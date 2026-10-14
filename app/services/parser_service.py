@@ -1233,7 +1233,9 @@ class ParserService:
                 or (evidence.image_coverage_ratio or 0.0) >= 0.20
                 or "repeated_text" in warning_codes
             )
-            if signature_page:
+            if signature_page and bool(
+                setting(self.settings, "vlm_signature_enabled", False)
+            ):
                 targets[page.page_number] = "signature"
         return targets
 
@@ -1391,12 +1393,31 @@ class ParserService:
         qwen_required = {
             page_number
             for page_number, target_kind in targets.items()
-            if target_kind == "signature"
-            or glm_assessments.get(
-                page_number,
-                GlmTableAssessment(route="full"),
-            ).route
-            != "accept"
+            if (
+                target_kind == "signature"
+                and self.visual_fusion_service.signature_enabled
+            )
+            or (
+                target_kind == "table"
+                and (
+                    (
+                        glm_assessments.get(
+                            page_number,
+                            GlmTableAssessment(route="full"),
+                        ).route
+                        == "targeted"
+                        and self.visual_fusion_service.table_targeted_enabled
+                    )
+                    or (
+                        glm_assessments.get(
+                            page_number,
+                            GlmTableAssessment(route="full"),
+                        ).route
+                        == "full"
+                        and self.visual_fusion_service.table_full_enabled
+                    )
+                )
+            )
         }
         qwen_ready = False
         if qwen_required and getattr(self.vlm_parser, "enabled", None) is not False:
@@ -1435,18 +1456,6 @@ class ParserService:
             try:
                 if target_kind == "table":
                     assessment = glm_assessments[page_number]
-                    if assessment.route == "full" and not qwen_ready:
-                        primary.status = PageStatus.WARNING
-                        primary.warnings.append(
-                            PipelineWarning(
-                                code="visual_fusion_partial",
-                                message="the table topology needs full visual fallback",
-                                page_number=page_number,
-                                backend=self.vlm_parser.name,
-                                details={"reasons": assessment.reasons},
-                            )
-                        )
-                        continue
                     outcome = await self.visual_fusion_service.fuse_table_page(
                         source,
                         options,

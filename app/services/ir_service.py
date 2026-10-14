@@ -319,7 +319,8 @@ class DocumentIRService:
             unit_text=fragment.unit_text,
             row_count=fragment.num_rows,
             column_count=fragment.num_cols,
-            header_rows=[0] if fragment.has_column_header and fragment.num_rows else [],
+            header_rows=list(fragment.header_row_indices)
+            or ([0] if fragment.has_column_header and fragment.num_rows else []),
             cells=_fragment_cells(fragment),
             logical_table_id=fragment.logical_table_id,
             quality=quality,

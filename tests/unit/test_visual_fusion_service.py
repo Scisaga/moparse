@@ -9,15 +9,21 @@ from pydantic import ValidationError
 
 from app.models import (
     ContentParseOptions,
+    DocumentParseResult,
     PageDiagnostics,
     PageParseResult,
     PageSourceKind,
+    PageStatus,
+    ParsePipeline,
+    QualityVerdict,
     SelectionStrategy,
 )
 from app.parsers.ollama_vlm import StructuredVlmCompletion, VlmResponseTruncatedError
 from app.services.evidence_service import PageEvidence
+from app.services.quality_service import QualityService
 from app.services.table_service import TableFragment, render_gfm_rows
 from app.services.visual_fusion_service import (
+    GlmTableAssessment,
     VisualBandExtraction,
     VisualConflictBatch,
     VisualConflictResolution,
@@ -115,6 +121,30 @@ def _financial_fragment(
     )
 
 
+def _generic_fragment(columns: int, *, fragment_id: str = "sdk_p1_t1") -> TableFragment:
+    rows = [
+        [f"字段{index + 1}" for index in range(columns)],
+        [f"甲{index + 1}" for index in range(columns)],
+        [f"乙{index + 1}" for index in range(columns)],
+        [f"丙{index + 1}" for index in range(columns)],
+    ]
+    markdown = render_gfm_rows(rows)
+    return TableFragment(
+        fragment_id=fragment_id,
+        page_number=1,
+        ordinal=1,
+        normalized_bbox=(0.05, 0.2, 0.95, 0.8),
+        num_rows=len(rows),
+        num_cols=columns,
+        rows=rows,
+        column_boundaries=[index / columns for index in range(columns + 1)],
+        markdown=markdown,
+        rendered=f"<!-- table-fragment: {fragment_id} -->\n\n{markdown}",
+        has_column_header=True,
+        source_kind="glm-sdk",
+    )
+
+
 def _page(fragment: TableFragment) -> PageParseResult:
     return PageParseResult(
         page_number=1,
@@ -171,6 +201,53 @@ def test_glm_gate_accepts_clean_parallel_financial_table_without_qwen() -> None:
     assert assessment.route == "accept"
     assert len(assessment.fragments) == 2
     assert assessment.issues == []
+
+
+@pytest.mark.parametrize("columns", [2, 5, 9, 11, 12])
+def test_glm_gate_accepts_clean_generic_table_shapes(columns: int) -> None:
+    fragment = _generic_fragment(columns)
+    service = VisualFusionService(SimpleNamespace(), _Qwen(VisualBandExtraction()))
+
+    assessment = service.assess_glm_table_candidate([fragment])
+
+    assert assessment.route == "accept"
+    assert len(assessment.fragments) == 1
+    assert assessment.fragments[0].num_cols == columns
+    assert assessment.fragments[0].rows == fragment.rows
+    assert assessment.issues == []
+    assert assessment.reasons == []
+
+
+def test_glm_gate_does_not_split_a_real_eight_column_table() -> None:
+    rows = [
+        ["序号", "项目", "地区", "负责人", "开始日期", "结束日期", "状态", "备注"],
+        ["1", "一期工程", "上海", "张三", "2026-01-01", "2026-06-30", "进行中", "正常"],
+        ["2", "二期工程", "北京", "李四", "2026-02-01", "2026-08-31", "待启动", "审批中"],
+        ["3", "三期工程", "深圳", "王五", "2026-03-01", "2026-09-30", "已完成", "已验收"],
+    ]
+    markdown = render_gfm_rows(rows)
+    fragment = TableFragment(
+        fragment_id="sdk_p1_t1",
+        page_number=1,
+        ordinal=1,
+        normalized_bbox=(0.05, 0.2, 0.95, 0.8),
+        num_rows=len(rows),
+        num_cols=8,
+        rows=rows,
+        column_boundaries=[index / 8 for index in range(9)],
+        markdown=markdown,
+        rendered=f"<!-- table-fragment: sdk_p1_t1 -->\n\n{markdown}",
+        has_column_header=True,
+        source_kind="glm-sdk",
+    )
+    service = VisualFusionService(SimpleNamespace(), _Qwen(VisualBandExtraction()))
+
+    assessment = service.assess_glm_table_candidate([fragment])
+
+    assert assessment.route == "accept"
+    assert len(assessment.fragments) == 1
+    assert assessment.fragments[0].num_cols == 8
+    assert assessment.fragments[0].rows == rows
 
 
 def test_glm_gate_localizes_shifted_amount_and_note_row() -> None:
@@ -243,6 +320,97 @@ async def test_glm_direct_route_makes_no_qwen_call() -> None:
     assert outcome.page.diagnostics.visual_fusion.qwen_calls == 0
 
 
+async def test_full_table_default_disabled_falls_back_to_valid_glm() -> None:
+    fragment = _generic_fragment(5)
+    primary = _page(fragment)
+    qwen = _Qwen(VisualBandExtraction())
+    service = VisualFusionService(SimpleNamespace(), qwen)
+
+    outcome = await service.fuse_table_page(
+        SimpleNamespace(),
+        ContentParseOptions(profile="accurate"),
+        primary,
+        _evidence(rows=8, columns=6),
+        _page(fragment),
+        [fragment],
+        [],
+        glm_assessment=GlmTableAssessment(
+            route="full",
+            fragments=[fragment],
+            reasons=["fixture_global_topology_warning"],
+        ),
+    )
+
+    assert qwen.calls == []
+    assert len(outcome.fragments) == 1
+    assert outcome.fragments[0].rows == fragment.rows
+    assert "保留的非表正文" in (outcome.page.content or "")
+    assert outcome.page.diagnostics is not None
+    assert outcome.page.diagnostics.visual_fusion is not None
+    assert outcome.page.diagnostics.visual_fusion.qwen_calls == 0
+
+
+async def test_full_table_default_disabled_without_glm_retains_primary_fragments() -> None:
+    primary_fragment = _fragment("321")
+    primary = _page(primary_fragment)
+    qwen = _Qwen(VisualBandExtraction())
+    service = VisualFusionService(SimpleNamespace(), qwen)
+
+    outcome = await service.fuse_table_page(
+        SimpleNamespace(),
+        ContentParseOptions(profile="accurate"),
+        primary,
+        _evidence(),
+        None,
+        [],
+        [primary_fragment],
+        glm_assessment=GlmTableAssessment(route="full", reasons=["missing_glm_table"]),
+    )
+
+    assert qwen.calls == []
+    assert outcome.page.content == primary.content
+    assert outcome.fragments == [primary_fragment]
+
+
+async def test_explicit_full_table_switch_still_allows_qwen_fallback() -> None:
+    primary_fragment = _fragment("100")
+    visual = VisualBandExtraction(
+        tables=[
+            VisualTableExtraction(
+                table_id="single",
+                columns=["项目", "金额"],
+                rows=[VisualRowExtraction(kind="data", cells=["现金", "100"])],
+            )
+        ]
+    )
+    qwen = _Qwen(visual)
+    service = VisualFusionService(
+        SimpleNamespace(
+            vlm_table_full_enabled=True,
+            vlm_max_calls_per_page=3,
+            vlm_page_budget_seconds=180,
+        ),
+        qwen,
+    )
+
+    outcome = await service.fuse_table_page(
+        SimpleNamespace(),
+        ContentParseOptions(profile="accurate"),
+        _page(primary_fragment),
+        _evidence(),
+        None,
+        [],
+        [primary_fragment],
+        glm_assessment=GlmTableAssessment(route="full", reasons=["missing_glm_table"]),
+    )
+
+    assert qwen.calls
+    assert outcome.page.diagnostics is not None
+    assert outcome.page.diagnostics.visual_fusion is not None
+    assert outcome.page.diagnostics.visual_fusion.routing_decision == "qwen_full_table"
+    assert outcome.page.diagnostics.visual_fusion.qwen_calls >= 1
+
+
 async def test_glm_targeted_route_uses_one_row_crop_call_and_repairs_columns() -> None:
     rows = [
         ["项目", "附注", "2023年末", "2022年末"],
@@ -294,6 +462,512 @@ async def test_glm_targeted_route_uses_one_row_crop_call_and_repairs_columns() -
     assert qwen.reasoning_efforts == ["none"]
 
 
+async def test_targeted_table_switch_disabled_retains_unmodified_glm() -> None:
+    rows = [
+        ["项目", "附注", "2023年末", "2022年末"],
+        ["货币资金", "五、（一）", "100", "90"],
+        ["短期借款", "296,155,561.32", "五、（二）", "323,988,595.63"],
+        ["应付账款", "五、（三）", "80", "70"],
+    ]
+    fragment = _financial_fragment(rows)
+    fragment.source_kind = "glm"
+    qwen = _Qwen(
+        VisualBandExtraction(),
+        VisualConflictBatch(
+            resolutions=[
+                VisualConflictResolution(
+                    conflict_id="t0r1c1", observed_value="五、（二）"
+                ),
+                VisualConflictResolution(
+                    conflict_id="t0r1c2", observed_value="296,155,561.32"
+                ),
+                VisualConflictResolution(
+                    conflict_id="t0r1c3", observed_value="323,988,595.63"
+                ),
+            ]
+        ),
+    )
+    service = VisualFusionService(
+        SimpleNamespace(vlm_table_targeted_enabled=False),
+        qwen,
+    )
+
+    outcome = await service.fuse_table_page(
+        SimpleNamespace(),
+        ContentParseOptions(profile="accurate"),
+        _page(fragment),
+        _evidence(rows=10, columns=5),
+        _page(fragment),
+        [fragment],
+        [],
+    )
+
+    assert qwen.calls == []
+    assert outcome.fragments[0].rows == rows
+    assert outcome.fragments[0].source_kind == "glm"
+    assert any(
+        warning.code == "targeted_visual_repair_unavailable"
+        for warning in outcome.page.warnings
+    )
+    assert outcome.page.diagnostics is not None
+    assert outcome.page.diagnostics.visual_fusion is not None
+    assert outcome.page.diagnostics.visual_fusion.qwen_calls == 0
+
+
+async def test_incomplete_targeted_repair_rolls_back_every_qwen_change() -> None:
+    rows = [
+        ["项目", "附注", "2023年末", "2022年末"],
+        ["货币资金", "五、（一）", "100", "90"],
+        ["短期借款", "296,155,561.32", "五、（二）", "323,988,595.63"],
+        ["应付账款", "五、（三）", "80", "70"],
+    ]
+    fragment = _financial_fragment(rows)
+    fragment.source_kind = "glm"
+    qwen = _Qwen(
+        VisualBandExtraction(),
+        VisualConflictBatch(
+            resolutions=[
+                VisualConflictResolution(
+                    conflict_id="t0r1c1", observed_value="五、（二）"
+                )
+            ]
+        ),
+    )
+    service = VisualFusionService(SimpleNamespace(), qwen)
+
+    outcome = await service.fuse_table_page(
+        SimpleNamespace(),
+        ContentParseOptions(profile="accurate"),
+        _page(fragment),
+        _evidence(rows=10, columns=5),
+        _page(fragment),
+        [fragment],
+        [],
+    )
+
+    assert qwen.calls == [VisualConflictBatch]
+    assert outcome.fragments[0].rows == rows
+    assert outcome.fragments[0].source_kind == "glm"
+    assert any(
+        warning.code == "targeted_visual_repair_incomplete"
+        for warning in outcome.page.warnings
+    )
+
+
+async def test_empty_explicit_full_result_falls_back_to_valid_glm() -> None:
+    fragment = _generic_fragment(5)
+    qwen = _Qwen(VisualBandExtraction())
+    service = VisualFusionService(
+        SimpleNamespace(
+            vlm_table_full_enabled=True,
+            vlm_max_calls_per_page=3,
+            vlm_page_budget_seconds=180,
+        ),
+        qwen,
+    )
+
+    outcome = await service.fuse_table_page(
+        SimpleNamespace(),
+        ContentParseOptions(profile="accurate"),
+        _page(fragment),
+        _evidence(),
+        _page(fragment),
+        [fragment],
+        [],
+        glm_assessment=GlmTableAssessment(
+            route="full",
+            fragments=[fragment],
+            reasons=["fixture_global_topology_warning"],
+        ),
+    )
+
+    assert qwen.calls
+    assert len(outcome.fragments) == 1
+    assert outcome.fragments[0].rows == fragment.rows
+    assert outcome.fragments[0].source_kind == "glm"
+
+
+async def test_incomplete_full_table_set_falls_back_to_every_glm_table() -> None:
+    left_rows = [
+        ["项目", "金额"],
+        ["现金", "100"],
+        ["应收账款", "200"],
+    ]
+    right_rows = [
+        ["项目", "金额"],
+        ["短期借款", "300"],
+        ["应付账款", "400"],
+    ]
+    left = _financial_fragment(left_rows, fragment_id="sdk_p1_t1")
+    right = _financial_fragment(right_rows, fragment_id="sdk_p1_t2")
+    left.normalized_bbox = (0.05, 0.2, 0.46, 0.8)
+    right.normalized_bbox = (0.54, 0.2, 0.95, 0.8)
+    glm_page = PageParseResult(
+        page_number=1,
+        content=f"保留的非表正文\n\n{left.rendered}\n\n{right.rendered}\n\n<!-- image -->",
+        diagnostics=PageDiagnostics(source_kind=PageSourceKind.SCANNED),
+    )
+    qwen = _Qwen(
+        VisualBandExtraction(
+            tables=[
+                VisualTableExtraction(
+                    table_id="single",
+                    columns=left_rows[0],
+                    rows=[
+                        VisualRowExtraction(kind="data", cells=row)
+                        for row in left_rows[1:]
+                    ],
+                )
+            ]
+        )
+    )
+    service = VisualFusionService(
+        SimpleNamespace(
+            vlm_table_full_enabled=True,
+            vlm_max_calls_per_page=3,
+            vlm_page_budget_seconds=180,
+        ),
+        qwen,
+    )
+
+    outcome = await service.fuse_table_page(
+        SimpleNamespace(),
+        ContentParseOptions(profile="accurate"),
+        glm_page,
+        _evidence(rows=8, columns=6),
+        glm_page,
+        [left, right],
+        [],
+        glm_assessment=GlmTableAssessment(
+            route="full",
+            fragments=[left, right],
+            reasons=["fixture_global_topology_warning"],
+        ),
+    )
+
+    assert qwen.calls
+    assert [fragment.rows for fragment in outcome.fragments] == [left_rows, right_rows]
+    assert [fragment.source_kind for fragment in outcome.fragments] == ["glm", "glm"]
+    assert "| 现金 | 100 |" in (outcome.page.content or "")
+    assert "| 短期借款 | 300 |" in (outcome.page.content or "")
+    rejected = next(
+        warning for warning in outcome.page.warnings if warning.code == "qwen_full_table_rejected"
+    )
+    assert "source_table_count_mismatch" in rejected.details["reasons"]
+
+
+async def test_full_table_shape_mismatch_falls_back_to_complete_glm_shape() -> None:
+    fragment = _generic_fragment(5)
+    qwen = _Qwen(
+        VisualBandExtraction(
+            tables=[
+                VisualTableExtraction(
+                    table_id="single",
+                    columns=fragment.rows[0][:2],
+                    rows=[
+                        VisualRowExtraction(kind="data", cells=row[:2])
+                        for row in fragment.rows[1:]
+                    ],
+                )
+            ]
+        )
+    )
+    service = VisualFusionService(
+        SimpleNamespace(
+            vlm_table_full_enabled=True,
+            vlm_max_calls_per_page=3,
+            vlm_page_budget_seconds=180,
+        ),
+        qwen,
+    )
+
+    outcome = await service.fuse_table_page(
+        SimpleNamespace(),
+        ContentParseOptions(profile="accurate"),
+        _page(fragment),
+        _evidence(rows=8, columns=6),
+        _page(fragment),
+        [fragment],
+        [],
+        glm_assessment=GlmTableAssessment(
+            route="full",
+            fragments=[fragment],
+            reasons=["fixture_global_topology_warning"],
+        ),
+    )
+
+    assert qwen.calls
+    assert len(outcome.fragments) == 1
+    assert outcome.fragments[0].num_cols == 5
+    assert outcome.fragments[0].rows == fragment.rows
+    assert outcome.fragments[0].source_kind == "glm"
+    assert "字段5" in (outcome.page.content or "")
+    rejected = next(
+        warning for warning in outcome.page.warnings if warning.code == "qwen_full_table_rejected"
+    )
+    assert "source_table_shape_mismatch" in rejected.details["reasons"]
+
+
+async def test_full_table_similar_row_omission_falls_back_to_every_glm_row() -> None:
+    rows = [
+        ["日期", "金额"],
+        ["2025年12月31日", "100"],
+        ["2025年12月31曰", "200"],
+    ]
+    fragment = _financial_fragment(rows, fragment_id="sdk_p1_t1")
+    qwen = _Qwen(
+        VisualBandExtraction(
+            tables=[
+                VisualTableExtraction(
+                    table_id="single",
+                    columns=rows[0],
+                    rows=[VisualRowExtraction(kind="data", cells=rows[1])],
+                )
+            ]
+        )
+    )
+    service = VisualFusionService(
+        SimpleNamespace(
+            vlm_table_full_enabled=True,
+            vlm_max_calls_per_page=3,
+            vlm_page_budget_seconds=180,
+        ),
+        qwen,
+    )
+
+    outcome = await service.fuse_table_page(
+        SimpleNamespace(),
+        ContentParseOptions(profile="accurate"),
+        _page(fragment),
+        _evidence(rows=8, columns=3),
+        _page(fragment),
+        [fragment],
+        [],
+        glm_assessment=GlmTableAssessment(
+            route="full",
+            fragments=[fragment],
+            reasons=["fixture_global_topology_warning"],
+        ),
+    )
+
+    assert qwen.calls
+    assert len(outcome.fragments) == 1
+    assert outcome.fragments[0].num_rows == 3
+    assert outcome.fragments[0].rows == rows
+    assert outcome.fragments[0].source_kind == "glm"
+    assert "| 2025年12月31日 | 100 |" in (outcome.page.content or "")
+    assert "| 2025年12月31曰 | 200 |" in (outcome.page.content or "")
+    rejected = next(
+        warning for warning in outcome.page.warnings if warning.code == "qwen_full_table_rejected"
+    )
+    assert "source_table_row_count_mismatch" in rejected.details["reasons"]
+
+
+async def test_full_table_uses_richer_docling_baseline_when_glm_and_qwen_agree_on_less() -> None:
+    glm_rows = [
+        ["项目", "金额"],
+        ["货币资金", "100"],
+        ["合计", "300"],
+    ]
+    docling_rows = [
+        ["项目", "备注", "金额"],
+        ["货币资金", "一", "100"],
+        ["存货", "二", "200"],
+        ["合计", "", "300"],
+    ]
+    glm_fragment = _financial_fragment(glm_rows, fragment_id="glm_p1_t1")
+    glm_fragment.source_kind = "glm"
+    docling_fragment = _financial_fragment(docling_rows, fragment_id="docling_p1_t1")
+    qwen = _Qwen(
+        VisualBandExtraction(
+            tables=[
+                VisualTableExtraction(
+                    table_id="single",
+                    columns=glm_rows[0],
+                    rows=[
+                        VisualRowExtraction(kind="data", cells=row)
+                        for row in glm_rows[1:]
+                    ],
+                )
+            ]
+        )
+    )
+    service = VisualFusionService(
+        SimpleNamespace(
+            vlm_table_full_enabled=True,
+            vlm_max_calls_per_page=3,
+            vlm_page_budget_seconds=180,
+        ),
+        qwen,
+    )
+
+    outcome = await service.fuse_table_page(
+        SimpleNamespace(),
+        ContentParseOptions(profile="accurate"),
+        _page(docling_fragment),
+        _evidence(rows=8, columns=4),
+        _page(glm_fragment),
+        [glm_fragment],
+        [docling_fragment],
+        glm_assessment=GlmTableAssessment(
+            route="full",
+            fragments=[glm_fragment],
+            reasons=["fixture_global_topology_warning"],
+        ),
+    )
+
+    assert qwen.calls
+    assert len(outcome.fragments) == 1
+    assert outcome.fragments[0].fragment_id == "docling_p1_t1"
+    assert outcome.fragments[0].num_rows == 4
+    assert outcome.fragments[0].num_cols == 3
+    assert outcome.fragments[0].rows == docling_rows
+    assert outcome.fragments[0].source_kind == "docling"
+    assert "| 存货 | 二 | 200 |" in (outcome.page.content or "")
+    rejected = next(
+        warning for warning in outcome.page.warnings if warning.code == "qwen_full_table_rejected"
+    )
+    assert {
+        "source_table_shape_mismatch",
+        "source_table_row_count_mismatch",
+    } & set(rejected.details["reasons"])
+
+
+async def test_incomplete_full_table_set_retains_every_docling_table_without_glm() -> None:
+    first_rows = [
+        ["项目", "金额"],
+        ["现金", "100"],
+        ["应收账款", "200"],
+    ]
+    second_rows = [
+        ["项目", "金额"],
+        ["短期借款", "300"],
+        ["应付账款", "400"],
+    ]
+    first = _financial_fragment(first_rows, fragment_id="docling_p1_t1")
+    second = _financial_fragment(second_rows, fragment_id="docling_p1_t2")
+    first.normalized_bbox = (0.05, 0.2, 0.46, 0.8)
+    second.normalized_bbox = (0.54, 0.2, 0.95, 0.8)
+    primary = PageParseResult(
+        page_number=1,
+        content=f"保留的非表正文\n\n{first.rendered}\n\n{second.rendered}\n\n<!-- image -->",
+        diagnostics=PageDiagnostics(source_kind=PageSourceKind.SCANNED),
+    )
+    qwen = _Qwen(
+        VisualBandExtraction(
+            tables=[
+                VisualTableExtraction(
+                    table_id="single",
+                    columns=first_rows[0],
+                    rows=[
+                        VisualRowExtraction(kind="data", cells=row)
+                        for row in first_rows[1:]
+                    ],
+                )
+            ]
+        )
+    )
+    service = VisualFusionService(
+        SimpleNamespace(
+            vlm_table_full_enabled=True,
+            vlm_max_calls_per_page=3,
+            vlm_page_budget_seconds=180,
+        ),
+        qwen,
+    )
+
+    outcome = await service.fuse_table_page(
+        SimpleNamespace(),
+        ContentParseOptions(profile="accurate"),
+        primary,
+        _evidence(rows=8, columns=6),
+        None,
+        [],
+        [first, second],
+        glm_assessment=GlmTableAssessment(route="full", reasons=["missing_glm_table"]),
+    )
+
+    assert qwen.calls
+    assert [fragment.fragment_id for fragment in outcome.fragments] == [
+        "docling_p1_t1",
+        "docling_p1_t2",
+    ]
+    assert [fragment.rows for fragment in outcome.fragments] == [first_rows, second_rows]
+    assert outcome.page.content == primary.content
+    rejected = next(
+        warning for warning in outcome.page.warnings if warning.code == "qwen_full_table_rejected"
+    )
+    assert "source_table_count_mismatch" in rejected.details["reasons"]
+
+
+async def test_qwen_only_full_table_is_adopted_as_degraded_unverified_output() -> None:
+    qwen = _Qwen(
+        VisualBandExtraction(
+            tables=[
+                VisualTableExtraction(
+                    table_id="single",
+                    columns=["项目", "金额"],
+                    rows=[VisualRowExtraction(kind="data", cells=["现金", "100"])],
+                )
+            ]
+        )
+    )
+    service = VisualFusionService(
+        SimpleNamespace(
+            vlm_table_full_enabled=True,
+            vlm_max_calls_per_page=3,
+            vlm_page_budget_seconds=180,
+        ),
+        qwen,
+    )
+    primary = PageParseResult(
+        page_number=1,
+        content="扫描页未形成结构化表格，但页面图像证据仍然保留。\n\n<!-- image -->",
+        diagnostics=PageDiagnostics(source_kind=PageSourceKind.SCANNED),
+    )
+
+    outcome = await service.fuse_table_page(
+        SimpleNamespace(),
+        ContentParseOptions(profile="accurate"),
+        primary,
+        _evidence(),
+        None,
+        [],
+        [],
+        glm_assessment=GlmTableAssessment(route="full", reasons=["missing_glm_table"]),
+    )
+
+    assert qwen.calls
+    assert len(outcome.fragments) == 1
+    assert outcome.fragments[0].source_kind == "qwen"
+    assert any(
+        warning.code == "qwen_full_table_unverified_values"
+        for warning in outcome.page.warnings
+    )
+    assert outcome.page.status == PageStatus.WARNING
+    assert outcome.page.diagnostics is not None
+    assert outcome.page.diagnostics.quality_verdict == QualityVerdict.DEGRADED
+    assert outcome.page.diagnostics.visual_fusion is not None
+    assert outcome.page.diagnostics.visual_fusion.qwen_selected_fields > 0
+
+    result = DocumentParseResult(
+        document_id="docparse_qwen_only_full",
+        filename="qwen-only.pdf",
+        mime_type="application/pdf",
+        page_count=1,
+        processed_pages=1,
+        pages=[outcome.page],
+        pipeline=ParsePipeline(profile="accurate", primary="adaptive-table-fusion"),
+    )
+    QualityService().assess(result)
+
+    assert result.pages[0].diagnostics is not None
+    assert result.pages[0].diagnostics.quality_verdict == QualityVerdict.DEGRADED
+    assert result.quality_summary is not None
+    assert result.quality_summary.degraded_pages == 1
+    assert result.quality_summary.trusted_pages == 0
+
+
 async def test_region_fusion_preserves_non_table_content_and_resolves_cells() -> None:
     fragment = _fragment("100")
     band = VisualBandExtraction(
@@ -315,7 +989,13 @@ async def test_region_fusion_preserves_non_table_content_and_resolves_cells() ->
         ),
     )
     service = VisualFusionService(
-        SimpleNamespace(vlm_max_calls_per_page=3, vlm_page_budget_seconds=180), qwen
+        SimpleNamespace(
+            glm_table_gate_enabled=False,
+            vlm_table_full_enabled=True,
+            vlm_max_calls_per_page=3,
+            vlm_page_budget_seconds=180,
+        ),
+        qwen,
     )
 
     primary = _page(fragment)
@@ -365,7 +1045,10 @@ async def test_parallel_visual_tables_become_two_fragments() -> None:
             ),
         ]
     )
-    service = VisualFusionService(SimpleNamespace(), _Qwen(band))
+    service = VisualFusionService(
+        SimpleNamespace(glm_table_gate_enabled=False, vlm_table_full_enabled=True),
+        _Qwen(band),
+    )
 
     outcome = await service.fuse_table_page(
         SimpleNamespace(),
@@ -373,8 +1056,11 @@ async def test_parallel_visual_tables_become_two_fragments() -> None:
         _page(fragment),
         _evidence(rows=24, columns=8),
         None,
-        [fragment],
         [],
+        [],
+        glm_assessment=GlmTableAssessment(
+            route="full", reasons=["fixture_full_table_rebuild"]
+        ),
     )
 
     assert len(outcome.fragments) == 2
@@ -397,7 +1083,10 @@ async def test_wide_parallel_table_is_normalized_before_cross_band_grouping() ->
             )
         ]
     )
-    service = VisualFusionService(SimpleNamespace(), _Qwen(band))
+    service = VisualFusionService(
+        SimpleNamespace(glm_table_gate_enabled=False, vlm_table_full_enabled=True),
+        _Qwen(band),
+    )
 
     outcome = await service.fuse_table_page(
         SimpleNamespace(),
@@ -405,8 +1094,11 @@ async def test_wide_parallel_table_is_normalized_before_cross_band_grouping() ->
         _page(fragment),
         _evidence(rows=24, columns=8),
         None,
-        [fragment],
         [],
+        [],
+        glm_assessment=GlmTableAssessment(
+            route="full", reasons=["fixture_full_table_rebuild"]
+        ),
     )
 
     assert len(outcome.fragments) == 2
@@ -426,7 +1118,10 @@ async def test_short_wide_table_remains_one_table() -> None:
             )
         ]
     )
-    service = VisualFusionService(SimpleNamespace(), _Qwen(band))
+    service = VisualFusionService(
+        SimpleNamespace(glm_table_gate_enabled=False, vlm_table_full_enabled=True),
+        _Qwen(band),
+    )
 
     outcome = await service.fuse_table_page(
         SimpleNamespace(),
@@ -434,8 +1129,11 @@ async def test_short_wide_table_remains_one_table() -> None:
         _page(fragment),
         _evidence(rows=8, columns=11),
         None,
-        [fragment],
         [],
+        [],
+        glm_assessment=GlmTableAssessment(
+            route="full", reasons=["fixture_full_table_rebuild"]
+        ),
     )
 
     assert len(outcome.fragments) == 1
@@ -778,7 +1476,13 @@ async def test_truncated_band_is_split_under_three_call_budget() -> None:
     )
     qwen = _TruncatingQwen(band)
     service = VisualFusionService(
-        SimpleNamespace(vlm_max_calls_per_page=3, vlm_page_budget_seconds=180), qwen
+        SimpleNamespace(
+            glm_table_gate_enabled=False,
+            vlm_table_full_enabled=True,
+            vlm_max_calls_per_page=3,
+            vlm_page_budget_seconds=180,
+        ),
+        qwen,
     )
 
     outcome = await service.fuse_table_page(
@@ -812,7 +1516,13 @@ async def test_rotated_dense_table_reserves_one_call_for_conflict_resolution() -
     )
     qwen = _Qwen(band)
     service = VisualFusionService(
-        SimpleNamespace(vlm_max_calls_per_page=3, vlm_page_budget_seconds=180), qwen
+        SimpleNamespace(
+            glm_table_gate_enabled=False,
+            vlm_table_full_enabled=True,
+            vlm_max_calls_per_page=3,
+            vlm_page_budget_seconds=180,
+        ),
+        qwen,
     )
     evidence = _evidence(rows=19, columns=61)
     evidence.detected_rotation_degrees = 90
@@ -902,7 +1612,11 @@ async def test_dense_band_replay_is_removed_and_variant_is_sent_to_conflict_call
         ),
     )
     service = VisualFusionService(
-        SimpleNamespace(vlm_max_calls_per_page=3, vlm_page_budget_seconds=180),
+        SimpleNamespace(
+            vlm_table_full_enabled=True,
+            vlm_max_calls_per_page=3,
+            vlm_page_budget_seconds=180,
+        ),
         qwen,
     )
 

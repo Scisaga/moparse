@@ -137,6 +137,9 @@ GLM_OCR_ENABLED=1
 GLM_SDK_ENABLED=1
 VISUAL_ROUTER_ENABLED=1
 VLM_ENABLED=1
+VLM_SIGNATURE_ENABLED=0
+VLM_TABLE_FULL_ENABLED=0
+VLM_TABLE_TARGETED_ENABLED=1
 VLM_MODEL=qwen3.6-docparse:35b-32k
 ```
 
@@ -147,12 +150,13 @@ docker compose logs -f glm-ocr-sdk
 ```
 
 `scan_policy=auto` first rotates measured complex pages into an upright image and sends them to
-the SDK. Clean financial tables pass the GLM quality gate with zero Qwen calls; localized column
-or subtotal conflicts use one row-crop Qwen call, while uncertain topology falls back to the
-bounded full-table route. Healthy native and sparse pages stay on Docling and retain their native
-text layer. The SDK sidecar uses `layout.device=cpu`, `batch_size=1`, and `max_workers=1`; it reuses
+the SDK. Any structurally valid GLM table can pass the domain-neutral quality gate with zero Qwen
+calls; localized column or subtotal conflicts may use one row-crop Qwen call. Signature-page and
+full-table Qwen routes are disabled by default. Healthy native and sparse pages stay on Docling and
+retain their native text layer. The SDK sidecar uses `layout.device=cpu`, `batch_size=1`, and `max_workers=1`; it reuses
 `http://glm-ocr:8000` and must not receive a GPU reservation. Set
-`GLM_TABLE_GATE_ENABLED=0` to force the previous full-table behavior, or
+both `GLM_TABLE_GATE_ENABLED=0` and `VLM_TABLE_FULL_ENABLED=1` to opt into the previous
+full-table behavior, or set
 `VISUAL_ROUTER_ENABLED=0` for a complete visual-route rollback.
 
 ## Mode 4: Remote GLM and/or existing Ollama
@@ -166,6 +170,9 @@ GLM_OCR_API_URL=http://gpu-host.example:8000/v1/chat/completions
 GLM_OCR_MODEL=zai-org/GLM-OCR
 
 VLM_ENABLED=1
+VLM_SIGNATURE_ENABLED=0
+VLM_TABLE_FULL_ENABLED=0
+VLM_TABLE_TARGETED_ENABLED=1
 VLM_BASE_URL=http://ollama-host.example:11434/v1
 VLM_MODEL=qwen3.6-docparse:35b-32k
 VLM_MAX_RETRIES=1

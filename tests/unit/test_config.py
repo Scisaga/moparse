@@ -60,3 +60,39 @@ def test_media_descriptions_disable_reasoning_by_default() -> None:
     settings = make_settings()
     assert settings.media_vlm_reasoning_effort == "none"
     assert settings.video_summary_reasoning_effort == "none"
+
+
+def test_document_vlm_routes_have_cost_safe_defaults(monkeypatch: pytest.MonkeyPatch) -> None:
+    for name in (
+        "VLM_SIGNATURE_ENABLED",
+        "VLM_TABLE_FULL_ENABLED",
+        "VLM_TABLE_TARGETED_ENABLED",
+    ):
+        monkeypatch.delenv(name, raising=False)
+
+    settings = make_settings()
+
+    assert settings.vlm_signature_enabled is False
+    assert settings.vlm_table_full_enabled is False
+    assert settings.vlm_table_targeted_enabled is True
+    public = settings.public_config()
+    assert public["vlm_signature_enabled"] is False
+    assert public["vlm_table_full_enabled"] is False
+    assert public["vlm_table_targeted_enabled"] is True
+
+
+def test_document_vlm_route_flags_are_loaded_from_environment(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv("VLM_SIGNATURE_ENABLED", "1")
+    monkeypatch.setenv("VLM_TABLE_FULL_ENABLED", "true")
+    monkeypatch.setenv("VLM_TABLE_TARGETED_ENABLED", "0")
+
+    settings = make_settings()
+
+    assert settings.vlm_signature_enabled is True
+    assert settings.vlm_table_full_enabled is True
+    assert settings.vlm_table_targeted_enabled is False
+    assert settings.public_config()["vlm_signature_enabled"] is True
+    assert settings.public_config()["vlm_table_full_enabled"] is True
+    assert settings.public_config()["vlm_table_targeted_enabled"] is False

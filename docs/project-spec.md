@@ -46,9 +46,10 @@ prefer_async                  # 仅 /parse
 
 - 数字 PDF：原生文本 + Docling Layout/TableFormer，不做无条件全页 OCR；
 - 扫描/混合 PDF：PP-DocLayoutV3 + 按页面方向旋转后的 GLM-OCR；
-- 干净财务表：GLM 直接采用，Qwen 调用为 0；
+- 任意结构有效的 GLM 表：直接采用，Qwen 调用为 0；
 - 少量可定位的错列/数字冲突：相关行裁剪后一次 Qwen 校验；
-- 多级表头、并表或全局拓扑失败：全表 Qwen 兜底；
+- 多级表头、并表或全局拓扑失败：保留最佳 GLM/Docling 结果和告警；整表 Qwen 仅为
+  默认关闭的显式实验/救援开关；
 - Office/PDF：始终保留嵌入图片资产，仅在 `describe_images=true` 时生成描述；
 - 独立图片/视频：内容本体使用有界视觉分析。
 - `scan_policy=skip`：PDF 扫描/混合页不输出 OCR 数值或表格事实，保留整页资产和显式状态。
@@ -103,7 +104,7 @@ MCP：`parse_content`、`get_content_job`、`get_content_result`、
 - 后端 ruff、mypy、pytest、OpenAPI 通过；前端测试、类型检查和构建通过；
 - `/parse` 与 `/result` 只返回 `text/markdown`，文档持久化只有 `output/result.md`；
 - UI 只有扫描页开关、内容预览、Markdown 源文、媒体和 API 示例，不提供质量档位或 JSON/TXT 下载；
-- 数字 PDF 不无条件 OCR；干净 GLM 财务表 Qwen 调用为 0；
-- 局部冲突不升级为整页/整表 Qwen，完整兜底仍受每页调用和时间预算约束；
+- 数字 PDF 不无条件 OCR；结构有效的 GLM 表 Qwen 调用为 0；
+- 局部冲突不升级为整页/整表 Qwen，签章和整表 Qwen 默认关闭；
 - 多级/分段表头、跨页并表、续页表头、期间、负数、单位、附注与资产引用有回归测试；
 - 私有 PDF、Gold 标注和运行结果不进入 Git。

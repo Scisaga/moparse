@@ -106,17 +106,20 @@ Compose 将 GPU `device_ids` 默认锁到 `1`。参考主机的 GPU 1 是 RTX 20
 （Turing，不支持 BF16），因此 vLLM 默认使用 FP16 `--dtype half`。主 parser
 仍不挂载 GPU，也不包含 CUDA 依赖。
 
-### GLM SDK＋Qwen 区域视觉融合
+### GLM SDK＋可选的 Qwen 局部复核
 
 `docling-glm-ocr` 插件和官方 `glmocr` SDK 复用同一个 GLM-OCR 识别模型。SDK
-sidecar 在 CPU 上运行 PP-DocLayoutV3；页面先按检测方向旋正，再生成表格候选。确定性
-质量门控会直接接受干净表格，只把少量冲突行交给 Qwen；多级表头或全局拓扑失败才执行
-全表视觉兜底。
+sidecar 在 CPU 上运行 PP-DocLayoutV3；页面先按检测方向旋正，再生成表格候选。通用的
+确定性质量门控会直接接受结构有效的表格，只把可精确定位的少量冲突行交给 Qwen。
+签章页和整表 Qwen 默认关闭，后者只保留为显式实验/救援开关。
 
 ```dotenv
 GLM_SDK_ENABLED=1
 VISUAL_ROUTER_ENABLED=1
 VLM_ENABLED=1
+VLM_SIGNATURE_ENABLED=0
+VLM_TABLE_FULL_ENABLED=0
+VLM_TABLE_TARGETED_ENABLED=1
 VLM_MODEL=qwen3.6-docparse:35b-32k
 ```
 
@@ -125,10 +128,11 @@ docker compose --profile glm-sdk up -d --build
 curl --fail http://localhost:12303/v1/backends
 ```
 
-默认 `scan_policy=auto` 自动处理复杂扫描/混合表、横置表及签章页；数字原生 PDF
-继续使用 Docling 原生文本和 TableFormer，不做无条件 GLM-OCR。局部复核最多一次
-Qwen，完整兜底仍受每页 3 次、180 秒预算限制。`scan_policy=skip` 会关闭 PDF 扫描
-OCR/视觉增强，将检测到的扫描页保存为整页资产并在 Markdown 中明确标记跳过。
+默认 `scan_policy=auto` 自动处理复杂扫描/混合表和横置表；数字原生 PDF 继续使用
+Docling 原生文本和 TableFormer，不做无条件 GLM-OCR。局部复核最多一次 Qwen，且结果
+未通过同一组结构/数值不变量时会整体回滚到 GLM。签章、手写和页面图像仍作为资产或
+OCR 证据保留，不自动执行整页 Qwen。`scan_policy=skip` 会关闭 PDF 扫描 OCR/视觉增强，
+将检测到的扫描页保存为整页资产并在 Markdown 中明确标记跳过。
 
 ### 远程 GLM / Ollama
 
@@ -138,6 +142,9 @@ GLM_OCR_API_URL=http://gpu-host:8000/v1/chat/completions
 GLM_OCR_MODEL=zai-org/GLM-OCR
 
 VLM_ENABLED=1
+VLM_SIGNATURE_ENABLED=0
+VLM_TABLE_FULL_ENABLED=0
+VLM_TABLE_TARGETED_ENABLED=1
 VLM_BASE_URL=http://ollama-host:11434/v1
 VLM_MODEL=qwen3.6-docparse:35b-32k
 VLM_PAGE_BUDGET_SECONDS=180
@@ -145,8 +152,9 @@ VLM_MAX_CALLS_PER_PAGE=3
 VLM_REGION_MAX_TOKENS=16384
 ```
 
-`VLM_ENABLED=0` 始终禁止所有 Qwen 出站调用。视觉诊断仅记录调用数、耗时、
-区域/表格/单元格和冲突计数，不记录图像、正文、prompt 或 reasoning 正文。
+`VLM_ENABLED=0` 始终禁止所有 Qwen 出站调用。三个子开关分别控制 PDF 签章页、整表和
+局部表格复核；子开关不能绕过总开关。视觉诊断仅记录调用数、耗时、区域/表格/单元格
+和冲突计数，不记录图像、正文、prompt 或 reasoning 正文。
 
 ```bash
 docker compose up -d --build mosaicparse

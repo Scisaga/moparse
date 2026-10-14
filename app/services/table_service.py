@@ -5,7 +5,6 @@ from __future__ import annotations
 import html
 import re
 from dataclasses import dataclass, field
-from difflib import SequenceMatcher
 from typing import Any
 
 from app.models.parse_result import PageDiagnostics, PageParseResult, PageSourceKind
@@ -50,9 +49,101 @@ class TableFragment:
 
     @property
     def header_signature(self) -> str:
-        return "|".join(
-            re.sub(r"\s+", "", cell).casefold() for cell in (self.rows[0] if self.rows else [])
+        """Complete text signature; structural equality uses cell spans as well."""
+        return "\n".join(
+            "|".join(_header_text(cell) for cell in self.rows[row])
+            for row in self.header_row_indices
         )
+
+    @property
+    def header_row_indices(self) -> tuple[int, ...]:
+        """Return the complete leading header band only with cell/span evidence.
+
+        A first-row flag cannot establish how many header levels exist. Missing,
+        discontinuous or conflicting cell evidence therefore leaves the scope
+        unknown and must not authorize cross-page header removal.
+        """
+        if not self.valid or not self.has_column_header or not self.cells or not self.rows:
+            return ()
+        if len(self.rows) != self.num_rows or any(len(row) != self.num_cols for row in self.rows):
+            return ()
+        header_rows: set[int] = set()
+        for cell in self.cells:
+            if cell.is_column_header:
+                if cell.row < 0 or cell.row_span < 1 or cell.row + cell.row_span > self.num_rows:
+                    return ()
+                header_rows.update(range(cell.row, cell.row + cell.row_span))
+        if not header_rows or header_rows != set(range(max(header_rows) + 1)):
+            return ()
+        depth = max(header_rows) + 1
+        occupied: set[tuple[int, int]] = set()
+        for cell in self.cells:
+            if cell.row >= depth:
+                continue
+            if (
+                cell.row < 0
+                or cell.column < 0
+                or cell.row_span < 1
+                or cell.column_span < 1
+                or cell.row + cell.row_span > depth
+                or cell.column + cell.column_span > self.num_cols
+                or _header_text(cell.text) != _header_text(self.rows[cell.row][cell.column])
+            ):
+                return ()
+            positions = {
+                (row, column)
+                for row in range(cell.row, cell.row + cell.row_span)
+                for column in range(cell.column, cell.column + cell.column_span)
+            }
+            if occupied & positions:
+                return ()
+            if any(
+                self.rows[row][column].strip()
+                for row, column in positions - {(cell.row, cell.column)}
+            ):
+                return ()
+            occupied.update(positions)
+        if occupied != {
+            (row, column) for row in range(depth) for column in range(self.num_cols)
+        }:
+            return ()
+        return tuple(range(depth))
+
+
+def _header_text(value: str | None) -> str:
+    # Ignore line wrapping/spacing only. Periods, words, units and punctuation
+    # remain source text; financial row labels do not supply header meaning.
+    return re.sub(r"\s+", "", value or "")
+
+
+def _complete_header_signature(fragment: TableFragment) -> tuple[object, ...] | None:
+    header_rows = fragment.header_row_indices
+    if not header_rows:
+        return None
+    cells = tuple(
+        sorted(
+            (
+                cell.row,
+                cell.column,
+                cell.row_span,
+                cell.column_span,
+                _header_text(cell.text),
+                cell.is_column_header,
+                cell.is_row_header,
+            )
+            for cell in fragment.cells
+            if cell.row in header_rows
+        )
+    )
+    if not any(_header_text(text) for row in header_rows for text in fragment.rows[row]):
+        return None
+    return (
+        fragment.num_cols,
+        tuple(tuple(_header_text(text) for text in fragment.rows[row]) for row in header_rows),
+        cells,
+        _header_text(fragment.unit_text),
+        _header_text(fragment.caption),
+    )
 
 
 def _escape_cell(value: str) -> str:
@@ -292,9 +383,8 @@ def export_page_markdown(document: Any, page_number: int, fragments: list[TableF
 
 
 def _headers_match(left: TableFragment, right: TableFragment) -> bool:
-    if right.has_column_header and left.header_signature and right.header_signature:
-        return SequenceMatcher(None, left.header_signature, right.header_signature).ratio() >= 0.80
-    return bool(not right.has_column_header and left.num_cols == right.num_cols and right.rows)
+    signature = _complete_header_signature(left)
+    return signature is not None and signature == _complete_header_signature(right)
 
 
 def _columns_match(left: TableFragment, right: TableFragment) -> bool:
@@ -311,79 +401,6 @@ def _columns_match(left: TableFragment, right: TableFragment) -> bool:
     )
 
 
-def _repair_continuation_shapes(
-    pages: list[PageParseResult],
-    fragments: list[TableFragment],
-) -> None:
-    """Expand a continuation table only when its compact header proves omitted blank columns."""
-
-    by_page: dict[int, list[TableFragment]] = {}
-    for fragment in fragments:
-        by_page.setdefault(fragment.page_number, []).append(fragment)
-    page_models = {page.page_number: page for page in pages}
-    for page_number in sorted(by_page):
-        left = sorted(by_page[page_number], key=lambda item: item.ordinal)[-1]
-        following = sorted(by_page.get(page_number + 1, []), key=lambda item: item.ordinal)
-        if not following:
-            continue
-        right = following[0]
-        if (
-            not left.valid
-            or not right.valid
-            or left.normalized_bbox[3] < 0.85
-            or right.normalized_bbox[1] > 0.15
-            or left.num_cols <= right.num_cols
-            or not left.rows
-            or not right.rows
-            or len(left.column_boundaries) < 2
-            or len(right.column_boundaries) < 2
-        ):
-            continue
-        blank_columns = [index for index, cell in enumerate(left.rows[0]) if not cell.strip()]
-        if left.num_cols - right.num_cols != len(blank_columns) or not blank_columns:
-            continue
-        left_header = "|".join(
-            re.sub(r"\s+", "", cell).casefold() for cell in left.rows[0] if cell.strip()
-        )
-        right_header = "|".join(
-            re.sub(r"\s+", "", cell).casefold() for cell in right.rows[0] if cell.strip()
-        )
-        if (
-            not left_header
-            or not right_header
-            or SequenceMatcher(None, left_header, right_header).ratio() < 0.80
-        ):
-            continue
-        outer_boundary_difference = (
-            abs(left.column_boundaries[0] - right.column_boundaries[0])
-            + abs(left.column_boundaries[-1] - right.column_boundaries[-1])
-        ) / 2
-        if outer_boundary_difference > 0.02:
-            continue
-        expanded: list[list[str]] = []
-        for row in right.rows:
-            output = list(row)
-            for index in blank_columns:
-                output.insert(index, "")
-            if len(output) != left.num_cols:
-                expanded = []
-                break
-            expanded.append(output)
-        if not expanded:
-            continue
-        old_rendered = right.rendered
-        right.rows = expanded
-        right.num_cols = left.num_cols
-        right.column_boundaries = list(left.column_boundaries)
-        right.has_column_header = True
-        right.markdown = render_gfm_rows(expanded)
-        marker = f"<!-- table-fragment: {right.fragment_id} -->"
-        right.rendered = f"{marker}\n\n{right.markdown}"
-        page = page_models.get(right.page_number)
-        if page is not None and page.content:
-            page.content = page.content.replace(old_rendered, right.rendered, 1)
-
-
 def link_cross_page_tables(fragments: list[TableFragment]) -> list[list[TableFragment]]:
     by_page: dict[int, list[TableFragment]] = {}
     for fragment in fragments:
@@ -396,8 +413,11 @@ def link_cross_page_tables(fragments: list[TableFragment]) -> list[list[TableFra
         if not next_items:
             continue
         following = next_items[0]
+        group = next(
+            (item for item in groups if item[-1].fragment_id == previous.fragment_id), None
+        )
         if (
-            previous.fragment_id not in consumed
+            (previous.fragment_id not in consumed or group is not None)
             and following.fragment_id not in consumed
             and previous.valid
             and following.valid
@@ -406,9 +426,6 @@ def link_cross_page_tables(fragments: list[TableFragment]) -> list[list[TableFra
             and _columns_match(previous, following)
             and _headers_match(previous, following)
         ):
-            group = next(
-                (item for item in groups if item[-1].fragment_id == previous.fragment_id), None
-            )
             if group is None:
                 group = [previous]
                 groups.append(group)
@@ -419,18 +436,63 @@ def link_cross_page_tables(fragments: list[TableFragment]) -> list[list[TableFra
 
 def _merged_rows(group: list[TableFragment]) -> list[list[str]]:
     rows = [row[:] for row in group[0].rows]
-    header = group[0].header_signature
     for fragment in group[1:]:
         continuation = fragment.rows
-        if (
-            continuation
-            and fragment.has_column_header
-            and fragment.header_signature
-            and SequenceMatcher(None, header, fragment.header_signature).ratio() >= 0.80
-        ):
-            continuation = continuation[1:]
+        if _headers_match(group[0], fragment):
+            continuation = continuation[len(fragment.header_row_indices) :]
         rows.extend(row[:] for row in continuation)
     return rows
+
+
+def _table_surroundings(fragment: TableFragment) -> tuple[str, str] | None:
+    if not fragment.markdown or fragment.rendered.count(fragment.markdown) != 1:
+        return None
+    prefix, _, suffix = fragment.rendered.partition(fragment.markdown)
+    prefix = prefix.replace(f"<!-- table-fragment: {fragment.fragment_id} -->", "", 1)
+    return prefix.strip(), suffix.strip()
+
+
+def _nearby_units(
+    content: str, fragment: TableFragment, fragments: list[TableFragment]
+) -> dict[str, str]:
+    prefix = content.partition(fragment.rendered)[0]
+    # A unit printed before another table is not evidence for this table.
+    for previous in fragments:
+        if previous.page_number == fragment.page_number and previous.ordinal < fragment.ordinal:
+            if previous.rendered and previous.rendered in prefix:
+                prefix = prefix.rpartition(previous.rendered)[2]
+    units: dict[str, str] = {}
+    for match in re.finditer(
+        r"(?m)^[ \t]*(单位|金额单位|币种|Unit)\s*[：:]\s*([^\n]+)", prefix
+    ):
+        dimension = "币种" if match[1] == "币种" else "单位"
+        value = match[2].strip()
+        # A source line may print both dimensions: 单位：元 币种：人民币.
+        currency_match = re.search(r"\s*币种\s*[：:]\s*(.+)$", value)
+        if currency_match and dimension == "单位":
+            units["币种"] = _header_text(currency_match[1])
+            value = value[: currency_match.start()]
+        units[dimension] = _header_text(value)
+    return units
+
+
+def _source_row_marker(fragment: TableFragment, logical_start: int, skip: int) -> str:
+    indices = fragment.source_row_indices
+    if len(indices) != len(fragment.rows):
+        indices = list(range(len(fragment.rows)))
+    emitted_indices = indices[skip:]
+    source_rows = ",".join(str(index + 1) for index in emitted_indices) or "none"
+    if len(emitted_indices) > 1 and emitted_indices == list(
+        range(emitted_indices[0], emitted_indices[-1] + 1)
+    ):
+        source_rows = f"{emitted_indices[0] + 1}-{emitted_indices[-1] + 1}"
+    count = len(fragment.rows) - skip
+    logical_rows = f"{logical_start}-{logical_start + count - 1}" if count else "none"
+    return (
+        f"<!-- table-source: {fragment.fragment_id}; source-page: {fragment.page_number}; "
+        f"source-rows: {source_rows}; logical-rows: {logical_rows}; "
+        f"repeated-header-rows: {skip} -->"
+    )
 
 
 def assemble_logical_tables(
@@ -439,7 +501,6 @@ def assemble_logical_tables(
     *,
     enabled: bool,
 ) -> dict[int, str]:
-    _repair_continuation_shapes(pages, fragments)
     content_by_page = {page.page_number: page.content or "" for page in pages}
     page_models = {page.page_number: page for page in pages}
     if not fragments:
@@ -453,22 +514,57 @@ def assemble_logical_tables(
     if not enabled:
         return content_by_page
     for group in link_cross_page_tables(fragments):
-        blocked_by_heading = False
+        # Never remove a continuation unless every original rendering can be
+        # replaced exactly once and all non-table material remains in scope.
+        if any(
+            not fragment.rendered
+            or content_by_page.get(fragment.page_number, "").count(fragment.rendered) != 1
+            for fragment in group
+        ):
+            continue
+        surroundings = _table_surroundings(group[0])
+        if surroundings is None or any(
+            _table_surroundings(fragment) != surroundings for fragment in group[1:]
+        ):
+            continue
+        blocked_by_context = False
+        known_units = _nearby_units(content_by_page[group[0].page_number], group[0], fragments)
         for left, right in zip(group, group[1:], strict=False):
             left_tail = content_by_page[left.page_number].partition(left.rendered)[2]
             right_head = content_by_page[right.page_number].partition(right.rendered)[0]
+            right_units = _nearby_units(content_by_page[right.page_number], right, fragments)
+            if any(known_units.get(dimension) != value for dimension, value in right_units.items()):
+                blocked_by_context = True
+                break
+            known_units.update(right_units)
             if re.search(
                 r"(?m)^(?:#{1,6}\s+\S|第[一二三四五六七八九十百0-9]+[章节]\s*|\d+(?:\.\d+)+\s+\S)",
                 f"{left_tail}\n{right_head}",
             ):
-                blocked_by_heading = True
+                blocked_by_context = True
                 break
-        if blocked_by_heading:
+        if blocked_by_context:
             continue
         logical_id = f"table_{group[0].fragment_id}_{group[-1].fragment_id}"
         source_pages = sorted({fragment.page_number for fragment in group})
         merged = render_gfm_rows(_merged_rows(group))
-        logical = f"<!-- logical-table: {logical_id}; source-pages: {','.join(map(str, source_pages))} -->\n\n{merged}"
+        source_markers: list[str] = []
+        logical_start = 1
+        for index, fragment in enumerate(group):
+            skip = len(fragment.header_row_indices) if index else 0
+            source_markers.append(_source_row_marker(fragment, logical_start, skip))
+            logical_start += len(fragment.rows) - skip
+        logical = "\n\n".join(
+            part
+            for part in [
+                f"<!-- logical-table: {logical_id}; source-pages: {','.join(map(str, source_pages))} -->",
+                "\n".join(source_markers),
+                surroundings[0],
+                merged,
+                surroundings[1],
+            ]
+            if part
+        )
         first = group[0]
         content_by_page[first.page_number] = content_by_page[first.page_number].replace(
             first.rendered, logical, 1

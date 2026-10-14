@@ -27,6 +27,7 @@ from app.services.evidence_service import NativeBlock, PageEvidence, PageEvidenc
 from app.services.parser_service import ParserService
 from app.services.quality_service import QualityService
 from app.services.table_service import (
+    TableCellFragment,
     TableFragment,
     _anchored_rows,
     assemble_logical_tables,
@@ -261,6 +262,11 @@ def _fragment(
         markdown=markdown,
         rendered=f"<!-- table-fragment: {fragment_id} -->\n\n{markdown}",
         has_column_header=True,
+        cells=[
+            TableCellFragment(row_index, column, 1, 1, text, is_column_header=row_index == 0)
+            for row_index, row in enumerate(rows)
+            for column, text in enumerate(row)
+        ],
     )
 
 
@@ -320,7 +326,7 @@ def test_cross_page_table_merges_only_canonical_content() -> None:
     assert pages[0].diagnostics.logical_table_ids == ["table_p1_t1_p2_t1"]
 
 
-def test_cross_page_continuation_expands_proven_blank_column() -> None:
+def test_cross_page_continuation_keeps_unproven_blank_column_shape() -> None:
     first = _fragment(
         "p1_t1",
         1,
@@ -343,10 +349,10 @@ def test_cross_page_continuation_expands_proven_blank_column() -> None:
 
     canonical = assemble_logical_tables(pages, [first, second], enabled=True)
 
-    assert "logical-table" in canonical[1]
-    assert "| 差异 |  | G=E-F | 30,000.00 |" in canonical[1]
-    assert canonical[2] == ""
-    assert "| 差异 |  | G=E-F | 30,000.00 |" in (pages[1].content or "")
+    assert "logical-table" not in canonical[1]
+    assert canonical[2] == second.rendered
+    assert second.num_cols == 3
+    assert "| 差异 | G=E-F | 30,000.00 |" in (pages[1].content or "")
 
 
 def test_directory_page_becomes_list_not_table() -> None:

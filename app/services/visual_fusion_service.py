@@ -297,6 +297,11 @@ class VisualFusionService:
         self.glm_targeted_max_cells = int(
             setting(settings, "glm_table_targeted_max_cells", 12)
         )
+        self.signature_enabled = bool(setting(settings, "vlm_signature_enabled", False))
+        self.table_full_enabled = bool(setting(settings, "vlm_table_full_enabled", False))
+        self.table_targeted_enabled = bool(
+            setting(settings, "vlm_table_targeted_enabled", True)
+        )
 
     @staticmethod
     def _union_bbox(
@@ -698,6 +703,16 @@ class VisualFusionService:
         if fragment.num_cols < 8 or fragment.num_cols % 2:
             return [fragment]
         half = fragment.num_cols // 2
+        if not fragment.rows or len(fragment.rows[0]) < fragment.num_cols:
+            return [fragment]
+        left_header = [_normalized(value) for value in fragment.rows[0][:half]]
+        right_header = [_normalized(value) for value in fragment.rows[0][half:]]
+        # A large even column count is not evidence that the page contains two
+        # parallel tables. Split only when both halves repeat the same visible
+        # header; otherwise genuine 8/10/12-column comparison tables are
+        # corrupted into unrelated halves.
+        if not left_header[0] or left_header != right_header:
+            return [fragment]
         split: list[TableFragment] = []
         left, top, right, bottom = fragment.normalized_bbox
         for index, column_slice in enumerate((slice(0, half), slice(half, fragment.num_cols))):
@@ -719,6 +734,9 @@ class VisualFusionService:
                     ],
                     markdown=render_gfm_rows(rows),
                     rendered="",
+                    valid=fragment.valid,
+                    invalid_reasons=list(fragment.invalid_reasons),
+                    logical_table_id=fragment.logical_table_id,
                     has_column_header=fragment.has_column_header,
                     caption=fragment.caption,
                     unit_text=fragment.unit_text,
@@ -733,6 +751,25 @@ class VisualFusionService:
                 )
             )
         return split
+
+    @staticmethod
+    def _has_usable_table_topology(fragment: TableFragment) -> bool:
+        """Accept domain-neutral GLM grids that have a coherent 2D shape."""
+
+        if (
+            not fragment.valid
+            or not (2 <= fragment.num_cols <= 100)
+            or not (2 <= fragment.num_rows <= 2_000)
+            or len(fragment.rows) != fragment.num_rows
+            or any(len(row) != fragment.num_cols for row in fragment.rows)
+        ):
+            return False
+        populated_rows = [
+            row for row in fragment.rows if any(_normalized(cell) for cell in row)
+        ]
+        return len(populated_rows) >= 2 and any(
+            sum(bool(_normalized(cell)) for cell in row) >= 2 for row in populated_rows
+        )
 
     @classmethod
     def _normalize_financial_note(cls, value: str) -> str:
@@ -814,6 +851,7 @@ class VisualFusionService:
         normalized: list[TableFragment] = []
         for fragment in fragments:
             for part in cls._split_wide_fragment(fragment):
+                financial = cls._is_financial_fragment(part)
                 rows: list[list[str]] = []
                 source_row_indices: list[int] = []
                 physical_indices = part.source_row_indices or list(range(len(part.rows)))
@@ -823,7 +861,7 @@ class VisualFusionService:
                     row = row[: part.num_cols]
                     if rows and not any(_normalized(cell) for cell in row):
                         continue
-                    if len(row) >= 2:
+                    if financial and len(row) >= 2:
                         row[1] = cls._normalize_financial_note(row[1])
                     rows.append(row)
                     source_row_indices.append(physical_index)
@@ -968,25 +1006,28 @@ class VisualFusionService:
 
         normalized = self._normalized_glm_fragments(fragments)
         if not self.glm_table_gate_enabled:
-            return GlmTableAssessment(route="full", reasons=["glm_table_gate_disabled"])
+            return GlmTableAssessment(
+                route="full",
+                fragments=normalized,
+                reasons=["glm_table_gate_disabled"],
+            )
         if not normalized:
             return GlmTableAssessment(route="full", reasons=["missing_glm_table"])
-        if len(normalized) > 4 or any(not fragment.valid for fragment in normalized):
+        if any(not self._has_usable_table_topology(fragment) for fragment in normalized):
             return GlmTableAssessment(
                 route="full",
                 fragments=normalized,
                 reasons=["invalid_or_excessive_table_topology"],
             )
-        if any(not self._is_financial_fragment(fragment) for fragment in normalized):
-            return GlmTableAssessment(
-                route="full",
-                fragments=normalized,
-                reasons=["schema_not_confidently_financial"],
-            )
 
         issues: list[GlmTableIssue] = []
         reasons: list[str] = []
         for table_index, fragment in enumerate(normalized):
+            # Financial statements have additional deterministic invariants;
+            # other coherent GLM tables are accepted without forcing them
+            # through a domain-specific four-column schema.
+            if not self._is_financial_fragment(fragment):
+                continue
             structural_rows: set[int] = set()
             header_key = _normalized(fragment.rows[0][0])
             for row_index, row in enumerate(fragment.rows[1:], start=1):
@@ -1019,7 +1060,9 @@ class VisualFusionService:
             issues.extend(subtotal_issues)
             reasons.extend(subtotal_reasons)
 
-        if len(normalized) == 2:
+        if len(normalized) == 2 and all(
+            self._is_financial_fragment(fragment) for fragment in normalized
+        ):
             left_total = next(
                 (row for row in normalized[0].rows if _normalized(row[0]) == "资产总计"),
                 None,
@@ -1783,7 +1826,8 @@ class VisualFusionService:
             deadline=time.monotonic() + self.page_budget_seconds,
         )
         metadata: VisualPageMetadata | None = None
-        attempted_targeted = assessment.route == "targeted" and allow_qwen
+        allow_targeted_qwen = allow_qwen and self.table_targeted_enabled
+        attempted_targeted = assessment.route == "targeted" and allow_targeted_qwen
         requested_cells = sum(len(issue.column_indices) for issue in assessment.issues)
         model_resolved = 0
 
@@ -1842,40 +1886,64 @@ class VisualFusionService:
                 targeted=True,
             )
 
-        candidate_fragments = self._updated_glm_fragments(
+        proposed_fragments = self._updated_glm_fragments(
             assessment.fragments,
             tables,
             targeted=attempted_targeted,
         )
-        final_assessment = self.assess_glm_table_candidate(candidate_fragments)
+        final_assessment = self.assess_glm_table_candidate(proposed_fragments)
         remaining_cells = sum(len(issue.column_indices) for issue in final_assessment.issues)
         if final_assessment.route == "full" and final_assessment.reasons:
             remaining_cells = max(1, remaining_cells)
-        resolved = max(0, min(model_resolved, requested_cells - remaining_cells))
-        unresolved = remaining_cells if assessment.route == "targeted" else 0
+        targeted_applied = attempted_targeted and final_assessment.route == "accept"
+        if targeted_applied:
+            candidate_fragments = proposed_fragments
+            resolved = max(0, min(model_resolved, requested_cells - remaining_cells))
+        elif attempted_targeted:
+            # A partial visual answer must not overwrite cells that were
+            # already present in GLM. Adopt the model edit only when the same
+            # deterministic invariants pass after the edit.
+            candidate_fragments = assessment.fragments
+            tables = self._glm_tables(candidate_fragments)
+            resolved = 0
+        else:
+            candidate_fragments = proposed_fragments
+            resolved = 0
+        unresolved = (
+            max(1, remaining_cells, requested_cells)
+            if assessment.route in {"targeted", "full"}
+            else 0
+        )
+        if targeted_applied:
+            unresolved = 0
         warnings: list[PipelineWarning] = []
-        if assessment.route == "targeted" and not allow_qwen:
+        if assessment.route == "targeted" and not allow_targeted_qwen:
             warnings.append(
                 PipelineWarning(
                     code="targeted_visual_repair_unavailable",
-                    message="the oriented GLM table was retained with localized unresolved cells",
+                    message=(
+                        "the oriented GLM table was retained because localized visual repair "
+                        "is disabled or unavailable"
+                    ),
                     page_number=primary.page_number,
                     backend=self.qwen.name,
                     details={"count": requested_cells},
                 )
             )
-            unresolved = max(1, requested_cells)
-        elif assessment.route == "targeted" and unresolved:
+        elif attempted_targeted and not targeted_applied:
             warnings.append(
                 PipelineWarning(
                     code="targeted_visual_repair_incomplete",
-                    message="row-level Qwen verification did not resolve every GLM table invariant",
+                    message=(
+                        "row-level Qwen verification did not resolve every invariant; "
+                        "the original GLM cells were retained"
+                    ),
                     page_number=primary.page_number,
                     backend=self.qwen.name,
                     details={"count": unresolved},
                 )
             )
-        elif attempted_targeted:
+        elif targeted_applied:
             warnings.append(
                 PipelineWarning(
                     code="qwen_targeted_table_repair_used",
@@ -1886,12 +1954,25 @@ class VisualFusionService:
                     details={"cells": requested_cells},
                 )
             )
+        elif assessment.route == "full":
+            warnings.append(
+                PipelineWarning(
+                    code="full_table_visual_fallback_skipped",
+                    message=(
+                        "the best valid GLM table was retained instead of running or adopting "
+                        "a full-table visual fallback"
+                    ),
+                    page_number=primary.page_number,
+                    backend="glm-table",
+                    details={"reasons": assessment.reasons},
+                )
+            )
 
         page_metadata = (
-            metadata.company_name if metadata else None,
-            metadata.statement_title if metadata else None,
-            metadata.statement_date if metadata else None,
-            metadata.unit if metadata else None,
+            metadata.company_name if metadata and targeted_applied else None,
+            metadata.statement_title if metadata and targeted_applied else None,
+            metadata.statement_date if metadata and targeted_applied else None,
+            metadata.unit if metadata and targeted_applied else None,
         )
         page = primary.model_copy(deep=True)
         page.content = self._replace_table_regions(
@@ -1916,7 +1997,7 @@ class VisualFusionService:
             ),
         )
         page.plain_text = None
-        page.backend = "glm-qwen-targeted" if attempted_targeted else "glm-table"
+        page.backend = "glm-qwen-targeted" if targeted_applied else "glm-table"
         page.warnings = [
             warning
             for warning in page.warnings
@@ -1931,7 +2012,7 @@ class VisualFusionService:
         diagnostics = page.diagnostics or PageDiagnostics(source_kind=evidence.source_kind)
         diagnostics.selected_strategy = (
             SelectionStrategy.GLM_QWEN_TARGETED
-            if attempted_targeted
+            if targeted_applied
             else SelectionStrategy.GLM_TABLE
         )
         rotation = evidence.detected_rotation_degrees or 0
@@ -1940,7 +2021,7 @@ class VisualFusionService:
         )
         diagnostics.visual_fusion = VisualFusionDiagnostics(
             routing_decision=(
-                "glm_targeted_qwen" if attempted_targeted else "glm_direct"
+                "glm_targeted_qwen" if targeted_applied else "glm_direct"
             ),
             candidate_issue_count=len(assessment.issues),
             qwen_calls=budget.calls,
@@ -1977,6 +2058,61 @@ class VisualFusionService:
             ),
         )
 
+    def _retain_primary_table_candidate(
+        self,
+        primary: PageParseResult,
+        evidence: PageEvidence,
+        docling_fragments: list[TableFragment],
+        *,
+        reasons: list[str],
+        warnings: list[PipelineWarning] | None = None,
+        budget: _CallBudget | None = None,
+        partition_attempts: int = 0,
+    ) -> VisualFusionOutcome:
+        """Keep the primary page and its fragments when no safe replacement exists."""
+
+        page = primary.model_copy(deep=True)
+        page.warnings.extend(warnings or [])
+        page.warnings.append(
+            PipelineWarning(
+                code="full_table_visual_fallback_skipped",
+                message=(
+                    "no validated GLM or full-table visual replacement was adopted; "
+                    "the primary page was retained"
+                ),
+                page_number=primary.page_number,
+                backend=primary.backend,
+                details={"reasons": list(dict.fromkeys(reasons))},
+            )
+        )
+        page.status = PageStatus.WARNING
+        if budget is not None:
+            diagnostics = page.diagnostics or PageDiagnostics(source_kind=evidence.source_kind)
+            diagnostics.visual_fusion = VisualFusionDiagnostics(
+                routing_decision="qwen_full_table",
+                qwen_calls=budget.calls,
+                qwen_duration_ms=budget.duration_ms,
+                visual_regions=len(evidence.grid_regions) or 1,
+                table_count=0,
+                extracted_cells=0,
+                agreed_cells=0,
+                qwen_selected_fields=0,
+                qwen_resolved_conflicts=0,
+                unresolved_conflicts=1,
+                truncated_calls=budget.truncated_calls,
+                partitions=partition_attempts,
+            )
+            diagnostics.quality_verdict = QualityVerdict.UNTRUSTED
+            page.diagnostics = diagnostics
+        return VisualFusionOutcome(
+            page=page,
+            fragments=list(docling_fragments),
+            ir=VisualPageIR(
+                page_number=primary.page_number,
+                rotation_degrees=evidence.detected_rotation_degrees or 0,
+            ),
+        )
+
     async def fuse_table_page(
         self,
         source: StoredSource,
@@ -2002,8 +2138,36 @@ class VisualFusionService:
                 assessment,
                 allow_qwen=allow_qwen,
             )
-        if not allow_qwen:
-            raise ParserError("full-table Qwen fallback is unavailable")
+        if not (allow_qwen and self.table_full_enabled):
+            if assessment.fragments and all(
+                self._has_usable_table_topology(fragment)
+                for fragment in assessment.fragments
+            ):
+                return await self._use_glm_table_candidate(
+                    source,
+                    options,
+                    primary,
+                    evidence,
+                    glm_page,
+                    glm_fragments,
+                    GlmTableAssessment(
+                        route="full",
+                        fragments=assessment.fragments,
+                        reasons=assessment.reasons,
+                    ),
+                    allow_qwen=False,
+                )
+            reason = (
+                "full_table_qwen_disabled"
+                if not self.table_full_enabled
+                else "full_table_qwen_unavailable"
+            )
+            return self._retain_primary_table_candidate(
+                primary,
+                evidence,
+                docling_fragments,
+                reasons=[*assessment.reasons, reason],
+            )
         budget = _CallBudget(
             max_calls=self.max_calls,
             deadline=time.monotonic() + self.page_budget_seconds,
@@ -2186,39 +2350,194 @@ class VisualFusionService:
                 )
             )
         fragments = self._render_fragments(primary.page_number, tables)
-        if not fragments:
+        if self.glm_table_gate_enabled:
+            qwen_assessment = self.assess_glm_table_candidate(fragments)
+        else:
+            normalized_qwen = self._normalized_glm_fragments(fragments)
+            qwen_assessment = GlmTableAssessment(
+                route=(
+                    "accept"
+                    if normalized_qwen
+                    and all(
+                        self._has_usable_table_topology(fragment)
+                        for fragment in normalized_qwen
+                    )
+                    else "full"
+                ),
+                fragments=normalized_qwen,
+                reasons=[] if normalized_qwen else ["missing_qwen_table"],
+            )
+        normalized_docling = self._normalized_glm_fragments(docling_fragments)
+        validated_source_sets = [
+            candidates
+            for candidates in (assessment.fragments, normalized_docling)
+            if candidates
+            and all(
+                self._has_usable_table_topology(fragment) for fragment in candidates
+            )
+        ]
+        complete_table_set = not validated_source_sets or all(
+            len(fragments) == len(source_fragments)
+            for source_fragments in validated_source_sets
+        )
+        complete_table_columns = not validated_source_sets or (
+            complete_table_set
+            and all(
+                all(
+                    qwen_fragment.num_cols == source_fragment.num_cols
+                    for qwen_fragment, source_fragment in zip(
+                        fragments,
+                        source_fragments,
+                        strict=True,
+                    )
+                )
+                for source_fragments in validated_source_sets
+            )
+        )
+        complete_table_rows = not validated_source_sets or (
+            complete_table_set
+            and all(
+                all(
+                    qwen_fragment.num_rows == source_fragment.num_rows
+                    for qwen_fragment, source_fragment in zip(
+                        fragments,
+                        source_fragments,
+                        strict=True,
+                    )
+                )
+                for source_fragments in validated_source_sets
+            )
+        )
+        qwen_validated = bool(
+            fragments
+            and qwen_assessment.route == "accept"
+            and complete_table_set
+            and complete_table_columns
+            and complete_table_rows
+            and not warnings
+            and unresolved == 0
+        )
+        if not qwen_validated:
+            rejection_reasons = [
+                *qwen_assessment.reasons,
+                *(warning.code for warning in warnings),
+            ]
+            if unresolved:
+                rejection_reasons.append("unresolved_visual_conflict")
+            if not complete_table_set:
+                rejection_reasons.append("source_table_count_mismatch")
+            else:
+                if not complete_table_columns:
+                    rejection_reasons.append("source_table_shape_mismatch")
+                if not complete_table_rows:
+                    rejection_reasons.append("source_table_row_count_mismatch")
+            if not fragments:
+                rejection_reasons.append("missing_qwen_table")
             warnings.append(
                 PipelineWarning(
-                    code="visual_fusion_partial",
-                    message="visual fusion produced no complete table region",
+                    code="qwen_full_table_rejected",
+                    message=(
+                        "the full-table Qwen result did not pass post-validation and was not adopted"
+                    ),
                     page_number=primary.page_number,
                     backend=self.qwen.name,
-                    details={"region_id": "table-region-1", "count": partition_attempts},
+                    details={"reasons": list(dict.fromkeys(rejection_reasons))},
                 )
             )
-            page = primary.model_copy(deep=True)
-        else:
-            page = primary.model_copy(deep=True)
-            page.content = self._replace_table_regions(
-                primary,
-                glm_page,
-                glm_fragments,
-                fragments,
-                page_metadata=page_metadata,
-                discard_unlocalized_scanned_text=(
-                    evidence.source_kind.value == "scanned"
-                    and rotation in {90, 270}
-                    and parallel_hint
-                    and (bbox[2] - bbox[0]) * (bbox[3] - bbox[1]) >= 0.5
-                ),
+            valid_glm_fragments = bool(assessment.fragments) and all(
+                self._has_usable_table_topology(fragment)
+                for fragment in assessment.fragments
             )
-            page.plain_text = None
-            page.backend = "visual-fusion"
-            page.warnings = [
-                warning
-                for warning in page.warnings
-                if warning.code not in self._RESOLVED_WARNING_CODES
-            ]
+            valid_docling_fragments = bool(normalized_docling) and all(
+                self._has_usable_table_topology(fragment)
+                for fragment in normalized_docling
+            )
+
+            def source_coverage(source_fragments: list[TableFragment]) -> tuple[int, int, int]:
+                return (
+                    sum(
+                        sum(bool(_normalized(cell)) for row in fragment.rows for cell in row)
+                        for fragment in source_fragments
+                    ),
+                    sum(fragment.num_rows * fragment.num_cols for fragment in source_fragments),
+                    len(source_fragments),
+                )
+
+            prefer_glm_fallback = valid_glm_fragments and (
+                not valid_docling_fragments
+                or source_coverage(assessment.fragments)
+                >= source_coverage(normalized_docling)
+            )
+            if prefer_glm_fallback:
+                fallback = await self._use_glm_table_candidate(
+                    source,
+                    options,
+                    primary,
+                    evidence,
+                    glm_page,
+                    glm_fragments,
+                    GlmTableAssessment(
+                        route="full",
+                        fragments=assessment.fragments,
+                        reasons=[*assessment.reasons, "qwen_full_table_rejected"],
+                    ),
+                    allow_qwen=False,
+                )
+                fallback.page.warnings.extend(warnings)
+                fallback.page.status = PageStatus.WARNING
+                diagnostics = fallback.page.diagnostics
+                if diagnostics is not None and diagnostics.visual_fusion is not None:
+                    diagnostics.visual_fusion.qwen_calls = budget.calls
+                    diagnostics.visual_fusion.qwen_duration_ms = budget.duration_ms
+                    diagnostics.visual_fusion.truncated_calls = budget.truncated_calls
+                    diagnostics.visual_fusion.partitions = partition_attempts
+                    diagnostics.quality_verdict = QualityVerdict.DEGRADED
+                return fallback
+            return self._retain_primary_table_candidate(
+                primary,
+                evidence,
+                docling_fragments,
+                reasons=[*assessment.reasons, *rejection_reasons],
+                warnings=warnings,
+                budget=budget,
+                partition_attempts=partition_attempts,
+            )
+
+        if qwen_selected:
+            warnings.append(
+                PipelineWarning(
+                    code="qwen_full_table_unverified_values",
+                    message=(
+                        "the explicitly enabled full-table result contains values without "
+                        "independent OCR agreement"
+                    ),
+                    page_number=primary.page_number,
+                    backend=self.qwen.name,
+                    details={"count": qwen_selected},
+                )
+            )
+
+        page = primary.model_copy(deep=True)
+        page.content = self._replace_table_regions(
+            primary,
+            glm_page,
+            glm_fragments,
+            fragments,
+            page_metadata=page_metadata,
+            discard_unlocalized_scanned_text=(
+                evidence.source_kind.value == "scanned"
+                and rotation in {90, 270}
+                and parallel_hint
+                and (bbox[2] - bbox[0]) * (bbox[3] - bbox[1]) >= 0.5
+            ),
+        )
+        page.plain_text = None
+        page.backend = "visual-fusion"
+        page.warnings = [
+            warning
+            for warning in page.warnings
+            if warning.code not in self._RESOLVED_WARNING_CODES
+        ]
         page.warnings.extend(warnings)
         page.status = PageStatus.WARNING if warnings else PageStatus.COMPLETED
         diagnostics = page.diagnostics or PageDiagnostics(source_kind=evidence.source_kind)

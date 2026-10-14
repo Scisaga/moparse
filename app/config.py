@@ -140,6 +140,11 @@ class Settings(BaseSettings):
     visual_router_enabled: bool = True
 
     vlm_enabled: bool = False
+    # PDF visual routes are independently gated so deployments can keep the
+    # shared VLM available for media while avoiding expensive page-wide calls.
+    vlm_signature_enabled: bool = False
+    vlm_table_full_enabled: bool = False
+    vlm_table_targeted_enabled: bool = True
     vlm_base_url: str = "http://5090-host:11434/v1"
     vlm_api_key: OptionalSecret = "ollama"
     vlm_model: str = "qwen3.6-docparse:35b-32k"
@@ -265,6 +270,9 @@ class Settings(BaseSettings):
             "glm_table_gate_enabled": self.glm_table_gate_enabled,
             "visual_router_enabled": self.visual_router_enabled,
             "vlm_enabled": self.vlm_enabled,
+            "vlm_signature_enabled": self.vlm_signature_enabled,
+            "vlm_table_full_enabled": self.vlm_table_full_enabled,
+            "vlm_table_targeted_enabled": self.vlm_table_targeted_enabled,
         }
 
 

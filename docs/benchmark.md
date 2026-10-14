@@ -43,8 +43,9 @@ or upstream component cannot observe them reliably.
 
 Performance release gates are: `scan_policy=auto` native numeric pages p95 no more than
 10% above the fixed baseline; automatically routed complex pages p95 no more than about
-2x baseline; and no single VLM table page above 120 seconds. A page timeout must
-stop later candidates while retaining the primary page with a warning.
+2x baseline; and each targeted table repair must use at most one VLM call. Signature-page
+and full-table VLM call counts must remain zero under default configuration. A page timeout
+must stop later candidates while retaining the primary page with a warning.
 
 ## HTTP smoke benchmark
 

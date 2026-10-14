@@ -3,6 +3,7 @@ from __future__ import annotations
 import asyncio
 from pathlib import Path
 from types import SimpleNamespace
+from unittest.mock import AsyncMock
 
 import pytest
 
@@ -246,6 +247,113 @@ async def test_scan_policy_controls_selective_visual_fusion(monkeypatch) -> None
         document_id="docparse_auto",
     )
     assert calls == 1
+
+
+async def test_signature_vlm_disabled_by_default_does_not_probe_or_call_qwen() -> None:
+    service = ParserService(
+        SimpleNamespace(
+            parser_workers=1,
+            content_timeout_seconds=1.0,
+            visual_router_enabled=True,
+            glm_sdk_enabled=False,
+            vlm_enabled=True,
+            vlm_signature_enabled=False,
+        )
+    )
+    qwen_probe = AsyncMock(side_effect=AssertionError("signature page must not probe Qwen"))
+    service.vlm_parser = SimpleNamespace(
+        enabled=True,
+        name="ollama-vlm",
+        probe=qwen_probe,
+    )
+    parsed = result(
+        "docparse_signature_without_qwen",
+        "法定代表人：张三\n\n<!-- image -->",
+    )
+    parsed.pages[0].diagnostics = PageDiagnostics(source_kind=PageSourceKind.SCANNED)
+    evidence = PageEvidence(
+        page_number=1,
+        source_kind=PageSourceKind.SCANNED,
+        image_coverage_ratio=0.5,
+    )
+    original_content = parsed.pages[0].content
+
+    assert service._complex_visual_targets(parsed, {1: evidence}) == {}
+    await service._apply_visual_fusion(
+        parsed,
+        stored_source(),
+        ContentParseOptions(scan_policy=ScanPolicy.AUTO),
+        {1: evidence},
+        document_id=parsed.document_id,
+        cancel_event=None,
+    )
+
+    qwen_probe.assert_not_awaited()
+    assert parsed.pages[0].content == original_content
+    assert parsed._vlm_page_numbers == set()
+
+
+def test_signature_vlm_can_be_explicitly_enabled_for_internal_routing() -> None:
+    service = ParserService(
+        SimpleNamespace(
+            parser_workers=1,
+            visual_router_enabled=True,
+            vlm_signature_enabled=True,
+        )
+    )
+    parsed = result("docparse_signature_opt_in", "法定代表人：张三\n\n<!-- image -->")
+    parsed.pages[0].diagnostics = PageDiagnostics(source_kind=PageSourceKind.SCANNED)
+    evidence = PageEvidence(
+        page_number=1,
+        source_kind=PageSourceKind.SCANNED,
+        image_coverage_ratio=0.5,
+    )
+
+    assert service._complex_visual_targets(parsed, {1: evidence}) == {1: "signature"}
+
+
+async def test_disabled_full_table_route_does_not_probe_qwen_or_report_it_unavailable() -> None:
+    service = ParserService(
+        SimpleNamespace(
+            parser_workers=1,
+            content_timeout_seconds=1.0,
+            visual_router_enabled=True,
+            glm_sdk_enabled=False,
+            vlm_enabled=True,
+            vlm_table_full_enabled=False,
+            vlm_table_targeted_enabled=True,
+            vlm_signature_enabled=False,
+        )
+    )
+    qwen_probe = AsyncMock(side_effect=AssertionError("disabled full route must not probe Qwen"))
+    service.vlm_parser = SimpleNamespace(
+        enabled=True,
+        name="ollama-vlm",
+        probe=qwen_probe,
+    )
+    parsed = result("docparse_full_without_qwen", "扫描表正文")
+    parsed.pages[0].diagnostics = PageDiagnostics(source_kind=PageSourceKind.SCANNED)
+    evidence = PageEvidence(
+        page_number=1,
+        source_kind=PageSourceKind.SCANNED,
+        horizontal_grid_lines=4,
+        vertical_grid_lines=4,
+        grid_area_ratio=0.5,
+        grid_regions=[(0.1, 0.2, 0.9, 0.8)],
+    )
+
+    await service._apply_visual_fusion(
+        parsed,
+        stored_source(),
+        ContentParseOptions(scan_policy=ScanPolicy.AUTO),
+        {1: evidence},
+        document_id=parsed.document_id,
+        cancel_event=None,
+    )
+
+    qwen_probe.assert_not_awaited()
+    assert parsed.pages[0].content == "扫描表正文"
+    assert not any(warning.code == "visual_fusion_unavailable" for warning in parsed.warnings)
 
 
 def test_skip_scan_policy_removes_unbound_ocr_and_retains_full_page_asset() -> None:
