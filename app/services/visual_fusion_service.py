@@ -41,7 +41,7 @@ from app.parsers.ollama_vlm import (
     VlmResponseTruncatedError,
 )
 from app.services.evidence_service import PageEvidence
-from app.services.table_service import TableFragment, render_gfm_rows
+from app.services.table_service import TableCellFragment, TableFragment, render_gfm_rows
 from app.utils.settings import setting
 
 _COMPACT = re.compile(r"\s+")
@@ -705,6 +705,13 @@ class VisualFusionService:
         half = fragment.num_cols // 2
         if not fragment.rows or len(fragment.rows[0]) < fragment.num_cols:
             return [fragment]
+        if any(
+            any(str(value or "").strip() for value in row[fragment.num_cols :])
+            for row in fragment.rows
+        ):
+            # Keep undeclared source values for the topology-conflict gate;
+            # slicing first would erase the evidence before validation.
+            return [fragment]
         left_header = [_normalized(value) for value in fragment.rows[0][:half]]
         right_header = [_normalized(value) for value in fragment.rows[0][half:]]
         # A large even column count is not evidence that the page contains two
@@ -713,12 +720,31 @@ class VisualFusionService:
         # corrupted into unrelated halves.
         if not left_header[0] or left_header != right_header:
             return [fragment]
+        if any(
+            cell.column < half < cell.column + cell.column_span
+            or cell.column < 0
+            or cell.column + cell.column_span > fragment.num_cols
+            for cell in fragment.cells
+        ):
+            # A shared merged cell is source evidence that the two halves
+            # cannot be treated as independent tables.
+            return [fragment]
         split: list[TableFragment] = []
         left, top, right, bottom = fragment.normalized_bbox
+        boundaries = fragment.column_boundaries or []
+        source_boundaries = (
+            len(boundaries) == fragment.num_cols + 1
+            and all(a <= b for a, b in zip(boundaries, boundaries[1:], strict=False))
+            and left <= boundaries[0]
+            and boundaries[-1] <= right
+            and left < boundaries[half] < right
+        )
+        middle = boundaries[half] if source_boundaries else (left + right) / 2
         for index, column_slice in enumerate((slice(0, half), slice(half, fragment.num_cols))):
             rows = [row[column_slice] for row in fragment.rows]
-            bbox_left = left + (right - left) * index / 2
-            bbox_right = left + (right - left) * (index + 1) / 2
+            start_column = index * half
+            bbox_left = left if index == 0 else middle
+            bbox_right = middle if index == 0 else right
             split.append(
                 TableFragment(
                     fragment_id=f"{fragment.fragment_id}_part{index + 1}",
@@ -728,10 +754,14 @@ class VisualFusionService:
                     num_rows=len(rows),
                     num_cols=half,
                     rows=rows,
-                    column_boundaries=[
-                        round(bbox_left + (bbox_right - bbox_left) * value / half, 6)
-                        for value in range(half + 1)
-                    ],
+                    column_boundaries=(
+                        list(boundaries[start_column : start_column + half + 1])
+                        if source_boundaries
+                        else [
+                            round(bbox_left + (bbox_right - bbox_left) * value / half, 6)
+                            for value in range(half + 1)
+                        ]
+                    ),
                     markdown=render_gfm_rows(rows),
                     rendered="",
                     valid=fragment.valid,
@@ -741,6 +771,16 @@ class VisualFusionService:
                     caption=fragment.caption,
                     unit_text=fragment.unit_text,
                     source_kind=fragment.source_kind,
+                    header_scope_complete=fragment.header_scope_complete,
+                    cells=[
+                        replace(cell, column=cell.column - start_column)
+                        for cell in fragment.cells
+                        if start_column <= cell.column < start_column + half
+                    ],
+                    cell_evidence=[
+                        [dict(cell) for cell in row[column_slice]]
+                        for row in fragment.cell_evidence
+                    ],
                     visual_obstructions=list(fragment.visual_obstructions),
                     physical_num_rows=fragment.physical_num_rows or fragment.num_rows,
                     source_row_indices=(
@@ -751,6 +791,34 @@ class VisualFusionService:
                 )
             )
         return split
+
+    @staticmethod
+    def _cells_after_row_selection(
+        fragment: TableFragment,
+        kept_indices: list[int],
+        rows: list[list[str]],
+    ) -> list[TableCellFragment]:
+        """Keep source rectangles while indexing the retained logical rows."""
+        row_mapping = {old_row: new_row for new_row, old_row in enumerate(kept_indices)}
+        cells: list[TableCellFragment] = []
+        for cell in fragment.cells:
+            surviving_rows = [
+                row_mapping[row]
+                for row in range(cell.row, cell.row + cell.row_span)
+                if row in row_mapping
+            ]
+            if not surviving_rows:
+                continue
+            anchor = surviving_rows[0]
+            cells.append(
+                replace(
+                    cell,
+                    row=anchor,
+                    row_span=len(surviving_rows),
+                    text=rows[anchor][cell.column],
+                )
+            )
+        return cells
 
     @staticmethod
     def _has_usable_table_topology(fragment: TableFragment) -> bool:
@@ -851,24 +919,59 @@ class VisualFusionService:
         normalized: list[TableFragment] = []
         for fragment in fragments:
             for part in cls._split_wide_fragment(fragment):
+                if any(
+                    any(str(value or "").strip() for value in row[part.num_cols :])
+                    for row in part.rows
+                ) or any(
+                    cell.row < 0
+                    or cell.column < 0
+                    or cell.row_span < 1
+                    or cell.column_span < 1
+                    or cell.row + cell.row_span > len(part.rows)
+                    or cell.column + cell.column_span > part.num_cols
+                    for cell in part.cells
+                ):
+                    normalized.append(
+                        replace(
+                            part,
+                            valid=False,
+                            invalid_reasons=[*part.invalid_reasons, "table_cell_topology_invalid"],
+                        )
+                    )
+                    continue
                 financial = cls._is_financial_fragment(part)
                 rows: list[list[str]] = []
                 source_row_indices: list[int] = []
+                kept_indices: list[int] = []
+                cells_by_row: dict[int, list[TableCellFragment]] = defaultdict(list)
+                for cell in part.cells:
+                    cells_by_row[cell.row].append(cell)
                 physical_indices = part.source_row_indices or list(range(len(part.rows)))
-                for physical_index, raw_row in zip(physical_indices, part.rows, strict=True):
+                for row_index, (physical_index, raw_row) in enumerate(
+                    zip(physical_indices, part.rows, strict=True)
+                ):
                     row = [str(cell or "").strip() for cell in raw_row]
                     row.extend([""] * (part.num_cols - len(row)))
                     row = row[: part.num_cols]
+                    for cell in cells_by_row.get(row_index, []):
+                        if cell.text.strip() and not row[cell.column]:
+                            row[cell.column] = cell.text.strip()
                     if rows and not any(_normalized(cell) for cell in row):
                         continue
                     if financial and len(row) >= 2:
                         row[1] = cls._normalize_financial_note(row[1])
                     rows.append(row)
+                    kept_indices.append(row_index)
                     source_row_indices.append(physical_index)
                 if not rows:
                     continue
                 markdown = render_gfm_rows(rows)
                 marker = f"<!-- table-fragment: {part.fragment_id} -->"
+                prelude = [marker]
+                if part.caption:
+                    prelude.append(f"## {part.caption}")
+                if part.unit_text:
+                    prelude.append(part.unit_text)
                 normalized.append(
                     replace(
                         part,
@@ -876,7 +979,27 @@ class VisualFusionService:
                         rows=rows,
                         num_rows=len(rows),
                         markdown=markdown,
-                        rendered=f"{marker}\n\n{markdown}",
+                        rendered="\n\n".join([*prelude, markdown]),
+                        cells=cls._cells_after_row_selection(part, kept_indices, rows),
+                        cell_evidence=(
+                            [
+                                [
+                                    {
+                                        **(
+                                            part.cell_evidence[row_index][column]
+                                            if row_index < len(part.cell_evidence)
+                                            and column < len(part.cell_evidence[row_index])
+                                            else {}
+                                        ),
+                                        "final": rows[logical_row][column],
+                                    }
+                                    for column in range(part.num_cols)
+                                ]
+                                for logical_row, row_index in enumerate(kept_indices)
+                            ]
+                            if part.cell_evidence
+                            else []
+                        ),
                         physical_num_rows=part.physical_num_rows or part.num_rows,
                         source_row_indices=source_row_indices,
                     )
@@ -1764,6 +1887,39 @@ class VisualFusionService:
         output: list[TableFragment] = []
         for fragment, table in zip(originals, tables, strict=True):
             rows = [table.columns, *table.rows]
+            topology_changed = bool(fragment.cells) and (
+                len(rows) != fragment.num_rows
+                or len(table.columns) != fragment.num_cols
+                or any(len(row) != fragment.num_cols for row in rows)
+            )
+            span_conflicts = {
+                (cell.row, cell.column)
+                for cell in fragment.cells
+                if not topology_changed
+                and any(
+                    rows[row][column].strip()
+                    for row in range(cell.row, cell.row + cell.row_span)
+                    for column in range(cell.column, cell.column + cell.column_span)
+                    if (row, column) != (cell.row, cell.column)
+                )
+            }
+            # A value newly emitted inside a merged continuation is a topology
+            # conflict. Do not let its old rectangle hide that nonempty text in
+            # the IR; the candidate gate must reject the ambiguous structure.
+            cells = (
+                []
+                if topology_changed
+                else [
+                    cell
+                    for cell in VisualFusionService._cells_after_row_selection(
+                        fragment, list(range(len(rows))), rows
+                    )
+                    if (cell.row, cell.column) not in span_conflicts
+                ]
+            )
+            invalid_reasons = list(fragment.invalid_reasons)
+            if topology_changed or span_conflicts:
+                invalid_reasons.append("table_cell_span_conflict")
             markdown = render_gfm_rows(rows)
             marker = f"<!-- table-fragment: {fragment.fragment_id} -->"
             prelude: list[str] = []
@@ -1782,6 +1938,11 @@ class VisualFusionService:
                     rendered=rendered,
                     source_kind="glm_qwen_targeted" if targeted else "glm",
                     cell_evidence=[table.column_evidence, *table.evidence],
+                    cells=cells,
+                    valid=fragment.valid and not (topology_changed or span_conflicts),
+                    invalid_reasons=invalid_reasons,
+                    caption=table.title,
+                    unit_text=table.unit,
                 )
             )
         return output

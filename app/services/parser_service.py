@@ -10,6 +10,7 @@ import unicodedata
 from collections import Counter
 from dataclasses import dataclass, field
 from difflib import SequenceMatcher
+from html import unescape
 from pathlib import Path
 
 from app.models.backend import BackendStatus
@@ -38,6 +39,7 @@ from app.parsers import (
     ParserUnavailableError,
     ProgressCallback,
 )
+from app.parsers.glm_sdk_remote import _markdown_table_rows
 from app.security.file_validation import (
     DOCX_MIME,
     IMAGE_MIME_TYPES,
@@ -333,7 +335,9 @@ class ParserService:
         )
 
     @staticmethod
-    def _refresh_table_fragment_renderings(result: DocumentParseResult) -> None:
+    def _refresh_table_fragment_renderings(
+        result: DocumentParseResult, *, native_glyph_pages: set[int] | None = None
+    ) -> None:
         """Keep fragment byte references aligned after deterministic text normalization."""
 
         pages = {page.page_number: page for page in result.pages}
@@ -354,6 +358,54 @@ class ParserService:
             if match is None:
                 continue
             markdown = match.group("table").rstrip()
+            if isinstance(fragment, TableFragment):
+                rows = [[unescape(value) for value in row] for row in _markdown_table_rows(markdown)]
+                if len(rows) == fragment.num_rows and all(
+                    len(row) == fragment.num_cols for row in rows
+                ):
+                    for cell in fragment.cells:
+                        if not (0 <= cell.row < len(rows) and 0 <= cell.column < len(rows[cell.row])):
+                            continue
+                        text = rows[cell.row][cell.column]
+                        if re.sub(r"\s+", "", text) == re.sub(r"\s+", "", cell.text):
+                            continue
+                        while len(fragment.cell_evidence) < fragment.num_rows:
+                            fragment.cell_evidence.append([])
+                        for evidence_row in fragment.cell_evidence:
+                            while len(evidence_row) < fragment.num_cols:
+                                evidence_row.append({})
+                        evidence = fragment.cell_evidence[cell.row][cell.column]
+                        evidence.setdefault(fragment.source_kind, cell.text)
+                        origin = (
+                            "native" if page_number in (native_glyph_pages or set())
+                            else fragment.source_kind
+                        )
+                        evidence[f"{origin}_normalized"] = text
+                        evidence["final"] = text
+                        cell.text = text
+                        fragment.rows[cell.row][cell.column] = text
+                    explicit = {(cell.row, cell.column) for cell in fragment.cells}
+                    for row_index, values in enumerate(rows):
+                        for column, text in enumerate(values):
+                            if (row_index, column) in explicit:
+                                continue
+                            previous = fragment.rows[row_index][column]
+                            if re.sub(r"\s+", "", text) == re.sub(r"\s+", "", previous):
+                                continue
+                            while len(fragment.cell_evidence) < fragment.num_rows:
+                                fragment.cell_evidence.append([])
+                            for evidence_row in fragment.cell_evidence:
+                                while len(evidence_row) < fragment.num_cols:
+                                    evidence_row.append({})
+                            evidence = fragment.cell_evidence[row_index][column]
+                            evidence.setdefault(fragment.source_kind, previous)
+                            origin = (
+                                "native" if page_number in (native_glyph_pages or set())
+                                else fragment.source_kind
+                            )
+                            evidence[f"{origin}_normalized"] = text
+                            evidence["final"] = text
+                            fragment.rows[row_index][column] = text
             fragment.markdown = markdown  # type: ignore[attr-defined]
             fragment.rendered = f"{marker}\n\n{markdown}"  # type: ignore[attr-defined]
 
@@ -1647,6 +1699,9 @@ class ParserService:
                                     if warning.code != "suspicious_unicode_glyphs"
                                 ]
                         if glyph_repaired_pages:
+                            self._refresh_table_fragment_renderings(
+                                result, native_glyph_pages=set(glyph_repaired_pages)
+                            )
                             result.warnings.append(
                                 PipelineWarning(
                                     code="native_glyph_repaired",

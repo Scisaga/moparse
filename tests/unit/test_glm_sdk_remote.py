@@ -7,6 +7,7 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import httpx
+import pytest
 from PIL import Image
 
 from app.models import (
@@ -14,7 +15,8 @@ from app.models import (
     ContentParseOptions,
     StoredSource,
 )
-from app.parsers.glm_sdk_remote import GlmSdkRemoteParser
+from app.parsers.glm_sdk_remote import GlmSdkRemoteParser, _html_table_rows
+from app.services.ir_service import DocumentIRService
 from app.services.table_service import TableFragment
 
 
@@ -99,9 +101,124 @@ async def test_sdk_adapter_renders_region_json_and_table_spans(native_pdf: Path)
         ["收入", "100", "90"],
     ]
     assert table.has_column_header is True
+    assert table.header_row_indices == (0, 1)
+    internal = DocumentIRService._table(table)
+    assert internal.header_rows == [0, 1]
+    assert internal.source_units == [1]
+    assert len(internal.cells) == 7
+    project = next(cell for cell in internal.cells if cell.text == "项目")
+    amount = next(cell for cell in internal.cells if cell.text == "金额")
+    assert (project.row_span, project.column_span, project.is_column_header) == (2, 1, True)
+    assert (amount.row_span, amount.column_span, amount.is_column_header) == (1, 2, True)
+    assert all(cell.provenance.selected_source.value == "glm" for cell in internal.cells)
     assert table.visual_obstructions == [(0.7, 0.7, 0.95, 0.9)]
     assert result.route_summary.ocr_regions == 3
     await client.aclose()
+
+
+def _html_fragment(content: str) -> TableFragment | None:
+    return GlmSdkRemoteParser._table_fragment(
+        {"content": content, "bbox_2d": [50, 100, 950, 800]}, page_number=7, ordinal=1
+    )
+
+
+def test_html_spans_survive_in_ir_with_units_and_signed_values() -> None:
+    fragment = _html_fragment(
+        "<table><tr><th colspan='2'>筹资方式（万元）</th><th>金额</th></tr>"
+        "<tr><td rowspan='3' colspan='2'>发行<br/>股票</td><td>12.30</td></tr>"
+        "<tr><td>-5.00</td></tr><tr><td>7.30</td></tr></table>"
+    )
+
+    assert fragment is not None
+    assert fragment.rows == [
+        ["筹资方式（万元）", "", "金额"],
+        ["发行 股票", "", "12.30"],
+        ["", "", "-5.00"],
+        ["", "", "7.30"],
+    ]
+    table = DocumentIRService._table(fragment)
+    merged = next(cell for cell in table.cells if cell.text == "发行 股票")
+    assert (merged.row, merged.column, merged.row_span, merged.column_span) == (1, 0, 3, 2)
+    assert table.source_units == [7]
+    assert [cell.text for cell in table.cells] == [
+        "筹资方式（万元）", "金额", "发行 股票", "12.30", "-5.00", "7.30"
+    ]
+    assert "筹资方式（万元）" in fragment.markdown
+    assert fragment.markdown.count("发行 股票") == 1
+    assert fragment.markdown.count("-5.00") == 1
+
+
+def test_html_empty_explicit_rows_do_not_shift_later_cell_ownership() -> None:
+    content = (
+        "<table><tr><th colspan='2'>事项</th></tr>"
+        "<tr><td rowspan='3' colspan='2'>事项甲</td></tr>"
+        "<tr></tr><tr></tr><tr><td>事项乙</td><td>17</td></tr>"
+        "<tr></tr></table>"
+    )
+    fragment = _html_fragment(content)
+
+    assert fragment is not None
+    assert (fragment.num_rows, fragment.num_cols) == (6, 2)
+    assert fragment.rows == [
+        ["事项", ""], ["事项甲", ""], ["", ""], ["", ""], ["事项乙", "17"], ["", ""]
+    ]
+    table = DocumentIRService._table(fragment)
+    later = next(cell for cell in table.cells if cell.text == "事项乙")
+    assert (later.row, later.column) == (4, 0)
+    assert not any(cell.row in (2, 3) for cell in table.cells)
+    # The legacy helper still returns the same two-value text/header view.
+    assert _html_table_rows(content) == (fragment.rows, True)
+
+
+def test_html_explicit_row_header_scope_does_not_expand_column_header_band() -> None:
+    fragment = _html_fragment(
+        "<table><tr><th>类别</th><th>金额（元）</th></tr>"
+        "<tr><th scope='rowgroup' rowspan='2'>类别甲</th><td>0.2907</td></tr>"
+        "<tr><td>0.3042</td></tr></table>"
+    )
+
+    assert fragment is not None
+    assert fragment.header_row_indices == (0,)
+    table = DocumentIRService._table(fragment)
+    row_header = next(cell for cell in table.cells if cell.text == "类别甲")
+    assert (row_header.row_span, row_header.is_row_header, row_header.is_column_header) == (
+        2, True, False
+    )
+    assert [cell.text for cell in table.cells if not cell.is_column_header] == [
+        "类别甲", "0.2907", "0.3042"
+    ]
+
+
+def test_html_colspan_collision_with_prior_rowspan_keeps_raw_source() -> None:
+    content = (
+        "<table><tr><td>甲</td><td rowspan='2'>乙</td></tr>"
+        "<tr><td colspan='2'>丙</td></tr></table>"
+    )
+
+    assert _html_table_rows(content) == ([], False)
+    assert _html_fragment(content) is None
+    markdown, fragments = GlmSdkRemoteParser._render_regions(
+        [{"label": "table", "content": content, "bbox_2d": [50, 100, 950, 800]}], 7
+    )
+    assert not fragments
+    assert markdown == content
+
+
+@pytest.mark.parametrize(
+    "content",
+    [
+        "<table><tr><td rowspan='2001'>甲</td></tr></table>",
+        "<table><tr><td colspan='101'>甲</td></tr></table>",
+        "<table><tr><td>甲</td></tr><tr><td rowspan='2000'>乙</td></tr></table>",
+        "<table><tr><td rowspan='0'>甲</td></tr></table>",
+        "<table><tr><td colspan='-1'>甲</td></tr></table>",
+        "<table><tr><td rowspan='unknown'>甲</td></tr></table>",
+        "<table>" + "<tr><td>甲</td></tr>" * 2_001 + "</table>",
+    ],
+)
+def test_html_unproved_or_oversized_spans_are_not_clamped_into_false_topology(content: str) -> None:
+    assert _html_table_rows(content) == ([], False)
+    assert _html_fragment(content) is None
 
 
 async def test_pdf_page_is_physically_rotated_before_glm_submission(native_pdf: Path) -> None:

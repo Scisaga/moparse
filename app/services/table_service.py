@@ -46,6 +46,7 @@ class TableFragment:
     visual_obstructions: list[tuple[float, float, float, float]] = field(default_factory=list)
     physical_num_rows: int | None = None
     source_row_indices: list[int] = field(default_factory=list)
+    header_scope_complete: bool = True
 
     @property
     def header_signature(self) -> str:
@@ -63,7 +64,10 @@ class TableFragment:
         discontinuous or conflicting cell evidence therefore leaves the scope
         unknown and must not authorize cross-page header removal.
         """
-        if not self.valid or not self.has_column_header or not self.cells or not self.rows:
+        if (
+            not self.header_scope_complete or not self.valid
+            or not self.has_column_header or not self.cells or not self.rows
+        ):
             return ()
         if len(self.rows) != self.num_rows or any(len(row) != self.num_cols for row in self.rows):
             return ()
@@ -147,7 +151,8 @@ def _complete_header_signature(fragment: TableFragment) -> tuple[object, ...] | 
 
 
 def _escape_cell(value: str) -> str:
-    return html.escape(value.replace("\n", " ").strip(), quote=False).replace("|", "&#124;")
+    text = value.replace("\r\n", "\n").replace("\r", "\n").replace("\n", " ").strip()
+    return html.escape(text, quote=False).replace("|", "&#124;")
 
 
 def render_gfm_rows(rows: list[list[str]]) -> str:

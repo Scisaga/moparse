@@ -37,7 +37,7 @@ from app.models.parse_result import (
 )
 from app.models.source import StoredSource
 from app.parsers.base import DocumentParser, ParserCancelledError, ProgressCallback
-from app.services.table_service import TableFragment, render_gfm_rows
+from app.services.table_service import TableCellFragment, TableFragment, render_gfm_rows
 from app.utils.page_range import parse_page_range
 from app.utils.settings import setting
 
@@ -48,6 +48,7 @@ class _HtmlCell:
     row_span: int
     col_span: int
     header: bool
+    row_header: bool = False
 
 
 class _TableHtmlParser(HTMLParser):
@@ -61,17 +62,25 @@ class _TableHtmlParser(HTMLParser):
         self._cell_parts: list[str] = []
         self._row_span = 1
         self._col_span = 1
+        self._row_header = False
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
         tag = tag.casefold()
         if tag == "tr":
+            if self._row is not None or len(self.rows) >= 2_000:
+                raise ValueError("invalid HTML table rows")
             self._row = []
         elif tag in {"td", "th"} and self._row is not None:
+            if self._cell_tag is not None:
+                raise ValueError("nested HTML table cells")
             values = {key.casefold(): value for key, value in attrs}
             self._cell_tag = tag
             self._cell_parts = []
             self._row_span = _positive_span(values.get("rowspan"))
             self._col_span = _positive_span(values.get("colspan"))
+            self._row_header = tag == "th" and (values.get("scope") or "").casefold() in {
+                "row", "rowgroup"
+            }
         elif tag == "br" and self._cell_tag is not None:
             self._cell_parts.append("\n")
 
@@ -88,60 +97,91 @@ class _TableHtmlParser(HTMLParser):
                     row_span=self._row_span,
                     col_span=self._col_span,
                     header=tag == "th",
+                    row_header=self._row_header,
                 )
             )
             self._cell_tag = None
             self._cell_parts = []
         elif tag == "tr" and self._row is not None:
-            if self._row:
-                self.rows.append(self._row)
+            if self._cell_tag is not None:
+                raise ValueError("unclosed HTML table cell")
+            # A row fully covered by a preceding rowspan can legitimately have
+            # no cells. It still consumes a row index in the source table.
+            self.rows.append(self._row)
             self._row = None
 
 
 def _positive_span(value: str | None) -> int:
-    try:
-        parsed = int(value or "1")
-    except ValueError:
-        return 1
-    return max(1, min(parsed, 2_000))
+    parsed = int(value or "1")
+    if not 1 <= parsed <= 2_000:
+        raise ValueError("HTML table span out of bounds")
+    return parsed
 
 
-def _html_table_rows(content: str) -> tuple[list[list[str]], bool]:
+def _html_table_layout(
+    content: str,
+) -> tuple[list[list[str]], bool, list[TableCellFragment]]:
+    """Retain source HTML spans and reject ambiguous overlapping rectangles."""
     parser = _TableHtmlParser()
     try:
         parser.feed(content)
         parser.close()
     except (ValueError, TypeError):
-        return [], False
-    if not parser.rows or len(parser.rows) > 2_000:
-        return [], False
+        return [], False, []
+    if not parser.rows or parser._row is not None or len(parser.rows) > 2_000:
+        return [], False, []
     anchors: dict[tuple[int, int], str] = {}
     occupied: set[tuple[int, int]] = set()
     columns = 0
     has_header = False
+    layout: list[TableCellFragment] = []
     for row_index, cells in enumerate(parser.rows):
         column_index = 0
         for cell in cells:
             while (row_index, column_index) in occupied:
                 column_index += 1
-            if column_index + cell.col_span > 100:
-                return [], False
+            if column_index + cell.col_span > 100 or row_index + cell.row_span > 2_000:
+                return [], False, []
+            positions = {
+                (target_row, target_column)
+                for target_row in range(row_index, row_index + cell.row_span)
+                for target_column in range(column_index, column_index + cell.col_span)
+            }
+            # The anchor can be free while a later column of its colspan is
+            # covered by a preceding rowspan. Checking only the anchor loses
+            # the association between both source cells.
+            if occupied & positions:
+                return [], False, []
             anchors[(row_index, column_index)] = cell.text
-            has_header = has_header or (row_index == 0 and cell.header)
-            for target_row in range(row_index, row_index + cell.row_span):
-                if target_row >= 2_000:
-                    return [], False
-                for target_column in range(column_index, column_index + cell.col_span):
-                    occupied.add((target_row, target_column))
+            column_header = cell.header and not cell.row_header
+            has_header = has_header or (row_index == 0 and column_header)
+            occupied.update(positions)
+            layout.append(
+                TableCellFragment(
+                    row=row_index,
+                    column=column_index,
+                    row_span=cell.row_span,
+                    column_span=cell.col_span,
+                    text=cell.text,
+                    is_column_header=column_header,
+                    is_row_header=cell.row_header,
+                )
+            )
             columns = max(columns, column_index + cell.col_span)
             column_index += cell.col_span
-    total_rows = max((position[0] for position in occupied), default=-1) + 1
+    total_rows = max(len(parser.rows), max((position[0] for position in occupied), default=-1) + 1)
     if total_rows <= 0 or columns <= 0:
-        return [], False
+        return [], False, []
     rows = [
         [anchors.get((row_index, column_index), "") for column_index in range(columns)]
         for row_index in range(total_rows)
     ]
+    return rows, has_header, layout
+
+
+def _html_table_rows(content: str) -> tuple[list[list[str]], bool]:
+    """Compatibility view for callers that only need the anchored text grid."""
+    rows, has_header, _cells = _html_table_layout(content)
     return rows, has_header
 
 
@@ -345,8 +385,9 @@ class GlmSdkRemoteParser(DocumentParser):
         content = str(region.get("content", "") or "").strip()
         rows: list[list[str]]
         has_header = False
+        cells: list[TableCellFragment] = []
         if re.search(r"<table\b", content, re.IGNORECASE):
-            rows, has_header = _html_table_rows(content)
+            rows, has_header, cells = _html_table_layout(content)
         else:
             rows = _markdown_table_rows(content)
         bbox = region.get("bbox_2d")
@@ -374,6 +415,7 @@ class GlmSdkRemoteParser(DocumentParser):
             rendered=f"{marker}\n\n{markdown}",
             has_column_header=has_header,
             source_kind="glm",
+            cells=cells,
         )
 
     @classmethod

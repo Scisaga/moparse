@@ -36,6 +36,7 @@ from app.parsers.base import (
     ProgressCallback,
 )
 from app.parsers.glm_ocr_remote import GlmOcrRemoteAdapter
+from app.services.native_table_service import restore_missing_native_merged_cells
 from app.services.table_service import export_page_markdown, extract_table_fragments
 from app.utils.page_range import group_consecutive_pages, parse_page_range
 from app.utils.settings import setting
@@ -800,6 +801,7 @@ class DoclingStandardParser(DocumentParser):
         progress_callback: ProgressCallback | None,
         completed_count: int,
         total_pages: int,
+        source_path: Path | None = None,
     ) -> tuple[list[PageParseResult], list[PictureCandidate], list[object], int]:
         status_text = str(getattr(conversion, "status", "success")).lower()
         if status_text.endswith("failure") or status_text.endswith("skipped"):
@@ -814,6 +816,17 @@ class DoclingStandardParser(DocumentParser):
         error_messages = self._conversion_error_messages(conversion)
         picture_candidates = self._extract_picture_candidates(document, page_group)
         group_table_fragments = extract_table_fragments(document, page_group)
+        completeness_diagnostics: list[dict[str, Any]] = []
+        recovered_cells = (
+            await asyncio.to_thread(
+                restore_missing_native_merged_cells,
+                source_path,
+                group_table_fragments,
+                completeness_diagnostics,
+            )
+            if source_path is not None
+            else {}
+        )
         overlapping_duplicates = self._overlapping_text_duplicate_counts(document, page_group)
         parsed_pages: list[PageParseResult] = []
 
@@ -841,6 +854,38 @@ class DoclingStandardParser(DocumentParser):
                 )
                 page_warnings: list[PipelineWarning] = []
                 page_status = PageStatus.COMPLETED
+                recovered = {
+                    fragment.fragment_id: recovered_cells[fragment.fragment_id]
+                    for fragment in group_table_fragments
+                    if fragment.page_number == page_number
+                    and fragment.fragment_id in recovered_cells
+                }
+                if recovered:
+                    page_warnings.append(
+                        PipelineWarning(
+                            code="native_table_completeness_repaired",
+                            message="native text and drawn grid repaired table text or span omissions",
+                            severity=WarningSeverity.INFO,
+                            page_number=page_number,
+                            backend="pymupdf-native",
+                            details={"fragments": recovered},
+                        )
+                    )
+                unresolved = [
+                    item for item in completeness_diagnostics
+                    if item["page_number"] == page_number
+                ]
+                if unresolved:
+                    page_warnings.append(
+                        PipelineWarning(
+                            code="native_table_completeness_unresolved",
+                            message="source evidence could not safely resolve all table differences",
+                            severity=WarningSeverity.WARNING,
+                            page_number=page_number,
+                            backend="pymupdf-native",
+                            details={"fragments": unresolved},
+                        )
+                    )
                 if error_messages:
                     page_status = PageStatus.WARNING
                     page_warnings.append(
@@ -1011,6 +1056,7 @@ class DoclingStandardParser(DocumentParser):
                     progress_callback=progress_callback,
                     completed_count=completed_count,
                     total_pages=len(pages),
+                    source_path=source.path if source.mime_type == "application/pdf" else None,
                 )
                 parsed_pages.extend(group_pages)
                 picture_candidates.extend(group_pictures)
