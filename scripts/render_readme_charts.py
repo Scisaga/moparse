@@ -18,6 +18,7 @@ matplotlib.use("Agg")
 
 from matplotlib import font_manager  # noqa: E402
 from matplotlib import pyplot as plt
+from matplotlib.patches import Patch  # noqa: E402
 from matplotlib.ticker import PercentFormatter  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -95,89 +96,136 @@ def save(figure: plt.Figure, name: str, preview: Path | None) -> None:
     print(output.relative_to(ROOT))
 
 
-def quality(rows: list[list[int]], preview: Path | None) -> None:
-    figure, panels = plt.subplots(2, 2, figsize=(13.8, 8.2))
-    figure.subplots_adjust(left=0.17, right=0.965, top=0.81, bottom=0.18, wspace=0.7, hspace=0.7)
-    figure.text(0.04, 0.945, "固定标注集的质量对比", fontsize=22, weight="bold")
+def clean_axes(axis: plt.Axes) -> None:
+    axis.set_axisbelow(True)
+    axis.grid(axis="y", color="#e9eef5", linewidth=0.8)
+    axis.tick_params(axis="both", length=0, labelsize=13)
+    for name, spine in axis.spines.items():
+        spine.set_visible(name == "bottom")
+
+
+def time_bars(axis: plt.Axes, minutes: list[float]) -> None:
+    axis.bar(range(3), minutes, width=0.53, color=COLORS[:3], zorder=3)
+    axis.set_xticks(
+        range(4),
+        [
+            "升级前线上\nDocling 2.119",
+            "本次选定配置\nDocling 2.139",
+            "Paddle 1.6\n＋GLM",
+            "全 GLM\n（实验 MD）",
+        ],
+    )
+    axis.set_xlim(-0.65, 3.65)
+    axis.set_ylim(0, 123)
+    axis.set_yticks([0, 30, 60, 90, 120])
+    axis.set_ylabel("分钟", fontsize=13)
+    clean_axes(axis)
+    for index, value in enumerate(minutes):
+        axis.text(
+            index,
+            value + 3,
+            f"{value:.2f} 分钟",
+            ha="center",
+            va="bottom",
+            color=COLORS[index],
+            fontsize=15,
+            weight="bold",
+        )
+    axis.text(
+        3,
+        40,
+        "未测完整 HTTP",
+        ha="center",
+        va="center",
+        fontsize=13,
+        color=COLORS[3],
+        bbox={"boxstyle": "round,pad=0.6", "facecolor": "#faf5ff", "edgecolor": "#ddd6fe"},
+    )
+
+
+def comparison(rows: list[list[int]], minutes: list[float], preview: Path | None) -> None:
+    figure = plt.figure(figsize=(14.4, 10.8))
+    figure.text(0.065, 0.95, "模型组合：质量与整批耗时", fontsize=24, weight="bold")
     figure.text(
-        0.04,
-        0.89,
-        "10 份原件 · 502 页｜蓝色为本次选定配置｜条长表示该标注集通过比例",
-        color="#475569",
+        0.065, 0.905, "同一批 10 份原件 · 502 页｜蓝色为本次选定配置", color="#475569", fontsize=13
+    )
+    figure.legend(
+        handles=[
+            Patch(facecolor=color, label=label) for color, label in zip(COLORS, LABELS, strict=True)
+        ],
+        loc="upper left",
+        bbox_to_anchor=(0.055, 0.883),
+        ncol=4,
+        frameon=False,
+        fontsize=12.5,
+        columnspacing=2.0,
+        handlelength=1.1,
+    )
+    axis = figure.add_axes((0.09, 0.51, 0.86, 0.28))
+    axis.set_title(
+        "质量｜柱越高越好；柱顶为通过项数", loc="left", fontsize=16, weight="bold", pad=18
     )
     metrics = [
-        (0, 209, "核心原值与完整期间"),
-        (2, 402, "原值及唯一行"),
-        (3, 402, "完整列义 · 读取公开结构"),
-        (4, 31, "筹资合并单元格"),
+        (0, 209, "核心原值／完整期间\n各 209 项"),
+        (2, 402, "原值及唯一行\n402 项"),
+        (3, 402, "完整列义 · 公开结构\n402 项"),
+        (4, 31, "筹资独立源格\n31 项"),
     ]
-    for axis, (column, total, title) in zip(panels.flat, metrics, strict=True):
-        values = [row[column] for row in rows]
-        axis.barh(range(4), [100 * value / total for value in values], height=0.52, color=COLORS)
-        axis.set_yticks(range(4), LABELS)
-        axis.invert_yaxis()
-        axis.set_xlim(0, 119)
-        axis.set_xticks([0, 50, 100])
-        axis.xaxis.set_major_formatter(PercentFormatter())
-        axis.set_title(title, loc="left", fontsize=13, weight="bold", pad=15)
-        axis.set_axisbelow(True)
-        axis.grid(axis="x", color="#eef2f6", linewidth=0.8)
-        axis.tick_params(axis="both", length=0)
-        for spine in axis.spines.values():
-            spine.set_visible(False)
-        for index, value in enumerate(values):
+    centers = [index * 1.2 for index in range(len(metrics))]
+    width = 0.20
+    for series, (row, color) in enumerate(zip(rows, COLORS, strict=True)):
+        positions = [center + (series - 1.5) * width for center in centers]
+        heights = [100 * row[column] / total for column, total, _ in metrics]
+        axis.bar(positions, heights, width=width * 0.88, color=color, zorder=3)
+        for position, height, (column, _, _) in zip(positions, heights, metrics, strict=True):
             axis.text(
-                100 * value / total + 2,
-                index,
-                f"{value}/{total}",
-                va="center",
-                fontsize=10,
-                color=COLORS[index],
-                weight="bold" if index == 1 else "normal",
+                position,
+                height + 2,
+                str(row[column]),
+                ha="center",
+                va="bottom",
+                fontsize=12.5,
+                color=color,
+                weight="bold" if series == 1 else "normal",
             )
+    axis.set_xticks(centers, [title for _, _, title in metrics])
+    axis.set_ylim(0, 114)
+    axis.set_yticks([0, 25, 50, 75, 100])
+    axis.yaxis.set_major_formatter(PercentFormatter())
+    axis.set_ylabel("标注集通过比例", fontsize=13)
+    clean_axes(axis)
+    time_axis = figure.add_axes((0.09, 0.155, 0.86, 0.215))
+    time_axis.set_title(
+        "耗时｜柱越低越快；完整 PDF → 最终 Markdown（不含资产下载）",
+        loc="left",
+        fontsize=16,
+        weight="bold",
+        pad=18,
+    )
+    time_bars(time_axis, minutes)
     figure.text(
-        0.04,
-        0.09,
-        "原值及唯一行：选定配置 372/402，旧线上 373/402；存在已确认的逐格回退。",
-        color="#9a3412",
-        fontsize=11,
+        0.065,
+        0.065,
+        "质量：指定标注集不等于整份文档准确率；列义分数含公开跨度读出收益；全 GLM 取已有实验 MD。",
+        fontsize=10.8,
+        color="#64748b",
     )
     figure.text(
-        0.04,
-        0.045,
-        "指定标注集不等于整份文档准确率。列义分数含公开跨度读出收益；全 GLM 取已有实验 Markdown。",
+        0.065,
+        0.03,
+        "耗时：全 GLM 缺少同口径完整 HTTP 计时；各次预热与共享主机负载不同。原始数据及已知回退见正文。",
+        fontsize=10.8,
         color="#64748b",
-        fontsize=10,
     )
     save(figure, "model-comparison-quality", preview)
 
 
 def timing(minutes: list[float], preview: Path | None) -> None:
-    figure, axis = plt.subplots(figsize=(13.8, 5.2))
-    figure.subplots_adjust(left=0.245, right=0.94, top=0.68, bottom=0.27)
+    figure, axis = plt.subplots(figsize=(13.8, 6.4))
+    figure.subplots_adjust(left=0.09, right=0.96, top=0.70, bottom=0.25)
     figure.text(0.04, 0.90, "完整 502 页的实际接口耗时", fontsize=22, weight="bold")
     figure.text(0.04, 0.80, "10 份完整 PDF 串行提交 → 取得最终 Markdown｜越短越快", color="#475569")
-    axis.barh(range(3), minutes, height=0.52, color=COLORS[:3])
-    axis.set_yticks(range(3), LABELS[:3])
-    axis.invert_yaxis()
-    axis.set_xlim(0, 120)
-    axis.set_xticks([0, 30, 60, 90, 120])
-    axis.set_xlabel("分钟", loc="right")
-    axis.set_axisbelow(True)
-    axis.grid(axis="x", color="#eef2f6", linewidth=0.8)
-    axis.tick_params(axis="both", length=0)
-    for spine in axis.spines.values():
-        spine.set_visible(False)
-    for index, value in enumerate(minutes):
-        axis.text(
-            value + 2,
-            index,
-            f"{value:.2f} 分钟",
-            va="center",
-            color=COLORS[index],
-            fontsize=13,
-            weight="bold" if index == 1 else "normal",
-        )
+    time_bars(axis, minutes)
     figure.text(
         0.04,
         0.10,
@@ -194,7 +242,7 @@ def main() -> None:
     args = parser.parse_args()
     rows, minutes = read_values()
     style()
-    quality(rows, args.preview_dir)
+    comparison(rows, minutes, args.preview_dir)
     timing(minutes, args.preview_dir)
 
 
