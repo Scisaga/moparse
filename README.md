@@ -283,6 +283,7 @@ CI 不下载或运行大模型；GLM/Ollama 错误路径由 mock 服务覆盖。
 - [API](docs/api.md)
 - [部署](docs/deployment.md)
 - [基准测试](docs/benchmark.md)
+- [完整模型比较与真实接口验证报告](benchmark-results/clean-model-comparison-20261015/report.md)
 - [项目 0.4.0 设计规格](docs/project-spec.md)
 
 本项目代码使用 [Apache License 2.0](LICENSE)。Docling、GLM-OCR、模型权重
