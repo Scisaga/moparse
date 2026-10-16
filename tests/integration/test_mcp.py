@@ -41,7 +41,6 @@ async def test_mcp_tools_resources_and_prompt(tmp_path: Path, native_pdf: Path) 
             assert "12,345.67" in result.structured_content["content"]
             assert runtime.parser_service.last_options is not None
             assert runtime.parser_service.last_options.scan_policy.value == "auto"
-            assert runtime.parser_service.last_options.resolved_vlm_policy.value == "auto_visual"
 
             parse_tool = next(tool for tool in tools.tools if tool.name == "parse_content")
             assert "scan_policy" in parse_tool.input_schema["properties"]

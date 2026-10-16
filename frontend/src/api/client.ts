@@ -265,9 +265,8 @@ function normalizeBackends(raw: unknown): { backends: BackendCapability[]; queue
     glm: { id: 'glm', label: 'GLM' },
     glm_ocr: { id: 'glm', label: 'GLM' },
     'glm-ocr-remote': { id: 'glm', label: 'GLM' },
-    vlm: { id: 'vlm', label: 'VLM' },
-    ollama: { id: 'vlm', label: 'VLM' },
-    ollama_vlm: { id: 'vlm', label: 'VLM' },
+    glm_sdk: { id: 'glm-sdk', label: 'GLM SDK' },
+    'glm-sdk-remote': { id: 'glm-sdk', label: 'GLM SDK' },
   }
   const byId = new Map<string, BackendCapability>()
   if (listed) {
@@ -276,8 +275,8 @@ function normalizeBackends(raw: unknown): { backends: BackendCapability[]; queue
       const rawId = String(record.id ?? record.name ?? record.backend ?? '').toLowerCase()
       const alias = aliases[rawId]
         ?? (rawId.includes('docling') ? aliases.docling
-          : rawId.includes('glm') ? aliases.glm
-            : rawId.includes('vlm') || rawId.includes('ollama') ? aliases.vlm
+          : rawId.includes('sdk') ? aliases.glm_sdk
+            : rawId.includes('glm') ? aliases.glm
               : { id: rawId || 'unknown', label: String(record.label ?? (rawId || 'Backend')) })
       byId.set(alias.id, backendFromValue(alias.id, alias.label, item))
     }
@@ -289,7 +288,7 @@ function normalizeBackends(raw: unknown): { backends: BackendCapability[]; queue
   for (const expected of [
     { id: 'docling', label: 'Docling' },
     { id: 'glm', label: 'GLM' },
-    { id: 'vlm', label: 'VLM' },
+    { id: 'glm-sdk', label: 'GLM SDK' },
   ]) {
     if (!byId.has(expected.id)) byId.set(expected.id, { ...expected, status: 'unknown' })
   }

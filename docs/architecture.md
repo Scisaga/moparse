@@ -4,7 +4,7 @@ MosaicParse 是 PDF/Office/图片/视频到 GFM Markdown 的解析层。详细�
 请求内的解析中间表示，不是交给业务 LLM 的输出；EventRail 等下游直接消费可读正文、
 列表和表格，再完成实体、关系、事件与财务指标抽取。
 
-这一输出边界及其表格识别、输入表示和 Qwen 消融依据见
+这一输出边界见
 [ADR-0001：以忠实的逻辑表 GFM 作为文档内容与下游抽取边界](adr/0001-faithful-gfm-for-downstream-extraction.md)。
 
 ```text
@@ -13,18 +13,15 @@ Browser / HTTP / MCP
           v
 格式校验 + Job + 页范围 + 超时
           |
-          +-- 数字 PDF ------> 原生文本 + Docling Layout/TableFormer
+          +-- 数字 PDF ------> PyPdfium 原生文本 + Docling 2.139 / TableFormer V1
           |
-          +-- 扫描/混合 PDF -> PP-DocLayoutV3 + 定向 GLM-OCR
+          +-- 扫描/混合 PDF -> 方向预处理 + GLM SDK / PP-DocLayoutV3
           |                         |
           |                         v
-          |                   通用表格质量门控
-          |                    |      |
-          |                    |      +---------- 局部 Qwen（可定位冲突，最多一次）
-          |                    +----------------- GLM 直接采用
+          |                   GLM-OCR + 结构验证
           |
           +-- Office ---------> 原生结构 + 嵌入图片关系
-          +-- 图片/视频 ------> 资产保留 + 按需视觉描述/关键帧
+          +-- 图片/视频 ------> 资产/关键帧 + GLM 可见文字识别
                                       |
                                       v
                       内部 Evidence IR + TableGridIR
@@ -36,24 +33,18 @@ Browser / HTTP / MCP
 
 ## PDF 路由
 
-文字型 PDF 不默认走 GLM-OCR。原生文本坐标可靠时，Docling Layout/TableFormer 直接
-恢复阅读顺序和表格；OCR 只用于扫描页、混合页或实测质量不足的区域。
+原生页固定使用 Docling 2.139.0、TableFormer V1 Accurate、`do_cell_matching=False` 与
+PyPdfium 后端，原生文字与表格结构由 CPU 恢复，不做无条件全页 OCR。
 
-默认 `scan_policy=auto` 下，扫描表格先按检测方向旋转页面像素，再执行
-PP-DocLayoutV3 与 GLM-OCR。
-GLM 表格经过确定性门控：
+`scan_policy=auto` 下，扫描、混合页由官方 GLM-OCR SDK 处理。
+`GLM_SDK_ORIENTATION_ENABLED=1` 先旋正页面，再执行 PP-DocLayoutV3 布局与 GLM-OCR
+区域识别。结构验证保留完整行格及候选，不依据指标名补期间，不用另一模型重写冲突数值。
 
-1. 只在左右两半表头明确重复时拆分并表，并归一化空行和可确定的财务附注括号；
-2. 对所有表验证二维形状，并对财务表追加期间列、附注进入金额列等不变量；
-3. 使用小计、资产负债恒等式和签章遮挡位置发现可局部定位的数字冲突；
-4. 无冲突时零次调用 Qwen；少量冲突只裁剪相关行并至多调用一次 Qwen，复验失败则整次
-   回滚；拓扑不明时保留最佳候选和告警，不自动执行整表视觉解析。
+`scan_policy=skip` 在 PDF 进入 Docling 时关闭扫描 OCR，扫描/混合页只保留可信原生文字、
+明确的 Markdown 跳过提示和整页图像资产。
 
-`scan_policy=skip` 在 PDF 进入 Docling 时关闭扫描 OCR，检测到的扫描/混合页不产生
-表格内容，只保留可信原生文字、明确的 Markdown 跳过提示和整页图像资产。
-`VLM_ENABLED=0` 是部署级硬停用；此时可用 GLM 结果仍会保留，并标注局部未复核状态。
-默认子策略为 `VLM_SIGNATURE_ENABLED=0`、`VLM_TABLE_FULL_ENABLED=0` 和
-`VLM_TABLE_TARGETED_ENABLED=1`。
+图片识字和视频关键帧识字复用 GLM-OCR；`describe_images` 保留参数兼容性，生成内容
+限定为可见文字。视频摘要按采样时间列出识别文字，不推断未采样片段或无文字场景。
 
 ## 内部证据与公共输出
 
@@ -65,7 +56,8 @@ GLM 表格经过确定性门控：
 
 - 标准 Markdown 正文、标题和列表；
 - 解析器识别出的 GFM 表格，包括多级/分段表头；
-- 合并后的跨页逻辑表，续页重复表头仅在结构证据充分时去重；
+- 合并后的跨页逻辑表，续页重复表头仅在完整表头及列义一致时去重；
+- 无坐标结构注释，携带原模型表头角色、合并跨度和来源页；未确认的结构明确标记未知；
 - 图片/视频资产的普通 Markdown 列表、描述和下载链接。
 
 解析层不判断某张表应变成财务事实、公司字段或股东关系，也不依据固定首行生成字段名。
@@ -95,7 +87,7 @@ GLM 表格经过确定性门控：
 
 上传与 URL 均不可信：校验 magic、OOXML 关系、ZIP 展开边界、FFprobe、大小、单元数、
 协议、解析 IP 与每次重定向。模型 URL、模型名和 prompt 只能由服务端配置。
-图像、候选正文、prompt 和 reasoning 不进入日志或公共结果。
+图像字节、内部候选正文和模型请求不进入诊断日志；公开正文只包含采用的解析结果。
 
 本项目不负责 Embedding、索引、问答、公司/人物消歧、领域关系与事件编排；它负责把
 下游真正需要的可见内容和结构恢复为可高效消费的一份 Markdown 文档。

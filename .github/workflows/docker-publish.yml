@@ -114,7 +114,6 @@ jobs:
         if: github.event_name != 'workflow_run'
         env:
           GLM_OCR_ENABLED: "0"
-          VLM_ENABLED: "0"
           DOCLING_MODEL_DOWNLOAD: "0"
           DATA_DIR: ${{ runner.temp }}/mosaicparse-data
           STATIC_DIR: ${{ runner.temp }}/mosaicparse-static
@@ -165,7 +164,6 @@ jobs:
           docker run --detach --name mosaicparse-smoke \
             --env DOCLING_MODEL_DOWNLOAD=0 \
             --env GLM_OCR_ENABLED=0 \
-            --env VLM_ENABLED=0 \
             --publish 127.0.0.1:12303:12303 \
             mosaic-parse:publish-candidate
           for attempt in $(seq 1 60); do

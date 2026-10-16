@@ -32,9 +32,9 @@ Record at least:
 - heading/paragraph reading order;
 - table cell and row/column structure;
 - empty-page and repeated-text rates;
-- mean and p95 seconds per page;
-- peak parser RAM;
-- GLM/Qwen call count, visual-page rate, unresolved conflicts, and budget exhaustion.
+- full HTTP wall time (upload through saved final Markdown), model inference time, and per-page mean/p95;
+- CPU utilization, peak parser RAM, GPU utilization, GPU memory, and sampling interval/coverage;
+- GLM/SDK request count, OCR-page rate, unresolved structural conflicts, and budget exhaustion;
 - trusted/degraded/untrusted counts and candidate adoption/rejection reasons;
 - native repair, logical cross-page merge, rotation, and timeout counts.
 
@@ -43,9 +43,21 @@ or upstream component cannot observe them reliably.
 
 Performance release gates are: `scan_policy=auto` native numeric pages p95 no more than
 10% above the fixed baseline; automatically routed complex pages p95 no more than about
-2x baseline; and each targeted table repair must use at most one VLM call. Signature-page
-and full-table VLM call counts must remain zero under default configuration. A page timeout
-must stop later candidates while retaining the primary page with a warning.
+2x baseline. A page timeout must stop later candidates while retaining the primary page with
+a warning. Do not attribute another process's GPU load or service-resident memory to per-request
+inference. Compare complete PDFs with `scan_policy=auto` and no `unit_range`, and retain the
+requests, final public Markdown, source hashes, model settings, and actual deployed image.
+
+Only remove cross-page repeated headers when their complete text, multi-level structure, and
+column meanings agree. Validate changed-header continuations and genuine same-header
+continuations against the original PDFs. Check units, merged cells, and source-page associations.
+
+## Comparison evidence
+
+The single maintained report is [report.md](../benchmark-results/clean-model-comparison-20261015/report.md).
+It separates new full-HTTP runs, saved full-HTTP results, and rescoring of existing final Markdown.
+All displayed configurations must use the same gold and public-output scoring rules; neither
+component timing nor offline output scoring substitutes for complete service acceptance.
 
 ## HTTP smoke benchmark
 

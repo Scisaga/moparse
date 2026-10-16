@@ -45,30 +45,18 @@ class SelectionStrategy(StrEnum):
     NATIVE_REPAIR = "native_repair"
     SCAN_SKIPPED = "scan_skipped"
     GLM_TABLE = "glm_table"
-    GLM_QWEN_TARGETED = "glm_qwen_targeted"
-    QWEN_VISUAL_FUSION = "qwen_visual_fusion"
 
 
-class VisualFusionDiagnostics(BaseModel):
-    """Measured visual-fusion activity without document or reasoning content."""
+class GlmDiagnostics(BaseModel):
+    """Observed OCR activity and structure validation, without model arbitration."""
 
     model_config = ConfigDict(extra="forbid")
 
-    routing_decision: Literal[
-        "glm_direct", "glm_targeted_qwen", "qwen_full_table", "qwen_signature"
-    ] | None = None
-    candidate_issue_count: int | None = Field(default=None, ge=0)
-    qwen_calls: int | None = Field(default=None, ge=0)
-    qwen_duration_ms: int | None = Field(default=None, ge=0)
-    visual_regions: int | None = Field(default=None, ge=0)
-    table_count: int | None = Field(default=None, ge=0)
-    extracted_cells: int | None = Field(default=None, ge=0)
-    agreed_cells: int | None = Field(default=None, ge=0)
-    qwen_selected_fields: int | None = Field(default=None, ge=0)
-    qwen_resolved_conflicts: int | None = Field(default=None, ge=0)
-    unresolved_conflicts: int | None = Field(default=None, ge=0)
-    truncated_calls: int | None = Field(default=None, ge=0)
-    partitions: int | None = Field(default=None, ge=0)
+    glm_calls: int | None = Field(default=None, ge=0)
+    sdk_requests: int | None = Field(default=None, ge=0)
+    sdk_duration_ms: int = Field(default=0, ge=0)
+    table_count: int = Field(default=0, ge=0)
+    structure_issue_count: int = Field(default=0, ge=0)
 
 
 class PageDiagnostics(BaseModel):
@@ -82,7 +70,7 @@ class PageDiagnostics(BaseModel):
     image_coverage_ratio: float | None = Field(default=None, ge=0, le=1)
     detected_rotation_degrees: Literal[0, 90, 180, 270] | None = None
     logical_table_ids: list[str] = Field(default_factory=list)
-    visual_fusion: VisualFusionDiagnostics | None = None
+    glm: GlmDiagnostics | None = None
 
 
 class QualitySummary(BaseModel):
@@ -93,8 +81,8 @@ class QualitySummary(BaseModel):
     untrusted_pages: int = Field(default=0, ge=0)
     repaired_pages: int = Field(default=0, ge=0)
     visual_pages: int = Field(default=0, ge=0)
-    qwen_calls: int = Field(default=0, ge=0)
-    qwen_resolved_conflicts: int = Field(default=0, ge=0)
+    glm_calls: int | None = Field(default=None, ge=0)
+    sdk_requests: int | None = Field(default=0, ge=0)
     unresolved_visual_conflicts: int = Field(default=0, ge=0)
 
 
@@ -121,6 +109,8 @@ class PageParseResult(BaseModel):
     warnings: list[PipelineWarning] = Field(default_factory=list)
     diagnostics: PageDiagnostics | None = None
 
+    _sdk_requests: int | None = PrivateAttr(default=None)
+
 
 class ParsePipeline(BaseModel):
     model_config = ConfigDict(extra="forbid")
@@ -128,7 +118,6 @@ class ParsePipeline(BaseModel):
     profile: str
     primary: str
     ocr: str | None = None
-    vlm: str | None = None
 
 
 class RouteSummary(BaseModel):
@@ -143,7 +132,6 @@ class RouteSummary(BaseModel):
     native_text_pages: int | None = Field(default=None, ge=0)
     pages_with_ocr: int | None = Field(default=None, ge=0)
     ocr_regions: int | None = Field(default=None, ge=0)
-    vlm_pages: int | None = Field(default=None, ge=0)
     failed_pages: int = Field(default=0, ge=0)
 
 
@@ -178,6 +166,4 @@ class DocumentParseResult(BaseModel):
     # Adapter-private, request-scoped enrichment hints.  These never cross the
     # stable API/storage boundary and deliberately stay out of the JSON schema.
     _picture_candidates: list[object] = PrivateAttr(default_factory=list)
-    _vlm_page_numbers: set[int] = PrivateAttr(default_factory=set)
     _table_fragments: list[object] = PrivateAttr(default_factory=list)
-    _visual_page_irs: dict[int, object] = PrivateAttr(default_factory=dict)

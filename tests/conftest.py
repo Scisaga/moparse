@@ -59,7 +59,7 @@ class FakeParserService:
                 detail="disabled in tests",
             ),
             BackendStatus(
-                name="ollama-vlm",
+                name="glm-sdk-remote",
                 state=BackendState.DISABLED,
                 enabled=False,
                 detail="disabled in tests",
@@ -148,7 +148,7 @@ def make_test_settings(tmp_path: Path, **overrides: object) -> Settings:
         "data_dir": tmp_path,
         "static_dir": tmp_path / "missing-static",
         "glm_ocr_enabled": False,
-        "vlm_enabled": False,
+        "glm_sdk_orientation_enabled": False,
         "docling_model_download": False,
         "mcp_enabled": False,
         "max_upload_bytes": 1_000_000,

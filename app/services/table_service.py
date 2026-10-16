@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import html
+import json
 import re
 from dataclasses import dataclass, field
 from typing import Any
@@ -47,6 +48,16 @@ class TableFragment:
     physical_num_rows: int | None = None
     source_row_indices: list[int] = field(default_factory=list)
     header_scope_complete: bool = True
+    _structure_marker: str = field(default="", init=False, repr=False)
+
+    def __post_init__(self) -> None:
+        # The matrix remains ordinary GFM. Only source-owned structural
+        # information is attached as a comment, without coordinates or text.
+        if self.markdown and self.rendered.count(self.markdown) == 1:
+            self._structure_marker = _table_structure_marker([self], self.fragment_id)
+            self.rendered = self.rendered.replace(
+                self.markdown, f"{self._structure_marker}\n\n{self.markdown}", 1
+            )
 
     @property
     def header_signature(self) -> str:
@@ -166,6 +177,86 @@ def render_gfm_rows(rows: list[list[str]]) -> str:
     lines.append("| " + " | ".join("---" for _ in range(columns)) + " |")
     lines.extend("| " + " | ".join(_escape_cell(cell) for cell in row) + " |" for row in body)
     return "\n".join(lines)
+
+
+def _structure_geometry_known(fragment: TableFragment) -> bool:
+    """Confirm that source spans refer to the emitted anchor-and-blank grid."""
+    if (
+        not fragment.valid
+        or not fragment.cells
+        or fragment.num_rows <= 0
+        or fragment.num_cols <= 0
+        or len(fragment.rows) != fragment.num_rows
+        or any(len(row) != fragment.num_cols for row in fragment.rows)
+        or fragment.markdown != render_gfm_rows(fragment.rows)
+    ):
+        return False
+    occupied: set[tuple[int, int]] = set()
+    for cell in fragment.cells:
+        if (
+            cell.row < 0
+            or cell.column < 0
+            or cell.row_span < 1
+            or cell.column_span < 1
+            or cell.row + cell.row_span > fragment.num_rows
+            or cell.column + cell.column_span > fragment.num_cols
+            or fragment.rows[cell.row][cell.column] != cell.text
+        ):
+            return False
+        positions = {
+            (row, column)
+            for row in range(cell.row, cell.row + cell.row_span)
+            for column in range(cell.column, cell.column + cell.column_span)
+        }
+        if occupied & positions or any(
+            fragment.rows[row][column].strip()
+            for row, column in positions - {(cell.row, cell.column)}
+        ):
+            return False
+        occupied.update(positions)
+    return True
+
+
+def _table_structure_marker(group: list[TableFragment], table_id: str) -> str:
+    """Describe observed cell roles/spans in final GFM indices, never infer them."""
+    geometry_known = all(_structure_geometry_known(fragment) for fragment in group)
+    source_header_rows: set[int] = set()
+    spans: list[list[int]] = []
+    output_rows = 0
+    for index, fragment in enumerate(group):
+        skip = len(fragment.header_row_indices) if index else 0
+        for cell in fragment.cells:
+            if cell.row < skip:
+                continue
+            logical_row = output_rows + cell.row - skip
+            if cell.is_column_header:
+                source_header_rows.add(logical_row)
+            if cell.row_span > 1 or cell.column_span > 1:
+                spans.append([logical_row, cell.column, cell.row_span, cell.column_span])
+        output_rows += len(fragment.rows) - skip
+    complete_header = (
+        group[0].header_row_indices
+        if geometry_known and all(fragment.header_row_indices for fragment in group)
+        else ()
+    )
+    metadata = {
+        "version": 1,
+        "table_id": table_id,
+        "source_pages": sorted({fragment.page_number for fragment in group}),
+        "num_rows": output_rows,
+        "num_cols": group[0].num_cols,
+        "encoding": "anchor_and_blanks" if geometry_known else "unknown",
+        "structure_valid": geometry_known,
+        "header_rows": sorted(source_header_rows) or None,
+        "header_scope_rows": list(complete_header) or None,
+        "header_scope_complete": bool(complete_header),
+        "spans": sorted(spans) if geometry_known else None,
+    }
+    return (
+        "<!-- table-structure: "
+        + json.dumps(metadata, ensure_ascii=False, separators=(",", ":"))
+        + " -->"
+    )
 
 
 def _anchored_rows(table_data: object) -> tuple[list[list[str]], list[str]]:
@@ -454,6 +545,8 @@ def _table_surroundings(fragment: TableFragment) -> tuple[str, str] | None:
         return None
     prefix, _, suffix = fragment.rendered.partition(fragment.markdown)
     prefix = prefix.replace(f"<!-- table-fragment: {fragment.fragment_id} -->", "", 1)
+    if fragment._structure_marker:
+        prefix = prefix.replace(fragment._structure_marker, "", 1)
     return prefix.strip(), suffix.strip()
 
 
@@ -565,6 +658,7 @@ def assemble_logical_tables(
                 f"<!-- logical-table: {logical_id}; source-pages: {','.join(map(str, source_pages))} -->",
                 "\n".join(source_markers),
                 surroundings[0],
+                _table_structure_marker(group, logical_id),
                 merged,
                 surroundings[1],
             ]

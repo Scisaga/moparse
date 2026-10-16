@@ -1,0 +1,496 @@
+{
+  "schema": "mosaic-selected-pipeline-release/1",
+  "created_UTC": "2026-10-16T21:24:48.594854+00:00",
+  "base_git_commit": "42668d7e1c5f68687512111d2d9336eb2356f7ec",
+  "canonical_report": "benchmark-results/clean-model-comparison-20261015/report.md",
+  "README": "README.md",
+  "production_url": "http://10.0.6.22:12303",
+  "deployed_UTC": "2026-10-16T21:15:31.226053+00:00",
+  "actual_containers": {
+    "mosaicparse": {
+      "ID": "392c40684b43d3c61d290ad25f12e447efe4d1bde83a416a8a37f7c61b116393",
+      "image": "sha256:f9639d65ec922a1c300233e3ef5711af5a0d3de3b6b8d7909b9ea1776575e89a",
+      "started": "2026-10-16T21:15:16.69822531Z",
+      "restart_count": 0
+    },
+    "docling_glm_ocr_sdk": {
+      "ID": "b0b2f735fb491fdb39b6b23e95d70848a15f1cebc67297c2f7d82c6b7fcd0a75",
+      "image": "sha256:abe353926afba82931744bac4533f895c9e6ad6f768da4103a4ec40410c2e6cb",
+      "started": "2026-10-16T21:15:08.695015459Z",
+      "restart_count": 0
+    },
+    "docling_glm_ocr": {
+      "ID": "a803d464218327072544e69c70513d17e1604a864a86ca556ec3ca87d0275035",
+      "image": "sha256:df7be4c4d818e250a8c80f78d110571e92e72a1fefec06fed82a2e37e473cd48",
+      "started": "2026-10-10T18:50:15.890807408Z",
+      "restart_count": 0
+    }
+  },
+  "versions": {
+    "docling": "2.139.0",
+    "docling-core": "2.101.1",
+    "docling-ibm-models": "4.0.3",
+    "pypdfium2": "5.12.1",
+    "torch": "2.13.0+cpu",
+    "transformers": "5.8.1"
+  },
+  "SDK_version": "0.1.5",
+  "configuration": {
+    "native": "Docling2.139 TableFormerV1 accurate matching=False PyPdfium, OCR disabled",
+    "scanned_and_mixed": "GLM-OCR through official SDK defaults, source-based routing, CPU PP-LCNet orientation on",
+    "SDK_input_DPI": 200,
+    "SDK_max_image_pixels": 8000000,
+    "native_source_pages": 433,
+    "SDK_source_pages": 69,
+    "domain_text_or_value_repairs": false,
+    "Qwen_runtime_or_configuration_retained": false,
+    "historical_evidence_preserved": true
+  },
+  "production_source_verification": {
+    "UTC": "2026-10-16T21:23:35.679496+00:00",
+    "checks": [
+      {
+        "command": ".venv/bin/ruff check app docker scripts tests",
+        "exit_code": 0,
+        "result": "All checks passed"
+      },
+      {
+        "command": "uv lock --check --offline",
+        "exit_code": 0,
+        "result": "148 packages resolved"
+      },
+      {
+        "command": "git diff --check",
+        "exit_code": 0
+      }
+    ],
+    "application_source_files_matching_production": 53,
+    "application_source_SHA256": "1e7532af2dad4b5ffb239d18d72a4e0cb233a59d72c6e1b613182ba0d0c20d1a",
+    "SDK_launcher_matches_production_SHA256": "586b9ed502215396367a8c4ec0e7e449dff707e90810fd9830140492554d15d6"
+  },
+  "tests": {
+    "backend_pass": 272,
+    "backend_scope": "Final deployed API image; ffmpeg installed and pyproject pytest config mounted",
+    "frontend_pass": 55,
+    "frontend_files": 17,
+    "mypy_sources_pass": 53,
+    "ruff": "pass",
+    "frontend_typecheck_and_lint": "pass",
+    "OpenAPI_and_fixtures": "pass"
+  },
+  "full_before_deployment_real_HTTP": {
+    "documents": 10,
+    "pages": 502,
+    "request": {
+      "scan_policy": "auto"
+    },
+    "unit_range_set": false,
+    "core_numeric_pass": 209,
+    "core_period_pass": 209,
+    "financial30_pass": 30,
+    "funding31_pass": 31,
+    "funding7_bound": 7,
+    "normal33": {
+      "literal_and_unique_row_pass": 33,
+      "literal_row_and_complete_header_pass": 33,
+      "target_count": 33
+    },
+    "header_leaves_pass": 10,
+    "supplement402_frozen": {
+      "literal_and_unique_row_pass": 372,
+      "literal_row_and_complete_header_pass": 180,
+      "target_count": 402
+    },
+    "supplement402_public_structure": {
+      "literal_and_unique_row_pass": 372,
+      "literal_row_and_complete_header_pass": 326,
+      "target_count": 402
+    },
+    "source28_public_structure": {
+      "literal_and_unique_row_pass": 24,
+      "literal_row_and_complete_header_pass": 24,
+      "target_count": 24
+    },
+    "source_images_RGB_pass": 69,
+    "downloaded_assets_SHA_and_size_pass": 79,
+    "MD_wall_seconds": 1291.1194475740194,
+    "including_assets_wall_seconds": 1292.6062040070537,
+    "SDK_POSTs": 69,
+    "resource_samples": 647,
+    "jobs": [
+      {
+        "source": "1225474693",
+        "job": "job_01M537R8YA11AJKTMF71HZZJKB",
+        "pages": 4,
+        "MD_SHA256": "8b65c48e506f792f61e9bf0e8e7caf7c3f9da3387d5452ffc9e27e1376da0ecd"
+      },
+      {
+        "source": "1225473526",
+        "job": "job_01M537RH2DX4XHEVSJ5G11M009",
+        "pages": 27,
+        "MD_SHA256": "d32d81217fe77efea8c8c3435e08a7757ae90464502f49f512eecc7128a27e75"
+      },
+      {
+        "source": "1210860446",
+        "job": "job_01M537SK53TE6EB8A672QSCNJY",
+        "pages": 6,
+        "MD_SHA256": "48948293a5eef688b264897b8b7b7a8e36ec0291587c1f43e38d690c60b30179"
+      },
+      {
+        "source": "1211290753",
+        "job": "job_01M537SZ50V3G1AXABVN2Y63JB",
+        "pages": 3,
+        "MD_SHA256": "3e65c590790e07e7e60c14179671285f503abba8dee66c8c0feacc6c417c4d53"
+      },
+      {
+        "source": "1219858186",
+        "job": "job_01M537T28PSV5PYYPX45AMR8DD",
+        "pages": 15,
+        "MD_SHA256": "8f33a9846ed2eff998ffd3a875358d65ae76b4e8deada5409db5730d13ef566c"
+      },
+      {
+        "source": "1225474139",
+        "job": "job_01M537TM59YNBKQYVM1P5S00A2",
+        "pages": 36,
+        "MD_SHA256": "6aa2d791ecde78a1be8c4dea6be2f4c0372844955cb4cf85a6abba796d1ae191"
+      },
+      {
+        "source": "1225474739",
+        "job": "job_01M537VYTY3DC1QB3B476369W2",
+        "pages": 134,
+        "MD_SHA256": "21224184c0cbbfe815948511628055012a48635fc27f79192a71dc03eff91731"
+      },
+      {
+        "source": "1225475333",
+        "job": "job_01M5384N9R0592B027W16W0FTY",
+        "pages": 28,
+        "MD_SHA256": "596b78224c87d543115cc73a00ba2849345d3997321c907a3ab4fed5de5cb299"
+      },
+      {
+        "source": "1225475375",
+        "job": "job_01M5387DNF30WG3C5STZX265QN",
+        "pages": 119,
+        "MD_SHA256": "0a1517eb1f3e9c1a2c35656e61eb8262ec748b76abab3bca4f99378858050f1d"
+      },
+      {
+        "source": "1225475642",
+        "job": "job_01M538MWQ80W16ACYJBCC7NV9P",
+        "pages": 130,
+        "MD_SHA256": "45b4160f994ed22ce51b43c8c5b37c50a4f963f88a597681d1b2e81f49f81a68"
+      }
+    ]
+  },
+  "post_deployment_real_HTTP": {
+    "documents": 3,
+    "pages": 59,
+    "request": {
+      "scan_policy": "auto"
+    },
+    "unit_range_set": false,
+    "core_numeric_pass": 23,
+    "core_period_pass": 23,
+    "financial30_pass": 30,
+    "funding31_pass": 31,
+    "funding7_bound": 7,
+    "normal33": {
+      "literal_and_unique_row_pass": 33,
+      "literal_row_and_complete_header_pass": 33,
+      "target_count": 33
+    },
+    "header_leaves_pass": 10,
+    "supplement402_frozen": {
+      "literal_and_unique_row_pass": 0,
+      "literal_row_and_complete_header_pass": 0,
+      "target_count": 0
+    },
+    "supplement402_public_structure": {
+      "literal_and_unique_row_pass": 0,
+      "literal_row_and_complete_header_pass": 0,
+      "target_count": 0
+    },
+    "source28_public_structure": {
+      "literal_and_unique_row_pass": 24,
+      "literal_row_and_complete_header_pass": 24,
+      "target_count": 24
+    },
+    "source_images_RGB_pass": 30,
+    "downloaded_assets_SHA_and_size_pass": 32,
+    "MD_wall_seconds": 136.8452613898553,
+    "including_assets_wall_seconds": 137.26661500695627,
+    "SDK_POSTs": 30,
+    "resource_samples": 69,
+    "jobs": [
+      {
+        "source": "1225474693",
+        "job": "job_01M5396J2JTYBCPJ8GVNMTEQCY",
+        "pages": 4,
+        "MD_SHA256": "8b65c48e506f792f61e9bf0e8e7caf7c3f9da3387d5452ffc9e27e1376da0ecd"
+      },
+      {
+        "source": "1225473526",
+        "job": "job_01M5396V7EH0P5BKHA48MTDQCK",
+        "pages": 27,
+        "MD_SHA256": "383d5ac07fad8898fe390827bb15872a5f0a9cfd27f293fd3685f608578b6a82"
+      },
+      {
+        "source": "1225475333",
+        "job": "job_01M5397XGEMTCYZ4H7NR7NMVYK",
+        "pages": 28,
+        "MD_SHA256": "c9c53f79eb97eae1b021321f0e113eb89d000a52c69eaea8ab4405403944bb52"
+      }
+    ]
+  },
+  "old_jobs": {
+    "Markdown_SHA_unchanged": 10,
+    "asset_HTTP_SHA_size_unchanged": 195
+  },
+  "known_limits": [
+    {
+      "source": "1210860446",
+      "page": 2,
+      "observed": "Shareholder count 170,064 truncated to 170,06; selected native raw output already contains the error."
+    },
+    {
+      "source": "1225474739",
+      "page": 54,
+      "observed": "Minority interest 3,402,182.56 loses decimal point."
+    },
+    {
+      "source": "1225474739",
+      "page": 56,
+      "observed": "Amount -113,703,744.77 is mixed with next-row 47."
+    },
+    {
+      "source": "1225474739",
+      "page": 60,
+      "observed": "Equity subtotal -7,735,172.19 loses minus sign."
+    },
+    {
+      "source": "1225475642",
+      "page": 11,
+      "observed": "Three guarantee dates missing in selected native output; many additional automatic table matches are ambiguous rather than text loss."
+    },
+    {
+      "scope": "native bitmap assets",
+      "observed": "Model-detected pictures are not a complete embedded-image inventory; two tight logo crops have edge loss. Original PDFs and complete scan/mixed page images are retained."
+    }
+  ],
+  "interpretation": {
+    "structure_score": "Frozen reader 180/402 vs public structure-aware 326/402 uses the same new Markdown. Difference is structural observability, not a change to recognized text or model accuracy.",
+    "timing": "End-to-end includes rendering, orientation, SDK layout/OCR, export and polling. Pure model forward time is unavailable.",
+    "GPU": "Only attributed GLM process measurements; other GPU processes and whole-card totals are not charged to this parser."
+  },
+  "evidence_retention": {
+    "local_root": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/selected-pipeline-deployment",
+    "raw_requests_results_assets_and_resource_samples": "Retained locally; excluded from Git and Docker build context.",
+    "private_env_and_DB_backups": "Retained outside repository under /root/.cache/mosaic-parse-deploy/20261017; not published.",
+    "large_PDFs_weights_and_cache_committed": false
+  },
+  "key_evidence": [
+    {
+      "path": "benchmark-results/clean-model-comparison-20261015/followup/20261017/selected-pipeline-deployment/production-deployment.json",
+      "bytes": 2054,
+      "SHA256": "e2bad040e9b9e3c5cae64bdfe174e5fefae261587ef08612de2e22ec8289a706"
+    },
+    {
+      "path": "benchmark-results/clean-model-comparison-20261015/followup/20261017/selected-pipeline-deployment/production-application-version.json",
+      "bytes": 6497,
+      "SHA256": "243fc4af120f7edd2532614df8ddc907240b4553559b81afb572ba73e52c230c"
+    },
+    {
+      "path": "benchmark-results/clean-model-comparison-20261015/followup/20261017/selected-pipeline-deployment/production-old-jobs-after.json",
+      "bytes": 2269,
+      "SHA256": "99af356441cb27f63bea4ab90b3a6ee5d064efc2a34a73c53fe46fa50d95e76d"
+    },
+    {
+      "path": "benchmark-results/clean-model-comparison-20261015/followup/20261017/selected-pipeline-deployment/production-old-assets-after.json",
+      "bytes": 56012,
+      "SHA256": "88bd4b1e63ded622ee3bf10c411b9bc1adc35c0b7bf2f723dba513a6dfc41014"
+    },
+    {
+      "path": "benchmark-results/clean-model-comparison-20261015/followup/20261017/selected-pipeline-deployment/final-image-source-verification.json",
+      "bytes": 5701,
+      "SHA256": "6d63f135258bb1d3913944950f846ca10034309fd285c7a3d3671837f4f8dc5c"
+    },
+    {
+      "path": "benchmark-results/clean-model-comparison-20261015/followup/20261017/selected-pipeline-deployment/sdk-final-200dpi-effective-config.json",
+      "bytes": 6281,
+      "SHA256": "23234a908c6799a03d9c14215c22391c501ea3aad03882c9316045e943e8a295"
+    },
+    {
+      "path": "benchmark-results/clean-model-comparison-20261015/followup/20261017/selected-pipeline-deployment/release-static-verification.json",
+      "bytes": 660,
+      "SHA256": "91af28e78fb6081c1f1226989f5c23460f687c61cd277f70be61b941650a6ead"
+    },
+    {
+      "path": "benchmark-results/clean-model-comparison-20261015/followup/20261017/selected-pipeline-deployment/pytest-final-image-200dpi.log",
+      "bytes": 341,
+      "SHA256": "3808a2e8d08fd23dea66ae0861a88f6a62b5902289fe8dbf8c90b81ec9f7dac6"
+    },
+    {
+      "path": "benchmark-results/clean-model-comparison-20261015/followup/20261017/selected-pipeline-deployment/mypy-final-200dpi.log",
+      "bytes": 44,
+      "SHA256": "1495598f2b8e6a09df4f1631545361d6c6e3e3204e506255935ef84876641cc6"
+    },
+    {
+      "path": "benchmark-results/clean-model-comparison-20261015/followup/20261017/selected-pipeline-deployment/frontend-test.log",
+      "bytes": 1309,
+      "SHA256": "4be209f5d0524b13ed96bcd627f7adf9561eb3aa6db50d020acc3b8da8346b07"
+    },
+    {
+      "path": "benchmark-results/clean-model-comparison-20261015/followup/20261017/selected-pipeline-deployment/routing-source-properties-audit.json",
+      "bytes": 302995,
+      "SHA256": "a329f4b743eb77fe28c9bfc4e7673de1314b3289aa985e9492093a9f012781e1"
+    },
+    {
+      "path": "benchmark-results/clean-model-comparison-20261015/followup/20261017/selected-pipeline-deployment/table-export-source-audit.json",
+      "bytes": 418787,
+      "SHA256": "34e057ff9cda1a6aaf452f059754fab0e56ab61c0b053d36f891a49cce5d30ff"
+    },
+    {
+      "path": "benchmark-results/clean-model-comparison-20261015/followup/20261017/selected-pipeline-deployment/orientation-real-model-verification.json",
+      "bytes": 27700,
+      "SHA256": "1e135776a539115ab88ed80639645fd921074bf6878d85c7038d6a2fb98ea97d"
+    },
+    {
+      "path": "benchmark-results/clean-model-comparison-20261015/followup/20261017/selected-pipeline-deployment/actual-sdk-200dpi-raster-audit.json",
+      "bytes": 27319,
+      "SHA256": "2a1e226f4c4eb85c08443805f33ff60279050295b8443ece86d3a826b26559c2"
+    },
+    {
+      "path": "benchmark-results/clean-model-comparison-20261015/followup/20261017/selected-pipeline-deployment/literal402-transition-audit.json",
+      "bytes": 4477,
+      "SHA256": "21ec45aa8fa74a1cb3bd233cd3e6a5c7f6e365b57071927bc15598f990527868"
+    },
+    {
+      "path": "benchmark-results/clean-model-comparison-20261015/followup/20261017/selected-pipeline-deployment/public-schema-interpretation-audit.json",
+      "bytes": 15403,
+      "SHA256": "24a63aaeea7829a7594eab08828b8ceecf393fc768dc843efb462e6c674c6eda"
+    },
+    {
+      "path": "benchmark-results/clean-model-comparison-20261015/followup/20261017/selected-pipeline-deployment/asset-transition-audit.json",
+      "bytes": 74340,
+      "SHA256": "1a1b4eb4519652d62cb36b67436ccfe46bc7493836138e5abe75f7cc96225fe2"
+    },
+    {
+      "path": "benchmark-results/clean-model-comparison-20261015/followup/20261017/selected-pipeline-deployment/native-image-object-audit.json",
+      "bytes": 50010,
+      "SHA256": "baf6de74dbfdfa582d830f967e76b976f6a9413ae7529c466b6a023a0a131bca"
+    },
+    {
+      "path": "benchmark-results/clean-model-comparison-20261015/followup/20261017/selected-pipeline-deployment/candidate-source130-failure-causes.json",
+      "bytes": 7020,
+      "SHA256": "36a44288f667b16d606c066751fd51af0d12279df562ebabfafb0bfa8bc9f10c"
+    },
+    {
+      "path": "benchmark-results/clean-model-comparison-20261015/followup/20261017/selected-pipeline-deployment/final-candidate-http/run-plan.json",
+      "bytes": 6763,
+      "SHA256": "ebac91814189ebbfe9f59e16d39d6444cb90d8590c9b8e1cead1eeb4c41e7f96"
+    },
+    {
+      "path": "benchmark-results/clean-model-comparison-20261015/followup/20261017/selected-pipeline-deployment/final-candidate-http/run-completion.json",
+      "bytes": 4769,
+      "SHA256": "aae3aef7b29f29874fdcc3d2f050d0d5e2265ea29be7535029f5e7fd537b766b"
+    },
+    {
+      "path": "benchmark-results/clean-model-comparison-20261015/followup/20261017/selected-pipeline-deployment/final-candidate-http/summary.json",
+      "bytes": 13889,
+      "SHA256": "21511d3930c63687bd64ed282480a3a7206c2c1e06e2009cc46e42ed0a8940b0"
+    },
+    {
+      "path": "benchmark-results/clean-model-comparison-20261015/followup/20261017/selected-pipeline-deployment/final-candidate-http/scoring/score-summary.json",
+      "bytes": 309850,
+      "SHA256": "fd68b62aa91764f34b69329052afefd8dad254488072f3989c6bfa3213a178e5"
+    },
+    {
+      "path": "benchmark-results/clean-model-comparison-20261015/followup/20261017/selected-pipeline-deployment/final-candidate-http/source-assets-audit.json",
+      "bytes": 99395,
+      "SHA256": "02878130b3d0d1c818788aec799f54c8e791bfffeb96961b5a166fe934d426ef"
+    },
+    {
+      "path": "benchmark-results/clean-model-comparison-20261015/followup/20261017/selected-pipeline-deployment/final-candidate-http/performance-summary.json",
+      "bytes": 376777,
+      "SHA256": "875a0d87376dbaa7c92648a8d42de2049c67a22f7e3183a08fd16889631cdc86"
+    },
+    {
+      "path": "benchmark-results/clean-model-comparison-20261015/followup/20261017/selected-pipeline-deployment/production-http/run-plan.json",
+      "bytes": 4659,
+      "SHA256": "fa91f319fd51678a86ff09ad3a56a687803b9e4731a7442211cdef752175470a"
+    },
+    {
+      "path": "benchmark-results/clean-model-comparison-20261015/followup/20261017/selected-pipeline-deployment/production-http/run-completion.json",
+      "bytes": 4737,
+      "SHA256": "0889b66280b09c11f33fba913c7a1f71ff484740f4601fc872b86390bd416b76"
+    },
+    {
+      "path": "benchmark-results/clean-model-comparison-20261015/followup/20261017/selected-pipeline-deployment/production-http/summary.json",
+      "bytes": 4049,
+      "SHA256": "747ab14ab652716ab868dfd569155053b4e7e6174f8b8992bb2b4758ef4c3986"
+    },
+    {
+      "path": "benchmark-results/clean-model-comparison-20261015/followup/20261017/selected-pipeline-deployment/production-http/scoring/score-summary.json",
+      "bytes": 46553,
+      "SHA256": "f741be09c214f879ea51cf228d6e16727e209c5b4978704ac8ccd6ee8906b14a"
+    },
+    {
+      "path": "benchmark-results/clean-model-comparison-20261015/followup/20261017/selected-pipeline-deployment/production-http/source-assets-audit.json",
+      "bytes": 41243,
+      "SHA256": "350f30afb559e4bba03e6eb578c3a587c850c7a59ddb84233904fd21d5767f5f"
+    },
+    {
+      "path": "benchmark-results/clean-model-comparison-20261015/followup/20261017/selected-pipeline-deployment/production-http/performance-summary.json",
+      "bytes": 143379,
+      "SHA256": "6ba976ce065f9e06211865f6b693cdfa61e49a40502261d7f79a66412be142f1"
+    },
+    {
+      "path": "benchmark-results/clean-model-comparison-20261015/followup/20261017/selected-pipeline-deployment/production-final-audit.json",
+      "bytes": 4902,
+      "SHA256": "592ba6cf367b2581b52fdf151222c7a5df310aa3fa80923f81aa0e1256d8959b"
+    },
+    {
+      "path": "benchmark-results/clean-model-comparison-20261015/followup/20261017/selected-pipeline-deployment/readme-chart-validation.json",
+      "bytes": 889,
+      "SHA256": "d898c035f51b50f27fcc5df03ffd7208884c179558d18af853e9e28e1ddfef09"
+    },
+    {
+      "path": "benchmark-results/clean-model-comparison-20261015/followup/20261017/selected-pipeline-deployment/release-documentation-validation.json",
+      "bytes": 15527,
+      "SHA256": "ee6b9e838662d82edf4303bd9e02d9b1ef3533773c257ff3a6776a943d2e1b17"
+    }
+  ],
+  "documentation": [
+    {
+      "path": "README.md",
+      "bytes": 16641,
+      "SHA256": "fcdae3ca1f6735036c4116c2224e7eec5392422300f0da437c2f3a67f14e0805"
+    },
+    {
+      "path": "benchmark-results/clean-model-comparison-20261015/report.md",
+      "bytes": 60500,
+      "SHA256": "b7de6ab5c983f21927639637c57fb394ddae7f401e87b3923198494c4d904460"
+    },
+    {
+      "path": "docs/assets/model-comparison-quality.svg",
+      "bytes": 164093,
+      "SHA256": "20726b48462bec7de883ba76eb286dbc810c9fee9c13928eb2121f812f38f688"
+    },
+    {
+      "path": "docs/assets/model-comparison-time.svg",
+      "bytes": 88406,
+      "SHA256": "f3c00c15a0c45db54728117ded4c9db2398fd37e8619339abcc752e2fddcd1b6"
+    },
+    {
+      "path": "scripts/render_readme_charts.py",
+      "bytes": 7545,
+      "SHA256": "c9ad19c2b0486bdc73160fb96c062880b5729efeb44cf5fba1a4fcae752b2126"
+    }
+  ],
+  "source_code_matches_production_at_final_audit": true,
+  "evidence_index": {
+    "path": "benchmark-results/clean-model-comparison-20261015/followup/20261017/selected-pipeline-deployment/release-evidence-index.jsonl",
+    "SHA256": "be98338c109823f70c071907676f0859f9e41ff6f6f5bbf413f320827e14052d",
+    "files": 952,
+    "bytes_indexed": 155877003,
+    "excludes_self_manifest_python_caches_and_post_commit_closure": true
+  }
+}

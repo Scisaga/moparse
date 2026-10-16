@@ -41,10 +41,10 @@ from app.models.parse_options import (
     ContentParseOptions,
     ParseProfile,
     ScanPolicy,
-    VlmPolicy,
 )
 from app.models.parse_result import (
     DocumentParseResult,
+    GlmDiagnostics,
     PageDiagnostics,
     PageParseResult,
     PageSourceKind,
@@ -56,7 +56,6 @@ from app.models.parse_result import (
     QualityVerdict,
     RouteSummary,
     SelectionStrategy,
-    VisualFusionDiagnostics,
     WarningSeverity,
 )
 from app.models.source import StoredSource
@@ -121,6 +120,5 @@ __all__ = [
     "VisualAnalysis",
     "VisualClassification",
     "WarningSeverity",
-    "VlmPolicy",
-    "VisualFusionDiagnostics",
+    "GlmDiagnostics",
 ]

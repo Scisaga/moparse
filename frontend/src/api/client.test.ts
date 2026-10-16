@@ -18,7 +18,6 @@ describe('API request helpers', () => {
     expect(form.get('describe_images')).toBe('false')
     expect(form.get('include_renderings')).toBeNull()
     expect(form.get('mode')).toBeNull()
-    expect(form.get('vlm_policy')).toBeNull()
   })
 
   it('parses SSE JSON and ignores malformed messages', () => {
@@ -38,7 +37,7 @@ describe('API request helpers', () => {
           backends: [
             { name: 'docling-standard', state: 'ready', enabled: true },
             { name: 'glm-ocr-remote', state: 'unavailable', enabled: true, detail: 'connection refused' },
-            { name: 'ollama-vlm', state: 'disabled', enabled: false },
+            { name: 'glm-sdk-remote', state: 'disabled', enabled: false },
           ],
           queue: { active: 1, capacity: 8 },
         }
@@ -48,7 +47,7 @@ describe('API request helpers', () => {
     expect(snapshot.api).toBe('ready')
     expect(snapshot.backends.find((backend) => backend.id === 'docling')?.status).toBe('ready')
     expect(snapshot.backends.find((backend) => backend.id === 'glm')).toMatchObject({ status: 'unavailable', message: 'connection refused' })
-    expect(snapshot.backends.find((backend) => backend.id === 'vlm')?.status).toBe('disabled')
+    expect(snapshot.backends.find((backend) => backend.id === 'glm-sdk')?.status).toBe('disabled')
     expect(snapshot.queue).toEqual({ active: 1, capacity: 8 })
   })
 

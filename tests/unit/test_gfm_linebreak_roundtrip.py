@@ -1,10 +1,8 @@
 from copy import deepcopy
-from types import SimpleNamespace
 
 import pytest
 
-from app.models.parse_result import PageParseResult
-from app.services.parser_service import ParserService
+from app.services.ir_service import DocumentIRService
 from app.services.table_service import TableCellFragment, TableFragment, render_gfm_rows
 
 
@@ -34,14 +32,8 @@ def _fragment(rows: list[list[str]]) -> TableFragment:
     )
 
 
-def _refresh(fragment: TableFragment) -> None:
-    page = PageParseResult(page_number=6, backend="docling-standard", content=fragment.rendered)
-    result = SimpleNamespace(pages=[page], _table_fragments=[fragment])
-    ParserService._refresh_table_fragment_renderings(result)
-
-
 @pytest.mark.parametrize("linebreak", ["\r", "\r\n", "\n"])
-def test_wrapped_name_and_amount_survive_gfm_refresh(linebreak: str) -> None:
+def test_wrapped_name_and_amount_survive_gfm_and_ir_export(linebreak: str) -> None:
     fragment = _fragment(
         [
             ["序号", "股东名称", "持股数量", "持股比例", "有限售条件的股" + linebreak + "份数量"],
@@ -50,9 +42,17 @@ def test_wrapped_name_and_amount_survive_gfm_refresh(linebreak: str) -> None:
     )
     before = deepcopy(fragment)
 
-    _refresh(fragment)
+    table = DocumentIRService._table(fragment)
+    assert table.source_units == [6]
+    assert table.unit_text == "单位：股"
 
     assert fragment.rows == before.rows
+    for source_cell in fragment.cells:
+        exported = next(cell for cell in table.cells
+                        if (cell.row, cell.column) == (source_cell.row, source_cell.column))
+        assert exported.text == source_cell.text
+        assert exported.row_span == source_cell.row_span
+        assert exported.column_span == source_cell.column_span
     assert fragment.cells == before.cells
     assert fragment.cell_evidence == before.cell_evidence
     assert fragment.header_row_indices == (0,)
@@ -81,9 +81,17 @@ def test_linebreak_rendering_preserves_multi_level_headers_and_source_spans() ->
     ]
     before = deepcopy(fragment)
 
-    _refresh(fragment)
+    table = DocumentIRService._table(fragment)
+    assert table.source_units == [6]
+    assert table.unit_text == "单位：股"
 
     assert fragment.rows == before.rows
+    for source_cell in fragment.cells:
+        exported = next(cell for cell in table.cells
+                        if (cell.row, cell.column) == (source_cell.row, source_cell.column))
+        assert exported.text == source_cell.text
+        assert exported.row_span == source_cell.row_span
+        assert exported.column_span == source_cell.column_span
     assert fragment.cells == before.cells
     assert fragment.cell_evidence == before.cell_evidence
     assert fragment.header_row_indices == (0, 1)

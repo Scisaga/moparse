@@ -21,10 +21,7 @@ from app.models import (
 )
 from app.parsers import ParserUnavailableError
 from app.services.evidence_service import PageEvidence
-from app.services.parser_service import (
-    ParserService,
-    _NativePageEvidence,
-)
+from app.services.parser_service import ParserService
 
 
 def stored_source() -> StoredSource:
@@ -226,7 +223,7 @@ async def test_parse_preserves_multi_section_gfm_table_without_domain_rewrite(
     assert "<fact" not in parsed.markdown
 
 
-async def test_scan_policy_controls_selective_visual_fusion(monkeypatch) -> None:
+async def test_scan_policy_controls_glm_processing(monkeypatch) -> None:
     service = ParserService(SimpleNamespace(parser_workers=1, content_timeout_seconds=1.0))
     install_parser(service, ImmediateParser("content"), monkeypatch)
     calls = 0
@@ -235,7 +232,7 @@ async def test_scan_policy_controls_selective_visual_fusion(monkeypatch) -> None
         nonlocal calls
         calls += 1
 
-    monkeypatch.setattr(service, "_apply_visual_fusion", visual)
+    monkeypatch.setattr(service, "_apply_scan_ocr", visual)
     await service.parse(
         stored_source(),
         ContentParseOptions(scan_policy=ScanPolicy.SKIP),
@@ -247,113 +244,6 @@ async def test_scan_policy_controls_selective_visual_fusion(monkeypatch) -> None
         document_id="docparse_auto",
     )
     assert calls == 1
-
-
-async def test_signature_vlm_disabled_by_default_does_not_probe_or_call_qwen() -> None:
-    service = ParserService(
-        SimpleNamespace(
-            parser_workers=1,
-            content_timeout_seconds=1.0,
-            visual_router_enabled=True,
-            glm_sdk_enabled=False,
-            vlm_enabled=True,
-            vlm_signature_enabled=False,
-        )
-    )
-    qwen_probe = AsyncMock(side_effect=AssertionError("signature page must not probe Qwen"))
-    service.vlm_parser = SimpleNamespace(
-        enabled=True,
-        name="ollama-vlm",
-        probe=qwen_probe,
-    )
-    parsed = result(
-        "docparse_signature_without_qwen",
-        "法定代表人：张三\n\n<!-- image -->",
-    )
-    parsed.pages[0].diagnostics = PageDiagnostics(source_kind=PageSourceKind.SCANNED)
-    evidence = PageEvidence(
-        page_number=1,
-        source_kind=PageSourceKind.SCANNED,
-        image_coverage_ratio=0.5,
-    )
-    original_content = parsed.pages[0].content
-
-    assert service._complex_visual_targets(parsed, {1: evidence}) == {}
-    await service._apply_visual_fusion(
-        parsed,
-        stored_source(),
-        ContentParseOptions(scan_policy=ScanPolicy.AUTO),
-        {1: evidence},
-        document_id=parsed.document_id,
-        cancel_event=None,
-    )
-
-    qwen_probe.assert_not_awaited()
-    assert parsed.pages[0].content == original_content
-    assert parsed._vlm_page_numbers == set()
-
-
-def test_signature_vlm_can_be_explicitly_enabled_for_internal_routing() -> None:
-    service = ParserService(
-        SimpleNamespace(
-            parser_workers=1,
-            visual_router_enabled=True,
-            vlm_signature_enabled=True,
-        )
-    )
-    parsed = result("docparse_signature_opt_in", "法定代表人：张三\n\n<!-- image -->")
-    parsed.pages[0].diagnostics = PageDiagnostics(source_kind=PageSourceKind.SCANNED)
-    evidence = PageEvidence(
-        page_number=1,
-        source_kind=PageSourceKind.SCANNED,
-        image_coverage_ratio=0.5,
-    )
-
-    assert service._complex_visual_targets(parsed, {1: evidence}) == {1: "signature"}
-
-
-async def test_disabled_full_table_route_does_not_probe_qwen_or_report_it_unavailable() -> None:
-    service = ParserService(
-        SimpleNamespace(
-            parser_workers=1,
-            content_timeout_seconds=1.0,
-            visual_router_enabled=True,
-            glm_sdk_enabled=False,
-            vlm_enabled=True,
-            vlm_table_full_enabled=False,
-            vlm_table_targeted_enabled=True,
-            vlm_signature_enabled=False,
-        )
-    )
-    qwen_probe = AsyncMock(side_effect=AssertionError("disabled full route must not probe Qwen"))
-    service.vlm_parser = SimpleNamespace(
-        enabled=True,
-        name="ollama-vlm",
-        probe=qwen_probe,
-    )
-    parsed = result("docparse_full_without_qwen", "扫描表正文")
-    parsed.pages[0].diagnostics = PageDiagnostics(source_kind=PageSourceKind.SCANNED)
-    evidence = PageEvidence(
-        page_number=1,
-        source_kind=PageSourceKind.SCANNED,
-        horizontal_grid_lines=4,
-        vertical_grid_lines=4,
-        grid_area_ratio=0.5,
-        grid_regions=[(0.1, 0.2, 0.9, 0.8)],
-    )
-
-    await service._apply_visual_fusion(
-        parsed,
-        stored_source(),
-        ContentParseOptions(scan_policy=ScanPolicy.AUTO),
-        {1: evidence},
-        document_id=parsed.document_id,
-        cancel_event=None,
-    )
-
-    qwen_probe.assert_not_awaited()
-    assert parsed.pages[0].content == "扫描表正文"
-    assert not any(warning.code == "visual_fusion_unavailable" for warning in parsed.warnings)
 
 
 def test_skip_scan_policy_removes_unbound_ocr_and_retains_full_page_asset() -> None:
@@ -384,80 +274,164 @@ def test_skip_scan_policy_removes_unbound_ocr_and_retains_full_page_asset() -> N
     assert parsed.pages[0].diagnostics.selected_strategy.value == "scan_skipped"
 
 
-def test_text_normalization_uses_native_tokens_and_preserves_code_and_mermaid() -> None:
-    original = (
-        "制造企业 已经拥 有大量SOP，M ES、An d roi d 与 Physical World Model。\n"
-        "G B /T 1243 -2024；ISO 9 001 : 201 5。\n"
-        "| M ES | 制 造 |\n"
-        "`M E S 中 文`\n"
-        "```python\nM E S = '中 文'\n```\n"
-        "```mermaid\nflowchart TD\nn1[中 文] --> n2[M E S]\n```\n"
-        "- \uf0b7 现场 作业\ufffd\u200b\n"
-    )
+@pytest.mark.parametrize("filename", ["renamed-input.pdf", "1225474693.pdf"])
+@pytest.mark.parametrize("observed_requests", [None, 1])
+async def test_glm_page_selection_uses_measured_source_kind_and_keeps_sdk_output_verbatim(
+    filename: str, observed_requests: int | None,
+) -> None:
+    from app.models import BackendState, BackendStatus
 
-    normalized, glyphs = ParserService._normalize_markdown_text(
-        original,
-        {
-            "mes",
-            "android",
-            "physical",
-            "world",
-            "model",
-            "gb",
-            "t",
-            "1243",
-            "2024",
-            "iso",
-            "9001",
-            "2015",
-        },
-        {"gb/t", "1243-2024", "9001:2015"},
-    )
-
-    assert "制造企业已经拥有大量SOP，MES、Android 与 Physical World Model。" in normalized
-    assert "GB/T 1243-2024；ISO 9001:2015。" in normalized
-    assert "| MES | 制造 |" in normalized
-    assert "`M E S 中 文`" in normalized
-    assert "```python\nM E S = '中 文'\n```" in normalized
-    assert "```mermaid\nflowchart TD\nn1[中 文] --> n2[M E S]\n```" in normalized
-    assert glyphs == {"U+F0B7": 1, "U+FFFD": 1, "U+200B": 1}
-
-
-def test_glyph_sanitizer_never_guesses_pua_without_font_position_evidence() -> None:
-    original = "- \uf0b7 item\ufffd\u200c\u200d\ue123\f"
-    normalized, glyphs = ParserService._sanitize_glyphs(original)
-    assert normalized == original
-    assert glyphs == {
-        "U+000C": 1,
-        "U+200C": 1,
-        "U+200D": 1,
-        "U+E123": 1,
-        "U+F0B7": 1,
-        "U+FFFD": 1,
+    service = ParserService(SimpleNamespace(parser_workers=1))
+    original = result("docparse_measured_route")
+    original.pages = [
+        PageParseResult(page_number=number, backend="docling-standard", content=f"native-{number}")
+        for number in (3, 8, 17, 43)
+    ]
+    original.page_count = 43
+    original.processed_pages = 4
+    kinds = (PageSourceKind.NATIVE, PageSourceKind.SCANNED,
+             PageSourceKind.SPARSE, PageSourceKind.MIXED)
+    evidence = {
+        page.page_number: PageEvidence(page_number=page.page_number, source_kind=kind)
+        for page, kind in zip(original.pages, kinds, strict=True)
     }
+    sdk = result("docparse_measured_route")
+    sdk.pages = [
+        PageParseResult(page_number=8, backend="glm-sdk-remote",
+                        content="| 原件期间 | 金额 |\n| --- | --- |\n| 收入 | 100,000,000.00 |"),
+        PageParseResult(page_number=43, backend="glm-sdk-remote", content="SDK原件合并格文字"),
+    ]
+    sdk.page_count = 43
+    sdk.processed_pages = 2
+    calls = AsyncMock(return_value=sdk)
+    service.glm_adapter = SimpleNamespace(enabled=True)
+    service.glm_sdk_parser = SimpleNamespace(
+        enabled=True, name="glm-sdk-remote", parse=calls,
+        probe=AsyncMock(return_value=BackendStatus(name="glm-sdk-remote", state=BackendState.READY)),
+    )
+    source = stored_source().model_copy(update={"filename": filename, "page_count": 43})
+    before_native = original.pages[0]
+    before_sparse = original.pages[2]
+    sdk_texts = [page.content for page in sdk.pages]
+    for page in sdk.pages:
+        page._sdk_requests = observed_requests
+
+    await service._apply_scan_ocr(
+        original, source, ContentParseOptions(scan_policy=ScanPolicy.AUTO), evidence,
+        document_id=original.document_id, cancel_event=None,
+    )
+
+    calls.assert_awaited_once()
+    called_source, called_options = calls.await_args.args
+    assert called_source is source
+    assert called_options.unit_range == "8,43"
+    assert original.pages[0] is before_native
+    assert original.pages[2] is before_sparse
+    assert [original.pages[1].content, original.pages[3].content] == sdk_texts
+    assert original.pipeline.ocr == "glm-sdk-remote"
+    assert original.route_summary.pages_with_ocr == 2
+    assert original.pages[1].diagnostics.source_kind == PageSourceKind.SCANNED
+    assert original.pages[3].diagnostics.source_kind == PageSourceKind.MIXED
+    assert original.pages[1].diagnostics.glm.sdk_requests == observed_requests
 
 
-async def test_automatic_text_normalization_uses_native_lexicon(monkeypatch) -> None:
-    service = ParserService(
-        SimpleNamespace(parser_workers=1, content_timeout_seconds=1.0, vlm_enabled=False)
+async def test_native_pages_do_not_probe_or_call_remote_ocr() -> None:
+    service = ParserService(SimpleNamespace(parser_workers=1))
+    parsed = result("docparse_no_remote")
+    forbidden = AsyncMock(side_effect=AssertionError("native PDF must use the CPU parser"))
+    service.glm_sdk_parser = SimpleNamespace(probe=forbidden, parse=forbidden)
+
+    await service._apply_scan_ocr(
+        parsed, stored_source(), ContentParseOptions(),
+        {1: PageEvidence(page_number=1, source_kind=PageSourceKind.NATIVE)},
+        document_id=parsed.document_id, cancel_event=None,
     )
-    install_parser(
-        service,
-        ImmediateParser("制造企业 已经拥 有，M ES 与 Physical World Model。"),
-        monkeypatch,
+
+    forbidden.assert_not_awaited()
+    assert parsed.pages[0].content == "# Page 1"
+
+
+async def test_skip_mixed_page_preserves_native_text_and_avoids_remote_inference() -> None:
+    from app.services.evidence_service import NativeBlock
+
+    service = ParserService(SimpleNamespace(parser_workers=1))
+    parsed = result("docparse_mixed_skip", "untrusted-ocr-only-9999")
+    native = "原件可复制的说明文本"
+    evidence = PageEvidence(
+        page_number=1, source_kind=PageSourceKind.MIXED,
+        native_blocks=[NativeBlock(native, (10, 10, 100, 30), 10, False)],
+        page_width=595, page_height=842,
     )
-    monkeypatch.setattr(
-        service,
-        "_native_lexicons",
-        lambda _source, _pages: {
-            1: _NativePageEvidence(words={"mes", "physical", "world", "model"})
-        },
-    )
+
+    assert service._skip_scanned_pdf_pages(parsed, {1: evidence}) == {1}
+
+    assert native in parsed.pages[0].content
+    assert "untrusted-ocr-only-9999" not in parsed.pages[0].content
+    assert parsed._picture_candidates[0].normalized_bbox == (0.0, 0.0, 1.0, 1.0)
+    assert parsed._picture_candidates[0].allow_description is False
+
+
+@pytest.mark.parametrize("model_text", [
+    "制造企业 已经拥 有，M ES 与 Physical World Model。",
+    "G B /T 1243 -2024；ISO 9 001 : 201 5。",
+    "| 项目 | 原文期间 |\n| --- | --- |\n| 营业收入 | 749,666,443.46 |",
+    "`M E S 中 文`\n\n```mermaid\nflowchart TD\nn1[中 文] --> n2[M E S]\n```",
+])
+async def test_model_text_is_preserved_without_legacy_normalization(
+    monkeypatch: pytest.MonkeyPatch, model_text: str,
+) -> None:
+    service = ParserService(SimpleNamespace(parser_workers=1, content_timeout_seconds=1.0))
+    install_parser(service, ImmediateParser(model_text), monkeypatch)
 
     parsed = await service.parse(
-        stored_source(), ContentParseOptions(), document_id="docparse_spacing"
+        stored_source(), ContentParseOptions(), document_id="docparse_faithful_model"
     )
-    expected = "制造企业已经拥有，MES 与 Physical World Model。"
-    assert parsed.pages[0].content == expected
-    assert parsed.parse_result is not None
-    assert parsed.parse_result.units[0].blocks[0].text == expected
+
+    assert parsed.pages[0].content == model_text
+    assert model_text in parsed.markdown
+    assert not any(warning.code.startswith("auto_") for warning in parsed.warnings)
+
+
+@pytest.mark.parametrize("scan_policy", [ScanPolicy.AUTO, ScanPolicy.SKIP])
+@pytest.mark.parametrize("kind", [PageSourceKind.SCANNED, PageSourceKind.MIXED])
+async def test_all_scan_pages_bypass_docling_and_skip_makes_no_model_calls(
+    monkeypatch: pytest.MonkeyPatch, scan_policy: ScanPolicy, kind: PageSourceKind,
+) -> None:
+    from app.models import BackendState, BackendStatus
+
+    service = ParserService(SimpleNamespace(parser_workers=1, content_timeout_seconds=2.0))
+    service._initialized = True
+    no_docling = AsyncMock(side_effect=AssertionError("scan page must not run native Docling"))
+    service.standard_parser = SimpleNamespace(name="docling-standard", parse=no_docling)
+    evidence = {number: PageEvidence(page_number=number, source_kind=kind) for number in (3, 8)}
+    monkeypatch.setattr(service, "_page_evidence", AsyncMock(return_value=evidence))
+    service.multimodal_service.enrich_page_content = AsyncMock()
+    sdk_result = result("docparse_scan_only")
+    sdk_result.pages = [PageParseResult(page_number=number, backend="glm-sdk-remote",
+                                       content=f"原件第{number}页GLM文字") for number in (3, 8)]
+    sdk_result.page_count = 8
+    sdk_result.processed_pages = 2
+    remote = AsyncMock(return_value=sdk_result)
+    probe = AsyncMock(return_value=BackendStatus(name="glm-sdk-remote", state=BackendState.READY))
+    service.glm_adapter = SimpleNamespace(enabled=True)
+    service.glm_sdk_parser = SimpleNamespace(enabled=True, name="glm-sdk-remote",
+                                            parse=remote, probe=probe)
+    source = stored_source().model_copy(update={"page_count": 8, "filename": "arbitrary.pdf"})
+
+    parsed = await service.parse(
+        source, ContentParseOptions(scan_policy=scan_policy, unit_range="3,8"),
+        document_id="docparse_scan_only",
+    )
+
+    no_docling.assert_not_awaited()
+    assert [page.page_number for page in parsed.pages] == [3, 8]
+    if scan_policy == ScanPolicy.SKIP:
+        remote.assert_not_awaited()
+        probe.assert_not_awaited()
+        assert len(parsed._picture_candidates) == 2
+        assert all("scan_policy=skip" in page.content for page in parsed.pages)
+    else:
+        remote.assert_awaited_once()
+        assert remote.await_args.args[1].unit_range == "3,8"
+        assert [page.content for page in parsed.pages] == [page.content for page in sdk_result.pages]
+        assert parsed.route_summary.pages_with_ocr == 2

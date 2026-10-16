@@ -90,7 +90,7 @@ def create_app(
         title="MosaicParse",
         summary="Self-hosted multimodal content parser for external RAG systems",
         description=(
-            "An independent multimodal parsing service with Docling, optional GLM-OCR, and VLM "
+            "An independent document and media parsing service with Docling and optional GLM-OCR "
             "backends. It produces evidence and assets, but does not perform embedding, chunking, "
             "indexing, question answering, or domain entity extraction."
         ),

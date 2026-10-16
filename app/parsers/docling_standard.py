@@ -16,7 +16,7 @@ from pathlib import Path
 from typing import Any, cast
 
 from app.models.backend import BackendState, BackendStatus
-from app.models.parse_options import ContentParseOptions, ParseProfile, ScanPolicy
+from app.models.parse_options import ContentParseOptions, ParseProfile
 from app.models.parse_result import (
     DocumentParseResult,
     PageParseResult,
@@ -36,7 +36,6 @@ from app.parsers.base import (
     ProgressCallback,
 )
 from app.parsers.glm_ocr_remote import GlmOcrRemoteAdapter
-from app.services.native_table_service import restore_missing_native_merged_cells
 from app.services.table_service import export_page_markdown, extract_table_fragments
 from app.utils.page_range import group_consecutive_pages, parse_page_range
 from app.utils.settings import setting
@@ -57,7 +56,7 @@ class PictureCandidate:
 class _ObservableStandardPdfPipelineMixin:
     """Expose Docling's real page-pipeline boundary to the async adapter.
 
-    Docling 2.119 has no public page callback, but its threaded standard
+    The pinned Docling pipeline has no public page callback, but its threaded standard
     pipeline invokes ``_release_page_resources`` exactly once when a page has
     passed preprocessing, layout, OCR, table recognition and page assembly.
     Keep this tiny, version-guarded bridge at the dependency boundary; the
@@ -107,9 +106,7 @@ class DoclingStandardParser(DocumentParser):
         self._page_worker_count = int(setting(settings, "docling_page_workers", 1))
         self._converter_count = self._document_worker_count * self._page_worker_count
         self._num_threads = int(setting(settings, "docling_num_threads", 4))
-        self._parallel_min_pages = int(
-            setting(settings, "docling_page_parallel_min_pages", 4)
-        )
+        self._parallel_min_pages = int(setting(settings, "docling_page_parallel_min_pages", 4))
         self._available_slots: asyncio.Queue[int] = asyncio.Queue(maxsize=self._converter_count)
         for slot in range(self._converter_count):
             self._available_slots.put_nowait(slot)
@@ -132,7 +129,6 @@ class DoclingStandardParser(DocumentParser):
             await asyncio.to_thread(
                 __import__, "docling.document_converter", fromlist=["DocumentConverter"]
             )
-            glm_status = await self.glm_adapter.probe()
             languages = list(getattr(self.settings, "default_languages", None) or ["zh", "en"])
             # Build and initialize every configured worker's balanced pipeline.
             # This loads/verifies model artifacts before /ready can report true.
@@ -141,7 +137,7 @@ class DoclingStandardParser(DocumentParser):
                     self._initialize_converter_slot,
                     worker_slot,
                     languages,
-                    glm_status.ready,
+                    False,
                 )
             self._dependency_error = None
             self._initialized = True
@@ -160,7 +156,8 @@ class DoclingStandardParser(DocumentParser):
                 detail=(
                     f"{len(self._converters)} converter profile(s) cached; "
                     f"{self._num_threads} CPU thread(s) each, "
-                    f"{self._page_worker_count} page worker(s) per document"
+                    f"{self._page_worker_count} page worker(s) per document; "
+                    "TableFormer V1 accurate, matching=False, PyPdfium, native OCR off"
                 ),
             )
         return BackendStatus(
@@ -214,6 +211,7 @@ class DoclingStandardParser(DocumentParser):
         languages: list[str],
         glm_ready: bool,
     ) -> object:
+        from docling.backend.pypdfium2_backend import PyPdfiumDocumentBackend
         from docling.datamodel.accelerator_options import AcceleratorOptions
         from docling.datamodel.base_models import InputFormat
         from docling.datamodel.pipeline_options import (
@@ -246,17 +244,6 @@ class DoclingStandardParser(DocumentParser):
 
             docling_settings.artifacts_path = None
 
-        scale = float(setting(self.settings, "glm_ocr_scale", 3.0))
-        if profile == ParseProfile.FAST:
-            scale = min(scale, 2.0)
-        elif profile == ParseProfile.ACCURATE:
-            scale = max(scale, 3.0)
-        configured_table_mode = str(setting(self.settings, "docling_table_mode", "accurate"))
-        table_mode = (
-            TableFormerMode.FAST
-            if profile == ParseProfile.FAST or configured_table_mode == "fast"
-            else TableFormerMode.ACCURATE
-        )
         device = str(setting(self.settings, "docling_device", "cpu"))
         if device.startswith("cuda"):
             import torch
@@ -265,15 +252,19 @@ class DoclingStandardParser(DocumentParser):
             if not torch.cuda.is_available() or requested_index >= torch.cuda.device_count():
                 raise RuntimeError(f"configured Docling device {device!r} is unavailable")
         pipeline_options = PdfPipelineOptions(
-            do_ocr=bool(glm_ready),
+            do_ocr=False,
             do_table_structure=True,
-            allow_external_plugins=bool(glm_ready),
-            enable_remote_services=bool(glm_ready),
+            allow_external_plugins=False,
+            enable_remote_services=False,
             artifacts_path=artifacts_path,
             document_timeout=float(setting(self.settings, "content_timeout_seconds", 900)),
             accelerator_options=AcceleratorOptions(
                 device=device,
                 num_threads=self._num_threads,
+            ),
+            table_structure_options=TableStructureOptions(
+                mode=TableFormerMode.ACCURATE,
+                do_cell_matching=False,
             ),
         )
         # torch.compile has a very large first-document cost on the default CPU
@@ -283,22 +274,13 @@ class DoclingStandardParser(DocumentParser):
             layout_engine_options.compile_model = bool(
                 setting(self.settings, "docling_compile_models", False)
             )
-        cast(TableStructureOptions, pipeline_options.table_structure_options).mode = table_mode
-        cast(
-            TableStructureOptions, pipeline_options.table_structure_options
-        ).do_cell_matching = bool(setting(self.settings, "docling_do_cell_matching", True))
         if hasattr(pipeline_options, "force_backend_text"):
             pipeline_options.force_backend_text = bool(
                 setting(self.settings, "docling_force_backend_text", False)
             )
-        if glm_ready:
-            pipeline_options.ocr_options = self.glm_adapter.build_options(
-                languages=languages,
-                scale=scale,
-                force_full_page_ocr=force_full_page_ocr,
-            )
         pipeline_class = _observable_standard_pipeline_class()
         pdf_format_option = PdfFormatOption(
+            backend=PyPdfiumDocumentBackend,
             pipeline_options=pipeline_options,
             pipeline_cls=pipeline_class,
         )
@@ -417,7 +399,7 @@ class DoclingStandardParser(DocumentParser):
         Keeping ``generate_picture_images`` enabled makes the threaded PDF
         pipeline retain rendered pages until document assembly, which is
         costly for long inputs.  Provenance already provides a stable crop in
-        page coordinates, so downstream VLM enrichment can render that crop
+        page coordinates, so downstream GLM text recognition can render that crop
         directly from the source PDF instead.
         """
 
@@ -816,17 +798,6 @@ class DoclingStandardParser(DocumentParser):
         error_messages = self._conversion_error_messages(conversion)
         picture_candidates = self._extract_picture_candidates(document, page_group)
         group_table_fragments = extract_table_fragments(document, page_group)
-        completeness_diagnostics: list[dict[str, Any]] = []
-        recovered_cells = (
-            await asyncio.to_thread(
-                restore_missing_native_merged_cells,
-                source_path,
-                group_table_fragments,
-                completeness_diagnostics,
-            )
-            if source_path is not None
-            else {}
-        )
         overlapping_duplicates = self._overlapping_text_duplicate_counts(document, page_group)
         parsed_pages: list[PageParseResult] = []
 
@@ -854,38 +825,6 @@ class DoclingStandardParser(DocumentParser):
                 )
                 page_warnings: list[PipelineWarning] = []
                 page_status = PageStatus.COMPLETED
-                recovered = {
-                    fragment.fragment_id: recovered_cells[fragment.fragment_id]
-                    for fragment in group_table_fragments
-                    if fragment.page_number == page_number
-                    and fragment.fragment_id in recovered_cells
-                }
-                if recovered:
-                    page_warnings.append(
-                        PipelineWarning(
-                            code="native_table_completeness_repaired",
-                            message="native text and drawn grid repaired table text or span omissions",
-                            severity=WarningSeverity.INFO,
-                            page_number=page_number,
-                            backend="pymupdf-native",
-                            details={"fragments": recovered},
-                        )
-                    )
-                unresolved = [
-                    item for item in completeness_diagnostics
-                    if item["page_number"] == page_number
-                ]
-                if unresolved:
-                    page_warnings.append(
-                        PipelineWarning(
-                            code="native_table_completeness_unresolved",
-                            message="source evidence could not safely resolve all table differences",
-                            severity=WarningSeverity.WARNING,
-                            page_number=page_number,
-                            backend="pymupdf-native",
-                            details={"fragments": unresolved},
-                        )
-                    )
                 if error_messages:
                     page_status = PageStatus.WARNING
                     page_warnings.append(
@@ -929,8 +868,7 @@ class DoclingStandardParser(DocumentParser):
                         PipelineWarning(
                             code="overlapping_ocr_boxes_deduplicated",
                             message=(
-                                "identical text from highly overlapping OCR boxes was emitted "
-                                "once"
+                                "identical text from highly overlapping OCR boxes was emitted once"
                             ),
                             severity=WarningSeverity.INFO,
                             page_number=page_number,
@@ -1008,11 +946,9 @@ class DoclingStandardParser(DocumentParser):
             raise ParserCancelledError("job was cancelled before parsing")
         pages = parse_page_range(options.page_range, source.page_count)
         page_groups = group_consecutive_pages(pages)
-        glm_status = await self.glm_adapter.probe()
-        glm_ready = glm_status.ready and not (
-            source.mime_type == "application/pdf"
-            and options.scan_policy == ScanPolicy.SKIP
-        )
+        # OCR and orientation belong to the selected scan/mixed-page SDK route.
+        # The native converter never invokes an external OCR plugin.
+        glm_ready = False
         force_ocr = False
         started = time.perf_counter()
         await self._notify(progress_callback, 0, len(pages), "document.started")
@@ -1071,18 +1007,6 @@ class DoclingStandardParser(DocumentParser):
             )
 
         warnings: list[PipelineWarning] = []
-        if not glm_ready and not (
-            source.mime_type == "application/pdf"
-            and options.scan_policy == ScanPolicy.SKIP
-        ):
-            warnings.append(
-                PipelineWarning(
-                    code="glm_ocr_unavailable",
-                    message="GLM-OCR was unavailable; Docling ran without remote OCR",
-                    backend=self.glm_adapter.name,
-                    severity=WarningSeverity.WARNING,
-                )
-            )
         elapsed = max(0, round((time.perf_counter() - started) * 1000))
         failed = sum(page.status == PageStatus.FAILED for page in parsed_pages)
         route_summary = RouteSummary(failed_pages=failed)
@@ -1092,7 +1016,6 @@ class DoclingStandardParser(DocumentParser):
             route_summary.native_text_pages = 0
             route_summary.pages_with_ocr = len(parsed_pages)
             route_summary.ocr_regions = len(parsed_pages)
-            route_summary.vlm_pages = 0
         result = DocumentParseResult(
             document_id=document_id,
             filename=source.filename,

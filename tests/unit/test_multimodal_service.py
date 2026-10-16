@@ -80,28 +80,6 @@ def test_raster_routing_uses_completed_ocr_when_pdf_metrics_do_not_exist(
     assert service(tmp_path).classify_image(None, text) == expected
 
 
-@pytest.mark.parametrize(
-    ("language", "expected"),
-    [
-        (
-            "zh-CN",
-            "Write every natural-language output field in Simplified Chinese and set "
-            "the language field to zh-CN. Do not answer in English.",
-        ),
-        (
-            "en",
-            "Write every natural-language output field in English and set the "
-            "language field to en.",
-        ),
-        ("auto", "Use the main language visible in the image or sampled frames."),
-    ],
-)
-def test_media_language_instruction_is_shared_by_frames_and_video_summary(
-    language: str, expected: str
-) -> None:
-    assert MultimodalService._language_instruction(language) == expected  # type: ignore[arg-type]
-
-
 def test_keyframe_selection_is_deterministic_bounded_and_covers_endpoints(
     tmp_path: Path,
 ) -> None:
@@ -150,7 +128,7 @@ async def test_embedded_video_relationship_is_never_processed_as_video(
             classification=VisualClassification.VISUAL,
             summary="演示文稿中的静态海报图像",
             language="zh-CN",
-            model="fixture-vlm",
+            model="fixture-glm",
         )
     )
     multimodal._describe = describe  # type: ignore[method-assign]
@@ -202,7 +180,7 @@ async def test_office_duplicate_images_are_analyzed_once(tmp_path: Path) -> None
             classification=VisualClassification.VISUAL,
             summary="静态插图",
             language="zh-CN",
-            model="fixture-vlm",
+            model="fixture-glm",
         )
     )
     multimodal._describe = describe  # type: ignore[method-assign]
@@ -226,7 +204,7 @@ async def test_office_duplicate_images_are_analyzed_once(tmp_path: Path) -> None
     assert describe.await_count == 1
 
 
-async def test_office_document_image_uses_child_document_path_without_vlm(
+async def test_office_document_image_uses_child_document_path_without_media_ocr(
     tmp_path: Path,
 ) -> None:
     multimodal = service(tmp_path)
@@ -234,7 +212,7 @@ async def test_office_document_image_uses_child_document_path_without_vlm(
     child_parser = SimpleNamespace(
         parse=AsyncMock(return_value=SimpleNamespace(plain_text=visible_text))
     )
-    describe = AsyncMock(side_effect=AssertionError("document image must not invoke VLM"))
+    describe = AsyncMock(side_effect=AssertionError("document image must not invoke media OCR"))
     multimodal._describe = describe  # type: ignore[method-assign]
     path = Path("tests/fixtures/embedded-image.docx").resolve()
 
@@ -263,12 +241,12 @@ async def test_office_document_image_uses_child_document_path_without_vlm(
     assert describe.await_count == 0
 
 
-async def test_embedded_image_vlm_failure_returns_partial_with_original_asset(
+async def test_embedded_image_glm_failure_returns_partial_with_original_asset(
     tmp_path: Path,
 ) -> None:
     multimodal = service(tmp_path)
     multimodal._describe = AsyncMock(  # type: ignore[method-assign]
-        side_effect=ParserUnavailableError("fixture VLM unavailable")
+        side_effect=ParserUnavailableError("fixture GLM unavailable")
     )
     path = Path("tests/fixtures/embedded-image.docx").resolve()
     result = await multimodal.parse_office(
@@ -289,7 +267,8 @@ async def test_embedded_image_vlm_failure_returns_partial_with_original_asset(
     parse_result = result.parse_result
     assert parse_result.status == "partial"
     assert len(parse_result.assets) == 1
-    assert parse_result.assets[0].status.value == "failed"
+    assert parse_result.assets[0].status.value == "partial"
+    assert parse_result.assets[0].asset_id in parse_result.units[0].asset_ids
     assert multimodal.storage.asset_path(
         "job_partial_docx", parse_result.assets[0].asset_id
     ) is not None
@@ -330,11 +309,11 @@ async def test_embedded_images_are_preserved_without_description_by_default(
     assert "<asset" not in result.markdown
 
 
-async def test_standalone_video_requires_vlm_before_ffmpeg(tmp_path: Path) -> None:
+async def test_standalone_video_requires_glm_before_ffmpeg(tmp_path: Path) -> None:
     multimodal = service(tmp_path)
-    multimodal.vlm = SimpleNamespace(enabled=False)  # type: ignore[assignment]
+    multimodal.glm = SimpleNamespace(enabled=False)  # type: ignore[assignment]
     path = Path("tests/fixtures/scene-switch.mp4").resolve()
-    with pytest.raises(ParserUnavailableError, match="standalone video"):
+    with pytest.raises(ParserUnavailableError, match="sampled video"):
         await multimodal.parse_video(
             StoredSource(
                 path=path,
@@ -344,7 +323,7 @@ async def test_standalone_video_requires_vlm_before_ffmpeg(tmp_path: Path) -> No
                 page_count=1,
             ),
             ContentParseOptions(),
-            content_id="job_video_no_vlm",
+            content_id="job_video_no_glm",
             progress_callback=None,
             cancel_event=None,
         )
@@ -405,27 +384,20 @@ async def test_tiff_keeps_original_bytes_and_adds_png_preview(tmp_path: Path) ->
 async def test_real_ffmpeg_video_pipeline_produces_bounded_keyframe_evidence(
     tmp_path: Path,
 ) -> None:
-    class FakeVlm:
+    class FakeGlm:
         enabled = True
-        name = "fixture-vlm"
-        model = "fixture-vlm"
+        name = "glm-ocr-remote"
+        model = "fixture-glm"
 
-        async def complete_structured(
-            self, images, prompt, response_model, **kwargs
-        ):  # type: ignore[no-untyped-def]
-            if "classification" in response_model.model_fields:
-                value = response_model(
-                    classification="visual",
-                    summary=f"sampled frame with {len(images)} image",
-                    detailed_description="solid-color sampled test frame",
-                    language="en",
-                )
-            else:
-                value = response_model(
-                    summary="Summary based only on the sampled test frames."
-                )
-            return SimpleNamespace(value=value, duration_ms=1)
+        def __init__(self):
+            self.calls = 0
 
+        async def recognize_image(self, image: bytes) -> str:
+            assert image.startswith(b"\x89PNG")
+            self.calls += 1
+            return "可验证的采样帧文字"
+
+    glm = FakeGlm()
     settings = SimpleNamespace(
         data_dir=tmp_path,
         video_max_keyframes=6,
@@ -435,7 +407,7 @@ async def test_real_ffmpeg_video_pipeline_produces_bounded_keyframe_evidence(
         ffmpeg_max_alloc_bytes=128 * 1024 * 1024,
     )
     multimodal = MultimodalService(
-        settings, StorageService(settings), FakeVlm()  # type: ignore[arg-type]
+        settings, StorageService(settings), glm  # type: ignore[arg-type]
     )
     path = Path("tests/fixtures/scene-switch.mp4").resolve()
     progress: list[tuple[int, int, str]] = []
@@ -464,7 +436,14 @@ async def test_real_ffmpeg_video_pipeline_produces_bounded_keyframe_evidence(
     assert timestamps == sorted(timestamps)
     assert timestamps[0] == 0
     assert timestamps[-1] <= video.duration_ms
-    assert video.summary == "Summary based only on the sampled test frames."
+    assert "Sampled-frame text observations only" in video.summary
+    assert "可验证的采样帧文字" in video.summary
+    assert all(frame.visual_analysis.visible_text == "可验证的采样帧文字"
+               for frame in video.keyframes)
+    assert all(not frame.visual_analysis.scene and not frame.visual_analysis.objects
+               and not frame.visual_analysis.actions for frame in video.keyframes)
+    assert glm.calls == len({frame.asset_id for frame in video.keyframes})
+    assert parse_result.runtime.glm_calls == glm.calls
     assert all(state == "frame.processed" for _, _, state in progress)
     assert progress[-1][:2] == (len(timestamps), len(timestamps))
     for asset in parse_result.assets:

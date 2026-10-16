@@ -203,7 +203,7 @@ def create_mcp(runtime: Callable[[], Runtime], settings: Settings) -> McpBundle:
 
     @server.resource("mosaicparse://backends", mime_type="application/json")
     async def backends_resource() -> dict[str, object]:
-        """Return actual Docling, GLM-OCR, and optional VLM probes."""
+        """Return actual Docling, GLM-OCR, and SDK probes."""
 
         items = await runtime().parser_service.probe_backends()
         return {"backends": [item.model_dump(mode="json", exclude_none=True) for item in items]}

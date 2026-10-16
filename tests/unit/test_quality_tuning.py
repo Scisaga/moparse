@@ -11,20 +11,15 @@ from pydantic import ValidationError
 from app.models import (
     ContentParseOptions,
     DocumentParseResult,
-    PageDiagnostics,
     PageParseResult,
     PageSourceKind,
     ParsePipeline,
     ParseProfile,
     ScanPolicy,
-    SelectionStrategy,
     StoredSource,
-    VlmPolicy,
 )
 from app.parsers.docling_standard import DoclingStandardParser
-from app.parsers.ollama_vlm import OllamaVisualAdapter
-from app.services.evidence_service import NativeBlock, PageEvidence, PageEvidenceService
-from app.services.parser_service import ParserService
+from app.services.evidence_service import PageEvidenceService
 from app.services.quality_service import QualityService
 from app.services.table_service import (
     TableCellFragment,
@@ -46,16 +41,13 @@ def _result(page: PageParseResult) -> DocumentParseResult:
     )
 
 
-def test_visual_policy_is_derived_only_from_scan_policy() -> None:
-    assert ContentParseOptions().resolved_vlm_policy == VlmPolicy.AUTO_VISUAL
-    assert (
-        ContentParseOptions(scan_policy=ScanPolicy.SKIP).resolved_vlm_policy
-        == VlmPolicy.OFF
-    )
+def test_scan_policy_is_the_only_document_visual_routing_option() -> None:
+    assert ContentParseOptions().scan_policy == ScanPolicy.AUTO
     assert ContentParseOptions(profile=ParseProfile.ACCURATE).scan_policy == ScanPolicy.AUTO
     assert ContentParseOptions(profile=ParseProfile.BALANCED).scan_policy == ScanPolicy.SKIP
+    assert ContentParseOptions(scan_policy=ScanPolicy.SKIP).scan_policy == ScanPolicy.SKIP
     with pytest.raises(ValidationError):
-        ContentParseOptions.model_validate({"scan_policy": "auto", "vlm_policy": "off"})
+        ContentParseOptions.model_validate({"scan_policy": "ocr_only"})
 
 
 def test_sparse_evidence_is_measured_and_not_guessed(tmp_path: Path) -> None:
@@ -82,45 +74,6 @@ def test_sparse_evidence_is_measured_and_not_guessed(tmp_path: Path) -> None:
     assert evidence.visual_ink_ratio < 0.015
 
 
-def test_native_reading_order_repair_requires_exact_multiset() -> None:
-    lines = ["第一段唯一锚点甲乙", "第二段唯一锚点丙丁", "第三段唯一锚点戊己", "第四段唯一锚点庚辛"]
-    blocks = [
-        NativeBlock(
-            text=line, bbox=(10, index * 20, 200, index * 20 + 10), max_font_size=10, bold=False
-        )
-        for index, line in enumerate(lines)
-    ]
-    evidence = PageEvidence(
-        page_number=1,
-        source_kind=PageSourceKind.NATIVE,
-        native_body_text="\n".join(lines),
-        native_lines=lines,
-        native_blocks=blocks,
-        page_width=300,
-    )
-    page = PageParseResult(
-        page_number=1,
-        content="\n\n".join([lines[1], lines[0], lines[2], lines[3]]),
-        diagnostics=PageDiagnostics(source_kind=PageSourceKind.NATIVE),
-    )
-    result = _result(page)
-    service = ParserService(SimpleNamespace(parser_workers=1))
-
-    service._repair_native_reading_order(result, {1: evidence})
-
-    assert result.pages[0].content == "\n\n".join(lines)
-    assert result.pages[0].diagnostics is not None
-    assert result.pages[0].diagnostics.selected_strategy == SelectionStrategy.NATIVE_REPAIR
-
-    rejected = PageParseResult(
-        page_number=1,
-        content="\n\n".join([lines[1], lines[0], lines[2], lines[3]]) + "新增",
-        diagnostics=PageDiagnostics(source_kind=PageSourceKind.NATIVE),
-    )
-    rejected_result = _result(rejected)
-    service._repair_native_reading_order(rejected_result, {1: evidence})
-    assert rejected_result.pages[0].content.endswith("新增")
-    assert rejected_result.pages[0].warnings[0].code == "reading_order_inversion"
 
 
 def test_wingdings_mapping_requires_font_evidence() -> None:
@@ -134,74 +87,8 @@ def test_wingdings_mapping_requires_font_evidence() -> None:
     assert unmapped[3] == {}
 
 
-def test_native_order_gate_accounts_for_proven_glyph_mapping() -> None:
-    native_lines = [
-        "第一段唯一锚点甲乙",
-        "第二段唯一锚点丙丁",
-        "第三段□适用\uf052不适用",
-        "第四段唯一锚点庚辛",
-    ]
-    blocks = [
-        NativeBlock(line, (10, index * 20, 200, index * 20 + 10), 10, False)
-        for index, line in enumerate(native_lines)
-    ]
-    evidence = PageEvidence(
-        page_number=1,
-        source_kind=PageSourceKind.NATIVE,
-        native_lines=native_lines,
-        native_blocks=blocks,
-        glyph_mappings={"\uf052": "☑"},
-        page_width=300,
-        page_height=100,
-    )
-    rendered = [line.replace("\uf052", "☑") for line in native_lines]
-    page = PageParseResult(
-        page_number=1,
-        content="\n\n".join([rendered[1], rendered[0], rendered[2], rendered[3]]),
-        diagnostics=PageDiagnostics(source_kind=PageSourceKind.NATIVE),
-    )
-    result = _result(page)
-
-    ParserService(SimpleNamespace(parser_workers=1))._repair_native_reading_order(
-        result, {1: evidence}
-    )
-
-    assert result.pages[0].content == "\n\n".join(rendered)
 
 
-def test_native_order_repair_matches_repeated_identical_blocks_by_occurrence() -> None:
-    lines = [
-        "第一段唯一锚点甲乙",
-        "第二段唯一锚点丙丁",
-        "重复选择内容",
-        "第三段唯一锚点戊己",
-        "重复选择内容",
-        "第四段唯一锚点庚辛",
-    ]
-    blocks = [
-        NativeBlock(line, (10, index * 15, 200, index * 15 + 10), 10, False)
-        for index, line in enumerate(lines)
-    ]
-    evidence = PageEvidence(
-        page_number=1,
-        source_kind=PageSourceKind.NATIVE,
-        native_lines=lines,
-        native_blocks=blocks,
-        page_width=300,
-        page_height=100,
-    )
-    page = PageParseResult(
-        page_number=1,
-        content="\n\n".join([lines[1], lines[0], *lines[2:]]),
-        diagnostics=PageDiagnostics(source_kind=PageSourceKind.NATIVE),
-    )
-    result = _result(page)
-
-    ParserService(SimpleNamespace(parser_workers=1))._repair_native_reading_order(
-        result, {1: evidence}
-    )
-
-    assert result.pages[0].content == "\n\n".join(lines)
 
 
 def test_span_export_anchors_merged_value_and_rejects_overlap() -> None:
@@ -270,39 +157,6 @@ def _fragment(
     )
 
 
-def test_native_repair_keeps_table_region_unchanged() -> None:
-    lines = ["第一节唯一锚点甲乙", "第二节唯一锚点丙丁", "第三节唯一锚点戊己", "第四节唯一锚点庚辛"]
-    table = _fragment("p1_t1", 1, (0.1, 0.3, 0.9, 0.55), [["项目", "金额"], ["现金", "100"]])
-    blocks = [
-        NativeBlock(text=lines[0], bbox=(10, 5, 90, 15), max_font_size=10, bold=False),
-        NativeBlock(text=lines[1], bbox=(10, 20, 90, 30), max_font_size=10, bold=False),
-        NativeBlock(text="项目 金额 现金 100", bbox=(10, 32, 90, 52), max_font_size=10, bold=False),
-        NativeBlock(text=lines[2], bbox=(10, 60, 90, 70), max_font_size=10, bold=False),
-        NativeBlock(text=lines[3], bbox=(10, 75, 90, 85), max_font_size=10, bold=False),
-    ]
-    evidence = PageEvidence(
-        page_number=1,
-        source_kind=PageSourceKind.NATIVE,
-        native_lines=lines,
-        native_blocks=blocks,
-        page_width=100,
-        page_height=100,
-    )
-    page = PageParseResult(
-        page_number=1,
-        content="\n\n".join([lines[1], lines[0], table.rendered, lines[2], lines[3]]),
-        diagnostics=PageDiagnostics(source_kind=PageSourceKind.NATIVE),
-    )
-    result = _result(page)
-    result._table_fragments = [table]
-
-    ParserService(SimpleNamespace(parser_workers=1))._repair_native_reading_order(
-        result, {1: evidence}
-    )
-
-    assert result.pages[0].content is not None
-    assert result.pages[0].content.index(lines[0]) < result.pages[0].content.index(lines[1])
-    assert result.pages[0].content.count(table.rendered) == 1
 
 
 def test_cross_page_table_merges_only_canonical_content() -> None:
@@ -355,93 +209,12 @@ def test_cross_page_continuation_keeps_unproven_blank_column_shape() -> None:
     assert "| 差异 | G=E-F | 30,000.00 |" in (pages[1].content or "")
 
 
-def test_directory_page_becomes_list_not_table() -> None:
-    page = PageParseResult(page_number=1, content="| 目录 | 页码 |")
-    result = _result(page)
-    evidence = PageEvidence(
-        page_number=1,
-        source_kind=PageSourceKind.NATIVE,
-        native_lines=["目录", "第一章........1", "第二章........3", "释义........5"],
-    )
-    ParserService._normalize_directory_pages(result, {1: evidence})
-    assert result.pages[0].content == "# 目录\n\n- 第一章 …… 1\n- 第二章 …… 3\n- 释义 …… 5"
-
-    result.pages[0].diagnostics = PageDiagnostics(
-        source_kind=PageSourceKind.NATIVE,
-        selected_strategy=SelectionStrategy.NATIVE_REPAIR,
-        native_text_characters=1_000,
-    )
-    assert not any(
-        warning.code == "visual_text_mismatch"
-        for warning in QualityService().inspect_page(result.pages[0])
-    )
 
 
-def test_native_line_evidence_rejoins_split_heading() -> None:
-    page = PageParseResult(
-        page_number=1,
-        content="## 1\n\n##、项目立项审批\n\n正文",
-        diagnostics=PageDiagnostics(source_kind=PageSourceKind.NATIVE),
-    )
-    result = _result(page)
-    evidence = PageEvidence(
-        page_number=1,
-        source_kind=PageSourceKind.NATIVE,
-        native_lines=["1、项目立项审批", "正文"],
-    )
-
-    ParserService._repair_split_headings(result, {1: evidence})
-
-    assert result.pages[0].content == "## 1、项目立项审批\n\n正文"
-    assert result.pages[0].diagnostics is not None
-    assert result.pages[0].diagnostics.selected_strategy == SelectionStrategy.NATIVE_REPAIR
 
 
-def test_position_evidence_removes_only_standalone_table_number() -> None:
-    table = _fragment(
-        "p1_t1",
-        1,
-        (0.1, 0.3, 0.9, 0.8),
-        [["项目", "金额"], ["利息", "813.01"]],
-    )
-    page = PageParseResult(
-        page_number=1,
-        content=f"说明\n\n813.01\n\n{table.rendered}",
-        diagnostics=PageDiagnostics(source_kind=PageSourceKind.NATIVE),
-    )
-    result = _result(page)
-    result._table_fragments = [table]
-    evidence = PageEvidence(
-        page_number=1,
-        source_kind=PageSourceKind.NATIVE,
-        native_blocks=[
-            NativeBlock("说明", (10, 10, 50, 20), 10, False),
-            NativeBlock("利息\n813.01", (10, 40, 90, 60), 10, False),
-        ],
-        page_width=100,
-        page_height=100,
-    )
-
-    ParserService._remove_unanchored_table_numbers(result, {1: evidence})
-
-    assert result.pages[0].content.count("813.01") == 1
-    assert result.pages[0].diagnostics is not None
-    assert result.pages[0].diagnostics.selected_strategy == SelectionStrategy.NATIVE_REPAIR
 
 
-def test_table_fragment_reference_refreshes_after_text_normalization() -> None:
-    table = _fragment("p1_t1", 1, (0.1, 0.3, 0.9, 0.8), [["项目", "金额"], ["总 资产", "1"]])
-    page = PageParseResult(
-        page_number=1,
-        content=table.rendered.replace("总 资产", "总资产"),
-    )
-    result = _result(page)
-    result._table_fragments = [table]
-
-    ParserService._refresh_table_fragment_renderings(result)
-
-    assert "总资产" in table.rendered
-    assert table.rendered in (page.content or "")
 
 
 def test_repeated_url_prefix_is_not_repeated_text_corruption() -> None:
@@ -499,30 +272,6 @@ def test_repeated_financial_values_are_not_header_propagation() -> None:
     codes = {warning.code for warning in QualityService().inspect_page(page)}
 
     assert "table_header_propagation" not in codes
-
-
-def test_visual_trigger_requires_measured_scan_grid() -> None:
-    service = ParserService(SimpleNamespace(parser_workers=1))
-    page = PageParseResult(
-        page_number=1,
-        content="OCR text without a table",
-        diagnostics=PageDiagnostics(source_kind=PageSourceKind.SCANNED),
-    )
-    result = _result(page)
-    evidence = PageEvidence(
-        page_number=1,
-        source_kind=PageSourceKind.SCANNED,
-        horizontal_grid_lines=3,
-        vertical_grid_lines=3,
-        grid_area_ratio=0.25,
-    )
-    assert service._complex_visual_targets(result, {1: evidence}) == {1: "table"}
-    evidence.grid_area_ratio = 0.249
-    assert service._complex_visual_targets(result, {1: evidence}) == {}
-
-
-def test_rotation_bbox_is_deterministic() -> None:
-    assert OllamaVisualAdapter._rotate_bbox((0.1, 0.2, 0.4, 0.6), 90) == (0.4, 0.1, 0.8, 0.4)
 
 
 def test_overlapping_ocr_dedup_requires_same_text_and_iou() -> None:

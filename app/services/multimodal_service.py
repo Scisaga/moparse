@@ -19,7 +19,6 @@ from typing import Literal
 from xml.etree import ElementTree
 
 from PIL import Image
-from pydantic import BaseModel, ConfigDict, Field
 
 from app.models.content_result import (
     AssetKind,
@@ -36,6 +35,7 @@ from app.models.content_result import (
     ContentUnit,
     ElementProvenance,
     ElementQuality,
+    NormalizedBBox,
     ParseRuntime,
     ParseWarning,
     ProvenanceSource,
@@ -59,6 +59,7 @@ from app.models.parse_result import (
     PageSourceKind,
     ParsePipeline,
     ParseUsage,
+    PipelineWarning,
     QualitySummary,
     RouteSummary,
 )
@@ -70,7 +71,7 @@ from app.parsers.base import (
     ParserUnavailableError,
     ProgressCallback,
 )
-from app.parsers.ollama_vlm import OllamaVisualAdapter
+from app.parsers.glm_ocr_remote import GlmOcrRemoteAdapter
 from app.security.file_validation import DOCX_MIME, PPTX_MIME, detect_mime_type
 from app.services.evidence_service import PageEvidence
 from app.services.storage_service import StorageService
@@ -81,26 +82,6 @@ logger = logging.getLogger(__name__)
 _RELATIONSHIP_NS = "http://schemas.openxmlformats.org/package/2006/relationships"
 _SCENE_TIME_RE = re.compile(r"pts_time:(?P<time>\d+(?:\.\d+)?)")
 _SCENE_SCORE_RE = re.compile(r"lavfi\.scene_score=(?P<score>\d+(?:\.\d+)?)")
-
-
-class _VisualResponse(BaseModel):
-    model_config = ConfigDict(extra="forbid")
-
-    classification: VisualClassification
-    summary: str = Field(min_length=1)
-    detailed_description: str = ""
-    visible_text: str = ""
-    scene: str | None = None
-    objects: list[str] = Field(default_factory=list)
-    actions: list[str] = Field(default_factory=list)
-    language: Literal["zh-CN", "en", "auto"] | None = None
-    uncertainties: list[str] = Field(default_factory=list)
-
-
-class _VideoSummaryResponse(BaseModel):
-    model_config = ConfigDict(extra="forbid")
-
-    summary: str = Field(min_length=1)
 
 
 @dataclass(frozen=True, slots=True)
@@ -162,22 +143,18 @@ class MultimodalService:
         self,
         settings: object | None,
         storage: StorageService,
-        vlm: OllamaVisualAdapter,
+        glm: GlmOcrRemoteAdapter,
     ) -> None:
         self.settings = settings
         self.storage = storage
-        self.vlm = vlm
+        self.glm = glm
         self.max_assets = int(setting(settings, "max_assets_per_content", 200))
         self.max_asset_bytes = int(setting(settings, "max_asset_bytes", 50 * 1024 * 1024))
         self.max_extracted_bytes = int(
             setting(settings, "max_extracted_asset_bytes", 400 * 1024 * 1024)
         )
-        self.max_asset_image_pixels = int(
-            setting(settings, "max_asset_image_pixels", 100_000_000)
-        )
-        self.media_vlm_max_pixels = int(
-            setting(settings, "media_vlm_max_pixels", 4_500_000)
-        )
+        self.max_asset_image_pixels = int(setting(settings, "max_asset_image_pixels", 100_000_000))
+        self.media_max_pixels = int(setting(settings, "glm_ocr_max_image_pixels", 4_500_000))
         self.max_keyframes = int(setting(settings, "video_max_keyframes", 24))
         self.min_spacing = float(setting(settings, "video_min_frame_spacing_seconds", 2.0))
         self.scene_threshold = float(setting(settings, "video_scene_threshold", 0.30))
@@ -224,20 +201,6 @@ class MultimodalService:
         if characters < 15 and (image_coverage >= 0.4 or ink_ratio < 0.08):
             return VisualClassification.VISUAL
         return VisualClassification.UNKNOWN
-
-    @staticmethod
-    def _language_instruction(language: Literal["zh-CN", "en", "auto"]) -> str:
-        return {
-            "zh-CN": (
-                "Write every natural-language output field in Simplified Chinese and set "
-                "the language field to zh-CN. Do not answer in English."
-            ),
-            "en": (
-                "Write every natural-language output field in English and set the "
-                "language field to en."
-            ),
-            "auto": "Use the main language visible in the image or sampled frames.",
-        }[language]
 
     @staticmethod
     def _measured_document_analysis(
@@ -303,7 +266,7 @@ class MultimodalService:
                 raise
             except ParserError as exc:
                 logger.info(
-                    "embedded document-image routing fell back to VLM",
+                    "embedded image text recognition will use GLM-OCR",
                     extra={"error_code": type(exc).__name__},
                 )
 
@@ -329,42 +292,44 @@ class MultimodalService:
         language: Literal["zh-CN", "en", "auto"],
         classification: VisualClassification | None = None,
     ) -> VisualAnalysis:
-        if not self.vlm.enabled:
-            raise ParserUnavailableError("VLM is required for visual media analysis")
-        language_instruction = self._language_instruction(language)
-        prompt = (
-            "Analyze only what is visibly present in this image. "
-            "Classify it as document, visual, mixed, or unknown; provide a concise summary, "
-            "a detailed description, visible text, scene, objects, actions, and explicit "
-            "uncertainties. Report the description language as zh-CN or en. "
-            f"Do not infer hidden facts. {language_instruction}"
-        )
         normalized = await asyncio.to_thread(self._normalized_png, image)
-        completion = await self.vlm.complete_structured(
-            [normalized],
-            prompt,
-            _VisualResponse,
-            max_tokens=int(setting(self.settings, "media_vlm_max_tokens", 4096)),
-            reasoning_effort=str(
-                setting(self.settings, "media_vlm_reasoning_effort", "none")
-            ),
+        visible_text = await self.glm.recognize_image(normalized)
+        return self._recognized_image_analysis(
+            visible_text, language=language, classification=classification
         )
-        response = completion.value
+
+    def _recognized_image_analysis(
+        self,
+        visible_text: str,
+        *,
+        language: Literal["zh-CN", "en", "auto"],
+        classification: VisualClassification | None = None,
+    ) -> VisualAnalysis:
+        """Describe the observed text result without scheduling another model request."""
+
+        english = language == "en"
         return VisualAnalysis(
-            classification=classification or response.classification,
-            summary=response.summary,
-            detailed_description=response.detailed_description,
-            visible_text=response.visible_text,
-            scene=response.scene,
-            objects=response.objects,
-            actions=response.actions,
-            language=response.language or language,
-            model=self.vlm.model,
-            uncertainties=response.uncertainties,
+            classification=classification or self.classify_image(None, visible_text),
+            summary=("Visible image text was extracted." if english else "已识别图片中的可见文字。")
+            if visible_text
+            else ("No text was recognized in this image." if english else "未从图片中识别出文字。"),
+            detailed_description=(
+                "GLM-OCR extracts visible text; scene and object descriptions are unavailable."
+                if english
+                else "GLM-OCR 仅提取可见文字，不提供场景、物体或动作描述。"
+            ),
+            visible_text=visible_text,
+            language=language,
+            model=self.glm.model,
+            uncertainties=[
+                "Text recognition does not describe visual-only image content."
+                if english
+                else "文字识别结果不涵盖图片中的纯视觉内容。"
+            ],
         )
 
     def _normalized_png(self, content: bytes) -> bytes:
-        """Return a bounded RGB PNG accepted consistently by VLM backends and browsers."""
+        """Return a bounded RGB PNG accepted by GLM-OCR and browsers."""
 
         try:
             with Image.open(io.BytesIO(content)) as source:
@@ -373,8 +338,8 @@ class MultimodalService:
                 if width * height > self.max_asset_image_pixels:
                     raise ParserError("image dimensions exceed the asset pixel safety limit")
                 image = source.convert("RGB")
-                if width * height > self.media_vlm_max_pixels:
-                    scale = math.sqrt(self.media_vlm_max_pixels / (width * height))
+                if width * height > self.media_max_pixels:
+                    scale = math.sqrt(self.media_max_pixels / (width * height))
                     image.thumbnail(
                         (max(1, int(width * scale)), max(1, int(height * scale))),
                         Image.Resampling.LANCZOS,
@@ -497,11 +462,15 @@ class MultimodalService:
                 location=AssetLocation(unit_id=parse_result.units[0].unit_id, page_number=1),
             )
             for unit in parse_result.units[1:]:
-                asset.locations.append(
-                    AssetLocation(unit_id=unit.unit_id, page_number=unit.index)
-                )
+                asset.locations.append(AssetLocation(unit_id=unit.unit_id, page_number=unit.index))
             classification = self.classify_image(evidence_by_page.get(1), result.plain_text)
-            if classification == VisualClassification.DOCUMENT:
+            if any(page.diagnostics and page.diagnostics.glm for page in result.pages):
+                asset.visual_analysis = self._recognized_image_analysis(
+                    result.plain_text,
+                    language=options.description_language,
+                    classification=classification,
+                )
+            elif classification == VisualClassification.DOCUMENT:
                 asset.visual_analysis = self._measured_document_analysis(
                     result.plain_text,
                     language=options.description_language,
@@ -559,6 +528,36 @@ class MultimodalService:
                 cancel_event=cancel_event,
             )
 
+    @staticmethod
+    def _render_pdf_crop(
+        path: Path,
+        page_number: int,
+        bbox: tuple[float, float, float, float],
+    ) -> bytes:
+        """Preserve an observed PDF picture without a model/backend dependency."""
+
+        import pymupdf
+
+        with pymupdf.open(path) as document:
+            page = document.load_page(page_number - 1)
+            # Candidate boxes are normalized to the displayed page. Rendering
+            # first keeps those coordinates valid for rotated PDF crop boxes.
+            image = page.get_pixmap(matrix=pymupdf.Matrix(2, 2), alpha=False).tobytes("png")
+        with Image.open(io.BytesIO(image)) as source:
+            frame = source.convert("RGB")
+            left, top, right, bottom = bbox
+            clipped = (
+                max(0, min(frame.width, round(left * frame.width))),
+                max(0, min(frame.height, round(top * frame.height))),
+                max(0, min(frame.width, round(right * frame.width))),
+                max(0, min(frame.height, round(bottom * frame.height))),
+            )
+            if clipped[2] <= clipped[0] or clipped[3] <= clipped[1]:
+                raise ValueError("PDF picture crop is empty")
+            output = io.BytesIO()
+            frame.crop(clipped).save(output, format="PNG")
+            return output.getvalue()
+
     async def _enrich_pdf_pictures(
         self,
         parse_result: ContentParseResult,
@@ -569,8 +568,12 @@ class MultimodalService:
         image_parser: DocumentParser | None,
         cancel_event: object | None,
     ) -> None:
-        candidates = list(result._picture_candidates)[: self.max_assets]
+        candidates = list(result._picture_candidates)
+        omitted_candidates = 0
+        extracted_bytes = sum(asset.size_bytes for asset in parse_result.assets)
         for index, picture in enumerate(candidates, start=1):
+            if _cancelled(cancel_event):
+                raise ParserCancelledError("job was cancelled")
             current_asset: ContentAsset | None = None
             page_number = int(getattr(picture, "page_number", 0))
             bbox = getattr(picture, "normalized_bbox", None)
@@ -580,24 +583,44 @@ class MultimodalService:
             if unit is None:
                 continue
             try:
-                page_image = await self.vlm._render(
-                    source, page_number, options.visual_profile.value
+                crop = await asyncio.to_thread(
+                    self._render_pdf_crop, source.path, page_number, bbox
                 )
-                crop = await asyncio.to_thread(self.vlm._crop_normalized_image, page_image, bbox)
+                if len(crop) > self.max_asset_bytes:
+                    raise ParserError("PDF picture exceeds the per-asset byte limit")
+                crop_sha256 = _sha256_bytes(crop)
+                is_new = not any(asset.sha256 == crop_sha256 for asset in parse_result.assets)
+                if is_new and len(parse_result.assets) >= self.max_assets:
+                    omitted_candidates += 1
+                    continue
+                if is_new and extracted_bytes + len(crop) > self.max_extracted_bytes:
+                    raise ParserError("PDF pictures exceed the extracted-asset byte limit")
                 asset, _ = await self._persist_image_asset(
                     result.document_id,
                     crop,
                     filename=f"page-{page_number}-image-{index}.png",
                     role=AssetRole.PAGE_CROP,
-                    location=AssetLocation(unit_id=unit.unit_id, page_number=page_number),
+                    location=AssetLocation(
+                        unit_id=unit.unit_id,
+                        page_number=page_number,
+                        bbox=NormalizedBBox(
+                            left=max(0.0, min(1.0, bbox[0])),
+                            top=max(0.0, min(1.0, bbox[1])),
+                            right=max(0.0, min(1.0, bbox[2])),
+                            bottom=max(0.0, min(1.0, bbox[3])),
+                        ),
+                    ),
                 )
+                if not any(existing.sha256 == asset.sha256 for existing in parse_result.assets):
+                    extracted_bytes += asset.size_bytes
                 current_asset = self._merge_asset(parse_result.assets, asset)
+                if current_asset.asset_id not in unit.asset_ids:
+                    unit.asset_ids.append(current_asset.asset_id)
                 if (
                     options.describe_images
                     and bool(getattr(picture, "allow_description", True))
                     and current_asset.visual_analysis is None
-                    and "embedded_image_analysis_failed"
-                    not in current_asset.warning_codes
+                    and "embedded_image_analysis_failed" not in current_asset.warning_codes
                 ):
                     current_asset.visual_analysis = await self._analyze_embedded_image(
                         crop,
@@ -611,7 +634,7 @@ class MultimodalService:
                     unit.asset_ids.append(current_asset.asset_id)
             except (OSError, ValueError, ParserError) as exc:
                 if current_asset is not None:
-                    current_asset.status = AssetStatus.FAILED
+                    current_asset.status = AssetStatus.PARTIAL
                     if "embedded_image_analysis_failed" not in current_asset.warning_codes:
                         current_asset.warning_codes.append("embedded_image_analysis_failed")
                 parse_result.status = "partial"
@@ -623,10 +646,35 @@ class MultimodalService:
                         asset_id=current_asset.asset_id if current_asset else None,
                     )
                 )
+                result.warnings.append(
+                    PipelineWarning(
+                        code="embedded_image_analysis_failed",
+                        message="a PDF image asset could not be completely exported or analyzed",
+                        page_number=page_number,
+                        backend="asset-export",
+                    )
+                )
                 logger.warning(
                     "embedded image processing failed",
                     extra={"unit": page_number, "error_code": type(exc).__name__},
                 )
+        if omitted_candidates:
+            parse_result.status = "partial"
+            parse_result.warnings.append(
+                ParseWarning(
+                    code="asset_limit_exceeded",
+                    severity="warning",
+                    count=omitted_candidates,
+                )
+            )
+            result.warnings.append(
+                PipelineWarning(
+                    code="asset_limit_exceeded",
+                    message="the PDF image asset limit omitted additional distinct images",
+                    backend="asset-export",
+                    details={"limit": self.max_assets, "omitted_candidates": omitted_candidates},
+                )
+            )
         self._project_asset_descriptions(parse_result)
 
     @staticmethod
@@ -703,9 +751,7 @@ class MultimodalService:
                 match = re.search(r"slide(?P<index>\d+)\.xml$", owner)
                 unit_index = int(match.group("index")) if match else 1
                 root = ElementTree.fromstring(archive.read(relationship_name))
-                owner_root = (
-                    ElementTree.fromstring(archive.read(owner)) if owner in names else None
-                )
+                owner_root = ElementTree.fromstring(archive.read(owner)) if owner in names else None
                 for relationship in root.findall(f"{{{_RELATIONSHIP_NS}}}Relationship"):
                     if not relationship.attrib.get("Type", "").endswith("/image"):
                         continue
@@ -867,9 +913,7 @@ class MultimodalService:
                     status="completed",
                     regions=regions,
                     blocks=blocks,
-                    renderings=ContentRenderings(
-                        markdown=page.content or "", plain_text=text
-                    ),
+                    renderings=ContentRenderings(markdown=page.content or "", plain_text=text),
                     diagnostics=UnitDiagnostics(
                         source_kind="office",
                         quality_verdict="trusted",
@@ -915,9 +959,7 @@ class MultimodalService:
                     unit_id=unit.unit_id,
                     slide_number=embedded.unit_index if kind == SourceKind.PPTX else None,
                     relationship_id=embedded.relationship_id,
-                    placement_id=(
-                        f"{embedded.relationship_id}:{embedded.placement_index}"
-                    ),
+                    placement_id=(f"{embedded.relationship_id}:{embedded.placement_index}"),
                 ),
             )
             asset = self._merge_asset(parse_result.assets, asset)
@@ -938,7 +980,7 @@ class MultimodalService:
                         cancel_event=cancel_event,
                     )
                 except ParserError as exc:
-                    asset.status = AssetStatus.FAILED
+                    asset.status = AssetStatus.PARTIAL
                     asset.warning_codes.append("embedded_image_analysis_failed")
                     parse_result.status = "partial"
                     parse_result.warnings.append(
@@ -1199,8 +1241,8 @@ class MultimodalService:
     ) -> DocumentParseResult:
         if options.unit_range:
             raise ParserError("video inputs do not accept unit_range")
-        if not self.vlm.enabled:
-            raise ParserUnavailableError("VLM is required for standalone video analysis")
+        if not self.glm.enabled:
+            raise ParserUnavailableError("GLM-OCR is required for sampled video text recognition")
         started = time.perf_counter()
         metadata = await self._video_metadata(source.path, cancel_event)
         candidates = await self._scene_candidates(source.path, cancel_event)
@@ -1231,7 +1273,7 @@ class MultimodalService:
         )
         assets = [source_asset]
         keyframes: list[VideoKeyframe] = []
-        qwen_duration = 0
+        glm_duration = 0
         visual_calls = 0
         for index, timestamp in enumerate(timestamps, start=1):
             if _cancelled(cancel_event):
@@ -1257,9 +1299,7 @@ class MultimodalService:
                     frame, language=options.description_language
                 )
                 visual_calls += 1
-                qwen_duration += max(
-                    0, round((time.perf_counter() - visual_started) * 1000)
-                )
+                glm_duration += max(0, round((time.perf_counter() - visual_started) * 1000))
             keyframes.append(
                 VideoKeyframe(
                     asset_id=asset.asset_id,
@@ -1269,30 +1309,18 @@ class MultimodalService:
             )
             await _notify(progress_callback, index, len(timestamps), "frame.processed")
         descriptions = "\n".join(
-            f"[{frame.timestamp_ms / 1000:.3f}s] {frame.visual_analysis.summary}"
+            f"[{frame.timestamp_ms / 1000:.3f}s] "
+            f"{frame.visual_analysis.visible_text or frame.visual_analysis.summary}"
             for frame in keyframes
         )
-        representative_images = [
-            await asyncio.to_thread(
-                self.storage.asset_path(content_id, frame.asset_id).read_bytes  # type: ignore[union-attr]
-            )
-            for frame in keyframes[: min(8, len(keyframes))]
-        ]
-        summary_language = self._language_instruction(options.description_language)
-        summary_completion = await self.vlm.complete_structured(
-            representative_images,
-            "Summarize this video using only the following sampled-frame observations. "
-            "Do not claim that unsampled events were observed. Include that limitation. "
-            f"{summary_language}\n"
-            f"{descriptions}",
-            _VideoSummaryResponse,
-            max_tokens=int(setting(self.settings, "video_summary_max_tokens", 4096)),
-            reasoning_effort=str(
-                setting(self.settings, "video_summary_reasoning_effort", "none")
-            ),
+        summary_text = (
+            "Sampled-frame text observations only; unsampled events and visual scenes were not analyzed."
+            if options.description_language == "en"
+            else "以下内容仅来自采样关键帧的文字识别；未采样时段及纯视觉场景未经分析。"
         )
-        qwen_duration += summary_completion.duration_ms
-        qwen_calls = visual_calls + 1
+        if descriptions:
+            summary_text = f"{summary_text}\n\n{descriptions}"
+        glm_calls = visual_calls
         scenes: list[VideoScene] = []
         for index, keyframe in enumerate(keyframes):
             previous = keyframes[index - 1].timestamp_ms if index else 0
@@ -1321,11 +1349,8 @@ class MultimodalService:
             f"- `{frame.timestamp_ms / 1000:.3f}s`：{frame.visual_analysis.summary}"
             for frame in keyframes
         )
-        markdown = (
-            f"# 视频摘要\n\n{summary_completion.value.summary}\n\n"
-            f"## 采样关键帧\n\n{timeline_markdown}"
-        )
-        plain_text = f"视频摘要：{summary_completion.value.summary}\n\n采样关键帧：\n" + "\n".join(
+        markdown = f"# 视频摘要\n\n{summary_text}\n\n## 采样关键帧\n\n{timeline_markdown}"
+        plain_text = f"视频摘要：{summary_text}\n\n采样关键帧：\n" + "\n".join(
             f"{frame.timestamp_ms / 1000:.3f}s：{frame.visual_analysis.summary}"
             for frame in keyframes
         )
@@ -1336,7 +1361,7 @@ class MultimodalService:
             height=metadata.height,
             codec=metadata.codec,
             frame_rate=metadata.frame_rate,
-            summary=summary_completion.value.summary,
+            summary=summary_text,
             scenes=scenes,
             keyframes=keyframes,
         )
@@ -1367,8 +1392,8 @@ class MultimodalService:
                         source_kind="video",
                         quality_verdict="trusted",
                         selected_strategy="video_keyframes",
-                        qwen_calls=qwen_calls,
-                        qwen_duration_ms=qwen_duration,
+                        glm_calls=glm_calls,
+                        glm_duration_ms=glm_duration,
                     ),
                     duration_ms=duration_ms,
                 )
@@ -1382,13 +1407,13 @@ class MultimodalService:
             diagnostics=ContentQualitySummary(trusted_units=1, visual_units=1),
             runtime=ParseRuntime(
                 profile=options.profile.value,
-                primary_backend="ffmpeg+vlm",
-                visual_backend=self.vlm.model,
+                primary_backend="ffmpeg+glm-ocr",
+                visual_backend=self.glm.model,
                 parser_version=str(setting(self.settings, "version", "0.4.0")),
                 input_bytes=source.size_bytes,
                 duration_ms=duration_ms,
-                qwen_calls=qwen_calls,
-                ffmpeg_duration_ms=max(0, duration_ms - qwen_duration),
+                glm_calls=glm_calls,
+                ffmpeg_duration_ms=max(0, duration_ms - glm_duration),
             ),
             links=self._links(content_id),
         )
@@ -1403,7 +1428,7 @@ class MultimodalService:
             pages=[
                 PageParseResult(
                     page_number=1,
-                    backend="ffmpeg+vlm",
+                    backend="ffmpeg+glm-ocr",
                     content=markdown,
                     plain_text=plain_text,
                     diagnostics=PageDiagnostics(source_kind=PageSourceKind.MIXED),
@@ -1411,12 +1436,10 @@ class MultimodalService:
                 )
             ],
             pipeline=ParsePipeline(
-                profile=options.profile.value, primary="ffmpeg", vlm=self.vlm.name
+                profile=options.profile.value, primary="ffmpeg", ocr=self.glm.name
             ),
-            route_summary=RouteSummary(vlm_pages=1),
-            quality_summary=QualitySummary(
-                trusted_pages=1, visual_pages=1, qwen_calls=qwen_calls
-            ),
+            route_summary=RouteSummary(),
+            quality_summary=QualitySummary(trusted_pages=1, visual_pages=1, glm_calls=glm_calls),
             usage=ParseUsage(input_bytes=source.size_bytes, duration_ms=duration_ms),
             parse_result=parse_result,
         )

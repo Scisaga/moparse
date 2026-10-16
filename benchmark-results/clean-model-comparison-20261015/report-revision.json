@@ -2,7 +2,7 @@
   "schema": "mosaic-report-consolidation/1",
   "created_UTC": "2026-10-16T18:36:52.457264+00:00",
   "canonical_report": "benchmark-results/clean-model-comparison-20261015/report.md",
-  "canonical_report_SHA256": "34f2feb5204df952e59db7d889bacd8064f876b2342f2986f7341b9adbfe9388",
+  "canonical_report_SHA256": "b7de6ab5c983f21927639637c57fb394ddae7f401e87b3923198494c4d904460",
   "previous_tracked_reports_commit": "55769e5adb35f776896552499b4c043a56a1b6a8",
   "deleted_duplicate_reports_and_build_files": [
     "docs/clean-model-comparison-20261016.md",
@@ -99,6 +99,12 @@
       "previous_report_SHA256": "2330ed1213c09d09eae9d9451ca97b979e846dbd06cb617d53509ce5135b5764",
       "updated_report_SHA256": "34f2feb5204df952e59db7d889bacd8064f876b2342f2986f7341b9adbfe9388",
       "change": "Add four completed V2 compute experiments, their measured time/resources and public Markdown scores; record user-requested stop and exclude incomplete configurations."
+    },
+    {
+      "created_UTC": "2026-10-16T21:27:15.467839+00:00",
+      "previous_report_SHA256": "34f2feb5204df952e59db7d889bacd8064f876b2342f2986f7341b9adbfe9388",
+      "updated_report_SHA256": "b7de6ab5c983f21927639637c57fb394ddae7f401e87b3923198494c4d904460",
+      "change": "Deploy the user-selected Docling2.139 V1 matching=False PyPdfium plus GLM SDK orientation-on 200DPI pipeline; remove Qwen runtime and model-adaptation repairs; add full502 real-HTTP and online59 validation, timings/resources, known regressions, README figures and release evidence."
     }
   ],
   "V2_compute_experiment": {
@@ -109,5 +115,17 @@
     "remaining_experiment_processes": [],
     "production_container_identities_unchanged": true,
     "full502_HTTP_run": false
+  },
+  "selected_pipeline_release": {
+    "created_UTC": "2026-10-16T21:27:15.467839+00:00",
+    "deployment_or_application_code_changed": true,
+    "evidence_root": "followup/20261017/selected-pipeline-deployment",
+    "manifest": "followup/20261017/selected-pipeline-deployment/release-manifest.json",
+    "manifest_SHA256": "610bef32c1b665ded32b52dccec1afc189d16129f0dafe744b33581951a4648f",
+    "deployed_API_image": "sha256:f9639d65ec922a1c300233e3ef5711af5a0d3de3b6b8d7909b9ea1776575e89a",
+    "deployed_SDK_image": "sha256:abe353926afba82931744bac4533f895c9e6ad6f768da4103a4ec40410c2e6cb",
+    "full_before_deployment_HTTP_pages": 502,
+    "post_deployment_HTTP_pages": 59,
+    "prior_consolidation_record_retained": true
   }
 }

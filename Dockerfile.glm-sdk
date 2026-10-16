@@ -14,7 +14,7 @@ RUN --mount=type=cache,target=/root/.cache/pip \
       "sentencepiece==0.2.2" \
       "glmocr[server]==0.1.5"
 
-COPY --chown=app:app docker/glmocr-config.yaml /etc/glmocr/config.yaml
+COPY --chown=app:app docker/glm_sdk_server.py /app/docker/glm_sdk_server.py
 
 ENV HF_HOME=/models/huggingface \
     GLMOCR_MODE=selfhosted \
@@ -25,4 +25,4 @@ EXPOSE 5002
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10m --retries=10 \
   CMD python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:5002/health', timeout=5)" || exit 1
 
-CMD ["python", "-c", "import os; import glmocr.server as server; os.environ['http_proxy'] = os.environ.get('HTTP_PROXY', ''); os.environ['https_proxy'] = os.environ.get('HTTPS_PROXY', ''); server.main()", "--config", "/etc/glmocr/config.yaml"]
+CMD ["python", "/app/docker/glm_sdk_server.py"]

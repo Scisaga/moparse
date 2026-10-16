@@ -72,7 +72,6 @@ class Settings(BaseSettings):
     max_asset_bytes: int = Field(default=50 * 1024 * 1024, gt=0)
     max_extracted_asset_bytes: int = Field(default=400 * 1024 * 1024, gt=0)
     max_asset_image_pixels: int = Field(default=100_000_000, gt=0)
-    media_vlm_max_pixels: int = Field(default=4_500_000, gt=0)
 
     docling_device: str = "cpu"
     # Prefer the application-specific name: upstream Docling also consumes
@@ -89,7 +88,8 @@ class Settings(BaseSettings):
     docling_force_backend_text: bool = False
     docling_model_download: bool = True
     docling_compile_models: bool = False
-    docling_do_cell_matching: bool = True
+    docling_do_cell_matching: bool = False
+    docling_pdf_backend: Literal["pypdfium"] = "pypdfium"
     docling_num_threads: int = Field(default=4, ge=1, le=64)
     docling_page_workers: int = Field(default=1, ge=1, le=8)
     docling_page_parallel_min_pages: int = Field(default=4, ge=2, le=1_000)
@@ -100,72 +100,33 @@ class Settings(BaseSettings):
     quality_native_max_image_coverage: float = Field(default=0.20, ge=0, le=1)
     quality_scanned_min_image_coverage: float = Field(default=0.80, ge=0, le=1)
     quality_scanned_min_ink_ratio: float = Field(default=0.03, ge=0, le=1)
-    quality_reading_order_min_anchors: int = Field(default=4, ge=2)
-    quality_native_repair_min_coverage: float = Field(default=0.98, ge=0, le=1)
-    quality_native_repair_min_length_ratio: float = Field(default=0.95, gt=0)
-    quality_native_repair_max_length_ratio: float = Field(default=1.05, gt=0)
-    quality_table_min_grid_area_ratio: float = Field(default=0.25, ge=0, le=1)
-    quality_vlm_numeric_precision: float = Field(default=0.99, ge=0, le=1)
-    quality_vlm_numeric_recall: float = Field(default=0.95, ge=0, le=1)
-    native_text_repair_enabled: bool = True
     cross_page_table_merge_enabled: bool = True
 
-    glm_ocr_enabled: bool = True
+    glm_ocr_enabled: bool = False
     glm_ocr_api_url: str = "http://glm-ocr:8000/v1/chat/completions"
     glm_ocr_api_key: OptionalSecret = None
     glm_ocr_model: str = "zai-org/GLM-OCR"
     glm_ocr_lang: str = "zh,en"
-    glm_ocr_scale: float = Field(default=3.0, gt=0)
     glm_ocr_max_image_pixels: int = Field(default=4_500_000, gt=0)
     glm_ocr_max_concurrency: int = Field(default=4, ge=1)
     # This is an output-token budget, not the model context window.  Keep
     # enough room for the image and prompt when vLLM uses a 16k context.
     glm_ocr_max_tokens: int = Field(default=4_096, ge=1)
-    # GLM-OCR accepts a small fixed prompt vocabulary.  Its general full-page
-    # OCR contract is more reliable than the plugin's free-form default.
-    glm_ocr_prompt: str = Field(default="Text Recognition:", min_length=1)
     glm_ocr_timeout_seconds: float = Field(default=120.0, gt=0)
     glm_ocr_max_retries: int = Field(default=3, ge=0)
 
-    glm_sdk_enabled: bool = False
+    glm_sdk_enabled: bool = True
+    glm_sdk_orientation_enabled: bool = True
+    glm_sdk_orientation_model_path: Path = Path(
+        "/models/huggingface/PP-LCNet_x1_0_doc_ori_safetensors"
+    )
     glm_sdk_url: str = "http://glm-ocr-sdk:5002/glmocr/parse"
     glm_sdk_timeout_seconds: float = Field(default=120.0, gt=0)
-    glm_sdk_render_scale: float = Field(default=2.0, gt=0)
+    # Match the selected SDK experiment: PDF points use 72 DPI.
+    glm_sdk_render_scale: float = Field(default=200.0 / 72.0, gt=0)
     glm_sdk_max_image_pixels: int = Field(default=8_000_000, gt=0)
     glm_sdk_max_concurrency: int = Field(default=1, ge=1, le=16)
     glm_sdk_max_retries: int = Field(default=1, ge=0, le=5)
-    glm_table_gate_enabled: bool = True
-    glm_table_targeted_max_rows: int = Field(default=8, ge=1, le=12)
-    glm_table_targeted_max_cells: int = Field(default=12, ge=1, le=24)
-    visual_router_enabled: bool = True
-
-    vlm_enabled: bool = False
-    # PDF visual routes are independently gated so deployments can keep the
-    # shared VLM available for media while avoiding expensive page-wide calls.
-    vlm_signature_enabled: bool = False
-    vlm_table_full_enabled: bool = False
-    vlm_table_targeted_enabled: bool = True
-    vlm_base_url: str = "http://5090-host:11434/v1"
-    vlm_api_key: OptionalSecret = "ollama"
-    vlm_model: str = "qwen3.6-docparse:35b-32k"
-    vlm_max_concurrency: int = Field(default=1, ge=1, le=1)
-    vlm_timeout_seconds: float = Field(default=300.0, gt=0)
-    vlm_temperature: float = Field(default=0.0, ge=0)
-    vlm_max_retries: int = Field(default=1, ge=0)
-    vlm_page_budget_seconds: float = Field(default=180.0, gt=0, le=180.0)
-    vlm_max_calls_per_page: int = Field(default=3, ge=1, le=3)
-    vlm_plan_max_tokens: int = Field(default=4_096, ge=1)
-    vlm_region_max_tokens: int = Field(default=16_384, ge=1)
-    vlm_conflict_max_tokens: int = Field(default=8_192, ge=1)
-    media_vlm_max_tokens: int = Field(default=4_096, ge=1)
-    video_summary_max_tokens: int = Field(default=4_096, ge=1)
-    media_vlm_reasoning_effort: Literal["none", "low", "medium", "high"] = "none"
-    video_summary_reasoning_effort: Literal["none", "low", "medium", "high"] = "none"
-    vlm_reasoning_effort: Literal["none", "low", "medium", "high"] = "low"
-    vlm_conflict_reasoning_effort: Literal["none", "low", "medium", "high"] = "medium"
-    # Independently switchable for remote-call cost/privacy control. The
-    # service also requires vlm_enabled before making an enrichment request.
-
     allow_source_urls: bool = True
     allow_private_source_urls: bool = False
     source_url_max_redirects: int = Field(default=3, ge=0, le=20)
@@ -192,7 +153,7 @@ class Settings(BaseSettings):
             return normalized
         raise ValueError("DOCLING_DEVICE must be cpu, auto, mps, cuda, or cuda:<index>")
 
-    @field_validator("glm_ocr_api_url", "glm_sdk_url", "vlm_base_url")
+    @field_validator("glm_ocr_api_url", "glm_sdk_url")
     @classmethod
     def validate_backend_url(cls, value: str) -> str:
         parsed = urlparse(value)
@@ -260,19 +221,16 @@ class Settings(BaseSettings):
             "ffmpeg_max_concurrency": self.ffmpeg_max_concurrency,
             "ffmpeg_threads": self.ffmpeg_threads,
             "docling_device": self.docling_device,
+            "docling_pdf_backend": self.docling_pdf_backend,
+            "docling_do_cell_matching": self.docling_do_cell_matching,
             "docling_num_threads": self.docling_num_threads,
             "docling_page_workers": self.docling_page_workers,
             "docling_page_parallel_min_pages": self.docling_page_parallel_min_pages,
             "source_urls_enabled": self.allow_source_urls,
             "private_source_urls_allowed": self.allow_private_source_urls,
             "glm_ocr_enabled": self.glm_ocr_enabled,
-            "glm_sdk_enabled": self.glm_sdk_enabled,
-            "glm_table_gate_enabled": self.glm_table_gate_enabled,
-            "visual_router_enabled": self.visual_router_enabled,
-            "vlm_enabled": self.vlm_enabled,
-            "vlm_signature_enabled": self.vlm_signature_enabled,
-            "vlm_table_full_enabled": self.vlm_table_full_enabled,
-            "vlm_table_targeted_enabled": self.vlm_table_targeted_enabled,
+            "glm_sdk_enabled": self.glm_sdk_enabled and self.glm_ocr_enabled,
+            "glm_sdk_orientation_enabled": self.glm_sdk_orientation_enabled,
         }
 
 

@@ -86,7 +86,7 @@ class PostprocessProgressParserService(BlockingParserService):
         await progress_callback(source.page_count, source.page_count, "page.completed")
         # Secondary adapters often operate on a one-page sub-range. The job
         # service must retain the whole-document total/counter for this phase.
-        await progress_callback(1, 1, "postprocess.visual_fusion")
+        await progress_callback(1, 1, "postprocess.glm_ocr")
         self.postprocess_emitted.set()
         await self.release.wait()
         parsed = parsed_result(source, document_id)
@@ -115,7 +115,6 @@ def async_job_settings(tmp_path: Path) -> Settings:
         parser_workers=1,
         max_queued_jobs=1,
         glm_ocr_enabled=False,
-        vlm_enabled=False,
         max_upload_bytes=1_000_000,
         sync_max_bytes=1_000_000,
         sync_max_units=10,
@@ -128,7 +127,6 @@ async def test_sync_admission_is_immediate_bounded_and_persists_jobs(tmp_path: P
         data_dir=tmp_path,
         parser_workers=1,
         glm_ocr_enabled=False,
-        vlm_enabled=False,
         max_upload_bytes=1_000_000,
         sync_max_bytes=1_000_000,
         sync_max_units=10,
@@ -213,7 +211,7 @@ async def test_postprocess_phase_does_not_regress_whole_document_progress(tmp_pa
     event = next(
         item
         for item in jobs._event_history[record.id]
-        if item.data.get("phase") == "postprocess.visual_fusion"
+        if item.data.get("phase") == "postprocess.glm_ocr"
     )
     assert event.data["current"] == event.data["total"] == record.page_count
 

@@ -30,7 +30,7 @@ Authorization: Bearer <API_KEY>
 | `scan_policy` | `auto\|skip` | `auto` |
 | `unit_range` | 一基页/幻灯片范围，如 `1-5,8` | 全部 |
 | `language` | OCR 语言，逗号分隔 | `zh,en` |
-| `describe_images` | 是否为嵌入图片生成模型描述；资产始终保留 | `false` |
+| `describe_images` | 是否通过 GLM 识别已提取图片的可见文字；不改变已提取资产 | `false` |
 | `description_language` | `zh-CN\|en\|auto` | `zh-CN` |
 | `timeout_seconds` | `1..86400` | 服务默认值 |
 | `prefer_async` | 仅 `/parse`；强制返回持久 Job | `false` |
@@ -80,9 +80,15 @@ Accept: text/markdown
 ## GFM Markdown 输出
 
 输出忠实保留解析器恢复出的标题、段落、列表和表格，不再按财务、股东或键值等领域类型
-二次改写。可确定属于同一逻辑表的跨页片段会先合并；续页重复表头会去重，但同一张表中
-真正的多级表头或分段表头会原样保留。下游 LLM 因而可以结合上下文理解表头，而不是依赖
-转换器把第一行硬套到所有数据行。
+二次改写。可确定属于同一逻辑表的跨页片段会先合并；仅在完整表头和列义一致时删除
+续页重复表头，多级表头和分段表头按原件保留。下游 LLM 因而可以结合上下文理解表头，
+避免转换器把第一行硬套到所有数据行。
+
+表格还携带无坐标的 `<!-- table-structure: ... -->` 注释，保留原模型给出的表头行、
+单元格跨度及来源页。行列索引从 0 开始；`spans` 项为 `[行, 列, 行跨度, 列跨度]`。
+`header_rows` 是原模型标记，不代表原件真值；完整表头范围未知时
+`header_scope_complete=false`。缺少源结构或无法与 GFM 网格对齐时编码为 `unknown`，
+不补造表头、期间或单位。注释不含坐标、单元格正文或完整内部 IR。
 
 ```markdown
 ## 截至报告期末的财务指标
@@ -97,16 +103,20 @@ Accept: text/markdown
 | 扣除非经常性损益后净利润 | 69,780.34 | 59,811.73 | 16.67% |
 ```
 
-图片、图表、签章裁剪和视频关键帧始终保留为鉴权资产。`describe_images=true` 时，
-嵌入图片的描述和可见文字使用普通 Markdown 列表追加：
+Office 嵌图直接提取，原生 PDF 保留模型识别出的图片区域，扫描／混合页保留整页来源图；
+视频保留采样关键帧。已提取内容作为鉴权资产下载，原生 PDF 未检出的图片不会因此补齐。
+`describe_images=true` 时，可见文字使用普通 Markdown 列表追加，不生成额外场景推断：
 
 ```markdown
 ## 图片资产
 
 - **figure-1.png**（embedded_image，第 3 页，资产 ID：`asset_...`）：[下载](/v1/content/jobs/.../assets/asset_...)
-  - 描述：图片中可见的内容说明
-  - 可见文字：图片内可见文字
+  - 可见文字：图片内识别到的原文
 ```
+
+独立图片和视频关键帧复用同一 GLM 识字服务。视频摘要按采样帧时间戳列出可见文字，
+不推断未采样片段或无文字场景。独立图片/视频在 GLM 未启用或不可用时返回
+`backend_unavailable`；文档已提取图片仍保留资产，按需识字失败以告警说明。
 
 ## Job、SSE、资产与 bundle
 

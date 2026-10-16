@@ -17,13 +17,13 @@ function jobWithPhase(phase: string): ContentJob {
 }
 
 describe('JobBar progress phases', () => {
-  it('labels text repair and diagram recognition instead of falling back to pages', () => {
-    const { rerender } = render(<JobBar job={jobWithPhase('postprocess.text_repair')} {...callbacks} />)
-    expect(screen.getByText('2/5 修复文字')).toBeInTheDocument()
+  it('labels native page processing and scanned text recognition', () => {
+    const { rerender } = render(<JobBar job={jobWithPhase('page_pipeline')} {...callbacks} />)
+    expect(screen.getByText('2/5 页面流水线')).toBeInTheDocument()
     expect(screen.queryByText('2/5 页面')).not.toBeInTheDocument()
 
-    rerender(<JobBar job={jobWithPhase('postprocess.visual_fusion')} {...callbacks} />)
-    expect(screen.getByText('2/5 融合视觉结果')).toBeInTheDocument()
+    rerender(<JobBar job={jobWithPhase('postprocess.glm_ocr')} {...callbacks} />)
+    expect(screen.getByText('2/5 识别扫描页文字')).toBeInTheDocument()
     expect(screen.queryByText('2/5 页面')).not.toBeInTheDocument()
   })
 

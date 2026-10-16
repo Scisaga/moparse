@@ -1,7 +1,8 @@
 # Deployment
 
 The parser listens on port `12303`. Its image is CPU-only and uses Python 3.13
-CPU wheels for PyTorch. Model inference is isolated in other processes.
+CPU wheels for PyTorch. Docling runs CPU inference in the parser; GLM GPU inference
+runs in its separate model service.
 
 ## Prerequisites
 
@@ -9,7 +10,7 @@ CPU wheels for PyTorch. Model inference is isolated in other processes.
 - At least 8 GiB RAM for normal Docling conversion; complex/large PDFs may need
   more.
 - Internet access on first use, or prefetched Docling artifacts.
-- NVIDIA Container Toolkit only for the optional `glm` profile.
+- NVIDIA Container Toolkit for the bundled GPU service in the `glm` / `glm-sdk` profiles.
 
 Copy configuration before changing defaults:
 
@@ -22,13 +23,16 @@ Never place production secrets in a committed `.env` file.
 On networks that require an outbound proxy, set `HTTP_PROXY` and
 `HTTPS_PROXY`; Compose passes them to the parser and GLM model containers for
 first-run model downloads. Keep internal service names in `NO_PROXY`. Document
-source downloads and GLM/Ollama API clients deliberately use `trust_env=False`,
+source downloads and GLM API clients deliberately use `trust_env=False`,
 so an ambient proxy cannot bypass their SSRF/backend routing controls.
 
 ## Mode 1: CPU parser only
 
 This is the default and works for digital-native PDF/Office content without GLM.
-Purely visual images and standalone videos still require an enabled VLM:
+Office embedded images are extracted directly; native PDF image assets depend on model
+detection and cropping. These assets do not require OCR. Standalone image/video parsing
+and optional asset text recognition require GLM-OCR. For PDFs containing scanned/mixed
+pages without GLM, use `scan_policy=skip` to retain those pages as whole-page images:
 
 ```bash
 docker compose up -d --build mosaicparse
@@ -37,18 +41,21 @@ curl --fail http://127.0.0.1:12303/health
 curl --fail http://127.0.0.1:12303/ready
 ```
 
-Keep `GLM_OCR_ENABLED=0` and `VLM_ENABLED=0`. The first conversion may download
-Docling layout/table models to the persistent `docling-models` volume. Parser
+Keep `GLM_OCR_ENABLED=0`. The first conversion may download
+Docling 2.139.0 layout/table models to the persistent `docling-models` volume. The PDF
+backend is PyPdfium, with TableFormer V1 Accurate and `DOCLING_DO_CELL_MATCHING=0`. Parser
 health checks have a ten-minute startup grace period for that download and CPU
 initialization. `DOCLING_COMPILE_MODELS=0` avoids a very slow first document
 caused by `torch.compile`; enable it only after workload-specific benchmarking
 and a controlled warm-up.
 
-For native-text PDFs, `DOCLING_PAGE_WORKERS` may be raised above 1 to split one
-contiguous document range across persistent converter instances. Each instance
-uses `DOCLING_NUM_THREADS` CPU threads and is loaded during service startup, not
-per request. Page parallelism starts at `DOCLING_PAGE_PARALLEL_MIN_PAGES`; a
-native-text preflight keeps scanned/mixed PDFs on the single-converter path.
+The parser first classifies source pages and sends native pages to Docling and scanned/mixed
+pages to the SDK. `DOCLING_PAGE_WORKERS` can split Docling's selected native page set across
+persistent converters when that set is one contiguous range, reaches
+`DOCLING_PAGE_PARALLEL_MIN_PAGES`, and each page has sufficient native text. Discontinuous
+native ranges are converted sequentially; SDK page requests are also submitted sequentially.
+A PDF containing both kinds is therefore routed by page, not kept wholly on one converter.
+Each converter uses `DOCLING_NUM_THREADS` CPU threads and loads during startup, not per request.
 The product of `PARSER_WORKERS` and `DOCLING_PAGE_WORKERS` is capped at 32 because
 each slot owns model state. A measured 12-core allocation can start with 3 page
 workers and 4 threads per worker; re-benchmark on the target NUMA topology.
@@ -89,7 +96,6 @@ GLM_OCR_ENABLED=1
 GLM_GPU_DEVICE_ID=1
 GLM_DTYPE=half
 GLM_OCR_MAX_TOKENS=4096
-GLM_OCR_PROMPT=Text Recognition:
 ```
 
 Then start the optional profile:
@@ -122,8 +128,8 @@ cannot execute BF16; the Compose baseline therefore passes
 `--dtype half` for FP16. Change `GLM_DTYPE` only after verifying the target GPU.
 `GLM_OCR_MAX_TOKENS` is the response budget and must remain below
 `GLM_MAX_MODEL_LEN` so the image and prompt still fit in the context window.
-The default `GLM_OCR_PROMPT=Text Recognition:` follows GLM-OCR's fixed prompt
-contract; arbitrary prose prompts can silently omit otherwise visible text.
+OCR uses the fixed `Text Recognition:` prompt required by GLM-OCR; it is not a
+configurable prose prompt.
 Model-server startup includes a potentially large Hugging Face download and has
 a five-minute health-check grace period.
 
@@ -133,14 +139,15 @@ The `glm-sdk` profile starts the same GPU model service plus a CPU-only SDK
 sidecar for PP-DocLayoutV3 and region orchestration:
 
 ```dotenv
+DOCLING_PDF_BACKEND=pypdfium
+DOCLING_TABLE_MODE=accurate
+DOCLING_DO_CELL_MATCHING=0
 GLM_OCR_ENABLED=1
 GLM_SDK_ENABLED=1
-VISUAL_ROUTER_ENABLED=1
-VLM_ENABLED=1
-VLM_SIGNATURE_ENABLED=0
-VLM_TABLE_FULL_ENABLED=0
-VLM_TABLE_TARGETED_ENABLED=1
-VLM_MODEL=qwen3.6-docparse:35b-32k
+GLM_SDK_ORIENTATION_ENABLED=1
+# 200 DPI = scale 200/72; preserve the tested SDK input resolution.
+GLM_SDK_RENDER_SCALE=2.7777777777777777
+GLM_SDK_MAX_IMAGE_PIXELS=8000000
 ```
 
 ```bash
@@ -149,73 +156,53 @@ docker compose --profile glm-sdk ps
 docker compose logs -f glm-ocr-sdk
 ```
 
-`scan_policy=auto` first rotates measured complex pages into an upright image and sends them to
-the SDK. Any structurally valid GLM table can pass the domain-neutral quality gate with zero Qwen
-calls; localized column or subtotal conflicts may use one row-crop Qwen call. Signature-page and
-full-table Qwen routes are disabled by default. Healthy native and sparse pages stay on Docling and
-retain their native text layer. The SDK sidecar uses `layout.device=cpu`, `batch_size=1`, and `max_workers=1`; it reuses
-`http://glm-ocr:8000` and must not receive a GPU reservation. Set
-both `GLM_TABLE_GATE_ENABLED=0` and `VLM_TABLE_FULL_ENABLED=1` to opt into the previous
-full-table behavior, or set
-`VISUAL_ROUTER_ENABLED=0` for a complete visual-route rollback.
+`scan_policy=auto` uses Docling for native-text pages and the SDK for scanned/mixed pages.
+`GLM_SDK_ORIENTATION_ENABLED=1` rotates the SDK input upright before PP-DocLayoutV3
+layout detection and regional GLM-OCR recognition. `GLM_SDK_RENDER_SCALE=2.7777777777777777`
+renders at 200 DPI before orientation, within `GLM_SDK_MAX_IMAGE_PIXELS=8000000`; larger
+images are downscaled to that budget. DPI is part of the tested pipeline configuration, not
+a promise of higher accuracy for every PDF. Structure validation retains uncertain
+cells and warnings rather than inventing missing text, periods, or numbers.
 
-## Mode 4: Remote GLM and/or existing Ollama
+The SDK sidecar loads the pinned package's layout/task/queue defaults and overrides only local
+self-hosting, OCR connection, CPU layout device, and listen settings. It reuses
+`http://glm-ocr:8000` and must not receive a GPU reservation. The parser is also CPU-only.
+The original page association is retained when oriented coordinates return to the page.
 
-Do not enable the bundled profile. Point the parser at services reachable from
-its container:
+Direction preprocessing runs in the parser with the official PP-LCNet document-orientation
+weights through CPU PyTorch/Transformers. `GLM_SDK_ORIENTATION_MODEL_PATH` points to
+`/models/huggingface/PP-LCNet_x1_0_doc_ori_safetensors`; prefetch these weights and retain
+their model revision and SHA when preparing an offline deployment. Paddle is not required.
+`GLM_SDK_ENABLED=1` is effective only when `GLM_OCR_ENABLED=1`; the CPU-only default
+does not contact an OCR service.
+
+## Mode 4: Remote GLM-OCR and SDK
+
+Do not enable the bundled profile. Point the parser at services reachable from its container:
 
 ```dotenv
 GLM_OCR_ENABLED=1
 GLM_OCR_API_URL=http://gpu-host.example:8000/v1/chat/completions
 GLM_OCR_MODEL=zai-org/GLM-OCR
-
-VLM_ENABLED=1
-VLM_SIGNATURE_ENABLED=0
-VLM_TABLE_FULL_ENABLED=0
-VLM_TABLE_TARGETED_ENABLED=1
-VLM_BASE_URL=http://ollama-host.example:11434/v1
-VLM_MODEL=qwen3.6-docparse:35b-32k
-VLM_MAX_RETRIES=1
-VLM_MAX_CONCURRENCY=1
-VLM_PAGE_BUDGET_SECONDS=180
-VLM_MAX_CALLS_PER_PAGE=3
-VLM_PLAN_MAX_TOKENS=4096
-VLM_REGION_MAX_TOKENS=16384
-VLM_CONFLICT_MAX_TOKENS=8192
-VLM_REASONING_EFFORT=low
-VLM_CONFLICT_REASONING_EFFORT=medium
-MEDIA_VLM_REASONING_EFFORT=none
-VIDEO_SUMMARY_REASONING_EFFORT=none
+GLM_SDK_ENABLED=1
+GLM_SDK_URL=http://sdk-host.example:5002/glmocr/parse
+GLM_SDK_ORIENTATION_ENABLED=1
+# 200 DPI = scale 200/72; preserve the tested SDK input resolution.
+GLM_SDK_RENDER_SCALE=2.7777777777777777
+GLM_SDK_MAX_IMAGE_PIXELS=8000000
 ```
-
-图片与视频描述默认关闭 reasoning，避免简单结构化描述消耗完整输出预算；文档视觉融合仍使用独立的 reasoning 配置。
-
-Create the fixed 32K Ollama alias on the model host before starting the parser:
-
-```dockerfile
-FROM qwen3.6:35b
-PARAMETER num_ctx 32768
-```
-
-```bash
-ollama create qwen3.6-docparse:35b-32k -f Modelfile
-curl --fail http://ollama-host.example:11434/api/ps
-```
-
-The OpenAI-compatible request cannot change the loaded context length per call;
-the alias therefore owns `num_ctx`. Structured visual responses use JSON Schema
-through `response_format` and are validated again by Pydantic in the parser.
-See [Ollama OpenAI compatibility](https://docs.ollama.com/api/openai-compatibility)
-and [Structured Outputs](https://docs.ollama.com/capabilities/structured-outputs).
 
 ```bash
 docker compose up -d --build mosaicparse
 curl --fail http://127.0.0.1:12303/v1/backends
 ```
 
-Container DNS must resolve those hostnames. On Linux, `host.docker.internal` may
-require an explicit `extra_hosts` entry. Use TLS and protected network paths
-when backends cross a trust boundary.
+Image and video frame text recognition reuse `GLM_OCR_*` request limits. The public
+`describe_images` parameter remains available, but its output is limited to visible text.
+Video summaries list recognized text with sampled-frame timestamps and do not infer scenes.
+
+Container DNS must resolve those hostnames. On Linux, `host.docker.internal` may require an
+explicit `extra_hosts` entry. Use TLS and protected network paths when backends cross a trust boundary.
 
 ## Source checkout without Docker
 
@@ -231,6 +218,22 @@ Python must be `>=3.13,<3.14`. The committed lock uses official CPU PyTorch
 wheels; it does not install CUDA libraries into the parser environment.
 
 ## Data, upgrades, and cleanup
+
+The 2026-10-17 release was deployed at 05:15 Beijing time. The API runs image
+`sha256:f9639d65ec922a1c300233e3ef5711af5a0d3de3b6b8d7909b9ea1776575e89a`
+and the SDK runs
+`sha256:abe353926afba82931744bac4533f895c9e6ad6f768da4103a4ec40410c2e6cb`.
+Only these two services were replaced; the GLM provider remained running. The actual
+configuration readback confirmed PyPdfium, V1 Accurate, matching off, 200 DPI SDK input,
+and orientation on. Readiness and all three configured backends passed.
+
+Before replacement, the accepted images completed all 10 PDFs / 502 pages through HTTP;
+after replacement, 3 PDFs / 59 pages were parsed again on the production endpoint.
+Financial headers, funding-cell bindings and the matching-header continuation passed their
+specified checks; all 30 source-page images and 32 downloaded assets passed pixel/SHA
+verification. The previous 10 Markdown results and 195 assets retained their hashes.
+Known numerical and native-image cropping limits remain documented in the
+[complete comparison and deployment evidence](../benchmark-results/clean-model-comparison-20261015/report.md).
 
 Compose uses named volumes `mosaicparse-data`, `docling-models`, and
 `huggingface-cache`. Do not use `docker compose down -v` unless deleting jobs,

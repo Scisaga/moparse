@@ -244,19 +244,16 @@ class QualityService:
                 page.status = PageStatus.WARNING
             warnings.extend(page.warnings)
             if page.diagnostics is not None:
-                visual = page.diagnostics.visual_fusion
+                visual = page.diagnostics.glm
                 warning_codes = {warning.code for warning in page.warnings}
                 if visual is not None:
                     if page.status == PageStatus.FAILED or warning_codes & {
-                        "qwen_response_truncated",
-                        "visual_fusion_partial",
-                        "visual_fusion_timeout",
+                        "glm_sdk_timeout",
+                        "glm_sdk_skipped_after_timeout",
                         "table_structure_invalid",
                     }:
                         page.diagnostics.quality_verdict = QualityVerdict.UNTRUSTED
-                    elif (
-                        visual.unresolved_conflicts or 0
-                    ) > 0 or page.status == PageStatus.WARNING:
+                    elif visual.structure_issue_count > 0 or page.status == PageStatus.WARNING:
                         page.diagnostics.quality_verdict = QualityVerdict.DEGRADED
                     else:
                         page.diagnostics.quality_verdict = QualityVerdict.TRUSTED
@@ -307,9 +304,8 @@ class QualityService:
                 "table_header_propagation",
                 "unanchored_table_numbers",
                 "visual_text_mismatch",
-                "qwen_response_truncated",
-                "visual_fusion_partial",
-                "visual_fusion_timeout",
+                "glm_sdk_timeout",
+                "glm_sdk_skipped_after_timeout",
                 "unresolved_visual_conflict",
             }
             for warning in warnings
@@ -340,12 +336,16 @@ class QualityService:
             if diagnostics and diagnostics.selected_strategy.value != "docling":
                 summary.repaired_pages += 1
             if diagnostics:
-                visual = diagnostics.visual_fusion
+                visual = diagnostics.glm
                 if visual is not None:
                     summary.visual_pages += 1
-                    summary.qwen_calls += visual.qwen_calls or 0
-                    summary.qwen_resolved_conflicts += visual.qwen_resolved_conflicts or 0
-                    summary.unresolved_visual_conflicts += visual.unresolved_conflicts or 0
+                    if summary.sdk_requests is None or visual.sdk_requests is None:
+                        summary.sdk_requests = None
+                    else:
+                        summary.sdk_requests += visual.sdk_requests
+                    if visual.glm_calls is not None:
+                        summary.glm_calls = (summary.glm_calls or 0) + visual.glm_calls
+                    summary.unresolved_visual_conflicts += visual.structure_issue_count
         result.quality_summary = summary
         return summary
 

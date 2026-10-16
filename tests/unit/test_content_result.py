@@ -13,10 +13,9 @@ from app.models import (
 from app.services.evidence_service import NativeBlock, PageEvidence
 from app.services.ir_service import DocumentIRService
 from app.services.table_service import TableCellFragment, TableFragment, render_gfm_rows
-from app.services.visual_fusion_service import VisualPageIR, VisualSignatureExtraction
 
 
-def test_content_result_preserves_spans_provenance_and_non_body_visual_material(
+def test_content_result_preserves_spans_and_independent_source_provenance(
     tmp_path: Path,
 ) -> None:
     source_path = tmp_path / "result.pdf"
@@ -41,7 +40,7 @@ def test_content_result_preserves_spans_provenance_and_non_body_visual_material(
         markdown=render_gfm_rows(rows),
         rendered=render_gfm_rows(rows),
         has_column_header=True,
-        source_kind="qwen_visual_fusion",
+        source_kind="glm-sdk",
         cells=[
             TableCellFragment(0, 0, 1, 1, "项目", (0.1, 0.4, 0.4, 0.5), True),
             TableCellFragment(0, 1, 1, 2, "金额", (0.4, 0.4, 0.9, 0.5), True),
@@ -51,14 +50,14 @@ def test_content_result_preserves_spans_provenance_and_non_body_visual_material(
         ],
         cell_evidence=[
             [
-                {"qwen": "项目", "glm": "项目", "final": "项目"},
-                {"qwen": "金额", "glm": "金额", "final": "金额"},
+                {"docling": "项目", "glm": "项目", "final": "项目"},
+                {"docling": "金额", "glm": "金额", "final": "金额"},
                 {},
             ],
             [
-                {"qwen": "收入", "glm": "收入", "final": "收入"},
-                {"qwen": "100", "glm": "100", "final": "100"},
-                {"qwen": "90", "docling": "90", "final": "90"},
+                {"docling": "收入", "glm": "收入", "final": "收入"},
+                {"docling": "100", "glm": "100", "final": "100"},
+                {"glm": "90", "docling": "90", "final": "90"},
             ],
         ],
     )
@@ -80,26 +79,13 @@ def test_content_result_preserves_spans_provenance_and_non_body_visual_material(
         ],
         pipeline=ParsePipeline(
             profile="accurate",
-            primary="visual-fusion",
+            primary="docling-standard",
             ocr="glm-sdk-remote",
-            vlm="ollama-vlm",
         ),
-        route_summary=RouteSummary(vlm_pages=1, failed_pages=0),
-        quality_summary=QualitySummary(trusted_pages=1, visual_pages=1, qwen_calls=1),
+        route_summary=RouteSummary(pages_with_ocr=1, failed_pages=0),
+        quality_summary=QualitySummary(trusted_pages=1, visual_pages=1, sdk_requests=1, glm_calls=None),
     )
     result._table_fragments = [fragment]
-    result._visual_page_irs[1] = VisualPageIR(
-        page_number=1,
-        rotation_degrees=0,
-        signature=VisualSignatureExtraction(
-            printed_lines=["法定代表人 张三"],
-            duplicate_printed_lines=[],
-            visual_only_names=["李四"],
-            seal_or_handwriting_ocr_line_ids=[],
-            has_seal=True,
-            has_handwriting=True,
-        ),
-    )
     page_evidence = PageEvidence(
         page_number=1,
         source_kind=PageSourceKind.MIXED,
@@ -115,19 +101,14 @@ def test_content_result_preserves_spans_provenance_and_non_body_visual_material(
 
     assert parse_result.object == "content.parse_result"
     assert parse_result.schema_version == "content-parse-result/1.0"
-    assert [block.text for block in parse_result.units[0].blocks] == ["报告", "李四"]
+    assert [block.text for block in parse_result.units[0].blocks] == ["报告"]
     assert {region.region_type.value for region in parse_result.units[0].regions} >= {
         "heading",
         "table",
-        "seal",
-        "handwriting",
     }
     merged_header = next(cell for cell in parse_result.tables[0].cells if cell.text == "金额")
     assert merged_header.column_span == 2
     assert merged_header.quality.value == "confirmed"
     amount = next(cell for cell in parse_result.tables[0].cells if cell.text == "100")
-    assert amount.provenance.selected_source.value in {"glm", "qwen"}
-    assert set(amount.provenance.supporting_sources) == {"glm", "qwen"}
-    handwriting = next(block for block in parse_result.units[0].blocks if block.text == "李四")
-    assert handwriting.provenance.selected_source.value == "qwen"
-    assert handwriting.provenance.reason_codes == ["visual_only_handwriting"]
+    assert amount.provenance.selected_source.value in {"glm", "docling"}
+    assert set(amount.provenance.supporting_sources) == {"glm", "docling"}

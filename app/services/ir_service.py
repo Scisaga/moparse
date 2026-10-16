@@ -82,8 +82,6 @@ def _native_bbox(
 
 def _source_kind(value: str) -> ProvenanceSourceKind:
     normalized = value.casefold()
-    if "qwen" in normalized or "vlm" in normalized:
-        return ProvenanceSourceKind.QWEN
     if "glm" in normalized or "sdk" in normalized:
         return ProvenanceSourceKind.GLM
     if "native" in normalized or "pymupdf" in normalized:
@@ -224,7 +222,6 @@ class DocumentIRService:
                 page,
                 evidence_by_page.get(page.page_number),
                 tables_by_page,
-                result._visual_page_irs.get(page.page_number),
                 pictures_by_page.get(page.page_number, []),
             )
             for page in sorted(result.pages, key=lambda item: item.page_number)
@@ -245,7 +242,7 @@ class DocumentIRService:
         ]
 
         summary = result.quality_summary
-        qwen_calls = summary.qwen_calls if summary is not None else 0
+        glm_calls = summary.glm_calls if summary is not None else None
         return ContentParseResult(
             status="partial" if result.route_summary.failed_pages else "completed",
             source=ContentSource(
@@ -290,11 +287,12 @@ class DocumentIRService:
                 profile=result.pipeline.profile,  # type: ignore[arg-type]
                 primary_backend=result.pipeline.primary,
                 ocr_backend=result.pipeline.ocr,
-                visual_backend=result.pipeline.vlm,
+                visual_backend=result.pipeline.ocr,
                 parser_version=str(setting(self.settings, "version", "0.4.0")),
                 input_bytes=result.usage.input_bytes,
                 duration_ms=result.usage.duration_ms,
-                qwen_calls=qwen_calls,
+                glm_calls=glm_calls,
+                sdk_requests=summary.sdk_requests if summary else 0,
             ),
             links=ContentLinks(
                 job=f"/v1/content/jobs/{result.document_id}",
@@ -332,7 +330,6 @@ class DocumentIRService:
         page: PageParseResult,
         evidence: PageEvidence | None,
         tables_by_page: dict[int, list[ParsedTable]],
-        visual_page_ir: object | None,
         picture_candidates: list[object],
     ) -> ContentUnit:
         page_number = int(page.page_number)
@@ -426,56 +423,7 @@ class DocumentIRService:
                 )
             )
 
-        signature = getattr(visual_page_ir, "signature", None)
-        visual_only_names = getattr(signature, "visual_only_names", []) if signature else []
-        if signature is not None and bool(getattr(signature, "has_seal", False)):
-            regions.append(
-                ContentRegion(
-                    region_id=f"{page_id}-seal",
-                    unit_id=page_id,
-                    region_type=RegionType.SEAL,
-                    reading_order=len(regions) + 1,
-                    quality=ElementQuality.SELECTED,
-                )
-            )
-        handwriting_region_id: str | None = None
-        if signature is not None and bool(getattr(signature, "has_handwriting", False)):
-            handwriting_region_id = f"{page_id}-handwriting"
-            handwriting_blocks: list[str] = []
-            for name in visual_only_names:
-                text = str(name or "").strip()
-                if not text:
-                    continue
-                block_id = f"{handwriting_region_id}-b{len(handwriting_blocks) + 1}"
-                handwriting_blocks.append(block_id)
-                blocks.append(
-                    TextBlock(
-                        block_id=block_id,
-                        unit_id=page_id,
-                        region_id=handwriting_region_id,
-                        block_type=RegionType.HANDWRITING,
-                        reading_order=len(regions) + 1,
-                        text=text,
-                        quality=ElementQuality.SELECTED,
-                        provenance=ElementProvenance(
-                            selected_source=ProvenanceSourceKind.QWEN,
-                            supporting_sources=[ProvenanceSourceKind.QWEN],
-                            sources=[ProvenanceSource(source=ProvenanceSourceKind.QWEN)],
-                            reason_codes=["visual_only_handwriting"],
-                        ),
-                    )
-                )
-            regions.append(
-                ContentRegion(
-                    region_id=handwriting_region_id,
-                    unit_id=page_id,
-                    region_type=RegionType.HANDWRITING,
-                    reading_order=len(regions) + 1,
-                    block_ids=handwriting_blocks,
-                    quality=ElementQuality.SELECTED,
-                )
-            )
-        elif picture_candidates:
+        if picture_candidates:
             for index, picture in enumerate(picture_candidates, 1):
                 regions.append(
                     ContentRegion(
@@ -507,7 +455,7 @@ class DocumentIRService:
             ir_block.reading_order = order_by_region.get(ir_block.region_id, ir_block.reading_order)
 
         diagnostics = getattr(page, "diagnostics", None)
-        visual = diagnostics.visual_fusion if diagnostics else None
+        visual = diagnostics.glm if diagnostics else None
         source_kind = diagnostics.source_kind.value if diagnostics else "native"
         verdict = (
             diagnostics.quality_verdict.value
@@ -548,10 +496,10 @@ class DocumentIRService:
                     diagnostics.detected_rotation_degrees if diagnostics else None
                 ),
                 warning_codes=[warning.code for warning in getattr(page, "warnings", [])],
-                qwen_calls=visual.qwen_calls if visual else None,
-                qwen_duration_ms=visual.qwen_duration_ms if visual else None,
-                unresolved_conflicts=visual.unresolved_conflicts if visual else None,
-                truncated_calls=visual.truncated_calls if visual else None,
+                glm_calls=visual.glm_calls if visual else None,
+                sdk_requests=visual.sdk_requests if visual else 0,
+                sdk_duration_ms=visual.sdk_duration_ms if visual else None,
+                unresolved_conflicts=visual.structure_issue_count if visual else None,
             ),
             duration_ms=int(getattr(page, "duration_ms", 0) or 0),
         )

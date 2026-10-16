@@ -12,11 +12,13 @@ import asyncio
 import base64
 import io
 import json
+import logging
 import math
 import re
 import time
 from dataclasses import dataclass
 from html.parser import HTMLParser
+from pathlib import Path
 from typing import Any
 from urllib.parse import urlsplit, urlunsplit
 
@@ -37,9 +39,12 @@ from app.models.parse_result import (
 )
 from app.models.source import StoredSource
 from app.parsers.base import DocumentParser, ParserCancelledError, ProgressCallback
+from app.services.orientation_service import DocumentOrientationService
 from app.services.table_service import TableCellFragment, TableFragment, render_gfm_rows
 from app.utils.page_range import parse_page_range
 from app.utils.settings import setting
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass(frozen=True, slots=True)
@@ -79,7 +84,8 @@ class _TableHtmlParser(HTMLParser):
             self._row_span = _positive_span(values.get("rowspan"))
             self._col_span = _positive_span(values.get("colspan"))
             self._row_header = tag == "th" and (values.get("scope") or "").casefold() in {
-                "row", "rowgroup"
+                "row",
+                "rowgroup",
             }
         elif tag == "br" and self._cell_tag is not None:
             self._cell_parts.append("\n")
@@ -213,12 +219,26 @@ class GlmSdkRemoteParser(DocumentParser):
         self,
         settings: object | None,
         http_client: httpx.AsyncClient | None = None,
+        orientation_service: DocumentOrientationService | None = None,
     ) -> None:
         self.settings = settings
-        self.enabled = bool(setting(settings, "glm_sdk_enabled", False))
+        self.enabled = bool(setting(settings, "glm_sdk_enabled", True)) and bool(
+            setting(settings, "glm_ocr_enabled", False)
+        )
+        self.orientation_enabled = bool(setting(settings, "glm_sdk_orientation_enabled", True))
+        self.orientation_service = orientation_service or DocumentOrientationService(
+            Path(
+                setting(
+                    settings,
+                    "glm_sdk_orientation_model_path",
+                    "/models/huggingface/PP-LCNet_x1_0_doc_ori_safetensors",
+                )
+            ),
+            allow_download=bool(setting(settings, "docling_model_download", True)),
+        )
         self.api_url = str(setting(settings, "glm_sdk_url", "http://glm-ocr-sdk:5002/glmocr/parse"))
         self.timeout = float(setting(settings, "glm_sdk_timeout_seconds", 120.0))
-        self.scale = float(setting(settings, "glm_sdk_render_scale", 2.0))
+        self.scale = float(setting(settings, "glm_sdk_render_scale", 200.0 / 72.0))
         self.max_pixels = int(setting(settings, "glm_sdk_max_image_pixels", 8_000_000))
         self.max_retries = int(setting(settings, "glm_sdk_max_retries", 1))
         self.health_ttl = float(setting(settings, "backend_health_ttl_seconds", 15.0))
@@ -241,7 +261,8 @@ class GlmSdkRemoteParser(DocumentParser):
         return urlunsplit((parsed.scheme, parsed.netloc, path, "", ""))
 
     async def initialize(self) -> None:
-        return None
+        if self.enabled and self.orientation_enabled:
+            await asyncio.to_thread(self.orientation_service.initialize)
 
     async def probe(self, *, force: bool = False) -> BackendStatus:
         if not self.enabled:
@@ -261,6 +282,8 @@ class GlmSdkRemoteParser(DocumentParser):
             return self._last_status
         started = time.perf_counter()
         try:
+            if self.orientation_enabled:
+                await self.initialize()
             response = await self._client.get(self._health_url())
             response.raise_for_status()
             payload = response.json()
@@ -269,11 +292,14 @@ class GlmSdkRemoteParser(DocumentParser):
             status = BackendStatus(
                 name=self.name,
                 state=BackendState.READY,
-                detail="official GLM-OCR SDK pipeline responded",
+                detail=(
+                    "official GLM-OCR SDK pipeline responded; "
+                    f"CPU document orientation {'on' if self.orientation_enabled else 'off'}"
+                ),
                 model="glmocr",
                 latency_ms=max(0, round((time.perf_counter() - started) * 1_000)),
             )
-        except (httpx.HTTPError, ValueError, TypeError):
+        except (httpx.HTTPError, ValueError, TypeError, OSError, RuntimeError):
             status = BackendStatus(
                 name=self.name,
                 state=BackendState.UNAVAILABLE,
@@ -316,6 +342,42 @@ class GlmSdkRemoteParser(DocumentParser):
                 upright.save(buffer, format="PNG")
                 payload = buffer.getvalue()
         return f"data:image/png;base64,{base64.b64encode(payload).decode('ascii')}"
+
+    @staticmethod
+    def _map_regions_to_source(
+        regions: list[dict[str, object]], clockwise_rotation: int
+    ) -> list[dict[str, object]]:
+        """Map normalized upright SDK rectangles back to the rendered source."""
+
+        def inverse(x: float, y: float) -> tuple[float, float]:
+            if clockwise_rotation == 90:
+                return y, 1_000 - x
+            if clockwise_rotation == 180:
+                return 1_000 - x, 1_000 - y
+            if clockwise_rotation == 270:
+                return 1_000 - y, x
+            return x, y
+
+        if clockwise_rotation not in {0, 90, 180, 270}:
+            raise ValueError("Invalid applied document rotation")
+        output = []
+        for region in regions:
+            mapped = dict(region)
+            bbox = region.get("bbox_2d")
+            if isinstance(bbox, list) and len(bbox) == 4:
+                left, top, right, bottom = map(float, bbox)
+                points = [
+                    inverse(x, y)
+                    for x, y in [(left, top), (right, top), (right, bottom), (left, bottom)]
+                ]
+                mapped["bbox_2d"] = [
+                    min(p[0] for p in points),
+                    min(p[1] for p in points),
+                    max(p[0] for p in points),
+                    max(p[1] for p in points),
+                ]
+            output.append(mapped)
+        return output
 
     @staticmethod
     def _page_regions(payload: object) -> list[dict[str, object]]:
@@ -457,11 +519,9 @@ class GlmSdkRemoteParser(DocumentParser):
             output.append(content)
         obstruction_regions: list[tuple[float, float, float, float]] = []
         for region in regions:
-            obstruction = (
-                str(region.get("label", "")) == "image"
-                or str(region.get("native_label", ""))
-                in {"seal", "signature", "handwriting", "watermark"}
-            )
+            obstruction = str(region.get("label", "")) == "image" or str(
+                region.get("native_label", "")
+            ) in {"seal", "signature", "handwriting", "watermark"}
             bbox = region.get("bbox_2d")
             if not obstruction or not isinstance(bbox, list) or len(bbox) != 4:
                 continue
@@ -493,6 +553,30 @@ class GlmSdkRemoteParser(DocumentParser):
         rotation_degrees: int = 0,
     ) -> tuple[PageParseResult, list[TableFragment], int]:
         started = time.perf_counter()
+        request_count = 0
+        http_duration_ms = 0
+        source_id = (
+            source.path.parent.parent.name
+            if source.path.parent.name == "input"
+            else source.path.stem
+        )
+        source_id = re.sub(r"[^A-Za-z0-9_-]", "_", source_id)[:128] or "unknown"
+
+        def _page_result(**values: Any) -> PageParseResult:
+            page = PageParseResult(**values)
+            page._sdk_requests = request_count
+            logger.info(
+                "GLM_SDK_PAGE source_id=%s page=%d status=%s sdk_requests=%d "
+                "page_duration_ms=%d http_duration_ms=%d",
+                source_id,
+                page_number,
+                page.status.value,
+                request_count,
+                page.duration_ms,
+                http_duration_ms,
+            )
+            return page
+
         if self._cancelled(cancel_event):
             raise ParserCancelledError("job was cancelled")
         try:
@@ -502,6 +586,18 @@ class GlmSdkRemoteParser(DocumentParser):
                 page_number,
                 rotation_degrees,
             )
+            applied_rotation = rotation_degrees % 360
+            if self.orientation_enabled:
+                image_uri, clockwise_rotation, confidence = await asyncio.to_thread(
+                    self.orientation_service.orient, image_uri
+                )
+                applied_rotation = (applied_rotation + clockwise_rotation) % 360
+                logger.info(
+                    "GLM SDK orientation page=%d clockwise_rotation=%d confidence=%.6f",
+                    page_number,
+                    applied_rotation,
+                    confidence,
+                )
             payload: dict[str, Any] | None = None
             last_error_code = "glm_sdk_http_error"
             async with self._semaphore:
@@ -509,11 +605,18 @@ class GlmSdkRemoteParser(DocumentParser):
                     if self._cancelled(cancel_event):
                         raise ParserCancelledError("job was cancelled")
                     try:
-                        response = await self._client.post(
-                            self.api_url,
-                            json={"images": [image_uri]},
-                            headers={"Content-Type": "application/json"},
-                        )
+                        request_count += 1
+                        http_started = time.perf_counter()
+                        try:
+                            response = await self._client.post(
+                                self.api_url,
+                                json={"images": [image_uri]},
+                                headers={"Content-Type": "application/json"},
+                            )
+                        finally:
+                            http_duration_ms += max(
+                                0, round((time.perf_counter() - http_started) * 1_000)
+                            )
                         response.raise_for_status()
                         value = response.json()
                         if not isinstance(value, dict):
@@ -534,6 +637,7 @@ class GlmSdkRemoteParser(DocumentParser):
                 raise RuntimeError(last_error_code)
             layout = payload.get("layout_details", payload.get("json_result"))
             regions = self._page_regions(layout)
+            regions = self._map_regions_to_source(regions, applied_rotation)
             markdown, fragments = self._render_regions(regions, page_number)
             if not markdown:
                 markdown_result = payload.get("md_results", payload.get("markdown_result", ""))
@@ -555,7 +659,7 @@ class GlmSdkRemoteParser(DocumentParser):
                     )
                 )
             return (
-                PageParseResult(
+                _page_result(
                     page_number=page_number,
                     status=status,
                     backend=self.name,
@@ -571,7 +675,7 @@ class GlmSdkRemoteParser(DocumentParser):
         except Exception as exc:
             code = str(exc) if str(exc).startswith("glm_sdk_") else "glm_sdk_invalid_response"
             return (
-                PageParseResult(
+                _page_result(
                     page_number=page_number,
                     status=PageStatus.FAILED,
                     backend=self.name,
@@ -724,7 +828,6 @@ class GlmSdkRemoteParser(DocumentParser):
                 native_text_pages=0,
                 pages_with_ocr=len(parsed_pages) - failed,
                 ocr_regions=region_count,
-                vlm_pages=0,
                 failed_pages=failed,
             ),
             usage=ParseUsage(

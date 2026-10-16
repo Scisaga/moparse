@@ -11,11 +11,17 @@ dist
 .mypy_cache
 .ruff_cache
 .coverage*
+coverage.xml
 htmlcov
 frontend/node_modules
 frontend/dist
+frontend/coverage
+frontend/.vite
+frontend/.eslintcache
+**/*.tsbuildinfo
 static
 data
+tmp
 models
 benchmark-results
 pdf_sample

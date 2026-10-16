@@ -3,6 +3,8 @@ from __future__ import annotations
 import asyncio
 import base64
 import io
+import json
+from copy import deepcopy
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -73,7 +75,9 @@ async def test_sdk_adapter_renders_region_json_and_table_spans(native_pdf: Path)
     client = httpx.AsyncClient(transport=httpx.MockTransport(handler))
     parser = GlmSdkRemoteParser(
         SimpleNamespace(
+            glm_ocr_enabled=True,
             glm_sdk_enabled=True,
+            glm_sdk_orientation_enabled=False,
             glm_sdk_url="http://sdk:5002/glmocr/parse",
             glm_sdk_max_retries=0,
             glm_sdk_max_concurrency=1,
@@ -141,7 +145,12 @@ def test_html_spans_survive_in_ir_with_units_and_signed_values() -> None:
     assert (merged.row, merged.column, merged.row_span, merged.column_span) == (1, 0, 3, 2)
     assert table.source_units == [7]
     assert [cell.text for cell in table.cells] == [
-        "筹资方式（万元）", "金额", "发行 股票", "12.30", "-5.00", "7.30"
+        "筹资方式（万元）",
+        "金额",
+        "发行 股票",
+        "12.30",
+        "-5.00",
+        "7.30",
     ]
     assert "筹资方式（万元）" in fragment.markdown
     assert fragment.markdown.count("发行 股票") == 1
@@ -160,7 +169,12 @@ def test_html_empty_explicit_rows_do_not_shift_later_cell_ownership() -> None:
     assert fragment is not None
     assert (fragment.num_rows, fragment.num_cols) == (6, 2)
     assert fragment.rows == [
-        ["事项", ""], ["事项甲", ""], ["", ""], ["", ""], ["事项乙", "17"], ["", ""]
+        ["事项", ""],
+        ["事项甲", ""],
+        ["", ""],
+        ["", ""],
+        ["事项乙", "17"],
+        ["", ""],
     ]
     table = DocumentIRService._table(fragment)
     later = next(cell for cell in table.cells if cell.text == "事项乙")
@@ -182,17 +196,20 @@ def test_html_explicit_row_header_scope_does_not_expand_column_header_band() -> 
     table = DocumentIRService._table(fragment)
     row_header = next(cell for cell in table.cells if cell.text == "类别甲")
     assert (row_header.row_span, row_header.is_row_header, row_header.is_column_header) == (
-        2, True, False
+        2,
+        True,
+        False,
     )
     assert [cell.text for cell in table.cells if not cell.is_column_header] == [
-        "类别甲", "0.2907", "0.3042"
+        "类别甲",
+        "0.2907",
+        "0.3042",
     ]
 
 
 def test_html_colspan_collision_with_prior_rowspan_keeps_raw_source() -> None:
     content = (
-        "<table><tr><td>甲</td><td rowspan='2'>乙</td></tr>"
-        "<tr><td colspan='2'>丙</td></tr></table>"
+        "<table><tr><td>甲</td><td rowspan='2'>乙</td></tr><tr><td colspan='2'>丙</td></tr></table>"
     )
 
     assert _html_table_rows(content) == ([], False)
@@ -224,7 +241,9 @@ def test_html_unproved_or_oversized_spans_are_not_clamped_into_false_topology(co
 async def test_pdf_page_is_physically_rotated_before_glm_submission(native_pdf: Path) -> None:
     parser = GlmSdkRemoteParser(
         SimpleNamespace(
+            glm_ocr_enabled=True,
             glm_sdk_enabled=True,
+            glm_sdk_orientation_enabled=False,
             glm_sdk_url="http://sdk:5002/glmocr/parse",
             glm_sdk_render_scale=1,
         )
@@ -253,7 +272,9 @@ async def test_sdk_adapter_timeout_stops_later_page_calls(native_pdf: Path, monk
     client = httpx.AsyncClient(transport=httpx.MockTransport(handler))
     parser = GlmSdkRemoteParser(
         SimpleNamespace(
+            glm_ocr_enabled=True,
             glm_sdk_enabled=True,
+            glm_sdk_orientation_enabled=False,
             glm_sdk_url="http://sdk:5002/glmocr/parse",
             glm_sdk_timeout_seconds=0.01,
             glm_sdk_max_retries=1,
@@ -282,3 +303,271 @@ async def test_sdk_adapter_timeout_stops_later_page_calls(native_pdf: Path, monk
         "glm_sdk_skipped_after_timeout"
     ]
     await client.aclose()
+
+
+@pytest.mark.parametrize(
+    ("rotation", "upright_bbox"),
+    [
+        (0, [100, 200, 400, 600]),
+        (90, [400, 100, 800, 400]),
+        (180, [600, 400, 900, 800]),
+        (270, [200, 600, 600, 900]),
+    ],
+)
+def test_orientation_inverse_maps_all_regions_without_mutating_sdk_payload(
+    rotation: int,
+    upright_bbox: list[int],
+) -> None:
+    regions = [
+        {
+            "index": index,
+            "label": label,
+            "native_label": label,
+            "content": f"原件{label}",
+            "bbox_2d": list(upright_bbox),
+        }
+        for index, label in enumerate(("text", "table", "image"))
+    ]
+    before = deepcopy(regions)
+
+    mapped = GlmSdkRemoteParser._map_regions_to_source(regions, rotation)
+
+    assert regions == before
+    assert len(mapped) == len(regions)
+    for before_region, after_region in zip(regions, mapped, strict=True):
+        assert after_region["bbox_2d"] == pytest.approx([100, 200, 400, 600])
+        assert after_region["index"] == before_region["index"]
+        assert after_region["content"] == before_region["content"]
+        assert after_region["label"] == before_region["label"]
+
+
+@pytest.mark.parametrize(
+    ("rotation", "upright_bbox"),
+    [(90, [400, 100, 800, 400]), (180, [600, 400, 900, 800]), (270, [200, 600, 600, 900])],
+)
+async def test_orientation_precedes_sdk_http_and_preserves_source_table_geometry(
+    native_pdf: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    rotation: int,
+    upright_bbox: list[int],
+) -> None:
+    events: list[str] = []
+    image = Image.new("RGB", (6, 10), "white")
+    image.putpixel((0, 0), (255, 0, 0))
+    image.putpixel((5, 9), (0, 0, 255))
+    buffer = io.BytesIO()
+    image.save(buffer, format="PNG")
+    image_uri = "data:image/png;base64," + base64.b64encode(buffer.getvalue()).decode("ascii")
+    expected_pixels = image.rotate(-rotation, expand=True)
+
+    class Orientation:
+        def orient(self, raw: str) -> tuple[str, int, float]:
+            events.append("orientation")
+            assert raw == image_uri
+            encoded = io.BytesIO()
+            expected_pixels.save(encoded, format="PNG")
+            return (
+                "data:image/png;base64," + base64.b64encode(encoded.getvalue()).decode("ascii"),
+                rotation,
+                0.999,
+            )
+
+    async def handler(request: httpx.Request) -> httpx.Response:
+        events.append("sdk_http")
+        assert request.method == "POST"
+        payload = json.loads(request.content)
+        with Image.open(
+            io.BytesIO(base64.b64decode(payload["images"][0].partition(",")[2]))
+        ) as sent:
+            assert sent.size == expected_pixels.size
+            assert sent.convert("RGB").tobytes() == expected_pixels.tobytes()
+        return httpx.Response(
+            200,
+            json={
+                "layout_details": [
+                    [
+                        {
+                            "index": 0,
+                            "label": "text",
+                            "content": "原件文字",
+                            "bbox_2d": upright_bbox,
+                        },
+                        {
+                            "index": 1,
+                            "label": "table",
+                            "content": (
+                                "<table><tr><th>原件期间</th><th>金额</th></tr>"
+                                "<tr><td rowspan='2'>合并单元格原文</td><td>0.2907</td></tr>"
+                                "<tr><td>0.3042</td></tr></table>"
+                            ),
+                            "bbox_2d": upright_bbox,
+                        },
+                        {
+                            "index": 2,
+                            "label": "image",
+                            "native_label": "seal",
+                            "content": "",
+                            "bbox_2d": upright_bbox,
+                        },
+                    ]
+                ]
+            },
+        )
+
+    client = httpx.AsyncClient(transport=httpx.MockTransport(handler))
+    parser = GlmSdkRemoteParser(
+        SimpleNamespace(
+            glm_ocr_enabled=True,
+            glm_sdk_enabled=True,
+            glm_sdk_orientation_enabled=True,
+            glm_sdk_max_retries=0,
+            glm_sdk_url="http://sdk:5002/glmocr/parse",
+        ),
+        http_client=client,
+        orientation_service=Orientation(),
+    )
+    monkeypatch.setattr(parser, "_render_page", lambda *_args: image_uri)
+
+    parsed = await parser.parse(_source(native_pdf), ContentParseOptions(), document_id="rotation")
+
+    assert events == ["orientation", "sdk_http"]
+    assert parsed.processed_pages == 1
+    [fragment] = parsed._table_fragments
+    assert fragment.normalized_bbox == pytest.approx((0.1, 0.2, 0.4, 0.6))
+    assert fragment.visual_obstructions[0] == pytest.approx((0.1, 0.2, 0.4, 0.6))
+    table = DocumentIRService._table(fragment)
+    assert next(cell for cell in table.cells if cell.text == "合并单元格原文").row_span == 2
+    assert table.source_units == [1]
+    assert "0.2907" in parsed.pages[0].content
+    assert "0.3042" in parsed.pages[0].content
+    assert "原件文字" in parsed.pages[0].content
+    await client.aclose()
+
+
+async def test_sdk_request_count_measures_actual_retry_posts(native_pdf: Path) -> None:
+    posts = 0
+
+    async def handler(request: httpx.Request) -> httpx.Response:
+        nonlocal posts
+        assert request.method == "POST"
+        posts += 1
+        if posts == 1:
+            return httpx.Response(503, json={"error": "temporarily unavailable"})
+        return httpx.Response(
+            200,
+            json={
+                "layout_details": [
+                    [{"label": "text", "content": "原件文字", "bbox_2d": [0, 0, 1000, 1000]}]
+                ]
+            },
+        )
+
+    client = httpx.AsyncClient(transport=httpx.MockTransport(handler))
+    parser = GlmSdkRemoteParser(
+        SimpleNamespace(
+            glm_ocr_enabled=True,
+            glm_sdk_enabled=True,
+            glm_sdk_orientation_enabled=False,
+            glm_sdk_max_retries=1,
+        ),
+        http_client=client,
+    )
+
+    parsed = await parser.parse(
+        _source(native_pdf), ContentParseOptions(), document_id="retry-count"
+    )
+
+    assert posts == 2
+    assert parsed.pages[0]._sdk_requests == posts
+    assert parsed.pages[0].content == "原件文字"
+    await client.aclose()
+
+
+async def test_orientation_failure_reports_zero_sdk_posts(native_pdf: Path) -> None:
+    class FailedOrientation:
+        def orient(self, _image: str):
+            raise RuntimeError("orientation unavailable")
+
+    posts = 0
+
+    async def handler(_request: httpx.Request) -> httpx.Response:
+        nonlocal posts
+        posts += 1
+        raise AssertionError("SDK must not receive an image whose orientation stage failed")
+
+    client = httpx.AsyncClient(transport=httpx.MockTransport(handler))
+    parser = GlmSdkRemoteParser(
+        SimpleNamespace(
+            glm_ocr_enabled=True,
+            glm_sdk_enabled=True,
+            glm_sdk_orientation_enabled=True,
+            glm_sdk_max_retries=0,
+        ),
+        http_client=client,
+        orientation_service=FailedOrientation(),
+    )
+
+    parsed = await parser.parse(
+        _source(native_pdf), ContentParseOptions(), document_id="orientation-fail"
+    )
+
+    assert posts == 0
+    assert parsed.pages[0]._sdk_requests == 0
+    assert parsed.pages[0].status.value == "failed"
+    await client.aclose()
+
+
+@pytest.mark.parametrize("pdf_rotation", [0, 90, 180, 270])
+async def test_default_pdf_render_matches_200_dpi_and_pdf_rotation(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, pdf_rotation: int
+) -> None:
+    import pymupdf
+
+    from app.config import Settings
+
+    monkeypatch.delenv("GLM_SDK_RENDER_SCALE", raising=False)
+    assert Settings(_env_file=None).glm_sdk_render_scale == pytest.approx(200 / 72)
+    path = tmp_path / "rotated-source.pdf"
+    with pymupdf.open() as document:
+        page = document.new_page(width=360, height=720)
+        page.insert_text((24, 48), "Visible source text at the original top-left")
+        page.draw_rect(pymupdf.Rect(40, 100, 90, 160), color=(1, 0, 0), fill=(1, 0, 0))
+        page.set_rotation(pdf_rotation)
+        document.save(path)
+    parser = GlmSdkRemoteParser(SimpleNamespace(glm_ocr_enabled=False))
+    try:
+        assert parser.scale == pytest.approx(200 / 72)
+        image_uri = parser._render_page(_source(path), 1)
+        with Image.open(io.BytesIO(base64.b64decode(image_uri.partition(",")[2]))) as rendered:
+            expected_size = (1000, 2000) if pdf_rotation in {0, 180} else (2000, 1000)
+            assert rendered.size == expected_size
+            with pymupdf.open(path) as document:
+                expected = document[0].get_pixmap(dpi=200, alpha=False)
+            assert rendered.convert("RGB").tobytes() == expected.samples
+    finally:
+        await parser.close()
+
+
+@pytest.mark.parametrize("pdf_rotation", [0, 90])
+async def test_200_dpi_pdf_render_still_respects_maximum_image_pixels(
+    tmp_path: Path, pdf_rotation: int
+) -> None:
+    import pymupdf
+
+    path = tmp_path / "limited-source.pdf"
+    with pymupdf.open() as document:
+        page = document.new_page(width=360, height=720)
+        page.insert_text((24, 48), "Source with a configured image-pixel budget")
+        page.set_rotation(pdf_rotation)
+        document.save(path)
+    parser = GlmSdkRemoteParser(
+        SimpleNamespace(glm_ocr_enabled=False, glm_sdk_max_image_pixels=500_000)
+    )
+    try:
+        image_uri = parser._render_page(_source(path), 1)
+        with Image.open(io.BytesIO(base64.b64decode(image_uri.partition(",")[2]))) as rendered:
+            expected_size = (500, 1000) if pdf_rotation == 0 else (1000, 500)
+            assert rendered.size == expected_size
+            assert rendered.width * rendered.height <= parser.max_pixels
+    finally:
+        await parser.close()

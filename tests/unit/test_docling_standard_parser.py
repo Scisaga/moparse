@@ -5,6 +5,7 @@ import queue
 import threading
 from pathlib import Path
 from types import SimpleNamespace
+from unittest.mock import AsyncMock
 
 import pymupdf
 import pytest
@@ -139,6 +140,44 @@ def test_empty_download_directory_clears_upstream_offline_override(
     parser._build_converter(ParseProfile.BALANCED, False, ["zh", "en"], False)
 
     assert docling_settings.artifacts_path is None
+
+
+@pytest.mark.parametrize("profile", [ParseProfile.BALANCED, ParseProfile.ACCURATE])
+def test_native_pdf_converter_uses_selected_v1_cpu_configuration(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, profile: ParseProfile,
+) -> None:
+    """Exercise real option construction without loading or downloading model weights."""
+    import docling.document_converter as converter_module
+    from docling.backend.pypdfium2_backend import PyPdfiumDocumentBackend
+    from docling.datamodel.base_models import InputFormat
+    from docling.datamodel.pipeline_options import TableFormerMode, TableStructureOptions
+
+    captured: dict[str, object] = {}
+
+    def capture_converter(**kwargs):
+        captured.update(kwargs)
+        return SimpleNamespace(**kwargs)
+
+    monkeypatch.setattr(converter_module, "DocumentConverter", capture_converter)
+    parser = DoclingStandardParser(
+        SimpleNamespace(
+            parser_workers=1, docling_artifacts_path=tmp_path,
+            docling_model_download=True, docling_num_threads=4,
+        ),
+        StubGlmAdapter(),  # type: ignore[arg-type]
+    )
+    parser._build_converter(profile, False, ["zh", "en"], False)
+
+    pdf = captured["format_options"][InputFormat.PDF]
+    options = pdf.pipeline_options
+    assert pdf.backend is PyPdfiumDocumentBackend
+    assert type(options.table_structure_options) is TableStructureOptions
+    assert options.table_structure_options.mode is TableFormerMode.ACCURATE
+    assert options.table_structure_options.do_cell_matching is False
+    assert options.do_ocr is False
+    assert options.enable_remote_services is False
+    assert options.accelerator_options.device == "cpu"
+    assert options.accelerator_options.num_threads == 4
 
 
 def test_picture_candidates_keep_only_caption_and_normalized_crop_geometry() -> None:
@@ -404,8 +443,9 @@ async def test_cancelled_parallel_conversion_keeps_all_slots_until_threads_exit(
     assert parser._available_slots.qsize() == 3
 
 
-async def test_automatic_route_reports_unavailable_optional_glm() -> None:
+async def test_native_docling_route_does_not_depend_on_remote_ocr_availability() -> None:
     adapter = StubGlmAdapter(BackendState.UNAVAILABLE)
+    adapter.probe = AsyncMock(side_effect=AssertionError("native Docling cannot probe remote OCR"))
     parser = DoclingStandardParser(SimpleNamespace(parser_workers=1), adapter)  # type: ignore[arg-type]
     parser._initialized = True
     converter = RecordingConverter()
@@ -414,7 +454,8 @@ async def test_automatic_route_reports_unavailable_optional_glm() -> None:
 
     result = await parser.parse(source(1), ContentParseOptions(), document_id="docparse_degraded")
 
-    assert [warning.code for warning in result.warnings] == ["glm_ocr_unavailable"]
+    assert result.pipeline.ocr is None
+    assert result.warnings == []
     assert converter.page_ranges == [(1, 1)]
 
 

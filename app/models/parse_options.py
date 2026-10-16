@@ -27,13 +27,6 @@ class ScanPolicy(StrEnum):
     SKIP = "skip"
 
 
-class VlmPolicy(StrEnum):
-    """Internal routing decision derived from the scan policy."""
-
-    OFF = "off"
-    AUTO_VISUAL = "auto_visual"
-
-
 LanguageCode = Annotated[str, Field(min_length=1, max_length=32)]
 
 
@@ -110,22 +103,6 @@ class ContentParseOptions(BaseModel):
         if not result:
             raise ValueError("at least one OCR language is required")
         return result
-
-    @property
-    def resolved_vlm_policy(self) -> VlmPolicy:
-        """Automatic scan processing enables selective visual fusion."""
-
-        if self.scan_policy == ScanPolicy.AUTO:
-            return VlmPolicy.AUTO_VISUAL
-        return VlmPolicy.OFF
-
-    @property
-    def visual_profile(self) -> ParseProfile:
-        """Use the measured high-resolution adapter path for automatic scans."""
-
-        if self.scan_policy == ScanPolicy.AUTO:
-            return ParseProfile.ACCURATE
-        return ParseProfile.BALANCED
 
     @property
     def page_range(self) -> str | None:

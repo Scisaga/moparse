@@ -16,14 +16,12 @@ def test_public_config_never_contains_secrets(tmp_path: Path) -> None:
         api_key="public-secret",
         admin_token="admin-secret",
         glm_ocr_api_key="glm-secret",
-        vlm_api_key="vlm-secret",
     )
 
     serialized = repr(settings.public_config())
     assert "public-secret" not in serialized
     assert "admin-secret" not in serialized
     assert "glm-secret" not in serialized
-    assert "vlm-secret" not in serialized
 
 
 @pytest.mark.parametrize("device", ["cpu", "auto", "mps", "cuda", "cuda:1"])
@@ -56,43 +54,21 @@ def test_mcp_host_allowlist_adds_port_patterns() -> None:
     assert settings.mcp_allowed_host_list == ["localhost", "localhost:*", "parser:12303"]
 
 
-def test_media_descriptions_disable_reasoning_by_default() -> None:
-    settings = make_settings()
-    assert settings.media_vlm_reasoning_effort == "none"
-    assert settings.video_summary_reasoning_effort == "none"
-
-
-def test_document_vlm_routes_have_cost_safe_defaults(monkeypatch: pytest.MonkeyPatch) -> None:
-    for name in (
-        "VLM_SIGNATURE_ENABLED",
-        "VLM_TABLE_FULL_ENABLED",
-        "VLM_TABLE_TARGETED_ENABLED",
-    ):
-        monkeypatch.delenv(name, raising=False)
-
-    settings = make_settings()
-
-    assert settings.vlm_signature_enabled is False
-    assert settings.vlm_table_full_enabled is False
-    assert settings.vlm_table_targeted_enabled is True
-    public = settings.public_config()
-    assert public["vlm_signature_enabled"] is False
-    assert public["vlm_table_full_enabled"] is False
-    assert public["vlm_table_targeted_enabled"] is True
-
-
-def test_document_vlm_route_flags_are_loaded_from_environment(
+def test_selected_pdf_pipeline_defaults_are_exposed_consistently(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    monkeypatch.setenv("VLM_SIGNATURE_ENABLED", "1")
-    monkeypatch.setenv("VLM_TABLE_FULL_ENABLED", "true")
-    monkeypatch.setenv("VLM_TABLE_TARGETED_ENABLED", "0")
-
+    for name in ("DOCLING_DEVICE", "DOCLING_DO_CELL_MATCHING", "DOCLING_PDF_BACKEND",
+                 "DOCLING_TABLE_MODE", "GLM_SDK_ENABLED", "GLM_SDK_ORIENTATION_ENABLED"):
+        monkeypatch.delenv(name, raising=False)
     settings = make_settings()
 
-    assert settings.vlm_signature_enabled is True
-    assert settings.vlm_table_full_enabled is True
-    assert settings.vlm_table_targeted_enabled is False
-    assert settings.public_config()["vlm_signature_enabled"] is True
-    assert settings.public_config()["vlm_table_full_enabled"] is True
-    assert settings.public_config()["vlm_table_targeted_enabled"] is False
+    assert settings.docling_device == "cpu"
+    assert settings.docling_do_cell_matching is False
+    assert settings.docling_pdf_backend == "pypdfium"
+    assert settings.docling_table_mode == "accurate"
+    assert settings.glm_sdk_enabled is True
+    assert settings.glm_sdk_orientation_enabled is True
+    public = settings.public_config()
+    assert public["docling_pdf_backend"] == "pypdfium"
+    assert public["docling_do_cell_matching"] is False
+    assert public["glm_sdk_orientation_enabled"] is True

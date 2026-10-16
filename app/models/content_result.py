@@ -26,7 +26,6 @@ class ProvenanceSourceKind(StrEnum):
     NATIVE = "native"
     DOCLING = "docling"
     GLM = "glm"
-    QWEN = "qwen"
     FFMPEG = "ffmpeg"
     OOXML = "ooxml"
 
@@ -207,8 +206,6 @@ class UnitDiagnostics(BaseModel):
         "native_repair",
         "scan_skipped",
         "glm_table",
-        "glm_qwen_targeted",
-        "qwen_visual_fusion",
         "office_native",
         "visual_description",
         "video_keyframes",
@@ -218,8 +215,10 @@ class UnitDiagnostics(BaseModel):
     image_coverage_ratio: float | None = Field(default=None, ge=0, le=1)
     detected_rotation_degrees: Literal[0, 90, 180, 270] | None = None
     warning_codes: list[str] = Field(default_factory=list)
-    qwen_calls: int | None = Field(default=None, ge=0)
-    qwen_duration_ms: int | None = Field(default=None, ge=0)
+    glm_calls: int | None = Field(default=None, ge=0)
+    sdk_requests: int | None = Field(default=0, ge=0)
+    sdk_duration_ms: int | None = Field(default=None, ge=0)
+    glm_duration_ms: int | None = Field(default=None, ge=0)
     unresolved_conflicts: int | None = Field(default=None, ge=0)
     truncated_calls: int | None = Field(default=None, ge=0)
 
@@ -378,7 +377,8 @@ class ParseRuntime(BaseModel):
     parser_version: str
     input_bytes: int = Field(default=0, ge=0)
     duration_ms: int = Field(default=0, ge=0)
-    qwen_calls: int = Field(default=0, ge=0)
+    glm_calls: int | None = Field(default=None, ge=0)
+    sdk_requests: int | None = Field(default=0, ge=0)
     ffmpeg_duration_ms: int | None = Field(default=None, ge=0)
 
 

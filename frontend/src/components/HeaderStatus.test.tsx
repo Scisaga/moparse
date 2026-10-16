@@ -12,7 +12,7 @@ describe('HeaderStatus', () => {
           backends: [
             { id: 'docling', label: 'Docling', status: 'ready' },
             { id: 'glm', label: 'GLM', status: 'unavailable', message: '连接失败' },
-            { id: 'vlm', label: 'VLM', status: 'ready' },
+            { id: 'glm-sdk', label: 'GLM SDK', status: 'ready' },
           ],
           queue: { active: 1, capacity: 8 },
         }}

@@ -12,9 +12,10 @@ RAG 等下游系统之间。
 最终只输出一份普通 GFM Markdown：保留标题、段落、列表、表格和页间连续关系，不再把
 表格二次改写为专用 XML 或文档 JSON。图片和视频以标准 Markdown 列表及下载链接保留。
 
-服务会根据文本层、页面布局、OCR 和视觉信号自动选择处理方式。文档内嵌图片始终作为
-可下载资产保留，模型描述默认关闭并可通过 `describe_images=true` 按需启用；独立视频
-通过 FFmpeg 采样关键帧，摘要只基于这些采样内容。
+服务按文本层和图像证据选择处理方式。Office 嵌图直接提取；原生 PDF 保留模型识别到
+的图片；扫描、混合页保留整页来源图。原生 PDF 图像检测和裁边仍有[已知边界](benchmark-results/clean-model-comparison-20261015/report.md#已知识别与图像边界)。
+`describe_images=true` 可按需识别已提取图片中的可见文字；独立视频通过 FFmpeg 采样
+关键帧，输出带时间戳的帧文字摘要，不生成无文字证据的场景描述。
 任务状态、错误和无坐标资产清单仍使用 JSON 控制协议；文档内容只有 Markdown。
 
 ![alt text](img/README-1789414313262.png)
@@ -27,11 +28,13 @@ RAG 等下游系统之间。
 ## 功能
 
 - PDF、DOCX、PPTX、PNG、JPEG、WebP、TIFF、BMP 及 MP4、MOV、MKV、WebM、AVI；
-- 文档内嵌图片提取、去重、按需描述与下载；独立视频关键帧和仅基于采样帧的摘要；
+- Office 嵌图提取、原生 PDF 模型图片和扫描整页图保留；按需识字、资产去重与下载；
+- 独立视频关键帧和带时间戳的帧文字摘要；
 - 单一自动解析策略；可显式跳过扫描 PDF 页并只保留页面图像；
 - 唯一的 GFM Markdown 文档结果；坐标和候选证据只在单次解析内部使用；
-- 表格保留为 GFM，并在导出前合并可确定的跨页连续表；多级/重复表头按识别结果保留，
-  不用固定首行表头或领域规则重新解释单元格；
+- 表格保留为 GFM；跨页合并与重复表头删除要求完整表头和列义一致，不同表头保持各自
+  作用范围；多级表头、合并单元格、单位和来源页关联按原件保留；
+- 无坐标 `table-structure` 注释保留原模型表头角色及合并跨度，未知结构明确标记；
 - 小文件同步解析，异步 Job、持久化状态和 SSE 进度；
 - `/health`、`/ready`、后端能力探测、Swagger、ReDoc；
 - MCP 2.x Streamable HTTP；
@@ -74,95 +77,147 @@ curl --fail-with-body http://localhost:12303/v1/content/parse \
   -o result.md
 ```
 
-## 三种部署模式
+## 模型配置与选择依据
 
-| 模式 | 主服务 | OCR/VLM | 启动方式 |
+默认 PDF 管线为：**Docling 2.139.0／TableFormer V1 Accurate／matching=False／PyPdfium
+处理原生页，GLM-OCR＋官方 SDK 以 200 DPI 处理扫描、混合页，方向预处理开启。** 主服务使用
+CPU，GLM 在独立 GPU 服务运行；原生页无需经过 GPU，也不会根据指标名称生成期间。
+
+```mermaid
+flowchart TD
+    source["PDF 来源页证据判定"]
+    source -->|原生页| native["Docling 2.139 · TableFormer V1 Accurate<br/>matching=False · PyPdfium · CPU"]
+    source -->|扫描／混合页| raster["200 DPI 渲染"]
+    raster --> orientation["方向预处理 · CPU"]
+    orientation --> layout["GLM SDK 布局 · CPU"]
+    layout --> ocr["GLM-OCR 区域识别 · GPU"]
+    native --> assemble["保留源表结构、期间与来源页<br/>严格核对跨页表头后组装"]
+    ocr --> assemble
+    assemble --> markdown["GFM Markdown＋公开结构注释"]
+    native --> pictures["原生页模型识别图片资产"]
+    source -->|扫描／混合页| pages["整页来源图资产"]
+    pictures --> markdown
+    pages --> markdown
+```
+
+10 份原件共 502 页。原值、期间和唯一行使用冻结内容评分；完整列义统一读取结果自己携带
+的公开结构注释，兼容历史 `clean-table` 和现行 `table-structure`，不使用私有坐标选表。
+列义通过要求数值对应的完整表头及作用范围得到确认。选定配置已重新调用真实接口处理完整
+10 份 PDF，并下载最终 Markdown 和全部资产。
+
+![10 份原件的模型组合质量比较](docs/assets/model-comparison-quality.svg)
+
+| 组合 | 核心原值 / 209 | 完整期间 / 209 | 原值及唯一行 / 402 | 完整列义：读取公开结构注释 / 402 | 筹资独立源格 / 31 |
+|---|---:|---:|---:|---:|---:|
+| 升级前线上：Docling 2.119／V1／True／默认后端及完整应用处理 | 206 | 206 | 373 | 178 | 31 |
+| **本次发布前完整 HTTP 回归：Docling 2.139／V1／False／PyPdfium＋GLM SDK（200 DPI）** | **209** | **209** | **372** | **326** | **31** |
+| Paddle 1.6 原生方向 OFF＋GLM SDK 方向 ON | 209 | 209 | 370 | 324 | 15 |
+| 全 GLM＋方向预处理 ON | 209 | 209 | 312 | 275 | 31 |
+
+这张表的新旧管线均来自 10 月 17 日的完整 HTTP 请求；Paddle 1.6 来自 10 月 16 日完整
+HTTP 结果；全 GLM 来自已生成的实验 Markdown 重评分。请求、最终结果、评分及实际部署
+版本统一保存在[完整报告](benchmark-results/clean-model-comparison-20261015/report.md)。
+这些是指定标注集成绩，各集合存在重叠。对同一份历史 Docling 输出，仅忽略／读取公开
+跨度注释，完整列义确认就从 180 变为 326（+146）；正文、原值和行关系均不变。这个差值
+来自结构读出，不是识字精度提高。原冻结读者的原始成绩与只读消融保留在完整报告中。
+
+已知局限：仍存在股东数末位截断，以及个别金额负号／小数点丢失、邻行数字混入等错误。
+这包含相对旧线上确认的回退，不能只看汇总净分；[逐格失败与图像边界](benchmark-results/clean-model-comparison-20261015/report.md#已知识别与图像边界)完整保留。
+
+| 原生 4 页组件对照 | 预热后耗时中位数 | 推理资源 |
+|---|---:|---|
+| **Docling V1／False／PyPdfium** | **12.94 秒** | **4 线程 CPU，不占 GPU** |
+| Paddle 1.6／方向 OFF | 32.78 秒 | GPU 显存约 2.82 GiB |
+| 全 GLM／方向 ON | 10.74 秒 | GLM 服务常驻显存约 11.34 GiB |
+
+组件耗时为三轮中位数，Paddle 和 GLM 从已渲染图片开始，未包含 PDF 渲染。完整 502 页
+实际接口累计耗时为：**本次选定配置 21.52 分钟取得 Markdown，含全部资产下载 21.54 分钟**；
+旧线上 39.49 分钟，Paddle 组合 103.22 分钟。这些是各次实际运行，预热和共享主机负载并未
+完全控制，不能当作重复测量后的固定加速比。
+
+![模型组合的耗时比较](docs/assets/model-comparison-time.svg)
+
+本批 433 个原生来源页由 CPU 处理，69 个扫描／混合页实际调用 SDK。约每 2 秒采样，
+API／SDK 的 CPU 平均占用为 535.69%／150.60%（100% 为一个核），进程树 RSS 峰值为
+6.172／5.148 GiB；GLM 进程显存约 11.34 GiB，SDK 请求窗口内其 GPU SM 利用率平均
+68.65%、峰值 99%。时间及资源的完整统计口径见报告。
+
+浙江出版的两组期间表头、原值和每股收益单位通过 30／30；相同表头续表通过 33／33，
+10 个表头叶项和 7 个筹资行绑定均通过。69 张整页来源图的 RGB／来源页，以及全部
+79 个资产的 HTTP 下载／SHA 核验通过。线上于 **2026-10-17 05:15（北京时间）**更新为
+本次验收镜像；部署后又通过 3 份／59 页接口复测，覆盖浙江出版、正常续表和扫描件。
+原有 10 份结果及 195 个资产核验不变。
+
+**扫描输入的 DPI 是组合配置的一部分。** `1225475375.pdf` 第 8 页、同一 SDK／GLM 和 90° 方向下，
+144 DPI 输入（1684×1191）遗漏上期短期借款 `142,000,000.00`；200 DPI 输入
+（2338×1653）正确保留同一行的 `100,000,000.00`／`142,000,000.00`，无损旋转与旧仿射
+两种 200 DPI 输入均通过。69 个扫描／混合页的新 200 DPI 未旋转 RGB 像素与冻结实验
+输入全部一致。该问题来自首次接入遗漏 DPI，不能归因于模型权重退化；这个对照也不证明
+任何 PDF 都是 200 DPI 更好，完整语料结果见报告。
+
+## 部署模式
+
+| 模式 | 主服务 | OCR 服务 | 启动方式 |
 |---|---|---|---|
-| CPU-only | 本项目 CPU 镜像 | 关闭；适合数字 PDF/Office | `docker compose up -d --build mosaicparse` |
-| 本机 GLM | CPU 主服务 | Compose 可选服务中的独立 vLLM，默认 GPU 1 | `docker compose --profile glm up -d --build` |
-| 完整 GLM SDK | CPU 主服务 + CPU 布局 sidecar | 复用 GPU 1 的 GLM-OCR | `docker compose --profile glm-sdk up -d --build` |
-| 远程后端 | CPU 主服务 | 远程 GLM 和/或既有 VLM | 配置 URL 后只启动 `mosaicparse` |
+| CPU-only | 本项目 CPU 镜像 | 关闭，适合数字 PDF/Office | `docker compose up -d --build mosaicparse` |
+| 本机 GLM | CPU 主服务 | 独立 vLLM，默认 GPU 1 | `docker compose --profile glm up -d --build` |
+| **完整 GLM SDK** | CPU 主服务＋CPU 布局 sidecar | 复用 GPU 1 的 GLM-OCR | `docker compose --profile glm-sdk up -d --build` |
+| 远程 GLM | CPU 主服务 | 已部署的 GLM-OCR 和 SDK | 配置 URL 后只启动 `mosaicparse` |
 
-### 本机 GLM-OCR（GPU 1）
+### 完整 GLM-OCR＋SDK（推荐）
 
 编辑 `.env`：
 
 ```dotenv
+DOCLING_PDF_BACKEND=pypdfium
+DOCLING_TABLE_MODE=accurate
+DOCLING_DO_CELL_MATCHING=0
 GLM_OCR_ENABLED=1
+GLM_SDK_ENABLED=1
+GLM_SDK_ORIENTATION_ENABLED=1
+# 200 / 72 DPI scale; larger rasters remain bounded by the pixel limit.
+GLM_SDK_RENDER_SCALE=2.7777777777777777
+GLM_SDK_MAX_IMAGE_PIXELS=8000000
 GLM_GPU_DEVICE_ID=1
 GLM_DTYPE=half
 GLM_GPU_MEMORY_UTILIZATION=0.40
 ```
 
-然后：
-
-```bash
-docker compose --profile glm up -d --build
-docker compose logs -f glm-ocr
-curl --fail http://localhost:8001/health
-```
-
-Compose 将 GPU `device_ids` 默认锁到 `1`。参考主机的 GPU 1 是 RTX 2080 Ti
-（Turing，不支持 BF16），因此 vLLM 默认使用 FP16 `--dtype half`。主 parser
-仍不挂载 GPU，也不包含 CUDA 依赖。
-
-### GLM SDK＋可选的 Qwen 局部复核
-
-`docling-glm-ocr` 插件和官方 `glmocr` SDK 复用同一个 GLM-OCR 识别模型。SDK
-sidecar 在 CPU 上运行 PP-DocLayoutV3；页面先按检测方向旋正，再生成表格候选。通用的
-确定性质量门控会直接接受结构有效的表格，只把可精确定位的少量冲突行交给 Qwen。
-签章页和整表 Qwen 默认关闭，后者只保留为显式实验/救援开关。
-
-```dotenv
-GLM_SDK_ENABLED=1
-VISUAL_ROUTER_ENABLED=1
-VLM_ENABLED=1
-VLM_SIGNATURE_ENABLED=0
-VLM_TABLE_FULL_ENABLED=0
-VLM_TABLE_TARGETED_ENABLED=1
-VLM_MODEL=qwen3.6-docparse:35b-32k
-```
-
 ```bash
 docker compose --profile glm-sdk up -d --build
+docker compose --profile glm-sdk ps
 curl --fail http://localhost:12303/v1/backends
 ```
 
-默认 `scan_policy=auto` 自动处理复杂扫描/混合表和横置表；数字原生 PDF 继续使用
-Docling 原生文本和 TableFormer，不做无条件 GLM-OCR。局部复核最多一次 Qwen，且结果
-未通过同一组结构/数值不变量时会整体回滚到 GLM。签章、手写和页面图像仍作为资产或
-OCR 证据保留，不自动执行整页 Qwen。`scan_policy=skip` 会关闭 PDF 扫描 OCR/视觉增强，
-将检测到的扫描页保存为整页资产并在 Markdown 中明确标记跳过。
+SDK sidecar 在 CPU 上运行 PP-DocLayoutV3；扫描、混合页先按检测方向旋正，再进行
+GLM-OCR 区域识别。结构验证不会补造原件文字或数值，无法确定的结构保留候选及告警。
+`scan_policy=skip` 则关闭 PDF 扫描 OCR，将扫描页保存为整页资产并明确标记跳过。
 
-### 远程 GLM / Ollama
+Compose 默认使用 GPU `device_ids=1`。参考主机 GPU 1 为 RTX 2080 Ti（Turing），因此
+vLLM 使用 FP16 `--dtype half`；主 parser 和 SDK sidecar 都不挂载 GPU。只需要基础
+GLM OCR 时可使用 `glm` profile，完整扫描表格处理使用 `glm-sdk` profile。
+
+### 使用远程 GLM-OCR 与 SDK
 
 ```dotenv
 GLM_OCR_ENABLED=1
 GLM_OCR_API_URL=http://gpu-host:8000/v1/chat/completions
 GLM_OCR_MODEL=zai-org/GLM-OCR
-
-VLM_ENABLED=1
-VLM_SIGNATURE_ENABLED=0
-VLM_TABLE_FULL_ENABLED=0
-VLM_TABLE_TARGETED_ENABLED=1
-VLM_BASE_URL=http://ollama-host:11434/v1
-VLM_MODEL=qwen3.6-docparse:35b-32k
-VLM_PAGE_BUDGET_SECONDS=180
-VLM_MAX_CALLS_PER_PAGE=3
-VLM_REGION_MAX_TOKENS=16384
+GLM_SDK_ENABLED=1
+GLM_SDK_URL=http://sdk-host:5002/glmocr/parse
+GLM_SDK_ORIENTATION_ENABLED=1
+# 200 / 72 DPI scale; larger rasters remain bounded by the pixel limit.
+GLM_SDK_RENDER_SCALE=2.7777777777777777
+GLM_SDK_MAX_IMAGE_PIXELS=8000000
 ```
-
-`VLM_ENABLED=0` 始终禁止所有 Qwen 出站调用。三个子开关分别控制 PDF 签章页、整表和
-局部表格复核；子开关不能绕过总开关。视觉诊断仅记录调用数、耗时、区域/表格/单元格
-和冲突计数，不记录图像、正文、prompt 或 reasoning 正文。
 
 ```bash
 docker compose up -d --build mosaicparse
 curl --fail http://localhost:12303/v1/backends
 ```
 
-完整部署、显卡校验、离线模型与反向代理说明见
-[docs/deployment.md](docs/deployment.md)。
+图片的可见文字识别和视频帧识字复用 GLM-OCR，不依赖额外的通用视觉模型。完整部署、
+显卡校验、离线模型与反向代理说明见 [docs/deployment.md](docs/deployment.md)。
 
 ## API 概览
 
@@ -231,8 +286,12 @@ DATA_DIR=./data STATIC_DIR=frontend/dist GLM_OCR_ENABLED=0 \
 
 | 组件 | 锁定版本 |
 |---|---:|
-| Docling | `2.119.0` |
-| docling-glm-ocr | `0.5.0` |
+| Docling | `2.139.0` |
+| TableFormer | `V1 Accurate` |
+| PDF 后端／单元格匹配 | `PyPdfium`／`False` |
+| docling-core／IBM models | `2.101.1`／`4.0.3` |
+| PyPdfium | `5.12.1` |
+| 官方 GLM SDK（独立 sidecar） | `glmocr 0.1.5` |
 | FastAPI | `0.141.1` |
 | MCP Python SDK | `2.0.0` |
 | PyTorch CPU | `2.13.0+cpu` |
@@ -242,14 +301,14 @@ DATA_DIR=./data STATIC_DIR=frontend/dist GLM_OCR_ENABLED=0 \
 `nvidia-*` 或 CUDA Python 包。
 
 CPU 基线使用 `DOCLING_COMPILE_MODELS=0`，避免首次文档触发耗时很长的
-`torch.compile`；只应在固定硬件上完成预热与基准验证后开启。远程 VLM
-默认 `VLM_MAX_RETRIES=1`，防止超时/过载时形成长时间重试风暴。
+`torch.compile`；只应在固定硬件上完成预热与基准验证后开启。扫描 OCR 的超时、重试和
+并发由 `GLM_OCR_*`、`GLM_SDK_*` 控制。
 
-原生文本 PDF 可通过 `DOCLING_PAGE_WORKERS` 做单文档页级并行。每个 worker
-持有一个启动期加载、请求间复用的 Docling 转换器，单转换器线程数由
-`DOCLING_NUM_THREADS` 控制。服务只对连续、达到
-`DOCLING_PAGE_PARALLEL_MIN_PAGES` 且每页原生文本充足的 PDF 分片；扫描、混合、
-稀疏选页和短文档自动走单转换器路径。缓存转换器总数为
+服务先逐页分流：原生页交给 Docling，扫描／混合来源页交给 SDK。Docling 所选原生页
+恰为一个连续段、达到 `DOCLING_PAGE_PARALLEL_MIN_PAGES` 且逐页原生文字充足时，
+可用 `DOCLING_PAGE_WORKERS` 做页级并行；不连续原生段顺序转换，SDK 也逐页请求。
+每个 worker 持有启动期加载、请求间复用的转换器，线程数由 `DOCLING_NUM_THREADS`
+控制。缓存转换器总数为
 `PARSER_WORKERS * DOCLING_PAGE_WORKERS`，配置上限为 32；调大前须同时核算 CPU 和内存。
 
 ## 验证
@@ -273,7 +332,7 @@ docker compose config --quiet
 docker build -t mosaic-parse:local .
 ```
 
-CI 不下载或运行大模型；GLM/Ollama 错误路径由 mock 服务覆盖。真实 GPU
+CI 不下载或运行大模型；GLM 与 SDK 错误路径由 mock 服务覆盖。真实 GPU
 回归应在专用环境执行。夹具全部由本项目脚本生成，不包含第三方文档原文，
 详见 [tests/fixtures/README.md](tests/fixtures/README.md)。
 
