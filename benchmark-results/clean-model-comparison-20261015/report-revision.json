@@ -2,7 +2,7 @@
   "schema": "mosaic-report-consolidation/1",
   "created_UTC": "2026-10-16T18:36:52.457264+00:00",
   "canonical_report": "benchmark-results/clean-model-comparison-20261015/report.md",
-  "canonical_report_SHA256": "2330ed1213c09d09eae9d9451ca97b979e846dbd06cb617d53509ce5135b5764",
+  "canonical_report_SHA256": "34f2feb5204df952e59db7d889bacd8064f876b2342f2986f7341b9adbfe9388",
   "previous_tracked_reports_commit": "55769e5adb35f776896552499b4c043a56a1b6a8",
   "deleted_duplicate_reports_and_build_files": [
     "docs/clean-model-comparison-20261016.md",
@@ -78,7 +78,7 @@
     "production_baseline_indexed_files_verified": 787,
     "production_baseline_indexed_bytes_verified": 119593706,
     "raw_request_result_asset_score_and_sample_bytes_unchanged": true,
-    "current_report_local_links_checked": 37,
+    "current_report_local_links_checked": 44,
     "missing_links": [],
     "bad_navigation_anchors": [],
     "six_public_comparison_rows_match_frozen_scores": true,
@@ -93,6 +93,21 @@
       "previous_report_SHA256": "1c9fe4dbf902b113e7c5ed0e5867761342c6e3a5d9c51a998ce46eaf2dc19abc",
       "updated_report_SHA256": "2330ed1213c09d09eae9d9451ca97b979e846dbd06cb617d53509ce5135b5764",
       "change": "Explain when models were rerun, distinguish earlier inference outputs from whole-PDF HTTP runs, and identify pre-experiment production configuration. Quality scores and source evidence unchanged."
+    },
+    {
+      "created_UTC": "2026-10-16T19:38:57.765995+00:00",
+      "previous_report_SHA256": "2330ed1213c09d09eae9d9451ca97b979e846dbd06cb617d53509ce5135b5764",
+      "updated_report_SHA256": "34f2feb5204df952e59db7d889bacd8064f876b2342f2986f7341b9adbfe9388",
+      "change": "Add four completed V2 compute experiments, their measured time/resources and public Markdown scores; record user-requested stop and exclude incomplete configurations."
     }
-  ]
+  ],
+  "V2_compute_experiment": {
+    "evidence_root": "followup/20261017/tableformer-v2-compute",
+    "status": "stopped_by_user",
+    "completed_configurations": 4,
+    "evidence_index_SHA256": "e749ff294443e2c651e2eb48840619e5057351591baa8216e1a78b1b927f9de6",
+    "remaining_experiment_processes": [],
+    "production_container_identities_unchanged": true,
+    "full502_HTTP_run": false
+  }
 }
