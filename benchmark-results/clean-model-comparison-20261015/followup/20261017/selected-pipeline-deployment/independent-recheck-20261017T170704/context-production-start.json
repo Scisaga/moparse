@@ -1,0 +1,53 @@
+{
+  "UTC": "2026-10-17T09:32:14.195232+00:00",
+  "Asia_Shanghai": "2026-10-17T17:32:14.195500+08:00",
+  "before": {
+    "mosaicparse": {
+      "ID": "392c40684b43d3c61d290ad25f12e447efe4d1bde83a416a8a37f7c61b116393",
+      "image": "sha256:f9639d65ec922a1c300233e3ef5711af5a0d3de3b6b8d7909b9ea1776575e89a",
+      "started": "2026-10-16T21:15:16.69822531Z",
+      "restart_count": 0
+    },
+    "docling_glm_ocr_sdk": {
+      "ID": "b0b2f735fb491fdb39b6b23e95d70848a15f1cebc67297c2f7d82c6b7fcd0a75",
+      "image": "sha256:abe353926afba82931744bac4533f895c9e6ad6f768da4103a4ec40410c2e6cb",
+      "started": "2026-10-16T21:15:08.695015459Z",
+      "restart_count": 0
+    },
+    "docling_glm_ocr": {
+      "ID": "a803d464218327072544e69c70513d17e1604a864a86ca556ec3ca87d0275035",
+      "image": "sha256:df7be4c4d818e250a8c80f78d110571e92e72a1fefec06fed82a2e37e473cd48",
+      "started": "2026-10-10T18:50:15.890807408Z",
+      "restart_count": 0
+    }
+  },
+  "active_jobs": 0,
+  "changed_environment_keys": [
+    "MOSAICPARSE_IMAGE"
+  ],
+  "old_environment_SHA256": "85dbe6a7fa96acd043b527d2d508923a6da797f289fcab7a54c65474bef7956d",
+  "new_environment_SHA256": "24488cd27699926d53e926f76f43ec46fca3ec0f3a0d8c1f4d9959dce3804580",
+  "old_jobs": [
+    {
+      "job": "job_01M54HTRH41FH2ZWKXGSS0M5NP",
+      "MD_SHA256": "8b65c48e506f792f61e9bf0e8e7caf7c3f9da3387d5452ffc9e27e1376da0ecd"
+    },
+    {
+      "job": "job_01M54HV0JR3XEAC3N2MR8J9FXP",
+      "MD_SHA256": "f23a62f51384db9e6fa13279aac6d3a18a7c27cc62090b6de187d51107935572"
+    },
+    {
+      "job": "job_01M54HWCD900458X6NT1RVV2BB",
+      "MD_SHA256": "8b65c48e506f792f61e9bf0e8e7caf7c3f9da3387d5452ffc9e27e1376da0ecd"
+    },
+    {
+      "job": "job_01M54HWMF6T8VRDPFW5HVQTWB7",
+      "MD_SHA256": "202b8a78c96e79819997826886db636d68202a950ee75cf2e739a960e5f9c373"
+    },
+    {
+      "job": "job_01M54HXPARFSY4YRCWKHGNR4RY",
+      "MD_SHA256": "8b65c48e506f792f61e9bf0e8e7caf7c3f9da3387d5452ffc9e27e1376da0ecd"
+    }
+  ],
+  "candidate_image": "sha256:dcf627bafa52f4786564ab1dcf9abdc3f05b18398d5829ed5e83300f8ea848ef"
+}

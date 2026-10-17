@@ -219,20 +219,53 @@ wheels; it does not install CUDA libraries into the parser environment.
 
 ## Data, upgrades, and cleanup
 
-The 2026-10-17 release was deployed at 05:15 Beijing time. The API runs image
-`sha256:f9639d65ec922a1c300233e3ef5711af5a0d3de3b6b8d7909b9ea1776575e89a`
-and the SDK runs
+The current API was updated on 2026-10-17 at **17:46:28.801462 Beijing time**, using
+`mosaic-parse:0.4.0-header-context-20261017-r3`, image
+`sha256:f815766b71ed67229f995d864ca146ef68937a98012676316bc33c4a673405db`.
+This revision strengthens source-caption, complete unit-declaration and inter-table context checks.
+Its 53 application files match the accepted image; 329 backend tests passed and the
+OpenAPI JSON is unchanged. The SDK still runs
 `sha256:abe353926afba82931744bac4533f895c9e6ad6f768da4103a4ec40410c2e6cb`.
-Only these two services were replaced; the GLM provider remained running. The actual
-configuration readback confirmed PyPdfium, V1 Accurate, matching off, 200 DPI SDK input,
-and orientation on. Readiness and all three configured backends passed.
+Only the API was replaced at 17:46; the SDK and GLM provider kept their existing instances.
+The model configuration remains PyPdfium, V1 Accurate, matching off, 200 DPI SDK input,
+and orientation on. Readiness and all three configured backends passed. The
+[current deployment readback](../benchmark-results/clean-model-comparison-20261015/followup/20261017/selected-pipeline-deployment/independent-recheck-20261017T170704/unit-r3-production-deployment.json)
+records the actual container, image, source hashes and configuration; use this revision
+when restoring the current service.
 
-Before replacement, the accepted images completed all 10 PDFs / 502 pages through HTTP;
-after replacement, 3 PDFs / 59 pages were parsed again on the production endpoint.
+The earlier **05:15** release used API image
+`sha256:f9639d65ec922a1c300233e3ef5711af5a0d3de3b6b8d7909b9ea1776575e89a`.
+That version completed all 10 PDFs / 502 pages through HTTP before deployment;
+after its deployment, 3 PDFs / 59 pages were parsed again on the production endpoint.
 Financial headers, funding-cell bindings and the matching-header continuation passed their
 specified checks; all 30 source-page images and 32 downloaded assets passed pixel/SHA
 verification. The previous 10 Markdown results and 195 assets retained their hashes.
-Known numerical and native-image cropping limits remain documented in the
+Its 502-page scores, timing and original release manifest remain an immutable snapshot;
+they are not a new full-cohort model run for a later API revision. The intermediate
+**17:32 r2** image `sha256:dcf627bafa52f4786564ab1dcf9abdc3f05b18398d5829ed5e83300f8ea848ef`
+has separate 316-test and 35-page production records; these do not count as r3 verification.
+r3 also fixes a counterexample where two declarations, such as centimeters followed by meters,
+were reduced to their last value. It retains all declarations and blocks ambiguous/empty values
+within a declared unit dimension, while allowing repeated equal declarations and ordinary
+continuation pages with no new declaration.
+
+The r3 candidate completed the two original PDFs / 31 pages through HTTP. After the
+17:46 r3 deployment, the production API independently completed those 31 pages again
+through asynchronous Jobs, plus 4 pages through the synchronous
+`/v1/content/parse` endpoint. Financial acceptance was 30/30, funding cells 31/31 with
+7/7 row bindings, and continuation checks 33/33 with 10/10 header leaves; the direct
+source comparison retained all 44 funding-grid positions, seven merged spans and
+55 continuation-body positions. Both source-page images passed RGB verification and all
+four assets passed SHA/size checks. The 31-page Markdown capture took 45.118937 seconds;
+the extra synchronous response took 8.160285 seconds and matched the persisted and asynchronous
+Markdown byte for byte. The
+[r3 post-deployment direct comparison](../benchmark-results/clean-model-comparison-20261015/followup/20261017/selected-pipeline-deployment/independent-recheck-20261017T170704/production-unit-r3-http/direct-source-recheck.json)
+and [r3 synchronous result readback](../benchmark-results/clean-model-comparison-20261015/followup/20261017/selected-pipeline-deployment/independent-recheck-20261017T170704/production-unit-r3-synchronous/summary.json)
+record this new 35-page validation. The
+[current release manifest](../benchmark-results/clean-model-comparison-20261015/followup/20261017/selected-pipeline-deployment/independent-recheck-20261017T170704/release-manifest.json)
+links the final source/image identity and evidence. A missing closing parenthesis in the diluted-EPS
+label remains a model-output defect; numerical acceptance does not establish exact label text.
+These limits, the numerical and native-image cropping issues, and the additional checks are in the
 [complete comparison and deployment evidence](../benchmark-results/clean-model-comparison-20261015/report.md).
 
 Compose uses named volumes `mosaicparse-data`, `docling-models`, and

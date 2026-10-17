@@ -25,6 +25,7 @@ dependencies = [
   "docling==2.139.0",
   "fastapi==0.141.1",
   "httpx==0.28.1",
+  "markdown-it-py==4.2.0",
   "mcp==2.0.0",
   "orjson==3.11.9",
   "pillow==12.3.0",

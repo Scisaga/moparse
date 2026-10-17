@@ -1,0 +1,13 @@
+{
+  "UTC": "2026-10-17T09:48:32.173414+00:00",
+  "candidate": {
+    "ID": "1ff84a6e0fe5ac1dde21924c4750df8c052908069f68514e5018c7f258309014",
+    "image": "sha256:f815766b71ed67229f995d864ca146ef68937a98012676316bc33c4a673405db",
+    "started": "2026-10-17T09:43:45.613527961Z",
+    "restart_count": 0
+  },
+  "active_jobs": 0,
+  "stopped_and_removed": true,
+  "data_volume_retained": "mosaicparse-context-unit-r3-data-20261017",
+  "SDK_GPU_provider_not_touched": true
+}

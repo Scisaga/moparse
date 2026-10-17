@@ -9,6 +9,10 @@ GLM-OCR＋官方 SDK 以 200 DPI 处理扫描、混合页，并开启 SDK 前方
 在 CPU 上解析；扫描部分调用独立 GLM GPU 服务。V1 与 GLM 识别权重沿用实验锁定版本，
 本次同时更新库版本、后端、SDK 输入配置和通用 Markdown 出口，不把这些变化统称为新权重提升。
 
+现行 API 为 10 月 17 日 17:46 部署的 r3，补强跨页上下文和多条单位声明的歧义检查；模型及输入配置未变。
+下文 502 页质量、21.52 分钟和原发布清单属于 05:15 版本，独立复验与最新镜像另见
+[独立逐格再验证](#独立逐格再验证2026-10-17)，没有将原批次改标为新镜像重新推理。
+
 应用代码已删除 Qwen／Ollama 客户端、探测、局部／整表复核路由、配置及前端计数；
 删除旧原生文字／网格恢复和按财务模式改写 OCR 表的补偿。当前没有额外通用视觉模型
 兜底。历史基线中 Qwen 的设置和资源记录仅留在本报告历史章节及原始证据，不再作为部署说明。
@@ -60,7 +64,7 @@ CPU 布局设备、自托管模式和监听地址；不继承旧自定义标签�
 `table-source` 的原始／逻辑行映射。该注释改善结构保留与可读取性，**不提高模型识字精度**。
 
 同一组保存的 Docling 新配置原始输出重放覆盖 433 原生页、632 张表和 20,569 个源单元格，
-含 659 个合并格。应用锚点矩阵与干净出口逐格一致，源格文字无丢失；加入注释前后，官方
+含 659 个合并格。应用锚点矩阵与干净出口逐格一致，模型原始格文字未在导出时丢失；加入注释前后，官方
 逐页导出及跨页组装的可见正文和 GFM 行全部相同。10 组真实续表（含一组三页续表）正常
 合并，浙江出版两组不同期间表保持分开。以上是出口保留验证，不能代替真实接口整批验收。
 见[逐格及注释前后重放审计](followup/20261017/selected-pipeline-deployment/table-export-source-audit.json)。
@@ -149,9 +153,9 @@ CPU 布局设备、自托管模式和监听地址；不继承旧自定义标签�
 [原生图像对象、inline 检查及原件复核](followup/20261017/selected-pipeline-deployment/native-image-object-audit.json)、
 [433 页显示位图清单](followup/20261017/selected-pipeline-deployment/native-embedded-image-inventory.json)。
 
-### 已完成构建与测试
+### 已完成构建与测试（05:15 版本）
 
-最终候选主镜像为 `mosaic-parse:0.4.0-docling139-glm-only-20261017`，镜像 ID：
+05:15 发布版本的主镜像为 `mosaic-parse:0.4.0-docling139-glm-only-20261017`，镜像 ID：
 `sha256:f9639d65ec922a1c300233e3ef5711af5a0d3de3b6b8d7909b9ea1776575e89a`。
 匹配的 SDK 镜像为
 `sha256:abe353926afba82931744bac4533f895c9e6ad6f768da4103a4ec40410c2e6cb`。
@@ -164,7 +168,7 @@ Ruff、mypy、OpenAPI／夹具及构建检查已完成。扫描／混合页在 `
 [SDK 最终有效配置](followup/20261017/selected-pipeline-deployment/sdk-final-200dpi-effective-config.json)、
 [前端测试](followup/20261017/selected-pipeline-deployment/frontend-test.log)。
 
-### 本次发布前完整 HTTP 回归
+### 本次发布前完整 HTTP 回归（05:15 版本）
 
 使用上述最终镜像，将 `pdf_sample` 的 10 份／502 页 PDF 完整上传至隔离接口，
 `scan_policy=auto`、未设置 `unit_range`，重新运行模型并下载最终 Markdown 和全部资产。
@@ -223,7 +227,7 @@ GPU 0 的其他任务也不计入本次解析资源。采样可能漏过间隔�
 21.52 分钟取得 Markdown。各次均是完整 PDF 的实际请求，但运行日期、预热及共享主机负载
 并非完全受控；这些值用于评估已发生的成本，不当作稳定加速倍数。
 
-### 实际生产部署
+### 实际生产部署（05:15 版本）
 
 2026-10-17 **05:15:31（北京时间）**，`http://10.0.6.22:12303/` 已更新 API 与 SDK，
 `/ready` 和三个后端均就绪。API 容器 `392c40684b43`、SDK 容器 `b0b2f735fb49` 分别运行
@@ -256,6 +260,149 @@ POST 与页日志、API HTTP 响应、SDK 访问日志逐项一致。它与发�
 供后续检查的[发布清单](followup/20261017/selected-pipeline-deployment/release-manifest.json)
 记录实际镜像、配置、测试范围、已知错误和证据 SHA。原始请求、结果、资产及资源采样保留在
 同一证据目录；大体积原件、模型缓存和私密环境备份不进入 Git。
+
+### 独立逐格再验证（2026-10-17）
+
+用户要求重新核对最初两项问题后，先直接查看两份原 PDF 的第 2／3 页和第 6／7 页，
+再从原件线框、物理合并格和文字建立独立源矩阵，未复用旧评分或模型输出作为答案。
+9 张原页／表格图及两份 PDF 的 SHA 一并保留。原件明确印有两组不同期间表头，
+指定 8 个数值与基本每股收益的“元／股”单位均直接可见。筹资表有 31 个非空物理源格，
+“历次筹资情况”跨 8 行，包含三列表头行和 7 笔筹资，表外单位为“万元”。各笔时间只有
+年份；2022 年一行的发行类型为“2021 年限制性股票”，不能据此改写筹资年份或补月份。
+[独立原件矩阵、完整源格与图像 SHA](followup/20261017/selected-pipeline-deployment/source-independent-recheck-20261017.json)。
+
+对修订前服务重新上传两份完整 PDF、`scan_policy=auto`、不设 `unit_range`，完成两轮
+共 62 页，并另外调用同步接口处理完整 4 页，共 66 页。原验收项继续通过；直接逐格比对
+只解码 HTML 实体和原件换行空白，不做模糊匹配或文字修补，结果如下：
+
+| 原件范围 | 直接比对结果 |
+| --- | --- |
+| 浙江第 2／3 页 | 两组完整表头分别保留，指定 8 值及基本每股收益单位正确；48 个财务表网格位置中有以下 1 个标签缺字 |
+| 第 3 页稀释每股收益标签 | 原件为 `稀释每股收益（元／股）`，模型原始格及最终 Markdown 为 `稀释每股收益（元／股`，右括号缺失，三次请求均出现 |
+| 第 7 页筹资表 | 44 个网格位置、31 个非空物理格、合并跨度、来源页及万元单位与原件一致，7 笔年份／类型／金额分别对应 |
+| 第 6／7 页正常续表 | 完整五列表头相同，序号 1—10 和合计共 11 行，55 个正文网格位置与原件一致 |
+
+此前“财务 30／30”是指定数值及期间的验收成绩，**不代表所有标签及标点逐字完整**。
+本次更细的源矩阵检查暴露了未被该集合覆盖的右括号缺失；原成绩保留，新增失败单独记录。
+基本每股收益与稀释每股收益是两条原件行，不能以其中一行单位完整代替另一行的逐字核查。
+没有针对期间、六个字或右括号增加补写规则。
+[两轮及同步请求的直接源矩阵比对](followup/20261017/selected-pipeline-deployment/independent-recheck-20261017T170704/direct-source-matrix-comparison.json)。
+
+#### 17:32 r2 中间修订及其验证
+
+独立运行时审查同时发现通用合并边界的缺口：模型引用的表题没有带入合并判断，
+加粗等 Markdown 修饰下的单位也可能漏检。r2 修订读取原模型表题引用，通过 CommonMark
+解析比较可见单位，保留普通上下文的编号及字面字符；不同表题／单位、新的表间说明、
+前表后未解释的文字，以及局部重复或顺序变化的上下文被纳入阻止合并的边界。完整表头及列义相同
+仍是必要条件；这些修改不重写识别格，不依据指标名推导期间。`markdown-it-py==4.2.0`
+由已存在的间接依赖改为显式依赖，148 个锁定包的版本和来源均未变化。
+[修订前反例、修订后边界检查与依赖核验](followup/20261017/selected-pipeline-deployment/runtime-independent-recheck-20261017.json)。
+
+使用 r2 的 `table_service.py`（SHA `500323d1…`）重放 433 个原生页，覆盖 632 张表、
+20,569 个模型锚点格及 659 个合并格。模型格文字、数值、跨度、表头作用范围和来源页
+均无变化，433 页输出 Markdown 字节和原有 10 组续表全部不变。新增带入判断的
+104 项表题元数据均来自模型原有引用，不生成新表题；这项回放检验出口稳定性，
+不冒充重新运行全部 502 页模型。
+[r2 原生页及表题来源回放快照](followup/20261017/selected-pipeline-deployment/independent-table-boundary-replay-20261017/intermediate-500323-r2/comparison.json)。
+
+r2 镜像内 **316 项后端测试通过，26.20 秒**，OpenAPI JSON 与修订前生产完全一致。
+隔离候选接口重新处理两份完整 PDF 共 31 页：财务 30／30、筹资 31／31 和 7／7 绑定、
+正常续表 33／33 及表头叶项 10／10；直接比对仍保留上述右括号缺失，筹资的全部跨度和
+55 个续表正文网格位置均与独立原件一致。4 个资产下载及 SHA、2 个整页来源图 RGB 核验通过。
+[最终镜像测试](followup/20261017/selected-pipeline-deployment/independent-recheck-20261017T170704/pytest-final-image.log)、
+[镜像源码与 OpenAPI 一致性](followup/20261017/selected-pipeline-deployment/independent-recheck-20261017T170704/candidate-ready-and-source.json)、
+[候选实际 HTTP 评分](followup/20261017/selected-pipeline-deployment/independent-recheck-20261017T170704/candidate-http/scoring/score-summary.json)、
+[候选直接源格比对](followup/20261017/selected-pipeline-deployment/independent-recheck-20261017T170704/candidate-http/direct-source-recheck.json)、
+[候选来源图与资产核验](followup/20261017/selected-pipeline-deployment/independent-recheck-20261017T170704/candidate-http/source-assets-audit.json)。
+
+**17:32:31（北京时间）**，生产 API 曾更新为中间版
+`mosaic-parse:0.4.0-header-context-20261017-r2`，镜像为
+`sha256:dcf627bafa52f4786564ab1dcf9abdc3f05b18398d5829ed5e83300f8ea848ef`，
+容器 `52af7eb29963`。53 个应用文件 SHA 与已验收镜像一致，三个后端就绪；只替换 API，
+SDK 和 GPU 模型服务保持原实例，模型、200 DPI、方向及路由配置不变。
+此前 5 个独立测试 Job 的 Markdown 重新下载后 SHA 均未改变。
+[r2 生产身份、配置与旧结果读回](followup/20261017/selected-pipeline-deployment/independent-recheck-20261017T170704/context-production-deployment.json)。
+
+r2 部署后通过真实线上接口处理两份完整原件共 **31 页**，实际 Job 为
+`job_01M54KAPYAC9YGVKX2HSPTNNZB`、`job_01M54KAY3QE1JH36RJEC5ZX41B`。
+财务 30／30、筹资 31／31 及行绑定 7／7、正常续表 33／33 及表头叶项 10／10 通过；
+筹资 44 个网格位置和全部 7 个合并跨度、正常续表 55 个正文位置与独立原件矩阵一致，
+来源映射和仅删除一个真正重复头的关系也保留。48 个财务表位置仍只发现上述稀释每股收益
+标签缺右括号，未将该差异隐藏在数值通过率中。2 个整页来源图 RGB 和 4 个下载资产的
+SHA／大小全部通过，取得两份 Markdown 累计 **42.851148 秒**。
+[更新后线上请求与结果](followup/20261017/selected-pipeline-deployment/independent-recheck-20261017T170704/production-http/summary.json)、
+[更新后冻结评分](followup/20261017/selected-pipeline-deployment/independent-recheck-20261017T170704/production-http/scoring/score-summary.json)、
+[更新后直接源矩阵／跨度核对](followup/20261017/selected-pipeline-deployment/independent-recheck-20261017T170704/production-http/direct-source-recheck.json)、
+[更新后来源图及资产核验](followup/20261017/selected-pipeline-deployment/independent-recheck-20261017T170704/production-http/source-assets-audit.json)、
+[更新后实测耗时](followup/20261017/selected-pipeline-deployment/independent-recheck-20261017T170704/production-http/performance-summary.json)。
+
+另外通过 `/v1/content/parse` 同步提交完整 4 页浙江出版 PDF，HTTP 200，Job 为
+`job_01M54KC158AT8VDWVC2WVEC8HD`，耗时 **7.542678 秒**，财务 30／30。
+同步返回与持久化结果字节相同，也与候选和异步接口收到的该文件 Markdown 一致，
+其中的右括号缺失同样保留。因此 r2 更新后的实际接口验证为 **35 页**，
+没有以 `/ready` 或内部函数测试代替最终 Markdown 检查。
+[更新后同步接口与持久化结果一致性](followup/20261017/selected-pipeline-deployment/independent-recheck-20261017T170704/production-synchronous/summary.json)。
+
+#### 17:46 r3 现行版本：完整保留单位声明
+
+r2 通过上述检查后，进一步的独立反例仍发现一个遗漏：一张表前同时存在“单位：厘米”与
+“单位：米”时，单位字典只保留最后一个取值；若另一片段仅声明“单位：米”，就可能错误地
+认为单位一致。此前 316 项测试和 r2 的 35 页实测没有覆盖这个反例，不能据此宣称单位边界已全部正确。
+
+r3 完整保留首片段及续片段的全部单位声明，同一维度出现空值声明或不同取值时阻止合并，
+相同声明的重复允许通过；没有单位声明的普通续页，不等同于出现空值声明。
+新增 13 个用例在修订前为 9 失败／4 通过；修订后定向 120 项全部通过。
+此修订只改变合并的证据检查，不改识别格、模型路由或 OCR 文字。
+[单位歧义反例及修订后证据](followup/20261017/selected-pipeline-deployment/unit-ambiguity-after.json)、
+[修订前 13 项测试](followup/20261017/selected-pipeline-deployment/unit-ambiguity-before-junit.xml)、
+[修订后 120 项测试](followup/20261017/selected-pipeline-deployment/unit-ambiguity-after-junit.xml)。
+
+最终 `table_service.py` SHA 为 `551611c43df261dea7cec4b99af7b9c3ccc814b70d0ff90f98bc49a477f9f0fb`。
+该源码重新回放全部 433 个原生页、632 张表、20,569 个锚点格、659 个合并格，
+模型文字、数值、跨度、表头作用范围及来源页均不变；433 页 Markdown 字节与 10 组续表
+仍无变化，104 项表题引用均可追溯至原模型。r2 的回放单独留档，没有将其改标为 r3 结果。
+[r3 最终源码的完整原生页回放](followup/20261017/selected-pipeline-deployment/independent-table-boundary-replay-20261017/comparison.json)。
+
+r3 镜像内 **329 项后端测试通过，25.95 秒**，53 个源码文件与构建输入一致，
+OpenAPI JSON 与 r2 生产版本相同。候选接口另外重新处理完整两份 PDF 共 31 页，
+原验收及直接源矩阵比对通过，仍明确保留稀释每股收益标签缺右括号；4 个资产 SHA、
+2 张整页来源图 RGB 通过，没有借用 r2 的请求成绩。
+[r3 镜像测试](followup/20261017/selected-pipeline-deployment/independent-recheck-20261017T170704/pytest-unit-r3-final-image.log)、
+[r3 候选源码与接口核验](followup/20261017/selected-pipeline-deployment/independent-recheck-20261017T170704/unit-r3-candidate-ready-and-source.json)、
+[r3 候选直接源矩阵比对](followup/20261017/selected-pipeline-deployment/independent-recheck-20261017T170704/candidate-unit-r3-http/direct-source-recheck.json)。
+
+现行 API 于 **17:46:28.801462（北京时间）**更新为
+`mosaic-parse:0.4.0-header-context-20261017-r3`，实际镜像：
+`sha256:f815766b71ed67229f995d864ca146ef68937a98012676316bc33c4a673405db`。
+53 个应用文件 SHA 与候选一致，三个后端就绪，SDK 与 GPU 服务保持原实例；
+此前 8 个测试 Job 的 Markdown 读回 SHA 不变。
+[r3 实际生产镜像、源码与配置读回](followup/20261017/selected-pipeline-deployment/independent-recheck-20261017T170704/unit-r3-production-deployment.json)。
+
+部署后再次新建两份完整 PDF 的异步 Job，共 **31 页**：
+`job_01M54M3QZD6TCVHJYVFTQ9SA2E`、`job_01M54M413X7B7TS2J3J7ZGZG8X`。
+财务 30／30、筹资 31／31 及行绑定 7／7、正常续表 33／33 及表头叶项 10／10 通过。
+直接比对的 48 个财务位置为 47 处完全相同、1 处已知右括号缺失；筹资 44 个位置和
+7 个合并跨度、续表 55 个正文位置及来源映射与原件一致，4 个资产 SHA／大小及
+2 个来源图 RGB 通过。取得 Markdown 累计 **45.118937 秒**，另保留 23 次约 2 秒的 CPU／GPU
+采样；该耗时属于本次 31 页请求，不能替代原 502 页计时。
+[r3 更新后实际异步请求](followup/20261017/selected-pipeline-deployment/independent-recheck-20261017T170704/production-unit-r3-http/summary.json)、
+[r3 更新后评分](followup/20261017/selected-pipeline-deployment/independent-recheck-20261017T170704/production-unit-r3-http/scoring/score-summary.json)、
+[r3 更新后直接源矩阵比对](followup/20261017/selected-pipeline-deployment/independent-recheck-20261017T170704/production-unit-r3-http/direct-source-recheck.json)、
+[r3 更新后来源图及资产](followup/20261017/selected-pipeline-deployment/independent-recheck-20261017T170704/production-unit-r3-http/source-assets-audit.json)、
+[r3 更新后耗时及资源](followup/20261017/selected-pipeline-deployment/independent-recheck-20261017T170704/production-unit-r3-http/performance-summary.json)。
+
+又通过同步 `/v1/content/parse` 重新处理完整 4 页，HTTP 200，Job 为
+`job_01M54M54C83DXGJXCM9ZTW76EE`，耗时 **8.160285 秒**，财务 30／30。
+同步响应、持久化结果及本轮异步 Markdown 字节相同，包括未修补的已知右括号差异。
+因此 **r3 部署后另完成 35 页实际接口复验**，与 r2 的 35 页结果分别保存。
+[r3 更新后同步接口核验](followup/20261017/selected-pipeline-deployment/independent-recheck-20261017T170704/production-unit-r3-synchronous/summary.json)。
+
+现行 r3 的[发布清单](followup/20261017/selected-pipeline-deployment/independent-recheck-20261017T170704/release-manifest.json)
+和[证据 SHA 索引](followup/20261017/selected-pipeline-deployment/independent-recheck-20261017T170704/release-evidence-index.jsonl)
+单独记录本次源码、镜像、请求与部署；05:15 的原发布清单和 r2 中间证据保留原归属。
+
+05:15 版本的全 502 页分数、21.52 分钟、图像及原始发布清单保持原值和原归属；
+本段另记录边界修订及独立复验，没有覆写原发布 manifest，也没有把结构检查升级计作模型识字提升。
 
 [历史质量比较](#历史质量比较) · [比较口径](#比较方法与完成范围) · [新版与调用配置](#新版优化与调用配置)
 · [历史耗时与资源](#历史耗时与-gpu-利用率) · [升级前快照](#升级前线上配置快照) · [证据](#证据与历史记录)

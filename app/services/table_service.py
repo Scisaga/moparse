@@ -8,7 +8,39 @@ import re
 from dataclasses import dataclass, field
 from typing import Any
 
+from markdown_it import MarkdownIt
+from markdown_it.token import Token
+
 from app.models.parse_result import PageDiagnostics, PageParseResult, PageSourceKind
+
+_MARKDOWN = MarkdownIt("commonmark")
+_BLOCK_WRAPPERS = {
+    "paragraph_open",
+    "paragraph_close",
+    "heading_open",
+    "heading_close",
+    "blockquote_open",
+    "blockquote_close",
+    "bullet_list_open",
+    "bullet_list_close",
+    "ordered_list_open",
+    "ordered_list_close",
+    "list_item_open",
+    "list_item_close",
+}
+_INLINE_WRAPPERS = {
+    "em_open",
+    "em_close",
+    "strong_open",
+    "strong_close",
+    "link_open",
+    "link_close",
+}
+_INLINE_HTML_WRAPPERS = {
+    f"<{closing}{tag}>"
+    for tag in ("em", "strong", "b", "i", "code", "u", "s", "del")
+    for closing in ("", "/")
+}
 
 
 @dataclass(slots=True)
@@ -48,6 +80,7 @@ class TableFragment:
     physical_num_rows: int | None = None
     source_row_indices: list[int] = field(default_factory=list)
     header_scope_complete: bool = True
+    caption_scope_complete: bool = True
     _structure_marker: str = field(default="", init=False, repr=False)
 
     def __post_init__(self) -> None:
@@ -76,8 +109,11 @@ class TableFragment:
         unknown and must not authorize cross-page header removal.
         """
         if (
-            not self.header_scope_complete or not self.valid
-            or not self.has_column_header or not self.cells or not self.rows
+            not self.header_scope_complete
+            or not self.valid
+            or not self.has_column_header
+            or not self.cells
+            or not self.rows
         ):
             return ()
         if len(self.rows) != self.num_rows or any(len(row) != self.num_cols for row in self.rows):
@@ -118,9 +154,7 @@ class TableFragment:
             ):
                 return ()
             occupied.update(positions)
-        if occupied != {
-            (row, column) for row in range(depth) for column in range(self.num_cols)
-        }:
+        if occupied != {(row, column) for row in range(depth) for column in range(self.num_cols)}:
             return ()
         return tuple(range(depth))
 
@@ -394,6 +428,14 @@ def extract_table_fragments(document: Any, page_group: tuple[int, int]) -> list[
         fragment_id = f"p{page_number}_t{ordinal}"
         marker = f"<!-- table-fragment: {fragment_id} -->"
         rendered = f"{marker}\n\n{markdown}" if markdown else marker
+        caption_scope_complete = True
+        try:
+            caption = str(item.caption_text(document) or "").strip() or None
+        except (AttributeError, TypeError, ValueError, RuntimeError, IndexError, KeyError):
+            caption = None
+            caption_scope_complete = False
+        if item.captions and not caption:
+            caption_scope_complete = False
         fragments.append(
             TableFragment(
                 fragment_id=fragment_id,
@@ -413,6 +455,8 @@ def extract_table_fragments(document: Any, page_group: tuple[int, int]) -> list[
                     and int(getattr(cell, "start_row_offset_idx", -1)) == 0
                     for cell in item.data.table_cells
                 ),
+                caption=caption,
+                caption_scope_complete=caption_scope_complete,
                 source_kind="docling",
                 cells=_table_cells(item.data, page_width=width, page_height=height),
             )
@@ -479,8 +523,15 @@ def export_page_markdown(document: Any, page_number: int, fragments: list[TableF
 
 
 def _headers_match(left: TableFragment, right: TableFragment) -> bool:
+    if not left.caption_scope_complete or not right.caption_scope_complete:
+        return False
     signature = _complete_header_signature(left)
-    return signature is not None and signature == _complete_header_signature(right)
+    continuation = _complete_header_signature(right)
+    if signature is None or continuation is None or signature[:-1] != continuation[:-1]:
+        return False
+    # A continuation may omit an already established source caption. A new or
+    # changed caption cannot establish that its rows belong to the same table.
+    return not continuation[-1] or signature[-1] == continuation[-1]
 
 
 def _columns_match(left: TableFragment, right: TableFragment) -> bool:
@@ -520,7 +571,7 @@ def link_cross_page_tables(fragments: list[TableFragment]) -> list[list[TableFra
             and previous.normalized_bbox[3] >= 0.85
             and following.normalized_bbox[1] <= 0.15
             and _columns_match(previous, following)
-            and _headers_match(previous, following)
+            and _headers_match(group[0] if group else previous, following)
         ):
             if group is None:
                 group = [previous]
@@ -550,28 +601,111 @@ def _table_surroundings(fragment: TableFragment) -> tuple[str, str] | None:
     return prefix.strip(), suffix.strip()
 
 
-def _nearby_units(
+def _preceding_content(
     content: str, fragment: TableFragment, fragments: list[TableFragment]
-) -> dict[str, str]:
+) -> str:
     prefix = content.partition(fragment.rendered)[0]
     # A unit printed before another table is not evidence for this table.
     for previous in fragments:
         if previous.page_number == fragment.page_number and previous.ordinal < fragment.ordinal:
             if previous.rendered and previous.rendered in prefix:
                 prefix = prefix.rpartition(previous.rendered)[2]
-    units: dict[str, str] = {}
-    for match in re.finditer(
-        r"(?m)^[ \t]*(单位|金额单位|币种|Unit)\s*[：:]\s*([^\n]+)", prefix
-    ):
-        dimension = "币种" if match[1] == "币种" else "单位"
-        value = match[2].strip()
-        # A source line may print both dimensions: 单位：元 币种：人民币.
-        currency_match = re.search(r"\s*币种\s*[：:]\s*(.+)$", value)
-        if currency_match and dimension == "单位":
-            units["币种"] = _header_text(currency_match[1])
-            value = value[: currency_match.start()]
-        units[dimension] = _header_text(value)
-    return units
+    return prefix
+
+
+def _plain_context_line(value: str, *, strip_block_markers: bool = True) -> str:
+    """Compare parsed visible text, preserving literals and unknown markup."""
+    source = value.strip()
+    parsed = _MARKDOWN.parse(source) if strip_block_markers else _MARKDOWN.parseInline(source)
+    inline: list[Token] = []
+    for token in parsed:
+        if token.type == "inline":
+            inline.extend(token.children or [])
+        elif token.type not in _BLOCK_WRAPPERS:
+            # A typed private marker prevents opaque HTML/blocks from becoming
+            # equal to escaped literal text. It is never emitted in source GFM.
+            return "\x00" + source
+    text: list[str] = []
+    for token in inline:
+        if token.type in {"text", "code_inline"}:
+            text.append(token.content)
+        elif token.type in {"softbreak", "hardbreak"}:
+            text.append("\n")
+        elif token.type in _INLINE_WRAPPERS:
+            continue
+        elif token.type == "html_inline" and token.content.casefold() in _INLINE_HTML_WRAPPERS:
+            continue
+        else:
+            return "\x00" + source
+    return "".join(text).strip()
+
+
+def _context_evidence(content: str) -> tuple[dict[str, tuple[str, ...]], tuple[str, ...]]:
+    """Separate explicit unit declarations from other observed table prelude text."""
+    units: dict[str, list[str]] = {}
+    other: list[str] = []
+    for line in content.splitlines():
+        if re.fullmatch(r"\s*<!-- page: \d+ -->\s*", line):
+            continue
+        plain = _plain_context_line(line)
+        if not plain:
+            continue
+        declarations = list(re.finditer(r"(金额单位|单位|币种|Unit)\s*[：:]", plain, re.IGNORECASE))
+        if not declarations or declarations[0].start() != 0:
+            # Numbered or quoted source context can establish a new scope;
+            # retain those block markers instead of treating them as decoration.
+            comparison = _plain_context_line(line, strip_block_markers=False)
+            other.append(comparison if comparison.startswith("\x00") else _header_text(comparison))
+            continue
+        for index, declaration in enumerate(declarations):
+            dimension = "币种" if declaration[1] == "币种" else "单位"
+            end = declarations[index + 1].start() if index + 1 < len(declarations) else len(plain)
+            value = plain[declaration.end() : end].strip()
+            if index + 1 < len(declarations):
+                value = value.rstrip(",，;； ")
+            # Retain every declaration in source order; an empty or conflicting
+            # value must remain visible to the merge guard rather than disappear.
+            units.setdefault(dimension, []).append(_header_text(value))
+    return {dimension: tuple(values) for dimension, values in units.items()}, tuple(other)
+
+
+def _units_are_consistent(units: dict[str, tuple[str, ...]]) -> bool:
+    return all(all(values) and len(set(values)) == 1 for values in units.values())
+
+
+def _continuous_table_context(
+    group: list[TableFragment],
+    content_by_page: dict[int, str],
+    fragments: list[TableFragment],
+) -> bool:
+    first = group[0]
+    known_units, known_context = _context_evidence(
+        _preceding_content(content_by_page[first.page_number], first, fragments)
+    )
+    if not _units_are_consistent(known_units):
+        return False
+    _, known_caption = _context_evidence(first.caption or "")
+    for left, right in zip(group, group[1:], strict=False):
+        # Recheck the first fragment's complete scope immediately before any
+        # repeated header is removed, including captions omitted on middle pages.
+        if not _headers_match(first, right):
+            return False
+        right_units, right_context = _context_evidence(
+            _preceding_content(content_by_page[right.page_number], right, fragments)
+        )
+        if not _units_are_consistent(right_units) or any(
+            dimension not in known_units or known_units[dimension][0] != values[0]
+            for dimension, values in right_units.items()
+        ):
+            return False
+        if right_context and right_context not in (known_context, known_caption):
+            return False
+        known_units.update(right_units)
+        left_tail = content_by_page[left.page_number].partition(left.rendered)[2]
+        tail_units, tail_context = _context_evidence(left_tail)
+        if tail_units or tail_context:
+            return False
+    return True
 
 
 def _source_row_marker(fragment: TableFragment, logical_start: int, skip: int) -> str:
@@ -625,23 +759,7 @@ def assemble_logical_tables(
             _table_surroundings(fragment) != surroundings for fragment in group[1:]
         ):
             continue
-        blocked_by_context = False
-        known_units = _nearby_units(content_by_page[group[0].page_number], group[0], fragments)
-        for left, right in zip(group, group[1:], strict=False):
-            left_tail = content_by_page[left.page_number].partition(left.rendered)[2]
-            right_head = content_by_page[right.page_number].partition(right.rendered)[0]
-            right_units = _nearby_units(content_by_page[right.page_number], right, fragments)
-            if any(known_units.get(dimension) != value for dimension, value in right_units.items()):
-                blocked_by_context = True
-                break
-            known_units.update(right_units)
-            if re.search(
-                r"(?m)^(?:#{1,6}\s+\S|第[一二三四五六七八九十百0-9]+[章节]\s*|\d+(?:\.\d+)+\s+\S)",
-                f"{left_tail}\n{right_head}",
-            ):
-                blocked_by_context = True
-                break
-        if blocked_by_context:
+        if not _continuous_table_context(group, content_by_page, fragments):
             continue
         logical_id = f"table_{group[0].fragment_id}_{group[-1].fragment_id}"
         source_pages = sorted({fragment.page_number for fragment in group})

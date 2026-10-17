@@ -2,7 +2,7 @@
   "schema": "mosaic-report-consolidation/1",
   "created_UTC": "2026-10-16T18:36:52.457264+00:00",
   "canonical_report": "benchmark-results/clean-model-comparison-20261015/report.md",
-  "canonical_report_SHA256": "b7de6ab5c983f21927639637c57fb394ddae7f401e87b3923198494c4d904460",
+  "canonical_report_SHA256": "11f5db0a6833c2be9e715f005a91d3f7faa430baa34b934c3f3eaf8f47f3070b",
   "previous_tracked_reports_commit": "55769e5adb35f776896552499b4c043a56a1b6a8",
   "deleted_duplicate_reports_and_build_files": [
     "docs/clean-model-comparison-20261016.md",
@@ -105,6 +105,12 @@
       "previous_report_SHA256": "34f2feb5204df952e59db7d889bacd8064f876b2342f2986f7341b9adbfe9388",
       "updated_report_SHA256": "b7de6ab5c983f21927639637c57fb394ddae7f401e87b3923198494c4d904460",
       "change": "Deploy the user-selected Docling2.139 V1 matching=False PyPdfium plus GLM SDK orientation-on 200DPI pipeline; remove Qwen runtime and model-adaptation repairs; add full502 real-HTTP and online59 validation, timings/resources, known regressions, README figures and release evidence."
+    },
+    {
+      "created_UTC": "2026-10-17T09:50:38.276345+00:00",
+      "previous_report_SHA256": "b7de6ab5c983f21927639637c57fb394ddae7f401e87b3923198494c4d904460",
+      "updated_report_SHA256": "11f5db0a6833c2be9e715f005a91d3f7faa430baa34b934c3f3eaf8f47f3070b",
+      "change": "Independently compare original PDF cell grids, retain the known diluted-EPS missing closing parenthesis, fix caption/unit/context merge guards including conflicting repeated declarations, and record separate r2/r3 tests, replay and real whole-PDF HTTP acceptance without relabeling the historical502 benchmark."
     }
   ],
   "V2_compute_experiment": {
@@ -127,5 +133,24 @@
     "full_before_deployment_HTTP_pages": 502,
     "post_deployment_HTTP_pages": 59,
     "prior_consolidation_record_retained": true
+  },
+  "header_context_reverification_release": {
+    "created_UTC": "2026-10-17T09:50:38.276345+00:00",
+    "deployment_or_application_code_changed": true,
+    "model_weights_configuration_and_locked_package_versions_changed": false,
+    "manifest": "followup/20261017/selected-pipeline-deployment/independent-recheck-20261017T170704/release-manifest.json",
+    "manifest_SHA256": "4cd919ccf2e86640bb288eef64f6a89e99a532a35045d66b30fea96ff857a348",
+    "evidence_index": "followup/20261017/selected-pipeline-deployment/independent-recheck-20261017T170704/release-evidence-index.jsonl",
+    "evidence_index_SHA256": "3b88a8555b37a91b5c13e83e038f0a263dbab758dd5a3bc41cf1f291f70fd9d7",
+    "deployed_API_image": "sha256:f815766b71ed67229f995d864ca146ef68937a98012676316bc33c4a673405db",
+    "deployed_Asia_Shanghai": "2026-10-17T17:46:28.801462+08:00",
+    "runtime_table_service_SHA256": "551611c43df261dea7cec4b99af7b9c3ccc814b70d0ff90f98bc49a477f9f0fb",
+    "final_image_backend_tests_passed": 329,
+    "final_native_pages_export_replayed": 433,
+    "final_candidate_HTTP_pages": 31,
+    "final_post_deployment_HTTP_pages": 35,
+    "new_full502_model_inference": false,
+    "known_additional_defect": "Diluted-EPS source label closing parenthesis is missing in raw native model output and final Markdown; retained and explicitly disclosed.",
+    "historical_0515_and_r2_evidence_retained": true
   }
 }

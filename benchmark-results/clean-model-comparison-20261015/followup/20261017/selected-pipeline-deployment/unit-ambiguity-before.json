@@ -1,0 +1,21 @@
+{
+  "created_utc": "2026-10-17T09:41:05.327555+00:00",
+  "source_sha256": "500323d1a22b85c54b0e94725a3c7df3350a71cb3c4e8408fb5cec49f6647ed6",
+  "model_calls": 0,
+  "source_changes": false,
+  "scope": "In-memory whole-assemble counterexample; no PDF/model/service changed",
+  "left_context": "单位：米\n\n",
+  "right_context": "单位：厘米\n\n单位：米\n\n",
+  "before_context_evidence": [
+    {
+      "单位": "米"
+    },
+    []
+  ],
+  "observed_merge": true,
+  "expected_merge": false,
+  "output_pages": {
+    "1": "单位：米\n\n<!-- logical-table: table_p1_t1_p2_t1; source-pages: 1,2 -->\n\n<!-- table-source: p1_t1; source-page: 1; source-rows: 1-2; logical-rows: 1-2; repeated-header-rows: 0 -->\n<!-- table-source: p2_t1; source-page: 2; source-rows: 2; logical-rows: 3-3; repeated-header-rows: 1 -->\n\n<!-- table-structure: {\"version\":1,\"table_id\":\"table_p1_t1_p2_t1\",\"source_pages\":[1,2],\"num_rows\":3,\"num_cols\":2,\"encoding\":\"anchor_and_blanks\",\"structure_valid\":true,\"header_rows\":[0],\"header_scope_rows\":[0],\"header_scope_complete\":true,\"spans\":[]} -->\n\n| 类别 | 数量 |\n| --- | --- |\n| 来源 1 | 100 |\n| 来源 2 | 200 |",
+    "2": "单位：厘米\n\n单位：米\n\n"
+  }
+}
