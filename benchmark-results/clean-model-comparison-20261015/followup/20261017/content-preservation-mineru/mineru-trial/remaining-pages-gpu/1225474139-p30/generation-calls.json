@@ -1,0 +1,236 @@
+[
+  {
+    "seconds": 6.218395591014996,
+    "input_tokens": 1394,
+    "generated_tokens": 177,
+    "output_tokens": 1571,
+    "kwargs": {
+      "use_cache": true,
+      "temperature": null,
+      "top_p": null,
+      "top_k": null,
+      "repetition_penalty": 1.0,
+      "no_repeat_ngram_size": 100,
+      "max_length": 8192,
+      "do_sample": false
+    },
+    "last_token_id": 151645,
+    "eos_token_id": [
+      151645,
+      151643
+    ],
+    "cuda_peak_allocated": 2650703360,
+    "cuda_peak_reserved": 3279945728,
+    "raw_generation": [
+      "<|box_start|>528 050 850 063<|box_end|><|ref_start|>header<|ref_end|><|rotate_up|>\n<|box_start|>392 096 640 117<|box_end|><|ref_start|>title<|ref_end|><|rotate_up|>\n<|box_start|>147 183 853 229<|box_end|><|ref_start|>text<|ref_end|><|rotate_up|>\n<|box_start|>462 322 851 340<|box_end|><|ref_start|>text<|ref_end|><|rotate_up|>\n<|box_start|>572 396 851 414<|box_end|><|ref_start|>text<|ref_end|><|rotate_up|>\n<|box_start|>746 433 811 450<|box_end|><|ref_start|>text<|ref_end|><|rotate_up|>\n<|box_start|>704 507 848 524<|box_end|><|ref_start|>text<|ref_end|><|rotate_up|>\n<|box_start|>506 929 524 940<|box_end|><|ref_start|>page_number<|ref_end|><|rotate_up|><|im_end|>"
+    ]
+  },
+  {
+    "seconds": 0.3573863540077582,
+    "input_tokens": 93,
+    "generated_tokens": 12,
+    "output_tokens": 105,
+    "kwargs": {
+      "use_cache": true,
+      "temperature": null,
+      "top_p": null,
+      "top_k": null,
+      "repetition_penalty": 1.0,
+      "no_repeat_ngram_size": 100,
+      "max_length": 8192,
+      "do_sample": false
+    },
+    "last_token_id": 151645,
+    "eos_token_id": [
+      151645,
+      151643
+    ],
+    "cuda_peak_allocated": 2650703360,
+    "cuda_peak_reserved": 3279945728,
+    "raw_generation": [
+      "深圳兆日科技股份有限公司详式权益变动报告书<|im_end|>"
+    ]
+  },
+  {
+    "seconds": 0.15969671495258808,
+    "input_tokens": 97,
+    "generated_tokens": 5,
+    "output_tokens": 102,
+    "kwargs": {
+      "use_cache": true,
+      "temperature": null,
+      "top_p": null,
+      "top_k": null,
+      "repetition_penalty": 1.0,
+      "no_repeat_ngram_size": 100,
+      "max_length": 8192,
+      "do_sample": false
+    },
+    "last_token_id": 151645,
+    "eos_token_id": [
+      151645,
+      151643
+    ],
+    "cuda_peak_allocated": 2650703360,
+    "cuda_peak_reserved": 3279945728,
+    "raw_generation": [
+      "信息披露义务人声明<|im_end|>"
+    ]
+  },
+  {
+    "seconds": 1.048165770014748,
+    "input_tokens": 193,
+    "generated_tokens": 39,
+    "output_tokens": 232,
+    "kwargs": {
+      "use_cache": true,
+      "temperature": null,
+      "top_p": null,
+      "top_k": null,
+      "repetition_penalty": 1.0,
+      "no_repeat_ngram_size": 100,
+      "max_length": 8192,
+      "do_sample": false
+    },
+    "last_token_id": 151645,
+    "eos_token_id": [
+      151645,
+      151643
+    ],
+    "cuda_peak_allocated": 2650703360,
+    "cuda_peak_reserved": 3279945728,
+    "raw_generation": [
+      "本人（以及本人所代表的机构）承诺本报告书不存在虚假记载、误导性陈述或重大遗漏，并对其真实性、准确性、完整性承担个别和连带的法律责任。<|im_end|>"
+    ]
+  },
+  {
+    "seconds": 0.31319036590866745,
+    "input_tokens": 121,
+    "generated_tokens": 11,
+    "output_tokens": 132,
+    "kwargs": {
+      "use_cache": true,
+      "temperature": null,
+      "top_p": null,
+      "top_k": null,
+      "repetition_penalty": 1.0,
+      "no_repeat_ngram_size": 100,
+      "max_length": 8192,
+      "do_sample": false
+    },
+    "last_token_id": 151645,
+    "eos_token_id": [
+      151645,
+      151643
+    ],
+    "cuda_peak_allocated": 2650703360,
+    "cuda_peak_reserved": 3279945728,
+    "raw_generation": [
+      "信息披露义务人：上海璟和珩科技有限公司<|im_end|>"
+    ]
+  },
+  {
+    "seconds": 0.16061306500341743,
+    "input_tokens": 106,
+    "generated_tokens": 5,
+    "output_tokens": 111,
+    "kwargs": {
+      "use_cache": true,
+      "temperature": null,
+      "top_p": null,
+      "top_k": null,
+      "repetition_penalty": 1.0,
+      "no_repeat_ngram_size": 100,
+      "max_length": 8192,
+      "do_sample": false
+    },
+    "last_token_id": 151645,
+    "eos_token_id": [
+      151645,
+      151643
+    ],
+    "cuda_peak_allocated": 2650703360,
+    "cuda_peak_reserved": 3279945728,
+    "raw_generation": [
+      "法定代表人：____<|im_end|>"
+    ]
+  },
+  {
+    "seconds": 0.13441165105905384,
+    "input_tokens": 95,
+    "generated_tokens": 4,
+    "output_tokens": 99,
+    "kwargs": {
+      "use_cache": true,
+      "temperature": null,
+      "top_p": null,
+      "top_k": null,
+      "repetition_penalty": 1.0,
+      "no_repeat_ngram_size": 100,
+      "max_length": 8192,
+      "do_sample": false
+    },
+    "last_token_id": 151645,
+    "eos_token_id": [
+      151645,
+      151643
+    ],
+    "cuda_peak_allocated": 2650703360,
+    "cuda_peak_reserved": 3279945728,
+    "raw_generation": [
+      "曲嘉麟<|im_end|>"
+    ]
+  },
+  {
+    "seconds": 0.161302046966739,
+    "input_tokens": 105,
+    "generated_tokens": 5,
+    "output_tokens": 110,
+    "kwargs": {
+      "use_cache": true,
+      "temperature": null,
+      "top_p": null,
+      "top_k": null,
+      "repetition_penalty": 1.0,
+      "no_repeat_ngram_size": 100,
+      "max_length": 8192,
+      "do_sample": false
+    },
+    "last_token_id": 151645,
+    "eos_token_id": [
+      151645,
+      151643
+    ],
+    "cuda_peak_allocated": 2650703360,
+    "cuda_peak_reserved": 3279945728,
+    "raw_generation": [
+      "年 月 日<|im_end|>"
+    ]
+  },
+  {
+    "seconds": 0.12937215995043516,
+    "input_tokens": 97,
+    "generated_tokens": 3,
+    "output_tokens": 100,
+    "kwargs": {
+      "use_cache": true,
+      "temperature": null,
+      "top_p": null,
+      "top_k": null,
+      "repetition_penalty": 1.0,
+      "no_repeat_ngram_size": 100,
+      "max_length": 8192,
+      "do_sample": false
+    },
+    "last_token_id": 151645,
+    "eos_token_id": [
+      151645,
+      151643
+    ],
+    "cuda_peak_allocated": 2650703360,
+    "cuda_peak_reserved": 3279945728,
+    "raw_generation": [
+      "30<|im_end|>"
+    ]
+  }
+]

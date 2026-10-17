@@ -1,0 +1,108 @@
+[
+  {
+    "stage": "official_input_preparation",
+    "file_suffix": "pdf",
+    "prepared_size_bytes": 225105,
+    "original_function_seconds": 0.01916554698254913,
+    "prepared_SHA256": "9f957f5db88af960e41715c6a7df4450b2d03565b2ff76ce7fc3c1a5a08466b9",
+    "retained_original_page_indices_zero_based": [
+      86
+    ],
+    "broken_original_page_indices_zero_based": [],
+    "derived_input_filename": "prepared-by-official-page-selection.pdf",
+    "transformation": "Official default page_range handling; runner did not crop or rewrite the source PDF."
+  },
+  {
+    "stage": "actual_VLM_options",
+    "image_analysis": false,
+    "not_extract_list": [
+      "caption",
+      "code_caption",
+      "doc_title",
+      "footer",
+      "footnote",
+      "header",
+      "image_caption",
+      "image_footnote",
+      "page_footnote",
+      "page_number",
+      "paragraph_title",
+      "phonetic",
+      "ref_text",
+      "table_caption",
+      "table_footnote",
+      "text",
+      "title"
+    ],
+    "image_sizes": [
+      [
+        1654,
+        2339
+      ]
+    ],
+    "model_inputs": []
+  },
+  {
+    "stage": "actual_VLM_results_before_native_body_fill",
+    "effort": "xhigh",
+    "tables": [
+      {
+        "window_page_index": 0,
+        "bbox": [
+          0.179,
+          0.069,
+          0.649,
+          0.919
+        ],
+        "content": "<table><tr><td rowspan=\"2\">项目</td><td rowspan=\"2\">期初余额</td><td colspan=\"6\">本期发生金额</td><td rowspan=\"2\">期末余额</td></tr><tr><td>本期所得税前发生额</td><td>减:前期计入其他综合收益当期转入损益</td><td>减:前期计入其他综合收益当期转入留存收益</td><td>减:所得税费用</td><td>税后归属于母公司</td><td>税后归属于少数股东</td></tr><tr><td>一、不能重分类进损益的其他综合收益</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>二、将重分类进损益的其他综合收益</td><td>-337,962.19</td><td>-1,035,963.86</td><td>-267,154.71</td><td></td><td>-5,975.71</td><td>-762,833.44</td><td></td><td>-1,100,795.63</td></tr><tr><td>其中:权益法下可转损益的其他综合收益</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>其他债权投资公允价值变动</td><td>-227,081.50</td><td>-306,992.75</td><td>-267,154.71</td><td></td><td>-5,975.71</td><td>-33,862.33</td><td></td><td>-260,943.83</td></tr><tr><td>金融资产重分类计入其他综合收益的金额</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>其他债权投资信用减值准备</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>外币报表折算</td><td>-110,880.69</td><td>-728,971.11</td><td></td><td></td><td></td><td>-728,971.11</td><td></td><td>-839,851.80</td></tr><tr><td>其他综合收益合计</td><td>-337,962.19</td><td>-1,035,963.86</td><td>-267,154.71</td><td></td><td>-5,975.71</td><td>-762,833.44</td><td></td><td>-1,100,795.63</td></tr></table>"
+      }
+    ]
+  },
+  {
+    "stage": "native_PDF_text_fill",
+    "returned_spans": 3,
+    "nonempty_text_spans": 3,
+    "queued_for_post_OCR": 0,
+    "spans": [
+      {
+        "type": "text",
+        "bbox": [
+          90.72,
+          613.08,
+          104.4,
+          749.52
+        ],
+        "text": "十四）其他综合",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          396.0,
+          485.64000000000004,
+          408.96000000000004,
+          750.96
+        ],
+        "text": "债权投资公允价值变动源于应收款",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          513.72,
+          402.12,
+          522.72,
+          413.28000000000003
+        ],
+        "text": "80",
+        "queued_for_post_OCR": false
+      }
+    ]
+  },
+  {
+    "stage": "actual_post_OCR",
+    "candidate_spans": 0,
+    "content_changed": 0,
+    "spans": []
+  }
+]

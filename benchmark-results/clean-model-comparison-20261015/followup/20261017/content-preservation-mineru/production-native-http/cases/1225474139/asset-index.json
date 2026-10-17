@@ -1,0 +1,24 @@
+{
+  "schema": "mosaic-asset-index/2.0",
+  "content_id": "job_01M5526XS8PWRMN5H1ASGACAS2",
+  "source_sha256": "dc69826976c576302ee4156642039b790693202a611922dda647eb006e6d5c18",
+  "assets": [
+    {
+      "asset_id": "asset_62294b905f3eb4514efb3e41c8",
+      "kind": "image",
+      "role": "page_crop",
+      "mime_type": "image/png",
+      "sha256": "62294b905f3eb4514efb3e41c8de154b287e48eebba4d261276de7a16c6da4f5",
+      "size_bytes": 17864,
+      "filename": "page-7-image-1.png",
+      "width": 233,
+      "height": 337,
+      "duration_ms": null,
+      "parent_asset_id": null,
+      "visual_analysis": null,
+      "status": "ready",
+      "warning_codes": [],
+      "download_url": "/v1/content/jobs/job_01M5526XS8PWRMN5H1ASGACAS2/assets/asset_62294b905f3eb4514efb3e41c8"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "status": "incomplete",
+  "owner": "preserve_exported_content",
+  "finished_at": "2026-10-17T14:05:02.903776+00:00",
+  "runner_no_longer_sends_requests": true,
+  "phases": [
+    {
+      "tier": "standard",
+      "status": "failed",
+      "started_at": "2026-10-17T14:04:50.394250+00:00",
+      "exit_code": 1,
+      "finished_at": "2026-10-17T14:05:02.903726+00:00"
+    }
+  ],
+  "remaining_tiers_not_started": [
+    "advanced"
+  ]
+}

@@ -9,9 +9,11 @@ GLM-OCR＋官方 SDK 以 200 DPI 处理扫描、混合页，并开启 SDK 前方
 在 CPU 上解析；扫描部分调用独立 GLM GPU 服务。V1 与 GLM 识别权重沿用实验锁定版本，
 本次同时更新库版本、后端、SDK 输入配置和通用 Markdown 出口，不把这些变化统称为新权重提升。
 
-现行 API 为 10 月 17 日 17:46 部署的 r3，补强跨页上下文和多条单位声明的歧义检查；模型及输入配置未变。
-下文 502 页质量、21.52 分钟和原发布清单属于 05:15 版本，独立复验与最新镜像另见
-[独立逐格再验证](#独立逐格再验证2026-10-17)，没有将原批次改标为新镜像重新推理。
+现行 API 于 **2026-10-17 21:51（北京时间）**更新为正文保留修订，模型及输入配置未变。
+最新镜像、504 页完整候选 HTTP 与上线后的新 job 见
+[正文遗漏与替代管线实测](#正文遗漏与替代管线实测2026-10-17)。
+05:15 版本的 502 页质量、21.52 分钟和原发布清单仍保留原归属；17:46 r3 的独立核对见
+[独立逐格再验证](#独立逐格再验证2026-10-17)，没有将历史批次改标为当前镜像。
 
 应用代码已删除 Qwen／Ollama 客户端、探测、局部／整表复核路由、配置及前端计数；
 删除旧原生文字／网格恢复和按财务模式改写 OCR 表的补偿。当前没有额外通用视觉模型
@@ -343,7 +345,7 @@ SHA／大小全部通过，取得两份 Markdown 累计 **42.851148 秒**。
 没有以 `/ready` 或内部函数测试代替最终 Markdown 检查。
 [更新后同步接口与持久化结果一致性](followup/20261017/selected-pipeline-deployment/independent-recheck-20261017T170704/production-synchronous/summary.json)。
 
-#### 17:46 r3 现行版本：完整保留单位声明
+#### 17:46 r3 版本：完整保留单位声明
 
 r2 通过上述检查后，进一步的独立反例仍发现一个遗漏：一张表前同时存在“单位：厘米”与
 “单位：米”时，单位字典只保留最后一个取值；若另一片段仅声明“单位：米”，就可能错误地
@@ -371,7 +373,7 @@ OpenAPI JSON 与 r2 生产版本相同。候选接口另外重新处理完整两
 [r3 候选源码与接口核验](followup/20261017/selected-pipeline-deployment/independent-recheck-20261017T170704/unit-r3-candidate-ready-and-source.json)、
 [r3 候选直接源矩阵比对](followup/20261017/selected-pipeline-deployment/independent-recheck-20261017T170704/candidate-unit-r3-http/direct-source-recheck.json)。
 
-现行 API 于 **17:46:28.801462（北京时间）**更新为
+当时 API 于 **17:46:28.801462（北京时间）**更新为
 `mosaic-parse:0.4.0-header-context-20261017-r3`，实际镜像：
 `sha256:f815766b71ed67229f995d864ca146ef68937a98012676316bc33c4a673405db`。
 53 个应用文件 SHA 与候选一致，三个后端就绪，SDK 与 GPU 服务保持原实例；
@@ -397,7 +399,7 @@ OpenAPI JSON 与 r2 生产版本相同。候选接口另外重新处理完整两
 因此 **r3 部署后另完成 35 页实际接口复验**，与 r2 的 35 页结果分别保存。
 [r3 更新后同步接口核验](followup/20261017/selected-pipeline-deployment/independent-recheck-20261017T170704/production-unit-r3-synchronous/summary.json)。
 
-现行 r3 的[发布清单](followup/20261017/selected-pipeline-deployment/independent-recheck-20261017T170704/release-manifest.json)
+r3 的[发布清单](followup/20261017/selected-pipeline-deployment/independent-recheck-20261017T170704/release-manifest.json)
 和[证据 SHA 索引](followup/20261017/selected-pipeline-deployment/independent-recheck-20261017T170704/release-evidence-index.jsonl)
 单独记录本次源码、镜像、请求与部署；05:15 的原发布清单和 r2 中间证据保留原归属。
 
@@ -406,6 +408,248 @@ OpenAPI JSON 与 r2 生产版本相同。候选接口另外重新处理完整两
 
 [历史质量比较](#历史质量比较) · [比较口径](#比较方法与完成范围) · [新版与调用配置](#新版优化与调用配置)
 · [历史耗时与资源](#历史耗时与-gpu-利用率) · [升级前快照](#升级前线上配置快照) · [证据](#证据与历史记录)
+
+## 正文遗漏与替代管线实测（2026-10-17）
+
+本轮已上线通用正文保留修复，并保留原跨页表头／来源映射验收。替代模型中，优先推进
+**Advanced＋TXT／MinerU2.5-Pro-2605／vLLM**；同 14 页为 45／46 加额外 4／4，
+Standard 更快但有实际旋转表和筹资跨度退化。Advanced 仍有一处原生回填截断和来源接口
+接入工作，当前线上模型没有替换。五组同页数、分入口耗时和具体失败见本章比较表。
+
+### 原件身份、丢弃环节与通用出口修复
+
+新增两页输入是 Eventrail 用 LibreOffice 26.8 转换后实际提交的 PDF，
+SHA256 为 `ccff40771d75e9412b65f364a1c72c1733c37b4d8f232f49cf639621f0ba165f`。
+它从原 job 上传区按相同字节恢复；巨潮原 DOCX 的 SHA256 为
+`de53a6b0ee17abeb6f4584fc156de278399fe8d9db88dcea72ceeba0a4ed073e`，两者没有混用或重新转换。
+旧 job `job_01M54PBZSMH249W7NWXT638W8K` 及用户后续 134 页 job
+`job_01M54S6SZB4PH061X16NW8TVCQ` 只读取、留档，不覆盖旧正文。
+[输入清单](followup/20261017/content-preservation-mineru/input-manifest.json)、
+[逐页原件与字符证据](followup/20261017/content-preservation-mineru/source-reference-review.json)。
+
+实际遗漏有两个位置：证券代码／简称已在 Docling 原始节点中，却被默认仅导出 BODY 的
+层过滤丢弃；两份财报第 74 页业务正文也已在原始节点中，却被挂入表格 footnotes。
+通用遍历器将这些节点交给浮动对象输出，而原有 `AnchoredTableSerializer` 仅写表题和表格，
+没有输出附注。官方默认 Markdown 导出也会丢这类附注，不能说只有应用自定义出口存在该问题。
+
+`app/services/table_service.py` 现在保留 BODY 与可见 FURNITURE 节点，并在原阅读顺序中
+释放真实附注，按源节点去重、限制来源页，保留原文而不按证券名称或财务指标补字。
+无坐标 `source-furniture`／`source-text` 注释记录节点角色和来源页；隐藏层及作者批注不进入正文。
+真实序列化失败交给页面错误处理，不静默退回已知漏字的旧出口。
+
+保留页眉／页脚后，跨页判断只忽略有来源位置证据的完整重复装饰或已证连续的页码；
+新的业务标题、期间和任何单位声明仍参与作用范围检查。完整表头、表题、全部单位声明、
+多级跨度及 `table-source` 的严格检查继续生效。该逻辑处理节点的保留和表格边界，
+没有按文件、页号、金额、指标名或题述答案替换正文。
+
+同一份冻结原生结果在修复前后回放：433 页、632 表、20,569 个源格、659 个合并格，
+原始单元格、跨度、表头角色和来源页不变。原 1,206 个未输出的可见文本节点中恢复 979 个，
+分别为 444 个页眉、532 个页脚和 3 个业务附注；已有正文节点没有新增丢弃或重复。
+仍有 227 个未输出节点，集中在 119 页文件第 62 页被识别为图片的侧向业务表中，
+它们是 227 个文本节点，并非 227 个独立业务错误；本次没有把图片子节点零散吐出冒充完整表格。
+[433 页冻结回放](followup/20261017/content-preservation-mineru/source-complete-export-replay/full-native/summary.json)、
+[第 62 页独立原件网格](followup/20261017/content-preservation-mineru/source-reference-p62.json)。
+
+续表组从 10 组变为 9 组：130 页文件第 115／116 页的连续页码被分别分类为 FURNITURE 与
+BODY，证据不一致导致一组拆开；两侧格、表头、来源行均保留。这是合并能力回退，单独披露。
+原验收的 27 页文件第 6／7 页同表头续表仍合并；四页文件第 2／3 页不同期间表仍拆开。
+
+### 新建完整 HTTP 请求的原件核对
+
+原件核对器同时检查字符顺序、数值边界、上下标独立性、行绑定、空列和跨度，
+读取真正可见的 Markdown／HTML；注释里的字不算正文。源码及 30 个正反例另加 10 个辅助检查
+均留档，旧读取器造成的早期假阴性结果也保留。
+[核对器自测](followup/20261017/content-preservation-mineru/verifier-self-test-final.json)。
+
+| 实际完整文档输入 | 本次候选 HTTP 的内容／结构检查 | 结果 |
+| --- | ---: | --- |
+| 相同字节的 Office 转换 PDF，2 页 | 6／6，117 个原生 span 全部保留 | 完整代码、简称、原标题、记录日期和正文恢复；另有 2／2 来源页关联 |
+| `1225474139.pdf`，36 页 | 4／4 | 第 28 页原文顺序正确，第 30 页空白年月日保留；另有 70／70 来源页关联 |
+| `1225474739.pdf`，134 页 | 9／31；用户前一真实结果为 8／31 | 第 74 页政策标题及句子恢复；六个问题中仅 1／6 解决；另有 269／269 来源页关联 |
+| `1225475375.pdf`，119 页 | 4／6 | 第 74 页否定结论恢复；第 87 页仍转置、少一行表头并丢跨六列组头；另有 102／102 来源页关联 |
+
+内容检查与 443 个来源页关联检查分开计数，不合成“准确率”。117 span 是本次独立原生读取器的
+单元，未冒充 Eventrail 71 片段读取器的口径。
+[真实最终正文核对](followup/20261017/content-preservation-mineru/candidate-all-content-source.json)、
+[按文档及问题拆开的摘要](followup/20261017/content-preservation-mineru/candidate-all-content-source-summary.json)。
+
+134 页剩余五类问题：第 19 页长风险格截断、金额与独立上标串接；第 40 页融资账户第 6／7 项
+遗漏、独立关联说明行并入股东行；第 131 页六列续表变成五列。负号／小数点与陈庆良股数等
+附带错误也仍存在。原始 TableFormer 预测格已出现这些问题：第 19 页格底约为 y720，
+漏行位于 y727–772；第 40 页格底约为 y654，漏行位于 y664–709。
+`matching=False` 直接按这些预测格向 PyPdfium 取字，格外源字没有进入模型单元格；
+没有证据支持统一字符长度上限。仅改 Markdown 出口或给已知六个字打补丁解决不了这些错误。
+
+### 21:51 发布与完整接口回归
+
+本次最终候选镜像内 352 项后端测试通过（25.12 秒），Ruff、53 文件 mypy 与依赖锁检查通过。
+实际运行的 53 个应用源码 SHA 与候选构建完全一致，OpenAPI、模型参数和锁定依赖未变。
+新建 10 份完整 PDF／502 页及额外相同字节两页输入，均 `scan_policy=auto`、未设置 `unit_range`。
+固定集合重新评分为核心原值 209／209、完整期间 209／209、原值及唯一行 372／402、
+公开结构完整列义 326／402、筹资独立源格 31／31；这批没有新增加上述集合的失败，
+已有金额／标签错误及保守拆开的一组续表仍分别披露。
+
+本次完整 502 页提交到取得 Markdown 累计 **1349.754 秒（22.50 分钟）**，
+含下载全部资产为 1351.583 秒（22.53 分钟）。另两页输入单列，不混入固定 502 页成绩和耗时。
+约两秒一次的 676 个资源样本中，API／SDK 平均 CPU 为 538.78%／134.82%（100% 为一核），
+进程树 RSS 峰值分别为 5.731／5.736 GiB。69 个实际 SDK 页的 SDK HTTP 累计 337.442 秒，
+该分量已经包含在客户端墙钟内，不能相加。SDK 请求窗口内 GLM 自身 GPU1 PID6977 有效 SM
+样本平均 69.01%、峰值 98%，显存为 11,612 MiB；缺失利用率样本不按零计。
+全卡采样还包括其他服务，与各次主机共享负载一起保留，不能把 22.50／21.52 当出口改动的因果倍率。
+[本批请求与最终结果](followup/20261017/content-preservation-mineru/candidate-full10-http/summary.json)、
+[固定集合评分](followup/20261017/content-preservation-mineru/candidate-full10-http/scoring/score-summary.json)、
+[逐资产及来源像素核验](followup/20261017/content-preservation-mineru/candidate-full10-http/source-assets-audit.json)、
+[完整耗时和资源](followup/20261017/content-preservation-mineru/candidate-full10-http/performance-summary.json)。
+
+实际部署镜像为 `mosaic-parse:0.4.0-source-content-20261017-r2`，
+`sha256:07a5df326885a6f83cf48aab766f6dd47fad5175066703fe6fa224380d86f9d4`，
+运行时 `table_service.py` 为 `1e350e7a20b0da8a299f0add1dbc5467d2973750e431dff507534e8e3bd733df`。
+只替换 API，SDK／GLM 实例未重建；替换前为零活动任务，私有环境及数据库备份保留。
+已有 314 个结果及资产文件 SHA 全部不变，两个用户原始 job 仍可经 HTTP 取得原 SHA 正文。
+[实际部署与配置读回](followup/20261017/content-preservation-mineru/production-deployment.json)。
+
+上线后另新建两页输入、四页财务表与 27 页股东表，实际完成 33 页。
+证券标识、标题、日期及原文检查 6／6、两条来源页关联 2／2；财务 30／30、筹资 31／31、
+7 个行绑定、正常续表 33／33 和 10 个表头叶项均通过。独立逐格读原件为财务 48 位置中
+47 个逐字一致，剩余稀释每股收益右括号仍在上游缺失；筹资 44 个位置／7 跨度与续表 55
+个正文位置保留。两张扫描来源图的 RGB 以及全部 4 资产下载核验通过。
+[线上新 job](followup/20261017/content-preservation-mineru/production-boundary-http/summary.json)、
+[线上 Office 新 job](followup/20261017/content-preservation-mineru/production-office-http/summary.json)、
+[Office 实际正文核对](followup/20261017/content-preservation-mineru/production-office-source-acceptance.json)、
+[线上原件逐格核对](followup/20261017/content-preservation-mineru/production-financial-funding-continuation-source.json)。
+
+上线后还完整重跑 36 页与 134 页原生输入，合计 **203 页新的生产 HTTP 验证**。
+第 28 页顺序和空日期继续通过；134 页第 74 页政策标题、句子及顺序通过，
+31 个内容条件依旧 9 通过／22 失败，341 条来源页关联独立通过。剩余五类问题没有被标为修复。
+这 170 页实际 SDK 调用为零；两张原生资产下载通过。两批时序、原始 Markdown 与来源检查见
+[上线后 203 页汇总](followup/20261017/content-preservation-mineru/production-validation-summary.json)、
+[原生完整 PDF 新 job](followup/20261017/content-preservation-mineru/production-native-http/summary.json)、
+[生产内容与来源检查](followup/20261017/content-preservation-mineru/production-content-source-acceptance.json)。
+
+### MinerU 官方视觉调用：已完成的 14 页组件试验
+
+另外隔离测试 `opendatalab/MinerU2.5-Pro-2605-1.2B`，使用官方
+`mineru-vl-utils==2.0.7` 的布局／区域两步流程、原件 200 DPI、FP16 和 SDPA。
+这是六份原件中固定 14 页的模型组件试验，没有接入 MosaicParse，也没有替代完整 PDF HTTP 验收。
+公开模型的 Qwen2-VL 架构不等于恢复已删除的应用 Qwen／Ollama 路由。
+
+| 共同的原件问题 | 原用户结果 | 当前 Docling 出口修复后的完整 HTTP | MinerU 官方视觉组件 |
+| --- | --- | --- | --- |
+| 第 19 页长风险格完整内容 | 失败 | 失败 | 保留本页全部源内容与合并格 |
+| `6,606.57` 与独立脚注 `1` | 失败 | 失败 | 金额与显式上标分开，未串成金额 |
+| 第 40 页融资说明七项及账户绑定 | 失败 | 失败 | 七项及人物／账户／股数绑定通过 |
+| 第 40 页独立关联说明行 | 失败 | 失败 | 行边界及独立说明保留 |
+| 第 74 页政策标题和句子 | 失败 | 恢复 | 恢复 |
+| 第 131 页六列、两个空格及 `92.29%` | 失败 | 失败 | 六个位置完整 |
+
+同一 14 页指定检查为 45／46：119 页第 74 页正文恢复，但句首破折号被识成“一”，该项严格失败。
+另外原件核对确认四种残留：该破折号、134 页第 40 页漏勾选、四页文件股东名称中的“一”误成“-”，
+以及将 QR 推断为原文没有的“验证码”。勾选错误相对用户旧 raw 是实际回退。
+1184 个原生 span 中覆盖 1182 个只说明覆盖，不等于逐字或业务准确率；不能用它掩盖上述错误。
+第 87 页 10×9、跨六列组头及两侧期初／期末列通过独立源格核对。
+[14 页指定检查](followup/20261017/content-preservation-mineru/model-evaluation/transformers-source-evaluation.json)、
+[额外原件错项](followup/20261017/content-preservation-mineru/additional-source-observations/source-confirmed-extra-observations.json)、
+[股东名称逐字对照](followup/20261017/content-preservation-mineru/additional-source-observations/source-confirmed-identity-observation.json)。
+
+该组件的两次模型装载累计 12.56 秒，14 页客户端累计 444.52 秒，其中生成 438.80 秒；155 次调用
+均 EOS 正常结束，没有 8192 token 上限截断。自身 NVML 显存峰值 3712 MiB，SM 有效采样平均
+26.65%；CUDA allocated 峰值 2837.5 MiB、reserved 3516 MiB。使用两张 RTX 2080 Ti 主机中 GPU1
+受限的空余显存，与已有 GLM／TTS 共享，TF 阶段与部分原 HTTP 时段重叠；这是观测成本，
+不能和 502 页 HTTP 或官方 A100 吞吐作直接速度比。实际 GLM EngineCore 只在 GPU1 占用 11,612 MiB，与 TTS 共享；
+GPU0 的其他进程不归属本服务。多个 CPU／GPU 子进程不能推断为双卡张量并行。
+[耗时／PID 资源与参数](followup/20261017/content-preservation-mineru/mineru-trial/tf-official-summary.json)。
+
+该视觉 SDK 主要返回整表 HTML、表框和页，不提供已确认的单格表头角色及 MosaicParse
+逐行 `table-source` 关系；当前将这些接口能力记为未接入，不能直接替换 Markdown 就声称兼容。
+
+### 同一模型，不同调用路径的完整比较
+
+对同一 14 页另跑当前 Docling 组件，固定 V1／matching=False／PyPdfium、4 CPU 核、
+单页／单文档并发 1、无 GPU／网络／GLM，得到 22／46，额外四项 4／4；
+转换加当前出口累计 63.532 秒，初始化 3.893 秒另列。此前的完整 HTTP 仍是生产验收依据，
+该组件只作为同页模型对照。
+
+| 固定 14 页配置 | 指定内容与结构／46 | 额外源字符与状态／4 | 组件耗时（秒） | 自身 GPU 显存峰值 MiB／有效 SM 均值 | 实际计时入口 |
+| --- | ---: | ---: | ---: | --- | --- |
+| 当前 Docling V1＋正文保留出口 | 22 | 4 | 63.53 | 不使用 GPU | 原 PDF convert＋export，CPU |
+| MinerU 纯视觉／Transformers | 45 | 0 | 444.52 | 3712／26.65% | 已渲染图片 two_step_extract，GPU |
+| MinerU 纯视觉／vLLM | 45 | 1 | 236.18 | 3430／24.35% | 相同图片 two_step_extract，GPU |
+| MinerU 4.0.12 Standard＋TXT／vLLM | 40 | 4 | 48.92 | 3400／13.92%（15 页窗口） | 原 PDF parse＋官方 FULL，CPU＋GPU |
+| **MinerU 4.0.12 Advanced＋TXT／vLLM** | **45** | **4** | **212.75** | **3426／23.90%（15 页窗口）** | **原 PDF parse＋官方 FULL，CPU＋GPU** |
+
+![14 页的内容、额外错项及分入口组件耗时](../../docs/assets/native-model-component-comparison.svg)
+
+两类入口在图中分开，不把 SDK 调用时间当完整 PDF 到 Markdown。所有组件时间排除模型装载；
+官方 PDF parse 内包含实验的只读观察写入成本，API／主机共享负载与 CPU/GPU 资源不同。
+额外四项包含原 PDF 私用字形的源状态语义，保留同代码点不保证普通 Markdown 字体显示正确，
+该显示能力另列 unknown。两类检查均是指定难例，不能换算成全文准确率。
+[五组最终逐项结果](followup/20261017/content-preservation-mineru/model-evaluation/frozen-five-configuration-source-summary.json)、
+[图表数值及全部来源 SHA](followup/20261017/content-preservation-mineru/component-comparison.json)。
+
+**官方推荐的 vLLM 确实改变了成本和部分结果。** 纯视觉的 14 张源 PNG 与 TF 逐字节相同，
+155 次请求全部正常 stop、无输入截断、没有自定义 stop 字符；最大实际总 token 为 3565，
+低于 8192 上下文。12 页最终 MD 字节相同，另外两页为基金名“一”的正确恢复及“A 股”空格差异。
+同 46 项仍 45 通过，额外四类从 0／4 变成 1／4；勾选、破折号、QR 臆造仍失败。
+模型 HTTP 累计 232.720 秒，服务观测 inference 225.280 秒（prefill 25.130、decode 200.149），
+这些时间已经包含在客户端 236.184 秒内，不能相加。自身显存峰值 3430 MiB，
+有效 SM 样本平均 24.35%；服务启动 49.009 秒另列。
+[真实参数与资源](followup/20261017/content-preservation-mineru/mineru-trial/vllm-official-summary.json)、
+[逐页差异](followup/20261017/content-preservation-mineru/mineru-trial/tf-vllm-output-diff.json)。
+
+vLLM 使用官方默认采样及 `MinerULogitsProcessor`；TF 后端没有实现相同的 presence/frequency
+惩罚，不能假定两种调用严格相同。运行前纠正了本机代理绕路与过量 KV 预留：显式 128 MiB
+KV 的实际容量为 10,912 token，覆盖 8192 上下文；没有降低输入图像、DPI、模型精度或修改权重。
+保护性中断与未发推理的观察器错误原始记录均保留，未记为模型精度失败。
+
+**Standard 的原生表“接受”不等于正确，Advanced 的原生正文也仍有真实遗漏。**
+Standard 的 25 表中 24 表原生恢复、1 表视觉回退；159 个原生正文 span，post-OCR 为零。
+它恢复长格、上标和负号，但第 87 页表转为 9×10 且内容倒序，第 7 页筹资表丢 7 个跨度，
+四页文件第 3 页扣非标签字符交错。40／46 的六项失败中，一项仅是官方 DocVortex 将中文弯引号
+规范化为 ASCII，引号字形严格检查失败，不能称长格尾段仍丢失；其余五项为真实结构／正文问题。
+
+Advanced 使用原生正文、视觉表格，本批 25 张表全部走视觉路径、模型 HTTP 39 次，
+原生正文 138 span，post-OCR 为零。它修复上述旋转表、筹资跨度及标签顺序，额外四类均通过。
+唯一指定失败是 119 页第 87 页业务脚注：源／官方选页 PDF 都有完整 22 字，视觉布局框和
+原生 span 框均包含这些源字，但官方 `_fill_native_pdf_text_spans` 首次返回已只剩 15 字，
+后续 Model／MiddleJson 和 DEFAULT／FULL 均保留这份截断。已定位到 TXT 回填层，
+尚未追踪底层 Rust 匹配谓词，不能归因于 Markdown 删除或视觉模型无法识别该句。
+[官方调用／计时与实际路径](followup/20261017/content-preservation-mineru/mineru-trial/official-native-comparison-summary.json)、
+[丢失发生层及规范化源码](followup/20261017/content-preservation-mineru/mineru-trial/official-native-layer-diagnostics.json)。
+
+额外第 62 页单列原件 9×11 网格、99 位置及 9 跨度：当前 HTTP 和 Standard 均转置失败，
+纯视觉 vLLM 与 Advanced 均逐格通过。它不是原 14 页的一部分，也没有加进 46 的分母。
+Standard／Advanced 的默认 Markdown 会另过滤证券标识，分别为 37／46、42／46；
+主表明确使用官方 `markdown(add_markers=True)` 的 FULL 视图，不把已识别而被过滤误报为模型漏识。
+该实验视图包含内部标记，尚不能直接用作 MosaicParse 无坐标公共接口。
+[官方三层结果核对](followup/20261017/content-preservation-mineru/model-evaluation/official-native-advanced-source-evaluation.json)、
+[额外第 62 页核对](followup/20261017/content-preservation-mineru/model-evaluation/official-native-advanced-extra-p62-FULL-source-acceptance.json)。
+
+两组 CPU 初始化分别为 8.164／7.961 秒，进程峰值 RSS 1.595／1.580 GiB。
+各自 GPU 阶段窗口含初始化及额外第 62 页，自身 FB 峰值为 3400／3426 MiB、
+有效 SM 均值为 13.92%／23.90%；这些 GPU 窗口不冒充原 14 页独占计时。
+所有实验 GPU 容器已清理，GLM、SDK、TTS 未重启，GPU1 回到 5107 MiB 空闲，生产 ready 为 200。
+[资源窗口](followup/20261017/content-preservation-mineru/mineru-trial/official-native-GPU-resource-summary.json)、
+[清理与生产读回](followup/20261017/content-preservation-mineru/mineru-trial/GPU-final-cleanup-readback.json)。
+
+### 推荐的模型组合与上线边界
+
+**下一步原生页替代首选：MinerU 4.0.12 Advanced＋TXT，表格由 MinerU2.5-Pro-2605-1.2B
+经 vLLM 识别；扫描、混合页继续 GLM-OCR＋官方 SDK／200 DPI／方向开启。**
+本组没有 Standard 的侧向表和正常筹资表退化，兼顾纯视觉组的表格收益和原生正文的字符保真；
+观察到的组件时间也更低于纯视觉组，但两个入口不用于计算固定加速倍数。
+
+仍须先解决已定位的 TXT 回填 22→15 字问题，并将完整表头、跨度及逐行来源接入现有接口，
+再对全部 `pdf_sample` 走完整 HTTP 验收。当前生产只发布已通过 504 页候选及 203 页生产回归的
+通用正文保留修复，**没有将 14 页实验模型直接替换为默认线上模型**。
+本轮验证支持“模型及调用组合能够明显改善复杂表”，也证明换模型之外需要检查原生回填和导出；
+没有依据把这些失败总结为新版模型整体退化。
+
+官方 2605 模型说明重点优化布局类别和图像任务；MinerU 4.0.12 则修正原生 CJK 标点、
+空格处理与布局阈值等完整管线行为。Standard 的 native-table 优先与 Advanced 的视觉表格
+是不同执行路径，不能按 tier 名称直接推断精度。
+[官方模型说明](https://huggingface.co/opendatalab/MinerU2.5-Pro-2605-1.2B)、
+[4.0.12 发布说明](https://github.com/opendatalab/MinerU/releases/tag/mineru-4.0.12-released)、
+[官方原生表路径](https://github.com/opendatalab/MinerU/blob/mineru-4.0.12-released/mineru/backend/analysis/pdf/tables.py)。
 
 ## 历史质量比较
 

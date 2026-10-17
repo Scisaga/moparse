@@ -1,0 +1,21 @@
+{
+  "id": "1225474693",
+  "page": 3,
+  "source_pdf": "/opt/mosaic-parse/pdf_sample/1225474693.pdf",
+  "source_pdf_SHA256": "dc7f5b3bfdc5a5c69b9cf4b2a9e0d28e2f9ee0b2464770fb8a910fea688ee775",
+  "source_total_pages": 4,
+  "source_page_SHA256": "7a0be2e543dce52d2f3f229f2fd38679c7a9c23e90f0e8443c434dda193578e9",
+  "source_page_size": [
+    1654,
+    2339
+  ],
+  "source_pdf_page_rotation": 0,
+  "status": "complete",
+  "client_seconds": 35.94771044398658,
+  "pure_generate_seconds": 35.5488190719625,
+  "generated_tokens": 971,
+  "model_calls": 6,
+  "blocks": 5,
+  "blocks_SHA256": "2cd87e55578e7a48fb2d802cbaae7484e00494b3b1d9449fb0c9c6ffa9a64903",
+  "MD_SHA256": "dd3d8ae73dde81e20159135dd74bddfbbf34298dfa8820422449577de4efd2db"
+}

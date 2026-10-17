@@ -1,0 +1,2886 @@
+{
+  "schema_name": "DoclingDocument",
+  "version": "1.10.0",
+  "name": "1225474739",
+  "origin": {
+    "mimetype": "application/pdf",
+    "binary_hash": 15472681299562646953,
+    "filename": "1225474739.pdf"
+  },
+  "furniture": {
+    "self_ref": "#/furniture",
+    "children": [],
+    "content_layer": "furniture",
+    "name": "_root_",
+    "label": "unspecified"
+  },
+  "body": {
+    "self_ref": "#/body",
+    "children": [
+      {
+        "$ref": "#/texts/0"
+      },
+      {
+        "$ref": "#/tables/0"
+      },
+      {
+        "$ref": "#/texts/1"
+      },
+      {
+        "$ref": "#/texts/2"
+      },
+      {
+        "$ref": "#/texts/3"
+      },
+      {
+        "$ref": "#/texts/4"
+      },
+      {
+        "$ref": "#/texts/5"
+      },
+      {
+        "$ref": "#/texts/6"
+      },
+      {
+        "$ref": "#/tables/1"
+      },
+      {
+        "$ref": "#/texts/7"
+      }
+    ],
+    "content_layer": "body",
+    "name": "_root_",
+    "label": "unspecified"
+  },
+  "groups": [],
+  "texts": [
+    {
+      "self_ref": "#/texts/0",
+      "parent": {
+        "$ref": "#/body"
+      },
+      "children": [],
+      "content_layer": "furniture",
+      "label": "page_header",
+      "prov": [
+        {
+          "page_no": 19,
+          "bbox": {
+            "l": 336.301025390625,
+            "t": 798.083984375,
+            "r": 538.1649780273438,
+            "b": 789.5880126953125,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            26
+          ]
+        }
+      ],
+      "orig": "广东银禧科技股份有限公司 2026 年半年度报告全文",
+      "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+    },
+    {
+      "self_ref": "#/texts/1",
+      "parent": {
+        "$ref": "#/body"
+      },
+      "children": [],
+      "content_layer": "body",
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 19,
+          "bbox": {
+            "l": 57.294002532958984,
+            "t": 734.2239990234375,
+            "r": 488.2770080566406,
+            "b": 708.9430541992188,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            57
+          ]
+        }
+      ],
+      "orig": "公司作为单一委托人委托金融机构开展资产管理，或投资安全性较低、流动性较差的高风险委托理财具体情况 □适用 不适用",
+      "text": "公司作为单一委托人委托金融机构开展资产管理，或投资安全性较低、流动性较差的高风险委托理财具体情况 □适用 不适用"
+    },
+    {
+      "self_ref": "#/texts/2",
+      "parent": {
+        "$ref": "#/body"
+      },
+      "children": [],
+      "content_layer": "body",
+      "label": "section_header",
+      "prov": [
+        {
+          "page_no": 19,
+          "bbox": {
+            "l": 61.75800323486328,
+            "t": 688.4679565429688,
+            "r": 146.61300659179688,
+            "b": 680.0079956054688,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            11
+          ]
+        }
+      ],
+      "orig": "（2） 衍生品投资情况",
+      "text": "（2） 衍生品投资情况",
+      "level": 1
+    },
+    {
+      "self_ref": "#/texts/3",
+      "parent": {
+        "$ref": "#/body"
+      },
+      "children": [],
+      "content_layer": "body",
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 19,
+          "bbox": {
+            "l": 57.42000198364258,
+            "t": 661.1289672851562,
+            "r": 122.17500305175781,
+            "b": 652.9030151367188,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            8
+          ]
+        }
+      ],
+      "orig": "适用 □不适用",
+      "text": "适用 □不适用"
+    },
+    {
+      "self_ref": "#/texts/4",
+      "parent": {
+        "$ref": "#/body"
+      },
+      "children": [],
+      "content_layer": "body",
+      "label": "section_header",
+      "prov": [
+        {
+          "page_no": 19,
+          "bbox": {
+            "l": 57.680999755859375,
+            "t": 632.583984375,
+            "r": 236.6580047607422,
+            "b": 624.0880126953125,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            21
+          ]
+        }
+      ],
+      "orig": "1） 报告期内以套期保值为目的的衍生品投资",
+      "text": "1） 报告期内以套期保值为目的的衍生品投资",
+      "level": 1
+    },
+    {
+      "self_ref": "#/texts/5",
+      "parent": {
+        "$ref": "#/body"
+      },
+      "children": [],
+      "content_layer": "body",
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 19,
+          "bbox": {
+            "l": 57.42000198364258,
+            "t": 605.178955078125,
+            "r": 122.17500305175781,
+            "b": 596.9530029296875,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            8
+          ]
+        }
+      ],
+      "orig": "适用 □不适用",
+      "text": "适用 □不适用"
+    },
+    {
+      "self_ref": "#/texts/6",
+      "parent": {
+        "$ref": "#/body"
+      },
+      "children": [],
+      "content_layer": "body",
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 19,
+          "bbox": {
+            "l": 484.7430114746094,
+            "t": 587.1939697265625,
+            "r": 528.9329833984375,
+            "b": 578.7969970703125,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            5
+          ]
+        }
+      ],
+      "orig": "单位：万元",
+      "text": "单位：万元"
+    },
+    {
+      "self_ref": "#/texts/7",
+      "parent": {
+        "$ref": "#/body"
+      },
+      "children": [],
+      "content_layer": "furniture",
+      "label": "page_footer",
+      "prov": [
+        {
+          "page_no": 19,
+          "bbox": {
+            "l": 530.5770263671875,
+            "t": 58.45500183105469,
+            "r": 538.125,
+            "b": 52.27199935913086,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            2
+          ]
+        }
+      ],
+      "orig": "19",
+      "text": "19"
+    }
+  ],
+  "pictures": [],
+  "tables": [
+    {
+      "self_ref": "#/tables/0",
+      "parent": {
+        "$ref": "#/body"
+      },
+      "children": [],
+      "content_layer": "body",
+      "label": "table",
+      "prov": [
+        {
+          "page_no": 19,
+          "bbox": {
+            "l": 50.009229213014216,
+            "t": 769.8690786877478,
+            "r": 534.0877400765712,
+            "b": 740.5685390092199,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            0
+          ]
+        }
+      ],
+      "captions": [],
+      "references": [],
+      "footnotes": [],
+      "data": {
+        "table_cells": [
+          {
+            "bbox": {
+              "l": 91.81070625782013,
+              "t": 74.02561709284782,
+              "r": 127.94248402118683,
+              "b": 85.64249208569527,
+              "coord_origin": "TOPLEFT"
+            },
+            "row_span": 1,
+            "col_span": 1,
+            "start_row_offset_idx": 0,
+            "end_row_offset_idx": 1,
+            "start_col_offset_idx": 0,
+            "end_col_offset_idx": 1,
+            "text": "产品类别 ",
+            "column_header": false,
+            "row_header": false,
+            "row_section": false,
+            "fillable": false
+          },
+          {
+            "bbox": {
+              "l": 212.8079800605774,
+              "t": 74.1770406216383,
+              "r": 247.44536900520325,
+              "b": 85.51093935966492,
+              "coord_origin": "TOPLEFT"
+            },
+            "row_span": 1,
+            "col_span": 1,
+            "start_row_offset_idx": 0,
+            "end_row_offset_idx": 1,
+            "start_col_offset_idx": 1,
+            "end_col_offset_idx": 2,
+            "text": "风险特征 ",
+            "column_header": false,
+            "row_header": false,
+            "row_section": false,
+            "fillable": false
+          },
+          {
+            "bbox": {
+              "l": 299.97812247276306,
+              "t": 74.20170983672142,
+              "r": 404.3004882335663,
+              "b": 85.6328555047512,
+              "coord_origin": "TOPLEFT"
+            },
+            "row_span": 1,
+            "col_span": 1,
+            "start_row_offset_idx": 0,
+            "end_row_offset_idx": 1,
+            "start_col_offset_idx": 2,
+            "end_col_offset_idx": 3,
+            "text": "报告期内委托理财的余额 ",
+            "column_header": false,
+            "row_header": false,
+            "row_section": false,
+            "fillable": false
+          },
+          {
+            "bbox": {
+              "l": 437.1672914028168,
+              "t": 74.11747877299786,
+              "r": 507.35668683052063,
+              "b": 85.61746549606323,
+              "coord_origin": "TOPLEFT"
+            },
+            "row_span": 1,
+            "col_span": 1,
+            "start_row_offset_idx": 0,
+            "end_row_offset_idx": 1,
+            "start_col_offset_idx": 3,
+            "end_col_offset_idx": 4,
+            "text": "逾期未收回的金额",
+            "column_header": false,
+            "row_header": false,
+            "row_section": false,
+            "fillable": false
+          },
+          {
+            "bbox": {
+              "l": 82.57246401906013,
+              "t": 89.27491354942322,
+              "r": 138.33212268352509,
+              "b": 100.84464621543884,
+              "coord_origin": "TOPLEFT"
+            },
+            "row_span": 1,
+            "col_span": 1,
+            "start_row_offset_idx": 1,
+            "end_row_offset_idx": 2,
+            "start_col_offset_idx": 0,
+            "end_col_offset_idx": 1,
+            "text": "银行理财产品 ",
+            "column_header": false,
+            "row_header": false,
+            "row_section": false,
+            "fillable": false
+          },
+          {
+            "bbox": {
+              "l": 217.35259413719177,
+              "t": 89.82027488946915,
+              "r": 244.44883108139038,
+              "b": 100.67086106538773,
+              "coord_origin": "TOPLEFT"
+            },
+            "row_span": 1,
+            "col_span": 1,
+            "start_row_offset_idx": 1,
+            "end_row_offset_idx": 2,
+            "start_col_offset_idx": 1,
+            "end_col_offset_idx": 2,
+            "text": "低风险 ",
+            "column_header": false,
+            "row_header": false,
+            "row_section": false,
+            "fillable": false
+          },
+          {
+            "bbox": {
+              "l": 346.1231505870819,
+              "t": 89.45360082387924,
+              "r": 355.5304639339447,
+              "b": 99.92129236459732,
+              "coord_origin": "TOPLEFT"
+            },
+            "row_span": 1,
+            "col_span": 1,
+            "start_row_offset_idx": 1,
+            "end_row_offset_idx": 2,
+            "start_col_offset_idx": 2,
+            "end_col_offset_idx": 3,
+            "text": "0 ",
+            "column_header": false,
+            "row_header": false,
+            "row_section": false,
+            "fillable": false
+          },
+          {
+            "bbox": {
+              "l": 469.57664155960083,
+              "t": 90.07645410299301,
+              "r": 477.187780380249,
+              "b": 99.71354669332504,
+              "coord_origin": "TOPLEFT"
+            },
+            "row_span": 1,
+            "col_span": 1,
+            "start_row_offset_idx": 1,
+            "end_row_offset_idx": 2,
+            "start_col_offset_idx": 3,
+            "end_col_offset_idx": 4,
+            "text": "0",
+            "column_header": false,
+            "row_header": false,
+            "row_section": false,
+            "fillable": false
+          }
+        ],
+        "num_rows": 2,
+        "num_cols": 4,
+        "orientation": "rot_0",
+        "grid": [
+          [
+            {
+              "bbox": {
+                "l": 91.81070625782013,
+                "t": 74.02561709284782,
+                "r": 127.94248402118683,
+                "b": 85.64249208569527,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 1,
+              "start_row_offset_idx": 0,
+              "end_row_offset_idx": 1,
+              "start_col_offset_idx": 0,
+              "end_col_offset_idx": 1,
+              "text": "产品类别 ",
+              "column_header": false,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 212.8079800605774,
+                "t": 74.1770406216383,
+                "r": 247.44536900520325,
+                "b": 85.51093935966492,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 1,
+              "start_row_offset_idx": 0,
+              "end_row_offset_idx": 1,
+              "start_col_offset_idx": 1,
+              "end_col_offset_idx": 2,
+              "text": "风险特征 ",
+              "column_header": false,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 299.97812247276306,
+                "t": 74.20170983672142,
+                "r": 404.3004882335663,
+                "b": 85.6328555047512,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 1,
+              "start_row_offset_idx": 0,
+              "end_row_offset_idx": 1,
+              "start_col_offset_idx": 2,
+              "end_col_offset_idx": 3,
+              "text": "报告期内委托理财的余额 ",
+              "column_header": false,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 437.1672914028168,
+                "t": 74.11747877299786,
+                "r": 507.35668683052063,
+                "b": 85.61746549606323,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 1,
+              "start_row_offset_idx": 0,
+              "end_row_offset_idx": 1,
+              "start_col_offset_idx": 3,
+              "end_col_offset_idx": 4,
+              "text": "逾期未收回的金额",
+              "column_header": false,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            }
+          ],
+          [
+            {
+              "bbox": {
+                "l": 82.57246401906013,
+                "t": 89.27491354942322,
+                "r": 138.33212268352509,
+                "b": 100.84464621543884,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 1,
+              "start_row_offset_idx": 1,
+              "end_row_offset_idx": 2,
+              "start_col_offset_idx": 0,
+              "end_col_offset_idx": 1,
+              "text": "银行理财产品 ",
+              "column_header": false,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 217.35259413719177,
+                "t": 89.82027488946915,
+                "r": 244.44883108139038,
+                "b": 100.67086106538773,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 1,
+              "start_row_offset_idx": 1,
+              "end_row_offset_idx": 2,
+              "start_col_offset_idx": 1,
+              "end_col_offset_idx": 2,
+              "text": "低风险 ",
+              "column_header": false,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 346.1231505870819,
+                "t": 89.45360082387924,
+                "r": 355.5304639339447,
+                "b": 99.92129236459732,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 1,
+              "start_row_offset_idx": 1,
+              "end_row_offset_idx": 2,
+              "start_col_offset_idx": 2,
+              "end_col_offset_idx": 3,
+              "text": "0 ",
+              "column_header": false,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 469.57664155960083,
+                "t": 90.07645410299301,
+                "r": 477.187780380249,
+                "b": 99.71354669332504,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 1,
+              "start_row_offset_idx": 1,
+              "end_row_offset_idx": 2,
+              "start_col_offset_idx": 3,
+              "end_col_offset_idx": 4,
+              "text": "0",
+              "column_header": false,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            }
+          ]
+        ]
+      },
+      "annotations": []
+    },
+    {
+      "self_ref": "#/tables/1",
+      "parent": {
+        "$ref": "#/body"
+      },
+      "children": [],
+      "content_layer": "body",
+      "label": "table",
+      "prov": [
+        {
+          "page_no": 19,
+          "bbox": {
+            "l": 50.12930282695266,
+            "t": 572.6485868995863,
+            "r": 534.4937603054866,
+            "b": 68.67165636071695,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            0
+          ]
+        }
+      ],
+      "captions": [],
+      "references": [],
+      "footnotes": [],
+      "data": {
+        "table_cells": [
+          {
+            "bbox": {
+              "l": 81.42862954735756,
+              "t": 297.48579466342926,
+              "r": 148.4392465353012,
+              "b": 309.84553933143616,
+              "coord_origin": "TOPLEFT"
+            },
+            "row_span": 1,
+            "col_span": 1,
+            "start_row_offset_idx": 0,
+            "end_row_offset_idx": 1,
+            "start_col_offset_idx": 0,
+            "end_col_offset_idx": 1,
+            "text": "衍生品投资类型",
+            "column_header": false,
+            "row_header": false,
+            "row_section": false,
+            "fillable": false
+          },
+          {
+            "bbox": {
+              "l": 183.40457248687744,
+              "t": 284.6503623723984,
+              "r": 204.82613611221313,
+              "b": 322.09963822364807,
+              "coord_origin": "TOPLEFT"
+            },
+            "row_span": 1,
+            "col_span": 1,
+            "start_row_offset_idx": 0,
+            "end_row_offset_idx": 1,
+            "start_col_offset_idx": 1,
+            "end_col_offset_idx": 2,
+            "text": "初始\r\n投资\r\n金额",
+            "column_header": true,
+            "row_header": false,
+            "row_section": false,
+            "fillable": false
+          },
+          {
+            "bbox": {
+              "l": 213.94794881343842,
+              "t": 291.1264101266861,
+              "r": 236.0141931772232,
+              "b": 316.411048412323,
+              "coord_origin": "TOPLEFT"
+            },
+            "row_span": 1,
+            "col_span": 1,
+            "start_row_offset_idx": 0,
+            "end_row_offset_idx": 1,
+            "start_col_offset_idx": 2,
+            "end_col_offset_idx": 3,
+            "text": "期初\r\n金额",
+            "column_header": true,
+            "row_header": false,
+            "row_section": false,
+            "fillable": false
+          },
+          {
+            "bbox": {
+              "l": 248.58536660671234,
+              "t": 276.2450869679451,
+              "r": 268.1283928155899,
+              "b": 327.68158715963364,
+              "coord_origin": "TOPLEFT"
+            },
+            "row_span": 1,
+            "col_span": 1,
+            "start_row_offset_idx": 0,
+            "end_row_offset_idx": 1,
+            "start_col_offset_idx": 3,
+            "end_col_offset_idx": 4,
+            "text": "本期\r\n公允\r\n价值\r\n变动\r\n损益",
+            "column_header": true,
+            "row_header": false,
+            "row_section": false,
+            "fillable": false
+          },
+          {
+            "bbox": {
+              "l": 279.7034945487976,
+              "t": 272.7458363175392,
+              "r": 311.33251762390137,
+              "b": 331.27471512556076,
+              "coord_origin": "TOPLEFT"
+            },
+            "row_span": 1,
+            "col_span": 1,
+            "start_row_offset_idx": 0,
+            "end_row_offset_idx": 1,
+            "start_col_offset_idx": 4,
+            "end_col_offset_idx": 5,
+            "text": "计入权\r\n益的累\r\n计公允\r\n价值变\r\n动",
+            "column_header": true,
+            "row_header": false,
+            "row_section": false,
+            "fillable": false
+          },
+          {
+            "bbox": {
+              "l": 324.7544376850128,
+              "t": 287.44520646333694,
+              "r": 363.8939754962921,
+              "b": 319.956460416317,
+              "coord_origin": "TOPLEFT"
+            },
+            "row_span": 1,
+            "col_span": 1,
+            "start_row_offset_idx": 0,
+            "end_row_offset_idx": 1,
+            "start_col_offset_idx": 5,
+            "end_col_offset_idx": 6,
+            "text": "报告期内\r\n购入金额",
+            "column_header": true,
+            "row_header": false,
+            "row_section": false,
+            "fillable": false
+          },
+          {
+            "bbox": {
+              "l": 378.1117432117462,
+              "t": 290.12534749507904,
+              "r": 418.34545254707336,
+              "b": 317.00297117233276,
+              "coord_origin": "TOPLEFT"
+            },
+            "row_span": 1,
+            "col_span": 1,
+            "start_row_offset_idx": 0,
+            "end_row_offset_idx": 1,
+            "start_col_offset_idx": 6,
+            "end_col_offset_idx": 7,
+            "text": "报告期内\r\n售出金额 ",
+            "column_header": true,
+            "row_header": false,
+            "row_section": false,
+            "fillable": false
+          },
+          {
+            "bbox": {
+              "l": 432.9645049571991,
+              "t": 297.79773584008217,
+              "r": 471.7980740070343,
+              "b": 309.8237147331238,
+              "coord_origin": "TOPLEFT"
+            },
+            "row_span": 1,
+            "col_span": 1,
+            "start_row_offset_idx": 0,
+            "end_row_offset_idx": 1,
+            "start_col_offset_idx": 7,
+            "end_col_offset_idx": 8,
+            "text": "期末金额",
+            "column_header": true,
+            "row_header": false,
+            "row_section": false,
+            "fillable": false
+          },
+          {
+            "bbox": {
+              "l": 486.49265217781067,
+              "t": 272.77271339297295,
+              "r": 525.1610338687897,
+              "b": 329.64421260356903,
+              "coord_origin": "TOPLEFT"
+            },
+            "row_span": 1,
+            "col_span": 1,
+            "start_row_offset_idx": 0,
+            "end_row_offset_idx": 1,
+            "start_col_offset_idx": 8,
+            "end_col_offset_idx": 9,
+            "text": "期末投资\r\n金额占公\r\n司报告期\r\n末净资产\r\n比例",
+            "column_header": true,
+            "row_header": false,
+            "row_section": false,
+            "fillable": false
+          },
+          {
+            "bbox": {
+              "l": 54.63761310279369,
+              "t": 335.45525598526,
+              "r": 96.12502157688141,
+              "b": 348.4053988456726,
+              "coord_origin": "TOPLEFT"
+            },
+            "row_span": 1,
+            "col_span": 1,
+            "start_row_offset_idx": 1,
+            "end_row_offset_idx": 2,
+            "start_col_offset_idx": 0,
+            "end_col_offset_idx": 1,
+            "text": "远期结售汇 ",
+            "column_header": false,
+            "row_header": true,
+            "row_section": false,
+            "fillable": false
+          },
+          {
+            "bbox": {
+              "l": 196.9669998884201,
+              "t": 335.6315050125122,
+              "r": 203.85764372348785,
+              "b": 347.4465584754944,
+              "coord_origin": "TOPLEFT"
+            },
+            "row_span": 1,
+            "col_span": 1,
+            "start_row_offset_idx": 1,
+            "end_row_offset_idx": 2,
+            "start_col_offset_idx": 1,
+            "end_col_offset_idx": 2,
+            "text": "0 ",
+            "column_header": false,
+            "row_header": false,
+            "row_section": false,
+            "fillable": false
+          },
+          {
+            "bbox": {
+              "l": 226.7630375623703,
+              "t": 335.28943860530853,
+              "r": 235.23623168468475,
+              "b": 347.3504055738449,
+              "coord_origin": "TOPLEFT"
+            },
+            "row_span": 1,
+            "col_span": 1,
+            "start_row_offset_idx": 1,
+            "end_row_offset_idx": 2,
+            "start_col_offset_idx": 2,
+            "end_col_offset_idx": 3,
+            "text": "0 ",
+            "column_header": false,
+            "row_header": false,
+            "row_section": false,
+            "fillable": false
+          },
+          {
+            "bbox": {
+              "l": 254.50137329101562,
+              "t": 335.5807662010193,
+              "r": 269.15146684646606,
+              "b": 347.3756022453308,
+              "coord_origin": "TOPLEFT"
+            },
+            "row_span": 1,
+            "col_span": 1,
+            "start_row_offset_idx": 1,
+            "end_row_offset_idx": 2,
+            "start_col_offset_idx": 3,
+            "end_col_offset_idx": 4,
+            "text": "2.06 ",
+            "column_header": false,
+            "row_header": false,
+            "row_section": false,
+            "fillable": false
+          },
+          {
+            "bbox": {
+              "l": 305.9952292442322,
+              "t": 335.221373796463,
+              "r": 313.87316036224365,
+              "b": 347.23576259613037,
+              "coord_origin": "TOPLEFT"
+            },
+            "row_span": 1,
+            "col_span": 1,
+            "start_row_offset_idx": 1,
+            "end_row_offset_idx": 2,
+            "start_col_offset_idx": 4,
+            "end_col_offset_idx": 5,
+            "text": "0 ",
+            "column_header": false,
+            "row_header": false,
+            "row_section": false,
+            "fillable": false
+          },
+          {
+            "bbox": {
+              "l": 328.7837860584259,
+              "t": 335.4290829896927,
+              "r": 368.5156443119049,
+              "b": 347.37634575366974,
+              "coord_origin": "TOPLEFT"
+            },
+            "row_span": 1,
+            "col_span": 1,
+            "start_row_offset_idx": 1,
+            "end_row_offset_idx": 2,
+            "start_col_offset_idx": 5,
+            "end_col_offset_idx": 6,
+            "text": "9,671.48 ",
+            "column_header": false,
+            "row_header": false,
+            "row_section": false,
+            "fillable": false
+          },
+          {
+            "bbox": {
+              "l": 381.7414801120758,
+              "t": 335.02481722831726,
+              "r": 420.4110734462738,
+              "b": 347.31856989860535,
+              "coord_origin": "TOPLEFT"
+            },
+            "row_span": 1,
+            "col_span": 1,
+            "start_row_offset_idx": 1,
+            "end_row_offset_idx": 2,
+            "start_col_offset_idx": 6,
+            "end_col_offset_idx": 7,
+            "text": "3,064.91 ",
+            "column_header": false,
+            "row_header": false,
+            "row_section": false,
+            "fillable": false
+          },
+          {
+            "bbox": {
+              "l": 432.14433789253235,
+              "t": 335.0427215099335,
+              "r": 473.67848658561707,
+              "b": 347.1375744342804,
+              "coord_origin": "TOPLEFT"
+            },
+            "row_span": 1,
+            "col_span": 1,
+            "start_row_offset_idx": 1,
+            "end_row_offset_idx": 2,
+            "start_col_offset_idx": 7,
+            "end_col_offset_idx": 8,
+            "text": "6,606.571",
+            "column_header": false,
+            "row_header": false,
+            "row_section": false,
+            "fillable": false
+          },
+          {
+            "bbox": {
+              "l": 503.645192861557,
+              "t": 334.92905485630035,
+              "r": 529.6656925678253,
+              "b": 346.63833487033844,
+              "coord_origin": "TOPLEFT"
+            },
+            "row_span": 1,
+            "col_span": 1,
+            "start_row_offset_idx": 1,
+            "end_row_offset_idx": 2,
+            "start_col_offset_idx": 8,
+            "end_col_offset_idx": 9,
+            "text": "4.35%",
+            "column_header": false,
+            "row_header": false,
+            "row_section": false,
+            "fillable": false
+          },
+          {
+            "bbox": {
+              "l": 54.4757884144783,
+              "t": 350.32864463329315,
+              "r": 74.777023807168,
+              "b": 363.04383885860443,
+              "coord_origin": "TOPLEFT"
+            },
+            "row_span": 1,
+            "col_span": 1,
+            "start_row_offset_idx": 2,
+            "end_row_offset_idx": 3,
+            "start_col_offset_idx": 0,
+            "end_col_offset_idx": 1,
+            "text": "合计 ",
+            "column_header": false,
+            "row_header": true,
+            "row_section": false,
+            "fillable": false
+          },
+          {
+            "bbox": {
+              "l": 195.71956992149353,
+              "t": 348.75781428813934,
+              "r": 203.5289855003357,
+              "b": 360.7675768136978,
+              "coord_origin": "TOPLEFT"
+            },
+            "row_span": 1,
+            "col_span": 1,
+            "start_row_offset_idx": 2,
+            "end_row_offset_idx": 3,
+            "start_col_offset_idx": 1,
+            "end_col_offset_idx": 2,
+            "text": "0 ",
+            "column_header": false,
+            "row_header": false,
+            "row_section": false,
+            "fillable": false
+          },
+          {
+            "bbox": {
+              "l": 226.30210828781128,
+              "t": 348.89934372901917,
+              "r": 235.80929565429688,
+              "b": 360.98109889030457,
+              "coord_origin": "TOPLEFT"
+            },
+            "row_span": 1,
+            "col_span": 1,
+            "start_row_offset_idx": 2,
+            "end_row_offset_idx": 3,
+            "start_col_offset_idx": 2,
+            "end_col_offset_idx": 3,
+            "text": "0 ",
+            "column_header": false,
+            "row_header": false,
+            "row_section": false,
+            "fillable": false
+          },
+          {
+            "bbox": {
+              "l": 252.83455610275269,
+              "t": 349.77195966243744,
+              "r": 270.01952266693115,
+              "b": 361.7813917398453,
+              "coord_origin": "TOPLEFT"
+            },
+            "row_span": 1,
+            "col_span": 1,
+            "start_row_offset_idx": 2,
+            "end_row_offset_idx": 3,
+            "start_col_offset_idx": 3,
+            "end_col_offset_idx": 4,
+            "text": "2.06 ",
+            "column_header": false,
+            "row_header": false,
+            "row_section": false,
+            "fillable": false
+          },
+          {
+            "bbox": {
+              "l": 305.3925232887268,
+              "t": 349.4979956150055,
+              "r": 314.1283555030823,
+              "b": 361.6486191749573,
+              "coord_origin": "TOPLEFT"
+            },
+            "row_span": 1,
+            "col_span": 1,
+            "start_row_offset_idx": 2,
+            "end_row_offset_idx": 3,
+            "start_col_offset_idx": 4,
+            "end_col_offset_idx": 5,
+            "text": "0 ",
+            "column_header": false,
+            "row_header": false,
+            "row_section": false,
+            "fillable": false
+          },
+          {
+            "bbox": {
+              "l": 327.744225025177,
+              "t": 349.8445531129837,
+              "r": 369.2552947998047,
+              "b": 361.75835049152374,
+              "coord_origin": "TOPLEFT"
+            },
+            "row_span": 1,
+            "col_span": 1,
+            "start_row_offset_idx": 2,
+            "end_row_offset_idx": 3,
+            "start_col_offset_idx": 5,
+            "end_col_offset_idx": 6,
+            "text": "9,671.48 ",
+            "column_header": false,
+            "row_header": false,
+            "row_section": false,
+            "fillable": false
+          },
+          {
+            "bbox": {
+              "l": 381.6422984600067,
+              "t": 349.43945372104645,
+              "r": 420.37795519828796,
+              "b": 361.7508102655411,
+              "coord_origin": "TOPLEFT"
+            },
+            "row_span": 1,
+            "col_span": 1,
+            "start_row_offset_idx": 2,
+            "end_row_offset_idx": 3,
+            "start_col_offset_idx": 6,
+            "end_col_offset_idx": 7,
+            "text": "3,064.91 ",
+            "column_header": false,
+            "row_header": false,
+            "row_section": false,
+            "fillable": false
+          },
+          {
+            "bbox": {
+              "l": 433.41930389404297,
+              "t": 349.75932002067566,
+              "r": 474.59526777267456,
+              "b": 361.84308791160583,
+              "coord_origin": "TOPLEFT"
+            },
+            "row_span": 1,
+            "col_span": 1,
+            "start_row_offset_idx": 2,
+            "end_row_offset_idx": 3,
+            "start_col_offset_idx": 7,
+            "end_col_offset_idx": 8,
+            "text": "6,606.57 ",
+            "column_header": false,
+            "row_header": false,
+            "row_section": false,
+            "fillable": false
+          },
+          {
+            "bbox": {
+              "l": 503.3228669166565,
+              "t": 349.590513586998,
+              "r": 530.1893243789673,
+              "b": 361.720138669014,
+              "coord_origin": "TOPLEFT"
+            },
+            "row_span": 1,
+            "col_span": 1,
+            "start_row_offset_idx": 2,
+            "end_row_offset_idx": 3,
+            "start_col_offset_idx": 8,
+            "end_col_offset_idx": 9,
+            "text": "4.35%",
+            "column_header": false,
+            "row_header": false,
+            "row_section": false,
+            "fillable": false
+          },
+          {
+            "bbox": {
+              "l": 54.43945714831352,
+              "t": 366.28106665611267,
+              "r": 174.9765409231186,
+              "b": 412.25610756874084,
+              "coord_origin": "TOPLEFT"
+            },
+            "row_span": 1,
+            "col_span": 1,
+            "start_row_offset_idx": 3,
+            "end_row_offset_idx": 4,
+            "start_col_offset_idx": 0,
+            "end_col_offset_idx": 1,
+            "text": "报告期内套期保值业务的会计\r\n政策、会计核算具体原则，以\r\n及与上一报告期相比是否发生\r\n重大变化的说明",
+            "column_header": false,
+            "row_header": true,
+            "row_section": false,
+            "fillable": false
+          },
+          {
+            "bbox": {
+              "l": 184.45962524414062,
+              "t": 369.2396891117096,
+              "r": 532.5886087417603,
+              "b": 402.23954820632935,
+              "coord_origin": "TOPLEFT"
+            },
+            "row_span": 1,
+            "col_span": 8,
+            "start_row_offset_idx": 3,
+            "end_row_offset_idx": 4,
+            "start_col_offset_idx": 1,
+            "end_col_offset_idx": 9,
+            "text": "否",
+            "column_header": false,
+            "row_header": false,
+            "row_section": false,
+            "fillable": false
+          },
+          {
+            "bbox": {
+              "l": 54.70176348090172,
+              "t": 428.7961940765381,
+              "r": 166.24849784374237,
+              "b": 441.8385920524597,
+              "coord_origin": "TOPLEFT"
+            },
+            "row_span": 1,
+            "col_span": 1,
+            "start_row_offset_idx": 4,
+            "end_row_offset_idx": 5,
+            "start_col_offset_idx": 0,
+            "end_col_offset_idx": 1,
+            "text": "报告期实际损益情况的说明",
+            "column_header": false,
+            "row_header": true,
+            "row_section": false,
+            "fillable": false
+          },
+          {
+            "bbox": {
+              "l": 188.81871366500854,
+              "t": 416.38984870910645,
+              "r": 531.1912379264832,
+              "b": 444.09936809539795,
+              "coord_origin": "TOPLEFT"
+            },
+            "row_span": 1,
+            "col_span": 8,
+            "start_row_offset_idx": 4,
+            "end_row_offset_idx": 5,
+            "start_col_offset_idx": 1,
+            "end_col_offset_idx": 9,
+            "text": "为规避和防范外汇汇率波动给公司带来的经营风险，公司按照一定比例，针对外汇开展\r\n远期结售汇业务，业务规模均在公司董事会审议的额度范围内。报告期内，公司远期结\r\n售汇实际损益金额为061 万元",
+            "column_header": false,
+            "row_header": false,
+            "row_section": false,
+            "fillable": false
+          },
+          {
+            "bbox": {
+              "l": 54.218851536512375,
+              "t": 454.1559717655182,
+              "r": 136.31268846988678,
+              "b": 467.0310127735138,
+              "coord_origin": "TOPLEFT"
+            },
+            "row_span": 1,
+            "col_span": 1,
+            "start_row_offset_idx": 5,
+            "end_row_offset_idx": 6,
+            "start_col_offset_idx": 0,
+            "end_col_offset_idx": 1,
+            "text": "套期保值效果的说明 ",
+            "column_header": false,
+            "row_header": true,
+            "row_section": false,
+            "fillable": false
+          },
+          {
+            "bbox": {
+              "l": 185.1405110359192,
+              "t": 453.3899779319763,
+              "r": 532.5303921699524,
+              "b": 465.4454174041748,
+              "coord_origin": "TOPLEFT"
+            },
+            "row_span": 1,
+            "col_span": 8,
+            "start_row_offset_idx": 5,
+            "end_row_offset_idx": 6,
+            "start_col_offset_idx": 1,
+            "end_col_offset_idx": 9,
+            "text": "公司从事套期保值业务，可抵消外汇汇率波动的风险，实现预期风险管理目标。",
+            "column_header": false,
+            "row_header": false,
+            "row_section": false,
+            "fillable": false
+          },
+          {
+            "bbox": {
+              "l": 54.19937148690224,
+              "t": 470.70535588264465,
+              "r": 138.75619781017303,
+              "b": 483.6152741909027,
+              "coord_origin": "TOPLEFT"
+            },
+            "row_span": 1,
+            "col_span": 1,
+            "start_row_offset_idx": 6,
+            "end_row_offset_idx": 7,
+            "start_col_offset_idx": 0,
+            "end_col_offset_idx": 1,
+            "text": "衍生品投资资金来源 ",
+            "column_header": false,
+            "row_header": true,
+            "row_section": false,
+            "fillable": false
+          },
+          {
+            "bbox": {
+              "l": 182.84932255744934,
+              "t": 470.3891019821167,
+              "r": 532.4250657558441,
+              "b": 482.8962640762329,
+              "coord_origin": "TOPLEFT"
+            },
+            "row_span": 1,
+            "col_span": 8,
+            "start_row_offset_idx": 6,
+            "end_row_offset_idx": 7,
+            "start_col_offset_idx": 1,
+            "end_col_offset_idx": 9,
+            "text": "自有资金",
+            "column_header": false,
+            "row_header": false,
+            "row_section": false,
+            "fillable": false
+          },
+          {
+            "bbox": {
+              "l": 54.92738515138626,
+              "t": 596.00608253479,
+              "r": 174.40431356430054,
+              "b": 661.0667572021484,
+              "coord_origin": "TOPLEFT"
+            },
+            "row_span": 1,
+            "col_span": 1,
+            "start_row_offset_idx": 7,
+            "end_row_offset_idx": 8,
+            "start_col_offset_idx": 0,
+            "end_col_offset_idx": 1,
+            "text": "报告期衍生品持仓的风险分析\r\n及控制措施说明（包括但不限\r\n于市场风险、流动性风险、信\r\n用风险、操作风险、法律风险\r\n等）",
+            "column_header": false,
+            "row_header": true,
+            "row_section": false,
+            "fillable": false
+          },
+          {
+            "bbox": {
+              "l": 180.16456639766693,
+              "t": 484.82415866851807,
+              "r": 531.1410412788391,
+              "b": 720.3673601150513,
+              "coord_origin": "TOPLEFT"
+            },
+            "row_span": 1,
+            "col_span": 8,
+            "start_row_offset_idx": 7,
+            "end_row_offset_idx": 8,
+            "start_col_offset_idx": 1,
+            "end_col_offset_idx": 9,
+            "text": "远期结售汇的风险分析：\r\n（1）汇率、利率波动风险：在外汇汇率波动较大时，公司判断汇率大幅波动方向与外\r\n汇套期保值合约方向不一致时，将造成汇兑损失；若汇率在未来发生波动时，与外汇套\r\n期保值合约偏差较大也将造成汇兑损失；\r\n（2）内部控制风险：外汇套期保值业务专业性较强，复杂程度较高，可能会由于内控\r\n制度不完善而造成风险；\r\n（3）交易违约风险：外汇套期保值交易对手出现违约，不能按照约定支付公司套期保\r\n值盈利从而无法对冲公司实际的汇兑损失，将造成公司损失；\r\n（4）客户违约风险：客户应收账款发生逾期、客户调整订单等情况将使货款实际回款\r\n情况与预期回款情况不一致，可能使实际发生的现金流与已操作的外汇套 期保值业务\r\n期限或数额无法完全匹配，从而导致公司损失。\r\n远期结售汇的风险控制措施：\r\n（1）公司制定了《广东银禧科技股份有限公司外汇套期保值业务管理制度》，（以下简\r\n称“《外汇套期保值业务管理制度》”）对外汇套期保值业务操作规范、审批权限及内\r\n部操作流程、信息隔离措施、内部风险报告制度及风险处理程序、信息披露等做出了明\r\n确规定；\r\n（2）为避免汇率大幅波动风险，公司会加强对汇率的研究分析，实时关注国际市场环\r\n境变化，适时调整经营策略，最大限度的避免汇兑损失；\r\n（3）为避免内部控制风险公司财务部负责统一管理公司外汇套期保值业务所有的",
+            "column_header": false,
+            "row_header": false,
+            "row_section": false,
+            "fillable": false
+          }
+        ],
+        "num_rows": 8,
+        "num_cols": 9,
+        "orientation": "rot_0",
+        "grid": [
+          [
+            {
+              "bbox": {
+                "l": 81.42862954735756,
+                "t": 297.48579466342926,
+                "r": 148.4392465353012,
+                "b": 309.84553933143616,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 1,
+              "start_row_offset_idx": 0,
+              "end_row_offset_idx": 1,
+              "start_col_offset_idx": 0,
+              "end_col_offset_idx": 1,
+              "text": "衍生品投资类型",
+              "column_header": false,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 183.40457248687744,
+                "t": 284.6503623723984,
+                "r": 204.82613611221313,
+                "b": 322.09963822364807,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 1,
+              "start_row_offset_idx": 0,
+              "end_row_offset_idx": 1,
+              "start_col_offset_idx": 1,
+              "end_col_offset_idx": 2,
+              "text": "初始\r\n投资\r\n金额",
+              "column_header": true,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 213.94794881343842,
+                "t": 291.1264101266861,
+                "r": 236.0141931772232,
+                "b": 316.411048412323,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 1,
+              "start_row_offset_idx": 0,
+              "end_row_offset_idx": 1,
+              "start_col_offset_idx": 2,
+              "end_col_offset_idx": 3,
+              "text": "期初\r\n金额",
+              "column_header": true,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 248.58536660671234,
+                "t": 276.2450869679451,
+                "r": 268.1283928155899,
+                "b": 327.68158715963364,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 1,
+              "start_row_offset_idx": 0,
+              "end_row_offset_idx": 1,
+              "start_col_offset_idx": 3,
+              "end_col_offset_idx": 4,
+              "text": "本期\r\n公允\r\n价值\r\n变动\r\n损益",
+              "column_header": true,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 279.7034945487976,
+                "t": 272.7458363175392,
+                "r": 311.33251762390137,
+                "b": 331.27471512556076,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 1,
+              "start_row_offset_idx": 0,
+              "end_row_offset_idx": 1,
+              "start_col_offset_idx": 4,
+              "end_col_offset_idx": 5,
+              "text": "计入权\r\n益的累\r\n计公允\r\n价值变\r\n动",
+              "column_header": true,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 324.7544376850128,
+                "t": 287.44520646333694,
+                "r": 363.8939754962921,
+                "b": 319.956460416317,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 1,
+              "start_row_offset_idx": 0,
+              "end_row_offset_idx": 1,
+              "start_col_offset_idx": 5,
+              "end_col_offset_idx": 6,
+              "text": "报告期内\r\n购入金额",
+              "column_header": true,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 378.1117432117462,
+                "t": 290.12534749507904,
+                "r": 418.34545254707336,
+                "b": 317.00297117233276,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 1,
+              "start_row_offset_idx": 0,
+              "end_row_offset_idx": 1,
+              "start_col_offset_idx": 6,
+              "end_col_offset_idx": 7,
+              "text": "报告期内\r\n售出金额 ",
+              "column_header": true,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 432.9645049571991,
+                "t": 297.79773584008217,
+                "r": 471.7980740070343,
+                "b": 309.8237147331238,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 1,
+              "start_row_offset_idx": 0,
+              "end_row_offset_idx": 1,
+              "start_col_offset_idx": 7,
+              "end_col_offset_idx": 8,
+              "text": "期末金额",
+              "column_header": true,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 486.49265217781067,
+                "t": 272.77271339297295,
+                "r": 525.1610338687897,
+                "b": 329.64421260356903,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 1,
+              "start_row_offset_idx": 0,
+              "end_row_offset_idx": 1,
+              "start_col_offset_idx": 8,
+              "end_col_offset_idx": 9,
+              "text": "期末投资\r\n金额占公\r\n司报告期\r\n末净资产\r\n比例",
+              "column_header": true,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            }
+          ],
+          [
+            {
+              "bbox": {
+                "l": 54.63761310279369,
+                "t": 335.45525598526,
+                "r": 96.12502157688141,
+                "b": 348.4053988456726,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 1,
+              "start_row_offset_idx": 1,
+              "end_row_offset_idx": 2,
+              "start_col_offset_idx": 0,
+              "end_col_offset_idx": 1,
+              "text": "远期结售汇 ",
+              "column_header": false,
+              "row_header": true,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 196.9669998884201,
+                "t": 335.6315050125122,
+                "r": 203.85764372348785,
+                "b": 347.4465584754944,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 1,
+              "start_row_offset_idx": 1,
+              "end_row_offset_idx": 2,
+              "start_col_offset_idx": 1,
+              "end_col_offset_idx": 2,
+              "text": "0 ",
+              "column_header": false,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 226.7630375623703,
+                "t": 335.28943860530853,
+                "r": 235.23623168468475,
+                "b": 347.3504055738449,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 1,
+              "start_row_offset_idx": 1,
+              "end_row_offset_idx": 2,
+              "start_col_offset_idx": 2,
+              "end_col_offset_idx": 3,
+              "text": "0 ",
+              "column_header": false,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 254.50137329101562,
+                "t": 335.5807662010193,
+                "r": 269.15146684646606,
+                "b": 347.3756022453308,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 1,
+              "start_row_offset_idx": 1,
+              "end_row_offset_idx": 2,
+              "start_col_offset_idx": 3,
+              "end_col_offset_idx": 4,
+              "text": "2.06 ",
+              "column_header": false,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 305.9952292442322,
+                "t": 335.221373796463,
+                "r": 313.87316036224365,
+                "b": 347.23576259613037,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 1,
+              "start_row_offset_idx": 1,
+              "end_row_offset_idx": 2,
+              "start_col_offset_idx": 4,
+              "end_col_offset_idx": 5,
+              "text": "0 ",
+              "column_header": false,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 328.7837860584259,
+                "t": 335.4290829896927,
+                "r": 368.5156443119049,
+                "b": 347.37634575366974,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 1,
+              "start_row_offset_idx": 1,
+              "end_row_offset_idx": 2,
+              "start_col_offset_idx": 5,
+              "end_col_offset_idx": 6,
+              "text": "9,671.48 ",
+              "column_header": false,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 381.7414801120758,
+                "t": 335.02481722831726,
+                "r": 420.4110734462738,
+                "b": 347.31856989860535,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 1,
+              "start_row_offset_idx": 1,
+              "end_row_offset_idx": 2,
+              "start_col_offset_idx": 6,
+              "end_col_offset_idx": 7,
+              "text": "3,064.91 ",
+              "column_header": false,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 432.14433789253235,
+                "t": 335.0427215099335,
+                "r": 473.67848658561707,
+                "b": 347.1375744342804,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 1,
+              "start_row_offset_idx": 1,
+              "end_row_offset_idx": 2,
+              "start_col_offset_idx": 7,
+              "end_col_offset_idx": 8,
+              "text": "6,606.571",
+              "column_header": false,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 503.645192861557,
+                "t": 334.92905485630035,
+                "r": 529.6656925678253,
+                "b": 346.63833487033844,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 1,
+              "start_row_offset_idx": 1,
+              "end_row_offset_idx": 2,
+              "start_col_offset_idx": 8,
+              "end_col_offset_idx": 9,
+              "text": "4.35%",
+              "column_header": false,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            }
+          ],
+          [
+            {
+              "bbox": {
+                "l": 54.4757884144783,
+                "t": 350.32864463329315,
+                "r": 74.777023807168,
+                "b": 363.04383885860443,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 1,
+              "start_row_offset_idx": 2,
+              "end_row_offset_idx": 3,
+              "start_col_offset_idx": 0,
+              "end_col_offset_idx": 1,
+              "text": "合计 ",
+              "column_header": false,
+              "row_header": true,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 195.71956992149353,
+                "t": 348.75781428813934,
+                "r": 203.5289855003357,
+                "b": 360.7675768136978,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 1,
+              "start_row_offset_idx": 2,
+              "end_row_offset_idx": 3,
+              "start_col_offset_idx": 1,
+              "end_col_offset_idx": 2,
+              "text": "0 ",
+              "column_header": false,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 226.30210828781128,
+                "t": 348.89934372901917,
+                "r": 235.80929565429688,
+                "b": 360.98109889030457,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 1,
+              "start_row_offset_idx": 2,
+              "end_row_offset_idx": 3,
+              "start_col_offset_idx": 2,
+              "end_col_offset_idx": 3,
+              "text": "0 ",
+              "column_header": false,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 252.83455610275269,
+                "t": 349.77195966243744,
+                "r": 270.01952266693115,
+                "b": 361.7813917398453,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 1,
+              "start_row_offset_idx": 2,
+              "end_row_offset_idx": 3,
+              "start_col_offset_idx": 3,
+              "end_col_offset_idx": 4,
+              "text": "2.06 ",
+              "column_header": false,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 305.3925232887268,
+                "t": 349.4979956150055,
+                "r": 314.1283555030823,
+                "b": 361.6486191749573,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 1,
+              "start_row_offset_idx": 2,
+              "end_row_offset_idx": 3,
+              "start_col_offset_idx": 4,
+              "end_col_offset_idx": 5,
+              "text": "0 ",
+              "column_header": false,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 327.744225025177,
+                "t": 349.8445531129837,
+                "r": 369.2552947998047,
+                "b": 361.75835049152374,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 1,
+              "start_row_offset_idx": 2,
+              "end_row_offset_idx": 3,
+              "start_col_offset_idx": 5,
+              "end_col_offset_idx": 6,
+              "text": "9,671.48 ",
+              "column_header": false,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 381.6422984600067,
+                "t": 349.43945372104645,
+                "r": 420.37795519828796,
+                "b": 361.7508102655411,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 1,
+              "start_row_offset_idx": 2,
+              "end_row_offset_idx": 3,
+              "start_col_offset_idx": 6,
+              "end_col_offset_idx": 7,
+              "text": "3,064.91 ",
+              "column_header": false,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 433.41930389404297,
+                "t": 349.75932002067566,
+                "r": 474.59526777267456,
+                "b": 361.84308791160583,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 1,
+              "start_row_offset_idx": 2,
+              "end_row_offset_idx": 3,
+              "start_col_offset_idx": 7,
+              "end_col_offset_idx": 8,
+              "text": "6,606.57 ",
+              "column_header": false,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 503.3228669166565,
+                "t": 349.590513586998,
+                "r": 530.1893243789673,
+                "b": 361.720138669014,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 1,
+              "start_row_offset_idx": 2,
+              "end_row_offset_idx": 3,
+              "start_col_offset_idx": 8,
+              "end_col_offset_idx": 9,
+              "text": "4.35%",
+              "column_header": false,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            }
+          ],
+          [
+            {
+              "bbox": {
+                "l": 54.43945714831352,
+                "t": 366.28106665611267,
+                "r": 174.9765409231186,
+                "b": 412.25610756874084,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 1,
+              "start_row_offset_idx": 3,
+              "end_row_offset_idx": 4,
+              "start_col_offset_idx": 0,
+              "end_col_offset_idx": 1,
+              "text": "报告期内套期保值业务的会计\r\n政策、会计核算具体原则，以\r\n及与上一报告期相比是否发生\r\n重大变化的说明",
+              "column_header": false,
+              "row_header": true,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 184.45962524414062,
+                "t": 369.2396891117096,
+                "r": 532.5886087417603,
+                "b": 402.23954820632935,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 8,
+              "start_row_offset_idx": 3,
+              "end_row_offset_idx": 4,
+              "start_col_offset_idx": 1,
+              "end_col_offset_idx": 9,
+              "text": "否",
+              "column_header": false,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 184.45962524414062,
+                "t": 369.2396891117096,
+                "r": 532.5886087417603,
+                "b": 402.23954820632935,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 8,
+              "start_row_offset_idx": 3,
+              "end_row_offset_idx": 4,
+              "start_col_offset_idx": 1,
+              "end_col_offset_idx": 9,
+              "text": "否",
+              "column_header": false,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 184.45962524414062,
+                "t": 369.2396891117096,
+                "r": 532.5886087417603,
+                "b": 402.23954820632935,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 8,
+              "start_row_offset_idx": 3,
+              "end_row_offset_idx": 4,
+              "start_col_offset_idx": 1,
+              "end_col_offset_idx": 9,
+              "text": "否",
+              "column_header": false,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 184.45962524414062,
+                "t": 369.2396891117096,
+                "r": 532.5886087417603,
+                "b": 402.23954820632935,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 8,
+              "start_row_offset_idx": 3,
+              "end_row_offset_idx": 4,
+              "start_col_offset_idx": 1,
+              "end_col_offset_idx": 9,
+              "text": "否",
+              "column_header": false,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 184.45962524414062,
+                "t": 369.2396891117096,
+                "r": 532.5886087417603,
+                "b": 402.23954820632935,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 8,
+              "start_row_offset_idx": 3,
+              "end_row_offset_idx": 4,
+              "start_col_offset_idx": 1,
+              "end_col_offset_idx": 9,
+              "text": "否",
+              "column_header": false,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 184.45962524414062,
+                "t": 369.2396891117096,
+                "r": 532.5886087417603,
+                "b": 402.23954820632935,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 8,
+              "start_row_offset_idx": 3,
+              "end_row_offset_idx": 4,
+              "start_col_offset_idx": 1,
+              "end_col_offset_idx": 9,
+              "text": "否",
+              "column_header": false,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 184.45962524414062,
+                "t": 369.2396891117096,
+                "r": 532.5886087417603,
+                "b": 402.23954820632935,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 8,
+              "start_row_offset_idx": 3,
+              "end_row_offset_idx": 4,
+              "start_col_offset_idx": 1,
+              "end_col_offset_idx": 9,
+              "text": "否",
+              "column_header": false,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 184.45962524414062,
+                "t": 369.2396891117096,
+                "r": 532.5886087417603,
+                "b": 402.23954820632935,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 8,
+              "start_row_offset_idx": 3,
+              "end_row_offset_idx": 4,
+              "start_col_offset_idx": 1,
+              "end_col_offset_idx": 9,
+              "text": "否",
+              "column_header": false,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            }
+          ],
+          [
+            {
+              "bbox": {
+                "l": 54.70176348090172,
+                "t": 428.7961940765381,
+                "r": 166.24849784374237,
+                "b": 441.8385920524597,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 1,
+              "start_row_offset_idx": 4,
+              "end_row_offset_idx": 5,
+              "start_col_offset_idx": 0,
+              "end_col_offset_idx": 1,
+              "text": "报告期实际损益情况的说明",
+              "column_header": false,
+              "row_header": true,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 188.81871366500854,
+                "t": 416.38984870910645,
+                "r": 531.1912379264832,
+                "b": 444.09936809539795,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 8,
+              "start_row_offset_idx": 4,
+              "end_row_offset_idx": 5,
+              "start_col_offset_idx": 1,
+              "end_col_offset_idx": 9,
+              "text": "为规避和防范外汇汇率波动给公司带来的经营风险，公司按照一定比例，针对外汇开展\r\n远期结售汇业务，业务规模均在公司董事会审议的额度范围内。报告期内，公司远期结\r\n售汇实际损益金额为061 万元",
+              "column_header": false,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 188.81871366500854,
+                "t": 416.38984870910645,
+                "r": 531.1912379264832,
+                "b": 444.09936809539795,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 8,
+              "start_row_offset_idx": 4,
+              "end_row_offset_idx": 5,
+              "start_col_offset_idx": 1,
+              "end_col_offset_idx": 9,
+              "text": "为规避和防范外汇汇率波动给公司带来的经营风险，公司按照一定比例，针对外汇开展\r\n远期结售汇业务，业务规模均在公司董事会审议的额度范围内。报告期内，公司远期结\r\n售汇实际损益金额为061 万元",
+              "column_header": false,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 188.81871366500854,
+                "t": 416.38984870910645,
+                "r": 531.1912379264832,
+                "b": 444.09936809539795,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 8,
+              "start_row_offset_idx": 4,
+              "end_row_offset_idx": 5,
+              "start_col_offset_idx": 1,
+              "end_col_offset_idx": 9,
+              "text": "为规避和防范外汇汇率波动给公司带来的经营风险，公司按照一定比例，针对外汇开展\r\n远期结售汇业务，业务规模均在公司董事会审议的额度范围内。报告期内，公司远期结\r\n售汇实际损益金额为061 万元",
+              "column_header": false,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 188.81871366500854,
+                "t": 416.38984870910645,
+                "r": 531.1912379264832,
+                "b": 444.09936809539795,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 8,
+              "start_row_offset_idx": 4,
+              "end_row_offset_idx": 5,
+              "start_col_offset_idx": 1,
+              "end_col_offset_idx": 9,
+              "text": "为规避和防范外汇汇率波动给公司带来的经营风险，公司按照一定比例，针对外汇开展\r\n远期结售汇业务，业务规模均在公司董事会审议的额度范围内。报告期内，公司远期结\r\n售汇实际损益金额为061 万元",
+              "column_header": false,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 188.81871366500854,
+                "t": 416.38984870910645,
+                "r": 531.1912379264832,
+                "b": 444.09936809539795,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 8,
+              "start_row_offset_idx": 4,
+              "end_row_offset_idx": 5,
+              "start_col_offset_idx": 1,
+              "end_col_offset_idx": 9,
+              "text": "为规避和防范外汇汇率波动给公司带来的经营风险，公司按照一定比例，针对外汇开展\r\n远期结售汇业务，业务规模均在公司董事会审议的额度范围内。报告期内，公司远期结\r\n售汇实际损益金额为061 万元",
+              "column_header": false,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 188.81871366500854,
+                "t": 416.38984870910645,
+                "r": 531.1912379264832,
+                "b": 444.09936809539795,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 8,
+              "start_row_offset_idx": 4,
+              "end_row_offset_idx": 5,
+              "start_col_offset_idx": 1,
+              "end_col_offset_idx": 9,
+              "text": "为规避和防范外汇汇率波动给公司带来的经营风险，公司按照一定比例，针对外汇开展\r\n远期结售汇业务，业务规模均在公司董事会审议的额度范围内。报告期内，公司远期结\r\n售汇实际损益金额为061 万元",
+              "column_header": false,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 188.81871366500854,
+                "t": 416.38984870910645,
+                "r": 531.1912379264832,
+                "b": 444.09936809539795,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 8,
+              "start_row_offset_idx": 4,
+              "end_row_offset_idx": 5,
+              "start_col_offset_idx": 1,
+              "end_col_offset_idx": 9,
+              "text": "为规避和防范外汇汇率波动给公司带来的经营风险，公司按照一定比例，针对外汇开展\r\n远期结售汇业务，业务规模均在公司董事会审议的额度范围内。报告期内，公司远期结\r\n售汇实际损益金额为061 万元",
+              "column_header": false,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 188.81871366500854,
+                "t": 416.38984870910645,
+                "r": 531.1912379264832,
+                "b": 444.09936809539795,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 8,
+              "start_row_offset_idx": 4,
+              "end_row_offset_idx": 5,
+              "start_col_offset_idx": 1,
+              "end_col_offset_idx": 9,
+              "text": "为规避和防范外汇汇率波动给公司带来的经营风险，公司按照一定比例，针对外汇开展\r\n远期结售汇业务，业务规模均在公司董事会审议的额度范围内。报告期内，公司远期结\r\n售汇实际损益金额为061 万元",
+              "column_header": false,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            }
+          ],
+          [
+            {
+              "bbox": {
+                "l": 54.218851536512375,
+                "t": 454.1559717655182,
+                "r": 136.31268846988678,
+                "b": 467.0310127735138,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 1,
+              "start_row_offset_idx": 5,
+              "end_row_offset_idx": 6,
+              "start_col_offset_idx": 0,
+              "end_col_offset_idx": 1,
+              "text": "套期保值效果的说明 ",
+              "column_header": false,
+              "row_header": true,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 185.1405110359192,
+                "t": 453.3899779319763,
+                "r": 532.5303921699524,
+                "b": 465.4454174041748,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 8,
+              "start_row_offset_idx": 5,
+              "end_row_offset_idx": 6,
+              "start_col_offset_idx": 1,
+              "end_col_offset_idx": 9,
+              "text": "公司从事套期保值业务，可抵消外汇汇率波动的风险，实现预期风险管理目标。",
+              "column_header": false,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 185.1405110359192,
+                "t": 453.3899779319763,
+                "r": 532.5303921699524,
+                "b": 465.4454174041748,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 8,
+              "start_row_offset_idx": 5,
+              "end_row_offset_idx": 6,
+              "start_col_offset_idx": 1,
+              "end_col_offset_idx": 9,
+              "text": "公司从事套期保值业务，可抵消外汇汇率波动的风险，实现预期风险管理目标。",
+              "column_header": false,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 185.1405110359192,
+                "t": 453.3899779319763,
+                "r": 532.5303921699524,
+                "b": 465.4454174041748,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 8,
+              "start_row_offset_idx": 5,
+              "end_row_offset_idx": 6,
+              "start_col_offset_idx": 1,
+              "end_col_offset_idx": 9,
+              "text": "公司从事套期保值业务，可抵消外汇汇率波动的风险，实现预期风险管理目标。",
+              "column_header": false,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 185.1405110359192,
+                "t": 453.3899779319763,
+                "r": 532.5303921699524,
+                "b": 465.4454174041748,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 8,
+              "start_row_offset_idx": 5,
+              "end_row_offset_idx": 6,
+              "start_col_offset_idx": 1,
+              "end_col_offset_idx": 9,
+              "text": "公司从事套期保值业务，可抵消外汇汇率波动的风险，实现预期风险管理目标。",
+              "column_header": false,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 185.1405110359192,
+                "t": 453.3899779319763,
+                "r": 532.5303921699524,
+                "b": 465.4454174041748,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 8,
+              "start_row_offset_idx": 5,
+              "end_row_offset_idx": 6,
+              "start_col_offset_idx": 1,
+              "end_col_offset_idx": 9,
+              "text": "公司从事套期保值业务，可抵消外汇汇率波动的风险，实现预期风险管理目标。",
+              "column_header": false,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 185.1405110359192,
+                "t": 453.3899779319763,
+                "r": 532.5303921699524,
+                "b": 465.4454174041748,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 8,
+              "start_row_offset_idx": 5,
+              "end_row_offset_idx": 6,
+              "start_col_offset_idx": 1,
+              "end_col_offset_idx": 9,
+              "text": "公司从事套期保值业务，可抵消外汇汇率波动的风险，实现预期风险管理目标。",
+              "column_header": false,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 185.1405110359192,
+                "t": 453.3899779319763,
+                "r": 532.5303921699524,
+                "b": 465.4454174041748,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 8,
+              "start_row_offset_idx": 5,
+              "end_row_offset_idx": 6,
+              "start_col_offset_idx": 1,
+              "end_col_offset_idx": 9,
+              "text": "公司从事套期保值业务，可抵消外汇汇率波动的风险，实现预期风险管理目标。",
+              "column_header": false,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 185.1405110359192,
+                "t": 453.3899779319763,
+                "r": 532.5303921699524,
+                "b": 465.4454174041748,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 8,
+              "start_row_offset_idx": 5,
+              "end_row_offset_idx": 6,
+              "start_col_offset_idx": 1,
+              "end_col_offset_idx": 9,
+              "text": "公司从事套期保值业务，可抵消外汇汇率波动的风险，实现预期风险管理目标。",
+              "column_header": false,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            }
+          ],
+          [
+            {
+              "bbox": {
+                "l": 54.19937148690224,
+                "t": 470.70535588264465,
+                "r": 138.75619781017303,
+                "b": 483.6152741909027,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 1,
+              "start_row_offset_idx": 6,
+              "end_row_offset_idx": 7,
+              "start_col_offset_idx": 0,
+              "end_col_offset_idx": 1,
+              "text": "衍生品投资资金来源 ",
+              "column_header": false,
+              "row_header": true,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 182.84932255744934,
+                "t": 470.3891019821167,
+                "r": 532.4250657558441,
+                "b": 482.8962640762329,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 8,
+              "start_row_offset_idx": 6,
+              "end_row_offset_idx": 7,
+              "start_col_offset_idx": 1,
+              "end_col_offset_idx": 9,
+              "text": "自有资金",
+              "column_header": false,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 182.84932255744934,
+                "t": 470.3891019821167,
+                "r": 532.4250657558441,
+                "b": 482.8962640762329,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 8,
+              "start_row_offset_idx": 6,
+              "end_row_offset_idx": 7,
+              "start_col_offset_idx": 1,
+              "end_col_offset_idx": 9,
+              "text": "自有资金",
+              "column_header": false,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 182.84932255744934,
+                "t": 470.3891019821167,
+                "r": 532.4250657558441,
+                "b": 482.8962640762329,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 8,
+              "start_row_offset_idx": 6,
+              "end_row_offset_idx": 7,
+              "start_col_offset_idx": 1,
+              "end_col_offset_idx": 9,
+              "text": "自有资金",
+              "column_header": false,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 182.84932255744934,
+                "t": 470.3891019821167,
+                "r": 532.4250657558441,
+                "b": 482.8962640762329,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 8,
+              "start_row_offset_idx": 6,
+              "end_row_offset_idx": 7,
+              "start_col_offset_idx": 1,
+              "end_col_offset_idx": 9,
+              "text": "自有资金",
+              "column_header": false,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 182.84932255744934,
+                "t": 470.3891019821167,
+                "r": 532.4250657558441,
+                "b": 482.8962640762329,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 8,
+              "start_row_offset_idx": 6,
+              "end_row_offset_idx": 7,
+              "start_col_offset_idx": 1,
+              "end_col_offset_idx": 9,
+              "text": "自有资金",
+              "column_header": false,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 182.84932255744934,
+                "t": 470.3891019821167,
+                "r": 532.4250657558441,
+                "b": 482.8962640762329,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 8,
+              "start_row_offset_idx": 6,
+              "end_row_offset_idx": 7,
+              "start_col_offset_idx": 1,
+              "end_col_offset_idx": 9,
+              "text": "自有资金",
+              "column_header": false,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 182.84932255744934,
+                "t": 470.3891019821167,
+                "r": 532.4250657558441,
+                "b": 482.8962640762329,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 8,
+              "start_row_offset_idx": 6,
+              "end_row_offset_idx": 7,
+              "start_col_offset_idx": 1,
+              "end_col_offset_idx": 9,
+              "text": "自有资金",
+              "column_header": false,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 182.84932255744934,
+                "t": 470.3891019821167,
+                "r": 532.4250657558441,
+                "b": 482.8962640762329,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 8,
+              "start_row_offset_idx": 6,
+              "end_row_offset_idx": 7,
+              "start_col_offset_idx": 1,
+              "end_col_offset_idx": 9,
+              "text": "自有资金",
+              "column_header": false,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            }
+          ],
+          [
+            {
+              "bbox": {
+                "l": 54.92738515138626,
+                "t": 596.00608253479,
+                "r": 174.40431356430054,
+                "b": 661.0667572021484,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 1,
+              "start_row_offset_idx": 7,
+              "end_row_offset_idx": 8,
+              "start_col_offset_idx": 0,
+              "end_col_offset_idx": 1,
+              "text": "报告期衍生品持仓的风险分析\r\n及控制措施说明（包括但不限\r\n于市场风险、流动性风险、信\r\n用风险、操作风险、法律风险\r\n等）",
+              "column_header": false,
+              "row_header": true,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 180.16456639766693,
+                "t": 484.82415866851807,
+                "r": 531.1410412788391,
+                "b": 720.3673601150513,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 8,
+              "start_row_offset_idx": 7,
+              "end_row_offset_idx": 8,
+              "start_col_offset_idx": 1,
+              "end_col_offset_idx": 9,
+              "text": "远期结售汇的风险分析：\r\n（1）汇率、利率波动风险：在外汇汇率波动较大时，公司判断汇率大幅波动方向与外\r\n汇套期保值合约方向不一致时，将造成汇兑损失；若汇率在未来发生波动时，与外汇套\r\n期保值合约偏差较大也将造成汇兑损失；\r\n（2）内部控制风险：外汇套期保值业务专业性较强，复杂程度较高，可能会由于内控\r\n制度不完善而造成风险；\r\n（3）交易违约风险：外汇套期保值交易对手出现违约，不能按照约定支付公司套期保\r\n值盈利从而无法对冲公司实际的汇兑损失，将造成公司损失；\r\n（4）客户违约风险：客户应收账款发生逾期、客户调整订单等情况将使货款实际回款\r\n情况与预期回款情况不一致，可能使实际发生的现金流与已操作的外汇套 期保值业务\r\n期限或数额无法完全匹配，从而导致公司损失。\r\n远期结售汇的风险控制措施：\r\n（1）公司制定了《广东银禧科技股份有限公司外汇套期保值业务管理制度》，（以下简\r\n称“《外汇套期保值业务管理制度》”）对外汇套期保值业务操作规范、审批权限及内\r\n部操作流程、信息隔离措施、内部风险报告制度及风险处理程序、信息披露等做出了明\r\n确规定；\r\n（2）为避免汇率大幅波动风险，公司会加强对汇率的研究分析，实时关注国际市场环\r\n境变化，适时调整经营策略，最大限度的避免汇兑损失；\r\n（3）为避免内部控制风险公司财务部负责统一管理公司外汇套期保值业务所有的",
+              "column_header": false,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 180.16456639766693,
+                "t": 484.82415866851807,
+                "r": 531.1410412788391,
+                "b": 720.3673601150513,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 8,
+              "start_row_offset_idx": 7,
+              "end_row_offset_idx": 8,
+              "start_col_offset_idx": 1,
+              "end_col_offset_idx": 9,
+              "text": "远期结售汇的风险分析：\r\n（1）汇率、利率波动风险：在外汇汇率波动较大时，公司判断汇率大幅波动方向与外\r\n汇套期保值合约方向不一致时，将造成汇兑损失；若汇率在未来发生波动时，与外汇套\r\n期保值合约偏差较大也将造成汇兑损失；\r\n（2）内部控制风险：外汇套期保值业务专业性较强，复杂程度较高，可能会由于内控\r\n制度不完善而造成风险；\r\n（3）交易违约风险：外汇套期保值交易对手出现违约，不能按照约定支付公司套期保\r\n值盈利从而无法对冲公司实际的汇兑损失，将造成公司损失；\r\n（4）客户违约风险：客户应收账款发生逾期、客户调整订单等情况将使货款实际回款\r\n情况与预期回款情况不一致，可能使实际发生的现金流与已操作的外汇套 期保值业务\r\n期限或数额无法完全匹配，从而导致公司损失。\r\n远期结售汇的风险控制措施：\r\n（1）公司制定了《广东银禧科技股份有限公司外汇套期保值业务管理制度》，（以下简\r\n称“《外汇套期保值业务管理制度》”）对外汇套期保值业务操作规范、审批权限及内\r\n部操作流程、信息隔离措施、内部风险报告制度及风险处理程序、信息披露等做出了明\r\n确规定；\r\n（2）为避免汇率大幅波动风险，公司会加强对汇率的研究分析，实时关注国际市场环\r\n境变化，适时调整经营策略，最大限度的避免汇兑损失；\r\n（3）为避免内部控制风险公司财务部负责统一管理公司外汇套期保值业务所有的",
+              "column_header": false,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 180.16456639766693,
+                "t": 484.82415866851807,
+                "r": 531.1410412788391,
+                "b": 720.3673601150513,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 8,
+              "start_row_offset_idx": 7,
+              "end_row_offset_idx": 8,
+              "start_col_offset_idx": 1,
+              "end_col_offset_idx": 9,
+              "text": "远期结售汇的风险分析：\r\n（1）汇率、利率波动风险：在外汇汇率波动较大时，公司判断汇率大幅波动方向与外\r\n汇套期保值合约方向不一致时，将造成汇兑损失；若汇率在未来发生波动时，与外汇套\r\n期保值合约偏差较大也将造成汇兑损失；\r\n（2）内部控制风险：外汇套期保值业务专业性较强，复杂程度较高，可能会由于内控\r\n制度不完善而造成风险；\r\n（3）交易违约风险：外汇套期保值交易对手出现违约，不能按照约定支付公司套期保\r\n值盈利从而无法对冲公司实际的汇兑损失，将造成公司损失；\r\n（4）客户违约风险：客户应收账款发生逾期、客户调整订单等情况将使货款实际回款\r\n情况与预期回款情况不一致，可能使实际发生的现金流与已操作的外汇套 期保值业务\r\n期限或数额无法完全匹配，从而导致公司损失。\r\n远期结售汇的风险控制措施：\r\n（1）公司制定了《广东银禧科技股份有限公司外汇套期保值业务管理制度》，（以下简\r\n称“《外汇套期保值业务管理制度》”）对外汇套期保值业务操作规范、审批权限及内\r\n部操作流程、信息隔离措施、内部风险报告制度及风险处理程序、信息披露等做出了明\r\n确规定；\r\n（2）为避免汇率大幅波动风险，公司会加强对汇率的研究分析，实时关注国际市场环\r\n境变化，适时调整经营策略，最大限度的避免汇兑损失；\r\n（3）为避免内部控制风险公司财务部负责统一管理公司外汇套期保值业务所有的",
+              "column_header": false,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 180.16456639766693,
+                "t": 484.82415866851807,
+                "r": 531.1410412788391,
+                "b": 720.3673601150513,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 8,
+              "start_row_offset_idx": 7,
+              "end_row_offset_idx": 8,
+              "start_col_offset_idx": 1,
+              "end_col_offset_idx": 9,
+              "text": "远期结售汇的风险分析：\r\n（1）汇率、利率波动风险：在外汇汇率波动较大时，公司判断汇率大幅波动方向与外\r\n汇套期保值合约方向不一致时，将造成汇兑损失；若汇率在未来发生波动时，与外汇套\r\n期保值合约偏差较大也将造成汇兑损失；\r\n（2）内部控制风险：外汇套期保值业务专业性较强，复杂程度较高，可能会由于内控\r\n制度不完善而造成风险；\r\n（3）交易违约风险：外汇套期保值交易对手出现违约，不能按照约定支付公司套期保\r\n值盈利从而无法对冲公司实际的汇兑损失，将造成公司损失；\r\n（4）客户违约风险：客户应收账款发生逾期、客户调整订单等情况将使货款实际回款\r\n情况与预期回款情况不一致，可能使实际发生的现金流与已操作的外汇套 期保值业务\r\n期限或数额无法完全匹配，从而导致公司损失。\r\n远期结售汇的风险控制措施：\r\n（1）公司制定了《广东银禧科技股份有限公司外汇套期保值业务管理制度》，（以下简\r\n称“《外汇套期保值业务管理制度》”）对外汇套期保值业务操作规范、审批权限及内\r\n部操作流程、信息隔离措施、内部风险报告制度及风险处理程序、信息披露等做出了明\r\n确规定；\r\n（2）为避免汇率大幅波动风险，公司会加强对汇率的研究分析，实时关注国际市场环\r\n境变化，适时调整经营策略，最大限度的避免汇兑损失；\r\n（3）为避免内部控制风险公司财务部负责统一管理公司外汇套期保值业务所有的",
+              "column_header": false,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 180.16456639766693,
+                "t": 484.82415866851807,
+                "r": 531.1410412788391,
+                "b": 720.3673601150513,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 8,
+              "start_row_offset_idx": 7,
+              "end_row_offset_idx": 8,
+              "start_col_offset_idx": 1,
+              "end_col_offset_idx": 9,
+              "text": "远期结售汇的风险分析：\r\n（1）汇率、利率波动风险：在外汇汇率波动较大时，公司判断汇率大幅波动方向与外\r\n汇套期保值合约方向不一致时，将造成汇兑损失；若汇率在未来发生波动时，与外汇套\r\n期保值合约偏差较大也将造成汇兑损失；\r\n（2）内部控制风险：外汇套期保值业务专业性较强，复杂程度较高，可能会由于内控\r\n制度不完善而造成风险；\r\n（3）交易违约风险：外汇套期保值交易对手出现违约，不能按照约定支付公司套期保\r\n值盈利从而无法对冲公司实际的汇兑损失，将造成公司损失；\r\n（4）客户违约风险：客户应收账款发生逾期、客户调整订单等情况将使货款实际回款\r\n情况与预期回款情况不一致，可能使实际发生的现金流与已操作的外汇套 期保值业务\r\n期限或数额无法完全匹配，从而导致公司损失。\r\n远期结售汇的风险控制措施：\r\n（1）公司制定了《广东银禧科技股份有限公司外汇套期保值业务管理制度》，（以下简\r\n称“《外汇套期保值业务管理制度》”）对外汇套期保值业务操作规范、审批权限及内\r\n部操作流程、信息隔离措施、内部风险报告制度及风险处理程序、信息披露等做出了明\r\n确规定；\r\n（2）为避免汇率大幅波动风险，公司会加强对汇率的研究分析，实时关注国际市场环\r\n境变化，适时调整经营策略，最大限度的避免汇兑损失；\r\n（3）为避免内部控制风险公司财务部负责统一管理公司外汇套期保值业务所有的",
+              "column_header": false,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 180.16456639766693,
+                "t": 484.82415866851807,
+                "r": 531.1410412788391,
+                "b": 720.3673601150513,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 8,
+              "start_row_offset_idx": 7,
+              "end_row_offset_idx": 8,
+              "start_col_offset_idx": 1,
+              "end_col_offset_idx": 9,
+              "text": "远期结售汇的风险分析：\r\n（1）汇率、利率波动风险：在外汇汇率波动较大时，公司判断汇率大幅波动方向与外\r\n汇套期保值合约方向不一致时，将造成汇兑损失；若汇率在未来发生波动时，与外汇套\r\n期保值合约偏差较大也将造成汇兑损失；\r\n（2）内部控制风险：外汇套期保值业务专业性较强，复杂程度较高，可能会由于内控\r\n制度不完善而造成风险；\r\n（3）交易违约风险：外汇套期保值交易对手出现违约，不能按照约定支付公司套期保\r\n值盈利从而无法对冲公司实际的汇兑损失，将造成公司损失；\r\n（4）客户违约风险：客户应收账款发生逾期、客户调整订单等情况将使货款实际回款\r\n情况与预期回款情况不一致，可能使实际发生的现金流与已操作的外汇套 期保值业务\r\n期限或数额无法完全匹配，从而导致公司损失。\r\n远期结售汇的风险控制措施：\r\n（1）公司制定了《广东银禧科技股份有限公司外汇套期保值业务管理制度》，（以下简\r\n称“《外汇套期保值业务管理制度》”）对外汇套期保值业务操作规范、审批权限及内\r\n部操作流程、信息隔离措施、内部风险报告制度及风险处理程序、信息披露等做出了明\r\n确规定；\r\n（2）为避免汇率大幅波动风险，公司会加强对汇率的研究分析，实时关注国际市场环\r\n境变化，适时调整经营策略，最大限度的避免汇兑损失；\r\n（3）为避免内部控制风险公司财务部负责统一管理公司外汇套期保值业务所有的",
+              "column_header": false,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 180.16456639766693,
+                "t": 484.82415866851807,
+                "r": 531.1410412788391,
+                "b": 720.3673601150513,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 8,
+              "start_row_offset_idx": 7,
+              "end_row_offset_idx": 8,
+              "start_col_offset_idx": 1,
+              "end_col_offset_idx": 9,
+              "text": "远期结售汇的风险分析：\r\n（1）汇率、利率波动风险：在外汇汇率波动较大时，公司判断汇率大幅波动方向与外\r\n汇套期保值合约方向不一致时，将造成汇兑损失；若汇率在未来发生波动时，与外汇套\r\n期保值合约偏差较大也将造成汇兑损失；\r\n（2）内部控制风险：外汇套期保值业务专业性较强，复杂程度较高，可能会由于内控\r\n制度不完善而造成风险；\r\n（3）交易违约风险：外汇套期保值交易对手出现违约，不能按照约定支付公司套期保\r\n值盈利从而无法对冲公司实际的汇兑损失，将造成公司损失；\r\n（4）客户违约风险：客户应收账款发生逾期、客户调整订单等情况将使货款实际回款\r\n情况与预期回款情况不一致，可能使实际发生的现金流与已操作的外汇套 期保值业务\r\n期限或数额无法完全匹配，从而导致公司损失。\r\n远期结售汇的风险控制措施：\r\n（1）公司制定了《广东银禧科技股份有限公司外汇套期保值业务管理制度》，（以下简\r\n称“《外汇套期保值业务管理制度》”）对外汇套期保值业务操作规范、审批权限及内\r\n部操作流程、信息隔离措施、内部风险报告制度及风险处理程序、信息披露等做出了明\r\n确规定；\r\n（2）为避免汇率大幅波动风险，公司会加强对汇率的研究分析，实时关注国际市场环\r\n境变化，适时调整经营策略，最大限度的避免汇兑损失；\r\n（3）为避免内部控制风险公司财务部负责统一管理公司外汇套期保值业务所有的",
+              "column_header": false,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            },
+            {
+              "bbox": {
+                "l": 180.16456639766693,
+                "t": 484.82415866851807,
+                "r": 531.1410412788391,
+                "b": 720.3673601150513,
+                "coord_origin": "TOPLEFT"
+              },
+              "row_span": 1,
+              "col_span": 8,
+              "start_row_offset_idx": 7,
+              "end_row_offset_idx": 8,
+              "start_col_offset_idx": 1,
+              "end_col_offset_idx": 9,
+              "text": "远期结售汇的风险分析：\r\n（1）汇率、利率波动风险：在外汇汇率波动较大时，公司判断汇率大幅波动方向与外\r\n汇套期保值合约方向不一致时，将造成汇兑损失；若汇率在未来发生波动时，与外汇套\r\n期保值合约偏差较大也将造成汇兑损失；\r\n（2）内部控制风险：外汇套期保值业务专业性较强，复杂程度较高，可能会由于内控\r\n制度不完善而造成风险；\r\n（3）交易违约风险：外汇套期保值交易对手出现违约，不能按照约定支付公司套期保\r\n值盈利从而无法对冲公司实际的汇兑损失，将造成公司损失；\r\n（4）客户违约风险：客户应收账款发生逾期、客户调整订单等情况将使货款实际回款\r\n情况与预期回款情况不一致，可能使实际发生的现金流与已操作的外汇套 期保值业务\r\n期限或数额无法完全匹配，从而导致公司损失。\r\n远期结售汇的风险控制措施：\r\n（1）公司制定了《广东银禧科技股份有限公司外汇套期保值业务管理制度》，（以下简\r\n称“《外汇套期保值业务管理制度》”）对外汇套期保值业务操作规范、审批权限及内\r\n部操作流程、信息隔离措施、内部风险报告制度及风险处理程序、信息披露等做出了明\r\n确规定；\r\n（2）为避免汇率大幅波动风险，公司会加强对汇率的研究分析，实时关注国际市场环\r\n境变化，适时调整经营策略，最大限度的避免汇兑损失；\r\n（3）为避免内部控制风险公司财务部负责统一管理公司外汇套期保值业务所有的",
+              "column_header": false,
+              "row_header": false,
+              "row_section": false,
+              "fillable": false
+            }
+          ]
+        ]
+      },
+      "annotations": []
+    }
+  ],
+  "key_value_items": [],
+  "form_items": [],
+  "pages": {
+    "19": {
+      "size": {
+        "width": 595.2000122070312,
+        "height": 842.0399780273438
+      },
+      "page_no": 19
+    }
+  }
+}

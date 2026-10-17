@@ -1,0 +1,97 @@
+2026-10-17 22:09:35.950 | DEBUG    | mineru.model.ocr.pp_ocr_v6_onnx:__init__:408 - PPOCRv6ONNX loaded: det=ch_PP-OCRv6_tiny_det_infer.onnx, rec=ch_PP-OCRv6_small_rec_infer.onnx
+2026-10-17 22:09:37.060 | DEBUG    | mineru.model.layout.pp_doclayout_v2_onnx:__init__:72 - PPDocLayoutV2LayoutModelONNX loaded: inference.onnx (inputs=['im_shape', 'image', 'scale_factor'], outputs=['fetch_name_0', 'fetch_name_1'])
+2026-10-17 22:09:43.551 | DEBUG    | mineru.model.mfr.pp_formulanet_plus_m_onnx:__init__:68 - PPFormulaNetPlusMONNX loaded: PP-FormulaNet_plus-M.onnx (config=PP-FormulaNet_plus-M_inference.yml)
+2026-10-17 22:09:43.700 | DEBUG    | mineru.model.ocr.pp_ocr_v6_onnx:__init__:408 - PPOCRv6ONNX loaded: det=ch_PP-OCRv6_tiny_det_infer.onnx, rec=ch_PP-OCRv6_small_rec_infer.onnx
+2026-10-17 22:09:43.873 | DEBUG    | mineru.model.ocr.pp_ocr_v6_onnx:__init__:408 - PPOCRv6ONNX loaded: det=seal_PP-OCRv4_det_infer.onnx, rec=ch_PP-OCRv6_small_rec_infer.onnx
+2026-10-17 22:09:44.077 | INFO     | mineru.model.vlm.runtime:_create_model:351 - get http-client predictor cost: 0.05s
+2026-10-17 22:09:44.078 | INFO     | mineru.backend.analysis.pdf.window:_log_processing_window_plan:105 - Hybrid processing-window run. page_count=1, window_size=64, total_windows=1
+2026-10-17 22:09:44.903 | INFO     | mineru.backend.analysis.pdf.window:_log_processing_window:113 - Hybrid processing window 1/1: pages 1-1/1 (1 pages)
+Layout Predict:   0%|          | 0/1 [00:00<?, ?it/s]Layout Predict: 100%|██████████| 1/1 [00:00<00:00,  1.20it/s]Layout Predict: 100%|██████████| 1/1 [00:00<00:00,  1.20it/s]
+OCR-det:   0%|          | 0/4 [00:00<?, ?it/s]OCR-det: 100%|██████████| 4/4 [00:00<00:00, 71.01it/s]
+2026-10-17 22:09:46.106 | INFO     | mineru.backend.analyze:_log_infer_performance:26 - model_list infer finished, file_suffix=pdf, pages=1, cost=1.986480s, speed=0.503 page/s
+{"id": "1206337604", "page": 1, "seconds": 3.6482883049175143, "native_tables": 1, "VLM_table_regions": 0}
+2026-10-17 22:09:48.060 | INFO     | mineru.backend.analysis.pdf.window:_log_processing_window_plan:105 - Hybrid processing-window run. page_count=1, window_size=64, total_windows=1
+2026-10-17 22:09:48.134 | INFO     | mineru.backend.analysis.pdf.window:_log_processing_window:113 - Hybrid processing window 1/1: pages 1-1/1 (1 pages)
+Layout Predict:   0%|          | 0/1 [00:00<?, ?it/s]Layout Predict: 100%|██████████| 1/1 [00:00<00:00,  1.20it/s]Layout Predict: 100%|██████████| 1/1 [00:00<00:00,  1.20it/s]
+OCR-det:   0%|          | 0/8 [00:00<?, ?it/s]OCR-det: 100%|██████████| 8/8 [00:00<00:00, 84.53it/s]
+2026-10-17 22:09:49.440 | INFO     | mineru.backend.analyze:_log_infer_performance:26 - model_list infer finished, file_suffix=pdf, pages=1, cost=1.305357s, speed=0.766 page/s
+{"id": "1225474739", "page": 19, "seconds": 1.5978978920029476, "native_tables": 2, "VLM_table_regions": 0}
+2026-10-17 22:09:49.668 | INFO     | mineru.backend.analysis.pdf.window:_log_processing_window_plan:105 - Hybrid processing-window run. page_count=1, window_size=64, total_windows=1
+2026-10-17 22:09:49.737 | INFO     | mineru.backend.analysis.pdf.window:_log_processing_window:113 - Hybrid processing window 1/1: pages 1-1/1 (1 pages)
+Layout Predict:   0%|          | 0/1 [00:00<?, ?it/s]Layout Predict: 100%|██████████| 1/1 [00:00<00:00,  1.21it/s]Layout Predict: 100%|██████████| 1/1 [00:00<00:00,  1.21it/s]
+OCR-det:   0%|          | 0/10 [00:00<?, ?it/s]OCR-det:  10%|█         | 1/10 [00:00<00:02,  4.46it/s]OCR-det:  80%|████████  | 8/10 [00:00<00:00, 28.60it/s]OCR-det: 100%|██████████| 10/10 [00:00<00:00, 28.24it/s]
+2026-10-17 22:09:51.183 | INFO     | mineru.backend.analyze:_log_infer_performance:26 - model_list infer finished, file_suffix=pdf, pages=1, cost=1.446429s, speed=0.691 page/s
+{"id": "1206337604", "page": 2, "seconds": 1.5290105229942128, "native_tables": 1, "VLM_table_regions": 0}
+2026-10-17 22:09:51.602 | INFO     | mineru.backend.analysis.pdf.window:_log_processing_window_plan:105 - Hybrid processing-window run. page_count=1, window_size=64, total_windows=1
+2026-10-17 22:09:51.672 | INFO     | mineru.backend.analysis.pdf.window:_log_processing_window:113 - Hybrid processing window 1/1: pages 1-1/1 (1 pages)
+Layout Predict:   0%|          | 0/1 [00:00<?, ?it/s]Layout Predict: 100%|██████████| 1/1 [00:00<00:00,  1.24it/s]Layout Predict: 100%|██████████| 1/1 [00:00<00:00,  1.24it/s]
+VLM Predict:   0%|          | 0/1 [00:00<?, ?it/s]VLM Predict: 100%|██████████| 1/1 [00:27<00:00, 27.22s/it]VLM Predict: 100%|██████████| 1/1 [00:27<00:00, 27.22s/it]
+OCR-det:   0%|          | 0/2 [00:00<?, ?it/s]OCR-det: 100%|██████████| 2/2 [00:00<00:00, 46.18it/s]
+2026-10-17 22:10:20.310 | INFO     | mineru.backend.analyze:_log_infer_performance:26 - model_list infer finished, file_suffix=pdf, pages=1, cost=28.627148s, speed=0.035 page/s
+{"id": "1225474739", "page": 40, "seconds": 28.927644115057774, "native_tables": 0, "VLM_table_regions": 1}
+2026-10-17 22:10:20.768 | INFO     | mineru.backend.analysis.pdf.window:_log_processing_window_plan:105 - Hybrid processing-window run. page_count=1, window_size=64, total_windows=1
+2026-10-17 22:10:20.830 | INFO     | mineru.backend.analysis.pdf.window:_log_processing_window:113 - Hybrid processing window 1/1: pages 1-1/1 (1 pages)
+Layout Predict:   0%|          | 0/1 [00:00<?, ?it/s]Layout Predict: 100%|██████████| 1/1 [00:00<00:00,  1.26it/s]Layout Predict: 100%|██████████| 1/1 [00:00<00:00,  1.26it/s]
+OCR-det:   0%|          | 0/28 [00:00<?, ?it/s]OCR-det:   7%|▋         | 2/28 [00:00<00:03,  7.54it/s]OCR-det:  61%|██████    | 17/28 [00:00<00:00, 55.58it/s]OCR-det: 100%|██████████| 28/28 [00:00<00:00, 65.31it/s]
+2026-10-17 22:10:22.367 | INFO     | mineru.backend.analyze:_log_infer_performance:26 - model_list infer finished, file_suffix=pdf, pages=1, cost=1.531101s, speed=0.653 page/s
+{"id": "1225474739", "page": 74, "seconds": 1.8139375210739672, "native_tables": 1, "VLM_table_regions": 0}
+2026-10-17 22:10:22.803 | INFO     | mineru.backend.analysis.pdf.window:_log_processing_window_plan:105 - Hybrid processing-window run. page_count=1, window_size=64, total_windows=1
+2026-10-17 22:10:22.867 | INFO     | mineru.backend.analysis.pdf.window:_log_processing_window:113 - Hybrid processing window 1/1: pages 1-1/1 (1 pages)
+Layout Predict:   0%|          | 0/1 [00:00<?, ?it/s]Layout Predict: 100%|██████████| 1/1 [00:00<00:00,  1.29it/s]Layout Predict: 100%|██████████| 1/1 [00:00<00:00,  1.29it/s]
+OCR-det:   0%|          | 0/8 [00:00<?, ?it/s]OCR-det: 100%|██████████| 8/8 [00:00<00:00, 116.44it/s]
+2026-10-17 22:10:24.089 | INFO     | mineru.backend.analyze:_log_infer_performance:26 - model_list infer finished, file_suffix=pdf, pages=1, cost=1.217333s, speed=0.821 page/s
+{"id": "1225474739", "page": 131, "seconds": 1.499752911971882, "native_tables": 4, "VLM_table_regions": 0}
+2026-10-17 22:10:24.375 | INFO     | mineru.backend.analysis.pdf.window:_log_processing_window_plan:105 - Hybrid processing-window run. page_count=1, window_size=64, total_windows=1
+2026-10-17 22:10:24.429 | INFO     | mineru.backend.analysis.pdf.window:_log_processing_window:113 - Hybrid processing window 1/1: pages 1-1/1 (1 pages)
+Layout Predict:   0%|          | 0/1 [00:00<?, ?it/s]Layout Predict: 100%|██████████| 1/1 [00:00<00:00,  1.30it/s]Layout Predict: 100%|██████████| 1/1 [00:00<00:00,  1.30it/s]
+OCR-det:   0%|          | 0/8 [00:00<?, ?it/s]OCR-det:  88%|████████▊ | 7/8 [00:00<00:00, 69.71it/s]OCR-det: 100%|██████████| 8/8 [00:00<00:00, 77.78it/s]
+2026-10-17 22:10:25.556 | INFO     | mineru.backend.analyze:_log_infer_performance:26 - model_list infer finished, file_suffix=pdf, pages=1, cost=1.117014s, speed=0.895 page/s
+{"id": "1225475375", "page": 74, "seconds": 1.219459293060936, "native_tables": 4, "VLM_table_regions": 0}
+2026-10-17 22:10:25.870 | INFO     | mineru.backend.analysis.pdf.window:_log_processing_window_plan:105 - Hybrid processing-window run. page_count=1, window_size=64, total_windows=1
+2026-10-17 22:10:25.924 | INFO     | mineru.backend.analysis.pdf.window:_log_processing_window:113 - Hybrid processing window 1/1: pages 1-1/1 (1 pages)
+Layout Predict:   0%|          | 0/1 [00:00<?, ?it/s]Layout Predict: 100%|██████████| 1/1 [00:00<00:00,  1.19it/s]Layout Predict: 100%|██████████| 1/1 [00:00<00:00,  1.19it/s]
+OCR-det:   0%|          | 0/3 [00:00<?, ?it/s]OCR-det: 100%|██████████| 3/3 [00:00<00:00, 76.63it/s]
+2026-10-17 22:10:27.073 | INFO     | mineru.backend.analyze:_log_infer_performance:26 - model_list infer finished, file_suffix=pdf, pages=1, cost=1.139525s, speed=0.878 page/s
+{"id": "1225475375", "page": 87, "seconds": 1.237325877067633, "native_tables": 1, "VLM_table_regions": 0}
+2026-10-17 22:10:27.305 | INFO     | mineru.backend.analysis.pdf.window:_log_processing_window_plan:105 - Hybrid processing-window run. page_count=1, window_size=64, total_windows=1
+2026-10-17 22:10:27.354 | INFO     | mineru.backend.analysis.pdf.window:_log_processing_window:113 - Hybrid processing window 1/1: pages 1-1/1 (1 pages)
+Layout Predict:   0%|          | 0/1 [00:00<?, ?it/s]Layout Predict: 100%|██████████| 1/1 [00:00<00:00,  1.28it/s]Layout Predict: 100%|██████████| 1/1 [00:00<00:00,  1.28it/s]
+OCR-det:   0%|          | 0/4 [00:00<?, ?it/s]OCR-det: 100%|██████████| 4/4 [00:00<00:00, 60.87it/s]
+2026-10-17 22:10:28.368 | INFO     | mineru.backend.analyze:_log_infer_performance:26 - model_list infer finished, file_suffix=pdf, pages=1, cost=1.000181s, speed=1.000 page/s
+{"id": "1225474139", "page": 28, "seconds": 1.0702782210428268, "native_tables": 0, "VLM_table_regions": 0}
+2026-10-17 22:10:28.557 | INFO     | mineru.backend.analysis.pdf.window:_log_processing_window_plan:105 - Hybrid processing-window run. page_count=1, window_size=64, total_windows=1
+2026-10-17 22:10:28.605 | INFO     | mineru.backend.analysis.pdf.window:_log_processing_window:113 - Hybrid processing window 1/1: pages 1-1/1 (1 pages)
+Layout Predict:   0%|          | 0/1 [00:00<?, ?it/s]Layout Predict: 100%|██████████| 1/1 [00:00<00:00,  1.23it/s]Layout Predict: 100%|██████████| 1/1 [00:00<00:00,  1.23it/s]
+OCR-det:   0%|          | 0/8 [00:00<?, ?it/s]OCR-det: 100%|██████████| 8/8 [00:00<00:00, 81.38it/s]
+2026-10-17 22:10:29.701 | INFO     | mineru.backend.analyze:_log_infer_performance:26 - model_list infer finished, file_suffix=pdf, pages=1, cost=1.071834s, speed=0.933 page/s
+{"id": "1225474139", "page": 30, "seconds": 1.153581376071088, "native_tables": 0, "VLM_table_regions": 0}
+2026-10-17 22:10:29.876 | INFO     | mineru.backend.analysis.pdf.window:_log_processing_window_plan:105 - Hybrid processing-window run. page_count=1, window_size=64, total_windows=1
+2026-10-17 22:10:29.956 | INFO     | mineru.backend.analysis.pdf.window:_log_processing_window:113 - Hybrid processing window 1/1: pages 1-1/1 (1 pages)
+Layout Predict:   0%|          | 0/1 [00:00<?, ?it/s]Layout Predict: 100%|██████████| 1/1 [00:00<00:00,  1.26it/s]Layout Predict: 100%|██████████| 1/1 [00:00<00:00,  1.26it/s]
+OCR-det:   0%|          | 0/12 [00:00<?, ?it/s]OCR-det:   8%|▊         | 1/12 [00:00<00:01,  8.95it/s]OCR-det: 100%|██████████| 12/12 [00:00<00:00, 64.14it/s]
+2026-10-17 22:10:31.204 | INFO     | mineru.backend.analyze:_log_infer_performance:26 - model_list infer finished, file_suffix=pdf, pages=1, cost=1.262877s, speed=0.792 page/s
+{"id": "1225474693", "page": 2, "seconds": 1.3409504590090364, "native_tables": 3, "VLM_table_regions": 0}
+2026-10-17 22:10:31.400 | INFO     | mineru.backend.analysis.pdf.window:_log_processing_window_plan:105 - Hybrid processing-window run. page_count=1, window_size=64, total_windows=1
+2026-10-17 22:10:31.466 | INFO     | mineru.backend.analysis.pdf.window:_log_processing_window:113 - Hybrid processing window 1/1: pages 1-1/1 (1 pages)
+Layout Predict:   0%|          | 0/1 [00:00<?, ?it/s]Layout Predict: 100%|██████████| 1/1 [00:00<00:00,  1.28it/s]Layout Predict: 100%|██████████| 1/1 [00:00<00:00,  1.28it/s]
+OCR-det:   0%|          | 0/3 [00:00<?, ?it/s]OCR-det: 100%|██████████| 3/3 [00:00<00:00, 89.20it/s]
+2026-10-17 22:10:32.626 | INFO     | mineru.backend.analyze:_log_infer_performance:26 - model_list infer finished, file_suffix=pdf, pages=1, cost=1.136034s, speed=0.880 page/s
+{"id": "1225474693", "page": 3, "seconds": 1.2394030569121242, "native_tables": 2, "VLM_table_regions": 0}
+2026-10-17 22:10:32.857 | INFO     | mineru.backend.analysis.pdf.window:_log_processing_window_plan:105 - Hybrid processing-window run. page_count=1, window_size=64, total_windows=1
+2026-10-17 22:10:32.933 | INFO     | mineru.backend.analysis.pdf.window:_log_processing_window:113 - Hybrid processing window 1/1: pages 1-1/1 (1 pages)
+Layout Predict:   0%|          | 0/1 [00:00<?, ?it/s]Layout Predict: 100%|██████████| 1/1 [00:00<00:00,  1.31it/s]Layout Predict: 100%|██████████| 1/1 [00:00<00:00,  1.31it/s]
+OCR-det:   0%|          | 0/12 [00:00<?, ?it/s]OCR-det:   8%|▊         | 1/12 [00:00<00:01,  8.46it/s]OCR-det: 100%|██████████| 12/12 [00:00<00:00, 60.24it/s]
+2026-10-17 22:10:34.188 | INFO     | mineru.backend.analyze:_log_infer_performance:26 - model_list infer finished, file_suffix=pdf, pages=1, cost=1.266969s, speed=0.789 page/s
+{"id": "1225473526", "page": 6, "seconds": 1.3606545849470422, "native_tables": 2, "VLM_table_regions": 0}
+2026-10-17 22:10:34.425 | INFO     | mineru.backend.analysis.pdf.window:_log_processing_window_plan:105 - Hybrid processing-window run. page_count=1, window_size=64, total_windows=1
+2026-10-17 22:10:34.507 | INFO     | mineru.backend.analysis.pdf.window:_log_processing_window:113 - Hybrid processing window 1/1: pages 1-1/1 (1 pages)
+Layout Predict:   0%|          | 0/1 [00:00<?, ?it/s]Layout Predict: 100%|██████████| 1/1 [00:00<00:00,  1.26it/s]Layout Predict: 100%|██████████| 1/1 [00:00<00:00,  1.26it/s]
+OCR-det:   0%|          | 0/9 [00:00<?, ?it/s]OCR-det: 100%|██████████| 9/9 [00:00<00:00, 101.09it/s]
+2026-10-17 22:10:35.735 | INFO     | mineru.backend.analyze:_log_infer_performance:26 - model_list infer finished, file_suffix=pdf, pages=1, cost=1.245578s, speed=0.803 page/s
+{"id": "1225473526", "page": 7, "seconds": 1.345502799958922, "native_tables": 3, "VLM_table_regions": 0}
+2026-10-17 22:10:36.008 | INFO     | mineru.backend.analysis.pdf.window:_log_processing_window_plan:105 - Hybrid processing-window run. page_count=1, window_size=64, total_windows=1
+2026-10-17 22:10:36.055 | INFO     | mineru.backend.analysis.pdf.window:_log_processing_window:113 - Hybrid processing window 1/1: pages 1-1/1 (1 pages)
+Layout Predict:   0%|          | 0/1 [00:00<?, ?it/s]Layout Predict: 100%|██████████| 1/1 [00:00<00:00,  1.32it/s]Layout Predict: 100%|██████████| 1/1 [00:00<00:00,  1.32it/s]
+OCR-det:   0%|          | 0/2 [00:00<?, ?it/s]OCR-det: 100%|██████████| 2/2 [00:00<00:00, 94.20it/s]
+2026-10-17 22:10:37.079 | INFO     | mineru.backend.analyze:_log_infer_performance:26 - model_list infer finished, file_suffix=pdf, pages=1, cost=1.006810s, speed=0.993 page/s
+{"id": "1225475375", "page": 62, "seconds": 1.0971038327552378, "native_tables": 1, "VLM_table_regions": 0}

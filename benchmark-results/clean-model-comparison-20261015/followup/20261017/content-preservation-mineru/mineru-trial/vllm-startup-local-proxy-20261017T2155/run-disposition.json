@@ -1,0 +1,7 @@
+{
+  "at": "2026-10-17T21:55:52.358950+08:00",
+  "disposition": "harness_restart_for_local_proxy_bypass",
+  "model_requests": 0,
+  "accuracy_judgment": "not_evaluated",
+  "reason": "Application healthy direct200, default HTTP_PROXY local502; fix localhost bypass only"
+}

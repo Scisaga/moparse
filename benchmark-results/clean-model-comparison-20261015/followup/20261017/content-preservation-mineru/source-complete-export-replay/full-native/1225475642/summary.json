@@ -1,0 +1,3508 @@
+{
+  "source": "1225475642",
+  "input_SHA256": "e2a184bb017930ca6306a56391a7248c2954a5ae212c2966104fad2104c4a24d",
+  "raw_SHA256": "1b25ddc9be2bc0c2c80af4bed353679eb3a10ced7abbdd1edd8c0e55e834a093",
+  "native_pages": 107,
+  "phases": {
+    "before": {
+      "tables": 185,
+      "anchors": 5062,
+      "span_cells": 131,
+      "actual_groups": {
+        "table_p68_t2_p70_t1": [
+          "p68_t2",
+          "p69_t1",
+          "p70_t1"
+        ],
+        "table_p87_t3_p88_t1": [
+          "p87_t3",
+          "p88_t1"
+        ],
+        "table_p112_t2_p113_t1": [
+          "p112_t2",
+          "p113_t1"
+        ],
+        "table_p115_t3_p116_t1": [
+          "p115_t3",
+          "p116_t1"
+        ],
+        "table_p123_t3_p124_t1": [
+          "p123_t3",
+          "p124_t1"
+        ]
+      },
+      "public_table_coverage": {
+        "all_source_tables_projected_once": true,
+        "emitted_source_cell_anchors": 5030,
+        "only_equivalent_complete_repeated_header_cells_removed": 32,
+        "source_rows_text_spans_header_roles_and_pages_preserved": true
+      },
+      "visible_source_items": 1418,
+      "serialized_source_events": 992,
+      "duplicate_source_refs": [],
+      "wrong_source_pages": [],
+      "serialized_blocks_absent_from_page": [],
+      "missing_visible_refs": [
+        {
+          "ref": "#/texts/0",
+          "page": 19,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/1",
+          "page": 19,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/7",
+          "page": 19,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "9"
+        },
+        {
+          "ref": "#/texts/8",
+          "page": 19,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 19"
+        },
+        {
+          "ref": "#/texts/9",
+          "page": 20,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/10",
+          "page": 20,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/24",
+          "page": 20,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "10"
+        },
+        {
+          "ref": "#/texts/25",
+          "page": 20,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 20"
+        },
+        {
+          "ref": "#/texts/26",
+          "page": 21,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/27",
+          "page": 21,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/39",
+          "page": 21,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "11"
+        },
+        {
+          "ref": "#/texts/40",
+          "page": 21,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 21"
+        },
+        {
+          "ref": "#/texts/41",
+          "page": 22,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/42",
+          "page": 22,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/53",
+          "page": 22,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "12"
+        },
+        {
+          "ref": "#/texts/54",
+          "page": 22,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 22"
+        },
+        {
+          "ref": "#/texts/55",
+          "page": 23,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/56",
+          "page": 23,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/71",
+          "page": 23,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "13"
+        },
+        {
+          "ref": "#/texts/72",
+          "page": 23,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 23"
+        },
+        {
+          "ref": "#/texts/73",
+          "page": 24,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/74",
+          "page": 24,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/89",
+          "page": 24,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "14"
+        },
+        {
+          "ref": "#/texts/90",
+          "page": 24,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 24"
+        },
+        {
+          "ref": "#/texts/91",
+          "page": 25,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/92",
+          "page": 25,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/103",
+          "page": 25,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "15"
+        },
+        {
+          "ref": "#/texts/104",
+          "page": 25,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 25"
+        },
+        {
+          "ref": "#/texts/105",
+          "page": 26,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/106",
+          "page": 26,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/116",
+          "page": 26,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "16"
+        },
+        {
+          "ref": "#/texts/117",
+          "page": 26,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 26"
+        },
+        {
+          "ref": "#/texts/118",
+          "page": 27,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/119",
+          "page": 27,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/131",
+          "page": 27,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "17"
+        },
+        {
+          "ref": "#/texts/132",
+          "page": 27,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 27"
+        },
+        {
+          "ref": "#/texts/133",
+          "page": 28,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/134",
+          "page": 28,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/144",
+          "page": 28,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "18"
+        },
+        {
+          "ref": "#/texts/145",
+          "page": 28,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 28"
+        },
+        {
+          "ref": "#/texts/146",
+          "page": 29,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/147",
+          "page": 29,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/164",
+          "page": 29,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "19"
+        },
+        {
+          "ref": "#/texts/165",
+          "page": 29,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 29"
+        },
+        {
+          "ref": "#/texts/166",
+          "page": 30,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/167",
+          "page": 30,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/178",
+          "page": 30,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "20"
+        },
+        {
+          "ref": "#/texts/179",
+          "page": 30,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 30"
+        },
+        {
+          "ref": "#/texts/180",
+          "page": 31,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/181",
+          "page": 31,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/192",
+          "page": 31,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "21"
+        },
+        {
+          "ref": "#/texts/193",
+          "page": 31,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 31"
+        },
+        {
+          "ref": "#/texts/194",
+          "page": 32,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/195",
+          "page": 32,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/206",
+          "page": 32,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "22"
+        },
+        {
+          "ref": "#/texts/207",
+          "page": 32,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 32"
+        },
+        {
+          "ref": "#/texts/208",
+          "page": 33,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/209",
+          "page": 33,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/219",
+          "page": 33,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "23"
+        },
+        {
+          "ref": "#/texts/220",
+          "page": 33,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 33"
+        },
+        {
+          "ref": "#/texts/221",
+          "page": 34,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/222",
+          "page": 34,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/235",
+          "page": 34,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "24"
+        },
+        {
+          "ref": "#/texts/236",
+          "page": 34,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 34"
+        },
+        {
+          "ref": "#/texts/237",
+          "page": 35,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/238",
+          "page": 35,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/255",
+          "page": 35,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "25"
+        },
+        {
+          "ref": "#/texts/256",
+          "page": 35,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 35"
+        },
+        {
+          "ref": "#/texts/257",
+          "page": 36,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/258",
+          "page": 36,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/273",
+          "page": 36,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "26"
+        },
+        {
+          "ref": "#/texts/274",
+          "page": 36,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 36"
+        },
+        {
+          "ref": "#/texts/275",
+          "page": 37,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/276",
+          "page": 37,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/289",
+          "page": 37,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "27"
+        },
+        {
+          "ref": "#/texts/290",
+          "page": 37,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 37"
+        },
+        {
+          "ref": "#/texts/291",
+          "page": 38,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/292",
+          "page": 38,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/304",
+          "page": 38,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "28"
+        },
+        {
+          "ref": "#/texts/305",
+          "page": 38,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 38"
+        },
+        {
+          "ref": "#/texts/306",
+          "page": 39,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/307",
+          "page": 39,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/324",
+          "page": 39,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "29"
+        },
+        {
+          "ref": "#/texts/325",
+          "page": 39,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 39"
+        },
+        {
+          "ref": "#/texts/326",
+          "page": 40,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/327",
+          "page": 40,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/343",
+          "page": 40,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "30"
+        },
+        {
+          "ref": "#/texts/344",
+          "page": 40,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 40"
+        },
+        {
+          "ref": "#/texts/345",
+          "page": 41,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/346",
+          "page": 41,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/359",
+          "page": 41,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "31"
+        },
+        {
+          "ref": "#/texts/360",
+          "page": 41,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 41"
+        },
+        {
+          "ref": "#/texts/361",
+          "page": 42,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/362",
+          "page": 42,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/377",
+          "page": 42,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "32"
+        },
+        {
+          "ref": "#/texts/378",
+          "page": 42,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 42"
+        },
+        {
+          "ref": "#/texts/379",
+          "page": 43,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/380",
+          "page": 43,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/390",
+          "page": 43,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "33"
+        },
+        {
+          "ref": "#/texts/391",
+          "page": 43,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 43"
+        },
+        {
+          "ref": "#/texts/392",
+          "page": 44,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/393",
+          "page": 44,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/404",
+          "page": 44,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "34"
+        },
+        {
+          "ref": "#/texts/405",
+          "page": 44,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 44"
+        },
+        {
+          "ref": "#/texts/406",
+          "page": 45,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/407",
+          "page": 45,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/416",
+          "page": 45,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "35"
+        },
+        {
+          "ref": "#/texts/417",
+          "page": 45,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 45"
+        },
+        {
+          "ref": "#/texts/418",
+          "page": 46,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/419",
+          "page": 46,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/437",
+          "page": 46,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "36"
+        },
+        {
+          "ref": "#/texts/438",
+          "page": 46,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 46"
+        },
+        {
+          "ref": "#/texts/439",
+          "page": 47,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/440",
+          "page": 47,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/451",
+          "page": 47,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "37"
+        },
+        {
+          "ref": "#/texts/452",
+          "page": 47,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 47"
+        },
+        {
+          "ref": "#/texts/453",
+          "page": 48,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/454",
+          "page": 48,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/469",
+          "page": 48,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "38"
+        },
+        {
+          "ref": "#/texts/470",
+          "page": 48,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 48"
+        },
+        {
+          "ref": "#/texts/471",
+          "page": 49,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/472",
+          "page": 49,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/484",
+          "page": 49,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "39"
+        },
+        {
+          "ref": "#/texts/485",
+          "page": 49,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 49"
+        },
+        {
+          "ref": "#/texts/486",
+          "page": 50,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/487",
+          "page": 50,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/500",
+          "page": 50,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "40"
+        },
+        {
+          "ref": "#/texts/501",
+          "page": 50,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 50"
+        },
+        {
+          "ref": "#/texts/502",
+          "page": 51,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/503",
+          "page": 51,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/519",
+          "page": 51,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "41"
+        },
+        {
+          "ref": "#/texts/520",
+          "page": 51,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 51"
+        },
+        {
+          "ref": "#/texts/521",
+          "page": 52,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/522",
+          "page": 52,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/538",
+          "page": 52,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "42"
+        },
+        {
+          "ref": "#/texts/539",
+          "page": 52,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 52"
+        },
+        {
+          "ref": "#/texts/540",
+          "page": 53,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/541",
+          "page": 53,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/556",
+          "page": 53,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "43"
+        },
+        {
+          "ref": "#/texts/557",
+          "page": 53,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 53"
+        },
+        {
+          "ref": "#/texts/558",
+          "page": 54,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/559",
+          "page": 54,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/580",
+          "page": 54,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "44"
+        },
+        {
+          "ref": "#/texts/581",
+          "page": 54,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 54"
+        },
+        {
+          "ref": "#/texts/582",
+          "page": 55,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/583",
+          "page": 55,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/596",
+          "page": 55,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "45"
+        },
+        {
+          "ref": "#/texts/597",
+          "page": 55,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 55"
+        },
+        {
+          "ref": "#/texts/598",
+          "page": 56,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/599",
+          "page": 56,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/612",
+          "page": 56,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "46"
+        },
+        {
+          "ref": "#/texts/613",
+          "page": 56,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 56"
+        },
+        {
+          "ref": "#/texts/614",
+          "page": 57,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/615",
+          "page": 57,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/627",
+          "page": 57,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "47"
+        },
+        {
+          "ref": "#/texts/628",
+          "page": 57,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 57"
+        },
+        {
+          "ref": "#/texts/629",
+          "page": 58,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/630",
+          "page": 58,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/646",
+          "page": 58,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "48"
+        },
+        {
+          "ref": "#/texts/647",
+          "page": 58,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 58"
+        },
+        {
+          "ref": "#/texts/648",
+          "page": 59,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/649",
+          "page": 59,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/665",
+          "page": 59,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "49"
+        },
+        {
+          "ref": "#/texts/666",
+          "page": 59,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 59"
+        },
+        {
+          "ref": "#/texts/667",
+          "page": 60,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/668",
+          "page": 60,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/682",
+          "page": 60,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "50"
+        },
+        {
+          "ref": "#/texts/683",
+          "page": 60,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 60"
+        },
+        {
+          "ref": "#/texts/684",
+          "page": 61,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/685",
+          "page": 61,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/702",
+          "page": 61,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "51"
+        },
+        {
+          "ref": "#/texts/703",
+          "page": 61,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 61"
+        },
+        {
+          "ref": "#/texts/704",
+          "page": 62,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/705",
+          "page": 62,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/717",
+          "page": 62,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "52"
+        },
+        {
+          "ref": "#/texts/718",
+          "page": 62,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 62"
+        },
+        {
+          "ref": "#/texts/719",
+          "page": 63,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/720",
+          "page": 63,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/733",
+          "page": 63,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "53"
+        },
+        {
+          "ref": "#/texts/734",
+          "page": 63,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 63"
+        },
+        {
+          "ref": "#/texts/735",
+          "page": 64,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/736",
+          "page": 64,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/752",
+          "page": 64,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "54"
+        },
+        {
+          "ref": "#/texts/753",
+          "page": 64,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 64"
+        },
+        {
+          "ref": "#/texts/754",
+          "page": 65,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/755",
+          "page": 65,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/768",
+          "page": 65,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "55"
+        },
+        {
+          "ref": "#/texts/769",
+          "page": 65,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 65"
+        },
+        {
+          "ref": "#/texts/770",
+          "page": 66,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/771",
+          "page": 66,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/786",
+          "page": 66,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "56"
+        },
+        {
+          "ref": "#/texts/787",
+          "page": 66,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 66"
+        },
+        {
+          "ref": "#/texts/788",
+          "page": 67,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/789",
+          "page": 67,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/801",
+          "page": 67,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "57"
+        },
+        {
+          "ref": "#/texts/802",
+          "page": 67,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 67"
+        },
+        {
+          "ref": "#/texts/803",
+          "page": 68,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/804",
+          "page": 68,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/815",
+          "page": 68,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "58"
+        },
+        {
+          "ref": "#/texts/816",
+          "page": 68,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 68"
+        },
+        {
+          "ref": "#/texts/817",
+          "page": 69,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/818",
+          "page": 69,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/819",
+          "page": 69,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "59"
+        },
+        {
+          "ref": "#/texts/820",
+          "page": 69,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 69"
+        },
+        {
+          "ref": "#/texts/821",
+          "page": 70,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/822",
+          "page": 70,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/830",
+          "page": 70,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "60"
+        },
+        {
+          "ref": "#/texts/831",
+          "page": 70,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 70"
+        },
+        {
+          "ref": "#/texts/832",
+          "page": 71,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/833",
+          "page": 71,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/840",
+          "page": 71,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "61"
+        },
+        {
+          "ref": "#/texts/841",
+          "page": 71,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 71"
+        },
+        {
+          "ref": "#/texts/842",
+          "page": 72,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/843",
+          "page": 72,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/855",
+          "page": 72,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 72"
+        },
+        {
+          "ref": "#/texts/856",
+          "page": 73,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/857",
+          "page": 73,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/864",
+          "page": 73,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "63"
+        },
+        {
+          "ref": "#/texts/865",
+          "page": 73,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 73"
+        },
+        {
+          "ref": "#/texts/866",
+          "page": 74,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/867",
+          "page": 74,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/873",
+          "page": 74,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "64"
+        },
+        {
+          "ref": "#/texts/874",
+          "page": 74,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 74"
+        },
+        {
+          "ref": "#/texts/875",
+          "page": 75,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/876",
+          "page": 75,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/885",
+          "page": 75,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "65"
+        },
+        {
+          "ref": "#/texts/886",
+          "page": 75,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 75"
+        },
+        {
+          "ref": "#/texts/887",
+          "page": 76,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/888",
+          "page": 76,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/900",
+          "page": 76,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "66"
+        },
+        {
+          "ref": "#/texts/901",
+          "page": 76,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 76"
+        },
+        {
+          "ref": "#/texts/902",
+          "page": 77,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/903",
+          "page": 77,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/908",
+          "page": 77,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "67"
+        },
+        {
+          "ref": "#/texts/909",
+          "page": 77,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 77"
+        },
+        {
+          "ref": "#/texts/910",
+          "page": 78,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/911",
+          "page": 78,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/919",
+          "page": 78,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "68"
+        },
+        {
+          "ref": "#/texts/920",
+          "page": 78,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 78"
+        },
+        {
+          "ref": "#/texts/921",
+          "page": 79,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/922",
+          "page": 79,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/931",
+          "page": 79,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "69"
+        },
+        {
+          "ref": "#/texts/932",
+          "page": 79,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 79"
+        },
+        {
+          "ref": "#/texts/933",
+          "page": 80,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/934",
+          "page": 80,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/941",
+          "page": 80,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "70"
+        },
+        {
+          "ref": "#/texts/942",
+          "page": 80,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 80"
+        },
+        {
+          "ref": "#/texts/943",
+          "page": 81,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/944",
+          "page": 81,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/949",
+          "page": 81,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "71"
+        },
+        {
+          "ref": "#/texts/950",
+          "page": 81,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 81"
+        },
+        {
+          "ref": "#/texts/951",
+          "page": 82,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/952",
+          "page": 82,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/956",
+          "page": 82,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "72"
+        },
+        {
+          "ref": "#/texts/957",
+          "page": 82,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 82"
+        },
+        {
+          "ref": "#/texts/958",
+          "page": 83,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/959",
+          "page": 83,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/964",
+          "page": 83,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "73"
+        },
+        {
+          "ref": "#/texts/965",
+          "page": 83,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 83"
+        },
+        {
+          "ref": "#/texts/966",
+          "page": 84,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/967",
+          "page": 84,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/972",
+          "page": 84,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "74"
+        },
+        {
+          "ref": "#/texts/973",
+          "page": 84,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 84"
+        },
+        {
+          "ref": "#/texts/974",
+          "page": 85,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/975",
+          "page": 85,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/978",
+          "page": 85,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "75"
+        },
+        {
+          "ref": "#/texts/979",
+          "page": 85,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 85"
+        },
+        {
+          "ref": "#/texts/980",
+          "page": 86,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/981",
+          "page": 86,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/990",
+          "page": 86,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "76"
+        },
+        {
+          "ref": "#/texts/991",
+          "page": 86,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 86"
+        },
+        {
+          "ref": "#/texts/992",
+          "page": 87,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/993",
+          "page": 87,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/999",
+          "page": 87,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "77"
+        },
+        {
+          "ref": "#/texts/1000",
+          "page": 87,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 87"
+        },
+        {
+          "ref": "#/texts/1001",
+          "page": 88,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/1002",
+          "page": 88,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/1008",
+          "page": 88,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "78"
+        },
+        {
+          "ref": "#/texts/1009",
+          "page": 88,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 88"
+        },
+        {
+          "ref": "#/texts/1010",
+          "page": 89,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/1011",
+          "page": 89,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/1019",
+          "page": 89,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "79"
+        },
+        {
+          "ref": "#/texts/1020",
+          "page": 89,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 89"
+        },
+        {
+          "ref": "#/texts/1021",
+          "page": 90,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/1022",
+          "page": 90,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/1031",
+          "page": 90,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "80"
+        },
+        {
+          "ref": "#/texts/1032",
+          "page": 90,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 90"
+        },
+        {
+          "ref": "#/texts/1033",
+          "page": 91,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/1034",
+          "page": 91,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/1043",
+          "page": 91,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "81"
+        },
+        {
+          "ref": "#/texts/1044",
+          "page": 91,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 91"
+        },
+        {
+          "ref": "#/texts/1045",
+          "page": 92,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/1046",
+          "page": 92,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/1053",
+          "page": 92,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "82"
+        },
+        {
+          "ref": "#/texts/1054",
+          "page": 92,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 92"
+        },
+        {
+          "ref": "#/texts/1055",
+          "page": 93,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/1056",
+          "page": 93,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/1065",
+          "page": 93,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "83"
+        },
+        {
+          "ref": "#/texts/1066",
+          "page": 93,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 93"
+        },
+        {
+          "ref": "#/texts/1067",
+          "page": 94,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/1068",
+          "page": 94,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/1075",
+          "page": 94,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "84"
+        },
+        {
+          "ref": "#/texts/1076",
+          "page": 94,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 94"
+        },
+        {
+          "ref": "#/texts/1077",
+          "page": 95,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/1078",
+          "page": 95,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/1084",
+          "page": 95,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "85"
+        },
+        {
+          "ref": "#/texts/1085",
+          "page": 95,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 95"
+        },
+        {
+          "ref": "#/texts/1086",
+          "page": 96,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/1087",
+          "page": 96,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/1094",
+          "page": 96,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "86"
+        },
+        {
+          "ref": "#/texts/1095",
+          "page": 96,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 96"
+        },
+        {
+          "ref": "#/texts/1096",
+          "page": 97,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/1097",
+          "page": 97,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/1101",
+          "page": 97,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "87"
+        },
+        {
+          "ref": "#/texts/1102",
+          "page": 97,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 97"
+        },
+        {
+          "ref": "#/texts/1103",
+          "page": 98,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/1104",
+          "page": 98,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/1109",
+          "page": 98,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "88"
+        },
+        {
+          "ref": "#/texts/1110",
+          "page": 98,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 98"
+        },
+        {
+          "ref": "#/texts/1111",
+          "page": 99,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/1112",
+          "page": 99,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/1118",
+          "page": 99,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "89"
+        },
+        {
+          "ref": "#/texts/1119",
+          "page": 99,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 99"
+        },
+        {
+          "ref": "#/texts/1120",
+          "page": 100,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/1121",
+          "page": 100,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/1130",
+          "page": 100,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "90"
+        },
+        {
+          "ref": "#/texts/1131",
+          "page": 100,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 100"
+        },
+        {
+          "ref": "#/texts/1132",
+          "page": 101,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/1133",
+          "page": 101,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/1141",
+          "page": 101,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "91"
+        },
+        {
+          "ref": "#/texts/1142",
+          "page": 101,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 101"
+        },
+        {
+          "ref": "#/texts/1143",
+          "page": 102,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/1144",
+          "page": 102,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/1147",
+          "page": 102,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "92"
+        },
+        {
+          "ref": "#/texts/1148",
+          "page": 102,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 102"
+        },
+        {
+          "ref": "#/texts/1149",
+          "page": 103,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/1150",
+          "page": 103,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/1153",
+          "page": 103,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "93"
+        },
+        {
+          "ref": "#/texts/1154",
+          "page": 103,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 103"
+        },
+        {
+          "ref": "#/texts/1155",
+          "page": 104,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/1156",
+          "page": 104,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/1165",
+          "page": 104,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "94"
+        },
+        {
+          "ref": "#/texts/1166",
+          "page": 104,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 104"
+        },
+        {
+          "ref": "#/texts/1167",
+          "page": 105,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/1168",
+          "page": 105,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/1181",
+          "page": 105,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "95"
+        },
+        {
+          "ref": "#/texts/1182",
+          "page": 105,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 105"
+        },
+        {
+          "ref": "#/texts/1183",
+          "page": 106,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/1184",
+          "page": 106,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/1185",
+          "page": 106,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "96"
+        },
+        {
+          "ref": "#/texts/1186",
+          "page": 106,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 106"
+        },
+        {
+          "ref": "#/texts/1187",
+          "page": 107,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/1188",
+          "page": 107,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/1190",
+          "page": 107,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "97"
+        },
+        {
+          "ref": "#/texts/1191",
+          "page": 107,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 107"
+        },
+        {
+          "ref": "#/texts/1192",
+          "page": 108,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/1193",
+          "page": 108,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/1203",
+          "page": 108,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "98"
+        },
+        {
+          "ref": "#/texts/1204",
+          "page": 108,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 108"
+        },
+        {
+          "ref": "#/texts/1205",
+          "page": 109,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/1206",
+          "page": 109,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/1217",
+          "page": 109,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "99"
+        },
+        {
+          "ref": "#/texts/1218",
+          "page": 109,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 109"
+        },
+        {
+          "ref": "#/texts/1219",
+          "page": 110,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/1220",
+          "page": 110,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/1231",
+          "page": 110,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "100"
+        },
+        {
+          "ref": "#/texts/1232",
+          "page": 110,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 110"
+        },
+        {
+          "ref": "#/texts/1233",
+          "page": 111,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/1234",
+          "page": 111,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/1240",
+          "page": 111,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "101"
+        },
+        {
+          "ref": "#/texts/1241",
+          "page": 111,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 111"
+        },
+        {
+          "ref": "#/texts/1242",
+          "page": 112,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/1243",
+          "page": 112,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/1254",
+          "page": 112,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "102"
+        },
+        {
+          "ref": "#/texts/1255",
+          "page": 112,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 112"
+        },
+        {
+          "ref": "#/texts/1256",
+          "page": 113,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/1257",
+          "page": 113,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/1288",
+          "page": 113,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "103"
+        },
+        {
+          "ref": "#/texts/1289",
+          "page": 113,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 113"
+        },
+        {
+          "ref": "#/texts/1290",
+          "page": 114,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/1291",
+          "page": 114,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/1303",
+          "page": 114,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "104"
+        },
+        {
+          "ref": "#/texts/1304",
+          "page": 114,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 114"
+        },
+        {
+          "ref": "#/texts/1305",
+          "page": 115,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/1306",
+          "page": 115,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/1312",
+          "page": 115,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "105"
+        },
+        {
+          "ref": "#/texts/1313",
+          "page": 115,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 115"
+        },
+        {
+          "ref": "#/texts/1314",
+          "page": 116,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/1315",
+          "page": 116,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/1318",
+          "page": 116,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 116"
+        },
+        {
+          "ref": "#/texts/1319",
+          "page": 117,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/1320",
+          "page": 117,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/1328",
+          "page": 117,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "107"
+        },
+        {
+          "ref": "#/texts/1329",
+          "page": 117,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 117"
+        },
+        {
+          "ref": "#/texts/1330",
+          "page": 118,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/1331",
+          "page": 118,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/1347",
+          "page": 118,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "108"
+        },
+        {
+          "ref": "#/texts/1348",
+          "page": 118,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 118"
+        },
+        {
+          "ref": "#/texts/1349",
+          "page": 119,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/1350",
+          "page": 119,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/1358",
+          "page": 119,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "109"
+        },
+        {
+          "ref": "#/texts/1359",
+          "page": 119,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 119"
+        },
+        {
+          "ref": "#/texts/1360",
+          "page": 120,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/1361",
+          "page": 120,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/1369",
+          "page": 120,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "110"
+        },
+        {
+          "ref": "#/texts/1370",
+          "page": 120,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 120"
+        },
+        {
+          "ref": "#/texts/1371",
+          "page": 121,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/1372",
+          "page": 121,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/1380",
+          "page": 121,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "111"
+        },
+        {
+          "ref": "#/texts/1381",
+          "page": 121,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 121"
+        },
+        {
+          "ref": "#/texts/1382",
+          "page": 122,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/1383",
+          "page": 122,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/1390",
+          "page": 122,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "112"
+        },
+        {
+          "ref": "#/texts/1391",
+          "page": 122,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 122"
+        },
+        {
+          "ref": "#/texts/1392",
+          "page": 123,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/1393",
+          "page": 123,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/1401",
+          "page": 123,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "113"
+        },
+        {
+          "ref": "#/texts/1402",
+          "page": 123,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 123"
+        },
+        {
+          "ref": "#/texts/1403",
+          "page": 124,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/1404",
+          "page": 124,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/1407",
+          "page": 124,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "114"
+        },
+        {
+          "ref": "#/texts/1408",
+          "page": 124,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 124"
+        },
+        {
+          "ref": "#/texts/1409",
+          "page": 125,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "昇兴集团股份有限公司"
+        },
+        {
+          "ref": "#/texts/1410",
+          "page": 125,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "财务报表附注"
+        },
+        {
+          "ref": "#/texts/1416",
+          "page": 125,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "115"
+        },
+        {
+          "ref": "#/texts/1417",
+          "page": 125,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6 - 1 - 125"
+        }
+      ],
+      "hidden_source_refs_exported": [],
+      "non_table_narrative_preserved_during_assembly": true
+    },
+    "after": {
+      "tables": 185,
+      "anchors": 5062,
+      "span_cells": 131,
+      "actual_groups": {
+        "table_p68_t2_p70_t1": [
+          "p68_t2",
+          "p69_t1",
+          "p70_t1"
+        ],
+        "table_p87_t3_p88_t1": [
+          "p87_t3",
+          "p88_t1"
+        ],
+        "table_p112_t2_p113_t1": [
+          "p112_t2",
+          "p113_t1"
+        ],
+        "table_p123_t3_p124_t1": [
+          "p123_t3",
+          "p124_t1"
+        ]
+      },
+      "public_table_coverage": {
+        "all_source_tables_projected_once": true,
+        "emitted_source_cell_anchors": 5035,
+        "only_equivalent_complete_repeated_header_cells_removed": 27,
+        "source_rows_text_spans_header_roles_and_pages_preserved": true
+      },
+      "visible_source_items": 1418,
+      "serialized_source_events": 1418,
+      "duplicate_source_refs": [],
+      "wrong_source_pages": [],
+      "serialized_blocks_absent_from_page": [],
+      "missing_visible_refs": [],
+      "hidden_source_refs_exported": [],
+      "non_table_narrative_preserved_during_assembly": true
+    }
+  },
+  "source_cells_spans_header_roles_scope_and_pages_unchanged": true,
+  "raw_model_unchanged": true,
+  "recovered_visible_refs": [
+    "#/texts/1111",
+    "#/texts/1303",
+    "#/texts/580",
+    "#/texts/843",
+    "#/texts/238",
+    "#/texts/581",
+    "#/texts/165",
+    "#/texts/380",
+    "#/texts/454",
+    "#/texts/1187",
+    "#/texts/820",
+    "#/texts/1218",
+    "#/texts/1185",
+    "#/texts/1149",
+    "#/texts/956",
+    "#/texts/1304",
+    "#/texts/1144",
+    "#/texts/1372",
+    "#/texts/8",
+    "#/texts/1390",
+    "#/texts/841",
+    "#/texts/972",
+    "#/texts/840",
+    "#/texts/833",
+    "#/texts/1240",
+    "#/texts/787",
+    "#/texts/257",
+    "#/texts/255",
+    "#/texts/73",
+    "#/texts/789",
+    "#/texts/964",
+    "#/texts/72",
+    "#/texts/950",
+    "#/texts/933",
+    "#/texts/1130",
+    "#/texts/1391",
+    "#/texts/206",
+    "#/texts/55",
+    "#/texts/91",
+    "#/texts/256",
+    "#/texts/469",
+    "#/texts/1205",
+    "#/texts/378",
+    "#/texts/164",
+    "#/texts/1056",
+    "#/texts/1182",
+    "#/texts/116",
+    "#/texts/106",
+    "#/texts/596",
+    "#/texts/1191",
+    "#/texts/1330",
+    "#/texts/25",
+    "#/texts/222",
+    "#/texts/105",
+    "#/texts/1068",
+    "#/texts/752",
+    "#/texts/865",
+    "#/texts/978",
+    "#/texts/1109",
+    "#/texts/404",
+    "#/texts/167",
+    "#/texts/1142",
+    "#/texts/1143",
+    "#/texts/502",
+    "#/texts/304",
+    "#/texts/220",
+    "#/texts/1166",
+    "#/texts/1347",
+    "#/texts/1328",
+    "#/texts/788",
+    "#/texts/307",
+    "#/texts/817",
+    "#/texts/648",
+    "#/texts/597",
+    "#/texts/1101",
+    "#/texts/857",
+    "#/texts/1055",
+    "#/texts/1154",
+    "#/texts/1066",
+    "#/texts/559",
+    "#/texts/273",
+    "#/texts/920",
+    "#/texts/118",
+    "#/texts/1165",
+    "#/texts/390",
+    "#/texts/1410",
+    "#/texts/235",
+    "#/texts/922",
+    "#/texts/541",
+    "#/texts/438",
+    "#/texts/981",
+    "#/texts/1102",
+    "#/texts/145",
+    "#/texts/1408",
+    "#/texts/1094",
+    "#/texts/392",
+    "#/texts/842",
+    "#/texts/89",
+    "#/texts/487",
+    "#/texts/1033",
+    "#/texts/521",
+    "#/texts/1019",
+    "#/texts/1",
+    "#/texts/769",
+    "#/texts/1381",
+    "#/texts/451",
+    "#/texts/1403",
+    "#/texts/613",
+    "#/texts/831",
+    "#/texts/1360",
+    "#/texts/736",
+    "#/texts/440",
+    "#/texts/133",
+    "#/texts/556",
+    "#/texts/236",
+    "#/texts/630",
+    "#/texts/1009",
+    "#/texts/815",
+    "#/texts/1133",
+    "#/texts/1361",
+    "#/texts/1131",
+    "#/texts/1305",
+    "#/texts/486",
+    "#/texts/901",
+    "#/texts/941",
+    "#/texts/144",
+    "#/texts/975",
+    "#/texts/131",
+    "#/texts/405",
+    "#/texts/888",
+    "#/texts/734",
+    "#/texts/768",
+    "#/texts/1233",
+    "#/texts/646",
+    "#/texts/1181",
+    "#/texts/207",
+    "#/texts/802",
+    "#/texts/1393",
+    "#/texts/92",
+    "#/texts/119",
+    "#/texts/876",
+    "#/texts/951",
+    "#/texts/944",
+    "#/texts/1046",
+    "#/texts/290",
+    "#/texts/855",
+    "#/texts/1167",
+    "#/texts/503",
+    "#/texts/193",
+    "#/texts/1370",
+    "#/texts/325",
+    "#/texts/1118",
+    "#/texts/1031",
+    "#/texts/26",
+    "#/texts/902",
+    "#/texts/952",
+    "#/texts/406",
+    "#/texts/1257",
+    "#/texts/717",
+    "#/texts/1290",
+    "#/texts/1232",
+    "#/texts/733",
+    "#/texts/134",
+    "#/texts/1119",
+    "#/texts/629",
+    "#/texts/875",
+    "#/texts/1401",
+    "#/texts/821",
+    "#/texts/753",
+    "#/texts/949",
+    "#/texts/1243",
+    "#/texts/377",
+    "#/texts/628",
+    "#/texts/274",
+    "#/texts/702",
+    "#/texts/1402",
+    "#/texts/1000",
+    "#/texts/1087",
+    "#/texts/209",
+    "#/texts/992",
+    "#/texts/407",
+    "#/texts/558",
+    "#/texts/470",
+    "#/texts/10",
+    "#/texts/540",
+    "#/texts/1306",
+    "#/texts/39",
+    "#/texts/306",
+    "#/texts/1002",
+    "#/texts/1084",
+    "#/texts/361",
+    "#/texts/909",
+    "#/texts/1085",
+    "#/texts/1349",
+    "#/texts/885",
+    "#/texts/539",
+    "#/texts/472",
+    "#/texts/1315",
+    "#/texts/1416",
+    "#/texts/786",
+    "#/texts/819",
+    "#/texts/1407",
+    "#/texts/439",
+    "#/texts/305",
+    "#/texts/1034",
+    "#/texts/1112",
+    "#/texts/1043",
+    "#/texts/942",
+    "#/texts/453",
+    "#/texts/1011",
+    "#/texts/1156",
+    "#/texts/289",
+    "#/texts/856",
+    "#/texts/1022",
+    "#/texts/276",
+    "#/texts/1392",
+    "#/texts/754",
+    "#/texts/719",
+    "#/texts/360",
+    "#/texts/682",
+    "#/texts/867",
+    "#/texts/237",
+    "#/texts/1132",
+    "#/texts/195",
+    "#/texts/804",
+    "#/texts/418",
+    "#/texts/1186",
+    "#/texts/1254",
+    "#/texts/647",
+    "#/texts/1103",
+    "#/texts/1358",
+    "#/texts/327",
+    "#/texts/40",
+    "#/texts/1193",
+    "#/texts/41",
+    "#/texts/703",
+    "#/texts/417",
+    "#/texts/391",
+    "#/texts/522",
+    "#/texts/1242",
+    "#/texts/959",
+    "#/texts/900",
+    "#/texts/1380",
+    "#/texts/1217",
+    "#/texts/599",
+    "#/texts/1020",
+    "#/texts/1313",
+    "#/texts/704",
+    "#/texts/1314",
+    "#/texts/485",
+    "#/texts/219",
+    "#/texts/1369",
+    "#/texts/818",
+    "#/texts/1291",
+    "#/texts/1231",
+    "#/texts/735",
+    "#/texts/501",
+    "#/texts/980",
+    "#/texts/887",
+    "#/texts/990",
+    "#/texts/668",
+    "#/texts/291",
+    "#/texts/1110",
+    "#/texts/803",
+    "#/texts/179",
+    "#/texts/1153",
+    "#/texts/1096",
+    "#/texts/908",
+    "#/texts/181",
+    "#/texts/362",
+    "#/texts/705",
+    "#/texts/921",
+    "#/texts/538",
+    "#/texts/1075",
+    "#/texts/346",
+    "#/texts/71",
+    "#/texts/1044",
+    "#/texts/1065",
+    "#/texts/1409",
+    "#/texts/832",
+    "#/texts/275",
+    "#/texts/9",
+    "#/texts/685",
+    "#/texts/755",
+    "#/texts/1168",
+    "#/texts/258",
+    "#/texts/324",
+    "#/texts/720",
+    "#/texts/393",
+    "#/texts/292",
+    "#/texts/1150",
+    "#/texts/344",
+    "#/texts/1095",
+    "#/texts/943",
+    "#/texts/484",
+    "#/texts/1204",
+    "#/texts/27",
+    "#/texts/911",
+    "#/texts/683",
+    "#/texts/718",
+    "#/texts/816",
+    "#/texts/934",
+    "#/texts/1220",
+    "#/texts/615",
+    "#/texts/1147",
+    "#/texts/180",
+    "#/texts/1021",
+    "#/texts/1188",
+    "#/texts/627",
+    "#/texts/24",
+    "#/texts/56",
+    "#/texts/1141",
+    "#/texts/965",
+    "#/texts/932",
+    "#/texts/147",
+    "#/texts/801",
+    "#/texts/1078",
+    "#/texts/649",
+    "#/texts/866",
+    "#/texts/966",
+    "#/texts/1192",
+    "#/texts/194",
+    "#/texts/192",
+    "#/texts/42",
+    "#/texts/1288",
+    "#/texts/1032",
+    "#/texts/117",
+    "#/texts/519",
+    "#/texts/1348",
+    "#/texts/666",
+    "#/texts/999",
+    "#/texts/830",
+    "#/texts/919",
+    "#/texts/1104",
+    "#/texts/1155",
+    "#/texts/1331",
+    "#/texts/1045",
+    "#/texts/598",
+    "#/texts/221",
+    "#/texts/771",
+    "#/texts/520",
+    "#/texts/1203",
+    "#/texts/1417",
+    "#/texts/1067",
+    "#/texts/873",
+    "#/texts/1183",
+    "#/texts/345",
+    "#/texts/1077",
+    "#/texts/822",
+    "#/texts/500",
+    "#/texts/770",
+    "#/texts/379",
+    "#/texts/1076",
+    "#/texts/1318",
+    "#/texts/967",
+    "#/texts/416",
+    "#/texts/667",
+    "#/texts/1097",
+    "#/texts/1053",
+    "#/texts/1350",
+    "#/texts/166",
+    "#/texts/931",
+    "#/texts/178",
+    "#/texts/979",
+    "#/texts/326",
+    "#/texts/614",
+    "#/texts/864",
+    "#/texts/1120",
+    "#/texts/1382",
+    "#/texts/1206",
+    "#/texts/132",
+    "#/texts/53",
+    "#/texts/1319",
+    "#/texts/7",
+    "#/texts/437",
+    "#/texts/1289",
+    "#/texts/1054",
+    "#/texts/1320",
+    "#/texts/886",
+    "#/texts/1184",
+    "#/texts/1219",
+    "#/texts/582",
+    "#/texts/1148",
+    "#/texts/910",
+    "#/texts/104",
+    "#/texts/1329",
+    "#/texts/471",
+    "#/texts/1383",
+    "#/texts/583",
+    "#/texts/359",
+    "#/texts/1234",
+    "#/texts/1359",
+    "#/texts/1241",
+    "#/texts/1121",
+    "#/texts/146",
+    "#/texts/1312",
+    "#/texts/0",
+    "#/texts/208",
+    "#/texts/419",
+    "#/texts/974",
+    "#/texts/903",
+    "#/texts/343",
+    "#/texts/958",
+    "#/texts/993",
+    "#/texts/874",
+    "#/texts/1256",
+    "#/texts/1190",
+    "#/texts/1371",
+    "#/texts/103",
+    "#/texts/973",
+    "#/texts/1404",
+    "#/texts/557",
+    "#/texts/991",
+    "#/texts/74",
+    "#/texts/612",
+    "#/texts/452",
+    "#/texts/1255",
+    "#/texts/1086",
+    "#/texts/90",
+    "#/texts/1010",
+    "#/texts/665",
+    "#/texts/684",
+    "#/texts/1008",
+    "#/texts/54",
+    "#/texts/957",
+    "#/texts/1001"
+  ],
+  "removed_groups": [
+    [
+      "p115_t3",
+      "p116_t1"
+    ]
+  ],
+  "added_groups": []
+}

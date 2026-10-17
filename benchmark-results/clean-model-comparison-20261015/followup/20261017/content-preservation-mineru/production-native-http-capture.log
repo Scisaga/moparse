@@ -1,0 +1,4 @@
+{"event": "submitted", "source": "1225474139", "job": "job_01M5526XS8PWRMN5H1ASGACAS2"}
+{"event": "terminal", "source": "1225474139", "job": "job_01M5526XS8PWRMN5H1ASGACAS2", "status": "completed", "full_capture_s": 48.86805866099894, "error": null}
+{"event": "submitted", "source": "1225474739", "job": "job_01M5528DH340D352BAKC1X0G1M"}
+{"event": "terminal", "source": "1225474739", "job": "job_01M5528DH340D352BAKC1X0G1M", "status": "completed", "full_capture_s": 301.8718693170231, "error": null}

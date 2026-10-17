@@ -1,0 +1,58 @@
+{
+  "UTC": "2026-10-17T14:32:25.370684+00:00",
+  "checks": [
+    {
+      "command": [
+        ".venv/bin/ruff",
+        "check",
+        "app",
+        "tests",
+        "scripts",
+        "docker"
+      ],
+      "exit": 0,
+      "stdout": "All checks passed!\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        ".venv/bin/mypy",
+        "app"
+      ],
+      "exit": 0,
+      "stdout": "Success: no issues found in 53 source files\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "uv",
+        "lock",
+        "--check"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": "Resolved 148 packages in 1ms\n"
+    },
+    {
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exit": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "documentation_relative_links": 177,
+  "missing_links": [],
+  "bad_anchors": [],
+  "application_sources_match_runtime_and_tested_image": 53,
+  "old_result_and_asset_files_unchanged": 314,
+  "historical_manifests_and_index_unchanged": {
+    "benchmark-results/clean-model-comparison-20261015/followup/20261017/selected-pipeline-deployment/release-manifest.json": "610bef32c1b665ded32b52dccec1afc189d16129f0dafe744b33581951a4648f",
+    "benchmark-results/clean-model-comparison-20261015/followup/20261017/selected-pipeline-deployment/independent-recheck-20261017T170704/release-manifest.json": "4cd919ccf2e86640bb288eef64f6a89e99a532a35045d66b30fea96ff857a348",
+    "benchmark-results/clean-model-comparison-20261015/final-evidence-index.jsonl": "fe83566adc4c2556b4679816ad8f080fd940f5c478f6c77b0ae57b668c50ae71"
+  },
+  "backend_test_log_SHA256": "aa11fb994ad0966eb2b9567a1ae7439974a2e977a55127f57dd14e9ceddd15fb"
+}

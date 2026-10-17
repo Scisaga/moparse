@@ -1,0 +1,499 @@
+{
+  "source": "1225475642",
+  "job": "job_01M551MRMVRHQVSVN2HQ7ATA7T",
+  "status": "completed",
+  "MD_SHA256": "7310b845f06c7b2aeaeb393ff3613fa4ab474611c426d4973c689c0591e0961a",
+  "pages_recorded": 130,
+  "pages_expected": 130,
+  "parse_issues": [],
+  "core_numeric": {
+    "pass": 99
+  },
+  "core_period": {
+    "passed": 99,
+    "period_confirmed": 99,
+    "period_mismatch": 0,
+    "period_unknown": 0
+  },
+  "financial30": {},
+  "funding31": {},
+  "funding7_bound": 0,
+  "stock": null,
+  "normal_header_leaves": {
+    "passed": 0,
+    "evaluated": 0,
+    "checks": []
+  },
+  "supplements": {
+    "supplement402": {
+      "literal": {
+        "counts": {},
+        "literal_and_unique_row_pass": 0,
+        "literal_row_and_complete_header_pass": 0,
+        "target_count": 0
+      },
+      "scope_calendar": {
+        "counts": {},
+        "literal_and_unique_row_pass": 0,
+        "literal_row_and_complete_header_pass": 0,
+        "target_count": 0
+      }
+    },
+    "source130": {
+      "literal": {
+        "counts": {
+          "pass": 43,
+          "value_mismatch_or_missing": 6,
+          "missing_table": 24
+        },
+        "literal_and_unique_row_pass": 43,
+        "literal_row_and_complete_header_pass": 40,
+        "target_count": 73
+      },
+      "scope_calendar": {
+        "counts": {
+          "pass": 43,
+          "value_mismatch_or_missing": 6,
+          "missing_table": 24
+        },
+        "literal_and_unique_row_pass": 43,
+        "literal_row_and_complete_header_pass": 40,
+        "target_count": 73
+      }
+    },
+    "source28": {
+      "literal": {
+        "counts": {},
+        "literal_and_unique_row_pass": 0,
+        "literal_row_and_complete_header_pass": 0,
+        "target_count": 0
+      },
+      "scope_calendar": {
+        "counts": {},
+        "literal_and_unique_row_pass": 0,
+        "literal_row_and_complete_header_pass": 0,
+        "target_count": 0
+      }
+    },
+    "normal33": {
+      "literal": {
+        "counts": {},
+        "literal_and_unique_row_pass": 0,
+        "literal_row_and_complete_header_pass": 0,
+        "target_count": 0
+      },
+      "scope_calendar": {
+        "counts": {},
+        "literal_and_unique_row_pass": 0,
+        "literal_row_and_complete_header_pass": 0,
+        "target_count": 0
+      }
+    }
+  },
+  "public_logical_projection": {
+    "audit": [
+      {
+        "logical": "table_p68_t2_p70_t1",
+        "declared_source": {
+          "fragment": "p68_t2",
+          "page": 68,
+          "source_rows": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "logical_rows": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "skip": 0
+        },
+        "visible_body_row_indices": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "visible_header_row_indices_reused": []
+      },
+      {
+        "logical": "table_p68_t2_p70_t1",
+        "declared_source": {
+          "fragment": "p69_t1",
+          "page": 69,
+          "source_rows": [
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33
+          ],
+          "logical_rows": [
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32,
+            33,
+            34,
+            35,
+            36,
+            37,
+            38,
+            39
+          ],
+          "skip": 1
+        },
+        "visible_body_row_indices": [
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28,
+          29,
+          30,
+          31,
+          32,
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          39
+        ],
+        "visible_header_row_indices_reused": [
+          1
+        ]
+      },
+      {
+        "logical": "table_p68_t2_p70_t1",
+        "declared_source": {
+          "fragment": "p70_t1",
+          "page": 70,
+          "source_rows": [
+            2
+          ],
+          "logical_rows": [
+            40
+          ],
+          "skip": 1
+        },
+        "visible_body_row_indices": [
+          40
+        ],
+        "visible_header_row_indices_reused": [
+          1
+        ]
+      },
+      {
+        "logical": "table_p87_t3_p88_t1",
+        "declared_source": {
+          "fragment": "p87_t3",
+          "page": 87,
+          "source_rows": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "logical_rows": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "skip": 0
+        },
+        "visible_body_row_indices": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "visible_header_row_indices_reused": []
+      },
+      {
+        "logical": "table_p87_t3_p88_t1",
+        "declared_source": {
+          "fragment": "p88_t1",
+          "page": 88,
+          "source_rows": [
+            3,
+            4
+          ],
+          "logical_rows": [
+            7,
+            8
+          ],
+          "skip": 2
+        },
+        "visible_body_row_indices": [
+          7,
+          8
+        ],
+        "visible_header_row_indices_reused": [
+          1,
+          2
+        ]
+      },
+      {
+        "logical": "table_p112_t2_p113_t1",
+        "declared_source": {
+          "fragment": "p112_t2",
+          "page": 112,
+          "source_rows": [
+            1,
+            2
+          ],
+          "logical_rows": [
+            1,
+            2
+          ],
+          "skip": 0
+        },
+        "visible_body_row_indices": [
+          1,
+          2
+        ],
+        "visible_header_row_indices_reused": []
+      },
+      {
+        "logical": "table_p112_t2_p113_t1",
+        "declared_source": {
+          "fragment": "p113_t1",
+          "page": 113,
+          "source_rows": [
+            2,
+            3
+          ],
+          "logical_rows": [
+            3,
+            4
+          ],
+          "skip": 1
+        },
+        "visible_body_row_indices": [
+          3,
+          4
+        ],
+        "visible_header_row_indices_reused": [
+          1
+        ]
+      },
+      {
+        "logical": "table_p123_t3_p124_t1",
+        "declared_source": {
+          "fragment": "p123_t3",
+          "page": 123,
+          "source_rows": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12
+          ],
+          "logical_rows": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12
+          ],
+          "skip": 0
+        },
+        "visible_body_row_indices": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12
+        ],
+        "visible_header_row_indices_reused": []
+      },
+      {
+        "logical": "table_p123_t3_p124_t1",
+        "declared_source": {
+          "fragment": "p124_t1",
+          "page": 124,
+          "source_rows": [
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21
+          ],
+          "logical_rows": [
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24,
+            25,
+            26,
+            27,
+            28,
+            29,
+            30,
+            31,
+            32
+          ],
+          "skip": 1
+        },
+        "visible_body_row_indices": [
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28,
+          29,
+          30,
+          31,
+          32
+        ],
+        "visible_header_row_indices_reused": [
+          1
+        ]
+      }
+    ],
+    "public_output_changed": false,
+    "gold_text_or_values_used": false,
+    "table_geometry_invented": false,
+    "span_or_header_roles_invented": false
+  }
+}

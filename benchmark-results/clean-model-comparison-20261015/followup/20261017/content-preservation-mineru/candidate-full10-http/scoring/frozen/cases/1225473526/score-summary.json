@@ -1,0 +1,286 @@
+{
+  "source": "1225473526",
+  "job": "job_01M550Q8A2EK2JRG1PMKJG30VW",
+  "status": "completed",
+  "MD_SHA256": "a9083dafc4f1b48d60526c7350c0805fcff112a245c4b784bba6c69bf8fa5914",
+  "pages_recorded": 27,
+  "pages_expected": 27,
+  "parse_issues": [],
+  "core_numeric": {},
+  "core_period": {
+    "passed": 0,
+    "period_confirmed": 0,
+    "period_mismatch": 0,
+    "period_unknown": 0
+  },
+  "financial30": {},
+  "funding31": {
+    "pass": 31
+  },
+  "funding7_bound": 7,
+  "stock": null,
+  "normal_header_leaves": {
+    "passed": 10,
+    "evaluated": 10,
+    "checks": [
+      {
+        "source_page": 6,
+        "table_id": "p6_t2",
+        "expected_leaf": "序号",
+        "status": "pass",
+        "matches": [
+          {
+            "row": 0,
+            "column": 0
+          }
+        ]
+      },
+      {
+        "source_page": 6,
+        "table_id": "p6_t2",
+        "expected_leaf": "股东名称",
+        "status": "pass",
+        "matches": [
+          {
+            "row": 0,
+            "column": 1
+          }
+        ]
+      },
+      {
+        "source_page": 6,
+        "table_id": "p6_t2",
+        "expected_leaf": "持股数量",
+        "status": "pass",
+        "matches": [
+          {
+            "row": 0,
+            "column": 2
+          }
+        ]
+      },
+      {
+        "source_page": 6,
+        "table_id": "p6_t2",
+        "expected_leaf": "持股比例",
+        "status": "pass",
+        "matches": [
+          {
+            "row": 0,
+            "column": 3
+          }
+        ]
+      },
+      {
+        "source_page": 6,
+        "table_id": "p6_t2",
+        "expected_leaf": "有限售条件的股\n份数量",
+        "status": "pass",
+        "matches": [
+          {
+            "row": 0,
+            "column": 4
+          }
+        ]
+      },
+      {
+        "source_page": 7,
+        "table_id": "p7_t1",
+        "expected_leaf": "序号",
+        "status": "pass",
+        "matches": [
+          {
+            "row": 0,
+            "column": 0
+          }
+        ]
+      },
+      {
+        "source_page": 7,
+        "table_id": "p7_t1",
+        "expected_leaf": "股东名称",
+        "status": "pass",
+        "matches": [
+          {
+            "row": 0,
+            "column": 1
+          }
+        ]
+      },
+      {
+        "source_page": 7,
+        "table_id": "p7_t1",
+        "expected_leaf": "持股数量",
+        "status": "pass",
+        "matches": [
+          {
+            "row": 0,
+            "column": 2
+          }
+        ]
+      },
+      {
+        "source_page": 7,
+        "table_id": "p7_t1",
+        "expected_leaf": "持股比例",
+        "status": "pass",
+        "matches": [
+          {
+            "row": 0,
+            "column": 3
+          }
+        ]
+      },
+      {
+        "source_page": 7,
+        "table_id": "p7_t1",
+        "expected_leaf": "有限售条件的股\n份数量",
+        "status": "pass",
+        "matches": [
+          {
+            "row": 0,
+            "column": 4
+          }
+        ]
+      }
+    ]
+  },
+  "supplements": {
+    "supplement402": {
+      "literal": {
+        "counts": {},
+        "literal_and_unique_row_pass": 0,
+        "literal_row_and_complete_header_pass": 0,
+        "target_count": 0
+      },
+      "scope_calendar": {
+        "counts": {},
+        "literal_and_unique_row_pass": 0,
+        "literal_row_and_complete_header_pass": 0,
+        "target_count": 0
+      }
+    },
+    "source130": {
+      "literal": {
+        "counts": {},
+        "literal_and_unique_row_pass": 0,
+        "literal_row_and_complete_header_pass": 0,
+        "target_count": 0
+      },
+      "scope_calendar": {
+        "counts": {},
+        "literal_and_unique_row_pass": 0,
+        "literal_row_and_complete_header_pass": 0,
+        "target_count": 0
+      }
+    },
+    "source28": {
+      "literal": {
+        "counts": {},
+        "literal_and_unique_row_pass": 0,
+        "literal_row_and_complete_header_pass": 0,
+        "target_count": 0
+      },
+      "scope_calendar": {
+        "counts": {},
+        "literal_and_unique_row_pass": 0,
+        "literal_row_and_complete_header_pass": 0,
+        "target_count": 0
+      }
+    },
+    "normal33": {
+      "literal": {
+        "counts": {
+          "pass": 33
+        },
+        "literal_and_unique_row_pass": 33,
+        "literal_row_and_complete_header_pass": 33,
+        "target_count": 33
+      },
+      "scope_calendar": {
+        "counts": {
+          "pass": 33
+        },
+        "literal_and_unique_row_pass": 33,
+        "literal_row_and_complete_header_pass": 33,
+        "target_count": 33
+      }
+    }
+  },
+  "public_logical_projection": {
+    "audit": [
+      {
+        "logical": "table_p6_t2_p7_t1",
+        "declared_source": {
+          "fragment": "p6_t2",
+          "page": 6,
+          "source_rows": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "logical_rows": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+          ],
+          "skip": 0
+        },
+        "visible_body_row_indices": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "visible_header_row_indices_reused": []
+      },
+      {
+        "logical": "table_p6_t2_p7_t1",
+        "declared_source": {
+          "fragment": "p7_t1",
+          "page": 7,
+          "source_rows": [
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "logical_rows": [
+            8,
+            9,
+            10,
+            11,
+            12
+          ],
+          "skip": 1
+        },
+        "visible_body_row_indices": [
+          8,
+          9,
+          10,
+          11,
+          12
+        ],
+        "visible_header_row_indices_reused": [
+          1
+        ]
+      }
+    ],
+    "public_output_changed": false,
+    "gold_text_or_values_used": false,
+    "table_geometry_invented": false,
+    "span_or_header_roles_invented": false
+  }
+}

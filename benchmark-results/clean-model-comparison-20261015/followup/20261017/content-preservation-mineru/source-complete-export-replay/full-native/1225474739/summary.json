@@ -1,0 +1,2233 @@
+{
+  "source": "1225474739",
+  "input_SHA256": "1c99c450a8efefe77c9ca02a6f670c958298f661e5ad8d30d6ba01aa0742cda9",
+  "raw_SHA256": "9cf9650678524ecd8a6d102bcf2d9db1f32268b5ffdd192b1611fb3d4811df11",
+  "native_pages": 134,
+  "phases": {
+    "before": {
+      "tables": 249,
+      "anchors": 9584,
+      "span_cells": 295,
+      "actual_groups": {
+        "table_p104_t4_p105_t1": [
+          "p104_t4",
+          "p105_t1"
+        ]
+      },
+      "public_table_coverage": {
+        "all_source_tables_projected_once": true,
+        "emitted_source_cell_anchors": 9577,
+        "only_equivalent_complete_repeated_header_cells_removed": 7,
+        "source_rows_text_spans_header_roles_and_pages_preserved": true
+      },
+      "visible_source_items": 1791,
+      "serialized_source_events": 1520,
+      "duplicate_source_refs": [],
+      "wrong_source_pages": [],
+      "serialized_blocks_absent_from_page": [],
+      "missing_visible_refs": [
+        {
+          "ref": "#/texts/0",
+          "page": 1,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/4",
+          "page": 1,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "1"
+        },
+        {
+          "ref": "#/texts/5",
+          "page": 2,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/13",
+          "page": 2,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "2"
+        },
+        {
+          "ref": "#/texts/14",
+          "page": 3,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/16",
+          "page": 3,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "3"
+        },
+        {
+          "ref": "#/texts/17",
+          "page": 4,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/22",
+          "page": 4,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "4"
+        },
+        {
+          "ref": "#/texts/23",
+          "page": 5,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/25",
+          "page": 5,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "5"
+        },
+        {
+          "ref": "#/texts/26",
+          "page": 6,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/27",
+          "page": 6,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6"
+        },
+        {
+          "ref": "#/texts/28",
+          "page": 7,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/45",
+          "page": 7,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "7"
+        },
+        {
+          "ref": "#/texts/46",
+          "page": 8,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/61",
+          "page": 8,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "8"
+        },
+        {
+          "ref": "#/texts/62",
+          "page": 9,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/69",
+          "page": 9,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "9"
+        },
+        {
+          "ref": "#/texts/70",
+          "page": 10,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/93",
+          "page": 10,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "10"
+        },
+        {
+          "ref": "#/texts/94",
+          "page": 11,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/109",
+          "page": 11,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "11"
+        },
+        {
+          "ref": "#/texts/110",
+          "page": 12,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/132",
+          "page": 12,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "12"
+        },
+        {
+          "ref": "#/texts/133",
+          "page": 13,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/148",
+          "page": 13,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "13"
+        },
+        {
+          "ref": "#/texts/149",
+          "page": 14,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/151",
+          "page": 14,
+          "label": "footnote",
+          "layer": "body",
+          "text": "公司报告期利润构成或利润来源发生重大变动"
+        },
+        {
+          "ref": "#/texts/159",
+          "page": 14,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "14"
+        },
+        {
+          "ref": "#/texts/160",
+          "page": 15,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/165",
+          "page": 15,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "15"
+        },
+        {
+          "ref": "#/texts/166",
+          "page": 16,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/171",
+          "page": 16,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "单位：元"
+        },
+        {
+          "ref": "#/texts/172",
+          "page": 16,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "16"
+        },
+        {
+          "ref": "#/texts/173",
+          "page": 17,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/182",
+          "page": 17,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "17"
+        },
+        {
+          "ref": "#/texts/183",
+          "page": 18,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/200",
+          "page": 18,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "18"
+        },
+        {
+          "ref": "#/texts/201",
+          "page": 19,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/208",
+          "page": 19,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "19"
+        },
+        {
+          "ref": "#/texts/209",
+          "page": 20,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/225",
+          "page": 20,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "20"
+        },
+        {
+          "ref": "#/texts/226",
+          "page": 21,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/245",
+          "page": 21,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "21"
+        },
+        {
+          "ref": "#/texts/246",
+          "page": 22,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/261",
+          "page": 22,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "22"
+        },
+        {
+          "ref": "#/texts/262",
+          "page": 23,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/269",
+          "page": 23,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "23"
+        },
+        {
+          "ref": "#/texts/270",
+          "page": 24,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/286",
+          "page": 24,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "24"
+        },
+        {
+          "ref": "#/texts/287",
+          "page": 25,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/303",
+          "page": 25,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "25"
+        },
+        {
+          "ref": "#/texts/304",
+          "page": 26,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/329",
+          "page": 26,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "26"
+        },
+        {
+          "ref": "#/texts/330",
+          "page": 27,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/347",
+          "page": 27,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "27"
+        },
+        {
+          "ref": "#/texts/348",
+          "page": 28,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/372",
+          "page": 28,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "28"
+        },
+        {
+          "ref": "#/texts/373",
+          "page": 29,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/388",
+          "page": 29,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "29"
+        },
+        {
+          "ref": "#/texts/389",
+          "page": 30,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/403",
+          "page": 30,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "30"
+        },
+        {
+          "ref": "#/texts/404",
+          "page": 31,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/417",
+          "page": 31,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "31"
+        },
+        {
+          "ref": "#/texts/418",
+          "page": 32,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/431",
+          "page": 32,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "32"
+        },
+        {
+          "ref": "#/texts/432",
+          "page": 33,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/433",
+          "page": 33,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "33"
+        },
+        {
+          "ref": "#/texts/434",
+          "page": 34,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/449",
+          "page": 34,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "34"
+        },
+        {
+          "ref": "#/texts/450",
+          "page": 35,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/469",
+          "page": 35,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "35"
+        },
+        {
+          "ref": "#/texts/470",
+          "page": 36,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/481",
+          "page": 36,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "36"
+        },
+        {
+          "ref": "#/texts/482",
+          "page": 37,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/498",
+          "page": 37,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "37"
+        },
+        {
+          "ref": "#/texts/499",
+          "page": 38,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/512",
+          "page": 38,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "38"
+        },
+        {
+          "ref": "#/texts/513",
+          "page": 39,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/518",
+          "page": 39,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "39"
+        },
+        {
+          "ref": "#/texts/519",
+          "page": 40,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/524",
+          "page": 40,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "40"
+        },
+        {
+          "ref": "#/texts/525",
+          "page": 41,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/544",
+          "page": 41,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "41"
+        },
+        {
+          "ref": "#/texts/545",
+          "page": 42,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/548",
+          "page": 42,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "42"
+        },
+        {
+          "ref": "#/texts/549",
+          "page": 43,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/552",
+          "page": 43,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "43"
+        },
+        {
+          "ref": "#/texts/553",
+          "page": 44,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/564",
+          "page": 44,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "44"
+        },
+        {
+          "ref": "#/texts/565",
+          "page": 45,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/566",
+          "page": 45,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "45"
+        },
+        {
+          "ref": "#/texts/567",
+          "page": 46,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/573",
+          "page": 46,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "46"
+        },
+        {
+          "ref": "#/texts/574",
+          "page": 47,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/575",
+          "page": 47,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "47"
+        },
+        {
+          "ref": "#/texts/576",
+          "page": 48,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/579",
+          "page": 48,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "48"
+        },
+        {
+          "ref": "#/texts/580",
+          "page": 49,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/581",
+          "page": 49,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "49"
+        },
+        {
+          "ref": "#/texts/582",
+          "page": 50,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/588",
+          "page": 50,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "50"
+        },
+        {
+          "ref": "#/texts/589",
+          "page": 51,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/590",
+          "page": 51,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "51"
+        },
+        {
+          "ref": "#/texts/591",
+          "page": 52,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/594",
+          "page": 52,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "52"
+        },
+        {
+          "ref": "#/texts/595",
+          "page": 53,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/598",
+          "page": 53,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "53"
+        },
+        {
+          "ref": "#/texts/599",
+          "page": 54,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/603",
+          "page": 54,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "54"
+        },
+        {
+          "ref": "#/texts/604",
+          "page": 55,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/605",
+          "page": 55,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "55"
+        },
+        {
+          "ref": "#/texts/606",
+          "page": 56,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/609",
+          "page": 56,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "56"
+        },
+        {
+          "ref": "#/texts/610",
+          "page": 57,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/611",
+          "page": 57,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "57"
+        },
+        {
+          "ref": "#/texts/612",
+          "page": 58,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/616",
+          "page": 58,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "58"
+        },
+        {
+          "ref": "#/texts/617",
+          "page": 59,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/620",
+          "page": 59,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "59"
+        },
+        {
+          "ref": "#/texts/621",
+          "page": 60,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/622",
+          "page": 60,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "60"
+        },
+        {
+          "ref": "#/texts/623",
+          "page": 61,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/631",
+          "page": 61,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "61"
+        },
+        {
+          "ref": "#/texts/632",
+          "page": 62,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/642",
+          "page": 62,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "62"
+        },
+        {
+          "ref": "#/texts/643",
+          "page": 63,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/654",
+          "page": 63,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "63"
+        },
+        {
+          "ref": "#/texts/655",
+          "page": 64,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/663",
+          "page": 64,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "64"
+        },
+        {
+          "ref": "#/texts/664",
+          "page": 65,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/682",
+          "page": 65,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "65"
+        },
+        {
+          "ref": "#/texts/683",
+          "page": 66,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/702",
+          "page": 66,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "66"
+        },
+        {
+          "ref": "#/texts/703",
+          "page": 67,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/732",
+          "page": 67,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "67"
+        },
+        {
+          "ref": "#/texts/733",
+          "page": 68,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/761",
+          "page": 68,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "68"
+        },
+        {
+          "ref": "#/texts/762",
+          "page": 69,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/791",
+          "page": 69,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "69"
+        },
+        {
+          "ref": "#/texts/792",
+          "page": 70,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/818",
+          "page": 70,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "70"
+        },
+        {
+          "ref": "#/texts/819",
+          "page": 71,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/842",
+          "page": 71,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "71"
+        },
+        {
+          "ref": "#/texts/843",
+          "page": 72,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/858",
+          "page": 72,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "72"
+        },
+        {
+          "ref": "#/texts/859",
+          "page": 73,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/880",
+          "page": 73,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "73"
+        },
+        {
+          "ref": "#/texts/881",
+          "page": 74,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/902",
+          "page": 74,
+          "label": "footnote",
+          "layer": "body",
+          "text": "3、使用寿命不确定的无形资产的判断依据以及对其使用寿命进行复核的程序 使用寿命不确定的无形资产，每期末进行减值测试。"
+        },
+        {
+          "ref": "#/texts/908",
+          "page": 74,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "74"
+        },
+        {
+          "ref": "#/texts/909",
+          "page": 75,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/931",
+          "page": 75,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "75"
+        },
+        {
+          "ref": "#/texts/932",
+          "page": 76,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/959",
+          "page": 76,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "76"
+        },
+        {
+          "ref": "#/texts/960",
+          "page": 77,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/981",
+          "page": 77,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "77"
+        },
+        {
+          "ref": "#/texts/982",
+          "page": 78,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/1007",
+          "page": 78,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "78"
+        },
+        {
+          "ref": "#/texts/1008",
+          "page": 79,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/1033",
+          "page": 79,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "79"
+        },
+        {
+          "ref": "#/texts/1034",
+          "page": 80,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/1063",
+          "page": 80,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "80"
+        },
+        {
+          "ref": "#/texts/1064",
+          "page": 81,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/1086",
+          "page": 81,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "81"
+        },
+        {
+          "ref": "#/texts/1087",
+          "page": 82,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/1096",
+          "page": 82,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "82"
+        },
+        {
+          "ref": "#/texts/1097",
+          "page": 83,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/1114",
+          "page": 83,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "83"
+        },
+        {
+          "ref": "#/texts/1115",
+          "page": 84,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/1120",
+          "page": 84,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "84"
+        },
+        {
+          "ref": "#/texts/1121",
+          "page": 85,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/1133",
+          "page": 85,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "85"
+        },
+        {
+          "ref": "#/texts/1134",
+          "page": 86,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/1149",
+          "page": 86,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "86"
+        },
+        {
+          "ref": "#/texts/1150",
+          "page": 87,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/1158",
+          "page": 87,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "87"
+        },
+        {
+          "ref": "#/texts/1159",
+          "page": 88,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/1171",
+          "page": 88,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "88"
+        },
+        {
+          "ref": "#/texts/1172",
+          "page": 89,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/1184",
+          "page": 89,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "89"
+        },
+        {
+          "ref": "#/texts/1185",
+          "page": 90,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/1198",
+          "page": 90,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "90"
+        },
+        {
+          "ref": "#/texts/1199",
+          "page": 91,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/1212",
+          "page": 91,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "91"
+        },
+        {
+          "ref": "#/texts/1213",
+          "page": 92,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/1220",
+          "page": 92,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "92"
+        },
+        {
+          "ref": "#/texts/1221",
+          "page": 93,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/1231",
+          "page": 93,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "93"
+        },
+        {
+          "ref": "#/texts/1232",
+          "page": 94,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/1235",
+          "page": 94,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "94"
+        },
+        {
+          "ref": "#/texts/1236",
+          "page": 95,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/1248",
+          "page": 95,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "95"
+        },
+        {
+          "ref": "#/texts/1249",
+          "page": 96,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/1258",
+          "page": 96,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "96"
+        },
+        {
+          "ref": "#/texts/1259",
+          "page": 97,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/1260",
+          "page": 97,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "97"
+        },
+        {
+          "ref": "#/texts/1261",
+          "page": 98,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/1273",
+          "page": 98,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "98"
+        },
+        {
+          "ref": "#/texts/1274",
+          "page": 99,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/1287",
+          "page": 99,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "99"
+        },
+        {
+          "ref": "#/texts/1288",
+          "page": 100,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/1301",
+          "page": 100,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "100"
+        },
+        {
+          "ref": "#/texts/1302",
+          "page": 101,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/1318",
+          "page": 101,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "101"
+        },
+        {
+          "ref": "#/texts/1319",
+          "page": 102,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/1330",
+          "page": 102,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "102"
+        },
+        {
+          "ref": "#/texts/1331",
+          "page": 103,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/1343",
+          "page": 103,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "103"
+        },
+        {
+          "ref": "#/texts/1344",
+          "page": 104,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/1358",
+          "page": 104,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "104"
+        },
+        {
+          "ref": "#/texts/1359",
+          "page": 105,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/1374",
+          "page": 105,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "105"
+        },
+        {
+          "ref": "#/texts/1375",
+          "page": 106,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/1391",
+          "page": 106,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "106"
+        },
+        {
+          "ref": "#/texts/1392",
+          "page": 107,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/1402",
+          "page": 107,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "107"
+        },
+        {
+          "ref": "#/texts/1403",
+          "page": 108,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/1413",
+          "page": 108,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "108"
+        },
+        {
+          "ref": "#/texts/1414",
+          "page": 109,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/1426",
+          "page": 109,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "109"
+        },
+        {
+          "ref": "#/texts/1427",
+          "page": 110,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/1442",
+          "page": 110,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "110"
+        },
+        {
+          "ref": "#/texts/1443",
+          "page": 111,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/1461",
+          "page": 111,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "111"
+        },
+        {
+          "ref": "#/texts/1462",
+          "page": 112,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/1476",
+          "page": 112,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "112"
+        },
+        {
+          "ref": "#/texts/1477",
+          "page": 113,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/1483",
+          "page": 113,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "113"
+        },
+        {
+          "ref": "#/texts/1484",
+          "page": 114,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/1502",
+          "page": 114,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "114"
+        },
+        {
+          "ref": "#/texts/1503",
+          "page": 115,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/1512",
+          "page": 115,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "115"
+        },
+        {
+          "ref": "#/texts/1513",
+          "page": 116,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/1522",
+          "page": 116,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "116"
+        },
+        {
+          "ref": "#/texts/1523",
+          "page": 117,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/1545",
+          "page": 117,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "117"
+        },
+        {
+          "ref": "#/texts/1546",
+          "page": 118,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/1561",
+          "page": 118,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "118"
+        },
+        {
+          "ref": "#/texts/1562",
+          "page": 119,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/1577",
+          "page": 119,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "119"
+        },
+        {
+          "ref": "#/texts/1578",
+          "page": 120,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/1587",
+          "page": 120,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "120"
+        },
+        {
+          "ref": "#/texts/1588",
+          "page": 121,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/1604",
+          "page": 121,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "121"
+        },
+        {
+          "ref": "#/texts/1605",
+          "page": 122,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/1623",
+          "page": 122,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "122"
+        },
+        {
+          "ref": "#/texts/1624",
+          "page": 123,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/1641",
+          "page": 123,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "123"
+        },
+        {
+          "ref": "#/texts/1642",
+          "page": 124,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/1655",
+          "page": 124,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "124"
+        },
+        {
+          "ref": "#/texts/1656",
+          "page": 125,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/1683",
+          "page": 125,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "125"
+        },
+        {
+          "ref": "#/texts/1684",
+          "page": 126,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/1698",
+          "page": 126,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "126"
+        },
+        {
+          "ref": "#/texts/1699",
+          "page": 127,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/1710",
+          "page": 127,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "127"
+        },
+        {
+          "ref": "#/texts/1711",
+          "page": 128,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/1724",
+          "page": 128,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "128"
+        },
+        {
+          "ref": "#/texts/1725",
+          "page": 129,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/1732",
+          "page": 129,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "129"
+        },
+        {
+          "ref": "#/texts/1733",
+          "page": 130,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/1746",
+          "page": 130,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "130"
+        },
+        {
+          "ref": "#/texts/1747",
+          "page": 131,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/1754",
+          "page": 131,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "131"
+        },
+        {
+          "ref": "#/texts/1755",
+          "page": 132,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/1768",
+          "page": 132,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "132"
+        },
+        {
+          "ref": "#/texts/1769",
+          "page": 133,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/1785",
+          "page": 133,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "133"
+        },
+        {
+          "ref": "#/texts/1786",
+          "page": 134,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "广东银禧科技股份有限公司 2026 年半年度报告全文"
+        },
+        {
+          "ref": "#/texts/1790",
+          "page": 134,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "134"
+        }
+      ],
+      "hidden_source_refs_exported": [],
+      "non_table_narrative_preserved_during_assembly": true
+    },
+    "after": {
+      "tables": 249,
+      "anchors": 9584,
+      "span_cells": 295,
+      "actual_groups": {
+        "table_p104_t4_p105_t1": [
+          "p104_t4",
+          "p105_t1"
+        ]
+      },
+      "public_table_coverage": {
+        "all_source_tables_projected_once": true,
+        "emitted_source_cell_anchors": 9577,
+        "only_equivalent_complete_repeated_header_cells_removed": 7,
+        "source_rows_text_spans_header_roles_and_pages_preserved": true
+      },
+      "visible_source_items": 1791,
+      "serialized_source_events": 1791,
+      "duplicate_source_refs": [],
+      "wrong_source_pages": [],
+      "serialized_blocks_absent_from_page": [],
+      "missing_visible_refs": [],
+      "hidden_source_refs_exported": [],
+      "non_table_narrative_preserved_during_assembly": true
+    }
+  },
+  "source_cells_spans_header_roles_scope_and_pages_unchanged": true,
+  "raw_model_unchanged": true,
+  "recovered_visible_refs": [
+    "#/texts/1725",
+    "#/texts/932",
+    "#/texts/1033",
+    "#/texts/1711",
+    "#/texts/580",
+    "#/texts/960",
+    "#/texts/1171",
+    "#/texts/843",
+    "#/texts/1442",
+    "#/texts/28",
+    "#/texts/581",
+    "#/texts/165",
+    "#/texts/1235",
+    "#/texts/1034",
+    "#/texts/544",
+    "#/texts/172",
+    "#/texts/791",
+    "#/texts/1301",
+    "#/texts/565",
+    "#/texts/1484",
+    "#/texts/524",
+    "#/texts/1403",
+    "#/texts/70",
+    "#/texts/431",
+    "#/texts/269",
+    "#/texts/1236",
+    "#/texts/1259",
+    "#/texts/1502",
+    "#/texts/287",
+    "#/texts/594",
+    "#/texts/182",
+    "#/texts/620",
+    "#/texts/1185",
+    "#/texts/1198",
+    "#/texts/1149",
+    "#/texts/1483",
+    "#/texts/1392",
+    "#/texts/1427",
+    "#/texts/1287",
+    "#/texts/1063",
+    "#/texts/1414",
+    "#/texts/616",
+    "#/texts/16",
+    "#/texts/1513",
+    "#/texts/1623",
+    "#/texts/982",
+    "#/texts/1461",
+    "#/texts/1683",
+    "#/texts/432",
+    "#/texts/1785",
+    "#/texts/171",
+    "#/texts/512",
+    "#/texts/329",
+    "#/texts/372",
+    "#/texts/133",
+    "#/texts/519",
+    "#/texts/682",
+    "#/texts/5",
+    "#/texts/1288",
+    "#/texts/1710",
+    "#/texts/1133",
+    "#/texts/1747",
+    "#/texts/1768",
+    "#/texts/632",
+    "#/texts/1331",
+    "#/texts/1655",
+    "#/texts/303",
+    "#/texts/1754",
+    "#/texts/762",
+    "#/texts/418",
+    "#/texts/1522",
+    "#/texts/598",
+    "#/texts/1624",
+    "#/texts/655",
+    "#/texts/1724",
+    "#/texts/1064",
+    "#/texts/591",
+    "#/texts/552",
+    "#/texts/859",
+    "#/texts/881",
+    "#/texts/604",
+    "#/texts/1258",
+    "#/texts/1358",
+    "#/texts/200",
+    "#/texts/348",
+    "#/texts/553",
+    "#/texts/1391",
+    "#/texts/17",
+    "#/texts/548",
+    "#/texts/388",
+    "#/texts/69",
+    "#/texts/1261",
+    "#/texts/469",
+    "#/texts/403",
+    "#/texts/545",
+    "#/texts/160",
+    "#/texts/575",
+    "#/texts/703",
+    "#/texts/1375",
+    "#/texts/858",
+    "#/texts/623",
+    "#/texts/498",
+    "#/texts/606",
+    "#/texts/573",
+    "#/texts/1318",
+    "#/texts/1578",
+    "#/texts/1546",
+    "#/texts/110",
+    "#/texts/1374",
+    "#/texts/417",
+    "#/texts/1545",
+    "#/texts/1330",
+    "#/texts/25",
+    "#/texts/611",
+    "#/texts/14",
+    "#/texts/643",
+    "#/texts/1684",
+    "#/texts/1213",
+    "#/texts/1097",
+    "#/texts/1523",
+    "#/texts/959",
+    "#/texts/1641",
+    "#/texts/166",
+    "#/texts/931",
+    "#/texts/605",
+    "#/texts/389",
+    "#/texts/1212",
+    "#/texts/1605",
+    "#/texts/1642",
+    "#/texts/1656",
+    "#/texts/262",
+    "#/texts/567",
+    "#/texts/450",
+    "#/texts/574",
+    "#/texts/1007",
+    "#/texts/599",
+    "#/texts/1120",
+    "#/texts/1769",
+    "#/texts/26",
+    "#/texts/132",
+    "#/texts/902",
+    "#/texts/1199",
+    "#/texts/1260",
+    "#/texts/434",
+    "#/texts/622",
+    "#/texts/226",
+    "#/texts/1319",
+    "#/texts/664",
+    "#/texts/404",
+    "#/texts/1273",
+    "#/texts/1604",
+    "#/texts/1221",
+    "#/texts/159",
+    "#/texts/818",
+    "#/texts/1587",
+    "#/texts/1232",
+    "#/texts/1562",
+    "#/texts/579",
+    "#/texts/733",
+    "#/texts/1184",
+    "#/texts/23",
+    "#/texts/1231",
+    "#/texts/1274",
+    "#/texts/880",
+    "#/texts/582",
+    "#/texts/173",
+    "#/texts/1588",
+    "#/texts/45",
+    "#/texts/1755",
+    "#/texts/304",
+    "#/texts/576",
+    "#/texts/94",
+    "#/texts/566",
+    "#/texts/1426",
+    "#/texts/1503",
+    "#/texts/245",
+    "#/texts/482",
+    "#/texts/1359",
+    "#/texts/663",
+    "#/texts/1096",
+    "#/texts/61",
+    "#/texts/225",
+    "#/texts/1121",
+    "#/texts/549",
+    "#/texts/149",
+    "#/texts/908",
+    "#/texts/1561",
+    "#/texts/481",
+    "#/texts/1302",
+    "#/texts/246",
+    "#/texts/0",
+    "#/texts/93",
+    "#/texts/208",
+    "#/texts/610",
+    "#/texts/595",
+    "#/texts/702",
+    "#/texts/588",
+    "#/texts/1402",
+    "#/texts/1476",
+    "#/texts/621",
+    "#/texts/1733",
+    "#/texts/1790",
+    "#/texts/261",
+    "#/texts/1087",
+    "#/texts/209",
+    "#/texts/499",
+    "#/texts/1732",
+    "#/texts/1249",
+    "#/texts/270",
+    "#/texts/590",
+    "#/texts/1248",
+    "#/texts/470",
+    "#/texts/449",
+    "#/texts/1413",
+    "#/texts/1512",
+    "#/texts/1577",
+    "#/texts/1158",
+    "#/texts/518",
+    "#/texts/617",
+    "#/texts/1699",
+    "#/texts/62",
+    "#/texts/109",
+    "#/texts/151",
+    "#/texts/654",
+    "#/texts/609",
+    "#/texts/589",
+    "#/texts/1115",
+    "#/texts/330",
+    "#/texts/1443",
+    "#/texts/13",
+    "#/texts/1150",
+    "#/texts/732",
+    "#/texts/1698",
+    "#/texts/1159",
+    "#/texts/148",
+    "#/texts/909",
+    "#/texts/201",
+    "#/texts/1343",
+    "#/texts/612",
+    "#/texts/27",
+    "#/texts/347",
+    "#/texts/1114",
+    "#/texts/183",
+    "#/texts/286",
+    "#/texts/981",
+    "#/texts/1086",
+    "#/texts/683",
+    "#/texts/1462",
+    "#/texts/4",
+    "#/texts/525",
+    "#/texts/1220",
+    "#/texts/433",
+    "#/texts/1786",
+    "#/texts/46",
+    "#/texts/22",
+    "#/texts/603",
+    "#/texts/1134",
+    "#/texts/373",
+    "#/texts/1746",
+    "#/texts/1477",
+    "#/texts/792",
+    "#/texts/564",
+    "#/texts/761",
+    "#/texts/513",
+    "#/texts/631",
+    "#/texts/642",
+    "#/texts/819",
+    "#/texts/1172",
+    "#/texts/1008",
+    "#/texts/842",
+    "#/texts/1344"
+  ],
+  "removed_groups": [],
+  "added_groups": []
+}

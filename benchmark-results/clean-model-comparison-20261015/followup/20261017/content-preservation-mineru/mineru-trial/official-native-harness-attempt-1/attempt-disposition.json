@@ -1,0 +1,9 @@
+{
+  "status": "harness_error_before_model_chat_requests",
+  "cause": "Observer assumed public PDFTableResult includes internal rows/cells; corrected by observing public result and internal NativeTableResult at their actual respective interfaces. Official functions and return values unchanged.",
+  "model_chat_requests": 0,
+  "advanced": "not_started",
+  "model_quality_judgment": "not_evaluated",
+  "retained_all_existing_model_results": true,
+  "at": "2026-10-17T14:06:40.536498+00:00"
+}

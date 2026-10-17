@@ -1,0 +1,9 @@
+{
+  "at": "2026-10-17T21:53:08.021850+08:00",
+  "directive": "root explicitly released GPU after complete502 and production33; root only170 native CPU next",
+  "GLM_physical_GPU": 1,
+  "GLM_GPU_PID": 6977,
+  "GPU0_other_services_unrelated": true,
+  "available_budget": "5GB free shared GPU1; utilization0.16 candidate; single server maxseq1",
+  "hardware": "index, name, memory.total [MiB], memory.free [MiB], utilization.gpu [%]\n0, NVIDIA GeForce RTX 2080 Ti, 22528 MiB, 3311 MiB, 47 %\n1, NVIDIA GeForce RTX 2080 Ti, 22528 MiB, 5107 MiB, 0 %\n"
+}

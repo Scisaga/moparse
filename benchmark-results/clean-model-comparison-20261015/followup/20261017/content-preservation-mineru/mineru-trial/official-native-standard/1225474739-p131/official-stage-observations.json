@@ -1,0 +1,299 @@
+[
+  {
+    "stage": "official_input_preparation",
+    "file_suffix": "pdf",
+    "prepared_size_bytes": 313886,
+    "original_function_seconds": 0.19961023493669927,
+    "prepared_SHA256": "88fb75e705f03b0edde8583a307e321039e89b34e27a593aa10eedf29d06dcfc",
+    "retained_original_page_indices_zero_based": [
+      130
+    ],
+    "broken_original_page_indices_zero_based": [],
+    "derived_input_filename": "prepared-by-official-page-selection.pdf",
+    "transformation": "Official default page_range handling; runner did not crop or rewrite the source PDF."
+  },
+  {
+    "stage": "native_table_priority",
+    "effort": "high",
+    "counts": {
+      "total": 4,
+      "accepted": 4,
+      "complex_fallbacks": 0,
+      "rejected": 0,
+      "errors": 0,
+      "removed_internal_text": 0,
+      "removed_formula_blocks": 0,
+      "removed_formula_layout_items": 0
+    },
+    "table_routes": [
+      {
+        "window_page_index": 0,
+        "bbox": [
+          0.084,
+          0.083,
+          0.897,
+          0.119
+        ],
+        "angle": 0,
+        "native_HTML_accepted": true,
+        "content_SHA256": "98e1c85f782cdaa074e6229c72b71a34b10972a76cb838e3b1a1c349fb499ee7"
+      },
+      {
+        "window_page_index": 0,
+        "bbox": [
+          0.084,
+          0.187,
+          0.896,
+          0.299
+        ],
+        "angle": 0,
+        "native_HTML_accepted": true,
+        "content_SHA256": "490a4cd62aacea2cb4b5b7c8581566e3b0373df58c9fdbbdccc90e2f5e4df26c"
+      },
+      {
+        "window_page_index": 0,
+        "bbox": [
+          0.083,
+          0.366,
+          0.897,
+          0.743
+        ],
+        "angle": 0,
+        "native_HTML_accepted": true,
+        "content_SHA256": "6320f80ab1fbcffe4451e7bb0de35de7365bc2ec98b80e921d3a79365ccf7036"
+      },
+      {
+        "window_page_index": 0,
+        "bbox": [
+          0.084,
+          0.809,
+          0.897,
+          0.922
+        ],
+        "angle": 0,
+        "native_HTML_accepted": true,
+        "content_SHA256": "bb5b63c86ddca4a2dacc7ec27eb41c7211733e0d4d6bf80dea772c58b6b9f60f"
+      }
+    ]
+  },
+  {
+    "stage": "actual_VLM_options",
+    "image_analysis": false,
+    "not_extract_list": [
+      "caption",
+      "code_caption",
+      "doc_title",
+      "footer",
+      "footnote",
+      "header",
+      "image_caption",
+      "image_footnote",
+      "page_footnote",
+      "page_number",
+      "paragraph_title",
+      "phonetic",
+      "ref_text",
+      "table_caption",
+      "table_footnote",
+      "text",
+      "title"
+    ],
+    "image_sizes": [
+      [
+        1654,
+        2339
+      ]
+    ],
+    "model_inputs": [
+      [
+        {
+          "type": "header",
+          "bbox": [
+            0.56,
+            0.05,
+            0.908,
+            0.064
+          ],
+          "has_content": false
+        },
+        {
+          "type": "paragraph_title",
+          "bbox": [
+            0.091,
+            0.138,
+            0.232,
+            0.154
+          ],
+          "has_content": false
+        },
+        {
+          "type": "footnote",
+          "bbox": [
+            0.826,
+            0.172,
+            0.892,
+            0.186
+          ],
+          "has_content": false
+        },
+        {
+          "type": "paragraph_title",
+          "bbox": [
+            0.1,
+            0.318,
+            0.258,
+            0.334
+          ],
+          "has_content": false
+        },
+        {
+          "type": "footnote",
+          "bbox": [
+            0.827,
+            0.352,
+            0.892,
+            0.366
+          ],
+          "has_content": false
+        },
+        {
+          "type": "paragraph_title",
+          "bbox": [
+            0.099,
+            0.761,
+            0.329,
+            0.778
+          ],
+          "has_content": false
+        },
+        {
+          "type": "footnote",
+          "bbox": [
+            0.826,
+            0.795,
+            0.891,
+            0.808
+          ],
+          "has_content": false
+        },
+        {
+          "type": "page_number",
+          "bbox": [
+            0.88,
+            0.928,
+            0.906,
+            0.94
+          ],
+          "has_content": false
+        }
+      ]
+    ]
+  },
+  {
+    "stage": "actual_VLM_results_before_native_body_fill",
+    "effort": "high",
+    "tables": []
+  },
+  {
+    "stage": "native_PDF_text_fill",
+    "returned_spans": 8,
+    "nonempty_text_spans": 8,
+    "queued_for_post_OCR": 0,
+    "spans": [
+      {
+        "type": "text",
+        "bbox": [
+          335.52000000000004,
+          43.92,
+          538.5600000000001,
+          52.56
+        ],
+        "text": "广东银禧科技股份有限公司 2026 年半年度报告全文",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          55.800000000000004,
+          117.72,
+          135.36,
+          128.52
+        ],
+        "text": "3、长期股权投资",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          492.48,
+          145.08,
+          530.28,
+          156.6
+        ],
+        "text": "单位：元",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          61.2,
+          268.92,
+          151.92000000000002,
+          280.44
+        ],
+        "text": "（1） 对子公司投资",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          492.12,
+          296.28000000000003,
+          530.64,
+          308.16
+        ],
+        "text": "单位：元",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          61.92,
+          642.6,
+          193.32,
+          653.0400000000001
+        ],
+        "text": "（2） 对联营、合营企业投资",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          492.12,
+          668.88,
+          531.0,
+          681.84
+        ],
+        "text": "单位：元",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          523.08,
+          780.48,
+          540.36,
+          792.36
+        ],
+        "text": "131",
+        "queued_for_post_OCR": false
+      }
+    ]
+  },
+  {
+    "stage": "actual_post_OCR",
+    "candidate_spans": 0,
+    "content_changed": 0,
+    "spans": []
+  }
+]

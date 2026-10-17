@@ -219,7 +219,34 @@ wheels; it does not install CUDA libraries into the parser environment.
 
 ## Data, upgrades, and cleanup
 
-The current API was updated on 2026-10-17 at **17:46:28.801462 Beijing time**, using
+The current API was updated on **2026-10-17 at 21:51 Beijing time**, using
+`mosaic-parse:0.4.0-source-content-20261017-r2`, image
+`sha256:07a5df326885a6f83cf48aab766f6dd47fad5175066703fe6fa224380d86f9d4`.
+This revision keeps visible native furniture and attached business notes in source order.
+It preserves the existing header/unit/context guards and source-row mapping; it does not
+change Docling, TableFormer, PyPdfium, GLM weights, SDK input or orientation settings.
+OpenAPI JSON and all 53 accepted source-file hashes were checked against the running API.
+Only the API was recreated; the SDK and GLM instances remained running, and all 314 old
+output/asset files retained their hashes. Private environment and SQLite backups are kept
+outside the repository. See the [current deployment readback](../benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/production-deployment.json).
+
+Before this release, 10 complete PDFs / 502 pages plus the exact two-page Eventrail input
+completed through the candidate HTTP API. The fixed scores remain 209/209 core values,
+209/209 periods, 372/402 value/unique-row checks, 326/402 public-structure header checks,
+and 31/31 funding cells. The 502-page Markdown capture took 22.50 minutes; 79 assets
+and all 69 routed source-page RGB images passed verification. The image passed 352 backend
+tests. After deployment, fresh jobs for the two-page input and original 4/27-page cases
+completed again: securities identity, financial headers, funding cells and row sources passed.
+The 36/134-page native PDFs were then rerun in full, bringing post-deployment HTTP validation
+to 203 pages; the policy note was recovered while the five remaining 134-page issue classes
+stayed open, as recorded in the current report.
+The [current detailed report](../benchmark-results/clean-model-comparison-20261015/report.md#正文遗漏与替代管线实测2026-10-17)
+separates export recovery from remaining upstream recognition errors and model-component trials.
+One extra continuation is now conservatively split because adjacent page counters have
+inconsistent source classifications; source cells and pages remain present. Remaining native
+long-cell, superscript, sideways-table and picture-classification defects are disclosed there.
+
+The previous API was updated on 2026-10-17 at **17:46:28.801462 Beijing time**, using
 `mosaic-parse:0.4.0-header-context-20261017-r3`, image
 `sha256:f815766b71ed67229f995d864ca146ef68937a98012676316bc33c4a673405db`.
 This revision strengthens source-caption, complete unit-declaration and inter-table context checks.
@@ -229,9 +256,9 @@ OpenAPI JSON is unchanged. The SDK still runs
 Only the API was replaced at 17:46; the SDK and GLM provider kept their existing instances.
 The model configuration remains PyPdfium, V1 Accurate, matching off, 200 DPI SDK input,
 and orientation on. Readiness and all three configured backends passed. The
-[current deployment readback](../benchmark-results/clean-model-comparison-20261015/followup/20261017/selected-pipeline-deployment/independent-recheck-20261017T170704/unit-r3-production-deployment.json)
+[r3 deployment readback](../benchmark-results/clean-model-comparison-20261015/followup/20261017/selected-pipeline-deployment/independent-recheck-20261017T170704/unit-r3-production-deployment.json)
 records the actual container, image, source hashes and configuration; use this revision
-when restoring the current service.
+when investigating that historical revision.
 
 The earlier **05:15** release used API image
 `sha256:f9639d65ec922a1c300233e3ef5711af5a0d3de3b6b8d7909b9ea1776575e89a`.
@@ -262,7 +289,7 @@ Markdown byte for byte. The
 [r3 post-deployment direct comparison](../benchmark-results/clean-model-comparison-20261015/followup/20261017/selected-pipeline-deployment/independent-recheck-20261017T170704/production-unit-r3-http/direct-source-recheck.json)
 and [r3 synchronous result readback](../benchmark-results/clean-model-comparison-20261015/followup/20261017/selected-pipeline-deployment/independent-recheck-20261017T170704/production-unit-r3-synchronous/summary.json)
 record this new 35-page validation. The
-[current release manifest](../benchmark-results/clean-model-comparison-20261015/followup/20261017/selected-pipeline-deployment/independent-recheck-20261017T170704/release-manifest.json)
+[r3 release manifest](../benchmark-results/clean-model-comparison-20261015/followup/20261017/selected-pipeline-deployment/independent-recheck-20261017T170704/release-manifest.json)
 links the final source/image identity and evidence. A missing closing parenthesis in the diluted-EPS
 label remains a model-output defect; numerical acceptance does not establish exact label text.
 These limits, the numerical and native-image cropping issues, and the additional checks are in the

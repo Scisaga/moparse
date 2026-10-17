@@ -1,0 +1,1088 @@
+[
+  {
+    "fragment_id": "p6_t1",
+    "page_number": 6,
+    "ordinal": 1,
+    "normalized_bbox": [
+      0.139537240677521,
+      0.4439796212166902,
+      0.8596787396599265,
+      0.6162284796707987
+    ],
+    "num_rows": 7,
+    "num_cols": 3,
+    "rows": [
+      [
+        "股份类别 ",
+        "持股数量 ",
+        "持股比例"
+      ],
+      [
+        "一、有限售条件股份 ",
+        "279,515,170 ",
+        "26.83% "
+      ],
+      [
+        "其中：境内法人持股 ",
+        "- ",
+        "-"
+      ],
+      [
+        "境内自然人持股 ",
+        "279,515,170 ",
+        "26.83% "
+      ],
+      [
+        "二、无限售条件股份 ",
+        "762,108,531 ",
+        "73.17% "
+      ],
+      [
+        "其中：人民币普通股 ",
+        "762,108,531 ",
+        "73.17% "
+      ],
+      [
+        "三、股份总数 ",
+        "1,041,623,701 ",
+        "100.00% "
+      ]
+    ],
+    "column_boundaries": [
+      0.17243,
+      0.440153,
+      0.722275,
+      0.846051
+    ],
+    "markdown": "| 股份类别 | 持股数量 | 持股比例 |\n| --- | --- | --- |\n| 一、有限售条件股份 | 279,515,170 | 26.83% |\n| 其中：境内法人持股 | - | - |\n| 境内自然人持股 | 279,515,170 | 26.83% |\n| 二、无限售条件股份 | 762,108,531 | 73.17% |\n| 其中：人民币普通股 | 762,108,531 | 73.17% |\n| 三、股份总数 | 1,041,623,701 | 100.00% |",
+    "rendered": "<!-- table-fragment: p6_t1 -->\n\n<!-- table-structure: {\"version\":1,\"table_id\":\"p6_t1\",\"source_pages\":[6],\"num_rows\":7,\"num_cols\":3,\"encoding\":\"anchor_and_blanks\",\"structure_valid\":true,\"header_rows\":[0,1],\"header_scope_rows\":[0,1],\"header_scope_complete\":true,\"spans\":[]} -->\n\n| 股份类别 | 持股数量 | 持股比例 |\n| --- | --- | --- |\n| 一、有限售条件股份 | 279,515,170 | 26.83% |\n| 其中：境内法人持股 | - | - |\n| 境内自然人持股 | 279,515,170 | 26.83% |\n| 二、无限售条件股份 | 762,108,531 | 73.17% |\n| 其中：人民币普通股 | 762,108,531 | 73.17% |\n| 三、股份总数 | 1,041,623,701 | 100.00% |",
+    "valid": true,
+    "invalid_reasons": [],
+    "logical_table_id": null,
+    "has_column_header": true,
+    "caption": null,
+    "unit_text": null,
+    "source_kind": "docling",
+    "cells": [
+      {
+        "row": 0,
+        "column": 0,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "股份类别 ",
+        "normalized_bbox": [
+          0.26822178612151804,
+          0.452835639362222,
+          0.3451718639677543,
+          0.4717386573174261
+        ],
+        "is_column_header": true,
+        "is_row_header": false
+      },
+      {
+        "row": 0,
+        "column": 1,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "持股数量 ",
+        "normalized_bbox": [
+          0.5346721075442167,
+          0.45224222224711147,
+          0.609343477381342,
+          0.47108037100404426
+        ],
+        "is_column_header": true,
+        "is_row_header": false
+      },
+      {
+        "row": 0,
+        "column": 2,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "持股比例",
+        "normalized_bbox": [
+          0.7258253507884886,
+          0.45274128848088463,
+          0.8049893645018292,
+          0.47130213002854787
+        ],
+        "is_column_header": true,
+        "is_row_header": false
+      },
+      {
+        "row": 1,
+        "column": 0,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "一、有限售条件股份 ",
+        "normalized_bbox": [
+          0.1464358721239019,
+          0.4758231398070763,
+          0.30894643283742784,
+          0.49519090729386744
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 1,
+        "column": 1,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "279,515,170 ",
+        "normalized_bbox": [
+          0.5584981620007111,
+          0.474688103670491,
+          0.6677309674990578,
+          0.4936381937704405
+        ],
+        "is_column_header": true,
+        "is_row_header": false
+      },
+      {
+        "row": 1,
+        "column": 2,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "26.83% ",
+        "normalized_bbox": [
+          0.7882882456660716,
+          0.4754047874679902,
+          0.851619164560772,
+          0.4935587701124109
+        ],
+        "is_column_header": true,
+        "is_row_header": false
+      },
+      {
+        "row": 2,
+        "column": 0,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "其中：境内法人持股 ",
+        "normalized_bbox": [
+          0.15012393797123672,
+          0.499939753233458,
+          0.30675880528397015,
+          0.5194506259942263
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 2,
+        "column": 1,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "- ",
+        "normalized_bbox": [
+          0.6565913617396724,
+          0.5003692589659071,
+          0.6687378564598807,
+          0.5198822874676844
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 2,
+        "column": 2,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "-",
+        "normalized_bbox": [
+          0.8388204384238716,
+          0.5010748894580187,
+          0.8530222030346771,
+          0.5204889078548851
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 3,
+        "column": 0,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "境内自然人持股 ",
+        "normalized_bbox": [
+          0.20680708425718328,
+          0.523745241905082,
+          0.33184467360726,
+          0.5432263449090601
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 3,
+        "column": 1,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "279,515,170 ",
+        "normalized_bbox": [
+          0.5645411709072525,
+          0.5228172518606142,
+          0.6674696883612417,
+          0.5420331627914751
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 3,
+        "column": 2,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "26.83% ",
+        "normalized_bbox": [
+          0.7895293967373087,
+          0.5232927621327376,
+          0.8524159306312126,
+          0.5420754050498171
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 4,
+        "column": 0,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "二、无限售条件股份 ",
+        "normalized_bbox": [
+          0.14504431266521656,
+          0.5471647297509039,
+          0.313422754821095,
+          0.5664323938641297
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 4,
+        "column": 1,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "762,108,531 ",
+        "normalized_bbox": [
+          0.5621767300099152,
+          0.5463768885356012,
+          0.6655997149034143,
+          0.5648936156665105
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 4,
+        "column": 2,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "73.17% ",
+        "normalized_bbox": [
+          0.7887239542924084,
+          0.546339255456845,
+          0.8536094904999673,
+          0.5647629161687682
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 5,
+        "column": 0,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "其中：人民币普通股 ",
+        "normalized_bbox": [
+          0.1469211048084176,
+          0.5720347438636122,
+          0.31237589869970356,
+          0.5906919021231043
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 5,
+        "column": 1,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "762,108,531 ",
+        "normalized_bbox": [
+          0.5626260115784762,
+          0.5705978808885493,
+          0.6661099029025891,
+          0.5892478122829449
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 5,
+        "column": 2,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "73.17% ",
+        "normalized_bbox": [
+          0.789031664919289,
+          0.5705177283847501,
+          0.8545918107172704,
+          0.5892656946678857
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 6,
+        "column": 0,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "三、股份总数 ",
+        "normalized_bbox": [
+          0.14345624084167816,
+          0.5957874271459503,
+          0.26020542819164894,
+          0.6156992472035159
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 6,
+        "column": 1,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "1,041,623,701 ",
+        "normalized_bbox": [
+          0.5443140078529181,
+          0.5940602166532826,
+          0.6653313056756955,
+          0.6134069040726362
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 6,
+        "column": 2,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "100.00% ",
+        "normalized_bbox": [
+          0.7813135573614749,
+          0.5943349401812893,
+          0.8521074468620533,
+          0.6129346941373433
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      }
+    ],
+    "cell_evidence": [],
+    "visual_obstructions": [],
+    "physical_num_rows": null,
+    "source_row_indices": [],
+    "header_scope_complete": true,
+    "caption_scope_complete": true,
+    "page_furniture": [
+      {
+        "source_ref": "#/texts/0",
+        "page_number": 6,
+        "label": "page_header",
+        "text": "上海百润投资控股集团股份有限公司",
+        "rendered": "<!-- source-furniture: #/texts/0; source-page: 6; role: page_header -->\n\n上海百润投资控股集团股份有限公司",
+        "normalized_bbox": [
+          0.15245636204759966,
+          0.05265558248913279,
+          0.4318355155257126,
+          0.06440821408296075
+        ]
+      },
+      {
+        "source_ref": "#/texts/1",
+        "page_number": 6,
+        "label": "page_header",
+        "text": "发行保荐书",
+        "rendered": "<!-- source-furniture: #/texts/1; source-page: 6; role: page_header -->\n\n发行保荐书",
+        "normalized_bbox": [
+          0.7612222020248063,
+          0.05265558248913279,
+          0.847377406555425,
+          0.06444583909096241
+        ]
+      },
+      {
+        "source_ref": "#/texts/11",
+        "page_number": 6,
+        "label": "page_footer",
+        "text": "3 - 1 - 5",
+        "rendered": "<!-- source-furniture: #/texts/11; source-page: 6; role: page_footer -->\n\n3 - 1 - 5",
+        "normalized_bbox": [
+          0.4815965657421274,
+          0.9300364879208138,
+          0.517831191228211,
+          0.9387035335682129
+        ]
+      }
+    ],
+    "_structure_marker": "<!-- table-structure: {\"version\":1,\"table_id\":\"p6_t1\",\"source_pages\":[6],\"num_rows\":7,\"num_cols\":3,\"encoding\":\"anchor_and_blanks\",\"structure_valid\":true,\"header_rows\":[0,1],\"header_scope_rows\":[0,1],\"header_scope_complete\":true,\"spans\":[]} -->"
+  },
+  {
+    "fragment_id": "p6_t2",
+    "page_number": 6,
+    "ordinal": 2,
+    "normalized_bbox": [
+      0.13920822784680278,
+      0.6788256140049733,
+      0.8604667086561186,
+      0.8957601443039267
+    ],
+    "num_rows": 7,
+    "num_cols": 5,
+    "rows": [
+      [
+        "序号 ",
+        "股东名称 ",
+        "持股数量 ",
+        "持股比例 ",
+        "有限售条件的股\r\n份数量"
+      ],
+      [
+        "1 ",
+        "刘晓东 ",
+        "362,588,502 ",
+        "34.81% ",
+        "271,941,376"
+      ],
+      [
+        "2 ",
+        "刘建国 ",
+        "63,000,000 ",
+        "6.05% ",
+        "-"
+      ],
+      [
+        "3 ",
+        "柳海彬 ",
+        "62,161,798 ",
+        "5.97% ",
+        "-"
+      ],
+      [
+        "4 ",
+        "刘晓俊 ",
+        "38,679,600 ",
+        "3.71% ",
+        "-"
+      ],
+      [
+        "5",
+        "基本养老保险基金一六零\r\n三二组合 ",
+        "18,669,504 ",
+        "1.79% ",
+        "-"
+      ],
+      [
+        "6",
+        "中国建设银行股份有限公\r\n司－鹏华中证酒交易型开\r\n放式指数证券投资基金 ",
+        "17,329,260 ",
+        "1.66% ",
+        "-"
+      ]
+    ],
+    "column_boundaries": [
+      0.160274,
+      0.219229,
+      0.418485,
+      0.599486,
+      0.748416,
+      0.849626
+    ],
+    "markdown": "| 序号 | 股东名称 | 持股数量 | 持股比例 | 有限售条件的股 份数量 |\n| --- | --- | --- | --- | --- |\n| 1 | 刘晓东 | 362,588,502 | 34.81% | 271,941,376 |\n| 2 | 刘建国 | 63,000,000 | 6.05% | - |\n| 3 | 柳海彬 | 62,161,798 | 5.97% | - |\n| 4 | 刘晓俊 | 38,679,600 | 3.71% | - |\n| 5 | 基本养老保险基金一六零 三二组合 | 18,669,504 | 1.79% | - |\n| 6 | 中国建设银行股份有限公 司－鹏华中证酒交易型开 放式指数证券投资基金 | 17,329,260 | 1.66% | - |",
+    "rendered": "<!-- table-fragment: p6_t2 -->\n\n<!-- table-structure: {\"version\":1,\"table_id\":\"p6_t2\",\"source_pages\":[6],\"num_rows\":7,\"num_cols\":5,\"encoding\":\"anchor_and_blanks\",\"structure_valid\":true,\"header_rows\":[0],\"header_scope_rows\":[0],\"header_scope_complete\":true,\"spans\":[]} -->\n\n| 序号 | 股东名称 | 持股数量 | 持股比例 | 有限售条件的股 份数量 |\n| --- | --- | --- | --- | --- |\n| 1 | 刘晓东 | 362,588,502 | 34.81% | 271,941,376 |\n| 2 | 刘建国 | 63,000,000 | 6.05% | - |\n| 3 | 柳海彬 | 62,161,798 | 5.97% | - |\n| 4 | 刘晓俊 | 38,679,600 | 3.71% | - |\n| 5 | 基本养老保险基金一六零 三二组合 | 18,669,504 | 1.79% | - |\n| 6 | 中国建设银行股份有限公 司－鹏华中证酒交易型开 放式指数证券投资基金 | 17,329,260 | 1.66% | - |",
+    "valid": true,
+    "invalid_reasons": [],
+    "logical_table_id": null,
+    "has_column_header": true,
+    "caption": "单位 ： 股",
+    "unit_text": null,
+    "source_kind": "docling",
+    "cells": [
+      {
+        "row": 0,
+        "column": 0,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "序号 ",
+        "normalized_bbox": [
+          0.14890936232356541,
+          0.689460797676939,
+          0.19020689270304383,
+          0.7102781917450266
+        ],
+        "is_column_header": true,
+        "is_row_header": false
+      },
+      {
+        "row": 0,
+        "column": 1,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "股东名称 ",
+        "normalized_bbox": [
+          0.26962714402225885,
+          0.6898005899110298,
+          0.35055733684252544,
+          0.7100958351352166
+        ],
+        "is_column_header": true,
+        "is_row_header": false
+      },
+      {
+        "row": 0,
+        "column": 2,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "持股数量 ",
+        "normalized_bbox": [
+          0.4569334460499884,
+          0.6898271875427127,
+          0.5401176492787998,
+          0.7098221117790031
+        ],
+        "is_column_header": true,
+        "is_row_header": false
+      },
+      {
+        "row": 0,
+        "column": 3,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "持股比例 ",
+        "normalized_bbox": [
+          0.5969652117869505,
+          0.6898945344404966,
+          0.677516844080973,
+          0.7100036051012641
+        ],
+        "is_column_header": true,
+        "is_row_header": false
+      },
+      {
+        "row": 0,
+        "column": 4,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "有限售条件的股\r\n份数量",
+        "normalized_bbox": [
+          0.7095394093563363,
+          0.6833008182303388,
+          0.8408762666950033,
+          0.7157956976190746
+        ],
+        "is_column_header": true,
+        "is_row_header": false
+      },
+      {
+        "row": 1,
+        "column": 0,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "1 ",
+        "normalized_bbox": [
+          0.162533870184789,
+          0.7187019261613454,
+          0.17919464602692609,
+          0.7382308015542173
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 1,
+        "column": 1,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "刘晓东 ",
+        "normalized_bbox": [
+          0.28035618975553617,
+          0.7187878490422356,
+          0.34230069273532143,
+          0.7375174103590755
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 1,
+        "column": 2,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "362,588,502 ",
+        "normalized_bbox": [
+          0.4726105379377476,
+          0.7193204298142222,
+          0.5734998711557692,
+          0.7375630679624996
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 1,
+        "column": 3,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "34.81% ",
+        "normalized_bbox": [
+          0.6283147567087972,
+          0.7191755038063445,
+          0.691127068943956,
+          0.7377024180347538
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 1,
+        "column": 4,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "271,941,376",
+        "normalized_bbox": [
+          0.755177826252377,
+          0.7199346009232436,
+          0.8527191742138168,
+          0.7376781815589415
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 2,
+        "column": 0,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "2 ",
+        "normalized_bbox": [
+          0.16214422795255173,
+          0.7428006399639379,
+          0.17894105535954707,
+          0.7618262734765958
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 2,
+        "column": 1,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "刘建国 ",
+        "normalized_bbox": [
+          0.28153810953776315,
+          0.7428257783819654,
+          0.3422511042486193,
+          0.7620950136020702
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 2,
+        "column": 2,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "63,000,000 ",
+        "normalized_bbox": [
+          0.4820972299340211,
+          0.743428114720634,
+          0.5752016861680022,
+          0.7620310852263431
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 2,
+        "column": 3,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "6.05% ",
+        "normalized_bbox": [
+          0.6382714977342818,
+          0.7434913601972553,
+          0.6900442831827844,
+          0.7620966628678352
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 2,
+        "column": 4,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "-",
+        "normalized_bbox": [
+          0.8381805343312881,
+          0.7433892667809348,
+          0.850485179599818,
+          0.7626163812995881
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 3,
+        "column": 0,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "3 ",
+        "normalized_bbox": [
+          0.1624925929775818,
+          0.7673924874514889,
+          0.17898319698277407,
+          0.786719627361812
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 3,
+        "column": 1,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "柳海彬 ",
+        "normalized_bbox": [
+          0.2809707519623212,
+          0.7675510939900384,
+          0.3419829097826447,
+          0.7867158456469524
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 3,
+        "column": 2,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "62,161,798 ",
+        "normalized_bbox": [
+          0.482114389397371,
+          0.7678633528273979,
+          0.5726002342099268,
+          0.7867118191192058
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 3,
+        "column": 3,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "5.97% ",
+        "normalized_bbox": [
+          0.6379703588167692,
+          0.76780986121159,
+          0.6897819731885968,
+          0.7866315655893829
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 3,
+        "column": 4,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "-",
+        "normalized_bbox": [
+          0.8384050892108711,
+          0.7673775731927155,
+          0.8502118308519859,
+          0.7873059735534933
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 4,
+        "column": 0,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "4 ",
+        "normalized_bbox": [
+          0.1616874565681668,
+          0.7918268107311489,
+          0.17885396410328955,
+          0.810517450020179
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 4,
+        "column": 1,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "刘晓俊 ",
+        "normalized_bbox": [
+          0.2825926863438533,
+          0.791455030150028,
+          0.3419921230614646,
+          0.8105618255771687
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 4,
+        "column": 2,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "38,679,600 ",
+        "normalized_bbox": [
+          0.4821941948614615,
+          0.7916745628852169,
+          0.5728877572328663,
+          0.8105204650841557
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 4,
+        "column": 3,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "3.71% ",
+        "normalized_bbox": [
+          0.6372706221022924,
+          0.7917861460221305,
+          0.690754285508627,
+          0.8105435805746434
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 4,
+        "column": 4,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "-",
+        "normalized_bbox": [
+          0.837400734438628,
+          0.7913764194435258,
+          0.8504689006596187,
+          0.810878832496047
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 5,
+        "column": 0,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "5",
+        "normalized_bbox": [
+          0.1623188614647293,
+          0.8202234563565675,
+          0.17876170245804393,
+          0.8397159738144987
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 5,
+        "column": 1,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "基本养老保险基金一六零\r\n三二组合 ",
+        "normalized_bbox": [
+          0.2058008556887233,
+          0.8113901821925313,
+          0.4095158140091577,
+          0.8449721193831264
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 5,
+        "column": 2,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "18,669,504 ",
+        "normalized_bbox": [
+          0.473591333346668,
+          0.8199880107837242,
+          0.5713687474171721,
+          0.8393988895862876
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 5,
+        "column": 3,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "1.79% ",
+        "normalized_bbox": [
+          0.6393309174177004,
+          0.8201230830729004,
+          0.6929488498664177,
+          0.8392532516883044
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 5,
+        "column": 4,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "-",
+        "normalized_bbox": [
+          0.8370258033858584,
+          0.8201307753515075,
+          0.8511393438722066,
+          0.8398768931905858
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 6,
+        "column": 0,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "6",
+        "normalized_bbox": [
+          0.16183157780555787,
+          0.8615274233624712,
+          0.179274634038499,
+          0.8803354697581477
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 6,
+        "column": 1,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "中国建设银行股份有限公\r\n司－鹏华中证酒交易型开\r\n放式指数证券投资基金 ",
+        "normalized_bbox": [
+          0.20410198291238382,
+          0.8461174056080346,
+          0.4091720663616248,
+          0.8943064515930621
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 6,
+        "column": 2,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "17,329,260 ",
+        "normalized_bbox": [
+          0.4714698309342046,
+          0.8608118739484572,
+          0.5708751390246384,
+          0.8801864173646353
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 6,
+        "column": 3,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "1.66% ",
+        "normalized_bbox": [
+          0.6381353817409003,
+          0.8608878947923129,
+          0.6927658728604836,
+          0.8803040048597247
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 6,
+        "column": 4,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "-",
+        "normalized_bbox": [
+          0.8371554335745695,
+          0.86103934377514,
+          0.8514807291405548,
+          0.8812226458908325
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      }
+    ],
+    "cell_evidence": [],
+    "visual_obstructions": [],
+    "physical_num_rows": null,
+    "source_row_indices": [],
+    "header_scope_complete": true,
+    "caption_scope_complete": true,
+    "page_furniture": [
+      {
+        "source_ref": "#/texts/0",
+        "page_number": 6,
+        "label": "page_header",
+        "text": "上海百润投资控股集团股份有限公司",
+        "rendered": "<!-- source-furniture: #/texts/0; source-page: 6; role: page_header -->\n\n上海百润投资控股集团股份有限公司",
+        "normalized_bbox": [
+          0.15245636204759966,
+          0.05265558248913279,
+          0.4318355155257126,
+          0.06440821408296075
+        ]
+      },
+      {
+        "source_ref": "#/texts/1",
+        "page_number": 6,
+        "label": "page_header",
+        "text": "发行保荐书",
+        "rendered": "<!-- source-furniture: #/texts/1; source-page: 6; role: page_header -->\n\n发行保荐书",
+        "normalized_bbox": [
+          0.7612222020248063,
+          0.05265558248913279,
+          0.847377406555425,
+          0.06444583909096241
+        ]
+      },
+      {
+        "source_ref": "#/texts/11",
+        "page_number": 6,
+        "label": "page_footer",
+        "text": "3 - 1 - 5",
+        "rendered": "<!-- source-furniture: #/texts/11; source-page: 6; role: page_footer -->\n\n3 - 1 - 5",
+        "normalized_bbox": [
+          0.4815965657421274,
+          0.9300364879208138,
+          0.517831191228211,
+          0.9387035335682129
+        ]
+      }
+    ],
+    "_structure_marker": "<!-- table-structure: {\"version\":1,\"table_id\":\"p6_t2\",\"source_pages\":[6],\"num_rows\":7,\"num_cols\":5,\"encoding\":\"anchor_and_blanks\",\"structure_valid\":true,\"header_rows\":[0],\"header_scope_rows\":[0],\"header_scope_complete\":true,\"spans\":[]} -->"
+  }
+]

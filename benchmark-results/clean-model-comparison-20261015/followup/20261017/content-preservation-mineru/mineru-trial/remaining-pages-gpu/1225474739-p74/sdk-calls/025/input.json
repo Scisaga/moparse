@@ -1,0 +1,25 @@
+{
+  "images": [
+    {
+      "path": "benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/mineru-trial/remaining-pages-gpu/1225474739-p74/sdk-calls/025/image-0.png",
+      "SHA256": "8fb2ee19b8871421123a1026d944bdb954def430c525cfd2a083ba640e5ed153",
+      "size": [
+        271,
+        30
+      ]
+    }
+  ],
+  "chat_prompts": [
+    "<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n<|im_start|>user\n<|vision_start|><|image_pad|><|vision_end|>\nText Recognition:<|im_end|>\n<|im_start|>assistant\n"
+  ],
+  "sampling_params": {
+    "temperature": 0.0,
+    "top_p": 0.01,
+    "top_k": 1,
+    "presence_penalty": 1.0,
+    "frequency_penalty": 0.05,
+    "repetition_penalty": 1.0,
+    "no_repeat_ngram_size": 100,
+    "max_new_tokens": null
+  }
+}

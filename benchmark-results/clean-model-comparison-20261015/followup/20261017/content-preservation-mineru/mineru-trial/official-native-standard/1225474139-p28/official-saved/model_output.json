@@ -1,0 +1,140 @@
+{
+  "metadata": {
+    "file_suffix": "pdf",
+    "producer": {
+      "name": "mineru",
+      "version": "4.0.12"
+    },
+    "document": {
+      "title": null,
+      "authors": [
+        "宋凯"
+      ],
+      "subject": null,
+      "keywords": [],
+      "description": null,
+      "languages": [],
+      "identifiers": [],
+      "publisher": null,
+      "created_at": "2026-08-14T17:10:29+09:10",
+      "modified_at": "2026-08-14T17:10:29+09:10",
+      "creator_application": "WPS 文字",
+      "producer_application": null,
+      "page_count": 36,
+      "page_count_kind": "physical"
+    }
+  },
+  "extensions": {
+    "mineru": {
+      "tier": "standard",
+      "parse_mode": "txt"
+    },
+    "docvortex_layout": {
+      "version": 1,
+      "pages": [
+        {
+          "page_idx": 27,
+          "width_pt": 595.2999877929688,
+          "height_pt": 841.9000244140625
+        }
+      ]
+    }
+  },
+  "schema_version": "2.0",
+  "schema": "docvortex.model",
+  "pages": [
+    [
+      {
+        "type": "header",
+        "bbox": [
+          0.527,
+          0.05,
+          0.852,
+          0.064
+        ],
+        "content": [
+          {
+            "type": "text",
+            "content": "深圳兆日科技股份有限公司详式权益变动报告书"
+          }
+        ]
+      },
+      {
+        "type": "paragraph_title",
+        "bbox": [
+          0.286,
+          0.087,
+          0.712,
+          0.109
+        ],
+        "content": [
+          {
+            "type": "text",
+            "content": "第九节 信息披露义务人的财务资料"
+          }
+        ],
+        "lines": [
+          {
+            "bbox": [
+              0.29,
+              0.087,
+              0.708,
+              0.106
+            ]
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "bbox": [
+          0.148,
+          0.137,
+          0.851,
+          0.183
+        ],
+        "content": [
+          {
+            "type": "text",
+            "content": "信息披露义务人璟和珩成立于 2026 年 6 月 26 日，截至本报告书签署日，暂无经营相关财务资料。"
+          }
+        ],
+        "lines": [
+          {
+            "bbox": [
+              0.192,
+              0.139,
+              0.848,
+              0.153
+            ]
+          },
+          {
+            "bbox": [
+              0.152,
+              0.167,
+              0.34,
+              0.18
+            ]
+          }
+        ]
+      },
+      {
+        "type": "page_number",
+        "bbox": [
+          0.505,
+          0.929,
+          0.525,
+          0.941
+        ],
+        "content": [
+          {
+            "type": "text",
+            "content": "28"
+          }
+        ]
+      }
+    ]
+  ],
+  "page_index_map": [
+    27
+  ]
+}

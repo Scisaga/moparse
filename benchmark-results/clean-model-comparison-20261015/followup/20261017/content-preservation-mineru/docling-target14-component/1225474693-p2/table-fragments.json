@@ -1,0 +1,801 @@
+[
+  {
+    "fragment_id": "p2_t1",
+    "page_number": 2,
+    "ordinal": 1,
+    "normalized_bbox": [
+      0.1466318979984572,
+      0.5335737577243542,
+      0.8962868057379201,
+      0.5973914864510652
+    ],
+    "num_rows": 3,
+    "num_cols": 5,
+    "rows": [
+      [
+        "公司股票简况",
+        "",
+        "",
+        "",
+        ""
+      ],
+      [
+        "股票种类 ",
+        "股票上市交易所 ",
+        "股票简称 ",
+        "股票代码 ",
+        "变更前股票简称"
+      ],
+      [
+        "A股 ",
+        "上海证券交易所 ",
+        "浙版传媒 ",
+        "601921 ",
+        "/"
+      ]
+    ],
+    "column_boundaries": [
+      0.287524,
+      0.27985,
+      0.460868,
+      0.598812,
+      0.727624,
+      0.88737
+    ],
+    "markdown": "| 公司股票简况 |  |  |  |  |\n| --- | --- | --- | --- | --- |\n| 股票种类 | 股票上市交易所 | 股票简称 | 股票代码 | 变更前股票简称 |\n| A股 | 上海证券交易所 | 浙版传媒 | 601921 | / |",
+    "rendered": "<!-- table-fragment: p2_t1 -->\n\n<!-- table-structure: {\"version\":1,\"table_id\":\"p2_t1\",\"source_pages\":[2],\"num_rows\":3,\"num_cols\":5,\"encoding\":\"anchor_and_blanks\",\"structure_valid\":true,\"header_rows\":[0],\"header_scope_rows\":[0],\"header_scope_complete\":true,\"spans\":[[0,0,1,5]]} -->\n\n| 公司股票简况 |  |  |  |  |\n| --- | --- | --- | --- | --- |\n| 股票种类 | 股票上市交易所 | 股票简称 | 股票代码 | 变更前股票简称 |\n| A股 | 上海证券交易所 | 浙版传媒 | 601921 | / |",
+    "valid": true,
+    "invalid_reasons": [],
+    "logical_table_id": null,
+    "has_column_header": true,
+    "caption": null,
+    "unit_text": null,
+    "source_kind": "docling",
+    "cells": [
+      {
+        "row": 0,
+        "column": 0,
+        "row_span": 1,
+        "column_span": 5,
+        "text": "公司股票简况",
+        "normalized_bbox": [
+          0.47066546463596776,
+          0.5372631874752378,
+          0.8926031291139521,
+          0.5534037631773342
+        ],
+        "is_column_header": true,
+        "is_row_header": false
+      },
+      {
+        "row": 1,
+        "column": 0,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "股票种类 ",
+        "normalized_bbox": [
+          0.1867812920058561,
+          0.5577773834562216,
+          0.25795893398689634,
+          0.5749923745137269
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 1,
+        "column": 1,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "股票上市交易所 ",
+        "normalized_bbox": [
+          0.3112220353384001,
+          0.5580213876893166,
+          0.43372314935353923,
+          0.5748634602692426
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 1,
+        "column": 2,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "股票简称 ",
+        "normalized_bbox": [
+          0.4870261283458862,
+          0.5580474840307416,
+          0.5579556064196108,
+          0.5750220263191901
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 1,
+        "column": 3,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "股票代码 ",
+        "normalized_bbox": [
+          0.6350049373032416,
+          0.558188112191154,
+          0.7063862724610892,
+          0.5746257182405505
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 1,
+        "column": 4,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "变更前股票简称",
+        "normalized_bbox": [
+          0.7566384552827503,
+          0.5581092994049724,
+          0.8830190684964697,
+          0.57481060619362
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 2,
+        "column": 0,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "A股 ",
+        "normalized_bbox": [
+          0.205124696298659,
+          0.5788107899676409,
+          0.23835925253663276,
+          0.5958329219510877
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 2,
+        "column": 1,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "上海证券交易所 ",
+        "normalized_bbox": [
+          0.3118593167390368,
+          0.5787096695119289,
+          0.43527005272106534,
+          0.5955938571368502
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 2,
+        "column": 2,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "浙版传媒 ",
+        "normalized_bbox": [
+          0.4874511989338873,
+          0.5789059158345228,
+          0.5592754175877669,
+          0.5959251728621021
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 2,
+        "column": 3,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "601921 ",
+        "normalized_bbox": [
+          0.6430113023905715,
+          0.5793031567445875,
+          0.6957551440461565,
+          0.5954339453628796
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 2,
+        "column": 4,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "/",
+        "normalized_bbox": [
+          0.7517170799885579,
+          0.578810583521342,
+          0.8864884680058841,
+          0.5961697964340941
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      }
+    ],
+    "cell_evidence": [],
+    "visual_obstructions": [],
+    "physical_num_rows": null,
+    "source_row_indices": [],
+    "header_scope_complete": true,
+    "caption_scope_complete": true,
+    "page_furniture": [
+      {
+        "source_ref": "#/texts/0",
+        "page_number": 2,
+        "label": "page_header",
+        "text": "浙江出版传媒股份有限公司2026 年半年度报告摘要",
+        "rendered": "<!-- source-furniture: #/texts/0; source-page: 2; role: page_header -->\n\n浙江出版传媒股份有限公司2026 年半年度报告摘要",
+        "normalized_bbox": [
+          0.354360840507331,
+          0.05274027471981754,
+          0.6894356272867037,
+          0.06287447376300323
+        ]
+      }
+    ],
+    "_structure_marker": "<!-- table-structure: {\"version\":1,\"table_id\":\"p2_t1\",\"source_pages\":[2],\"num_rows\":3,\"num_cols\":5,\"encoding\":\"anchor_and_blanks\",\"structure_valid\":true,\"header_rows\":[0],\"header_scope_rows\":[0],\"header_scope_complete\":true,\"spans\":[[0,0,1,5]]} -->"
+  },
+  {
+    "fragment_id": "p2_t2",
+    "page_number": 2,
+    "ordinal": 2,
+    "normalized_bbox": [
+      0.1447401287175026,
+      0.615173412332059,
+      0.898779502035189,
+      0.7302710743811237
+    ],
+    "num_rows": 5,
+    "num_cols": 3,
+    "rows": [
+      [
+        "联系人和联系方式 ",
+        "董事会秘书 ",
+        "证券事务代表"
+      ],
+      [
+        "姓名 ",
+        "汪益信 ",
+        "刘子婧"
+      ],
+      [
+        "电话 ",
+        "0571-88909784 ",
+        "0571-88909784"
+      ],
+      [
+        "办公地址 ",
+        "浙江省杭州市环城北路177号 ",
+        "浙江省杭州市环城北路177号"
+      ],
+      [
+        "电子信箱 ",
+        "zqfwb@zjcbcm.com ",
+        "zqfwb@zjcbcm.com"
+      ]
+    ],
+    "column_boundaries": [
+      0.231645,
+      0.35675,
+      0.600516,
+      0.793518
+    ],
+    "markdown": "| 联系人和联系方式 | 董事会秘书 | 证券事务代表 |\n| --- | --- | --- |\n| 姓名 | 汪益信 | 刘子婧 |\n| 电话 | 0571-88909784 | 0571-88909784 |\n| 办公地址 | 浙江省杭州市环城北路177号 | 浙江省杭州市环城北路177号 |\n| 电子信箱 | zqfwb@zjcbcm.com | zqfwb@zjcbcm.com |",
+    "rendered": "<!-- table-fragment: p2_t2 -->\n\n<!-- table-structure: {\"version\":1,\"table_id\":\"p2_t2\",\"source_pages\":[2],\"num_rows\":5,\"num_cols\":3,\"encoding\":\"anchor_and_blanks\",\"structure_valid\":true,\"header_rows\":[0],\"header_scope_rows\":[0],\"header_scope_complete\":true,\"spans\":[]} -->\n\n| 联系人和联系方式 | 董事会秘书 | 证券事务代表 |\n| --- | --- | --- |\n| 姓名 | 汪益信 | 刘子婧 |\n| 电话 | 0571-88909784 | 0571-88909784 |\n| 办公地址 | 浙江省杭州市环城北路177号 | 浙江省杭州市环城北路177号 |\n| 电子信箱 | zqfwb@zjcbcm.com | zqfwb@zjcbcm.com |",
+    "valid": true,
+    "invalid_reasons": [],
+    "logical_table_id": null,
+    "has_column_header": true,
+    "caption": null,
+    "unit_text": null,
+    "source_kind": "docling",
+    "cells": [
+      {
+        "row": 0,
+        "column": 0,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "联系人和联系方式 ",
+        "normalized_bbox": [
+          0.1978879673416763,
+          0.6242614824635027,
+          0.33852231399697874,
+          0.6410907660368051
+        ],
+        "is_column_header": true,
+        "is_row_header": false
+      },
+      {
+        "row": 0,
+        "column": 1,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "董事会秘书 ",
+        "normalized_bbox": [
+          0.4717403994827731,
+          0.624561889298077,
+          0.5634837346820966,
+          0.6410106923423297
+        ],
+        "is_column_header": true,
+        "is_row_header": false
+      },
+      {
+        "row": 0,
+        "column": 2,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "证券事务代表",
+        "normalized_bbox": [
+          0.7152717171655357,
+          0.6250641182398635,
+          0.8232429058996893,
+          0.6411612872004903
+        ],
+        "is_column_header": true,
+        "is_row_header": false
+      },
+      {
+        "row": 1,
+        "column": 0,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "姓名 ",
+        "normalized_bbox": [
+          0.24840338482579336,
+          0.6494435545856928,
+          0.28488776090714757,
+          0.666308393179916
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 1,
+        "column": 1,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "汪益信 ",
+        "normalized_bbox": [
+          0.39769734907050314,
+          0.6491271604817583,
+          0.4542281444251271,
+          0.666485042892008
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 1,
+        "column": 2,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "刘子婧",
+        "normalized_bbox": [
+          0.6510232286424368,
+          0.6495577488763091,
+          0.7072812741182045,
+          0.666338049976622
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 2,
+        "column": 0,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "电话 ",
+        "normalized_bbox": [
+          0.2487023891845,
+          0.6704818155940439,
+          0.28594987599910726,
+          0.6876124803119896
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 2,
+        "column": 1,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "0571-88909784 ",
+        "normalized_bbox": [
+          0.3938574740453356,
+          0.6706956453217354,
+          0.5113588141836606,
+          0.687337008947796
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 2,
+        "column": 2,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "0571-88909784",
+        "normalized_bbox": [
+          0.6493480669503414,
+          0.6711312194368856,
+          0.7672320301674442,
+          0.68699089280701
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 3,
+        "column": 0,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "办公地址 ",
+        "normalized_bbox": [
+          0.23259241669072747,
+          0.6914621227509644,
+          0.3050591811756637,
+          0.7081674320207736
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 3,
+        "column": 1,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "浙江省杭州市环城北路177号 ",
+        "normalized_bbox": [
+          0.39444952605285133,
+          0.6913592562098367,
+          0.6197446573611355,
+          0.7083229439256963
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 3,
+        "column": 2,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "浙江省杭州市环城北路177号",
+        "normalized_bbox": [
+          0.6475517030704436,
+          0.6912762570098855,
+          0.8697666534079287,
+          0.7082451089983218
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 4,
+        "column": 0,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "电子信箱 ",
+        "normalized_bbox": [
+          0.2306366546256938,
+          0.7123049757885218,
+          0.3032276839464457,
+          0.7294256793663443
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 4,
+        "column": 1,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "zqfwb@zjcbcm.com ",
+        "normalized_bbox": [
+          0.3921107194437168,
+          0.7128822686683413,
+          0.5429520121383055,
+          0.7287770068998715
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 4,
+        "column": 2,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "zqfwb@zjcbcm.com",
+        "normalized_bbox": [
+          0.650194324362504,
+          0.713026676013747,
+          0.8000647857345442,
+          0.7287570090784038
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      }
+    ],
+    "cell_evidence": [],
+    "visual_obstructions": [],
+    "physical_num_rows": null,
+    "source_row_indices": [],
+    "header_scope_complete": true,
+    "caption_scope_complete": true,
+    "page_furniture": [
+      {
+        "source_ref": "#/texts/0",
+        "page_number": 2,
+        "label": "page_header",
+        "text": "浙江出版传媒股份有限公司2026 年半年度报告摘要",
+        "rendered": "<!-- source-furniture: #/texts/0; source-page: 2; role: page_header -->\n\n浙江出版传媒股份有限公司2026 年半年度报告摘要",
+        "normalized_bbox": [
+          0.354360840507331,
+          0.05274027471981754,
+          0.6894356272867037,
+          0.06287447376300323
+        ]
+      }
+    ],
+    "_structure_marker": "<!-- table-structure: {\"version\":1,\"table_id\":\"p2_t2\",\"source_pages\":[2],\"num_rows\":5,\"num_cols\":3,\"encoding\":\"anchor_and_blanks\",\"structure_valid\":true,\"header_rows\":[0],\"header_scope_rows\":[0],\"header_scope_complete\":true,\"spans\":[]} -->"
+  },
+  {
+    "fragment_id": "p2_t3",
+    "page_number": 2,
+    "ordinal": 3,
+    "normalized_bbox": [
+      0.14463004745355174,
+      0.8080953203867279,
+      0.8988272017791491,
+      0.8964397946899124
+    ],
+    "num_rows": 3,
+    "num_cols": 4,
+    "rows": [
+      [
+        "",
+        "本报告期末 ",
+        "上年度末",
+        "本报告期末比\r\n上年度末增减(%)"
+      ],
+      [
+        "总资产 ",
+        "21,467,154,275.58 ",
+        "21,158,183,575.04 ",
+        "1.46"
+      ],
+      [
+        "归属于上市公司股东的净资产 ",
+        "14,541,058,486.24 ",
+        "14,384,089,799.69 ",
+        "1.09"
+      ]
+    ],
+    "column_boundaries": [
+      0.150061,
+      0.379289,
+      0.58152,
+      0.769902,
+      0.887637
+    ],
+    "markdown": "|  | 本报告期末 | 上年度末 | 本报告期末比 上年度末增减(%) |\n| --- | --- | --- | --- |\n| 总资产 | 21,467,154,275.58 | 21,158,183,575.04 | 1.46 |\n| 归属于上市公司股东的净资产 | 14,541,058,486.24 | 14,384,089,799.69 | 1.09 |",
+    "rendered": "<!-- table-fragment: p2_t3 -->\n\n<!-- table-structure: {\"version\":1,\"table_id\":\"p2_t3\",\"source_pages\":[2],\"num_rows\":3,\"num_cols\":4,\"encoding\":\"anchor_and_blanks\",\"structure_valid\":true,\"header_rows\":[0],\"header_scope_rows\":[0],\"header_scope_complete\":true,\"spans\":[]} -->\n\n|  | 本报告期末 | 上年度末 | 本报告期末比 上年度末增减(%) |\n| --- | --- | --- | --- |\n| 总资产 | 21,467,154,275.58 | 21,158,183,575.04 | 1.46 |\n| 归属于上市公司股东的净资产 | 14,541,058,486.24 | 14,384,089,799.69 | 1.09 |",
+    "valid": true,
+    "invalid_reasons": [],
+    "logical_table_id": null,
+    "has_column_header": true,
+    "caption": null,
+    "unit_text": null,
+    "source_kind": "docling",
+    "cells": [
+      {
+        "row": 0,
+        "column": 0,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "",
+        "normalized_bbox": [
+          0.14602481614554952,
+          0.8134839810443897,
+          0.38633226128007864,
+          0.8459494111514373
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 0,
+        "column": 1,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "本报告期末 ",
+        "normalized_bbox": [
+          0.4392816353846372,
+          0.8227485746468924,
+          0.5302222308712761,
+          0.8385144983171993
+        ],
+        "is_column_header": true,
+        "is_row_header": false
+      },
+      {
+        "row": 0,
+        "column": 2,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "上年度末",
+        "normalized_bbox": [
+          0.6232789419294833,
+          0.8231714125617062,
+          0.6910397763459865,
+          0.8385271622684108
+        ],
+        "is_column_header": true,
+        "is_row_header": false
+      },
+      {
+        "row": 0,
+        "column": 3,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "本报告期末比\r\n上年度末增减(%)",
+        "normalized_bbox": [
+          0.753187367005444,
+          0.8141590386717926,
+          0.8867630573884465,
+          0.8458066403672961
+        ],
+        "is_column_header": true,
+        "is_row_header": false
+      },
+      {
+        "row": 1,
+        "column": 0,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "总资产 ",
+        "normalized_bbox": [
+          0.15207851364321812,
+          0.8524110289797817,
+          0.20451208162694967,
+          0.869075323260355
+        ],
+        "is_column_header": false,
+        "is_row_header": true
+      },
+      {
+        "row": 1,
+        "column": 1,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "21,467,154,275.58 ",
+        "normalized_bbox": [
+          0.4312200939470948,
+          0.8535076209580477,
+          0.5661840349084857,
+          0.8683752695950785
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 1,
+        "column": 2,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "21,158,183,575.04 ",
+        "normalized_bbox": [
+          0.5990238036585595,
+          0.8535164777591465,
+          0.7314003296656575,
+          0.8683211836382478
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 1,
+        "column": 3,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "1.46",
+        "normalized_bbox": [
+          0.8562547224141248,
+          0.8539650896023381,
+          0.8883184554943753,
+          0.8684012506069352
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 2,
+        "column": 0,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "归属于上市公司股东的净资产 ",
+        "normalized_bbox": [
+          0.1520788002396377,
+          0.8761922408282791,
+          0.3841153312032631,
+          0.8925540870329567
+        ],
+        "is_column_header": false,
+        "is_row_header": true
+      },
+      {
+        "row": 2,
+        "column": 1,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "14,541,058,486.24 ",
+        "normalized_bbox": [
+          0.43027180820955485,
+          0.8768154134245442,
+          0.5679414216753179,
+          0.8920335853635792
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 2,
+        "column": 2,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "14,384,089,799.69 ",
+        "normalized_bbox": [
+          0.6024703335271334,
+          0.8770831776726351,
+          0.7321548762235484,
+          0.8918955297109584
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 2,
+        "column": 3,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "1.09",
+        "normalized_bbox": [
+          0.8553757817710526,
+          0.8772474320402571,
+          0.8878289263315492,
+          0.8921634213950365
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      }
+    ],
+    "cell_evidence": [],
+    "visual_obstructions": [],
+    "physical_num_rows": null,
+    "source_row_indices": [],
+    "header_scope_complete": true,
+    "caption_scope_complete": true,
+    "page_furniture": [
+      {
+        "source_ref": "#/texts/0",
+        "page_number": 2,
+        "label": "page_header",
+        "text": "浙江出版传媒股份有限公司2026 年半年度报告摘要",
+        "rendered": "<!-- source-furniture: #/texts/0; source-page: 2; role: page_header -->\n\n浙江出版传媒股份有限公司2026 年半年度报告摘要",
+        "normalized_bbox": [
+          0.354360840507331,
+          0.05274027471981754,
+          0.6894356272867037,
+          0.06287447376300323
+        ]
+      }
+    ],
+    "_structure_marker": "<!-- table-structure: {\"version\":1,\"table_id\":\"p2_t3\",\"source_pages\":[2],\"num_rows\":3,\"num_cols\":4,\"encoding\":\"anchor_and_blanks\",\"structure_valid\":true,\"header_rows\":[0],\"header_scope_rows\":[0],\"header_scope_complete\":true,\"spans\":[]} -->"
+  }
+]

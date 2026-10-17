@@ -1,0 +1,19 @@
+[
+  {
+    "asset_id": "asset_b8fd195efdc930e4c725c32116",
+    "kind": "image",
+    "role": "page_crop",
+    "mime_type": "image/png",
+    "sha256": "b8fd195efdc930e4c725c321162f76808b6a7e7361d52342e588ea15123818ff",
+    "size_bytes": 47825,
+    "filename": "page-11-image-1.png",
+    "width": 707,
+    "height": 339,
+    "duration_ms": null,
+    "parent_asset_id": null,
+    "visual_analysis": null,
+    "status": "ready",
+    "warning_codes": [],
+    "download_url": "/v1/content/jobs/job_01M5528DH340D352BAKC1X0G1M/assets/asset_b8fd195efdc930e4c725c32116"
+  }
+]

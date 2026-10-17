@@ -1,0 +1,27 @@
+{
+  "id": "1206337604",
+  "page": 2,
+  "run_order_zero_based": 2,
+  "source_pdf": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/sources/1206337604/source-converted.pdf",
+  "source_pdf_SHA256": "ccff40771d75e9412b65f364a1c72c1733c37b4d8f232f49cf639621f0ba165f",
+  "source_total_pages": 2,
+  "convert_page_range_one_based": [
+    2,
+    2
+  ],
+  "status": "complete",
+  "device": "cpu",
+  "CPU_threads": 4,
+  "convert_seconds": 0.8507242819759995,
+  "conversion_status": "ConversionStatus.SUCCESS",
+  "export_seconds": 0.0322330150520429,
+  "convert_plus_export_seconds": 0.8829572970280424,
+  "user_CPU_seconds": 2.942221,
+  "system_CPU_seconds": 0.07977500000000015,
+  "CPU_core_percent": 342.2584546468755,
+  "peak_process_RSS_bytes": 1458446336,
+  "table_fragments": 0,
+  "picture_candidates": 0,
+  "MD_SHA256": "b0776682ce5fc5a68ca3408220a8283ab911866a99f50eb429d6eb03eeb55789",
+  "raw_docling_SHA256": "a41411b20d8c1ba6671d409ab0b75c9add2f7ca43a2524ad708ea52fbcd1a90a"
+}

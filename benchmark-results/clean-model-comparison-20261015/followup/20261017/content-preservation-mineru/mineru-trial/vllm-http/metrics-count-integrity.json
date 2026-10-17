@@ -1,0 +1,103 @@
+{
+  "all_counts_match": true,
+  "rows": [
+    {
+      "id": "1206337604",
+      "page": 1,
+      "expected_model_calls": 6,
+      "metric_stop_delta": 6.0,
+      "matches": true
+    },
+    {
+      "id": "1225474739",
+      "page": 19,
+      "expected_model_calls": 12,
+      "metric_stop_delta": 12.0,
+      "matches": true
+    },
+    {
+      "id": "1206337604",
+      "page": 2,
+      "expected_model_calls": 2,
+      "metric_stop_delta": 2.0,
+      "matches": true
+    },
+    {
+      "id": "1225474739",
+      "page": 40,
+      "expected_model_calls": 8,
+      "metric_stop_delta": 8.0,
+      "matches": true
+    },
+    {
+      "id": "1225474739",
+      "page": 74,
+      "expected_model_calls": 30,
+      "metric_stop_delta": 30.0,
+      "matches": true
+    },
+    {
+      "id": "1225474739",
+      "page": 131,
+      "expected_model_calls": 13,
+      "metric_stop_delta": 13.0,
+      "matches": true
+    },
+    {
+      "id": "1225475375",
+      "page": 74,
+      "expected_model_calls": 14,
+      "metric_stop_delta": 14.0,
+      "matches": true
+    },
+    {
+      "id": "1225475375",
+      "page": 87,
+      "expected_model_calls": 6,
+      "metric_stop_delta": 6.0,
+      "matches": true
+    },
+    {
+      "id": "1225474139",
+      "page": 28,
+      "expected_model_calls": 5,
+      "metric_stop_delta": 5.0,
+      "matches": true
+    },
+    {
+      "id": "1225474139",
+      "page": 30,
+      "expected_model_calls": 9,
+      "metric_stop_delta": 9.0,
+      "matches": true
+    },
+    {
+      "id": "1225474693",
+      "page": 2,
+      "expected_model_calls": 16,
+      "metric_stop_delta": 16.0,
+      "matches": true
+    },
+    {
+      "id": "1225474693",
+      "page": 3,
+      "expected_model_calls": 6,
+      "metric_stop_delta": 6.0,
+      "matches": true
+    },
+    {
+      "id": "1225473526",
+      "page": 6,
+      "expected_model_calls": 15,
+      "metric_stop_delta": 15.0,
+      "matches": true
+    },
+    {
+      "id": "1225473526",
+      "page": 7,
+      "expected_model_calls": 13,
+      "metric_stop_delta": 13.0,
+      "matches": true
+    }
+  ]
+}

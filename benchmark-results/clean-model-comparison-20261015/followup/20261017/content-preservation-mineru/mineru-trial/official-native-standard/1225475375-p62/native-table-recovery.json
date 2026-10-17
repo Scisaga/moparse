@@ -1,0 +1,1501 @@
+[
+  {
+    "stage": "internal_NativeTableResult",
+    "rows": 11,
+    "cols": 9,
+    "source": "vector_grid",
+    "confidence": 0.9985021261960801,
+    "cells": [
+      {
+        "row": 0,
+        "col": 0,
+        "rowspan": 5,
+        "colspan": 1,
+        "bbox": [
+          1.0223545227050863,
+          1.761985351562494,
+          23.272358337402352,
+          310.85201220703124
+        ],
+        "content": "额余初期",
+        "source_char_indices": [
+          31,
+          30,
+          29,
+          28
+        ]
+      },
+      {
+        "row": 0,
+        "col": 1,
+        "rowspan": 1,
+        "colspan": 2,
+        "bbox": [
+          23.272358337402352,
+          1.761985351562494,
+          70.76235620117188,
+          80.35201220703124
+        ],
+        "content": "面值账价",
+        "source_char_indices": [
+          63,
+          67,
+          62,
+          66
+        ]
+      },
+      {
+        "row": 0,
+        "col": 3,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          70.76235620117188,
+          1.761985351562494,
+          93.01235620117188,
+          80.35201220703124
+        ],
+        "content": "",
+        "source_char_indices": []
+      },
+      {
+        "row": 0,
+        "col": 4,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          93.01235620117188,
+          1.761985351562494,
+          115.26235620117188,
+          80.35201220703124
+        ],
+        "content": "",
+        "source_char_indices": []
+      },
+      {
+        "row": 0,
+        "col": 5,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          115.26235620117188,
+          1.761985351562494,
+          137.51235620117188,
+          80.35201220703124
+        ],
+        "content": "",
+        "source_char_indices": []
+      },
+      {
+        "row": 0,
+        "col": 6,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          137.51235620117188,
+          1.761985351562494,
+          159.76234094238282,
+          80.35201220703124
+        ],
+        "content": "",
+        "source_char_indices": []
+      },
+      {
+        "row": 0,
+        "col": 7,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          159.76234094238282,
+          1.761985351562494,
+          182.01234094238282,
+          80.35201220703124
+        ],
+        "content": "",
+        "source_char_indices": []
+      },
+      {
+        "row": 0,
+        "col": 8,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          182.01234094238282,
+          1.761985351562494,
+          204.02235070800782,
+          80.35201220703124
+        ],
+        "content": "",
+        "source_char_indices": []
+      },
+      {
+        "row": 1,
+        "col": 1,
+        "rowspan": 2,
+        "colspan": 1,
+        "bbox": [
+          23.272358337402352,
+          80.35201220703124,
+          45.76235620117188,
+          192.0520244140625
+        ],
+        "content": "备准账坏",
+        "source_char_indices": [
+          60,
+          59,
+          58,
+          57
+        ]
+      },
+      {
+        "row": 1,
+        "col": 2,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          45.76235620117188,
+          80.35201220703124,
+          70.76235620117188,
+          129.3020244140625
+        ],
+        "content": "例比）%提（计",
+        "source_char_indices": [
+          109,
+          108,
+          113,
+          114,
+          107,
+          112,
+          106
+        ]
+      },
+      {
+        "row": 1,
+        "col": 3,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          70.76235620117188,
+          80.35201220703124,
+          93.01235620117188,
+          129.3020244140625
+        ],
+        "content": "",
+        "source_char_indices": []
+      },
+      {
+        "row": 1,
+        "col": 4,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          93.01235620117188,
+          80.35201220703124,
+          115.26235620117188,
+          129.3020244140625
+        ],
+        "content": "",
+        "source_char_indices": []
+      },
+      {
+        "row": 1,
+        "col": 5,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          115.26235620117188,
+          80.35201220703124,
+          137.51235620117188,
+          129.3020244140625
+        ],
+        "content": "",
+        "source_char_indices": []
+      },
+      {
+        "row": 1,
+        "col": 6,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          137.51235620117188,
+          80.35201220703124,
+          159.76234094238282,
+          129.3020244140625
+        ],
+        "content": "",
+        "source_char_indices": []
+      },
+      {
+        "row": 1,
+        "col": 7,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          159.76234094238282,
+          80.35201220703124,
+          182.01234094238282,
+          129.3020244140625
+        ],
+        "content": "",
+        "source_char_indices": []
+      },
+      {
+        "row": 1,
+        "col": 8,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          182.01234094238282,
+          80.35201220703124,
+          204.02235070800782,
+          129.3020244140625
+        ],
+        "content": "",
+        "source_char_indices": []
+      },
+      {
+        "row": 2,
+        "col": 2,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          45.76235620117188,
+          129.3020244140625,
+          70.76235620117188,
+          192.0520244140625
+        ],
+        "content": "额金",
+        "source_char_indices": [
+          103,
+          102
+        ]
+      },
+      {
+        "row": 2,
+        "col": 3,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          70.76235620117188,
+          129.3020244140625,
+          93.01235620117188,
+          192.0520244140625
+        ],
+        "content": "",
+        "source_char_indices": []
+      },
+      {
+        "row": 2,
+        "col": 4,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          93.01235620117188,
+          129.3020244140625,
+          115.26235620117188,
+          192.0520244140625
+        ],
+        "content": "",
+        "source_char_indices": []
+      },
+      {
+        "row": 2,
+        "col": 5,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          115.26235620117188,
+          129.3020244140625,
+          137.51235620117188,
+          192.0520244140625
+        ],
+        "content": "",
+        "source_char_indices": []
+      },
+      {
+        "row": 2,
+        "col": 6,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          137.51235620117188,
+          129.3020244140625,
+          159.76234094238282,
+          192.0520244140625
+        ],
+        "content": "",
+        "source_char_indices": []
+      },
+      {
+        "row": 2,
+        "col": 7,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          159.76234094238282,
+          129.3020244140625,
+          182.01234094238282,
+          192.0520244140625
+        ],
+        "content": "",
+        "source_char_indices": []
+      },
+      {
+        "row": 2,
+        "col": 8,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          182.01234094238282,
+          129.3020244140625,
+          204.02235070800782,
+          192.0520244140625
+        ],
+        "content": "",
+        "source_char_indices": []
+      },
+      {
+        "row": 3,
+        "col": 1,
+        "rowspan": 2,
+        "colspan": 1,
+        "bbox": [
+          23.272358337402352,
+          192.0520244140625,
+          45.76235620117188,
+          310.85201220703124
+        ],
+        "content": "额余面账",
+        "source_char_indices": [
+          55,
+          54,
+          53,
+          52
+        ]
+      },
+      {
+        "row": 3,
+        "col": 2,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          45.76235620117188,
+          192.0520244140625,
+          70.76235620117188,
+          233.402
+        ],
+        "content": "）%（例比",
+        "source_char_indices": [
+          100,
+          99,
+          97,
+          98,
+          96
+        ]
+      },
+      {
+        "row": 3,
+        "col": 3,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          70.76235620117188,
+          192.0520244140625,
+          93.01235620117188,
+          233.402
+        ],
+        "content": "",
+        "source_char_indices": []
+      },
+      {
+        "row": 3,
+        "col": 4,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          93.01235620117188,
+          192.0520244140625,
+          115.26235620117188,
+          233.402
+        ],
+        "content": "",
+        "source_char_indices": []
+      },
+      {
+        "row": 3,
+        "col": 5,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          115.26235620117188,
+          192.0520244140625,
+          137.51235620117188,
+          233.402
+        ],
+        "content": "",
+        "source_char_indices": []
+      },
+      {
+        "row": 3,
+        "col": 6,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          137.51235620117188,
+          192.0520244140625,
+          159.76234094238282,
+          233.402
+        ],
+        "content": "",
+        "source_char_indices": []
+      },
+      {
+        "row": 3,
+        "col": 7,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          159.76234094238282,
+          192.0520244140625,
+          182.01234094238282,
+          233.402
+        ],
+        "content": "",
+        "source_char_indices": []
+      },
+      {
+        "row": 3,
+        "col": 8,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          182.01234094238282,
+          192.0520244140625,
+          204.02235070800782,
+          233.402
+        ],
+        "content": "",
+        "source_char_indices": []
+      },
+      {
+        "row": 4,
+        "col": 2,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          45.76235620117188,
+          233.402,
+          70.76235620117188,
+          310.85201220703124
+        ],
+        "content": "额金",
+        "source_char_indices": [
+          94,
+          93
+        ]
+      },
+      {
+        "row": 4,
+        "col": 3,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          70.76235620117188,
+          233.402,
+          93.01235620117188,
+          310.85201220703124
+        ],
+        "content": "",
+        "source_char_indices": []
+      },
+      {
+        "row": 4,
+        "col": 4,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          93.01235620117188,
+          233.402,
+          115.26235620117188,
+          310.85201220703124
+        ],
+        "content": "",
+        "source_char_indices": []
+      },
+      {
+        "row": 4,
+        "col": 5,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          115.26235620117188,
+          233.402,
+          137.51235620117188,
+          310.85201220703124
+        ],
+        "content": "",
+        "source_char_indices": []
+      },
+      {
+        "row": 4,
+        "col": 6,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          137.51235620117188,
+          233.402,
+          159.76234094238282,
+          310.85201220703124
+        ],
+        "content": "",
+        "source_char_indices": []
+      },
+      {
+        "row": 4,
+        "col": 7,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          159.76234094238282,
+          233.402,
+          182.01234094238282,
+          310.85201220703124
+        ],
+        "content": "",
+        "source_char_indices": []
+      },
+      {
+        "row": 4,
+        "col": 8,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          182.01234094238282,
+          233.402,
+          204.02235070800782,
+          310.85201220703124
+        ],
+        "content": "",
+        "source_char_indices": []
+      },
+      {
+        "row": 5,
+        "col": 0,
+        "rowspan": 5,
+        "colspan": 1,
+        "bbox": [
+          1.0223545227050863,
+          310.85201220703124,
+          23.272358337402352,
+          615.7020030517579
+        ],
+        "content": "额余末期",
+        "source_char_indices": [
+          26,
+          23,
+          24,
+          25
+        ]
+      },
+      {
+        "row": 5,
+        "col": 1,
+        "rowspan": 1,
+        "colspan": 2,
+        "bbox": [
+          23.272358337402352,
+          310.85201220703124,
+          70.76235620117188,
+          383.60201220703124
+        ],
+        "content": "面值账价",
+        "source_char_indices": [
+          45,
+          49,
+          44,
+          48
+        ]
+      },
+      {
+        "row": 5,
+        "col": 3,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          70.76235620117188,
+          310.85201220703124,
+          93.01235620117188,
+          383.60201220703124
+        ],
+        "content": "",
+        "source_char_indices": []
+      },
+      {
+        "row": 5,
+        "col": 4,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          93.01235620117188,
+          310.85201220703124,
+          115.26235620117188,
+          383.60201220703124
+        ],
+        "content": "11.223,343,1",
+        "source_char_indices": [
+          183,
+          182,
+          181,
+          180,
+          179,
+          177,
+          178,
+          176,
+          175,
+          174,
+          173,
+          172
+        ]
+      },
+      {
+        "row": 5,
+        "col": 5,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          115.26235620117188,
+          310.85201220703124,
+          137.51235620117188,
+          383.60201220703124
+        ],
+        "content": "",
+        "source_char_indices": []
+      },
+      {
+        "row": 5,
+        "col": 6,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          137.51235620117188,
+          310.85201220703124,
+          159.76234094238282,
+          383.60201220703124
+        ],
+        "content": "11.223,343,1",
+        "source_char_indices": [
+          243,
+          242,
+          241,
+          240,
+          239,
+          237,
+          238,
+          236,
+          235,
+          234,
+          233,
+          232
+        ]
+      },
+      {
+        "row": 5,
+        "col": 7,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          159.76234094238282,
+          310.85201220703124,
+          182.01234094238282,
+          383.60201220703124
+        ],
+        "content": "",
+        "source_char_indices": []
+      },
+      {
+        "row": 5,
+        "col": 8,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          182.01234094238282,
+          310.85201220703124,
+          204.02235070800782,
+          383.60201220703124
+        ],
+        "content": "11.223,343,1",
+        "source_char_indices": [
+          302,
+          301,
+          300,
+          299,
+          298,
+          296,
+          297,
+          295,
+          294,
+          293,
+          292,
+          291
+        ]
+      },
+      {
+        "row": 6,
+        "col": 1,
+        "rowspan": 2,
+        "colspan": 1,
+        "bbox": [
+          23.272358337402352,
+          383.60201220703124,
+          45.76235620117188,
+          497.85201220703124
+        ],
+        "content": "备准账坏",
+        "source_char_indices": [
+          42,
+          41,
+          40,
+          39
+        ]
+      },
+      {
+        "row": 6,
+        "col": 2,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          45.76235620117188,
+          383.60201220703124,
+          70.76235620117188,
+          439.80199389648436
+        ],
+        "content": "例比）%提计（",
+        "source_char_indices": [
+          85,
+          84,
+          89,
+          90,
+          82,
+          83,
+          88
+        ]
+      },
+      {
+        "row": 6,
+        "col": 3,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          70.76235620117188,
+          383.60201220703124,
+          93.01235620117188,
+          439.80199389648436
+        ],
+        "content": "",
+        "source_char_indices": []
+      },
+      {
+        "row": 6,
+        "col": 4,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          93.01235620117188,
+          383.60201220703124,
+          115.26235620117188,
+          439.80199389648436
+        ],
+        "content": "05.0",
+        "source_char_indices": [
+          170,
+          168,
+          169,
+          167
+        ]
+      },
+      {
+        "row": 6,
+        "col": 5,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          115.26235620117188,
+          383.60201220703124,
+          137.51235620117188,
+          439.80199389648436
+        ],
+        "content": "",
+        "source_char_indices": []
+      },
+      {
+        "row": 6,
+        "col": 6,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          137.51235620117188,
+          383.60201220703124,
+          159.76234094238282,
+          439.80199389648436
+        ],
+        "content": "05.0",
+        "source_char_indices": [
+          230,
+          228,
+          229,
+          227
+        ]
+      },
+      {
+        "row": 6,
+        "col": 7,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          159.76234094238282,
+          383.60201220703124,
+          182.01234094238282,
+          439.80199389648436
+        ],
+        "content": "",
+        "source_char_indices": []
+      },
+      {
+        "row": 6,
+        "col": 8,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          182.01234094238282,
+          383.60201220703124,
+          204.02235070800782,
+          439.80199389648436
+        ],
+        "content": "05.0",
+        "source_char_indices": [
+          289,
+          287,
+          288,
+          286
+        ]
+      },
+      {
+        "row": 7,
+        "col": 2,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          45.76235620117188,
+          439.80199389648436,
+          70.76235620117188,
+          497.85201220703124
+        ],
+        "content": "额金",
+        "source_char_indices": [
+          78,
+          79
+        ]
+      },
+      {
+        "row": 7,
+        "col": 3,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          70.76235620117188,
+          439.80199389648436,
+          93.01235620117188,
+          497.85201220703124
+        ],
+        "content": "",
+        "source_char_indices": []
+      },
+      {
+        "row": 7,
+        "col": 4,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          93.01235620117188,
+          439.80199389648436,
+          115.26235620117188,
+          497.85201220703124
+        ],
+        "content": "63.057,6",
+        "source_char_indices": [
+          164,
+          165,
+          158,
+          159,
+          160,
+          161,
+          162,
+          163
+        ]
+      },
+      {
+        "row": 7,
+        "col": 5,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          115.26235620117188,
+          439.80199389648436,
+          137.51235620117188,
+          497.85201220703124
+        ],
+        "content": "",
+        "source_char_indices": []
+      },
+      {
+        "row": 7,
+        "col": 6,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          137.51235620117188,
+          439.80199389648436,
+          159.76234094238282,
+          497.85201220703124
+        ],
+        "content": "63.057,6",
+        "source_char_indices": [
+          224,
+          225,
+          218,
+          219,
+          220,
+          221,
+          222,
+          223
+        ]
+      },
+      {
+        "row": 7,
+        "col": 7,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          159.76234094238282,
+          439.80199389648436,
+          182.01234094238282,
+          497.85201220703124
+        ],
+        "content": "",
+        "source_char_indices": []
+      },
+      {
+        "row": 7,
+        "col": 8,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          182.01234094238282,
+          439.80199389648436,
+          204.02235070800782,
+          497.85201220703124
+        ],
+        "content": "63.057,6",
+        "source_char_indices": [
+          283,
+          284,
+          277,
+          278,
+          279,
+          280,
+          281,
+          282
+        ]
+      },
+      {
+        "row": 8,
+        "col": 1,
+        "rowspan": 2,
+        "colspan": 1,
+        "bbox": [
+          23.272358337402352,
+          497.85201220703124,
+          45.76235620117188,
+          615.7020030517579
+        ],
+        "content": "额余面账",
+        "source_char_indices": [
+          37,
+          36,
+          35,
+          34
+        ]
+      },
+      {
+        "row": 8,
+        "col": 2,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          45.76235620117188,
+          497.85201220703124,
+          70.76235620117188,
+          541.652
+        ],
+        "content": "）%（例比",
+        "source_char_indices": [
+          76,
+          75,
+          74,
+          73,
+          72
+        ]
+      },
+      {
+        "row": 8,
+        "col": 3,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          70.76235620117188,
+          497.85201220703124,
+          93.01235620117188,
+          541.652
+        ],
+        "content": "",
+        "source_char_indices": []
+      },
+      {
+        "row": 8,
+        "col": 4,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          93.01235620117188,
+          497.85201220703124,
+          115.26235620117188,
+          541.652
+        ],
+        "content": "00.001",
+        "source_char_indices": [
+          156,
+          155,
+          153,
+          154,
+          152,
+          151
+        ]
+      },
+      {
+        "row": 8,
+        "col": 5,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          115.26235620117188,
+          497.85201220703124,
+          137.51235620117188,
+          541.652
+        ],
+        "content": "",
+        "source_char_indices": []
+      },
+      {
+        "row": 8,
+        "col": 6,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          137.51235620117188,
+          497.85201220703124,
+          159.76234094238282,
+          541.652
+        ],
+        "content": "00.001",
+        "source_char_indices": [
+          216,
+          215,
+          213,
+          214,
+          212,
+          211
+        ]
+      },
+      {
+        "row": 8,
+        "col": 7,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          159.76234094238282,
+          497.85201220703124,
+          182.01234094238282,
+          541.652
+        ],
+        "content": "",
+        "source_char_indices": []
+      },
+      {
+        "row": 8,
+        "col": 8,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          182.01234094238282,
+          497.85201220703124,
+          204.02235070800782,
+          541.652
+        ],
+        "content": "00.001",
+        "source_char_indices": [
+          275,
+          274,
+          272,
+          273,
+          271,
+          270
+        ]
+      },
+      {
+        "row": 9,
+        "col": 2,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          45.76235620117188,
+          541.652,
+          70.76235620117188,
+          615.7020030517579
+        ],
+        "content": "额金",
+        "source_char_indices": [
+          70,
+          69
+        ]
+      },
+      {
+        "row": 9,
+        "col": 3,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          70.76235620117188,
+          541.652,
+          93.01235620117188,
+          615.7020030517579
+        ],
+        "content": "",
+        "source_char_indices": []
+      },
+      {
+        "row": 9,
+        "col": 4,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          93.01235620117188,
+          541.652,
+          115.26235620117188,
+          615.7020030517579
+        ],
+        "content": "74.270,053,1",
+        "source_char_indices": [
+          149,
+          147,
+          148,
+          145,
+          146,
+          143,
+          144,
+          141,
+          142,
+          140,
+          139,
+          138
+        ]
+      },
+      {
+        "row": 9,
+        "col": 5,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          115.26235620117188,
+          541.652,
+          137.51235620117188,
+          615.7020030517579
+        ],
+        "content": "",
+        "source_char_indices": []
+      },
+      {
+        "row": 9,
+        "col": 6,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          137.51235620117188,
+          541.652,
+          159.76234094238282,
+          615.7020030517579
+        ],
+        "content": "74.270,053,1",
+        "source_char_indices": [
+          209,
+          207,
+          208,
+          205,
+          206,
+          203,
+          204,
+          201,
+          202,
+          200,
+          199,
+          198
+        ]
+      },
+      {
+        "row": 9,
+        "col": 7,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          159.76234094238282,
+          541.652,
+          182.01234094238282,
+          615.7020030517579
+        ],
+        "content": "",
+        "source_char_indices": []
+      },
+      {
+        "row": 9,
+        "col": 8,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          182.01234094238282,
+          541.652,
+          204.02235070800782,
+          615.7020030517579
+        ],
+        "content": "74.270,053,1",
+        "source_char_indices": [
+          268,
+          266,
+          267,
+          264,
+          265,
+          262,
+          263,
+          260,
+          261,
+          259,
+          258,
+          257
+        ]
+      },
+      {
+        "row": 10,
+        "col": 0,
+        "rowspan": 1,
+        "colspan": 3,
+        "bbox": [
+          1.0223545227050863,
+          615.7020030517579,
+          70.76235620117188,
+          714.0160000000001
+        ],
+        "content": "别类",
+        "source_char_indices": [
+          19,
+          20
+        ]
+      },
+      {
+        "row": 10,
+        "col": 3,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          70.76235620117188,
+          615.7020030517579,
+          93.01235620117188,
+          714.0160000000001
+        ],
+        "content": "备准账坏提计项单按",
+        "source_char_indices": [
+          125,
+          124,
+          123,
+          120,
+          121,
+          122,
+          119,
+          118,
+          117
+        ]
+      },
+      {
+        "row": 10,
+        "col": 4,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          93.01235620117188,
+          615.7020030517579,
+          115.26235620117188,
+          714.0160000000001
+        ],
+        "content": "备准账坏提计合组按",
+        "source_char_indices": [
+          136,
+          135,
+          134,
+          131,
+          132,
+          133,
+          130,
+          129,
+          128
+        ]
+      },
+      {
+        "row": 10,
+        "col": 5,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          115.26235620117188,
+          615.7020030517579,
+          137.51235620117188,
+          714.0160000000001
+        ],
+        "content": "：中其",
+        "source_char_indices": [
+          188,
+          187,
+          186
+        ]
+      },
+      {
+        "row": 10,
+        "col": 6,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          137.51235620117188,
+          615.7020030517579,
+          159.76234094238282,
+          714.0160000000001
+        ],
+        "content": "据票兑承行银",
+        "source_char_indices": [
+          194,
+          195,
+          196,
+          193,
+          192,
+          191
+        ]
+      },
+      {
+        "row": 10,
+        "col": 7,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          159.76234094238282,
+          615.7020030517579,
+          182.01234094238282,
+          714.0160000000001
+        ],
+        "content": "据票兑承业商",
+        "source_char_indices": [
+          249,
+          250,
+          251,
+          248,
+          247,
+          246
+        ]
+      },
+      {
+        "row": 10,
+        "col": 8,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          182.01234094238282,
+          615.7020030517579,
+          204.02235070800782,
+          714.0160000000001
+        ],
+        "content": "计合",
+        "source_char_indices": [
+          254,
+          255
+        ]
+      }
+    ],
+    "html_with_native_script_markup": "<table><tbody><tr><td rowspan=\"5\">额余初期</td><td colspan=\"2\">面值账价</td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td rowspan=\"2\">备准账坏</td><td>例比）%提（计</td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>额金</td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td rowspan=\"2\">额余面账</td><td>）%（例比</td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>额金</td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td rowspan=\"5\">额余<sub>末期</sub></td><td colspan=\"2\">面值账价</td><td></td><td>11.223,343,1</td><td></td><td>11.223,343,1</td><td></td><td>11.223,343,1</td></tr><tr><td rowspan=\"2\">备准账坏</td><td>例比）%<sup>提</sup>计（</td><td></td><td>05.0</td><td></td><td>05.0</td><td></td><td>05.0</td></tr><tr><td>额金</td><td></td><td><sup>6</sup>3.<sup>0</sup><sub>5</sub>7,6</td><td></td><td><sup>6</sup>3.<sup>0</sup><sub>5</sub>7,6</td><td></td><td><sup>6</sup>3.<sup>0</sup><sub>5</sub>7,6</td></tr><tr><td rowspan=\"2\">额余面账</td><td>）%（例比</td><td></td><td>00.001</td><td></td><td>00.001</td><td></td><td>00.001</td></tr><tr><td>额金</td><td></td><td>74.<sup>2</sup>70,<sup>0</sup>53,1</td><td></td><td>74.<sup>2</sup>70,<sup>0</sup>53,1</td><td></td><td>74.<sup>2</sup>70,<sup>0</sup>53,1</td></tr><tr><td colspan=\"3\"><sup>别</sup>类</td><td>备准账<sup>坏提</sup>计项单按</td><td>备准账<sup>坏提</sup>计合组按</td><td>：中其</td><td>据<sub>票兑</sub>承行银</td><td>据<sub>票兑</sub>承业商</td><td>计合</td></tr></tbody></table>",
+    "diagnostics": [
+      "candidate=vector_grid",
+      "score=0.9985",
+      "text_capture=1.0000",
+      "structure_support=0.9985",
+      "row_stability=1.0000",
+      "column_stability=1.0000",
+      "order_consistency=1.0000",
+      "evidence=line_grid",
+      "ambiguous_separator_ratio=0.0000",
+      "collapsed_x_tracks=0",
+      "collapsed_y_tracks=0",
+      "alias_max_span=0.0000",
+      "alias_separator_recoveries=0",
+      "y_alias_separator_recoveries=0",
+      "single_row_line_grid=false",
+      "single_column_line_grid=false",
+      "single_row_reliability=n/a",
+      "single_row_confidence=n/a",
+      "single_column_reliability=n/a",
+      "single_column_confidence=n/a",
+      "physical_blank_rows="
+    ],
+    "coordinate_scope": "Raw official NativeTableResult cell geometry, not reinterpreted as public cell provenance."
+  },
+  {
+    "region": [
+      106.5676456298828,
+      58.098000000000006,
+      312.5587371826172,
+      772.114
+    ],
+    "angle": 0,
+    "stage": "public_PDFTableResult",
+    "status": "accepted",
+    "source": "vector_grid",
+    "confidence": 0.9985021261960801,
+    "html": "<table><tbody><tr><td rowspan=\"5\">额余初期</td><td colspan=\"2\">面值账价</td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td rowspan=\"2\">备准账坏</td><td>例比）%提（计</td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>额金</td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td rowspan=\"2\">额余面账</td><td>）%（例比</td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>额金</td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td rowspan=\"5\">额余<sub>末期</sub></td><td colspan=\"2\">面值账价</td><td></td><td>11.223,343,1</td><td></td><td>11.223,343,1</td><td></td><td>11.223,343,1</td></tr><tr><td rowspan=\"2\">备准账坏</td><td>例比）%<sup>提</sup>计（</td><td></td><td>05.0</td><td></td><td>05.0</td><td></td><td>05.0</td></tr><tr><td>额金</td><td></td><td><sup>6</sup>3.<sup>0</sup><sub>5</sub>7,6</td><td></td><td><sup>6</sup>3.<sup>0</sup><sub>5</sub>7,6</td><td></td><td><sup>6</sup>3.<sup>0</sup><sub>5</sub>7,6</td></tr><tr><td rowspan=\"2\">额余面账</td><td>）%（例比</td><td></td><td>00.001</td><td></td><td>00.001</td><td></td><td>00.001</td></tr><tr><td>额金</td><td></td><td>74.<sup>2</sup>70,<sup>0</sup>53,1</td><td></td><td>74.<sup>2</sup>70,<sup>0</sup>53,1</td><td></td><td>74.<sup>2</sup>70,<sup>0</sup>53,1</td></tr><tr><td colspan=\"3\"><sup>别</sup>类</td><td>备准账<sup>坏提</sup>计项单按</td><td>备准账<sup>坏提</sup>计合组按</td><td>：中其</td><td>据<sub>票兑</sub>承行银</td><td>据<sub>票兑</sub>承业商</td><td>计合</td></tr></tbody></table>",
+    "diagnostics": [
+      "candidate=vector_grid",
+      "score=0.9985",
+      "text_capture=1.0000",
+      "structure_support=0.9985",
+      "row_stability=1.0000",
+      "column_stability=1.0000",
+      "order_consistency=1.0000",
+      "evidence=line_grid",
+      "ambiguous_separator_ratio=0.0000",
+      "collapsed_x_tracks=0",
+      "collapsed_y_tracks=0",
+      "alias_max_span=0.0000",
+      "alias_separator_recoveries=0",
+      "y_alias_separator_recoveries=0",
+      "single_row_line_grid=false",
+      "single_column_line_grid=false",
+      "single_row_reliability=n/a",
+      "single_row_confidence=n/a",
+      "single_column_reliability=n/a",
+      "single_column_confidence=n/a",
+      "physical_blank_rows="
+    ],
+    "wall_seconds": 0.02177143096923828
+  }
+]

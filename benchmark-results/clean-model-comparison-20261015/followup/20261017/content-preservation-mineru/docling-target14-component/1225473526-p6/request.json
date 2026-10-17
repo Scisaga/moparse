@@ -1,0 +1,27 @@
+{
+  "id": "1225473526",
+  "page": 6,
+  "run_order_zero_based": 12,
+  "source_pdf": "/opt/mosaic-parse/pdf_sample/1225473526.pdf",
+  "source_pdf_SHA256": "787297535ba74a4170cc859ae68f15f946f6dfd0bfc14a1e1fa0e6d068ba2b19",
+  "source_total_pages": 27,
+  "convert_page_range_one_based": [
+    6,
+    6
+  ],
+  "status": "complete",
+  "device": "cpu",
+  "CPU_threads": 4,
+  "convert_seconds": 4.464665281004272,
+  "conversion_status": "ConversionStatus.SUCCESS",
+  "export_seconds": 0.037839371943846345,
+  "convert_plus_export_seconds": 4.502504652948119,
+  "user_CPU_seconds": 16.627275999999995,
+  "system_CPU_seconds": 0.21651600000000037,
+  "CPU_core_percent": 374.0982697035334,
+  "peak_process_RSS_bytes": 1624592384,
+  "table_fragments": 2,
+  "picture_candidates": 0,
+  "MD_SHA256": "a0693099a42b7aaae3791acd85c3929e03df36875962770e997f89fb1b7f8a76",
+  "raw_docling_SHA256": "6677fe725d49728b2f20b8354a5d1b0f63da8c6ef25f6467a6ce23afbfef428d"
+}

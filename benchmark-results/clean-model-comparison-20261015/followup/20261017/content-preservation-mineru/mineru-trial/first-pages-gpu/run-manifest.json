@@ -1,0 +1,193 @@
+{
+  "started_at": "2026-10-17T21:19:57.068280+08:00",
+  "pid": 1129816,
+  "model_path": "/root/.cache/huggingface/hub/models--opendatalab--MinerU2.5-Pro-2605-1.2B/snapshots/08aaea840498d49ce16247b6263196cf02814885",
+  "model_revision": "08aaea840498d49ce16247b6263196cf02814885",
+  "model_weight_SHA256": "abf8681ca63b8dec7b67de257af47b821f179442f72998d0696ae2ed9232a5f0",
+  "device": "cuda:0",
+  "dtype": "float16",
+  "attention": "sdpa",
+  "threads": 4,
+  "batch_size": 1,
+  "max_concurrency": 1,
+  "input_DPI": 200,
+  "SDK_layout_size": [
+    1036,
+    1036
+  ],
+  "official_prompts": {
+    "table": "\nTable Recognition:",
+    "equation": "\nFormula Recognition:",
+    "image": "\nImage Analysis:",
+    "chart": "\nImage Analysis:",
+    "[default]": "\nText Recognition:",
+    "[layout]": "\nLayout Detection:",
+    "[cross_page_table_merge]": ""
+  },
+  "official_sampling_params": {
+    "table": {
+      "temperature": 0.0,
+      "top_p": 0.01,
+      "top_k": 1,
+      "presence_penalty": 1.0,
+      "frequency_penalty": 0.005,
+      "repetition_penalty": 1.0,
+      "no_repeat_ngram_size": 100,
+      "max_new_tokens": null
+    },
+    "equation": {
+      "temperature": 0.0,
+      "top_p": 0.01,
+      "top_k": 1,
+      "presence_penalty": 1.0,
+      "frequency_penalty": 0.05,
+      "repetition_penalty": 1.0,
+      "no_repeat_ngram_size": 100,
+      "max_new_tokens": null
+    },
+    "image": {
+      "temperature": 0.0,
+      "top_p": 0.01,
+      "top_k": 1,
+      "presence_penalty": 1.0,
+      "frequency_penalty": 0.05,
+      "repetition_penalty": 1.0,
+      "no_repeat_ngram_size": 100,
+      "max_new_tokens": null
+    },
+    "chart": {
+      "temperature": 0.0,
+      "top_p": 0.01,
+      "top_k": 1,
+      "presence_penalty": 1.0,
+      "frequency_penalty": 0.05,
+      "repetition_penalty": 1.0,
+      "no_repeat_ngram_size": 100,
+      "max_new_tokens": null
+    },
+    "[default]": {
+      "temperature": 0.0,
+      "top_p": 0.01,
+      "top_k": 1,
+      "presence_penalty": 1.0,
+      "frequency_penalty": 0.05,
+      "repetition_penalty": 1.0,
+      "no_repeat_ngram_size": 100,
+      "max_new_tokens": null
+    },
+    "[layout]": {
+      "temperature": 0.0,
+      "top_p": 0.01,
+      "top_k": 1,
+      "presence_penalty": 0.0,
+      "frequency_penalty": 0.0,
+      "repetition_penalty": 1.0,
+      "no_repeat_ngram_size": 100,
+      "max_new_tokens": null
+    },
+    "[cross_page_table_merge]": {
+      "temperature": 0.0,
+      "top_p": 0.01,
+      "top_k": 1,
+      "presence_penalty": 1.0,
+      "frequency_penalty": 0.05,
+      "repetition_penalty": 1.0,
+      "no_repeat_ngram_size": 100,
+      "max_new_tokens": null
+    }
+  },
+  "image_analysis": false,
+  "abandon_paratext": false,
+  "enable_cross_page_table_merge": false,
+  "packages": {
+    "torch": "2.7.1+cu126",
+    "transformers": "5.10.1",
+    "torchvision": "0.22.1+cu126",
+    "mineru-vl-utils": "2.0.7",
+    "accelerate": "1.12.0",
+    "pillow": "11.3.0",
+    "pymupdf": "1.28.2"
+  },
+  "pages": [
+    {
+      "id": "1206337604",
+      "page": 1,
+      "source_pdf": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/sources/1206337604/source-converted.pdf",
+      "source_pdf_SHA256": "ccff40771d75e9412b65f364a1c72c1733c37b4d8f232f49cf639621f0ba165f",
+      "source_total_pages": 2,
+      "source_page_SHA256": "c64c87161f29bcb6640a1cf595e0f8a83da5cdbebd83622e4064a1077269d473",
+      "source_page_size": [
+        1654,
+        2339
+      ],
+      "source_pdf_page_rotation": 0,
+      "status": "complete",
+      "client_seconds": 17.709287093020976,
+      "pure_generate_seconds": 17.32718464510981,
+      "generated_tokens": 424,
+      "model_calls": 6,
+      "blocks": 5,
+      "blocks_SHA256": "841ae4ad7cc3d4d4d03e4e5ea1df1caed955d8ce88535601dcaab237d0987f2d",
+      "MD_SHA256": "f930a9a78bdf4a083fe0b8d047a91e50b89352d6a5e22b5fcaf7657194339b47"
+    },
+    {
+      "id": "1225474739",
+      "page": 19,
+      "source_pdf": "/opt/mosaic-parse/pdf_sample/1225474739.pdf",
+      "source_pdf_SHA256": "1c99c450a8efefe77c9ca02a6f670c958298f661e5ad8d30d6ba01aa0742cda9",
+      "source_total_pages": 134,
+      "source_page_SHA256": "e1f87567100070b0899a1b1c7b036e73a0d6a746688802fc9a911bbe37055430",
+      "source_page_size": [
+        1654,
+        2339
+      ],
+      "source_pdf_page_rotation": 0,
+      "status": "complete",
+      "client_seconds": 46.05941523401998,
+      "pure_generate_seconds": 45.42653151100967,
+      "generated_tokens": 1145,
+      "model_calls": 12,
+      "blocks": 11,
+      "blocks_SHA256": "29460053a02ae4bd7875e44576f03210036d607245e11704019212d7d195ff70",
+      "MD_SHA256": "43adcc984503346c9b3d69d65048f80d4d031a3ee69765e4795224b9f0a1ab5d"
+    }
+  ],
+  "status": "complete",
+  "transformers_backend_sampling_caveat": "Official Transformers backend does not implement presence_penalty/frequency_penalty; actual generate kwargs are archived. This is not a vLLM throughput benchmark.",
+  "runner_SHA256": "b5ce69398a75a73dffb2f30dad310e9ab77e796fbc35941bf4c85fdc67ab74e2",
+  "input_spec_SHA256": "103a3b33409ab0df95b96ed760a6ee99d5ae29520728c4cf0b76dafceac2fa90",
+  "load_seconds": 5.848630732973106,
+  "parameters": 1156026624,
+  "actual_dtype": "torch.float16",
+  "image_processor_config": {
+    "size": {
+      "longest_edge": 1605632,
+      "shortest_edge": 50176
+    },
+    "patch_size": 14,
+    "temporal_patch_size": 2,
+    "merge_size": 2,
+    "image_mean": [
+      0.48145466,
+      0.4578275,
+      0.40821073
+    ],
+    "image_std": [
+      0.26862954,
+      0.26130258,
+      0.27577711
+    ],
+    "image_processor_type": "Qwen2VLImageProcessor",
+    "do_convert_rgb": true,
+    "do_resize": true,
+    "resample": 3,
+    "do_rescale": true,
+    "rescale_factor": 0.00392156862745098,
+    "do_normalize": true
+  },
+  "processor_chat_template_SHA256": "a0bc6f6fc7a29a80017a433e8f03a1cc1236e838a944a2d034295a60c4f2fddb",
+  "actual_attention": "sdpa",
+  "gpu_allocator_budget_MiB": 3584,
+  "existing_CUDA_packages_imported_readonly_from": "/opt/qwen3-tts-openai/.tools/venv-gpu/lib/python3.12/site-packages",
+  "finished_at": "2026-10-17T21:21:12.912009+08:00"
+}

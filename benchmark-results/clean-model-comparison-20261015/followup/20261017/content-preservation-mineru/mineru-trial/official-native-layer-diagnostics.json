@@ -1,0 +1,1954 @@
+{
+  "created_at": "2026-10-17T14:18:29.113705+00:00",
+  "model_calls": 0,
+  "diagnostic_script_SHA256": "d8f5cd41d13faaba9680b9f840cb8ac56afe0a9bc172a2c35f2cd939915032e0",
+  "advanced_p87_footnote": {
+    "source_PDF": "/opt/mosaic-parse/pdf_sample/1225475375.pdf",
+    "source_SHA256": "5eef30b5c544d76df917d56df76a665ed13b5e6ffebdc54ab0eea0a47b7589d6",
+    "original_physical_page_one_based": 87,
+    "prepared_PDF_SHA256": "9f957f5db88af960e41715c6a7df4450b2d03565b2ff76ce7fc3c1a5a08466b9",
+    "source_original": {
+      "page_size": [
+        595.3499755859375,
+        842.0
+      ],
+      "page_rotation": 270,
+      "source_text": "—其他债权投资公允价值变动源于应收款项融资。",
+      "characters": [
+        {
+          "char": "—",
+          "char_idx": 543,
+          "bbox": [
+            397.31101989746094,
+            735.0800018310547,
+            409.58702087402344,
+            747.0800018310547
+          ],
+          "tight_bbox": [
+            402.3609924316406,
+            735.4039993286133,
+            402.8889923095703,
+            746.7080001831055
+          ],
+          "origin": [
+            406.968994140625,
+            747.0800018310547
+          ],
+          "rotation": 0.0,
+          "writing_angle": 4.71238898038469,
+          "text_render_mode": 0,
+          "source_indices": [
+            543
+          ]
+        },
+        {
+          "char": "其",
+          "char_idx": 544,
+          "bbox": [
+            397.31101989746094,
+            723.0800170898438,
+            409.58702087402344,
+            735.0800170898438
+          ],
+          "tight_bbox": [
+            396.93699645996094,
+            723.9199981689453,
+            408.13299560546875,
+            734.1920013427734
+          ],
+          "origin": [
+            406.968994140625,
+            735.0800018310547
+          ],
+          "rotation": 0.0,
+          "writing_angle": 4.71238898038469,
+          "text_render_mode": 0,
+          "source_indices": [
+            544
+          ]
+        },
+        {
+          "char": "他",
+          "char_idx": 545,
+          "bbox": [
+            397.31101989746094,
+            711.0800170898438,
+            409.58702087402344,
+            723.0800170898438
+          ],
+          "tight_bbox": [
+            397.0690002441406,
+            711.9199981689453,
+            408.31298828125,
+            722.2400054931641
+          ],
+          "origin": [
+            406.968994140625,
+            723.0800018310547
+          ],
+          "rotation": 0.0,
+          "writing_angle": 4.71238898038469,
+          "text_render_mode": 0,
+          "source_indices": [
+            545
+          ]
+        },
+        {
+          "char": "债",
+          "char_idx": 546,
+          "bbox": [
+            397.31101989746094,
+            699.0800170898438,
+            409.58702087402344,
+            711.0800170898438
+          ],
+          "tight_bbox": [
+            396.98500061035156,
+            700.0160064697266,
+            408.3609924316406,
+            710.1920013427734
+          ],
+          "origin": [
+            406.968994140625,
+            711.0800018310547
+          ],
+          "rotation": 0.0,
+          "writing_angle": 4.71238898038469,
+          "text_render_mode": 0,
+          "source_indices": [
+            546
+          ]
+        },
+        {
+          "char": "权",
+          "char_idx": 547,
+          "bbox": [
+            397.31101989746094,
+            687.0800018310547,
+            409.58702087402344,
+            699.0800018310547
+          ],
+          "tight_bbox": [
+            397.1649932861328,
+            687.8720092773438,
+            408.26499938964844,
+            698.3240051269531
+          ],
+          "origin": [
+            406.968994140625,
+            699.0800018310547
+          ],
+          "rotation": 0.0,
+          "writing_angle": 4.71238898038469,
+          "text_render_mode": 0,
+          "source_indices": [
+            547
+          ]
+        },
+        {
+          "char": "投",
+          "char_idx": 548,
+          "bbox": [
+            397.31101989746094,
+            675.0800018310547,
+            409.58702087402344,
+            687.0800018310547
+          ],
+          "tight_bbox": [
+            397.0690002441406,
+            675.9199981689453,
+            408.1809997558594,
+            686.3240051269531
+          ],
+          "origin": [
+            406.968994140625,
+            687.0800018310547
+          ],
+          "rotation": 0.0,
+          "writing_angle": 4.71238898038469,
+          "text_render_mode": 0,
+          "source_indices": [
+            548
+          ]
+        },
+        {
+          "char": "资",
+          "char_idx": 549,
+          "bbox": [
+            397.31101989746094,
+            663.0800018310547,
+            409.58702087402344,
+            675.0800018310547
+          ],
+          "tight_bbox": [
+            396.98500061035156,
+            664.3399963378906,
+            408.1809997558594,
+            673.6759948730469
+          ],
+          "origin": [
+            406.968994140625,
+            675.0800018310547
+          ],
+          "rotation": 0.0,
+          "writing_angle": 4.71238898038469,
+          "text_render_mode": 0,
+          "source_indices": [
+            549
+          ]
+        },
+        {
+          "char": "公",
+          "char_idx": 550,
+          "bbox": [
+            397.31101989746094,
+            651.0800170898438,
+            409.58702087402344,
+            663.0800170898438
+          ],
+          "tight_bbox": [
+            397.1169891357422,
+            651.9199981689453,
+            407.98899841308594,
+            662.0480041503906
+          ],
+          "origin": [
+            406.968994140625,
+            663.0800018310547
+          ],
+          "rotation": 0.0,
+          "writing_angle": 4.71238898038469,
+          "text_render_mode": 0,
+          "source_indices": [
+            550
+          ]
+        },
+        {
+          "char": "允",
+          "char_idx": 551,
+          "bbox": [
+            397.31101989746094,
+            639.0800170898438,
+            409.58702087402344,
+            651.0800170898438
+          ],
+          "tight_bbox": [
+            397.0329895019531,
+            640.0160064697266,
+            408.2169952392578,
+            649.9519958496094
+          ],
+          "origin": [
+            406.968994140625,
+            651.0800018310547
+          ],
+          "rotation": 0.0,
+          "writing_angle": 4.71238898038469,
+          "text_render_mode": 0,
+          "source_indices": [
+            551
+          ]
+        },
+        {
+          "char": "价",
+          "char_idx": 552,
+          "bbox": [
+            397.31101989746094,
+            627.0800018310547,
+            409.58702087402344,
+            639.0800018310547
+          ],
+          "tight_bbox": [
+            397.0329895019531,
+            627.8720092773438,
+            408.26499938964844,
+            638.2400054931641
+          ],
+          "origin": [
+            406.968994140625,
+            639.0800018310547
+          ],
+          "rotation": 0.0,
+          "writing_angle": 4.71238898038469,
+          "text_render_mode": 0,
+          "source_indices": [
+            552
+          ]
+        },
+        {
+          "char": "值",
+          "char_idx": 553,
+          "bbox": [
+            397.31101989746094,
+            615.0800323486328,
+            409.58702087402344,
+            627.0800323486328
+          ],
+          "tight_bbox": [
+            397.0329895019531,
+            615.9199981689453,
+            408.2169952392578,
+            626.3240051269531
+          ],
+          "origin": [
+            406.968994140625,
+            627.0800018310547
+          ],
+          "rotation": 0.0,
+          "writing_angle": 4.71238898038469,
+          "text_render_mode": 0,
+          "source_indices": [
+            553
+          ]
+        },
+        {
+          "char": "变",
+          "char_idx": 554,
+          "bbox": [
+            397.31101989746094,
+            603.0800018310547,
+            409.58702087402344,
+            615.0800018310547
+          ],
+          "tight_bbox": [
+            397.0329895019531,
+            604.4840087890625,
+            408.13299560546875,
+            613.9040069580078
+          ],
+          "origin": [
+            406.968994140625,
+            615.0800018310547
+          ],
+          "rotation": 0.0,
+          "writing_angle": 4.71238898038469,
+          "text_render_mode": 0,
+          "source_indices": [
+            554
+          ]
+        },
+        {
+          "char": "动",
+          "char_idx": 555,
+          "bbox": [
+            397.31101989746094,
+            591.0800323486328,
+            409.58702087402344,
+            603.0800323486328
+          ],
+          "tight_bbox": [
+            397.0329895019531,
+            592.2559967041016,
+            408.1809997558594,
+            602.1439971923828
+          ],
+          "origin": [
+            406.968994140625,
+            603.0800018310547
+          ],
+          "rotation": 0.0,
+          "writing_angle": 4.71238898038469,
+          "text_render_mode": 0,
+          "source_indices": [
+            555
+          ]
+        },
+        {
+          "char": "源",
+          "char_idx": 556,
+          "bbox": [
+            397.31101989746094,
+            579.0800170898438,
+            409.58702087402344,
+            591.0800323486328
+          ],
+          "tight_bbox": [
+            397.45298767089844,
+            580.0639953613281,
+            407.98899841308594,
+            590.0480041503906
+          ],
+          "origin": [
+            406.968994140625,
+            591.0800018310547
+          ],
+          "rotation": 0.0,
+          "writing_angle": 4.71238898038469,
+          "text_render_mode": 0,
+          "source_indices": [
+            556
+          ]
+        },
+        {
+          "char": "于",
+          "char_idx": 557,
+          "bbox": [
+            397.31101989746094,
+            567.0800476074219,
+            409.58702087402344,
+            579.0800476074219
+          ],
+          "tight_bbox": [
+            397.7409973144531,
+            568.0640258789062,
+            408.13299560546875,
+            578.0480041503906
+          ],
+          "origin": [
+            406.968994140625,
+            579.0800170898438
+          ],
+          "rotation": 0.0,
+          "writing_angle": 4.71238898038469,
+          "text_render_mode": 0,
+          "source_indices": [
+            557
+          ]
+        },
+        {
+          "char": "应",
+          "char_idx": 558,
+          "bbox": [
+            397.31101989746094,
+            555.0800476074219,
+            409.58702087402344,
+            567.0800476074219
+          ],
+          "tight_bbox": [
+            396.93699645996094,
+            556.3400268554688,
+            408.0849914550781,
+            566.2880249023438
+          ],
+          "origin": [
+            406.968994140625,
+            567.0800170898438
+          ],
+          "rotation": 0.0,
+          "writing_angle": 4.71238898038469,
+          "text_render_mode": 0,
+          "source_indices": [
+            558
+          ]
+        },
+        {
+          "char": "收",
+          "char_idx": 559,
+          "bbox": [
+            397.31101989746094,
+            543.0800476074219,
+            409.58702087402344,
+            555.0800476074219
+          ],
+          "tight_bbox": [
+            397.0690002441406,
+            543.8240051269531,
+            408.2169952392578,
+            553.6280212402344
+          ],
+          "origin": [
+            406.968994140625,
+            555.0800170898438
+          ],
+          "rotation": 0.0,
+          "writing_angle": 4.71238898038469,
+          "text_render_mode": 0,
+          "source_indices": [
+            559
+          ]
+        },
+        {
+          "char": "款",
+          "char_idx": 560,
+          "bbox": [
+            397.31101989746094,
+            531.0800476074219,
+            409.58702087402344,
+            543.0800476074219
+          ],
+          "tight_bbox": [
+            397.0690002441406,
+            531.8720092773438,
+            408.2169952392578,
+            542.3240051269531
+          ],
+          "origin": [
+            406.968994140625,
+            543.0800170898438
+          ],
+          "rotation": 0.0,
+          "writing_angle": 4.71238898038469,
+          "text_render_mode": 0,
+          "source_indices": [
+            560
+          ]
+        },
+        {
+          "char": "项",
+          "char_idx": 561,
+          "bbox": [
+            397.31101989746094,
+            519.0800476074219,
+            409.58702087402344,
+            531.0800476074219
+          ],
+          "tight_bbox": [
+            397.5849914550781,
+            519.968017578125,
+            408.1809997558594,
+            530.2400207519531
+          ],
+          "origin": [
+            406.968994140625,
+            531.0800170898438
+          ],
+          "rotation": 0.0,
+          "writing_angle": 4.71238898038469,
+          "text_render_mode": 0,
+          "source_indices": [
+            561
+          ]
+        },
+        {
+          "char": "融",
+          "char_idx": 562,
+          "bbox": [
+            397.31101989746094,
+            507.0800476074219,
+            409.58702087402344,
+            519.0800476074219
+          ],
+          "tight_bbox": [
+            397.0329895019531,
+            507.87200927734375,
+            407.7969970703125,
+            517.9520263671875
+          ],
+          "origin": [
+            406.968994140625,
+            519.0800170898438
+          ],
+          "rotation": 0.0,
+          "writing_angle": 4.71238898038469,
+          "text_render_mode": 0,
+          "source_indices": [
+            562
+          ]
+        },
+        {
+          "char": "资",
+          "char_idx": 563,
+          "bbox": [
+            397.31101989746094,
+            495.0800476074219,
+            409.58702087402344,
+            507.0800476074219
+          ],
+          "tight_bbox": [
+            396.98500061035156,
+            496.34002685546875,
+            408.1809997558594,
+            505.676025390625
+          ],
+          "origin": [
+            406.968994140625,
+            507.08001708984375
+          ],
+          "rotation": 0.0,
+          "writing_angle": 4.71238898038469,
+          "text_render_mode": 0,
+          "source_indices": [
+            563
+          ]
+        },
+        {
+          "char": "。",
+          "char_idx": 564,
+          "bbox": [
+            397.31101989746094,
+            483.08001708984375,
+            409.58702087402344,
+            495.08001708984375
+          ],
+          "tight_bbox": [
+            404.6889953613281,
+            490.676025390625,
+            407.3769989013672,
+            493.3880310058594
+          ],
+          "origin": [
+            406.968994140625,
+            495.08001708984375
+          ],
+          "rotation": 0.0,
+          "writing_angle": 4.71238898038469,
+          "text_render_mode": 0,
+          "source_indices": [
+            564
+          ]
+        }
+      ]
+    },
+    "source_official_selected_PDF": {
+      "page_size": [
+        595.3499755859375,
+        842.0
+      ],
+      "page_rotation": 270,
+      "source_text": "—其他债权投资公允价值变动源于应收款项融资。",
+      "characters": [
+        {
+          "char": "—",
+          "char_idx": 543,
+          "bbox": [
+            397.31101989746094,
+            735.0800018310547,
+            409.58702087402344,
+            747.0800018310547
+          ],
+          "tight_bbox": [
+            402.3609924316406,
+            735.4039993286133,
+            402.8889923095703,
+            746.7080001831055
+          ],
+          "origin": [
+            406.968994140625,
+            747.0800018310547
+          ],
+          "rotation": 0.0,
+          "writing_angle": 4.71238898038469,
+          "text_render_mode": 0,
+          "source_indices": [
+            543
+          ],
+          "tight_bbox_inside_model_layout": true,
+          "tight_bbox_inside_native_fill_span": true
+        },
+        {
+          "char": "其",
+          "char_idx": 544,
+          "bbox": [
+            397.31101989746094,
+            723.0800170898438,
+            409.58702087402344,
+            735.0800170898438
+          ],
+          "tight_bbox": [
+            396.93699645996094,
+            723.9199981689453,
+            408.13299560546875,
+            734.1920013427734
+          ],
+          "origin": [
+            406.968994140625,
+            735.0800018310547
+          ],
+          "rotation": 0.0,
+          "writing_angle": 4.71238898038469,
+          "text_render_mode": 0,
+          "source_indices": [
+            544
+          ],
+          "tight_bbox_inside_model_layout": true,
+          "tight_bbox_inside_native_fill_span": true
+        },
+        {
+          "char": "他",
+          "char_idx": 545,
+          "bbox": [
+            397.31101989746094,
+            711.0800170898438,
+            409.58702087402344,
+            723.0800170898438
+          ],
+          "tight_bbox": [
+            397.0690002441406,
+            711.9199981689453,
+            408.31298828125,
+            722.2400054931641
+          ],
+          "origin": [
+            406.968994140625,
+            723.0800018310547
+          ],
+          "rotation": 0.0,
+          "writing_angle": 4.71238898038469,
+          "text_render_mode": 0,
+          "source_indices": [
+            545
+          ],
+          "tight_bbox_inside_model_layout": true,
+          "tight_bbox_inside_native_fill_span": true
+        },
+        {
+          "char": "债",
+          "char_idx": 546,
+          "bbox": [
+            397.31101989746094,
+            699.0800170898438,
+            409.58702087402344,
+            711.0800170898438
+          ],
+          "tight_bbox": [
+            396.98500061035156,
+            700.0160064697266,
+            408.3609924316406,
+            710.1920013427734
+          ],
+          "origin": [
+            406.968994140625,
+            711.0800018310547
+          ],
+          "rotation": 0.0,
+          "writing_angle": 4.71238898038469,
+          "text_render_mode": 0,
+          "source_indices": [
+            546
+          ],
+          "tight_bbox_inside_model_layout": true,
+          "tight_bbox_inside_native_fill_span": true
+        },
+        {
+          "char": "权",
+          "char_idx": 547,
+          "bbox": [
+            397.31101989746094,
+            687.0800018310547,
+            409.58702087402344,
+            699.0800018310547
+          ],
+          "tight_bbox": [
+            397.1649932861328,
+            687.8720092773438,
+            408.26499938964844,
+            698.3240051269531
+          ],
+          "origin": [
+            406.968994140625,
+            699.0800018310547
+          ],
+          "rotation": 0.0,
+          "writing_angle": 4.71238898038469,
+          "text_render_mode": 0,
+          "source_indices": [
+            547
+          ],
+          "tight_bbox_inside_model_layout": true,
+          "tight_bbox_inside_native_fill_span": true
+        },
+        {
+          "char": "投",
+          "char_idx": 548,
+          "bbox": [
+            397.31101989746094,
+            675.0800018310547,
+            409.58702087402344,
+            687.0800018310547
+          ],
+          "tight_bbox": [
+            397.0690002441406,
+            675.9199981689453,
+            408.1809997558594,
+            686.3240051269531
+          ],
+          "origin": [
+            406.968994140625,
+            687.0800018310547
+          ],
+          "rotation": 0.0,
+          "writing_angle": 4.71238898038469,
+          "text_render_mode": 0,
+          "source_indices": [
+            548
+          ],
+          "tight_bbox_inside_model_layout": true,
+          "tight_bbox_inside_native_fill_span": true
+        },
+        {
+          "char": "资",
+          "char_idx": 549,
+          "bbox": [
+            397.31101989746094,
+            663.0800018310547,
+            409.58702087402344,
+            675.0800018310547
+          ],
+          "tight_bbox": [
+            396.98500061035156,
+            664.3399963378906,
+            408.1809997558594,
+            673.6759948730469
+          ],
+          "origin": [
+            406.968994140625,
+            675.0800018310547
+          ],
+          "rotation": 0.0,
+          "writing_angle": 4.71238898038469,
+          "text_render_mode": 0,
+          "source_indices": [
+            549
+          ],
+          "tight_bbox_inside_model_layout": true,
+          "tight_bbox_inside_native_fill_span": true
+        },
+        {
+          "char": "公",
+          "char_idx": 550,
+          "bbox": [
+            397.31101989746094,
+            651.0800170898438,
+            409.58702087402344,
+            663.0800170898438
+          ],
+          "tight_bbox": [
+            397.1169891357422,
+            651.9199981689453,
+            407.98899841308594,
+            662.0480041503906
+          ],
+          "origin": [
+            406.968994140625,
+            663.0800018310547
+          ],
+          "rotation": 0.0,
+          "writing_angle": 4.71238898038469,
+          "text_render_mode": 0,
+          "source_indices": [
+            550
+          ],
+          "tight_bbox_inside_model_layout": true,
+          "tight_bbox_inside_native_fill_span": true
+        },
+        {
+          "char": "允",
+          "char_idx": 551,
+          "bbox": [
+            397.31101989746094,
+            639.0800170898438,
+            409.58702087402344,
+            651.0800170898438
+          ],
+          "tight_bbox": [
+            397.0329895019531,
+            640.0160064697266,
+            408.2169952392578,
+            649.9519958496094
+          ],
+          "origin": [
+            406.968994140625,
+            651.0800018310547
+          ],
+          "rotation": 0.0,
+          "writing_angle": 4.71238898038469,
+          "text_render_mode": 0,
+          "source_indices": [
+            551
+          ],
+          "tight_bbox_inside_model_layout": true,
+          "tight_bbox_inside_native_fill_span": true
+        },
+        {
+          "char": "价",
+          "char_idx": 552,
+          "bbox": [
+            397.31101989746094,
+            627.0800018310547,
+            409.58702087402344,
+            639.0800018310547
+          ],
+          "tight_bbox": [
+            397.0329895019531,
+            627.8720092773438,
+            408.26499938964844,
+            638.2400054931641
+          ],
+          "origin": [
+            406.968994140625,
+            639.0800018310547
+          ],
+          "rotation": 0.0,
+          "writing_angle": 4.71238898038469,
+          "text_render_mode": 0,
+          "source_indices": [
+            552
+          ],
+          "tight_bbox_inside_model_layout": true,
+          "tight_bbox_inside_native_fill_span": true
+        },
+        {
+          "char": "值",
+          "char_idx": 553,
+          "bbox": [
+            397.31101989746094,
+            615.0800323486328,
+            409.58702087402344,
+            627.0800323486328
+          ],
+          "tight_bbox": [
+            397.0329895019531,
+            615.9199981689453,
+            408.2169952392578,
+            626.3240051269531
+          ],
+          "origin": [
+            406.968994140625,
+            627.0800018310547
+          ],
+          "rotation": 0.0,
+          "writing_angle": 4.71238898038469,
+          "text_render_mode": 0,
+          "source_indices": [
+            553
+          ],
+          "tight_bbox_inside_model_layout": true,
+          "tight_bbox_inside_native_fill_span": true
+        },
+        {
+          "char": "变",
+          "char_idx": 554,
+          "bbox": [
+            397.31101989746094,
+            603.0800018310547,
+            409.58702087402344,
+            615.0800018310547
+          ],
+          "tight_bbox": [
+            397.0329895019531,
+            604.4840087890625,
+            408.13299560546875,
+            613.9040069580078
+          ],
+          "origin": [
+            406.968994140625,
+            615.0800018310547
+          ],
+          "rotation": 0.0,
+          "writing_angle": 4.71238898038469,
+          "text_render_mode": 0,
+          "source_indices": [
+            554
+          ],
+          "tight_bbox_inside_model_layout": true,
+          "tight_bbox_inside_native_fill_span": true
+        },
+        {
+          "char": "动",
+          "char_idx": 555,
+          "bbox": [
+            397.31101989746094,
+            591.0800323486328,
+            409.58702087402344,
+            603.0800323486328
+          ],
+          "tight_bbox": [
+            397.0329895019531,
+            592.2559967041016,
+            408.1809997558594,
+            602.1439971923828
+          ],
+          "origin": [
+            406.968994140625,
+            603.0800018310547
+          ],
+          "rotation": 0.0,
+          "writing_angle": 4.71238898038469,
+          "text_render_mode": 0,
+          "source_indices": [
+            555
+          ],
+          "tight_bbox_inside_model_layout": true,
+          "tight_bbox_inside_native_fill_span": true
+        },
+        {
+          "char": "源",
+          "char_idx": 556,
+          "bbox": [
+            397.31101989746094,
+            579.0800170898438,
+            409.58702087402344,
+            591.0800323486328
+          ],
+          "tight_bbox": [
+            397.45298767089844,
+            580.0639953613281,
+            407.98899841308594,
+            590.0480041503906
+          ],
+          "origin": [
+            406.968994140625,
+            591.0800018310547
+          ],
+          "rotation": 0.0,
+          "writing_angle": 4.71238898038469,
+          "text_render_mode": 0,
+          "source_indices": [
+            556
+          ],
+          "tight_bbox_inside_model_layout": true,
+          "tight_bbox_inside_native_fill_span": true
+        },
+        {
+          "char": "于",
+          "char_idx": 557,
+          "bbox": [
+            397.31101989746094,
+            567.0800476074219,
+            409.58702087402344,
+            579.0800476074219
+          ],
+          "tight_bbox": [
+            397.7409973144531,
+            568.0640258789062,
+            408.13299560546875,
+            578.0480041503906
+          ],
+          "origin": [
+            406.968994140625,
+            579.0800170898438
+          ],
+          "rotation": 0.0,
+          "writing_angle": 4.71238898038469,
+          "text_render_mode": 0,
+          "source_indices": [
+            557
+          ],
+          "tight_bbox_inside_model_layout": true,
+          "tight_bbox_inside_native_fill_span": true
+        },
+        {
+          "char": "应",
+          "char_idx": 558,
+          "bbox": [
+            397.31101989746094,
+            555.0800476074219,
+            409.58702087402344,
+            567.0800476074219
+          ],
+          "tight_bbox": [
+            396.93699645996094,
+            556.3400268554688,
+            408.0849914550781,
+            566.2880249023438
+          ],
+          "origin": [
+            406.968994140625,
+            567.0800170898438
+          ],
+          "rotation": 0.0,
+          "writing_angle": 4.71238898038469,
+          "text_render_mode": 0,
+          "source_indices": [
+            558
+          ],
+          "tight_bbox_inside_model_layout": true,
+          "tight_bbox_inside_native_fill_span": true
+        },
+        {
+          "char": "收",
+          "char_idx": 559,
+          "bbox": [
+            397.31101989746094,
+            543.0800476074219,
+            409.58702087402344,
+            555.0800476074219
+          ],
+          "tight_bbox": [
+            397.0690002441406,
+            543.8240051269531,
+            408.2169952392578,
+            553.6280212402344
+          ],
+          "origin": [
+            406.968994140625,
+            555.0800170898438
+          ],
+          "rotation": 0.0,
+          "writing_angle": 4.71238898038469,
+          "text_render_mode": 0,
+          "source_indices": [
+            559
+          ],
+          "tight_bbox_inside_model_layout": true,
+          "tight_bbox_inside_native_fill_span": true
+        },
+        {
+          "char": "款",
+          "char_idx": 560,
+          "bbox": [
+            397.31101989746094,
+            531.0800476074219,
+            409.58702087402344,
+            543.0800476074219
+          ],
+          "tight_bbox": [
+            397.0690002441406,
+            531.8720092773438,
+            408.2169952392578,
+            542.3240051269531
+          ],
+          "origin": [
+            406.968994140625,
+            543.0800170898438
+          ],
+          "rotation": 0.0,
+          "writing_angle": 4.71238898038469,
+          "text_render_mode": 0,
+          "source_indices": [
+            560
+          ],
+          "tight_bbox_inside_model_layout": true,
+          "tight_bbox_inside_native_fill_span": true
+        },
+        {
+          "char": "项",
+          "char_idx": 561,
+          "bbox": [
+            397.31101989746094,
+            519.0800476074219,
+            409.58702087402344,
+            531.0800476074219
+          ],
+          "tight_bbox": [
+            397.5849914550781,
+            519.968017578125,
+            408.1809997558594,
+            530.2400207519531
+          ],
+          "origin": [
+            406.968994140625,
+            531.0800170898438
+          ],
+          "rotation": 0.0,
+          "writing_angle": 4.71238898038469,
+          "text_render_mode": 0,
+          "source_indices": [
+            561
+          ],
+          "tight_bbox_inside_model_layout": true,
+          "tight_bbox_inside_native_fill_span": true
+        },
+        {
+          "char": "融",
+          "char_idx": 562,
+          "bbox": [
+            397.31101989746094,
+            507.0800476074219,
+            409.58702087402344,
+            519.0800476074219
+          ],
+          "tight_bbox": [
+            397.0329895019531,
+            507.87200927734375,
+            407.7969970703125,
+            517.9520263671875
+          ],
+          "origin": [
+            406.968994140625,
+            519.0800170898438
+          ],
+          "rotation": 0.0,
+          "writing_angle": 4.71238898038469,
+          "text_render_mode": 0,
+          "source_indices": [
+            562
+          ],
+          "tight_bbox_inside_model_layout": true,
+          "tight_bbox_inside_native_fill_span": true
+        },
+        {
+          "char": "资",
+          "char_idx": 563,
+          "bbox": [
+            397.31101989746094,
+            495.0800476074219,
+            409.58702087402344,
+            507.0800476074219
+          ],
+          "tight_bbox": [
+            396.98500061035156,
+            496.34002685546875,
+            408.1809997558594,
+            505.676025390625
+          ],
+          "origin": [
+            406.968994140625,
+            507.08001708984375
+          ],
+          "rotation": 0.0,
+          "writing_angle": 4.71238898038469,
+          "text_render_mode": 0,
+          "source_indices": [
+            563
+          ],
+          "tight_bbox_inside_model_layout": true,
+          "tight_bbox_inside_native_fill_span": true
+        },
+        {
+          "char": "。",
+          "char_idx": 564,
+          "bbox": [
+            397.31101989746094,
+            483.08001708984375,
+            409.58702087402344,
+            495.08001708984375
+          ],
+          "tight_bbox": [
+            404.6889953613281,
+            490.676025390625,
+            407.3769989013672,
+            493.3880310058594
+          ],
+          "origin": [
+            406.968994140625,
+            495.08001708984375
+          ],
+          "rotation": 0.0,
+          "writing_angle": 4.71238898038469,
+          "text_render_mode": 0,
+          "source_indices": [
+            564
+          ],
+          "tight_bbox_inside_model_layout": true,
+          "tight_bbox_inside_native_fill_span": true
+        }
+      ]
+    },
+    "source_text_preserved_by_official_page_selection": true,
+    "model_layout_response_file": "official-native-advanced/1225475375-p87/model-http/000/response.json",
+    "model_layout_response_SHA256": "4b55c630d17b5f6414257e2eefa62961deb03b8aea0f288b5cfba28de4a2d06e",
+    "model_layout_raw_footnote_line": "<|box_start|>664 581 687 887<|box_end|><|ref_start|>table_footnote<|ref_end|><|rotate_left|>",
+    "model_layout_normalized_bbox": [
+      0.664,
+      0.581,
+      0.687,
+      0.887
+    ],
+    "model_layout_absolute_bbox": [
+      395.3123837890625,
+      489.20199999999994,
+      409.0054332275391,
+      746.854
+    ],
+    "native_fill_returned_span": {
+      "type": "text",
+      "bbox": [
+        396.0,
+        485.64000000000004,
+        408.96000000000004,
+        750.96
+      ],
+      "text": "债权投资公允价值变动源于应收款",
+      "queued_for_post_OCR": false
+    },
+    "native_fill_returned_text_character_count": 15,
+    "source_text_character_count": 22,
+    "all_source_tight_boxes_inside_model_layout": true,
+    "all_source_tight_boxes_inside_native_fill_span": true,
+    "post_OCR": {
+      "stage": "actual_post_OCR",
+      "candidate_spans": 0,
+      "content_changed": 0,
+      "spans": []
+    },
+    "downstream": {
+      "official-saved/model_output.json": {
+        "SHA256": "401277b47c10014021777cf39007135ba8815d86203b701e3cc6eb72c7019b25",
+        "matching_raw_strings": [
+          "债权投资公允价值变动源于应收款"
+        ],
+        "contains_full_source_text": false
+      },
+      "official-saved/middle_json.json": {
+        "SHA256": "f2531d4fab69b82ab0c34d25b7720cac40ff9ea1a8aaef3a740fedab71a7ef1e",
+        "matching_raw_strings": [
+          "债权投资公允价值变动源于应收款"
+        ],
+        "contains_full_source_text": false
+      },
+      "result.json": {
+        "SHA256": "0007977bab2daf8d6599b0647c469a46bc3a9ae216839a64cae1150dbaf58edf",
+        "matching_raw_strings": [
+          "债权投资公允价值变动源于应收款"
+        ],
+        "contains_full_source_text": false
+      },
+      "result.md": {
+        "SHA256": "256d27095830c9ad1cfee8ce32f4c5ab678a62808b8d6fd5546f6568aeadc96a",
+        "contains_full_source_text": false,
+        "contains_native_fill_text": true
+      },
+      "result-full.md": {
+        "SHA256": "0bce9b36785f334ade24819ba12c5eff0933e28cff9344f0fe34f9a08b584792",
+        "contains_full_source_text": false,
+        "contains_native_fill_text": true
+      }
+    },
+    "observed_failure_layer": "Native TXT span filling: full source glyphs survive page selection and fit the model layout/native-fill span boxes, but the first recorded return from _fill_native_pdf_text_spans is already truncated. The same truncated content then survives ModelJson, MiddleJson and both Markdown renderers unchanged.",
+    "not_proven": "This observer did not instrument individual Rust/native span matching predicates; the exact lower-level cause of the seven skipped source characters is not established. No new inference, output repair or source-text injection was performed."
+  },
+  "standard_native_failures": {
+    "1225475375-p62": {
+      "request": {
+        "id": "1225475375",
+        "pdf": "/opt/mosaic-parse/pdf_sample/1225475375.pdf",
+        "page": 62,
+        "source_pdf_SHA256": "5eef30b5c544d76df917d56df76a665ed13b5e6ffebdc54ab0eea0a47b7589d6",
+        "physical_page_one_based": 62,
+        "source_pdf_total_pages": 119,
+        "source_pdf_page_rotation": 270,
+        "expected_original_page_idx_zero_based": 61,
+        "official_parse_arguments": {
+          "tier": "standard",
+          "ocr_mode": "txt",
+          "image_analysis": false,
+          "page_range": "62"
+        },
+        "cohort": "additional_p62"
+      },
+      "native_recovery_file": "official-native-standard/1225475375-p62/native-table-recovery.json",
+      "native_recovery_SHA256": "d7a1385695c58624076079d816800951dcb99aa9aa6eebf8e0f3e319284e952c",
+      "routes": [
+        {
+          "stage": "native_table_priority",
+          "effort": "high",
+          "counts": {
+            "total": 1,
+            "accepted": 1,
+            "complex_fallbacks": 0,
+            "rejected": 0,
+            "errors": 0,
+            "removed_internal_text": 0,
+            "removed_formula_blocks": 0,
+            "removed_formula_layout_items": 0
+          },
+          "table_routes": [
+            {
+              "window_page_index": 0,
+              "bbox": [
+                0.179,
+                0.069,
+                0.525,
+                0.917
+              ],
+              "angle": 0,
+              "native_HTML_accepted": true,
+              "content_SHA256": "80b14bdc674c1c7cdd4f03d84dcfa4c084f61f65320d847bc59fab131c0539b6"
+            }
+          ]
+        }
+      ],
+      "returned_native_tables": [
+        {
+          "rows": 11,
+          "cols": 9,
+          "source": "vector_grid",
+          "confidence": 0.9985021261960801,
+          "diagnostics": [
+            "candidate=vector_grid",
+            "score=0.9985",
+            "text_capture=1.0000",
+            "structure_support=0.9985",
+            "row_stability=1.0000",
+            "column_stability=1.0000",
+            "order_consistency=1.0000",
+            "evidence=line_grid",
+            "ambiguous_separator_ratio=0.0000",
+            "collapsed_x_tracks=0",
+            "collapsed_y_tracks=0",
+            "alias_max_span=0.0000",
+            "alias_separator_recoveries=0",
+            "y_alias_separator_recoveries=0",
+            "single_row_line_grid=false",
+            "single_column_line_grid=false",
+            "single_row_reliability=n/a",
+            "single_row_confidence=n/a",
+            "single_column_reliability=n/a",
+            "single_column_confidence=n/a",
+            "physical_blank_rows="
+          ],
+          "first_cells": [
+            {
+              "row": 0,
+              "col": 0,
+              "content": "额余初期"
+            },
+            {
+              "row": 0,
+              "col": 1,
+              "content": "面值账价"
+            },
+            {
+              "row": 0,
+              "col": 3,
+              "content": ""
+            },
+            {
+              "row": 0,
+              "col": 4,
+              "content": ""
+            },
+            {
+              "row": 0,
+              "col": 5,
+              "content": ""
+            }
+          ]
+        }
+      ],
+      "quality_verdict_reference": "Independent original-PDF source-acceptance JSONs under BASE/model-evaluation; acceptance/confidence above is official routing, not a correctness guarantee."
+    },
+    "1225475375-p87": {
+      "request": {
+        "id": "1225475375",
+        "pdf": "/opt/mosaic-parse/pdf_sample/1225475375.pdf",
+        "page": 87,
+        "source_pdf_SHA256": "5eef30b5c544d76df917d56df76a665ed13b5e6ffebdc54ab0eea0a47b7589d6",
+        "physical_page_one_based": 87,
+        "source_pdf_total_pages": 119,
+        "source_pdf_page_rotation": 270,
+        "expected_original_page_idx_zero_based": 86,
+        "official_parse_arguments": {
+          "tier": "standard",
+          "ocr_mode": "txt",
+          "image_analysis": false,
+          "page_range": "87"
+        },
+        "cohort": "original_14"
+      },
+      "native_recovery_file": "official-native-standard/1225475375-p87/native-table-recovery.json",
+      "native_recovery_SHA256": "b58ec43d0485065edb63ac6fb841edd4f6eb6e36f50b84fb8e2b77f08c074461",
+      "routes": [
+        {
+          "stage": "native_table_priority",
+          "effort": "high",
+          "counts": {
+            "total": 1,
+            "accepted": 1,
+            "complex_fallbacks": 0,
+            "rejected": 0,
+            "errors": 0,
+            "removed_internal_text": 0,
+            "removed_formula_blocks": 0,
+            "removed_formula_layout_items": 0
+          },
+          "table_routes": [
+            {
+              "window_page_index": 0,
+              "bbox": [
+                0.178,
+                0.068,
+                0.651,
+                0.918
+              ],
+              "angle": 0,
+              "native_HTML_accepted": true,
+              "content_SHA256": "6de82d1ea695d04d37c9e944591b1b2bda58371f48f4b8bf868b37731f466463"
+            }
+          ]
+        }
+      ],
+      "returned_native_tables": [
+        {
+          "rows": 9,
+          "cols": 10,
+          "source": "vector_grid",
+          "confidence": 0.9990435592394628,
+          "diagnostics": [
+            "candidate=vector_grid",
+            "score=0.9990",
+            "text_capture=1.0000",
+            "structure_support=0.9990",
+            "row_stability=1.0000",
+            "column_stability=1.0000",
+            "order_consistency=1.0000",
+            "evidence=line_grid",
+            "ambiguous_separator_ratio=0.0000",
+            "collapsed_x_tracks=0",
+            "collapsed_y_tracks=0",
+            "alias_max_span=0.0000",
+            "alias_separator_recoveries=0",
+            "y_alias_separator_recoveries=0",
+            "single_row_line_grid=false",
+            "single_column_line_grid=false",
+            "single_row_reliability=n/a",
+            "single_row_confidence=n/a",
+            "single_column_reliability=n/a",
+            "single_column_confidence=n/a",
+            "physical_blank_rows="
+          ],
+          "first_cells": [
+            {
+              "row": 0,
+              "col": 0,
+              "content": "额余末期"
+            },
+            {
+              "row": 0,
+              "col": 2,
+              "content": ""
+            },
+            {
+              "row": 0,
+              "col": 3,
+              "content": "36.597,001,1-"
+            },
+            {
+              "row": 0,
+              "col": 4,
+              "content": ""
+            },
+            {
+              "row": 0,
+              "col": 5,
+              "content": "38.349,062-"
+            }
+          ]
+        }
+      ],
+      "quality_verdict_reference": "Independent original-PDF source-acceptance JSONs under BASE/model-evaluation; acceptance/confidence above is official routing, not a correctness guarantee."
+    },
+    "1225473526-p7": {
+      "request": {
+        "id": "1225473526",
+        "pdf": "/opt/mosaic-parse/pdf_sample/1225473526.pdf",
+        "page": 7,
+        "source_pdf_SHA256": "787297535ba74a4170cc859ae68f15f946f6dfd0bfc14a1e1fa0e6d068ba2b19",
+        "physical_page_one_based": 7,
+        "source_pdf_total_pages": 27,
+        "source_pdf_page_rotation": 0,
+        "expected_original_page_idx_zero_based": 6,
+        "official_parse_arguments": {
+          "tier": "standard",
+          "ocr_mode": "txt",
+          "image_analysis": false,
+          "page_range": "7"
+        },
+        "cohort": "original_14"
+      },
+      "native_recovery_file": "official-native-standard/1225473526-p7/native-table-recovery.json",
+      "native_recovery_SHA256": "ecf876b8ab5873d7d7e8f7d1a90ca0fddd3e57f9e59eabbba07e50c6a84721fa",
+      "routes": [
+        {
+          "stage": "native_table_priority",
+          "effort": "high",
+          "counts": {
+            "total": 3,
+            "accepted": 3,
+            "complex_fallbacks": 0,
+            "rejected": 0,
+            "errors": 0,
+            "removed_internal_text": 0,
+            "removed_formula_blocks": 0,
+            "removed_formula_layout_items": 0
+          },
+          "table_routes": [
+            {
+              "window_page_index": 0,
+              "bbox": [
+                0.14,
+                0.084,
+                0.859,
+                0.25
+              ],
+              "angle": 0,
+              "native_HTML_accepted": true,
+              "content_SHA256": "163f05facfbeb7e57e42b1094e5eaf4a166787b5f6abb2d51e5cf10bc15125a2"
+            },
+            {
+              "window_page_index": 0,
+              "bbox": [
+                0.14,
+                0.315,
+                0.859,
+                0.59
+              ],
+              "angle": 0,
+              "native_HTML_accepted": true,
+              "content_SHA256": "5e204334886e9b96fe2a29bd6c66bbc72ea172b17ae825a2faaeb07ceb5a2380"
+            },
+            {
+              "window_page_index": 0,
+              "bbox": [
+                0.139,
+                0.69,
+                0.859,
+                0.867
+              ],
+              "angle": 0,
+              "native_HTML_accepted": true,
+              "content_SHA256": "88b6c7c97cfc19e406141443622e818b4813c0a009496980cf26ad78f1c987ee"
+            }
+          ]
+        }
+      ],
+      "returned_native_tables": [
+        {
+          "rows": 6,
+          "cols": 5,
+          "source": "vector_grid",
+          "confidence": 0.9967282874635978,
+          "diagnostics": [
+            "candidate=vector_grid",
+            "score=0.9967",
+            "text_capture=1.0000",
+            "structure_support=0.9967",
+            "row_stability=1.0000",
+            "column_stability=1.0000",
+            "order_consistency=1.0000",
+            "evidence=line_grid",
+            "ambiguous_separator_ratio=0.0000",
+            "collapsed_x_tracks=0",
+            "collapsed_y_tracks=0",
+            "alias_max_span=0.0000",
+            "alias_separator_recoveries=0",
+            "y_alias_separator_recoveries=0",
+            "single_row_line_grid=false",
+            "single_column_line_grid=false",
+            "single_row_reliability=n/a",
+            "single_row_confidence=n/a",
+            "single_column_reliability=n/a",
+            "single_column_confidence=n/a",
+            "physical_blank_rows="
+          ],
+          "first_cells": [
+            {
+              "row": 0,
+              "col": 0,
+              "content": "序号"
+            },
+            {
+              "row": 0,
+              "col": 1,
+              "content": "股东名称"
+            },
+            {
+              "row": 0,
+              "col": 2,
+              "content": "持股数量"
+            },
+            {
+              "row": 0,
+              "col": 3,
+              "content": "持股比例"
+            },
+            {
+              "row": 0,
+              "col": 4,
+              "content": "有限售条件的股份数量"
+            }
+          ]
+        },
+        {
+          "rows": 14,
+          "cols": 3,
+          "source": "sparse_multiline",
+          "confidence": 1.0,
+          "diagnostics": [
+            "candidate=sparse_multiline",
+            "score=1.0000",
+            "text_capture=1.0000",
+            "structure_support=1.0000",
+            "row_stability=1.0000",
+            "column_stability=1.0000",
+            "order_consistency=1.0000",
+            "evidence=rule_band",
+            "header_rows=1",
+            "logical_body_rows=13",
+            "key_col=0",
+            "filled_band_count=0"
+          ],
+          "first_cells": [
+            {
+              "row": 0,
+              "col": 0,
+              "content": "首发前期末净资产（截至2010.12.31）"
+            },
+            {
+              "row": 0,
+              "col": 1,
+              "content": ""
+            },
+            {
+              "row": 0,
+              "col": 2,
+              "content": "11,848.23"
+            },
+            {
+              "row": 1,
+              "col": 0,
+              "content": "时间"
+            },
+            {
+              "row": 1,
+              "col": 1,
+              "content": "发行类型"
+            }
+          ]
+        },
+        {
+          "rows": 9,
+          "cols": 5,
+          "source": "vector_grid",
+          "confidence": 0.9989782738687831,
+          "diagnostics": [
+            "candidate=vector_grid",
+            "score=0.9990",
+            "text_capture=1.0000",
+            "structure_support=0.9990",
+            "row_stability=1.0000",
+            "column_stability=1.0000",
+            "order_consistency=1.0000",
+            "evidence=line_grid",
+            "ambiguous_separator_ratio=0.0000",
+            "collapsed_x_tracks=0",
+            "collapsed_y_tracks=0",
+            "alias_max_span=0.0000",
+            "alias_separator_recoveries=0",
+            "y_alias_separator_recoveries=0",
+            "single_row_line_grid=false",
+            "single_column_line_grid=false",
+            "single_row_reliability=n/a",
+            "single_row_confidence=n/a",
+            "single_column_reliability=n/a",
+            "single_column_confidence=n/a",
+            "physical_blank_rows="
+          ],
+          "first_cells": [
+            {
+              "row": 0,
+              "col": 0,
+              "content": "项目2026年6月末 2025年末2024年末2023年末"
+            },
+            {
+              "row": 2,
+              "col": 0,
+              "content": "流动资产"
+            },
+            {
+              "row": 2,
+              "col": 1,
+              "content": "385,154.24"
+            },
+            {
+              "row": 2,
+              "col": 2,
+              "content": "370,267.93"
+            },
+            {
+              "row": 2,
+              "col": 3,
+              "content": "346,310.67"
+            }
+          ]
+        }
+      ],
+      "quality_verdict_reference": "Independent original-PDF source-acceptance JSONs under BASE/model-evaluation; acceptance/confidence above is official routing, not a correctness guarantee."
+    },
+    "1225474693-p3": {
+      "request": {
+        "id": "1225474693",
+        "pdf": "/opt/mosaic-parse/pdf_sample/1225474693.pdf",
+        "page": 3,
+        "source_pdf_SHA256": "dc7f5b3bfdc5a5c69b9cf4b2a9e0d28e2f9ee0b2464770fb8a910fea688ee775",
+        "physical_page_one_based": 3,
+        "source_pdf_total_pages": 4,
+        "source_pdf_page_rotation": 0,
+        "expected_original_page_idx_zero_based": 2,
+        "official_parse_arguments": {
+          "tier": "standard",
+          "ocr_mode": "txt",
+          "image_analysis": false,
+          "page_range": "3"
+        },
+        "cohort": "original_14"
+      },
+      "native_recovery_file": "official-native-standard/1225474693-p3/native-table-recovery.json",
+      "native_recovery_SHA256": "034aa90d4fefb286643aeeb1e291ae4ba0f94b3089b52469fe97435748195003",
+      "routes": [
+        {
+          "stage": "native_table_priority",
+          "effort": "high",
+          "counts": {
+            "total": 2,
+            "accepted": 2,
+            "complex_fallbacks": 0,
+            "rejected": 0,
+            "errors": 0,
+            "removed_internal_text": 0,
+            "removed_formula_blocks": 0,
+            "removed_formula_layout_items": 0
+          },
+          "table_routes": [
+            {
+              "window_page_index": 0,
+              "bbox": [
+                0.144,
+                0.088,
+                0.898,
+                0.311
+              ],
+              "angle": 0,
+              "native_HTML_accepted": true,
+              "content_SHA256": "788a319a7aeaa4dc4ef64c288136ab8f3baed38fc6a19bab50a5f7949f509d6e"
+            },
+            {
+              "window_page_index": 0,
+              "bbox": [
+                0.139,
+                0.371,
+                0.903,
+                0.898
+              ],
+              "angle": 0,
+              "native_HTML_accepted": true,
+              "content_SHA256": "86030aa27a359dcf5a277e16f901be27cf1ea0c83e48f31c70727262fec6ecad"
+            }
+          ]
+        }
+      ],
+      "returned_native_tables": [
+        {
+          "rows": 9,
+          "cols": 4,
+          "source": "vector_grid",
+          "confidence": 1.0,
+          "diagnostics": [
+            "candidate=vector_grid",
+            "score=1.0000",
+            "text_capture=1.0000",
+            "structure_support=1.0000",
+            "row_stability=1.0000",
+            "column_stability=1.0000",
+            "order_consistency=1.0000",
+            "evidence=line_grid",
+            "ambiguous_separator_ratio=0.0000",
+            "collapsed_x_tracks=0",
+            "collapsed_y_tracks=0",
+            "alias_max_span=0.0000",
+            "alias_separator_recoveries=0",
+            "y_alias_separator_recoveries=0",
+            "single_row_line_grid=false",
+            "single_column_line_grid=false",
+            "single_row_reliability=n/a",
+            "single_row_confidence=n/a",
+            "single_column_reliability=n/a",
+            "single_column_confidence=n/a",
+            "physical_blank_rows="
+          ],
+          "first_cells": [
+            {
+              "row": 0,
+              "col": 0,
+              "content": ""
+            },
+            {
+              "row": 0,
+              "col": 1,
+              "content": "本报告期"
+            },
+            {
+              "row": 0,
+              "col": 2,
+              "content": "上年同期"
+            },
+            {
+              "row": 0,
+              "col": 3,
+              "content": "本报告期比上年同期增减(%)"
+            },
+            {
+              "row": 1,
+              "col": 0,
+              "content": "营业收入"
+            }
+          ]
+        },
+        {
+          "rows": 14,
+          "cols": 7,
+          "source": "vector_grid",
+          "confidence": 0.999743472245851,
+          "diagnostics": [
+            "candidate=vector_grid",
+            "score=0.9997",
+            "text_capture=1.0000",
+            "structure_support=0.9997",
+            "row_stability=1.0000",
+            "column_stability=1.0000",
+            "order_consistency=1.0000",
+            "evidence=line_grid",
+            "ambiguous_separator_ratio=0.0000",
+            "collapsed_x_tracks=0",
+            "collapsed_y_tracks=0",
+            "alias_max_span=0.0000",
+            "alias_separator_recoveries=0",
+            "y_alias_separator_recoveries=0",
+            "single_row_line_grid=false",
+            "single_column_line_grid=false",
+            "single_row_reliability=n/a",
+            "single_row_confidence=n/a",
+            "single_column_reliability=n/a",
+            "single_column_confidence=n/a",
+            "physical_blank_rows="
+          ],
+          "first_cells": [
+            {
+              "row": 0,
+              "col": 0,
+              "content": "截至报告期末股东总数（户）"
+            },
+            {
+              "row": 0,
+              "col": 4,
+              "content": "38,133"
+            },
+            {
+              "row": 1,
+              "col": 0,
+              "content": "截至报告期末表决权恢复的优先股股东总数（户）"
+            },
+            {
+              "row": 1,
+              "col": 4,
+              "content": "/"
+            },
+            {
+              "row": 2,
+              "col": 0,
+              "content": "前10名股东持股情况"
+            }
+          ]
+        }
+      ],
+      "quality_verdict_reference": "Independent original-PDF source-acceptance JSONs under BASE/model-evaluation; acceptance/confidence above is official routing, not a correctness guarantee."
+    }
+  },
+  "standard_p19_punctuation_normalization": {
+    "original": {
+      "path": "/opt/mosaic-parse/pdf_sample/1225474739.pdf",
+      "SHA256": "1c99c450a8efefe77c9ca02a6f670c958298f661e5ad8d30d6ba01aa0742cda9",
+      "quote_counts": {
+        "“": 1,
+        "”": 1,
+        "\"": 0
+      }
+    },
+    "official_selected_PDF": {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/mineru-trial/official-native-standard/1225474739-p19/prepared-by-official-page-selection.pdf",
+      "SHA256": "c204e9f34d5f98cb94c8e4468eb85b424f419d46c3d1632dff93d6e655c86b89",
+      "quote_counts": {
+        "“": 1,
+        "”": 1,
+        "\"": 0
+      }
+    },
+    "native_recovered_long_cells": [
+      "远期结售汇的风险分析：（1）汇率、利率波动风险：在外汇汇率波动较大时，公司判断汇率大幅波动方向与外汇套期保值合约方向不一致时，将造成汇兑损失；若汇率在未来发生波动时，与外汇套期保值合约偏差较大也将造成汇兑损失；（2）内部控制风险：外汇套期保值业务专业性较强，复杂程度较高，可能会由于内控制度不完善而造成风险；（3）交易违约风险：外汇套期保值交易对手出现违约，不能按照约定支付公司套期保值盈利从而无法对冲公司实际的汇兑损失，将造成公司损失；（4）客户违约风险：客户应收账款发生逾期、客户调整订单等情况将使货款实际回款情况与预期回款情况不一致，可能使实际发生的现金流与已操作的外汇套期保值业务期限或数额无法完全匹配，从而导致公司损失。远期结售汇的风险控制措施：（1）公司制定了《广东银禧科技股份有限公司外汇套期保值业务管理制度》，（以下简称\"《外汇套期保值业务管理制度》\"）对外汇套期保值业务操作规范、审批权限及内部操作流程、信息隔离措施、内部风险报告制度及风险处理程序、信息披露等做出了明确规定；（2）为避免汇率大幅波动风险，公司会加强对汇率的研究分析，实时关注国际市场环境变化，适时调整经营策略，最大限度的避免汇兑损失；（3）为避免内部控制风险，公司财务部负责统一管理公司外汇套期保值业务，所有的外汇交易行为均以正常生产经营为基础，以具体经营业务为依托，不得进行投机和套利交易，并严格按照《外汇套期保值业务管理制度》的规定进行业务操作，有效地保证制度的执行；（4）为控制交易违约风险，公司仅与具有合法资质的大型银行等金融机构开展外汇套"
+    ],
+    "official_normalizer_file_SHA256": "d36f3fafe6da4597316d4470f607896462aa665612542abcf5595c6a5992da7c",
+    "official_source": "https://github.com/myhloli/DocVortex/blob/f5da4e69022f5b0a935fb64579d7f0f7ec7d08b6/src/docvortex/analyzers/native/pdf/spatial_text.py#L31",
+    "finding": "Official _PUNCTUATION_TRANSLATION maps U+201C and U+201D to ASCII double quote; _normalize_table_text applies it before NativeTableResult. No VLM was used for p19."
+  }
+}

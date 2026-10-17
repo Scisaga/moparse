@@ -1,0 +1,299 @@
+[
+  {
+    "stage": "official_input_preparation",
+    "file_suffix": "pdf",
+    "prepared_size_bytes": 225883,
+    "original_function_seconds": 0.0266054020030424,
+    "prepared_SHA256": "2418e9263ff2b44999ae6a2b2e111068289dd9bcb3e79c0ebd45bcb99cf8feff",
+    "retained_original_page_indices_zero_based": [
+      73
+    ],
+    "broken_original_page_indices_zero_based": [],
+    "derived_input_filename": "prepared-by-official-page-selection.pdf",
+    "transformation": "Official default page_range handling; runner did not crop or rewrite the source PDF."
+  },
+  {
+    "stage": "native_table_priority",
+    "effort": "high",
+    "counts": {
+      "total": 4,
+      "accepted": 4,
+      "complex_fallbacks": 0,
+      "rejected": 0,
+      "errors": 0,
+      "removed_internal_text": 0,
+      "removed_formula_blocks": 0,
+      "removed_formula_layout_items": 0
+    },
+    "table_routes": [
+      {
+        "window_page_index": 0,
+        "bbox": [
+          0.129,
+          0.08,
+          0.912,
+          0.319
+        ],
+        "angle": 0,
+        "native_HTML_accepted": true,
+        "content_SHA256": "84cdaf35bcd652275d427e63998abcdc86b5e992b6bafd24204b4dfd2256824b"
+      },
+      {
+        "window_page_index": 0,
+        "bbox": [
+          0.131,
+          0.412,
+          0.911,
+          0.526
+        ],
+        "angle": 0,
+        "native_HTML_accepted": true,
+        "content_SHA256": "42d6ea101cf6a899dfd947cd8df52aae53f8c94e1f5da90ce94ac847663a2c82"
+      },
+      {
+        "window_page_index": 0,
+        "bbox": [
+          0.131,
+          0.556,
+          0.911,
+          0.67
+        ],
+        "angle": 0,
+        "native_HTML_accepted": true,
+        "content_SHA256": "db12944dc0920657ce74e195dd7cae2e655945c12100fb790e3d9ff6b698da2f"
+      },
+      {
+        "window_page_index": 0,
+        "bbox": [
+          0.131,
+          0.732,
+          0.911,
+          0.817
+        ],
+        "angle": 0,
+        "native_HTML_accepted": true,
+        "content_SHA256": "607680f06456c0143ca9032dd5bb97d2f2bbd4ea1be7f5e75e61ee22bb84d539"
+      }
+    ]
+  },
+  {
+    "stage": "actual_VLM_options",
+    "image_analysis": false,
+    "not_extract_list": [
+      "caption",
+      "code_caption",
+      "doc_title",
+      "footer",
+      "footnote",
+      "header",
+      "image_caption",
+      "image_footnote",
+      "page_footnote",
+      "page_number",
+      "paragraph_title",
+      "phonetic",
+      "ref_text",
+      "table_caption",
+      "table_footnote",
+      "text",
+      "title"
+    ],
+    "image_sizes": [
+      [
+        1654,
+        2339
+      ]
+    ],
+    "model_inputs": [
+      [
+        {
+          "type": "footnote",
+          "bbox": [
+            0.182,
+            0.331,
+            0.601,
+            0.349
+          ],
+          "has_content": false
+        },
+        {
+          "type": "text",
+          "bbox": [
+            0.182,
+            0.362,
+            0.641,
+            0.38
+          ],
+          "has_content": false
+        },
+        {
+          "type": "caption",
+          "bbox": [
+            0.183,
+            0.393,
+            0.649,
+            0.41
+          ],
+          "has_content": false
+        },
+        {
+          "type": "caption",
+          "bbox": [
+            0.184,
+            0.537,
+            0.343,
+            0.555
+          ],
+          "has_content": false
+        },
+        {
+          "type": "paragraph_title",
+          "bbox": [
+            0.174,
+            0.682,
+            0.282,
+            0.7
+          ],
+          "has_content": false
+        },
+        {
+          "type": "paragraph_title",
+          "bbox": [
+            0.183,
+            0.714,
+            0.354,
+            0.73
+          ],
+          "has_content": false
+        },
+        {
+          "type": "footnote",
+          "bbox": [
+            0.172,
+            0.828,
+            0.64,
+            0.846
+          ],
+          "has_content": false
+        },
+        {
+          "type": "page_number",
+          "bbox": [
+            0.527,
+            0.903,
+            0.547,
+            0.915
+          ],
+          "has_content": false
+        }
+      ]
+    ]
+  },
+  {
+    "stage": "actual_VLM_results_before_native_body_fill",
+    "effort": "high",
+    "tables": []
+  },
+  {
+    "stage": "native_PDF_text_fill",
+    "returned_spans": 8,
+    "nonempty_text_spans": 8,
+    "queued_for_post_OCR": 0,
+    "spans": [
+      {
+        "type": "text",
+        "bbox": [
+          111.60000000000001,
+          281.16,
+          353.88,
+          291.96000000000004
+        ],
+        "text": "（2）本期公司不存在暂时闲置的固定资产情况",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          111.24000000000001,
+          306.36,
+          378.0,
+          317.16
+        ],
+        "text": "（3）本期公司不存在通过经营租赁租出的固定资产",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          111.24000000000001,
+          332.28000000000003,
+          384.48,
+          344.16
+        ],
+        "text": "（4）截至本期末，未办妥产权证书的固定资产如下：",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          111.60000000000001,
+          453.6,
+          201.96,
+          466.2
+        ],
+        "text": "（十三）在建工程",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          104.76,
+          575.64,
+          165.6,
+          587.16
+        ],
+        "text": "1.在建工程",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          111.24000000000001,
+          601.9200000000001,
+          208.08,
+          613.8000000000001
+        ],
+        "text": "（1）在建工程情况",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          105.84,
+          698.4,
+          377.64,
+          709.2
+        ],
+        "text": "—公司期末不存在需计提在建工程减值准备的情形。",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          313.56,
+          759.6,
+          325.8,
+          770.76
+        ],
+        "text": "67",
+        "queued_for_post_OCR": false
+      }
+    ]
+  },
+  {
+    "stage": "actual_post_OCR",
+    "candidate_spans": 0,
+    "content_changed": 0,
+    "spans": []
+  }
+]

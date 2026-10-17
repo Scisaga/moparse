@@ -1,0 +1,47 @@
+{
+  "started_at": "2026-10-17T21:56:57.780024+08:00",
+  "backend": "official http-client -> isolated vLLM 0.19.1",
+  "SDK": "2.0.7",
+  "client_packages": {
+    "pillow": "11.3.0",
+    "pymupdf": "1.28.2",
+    "mineru-vl-utils": "2.0.7",
+    "httpx": "0.28.1"
+  },
+  "runner_SHA256": "a7cb912285d5296337965980a2e423e3da4b8bcf7f0a99a9061578a033e70180",
+  "input_spec_SHA256": "aec902f7ed3136402e651780c9f339128bb25156d2072ed387494eb4366ccbd7",
+  "source_DPI": 200,
+  "layout_image_size": [
+    1036,
+    1036
+  ],
+  "model": "mineru-trial",
+  "image_analysis": false,
+  "abandon_paratext": false,
+  "cross_page_merge": false,
+  "pages": [
+    {
+      "id": "1206337604",
+      "page": 1,
+      "source_pdf_SHA256": "ccff40771d75e9412b65f364a1c72c1733c37b4d8f232f49cf639621f0ba165f",
+      "source_page_SHA256": "c64c87161f29bcb6640a1cf595e0f8a83da5cdbebd83622e4064a1077269d473",
+      "source_page_size": [
+        1654,
+        2339
+      ],
+      "source_pdf_page_rotation": 0,
+      "source_total_pages": 2,
+      "status": "complete",
+      "client_seconds": 11.824494999018498,
+      "model_HTTP_seconds": 11.539307866944,
+      "model_calls": 6,
+      "blocks": 5,
+      "blocks_SHA256": "841ae4ad7cc3d4d4d03e4e5ea1df1caed955d8ce88535601dcaab237d0987f2d",
+      "MD_SHA256": "f930a9a78bdf4a083fe0b8d047a91e50b89352d6a5e22b5fcaf7657194339b47"
+    }
+  ],
+  "status": "failed",
+  "error": "RequestError('Unexpected finish reason: abort')",
+  "traceback": "Traceback (most recent call last):\n  File \"/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/mineru-trial/run-official-http-pipeline.py\", line 44, in <module>\n    t=time.perf_counter();result=client.two_step_extract(image);row['client_seconds']=time.perf_counter()-t;row['model_HTTP_seconds']=sum(v['model_HTTP_seconds'] for v in current['calls']);row['model_calls']=len(current['calls']);row['blocks']=len(result)\n                                 ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^\n  File \"/root/.cache/mosaicparse-mineru/venv/lib/python3.13/site-packages/mineru_vl_utils/mineru_client.py\", line 1007, in two_step_extract\n    outputs = self._batch_predict(block_images, prompts, params, priority, scored)\n  File \"/root/.cache/mosaicparse-mineru/venv/lib/python3.13/site-packages/mineru_vl_utils/mineru_client.py\", line 738, in _batch_predict\n    return [_PredictResult(t) for t in self.client.batch_predict(images, prompts, params, priority)]\n                                       ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/root/.cache/mosaicparse-mineru/venv/lib/python3.13/site-packages/mineru_vl_utils/vlm_client/http_client.py\", line 467, in batch_predict\n    return asyncio.run(predict_and_close())\n           ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/miniconda3/lib/python3.13/asyncio/runners.py\", line 195, in run\n    return runner.run(main)\n           ~~~~~~~~~~^^^^^^\n  File \"/opt/miniconda3/lib/python3.13/asyncio/runners.py\", line 118, in run\n    return self._loop.run_until_complete(task)\n           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^\n  File \"/opt/miniconda3/lib/python3.13/asyncio/base_events.py\", line 725, in run_until_complete\n    return future.result()\n           ~~~~~~~~~~~~~^^\n  File \"/root/.cache/mosaicparse-mineru/venv/lib/python3.13/site-packages/mineru_vl_utils/vlm_client/http_client.py\", line 456, in predict_and_close\n    return await self.aio_batch_predict(\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    ...<6 lines>...\n    )\n    ^\n  File \"/root/.cache/mosaicparse-mineru/venv/lib/python3.13/site-packages/mineru_vl_utils/vlm_client/http_client.py\", line 608, in aio_batch_predict\n    results = await gather_tasks(\n              ^^^^^^^^^^^^^^^^^^^\n    ...<11 lines>...\n    )\n    ^\n  File \"/root/.cache/mosaicparse-mineru/venv/lib/python3.13/site-packages/mineru_vl_utils/vlm_client/utils.py\", line 196, in gather_tasks\n    done_task.result()\n    ~~~~~~~~~~~~~~~~^^\n  File \"/root/.cache/mosaicparse-mineru/venv/lib/python3.13/site-packages/mineru_vl_utils/vlm_client/http_client.py\", line 603, in predict_with_semaphore\n    return capture_block_error(\n        exc, enabled=getattr(self, \"isolate_block_errors\", False),\n        backend=type(self).__name__, index=index,\n    )\n  File \"/root/.cache/mosaicparse-mineru/venv/lib/python3.13/site-packages/mineru_vl_utils/vlm_client/batch_errors.py\", line 34, in capture_block_error\n    raise error\n  File \"/root/.cache/mosaicparse-mineru/venv/lib/python3.13/site-packages/mineru_vl_utils/vlm_client/http_client.py\", line 598, in predict_with_semaphore\n    await self.aio_predict(\n        image=image, prompt=prompt, sampling_params=sampling_params, priority=priority,\n    )\n  File \"/root/.cache/mosaicparse-mineru/venv/lib/python3.13/site-packages/mineru_vl_utils/vlm_client/http_client.py\", line 561, in aio_predict\n    return self.get_response_content(response_data)\n           ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^\n  File \"/root/.cache/mosaicparse-mineru/venv/lib/python3.13/site-packages/mineru_vl_utils/vlm_client/http_client.py\", line 388, in get_response_content\n    raise RequestError(f\"Unexpected finish reason: {finish_reason}\")\nmineru_vl_utils.vlm_client.base_client.RequestError: Unexpected finish reason: abort\n",
+  "finished_at": "2026-10-17T21:57:20.636641+08:00"
+}

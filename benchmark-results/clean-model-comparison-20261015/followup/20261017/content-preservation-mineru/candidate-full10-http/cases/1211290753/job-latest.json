@@ -1,0 +1,35 @@
+{
+  "id": "job_01M550RSR16JF6GHDXKMC4K3SA",
+  "object": "content.parse.job",
+  "status": "completed",
+  "filename": "1211290753.pdf",
+  "mime_type": "application/pdf",
+  "unit_count": 3,
+  "progress": {
+    "current": 3,
+    "total": 3,
+    "unit": "page"
+  },
+  "options": {
+    "scan_policy": "auto",
+    "unit_range": null,
+    "language": [
+      "zh",
+      "en"
+    ],
+    "describe_images": false,
+    "description_language": "zh-CN",
+    "timeout_seconds": null
+  },
+  "error": null,
+  "attempt": 1,
+  "parent_job_id": null,
+  "created_at": "2026-10-17T13:28:09.230389Z",
+  "started_at": "2026-10-17T13:28:09.239279Z",
+  "completed_at": "2026-10-17T13:28:12.392120Z",
+  "status_url": "/v1/content/jobs/job_01M550RSR16JF6GHDXKMC4K3SA",
+  "events_url": "/v1/content/jobs/job_01M550RSR16JF6GHDXKMC4K3SA/events",
+  "result_url": "/v1/content/jobs/job_01M550RSR16JF6GHDXKMC4K3SA/result",
+  "assets_url": "/v1/content/jobs/job_01M550RSR16JF6GHDXKMC4K3SA/assets",
+  "bundle_url": "/v1/content/jobs/job_01M550RSR16JF6GHDXKMC4K3SA/bundle"
+}

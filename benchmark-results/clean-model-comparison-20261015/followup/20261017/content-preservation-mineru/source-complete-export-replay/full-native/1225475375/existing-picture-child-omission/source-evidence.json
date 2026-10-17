@@ -1,0 +1,6877 @@
+{
+  "input_SHA256": "5eef30b5c544d76df917d56df76a665ed13b5e6ffebdc54ab0eea0a47b7589d6",
+  "raw_SHA256": "5dab512bc9286e7b189c1fa2c16a1fc51906a071ee2d2d8785147b53370c5762",
+  "source_page": 62,
+  "picture_ref": "#/pictures/40",
+  "source_picture_bbox_top_left_points": [
+    106.22487394163275,
+    58.28791427612305,
+    311.9568819180632,
+    774.4107055664062
+  ],
+  "source_children": [
+    {
+      "self_ref": "#/texts/610",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "caption",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 92.13796997070312,
+            "t": 240.21299743652344,
+            "r": 103.46597290039062,
+            "b": 95.6520004272461,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            25
+          ]
+        }
+      ],
+      "orig": "4 . 按 坏 账 计 提 方 法 分 类 披 露",
+      "text": "4 . 按 坏 账 计 提 方 法 分 类 披 露",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/611",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 137.556396484375,
+            "t": 117.55670166015625,
+            "r": 147.22262573242188,
+            "b": 108.69509887695312,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "类",
+      "text": "类",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/612",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 137.51458740234375,
+            "t": 127.42179870605469,
+            "r": 147.2957763671875,
+            "b": 119.13494873046875,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "别",
+      "text": "别",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/613",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 113.91741943359375,
+            "t": 308.9091796875,
+            "r": 123.65679931640625,
+            "b": 300.3297119140625,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "期",
+      "text": "期",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/614",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 113.91741943359375,
+            "t": 319.8401794433594,
+            "r": 123.6986083984375,
+            "b": 310.8531494140625,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "末",
+      "text": "末",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/615",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 113.83380126953125,
+            "t": 330.44134521484375,
+            "r": 123.65679931640625,
+            "b": 321.41253662109375,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "余",
+      "text": "余",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/616",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 114.15774536132812,
+            "t": 340.797607421875,
+            "r": 123.65679931640625,
+            "b": 331.7374572753906,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "额",
+      "text": "额",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/617",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 113.91741943359375,
+            "t": 615.7491455078125,
+            "r": 123.65679931640625,
+            "b": 607.169677734375,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "期",
+      "text": "期",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/618",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 113.83380126953125,
+            "t": 626.5128784179688,
+            "r": 123.65679931640625,
+            "b": 617.6094970703125,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "初",
+      "text": "初",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/619",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 113.83380126953125,
+            "t": 637.2813720703125,
+            "r": 123.65679931640625,
+            "b": 628.2525634765625,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "余",
+      "text": "余",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/620",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 114.15774536132812,
+            "t": 647.6375732421875,
+            "r": 123.65679931640625,
+            "b": 638.577392578125,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "额",
+      "text": "额",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/621",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 136.19058227539062,
+            "t": 215.99884033203125,
+            "r": 145.74188232421875,
+            "b": 206.61474609375,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "账",
+      "text": "账",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/622",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 136.73397827148438,
+            "t": 226.03114318847656,
+            "r": 145.65826416015625,
+            "b": 217.3785400390625,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "面",
+      "text": "面",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/623",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 136.0338134765625,
+            "t": 236.84133911132812,
+            "r": 145.8568115234375,
+            "b": 227.8125457763672,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "余",
+      "text": "余",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/624",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 136.35775756835938,
+            "t": 247.19760131835938,
+            "r": 145.8568115234375,
+            "b": 238.137451171875,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "额",
+      "text": "额",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/625",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 136.07562255859375,
+            "t": 331.667724609375,
+            "r": 145.89862060546875,
+            "b": 322.88970947265625,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "坏",
+      "text": "坏",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/626",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 136.19058227539062,
+            "t": 342.5987243652344,
+            "r": 145.74188232421875,
+            "b": 333.214599609375,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "账",
+      "text": "账",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/627",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 136.14877319335938,
+            "t": 353.0013427734375,
+            "r": 145.89862060546875,
+            "b": 344.01434326171875,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "准",
+      "text": "准",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/628",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 136.0338134765625,
+            "t": 363.35760498046875,
+            "r": 145.78366088867188,
+            "b": 354.4123840332031,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "备",
+      "text": "备",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/629",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 142.67056274414062,
+            "t": 436.078857421875,
+            "r": 152.22186279296875,
+            "b": 426.6947326660156,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "账",
+      "text": "账",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/630",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 143.21395874023438,
+            "t": 446.11114501953125,
+            "r": 152.13824462890625,
+            "b": 437.45855712890625,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "面",
+      "text": "面",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/631",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 154.597412109375,
+            "t": 435.88031005859375,
+            "r": 164.37860107421875,
+            "b": 426.85150146484375,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "价",
+      "text": "价",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/632",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 154.597412109375,
+            "t": 446.2783508300781,
+            "r": 164.3367919921875,
+            "b": 437.21820068359375,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "值",
+      "text": "值",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/633",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 136.19058227539062,
+            "t": 521.3988647460938,
+            "r": 145.74188232421875,
+            "b": 512.0147705078125,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "账",
+      "text": "账",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/634",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 136.73397827148438,
+            "t": 531.43115234375,
+            "r": 145.65826416015625,
+            "b": 522.778564453125,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "面",
+      "text": "面",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/635",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 136.0338134765625,
+            "t": 542.2413940429688,
+            "r": 145.8568115234375,
+            "b": 533.2125854492188,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "余",
+      "text": "余",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/636",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 136.35775756835938,
+            "t": 552.5975952148438,
+            "r": 145.8568115234375,
+            "b": 543.5374145507812,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "额",
+      "text": "额",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/637",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 136.07562255859375,
+            "t": 636.1077270507812,
+            "r": 145.89862060546875,
+            "b": 627.3297119140625,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "坏",
+      "text": "坏",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/638",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 136.19058227539062,
+            "t": 647.0386962890625,
+            "r": 145.74188232421875,
+            "b": 637.6546020507812,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "账",
+      "text": "账",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/639",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 136.14877319335938,
+            "t": 657.44140625,
+            "r": 145.89862060546875,
+            "b": 648.4544067382812,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "准",
+      "text": "准",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/640",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 136.0338134765625,
+            "t": 667.797607421875,
+            "r": 145.78366088867188,
+            "b": 658.8524169921875,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "备",
+      "text": "备",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/641",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 142.67056274414062,
+            "t": 742.1988525390625,
+            "r": 152.22186279296875,
+            "b": 732.8147583007812,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "账",
+      "text": "账",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/642",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 143.21395874023438,
+            "t": 752.2310791015625,
+            "r": 152.13824462890625,
+            "b": 743.5784912109375,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "面",
+      "text": "面",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/643",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 154.597412109375,
+            "t": 742.0003051757812,
+            "r": 164.37860107421875,
+            "b": 732.9714965820312,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "价",
+      "text": "价",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/644",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 154.597412109375,
+            "t": 752.3983154296875,
+            "r": 164.3367919921875,
+            "b": 743.338134765625,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "值",
+      "text": "值",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/645",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 159.714599609375,
+            "t": 204.35850524902344,
+            "r": 169.21365356445312,
+            "b": 195.32969665527344,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "金",
+      "text": "金",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/646",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 159.99673461914062,
+            "t": 214.79835510253906,
+            "r": 169.49578857421875,
+            "b": 205.7382049560547,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "额",
+      "text": "额",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/647",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 159.78775024414062,
+            "t": 253.90769958496094,
+            "r": 168.97329711914062,
+            "b": 246.3209991455078,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "比",
+      "text": "比",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/648",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 159.75640869140625,
+            "t": 264.0235900878906,
+            "r": 169.49578857421875,
+            "b": 255.5382080078125,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "例",
+      "text": "例",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/649",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 160.41473388671875,
+            "t": 271.7347412109375,
+            "r": 168.72250366210938,
+            "b": 268.7146911621094,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "（",
+      "text": "（",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/650",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 161.24029541015625,
+            "t": 278.1828308105469,
+            "r": 168.48214721679688,
+            "b": 273.3235778808594,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "%",
+      "text": "%",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/651",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 160.28933715820312,
+            "t": 283.0552978515625,
+            "r": 168.7642822265625,
+            "b": 280.0352478027344,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "）",
+      "text": "）",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/652",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 159.714599609375,
+            "t": 314.2774963378906,
+            "r": 169.21365356445312,
+            "b": 305.2486877441406,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "金",
+      "text": "金",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/653",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 159.99673461914062,
+            "t": 324.71734619140625,
+            "r": 169.49578857421875,
+            "b": 315.6571960449219,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "额",
+      "text": "额",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/654",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 153.871337890625,
+            "t": 360.95849609375,
+            "r": 163.53759765625,
+            "b": 351.9296875,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "计",
+      "text": "计",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/655",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 153.78775024414062,
+            "t": 371.3565368652344,
+            "r": 163.33905029296875,
+            "b": 362.453125,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "提",
+      "text": "提",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/656",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 153.78775024414062,
+            "t": 381.7069396972656,
+            "r": 162.97329711914062,
+            "b": 374.1202392578125,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "比",
+      "text": "比",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/657",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 153.75640869140625,
+            "t": 391.82281494140625,
+            "r": 163.49578857421875,
+            "b": 383.3374328613281,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "例",
+      "text": "例",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/658",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 166.41473388671875,
+            "t": 367.9747619628906,
+            "r": 174.72250366210938,
+            "b": 364.9547119140625,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "（",
+      "text": "（",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/659",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 167.24029541015625,
+            "t": 374.5428466796875,
+            "r": 174.48214721679688,
+            "b": 369.68359375,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "%",
+      "text": "%",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/660",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 166.28933715820312,
+            "t": 379.2943115234375,
+            "r": 174.7642822265625,
+            "b": 376.2742614746094,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "）",
+      "text": "）",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/661",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 159.714599609375,
+            "t": 510.95849609375,
+            "r": 169.21365356445312,
+            "b": 501.9296875,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "金",
+      "text": "金",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/662",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 159.99673461914062,
+            "t": 521.3983154296875,
+            "r": 169.49578857421875,
+            "b": 512.3381958007812,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "额",
+      "text": "额",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/663",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 159.78775024414062,
+            "t": 562.1867065429688,
+            "r": 168.97329711914062,
+            "b": 554.5999755859375,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "比",
+      "text": "比",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/664",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 159.75640869140625,
+            "t": 572.3025512695312,
+            "r": 169.49578857421875,
+            "b": 563.817138671875,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "例",
+      "text": "例",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/665",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 160.41473388671875,
+            "t": 577.4937744140625,
+            "r": 168.72250366210938,
+            "b": 574.4736938476562,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "（",
+      "text": "（",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/666",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 161.24029541015625,
+            "t": 584.0628662109375,
+            "r": 168.48214721679688,
+            "b": 579.20361328125,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "%",
+      "text": "%",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/667",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 160.28933715820312,
+            "t": 588.935302734375,
+            "r": 168.7642822265625,
+            "b": 585.915283203125,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "）",
+      "text": "）",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/668",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 159.714599609375,
+            "t": 622.4375,
+            "r": 169.21365356445312,
+            "b": 613.40869140625,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "金",
+      "text": "金",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/669",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 159.99673461914062,
+            "t": 632.8773193359375,
+            "r": 169.49578857421875,
+            "b": 623.817138671875,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "额",
+      "text": "额",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/670",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 153.871337890625,
+            "t": 667.7985229492188,
+            "r": 163.53759765625,
+            "b": 658.7697143554688,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "计",
+      "text": "计",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/671",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 153.78775024414062,
+            "t": 678.1965942382812,
+            "r": 163.33905029296875,
+            "b": 669.293212890625,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "提",
+      "text": "提",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/672",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 153.78775024414062,
+            "t": 688.5469970703125,
+            "r": 162.97329711914062,
+            "b": 680.9602661132812,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "比",
+      "text": "比",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/673",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 153.75640869140625,
+            "t": 698.662841796875,
+            "r": 163.49578857421875,
+            "b": 690.1774291992188,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "例",
+      "text": "例",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/674",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 166.41473388671875,
+            "t": 674.9347534179688,
+            "r": 174.72250366210938,
+            "b": 671.9146728515625,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "（",
+      "text": "（",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/675",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 167.24029541015625,
+            "t": 681.3828735351562,
+            "r": 174.48214721679688,
+            "b": 676.5236206054688,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "%",
+      "text": "%",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/676",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 166.28933715820312,
+            "t": 686.2542724609375,
+            "r": 174.7642822265625,
+            "b": 683.2342529296875,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "）",
+      "text": "）",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/677",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 183.42874145507812,
+            "t": 80.55490112304688,
+            "r": 193.10543823242188,
+            "b": 71.60969543457031,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "按",
+      "text": "按",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/678",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 183.3555908203125,
+            "t": 91.0783462524414,
+            "r": 193.26217651367188,
+            "b": 82.258544921875,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "单",
+      "text": "单",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/679",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 183.87808227539062,
+            "t": 101.595947265625,
+            "r": 193.10543823242188,
+            "b": 92.65074920654297,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "项",
+      "text": "项",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/680",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 183.5123291015625,
+            "t": 112.07759857177734,
+            "r": 193.1785888671875,
+            "b": 103.04879760742188,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "计",
+      "text": "计",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/681",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 183.42874145507812,
+            "t": 122.59519958496094,
+            "r": 192.98004150390625,
+            "b": 113.69180297851562,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "提",
+      "text": "提",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/682",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 183.3555908203125,
+            "t": 132.8260498046875,
+            "r": 193.1785888671875,
+            "b": 124.04804992675781,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "坏",
+      "text": "坏",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/683",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 183.47055053710938,
+            "t": 143.87660217285156,
+            "r": 193.0218505859375,
+            "b": 134.4925079345703,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "账",
+      "text": "账",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/684",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 183.42874145507812,
+            "t": 154.15969848632812,
+            "r": 193.1785888671875,
+            "b": 145.17269897460938,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "准",
+      "text": "准",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/685",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 183.31378173828125,
+            "t": 164.635498046875,
+            "r": 193.06362915039062,
+            "b": 155.69029235839844,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "备",
+      "text": "备",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/686",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 205.62875366210938,
+            "t": 80.55490112304688,
+            "r": 215.30545043945312,
+            "b": 71.60969543457031,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "按",
+      "text": "按",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/687",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 205.71234130859375,
+            "t": 91.0783462524414,
+            "r": 214.77249145507812,
+            "b": 82.09134674072266,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "组",
+      "text": "组",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/688",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 205.5137939453125,
+            "t": 101.79450225830078,
+            "r": 215.30545043945312,
+            "b": 92.90155029296875,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "合",
+      "text": "合",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/689",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 205.71234130859375,
+            "t": 112.07759857177734,
+            "r": 215.37860107421875,
+            "b": 103.04879760742188,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "计",
+      "text": "计",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/690",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 205.62875366210938,
+            "t": 122.59519958496094,
+            "r": 215.1800537109375,
+            "b": 113.69180297851562,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "提",
+      "text": "提",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/691",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 205.55560302734375,
+            "t": 132.8260498046875,
+            "r": 215.37860107421875,
+            "b": 124.04804992675781,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "坏",
+      "text": "坏",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/692",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 205.67056274414062,
+            "t": 143.87660217285156,
+            "r": 215.22186279296875,
+            "b": 134.4925079345703,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "账",
+      "text": "账",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/693",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 205.62875366210938,
+            "t": 154.15969848632812,
+            "r": 215.37860107421875,
+            "b": 145.17269897460938,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "准",
+      "text": "准",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/694",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 205.5137939453125,
+            "t": 164.635498046875,
+            "r": 215.26364135742188,
+            "b": 155.69029235839844,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "备",
+      "text": "备",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/695",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 207.27947998046875,
+            "t": 180.52774047851562,
+            "r": 214.489990234375,
+            "b": 177.53904724121094,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "1",
+      "text": "1",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/696",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 213.215087890625,
+            "t": 184.45938110351562,
+            "r": 215.5767822265625,
+            "b": 183.19493103027344,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": ",",
+      "text": ",",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/697",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 207.3212890625,
+            "t": 191.614990234375,
+            "r": 214.56314086914062,
+            "b": 187.65444946289062,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "3",
+      "text": "3",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/698",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 207.40487670898438,
+            "t": 196.89468383789062,
+            "r": 214.56314086914062,
+            "b": 192.93414306640625,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "5",
+      "text": "5",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/699",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 207.3212890625,
+            "t": 202.40965270996094,
+            "r": 214.56314086914062,
+            "b": 198.20875549316406,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "0",
+      "text": "0",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/700",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 213.215087890625,
+            "t": 205.81878662109375,
+            "r": 215.5767822265625,
+            "b": 204.55433654785156,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": ",",
+      "text": ",",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/701",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 207.3212890625,
+            "t": 213.08934020996094,
+            "r": 214.56314086914062,
+            "b": 208.88844299316406,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "0",
+      "text": "0",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/702",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 207.40487670898438,
+            "t": 218.2958984375,
+            "r": 214.56314086914062,
+            "b": 214.33534240722656,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "7",
+      "text": "7",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/703",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 207.3212890625,
+            "t": 223.65408325195312,
+            "r": 214.489990234375,
+            "b": 219.6099395751953,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "2",
+      "text": "2",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/704",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 213.4554443359375,
+            "t": 226.23770141601562,
+            "r": 214.60494995117188,
+            "b": 225.08819580078125,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": ".",
+      "text": ".",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/705",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 207.3212890625,
+            "t": 234.61593627929688,
+            "r": 214.489990234375,
+            "b": 230.1224365234375,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "4",
+      "text": "4",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/706",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 207.40487670898438,
+            "t": 239.65528869628906,
+            "r": 214.56314086914062,
+            "b": 235.69473266601562,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "7",
+      "text": "7",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/707",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 207.27947998046875,
+            "t": 256.12774658203125,
+            "r": 214.489990234375,
+            "b": 253.13905334472656,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "1",
+      "text": "1",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/708",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 207.3212890625,
+            "t": 261.929931640625,
+            "r": 214.56314086914062,
+            "b": 257.7290344238281,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "0",
+      "text": "0",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/709",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 207.3212890625,
+            "t": 267.3299255371094,
+            "r": 214.56314086914062,
+            "b": 263.1290283203125,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "0",
+      "text": "0",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/710",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 213.4554443359375,
+            "t": 269.7986145019531,
+            "r": 214.60494995117188,
+            "b": 268.64910888671875,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": ".",
+      "text": ".",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/711",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 207.3212890625,
+            "t": 278.0096435546875,
+            "r": 214.56314086914062,
+            "b": 273.8087463378906,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "0",
+      "text": "0",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/712",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 207.3212890625,
+            "t": 283.2893371582031,
+            "r": 214.56314086914062,
+            "b": 279.08843994140625,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "0",
+      "text": "0",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/713",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 207.3212890625,
+            "t": 304.05023193359375,
+            "r": 214.56314086914062,
+            "b": 299.8493347167969,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "6",
+      "text": "6",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/714",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 213.215087890625,
+            "t": 307.4593811035156,
+            "r": 215.5767822265625,
+            "b": 306.1949462890625,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": ",",
+      "text": ",",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/715",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 207.40487670898438,
+            "t": 314.6567687988281,
+            "r": 214.56314086914062,
+            "b": 310.69622802734375,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "7",
+      "text": "7",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/716",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 207.40487670898438,
+            "t": 319.89471435546875,
+            "r": 214.56314086914062,
+            "b": 315.93414306640625,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "5",
+      "text": "5",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/717",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 207.3212890625,
+            "t": 325.4096374511719,
+            "r": 214.56314086914062,
+            "b": 321.208740234375,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "0",
+      "text": "0",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/718",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 213.4554443359375,
+            "t": 327.8782958984375,
+            "r": 214.60494995117188,
+            "b": 326.7287902832031,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": ".",
+      "text": ".",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/719",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 207.3212890625,
+            "t": 335.9743957519531,
+            "r": 214.56314086914062,
+            "b": 332.0138244628906,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "3",
+      "text": "3",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/720",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 207.3212890625,
+            "t": 341.3690185546875,
+            "r": 214.56314086914062,
+            "b": 337.1681213378906,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "6",
+      "text": "6",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/721",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 207.3212890625,
+            "t": 381.4502258300781,
+            "r": 214.56314086914062,
+            "b": 377.24932861328125,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "0",
+      "text": "0",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/722",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 213.4554443359375,
+            "t": 383.91888427734375,
+            "r": 214.60494995117188,
+            "b": 382.7693786621094,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": ".",
+      "text": ".",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/723",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 207.40487670898438,
+            "t": 392.0149841308594,
+            "r": 214.56314086914062,
+            "b": 388.0544128417969,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "5",
+      "text": "5",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/724",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 207.3212890625,
+            "t": 397.4096374511719,
+            "r": 214.56314086914062,
+            "b": 393.208740234375,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "0",
+      "text": "0",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/725",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 207.27947998046875,
+            "t": 411.2867431640625,
+            "r": 214.489990234375,
+            "b": 408.29803466796875,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "1",
+      "text": "1",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/726",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 213.215087890625,
+            "t": 415.2183837890625,
+            "r": 215.5767822265625,
+            "b": 413.9539489746094,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": ",",
+      "text": ",",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/727",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 207.3212890625,
+            "t": 422.3739929199219,
+            "r": 214.56314086914062,
+            "b": 418.4134216308594,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "3",
+      "text": "3",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/728",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 207.3212890625,
+            "t": 427.93585205078125,
+            "r": 214.489990234375,
+            "b": 423.4423522949219,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "4",
+      "text": "4",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/729",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 207.3212890625,
+            "t": 433.0537109375,
+            "r": 214.56314086914062,
+            "b": 429.0931396484375,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "3",
+      "text": "3",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/730",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 213.215087890625,
+            "t": 436.5777893066406,
+            "r": 215.5767822265625,
+            "b": 435.3133544921875,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": ",",
+      "text": ",",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/731",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 207.3212890625,
+            "t": 443.7333984375,
+            "r": 214.56314086914062,
+            "b": 439.7728271484375,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "3",
+      "text": "3",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/732",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 207.3212890625,
+            "t": 449.0130920410156,
+            "r": 214.489990234375,
+            "b": 444.96893310546875,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "2",
+      "text": "2",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/733",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 207.3212890625,
+            "t": 454.4131164550781,
+            "r": 214.489990234375,
+            "b": 450.36895751953125,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "2",
+      "text": "2",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/734",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 213.4554443359375,
+            "t": 456.9967041015625,
+            "r": 214.60494995117188,
+            "b": 455.8471984863281,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": ".",
+      "text": ".",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/735",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 207.27947998046875,
+            "t": 464.68524169921875,
+            "r": 214.489990234375,
+            "b": 461.696533203125,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "1",
+      "text": "1",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/736",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 207.27947998046875,
+            "t": 469.9649353027344,
+            "r": 214.489990234375,
+            "b": 466.9762268066406,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "1",
+      "text": "1",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/737",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 227.83380126953125,
+            "t": 80.63849639892578,
+            "r": 237.58364868164062,
+            "b": 71.69329833984375,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "其",
+      "text": "其",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/738",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 227.94876098632812,
+            "t": 90.13784790039062,
+            "r": 237.6986083984375,
+            "b": 83.39759826660156,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "中",
+      "text": "中",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/739",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 232.64080810546875,
+            "t": 94.81465148925781,
+            "r": 236.7685546875,
+            "b": 93.39344787597656,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "：",
+      "text": "：",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/740",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 250.07559204101562,
+            "t": 80.63849639892578,
+            "r": 259.78363037109375,
+            "b": 71.65149688720703,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "银",
+      "text": "银",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/741",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 250.14874267578125,
+            "t": 91.0783462524414,
+            "r": 259.982177734375,
+            "b": 82.13314819335938,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "行",
+      "text": "行",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/742",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 250.31594848632812,
+            "t": 101.63774871826172,
+            "r": 259.825439453125,
+            "b": 92.60894775390625,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "承",
+      "text": "承",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/743",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 250.07559204101562,
+            "t": 111.99400329589844,
+            "r": 259.825439453125,
+            "b": 103.34140014648438,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "兑",
+      "text": "兑",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/744",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 250.483154296875,
+            "t": 122.46980285644531,
+            "r": 259.78363037109375,
+            "b": 113.77540588378906,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "票",
+      "text": "票",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/745",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 250.07559204101562,
+            "t": 133.11865234375,
+            "r": 259.8567810058594,
+            "b": 124.08985137939453,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "据",
+      "text": "据",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/746",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 251.67950439453125,
+            "t": 180.52774047851562,
+            "r": 258.8900146484375,
+            "b": 177.53904724121094,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "1",
+      "text": "1",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/747",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 257.6151123046875,
+            "t": 184.45938110351562,
+            "r": 259.976806640625,
+            "b": 183.19493103027344,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": ",",
+      "text": ",",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/748",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 251.7213134765625,
+            "t": 191.614990234375,
+            "r": 258.9631652832031,
+            "b": 187.65444946289062,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "3",
+      "text": "3",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/749",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 251.80490112304688,
+            "t": 196.89468383789062,
+            "r": 258.9631652832031,
+            "b": 192.93414306640625,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "5",
+      "text": "5",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/750",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 251.7213134765625,
+            "t": 202.40965270996094,
+            "r": 258.9631652832031,
+            "b": 198.20875549316406,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "0",
+      "text": "0",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/751",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 257.6151123046875,
+            "t": 205.81878662109375,
+            "r": 259.976806640625,
+            "b": 204.55433654785156,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": ",",
+      "text": ",",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/752",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 251.7213134765625,
+            "t": 213.08934020996094,
+            "r": 258.9631652832031,
+            "b": 208.88844299316406,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "0",
+      "text": "0",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/753",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 251.80490112304688,
+            "t": 218.2958984375,
+            "r": 258.9631652832031,
+            "b": 214.33534240722656,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "7",
+      "text": "7",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/754",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 251.7213134765625,
+            "t": 223.65408325195312,
+            "r": 258.8900146484375,
+            "b": 219.6099395751953,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "2",
+      "text": "2",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/755",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 257.85546875,
+            "t": 226.23770141601562,
+            "r": 259.0049743652344,
+            "b": 225.08819580078125,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": ".",
+      "text": ".",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/756",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 251.7213134765625,
+            "t": 234.61593627929688,
+            "r": 258.8900146484375,
+            "b": 230.1224365234375,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "4",
+      "text": "4",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/757",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 251.80490112304688,
+            "t": 239.65528869628906,
+            "r": 258.9631652832031,
+            "b": 235.69473266601562,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "7",
+      "text": "7",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/758",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 251.67950439453125,
+            "t": 256.12774658203125,
+            "r": 258.8900146484375,
+            "b": 253.13905334472656,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "1",
+      "text": "1",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/759",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 251.7213134765625,
+            "t": 261.929931640625,
+            "r": 258.9631652832031,
+            "b": 257.7290344238281,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "0",
+      "text": "0",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/760",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 251.7213134765625,
+            "t": 267.3299255371094,
+            "r": 258.9631652832031,
+            "b": 263.1290283203125,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "0",
+      "text": "0",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/761",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 257.85546875,
+            "t": 269.7986145019531,
+            "r": 259.0049743652344,
+            "b": 268.64910888671875,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": ".",
+      "text": ".",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/762",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 251.7213134765625,
+            "t": 278.0096435546875,
+            "r": 258.9631652832031,
+            "b": 273.8087463378906,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "0",
+      "text": "0",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/763",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 251.7213134765625,
+            "t": 283.2893371582031,
+            "r": 258.9631652832031,
+            "b": 279.08843994140625,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "0",
+      "text": "0",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/764",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 251.7213134765625,
+            "t": 304.05023193359375,
+            "r": 258.9631652832031,
+            "b": 299.8493347167969,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "6",
+      "text": "6",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/765",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 257.6151123046875,
+            "t": 307.4593811035156,
+            "r": 259.976806640625,
+            "b": 306.1949462890625,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": ",",
+      "text": ",",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/766",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 251.80490112304688,
+            "t": 314.6567687988281,
+            "r": 258.9631652832031,
+            "b": 310.69622802734375,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "7",
+      "text": "7",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/767",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 251.80490112304688,
+            "t": 319.89471435546875,
+            "r": 258.9631652832031,
+            "b": 315.93414306640625,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "5",
+      "text": "5",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/768",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 251.7213134765625,
+            "t": 325.4096374511719,
+            "r": 258.9631652832031,
+            "b": 321.208740234375,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "0",
+      "text": "0",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/769",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 257.85546875,
+            "t": 327.8782958984375,
+            "r": 259.0049743652344,
+            "b": 326.7287902832031,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": ".",
+      "text": ".",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/770",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 251.7213134765625,
+            "t": 335.9743957519531,
+            "r": 258.9631652832031,
+            "b": 332.0138244628906,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "3",
+      "text": "3",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/771",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 251.7213134765625,
+            "t": 341.3690185546875,
+            "r": 258.9631652832031,
+            "b": 337.1681213378906,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "6",
+      "text": "6",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/772",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 251.7213134765625,
+            "t": 381.4502258300781,
+            "r": 258.9631652832031,
+            "b": 377.24932861328125,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "0",
+      "text": "0",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/773",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 257.85546875,
+            "t": 383.91888427734375,
+            "r": 259.0049743652344,
+            "b": 382.7693786621094,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": ".",
+      "text": ".",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/774",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 251.80490112304688,
+            "t": 392.0149841308594,
+            "r": 258.9631652832031,
+            "b": 388.0544128417969,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "5",
+      "text": "5",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/775",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 251.7213134765625,
+            "t": 397.4096374511719,
+            "r": 258.9631652832031,
+            "b": 393.208740234375,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "0",
+      "text": "0",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/776",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 251.67950439453125,
+            "t": 411.2867431640625,
+            "r": 258.8900146484375,
+            "b": 408.29803466796875,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "1",
+      "text": "1",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/777",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 257.6151123046875,
+            "t": 415.2183837890625,
+            "r": 259.976806640625,
+            "b": 413.9539489746094,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": ",",
+      "text": ",",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/778",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 251.7213134765625,
+            "t": 422.3739929199219,
+            "r": 258.9631652832031,
+            "b": 418.4134216308594,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "3",
+      "text": "3",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/779",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 251.7213134765625,
+            "t": 427.93585205078125,
+            "r": 258.8900146484375,
+            "b": 423.4423522949219,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "4",
+      "text": "4",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/780",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 251.7213134765625,
+            "t": 433.0537109375,
+            "r": 258.9631652832031,
+            "b": 429.0931396484375,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "3",
+      "text": "3",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/781",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 257.6151123046875,
+            "t": 436.5777893066406,
+            "r": 259.976806640625,
+            "b": 435.3133544921875,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": ",",
+      "text": ",",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/782",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 251.7213134765625,
+            "t": 443.7333984375,
+            "r": 258.9631652832031,
+            "b": 439.7728271484375,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "3",
+      "text": "3",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/783",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 251.7213134765625,
+            "t": 449.0130920410156,
+            "r": 258.8900146484375,
+            "b": 444.96893310546875,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "2",
+      "text": "2",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/784",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 251.7213134765625,
+            "t": 454.4131164550781,
+            "r": 258.8900146484375,
+            "b": 450.36895751953125,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "2",
+      "text": "2",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/785",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 257.85546875,
+            "t": 456.9967041015625,
+            "r": 259.0049743652344,
+            "b": 455.8471984863281,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": ".",
+      "text": ".",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/786",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 251.67950439453125,
+            "t": 464.68524169921875,
+            "r": 258.8900146484375,
+            "b": 461.696533203125,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "1",
+      "text": "1",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/787",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 251.67950439453125,
+            "t": 469.9649353027344,
+            "r": 258.8900146484375,
+            "b": 466.9762268066406,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "1",
+      "text": "1",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/788",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 272.4374084472656,
+            "t": 80.55490112304688,
+            "r": 282.1767883300781,
+            "b": 71.98590087890625,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "商",
+      "text": "商",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/789",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 272.4374084472656,
+            "t": 91.12014770507812,
+            "r": 281.61248779296875,
+            "b": 82.04954528808594,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "业",
+      "text": "业",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/790",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 272.6359558105469,
+            "t": 101.63774871826172,
+            "r": 282.14544677734375,
+            "b": 92.60894775390625,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "承",
+      "text": "承",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/791",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 272.3955993652344,
+            "t": 111.99400329589844,
+            "r": 282.14544677734375,
+            "b": 103.34140014648438,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "兑",
+      "text": "兑",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/792",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 272.80316162109375,
+            "t": 122.46980285644531,
+            "r": 282.1036376953125,
+            "b": 113.77540588378906,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "票",
+      "text": "票",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/793",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 272.3955993652344,
+            "t": 133.11865234375,
+            "r": 282.1767883300781,
+            "b": 124.08985137939453,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "据",
+      "text": "据",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/794",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 294.5538024902344,
+            "t": 117.7552490234375,
+            "r": 304.345458984375,
+            "b": 108.86229705810547,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "合",
+      "text": "合",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/795",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 294.7523498535156,
+            "t": 128.03834533691406,
+            "r": 304.4186096191406,
+            "b": 119.0095443725586,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "计",
+      "text": "计",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/796",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 296.198486328125,
+            "t": 180.52774047851562,
+            "r": 303.40899658203125,
+            "b": 177.53904724121094,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "1",
+      "text": "1",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/797",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 302.13409423828125,
+            "t": 184.45938110351562,
+            "r": 304.49578857421875,
+            "b": 183.19493103027344,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": ",",
+      "text": ",",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/798",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 296.24029541015625,
+            "t": 191.614990234375,
+            "r": 303.4821472167969,
+            "b": 187.65444946289062,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "3",
+      "text": "3",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/799",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 296.3238830566406,
+            "t": 196.89468383789062,
+            "r": 303.4821472167969,
+            "b": 192.93414306640625,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "5",
+      "text": "5",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/800",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 296.24029541015625,
+            "t": 202.40965270996094,
+            "r": 303.4821472167969,
+            "b": 198.20875549316406,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "0",
+      "text": "0",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/801",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 302.13409423828125,
+            "t": 205.81878662109375,
+            "r": 304.49578857421875,
+            "b": 204.55433654785156,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": ",",
+      "text": ",",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/802",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 296.24029541015625,
+            "t": 213.08934020996094,
+            "r": 303.4821472167969,
+            "b": 208.88844299316406,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "0",
+      "text": "0",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/803",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 296.3238830566406,
+            "t": 218.2958984375,
+            "r": 303.4821472167969,
+            "b": 214.33534240722656,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "7",
+      "text": "7",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/804",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 296.24029541015625,
+            "t": 223.65408325195312,
+            "r": 303.40899658203125,
+            "b": 219.6099395751953,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "2",
+      "text": "2",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/805",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 302.37445068359375,
+            "t": 226.23770141601562,
+            "r": 303.5239562988281,
+            "b": 225.08819580078125,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": ".",
+      "text": ".",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/806",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 296.24029541015625,
+            "t": 234.61593627929688,
+            "r": 303.40899658203125,
+            "b": 230.1224365234375,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "4",
+      "text": "4",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/807",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 296.3238830566406,
+            "t": 239.65528869628906,
+            "r": 303.4821472167969,
+            "b": 235.69473266601562,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "7",
+      "text": "7",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/808",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 296.198486328125,
+            "t": 256.12774658203125,
+            "r": 303.40899658203125,
+            "b": 253.13905334472656,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "1",
+      "text": "1",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/809",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 296.24029541015625,
+            "t": 261.929931640625,
+            "r": 303.4821472167969,
+            "b": 257.7290344238281,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "0",
+      "text": "0",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/810",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 296.24029541015625,
+            "t": 267.3299255371094,
+            "r": 303.4821472167969,
+            "b": 263.1290283203125,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "0",
+      "text": "0",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/811",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 302.37445068359375,
+            "t": 269.7986145019531,
+            "r": 303.5239562988281,
+            "b": 268.64910888671875,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": ".",
+      "text": ".",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/812",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 296.24029541015625,
+            "t": 278.0096435546875,
+            "r": 303.4821472167969,
+            "b": 273.8087463378906,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "0",
+      "text": "0",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/813",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 296.24029541015625,
+            "t": 283.2893371582031,
+            "r": 303.4821472167969,
+            "b": 279.08843994140625,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "0",
+      "text": "0",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/814",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 296.24029541015625,
+            "t": 304.05023193359375,
+            "r": 303.4821472167969,
+            "b": 299.8493347167969,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "6",
+      "text": "6",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/815",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 302.13409423828125,
+            "t": 307.4593811035156,
+            "r": 304.49578857421875,
+            "b": 306.1949462890625,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": ",",
+      "text": ",",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/816",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 296.3238830566406,
+            "t": 314.6567687988281,
+            "r": 303.4821472167969,
+            "b": 310.69622802734375,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "7",
+      "text": "7",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/817",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 296.3238830566406,
+            "t": 319.89471435546875,
+            "r": 303.4821472167969,
+            "b": 315.93414306640625,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "5",
+      "text": "5",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/818",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 296.24029541015625,
+            "t": 325.4096374511719,
+            "r": 303.4821472167969,
+            "b": 321.208740234375,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "0",
+      "text": "0",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/819",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 302.37445068359375,
+            "t": 327.8782958984375,
+            "r": 303.5239562988281,
+            "b": 326.7287902832031,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": ".",
+      "text": ".",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/820",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 296.24029541015625,
+            "t": 335.9743957519531,
+            "r": 303.4821472167969,
+            "b": 332.0138244628906,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "3",
+      "text": "3",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/821",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 296.24029541015625,
+            "t": 341.3690185546875,
+            "r": 303.4821472167969,
+            "b": 337.1681213378906,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "6",
+      "text": "6",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/822",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 296.24029541015625,
+            "t": 381.4502258300781,
+            "r": 303.4821472167969,
+            "b": 377.24932861328125,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "0",
+      "text": "0",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/823",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 302.37445068359375,
+            "t": 383.91888427734375,
+            "r": 303.5239562988281,
+            "b": 382.7693786621094,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": ".",
+      "text": ".",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/824",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 296.3238830566406,
+            "t": 392.0149841308594,
+            "r": 303.4821472167969,
+            "b": 388.0544128417969,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "5",
+      "text": "5",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/825",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 296.24029541015625,
+            "t": 397.4096374511719,
+            "r": 303.4821472167969,
+            "b": 393.208740234375,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "0",
+      "text": "0",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/826",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 296.198486328125,
+            "t": 411.2867431640625,
+            "r": 303.40899658203125,
+            "b": 408.29803466796875,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "1",
+      "text": "1",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/827",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 302.13409423828125,
+            "t": 415.2183837890625,
+            "r": 304.49578857421875,
+            "b": 413.9539489746094,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": ",",
+      "text": ",",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/828",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 296.24029541015625,
+            "t": 422.3739929199219,
+            "r": 303.4821472167969,
+            "b": 418.4134216308594,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "3",
+      "text": "3",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/829",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 296.24029541015625,
+            "t": 427.93585205078125,
+            "r": 303.40899658203125,
+            "b": 423.4423522949219,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "4",
+      "text": "4",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/830",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 296.24029541015625,
+            "t": 433.0537109375,
+            "r": 303.4821472167969,
+            "b": 429.0931396484375,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "3",
+      "text": "3",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/831",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 302.13409423828125,
+            "t": 436.5777893066406,
+            "r": 304.49578857421875,
+            "b": 435.3133544921875,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": ",",
+      "text": ",",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/832",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 296.24029541015625,
+            "t": 443.7333984375,
+            "r": 303.4821472167969,
+            "b": 439.7728271484375,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "3",
+      "text": "3",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/833",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 296.24029541015625,
+            "t": 449.0130920410156,
+            "r": 303.40899658203125,
+            "b": 444.96893310546875,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "2",
+      "text": "2",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/834",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 296.24029541015625,
+            "t": 454.4131164550781,
+            "r": 303.40899658203125,
+            "b": 450.36895751953125,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "2",
+      "text": "2",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/835",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 302.37445068359375,
+            "t": 456.9967041015625,
+            "r": 303.5239562988281,
+            "b": 455.8471984863281,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": ".",
+      "text": ".",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/836",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 296.198486328125,
+            "t": 464.68524169921875,
+            "r": 303.40899658203125,
+            "b": 461.696533203125,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "1",
+      "text": "1",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/837",
+      "parent": {
+        "cref": "#/pictures/40"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "text",
+      "prov": [
+        {
+          "page_no": 62,
+          "bbox": {
+            "l": 296.198486328125,
+            "t": 469.9649353027344,
+            "r": 303.40899658203125,
+            "b": 466.9762268066406,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            1
+          ]
+        }
+      ],
+      "orig": "1",
+      "text": "1",
+      "formatting": null,
+      "hyperlink": null
+    }
+  ],
+  "caption_refs": [
+    "#/texts/610"
+  ],
+  "missing_noncaption_source_texts": 227,
+  "cause": "Docling classifies this region as PictureItem; default traverse_pictures=False omits its BODY/text children; unchanged existing limitation, not repaired by dumping rotated text glyphs into Markdown.",
+  "original_visual_review": {
+    "performed": true,
+    "region_type": "90-degree rotated business financial table",
+    "source_title": "4. 按坏账计提方法分类披露",
+    "observed_group_headers": [
+      "期末余额",
+      "期初余额"
+    ],
+    "observed_source_body": "银行承兑票据、商业承兑票据、合计及金额、比例、坏账准备、账面价值",
+    "classification_error": "business table represented as PictureItem with 227 individual BODY/text children; not a photograph or decorative image",
+    "source_table_columns": 11,
+    "source_header_rows": 3,
+    "source_body_rows": 6,
+    "source_source_pages": [
+      62
+    ],
+    "printed_page_number": "55"
+  }
+}

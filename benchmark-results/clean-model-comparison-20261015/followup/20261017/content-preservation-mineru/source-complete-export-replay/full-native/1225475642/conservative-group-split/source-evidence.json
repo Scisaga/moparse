@@ -1,0 +1,253 @@
+{
+  "document": "1225475642",
+  "input_SHA256": "e2a184bb017930ca6306a56391a7248c2954a5ae212c2966104fad2104c4a24d",
+  "old_group": [
+    "p115_t3",
+    "p116_t1"
+  ],
+  "new_group": null,
+  "cause": "p115 printed page 105 is classified FURNITURE/page_footer, but p116 printed 106 is BODY/text, so a corresponding repeated/source footer cannot be proved across both pages. The guard conservatively preserves both tables and full headers rather than ignoring unmatched furniture based on classification alone. All source cell anchors/spans/pages remain exactly preserved.",
+  "source_items": [
+    {
+      "self_ref": "#/texts/1305",
+      "parent": {
+        "cref": "#/body"
+      },
+      "children": [],
+      "content_layer": "furniture",
+      "meta": null,
+      "label": "page_header",
+      "prov": [
+        {
+          "page_no": 115,
+          "bbox": {
+            "l": 89.0635986328125,
+            "t": 793.4744262695312,
+            "r": 191.7947998046875,
+            "b": 783.7296142578125,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            10
+          ]
+        }
+      ],
+      "orig": "昇兴集团股份有限公司",
+      "text": "昇兴集团股份有限公司",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/1306",
+      "parent": {
+        "cref": "#/body"
+      },
+      "children": [],
+      "content_layer": "furniture",
+      "meta": null,
+      "label": "page_header",
+      "prov": [
+        {
+          "page_no": 115,
+          "bbox": {
+            "l": 471.9671936035156,
+            "t": 793.4744262695312,
+            "r": 534.1591796875,
+            "b": 783.6984252929688,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            6
+          ]
+        }
+      ],
+      "orig": "财务报表附注",
+      "text": "财务报表附注",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/1312",
+      "parent": {
+        "cref": "#/body"
+      },
+      "children": [],
+      "content_layer": "furniture",
+      "meta": null,
+      "label": "page_footer",
+      "prov": [
+        {
+          "page_no": 115,
+          "bbox": {
+            "l": 306.47637939453125,
+            "t": 70.24420166015625,
+            "r": 318.5835876464844,
+            "b": 63.92380142211914,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            3
+          ]
+        }
+      ],
+      "orig": "105",
+      "text": "105",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/1313",
+      "parent": {
+        "cref": "#/body"
+      },
+      "children": [],
+      "content_layer": "furniture",
+      "meta": null,
+      "label": "page_footer",
+      "prov": [
+        {
+          "page_no": 115,
+          "bbox": {
+            "l": 296.2471923828125,
+            "t": 47.1343994140625,
+            "r": 327.9483947753906,
+            "b": 39.88560104370117,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            11
+          ]
+        }
+      ],
+      "orig": "6 - 1 - 115",
+      "text": "6 - 1 - 115",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/1314",
+      "parent": {
+        "cref": "#/body"
+      },
+      "children": [],
+      "content_layer": "furniture",
+      "meta": null,
+      "label": "page_header",
+      "prov": [
+        {
+          "page_no": 116,
+          "bbox": {
+            "l": 89.0635986328125,
+            "t": 793.4744262695312,
+            "r": 191.7947998046875,
+            "b": 783.7296142578125,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            10
+          ]
+        }
+      ],
+      "orig": "昇兴集团股份有限公司",
+      "text": "昇兴集团股份有限公司",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/1315",
+      "parent": {
+        "cref": "#/body"
+      },
+      "children": [],
+      "content_layer": "furniture",
+      "meta": null,
+      "label": "page_header",
+      "prov": [
+        {
+          "page_no": 116,
+          "bbox": {
+            "l": 471.9671936035156,
+            "t": 793.4744262695312,
+            "r": 534.1591796875,
+            "b": 783.6984252929688,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            6
+          ]
+        }
+      ],
+      "orig": "财务报表附注",
+      "text": "财务报表附注",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/1317",
+      "parent": {
+        "cref": "#/tables/161"
+      },
+      "children": [],
+      "content_layer": "body",
+      "meta": null,
+      "label": "caption",
+      "prov": [
+        {
+          "page_no": 116,
+          "bbox": {
+            "l": 306.47637939453125,
+            "t": 70.24420166015625,
+            "r": 318.8320007324219,
+            "b": 63.92380142211914,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            3
+          ]
+        }
+      ],
+      "orig": "106",
+      "text": "106",
+      "formatting": null,
+      "hyperlink": null
+    },
+    {
+      "self_ref": "#/texts/1318",
+      "parent": {
+        "cref": "#/body"
+      },
+      "children": [],
+      "content_layer": "furniture",
+      "meta": null,
+      "label": "page_footer",
+      "prov": [
+        {
+          "page_no": 116,
+          "bbox": {
+            "l": 296.2471923828125,
+            "t": 47.1343994140625,
+            "r": 328.22918701171875,
+            "b": 39.88560104370117,
+            "coord_origin": "BOTTOMLEFT"
+          },
+          "charspan": [
+            0,
+            11
+          ]
+        }
+      ],
+      "orig": "6 - 1 - 116",
+      "text": "6 - 1 - 116",
+      "formatting": null,
+      "hyperlink": null
+    }
+  ],
+  "scope": "one additional conservative split, 10 prior logical groups become 9; specified p6/p7 continuation remains merged"
+}

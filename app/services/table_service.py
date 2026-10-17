@@ -56,6 +56,18 @@ class TableCellFragment:
 
 
 @dataclass(slots=True)
+class PageFurnitureFragment:
+    """Visible source furniture retained separately from table scope evidence."""
+
+    source_ref: str
+    page_number: int
+    label: str
+    text: str
+    rendered: str
+    normalized_bbox: tuple[float, float, float, float] | None
+
+
+@dataclass(slots=True)
 class TableFragment:
     fragment_id: str
     page_number: int
@@ -81,6 +93,7 @@ class TableFragment:
     source_row_indices: list[int] = field(default_factory=list)
     header_scope_complete: bool = True
     caption_scope_complete: bool = True
+    page_furniture: list[PageFurnitureFragment] = field(default_factory=list)
     _structure_marker: str = field(default="", init=False, repr=False)
 
     def __post_init__(self) -> None:
@@ -388,12 +401,14 @@ def extract_table_fragments(document: Any, page_group: tuple[int, int]) -> list[
     if not callable(iterator) or not isinstance(pages, dict):
         return []
     try:
-        from docling_core.types.doc import TableItem
+        from docling_core.types.doc import ContentLayer, TableItem
     except ImportError:
         return []
     ordinals: dict[int, int] = {}
     fragments: list[TableFragment] = []
-    for item, _level in iterator():
+    for item, _level in iterator(
+        included_content_layers={ContentLayer.BODY, ContentLayer.FURNITURE}
+    ):
         if not isinstance(item, TableItem) or not item.prov:
             continue
         provenance = item.prov[0]
@@ -465,61 +480,170 @@ def extract_table_fragments(document: Any, page_group: tuple[int, int]) -> list[
 
 
 def export_page_markdown(document: Any, page_number: int, fragments: list[TableFragment]) -> str:
+    iterator = getattr(document, "iterate_items", None)
+    if not callable(iterator):
+        # Keep legacy lightweight adapter/test documents usable. Real Docling
+        # serialization errors must reach the parser's page failure reporting.
+        return str(document.export_to_markdown(page_no=page_number) or "")
+    from docling_core.types.doc import ContentLayer, DoclingDocument, TableItem
+
+    if not isinstance(document, DoclingDocument):
+        return str(document.export_to_markdown(page_no=page_number) or "")
     rendered = {fragment.fragment_id: fragment.rendered for fragment in fragments}
     refs: dict[str, str] = {}
-    iterator = getattr(document, "iterate_items", None)
-    if callable(iterator):
-        try:
-            from docling_core.types.doc import TableItem
+    page_fragments = iter(fragment for fragment in fragments if fragment.page_number == page_number)
+    for item, _level in iterator(
+        page_no=page_number,
+        included_content_layers={ContentLayer.BODY, ContentLayer.FURNITURE},
+    ):
+        if isinstance(item, TableItem):
+            fragment = next(page_fragments, None)
+            if fragment is not None:
+                refs[item.self_ref] = fragment.fragment_id
+    from docling_core.transforms.serializer.base import BaseTableSerializer
+    from docling_core.transforms.serializer.common import create_ser_result
+    from docling_core.transforms.serializer.markdown import (
+        MarkdownDocSerializer,
+        MarkdownParams,
+    )
+    from docling_core.types.doc import ContentLayer, DocItem, DocItemLabel, TextItem
+    from pydantic import BaseModel, ConfigDict, Field
 
-            page_fragments = iter(
-                fragment for fragment in fragments if fragment.page_number == page_number
+    page_furniture: list[PageFurnitureFragment] = []
+    visible_excluded_cache: dict[str, set[str]] = {}
+
+    class SourceCompleteDocSerializer(MarkdownDocSerializer):
+        def get_excluded_refs(self, **kwargs: Any) -> set[str]:
+            params = self.params.merge_with_patch(patch=kwargs)
+            cache_key = params.model_dump_json()
+            if cache_key in visible_excluded_cache:
+                return visible_excluded_cache[cache_key]
+            excluded = super().get_excluded_refs(**kwargs).copy()
+            # Floating-item caption/reference resolution can reach layers
+            # omitted from the normal walk. Exclude them explicitly too.
+            for source, _ in self.doc.iterate_items(
+                traverse_pictures=True,
+                included_content_layers=set(ContentLayer),
+            ):
+                if not isinstance(source, DocItem):
+                    continue
+                if (
+                    source.content_layer not in params.layers
+                    or source.label not in params.labels
+                    or (
+                        params.pages is not None
+                        and not any(prov.page_no in params.pages for prov in source.prov)
+                    )
+                ):
+                    excluded.add(source.self_ref)
+            visible_excluded_cache[cache_key] = excluded
+            return excluded
+
+        def serialize(
+            self,
+            *,
+            item: Any = None,
+            visited: set[str] | None = None,
+            **kwargs: Any,
+        ) -> Any:
+            # Docling's generic walker delegates attached footnotes to the
+            # floating item's serializer, while its Markdown table writer
+            # does not write them. Release them at their original tree
+            # position, rather than appending guesses or matching text.
+            is_footnote = (
+                isinstance(item, TextItem) and item.self_ref in self._footnotes_of_some_item
             )
-            for item, _level in iterator(page_no=page_number):
-                if isinstance(item, TableItem):
-                    fragment = next(page_fragments, None)
-                    if fragment is not None:
-                        refs[item.self_ref] = fragment.fragment_id
-        except (ImportError, TypeError):
-            refs = {}
-    if not refs:
-        return str(document.export_to_markdown(page_no=page_number) or "")
-    try:
-        from docling_core.transforms.serializer.base import BaseTableSerializer
-        from docling_core.transforms.serializer.common import create_ser_result
-        from docling_core.transforms.serializer.markdown import (
-            MarkdownDocSerializer,
-            MarkdownParams,
-        )
-        from pydantic import BaseModel, ConfigDict, Field
-
-        class AnchoredTableSerializer(BaseModel, BaseTableSerializer):
-            model_config = ConfigDict(arbitrary_types_allowed=True)
-
-            refs: dict[str, str] = Field(default_factory=dict)
-            rendered: dict[str, str] = Field(default_factory=dict)
-
-            def serialize(self, *, item: Any, doc_serializer: Any, doc: Any, **kwargs: Any) -> Any:
-                parts = []
-                caption = doc_serializer.serialize_captions(item=item, **kwargs)
-                if caption.text:
-                    parts.append(caption)
-                fragment_id = self.refs.get(item.self_ref)
-                text = self.rendered.get(fragment_id or "", "")
-                if text:
-                    parts.append(create_ser_result(text=text, span_source=item))
-                return create_ser_result(
-                    text="\n\n".join(part.text for part in parts), span_source=parts
+            if is_footnote:
+                if (
+                    item.content_layer not in self.params.layers
+                    or item.self_ref in self.get_excluded_refs(**kwargs)
+                ):
+                    return create_ser_result()
+                result = self.text_serializer.serialize(
+                    item=item,
+                    doc_serializer=self,
+                    doc=self.doc,
+                    visited=visited,
+                    **(self.params.model_dump() | kwargs),
                 )
+            else:
+                result = super().serialize(item=item, visited=visited, **kwargs)
+            if not isinstance(item, TextItem) or not result.text:
+                return result
+            if is_footnote:
+                source_marker = (
+                    f"<!-- source-text: {item.self_ref}; source-page: {page_number}; "
+                    "role: footnote -->"
+                )
+                return create_ser_result(
+                    text=f"{source_marker}\n\n{result.text}", span_source=[result]
+                )
+            if item.content_layer == ContentLayer.FURNITURE and item.label in {
+                DocItemLabel.PAGE_HEADER,
+                DocItemLabel.PAGE_FOOTER,
+            }:
+                marker = (
+                    f"<!-- source-furniture: {item.self_ref}; source-page: {page_number}; "
+                    f"role: {item.label.value} -->"
+                )
+                rendered_furniture = f"{marker}\n\n{result.text}"
+                bbox = None
+                if item.prov:
+                    page = self.doc.pages.get(page_number)
+                    if page is not None and page.size.width > 0 and page.size.height > 0:
+                        source_bbox = item.prov[0].bbox.to_top_left_origin(
+                            page_height=page.size.height
+                        )
+                        bbox = (
+                            source_bbox.l / page.size.width,
+                            source_bbox.t / page.size.height,
+                            source_bbox.r / page.size.width,
+                            source_bbox.b / page.size.height,
+                        )
+                page_furniture.append(
+                    PageFurnitureFragment(
+                        source_ref=item.self_ref,
+                        page_number=page_number,
+                        label=item.label.value,
+                        text=item.text,
+                        rendered=rendered_furniture,
+                        normalized_bbox=bbox,
+                    )
+                )
+                return create_ser_result(text=rendered_furniture, span_source=[result])
+            return result
 
-        serializer = MarkdownDocSerializer(
-            doc=document,
-            params=MarkdownParams(pages={page_number}),
-            table_serializer=AnchoredTableSerializer(refs=refs, rendered=rendered),
-        )
-        return str(serializer.serialize().text or "")
-    except (ImportError, TypeError, ValueError):
-        return str(document.export_to_markdown(page_no=page_number) or "")
+    class AnchoredTableSerializer(BaseModel, BaseTableSerializer):
+        model_config = ConfigDict(arbitrary_types_allowed=True)
+
+        refs: dict[str, str] = Field(default_factory=dict)
+        rendered: dict[str, str] = Field(default_factory=dict)
+
+        def serialize(self, *, item: Any, doc_serializer: Any, doc: Any, **kwargs: Any) -> Any:
+            parts = []
+            caption = doc_serializer.serialize_captions(item=item, **kwargs)
+            if caption.text:
+                parts.append(caption)
+            fragment_id = self.refs.get(item.self_ref)
+            text = self.rendered.get(fragment_id or "", "")
+            if text:
+                parts.append(create_ser_result(text=text, span_source=item))
+            return create_ser_result(
+                text="\n\n".join(part.text for part in parts), span_source=parts
+            )
+
+    serializer = SourceCompleteDocSerializer(
+        doc=document,
+        params=MarkdownParams(
+            pages={page_number}, layers={ContentLayer.BODY, ContentLayer.FURNITURE}
+        ),
+        table_serializer=AnchoredTableSerializer(refs=refs, rendered=rendered),
+    )
+    markdown = str(serializer.serialize().text or "")
+    for fragment in fragments:
+        if fragment.page_number == page_number:
+            fragment.page_furniture = page_furniture[:]
+    return markdown
 
 
 def _headers_match(left: TableFragment, right: TableFragment) -> bool:
@@ -673,11 +797,98 @@ def _units_are_consistent(units: dict[str, tuple[str, ...]]) -> bool:
     return all(all(values) and len(set(values)) == 1 for values in units.values())
 
 
+def _table_context_pages(
+    group: list[TableFragment],
+    content_by_page: dict[int, str],
+    fragments: list[TableFragment],
+) -> dict[int, str]:
+    """Ignore only source-proven repeated furniture for continuity checks.
+
+    This is a view for the merge guard. The public Markdown always keeps every
+    furniture item. Classification alone cannot turn a new title, unit or
+    business paragraph into decoration.
+    """
+    context = content_by_page.copy()
+    first = group[0]
+    for candidate in first.page_furniture:
+        candidate_units, _ = _context_evidence(candidate.text)
+        # A repeated source classification does not remove an explicit unit
+        # declaration from the table's scope or hide conflicting declarations.
+        if candidate.normalized_bbox is None or candidate_units:
+            continue
+        repeated: list[PageFurnitureFragment] = []
+        for fragment in group:
+            matches = [
+                source
+                for source in fragment.page_furniture
+                if source.page_number == fragment.page_number
+                and source.label == candidate.label
+                and source.normalized_bbox is not None
+                and max(
+                    abs(a - b)
+                    for a, b in zip(source.normalized_bbox, candidate.normalized_bbox, strict=True)
+                )
+                <= 0.01
+            ]
+            if len(matches) != 1:
+                break
+            repeated.append(matches[0])
+        if len(repeated) != len(group):
+            continue
+        exact_repeat = all(source.text == candidate.text for source in repeated)
+
+        # Printed page numbering is allowed only with the source footer label,
+        # the same bottom-page position and a consistent offset from physical
+        # page numbers across all adjacent pages. Arbitrary footer numbers and
+        # unit/period declarations do not satisfy that evidence.
+        def pagination_id(source: PageFurnitureFragment) -> tuple[tuple[str, ...], int] | None:
+            if not re.fullmatch(r"\s*[0-9]+(?:\s*[-–—]\s*[0-9]+)*\s*", source.text):
+                return None
+            components = tuple(re.split(r"\s*[-–—]\s*", source.text.strip()))
+            return components[:-1], int(components[-1]) - source.page_number
+
+        identity = pagination_id(candidate)
+        pagination = (
+            candidate.label == "page_footer"
+            and candidate.normalized_bbox[1] >= 0.9
+            and identity is not None
+            and all(pagination_id(source) == identity for source in repeated)
+        )
+        if pagination and identity is not None and identity[0]:
+            # Hierarchical printed page IDs need an additional consecutive
+            # source page as corroboration. Two arbitrary hyphenated numbers
+            # alone do not establish a document pagination scheme.
+            evidence_pages = {
+                source.page_number
+                for fragment in fragments
+                for source in fragment.page_furniture
+                if source.label == candidate.label
+                and source.normalized_bbox is not None
+                and max(
+                    abs(a - b)
+                    for a, b in zip(source.normalized_bbox, candidate.normalized_bbox, strict=True)
+                )
+                <= 0.01
+                and pagination_id(source) == identity
+            }
+            pagination = any(
+                {page, page + 1, page + 2} <= evidence_pages for page in evidence_pages
+            )
+        if not exact_repeat and not pagination:
+            continue
+        for source in repeated:
+            page_content = context[source.page_number]
+            if page_content.count(source.rendered) == 1:
+                context[source.page_number] = page_content.replace(source.rendered, "", 1)
+    return context
+
+
 def _continuous_table_context(
     group: list[TableFragment],
     content_by_page: dict[int, str],
     fragments: list[TableFragment],
 ) -> bool:
+    content_by_page = _table_context_pages(group, content_by_page, fragments)
     first = group[0]
     known_units, known_context = _context_evidence(
         _preceding_content(content_by_page[first.page_number], first, fragments)

@@ -1,0 +1,158 @@
+[
+  {
+    "seconds": 4.372503595077433,
+    "input_tokens": 1394,
+    "generated_tokens": 114,
+    "output_tokens": 1508,
+    "kwargs": {
+      "use_cache": true,
+      "temperature": null,
+      "top_p": null,
+      "top_k": null,
+      "repetition_penalty": 1.0,
+      "no_repeat_ngram_size": 100,
+      "max_length": 8192,
+      "do_sample": false
+    },
+    "last_token_id": 151645,
+    "eos_token_id": [
+      151645,
+      151643
+    ],
+    "cuda_peak_allocated": 2650703360,
+    "cuda_peak_reserved": 3279945728,
+    "raw_generation": [
+      "<|box_start|>154 730 174 880<|box_end|><|ref_start|>table_caption<|ref_end|><|rotate_left|>\n<|box_start|>179 069 649 919<|box_end|><|ref_start|>table<|ref_end|><|rotate_left|>\n<|box_start|>664 581 687 887<|box_end|><|ref_start|>table_footnote<|ref_end|><|rotate_left|>\n<|box_start|>864 478 878 490<|box_end|><|ref_start|>page_number<|ref_end|><|rotate_left|>\n<|box_start|>885 922 975 986<|box_end|><|ref_start|>footer<|ref_end|><|rotate_up|><|im_end|>"
+    ]
+  },
+  {
+    "seconds": 0.24102287797722965,
+    "input_tokens": 106,
+    "generated_tokens": 8,
+    "output_tokens": 114,
+    "kwargs": {
+      "use_cache": true,
+      "temperature": null,
+      "top_p": null,
+      "top_k": null,
+      "repetition_penalty": 1.0,
+      "no_repeat_ngram_size": 100,
+      "max_length": 8192,
+      "do_sample": false
+    },
+    "last_token_id": 151645,
+    "eos_token_id": [
+      151645,
+      151643
+    ],
+    "cuda_peak_allocated": 2650703360,
+    "cuda_peak_reserved": 3279945728,
+    "raw_generation": [
+      "（三十四）其他综合收益<|im_end|>"
+    ]
+  },
+  {
+    "seconds": 19.093075523036532,
+    "input_tokens": 2013,
+    "generated_tokens": 473,
+    "output_tokens": 2486,
+    "kwargs": {
+      "use_cache": true,
+      "temperature": null,
+      "top_p": null,
+      "top_k": null,
+      "repetition_penalty": 1.0,
+      "no_repeat_ngram_size": 100,
+      "max_length": 8192,
+      "do_sample": false
+    },
+    "last_token_id": 151645,
+    "eos_token_id": [
+      151645,
+      151643
+    ],
+    "cuda_peak_allocated": 2950469120,
+    "cuda_peak_reserved": 3279945728,
+    "raw_generation": [
+      "<fcel>项目<fcel>期初余额<fcel>本期发生金额<lcel><lcel><lcel><lcel><lcel><fcel>期末余额<nl>\n<ucel><ucel><fcel>本期所得税前发生额<fcel>减:前期计入其他综合收益当期转入损益<fcel>减:前期计入其他综合收益当期转入留存收益<fcel>减:所得税费用<fcel>税后归属于母公司<fcel>税后归属于少数股东<ucel><nl>\n<fcel>一、不能重分类进损益的其他综合收益<ecel><ecel><ecel><ecel><ecel><ecel><ecel><ecel><nl>\n<fcel>二、将重分类进损益的其他综合收益<fcel>-337,962.19<fcel>-1,035,963.86<fcel>-267,154.71<ecel><fcel>-5,975.71<fcel>-762,833.44<ecel><fcel>-1,100,795.63<nl>\n<fcel>其中:权益法下可转损益的其他综合收益<ecel><ecel><ecel><ecel><ecel><ecel><ecel><ecel><nl>\n<fcel>其他债权投资公允价值变动<fcel>-227,081.50<fcel>-306,992.75<fcel>-267,154.71<ecel><fcel>-5,975.71<fcel>-33,862.33<ecel><fcel>-260,943.83<nl>\n<fcel>金融资产重分类计入其他综合收益的金额<ecel><ecel><ecel><ecel><ecel><ecel><ecel><ecel><nl>\n<fcel>其他债权投资信用减值准备<ecel><ecel><ecel><ecel><ecel><ecel><ecel><ecel><nl>\n<fcel>外币报表折算<fcel>-110,880.69<fcel>-728,971.11<ecel><ecel><ecel><fcel>-728,971.11<ecel><fcel>-839,851.80<nl>\n<fcel>其他综合收益合计<fcel>-337,962.19<fcel>-1,035,963.86<fcel>-267,154.71<ecel><fcel>-5,975.71<fcel>-762,833.44<ecel><fcel>-1,100,795.63<nl><|im_end|>"
+    ]
+  },
+  {
+    "seconds": 0.3913844359340146,
+    "input_tokens": 95,
+    "generated_tokens": 14,
+    "output_tokens": 109,
+    "kwargs": {
+      "use_cache": true,
+      "temperature": null,
+      "top_p": null,
+      "top_k": null,
+      "repetition_penalty": 1.0,
+      "no_repeat_ngram_size": 100,
+      "max_length": 8192,
+      "do_sample": false
+    },
+    "last_token_id": 151645,
+    "eos_token_id": [
+      151645,
+      151643
+    ],
+    "cuda_peak_allocated": 2950469120,
+    "cuda_peak_reserved": 3279945728,
+    "raw_generation": [
+      "—其他债权投资公允价值变动源于应收款项融资。<|im_end|>"
+    ]
+  },
+  {
+    "seconds": 0.11631466494873166,
+    "input_tokens": 97,
+    "generated_tokens": 3,
+    "output_tokens": 100,
+    "kwargs": {
+      "use_cache": true,
+      "temperature": null,
+      "top_p": null,
+      "top_k": null,
+      "repetition_penalty": 1.0,
+      "no_repeat_ngram_size": 100,
+      "max_length": 8192,
+      "do_sample": false
+    },
+    "last_token_id": 151645,
+    "eos_token_id": [
+      151645,
+      151643
+    ],
+    "cuda_peak_allocated": 2950469120,
+    "cuda_peak_reserved": 3279945728,
+    "raw_generation": [
+      "80<|im_end|>"
+    ]
+  },
+  {
+    "seconds": 0.08748336706776172,
+    "input_tokens": 89,
+    "generated_tokens": 2,
+    "output_tokens": 91,
+    "kwargs": {
+      "use_cache": true,
+      "temperature": null,
+      "top_p": null,
+      "top_k": null,
+      "repetition_penalty": 1.0,
+      "no_repeat_ngram_size": 100,
+      "max_length": 8192,
+      "do_sample": false
+    },
+    "last_token_id": 151645,
+    "eos_token_id": [
+      151645,
+      151643
+    ],
+    "cuda_peak_allocated": 2950469120,
+    "cuda_peak_reserved": 3279945728,
+    "raw_generation": [
+      "验证码<|im_end|>"
+    ]
+  }
+]

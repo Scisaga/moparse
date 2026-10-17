@@ -1,0 +1,308 @@
+[
+  {
+    "stage": "official_input_preparation",
+    "file_suffix": "pdf",
+    "prepared_size_bytes": 219542,
+    "original_function_seconds": 0.02295244694687426,
+    "prepared_SHA256": "62a8d51598f8965441c2b125d023b136831fa8a7d534a45608ec4f3b255d54d7",
+    "retained_original_page_indices_zero_based": [
+      6
+    ],
+    "broken_original_page_indices_zero_based": [],
+    "derived_input_filename": "prepared-by-official-page-selection.pdf",
+    "transformation": "Official default page_range handling; runner did not crop or rewrite the source PDF."
+  },
+  {
+    "stage": "native_table_priority",
+    "effort": "high",
+    "counts": {
+      "total": 3,
+      "accepted": 3,
+      "complex_fallbacks": 0,
+      "rejected": 0,
+      "errors": 0,
+      "removed_internal_text": 0,
+      "removed_formula_blocks": 0,
+      "removed_formula_layout_items": 0
+    },
+    "table_routes": [
+      {
+        "window_page_index": 0,
+        "bbox": [
+          0.14,
+          0.084,
+          0.859,
+          0.25
+        ],
+        "angle": 0,
+        "native_HTML_accepted": true,
+        "content_SHA256": "163f05facfbeb7e57e42b1094e5eaf4a166787b5f6abb2d51e5cf10bc15125a2"
+      },
+      {
+        "window_page_index": 0,
+        "bbox": [
+          0.14,
+          0.315,
+          0.859,
+          0.59
+        ],
+        "angle": 0,
+        "native_HTML_accepted": true,
+        "content_SHA256": "5e204334886e9b96fe2a29bd6c66bbc72ea172b17ae825a2faaeb07ceb5a2380"
+      },
+      {
+        "window_page_index": 0,
+        "bbox": [
+          0.139,
+          0.69,
+          0.859,
+          0.867
+        ],
+        "angle": 0,
+        "native_HTML_accepted": true,
+        "content_SHA256": "88b6c7c97cfc19e406141443622e818b4813c0a009496980cf26ad78f1c987ee"
+      }
+    ]
+  },
+  {
+    "stage": "actual_VLM_options",
+    "image_analysis": false,
+    "not_extract_list": [
+      "caption",
+      "code_caption",
+      "doc_title",
+      "footer",
+      "footnote",
+      "header",
+      "image_caption",
+      "image_footnote",
+      "page_footnote",
+      "page_number",
+      "paragraph_title",
+      "phonetic",
+      "ref_text",
+      "table_caption",
+      "table_footnote",
+      "text",
+      "title"
+    ],
+    "image_sizes": [
+      [
+        1654,
+        2339
+      ]
+    ],
+    "model_inputs": [
+      [
+        {
+          "type": "header",
+          "bbox": [
+            0.149,
+            0.051,
+            0.435,
+            0.067
+          ],
+          "has_content": false
+        },
+        {
+          "type": "header",
+          "bbox": [
+            0.758,
+            0.05,
+            0.851,
+            0.066
+          ],
+          "has_content": false
+        },
+        {
+          "type": "caption",
+          "bbox": [
+            0.197,
+            0.265,
+            0.742,
+            0.283
+          ],
+          "has_content": false
+        },
+        {
+          "type": "footnote",
+          "bbox": [
+            0.758,
+            0.299,
+            0.851,
+            0.314
+          ],
+          "has_content": false
+        },
+        {
+          "type": "paragraph_title",
+          "bbox": [
+            0.197,
+            0.6,
+            0.539,
+            0.619
+          ],
+          "has_content": false
+        },
+        {
+          "type": "paragraph_title",
+          "bbox": [
+            0.187,
+            0.637,
+            0.448,
+            0.655
+          ],
+          "has_content": false
+        },
+        {
+          "type": "footnote",
+          "bbox": [
+            0.758,
+            0.675,
+            0.851,
+            0.69
+          ],
+          "has_content": false
+        },
+        {
+          "type": "paragraph_title",
+          "bbox": [
+            0.186,
+            0.878,
+            0.408,
+            0.896
+          ],
+          "has_content": false
+        },
+        {
+          "type": "page_number",
+          "bbox": [
+            0.477,
+            0.927,
+            0.522,
+            0.941
+          ],
+          "has_content": false
+        }
+      ]
+    ]
+  },
+  {
+    "stage": "actual_VLM_results_before_native_body_fill",
+    "effort": "high",
+    "tables": []
+  },
+  {
+    "stage": "native_PDF_text_fill",
+    "returned_spans": 9,
+    "nonempty_text_spans": 9,
+    "queued_for_post_OCR": 0,
+    "spans": [
+      {
+        "type": "text",
+        "bbox": [
+          91.44,
+          45.0,
+          256.68,
+          54.0
+        ],
+        "text": "上海百润投资控股集团股份有限公司",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          452.16,
+          43.56,
+          505.08000000000004,
+          54.36
+        ],
+        "text": "发行保荐书",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          120.24000000000001,
+          224.64000000000001,
+          438.48,
+          236.88
+        ],
+        "text": "（四）发行人上市以来历次筹资及现金分红及净资产变动情况",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          452.52000000000004,
+          252.36,
+          505.8,
+          264.24
+        ],
+        "text": "单位：万元",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          120.60000000000001,
+          507.24,
+          318.24,
+          518.4
+        ],
+        "text": "（五）发行人主要财务数据及财务指标",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          114.12,
+          538.2,
+          263.88,
+          550.08
+        ],
+        "text": "1、合并资产负债表主要数据",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          451.8,
+          567.36,
+          506.52000000000004,
+          581.76
+        ],
+        "text": "单位：万元",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          113.04,
+          741.24,
+          239.76000000000002,
+          752.76
+        ],
+        "text": "2、合并利润表主要数据",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          283.32,
+          779.4,
+          311.40000000000003,
+          793.44
+        ],
+        "text": "3-1-6",
+        "queued_for_post_OCR": false
+      }
+    ]
+  },
+  {
+    "stage": "actual_post_OCR",
+    "candidate_spans": 0,
+    "content_changed": 0,
+    "spans": []
+  }
+]

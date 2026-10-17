@@ -1,0 +1,1078 @@
+[
+  {
+    "stage": "internal_NativeTableResult",
+    "rows": 3,
+    "cols": 5,
+    "source": "vector_grid",
+    "confidence": 0.9975065949675325,
+    "cells": [
+      {
+        "row": 0,
+        "col": 0,
+        "rowspan": 1,
+        "colspan": 5,
+        "bbox": [
+          0.8709028625488315,
+          1.457289428710908,
+          445.71090301513675,
+          18.957289428710908
+        ],
+        "content": "公司股票简况",
+        "source_char_indices": [
+          468,
+          469,
+          470,
+          471,
+          472,
+          473
+        ]
+      },
+      {
+        "row": 1,
+        "col": 0,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          0.8709028625488315,
+          18.957289428710908,
+          89.89089569091797,
+          36.45728942871091
+        ],
+        "content": "股票种类",
+        "source_char_indices": [
+          476,
+          477,
+          478,
+          479
+        ]
+      },
+      {
+        "row": 1,
+        "col": 1,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          89.89089569091797,
+          18.957289428710908,
+          178.79088958740235,
+          36.45728942871091
+        ],
+        "content": "股票上市交易所",
+        "source_char_indices": [
+          481,
+          482,
+          483,
+          484,
+          485,
+          486,
+          487
+        ]
+      },
+      {
+        "row": 1,
+        "col": 2,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          178.79088958740235,
+          18.957289428710908,
+          267.6909140014649,
+          36.45728942871091
+        ],
+        "content": "股票简称",
+        "source_char_indices": [
+          489,
+          490,
+          491,
+          492
+        ]
+      },
+      {
+        "row": 1,
+        "col": 3,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          267.6909140014649,
+          18.957289428710908,
+          356.640895690918,
+          36.45728942871091
+        ],
+        "content": "股票代码",
+        "source_char_indices": [
+          494,
+          495,
+          496,
+          497
+        ]
+      },
+      {
+        "row": 1,
+        "col": 4,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          356.640895690918,
+          18.957289428710908,
+          445.71090301513675,
+          36.45728942871091
+        ],
+        "content": "变更前股票简称",
+        "source_char_indices": [
+          499,
+          500,
+          501,
+          502,
+          503,
+          504,
+          505
+        ]
+      },
+      {
+        "row": 2,
+        "col": 0,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          0.8709028625488315,
+          36.45728942871091,
+          89.89089569091797,
+          53.039701538085865
+        ],
+        "content": "A股",
+        "source_char_indices": [
+          508,
+          509
+        ]
+      },
+      {
+        "row": 2,
+        "col": 1,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          89.89089569091797,
+          36.45728942871091,
+          178.79088958740235,
+          53.039701538085865
+        ],
+        "content": "上海证券交易所",
+        "source_char_indices": [
+          511,
+          512,
+          513,
+          514,
+          515,
+          516,
+          517
+        ]
+      },
+      {
+        "row": 2,
+        "col": 2,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          178.79088958740235,
+          36.45728942871091,
+          267.6909140014649,
+          53.039701538085865
+        ],
+        "content": "浙版传媒",
+        "source_char_indices": [
+          519,
+          520,
+          521,
+          522
+        ]
+      },
+      {
+        "row": 2,
+        "col": 3,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          267.6909140014649,
+          36.45728942871091,
+          356.640895690918,
+          53.039701538085865
+        ],
+        "content": "601921",
+        "source_char_indices": [
+          524,
+          525,
+          526,
+          527,
+          528,
+          529
+        ]
+      },
+      {
+        "row": 2,
+        "col": 4,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          356.640895690918,
+          36.45728942871091,
+          445.71090301513675,
+          53.039701538085865
+        ],
+        "content": "/",
+        "source_char_indices": [
+          531
+        ]
+      }
+    ],
+    "html_with_native_script_markup": "<table><tbody><tr><td colspan=\"5\">公司股票简况</td></tr><tr><td>股票种类</td><td>股票上市交易所</td><td>股票简称</td><td>股票代码</td><td>变更前股票简称</td></tr><tr><td>A股</td><td>上海证券交易所</td><td>浙版传媒</td><td>601921</td><td>/</td></tr></tbody></table>",
+    "diagnostics": [
+      "candidate=vector_grid",
+      "score=0.9975",
+      "text_capture=1.0000",
+      "structure_support=0.9975",
+      "row_stability=1.0000",
+      "column_stability=1.0000",
+      "order_consistency=1.0000",
+      "evidence=line_grid",
+      "ambiguous_separator_ratio=0.0000",
+      "collapsed_x_tracks=0",
+      "collapsed_y_tracks=0",
+      "alias_max_span=0.0000",
+      "alias_separator_recoveries=0",
+      "y_alias_separator_recoveries=0",
+      "single_row_line_grid=false",
+      "single_column_line_grid=false",
+      "single_row_reliability=n/a",
+      "single_row_confidence=n/a",
+      "single_column_reliability=n/a",
+      "single_column_confidence=n/a",
+      "physical_blank_rows="
+    ],
+    "coordinate_scope": "Raw official NativeTableResult cell geometry, not reinterpreted as public cell provenance."
+  },
+  {
+    "region": [
+      87.5090982055664,
+      448.73271301269534,
+      533.3887890625,
+      501.7724145507812
+    ],
+    "angle": 0,
+    "stage": "public_PDFTableResult",
+    "status": "accepted",
+    "source": "vector_grid",
+    "confidence": 0.9975065949675325,
+    "html": "<table><tbody><tr><td colspan=\"5\">公司股票简况</td></tr><tr><td>股票种类</td><td>股票上市交易所</td><td>股票简称</td><td>股票代码</td><td>变更前股票简称</td></tr><tr><td>A股</td><td>上海证券交易所</td><td>浙版传媒</td><td>601921</td><td>/</td></tr></tbody></table>",
+    "diagnostics": [
+      "candidate=vector_grid",
+      "score=0.9975",
+      "text_capture=1.0000",
+      "structure_support=0.9975",
+      "row_stability=1.0000",
+      "column_stability=1.0000",
+      "order_consistency=1.0000",
+      "evidence=line_grid",
+      "ambiguous_separator_ratio=0.0000",
+      "collapsed_x_tracks=0",
+      "collapsed_y_tracks=0",
+      "alias_max_span=0.0000",
+      "alias_separator_recoveries=0",
+      "y_alias_separator_recoveries=0",
+      "single_row_line_grid=false",
+      "single_column_line_grid=false",
+      "single_row_reliability=n/a",
+      "single_row_confidence=n/a",
+      "single_column_reliability=n/a",
+      "single_column_confidence=n/a",
+      "physical_blank_rows="
+    ],
+    "wall_seconds": 0.003416987950913608
+  },
+  {
+    "stage": "internal_NativeTableResult",
+    "rows": 5,
+    "cols": 3,
+    "source": "vector_grid",
+    "confidence": 0.999819966718018,
+    "cells": [
+      {
+        "row": 0,
+        "col": 0,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          0.8615020751953182,
+          0.9014678955078352,
+          146.43150177001954,
+          26.921487426757835
+        ],
+        "content": "联系人和联系方式",
+        "source_char_indices": [
+          534,
+          535,
+          536,
+          537,
+          538,
+          539,
+          540,
+          541
+        ]
+      },
+      {
+        "row": 0,
+        "col": 1,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          146.43150177001954,
+          0.9014678955078352,
+          297.3314956665039,
+          26.921487426757835
+        ],
+        "content": "董事会秘书",
+        "source_char_indices": [
+          543,
+          544,
+          545,
+          546,
+          547
+        ]
+      },
+      {
+        "row": 0,
+        "col": 2,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          297.3314956665039,
+          0.9014678955078352,
+          448.051496887207,
+          26.921487426757835
+        ],
+        "content": "证券事务代表",
+        "source_char_indices": [
+          549,
+          550,
+          551,
+          552,
+          553,
+          554
+        ]
+      },
+      {
+        "row": 1,
+        "col": 0,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          0.8615020751953182,
+          26.921487426757835,
+          146.43150177001954,
+          44.421487426757835
+        ],
+        "content": "姓名",
+        "source_char_indices": [
+          557,
+          558
+        ]
+      },
+      {
+        "row": 1,
+        "col": 1,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          146.43150177001954,
+          26.921487426757835,
+          297.3314956665039,
+          44.421487426757835
+        ],
+        "content": "汪益信",
+        "source_char_indices": [
+          560,
+          561,
+          562
+        ]
+      },
+      {
+        "row": 1,
+        "col": 2,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          297.3314956665039,
+          26.921487426757835,
+          448.051496887207,
+          44.421487426757835
+        ],
+        "content": "刘子婧",
+        "source_char_indices": [
+          564,
+          565,
+          566
+        ]
+      },
+      {
+        "row": 2,
+        "col": 0,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          0.8615020751953182,
+          44.421487426757835,
+          146.43150177001954,
+          61.921487426757835
+        ],
+        "content": "电话",
+        "source_char_indices": [
+          569,
+          570
+        ]
+      },
+      {
+        "row": 2,
+        "col": 1,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          146.43150177001954,
+          44.421487426757835,
+          297.3314956665039,
+          61.921487426757835
+        ],
+        "content": "0571-88909784",
+        "source_char_indices": [
+          572,
+          573,
+          574,
+          575,
+          576,
+          577,
+          578,
+          579,
+          580,
+          581,
+          582,
+          583,
+          584
+        ]
+      },
+      {
+        "row": 2,
+        "col": 2,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          297.3314956665039,
+          44.421487426757835,
+          448.051496887207,
+          61.921487426757835
+        ],
+        "content": "0571-88909784",
+        "source_char_indices": [
+          586,
+          587,
+          588,
+          589,
+          590,
+          591,
+          592,
+          593,
+          594,
+          595,
+          596,
+          597,
+          598
+        ]
+      },
+      {
+        "row": 3,
+        "col": 0,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          0.8615020751953182,
+          61.921487426757835,
+          146.43150177001954,
+          79.42148742675784
+        ],
+        "content": "办公地址",
+        "source_char_indices": [
+          601,
+          602,
+          603,
+          604
+        ]
+      },
+      {
+        "row": 3,
+        "col": 1,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          146.43150177001954,
+          61.921487426757835,
+          297.3314956665039,
+          79.42148742675784
+        ],
+        "content": "浙江省杭州市环城北路177号",
+        "source_char_indices": [
+          606,
+          607,
+          608,
+          609,
+          610,
+          611,
+          612,
+          613,
+          614,
+          615,
+          616,
+          617,
+          618,
+          619
+        ]
+      },
+      {
+        "row": 3,
+        "col": 2,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          297.3314956665039,
+          61.921487426757835,
+          448.051496887207,
+          79.42148742675784
+        ],
+        "content": "浙江省杭州市环城北路177号",
+        "source_char_indices": [
+          621,
+          622,
+          623,
+          624,
+          625,
+          626,
+          627,
+          628,
+          629,
+          630,
+          631,
+          632,
+          633,
+          634
+        ]
+      },
+      {
+        "row": 4,
+        "col": 0,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          0.8615020751953182,
+          79.42148742675784,
+          146.43150177001954,
+          96.71574615612627
+        ],
+        "content": "电子信箱",
+        "source_char_indices": [
+          637,
+          638,
+          639,
+          640
+        ]
+      },
+      {
+        "row": 4,
+        "col": 1,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          146.43150177001954,
+          79.42148742675784,
+          297.3314956665039,
+          96.71574615612627
+        ],
+        "content": "zqfwb@zjcbcm.com",
+        "source_char_indices": [
+          642,
+          643,
+          644,
+          645,
+          646,
+          647,
+          648,
+          649,
+          650,
+          651,
+          652,
+          653,
+          654,
+          655,
+          656,
+          657
+        ]
+      },
+      {
+        "row": 4,
+        "col": 2,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          297.3314956665039,
+          79.42148742675784,
+          448.051496887207,
+          96.71574615612627
+        ],
+        "content": "zqfwb@zjcbcm.com",
+        "source_char_indices": [
+          659,
+          660,
+          661,
+          662,
+          663,
+          664,
+          665,
+          666,
+          667,
+          668,
+          669,
+          670,
+          671,
+          672,
+          673,
+          674
+        ]
+      }
+    ],
+    "html_with_native_script_markup": "<table><tbody><tr><td>联系人和联系方式</td><td>董事会秘书</td><td>证券事务代表</td></tr><tr><td>姓名</td><td>汪益信</td><td>刘子婧</td></tr><tr><td>电话</td><td>0571-88909784</td><td>0571-88909784</td></tr><tr><td>办公地址</td><td>浙江省杭州市环城北路177号</td><td>浙江省杭州市环城北路177号</td></tr><tr><td>电子信箱</td><td>zqfwb@zjcbcm.com</td><td>zqfwb@zjcbcm.com</td></tr></tbody></table>",
+    "diagnostics": [
+      "candidate=vector_grid",
+      "score=0.9998",
+      "text_capture=1.0000",
+      "structure_support=0.9998",
+      "row_stability=1.0000",
+      "column_stability=1.0000",
+      "order_consistency=1.0000",
+      "evidence=line_grid",
+      "ambiguous_separator_ratio=0.0000",
+      "collapsed_x_tracks=0",
+      "collapsed_y_tracks=0",
+      "alias_max_span=0.0000",
+      "alias_separator_recoveries=0",
+      "y_alias_separator_recoveries=0",
+      "single_row_line_grid=false",
+      "single_column_line_grid=false",
+      "single_row_reliability=n/a",
+      "single_row_confidence=n/a",
+      "single_column_reliability=n/a",
+      "single_column_confidence=n/a",
+      "physical_blank_rows="
+    ],
+    "coordinate_scope": "Raw official NativeTableResult cell geometry, not reinterpreted as public cell provenance."
+  },
+  {
+    "region": [
+      86.31849822998046,
+      517.7685150146484,
+      534.579389038086,
+      614.5870178222656
+    ],
+    "angle": 0,
+    "stage": "public_PDFTableResult",
+    "status": "accepted",
+    "source": "vector_grid",
+    "confidence": 0.999819966718018,
+    "html": "<table><tbody><tr><td>联系人和联系方式</td><td>董事会秘书</td><td>证券事务代表</td></tr><tr><td>姓名</td><td>汪益信</td><td>刘子婧</td></tr><tr><td>电话</td><td>0571-88909784</td><td>0571-88909784</td></tr><tr><td>办公地址</td><td>浙江省杭州市环城北路177号</td><td>浙江省杭州市环城北路177号</td></tr><tr><td>电子信箱</td><td>zqfwb@zjcbcm.com</td><td>zqfwb@zjcbcm.com</td></tr></tbody></table>",
+    "diagnostics": [
+      "candidate=vector_grid",
+      "score=0.9998",
+      "text_capture=1.0000",
+      "structure_support=0.9998",
+      "row_stability=1.0000",
+      "column_stability=1.0000",
+      "order_consistency=1.0000",
+      "evidence=line_grid",
+      "ambiguous_separator_ratio=0.0000",
+      "collapsed_x_tracks=0",
+      "collapsed_y_tracks=0",
+      "alias_max_span=0.0000",
+      "alias_separator_recoveries=0",
+      "y_alias_separator_recoveries=0",
+      "single_row_line_grid=false",
+      "single_column_line_grid=false",
+      "single_row_reliability=n/a",
+      "single_row_confidence=n/a",
+      "single_column_reliability=n/a",
+      "single_column_confidence=n/a",
+      "physical_blank_rows="
+    ],
+    "wall_seconds": 0.005336045986041427
+  },
+  {
+    "stage": "internal_NativeTableResult",
+    "rows": 3,
+    "cols": 4,
+    "source": "vector_grid",
+    "confidence": 1.0,
+    "cells": [
+      {
+        "row": 0,
+        "col": 0,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          1.456802062988288,
+          2.356699829101558,
+          150.4767987060547,
+          34.97669494628906
+        ],
+        "content": "",
+        "source_char_indices": []
+      },
+      {
+        "row": 0,
+        "col": 1,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          150.4767987060547,
+          2.356699829101558,
+          256.7768017578125,
+          34.97669494628906
+        ],
+        "content": "本报告期末",
+        "source_char_indices": [
+          702,
+          703,
+          704,
+          705,
+          706
+        ]
+      },
+      {
+        "row": 0,
+        "col": 2,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          256.7768017578125,
+          2.356699829101558,
+          355.97681396484376,
+          34.97669494628906
+        ],
+        "content": "上年度末",
+        "source_char_indices": [
+          708,
+          709,
+          710,
+          711
+        ]
+      },
+      {
+        "row": 0,
+        "col": 3,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          355.97681396484376,
+          2.356699829101558,
+          448.26089080810544,
+          34.97669494628906
+        ],
+        "content": "本报告期末比上年度末增减(%)",
+        "source_char_indices": [
+          714,
+          715,
+          716,
+          717,
+          718,
+          719,
+          722,
+          723,
+          724,
+          725,
+          726,
+          727,
+          728,
+          729,
+          730
+        ]
+      },
+      {
+        "row": 1,
+        "col": 0,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          1.456802062988288,
+          34.97669494628906,
+          150.4767987060547,
+          53.67670715332031
+        ],
+        "content": "总资产",
+        "source_char_indices": [
+          733,
+          734,
+          735
+        ]
+      },
+      {
+        "row": 1,
+        "col": 1,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          150.4767987060547,
+          34.97669494628906,
+          256.7768017578125,
+          53.67670715332031
+        ],
+        "content": "21,467,154,275.58",
+        "source_char_indices": [
+          737,
+          738,
+          739,
+          740,
+          741,
+          742,
+          743,
+          744,
+          745,
+          746,
+          747,
+          748,
+          749,
+          750,
+          751,
+          752,
+          753
+        ]
+      },
+      {
+        "row": 1,
+        "col": 2,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          256.7768017578125,
+          34.97669494628906,
+          355.97681396484376,
+          53.67670715332031
+        ],
+        "content": "21,158,183,575.04",
+        "source_char_indices": [
+          755,
+          756,
+          757,
+          758,
+          759,
+          760,
+          761,
+          762,
+          763,
+          764,
+          765,
+          766,
+          767,
+          768,
+          769,
+          770,
+          771
+        ]
+      },
+      {
+        "row": 1,
+        "col": 3,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          355.97681396484376,
+          34.97669494628906,
+          448.26089080810544,
+          53.67670715332031
+        ],
+        "content": "1.46",
+        "source_char_indices": [
+          773,
+          774,
+          775,
+          776
+        ]
+      },
+      {
+        "row": 2,
+        "col": 0,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          1.456802062988288,
+          53.67670715332031,
+          150.4767987060547,
+          73.2453021240234
+        ],
+        "content": "归属于上市公司股东的净资产",
+        "source_char_indices": [
+          779,
+          780,
+          781,
+          782,
+          783,
+          784,
+          785,
+          786,
+          787,
+          788,
+          789,
+          790,
+          791
+        ]
+      },
+      {
+        "row": 2,
+        "col": 1,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          150.4767987060547,
+          53.67670715332031,
+          256.7768017578125,
+          73.2453021240234
+        ],
+        "content": "14,541,058,486.24",
+        "source_char_indices": [
+          793,
+          794,
+          795,
+          796,
+          797,
+          798,
+          799,
+          800,
+          801,
+          802,
+          803,
+          804,
+          805,
+          806,
+          807,
+          808,
+          809
+        ]
+      },
+      {
+        "row": 2,
+        "col": 2,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          256.7768017578125,
+          53.67670715332031,
+          355.97681396484376,
+          73.2453021240234
+        ],
+        "content": "14,384,089,799.69",
+        "source_char_indices": [
+          811,
+          812,
+          813,
+          814,
+          815,
+          816,
+          817,
+          818,
+          819,
+          820,
+          821,
+          822,
+          823,
+          824,
+          825,
+          826,
+          827
+        ]
+      },
+      {
+        "row": 2,
+        "col": 3,
+        "rowspan": 1,
+        "colspan": 1,
+        "bbox": [
+          355.97681396484376,
+          53.67670715332031,
+          448.26089080810544,
+          73.2453021240234
+        ],
+        "content": "1.09",
+        "source_char_indices": [
+          829,
+          830,
+          831,
+          832
+        ]
+      }
+    ],
+    "html_with_native_script_markup": "<table><tbody><tr><td></td><td>本报告期末</td><td>上年度末</td><td>本报告期末比上年度末增减(%)</td></tr><tr><td>总资产</td><td>21,467,154,275.58</td><td>21,158,183,575.04</td><td>1.46</td></tr><tr><td>归属于上市公司股东的净资产</td><td>14,541,058,486.24</td><td>14,384,089,799.69</td><td>1.09</td></tr></tbody></table>",
+    "diagnostics": [
+      "candidate=vector_grid",
+      "score=1.0000",
+      "text_capture=1.0000",
+      "structure_support=1.0000",
+      "row_stability=1.0000",
+      "column_stability=1.0000",
+      "order_consistency=1.0000",
+      "evidence=line_grid",
+      "ambiguous_separator_ratio=0.0000",
+      "collapsed_x_tracks=0",
+      "collapsed_y_tracks=0",
+      "alias_max_span=0.0000",
+      "alias_separator_recoveries=0",
+      "y_alias_separator_recoveries=0",
+      "single_row_line_grid=false",
+      "single_column_line_grid=false",
+      "single_row_reliability=n/a",
+      "single_row_confidence=n/a",
+      "single_column_reliability=n/a",
+      "single_column_confidence=n/a",
+      "physical_blank_rows="
+    ],
+    "coordinate_scope": "Raw official NativeTableResult cell geometry, not reinterpreted as public cell provenance."
+  },
+  {
+    "region": [
+      85.7231982421875,
+      679.4133197021484,
+      533.9840890502929,
+      752.6586218261718
+    ],
+    "angle": 0,
+    "stage": "public_PDFTableResult",
+    "status": "accepted",
+    "source": "vector_grid",
+    "confidence": 1.0,
+    "html": "<table><tbody><tr><td></td><td>本报告期末</td><td>上年度末</td><td>本报告期末比上年度末增减(%)</td></tr><tr><td>总资产</td><td>21,467,154,275.58</td><td>21,158,183,575.04</td><td>1.46</td></tr><tr><td>归属于上市公司股东的净资产</td><td>14,541,058,486.24</td><td>14,384,089,799.69</td><td>1.09</td></tr></tbody></table>",
+    "diagnostics": [
+      "candidate=vector_grid",
+      "score=1.0000",
+      "text_capture=1.0000",
+      "structure_support=1.0000",
+      "row_stability=1.0000",
+      "column_stability=1.0000",
+      "order_consistency=1.0000",
+      "evidence=line_grid",
+      "ambiguous_separator_ratio=0.0000",
+      "collapsed_x_tracks=0",
+      "collapsed_y_tracks=0",
+      "alias_max_span=0.0000",
+      "alias_separator_recoveries=0",
+      "y_alias_separator_recoveries=0",
+      "single_row_line_grid=false",
+      "single_column_line_grid=false",
+      "single_row_reliability=n/a",
+      "single_row_confidence=n/a",
+      "single_column_reliability=n/a",
+      "single_column_confidence=n/a",
+      "physical_blank_rows="
+    ],
+    "wall_seconds": 0.00458316202275455
+  }
+]

@@ -1,0 +1,52 @@
+{
+  "status": 200,
+  "headers": {
+    "date": "Sat, 17 Oct 2026 13:53:19 GMT",
+    "server": "uvicorn",
+    "content-length": "750",
+    "content-type": "application/json",
+    "x-request-id": "req_01M5526XQ0RBCP2T93RQ47Q33B",
+    "x-content-type-options": "nosniff",
+    "referrer-policy": "no-referrer"
+  },
+  "body_path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/production-native-http/v1-backends-before-response-body.bin",
+  "body_sha256": "9b0698015ad314078db1005446c8d3f24119fe202fba530106f58d7c8e65eb7f",
+  "body_bytes": 750,
+  "received_url": "http://10.0.6.22:12303/v1/backends",
+  "captured_utc": "2026-10-17T13:53:20.611604+00:00",
+  "body": {
+    "backends": [
+      {
+        "name": "docling-standard",
+        "state": "ready",
+        "enabled": true,
+        "detail": "3 converter profile(s) cached; 4 CPU thread(s) each, 3 page worker(s) per document; TableFormer V1 accurate, matching=False, PyPdfium, native OCR off",
+        "model": null,
+        "latency_ms": null,
+        "checked_at": "2026-10-17T13:53:20.610156Z"
+      },
+      {
+        "name": "glm-ocr-remote",
+        "state": "ready",
+        "enabled": true,
+        "detail": "OpenAI-compatible models endpoint responded",
+        "model": "zai-org/GLM-OCR",
+        "latency_ms": 6,
+        "checked_at": "2026-10-17T13:53:12.950970Z"
+      },
+      {
+        "name": "glm-sdk-remote",
+        "state": "ready",
+        "enabled": true,
+        "detail": "official GLM-OCR SDK pipeline responded; CPU document orientation on",
+        "model": "glmocr",
+        "latency_ms": 6,
+        "checked_at": "2026-10-17T13:53:12.952012Z"
+      }
+    ],
+    "queue": {
+      "active": 0,
+      "capacity": 8
+    }
+  }
+}

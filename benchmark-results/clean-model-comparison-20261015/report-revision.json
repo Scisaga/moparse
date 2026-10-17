@@ -111,6 +111,12 @@
       "previous_report_SHA256": "b7de6ab5c983f21927639637c57fb394ddae7f401e87b3923198494c4d904460",
       "updated_report_SHA256": "11f5db0a6833c2be9e715f005a91d3f7faa430baa34b934c3f3eaf8f47f3070b",
       "change": "Independently compare original PDF cell grids, retain the known diluted-EPS missing closing parenthesis, fix caption/unit/context merge guards including conflicting repeated declarations, and record separate r2/r3 tests, replay and real whole-PDF HTTP acceptance without relabeling the historical502 benchmark."
+    },
+    {
+      "created_UTC": "2026-10-17T14:32:25.370684+00:00",
+      "previous_report_SHA256": "11f5db0a6833c2be9e715f005a91d3f7faa430baa34b934c3f3eaf8f47f3070b",
+      "updated_report_SHA256": "d3845ef549a07b74b7e40d4afd72bec6d494b480e0f137875ee394d475a0bdec",
+      "change": "Publish generic source-furniture/business-note preservation, full504 candidate and203 production HTTP evidence, and five same14-page model/calling-path comparisons, resource scopes and remaining TXT-fill defect. Historical runs/charts retained."
     }
   ],
   "V2_compute_experiment": {
@@ -152,5 +158,20 @@
     "new_full502_model_inference": false,
     "known_additional_defect": "Diluted-EPS source label closing parenthesis is missing in raw native model output and final Markdown; retained and explicitly disclosed.",
     "historical_0515_and_r2_evidence_retained": true
+  },
+  "source_content_preservation_release": {
+    "created_UTC": "2026-10-17T14:32:25.370684+00:00",
+    "deployment_or_application_code_changed": true,
+    "model_weights_configuration_and_locked_package_versions_changed": false,
+    "manifest": "followup/20261017/content-preservation-mineru/release-manifest.json",
+    "manifest_SHA256": "21276fc45274aa051d8c9050a940c70a59ff02290bd32c9a34197a35acd13221",
+    "report_SHA256": "d3845ef549a07b74b7e40d4afd72bec6d494b480e0f137875ee394d475a0bdec",
+    "deployed_API_image": "sha256:07a5df326885a6f83cf48aab766f6dd47fad5175066703fe6fa224380d86f9d4",
+    "full_candidate_HTTP_pages": 504,
+    "post_deployment_HTTP_pages": 203,
+    "isolated_new_model_configurations": 4,
+    "same_page_component_configurations_including_Docling": 5,
+    "isolated_model_experiments_in_production": false,
+    "historical_evidence_and_charts_preserved": true
   }
 }

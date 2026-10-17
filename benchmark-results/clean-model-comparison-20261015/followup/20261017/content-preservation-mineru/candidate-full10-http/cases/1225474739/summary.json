@@ -1,0 +1,31 @@
+{
+  "source": "1225474739",
+  "page_count": 134,
+  "started_UTC": "2026-10-17T13:29:18.978940+00:00",
+  "status": "completed",
+  "job": "job_01M550TXWY9C7DC9V0KPSBF4MQ",
+  "submit_to_terminal_s": 291.82678487699013,
+  "submit_to_saved_MD_s": 291.84925309801474,
+  "MD_SHA256": "af59114727091d2e0f627b048ddd925e605d0fb2445bf86f33aa3e5a1592e775",
+  "MD_bytes": 473602,
+  "asset_count": 1,
+  "asset_errors": [],
+  "asset_status": "completed",
+  "asset_capture_s": 0.06047106604091823,
+  "local_diagnostics": [
+    {
+      "source": "/var/lib/docker/volumes/mosaicparse-source-content-candidate-data-20261017/_data/jobs/job_01M550TXWY9C7DC9V0KPSBF4MQ/logs/warnings.json",
+      "saved": "warnings.json",
+      "sha256": "4e3ba90b2fa9dac0f0525311c7b72d3657a627b7ad820d50a20ea3017bf81802",
+      "scope": "Optional local diagnostics; frozen quality reads public Markdown only."
+    },
+    {
+      "source": "/var/lib/docker/volumes/mosaicparse-source-content-candidate-data-20261017/_data/jobs/job_01M550TXWY9C7DC9V0KPSBF4MQ/output/asset-index.json",
+      "saved": "asset-index.json",
+      "sha256": "e88810cb51744ef5688838763701261404e63db71c2655dba981e9545e98aa05",
+      "scope": "Optional local diagnostics; frozen quality reads public Markdown only."
+    }
+  ],
+  "completed_UTC": "2026-10-17T13:34:10.897641+00:00",
+  "full_capture_s": 291.9187134379754
+}

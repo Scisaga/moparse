@@ -1,0 +1,20 @@
+{
+  "method": "POST",
+  "url": "http://127.0.0.1:12423/v1/content/jobs",
+  "source": "/opt/mosaic-parse/pdf_sample/1219858186.pdf",
+  "source_SHA256": "1c21b0402e57812823bfe4b28feac6fc0517c828a18f8c862e8dccdc3543de89",
+  "multipart_file": {
+    "filename": "1219858186.pdf",
+    "content_type": "application/pdf",
+    "size_bytes": 534642
+  },
+  "form": {
+    "scan_policy": "auto"
+  },
+  "unit_range_in_request": false,
+  "profile_in_request": false,
+  "timeout_in_request": false,
+  "authorization_present": false,
+  "authorization_value": "[NOT RECORDED]",
+  "started_UTC": "2026-10-17T13:28:13.406946+00:00"
+}

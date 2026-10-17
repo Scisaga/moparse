@@ -1,0 +1,129 @@
+{
+  "schema": "mosaicparse-content-component-comparison/1",
+  "source_pages": 14,
+  "original_documents": 6,
+  "additional_p62_is_separate": true,
+  "scope": "Fixed difficult source conditions; not full-document accuracy or MosaicParse model-interface acceptance.",
+  "timing": "Two different entry groups retained. Do not calculate a cross-entry speedup. Shared host, differing CPU/GPU resources.",
+  "native_PUA_display": "Four additional checks cover source characters/state; native private-use glyph ordinary-font readability is separately unknown.",
+  "configurations": [
+    {
+      "id": "docling",
+      "label": "Docling V1 · 当前出口",
+      "condition_pass": 22,
+      "condition_total": 46,
+      "additional_pass": 4,
+      "additional_total": 4,
+      "component_seconds": 63.532434215419926,
+      "time_group": "pdf",
+      "time_label": "Docling V1\nCPU 4 核",
+      "time_scope": "Original PDF convert plus current export; excludes model initialization and file persistence"
+    },
+    {
+      "id": "transformers",
+      "label": "MinerU · 纯视觉 TF",
+      "condition_pass": 45,
+      "condition_total": 46,
+      "additional_pass": 0,
+      "additional_total": 4,
+      "component_seconds": 444.5237781930482,
+      "time_group": "sdk",
+      "time_label": "Transformers\nGPU",
+      "time_scope": "Official two_step_extract only; PDF render, JSON-to-Markdown and persistence not timed"
+    },
+    {
+      "id": "vllm",
+      "label": "MinerU · 纯视觉 vLLM",
+      "condition_pass": 45,
+      "condition_total": 46,
+      "additional_pass": 1,
+      "additional_total": 4,
+      "component_seconds": 236.18429279793054,
+      "time_group": "sdk",
+      "time_label": "vLLM\nGPU",
+      "time_scope": "Official two_step_extract only; PDF render, JSON-to-Markdown and persistence not timed"
+    },
+    {
+      "id": "standard",
+      "label": "MinerU · Standard＋TXT",
+      "condition_pass": 40,
+      "condition_total": 46,
+      "additional_pass": 4,
+      "additional_total": 4,
+      "component_seconds": 48.921823069802485,
+      "time_group": "pdf",
+      "time_label": "Standard＋TXT\nCPU＋GPU",
+      "time_scope": "Official PDF parse plus FULL Markdown; CPU initialization, file writes and separate extra p62 excluded"
+    },
+    {
+      "id": "advanced",
+      "label": "MinerU · Advanced＋TXT",
+      "condition_pass": 45,
+      "condition_total": 46,
+      "additional_pass": 4,
+      "additional_total": 4,
+      "component_seconds": 212.7462896129582,
+      "time_group": "pdf",
+      "time_label": "Advanced＋TXT\nCPU＋GPU",
+      "time_scope": "Official PDF parse plus FULL Markdown; CPU initialization, file writes and separate extra p62 excluded"
+    }
+  ],
+  "inputs": [
+    {
+      "path": "docling-target14-component/run-manifest.json",
+      "SHA256": "d6a5cc77778720ed5811051db0739c0d996f335712841de6624be9fd27a1ef14",
+      "bytes": 29432
+    },
+    {
+      "path": "model-evaluation/docling-component-source-evaluation.json",
+      "SHA256": "caedf83c4c6edd537e8717af83980001b41d9be3e7ced582cd006cd68a6eccc2",
+      "bytes": 65805
+    },
+    {
+      "path": "model-evaluation/transformers-source-evaluation.json",
+      "SHA256": "9b3a54a8296bc737cdd4c4df03425332d8ccf087df71e52cc46a560b5b8a5a13",
+      "bytes": 188907
+    },
+    {
+      "path": "model-evaluation/transformers-additional-source-observations.json",
+      "SHA256": "d7681d278cc3fb342d8d1bd0a8471bf6989cbfe733d7fc17ea16a1b5526f4260",
+      "bytes": 2382
+    },
+    {
+      "path": "mineru-trial/tf-official-summary.json",
+      "SHA256": "059799eeee51f165407f548c62dedc431e6f6f2d4d5618ea17895c844e5b4d7c",
+      "bytes": 18721
+    },
+    {
+      "path": "model-evaluation/vllm-source-evaluation.json",
+      "SHA256": "55e787cf6b90ec519f316b001c683ed42d352820673e90d6beb35c16a59942df",
+      "bytes": 348229
+    },
+    {
+      "path": "model-evaluation/vllm-additional-source-observations.json",
+      "SHA256": "ca8cf2d2e9fedefd1c2e149b9e8782567b5e2f9f7b0d754b64f607f0672d5f42",
+      "bytes": 2487
+    },
+    {
+      "path": "mineru-trial/vllm-official-summary.json",
+      "SHA256": "f90ee17cedc3d373c1570c47044244ff6c109a1478f3813c44501e6ad2ac361f",
+      "bytes": 193726
+    },
+    {
+      "path": "mineru-trial/official-native-comparison-summary.json",
+      "SHA256": "f7a7c4c95adc178fcb32ba742650ac45f316c017212d176aa8e2d461649751f9",
+      "bytes": 127226
+    },
+    {
+      "path": "model-evaluation/official-native-standard-source-evaluation.json",
+      "SHA256": "2c4ed5eb4434d04a5014064f894ed4b4189ad05b382fda0810cdf418fe18e88e",
+      "bytes": 270822
+    },
+    {
+      "path": "model-evaluation/official-native-advanced-source-evaluation.json",
+      "SHA256": "415a5d1b8a866b6cf63afc9a9814ad701df0cb5af8f91927b2714cdd888a630a",
+      "bytes": 512961
+    }
+  ],
+  "builder_SHA256": "0c22eaaa95d340c71be550a3a58b2d2bdfc1c0cbaf40d6d723f2bb7fd9e85dd7"
+}

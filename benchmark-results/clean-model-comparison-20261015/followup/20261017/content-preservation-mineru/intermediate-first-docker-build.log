@@ -1,0 +1,225 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 2.22kB done
+#1 DONE 0.0s
+
+#2 resolve image config for docker-image://docker.io/docker/dockerfile:1.7
+#2 DONE 2.3s
+
+#3 docker-image://docker.io/docker/dockerfile:1.7@sha256:a57df69d0ea827fb7266491f2813635de6f17269be881f696fbfdf2d83dda33e
+#3 CACHED
+
+#4 [internal] load metadata for docker.io/library/python:3.13-slim-bookworm
+#4 DONE 0.0s
+
+#5 [internal] load metadata for docker.io/library/node:20-bookworm-slim
+#5 ...
+
+#6 [auth] astral-sh/uv:pull token for ghcr.io
+#6 DONE 0.0s
+
+#7 [internal] load metadata for ghcr.io/astral-sh/uv:0.9.13
+#7 DONE 2.5s
+
+#5 [internal] load metadata for docker.io/library/node:20-bookworm-slim
+#5 DONE 2.9s
+
+#8 [internal] load .dockerignore
+#8 transferring context: 396B done
+#8 DONE 0.0s
+
+#9 [uv-bin 1/1] FROM ghcr.io/astral-sh/uv:0.9.13@sha256:f07d1bf7b1fb4b983eed2b31320e25a2a76625bdf83d5ff0208fe105d4d8d2f5
+#9 DONE 0.0s
+
+#10 [frontend-builder 1/6] FROM docker.io/library/node:20-bookworm-slim@sha256:2cf067cfed83d5ea958367df9f966191a942351a2df77d6f0193e162b5febfc0
+#10 DONE 0.0s
+
+#11 [python-deps 1/5] FROM docker.io/library/python:3.13-slim-bookworm
+#11 DONE 0.0s
+
+#12 [internal] load build context
+#12 transferring context: 66.83kB 0.0s done
+#12 DONE 0.0s
+
+#13 [python-deps 2/5] WORKDIR /app
+#13 CACHED
+
+#14 [frontend-builder 3/6] COPY frontend/package.json frontend/package-lock.json ./
+#14 CACHED
+
+#15 [frontend-builder 4/6] RUN --mount=type=cache,target=/root/.npm     npm ci --no-audit --no-fund
+#15 CACHED
+
+#16 [frontend-builder 5/6] COPY frontend/ ./
+#16 CACHED
+
+#17 [frontend-builder 2/6] WORKDIR /build/frontend
+#17 CACHED
+
+#18 [python-deps 3/5] COPY --from=uv-bin /uv /uvx /usr/local/bin/
+#18 CACHED
+
+#19 [frontend-builder 6/6] RUN npm run build
+#19 CACHED
+
+#20 [python-deps 4/5] COPY pyproject.toml uv.lock README.md LICENSE ./
+#20 DONE 0.1s
+
+#21 [python-deps 5/5] RUN --mount=type=cache,target=/root/.cache/uv     uv sync --frozen --no-dev --no-install-project
+#21 0.541 Using CPython 3.13.15 interpreter at: /usr/local/bin/python3
+#21 0.541 Creating virtual environment at: .venv
+#21 2.092 Installed 126 packages in 1.53s
+#21 5.535 Bytecode compiled 14607 files in 3.44s
+#21 5.535  + accelerate==1.14.0
+#21 5.535  + aiofiles==25.1.0
+#21 5.535  + aiosqlite==0.22.1
+#21 5.535  + annotated-doc==0.0.5
+#21 5.535  + annotated-types==0.8.0
+#21 5.535  + antlr4-python3-runtime==4.9.3
+#21 5.535  + anyio==4.14.2
+#21 5.535  + attrs==26.1.0
+#21 5.536  + beautifulsoup4==4.15.0
+#21 5.536  + certifi==2026.7.22
+#21 5.536  + cffi==2.1.1
+#21 5.536  + charset-normalizer==3.4.9
+#21 5.536  + click==8.4.2
+#21 5.536  + colorlog==6.12.0
+#21 5.536  + cryptography==50.0.0
+#21 5.536  + defusedxml==0.7.1
+#21 5.536  + dill==0.4.1
+#21 5.536  + doclang==0.7.3
+#21 5.536  + docling==2.139.0
+#21 5.536  + docling-core==2.101.1
+#21 5.536  + docling-ibm-models==4.0.3
+#21 5.536  + docling-parse==7.22.3
+#21 5.536  + docling-slim==2.139.0
+#21 5.536  + et-xmlfile==2.0.0
+#21 5.536  + faker==40.36.0
+#21 5.536  + fastapi==0.141.1
+#21 5.536  + filelock==3.32.2
+#21 5.536  + filetype==1.2.0
+#21 5.536  + fsspec==2026.7.0
+#21 5.536  + h11==0.16.0
+#21 5.537  + hf-xet==1.6.0
+#21 5.537  + httpcore==1.0.9
+#21 5.537  + httpcore2==2.10.0
+#21 5.537  + httptools==0.8.0
+#21 5.537  + httpx==0.28.1
+#21 5.537  + httpx2==2.10.0
+#21 5.537  + huggingface-hub==1.27.0
+#21 5.537  + idna==3.18
+#21 5.537  + jinja2==3.1.6
+#21 5.537  + jsonref==1.1.0
+#21 5.537  + jsonschema==4.26.0
+#21 5.537  + jsonschema-specifications==2025.9.1
+#21 5.537  + langcodes==3.5.1
+#21 5.537  + latex2mathml==3.81.0
+#21 5.537  + lxml==6.1.1
+#21 5.537  + mail-parser==4.6.0
+#21 5.537  + markdown-it-py==4.2.0
+#21 5.537  + marko==2.2.3
+#21 5.537  + markupsafe==3.0.3
+#21 5.537  + mcp==2.0.0
+#21 5.537  + mcp-types==2.0.0
+#21 5.537  + mdurl==0.1.2
+#21 5.537  + mpire==2.10.2
+#21 5.538  + mpmath==1.3.0
+#21 5.538  + multiprocess==0.70.19
+#21 5.538  + networkx==3.6.1
+#21 5.538  + numpy==2.5.2
+#21 5.538  + olefile==0.47
+#21 5.538  + omegaconf==2.3.1
+#21 5.538  + opencv-python==5.0.0.93
+#21 5.538  + openpyxl==3.1.5
+#21 5.538  + opentelemetry-api==1.44.0
+#21 5.538  + orjson==3.11.9
+#21 5.538  + packaging==26.3
+#21 5.538  + pandas==3.0.5
+#21 5.538  + pillow==12.3.0
+#21 5.538  + pluggy==1.6.0
+#21 5.538  + polyfactory==3.3.0
+#21 5.538  + psutil==7.2.2
+#21 5.538  + pyclipper==1.4.0
+#21 5.538  + pycparser==3.0
+#21 5.538  + pydantic==2.13.4
+#21 5.538  + pydantic-core==2.46.4
+#21 5.538  + pydantic-settings==2.15.0
+#21 5.538  + pygments==2.20.0
+#21 5.539  + pyjwt==2.13.0
+#21 5.539  + pylatexenc==2.11
+#21 5.539  + pymupdf==1.28.2
+#21 5.539  + pypdfium2==5.12.1
+#21 5.539  + python-dateutil==2.9.0.post0
+#21 5.539  + python-docx==1.2.0
+#21 5.539  + python-dotenv==1.2.2
+#21 5.539  + python-multipart==0.0.32
+#21 5.539  + python-oxmsg==0.0.2
+#21 5.539  + python-pptx==1.0.2
+#21 5.539  + pyyaml==6.0.3
+#21 5.539  + rapidocr==3.9.2
+#21 5.539  + referencing==0.37.0
+#21 5.539  + regex==2026.7.19
+#21 5.539  + requests==2.34.2
+#21 5.539  + rich==15.0.0
+#21 5.539  + rpds-py==2026.6.3
+#21 5.539  + rtree==1.4.1
+#21 5.539  + safetensors==0.8.0
+#21 5.539  + scipy==1.18.0
+#21 5.539  + semchunk==3.2.5
+#21 5.539  + setuptools==84.0.0
+#21 5.539  + shapely==2.1.2
+#21 5.540  + shellingham==1.5.4
+#21 5.540  + six==1.17.0
+#21 5.540  + soupsieve==2.9.2
+#21 5.540  + sse-starlette==3.4.8
+#21 5.540  + starlette==1.6.0
+#21 5.540  + sympy==1.14.0
+#21 5.540  + tabulate==0.10.0
+#21 5.540  + tenacity==9.1.4
+#21 5.540  + tokenizers==0.22.2
+#21 5.540  + torch==2.13.0+cpu
+#21 5.540  + torchvision==0.28.0+cpu
+#21 5.540  + tqdm==4.70.0
+#21 5.540  + transformers==5.8.1
+#21 5.540  + tree-sitter==0.26.0
+#21 5.540  + tree-sitter-c==0.24.2
+#21 5.540  + tree-sitter-javascript==0.25.0
+#21 5.540  + tree-sitter-python==0.25.0
+#21 5.540  + tree-sitter-typescript==0.23.2
+#21 5.540  + truststore==0.10.4
+#21 5.540  + typer==0.26.8
+#21 5.540  + typing-extensions==4.16.0
+#21 5.541  + typing-inspection==0.4.3
+#21 5.541  + urllib3==2.7.0
+#21 5.541  + uvicorn==0.52.1
+#21 5.541  + uvloop==0.22.1
+#21 5.541  + watchfiles==1.2.0
+#21 5.541  + websockets==16.1.1
+#21 5.541  + xlsxwriter==3.2.9
+#21 DONE 31.7s
+
+#22 [runtime 3/8] RUN apt-get update     && apt-get install -y --no-install-recommends        ca-certificates        curl        ffmpeg        libgl1        libglib2.0-0        libgomp1        tzdata     && rm -rf /var/lib/apt/lists/*     && groupadd --gid "10001" app     && useradd --uid "10001" --gid "10001" --create-home app     && mkdir -p /data /models/docling /models/huggingface /app/static     && chown -R app:app /data /models /app
+#22 CACHED
+
+#23 [runtime 4/8] COPY --from=python-deps --chown=app:app /app/.venv /app/.venv
+#23 DONE 35.6s
+
+#24 [runtime 5/8] COPY --chown=app:app app/ ./app/
+#24 DONE 0.1s
+
+#25 [runtime 6/8] COPY --chown=app:app scripts/purge_job_data.py ./scripts/purge_job_data.py
+#25 DONE 0.2s
+
+#26 [runtime 7/8] COPY --from=frontend-builder --chown=app:app /build/frontend/dist/ ./static/
+#26 DONE 0.5s
+
+#27 [runtime 8/8] COPY --chown=app:app README.md LICENSE ./
+#27 DONE 0.2s
+
+#28 exporting to image
+#28 exporting layers
+#28 exporting layers 24.5s done
+#28 writing image sha256:598e9c6285603393a43699b1aa27a5554dda3021087d5d0af0684a9fbbe381a3 done
+#28 naming to docker.io/library/mosaic-parse:0.4.0-source-content-20261017-r1 0.0s done
+#28 DONE 24.6s

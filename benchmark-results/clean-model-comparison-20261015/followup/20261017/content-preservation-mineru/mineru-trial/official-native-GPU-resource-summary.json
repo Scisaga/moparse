@@ -1,0 +1,119 @@
+{
+  "created_at": "2026-10-17T22:15:55.572990+08:00",
+  "scope": "Physical GPU1 own candidate server; phase windows include original14 and additional62; no request-level attribution beyond recorded phase windows",
+  "raw_samples": "vllm-native-server/resource-samples.json",
+  "server_model": "MinerU2.5-Pro-2605-1.2B revision08aaea840498d49ce16247b6263196cf02814885",
+  "precision": "FP16",
+  "KV_bytes": 134217728,
+  "server_start_seconds_separate": 46.726729630026966,
+  "max_model_len": 8192,
+  "max_num_seqs": 1,
+  "own_SM_scope": "Own container PIDs only; minus/unavailable SM samples excluded. FB is sum of own PIDs per sample. Host device utilization includes GLM/TTS and is separately labelled.",
+  "known_existing_GLM_GPU_PID": 6977,
+  "GPU0_services_unrelated": true,
+  "phases": [
+    {
+      "tier": "standard",
+      "phase_started_at": "2026-10-17T14:09:34.942975+00:00",
+      "phase_finished_at": "2026-10-17T14:10:37.863803+00:00",
+      "phase_wall_seconds": 62.920828,
+      "sample_count": 19,
+      "own_GPU_PID_list": [
+        1209945,
+        1211418,
+        1211419
+      ],
+      "own_GPU_FB_peak_MiB": 3400.0,
+      "own_GPU_SM_mean_valid_samples_pct": 13.923076923076923,
+      "own_GPU_SM_valid_samples": 13,
+      "device1_free_min_MiB": 1707.0,
+      "device1_utilization_mean_including_shared_processes_pct": 9.368421052631579
+    },
+    {
+      "tier": "advanced",
+      "phase_started_at": "2026-10-17T14:10:37.863840+00:00",
+      "phase_finished_at": "2026-10-17T14:14:31.562004+00:00",
+      "phase_wall_seconds": 233.698164,
+      "sample_count": 74,
+      "own_GPU_PID_list": [
+        1209945,
+        1211418,
+        1211419
+      ],
+      "own_GPU_FB_peak_MiB": 3426.0,
+      "own_GPU_SM_mean_valid_samples_pct": 23.9,
+      "own_GPU_SM_valid_samples": 70,
+      "device1_free_min_MiB": 1681.0,
+      "device1_utilization_mean_including_shared_processes_pct": 22.635135135135137
+    }
+  ],
+  "cleanup": {
+    "at": "2026-10-17T22:15:55.435922+08:00",
+    "own_candidate_exists": false,
+    "GPU_raw": "index, name, memory.used [MiB], memory.free [MiB], utilization.gpu [%]\n0, NVIDIA GeForce RTX 2080 Ti, 19208 MiB, 2793 MiB, 54 %\n1, NVIDIA GeForce RTX 2080 Ti, 16894 MiB, 5107 MiB, 0 %\n",
+    "compute_apps_raw": "gpu_uuid, pid, process_name, used_gpu_memory [MiB]\nGPU-95b5895b-c5f3-440b-4bd2-7160ec4da0d1, 3128, python, 7536 MiB\nGPU-95b5895b-c5f3-440b-4bd2-7160ec4da0d1, 10617, VLLM::EngineCore, 9798 MiB\nGPU-95b5895b-c5f3-440b-4bd2-7160ec4da0d1, 11623, VLLM::EngineCore, 1870 MiB\nGPU-87a92d2a-6521-1e36-1ca9-21fd8085b365, 6977, VLLM::EngineCore, 11612 MiB\nGPU-87a92d2a-6521-1e36-1ca9-21fd8085b365, 1037778, /opt/qwen3-tts-openai/.tools/venv-gpu/bin/python, 5278 MiB\n",
+    "production_ready_HTTP": 200,
+    "production_ready_response": {
+      "ready": true,
+      "status": "ready",
+      "checks": {
+        "writable_data_dir": true,
+        "writable_database": true,
+        "docling": true
+      },
+      "backends": [
+        {
+          "name": "docling-standard",
+          "state": "ready",
+          "enabled": true,
+          "detail": "3 converter profile(s) cached; 4 CPU thread(s) each, 3 page worker(s) per document; TableFormer V1 accurate, matching=False, PyPdfium, native OCR off",
+          "model": null,
+          "latency_ms": null,
+          "checked_at": "2026-10-17T14:15:55.325193Z"
+        },
+        {
+          "name": "glm-ocr-remote",
+          "state": "ready",
+          "enabled": true,
+          "detail": "OpenAI-compatible models endpoint responded",
+          "model": "zai-org/GLM-OCR",
+          "latency_ms": 14,
+          "checked_at": "2026-10-17T14:15:48.523469Z"
+        },
+        {
+          "name": "glm-sdk-remote",
+          "state": "ready",
+          "enabled": true,
+          "detail": "official GLM-OCR SDK pipeline responded; CPU document orientation on",
+          "model": "glmocr",
+          "latency_ms": 13,
+          "checked_at": "2026-10-17T14:15:48.525503Z"
+        }
+      ]
+    },
+    "container_identities": {
+      "mosaicparse": {
+        "Id": "3466a7bef1c98f30c84db0460500eedece0cf7e0d308da912390077905cb3fa9",
+        "Image": "sha256:07a5df326885a6f83cf48aab766f6dd47fad5175066703fe6fa224380d86f9d4",
+        "StartedAt": "2026-10-17T13:50:56.919214112Z",
+        "RestartCount": 0,
+        "Running": true
+      },
+      "docling_glm_ocr": {
+        "Id": "a803d464218327072544e69c70513d17e1604a864a86ca556ec3ca87d0275035",
+        "Image": "sha256:df7be4c4d818e250a8c80f78d110571e92e72a1fefec06fed82a2e37e473cd48",
+        "StartedAt": "2026-10-10T18:50:15.890807408Z",
+        "RestartCount": 0,
+        "Running": true
+      },
+      "docling_glm_ocr_sdk": {
+        "Id": "b0b2f735fb491fdb39b6b23e95d70848a15f1cebc67297c2f7d82c6b7fcd0a75",
+        "Image": "sha256:abe353926afba82931744bac4533f895c9e6ad6f768da4103a4ec40410c2e6cb",
+        "StartedAt": "2026-10-16T21:15:08.695015459Z",
+        "RestartCount": 0,
+        "Running": true
+      }
+    }
+  },
+  "known_existing_GLM_GPU": 1
+}

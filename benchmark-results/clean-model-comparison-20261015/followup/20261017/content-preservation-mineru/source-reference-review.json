@@ -1,0 +1,220 @@
+{
+  "schema": "mosaicparse-independent-source-review/1",
+  "created_UTC": "2026-10-17T13:18:10.281712+00:00",
+  "pymupdf_version": "1.28.2",
+  "basis": "All original PDF hashes verified; 11 source page renders visually reviewed; raw native character geometry and source vector lines retained. No model output used to create source reference.",
+  "reference_sha256": "9c7863cebe11c786963b745bc57e9351c8d3940d250f93ad898ede4fde6deb1b",
+  "visually_reviewed_pages": {
+    "1225474739": [
+      19,
+      40,
+      74,
+      130,
+      131
+    ],
+    "1225475375": [
+      74,
+      87
+    ],
+    "1225474139": [
+      28,
+      30
+    ],
+    "1206337604": [
+      1,
+      2
+    ]
+  },
+  "source_file_index": [
+    {
+      "path": "source-reference/1206337604-p1-raw.json",
+      "bytes": 299353,
+      "sha256": "ee241c25aece61140ebc80273050d172150b954073cbf0d48a4daafafc07f289"
+    },
+    {
+      "path": "source-reference/1206337604-p1-sorted.txt",
+      "bytes": 1577,
+      "sha256": "873590c82f2bf18525d076fa7db3e83718a297545d20961a57aa2523cf690c43"
+    },
+    {
+      "path": "source-reference/1206337604-p1.png",
+      "bytes": 136392,
+      "sha256": "39a819030ccf39e5df10d838633c01e58450526d10be1245dcb96ac865a2f8bf"
+    },
+    {
+      "path": "source-reference/1206337604-p2-raw.json",
+      "bytes": 335355,
+      "sha256": "ecb8a216b1ef331b87d8d92a786095f3dd103cfc561d71ec2c334e0b53679573"
+    },
+    {
+      "path": "source-reference/1206337604-p2-sorted.txt",
+      "bytes": 2174,
+      "sha256": "81ffd4aa776c0b50958d028e1c916a10cfaea78e1b31a6610e24516bcb1f2099"
+    },
+    {
+      "path": "source-reference/1206337604-p2.png",
+      "bytes": 180534,
+      "sha256": "f018fa9d7a1fdd443c95c7e99f5b5bac9297bc814d4838a19556a303c6dec020"
+    },
+    {
+      "path": "source-reference/1225474139-p28-raw.json",
+      "bytes": 46185,
+      "sha256": "dc357b35c91f14e112927436d2f4282a459c707e269f974ee2d7cd44a4a9dbad"
+    },
+    {
+      "path": "source-reference/1225474139-p28-sorted.txt",
+      "bytes": 326,
+      "sha256": "5222eb8091ec20194b06d776b873ecc62a94fc5e08ef2cfd99c4fafce04f2105"
+    },
+    {
+      "path": "source-reference/1225474139-p28.png",
+      "bytes": 29696,
+      "sha256": "82fec56575cbf53684b1401fc8f5a9088322ceaeea4eb9a74d31decc4d0ec69b"
+    },
+    {
+      "path": "source-reference/1225474139-p30-raw.json",
+      "bytes": 67755,
+      "sha256": "b408ea53298cc9fdf4f410d9dca58c7cb54298a6f8a84e889d3438fc0e3e63a1"
+    },
+    {
+      "path": "source-reference/1225474139-p30-sorted.txt",
+      "bytes": 601,
+      "sha256": "8eab86bf066f0612eb444f563ac580d34d029808bbc86a2316684c2177111729"
+    },
+    {
+      "path": "source-reference/1225474139-p30.png",
+      "bytes": 43599,
+      "sha256": "e4e86444c7922f2d81c813425b290823c0ce1cc40e869c7b97879004e4f59060"
+    },
+    {
+      "path": "source-reference/1225474739-p130-raw.json",
+      "bytes": 568967,
+      "sha256": "9d0d1008c31411a0aecd0899beb3153ca482f3a4c0f396912a23004167ccf3c6"
+    },
+    {
+      "path": "source-reference/1225474739-p130-sorted.txt",
+      "bytes": 3559,
+      "sha256": "be02f955ff1f2b6c5fee01d32f40c9486785e72952094e3509348a0a636e7165"
+    },
+    {
+      "path": "source-reference/1225474739-p130.png",
+      "bytes": 135836,
+      "sha256": "3428283dad1bc395b47013e8ca19ffd8907491c1e7af76b4438c75baf157d1e3"
+    },
+    {
+      "path": "source-reference/1225474739-p131-raw.json",
+      "bytes": 659889,
+      "sha256": "a2d75645ea9b51c5668922e679dce98546ef89e0652acab448e1913886f911e7"
+    },
+    {
+      "path": "source-reference/1225474739-p131-sorted.txt",
+      "bytes": 3482,
+      "sha256": "23679750b2eae7f386652e10d3d155969c19419df149c60d3cbbf25718da52a4"
+    },
+    {
+      "path": "source-reference/1225474739-p131.png",
+      "bytes": 131050,
+      "sha256": "30284682f0dfa7d6f5a86838e92d1c0dc5309f1a65715452632da51e1d26aa2c"
+    },
+    {
+      "path": "source-reference/1225474739-p19-raw.json",
+      "bytes": 683428,
+      "sha256": "ef96cb2e8d82c8d16854aca1ae08833251eb80305534701e91da46fa2c04dcc9"
+    },
+    {
+      "path": "source-reference/1225474739-p19-sorted.txt",
+      "bytes": 4701,
+      "sha256": "0e528af80194a28f478a317f03d7c805e22ec5bc41b571cd7b49ee4b18cf99e4"
+    },
+    {
+      "path": "source-reference/1225474739-p19.png",
+      "bytes": 219441,
+      "sha256": "d7eff9eb85f5a177ae6244e3a35bbe08ac8a556e2d9cbfffa0f1bb30ee7d74f6"
+    },
+    {
+      "path": "source-reference/1225474739-p40-raw.json",
+      "bytes": 941093,
+      "sha256": "72be81dd55ded006d2aead393b577b12e0548d8b607bb89f4f15dad1080c8191"
+    },
+    {
+      "path": "source-reference/1225474739-p40-sorted.txt",
+      "bytes": 4996,
+      "sha256": "198f8ff8e69417d35045611635726ed35f75449d12d10941f72fa6fe63837248"
+    },
+    {
+      "path": "source-reference/1225474739-p40.png",
+      "bytes": 223901,
+      "sha256": "6232df1d2fe82ce117a4c5e72213616f1019e99bb2b8372436d95a4353b28989"
+    },
+    {
+      "path": "source-reference/1225474739-p74-raw.json",
+      "bytes": 631266,
+      "sha256": "433839c4e47afd4a6c04c6d0a59987e0d6fde01b5962b2645ee4df459f9b37bb"
+    },
+    {
+      "path": "source-reference/1225474739-p74-sorted.txt",
+      "bytes": 3900,
+      "sha256": "d735a574c16ace85d15ed902347ca488413f2d01b7dae72891775c006b89b8b2"
+    },
+    {
+      "path": "source-reference/1225474739-p74.png",
+      "bytes": 207060,
+      "sha256": "d9e9c3cb2c616425a732f4db12cbe20fe52b512f9cb613d7401c5f91e021b175"
+    },
+    {
+      "path": "source-reference/1225475375-p74-raw.json",
+      "bytes": 325309,
+      "sha256": "4a4ad7b9671b511071083163eaba0f4d36509ed7753aa2cfc62426e811c505a0"
+    },
+    {
+      "path": "source-reference/1225475375-p74-sorted.txt",
+      "bytes": 1759,
+      "sha256": "1d75245b28bf00e6cf5b7da630bc4c39a5eb1668985b306f64cb6a19769f31c6"
+    },
+    {
+      "path": "source-reference/1225475375-p74.png",
+      "bytes": 118225,
+      "sha256": "84b7c761ad786343649ec68c4c9ade64a832b8644f15534ee935b2655c555eab"
+    },
+    {
+      "path": "source-reference/1225475375-p87-raw.json",
+      "bytes": 265728,
+      "sha256": "08378794373aa7f5b1196405687cf079a8bab084cc17fad10161580c7f19709d"
+    },
+    {
+      "path": "source-reference/1225475375-p87-sorted.txt",
+      "bytes": 1559,
+      "sha256": "575ad0d297a947be5c1892274c0814c6c6c75745e5acbaf7348c2d0b0d0bf8a7"
+    },
+    {
+      "path": "source-reference/1225475375-p87.png",
+      "bytes": 100604,
+      "sha256": "34f7600bdb590c04d10c3b930719f947a0ba05b45262ba16a688de08db42cd50"
+    }
+  ],
+  "reference_extraction_notes": [
+    "Page 87 source /Rotate=270 is cleared only in source-review page object; original PDF bytes never rewritten. Reference grid is exactly 10 rows by 9 columns; current-period group spans columns 2..7, leaving opening/closing balances outside.",
+    "Page 131 six columns established from physical vector boundaries and original image; default PyMuPDF find_tables oversegments this grid and is not used as the source oracle.",
+    "Page 19 amount has font size 9, independent red superscript reference 1 has font size 6.96 and a higher baseline. Numeric substring matching is explicitly rejected.",
+    "Office 117 native spans and 65 lines are independently obtained; the original Eventrail 71-fragment algorithm was not supplied. No claim of reproducing its segmentation.",
+    "Original source, parser output, model inference, and verifier-synthetic tests are stored and labeled separately."
+  ],
+  "old_jobs_get_only": [
+    {
+      "job": "job_01M54S6SZB4PH061X16NW8TVCQ",
+      "http_status": 200,
+      "created_UTC": "2026-10-17T11:15:59.755210Z",
+      "result_bytes": 443135,
+      "result_sha256": "57acd94eca552844fd9c96ba1a218feaf35fed4b72e94843d09e19de7e3676ad",
+      "job_time_deployment_build": "unknown",
+      "new_POST_by_this_agent": false
+    },
+    {
+      "job": "job_01M54PBZSMH249W7NWXT638W8K",
+      "http_status": 200,
+      "result_bytes": 3440,
+      "job_time_deployment_build": "unknown",
+      "new_POST_by_this_agent": false
+    }
+  ]
+}

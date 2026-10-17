@@ -1,0 +1,96 @@
+{
+  "UTC": "2026-10-17T13:52:43.560612+00:00",
+  "live_query": "GPU-95b5895b-c5f3-440b-4bd2-7160ec4da0d1, 3128, python, 8150 MiB\nGPU-95b5895b-c5f3-440b-4bd2-7160ec4da0d1, 10617, VLLM::EngineCore, 9798 MiB\nGPU-95b5895b-c5f3-440b-4bd2-7160ec4da0d1, 11623, VLLM::EngineCore, 1870 MiB\nGPU-87a92d2a-6521-1e36-1ca9-21fd8085b365, 6977, VLLM::EngineCore, 11612 MiB\nGPU-87a92d2a-6521-1e36-1ca9-21fd8085b365, 1037778, /opt/qwen3-tts-openai/.tools/venv-gpu/bin/python, 5278 MiB\n",
+  "GLM_container_arguments": [
+    "serve",
+    "zai-org/GLM-OCR",
+    "--port",
+    "8000",
+    "--served-model-name",
+    "zai-org/GLM-OCR",
+    "--dtype",
+    "half",
+    "--gpu-memory-utilization",
+    "0.40",
+    "--max-model-len",
+    "16384",
+    "--max-num-batched-tokens",
+    "8192"
+  ],
+  "captured_GLM_gpu_processes": [
+    {
+      "GPU_index": "1",
+      "pid": 6977,
+      "created": 1791658283.94,
+      "owner": "docling_glm_ocr",
+      "command": "VLLM::EngineCor",
+      "present_samples": 676,
+      "not_seen_samples": 0,
+      "all_observed_samples": {
+        "sm": {
+          "known_samples": 207,
+          "unknown_samples": 469,
+          "mean": 61.270531400966185,
+          "min": 0.0,
+          "max": 98.0,
+          "p50": 91.0,
+          "p95": 98.0
+        },
+        "mem": {
+          "known_samples": 207,
+          "unknown_samples": 469,
+          "mean": 49.05797101449275,
+          "min": 0.0,
+          "max": 86.0,
+          "p50": 64.0,
+          "p95": 85.0
+        },
+        "fb": {
+          "known_samples": 676,
+          "unknown_samples": 0,
+          "mean": 11612.0,
+          "min": 11612.0,
+          "max": 11612.0,
+          "p50": 11612.0,
+          "p95": 11612.0
+        }
+      },
+      "during_observed_SDK_windows": {
+        "sm": {
+          "known_samples": 183,
+          "unknown_samples": 4,
+          "mean": 69.00546448087432,
+          "min": 0.0,
+          "max": 98.0,
+          "p50": 96.0,
+          "p95": 98.0
+        },
+        "mem": {
+          "known_samples": 183,
+          "unknown_samples": 4,
+          "mean": 55.30054644808743,
+          "min": 0.0,
+          "max": 86.0,
+          "p50": 81.0,
+          "p95": 85.0
+        },
+        "fb": {
+          "known_samples": 187,
+          "unknown_samples": 0,
+          "mean": 11612.0,
+          "min": 11612.0,
+          "max": 11612.0,
+          "p50": 11612.0,
+          "p95": 11612.0
+        }
+      },
+      "units": {
+        "sm": "percent",
+        "mem": "memory engine percent",
+        "fb": "MB as labeled by nvidia-smi pmon"
+      },
+      "attribution": "PID belongs to exactly one recorded service tree in the same sampling cycle; otherwise unknown. No current-live PID lookup."
+    }
+  ],
+  "conclusion": "GLM EngineCore host PID6977 has GPU context on GPU1 only (11612 MiB). Host PID6976 is a CPU python helper. Multiple service-tree processes do not prove tensor parallelism or GPU0 ownership. GPU0 other processes must not be attributed to GLM. GPU1 is shared with TTS and candidate trials."
+}

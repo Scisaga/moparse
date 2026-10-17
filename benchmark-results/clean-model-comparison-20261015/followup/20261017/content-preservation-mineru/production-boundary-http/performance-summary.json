@@ -1,0 +1,3011 @@
+{
+  "schema": "selected-pipeline-performance-summary/1",
+  "status": "complete",
+  "as_of_UTC": "2026-10-17T13:53:21.384253+00:00",
+  "as_of_Asia_Shanghai": "2026-10-17T21:53:21.384384+08:00",
+  "run": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/production-boundary-http",
+  "expected_documents": 2,
+  "expected_pages": 31,
+  "finished_capture_documents": 2,
+  "finished_capture_pages": 31,
+  "case_statuses": {
+    "completed": 2
+  },
+  "timing": {
+    "submit_to_terminal_s": {
+      "total_s": 46.45010460494086,
+      "observed_partial_sum_s": 46.45010460494086,
+      "known_case_count": 2,
+      "unknown_case_count": 0
+    },
+    "submit_to_saved_MD_s": {
+      "total_s": 46.46937722398434,
+      "observed_partial_sum_s": 46.46937722398434,
+      "known_case_count": 2,
+      "unknown_case_count": 0
+    },
+    "full_capture_s": {
+      "total_s": 46.54822273401078,
+      "observed_partial_sum_s": 46.54822273401078,
+      "known_case_count": 2,
+      "unknown_case_count": 0
+    },
+    "asset_capture_s": {
+      "total_s": 0.07444002397824079,
+      "observed_partial_sum_s": 0.07444002397824079,
+      "known_case_count": 2,
+      "unknown_case_count": 0
+    },
+    "server_queue_wait_s": {
+      "total_s": 0.021149873733520508,
+      "observed_partial_sum_s": 0.021149873733520508,
+      "known_case_count": 2,
+      "unknown_case_count": 0
+    },
+    "server_job_duration_s": {
+      "total_s": 44.4676878452301,
+      "observed_partial_sum_s": 44.4676878452301,
+      "known_case_count": 2,
+      "unknown_case_count": 0
+    },
+    "SDK_page_pipeline_total_s": {
+      "total_s": 3.501,
+      "observed_partial_sum_s": 3.501,
+      "known_case_count": 2,
+      "unknown_case_count": 0
+    },
+    "SDK_HTTP_total_s": {
+      "total_s": 2.829,
+      "observed_partial_sum_s": 2.829,
+      "known_case_count": 2,
+      "unknown_case_count": 0
+    }
+  },
+  "timing_scopes": {
+    "client": "Upload start through terminal job / saved Markdown / all downloaded public assets; includes polling.",
+    "server_job": "Persisted started_at through completed_at; includes native parsing, SDK, rendering/export and assets.",
+    "docling": "Official Finished converting logs include the full converter pipeline. Sum is parallel work; interval union/span is estimated wall time from 0.01s-rounded logs. Never sum with server/client durations.",
+    "SDK_page_pipeline": "Observed GLM_SDK_PAGE duration includes source PDF/image rendering, orientation, SDK semaphore, HTTP/retries and response parsing.",
+    "SDK_HTTP": "Observed accumulated POST-await time includes network, SDK CPU layout, GLM region recognition and retry HTTP attempts; excludes direction and retry sleep.",
+    "legacy": "Orientation-result log to next SDK HTTP response is only a separate log-derived interval, never a substitute for missing exact SDK page timing.",
+    "pure_model": "No kernel/model-forward/request-specific engine duration is available; remains null."
+  },
+  "sampling": {
+    "count": 24,
+    "invalid_or_in_progress_lines": 0,
+    "interval_seconds": {
+      "known_samples": 23,
+      "unknown_samples": 0,
+      "mean": 2.0002066282170783,
+      "min": 2.000104646082036,
+      "max": 2.000764108961448,
+      "p50": 2.00018882995937,
+      "p95": 2.000275315565523
+    },
+    "target_seconds": 2
+  },
+  "resources": {
+    "sample_count": 24,
+    "CPU_and_RAM_by_service": {
+      "docling_glm_ocr": {
+        "CPU_percent_100_equals_one_core": {
+          "known_samples": 23,
+          "unknown_samples": 1,
+          "mean": 6.926608801622836,
+          "min": 1.4866738814115887,
+          "max": 62.275717706865805,
+          "p50": 2.0040431940915657,
+          "p95": 47.58168310876249
+        },
+        "CPU_time_weighted_mean_percent": 6.913895663247175,
+        "observed_CPU_core_seconds": 3.180000000000291,
+        "CPU_observed_interval_seconds": 45.99433018499985,
+        "CPU_unknown_or_boundary_intervals": 1,
+        "tree_RSS_bytes": {
+          "known_samples": 24,
+          "unknown_samples": 0,
+          "mean": 8774762496.0,
+          "min": 8774762496.0,
+          "max": 8774762496.0,
+          "p50": 8774762496.0,
+          "p95": 8774762496.0
+        },
+        "tree_threads": {
+          "known_samples": 24,
+          "unknown_samples": 0,
+          "mean": 552.0,
+          "min": 552.0,
+          "max": 552.0,
+          "p50": 552.0,
+          "p95": 552.0
+        },
+        "observed_process_identities": [
+          {
+            "pid": 3145,
+            "created": 1791658215.87
+          },
+          {
+            "pid": 6976,
+            "created": 1791658283.94
+          },
+          {
+            "pid": 6977,
+            "created": 1791658283.94
+          }
+        ]
+      },
+      "docling_glm_ocr_sdk": {
+        "CPU_percent_100_equals_one_core": {
+          "known_samples": 23,
+          "unknown_samples": 1,
+          "mean": 137.10654191577004,
+          "min": 0.0,
+          "max": 1931.8976583366352,
+          "p50": 0.0,
+          "p95": 793.3153490876
+        },
+        "CPU_time_weighted_mean_percent": 137.14278901939377,
+        "observed_CPU_core_seconds": 63.079999999999934,
+        "CPU_observed_interval_seconds": 45.99585618101992,
+        "CPU_unknown_or_boundary_intervals": 1,
+        "tree_RSS_bytes": {
+          "known_samples": 24,
+          "unknown_samples": 0,
+          "mean": 6005363200.0,
+          "min": 5978873856.0,
+          "max": 6294794240.0,
+          "p50": 5978873856.0,
+          "p95": 6170078412.8
+        },
+        "tree_threads": {
+          "known_samples": 24,
+          "unknown_samples": 0,
+          "mean": 310.25,
+          "min": 307.0,
+          "max": 346.0,
+          "p50": 307.0,
+          "p95": 340.1499999999999
+        },
+        "observed_process_identities": [
+          {
+            "pid": 418554,
+            "created": 1792185308.65
+          },
+          {
+            "pid": 418724,
+            "created": 1792185308.84
+          },
+          {
+            "pid": 419205,
+            "created": 1792185314.2
+          }
+        ]
+      },
+      "mosaicparse": {
+        "CPU_percent_100_equals_one_core": {
+          "known_samples": 23,
+          "unknown_samples": 1,
+          "mean": 514.5471832409849,
+          "min": 23.040373726312996,
+          "max": 866.7702316057836,
+          "p50": 619.4379088346009,
+          "p95": 831.4132164216418
+        },
+        "CPU_time_weighted_mean_percent": 514.515284884481,
+        "observed_CPU_core_seconds": 236.67,
+        "CPU_observed_interval_seconds": 45.99863346200436,
+        "CPU_unknown_or_boundary_intervals": 1,
+        "tree_RSS_bytes": {
+          "known_samples": 24,
+          "unknown_samples": 0,
+          "mean": 3149581653.3333335,
+          "min": 1771524096.0,
+          "max": 3508838400.0,
+          "p50": 3289038848.0,
+          "p95": 3477194342.4
+        },
+        "tree_threads": {
+          "known_samples": 24,
+          "unknown_samples": 0,
+          "mean": 253.04166666666666,
+          "min": 224.0,
+          "max": 257.0,
+          "p50": 255.0,
+          "p95": 256.0
+        },
+        "observed_process_identities": [
+          {
+            "pid": 1179707,
+            "created": 1792245056.87
+          },
+          {
+            "pid": 1179901,
+            "created": 1792245057.08
+          }
+        ]
+      }
+    },
+    "whole_GPU_cards": [
+      {
+        "index": "0",
+        "uuid": "GPU-95b5895b-c5f3-440b-4bd2-7160ec4da0d1",
+        "scope": "Whole card, includes unrelated resident/running processes.",
+        "all_observed_samples": {
+          "GPU_utilization_percent": {
+            "known_samples": 24,
+            "unknown_samples": 0,
+            "mean": 53.625,
+            "min": 9.0,
+            "max": 100.0,
+            "p50": 52.0,
+            "p95": 75.0
+          },
+          "memory_engine_utilization_percent": {
+            "known_samples": 24,
+            "unknown_samples": 0,
+            "mean": 37.625,
+            "min": 1.0,
+            "max": 48.0,
+            "p50": 39.5,
+            "p95": 47.0
+          },
+          "VRAM_used_MiB": {
+            "known_samples": 24,
+            "unknown_samples": 0,
+            "mean": 19423.166666666668,
+            "min": 17542.0,
+            "max": 19822.0,
+            "p50": 19822.0,
+            "p95": 19822.0
+          },
+          "power_W": {
+            "known_samples": 24,
+            "unknown_samples": 0,
+            "mean": 159.34791666666666,
+            "min": 88.1,
+            "max": 178.82,
+            "p50": 162.39499999999998,
+            "p95": 178.5555
+          },
+          "temperature_C": {
+            "known_samples": 24,
+            "unknown_samples": 0,
+            "mean": 76.58333333333333,
+            "min": 73.0,
+            "max": 78.0,
+            "p50": 77.0,
+            "p95": 78.0
+          },
+          "SM_clock_MHz": {
+            "known_samples": 24,
+            "unknown_samples": 0,
+            "mean": 1700.625,
+            "min": 1275.0,
+            "max": 1740.0,
+            "p50": 1740.0,
+            "p95": 1740.0
+          },
+          "memory_clock_MHz": {
+            "known_samples": 24,
+            "unknown_samples": 0,
+            "mean": 6800.0,
+            "min": 6800.0,
+            "max": 6800.0,
+            "p50": 6800.0,
+            "p95": 6800.0
+          }
+        },
+        "during_observed_SDK_windows": {
+          "GPU_utilization_percent": {
+            "known_samples": 2,
+            "unknown_samples": 0,
+            "mean": 48.0,
+            "min": 48.0,
+            "max": 48.0,
+            "p50": 48.0,
+            "p95": 48.0
+          },
+          "memory_engine_utilization_percent": {
+            "known_samples": 2,
+            "unknown_samples": 0,
+            "mean": 37.0,
+            "min": 37.0,
+            "max": 37.0,
+            "p50": 37.0,
+            "p95": 37.0
+          },
+          "VRAM_used_MiB": {
+            "known_samples": 2,
+            "unknown_samples": 0,
+            "mean": 18992.0,
+            "min": 18992.0,
+            "max": 18992.0,
+            "p50": 18992.0,
+            "p95": 18992.0
+          },
+          "power_W": {
+            "known_samples": 2,
+            "unknown_samples": 0,
+            "mean": 158.82,
+            "min": 157.04,
+            "max": 160.6,
+            "p50": 158.82,
+            "p95": 160.422
+          },
+          "temperature_C": {
+            "known_samples": 2,
+            "unknown_samples": 0,
+            "mean": 77.0,
+            "min": 77.0,
+            "max": 77.0,
+            "p50": 77.0,
+            "p95": 77.0
+          },
+          "SM_clock_MHz": {
+            "known_samples": 2,
+            "unknown_samples": 0,
+            "mean": 1740.0,
+            "min": 1740.0,
+            "max": 1740.0,
+            "p50": 1740.0,
+            "p95": 1740.0
+          },
+          "memory_clock_MHz": {
+            "known_samples": 2,
+            "unknown_samples": 0,
+            "mean": 6800.0,
+            "min": 6800.0,
+            "max": 6800.0,
+            "p50": 6800.0,
+            "p95": 6800.0
+          }
+        }
+      },
+      {
+        "index": "1",
+        "uuid": "GPU-87a92d2a-6521-1e36-1ca9-21fd8085b365",
+        "scope": "Whole card, includes unrelated resident/running processes.",
+        "all_observed_samples": {
+          "GPU_utilization_percent": {
+            "known_samples": 24,
+            "unknown_samples": 0,
+            "mean": 0.08333333333333333,
+            "min": 0.0,
+            "max": 2.0,
+            "p50": 0.0,
+            "p95": 0.0
+          },
+          "memory_engine_utilization_percent": {
+            "known_samples": 24,
+            "unknown_samples": 0,
+            "mean": 0.08333333333333333,
+            "min": 0.0,
+            "max": 2.0,
+            "p50": 0.0,
+            "p95": 0.0
+          },
+          "VRAM_used_MiB": {
+            "known_samples": 24,
+            "unknown_samples": 0,
+            "mean": 16894.0,
+            "min": 16894.0,
+            "max": 16894.0,
+            "p50": 16894.0,
+            "p95": 16894.0
+          },
+          "power_W": {
+            "known_samples": 24,
+            "unknown_samples": 0,
+            "mean": 32.147083333333335,
+            "min": 26.29,
+            "max": 87.64,
+            "p50": 27.255000000000003,
+            "p95": 77.98749999999987
+          },
+          "temperature_C": {
+            "known_samples": 24,
+            "unknown_samples": 0,
+            "mean": 49.625,
+            "min": 48.0,
+            "max": 52.0,
+            "p50": 49.5,
+            "p95": 51.0
+          },
+          "SM_clock_MHz": {
+            "known_samples": 24,
+            "unknown_samples": 0,
+            "mean": 428.75,
+            "min": 300.0,
+            "max": 1845.0,
+            "p50": 300.0,
+            "p95": 1613.2499999999968
+          },
+          "memory_clock_MHz": {
+            "known_samples": 24,
+            "unknown_samples": 0,
+            "mean": 937.9166666666666,
+            "min": 405.0,
+            "max": 6800.0,
+            "p50": 405.0,
+            "p95": 5840.749999999986
+          }
+        },
+        "during_observed_SDK_windows": {
+          "GPU_utilization_percent": {
+            "known_samples": 2,
+            "unknown_samples": 0,
+            "mean": 1.0,
+            "min": 0.0,
+            "max": 2.0,
+            "p50": 1.0,
+            "p95": 1.9
+          },
+          "memory_engine_utilization_percent": {
+            "known_samples": 2,
+            "unknown_samples": 0,
+            "mean": 1.0,
+            "min": 0.0,
+            "max": 2.0,
+            "p50": 1.0,
+            "p95": 1.9
+          },
+          "VRAM_used_MiB": {
+            "known_samples": 2,
+            "unknown_samples": 0,
+            "mean": 16894.0,
+            "min": 16894.0,
+            "max": 16894.0,
+            "p50": 16894.0,
+            "p95": 16894.0
+          },
+          "power_W": {
+            "known_samples": 2,
+            "unknown_samples": 0,
+            "mean": 57.120000000000005,
+            "min": 27.35,
+            "max": 86.89,
+            "p50": 57.120000000000005,
+            "p95": 83.913
+          },
+          "temperature_C": {
+            "known_samples": 2,
+            "unknown_samples": 0,
+            "mean": 49.5,
+            "min": 48.0,
+            "max": 51.0,
+            "p50": 49.5,
+            "p95": 50.85
+          },
+          "SM_clock_MHz": {
+            "known_samples": 2,
+            "unknown_samples": 0,
+            "mean": 1072.5,
+            "min": 300.0,
+            "max": 1845.0,
+            "p50": 1072.5,
+            "p95": 1767.75
+          },
+          "memory_clock_MHz": {
+            "known_samples": 2,
+            "unknown_samples": 0,
+            "mean": 3602.5,
+            "min": 405.0,
+            "max": 6800.0,
+            "p50": 3602.5,
+            "p95": 6480.25
+          }
+        }
+      }
+    ],
+    "GPU_processes": [
+      {
+        "GPU_index": "0",
+        "pid": 3128,
+        "created": null,
+        "owner": "unattributed_or_ambiguous",
+        "command": "python",
+        "present_samples": 24,
+        "not_seen_samples": 0,
+        "all_observed_samples": {
+          "sm": {
+            "known_samples": 24,
+            "unknown_samples": 0,
+            "mean": 53.375,
+            "min": 4.0,
+            "max": 99.0,
+            "p50": 50.5,
+            "p95": 74.0
+          },
+          "mem": {
+            "known_samples": 24,
+            "unknown_samples": 0,
+            "mean": 36.333333333333336,
+            "min": 0.0,
+            "max": 48.0,
+            "p50": 38.5,
+            "p95": 46.0
+          },
+          "fb": {
+            "known_samples": 24,
+            "unknown_samples": 0,
+            "mean": 7751.25,
+            "min": 5870.0,
+            "max": 8150.0,
+            "p50": 8150.0,
+            "p95": 8150.0
+          }
+        },
+        "during_observed_SDK_windows": {
+          "sm": {
+            "known_samples": 2,
+            "unknown_samples": 0,
+            "mean": 47.5,
+            "min": 47.0,
+            "max": 48.0,
+            "p50": 47.5,
+            "p95": 47.95
+          },
+          "mem": {
+            "known_samples": 2,
+            "unknown_samples": 0,
+            "mean": 36.0,
+            "min": 36.0,
+            "max": 36.0,
+            "p50": 36.0,
+            "p95": 36.0
+          },
+          "fb": {
+            "known_samples": 2,
+            "unknown_samples": 0,
+            "mean": 7320.0,
+            "min": 7320.0,
+            "max": 7320.0,
+            "p50": 7320.0,
+            "p95": 7320.0
+          }
+        },
+        "units": {
+          "sm": "percent",
+          "mem": "memory engine percent",
+          "fb": "MB as labeled by nvidia-smi pmon"
+        },
+        "attribution": "PID belongs to exactly one recorded service tree in the same sampling cycle; otherwise unknown. No current-live PID lookup."
+      },
+      {
+        "GPU_index": "0",
+        "pid": 10617,
+        "created": null,
+        "owner": "unattributed_or_ambiguous",
+        "command": "VLLM::EngineCor",
+        "present_samples": 24,
+        "not_seen_samples": 0,
+        "all_observed_samples": {
+          "sm": {
+            "known_samples": 0,
+            "unknown_samples": 24,
+            "mean": null,
+            "min": null,
+            "max": null,
+            "p50": null,
+            "p95": null
+          },
+          "mem": {
+            "known_samples": 0,
+            "unknown_samples": 24,
+            "mean": null,
+            "min": null,
+            "max": null,
+            "p50": null,
+            "p95": null
+          },
+          "fb": {
+            "known_samples": 24,
+            "unknown_samples": 0,
+            "mean": 9798.0,
+            "min": 9798.0,
+            "max": 9798.0,
+            "p50": 9798.0,
+            "p95": 9798.0
+          }
+        },
+        "during_observed_SDK_windows": {
+          "sm": {
+            "known_samples": 0,
+            "unknown_samples": 2,
+            "mean": null,
+            "min": null,
+            "max": null,
+            "p50": null,
+            "p95": null
+          },
+          "mem": {
+            "known_samples": 0,
+            "unknown_samples": 2,
+            "mean": null,
+            "min": null,
+            "max": null,
+            "p50": null,
+            "p95": null
+          },
+          "fb": {
+            "known_samples": 2,
+            "unknown_samples": 0,
+            "mean": 9798.0,
+            "min": 9798.0,
+            "max": 9798.0,
+            "p50": 9798.0,
+            "p95": 9798.0
+          }
+        },
+        "units": {
+          "sm": "percent",
+          "mem": "memory engine percent",
+          "fb": "MB as labeled by nvidia-smi pmon"
+        },
+        "attribution": "PID belongs to exactly one recorded service tree in the same sampling cycle; otherwise unknown. No current-live PID lookup."
+      },
+      {
+        "GPU_index": "0",
+        "pid": 11623,
+        "created": null,
+        "owner": "unattributed_or_ambiguous",
+        "command": "VLLM::EngineCor",
+        "present_samples": 24,
+        "not_seen_samples": 0,
+        "all_observed_samples": {
+          "sm": {
+            "known_samples": 0,
+            "unknown_samples": 24,
+            "mean": null,
+            "min": null,
+            "max": null,
+            "p50": null,
+            "p95": null
+          },
+          "mem": {
+            "known_samples": 0,
+            "unknown_samples": 24,
+            "mean": null,
+            "min": null,
+            "max": null,
+            "p50": null,
+            "p95": null
+          },
+          "fb": {
+            "known_samples": 24,
+            "unknown_samples": 0,
+            "mean": 1870.0,
+            "min": 1870.0,
+            "max": 1870.0,
+            "p50": 1870.0,
+            "p95": 1870.0
+          }
+        },
+        "during_observed_SDK_windows": {
+          "sm": {
+            "known_samples": 0,
+            "unknown_samples": 2,
+            "mean": null,
+            "min": null,
+            "max": null,
+            "p50": null,
+            "p95": null
+          },
+          "mem": {
+            "known_samples": 0,
+            "unknown_samples": 2,
+            "mean": null,
+            "min": null,
+            "max": null,
+            "p50": null,
+            "p95": null
+          },
+          "fb": {
+            "known_samples": 2,
+            "unknown_samples": 0,
+            "mean": 1870.0,
+            "min": 1870.0,
+            "max": 1870.0,
+            "p50": 1870.0,
+            "p95": 1870.0
+          }
+        },
+        "units": {
+          "sm": "percent",
+          "mem": "memory engine percent",
+          "fb": "MB as labeled by nvidia-smi pmon"
+        },
+        "attribution": "PID belongs to exactly one recorded service tree in the same sampling cycle; otherwise unknown. No current-live PID lookup."
+      },
+      {
+        "GPU_index": "1",
+        "pid": 6977,
+        "created": 1791658283.94,
+        "owner": "docling_glm_ocr",
+        "command": "VLLM::EngineCor",
+        "present_samples": 24,
+        "not_seen_samples": 0,
+        "all_observed_samples": {
+          "sm": {
+            "known_samples": 2,
+            "unknown_samples": 22,
+            "mean": 13.5,
+            "min": 11.0,
+            "max": 16.0,
+            "p50": 13.5,
+            "p95": 15.75
+          },
+          "mem": {
+            "known_samples": 2,
+            "unknown_samples": 22,
+            "mean": 8.5,
+            "min": 7.0,
+            "max": 10.0,
+            "p50": 8.5,
+            "p95": 9.85
+          },
+          "fb": {
+            "known_samples": 24,
+            "unknown_samples": 0,
+            "mean": 11612.0,
+            "min": 11612.0,
+            "max": 11612.0,
+            "p50": 11612.0,
+            "p95": 11612.0
+          }
+        },
+        "during_observed_SDK_windows": {
+          "sm": {
+            "known_samples": 1,
+            "unknown_samples": 1,
+            "mean": 16.0,
+            "min": 16.0,
+            "max": 16.0,
+            "p50": 16.0,
+            "p95": 16.0
+          },
+          "mem": {
+            "known_samples": 1,
+            "unknown_samples": 1,
+            "mean": 10.0,
+            "min": 10.0,
+            "max": 10.0,
+            "p50": 10.0,
+            "p95": 10.0
+          },
+          "fb": {
+            "known_samples": 2,
+            "unknown_samples": 0,
+            "mean": 11612.0,
+            "min": 11612.0,
+            "max": 11612.0,
+            "p50": 11612.0,
+            "p95": 11612.0
+          }
+        },
+        "units": {
+          "sm": "percent",
+          "mem": "memory engine percent",
+          "fb": "MB as labeled by nvidia-smi pmon"
+        },
+        "attribution": "PID belongs to exactly one recorded service tree in the same sampling cycle; otherwise unknown. No current-live PID lookup."
+      },
+      {
+        "GPU_index": "1",
+        "pid": 1037778,
+        "created": null,
+        "owner": "unattributed_or_ambiguous",
+        "command": "python",
+        "present_samples": 24,
+        "not_seen_samples": 0,
+        "all_observed_samples": {
+          "sm": {
+            "known_samples": 0,
+            "unknown_samples": 24,
+            "mean": null,
+            "min": null,
+            "max": null,
+            "p50": null,
+            "p95": null
+          },
+          "mem": {
+            "known_samples": 0,
+            "unknown_samples": 24,
+            "mean": null,
+            "min": null,
+            "max": null,
+            "p50": null,
+            "p95": null
+          },
+          "fb": {
+            "known_samples": 24,
+            "unknown_samples": 0,
+            "mean": 5278.0,
+            "min": 5278.0,
+            "max": 5278.0,
+            "p50": 5278.0,
+            "p95": 5278.0
+          }
+        },
+        "during_observed_SDK_windows": {
+          "sm": {
+            "known_samples": 0,
+            "unknown_samples": 2,
+            "mean": null,
+            "min": null,
+            "max": null,
+            "p50": null,
+            "p95": null
+          },
+          "mem": {
+            "known_samples": 0,
+            "unknown_samples": 2,
+            "mean": null,
+            "min": null,
+            "max": null,
+            "p50": null,
+            "p95": null
+          },
+          "fb": {
+            "known_samples": 2,
+            "unknown_samples": 0,
+            "mean": 5278.0,
+            "min": 5278.0,
+            "max": 5278.0,
+            "p50": 5278.0,
+            "p95": 5278.0
+          }
+        },
+        "units": {
+          "sm": "percent",
+          "mem": "memory engine percent",
+          "fb": "MB as labeled by nvidia-smi pmon"
+        },
+        "attribution": "PID belongs to exactly one recorded service tree in the same sampling cycle; otherwise unknown. No current-live PID lookup."
+      }
+    ],
+    "host_CPU_percent": {
+      "known_samples": 24,
+      "unknown_samples": 0,
+      "mean": 14.35,
+      "min": 0.0,
+      "max": 33.2,
+      "p50": 15.0,
+      "p95": 20.41
+    },
+    "CPU_package_temperature_C": {
+      "known_samples": 48,
+      "unknown_samples": 0,
+      "mean": 49.020833333333336,
+      "min": 41.0,
+      "max": 58.0,
+      "p50": 48.0,
+      "p95": 57.0
+    },
+    "limitations": [
+      "Sampling misses peaks between observations.",
+      "Service trees have separate CPU/RSS scopes; shared RSS is not deduplicated.",
+      "GPU means use known samples only; pmon - and absent process observations are not zero.",
+      "SDK windows are recorded/log-derived page windows, not pure GPU model execution.",
+      "Whole-card GPU values must not be attributed to one parser process."
+    ]
+  },
+  "SDK_observed_window_union_s": 3.500999927520752,
+  "SDK_request_counts": {
+    "exact_actual_POST_total": 2,
+    "observed_page_log_POST_sum": 2,
+    "API_response_log_count": 2,
+    "SDK_access_log_POST_count": 2,
+    "unmatched_page_logs": [],
+    "interpretation": "Page POSTs can contain multiple GLM region requests; access/response logs are observations, not exact attempts when requests fail before a logged response."
+  },
+  "GLM_service_log": {
+    "scope": "Shared inference service; no attribution of throughput/region calls to individual parser jobs.",
+    "log_present": true,
+    "POST_completions_by_peer": {
+      "172.23.0.2": 13
+    },
+    "throughput": {
+      "prompt_tokens_per_s": {
+        "known_samples": 0,
+        "unknown_samples": 0,
+        "mean": null,
+        "min": null,
+        "max": null,
+        "p50": null,
+        "p95": null
+      },
+      "generation_tokens_per_s": {
+        "known_samples": 0,
+        "unknown_samples": 0,
+        "mean": null,
+        "min": null,
+        "max": null,
+        "p50": null,
+        "p95": null
+      },
+      "running_requests": {
+        "known_samples": 0,
+        "unknown_samples": 0,
+        "mean": null,
+        "min": null,
+        "max": null,
+        "p50": null,
+        "p95": null
+      },
+      "waiting_requests": {
+        "known_samples": 0,
+        "unknown_samples": 0,
+        "mean": null,
+        "min": null,
+        "max": null,
+        "p50": null,
+        "p95": null
+      },
+      "KV_cache_percent": {
+        "known_samples": 0,
+        "unknown_samples": 0,
+        "mean": null,
+        "min": null,
+        "max": null,
+        "p50": null,
+        "p95": null
+      }
+    }
+  },
+  "cases": [
+    {
+      "source": "1225474693",
+      "page_count": 4,
+      "started_UTC": "2026-10-17T13:51:24.628060+00:00",
+      "status": "completed",
+      "job": "job_01M5523CESCQ9ZQDA0AAX69Z29",
+      "submit_to_terminal_s": 9.241373152006418,
+      "submit_to_saved_MD_s": 9.25057780102361,
+      "MD_SHA256": "9a68e8c74cf32bb87fbd4891d394a5da2f1a6b63eea38c9b427addb15966482c",
+      "MD_bytes": 7779,
+      "asset_count": 0,
+      "asset_errors": [],
+      "asset_status": "completed",
+      "asset_capture_s": 0.01024302700534463,
+      "local_diagnostics": [
+        {
+          "source": "/var/lib/docker/volumes/mosaicparse-data/_data/jobs/job_01M5523CESCQ9ZQDA0AAX69Z29/logs/warnings.json",
+          "saved": "warnings.json",
+          "sha256": "3f819417a4f7dfa557a154a67860f4b1f13818f6e9208b802067682c3fa6de26",
+          "scope": "Optional local diagnostics; frozen quality reads public Markdown only."
+        },
+        {
+          "source": "/var/lib/docker/volumes/mosaicparse-data/_data/jobs/job_01M5523CESCQ9ZQDA0AAX69Z29/output/asset-index.json",
+          "saved": "asset-index.json",
+          "sha256": "16db168f4d5d20020c5ed46612415dad90d66619f84d79abe575dd9d0e142337",
+          "scope": "Optional local diagnostics; frozen quality reads public Markdown only."
+        }
+      ],
+      "completed_UTC": "2026-10-17T13:51:33.890426+00:00",
+      "full_capture_s": 9.262385839014314,
+      "server_queue_wait_s": 0.010973930358886719,
+      "server_job_duration_s": 8.24955701828003,
+      "SDK_expected_pages": [],
+      "docling_converters": [
+        {
+          "finished_UTC": "2026-10-17T13:51:27.208642+00:00",
+          "duration_s": 2.41,
+          "inferred_start_epoch": 1792245084.798642,
+          "finished_epoch": 1792245087.208642
+        },
+        {
+          "finished_UTC": "2026-10-17T13:51:30.420383+00:00",
+          "duration_s": 5.63,
+          "inferred_start_epoch": 1792245084.7903829,
+          "finished_epoch": 1792245090.420383
+        },
+        {
+          "finished_UTC": "2026-10-17T13:51:32.502356+00:00",
+          "duration_s": 7.71,
+          "inferred_start_epoch": 1792245084.792356,
+          "finished_epoch": 1792245092.502356
+        }
+      ],
+      "SDK_page_records": [],
+      "legacy_orientation_records": [],
+      "legacy_orientation_to_HTTP_intervals": [],
+      "API_observed_SDK_HTTP_responses": 0,
+      "SDK_access_POST_completions": 0,
+      "docling_logged_pipeline_work_s": 15.75,
+      "docling_logged_pipeline_union_s": 7.711973190307617,
+      "docling_logged_pipeline_elapsed_span_s": 7.711973190307617,
+      "SDK_timing_status": "not_invoked",
+      "SDK_page_pipeline_total_s": 0.0,
+      "SDK_HTTP_total_s": 0.0,
+      "SDK_actual_POST_count": 0,
+      "SDK_observed_page_duration_ms": {
+        "known_samples": 0,
+        "unknown_samples": 0,
+        "mean": null,
+        "min": null,
+        "max": null,
+        "p50": null,
+        "p95": null
+      },
+      "legacy_orientation_to_HTTP_s": {
+        "known_samples": 0,
+        "unknown_samples": 0,
+        "mean": null,
+        "min": null,
+        "max": null,
+        "p50": null,
+        "p95": null
+      },
+      "GLM_pure_model_inference_duration_s": null,
+      "resources": {
+        "sample_count": 4,
+        "CPU_and_RAM_by_service": {
+          "docling_glm_ocr": {
+            "CPU_percent_100_equals_one_core": {
+              "known_samples": 3,
+              "unknown_samples": 1,
+              "mean": 1.8357479338499296,
+              "min": 1.5096903680220086,
+              "max": 2.0030829581226315,
+              "p50": 1.9944704754051485,
+              "p95": 2.002221709850883
+            },
+            "CPU_time_weighted_mean_percent": 1.836507710982397,
+            "observed_CPU_core_seconds": 0.11000000000422006,
+            "CPU_observed_interval_seconds": 5.989629084942862,
+            "CPU_unknown_or_boundary_intervals": 1,
+            "tree_RSS_bytes": {
+              "known_samples": 4,
+              "unknown_samples": 0,
+              "mean": 8774762496.0,
+              "min": 8774762496.0,
+              "max": 8774762496.0,
+              "p50": 8774762496.0,
+              "p95": 8774762496.0
+            },
+            "tree_threads": {
+              "known_samples": 4,
+              "unknown_samples": 0,
+              "mean": 552.0,
+              "min": 552.0,
+              "max": 552.0,
+              "p50": 552.0,
+              "p95": 552.0
+            },
+            "observed_process_identities": [
+              {
+                "pid": 3145,
+                "created": 1791658215.87
+              },
+              {
+                "pid": 6976,
+                "created": 1791658283.94
+              },
+              {
+                "pid": 6977,
+                "created": 1791658283.94
+              }
+            ]
+          },
+          "docling_glm_ocr_sdk": {
+            "CPU_percent_100_equals_one_core": {
+              "known_samples": 3,
+              "unknown_samples": 1,
+              "mean": 0.0,
+              "min": 0.0,
+              "max": 0.0,
+              "p50": 0.0,
+              "p95": 0.0
+            },
+            "CPU_time_weighted_mean_percent": 0.0,
+            "observed_CPU_core_seconds": 0.0,
+            "CPU_observed_interval_seconds": 5.994496511062607,
+            "CPU_unknown_or_boundary_intervals": 1,
+            "tree_RSS_bytes": {
+              "known_samples": 4,
+              "unknown_samples": 0,
+              "mean": 5978873856.0,
+              "min": 5978873856.0,
+              "max": 5978873856.0,
+              "p50": 5978873856.0,
+              "p95": 5978873856.0
+            },
+            "tree_threads": {
+              "known_samples": 4,
+              "unknown_samples": 0,
+              "mean": 307.0,
+              "min": 307.0,
+              "max": 307.0,
+              "p50": 307.0,
+              "p95": 307.0
+            },
+            "observed_process_identities": [
+              {
+                "pid": 418554,
+                "created": 1792185308.65
+              },
+              {
+                "pid": 418724,
+                "created": 1792185308.84
+              },
+              {
+                "pid": 419205,
+                "created": 1792185314.2
+              }
+            ]
+          },
+          "mosaicparse": {
+            "CPU_percent_100_equals_one_core": {
+              "known_samples": 3,
+              "unknown_samples": 1,
+              "mean": 658.989709876578,
+              "min": 373.09329850979,
+              "max": 866.7702316057836,
+              "p50": 737.1055995141605,
+              "p95": 853.8037683966213
+            },
+            "CPU_time_weighted_mean_percent": 658.8990474183954,
+            "observed_CPU_core_seconds": 39.53000000000001,
+            "CPU_observed_interval_seconds": 5.999401601031423,
+            "CPU_unknown_or_boundary_intervals": 1,
+            "tree_RSS_bytes": {
+              "known_samples": 4,
+              "unknown_samples": 0,
+              "mean": 2711929856.0,
+              "min": 2601873408.0,
+              "max": 2748731392.0,
+              "p50": 2748557312.0,
+              "p95": 2748711116.8
+            },
+            "tree_threads": {
+              "known_samples": 4,
+              "unknown_samples": 0,
+              "mean": 251.5,
+              "min": 250.0,
+              "max": 253.0,
+              "p50": 251.5,
+              "p95": 252.85
+            },
+            "observed_process_identities": [
+              {
+                "pid": 1179707,
+                "created": 1792245056.87
+              },
+              {
+                "pid": 1179901,
+                "created": 1792245057.08
+              }
+            ]
+          }
+        },
+        "whole_GPU_cards": [
+          {
+            "index": "0",
+            "uuid": "GPU-95b5895b-c5f3-440b-4bd2-7160ec4da0d1",
+            "scope": "Whole card, includes unrelated resident/running processes.",
+            "all_observed_samples": {
+              "GPU_utilization_percent": {
+                "known_samples": 4,
+                "unknown_samples": 0,
+                "mean": 51.5,
+                "min": 9.0,
+                "max": 100.0,
+                "p50": 48.5,
+                "p95": 93.39999999999998
+              },
+              "memory_engine_utilization_percent": {
+                "known_samples": 4,
+                "unknown_samples": 0,
+                "mean": 24.25,
+                "min": 1.0,
+                "max": 45.0,
+                "p50": 25.5,
+                "p95": 42.74999999999999
+              },
+              "VRAM_used_MiB": {
+                "known_samples": 4,
+                "unknown_samples": 0,
+                "mean": 18951.0,
+                "min": 17542.0,
+                "max": 19822.0,
+                "p50": 19220.0,
+                "p95": 19822.0
+              },
+              "power_W": {
+                "known_samples": 4,
+                "unknown_samples": 0,
+                "mean": 140.9025,
+                "min": 88.1,
+                "max": 176.16,
+                "p50": 149.675,
+                "p95": 173.964
+              },
+              "temperature_C": {
+                "known_samples": 4,
+                "unknown_samples": 0,
+                "mean": 74.5,
+                "min": 73.0,
+                "max": 76.0,
+                "p50": 74.5,
+                "p95": 75.85
+              },
+              "SM_clock_MHz": {
+                "known_samples": 4,
+                "unknown_samples": 0,
+                "mean": 1620.0,
+                "min": 1275.0,
+                "max": 1740.0,
+                "p50": 1732.5,
+                "p95": 1740.0
+              },
+              "memory_clock_MHz": {
+                "known_samples": 4,
+                "unknown_samples": 0,
+                "mean": 6800.0,
+                "min": 6800.0,
+                "max": 6800.0,
+                "p50": 6800.0,
+                "p95": 6800.0
+              }
+            },
+            "during_observed_SDK_windows": {
+              "GPU_utilization_percent": {
+                "known_samples": 0,
+                "unknown_samples": 0,
+                "mean": null,
+                "min": null,
+                "max": null,
+                "p50": null,
+                "p95": null
+              },
+              "memory_engine_utilization_percent": {
+                "known_samples": 0,
+                "unknown_samples": 0,
+                "mean": null,
+                "min": null,
+                "max": null,
+                "p50": null,
+                "p95": null
+              },
+              "VRAM_used_MiB": {
+                "known_samples": 0,
+                "unknown_samples": 0,
+                "mean": null,
+                "min": null,
+                "max": null,
+                "p50": null,
+                "p95": null
+              },
+              "power_W": {
+                "known_samples": 0,
+                "unknown_samples": 0,
+                "mean": null,
+                "min": null,
+                "max": null,
+                "p50": null,
+                "p95": null
+              },
+              "temperature_C": {
+                "known_samples": 0,
+                "unknown_samples": 0,
+                "mean": null,
+                "min": null,
+                "max": null,
+                "p50": null,
+                "p95": null
+              },
+              "SM_clock_MHz": {
+                "known_samples": 0,
+                "unknown_samples": 0,
+                "mean": null,
+                "min": null,
+                "max": null,
+                "p50": null,
+                "p95": null
+              },
+              "memory_clock_MHz": {
+                "known_samples": 0,
+                "unknown_samples": 0,
+                "mean": null,
+                "min": null,
+                "max": null,
+                "p50": null,
+                "p95": null
+              }
+            }
+          },
+          {
+            "index": "1",
+            "uuid": "GPU-87a92d2a-6521-1e36-1ca9-21fd8085b365",
+            "scope": "Whole card, includes unrelated resident/running processes.",
+            "all_observed_samples": {
+              "GPU_utilization_percent": {
+                "known_samples": 4,
+                "unknown_samples": 0,
+                "mean": 0.0,
+                "min": 0.0,
+                "max": 0.0,
+                "p50": 0.0,
+                "p95": 0.0
+              },
+              "memory_engine_utilization_percent": {
+                "known_samples": 4,
+                "unknown_samples": 0,
+                "mean": 0.0,
+                "min": 0.0,
+                "max": 0.0,
+                "p50": 0.0,
+                "p95": 0.0
+              },
+              "VRAM_used_MiB": {
+                "known_samples": 4,
+                "unknown_samples": 0,
+                "mean": 16894.0,
+                "min": 16894.0,
+                "max": 16894.0,
+                "p50": 16894.0,
+                "p95": 16894.0
+              },
+              "power_W": {
+                "known_samples": 4,
+                "unknown_samples": 0,
+                "mean": 26.572499999999998,
+                "min": 26.29,
+                "max": 27.08,
+                "p50": 26.46,
+                "p95": 26.993
+              },
+              "temperature_C": {
+                "known_samples": 4,
+                "unknown_samples": 0,
+                "mean": 50.0,
+                "min": 50.0,
+                "max": 50.0,
+                "p50": 50.0,
+                "p95": 50.0
+              },
+              "SM_clock_MHz": {
+                "known_samples": 4,
+                "unknown_samples": 0,
+                "mean": 300.0,
+                "min": 300.0,
+                "max": 300.0,
+                "p50": 300.0,
+                "p95": 300.0
+              },
+              "memory_clock_MHz": {
+                "known_samples": 4,
+                "unknown_samples": 0,
+                "mean": 405.0,
+                "min": 405.0,
+                "max": 405.0,
+                "p50": 405.0,
+                "p95": 405.0
+              }
+            },
+            "during_observed_SDK_windows": {
+              "GPU_utilization_percent": {
+                "known_samples": 0,
+                "unknown_samples": 0,
+                "mean": null,
+                "min": null,
+                "max": null,
+                "p50": null,
+                "p95": null
+              },
+              "memory_engine_utilization_percent": {
+                "known_samples": 0,
+                "unknown_samples": 0,
+                "mean": null,
+                "min": null,
+                "max": null,
+                "p50": null,
+                "p95": null
+              },
+              "VRAM_used_MiB": {
+                "known_samples": 0,
+                "unknown_samples": 0,
+                "mean": null,
+                "min": null,
+                "max": null,
+                "p50": null,
+                "p95": null
+              },
+              "power_W": {
+                "known_samples": 0,
+                "unknown_samples": 0,
+                "mean": null,
+                "min": null,
+                "max": null,
+                "p50": null,
+                "p95": null
+              },
+              "temperature_C": {
+                "known_samples": 0,
+                "unknown_samples": 0,
+                "mean": null,
+                "min": null,
+                "max": null,
+                "p50": null,
+                "p95": null
+              },
+              "SM_clock_MHz": {
+                "known_samples": 0,
+                "unknown_samples": 0,
+                "mean": null,
+                "min": null,
+                "max": null,
+                "p50": null,
+                "p95": null
+              },
+              "memory_clock_MHz": {
+                "known_samples": 0,
+                "unknown_samples": 0,
+                "mean": null,
+                "min": null,
+                "max": null,
+                "p50": null,
+                "p95": null
+              }
+            }
+          }
+        ],
+        "GPU_processes": [
+          {
+            "GPU_index": "0",
+            "pid": 3128,
+            "created": null,
+            "owner": "unattributed_or_ambiguous",
+            "command": "python",
+            "present_samples": 4,
+            "not_seen_samples": 0,
+            "all_observed_samples": {
+              "sm": {
+                "known_samples": 4,
+                "unknown_samples": 0,
+                "mean": 54.5,
+                "min": 4.0,
+                "max": 99.0,
+                "p50": 57.5,
+                "p95": 95.25
+              },
+              "mem": {
+                "known_samples": 4,
+                "unknown_samples": 0,
+                "mean": 20.75,
+                "min": 0.0,
+                "max": 33.0,
+                "p50": 25.0,
+                "p95": 32.7
+              },
+              "fb": {
+                "known_samples": 4,
+                "unknown_samples": 0,
+                "mean": 7279.5,
+                "min": 5870.0,
+                "max": 8150.0,
+                "p50": 7549.0,
+                "p95": 8150.0
+              }
+            },
+            "during_observed_SDK_windows": {
+              "sm": {
+                "known_samples": 0,
+                "unknown_samples": 0,
+                "mean": null,
+                "min": null,
+                "max": null,
+                "p50": null,
+                "p95": null
+              },
+              "mem": {
+                "known_samples": 0,
+                "unknown_samples": 0,
+                "mean": null,
+                "min": null,
+                "max": null,
+                "p50": null,
+                "p95": null
+              },
+              "fb": {
+                "known_samples": 0,
+                "unknown_samples": 0,
+                "mean": null,
+                "min": null,
+                "max": null,
+                "p50": null,
+                "p95": null
+              }
+            },
+            "units": {
+              "sm": "percent",
+              "mem": "memory engine percent",
+              "fb": "MB as labeled by nvidia-smi pmon"
+            },
+            "attribution": "PID belongs to exactly one recorded service tree in the same sampling cycle; otherwise unknown. No current-live PID lookup."
+          },
+          {
+            "GPU_index": "0",
+            "pid": 10617,
+            "created": null,
+            "owner": "unattributed_or_ambiguous",
+            "command": "VLLM::EngineCor",
+            "present_samples": 4,
+            "not_seen_samples": 0,
+            "all_observed_samples": {
+              "sm": {
+                "known_samples": 0,
+                "unknown_samples": 4,
+                "mean": null,
+                "min": null,
+                "max": null,
+                "p50": null,
+                "p95": null
+              },
+              "mem": {
+                "known_samples": 0,
+                "unknown_samples": 4,
+                "mean": null,
+                "min": null,
+                "max": null,
+                "p50": null,
+                "p95": null
+              },
+              "fb": {
+                "known_samples": 4,
+                "unknown_samples": 0,
+                "mean": 9798.0,
+                "min": 9798.0,
+                "max": 9798.0,
+                "p50": 9798.0,
+                "p95": 9798.0
+              }
+            },
+            "during_observed_SDK_windows": {
+              "sm": {
+                "known_samples": 0,
+                "unknown_samples": 0,
+                "mean": null,
+                "min": null,
+                "max": null,
+                "p50": null,
+                "p95": null
+              },
+              "mem": {
+                "known_samples": 0,
+                "unknown_samples": 0,
+                "mean": null,
+                "min": null,
+                "max": null,
+                "p50": null,
+                "p95": null
+              },
+              "fb": {
+                "known_samples": 0,
+                "unknown_samples": 0,
+                "mean": null,
+                "min": null,
+                "max": null,
+                "p50": null,
+                "p95": null
+              }
+            },
+            "units": {
+              "sm": "percent",
+              "mem": "memory engine percent",
+              "fb": "MB as labeled by nvidia-smi pmon"
+            },
+            "attribution": "PID belongs to exactly one recorded service tree in the same sampling cycle; otherwise unknown. No current-live PID lookup."
+          },
+          {
+            "GPU_index": "0",
+            "pid": 11623,
+            "created": null,
+            "owner": "unattributed_or_ambiguous",
+            "command": "VLLM::EngineCor",
+            "present_samples": 4,
+            "not_seen_samples": 0,
+            "all_observed_samples": {
+              "sm": {
+                "known_samples": 0,
+                "unknown_samples": 4,
+                "mean": null,
+                "min": null,
+                "max": null,
+                "p50": null,
+                "p95": null
+              },
+              "mem": {
+                "known_samples": 0,
+                "unknown_samples": 4,
+                "mean": null,
+                "min": null,
+                "max": null,
+                "p50": null,
+                "p95": null
+              },
+              "fb": {
+                "known_samples": 4,
+                "unknown_samples": 0,
+                "mean": 1870.0,
+                "min": 1870.0,
+                "max": 1870.0,
+                "p50": 1870.0,
+                "p95": 1870.0
+              }
+            },
+            "during_observed_SDK_windows": {
+              "sm": {
+                "known_samples": 0,
+                "unknown_samples": 0,
+                "mean": null,
+                "min": null,
+                "max": null,
+                "p50": null,
+                "p95": null
+              },
+              "mem": {
+                "known_samples": 0,
+                "unknown_samples": 0,
+                "mean": null,
+                "min": null,
+                "max": null,
+                "p50": null,
+                "p95": null
+              },
+              "fb": {
+                "known_samples": 0,
+                "unknown_samples": 0,
+                "mean": null,
+                "min": null,
+                "max": null,
+                "p50": null,
+                "p95": null
+              }
+            },
+            "units": {
+              "sm": "percent",
+              "mem": "memory engine percent",
+              "fb": "MB as labeled by nvidia-smi pmon"
+            },
+            "attribution": "PID belongs to exactly one recorded service tree in the same sampling cycle; otherwise unknown. No current-live PID lookup."
+          },
+          {
+            "GPU_index": "1",
+            "pid": 6977,
+            "created": 1791658283.94,
+            "owner": "docling_glm_ocr",
+            "command": "VLLM::EngineCor",
+            "present_samples": 4,
+            "not_seen_samples": 0,
+            "all_observed_samples": {
+              "sm": {
+                "known_samples": 0,
+                "unknown_samples": 4,
+                "mean": null,
+                "min": null,
+                "max": null,
+                "p50": null,
+                "p95": null
+              },
+              "mem": {
+                "known_samples": 0,
+                "unknown_samples": 4,
+                "mean": null,
+                "min": null,
+                "max": null,
+                "p50": null,
+                "p95": null
+              },
+              "fb": {
+                "known_samples": 4,
+                "unknown_samples": 0,
+                "mean": 11612.0,
+                "min": 11612.0,
+                "max": 11612.0,
+                "p50": 11612.0,
+                "p95": 11612.0
+              }
+            },
+            "during_observed_SDK_windows": {
+              "sm": {
+                "known_samples": 0,
+                "unknown_samples": 0,
+                "mean": null,
+                "min": null,
+                "max": null,
+                "p50": null,
+                "p95": null
+              },
+              "mem": {
+                "known_samples": 0,
+                "unknown_samples": 0,
+                "mean": null,
+                "min": null,
+                "max": null,
+                "p50": null,
+                "p95": null
+              },
+              "fb": {
+                "known_samples": 0,
+                "unknown_samples": 0,
+                "mean": null,
+                "min": null,
+                "max": null,
+                "p50": null,
+                "p95": null
+              }
+            },
+            "units": {
+              "sm": "percent",
+              "mem": "memory engine percent",
+              "fb": "MB as labeled by nvidia-smi pmon"
+            },
+            "attribution": "PID belongs to exactly one recorded service tree in the same sampling cycle; otherwise unknown. No current-live PID lookup."
+          },
+          {
+            "GPU_index": "1",
+            "pid": 1037778,
+            "created": null,
+            "owner": "unattributed_or_ambiguous",
+            "command": "python",
+            "present_samples": 4,
+            "not_seen_samples": 0,
+            "all_observed_samples": {
+              "sm": {
+                "known_samples": 0,
+                "unknown_samples": 4,
+                "mean": null,
+                "min": null,
+                "max": null,
+                "p50": null,
+                "p95": null
+              },
+              "mem": {
+                "known_samples": 0,
+                "unknown_samples": 4,
+                "mean": null,
+                "min": null,
+                "max": null,
+                "p50": null,
+                "p95": null
+              },
+              "fb": {
+                "known_samples": 4,
+                "unknown_samples": 0,
+                "mean": 5278.0,
+                "min": 5278.0,
+                "max": 5278.0,
+                "p50": 5278.0,
+                "p95": 5278.0
+              }
+            },
+            "during_observed_SDK_windows": {
+              "sm": {
+                "known_samples": 0,
+                "unknown_samples": 0,
+                "mean": null,
+                "min": null,
+                "max": null,
+                "p50": null,
+                "p95": null
+              },
+              "mem": {
+                "known_samples": 0,
+                "unknown_samples": 0,
+                "mean": null,
+                "min": null,
+                "max": null,
+                "p50": null,
+                "p95": null
+              },
+              "fb": {
+                "known_samples": 0,
+                "unknown_samples": 0,
+                "mean": null,
+                "min": null,
+                "max": null,
+                "p50": null,
+                "p95": null
+              }
+            },
+            "units": {
+              "sm": "percent",
+              "mem": "memory engine percent",
+              "fb": "MB as labeled by nvidia-smi pmon"
+            },
+            "attribution": "PID belongs to exactly one recorded service tree in the same sampling cycle; otherwise unknown. No current-live PID lookup."
+          }
+        ],
+        "host_CPU_percent": {
+          "known_samples": 4,
+          "unknown_samples": 0,
+          "mean": 15.775,
+          "min": 11.2,
+          "max": 20.5,
+          "p50": 15.7,
+          "p95": 20.02
+        },
+        "CPU_package_temperature_C": {
+          "known_samples": 8,
+          "unknown_samples": 0,
+          "mean": 49.25,
+          "min": 42.0,
+          "max": 58.0,
+          "p50": 48.0,
+          "p95": 58.0
+        },
+        "limitations": [
+          "Sampling misses peaks between observations.",
+          "Service trees have separate CPU/RSS scopes; shared RSS is not deduplicated.",
+          "GPU means use known samples only; pmon - and absent process observations are not zero.",
+          "SDK windows are recorded/log-derived page windows, not pure GPU model execution.",
+          "Whole-card GPU values must not be attributed to one parser process."
+        ]
+      }
+    },
+    {
+      "source": "1225473526",
+      "page_count": 27,
+      "started_UTC": "2026-10-17T13:51:33.891586+00:00",
+      "status": "completed",
+      "job": "job_01M5523NGH51ZHS677219YPS60",
+      "submit_to_terminal_s": 37.208731452934444,
+      "submit_to_saved_MD_s": 37.21879942296073,
+      "MD_SHA256": "6fab180cf837a82ea299ee76200a8595cc73a4e914eebf34478e586090a8d74d",
+      "MD_bytes": 51972,
+      "asset_count": 4,
+      "asset_errors": [],
+      "asset_status": "completed",
+      "asset_capture_s": 0.06419699697289616,
+      "local_diagnostics": [
+        {
+          "source": "/var/lib/docker/volumes/mosaicparse-data/_data/jobs/job_01M5523NGH51ZHS677219YPS60/logs/warnings.json",
+          "saved": "warnings.json",
+          "sha256": "5c864f02ff0aff599e37fe67b2797d915ac59a40ed2092446447d917e2520425",
+          "scope": "Optional local diagnostics; frozen quality reads public Markdown only."
+        },
+        {
+          "source": "/var/lib/docker/volumes/mosaicparse-data/_data/jobs/job_01M5523NGH51ZHS677219YPS60/output/asset-index.json",
+          "saved": "asset-index.json",
+          "sha256": "982efd0db34aed6d5479f9ff40f7766703e3e9b10e3e3b8ee57b44ad363e9a3d",
+          "scope": "Optional local diagnostics; frozen quality reads public Markdown only."
+        }
+      ],
+      "completed_UTC": "2026-10-17T13:52:11.177399+00:00",
+      "full_capture_s": 37.285836894996464,
+      "server_queue_wait_s": 0.010175943374633789,
+      "server_job_duration_s": 36.21813082695007,
+      "SDK_expected_pages": [
+        25,
+        27
+      ],
+      "docling_converters": [
+        {
+          "finished_UTC": "2026-10-17T13:52:01.867301+00:00",
+          "duration_s": 27.48,
+          "inferred_start_epoch": 1792245094.387301,
+          "finished_epoch": 1792245121.867301
+        },
+        {
+          "finished_UTC": "2026-10-17T13:52:05.669074+00:00",
+          "duration_s": 0.85,
+          "inferred_start_epoch": 1792245124.8190742,
+          "finished_epoch": 1792245125.669074
+        }
+      ],
+      "SDK_page_records": [
+        {
+          "source_id": "job_01M5523NGH51ZHS677219YPS60",
+          "page": 25,
+          "status": "completed",
+          "sdk_requests": 1,
+          "page_duration_ms": 2023,
+          "http_duration_ms": 1672,
+          "finished_epoch": 1792245127.77209
+        },
+        {
+          "source_id": "job_01M5523NGH51ZHS677219YPS60",
+          "page": 27,
+          "status": "completed",
+          "sdk_requests": 1,
+          "page_duration_ms": 1478,
+          "http_duration_ms": 1157,
+          "finished_epoch": 1792245129.257144
+        }
+      ],
+      "legacy_orientation_records": [
+        {
+          "page": 25,
+          "clockwise_rotation": 0,
+          "confidence": 0.926908,
+          "epoch": 1792245126.099068
+        },
+        {
+          "page": 27,
+          "clockwise_rotation": 0,
+          "confidence": 0.924407,
+          "epoch": 1792245128.099522
+        }
+      ],
+      "legacy_orientation_to_HTTP_intervals": [
+        {
+          "page": 25,
+          "duration_s": 1.670323133468628,
+          "start_epoch": 1792245126.099068,
+          "finished_epoch": 1792245127.769391
+        },
+        {
+          "page": 27,
+          "duration_s": 1.1554858684539795,
+          "start_epoch": 1792245128.099522,
+          "finished_epoch": 1792245129.255008
+        }
+      ],
+      "API_observed_SDK_HTTP_responses": 2,
+      "SDK_access_POST_completions": 2,
+      "docling_logged_pipeline_work_s": 28.330000000000002,
+      "docling_logged_pipeline_union_s": 28.329999923706055,
+      "docling_logged_pipeline_elapsed_span_s": 31.28177309036255,
+      "SDK_timing_status": "complete_observed_page_logs",
+      "SDK_page_pipeline_total_s": 3.501,
+      "SDK_HTTP_total_s": 2.829,
+      "SDK_actual_POST_count": 2,
+      "SDK_observed_page_duration_ms": {
+        "known_samples": 2,
+        "unknown_samples": 0,
+        "mean": 1750.5,
+        "min": 1478.0,
+        "max": 2023.0,
+        "p50": 1750.5,
+        "p95": 1995.75
+      },
+      "legacy_orientation_to_HTTP_s": {
+        "known_samples": 2,
+        "unknown_samples": 0,
+        "mean": 1.4129045009613037,
+        "min": 1.1554858684539795,
+        "max": 1.670323133468628,
+        "p50": 1.4129045009613037,
+        "p95": 1.6445812702178955
+      },
+      "GLM_pure_model_inference_duration_s": null,
+      "resources": {
+        "sample_count": 19,
+        "CPU_and_RAM_by_service": {
+          "docling_glm_ocr": {
+            "CPU_percent_100_equals_one_core": {
+              "known_samples": 18,
+              "unknown_samples": 1,
+              "mean": 8.32346677335931,
+              "min": 1.4866738814115887,
+              "max": 62.275717706865805,
+              "p50": 2.491823867831659,
+              "p95": 53.99456453118503
+            },
+            "CPU_time_weighted_mean_percent": 8.308564419072024,
+            "observed_CPU_core_seconds": 2.9899999999979627,
+            "CPU_observed_interval_seconds": 35.98696295998525,
+            "CPU_unknown_or_boundary_intervals": 1,
+            "tree_RSS_bytes": {
+              "known_samples": 19,
+              "unknown_samples": 0,
+              "mean": 8774762496.0,
+              "min": 8774762496.0,
+              "max": 8774762496.0,
+              "p50": 8774762496.0,
+              "p95": 8774762496.0
+            },
+            "tree_threads": {
+              "known_samples": 19,
+              "unknown_samples": 0,
+              "mean": 552.0,
+              "min": 552.0,
+              "max": 552.0,
+              "p50": 552.0,
+              "p95": 552.0
+            },
+            "observed_process_identities": [
+              {
+                "pid": 3145,
+                "created": 1791658215.87
+              },
+              {
+                "pid": 6976,
+                "created": 1791658283.94
+              },
+              {
+                "pid": 6977,
+                "created": 1791658283.94
+              }
+            ]
+          },
+          "docling_glm_ocr_sdk": {
+            "CPU_percent_100_equals_one_core": {
+              "known_samples": 18,
+              "unknown_samples": 1,
+              "mean": 175.19169244792838,
+              "min": 0.0,
+              "max": 1931.8976583366352,
+              "p50": 0.0,
+              "p95": 1002.9983864364295
+            },
+            "CPU_time_weighted_mean_percent": 175.24886120290213,
+            "observed_CPU_core_seconds": 63.079999999999934,
+            "CPU_observed_interval_seconds": 35.99452776298858,
+            "CPU_unknown_or_boundary_intervals": 1,
+            "tree_RSS_bytes": {
+              "known_samples": 19,
+              "unknown_samples": 0,
+              "mean": 6012334080.0,
+              "min": 5978873856.0,
+              "max": 6294794240.0,
+              "p50": 5978873856.0,
+              "p95": 6194620006.4
+            },
+            "tree_threads": {
+              "known_samples": 19,
+              "unknown_samples": 0,
+              "mean": 311.10526315789474,
+              "min": 307.0,
+              "max": 346.0,
+              "p50": 307.0,
+              "p95": 346.0
+            },
+            "observed_process_identities": [
+              {
+                "pid": 418554,
+                "created": 1792185308.65
+              },
+              {
+                "pid": 418724,
+                "created": 1792185308.84
+              },
+              {
+                "pid": 419205,
+                "created": 1792185314.2
+              }
+            ]
+          },
+          "mosaicparse": {
+            "CPU_percent_100_equals_one_core": {
+              "known_samples": 18,
+              "unknown_samples": 1,
+              "mean": 496.87150916465447,
+              "min": 23.040373726312996,
+              "max": 793.8656203679745,
+              "p50": 612.7834448797835,
+              "p95": 793.2912550087882
+            },
+            "CPU_time_weighted_mean_percent": 496.9186987373692,
+            "observed_CPU_core_seconds": 178.88,
+            "CPU_observed_interval_seconds": 35.99784038204234,
+            "CPU_unknown_or_boundary_intervals": 1,
+            "tree_RSS_bytes": {
+              "known_samples": 19,
+              "unknown_samples": 0,
+              "mean": 3314248218.9473686,
+              "min": 2859540480.0,
+              "max": 3508838400.0,
+              "p50": 3317784576.0,
+              "p95": 3483922022.4
+            },
+            "tree_threads": {
+              "known_samples": 19,
+              "unknown_samples": 0,
+              "mean": 254.89473684210526,
+              "min": 251.0,
+              "max": 257.0,
+              "p50": 256.0,
+              "p95": 256.1
+            },
+            "observed_process_identities": [
+              {
+                "pid": 1179707,
+                "created": 1792245056.87
+              },
+              {
+                "pid": 1179901,
+                "created": 1792245057.08
+              }
+            ]
+          }
+        },
+        "whole_GPU_cards": [
+          {
+            "index": "0",
+            "uuid": "GPU-95b5895b-c5f3-440b-4bd2-7160ec4da0d1",
+            "scope": "Whole card, includes unrelated resident/running processes.",
+            "all_observed_samples": {
+              "GPU_utilization_percent": {
+                "known_samples": 19,
+                "unknown_samples": 0,
+                "mean": 54.421052631578945,
+                "min": 41.0,
+                "max": 75.0,
+                "p50": 52.0,
+                "p95": 75.0
+              },
+              "memory_engine_utilization_percent": {
+                "known_samples": 19,
+                "unknown_samples": 0,
+                "mean": 40.526315789473685,
+                "min": 30.0,
+                "max": 48.0,
+                "p50": 41.0,
+                "p95": 47.099999999999994
+              },
+              "VRAM_used_MiB": {
+                "known_samples": 19,
+                "unknown_samples": 0,
+                "mean": 19559.894736842107,
+                "min": 18992.0,
+                "max": 19822.0,
+                "p50": 19822.0,
+                "p95": 19822.0
+              },
+              "power_W": {
+                "known_samples": 19,
+                "unknown_samples": 0,
+                "mean": 163.48894736842107,
+                "min": 132.08,
+                "max": 178.82,
+                "p50": 162.6,
+                "p95": 178.613
+              },
+              "temperature_C": {
+                "known_samples": 19,
+                "unknown_samples": 0,
+                "mean": 77.05263157894737,
+                "min": 76.0,
+                "max": 78.0,
+                "p50": 77.0,
+                "p95": 78.0
+              },
+              "SM_clock_MHz": {
+                "known_samples": 19,
+                "unknown_samples": 0,
+                "mean": 1715.5263157894738,
+                "min": 1290.0,
+                "max": 1740.0,
+                "p50": 1740.0,
+                "p95": 1740.0
+              },
+              "memory_clock_MHz": {
+                "known_samples": 19,
+                "unknown_samples": 0,
+                "mean": 6800.0,
+                "min": 6800.0,
+                "max": 6800.0,
+                "p50": 6800.0,
+                "p95": 6800.0
+              }
+            },
+            "during_observed_SDK_windows": {
+              "GPU_utilization_percent": {
+                "known_samples": 2,
+                "unknown_samples": 0,
+                "mean": 48.0,
+                "min": 48.0,
+                "max": 48.0,
+                "p50": 48.0,
+                "p95": 48.0
+              },
+              "memory_engine_utilization_percent": {
+                "known_samples": 2,
+                "unknown_samples": 0,
+                "mean": 37.0,
+                "min": 37.0,
+                "max": 37.0,
+                "p50": 37.0,
+                "p95": 37.0
+              },
+              "VRAM_used_MiB": {
+                "known_samples": 2,
+                "unknown_samples": 0,
+                "mean": 18992.0,
+                "min": 18992.0,
+                "max": 18992.0,
+                "p50": 18992.0,
+                "p95": 18992.0
+              },
+              "power_W": {
+                "known_samples": 2,
+                "unknown_samples": 0,
+                "mean": 158.82,
+                "min": 157.04,
+                "max": 160.6,
+                "p50": 158.82,
+                "p95": 160.422
+              },
+              "temperature_C": {
+                "known_samples": 2,
+                "unknown_samples": 0,
+                "mean": 77.0,
+                "min": 77.0,
+                "max": 77.0,
+                "p50": 77.0,
+                "p95": 77.0
+              },
+              "SM_clock_MHz": {
+                "known_samples": 2,
+                "unknown_samples": 0,
+                "mean": 1740.0,
+                "min": 1740.0,
+                "max": 1740.0,
+                "p50": 1740.0,
+                "p95": 1740.0
+              },
+              "memory_clock_MHz": {
+                "known_samples": 2,
+                "unknown_samples": 0,
+                "mean": 6800.0,
+                "min": 6800.0,
+                "max": 6800.0,
+                "p50": 6800.0,
+                "p95": 6800.0
+              }
+            }
+          },
+          {
+            "index": "1",
+            "uuid": "GPU-87a92d2a-6521-1e36-1ca9-21fd8085b365",
+            "scope": "Whole card, includes unrelated resident/running processes.",
+            "all_observed_samples": {
+              "GPU_utilization_percent": {
+                "known_samples": 19,
+                "unknown_samples": 0,
+                "mean": 0.10526315789473684,
+                "min": 0.0,
+                "max": 2.0,
+                "p50": 0.0,
+                "p95": 0.19999999999999574
+              },
+              "memory_engine_utilization_percent": {
+                "known_samples": 19,
+                "unknown_samples": 0,
+                "mean": 0.10526315789473684,
+                "min": 0.0,
+                "max": 2.0,
+                "p50": 0.0,
+                "p95": 0.19999999999999574
+              },
+              "VRAM_used_MiB": {
+                "known_samples": 19,
+                "unknown_samples": 0,
+                "mean": 16894.0,
+                "min": 16894.0,
+                "max": 16894.0,
+                "p50": 16894.0,
+                "p95": 16894.0
+              },
+              "power_W": {
+                "known_samples": 19,
+                "unknown_samples": 0,
+                "mean": 33.57684210526316,
+                "min": 26.64,
+                "max": 87.64,
+                "p50": 27.3,
+                "p95": 86.965
+              },
+              "temperature_C": {
+                "known_samples": 19,
+                "unknown_samples": 0,
+                "mean": 49.473684210526315,
+                "min": 48.0,
+                "max": 52.0,
+                "p50": 49.0,
+                "p95": 51.099999999999994
+              },
+              "SM_clock_MHz": {
+                "known_samples": 19,
+                "unknown_samples": 0,
+                "mean": 462.63157894736844,
+                "min": 300.0,
+                "max": 1845.0,
+                "p50": 300.0,
+                "p95": 1845.0
+              },
+              "memory_clock_MHz": {
+                "known_samples": 19,
+                "unknown_samples": 0,
+                "mean": 1078.157894736842,
+                "min": 405.0,
+                "max": 6800.0,
+                "p50": 405.0,
+                "p95": 6800.0
+              }
+            },
+            "during_observed_SDK_windows": {
+              "GPU_utilization_percent": {
+                "known_samples": 2,
+                "unknown_samples": 0,
+                "mean": 1.0,
+                "min": 0.0,
+                "max": 2.0,
+                "p50": 1.0,
+                "p95": 1.9
+              },
+              "memory_engine_utilization_percent": {
+                "known_samples": 2,
+                "unknown_samples": 0,
+                "mean": 1.0,
+                "min": 0.0,
+                "max": 2.0,
+                "p50": 1.0,
+                "p95": 1.9
+              },
+              "VRAM_used_MiB": {
+                "known_samples": 2,
+                "unknown_samples": 0,
+                "mean": 16894.0,
+                "min": 16894.0,
+                "max": 16894.0,
+                "p50": 16894.0,
+                "p95": 16894.0
+              },
+              "power_W": {
+                "known_samples": 2,
+                "unknown_samples": 0,
+                "mean": 57.120000000000005,
+                "min": 27.35,
+                "max": 86.89,
+                "p50": 57.120000000000005,
+                "p95": 83.913
+              },
+              "temperature_C": {
+                "known_samples": 2,
+                "unknown_samples": 0,
+                "mean": 49.5,
+                "min": 48.0,
+                "max": 51.0,
+                "p50": 49.5,
+                "p95": 50.85
+              },
+              "SM_clock_MHz": {
+                "known_samples": 2,
+                "unknown_samples": 0,
+                "mean": 1072.5,
+                "min": 300.0,
+                "max": 1845.0,
+                "p50": 1072.5,
+                "p95": 1767.75
+              },
+              "memory_clock_MHz": {
+                "known_samples": 2,
+                "unknown_samples": 0,
+                "mean": 3602.5,
+                "min": 405.0,
+                "max": 6800.0,
+                "p50": 3602.5,
+                "p95": 6480.25
+              }
+            }
+          }
+        ],
+        "GPU_processes": [
+          {
+            "GPU_index": "0",
+            "pid": 3128,
+            "created": null,
+            "owner": "unattributed_or_ambiguous",
+            "command": "python",
+            "present_samples": 19,
+            "not_seen_samples": 0,
+            "all_observed_samples": {
+              "sm": {
+                "known_samples": 19,
+                "unknown_samples": 0,
+                "mean": 53.578947368421055,
+                "min": 41.0,
+                "max": 74.0,
+                "p50": 51.0,
+                "p95": 74.0
+              },
+              "mem": {
+                "known_samples": 19,
+                "unknown_samples": 0,
+                "mean": 39.73684210526316,
+                "min": 29.0,
+                "max": 48.0,
+                "p50": 40.0,
+                "p95": 46.199999999999996
+              },
+              "fb": {
+                "known_samples": 19,
+                "unknown_samples": 0,
+                "mean": 7887.894736842105,
+                "min": 7320.0,
+                "max": 8150.0,
+                "p50": 8150.0,
+                "p95": 8150.0
+              }
+            },
+            "during_observed_SDK_windows": {
+              "sm": {
+                "known_samples": 2,
+                "unknown_samples": 0,
+                "mean": 47.5,
+                "min": 47.0,
+                "max": 48.0,
+                "p50": 47.5,
+                "p95": 47.95
+              },
+              "mem": {
+                "known_samples": 2,
+                "unknown_samples": 0,
+                "mean": 36.0,
+                "min": 36.0,
+                "max": 36.0,
+                "p50": 36.0,
+                "p95": 36.0
+              },
+              "fb": {
+                "known_samples": 2,
+                "unknown_samples": 0,
+                "mean": 7320.0,
+                "min": 7320.0,
+                "max": 7320.0,
+                "p50": 7320.0,
+                "p95": 7320.0
+              }
+            },
+            "units": {
+              "sm": "percent",
+              "mem": "memory engine percent",
+              "fb": "MB as labeled by nvidia-smi pmon"
+            },
+            "attribution": "PID belongs to exactly one recorded service tree in the same sampling cycle; otherwise unknown. No current-live PID lookup."
+          },
+          {
+            "GPU_index": "0",
+            "pid": 10617,
+            "created": null,
+            "owner": "unattributed_or_ambiguous",
+            "command": "VLLM::EngineCor",
+            "present_samples": 19,
+            "not_seen_samples": 0,
+            "all_observed_samples": {
+              "sm": {
+                "known_samples": 0,
+                "unknown_samples": 19,
+                "mean": null,
+                "min": null,
+                "max": null,
+                "p50": null,
+                "p95": null
+              },
+              "mem": {
+                "known_samples": 0,
+                "unknown_samples": 19,
+                "mean": null,
+                "min": null,
+                "max": null,
+                "p50": null,
+                "p95": null
+              },
+              "fb": {
+                "known_samples": 19,
+                "unknown_samples": 0,
+                "mean": 9798.0,
+                "min": 9798.0,
+                "max": 9798.0,
+                "p50": 9798.0,
+                "p95": 9798.0
+              }
+            },
+            "during_observed_SDK_windows": {
+              "sm": {
+                "known_samples": 0,
+                "unknown_samples": 2,
+                "mean": null,
+                "min": null,
+                "max": null,
+                "p50": null,
+                "p95": null
+              },
+              "mem": {
+                "known_samples": 0,
+                "unknown_samples": 2,
+                "mean": null,
+                "min": null,
+                "max": null,
+                "p50": null,
+                "p95": null
+              },
+              "fb": {
+                "known_samples": 2,
+                "unknown_samples": 0,
+                "mean": 9798.0,
+                "min": 9798.0,
+                "max": 9798.0,
+                "p50": 9798.0,
+                "p95": 9798.0
+              }
+            },
+            "units": {
+              "sm": "percent",
+              "mem": "memory engine percent",
+              "fb": "MB as labeled by nvidia-smi pmon"
+            },
+            "attribution": "PID belongs to exactly one recorded service tree in the same sampling cycle; otherwise unknown. No current-live PID lookup."
+          },
+          {
+            "GPU_index": "0",
+            "pid": 11623,
+            "created": null,
+            "owner": "unattributed_or_ambiguous",
+            "command": "VLLM::EngineCor",
+            "present_samples": 19,
+            "not_seen_samples": 0,
+            "all_observed_samples": {
+              "sm": {
+                "known_samples": 0,
+                "unknown_samples": 19,
+                "mean": null,
+                "min": null,
+                "max": null,
+                "p50": null,
+                "p95": null
+              },
+              "mem": {
+                "known_samples": 0,
+                "unknown_samples": 19,
+                "mean": null,
+                "min": null,
+                "max": null,
+                "p50": null,
+                "p95": null
+              },
+              "fb": {
+                "known_samples": 19,
+                "unknown_samples": 0,
+                "mean": 1870.0,
+                "min": 1870.0,
+                "max": 1870.0,
+                "p50": 1870.0,
+                "p95": 1870.0
+              }
+            },
+            "during_observed_SDK_windows": {
+              "sm": {
+                "known_samples": 0,
+                "unknown_samples": 2,
+                "mean": null,
+                "min": null,
+                "max": null,
+                "p50": null,
+                "p95": null
+              },
+              "mem": {
+                "known_samples": 0,
+                "unknown_samples": 2,
+                "mean": null,
+                "min": null,
+                "max": null,
+                "p50": null,
+                "p95": null
+              },
+              "fb": {
+                "known_samples": 2,
+                "unknown_samples": 0,
+                "mean": 1870.0,
+                "min": 1870.0,
+                "max": 1870.0,
+                "p50": 1870.0,
+                "p95": 1870.0
+              }
+            },
+            "units": {
+              "sm": "percent",
+              "mem": "memory engine percent",
+              "fb": "MB as labeled by nvidia-smi pmon"
+            },
+            "attribution": "PID belongs to exactly one recorded service tree in the same sampling cycle; otherwise unknown. No current-live PID lookup."
+          },
+          {
+            "GPU_index": "1",
+            "pid": 6977,
+            "created": 1791658283.94,
+            "owner": "docling_glm_ocr",
+            "command": "VLLM::EngineCor",
+            "present_samples": 19,
+            "not_seen_samples": 0,
+            "all_observed_samples": {
+              "sm": {
+                "known_samples": 2,
+                "unknown_samples": 17,
+                "mean": 13.5,
+                "min": 11.0,
+                "max": 16.0,
+                "p50": 13.5,
+                "p95": 15.75
+              },
+              "mem": {
+                "known_samples": 2,
+                "unknown_samples": 17,
+                "mean": 8.5,
+                "min": 7.0,
+                "max": 10.0,
+                "p50": 8.5,
+                "p95": 9.85
+              },
+              "fb": {
+                "known_samples": 19,
+                "unknown_samples": 0,
+                "mean": 11612.0,
+                "min": 11612.0,
+                "max": 11612.0,
+                "p50": 11612.0,
+                "p95": 11612.0
+              }
+            },
+            "during_observed_SDK_windows": {
+              "sm": {
+                "known_samples": 1,
+                "unknown_samples": 1,
+                "mean": 16.0,
+                "min": 16.0,
+                "max": 16.0,
+                "p50": 16.0,
+                "p95": 16.0
+              },
+              "mem": {
+                "known_samples": 1,
+                "unknown_samples": 1,
+                "mean": 10.0,
+                "min": 10.0,
+                "max": 10.0,
+                "p50": 10.0,
+                "p95": 10.0
+              },
+              "fb": {
+                "known_samples": 2,
+                "unknown_samples": 0,
+                "mean": 11612.0,
+                "min": 11612.0,
+                "max": 11612.0,
+                "p50": 11612.0,
+                "p95": 11612.0
+              }
+            },
+            "units": {
+              "sm": "percent",
+              "mem": "memory engine percent",
+              "fb": "MB as labeled by nvidia-smi pmon"
+            },
+            "attribution": "PID belongs to exactly one recorded service tree in the same sampling cycle; otherwise unknown. No current-live PID lookup."
+          },
+          {
+            "GPU_index": "1",
+            "pid": 1037778,
+            "created": null,
+            "owner": "unattributed_or_ambiguous",
+            "command": "python",
+            "present_samples": 19,
+            "not_seen_samples": 0,
+            "all_observed_samples": {
+              "sm": {
+                "known_samples": 0,
+                "unknown_samples": 19,
+                "mean": null,
+                "min": null,
+                "max": null,
+                "p50": null,
+                "p95": null
+              },
+              "mem": {
+                "known_samples": 0,
+                "unknown_samples": 19,
+                "mean": null,
+                "min": null,
+                "max": null,
+                "p50": null,
+                "p95": null
+              },
+              "fb": {
+                "known_samples": 19,
+                "unknown_samples": 0,
+                "mean": 5278.0,
+                "min": 5278.0,
+                "max": 5278.0,
+                "p50": 5278.0,
+                "p95": 5278.0
+              }
+            },
+            "during_observed_SDK_windows": {
+              "sm": {
+                "known_samples": 0,
+                "unknown_samples": 2,
+                "mean": null,
+                "min": null,
+                "max": null,
+                "p50": null,
+                "p95": null
+              },
+              "mem": {
+                "known_samples": 0,
+                "unknown_samples": 2,
+                "mean": null,
+                "min": null,
+                "max": null,
+                "p50": null,
+                "p95": null
+              },
+              "fb": {
+                "known_samples": 2,
+                "unknown_samples": 0,
+                "mean": 5278.0,
+                "min": 5278.0,
+                "max": 5278.0,
+                "p50": 5278.0,
+                "p95": 5278.0
+              }
+            },
+            "units": {
+              "sm": "percent",
+              "mem": "memory engine percent",
+              "fb": "MB as labeled by nvidia-smi pmon"
+            },
+            "attribution": "PID belongs to exactly one recorded service tree in the same sampling cycle; otherwise unknown. No current-live PID lookup."
+          }
+        ],
+        "host_CPU_percent": {
+          "known_samples": 19,
+          "unknown_samples": 0,
+          "mean": 14.805263157894737,
+          "min": 5.5,
+          "max": 33.2,
+          "p50": 15.1,
+          "p95": 21.229999999999972
+        },
+        "CPU_package_temperature_C": {
+          "known_samples": 38,
+          "unknown_samples": 0,
+          "mean": 49.05263157894737,
+          "min": 42.0,
+          "max": 57.0,
+          "p50": 48.0,
+          "p95": 57.0
+        },
+        "limitations": [
+          "Sampling misses peaks between observations.",
+          "Service trees have separate CPU/RSS scopes; shared RSS is not deduplicated.",
+          "GPU means use known samples only; pmon - and absent process observations are not zero.",
+          "SDK windows are recorded/log-derived page windows, not pure GPU model execution.",
+          "Whole-card GPU values must not be attributed to one parser process."
+        ]
+      }
+    }
+  ],
+  "capture_plan": {
+    "schema": "selected-pipeline-full-HTTP/1",
+    "base": "http://10.0.6.22:12303",
+    "container": "mosaicparse",
+    "sdk_container": "docling_glm_ocr_sdk",
+    "glm_container": "docling_glm_ocr",
+    "sources": [
+      {
+        "source": "1225474693",
+        "source_path": "/opt/mosaic-parse/pdf_sample/1225474693.pdf",
+        "manifest_path": "pdf_sample/1225474693.pdf",
+        "sha256": "dc7f5b3bfdc5a5c69b9cf4b2a9e0d28e2f9ee0b2464770fb8a910fea688ee775",
+        "page_count": 4,
+        "size_bytes": 144506
+      },
+      {
+        "source": "1225473526",
+        "source_path": "/opt/mosaic-parse/pdf_sample/1225473526.pdf",
+        "manifest_path": "pdf_sample/1225473526.pdf",
+        "sha256": "787297535ba74a4170cc859ae68f15f946f6dfd0bfc14a1e1fa0e6d068ba2b19",
+        "page_count": 27,
+        "size_bytes": 1175574
+      }
+    ],
+    "pages": 31,
+    "form": {
+      "scan_policy": "auto"
+    },
+    "unit_range_set": false,
+    "profile_override": false,
+    "parse_timeout_override": false,
+    "request_concurrency": 1,
+    "sampling_target_seconds": 2,
+    "service_control": false,
+    "source_manifest_SHA256": "dc5a4d24e61b0fd8e200a34b3e2ced68f3dd7b3ef55e19ef431c0afd805eb70a",
+    "capture_helper_SHA256": "3a4bdfcc443277d8f515e97b2e37bd71d77c1f98c9c3863fb9d3ce95a2a0852e",
+    "runner_SHA256": "30e179cdf16a340e07dc2f1b9be98d4e96d8411cd3947f5ebf7ff2769cb5b727",
+    "api_key_value_recorded": false,
+    "authorization_environment_variable": "MOSAICPARSE_API_KEY",
+    "started_UTC": "2026-10-17T13:51:24.466467+00:00",
+    "containers": {
+      "mosaicparse": {
+        "name": "mosaicparse",
+        "container_ID": "3466a7bef1c98f30c84db0460500eedece0cf7e0d308da912390077905cb3fa9",
+        "image_ID": "sha256:07a5df326885a6f83cf48aab766f6dd47fad5175066703fe6fa224380d86f9d4",
+        "started": "2026-10-17T13:50:56.919214112Z",
+        "restart_count": 0,
+        "pid": 1179707,
+        "ports": {
+          "12303/tcp": [
+            {
+              "HostIp": "0.0.0.0",
+              "HostPort": "12303"
+            },
+            {
+              "HostIp": "::",
+              "HostPort": "12303"
+            }
+          ]
+        },
+        "mounts": [
+          {
+            "Type": "volume",
+            "Source": "/var/lib/docker/volumes/mosaicparse-data/_data",
+            "Destination": "/data"
+          },
+          {
+            "Type": "volume",
+            "Source": "/var/lib/docker/volumes/mosaicparse-docling-models-selected-20261017/_data",
+            "Destination": "/models/docling"
+          },
+          {
+            "Type": "volume",
+            "Source": "/var/lib/docker/volumes/mosaicparse-huggingface-cache/_data",
+            "Destination": "/models/huggingface"
+          }
+        ]
+      },
+      "docling_glm_ocr_sdk": {
+        "name": "docling_glm_ocr_sdk",
+        "container_ID": "b0b2f735fb491fdb39b6b23e95d70848a15f1cebc67297c2f7d82c6b7fcd0a75",
+        "image_ID": "sha256:abe353926afba82931744bac4533f895c9e6ad6f768da4103a4ec40410c2e6cb",
+        "started": "2026-10-16T21:15:08.695015459Z",
+        "restart_count": 0,
+        "pid": 418554,
+        "ports": {
+          "12303/tcp": null,
+          "5002/tcp": null
+        },
+        "mounts": [
+          {
+            "Type": "volume",
+            "Source": "/var/lib/docker/volumes/mosaicparse-huggingface-cache/_data",
+            "Destination": "/models/huggingface"
+          },
+          {
+            "Type": "volume",
+            "Source": "/var/lib/docker/volumes/2d6b12646d90939ffba76ee495bbbd0e64862b1618e195e10277e21b5284fc26/_data",
+            "Destination": "/data"
+          },
+          {
+            "Type": "volume",
+            "Source": "/var/lib/docker/volumes/1aa962a748d64b015de2df5b7f3383359cc94077eab2ea26fc31e17d93502b08/_data",
+            "Destination": "/models/docling"
+          }
+        ]
+      },
+      "docling_glm_ocr": {
+        "name": "docling_glm_ocr",
+        "container_ID": "a803d464218327072544e69c70513d17e1604a864a86ca556ec3ca87d0275035",
+        "image_ID": "sha256:df7be4c4d818e250a8c80f78d110571e92e72a1fefec06fed82a2e37e473cd48",
+        "started": "2026-10-10T18:50:15.890807408Z",
+        "restart_count": 0,
+        "pid": 3145,
+        "ports": {
+          "8000/tcp": [
+            {
+              "HostIp": "127.0.0.1",
+              "HostPort": "8001"
+            }
+          ]
+        },
+        "mounts": [
+          {
+            "Type": "volume",
+            "Source": "/var/lib/docker/volumes/mosaicparse-huggingface-cache/_data",
+            "Destination": "/root/.cache/huggingface"
+          }
+        ]
+      }
+    }
+  },
+  "input_snapshots": [
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/production-boundary-http/run-plan.json",
+      "snapshot_SHA256": "058eccb3f6aca797fb725f641cae657c307cb435f91421c8677e0d6680369165",
+      "snapshot_bytes": 4362,
+      "size_after_read": 4362,
+      "mutated_during_read": false
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/production-boundary-http/run-completion.json",
+      "snapshot_SHA256": "5a2d7cd7247c1b6c4947412249cd1a3dd2343d874d6c7cd1883f9a4e790b88d1",
+      "snapshot_bytes": 4740,
+      "size_after_read": 4740,
+      "mutated_during_read": false
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/production-boundary-http/resource-samples.jsonl",
+      "snapshot_SHA256": "6fcd92429d47f90c8bcda323e3a056eea7c09fe65e722eec6160e5fe5b2df2be",
+      "snapshot_bytes": 212291,
+      "size_after_read": 212291,
+      "mutated_during_read": false
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/production-boundary-http/container.log",
+      "snapshot_SHA256": "ea0940e47038969e563e1f8a55f345f605da5d50da5cd77e6a1767aba90d74da",
+      "snapshot_bytes": 17172,
+      "size_after_read": 17172,
+      "mutated_during_read": false
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/production-boundary-http/sdk-container.log",
+      "snapshot_SHA256": "bb5b7860274e519bcf5aba11afccd5e6e76ed36e1a228043d494dc4dcb30133d",
+      "snapshot_bytes": 698,
+      "size_after_read": 698,
+      "mutated_during_read": false
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/production-boundary-http/glm-container.log",
+      "snapshot_SHA256": "93e9baad399b53f48b753fcb66da57883bbd9ff7acce87ed29b51f5b112dda12",
+      "snapshot_bytes": 2026,
+      "size_after_read": 2026,
+      "mutated_during_read": false
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/production-boundary-http/summary.json",
+      "snapshot_SHA256": "9c067eca64472326ac3ada6833a2db455624b670df07b68bb2859dd116d628a1",
+      "snapshot_bytes": 2700,
+      "size_after_read": 2700,
+      "mutated_during_read": false
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/production-boundary-http/cases/1225474693/summary.json",
+      "snapshot_SHA256": "caa35ff38da0602fc3a3b6ad3065c0337a345a8260cc42c2a8811bb966f58ea4",
+      "snapshot_bytes": 1283,
+      "size_after_read": 1283,
+      "mutated_during_read": false
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/production-boundary-http/cases/1225474693/job-latest.json",
+      "snapshot_SHA256": "def77cb5a32eb69b378330f3ab082d0c22760b06db35f696ef32e8f0844fabb5",
+      "snapshot_bytes": 1040,
+      "size_after_read": 1040,
+      "mutated_during_read": false
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/production-boundary-http/cases/1225474693/warnings.json",
+      "snapshot_SHA256": "3f819417a4f7dfa557a154a67860f4b1f13818f6e9208b802067682c3fa6de26",
+      "snapshot_bytes": 44,
+      "size_after_read": 44,
+      "mutated_during_read": false
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/production-boundary-http/cases/1225473526/summary.json",
+      "snapshot_SHA256": "25d92da962e26177cbbbaa91d243ddc3097c5c2a136a851dcace55b9127b8a77",
+      "snapshot_bytes": 1288,
+      "size_after_read": 1288,
+      "mutated_during_read": false
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/production-boundary-http/cases/1225473526/job-latest.json",
+      "snapshot_SHA256": "fa67e6345671682346268ea7fe3d34ad08fcc301f6170933b26f6247f4963d6b",
+      "snapshot_bytes": 1043,
+      "size_after_read": 1043,
+      "mutated_during_read": false
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/production-boundary-http/cases/1225473526/warnings.json",
+      "snapshot_SHA256": "5c864f02ff0aff599e37fe67b2797d915ac59a40ed2092446447d917e2520425",
+      "snapshot_bytes": 343,
+      "size_after_read": 343,
+      "mutated_during_read": false
+    }
+  ],
+  "summarizer_SHA256": "f7666a7865f1e9ee4af470d9367338e901a8a0bf3d2cb85d497cf77dbd6b9000",
+  "read_only": true,
+  "services_or_models_controlled": false,
+  "missing_values_are_null_not_zero": true
+}

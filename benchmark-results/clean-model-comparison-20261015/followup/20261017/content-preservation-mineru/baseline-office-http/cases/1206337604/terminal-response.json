@@ -1,0 +1,52 @@
+{
+  "status": 200,
+  "headers": {
+    "date": "Sat, 17 Oct 2026 13:12:28 GMT",
+    "server": "uvicorn",
+    "content-length": "889",
+    "content-type": "application/json",
+    "x-request-id": "req_01M54ZW39ZZ99KFF9749QMC3QC",
+    "x-content-type-options": "nosniff",
+    "referrer-policy": "no-referrer"
+  },
+  "body_path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/baseline-office-http/cases/1206337604/terminal-response-body.bin",
+  "body_sha256": "173a23439eac2998e996475aaa292a0c39cd46169af30a0eb09263d98eb43307",
+  "body_bytes": 889,
+  "received_url": "http://10.0.6.22:12303/v1/content/jobs/job_01M54ZW17B1A3J6RZHC0J2TYVD",
+  "captured_utc": "2026-10-17T13:12:28.742293+00:00",
+  "body": {
+    "id": "job_01M54ZW17B1A3J6RZHC0J2TYVD",
+    "object": "content.parse.job",
+    "status": "completed",
+    "filename": "source-converted.pdf",
+    "mime_type": "application/pdf",
+    "unit_count": 2,
+    "progress": {
+      "current": 2,
+      "total": 2,
+      "unit": "page"
+    },
+    "options": {
+      "scan_policy": "auto",
+      "unit_range": null,
+      "language": [
+        "zh",
+        "en"
+      ],
+      "describe_images": false,
+      "description_language": "zh-CN",
+      "timeout_seconds": null
+    },
+    "error": null,
+    "attempt": 1,
+    "parent_job_id": null,
+    "created_at": "2026-10-17T13:12:26.619884Z",
+    "started_at": "2026-10-17T13:12:26.637779Z",
+    "completed_at": "2026-10-17T13:12:28.525393Z",
+    "status_url": "/v1/content/jobs/job_01M54ZW17B1A3J6RZHC0J2TYVD",
+    "events_url": "/v1/content/jobs/job_01M54ZW17B1A3J6RZHC0J2TYVD/events",
+    "result_url": "/v1/content/jobs/job_01M54ZW17B1A3J6RZHC0J2TYVD/result",
+    "assets_url": "/v1/content/jobs/job_01M54ZW17B1A3J6RZHC0J2TYVD/assets",
+    "bundle_url": "/v1/content/jobs/job_01M54ZW17B1A3J6RZHC0J2TYVD/bundle"
+  }
+}

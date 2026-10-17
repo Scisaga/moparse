@@ -1,0 +1,184 @@
+[
+  {
+    "stage": "official_input_preparation",
+    "file_suffix": "pdf",
+    "prepared_size_bytes": 241216,
+    "original_function_seconds": 0.21336181298829615,
+    "prepared_SHA256": "066d99ead1f388c78d9cac36a8f9deac51c4ad4474477872c2f65b3064009930",
+    "retained_original_page_indices_zero_based": [
+      18
+    ],
+    "broken_original_page_indices_zero_based": [],
+    "derived_input_filename": "prepared-by-official-page-selection.pdf",
+    "transformation": "Official default page_range handling; runner did not crop or rewrite the source PDF."
+  },
+  {
+    "stage": "actual_VLM_options",
+    "image_analysis": false,
+    "not_extract_list": [
+      "caption",
+      "code_caption",
+      "doc_title",
+      "footer",
+      "footnote",
+      "header",
+      "image_caption",
+      "image_footnote",
+      "page_footnote",
+      "page_number",
+      "paragraph_title",
+      "phonetic",
+      "ref_text",
+      "table_caption",
+      "table_footnote",
+      "text",
+      "title"
+    ],
+    "image_sizes": [
+      [
+        1654,
+        2339
+      ]
+    ],
+    "model_inputs": []
+  },
+  {
+    "stage": "actual_VLM_results_before_native_body_fill",
+    "effort": "xhigh",
+    "tables": [
+      {
+        "window_page_index": 0,
+        "bbox": [
+          0.084,
+          0.083,
+          0.898,
+          0.121
+        ],
+        "content": "<table><tr><td>产品类别</td><td>风险特征</td><td>报告期内委托理财的余额</td><td>逾期未收回的金额</td></tr><tr><td>银行理财产品</td><td>低风险</td><td>0</td><td>0</td></tr></table>"
+      },
+      {
+        "window_page_index": 0,
+        "bbox": [
+          0.084,
+          0.319,
+          0.898,
+          0.92
+        ],
+        "content": "<table><tr><td>衍生品投资类型</td><td>初始投资金额</td><td>期初金额</td><td>本期公允价值变动损益</td><td>计入权益的累计公允价值变动</td><td>报告期内购入金额</td><td>报告期内售出金额</td><td>期末金额</td><td>期末投资金额占公司报告期末净资产比例</td></tr><tr><td>远期结售汇</td><td>0</td><td>0</td><td>2.06</td><td>0</td><td>9,671.48</td><td>3,064.91</td><td><eq>6,606.57^1</eq></td><td>4.35%</td></tr><tr><td>合计</td><td>0</td><td>0</td><td>2.06</td><td>0</td><td>9,671.48</td><td>3,064.91</td><td>6,606.57</td><td>4.35%</td></tr><tr><td>报告期内套期保值业务的会计政策、会计核算具体原则,以及与上一报告期相比是否发生重大变化的说明</td><td colspan=\"8\">否</td></tr><tr><td>报告期实际损益情况的说明</td><td colspan=\"8\">为规避和防范外汇汇率波动给公司带来的经营风险,公司按照一定比例,针对外汇开展远期结售汇业务,业务规模均在公司董事会审议的额度范围内。报告期内,公司远期结售汇实际损益金额为-0.61万元。</td></tr><tr><td>套期保值效果的说明</td><td colspan=\"8\">公司从事套期保值业务,可抵消外汇汇率波动的风险,实现预期风险管理目标。</td></tr><tr><td>衍生品投资资金来源</td><td colspan=\"8\">自有资金</td></tr><tr><td>报告期衍生品持仓的风险分析及控制措施说明(包括但不限于市场风险、流动性风险、信用风险、操作风险、法律风险等)</td><td colspan=\"8\">远期结售汇的风险分析:(1)汇率、利率波动风险:在外汇汇率波动较大时,公司判断汇率大幅波动方向与外汇套期保值合约方向不一致时,将造成汇兑损失;若汇率在未来发生波动时,与外汇套期保值合约偏差较大也将造成汇兑损失;(2)内部控制风险:外汇套期保值业务专业性较强,复杂程度较高,可能会由于内控制度不完善而造成风险;(3)交易违约风险:外汇套期保值交易对手出现违约,不能按照约定支付公司套期保值盈利从而无法对冲公司实际的汇兑损失,将造成公司损失;(4)客户违约风险:客户应收账款发生逾期、客户调整订单等情况将使货款实际回款情况与预期回款情况不一致,可能使实际发生的现金流与已操作的外汇套期保值业务期限或数额无法完全匹配,从而导致公司损失。远期结售汇的风险控制措施:(1)公司制定了《广东银禧科技股份有限公司外汇套期保值业务管理制度》,(以下简称“《外汇套期保值业务管理制度》”)对外汇套期保值业务操作规范、审批权限及内部操作流程、信息隔离措施、内部风险报告制度及风险处理程序、信息披露等做出了明确规定;(2)为避免汇率大幅波动风险,公司会加强对汇率的研究分析,实时关注国际市场环境变化,适时调整经营策略,最大限度的避免汇兑损失;(3)为避免内部控制风险,公司财务部负责统一管理公司外汇套期保值业务,所有的外汇交易行为均以正常生产经营为基础,以具体经营业务为依托,不得进行投机和套利交易,并严格按照《外汇套期保值业务管理制度》的规定进行业务操作,有效地保证制度的执行;(4)为控制交易违约风险,公司仅与具有合法资质的大型银行等金融机构开展外汇套</td></tr></table>"
+      }
+    ]
+  },
+  {
+    "stage": "native_PDF_text_fill",
+    "returned_spans": 9,
+    "nonempty_text_spans": 9,
+    "queued_for_post_OCR": 0,
+    "spans": [
+      {
+        "type": "text",
+        "bbox": [
+          335.52000000000004,
+          43.92,
+          538.5600000000001,
+          52.56
+        ],
+        "text": "广东银禧科技股份有限公司 2026 年半年度报告全文",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          56.52,
+          107.64,
+          488.52000000000004,
+          116.28
+        ],
+        "text": "公司作为单一委托人委托金融机构开展资产管理，或投资安全性较低、流动性较差的高风险委托理财具体情况",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          56.88,
+          124.56,
+          122.76,
+          133.56
+        ],
+        "text": "□适用 不适用",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          60.480000000000004,
+          153.0,
+          146.88,
+          162.72
+        ],
+        "text": "（2） 衍生品投资情况",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          56.88,
+          180.72,
+          122.76,
+          189.36
+        ],
+        "text": "适用 □不适用",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          55.800000000000004,
+          208.8,
+          236.52,
+          218.16
+        ],
+        "text": "1） 报告期内以套期保值为目的的衍生品投资",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          56.88,
+          236.52,
+          122.76,
+          245.16
+        ],
+        "text": "适用 □不适用",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          483.12,
+          253.08,
+          529.9200000000001,
+          264.96000000000004
+        ],
+        "text": "单位：万元",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          528.12,
+          780.48,
+          540.0,
+          792.0
+        ],
+        "text": "19",
+        "queued_for_post_OCR": false
+      }
+    ]
+  },
+  {
+    "stage": "actual_post_OCR",
+    "candidate_spans": 0,
+    "content_changed": 0,
+    "spans": []
+  }
+]

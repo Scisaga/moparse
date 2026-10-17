@@ -1,0 +1,11 @@
+{
+  "UTC": "2026-10-17T13:09:09.630795+00:00",
+  "source_job": "job_01M54PBZSMH249W7NWXT638W8K",
+  "recovery": "Read-only copy of exact original server upload, no conversion performed",
+  "server_original_upload_path": "/var/lib/docker/volumes/mosaicparse-data/_data/jobs/job_01M54PBZSMH249W7NWXT638W8K/input/1206337604.docx-26.8.pdf",
+  "retained_input": "benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/sources/1206337604/source-converted.pdf",
+  "SHA256": "ccff40771d75e9412b65f364a1c72c1733c37b4d8f232f49cf639621f0ba165f",
+  "size_bytes": 181311,
+  "is_original_DOCX": false,
+  "historical_job_and_result_unchanged": true
+}

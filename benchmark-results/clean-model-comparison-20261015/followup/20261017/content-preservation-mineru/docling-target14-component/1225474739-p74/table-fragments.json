@@ -1,0 +1,399 @@
+[
+  {
+    "fragment_id": "p74_t1",
+    "page_number": 74,
+    "ordinal": 1,
+    "normalized_bbox": [
+      0.09361353641798517,
+      0.662858831627635,
+      0.8824645483193277,
+      0.7328287518788971
+    ],
+    "num_rows": 4,
+    "num_cols": 5,
+    "rows": [
+      [
+        "项目 ",
+        "预计使用寿命 ",
+        "摊销方法 ",
+        "残值率 ",
+        "预计使用寿命的确定依据"
+      ],
+      [
+        "土地使用权 ",
+        "50 年 ",
+        "直线法 ",
+        "",
+        "土地使用权证规定年限"
+      ],
+      [
+        "专利权 ",
+        "10 年-20 年 ",
+        "直线法 ",
+        "",
+        "专利权规定年限"
+      ],
+      [
+        "软件 ",
+        "3 年-10 年 ",
+        "直线法 ",
+        "",
+        "合同规定年限"
+      ]
+    ],
+    "column_boundaries": [
+      0.111281,
+      0.19826,
+      0.352225,
+      0.490751,
+      0.639482,
+      0.791264
+    ],
+    "markdown": "| 项目 | 预计使用寿命 | 摊销方法 | 残值率 | 预计使用寿命的确定依据 |\n| --- | --- | --- | --- | --- |\n| 土地使用权 | 50 年 | 直线法 |  | 土地使用权证规定年限 |\n| 专利权 | 10 年-20 年 | 直线法 |  | 专利权规定年限 |\n| 软件 | 3 年-10 年 | 直线法 |  | 合同规定年限 |",
+    "rendered": "<!-- table-fragment: p74_t1 -->\n\n<!-- table-structure: {\"version\":1,\"table_id\":\"p74_t1\",\"source_pages\":[74],\"num_rows\":4,\"num_cols\":5,\"encoding\":\"anchor_and_blanks\",\"structure_valid\":true,\"header_rows\":[0],\"header_scope_rows\":[0],\"header_scope_complete\":true,\"spans\":[]} -->\n\n| 项目 | 预计使用寿命 | 摊销方法 | 残值率 | 预计使用寿命的确定依据 |\n| --- | --- | --- | --- | --- |\n| 土地使用权 | 50 年 | 直线法 |  | 土地使用权证规定年限 |\n| 专利权 | 10 年-20 年 | 直线法 |  | 专利权规定年限 |\n| 软件 | 3 年-10 年 | 直线法 |  | 合同规定年限 |",
+    "valid": true,
+    "invalid_reasons": [],
+    "logical_table_id": null,
+    "has_column_header": true,
+    "caption": null,
+    "unit_text": null,
+    "source_kind": "docling",
+    "cells": [
+      {
+        "row": 0,
+        "column": 0,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "项目 ",
+        "normalized_bbox": [
+          0.14353521139230666,
+          0.6656484151923573,
+          0.17249657906899335,
+          0.6795638121299908
+        ],
+        "is_column_header": true,
+        "is_row_header": false
+      },
+      {
+        "row": 0,
+        "column": 1,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "预计使用寿命 ",
+        "normalized_bbox": [
+          0.25603691161676684,
+          0.6659483404616198,
+          0.3464110276807041,
+          0.6793518705360534
+        ],
+        "is_column_header": true,
+        "is_row_header": false
+      },
+      {
+        "row": 0,
+        "column": 2,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "摊销方法 ",
+        "normalized_bbox": [
+          0.41380339975609653,
+          0.6656849595107232,
+          0.4743943835943166,
+          0.6795622971502489
+        ],
+        "is_column_header": true,
+        "is_row_header": false
+      },
+      {
+        "row": 0,
+        "column": 3,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "残值率 ",
+        "normalized_bbox": [
+          0.5572553781005503,
+          0.6657373255007086,
+          0.6017103897157007,
+          0.6792379244304981
+        ],
+        "is_column_header": true,
+        "is_row_header": false
+      },
+      {
+        "row": 0,
+        "column": 4,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "预计使用寿命的确定依据",
+        "normalized_bbox": [
+          0.6800645069812804,
+          0.6660792593519341,
+          0.8454271068312357,
+          0.6793927447103738
+        ],
+        "is_column_header": true,
+        "is_row_header": false
+      },
+      {
+        "row": 1,
+        "column": 0,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "土地使用权 ",
+        "normalized_bbox": [
+          0.09833232264815964,
+          0.6824165148077547,
+          0.1775008923351902,
+          0.6968371172917349
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 1,
+        "column": 1,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "50 年 ",
+        "normalized_bbox": [
+          0.23309728501341315,
+          0.6825811788016256,
+          0.2725985547529489,
+          0.6967181553607624
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 1,
+        "column": 2,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "直线法 ",
+        "normalized_bbox": [
+          0.3860505673750798,
+          0.6823662709379109,
+          0.43050628349067954,
+          0.6967980535756314
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 1,
+        "column": 3,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "",
+        "normalized_bbox": [
+          0.5360516993125252,
+          0.6824260640873687,
+          0.6201114717832066,
+          0.6967052211298571
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 1,
+        "column": 4,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "土地使用权证规定年限",
+        "normalized_bbox": [
+          0.6572826062868402,
+          0.6827828183244988,
+          0.8092120733706308,
+          0.6966766463775633
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 2,
+        "column": 0,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "专利权 ",
+        "normalized_bbox": [
+          0.10221519448672534,
+          0.7002361909922665,
+          0.147064829093106,
+          0.7147751268629019
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 2,
+        "column": 1,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "10 年-20 年 ",
+        "normalized_bbox": [
+          0.23425656398600625,
+          0.7006260346422034,
+          0.3194076193942538,
+          0.7143699141558996
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 2,
+        "column": 2,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "直线法 ",
+        "normalized_bbox": [
+          0.3849122590325261,
+          0.700158919716771,
+          0.43097184087089385,
+          0.7148203737010123
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 2,
+        "column": 3,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "",
+        "normalized_bbox": [
+          0.5326098388843544,
+          0.700031761651426,
+          0.6201683484528095,
+          0.7145994226238265
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 2,
+        "column": 4,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "专利权规定年限",
+        "normalized_bbox": [
+          0.6591584091830195,
+          0.7004865855075804,
+          0.7616282813269573,
+          0.7145933835867295
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 3,
+        "column": 0,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "软件 ",
+        "normalized_bbox": [
+          0.1010411180692794,
+          0.7175579995199055,
+          0.1328123564336238,
+          0.7320833621743825
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 3,
+        "column": 1,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "3 年-10 年 ",
+        "normalized_bbox": [
+          0.23281507387511682,
+          0.7175383079155405,
+          0.31115317549715016,
+          0.7316361769066446
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 3,
+        "column": 2,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "直线法 ",
+        "normalized_bbox": [
+          0.38346136384063917,
+          0.7174863412913383,
+          0.4323401216434318,
+          0.7317293309332326
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 3,
+        "column": 3,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "",
+        "normalized_bbox": [
+          0.5318792249517831,
+          0.7178840699357695,
+          0.6201245754915627,
+          0.7320766757992843
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 3,
+        "column": 4,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "合同规定年限",
+        "normalized_bbox": [
+          0.6572380348917508,
+          0.7177735672507443,
+          0.7487896530065684,
+          0.7320233810880856
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      }
+    ],
+    "cell_evidence": [],
+    "visual_obstructions": [],
+    "physical_num_rows": null,
+    "source_row_indices": [],
+    "header_scope_complete": true,
+    "caption_scope_complete": true,
+    "page_furniture": [
+      {
+        "source_ref": "#/texts/0",
+        "page_number": 74,
+        "label": "page_header",
+        "text": "广东银禧科技股份有限公司 2026 年半年度报告全文",
+        "rendered": "<!-- source-furniture: #/texts/0; source-page: 74; role: page_header -->\n\n广东银禧科技股份有限公司 2026 年半年度报告全文",
+        "normalized_bbox": [
+          0.5650218724687254,
+          0.0522017894629183,
+          0.9041750117440375,
+          0.06229153805132987
+        ]
+      },
+      {
+        "source_ref": "#/texts/27",
+        "page_number": 74,
+        "label": "page_footer",
+        "text": "74",
+        "rendered": "<!-- source-furniture: #/texts/27; source-page: 74; role: page_footer -->\n\n74",
+        "normalized_bbox": [
+          0.8906703684269409,
+          0.930622060421501,
+          0.9044102514039265,
+          0.9379221881108436
+        ]
+      }
+    ],
+    "_structure_marker": "<!-- table-structure: {\"version\":1,\"table_id\":\"p74_t1\",\"source_pages\":[74],\"num_rows\":4,\"num_cols\":5,\"encoding\":\"anchor_and_blanks\",\"structure_valid\":true,\"header_rows\":[0],\"header_scope_rows\":[0],\"header_scope_complete\":true,\"spans\":[]} -->"
+  }
+]

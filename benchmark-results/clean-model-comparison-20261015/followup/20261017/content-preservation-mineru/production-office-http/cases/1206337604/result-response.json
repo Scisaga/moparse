@@ -1,0 +1,18 @@
+{
+  "status": 200,
+  "headers": {
+    "date": "Sat, 17 Oct 2026 13:51:23 GMT",
+    "server": "uvicorn",
+    "x-content-id": "job_01M55239M5WB45HZBN6RZBYQGK",
+    "content-length": "3634",
+    "content-type": "text/markdown; charset=utf-8",
+    "x-request-id": "req_01M5523BSKXZM25NFVC9BEPXAD",
+    "x-content-type-options": "nosniff",
+    "referrer-policy": "no-referrer"
+  },
+  "body_path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/production-office-http/cases/1206337604/result-response-body.bin",
+  "body_sha256": "649778d8b6174ba2984c7dd6d0daa696ad366a016eea955fe470f46c88c3b803",
+  "body_bytes": 3634,
+  "received_url": "http://10.0.6.22:12303/v1/content/jobs/job_01M55239M5WB45HZBN6RZBYQGK/result",
+  "captured_utc": "2026-10-17T13:51:23.961985+00:00"
+}

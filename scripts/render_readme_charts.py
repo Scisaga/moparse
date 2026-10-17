@@ -2,13 +2,14 @@
 """Render README figures without adding plotting packages to the parser runtime.
 
 Run: uv run --no-project --with matplotlib python scripts/render_readme_charts.py
-Requires a Noto Sans CJK font. Values come from the README's comparison table
-and measured end-to-end timing paragraph, rather than a second result dataset.
+Requires a Noto Sans CJK font. Historical values come from the README table.
+--content-components reads the separately sealed component-comparison.json.
 """
 
 from __future__ import annotations
 
 import argparse
+import json
 import re
 from pathlib import Path
 
@@ -236,10 +237,128 @@ def timing(minutes: list[float], preview: Path | None) -> None:
     save(figure, "model-comparison-time", preview)
 
 
+def content_components(preview: Path | None) -> None:
+    """Keep the immutable 502-page figures separate from the new component trial."""
+    source = (
+        ROOT
+        / "benchmark-results/clean-model-comparison-20261015/followup/20261017"
+        / "content-preservation-mineru/component-comparison.json"
+    )
+    data = json.loads(source.read_text())
+    rows = data["configurations"]
+    if data["source_pages"] != 14 or not rows:
+        raise ValueError("Expected the fixed fourteen-page experiment")
+    if any(row["condition_total"] != 46 or row["additional_total"] != 4 for row in rows):
+        raise ValueError("Source check denominators changed")
+    figure = plt.figure(figsize=(14.4, 12.0))
+    figure.text(0.075, 0.954, "原生 PDF 难例：解析路径与处理成本", fontsize=23, weight="bold")
+    figure.text(
+        0.075,
+        0.914,
+        "同一组 14 页 · 6 份原件｜指定内容/结构检查与额外字符/状态检查分列",
+        color="#475569",
+        fontsize=13,
+    )
+    axis = figure.add_axes((0.285, 0.48, 0.64, 0.36))
+    for index, row in enumerate(rows):
+        for offset, value, total, color in (
+            (-0.17, row["condition_pass"], 46, "#2563eb"),
+            (0.17, row["additional_pass"], 4, "#d97706"),
+        ):
+            y = index + offset
+            axis.barh(y, 100 * value / total, height=0.27, color=color, zorder=3)
+            axis.text(
+                100 * value / total + 1.2,
+                y,
+                f"{value}/{total}",
+                va="center",
+                color=color,
+                fontsize=12,
+                weight="bold",
+            )
+    axis.set_yticks(range(len(rows)), [row["label"] for row in rows], fontsize=13)
+    axis.invert_yaxis()
+    axis.set_xlim(0, 115)
+    axis.set_xticks([0, 25, 50, 75, 100])
+    axis.xaxis.set_major_formatter(PercentFormatter())
+    axis.set_axisbelow(True)
+    axis.grid(axis="x", color="#e9eef5")
+    axis.tick_params(length=0)
+    for spine in axis.spines.values():
+        spine.set_visible(False)
+    figure.legend(
+        handles=[
+            Patch(facecolor="#2563eb", label="指定内容与结构 · 46 项"),
+            Patch(facecolor="#d97706", label="额外源字符与状态 · 4 项"),
+        ],
+        loc="upper left",
+        bbox_to_anchor=(0.276, 0.892),
+        ncol=2,
+        frameon=False,
+        fontsize=12,
+    )
+    for group, bounds, title in (
+        ("pdf", (0.09, 0.16, 0.40, 0.20), "PDF 转换组件 · 秒"),
+        ("sdk", (0.59, 0.16, 0.34, 0.20), "图片 SDK 调用组件 · 秒"),
+    ):
+        values = [row for row in rows if row["time_group"] == group]
+        if not values or any(row["component_seconds"] is None for row in values):
+            raise ValueError(f"Missing completed timing for {group}")
+        timing_axis = figure.add_axes(bounds)
+        heights = [row["component_seconds"] for row in values]
+        colors = ["#64748b" if row["id"] == "docling" else "#0d9488" for row in values]
+        timing_axis.bar(range(len(values)), heights, width=0.55, color=colors, zorder=3)
+        timing_axis.set_xticks(range(len(values)), [row["time_label"] for row in values])
+        timing_axis.set_ylim(0, max(heights) * 1.25)
+        timing_axis.set_title(
+            title + "（越低越快）", loc="left", fontsize=14, weight="bold", pad=15
+        )
+        clean_axes(timing_axis)
+        for position, (height, color) in enumerate(zip(heights, colors, strict=True)):
+            timing_axis.text(
+                position,
+                height + max(heights) * 0.025,
+                f"{height:.2f}",
+                ha="center",
+                color=color,
+                fontsize=13,
+                weight="bold",
+            )
+    figure.text(
+        0.075,
+        0.069,
+        "时间按入口分组：PDF 组为转换/解析及输出；SDK 组仅 two_step_extract，不含 PDF 渲染和导出。",
+        fontsize=10.5,
+        color="#475569",
+    )
+    figure.text(
+        0.075,
+        0.038,
+        "各组均不含模型装载；CPU/GPU 与主机负载不同，不跨组计算加速比。难例通过数不等于整份文档准确率。",
+        fontsize=10.5,
+        color="#64748b",
+    )
+    figure.text(
+        0.075,
+        0.01,
+        "原生路径保留的私用字形按源状态核对；普通 Markdown 字体能否正确显示另列，未计为显示修复。",
+        fontsize=10.5,
+        color="#64748b",
+    )
+    save(figure, "native-model-component-comparison", preview)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--preview-dir", type=Path, help="Optional local PNG previews")
+    parser.add_argument(
+        "--content-components", action="store_true", help="Render the separate fourteen-page trial"
+    )
     args = parser.parse_args()
+    if args.content_components:
+        style()
+        content_components(args.preview_dir)
+        return
     rows, minutes = read_values()
     style()
     comparison(rows, minutes, args.preview_dir)

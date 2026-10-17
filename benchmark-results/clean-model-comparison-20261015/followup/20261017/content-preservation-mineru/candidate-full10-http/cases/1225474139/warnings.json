@@ -1,0 +1,34 @@
+{
+  "document_warnings": [
+    {
+      "code": "intentional_sparse_page",
+      "message": "page is visually sparse and its short output agrees with the native PDF evidence",
+      "severity": "info",
+      "page_number": 3,
+      "backend": "docling-standard",
+      "details": {
+        "native_text_characters": 27,
+        "visual_ink_ratio": 0.004786
+      }
+    }
+  ],
+  "units": [
+    {
+      "unit_index": 3,
+      "status": "completed",
+      "warnings": [
+        {
+          "code": "intentional_sparse_page",
+          "message": "page is visually sparse and its short output agrees with the native PDF evidence",
+          "severity": "info",
+          "page_number": 3,
+          "backend": "docling-standard",
+          "details": {
+            "native_text_characters": 27,
+            "visual_ink_ratio": 0.004786
+          }
+        }
+      ]
+    }
+  ]
+}

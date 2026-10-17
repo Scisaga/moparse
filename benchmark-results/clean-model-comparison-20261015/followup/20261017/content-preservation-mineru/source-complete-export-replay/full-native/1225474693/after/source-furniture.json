@@ -1,0 +1,23 @@
+[
+  {
+    "page": 2,
+    "ref": "#/texts/4",
+    "text": "浙江出版传媒股份有限公司2026 年半年度报告摘要",
+    "label": "page_header",
+    "exact_block_present_after_assembly": true
+  },
+  {
+    "page": 3,
+    "ref": "#/texts/16",
+    "text": "浙江出版传媒股份有限公司2026 年半年度报告摘要",
+    "label": "page_header",
+    "exact_block_present_after_assembly": true
+  },
+  {
+    "page": 4,
+    "ref": "#/texts/19",
+    "text": "浙江出版传媒股份有限公司2026 年半年度报告摘要",
+    "label": "page_header",
+    "exact_block_present_after_assembly": true
+  }
+]

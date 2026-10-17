@@ -1,0 +1,102 @@
+{
+  "schema": "content-preservation-input-identity/1",
+  "created_UTC": "2026-10-17T13:12:09.235223+00:00",
+  "document_count": 11,
+  "page_count": 504,
+  "frozen_ten_source_manifest": "benchmark-results/clean-model-comparison-20261015/input-manifest.json",
+  "frozen_ten_manifest_SHA256": "c98c5835b19d543f8a0d2d37a9df896f7cd00f3f0c98952709be5bb5f650da93",
+  "frozen_ten_source_order": [
+    "1225474693",
+    "1225473526",
+    "1210860446",
+    "1211290753",
+    "1219858186",
+    "1225474139",
+    "1225474739",
+    "1225475333",
+    "1225475375",
+    "1225475642"
+  ],
+  "documents": [
+    {
+      "source": "1210860446",
+      "source_path": "/opt/mosaic-parse/pdf_sample/1210860446.pdf",
+      "path": "pdf_sample/1210860446.pdf",
+      "sha256": "3abc446078329a684f22da643ae578a32f1f68a4509c5449936e9be80673f667",
+      "page_count": 6
+    },
+    {
+      "source": "1211290753",
+      "source_path": "/opt/mosaic-parse/pdf_sample/1211290753.pdf",
+      "path": "pdf_sample/1211290753.pdf",
+      "sha256": "84401aa91f072bd934b12c1742c6d92fbfee19018269f32c9b7f6faa5198cef4",
+      "page_count": 3
+    },
+    {
+      "source": "1219858186",
+      "source_path": "/opt/mosaic-parse/pdf_sample/1219858186.pdf",
+      "path": "pdf_sample/1219858186.pdf",
+      "sha256": "1c21b0402e57812823bfe4b28feac6fc0517c828a18f8c862e8dccdc3543de89",
+      "page_count": 15
+    },
+    {
+      "source": "1225473526",
+      "source_path": "/opt/mosaic-parse/pdf_sample/1225473526.pdf",
+      "path": "pdf_sample/1225473526.pdf",
+      "sha256": "787297535ba74a4170cc859ae68f15f946f6dfd0bfc14a1e1fa0e6d068ba2b19",
+      "page_count": 27
+    },
+    {
+      "source": "1225474139",
+      "source_path": "/opt/mosaic-parse/pdf_sample/1225474139.pdf",
+      "path": "pdf_sample/1225474139.pdf",
+      "sha256": "dc69826976c576302ee4156642039b790693202a611922dda647eb006e6d5c18",
+      "page_count": 36
+    },
+    {
+      "source": "1225474693",
+      "source_path": "/opt/mosaic-parse/pdf_sample/1225474693.pdf",
+      "path": "pdf_sample/1225474693.pdf",
+      "sha256": "dc7f5b3bfdc5a5c69b9cf4b2a9e0d28e2f9ee0b2464770fb8a910fea688ee775",
+      "page_count": 4
+    },
+    {
+      "source": "1225474739",
+      "source_path": "/opt/mosaic-parse/pdf_sample/1225474739.pdf",
+      "path": "pdf_sample/1225474739.pdf",
+      "sha256": "1c99c450a8efefe77c9ca02a6f670c958298f661e5ad8d30d6ba01aa0742cda9",
+      "page_count": 134
+    },
+    {
+      "source": "1225475333",
+      "source_path": "/opt/mosaic-parse/pdf_sample/1225475333.pdf",
+      "path": "pdf_sample/1225475333.pdf",
+      "sha256": "bdb4210e0cd5dc000e8278d2438937b61ae9042969f100289c0d4cab4537e62b",
+      "page_count": 28
+    },
+    {
+      "source": "1225475375",
+      "source_path": "/opt/mosaic-parse/pdf_sample/1225475375.pdf",
+      "path": "pdf_sample/1225475375.pdf",
+      "sha256": "5eef30b5c544d76df917d56df76a665ed13b5e6ffebdc54ab0eea0a47b7589d6",
+      "page_count": 119
+    },
+    {
+      "source": "1225475642",
+      "source_path": "/opt/mosaic-parse/pdf_sample/1225475642.pdf",
+      "path": "pdf_sample/1225475642.pdf",
+      "sha256": "e2a184bb017930ca6306a56391a7248c2954a5ae212c2966104fad2104c4a24d",
+      "page_count": 130
+    },
+    {
+      "source": "1206337604",
+      "source_path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/sources/1206337604/source-converted.pdf",
+      "path": "benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/sources/1206337604/source-converted.pdf",
+      "sha256": "ccff40771d75e9412b65f364a1c72c1733c37b4d8f232f49cf639621f0ba165f",
+      "page_count": 2,
+      "format_identity": "Exact historical LibreOffice26.8 PDF upload; not the original DOCX"
+    }
+  ],
+  "capture_wrapper_SHA256": "5157889d15b3e9a7639b22d81fa15f1b680c8ad4bd2dae71c20c11e73f0b1ded",
+  "frozen_sources_modified": false
+}

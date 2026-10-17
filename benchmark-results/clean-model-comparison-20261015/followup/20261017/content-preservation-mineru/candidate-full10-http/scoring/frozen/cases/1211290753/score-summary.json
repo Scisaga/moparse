@@ -1,0 +1,90 @@
+{
+  "source": "1211290753",
+  "job": "job_01M550RSR16JF6GHDXKMC4K3SA",
+  "status": "completed",
+  "MD_SHA256": "6bad555c4fd346ad14d223f17f917770cb91039b86f01e8a0e5f6677c6a75517",
+  "pages_recorded": 3,
+  "pages_expected": 3,
+  "parse_issues": [],
+  "core_numeric": {},
+  "core_period": {
+    "passed": 0,
+    "period_confirmed": 0,
+    "period_mismatch": 0,
+    "period_unknown": 0
+  },
+  "financial30": {},
+  "funding31": {},
+  "funding7_bound": 0,
+  "stock": null,
+  "normal_header_leaves": {
+    "passed": 0,
+    "evaluated": 0,
+    "checks": []
+  },
+  "supplements": {
+    "supplement402": {
+      "literal": {
+        "counts": {},
+        "literal_and_unique_row_pass": 0,
+        "literal_row_and_complete_header_pass": 0,
+        "target_count": 0
+      },
+      "scope_calendar": {
+        "counts": {},
+        "literal_and_unique_row_pass": 0,
+        "literal_row_and_complete_header_pass": 0,
+        "target_count": 0
+      }
+    },
+    "source130": {
+      "literal": {
+        "counts": {},
+        "literal_and_unique_row_pass": 0,
+        "literal_row_and_complete_header_pass": 0,
+        "target_count": 0
+      },
+      "scope_calendar": {
+        "counts": {},
+        "literal_and_unique_row_pass": 0,
+        "literal_row_and_complete_header_pass": 0,
+        "target_count": 0
+      }
+    },
+    "source28": {
+      "literal": {
+        "counts": {},
+        "literal_and_unique_row_pass": 0,
+        "literal_row_and_complete_header_pass": 0,
+        "target_count": 0
+      },
+      "scope_calendar": {
+        "counts": {},
+        "literal_and_unique_row_pass": 0,
+        "literal_row_and_complete_header_pass": 0,
+        "target_count": 0
+      }
+    },
+    "normal33": {
+      "literal": {
+        "counts": {},
+        "literal_and_unique_row_pass": 0,
+        "literal_row_and_complete_header_pass": 0,
+        "target_count": 0
+      },
+      "scope_calendar": {
+        "counts": {},
+        "literal_and_unique_row_pass": 0,
+        "literal_row_and_complete_header_pass": 0,
+        "target_count": 0
+      }
+    }
+  },
+  "public_logical_projection": {
+    "audit": [],
+    "public_output_changed": false,
+    "gold_text_or_values_used": false,
+    "table_geometry_invented": false,
+    "span_or_header_roles_invented": false
+  }
+}

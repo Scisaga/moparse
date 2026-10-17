@@ -1,0 +1,17 @@
+{
+  "id": "1206337604",
+  "pdf": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/sources/1206337604/source-converted.pdf",
+  "page": 2,
+  "source_pdf_SHA256": "ccff40771d75e9412b65f364a1c72c1733c37b4d8f232f49cf639621f0ba165f",
+  "physical_page_one_based": 2,
+  "source_pdf_total_pages": 2,
+  "source_pdf_page_rotation": 0,
+  "expected_original_page_idx_zero_based": 1,
+  "official_parse_arguments": {
+    "tier": "standard",
+    "ocr_mode": "txt",
+    "image_analysis": false,
+    "page_range": "2"
+  },
+  "cohort": "original_14"
+}

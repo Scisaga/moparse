@@ -1,0 +1,158 @@
+[
+  {
+    "stage": "official_input_preparation",
+    "file_suffix": "pdf",
+    "prepared_size_bytes": 225105,
+    "original_function_seconds": 0.024104399024508893,
+    "prepared_SHA256": "8366f1f0b519580fcf191168396ae4c2234c109b3249635cf6b1744f0e7b0ba9",
+    "retained_original_page_indices_zero_based": [
+      86
+    ],
+    "broken_original_page_indices_zero_based": [],
+    "derived_input_filename": "prepared-by-official-page-selection.pdf",
+    "transformation": "Official default page_range handling; runner did not crop or rewrite the source PDF."
+  },
+  {
+    "stage": "native_table_priority",
+    "effort": "high",
+    "counts": {
+      "total": 1,
+      "accepted": 1,
+      "complex_fallbacks": 0,
+      "rejected": 0,
+      "errors": 0,
+      "removed_internal_text": 0,
+      "removed_formula_blocks": 0,
+      "removed_formula_layout_items": 0
+    },
+    "table_routes": [
+      {
+        "window_page_index": 0,
+        "bbox": [
+          0.178,
+          0.068,
+          0.651,
+          0.918
+        ],
+        "angle": 0,
+        "native_HTML_accepted": true,
+        "content_SHA256": "6de82d1ea695d04d37c9e944591b1b2bda58371f48f4b8bf868b37731f466463"
+      }
+    ]
+  },
+  {
+    "stage": "actual_VLM_options",
+    "image_analysis": false,
+    "not_extract_list": [
+      "caption",
+      "code_caption",
+      "doc_title",
+      "footer",
+      "footnote",
+      "header",
+      "image_caption",
+      "image_footnote",
+      "page_footnote",
+      "page_number",
+      "paragraph_title",
+      "phonetic",
+      "ref_text",
+      "table_caption",
+      "table_footnote",
+      "text",
+      "title"
+    ],
+    "image_sizes": [
+      [
+        1654,
+        2339
+      ]
+    ],
+    "model_inputs": [
+      [
+        {
+          "type": "caption",
+          "bbox": [
+            0.661,
+            0.579,
+            0.692,
+            0.88
+          ],
+          "has_content": false
+        },
+        {
+          "type": "caption",
+          "bbox": [
+            0.149,
+            0.728,
+            0.178,
+            0.882
+          ],
+          "has_content": false
+        },
+        {
+          "type": "page_number",
+          "bbox": [
+            0.86,
+            0.476,
+            0.881,
+            0.492
+          ],
+          "has_content": false
+        }
+      ]
+    ]
+  },
+  {
+    "stage": "actual_VLM_results_before_native_body_fill",
+    "effort": "high",
+    "tables": []
+  },
+  {
+    "stage": "native_PDF_text_fill",
+    "returned_spans": 3,
+    "nonempty_text_spans": 3,
+    "queued_for_post_OCR": 0,
+    "spans": [
+      {
+        "type": "text",
+        "bbox": [
+          396.0,
+          486.72,
+          409.32,
+          749.88
+        ],
+        "text": "债权投资公允价值变动源于应收款",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          91.08,
+          614.16,
+          103.68,
+          746.28
+        ],
+        "text": "十四）其他综合",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          513.72,
+          402.12,
+          523.08,
+          413.64
+        ],
+        "text": "80",
+        "queued_for_post_OCR": false
+      }
+    ]
+  },
+  {
+    "stage": "actual_post_OCR",
+    "candidate_spans": 0,
+    "content_changed": 0,
+    "spans": []
+  }
+]

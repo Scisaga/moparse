@@ -1,0 +1,98 @@
+[
+  {
+    "index": 0,
+    "HTTP_status": 200,
+    "model_HTTP_seconds": 4.110778047936037,
+    "usage": {
+      "prompt_tokens": 1394,
+      "total_tokens": 1506,
+      "completion_tokens": 112,
+      "prompt_tokens_details": null
+    },
+    "finish_reasons": [
+      "stop"
+    ],
+    "request_SHA256": "0731b435ff01dcf5d87b98b79e4e0703b76ed4344a71a922545d1702ad3069fb",
+    "response_SHA256": "8486202d186b72ce30299725640c67cb4555d7b5460e3739bf520f534300c601"
+  },
+  {
+    "index": 1,
+    "HTTP_status": 200,
+    "model_HTTP_seconds": 0.4118869339581579,
+    "usage": {
+      "prompt_tokens": 109,
+      "total_tokens": 119,
+      "completion_tokens": 10,
+      "prompt_tokens_details": null
+    },
+    "finish_reasons": [
+      "stop"
+    ],
+    "request_SHA256": "c0b32d9143202e83f296e12430ca992ad9bcd470d2e105005309989c5c70d327",
+    "response_SHA256": "73e171b1d69feb6b79c9687a91754927c1635e80de6ed93aa9aaa5efe88848d0"
+  },
+  {
+    "index": 2,
+    "HTTP_status": 200,
+    "model_HTTP_seconds": 0.23457349906675518,
+    "usage": {
+      "prompt_tokens": 113,
+      "total_tokens": 120,
+      "completion_tokens": 7,
+      "prompt_tokens_details": null
+    },
+    "finish_reasons": [
+      "stop"
+    ],
+    "request_SHA256": "03e3e84437c46e594bdb6fcd8451fb1843e072c0ab59dd78e1e9c58d603a29ac",
+    "response_SHA256": "a7a6d3be84001e110f404f398dd311f476f827a10fd891c3cdbb76d755ef5772"
+  },
+  {
+    "index": 3,
+    "HTTP_status": 200,
+    "model_HTTP_seconds": 0.4291524710133672,
+    "usage": {
+      "prompt_tokens": 118,
+      "total_tokens": 133,
+      "completion_tokens": 15,
+      "prompt_tokens_details": null
+    },
+    "finish_reasons": [
+      "stop"
+    ],
+    "request_SHA256": "88063d4b9a1e2e590cb4c9b4b167accd47381a415d4b1ba4aa717a5f7eb802fb",
+    "response_SHA256": "87c7e0afa5128927dc4784b585bde58506cf28b4ef040063f06694c5735a99e1"
+  },
+  {
+    "index": 4,
+    "HTTP_status": 200,
+    "model_HTTP_seconds": 0.3333657520124689,
+    "usage": {
+      "prompt_tokens": 109,
+      "total_tokens": 120,
+      "completion_tokens": 11,
+      "prompt_tokens_details": null
+    },
+    "finish_reasons": [
+      "stop"
+    ],
+    "request_SHA256": "b7c7e65d520c30f5f112585a6739bd6d31e51a00e93641a7365e152ffcd6107a",
+    "response_SHA256": "55c242e4d286158aaf9c0a3bc9629e1f898199a454333684d5be7fa7dfd07bc9"
+  },
+  {
+    "index": 5,
+    "HTTP_status": 200,
+    "model_HTTP_seconds": 6.019551162957214,
+    "usage": {
+      "prompt_tokens": 2014,
+      "total_tokens": 2283,
+      "completion_tokens": 269,
+      "prompt_tokens_details": null
+    },
+    "finish_reasons": [
+      "stop"
+    ],
+    "request_SHA256": "3c12c90b704d614dd9f700d9de03c09e1b743ffd55f011058c1debbd16933bd9",
+    "response_SHA256": "7b4df513ec415f1d03e2b81ef046050e06cb7c3f16ea595c72ed0160958c2f20"
+  }
+]

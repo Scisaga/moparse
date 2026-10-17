@@ -1,0 +1,19 @@
+{
+  "id": "1225474739",
+  "page": 74,
+  "source_pdf_SHA256": "1c99c450a8efefe77c9ca02a6f670c958298f661e5ad8d30d6ba01aa0742cda9",
+  "source_page_SHA256": "5f80ffe21d228b27c2b5b7b29b5daea1a9360e68cc114ae0506338abb7df3b10",
+  "source_page_size": [
+    1654,
+    2339
+  ],
+  "source_pdf_page_rotation": 0,
+  "source_total_pages": 134,
+  "status": "complete",
+  "client_seconds": 26.962432462954894,
+  "model_HTTP_seconds": 26.65523083973676,
+  "model_calls": 30,
+  "blocks": 30,
+  "blocks_SHA256": "ed904df40e03e4c8666432b0471f7db95ae0431b8f8a3ee9aa8e92b32ee07f74",
+  "MD_SHA256": "9a89070ca424b2cf5e656ebd0ade8756e7def6ae425da0aca45643308f92ce9d"
+}

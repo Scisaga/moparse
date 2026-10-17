@@ -1,0 +1,52 @@
+{
+  "status": 200,
+  "headers": {
+    "date": "Sat, 17 Oct 2026 13:28:13 GMT",
+    "server": "uvicorn",
+    "content-length": "883",
+    "content-type": "application/json",
+    "x-request-id": "req_01M550RXSS7K2WJMCKXG8NHSAR",
+    "x-content-type-options": "nosniff",
+    "referrer-policy": "no-referrer"
+  },
+  "body_path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/candidate-full10-http/cases/1211290753/terminal-response-body.bin",
+  "body_sha256": "1547b2e4d61a2e6fd549e22de397de9016c782a36ed1c1d9b7461fd049dcc20a",
+  "body_bytes": 883,
+  "received_url": "http://127.0.0.1:12423/v1/content/jobs/job_01M550RSR16JF6GHDXKMC4K3SA",
+  "captured_utc": "2026-10-17T13:28:13.377634+00:00",
+  "body": {
+    "id": "job_01M550RSR16JF6GHDXKMC4K3SA",
+    "object": "content.parse.job",
+    "status": "completed",
+    "filename": "1211290753.pdf",
+    "mime_type": "application/pdf",
+    "unit_count": 3,
+    "progress": {
+      "current": 3,
+      "total": 3,
+      "unit": "page"
+    },
+    "options": {
+      "scan_policy": "auto",
+      "unit_range": null,
+      "language": [
+        "zh",
+        "en"
+      ],
+      "describe_images": false,
+      "description_language": "zh-CN",
+      "timeout_seconds": null
+    },
+    "error": null,
+    "attempt": 1,
+    "parent_job_id": null,
+    "created_at": "2026-10-17T13:28:09.230389Z",
+    "started_at": "2026-10-17T13:28:09.239279Z",
+    "completed_at": "2026-10-17T13:28:12.392120Z",
+    "status_url": "/v1/content/jobs/job_01M550RSR16JF6GHDXKMC4K3SA",
+    "events_url": "/v1/content/jobs/job_01M550RSR16JF6GHDXKMC4K3SA/events",
+    "result_url": "/v1/content/jobs/job_01M550RSR16JF6GHDXKMC4K3SA/result",
+    "assets_url": "/v1/content/jobs/job_01M550RSR16JF6GHDXKMC4K3SA/assets",
+    "bundle_url": "/v1/content/jobs/job_01M550RSR16JF6GHDXKMC4K3SA/bundle"
+  }
+}

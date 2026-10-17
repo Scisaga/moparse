@@ -1,0 +1,82 @@
+[
+  {
+    "index": 0,
+    "HTTP_status": 200,
+    "model_HTTP_seconds": 4.955102834966965,
+    "usage": {
+      "prompt_tokens": 1394,
+      "total_tokens": 1681,
+      "completion_tokens": 287,
+      "prompt_tokens_details": null
+    },
+    "finish_reasons": [
+      "stop"
+    ],
+    "request_SHA256": "35667abda5efdbe342b8bfe0a92d85221e3d8856d3a01b8b93ab5ad7b63e8dfd",
+    "response_SHA256": "315cbdf128819244430e684a76e041235634ffb21418d1ec3f37a8261a7856cf"
+  },
+  {
+    "index": 1,
+    "HTTP_status": 200,
+    "model_HTTP_seconds": 4.313364050001837,
+    "usage": {
+      "prompt_tokens": 945,
+      "total_tokens": 1205,
+      "completion_tokens": 260,
+      "prompt_tokens_details": null
+    },
+    "finish_reasons": [
+      "stop"
+    ],
+    "request_SHA256": "529cde4d4ea93125687c89957c5f26bf8014a6854ea2e93bd0b886109d540cde",
+    "response_SHA256": "0f9e0bb2276a8421072e5d351121efcae4904f8e79589c8dfcb3f6a651bc686e"
+  },
+  {
+    "index": 2,
+    "HTTP_status": 200,
+    "model_HTTP_seconds": 1.5675962950335816,
+    "usage": {
+      "prompt_tokens": 485,
+      "total_tokens": 574,
+      "completion_tokens": 89,
+      "prompt_tokens_details": null
+    },
+    "finish_reasons": [
+      "stop"
+    ],
+    "request_SHA256": "015e0a2f4b39d18043c626d0ad7c29a323fd5bd7725a4d68a1a8cf1b4a1705a9",
+    "response_SHA256": "e378b3fdc6e7b4f71a4bfde9665fa22809afff1edc0a1934e516d3c4409a7c5a"
+  },
+  {
+    "index": 3,
+    "HTTP_status": 200,
+    "model_HTTP_seconds": 1.4543637010501698,
+    "usage": {
+      "prompt_tokens": 485,
+      "total_tokens": 569,
+      "completion_tokens": 84,
+      "prompt_tokens_details": null
+    },
+    "finish_reasons": [
+      "stop"
+    ],
+    "request_SHA256": "22b61456526fdd9edf987a6deb0080d5b925d0bb590d0bac28f67a18642f0bad",
+    "response_SHA256": "77e0e2fbac7614927b829b361468119ca9966d545f080468e5b3ddc40662e7e1"
+  },
+  {
+    "index": 4,
+    "HTTP_status": 200,
+    "model_HTTP_seconds": 1.7280038449680433,
+    "usage": {
+      "prompt_tokens": 347,
+      "total_tokens": 451,
+      "completion_tokens": 104,
+      "prompt_tokens_details": null
+    },
+    "finish_reasons": [
+      "stop"
+    ],
+    "request_SHA256": "adb0ad73842dc93a9d9dabedf63d616338b7cdb857611005a7d5e667766acc0e",
+    "response_SHA256": "88ad0c942f9353a5aa10d0509b9442a76b9304db97aaea0265a86675bc40f4b0"
+  }
+]

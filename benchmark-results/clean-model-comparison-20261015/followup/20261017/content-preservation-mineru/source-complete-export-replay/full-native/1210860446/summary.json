@@ -1,0 +1,159 @@
+{
+  "source": "1210860446",
+  "input_SHA256": "3abc446078329a684f22da643ae578a32f1f68a4509c5449936e9be80673f667",
+  "raw_SHA256": "02343bd52dd7bcf58aef7ec852a8b0c73ab5535bafadd3ab23a745ae4e14679d",
+  "native_pages": 6,
+  "phases": {
+    "before": {
+      "tables": 10,
+      "anchors": 343,
+      "span_cells": 38,
+      "actual_groups": {},
+      "public_table_coverage": {
+        "all_source_tables_projected_once": true,
+        "emitted_source_cell_anchors": 343,
+        "only_equivalent_complete_repeated_header_cells_removed": 0,
+        "source_rows_text_spans_header_roles_and_pages_preserved": true
+      },
+      "visible_source_items": 69,
+      "serialized_source_events": 56,
+      "duplicate_source_refs": [],
+      "wrong_source_pages": [],
+      "serialized_blocks_absent_from_page": [],
+      "missing_visible_refs": [
+        {
+          "ref": "#/texts/0",
+          "page": 1,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "中节能太阳能股份有限公司 2021 年半年度报告摘要"
+        },
+        {
+          "ref": "#/texts/24",
+          "page": 1,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "公告编号：2021 - 60"
+        },
+        {
+          "ref": "#/texts/25",
+          "page": 1,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "1"
+        },
+        {
+          "ref": "#/texts/26",
+          "page": 2,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "中节能太阳能股份有限公司 2021 年半年度报告摘要"
+        },
+        {
+          "ref": "#/texts/32",
+          "page": 2,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "2"
+        },
+        {
+          "ref": "#/texts/33",
+          "page": 3,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "中节能太阳能股份有限公司 2021 年半年度报告摘要"
+        },
+        {
+          "ref": "#/texts/34",
+          "page": 3,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "3"
+        },
+        {
+          "ref": "#/texts/35",
+          "page": 4,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "中节能太阳能股份有限公司 2021 年半年度报告摘要"
+        },
+        {
+          "ref": "#/texts/48",
+          "page": 4,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "4"
+        },
+        {
+          "ref": "#/texts/49",
+          "page": 5,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "中节能太阳能股份有限公司 2021 年半年度报告摘要"
+        },
+        {
+          "ref": "#/texts/53",
+          "page": 5,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "5"
+        },
+        {
+          "ref": "#/texts/54",
+          "page": 6,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "中节能太阳能股份有限公司 2021 年半年度报告摘要"
+        },
+        {
+          "ref": "#/texts/68",
+          "page": 6,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6"
+        }
+      ],
+      "hidden_source_refs_exported": [],
+      "non_table_narrative_preserved_during_assembly": true
+    },
+    "after": {
+      "tables": 10,
+      "anchors": 343,
+      "span_cells": 38,
+      "actual_groups": {},
+      "public_table_coverage": {
+        "all_source_tables_projected_once": true,
+        "emitted_source_cell_anchors": 343,
+        "only_equivalent_complete_repeated_header_cells_removed": 0,
+        "source_rows_text_spans_header_roles_and_pages_preserved": true
+      },
+      "visible_source_items": 69,
+      "serialized_source_events": 69,
+      "duplicate_source_refs": [],
+      "wrong_source_pages": [],
+      "serialized_blocks_absent_from_page": [],
+      "missing_visible_refs": [],
+      "hidden_source_refs_exported": [],
+      "non_table_narrative_preserved_during_assembly": true
+    }
+  },
+  "source_cells_spans_header_roles_scope_and_pages_unchanged": true,
+  "raw_model_unchanged": true,
+  "recovered_visible_refs": [
+    "#/texts/68",
+    "#/texts/53",
+    "#/texts/24",
+    "#/texts/33",
+    "#/texts/34",
+    "#/texts/49",
+    "#/texts/25",
+    "#/texts/48",
+    "#/texts/35",
+    "#/texts/54",
+    "#/texts/0",
+    "#/texts/26",
+    "#/texts/32"
+  ],
+  "removed_groups": [],
+  "added_groups": []
+}

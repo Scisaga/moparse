@@ -1,0 +1,90 @@
+{
+  "schema": "mosaicparse-model-reader-self-tests/1",
+  "created_UTC": "2026-10-17T13:38:23.010836+00:00",
+  "scope": "Pure in-memory verifier tests; no synthetic parser results are saved or counted as model quality.",
+  "scripts": {
+    "evaluate-mineru-source.py": "25ae40c43f97404aa723b04bb717a04add76db558d4d7b9aa47d492e9dc63d75",
+    "audit-visible-source-spans.py": "8c7e26f156bec535a2fe6b8bed2929cc395b723129312f4987128fdde2bebbd7",
+    "test-model-output-readers.py": "16027b54049a01afaeca9028302a507b0013dcb557495c5007a0dc4fca762c97"
+  },
+  "pass": true,
+  "test_count": 19,
+  "tests": [
+    {
+      "test": "HTML_explicit_anchors_and_spans",
+      "pass": true
+    },
+    {
+      "test": "HTML_complete_explicit_physical_coverage",
+      "pass": true
+    },
+    {
+      "test": "complete_source_grid_passes",
+      "pass": true
+    },
+    {
+      "test": "omitted_blank_cell_not_filled_as_evidence",
+      "pass": true
+    },
+    {
+      "test": "wrong_group_span_rejected",
+      "pass": true
+    },
+    {
+      "test": "unclosed_HTML_reported",
+      "pass": true
+    },
+    {
+      "test": "superscript_semantics_preserved",
+      "pass": true
+    },
+    {
+      "test": "punctuation_width_equivalence_only",
+      "pass": true
+    },
+    {
+      "test": "Chinese_identity_one_not_hyphen",
+      "pass": true
+    },
+    {
+      "test": "em_dash_not_Chinese_one",
+      "pass": true
+    },
+    {
+      "test": "digits_never_normalized",
+      "pass": true
+    },
+    {
+      "test": "negative_decimal_keeps_sign_and_point",
+      "pass": true
+    },
+    {
+      "test": "pure_numeric_span_cannot_match_contamination",
+      "pass": true
+    },
+    {
+      "test": "positive_span_cannot_match_negative",
+      "pass": true
+    },
+    {
+      "test": "negative_span_exact_token",
+      "pass": true
+    },
+    {
+      "test": "negative_span_cannot_match_longer_decimal",
+      "pass": true
+    },
+    {
+      "test": "adjacent_HTML_numeric_cells_do_not_concatenate",
+      "pass": true
+    },
+    {
+      "test": "cross_cell_native_text_span_can_be_covered",
+      "pass": true
+    },
+    {
+      "test": "choice_state_kept_distinct",
+      "pass": true
+    }
+  ]
+}

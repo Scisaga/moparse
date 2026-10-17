@@ -1,0 +1,50 @@
+[
+  {
+    "index": 0,
+    "HTTP_status": 200,
+    "model_HTTP_seconds": 5.154988631955348,
+    "usage": {
+      "prompt_tokens": 1394,
+      "total_tokens": 1638,
+      "completion_tokens": 244,
+      "prompt_tokens_details": null
+    },
+    "finish_reasons": [
+      "stop"
+    ],
+    "request_SHA256": "cabe33a99e8ac2dfa99f06813547031a52a2db7aea3af2a4d90f97d98b888be8",
+    "response_SHA256": "1f9318ac557d80da11fabec5373418faa597faefd59bfc12df073824404dbf4e"
+  },
+  {
+    "index": 1,
+    "HTTP_status": 200,
+    "model_HTTP_seconds": 0.7068838808918372,
+    "usage": {
+      "prompt_tokens": 169,
+      "total_tokens": 201,
+      "completion_tokens": 32,
+      "prompt_tokens_details": null
+    },
+    "finish_reasons": [
+      "stop"
+    ],
+    "request_SHA256": "26506a7e21efb92dff6f63009fafd942c063c5bd6e49d6913313fb5b5d56a7ac",
+    "response_SHA256": "b049c585502db62001712e406934de715cb99b6e25c4e72f10e7b590ff83e45b"
+  },
+  {
+    "index": 2,
+    "HTTP_status": 200,
+    "model_HTTP_seconds": 15.754273011931218,
+    "usage": {
+      "prompt_tokens": 2049,
+      "total_tokens": 2825,
+      "completion_tokens": 776,
+      "prompt_tokens_details": null
+    },
+    "finish_reasons": [
+      "stop"
+    ],
+    "request_SHA256": "5d1cd38b4052d81222d89db4493cdf1d6b4ade3c9db7bd9bbc4ca3cee221e2f8",
+    "response_SHA256": "ef3f851429cc7e438c0dfe96bfcc59dd86010291604621a83d0cbf03156f4aa7"
+  }
+]

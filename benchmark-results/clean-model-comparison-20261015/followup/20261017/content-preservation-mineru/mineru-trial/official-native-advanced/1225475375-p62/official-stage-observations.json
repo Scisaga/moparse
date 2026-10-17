@@ -1,0 +1,97 @@
+[
+  {
+    "stage": "official_input_preparation",
+    "file_suffix": "pdf",
+    "prepared_size_bytes": 224461,
+    "original_function_seconds": 0.019956742995418608,
+    "prepared_SHA256": "3251db01c2fd28febea77006403b88512dffd83442d571f28c8f494423cb15ff",
+    "retained_original_page_indices_zero_based": [
+      61
+    ],
+    "broken_original_page_indices_zero_based": [],
+    "derived_input_filename": "prepared-by-official-page-selection.pdf",
+    "transformation": "Official default page_range handling; runner did not crop or rewrite the source PDF."
+  },
+  {
+    "stage": "actual_VLM_options",
+    "image_analysis": false,
+    "not_extract_list": [
+      "caption",
+      "code_caption",
+      "doc_title",
+      "footer",
+      "footnote",
+      "header",
+      "image_caption",
+      "image_footnote",
+      "page_footnote",
+      "page_number",
+      "paragraph_title",
+      "phonetic",
+      "ref_text",
+      "table_caption",
+      "table_footnote",
+      "text",
+      "title"
+    ],
+    "image_sizes": [
+      [
+        1654,
+        2339
+      ]
+    ],
+    "model_inputs": []
+  },
+  {
+    "stage": "actual_VLM_results_before_native_body_fill",
+    "effort": "xhigh",
+    "tables": [
+      {
+        "window_page_index": 0,
+        "bbox": [
+          0.179,
+          0.069,
+          0.524,
+          0.919
+        ],
+        "content": "<table><tr><td rowspan=\"3\">类别</td><td colspan=\"5\">期末余额</td><td colspan=\"5\">期初余额</td></tr><tr><td colspan=\"2\">账面余额</td><td colspan=\"2\">坏账准备</td><td rowspan=\"2\">账面价值</td><td colspan=\"2\">账面余额</td><td colspan=\"2\">坏账准备</td><td rowspan=\"2\">账面价值</td></tr><tr><td>金额</td><td>比例(%)</td><td>金额</td><td>计提比例(%)</td><td>金额</td><td>比例(%)</td><td>金额</td><td>计提比例(%)</td></tr><tr><td>按单项计提坏账准备</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>按组合计提坏账准备</td><td>1,350,072.47</td><td>100.00</td><td>6,750.36</td><td>0.50</td><td>1,343,322.11</td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>其中:</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>银行承兑票据</td><td>1,350,072.47</td><td>100.00</td><td>6,750.36</td><td>0.50</td><td>1,343,322.11</td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>商业承兑票据</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>合计</td><td>1,350,072.47</td><td>100.00</td><td>6,750.36</td><td>0.50</td><td>1,343,322.11</td><td></td><td></td><td></td><td></td><td></td></tr></table>"
+      }
+    ]
+  },
+  {
+    "stage": "native_PDF_text_fill",
+    "returned_spans": 2,
+    "nonempty_text_spans": 2,
+    "queued_for_post_OCR": 0,
+    "spans": [
+      {
+        "type": "text",
+        "bbox": [
+          91.08,
+          600.12,
+          104.04,
+          749.52
+        ],
+        "text": "坏账计提方法分类",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          513.0,
+          401.40000000000003,
+          523.8000000000001,
+          414.0
+        ],
+        "text": "55",
+        "queued_for_post_OCR": false
+      }
+    ]
+  },
+  {
+    "stage": "actual_post_OCR",
+    "candidate_spans": 0,
+    "content_changed": 0,
+    "spans": []
+  }
+]

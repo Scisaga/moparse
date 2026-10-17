@@ -1,0 +1,43 @@
+{
+  "at": "2026-10-17T22:02:09.907160+08:00",
+  "exit_code": 0,
+  "checks": {
+    "test_scope": "CPU only official processor routing and ngram100 functional check; no model inference/parameters changed",
+    "processor_class": "VllmV1NoRepeatNGramLogitsProcessor",
+    "processor_source_SHA256": "4f715af2bb3a17230a509ab95bff8c8a5fe796c6f5d8961303ee360f5021b55a",
+    "OpenAI_protocol_SHA256": "1a2492bdb99e944ca177853496408a2a00d578bb2fa51c6e49241567d6601a82",
+    "routing_lines": [
+      {
+        "line": 340,
+        "text": "    vllm_xargs: dict[str, str | int | float | list[str | int | float]] | None = Field("
+      },
+      {
+        "line": 489,
+        "text": "        extra_args: dict[str, Any] = self.vllm_xargs if self.vllm_xargs else {}"
+      },
+      {
+        "line": 495,
+        "text": "            presence_penalty=self.presence_penalty,"
+      },
+      {
+        "line": 496,
+        "text": "            frequency_penalty=self.frequency_penalty,"
+      },
+      {
+        "line": 521,
+        "text": "            extra_args=extra_args or None,"
+      }
+    ],
+    "actual_params": {
+      "presence_penalty": 1.0,
+      "frequency_penalty": 0.005,
+      "repetition_penalty": 1.0,
+      "extra_args": {
+        "no_repeat_ngram_size": 100,
+        "debug": false
+      }
+    },
+    "ngram100_next_repeat_banned": true,
+    "other_token_unchanged": true
+  }
+}

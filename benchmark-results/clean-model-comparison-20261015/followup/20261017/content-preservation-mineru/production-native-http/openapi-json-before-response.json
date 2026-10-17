@@ -1,0 +1,2092 @@
+{
+  "status": 200,
+  "headers": {
+    "date": "Sat, 17 Oct 2026 13:53:19 GMT",
+    "server": "uvicorn",
+    "content-length": "24184",
+    "content-type": "application/json",
+    "x-request-id": "req_01M5526XPV9SJ2DY5VDB5WRQ89",
+    "x-content-type-options": "nosniff",
+    "referrer-policy": "no-referrer"
+  },
+  "body_path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/production-native-http/openapi-json-before-response-body.bin",
+  "body_sha256": "c728cd6a382e6fe699205cd97e34f016841fd244e5209a886b1e945e06ddf201",
+  "body_bytes": 24184,
+  "received_url": "http://10.0.6.22:12303/openapi.json",
+  "captured_utc": "2026-10-17T13:53:20.607214+00:00",
+  "body": {
+    "openapi": "3.1.0",
+    "info": {
+      "title": "MosaicParse",
+      "summary": "Self-hosted multimodal content parser for external RAG systems",
+      "description": "An independent document and media parsing service with Docling and optional GLM-OCR backends. It produces evidence and assets, but does not perform embedding, chunking, indexing, question answering, or domain entity extraction.",
+      "version": "0.4.0"
+    },
+    "paths": {
+      "/v1/content/parse": {
+        "post": {
+          "tags": [
+            "content"
+          ],
+          "summary": "Parse content synchronously or automatically create an asynchronous job",
+          "operationId": "parse_content_v1_content_parse_post",
+          "parameters": [
+            {
+              "name": "authorization",
+              "in": "header",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Authorization"
+              }
+            },
+            {
+              "name": "X-API-Key",
+              "in": "header",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "X-Api-Key"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "multipart/form-data": {
+                "schema": {
+                  "$ref": "#/components/schemas/Body_parse_content_v1_content_parse_post"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "GFM Markdown",
+              "content": {
+                "text/markdown": {}
+              }
+            },
+            "202": {
+              "description": "Asynchronous job",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/JobResponse"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/v1/content/jobs": {
+        "post": {
+          "tags": [
+            "content"
+          ],
+          "summary": "Create an asynchronous parsing job",
+          "operationId": "create_content_job_v1_content_jobs_post",
+          "parameters": [
+            {
+              "name": "authorization",
+              "in": "header",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Authorization"
+              }
+            },
+            {
+              "name": "X-API-Key",
+              "in": "header",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "X-Api-Key"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "multipart/form-data": {
+                "schema": {
+                  "$ref": "#/components/schemas/Body_create_content_job_v1_content_jobs_post"
+                }
+              }
+            }
+          },
+          "responses": {
+            "202": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/JobResponse"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/v1/content/jobs/{job_id}": {
+        "get": {
+          "tags": [
+            "jobs"
+          ],
+          "summary": "Get persistent job state",
+          "operationId": "get_content_job_v1_content_jobs__job_id__get",
+          "parameters": [
+            {
+              "name": "job_id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "title": "Job Id"
+              }
+            },
+            {
+              "name": "authorization",
+              "in": "header",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Authorization"
+              }
+            },
+            {
+              "name": "X-API-Key",
+              "in": "header",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "X-Api-Key"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/JobResponse"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "delete": {
+          "tags": [
+            "jobs"
+          ],
+          "summary": "Cancel an active job or delete a terminal job",
+          "operationId": "delete_content_job_v1_content_jobs__job_id__delete",
+          "parameters": [
+            {
+              "name": "job_id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "title": "Job Id"
+              }
+            },
+            {
+              "name": "authorization",
+              "in": "header",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Authorization"
+              }
+            },
+            {
+              "name": "X-API-Key",
+              "in": "header",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "X-Api-Key"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/DeleteJobResponse"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/v1/content/jobs/{job_id}/events": {
+        "get": {
+          "tags": [
+            "jobs"
+          ],
+          "summary": "Stream job progress as Server-Sent Events",
+          "operationId": "content_job_events_v1_content_jobs__job_id__events_get",
+          "parameters": [
+            {
+              "name": "job_id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "title": "Job Id"
+              }
+            },
+            {
+              "name": "Last-Event-ID",
+              "in": "header",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Last-Event-Id"
+              }
+            },
+            {
+              "name": "authorization",
+              "in": "header",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Authorization"
+              }
+            },
+            {
+              "name": "X-API-Key",
+              "in": "header",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "X-Api-Key"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {}
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/v1/content/jobs/{job_id}/result": {
+        "get": {
+          "tags": [
+            "jobs"
+          ],
+          "summary": "Read the completed GFM Markdown result",
+          "operationId": "get_content_result_v1_content_jobs__job_id__result_get",
+          "parameters": [
+            {
+              "name": "job_id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "title": "Job Id"
+              }
+            },
+            {
+              "name": "download",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "type": "boolean",
+                "default": false,
+                "title": "Download"
+              }
+            },
+            {
+              "name": "authorization",
+              "in": "header",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Authorization"
+              }
+            },
+            {
+              "name": "X-API-Key",
+              "in": "header",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "X-Api-Key"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "text/markdown": {}
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/v1/content/jobs/{job_id}/retry": {
+        "post": {
+          "tags": [
+            "jobs"
+          ],
+          "summary": "Retry a failed job",
+          "operationId": "retry_content_job_v1_content_jobs__job_id__retry_post",
+          "parameters": [
+            {
+              "name": "job_id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "title": "Job Id"
+              }
+            },
+            {
+              "name": "authorization",
+              "in": "header",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Authorization"
+              }
+            },
+            {
+              "name": "X-API-Key",
+              "in": "header",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "X-Api-Key"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/x-www-form-urlencoded": {
+                "schema": {
+                  "$ref": "#/components/schemas/Body_retry_content_job_v1_content_jobs__job_id__retry_post"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/JobResponse"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/v1/content/jobs/{job_id}/assets": {
+        "get": {
+          "tags": [
+            "jobs"
+          ],
+          "summary": "List content assets",
+          "operationId": "get_content_assets_v1_content_jobs__job_id__assets_get",
+          "parameters": [
+            {
+              "name": "job_id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "title": "Job Id"
+              }
+            },
+            {
+              "name": "authorization",
+              "in": "header",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Authorization"
+              }
+            },
+            {
+              "name": "X-API-Key",
+              "in": "header",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "X-Api-Key"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/PublicContentAsset"
+                    },
+                    "title": "Response Get Content Assets V1 Content Jobs  Job Id  Assets Get"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/v1/content/jobs/{job_id}/assets/{asset_id}": {
+        "get": {
+          "tags": [
+            "jobs"
+          ],
+          "summary": "Download a content asset",
+          "operationId": "get_content_asset_v1_content_jobs__job_id__assets__asset_id__get",
+          "parameters": [
+            {
+              "name": "job_id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "title": "Job Id"
+              }
+            },
+            {
+              "name": "asset_id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "title": "Asset Id"
+              }
+            },
+            {
+              "name": "authorization",
+              "in": "header",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Authorization"
+              }
+            },
+            {
+              "name": "X-API-Key",
+              "in": "header",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "X-Api-Key"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {}
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/v1/content/jobs/{job_id}/bundle": {
+        "get": {
+          "tags": [
+            "jobs"
+          ],
+          "summary": "Download the parsed-content asset bundle",
+          "operationId": "get_content_bundle_v1_content_jobs__job_id__bundle_get",
+          "parameters": [
+            {
+              "name": "job_id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "title": "Job Id"
+              }
+            },
+            {
+              "name": "authorization",
+              "in": "header",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Authorization"
+              }
+            },
+            {
+              "name": "X-API-Key",
+              "in": "header",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "X-Api-Key"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {}
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/v1/backends": {
+        "get": {
+          "tags": [
+            "backends"
+          ],
+          "summary": "Probe parser backends",
+          "operationId": "get_backends_v1_backends_get",
+          "parameters": [
+            {
+              "name": "authorization",
+              "in": "header",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Authorization"
+              }
+            },
+            {
+              "name": "X-API-Key",
+              "in": "header",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "X-Api-Key"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/BackendsResponse"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/health": {
+        "get": {
+          "tags": [
+            "health"
+          ],
+          "summary": "Process liveness",
+          "operationId": "health_health_get",
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HealthResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/ready": {
+        "get": {
+          "tags": [
+            "health"
+          ],
+          "summary": "Storage and parser readiness",
+          "operationId": "ready_ready_get",
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ReadyResponse"
+                  }
+                }
+              }
+            },
+            "503": {
+              "description": "Core parser is not ready",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ReadyResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/admin/reload": {
+        "post": {
+          "tags": [
+            "admin"
+          ],
+          "summary": "Rebuild parser adapters",
+          "operationId": "reload_parsers_admin_reload_post",
+          "parameters": [
+            {
+              "name": "authorization",
+              "in": "header",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Authorization"
+              }
+            },
+            {
+              "name": "X-Admin-Token",
+              "in": "header",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "X-Admin-Token"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ReloadResponse"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/admin/cleanup": {
+        "post": {
+          "tags": [
+            "admin"
+          ],
+          "summary": "Delete expired jobs",
+          "operationId": "cleanup_jobs_admin_cleanup_post",
+          "parameters": [
+            {
+              "name": "authorization",
+              "in": "header",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Authorization"
+              }
+            },
+            {
+              "name": "X-Admin-Token",
+              "in": "header",
+              "required": false,
+              "schema": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "X-Admin-Token"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/CleanupResponse"
+                  }
+                }
+              }
+            },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/HTTPValidationError"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "AssetKind": {
+          "type": "string",
+          "enum": [
+            "image",
+            "video"
+          ],
+          "title": "AssetKind"
+        },
+        "AssetRole": {
+          "type": "string",
+          "enum": [
+            "source",
+            "embedded_image",
+            "page_crop",
+            "preview",
+            "keyframe"
+          ],
+          "title": "AssetRole"
+        },
+        "AssetStatus": {
+          "type": "string",
+          "enum": [
+            "ready",
+            "partial",
+            "failed"
+          ],
+          "title": "AssetStatus"
+        },
+        "BackendState": {
+          "type": "string",
+          "enum": [
+            "ready",
+            "unavailable",
+            "disabled",
+            "degraded",
+            "unknown"
+          ],
+          "title": "BackendState"
+        },
+        "BackendStatus": {
+          "properties": {
+            "name": {
+              "type": "string",
+              "title": "Name"
+            },
+            "state": {
+              "$ref": "#/components/schemas/BackendState"
+            },
+            "enabled": {
+              "type": "boolean",
+              "title": "Enabled",
+              "default": true
+            },
+            "detail": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Detail"
+            },
+            "model": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Model"
+            },
+            "latency_ms": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "minimum": 0.0
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Latency Ms"
+            },
+            "checked_at": {
+              "type": "string",
+              "format": "date-time",
+              "title": "Checked At"
+            }
+          },
+          "additionalProperties": false,
+          "type": "object",
+          "required": [
+            "name",
+            "state"
+          ],
+          "title": "BackendStatus"
+        },
+        "BackendsResponse": {
+          "properties": {
+            "backends": {
+              "items": {
+                "$ref": "#/components/schemas/BackendStatus"
+              },
+              "type": "array",
+              "title": "Backends"
+            },
+            "queue": {
+              "$ref": "#/components/schemas/QueueStatus"
+            }
+          },
+          "type": "object",
+          "required": [
+            "backends",
+            "queue"
+          ],
+          "title": "BackendsResponse"
+        },
+        "Body_create_content_job_v1_content_jobs_post": {
+          "properties": {
+            "file": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "contentMediaType": "application/octet-stream"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "File",
+              "description": "Supported document, image, or video"
+            },
+            "source_url": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Source Url",
+              "description": "HTTP(S) content URL"
+            },
+            "scan_policy": {
+              "type": "string",
+              "enum": [
+                "auto",
+                "skip"
+              ],
+              "title": "Scan Policy",
+              "description": "Automatically process scanned PDF pages or skip them",
+              "default": "auto"
+            },
+            "unit_range": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Unit Range",
+              "description": "One-based page or slide ranges, e.g. 1-5,8"
+            },
+            "language": {
+              "type": "string",
+              "title": "Language",
+              "description": "Comma-separated OCR languages",
+              "default": "zh,en"
+            },
+            "describe_images": {
+              "type": "boolean",
+              "title": "Describe Images",
+              "description": "Generate model descriptions for embedded images",
+              "default": false
+            },
+            "description_language": {
+              "type": "string",
+              "enum": [
+                "zh-CN",
+                "en",
+                "auto"
+              ],
+              "title": "Description Language",
+              "default": "zh-CN"
+            },
+            "timeout_seconds": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "maximum": 86400.0,
+                  "minimum": 1.0
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Timeout Seconds"
+            }
+          },
+          "type": "object",
+          "title": "Body_create_content_job_v1_content_jobs_post"
+        },
+        "Body_parse_content_v1_content_parse_post": {
+          "properties": {
+            "file": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "contentMediaType": "application/octet-stream"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "File",
+              "description": "Supported document, image, or video"
+            },
+            "source_url": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Source Url",
+              "description": "HTTP(S) content URL"
+            },
+            "scan_policy": {
+              "type": "string",
+              "enum": [
+                "auto",
+                "skip"
+              ],
+              "title": "Scan Policy",
+              "description": "Automatically process scanned PDF pages or skip them",
+              "default": "auto"
+            },
+            "unit_range": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Unit Range",
+              "description": "One-based page or slide ranges, e.g. 1-5,8"
+            },
+            "language": {
+              "type": "string",
+              "title": "Language",
+              "description": "Comma-separated OCR languages",
+              "default": "zh,en"
+            },
+            "describe_images": {
+              "type": "boolean",
+              "title": "Describe Images",
+              "description": "Generate model descriptions for embedded images",
+              "default": false
+            },
+            "description_language": {
+              "type": "string",
+              "enum": [
+                "zh-CN",
+                "en",
+                "auto"
+              ],
+              "title": "Description Language",
+              "default": "zh-CN"
+            },
+            "timeout_seconds": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "maximum": 86400.0,
+                  "minimum": 1.0
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Timeout Seconds"
+            },
+            "prefer_async": {
+              "type": "boolean",
+              "title": "Prefer Async",
+              "default": false
+            }
+          },
+          "type": "object",
+          "title": "Body_parse_content_v1_content_parse_post"
+        },
+        "Body_retry_content_job_v1_content_jobs__job_id__retry_post": {
+          "properties": {
+            "unit_range": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Unit Range"
+            }
+          },
+          "type": "object",
+          "title": "Body_retry_content_job_v1_content_jobs__job_id__retry_post"
+        },
+        "CleanupResponse": {
+          "properties": {
+            "status": {
+              "type": "string",
+              "const": "completed",
+              "title": "Status",
+              "default": "completed"
+            },
+            "deleted_jobs": {
+              "type": "integer",
+              "minimum": 0.0,
+              "title": "Deleted Jobs"
+            }
+          },
+          "type": "object",
+          "required": [
+            "deleted_jobs"
+          ],
+          "title": "CleanupResponse"
+        },
+        "DeleteJobResponse": {
+          "properties": {
+            "id": {
+              "type": "string",
+              "title": "Id"
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "cancelled",
+                "deleted"
+              ],
+              "title": "Status"
+            }
+          },
+          "type": "object",
+          "required": [
+            "id",
+            "status"
+          ],
+          "title": "DeleteJobResponse"
+        },
+        "HTTPValidationError": {
+          "properties": {
+            "detail": {
+              "items": {
+                "$ref": "#/components/schemas/ValidationError"
+              },
+              "type": "array",
+              "title": "Detail"
+            }
+          },
+          "type": "object",
+          "title": "HTTPValidationError"
+        },
+        "HealthResponse": {
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": [
+                "ok",
+                "degraded"
+              ],
+              "title": "Status"
+            },
+            "service": {
+              "type": "string",
+              "title": "Service"
+            },
+            "version": {
+              "type": "string",
+              "title": "Version"
+            },
+            "uptime_seconds": {
+              "type": "number",
+              "minimum": 0.0,
+              "title": "Uptime Seconds"
+            },
+            "queue": {
+              "$ref": "#/components/schemas/QueueStatus"
+            },
+            "config": {
+              "additionalProperties": true,
+              "type": "object",
+              "title": "Config"
+            },
+            "backends": {
+              "items": {
+                "$ref": "#/components/schemas/BackendStatus"
+              },
+              "type": "array",
+              "title": "Backends"
+            }
+          },
+          "type": "object",
+          "required": [
+            "status",
+            "service",
+            "version",
+            "uptime_seconds",
+            "queue",
+            "config",
+            "backends"
+          ],
+          "title": "HealthResponse"
+        },
+        "JobError": {
+          "properties": {
+            "code": {
+              "type": "string",
+              "title": "Code"
+            },
+            "message": {
+              "type": "string",
+              "title": "Message"
+            },
+            "details": {
+              "anyOf": [
+                {
+                  "additionalProperties": true,
+                  "type": "object"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Details"
+            }
+          },
+          "additionalProperties": false,
+          "type": "object",
+          "required": [
+            "code",
+            "message"
+          ],
+          "title": "JobError"
+        },
+        "JobProgress": {
+          "properties": {
+            "current": {
+              "type": "integer",
+              "minimum": 0.0,
+              "title": "Current",
+              "default": 0
+            },
+            "total": {
+              "type": "integer",
+              "minimum": 0.0,
+              "title": "Total",
+              "default": 0
+            },
+            "unit": {
+              "type": "string",
+              "title": "Unit",
+              "default": "unit"
+            }
+          },
+          "additionalProperties": false,
+          "type": "object",
+          "title": "JobProgress"
+        },
+        "JobResponse": {
+          "properties": {
+            "id": {
+              "type": "string",
+              "title": "Id"
+            },
+            "object": {
+              "type": "string",
+              "const": "content.parse.job",
+              "title": "Object",
+              "default": "content.parse.job"
+            },
+            "status": {
+              "$ref": "#/components/schemas/JobStatus"
+            },
+            "filename": {
+              "type": "string",
+              "title": "Filename"
+            },
+            "mime_type": {
+              "type": "string",
+              "title": "Mime Type"
+            },
+            "unit_count": {
+              "type": "integer",
+              "minimum": 1.0,
+              "title": "Unit Count"
+            },
+            "progress": {
+              "$ref": "#/components/schemas/JobProgress"
+            },
+            "options": {
+              "$ref": "#/components/schemas/PublicContentParseOptions"
+            },
+            "error": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/JobError"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "attempt": {
+              "type": "integer",
+              "minimum": 1.0,
+              "title": "Attempt"
+            },
+            "parent_job_id": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Parent Job Id"
+            },
+            "created_at": {
+              "type": "string",
+              "format": "date-time",
+              "title": "Created At"
+            },
+            "started_at": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Started At"
+            },
+            "completed_at": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Completed At"
+            },
+            "status_url": {
+              "type": "string",
+              "title": "Status Url"
+            },
+            "events_url": {
+              "type": "string",
+              "title": "Events Url"
+            },
+            "result_url": {
+              "type": "string",
+              "title": "Result Url"
+            },
+            "assets_url": {
+              "type": "string",
+              "title": "Assets Url"
+            },
+            "bundle_url": {
+              "type": "string",
+              "title": "Bundle Url"
+            }
+          },
+          "additionalProperties": false,
+          "type": "object",
+          "required": [
+            "id",
+            "status",
+            "filename",
+            "mime_type",
+            "unit_count",
+            "progress",
+            "options",
+            "attempt",
+            "created_at",
+            "status_url",
+            "events_url",
+            "result_url",
+            "assets_url",
+            "bundle_url"
+          ],
+          "title": "JobResponse",
+          "description": "Safe task representation returned by job endpoints."
+        },
+        "JobStatus": {
+          "type": "string",
+          "enum": [
+            "queued",
+            "running",
+            "completed",
+            "partial",
+            "failed",
+            "cancelled"
+          ],
+          "title": "JobStatus"
+        },
+        "PublicContentAsset": {
+          "properties": {
+            "asset_id": {
+              "type": "string",
+              "title": "Asset Id"
+            },
+            "kind": {
+              "$ref": "#/components/schemas/AssetKind"
+            },
+            "role": {
+              "$ref": "#/components/schemas/AssetRole"
+            },
+            "mime_type": {
+              "type": "string",
+              "title": "Mime Type"
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$",
+              "title": "Sha256"
+            },
+            "size_bytes": {
+              "type": "integer",
+              "minimum": 0.0,
+              "title": "Size Bytes"
+            },
+            "filename": {
+              "type": "string",
+              "title": "Filename"
+            },
+            "width": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "exclusiveMinimum": 0.0
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Width"
+            },
+            "height": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "exclusiveMinimum": 0.0
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Height"
+            },
+            "duration_ms": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "minimum": 0.0
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Duration Ms"
+            },
+            "parent_asset_id": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Parent Asset Id"
+            },
+            "visual_analysis": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/VisualAnalysis"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "status": {
+              "$ref": "#/components/schemas/AssetStatus",
+              "default": "ready"
+            },
+            "warning_codes": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array",
+              "title": "Warning Codes"
+            },
+            "download_url": {
+              "type": "string",
+              "title": "Download Url"
+            }
+          },
+          "additionalProperties": false,
+          "type": "object",
+          "required": [
+            "asset_id",
+            "kind",
+            "role",
+            "mime_type",
+            "sha256",
+            "size_bytes",
+            "filename",
+            "download_url"
+          ],
+          "title": "PublicContentAsset",
+          "description": "Download metadata without request-scoped page or coordinate evidence."
+        },
+        "PublicContentParseOptions": {
+          "properties": {
+            "scan_policy": {
+              "type": "string",
+              "enum": [
+                "auto",
+                "skip"
+              ],
+              "title": "Scan Policy"
+            },
+            "unit_range": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Unit Range"
+            },
+            "language": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array",
+              "title": "Language"
+            },
+            "describe_images": {
+              "type": "boolean",
+              "title": "Describe Images"
+            },
+            "description_language": {
+              "type": "string",
+              "enum": [
+                "zh-CN",
+                "en",
+                "auto"
+              ],
+              "title": "Description Language"
+            },
+            "timeout_seconds": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Timeout Seconds"
+            }
+          },
+          "additionalProperties": false,
+          "type": "object",
+          "required": [
+            "scan_policy",
+            "unit_range",
+            "language",
+            "describe_images",
+            "description_language",
+            "timeout_seconds"
+          ],
+          "title": "PublicContentParseOptions",
+          "description": "Options exposed by job control APIs."
+        },
+        "QueueStatus": {
+          "properties": {
+            "active": {
+              "type": "integer",
+              "minimum": 0.0,
+              "title": "Active"
+            },
+            "capacity": {
+              "type": "integer",
+              "minimum": 1.0,
+              "title": "Capacity"
+            }
+          },
+          "type": "object",
+          "required": [
+            "active",
+            "capacity"
+          ],
+          "title": "QueueStatus"
+        },
+        "ReadyCheck": {
+          "properties": {
+            "writable_data_dir": {
+              "type": "boolean",
+              "title": "Writable Data Dir"
+            },
+            "writable_database": {
+              "type": "boolean",
+              "title": "Writable Database"
+            },
+            "docling": {
+              "type": "boolean",
+              "title": "Docling"
+            }
+          },
+          "type": "object",
+          "required": [
+            "writable_data_dir",
+            "writable_database",
+            "docling"
+          ],
+          "title": "ReadyCheck"
+        },
+        "ReadyResponse": {
+          "properties": {
+            "ready": {
+              "type": "boolean",
+              "title": "Ready"
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "ready",
+                "not_ready"
+              ],
+              "title": "Status"
+            },
+            "checks": {
+              "$ref": "#/components/schemas/ReadyCheck"
+            },
+            "backends": {
+              "items": {
+                "$ref": "#/components/schemas/BackendStatus"
+              },
+              "type": "array",
+              "title": "Backends"
+            }
+          },
+          "type": "object",
+          "required": [
+            "ready",
+            "status",
+            "checks",
+            "backends"
+          ],
+          "title": "ReadyResponse"
+        },
+        "ReloadResponse": {
+          "properties": {
+            "status": {
+              "type": "string",
+              "const": "reloaded",
+              "title": "Status",
+              "default": "reloaded"
+            },
+            "backends": {
+              "items": {
+                "$ref": "#/components/schemas/BackendStatus"
+              },
+              "type": "array",
+              "title": "Backends"
+            }
+          },
+          "type": "object",
+          "required": [
+            "backends"
+          ],
+          "title": "ReloadResponse"
+        },
+        "ValidationError": {
+          "properties": {
+            "loc": {
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "integer"
+                  }
+                ]
+              },
+              "type": "array",
+              "title": "Location"
+            },
+            "msg": {
+              "type": "string",
+              "title": "Message"
+            },
+            "type": {
+              "type": "string",
+              "title": "Error Type"
+            },
+            "input": {
+              "title": "Input"
+            },
+            "ctx": {
+              "type": "object",
+              "title": "Context"
+            }
+          },
+          "type": "object",
+          "required": [
+            "loc",
+            "msg",
+            "type"
+          ],
+          "title": "ValidationError"
+        },
+        "VisualAnalysis": {
+          "properties": {
+            "classification": {
+              "$ref": "#/components/schemas/VisualClassification"
+            },
+            "summary": {
+              "type": "string",
+              "title": "Summary"
+            },
+            "detailed_description": {
+              "type": "string",
+              "title": "Detailed Description",
+              "default": ""
+            },
+            "visible_text": {
+              "type": "string",
+              "title": "Visible Text",
+              "default": ""
+            },
+            "scene": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Scene"
+            },
+            "objects": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array",
+              "title": "Objects"
+            },
+            "actions": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array",
+              "title": "Actions"
+            },
+            "language": {
+              "type": "string",
+              "enum": [
+                "zh-CN",
+                "en",
+                "auto"
+              ],
+              "title": "Language",
+              "default": "zh-CN"
+            },
+            "model": {
+              "type": "string",
+              "title": "Model"
+            },
+            "uncertainties": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array",
+              "title": "Uncertainties"
+            }
+          },
+          "additionalProperties": false,
+          "type": "object",
+          "required": [
+            "classification",
+            "summary",
+            "model"
+          ],
+          "title": "VisualAnalysis"
+        },
+        "VisualClassification": {
+          "type": "string",
+          "enum": [
+            "document",
+            "visual",
+            "mixed",
+            "unknown"
+          ],
+          "title": "VisualClassification"
+        }
+      }
+    }
+  }
+}

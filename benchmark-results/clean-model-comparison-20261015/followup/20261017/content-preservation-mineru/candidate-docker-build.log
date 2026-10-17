@@ -1,0 +1,95 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 2.22kB done
+#1 DONE 0.0s
+
+#2 resolve image config for docker-image://docker.io/docker/dockerfile:1.7
+#2 DONE 1.3s
+
+#3 docker-image://docker.io/docker/dockerfile:1.7@sha256:a57df69d0ea827fb7266491f2813635de6f17269be881f696fbfdf2d83dda33e
+#3 CACHED
+
+#4 [internal] load metadata for docker.io/library/node:20-bookworm-slim
+#4 ...
+
+#5 [internal] load metadata for docker.io/library/python:3.13-slim-bookworm
+#5 DONE 0.0s
+
+#6 [auth] astral-sh/uv:pull token for ghcr.io
+#6 DONE 0.0s
+
+#7 [internal] load metadata for ghcr.io/astral-sh/uv:0.9.13
+#7 DONE 2.3s
+
+#4 [internal] load metadata for docker.io/library/node:20-bookworm-slim
+#4 DONE 2.7s
+
+#8 [internal] load .dockerignore
+#8 transferring context: 396B done
+#8 DONE 0.0s
+
+#9 [uv-bin 1/1] FROM ghcr.io/astral-sh/uv:0.9.13@sha256:f07d1bf7b1fb4b983eed2b31320e25a2a76625bdf83d5ff0208fe105d4d8d2f5
+#9 DONE 0.0s
+
+#10 [python-deps 1/5] FROM docker.io/library/python:3.13-slim-bookworm
+#10 DONE 0.0s
+
+#11 [frontend-builder 1/6] FROM docker.io/library/node:20-bookworm-slim@sha256:2cf067cfed83d5ea958367df9f966191a942351a2df77d6f0193e162b5febfc0
+#11 DONE 0.0s
+
+#12 [internal] load build context
+#12 transferring context: 49.70kB 0.0s done
+#12 DONE 0.0s
+
+#13 [runtime 3/8] RUN apt-get update     && apt-get install -y --no-install-recommends        ca-certificates        curl        ffmpeg        libgl1        libglib2.0-0        libgomp1        tzdata     && rm -rf /var/lib/apt/lists/*     && groupadd --gid "10001" app     && useradd --uid "10001" --gid "10001" --create-home app     && mkdir -p /data /models/docling /models/huggingface /app/static     && chown -R app:app /data /models /app
+#13 CACHED
+
+#14 [python-deps 3/5] COPY --from=uv-bin /uv /uvx /usr/local/bin/
+#14 CACHED
+
+#15 [python-deps 5/5] RUN --mount=type=cache,target=/root/.cache/uv     uv sync --frozen --no-dev --no-install-project
+#15 CACHED
+
+#16 [python-deps 4/5] COPY pyproject.toml uv.lock README.md LICENSE ./
+#16 CACHED
+
+#17 [python-deps 2/5] WORKDIR /app
+#17 CACHED
+
+#18 [frontend-builder 2/6] WORKDIR /build/frontend
+#18 CACHED
+
+#19 [frontend-builder 3/6] COPY frontend/package.json frontend/package-lock.json ./
+#19 CACHED
+
+#20 [frontend-builder 4/6] RUN --mount=type=cache,target=/root/.npm     npm ci --no-audit --no-fund
+#20 CACHED
+
+#21 [frontend-builder 5/6] COPY frontend/ ./
+#21 CACHED
+
+#22 [frontend-builder 6/6] RUN npm run build
+#22 CACHED
+
+#23 [runtime 4/8] COPY --from=python-deps --chown=app:app /app/.venv /app/.venv
+#23 CACHED
+
+#24 [runtime 5/8] COPY --chown=app:app app/ ./app/
+#24 DONE 0.2s
+
+#25 [runtime 6/8] COPY --chown=app:app scripts/purge_job_data.py ./scripts/purge_job_data.py
+#25 DONE 0.1s
+
+#26 [runtime 7/8] COPY --from=frontend-builder --chown=app:app /build/frontend/dist/ ./static/
+#26 DONE 0.5s
+
+#27 [runtime 8/8] COPY --chown=app:app README.md LICENSE ./
+#27 DONE 0.1s
+
+#28 exporting to image
+#28 exporting layers
+#28 exporting layers 0.4s done
+#28 writing image sha256:07a5df326885a6f83cf48aab766f6dd47fad5175066703fe6fa224380d86f9d4 done
+#28 naming to docker.io/library/mosaic-parse:0.4.0-source-content-20261017-r2 done
+#28 DONE 0.5s

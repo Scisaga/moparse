@@ -1,0 +1,14 @@
+{
+  "status": 200,
+  "headers": {
+    "date": "Sat, 17 Oct 2026 13:29:18 GMT",
+    "server": "uvicorn",
+    "content-length": "465",
+    "content-type": "application/json",
+    "x-request-id": "req_01M550TXV7ETGWRA34Q860949X",
+    "x-content-type-options": "nosniff",
+    "referrer-policy": "no-referrer"
+  },
+  "body_sha256": "8b35fddee7856b9e8bb79d6d08073bca7393c265656b44a646adeae136e33814",
+  "body_bytes": 465
+}

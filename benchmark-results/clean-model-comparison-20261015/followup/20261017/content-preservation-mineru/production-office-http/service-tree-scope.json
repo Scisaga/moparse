@@ -1,0 +1,43 @@
+{
+  "owned_server_root_identity": {
+    "pid": 1179707,
+    "create_time": 1792245056.87,
+    "proc_starttime_ticks": 58699987,
+    "boot_id": "74913799-52a2-4c2e-871f-473f4bde606d"
+  },
+  "owned_tree_PIDs": [
+    1179707,
+    1179901
+  ],
+  "readonly_services": {
+    "docling_glm_ocr_sdk": {
+      "root_identity": {
+        "pid": 418554,
+        "create_time": 1792185308.65,
+        "proc_starttime_ticks": 52725165,
+        "boot_id": "74913799-52a2-4c2e-871f-473f4bde606d"
+      },
+      "tree_PIDs": [
+        418554,
+        418724,
+        419205
+      ],
+      "overlap_with_owned_tree_PIDs": []
+    },
+    "docling_glm_ocr": {
+      "root_identity": {
+        "pid": 3145,
+        "create_time": 1791658215.87,
+        "proc_starttime_ticks": 15887,
+        "boot_id": "74913799-52a2-4c2e-871f-473f4bde606d"
+      },
+      "tree_PIDs": [
+        3145,
+        6976,
+        6977
+      ],
+      "overlap_with_owned_tree_PIDs": []
+    }
+  },
+  "status": "disjoint"
+}

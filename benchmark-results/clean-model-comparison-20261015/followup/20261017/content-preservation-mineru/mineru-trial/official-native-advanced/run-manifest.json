@@ -1,0 +1,654 @@
+{
+  "started_at": "2026-10-17T14:10:38.620454+00:00",
+  "script_SHA256": "a22853c7a6910e6c7360f32a172de9f628fab5d252722def699ea4ae684a1d23",
+  "tier": "advanced",
+  "packages": {
+    "mineru": "4.0.12",
+    "docvortex": "0.5.16",
+    "mineru-vl-utils": "2.0.7",
+    "onnxruntime": "1.31.0",
+    "pypdfium2": "5.14.0"
+  },
+  "CPU_affinity": [
+    68,
+    69,
+    70,
+    71
+  ],
+  "small_model_backend": "onnx/CPU",
+  "GPU_local_access": false,
+  "remote_VLM": {
+    "engine": "auto",
+    "server_url": "http://127.0.0.1:12431/",
+    "model": "mineru-trial",
+    "http_timeout": 600,
+    "max_concurrency": 1
+  },
+  "local_process_NO_PROXY": "127.0.0.1,localhost",
+  "Markdown_exports": {
+    "result.md": "official default renderer; filters page auxiliary blocks",
+    "result-full.md": "official public add_markers=True FULL renderer; retains physical-page auxiliary blocks"
+  },
+  "timing_boundaries": {
+    "CPU_model_initialization": "preloaded before timed page parsing and recorded separately",
+    "parse_seconds": "official parse() call; includes its official input selection, layout/native/VLM/postprocessing and read-only observation writes made inside those calls; excludes CPU model initialization and subsequent Markdown calls",
+    "markdown_DEFAULT_and_FULL_seconds": "each measured independently on returned result, before file writing",
+    "case_component_seconds": "parse + DEFAULT Markdown + FULL Markdown; excludes standalone exports/file writes/metrics/input fingerprinting",
+    "end_to_end_case_seconds": "all case preparation, fingerprints, metrics, parse, both renders, official save and evidence writes",
+    "model_HTTP_seconds": "request event hook until response body read; includes request-evidence hook overhead, not pure GPU kernel time"
+  },
+  "handoff": {
+    "at": "2026-10-17T22:07:11.103472+08:00",
+    "status": "ready_for_official_native",
+    "server_url": "http://127.0.0.1:12431",
+    "model": "mineru-trial",
+    "original14_complete": true,
+    "extra_p62_exit_code": null,
+    "container_id": "3dcd543c71902b0ebfe335c0ab0e97cfc3ae715cd309605afee027775e15a871"
+  },
+  "source_pages": 15,
+  "whole_document_HTTP_acceptance": false,
+  "actual_input_scope": "Original full PDF byte files supplied to official parse(); explicit page_range selects one physical page per call. Original 14 pages and additional p62 are separately labeled. No crop/pre-render supplied by this runner.",
+  "planned_cases": [
+    {
+      "id": "1206337604",
+      "pdf": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/sources/1206337604/source-converted.pdf",
+      "page": 1
+    },
+    {
+      "id": "1225474739",
+      "pdf": "/opt/mosaic-parse/pdf_sample/1225474739.pdf",
+      "page": 19
+    },
+    {
+      "id": "1206337604",
+      "pdf": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/sources/1206337604/source-converted.pdf",
+      "page": 2
+    },
+    {
+      "id": "1225474739",
+      "pdf": "/opt/mosaic-parse/pdf_sample/1225474739.pdf",
+      "page": 40
+    },
+    {
+      "id": "1225474739",
+      "pdf": "/opt/mosaic-parse/pdf_sample/1225474739.pdf",
+      "page": 74
+    },
+    {
+      "id": "1225474739",
+      "pdf": "/opt/mosaic-parse/pdf_sample/1225474739.pdf",
+      "page": 131
+    },
+    {
+      "id": "1225475375",
+      "pdf": "/opt/mosaic-parse/pdf_sample/1225475375.pdf",
+      "page": 74
+    },
+    {
+      "id": "1225475375",
+      "pdf": "/opt/mosaic-parse/pdf_sample/1225475375.pdf",
+      "page": 87
+    },
+    {
+      "id": "1225474139",
+      "pdf": "/opt/mosaic-parse/pdf_sample/1225474139.pdf",
+      "page": 28
+    },
+    {
+      "id": "1225474139",
+      "pdf": "/opt/mosaic-parse/pdf_sample/1225474139.pdf",
+      "page": 30
+    },
+    {
+      "id": "1225474693",
+      "pdf": "/opt/mosaic-parse/pdf_sample/1225474693.pdf",
+      "page": 2
+    },
+    {
+      "id": "1225474693",
+      "pdf": "/opt/mosaic-parse/pdf_sample/1225474693.pdf",
+      "page": 3
+    },
+    {
+      "id": "1225473526",
+      "pdf": "/opt/mosaic-parse/pdf_sample/1225473526.pdf",
+      "page": 6
+    },
+    {
+      "id": "1225473526",
+      "pdf": "/opt/mosaic-parse/pdf_sample/1225473526.pdf",
+      "page": 7
+    },
+    {
+      "id": "1225475375",
+      "pdf": "/opt/mosaic-parse/pdf_sample/1225475375.pdf",
+      "page": 62
+    }
+  ],
+  "cases": [
+    {
+      "id": "1206337604",
+      "pdf": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/sources/1206337604/source-converted.pdf",
+      "page": 1,
+      "source_pdf_SHA256": "ccff40771d75e9412b65f364a1c72c1733c37b4d8f232f49cf639621f0ba165f",
+      "physical_page_one_based": 1,
+      "source_pdf_total_pages": 2,
+      "source_pdf_page_rotation": 0,
+      "expected_original_page_idx_zero_based": 0,
+      "official_parse_arguments": {
+        "tier": "advanced",
+        "ocr_mode": "txt",
+        "image_analysis": false,
+        "page_range": "1"
+      },
+      "cohort": "original_14",
+      "status": "completed",
+      "parse_seconds": 11.647757304017432,
+      "markdown_DEFAULT_seconds": 0.007111747981980443,
+      "markdown_FULL_seconds": 0.0019795598927885294,
+      "PDF_to_DEFAULT_MD_component_seconds": 11.654869051999412,
+      "PDF_to_FULL_MD_component_seconds": 11.64973686391022,
+      "case_component_seconds": 11.656848611892201,
+      "official_save_seconds": 0.01420048694126308,
+      "direct_MD_write_seconds": 0.00022287503816187382,
+      "returned_original_page_indices_zero_based": [
+        0
+      ],
+      "model_HTTP_calls": 2,
+      "model_HTTP_seconds": 8.724293229053728,
+      "result_full_MD_SHA256": "ba6e392d3e8bdf38c6103627944ceff85154d88eced163f0843148d45f93112c",
+      "result_MD_SHA256": "a62e576e6bf182072efe3a28d314609296a914b71475cdeda8ef2f288010a6cf",
+      "end_to_end_case_seconds": 11.856938748969696
+    },
+    {
+      "id": "1225474739",
+      "pdf": "/opt/mosaic-parse/pdf_sample/1225474739.pdf",
+      "page": 19,
+      "source_pdf_SHA256": "1c99c450a8efefe77c9ca02a6f670c958298f661e5ad8d30d6ba01aa0742cda9",
+      "physical_page_one_based": 19,
+      "source_pdf_total_pages": 134,
+      "source_pdf_page_rotation": 0,
+      "expected_original_page_idx_zero_based": 18,
+      "official_parse_arguments": {
+        "tier": "advanced",
+        "ocr_mode": "txt",
+        "image_analysis": false,
+        "page_range": "19"
+      },
+      "cohort": "original_14",
+      "status": "completed",
+      "parse_seconds": 23.4646888920106,
+      "markdown_DEFAULT_seconds": 0.0028113090666010976,
+      "markdown_FULL_seconds": 0.002762468997389078,
+      "PDF_to_DEFAULT_MD_component_seconds": 23.4675002010772,
+      "PDF_to_FULL_MD_component_seconds": 23.46745136100799,
+      "case_component_seconds": 23.47026267007459,
+      "official_save_seconds": 0.02283361298032105,
+      "direct_MD_write_seconds": 0.0002357379999011755,
+      "returned_original_page_indices_zero_based": [
+        18
+      ],
+      "model_HTTP_calls": 3,
+      "model_HTTP_seconds": 21.616145524778403,
+      "result_full_MD_SHA256": "8df25588b8730ba8788fe344cb5035e3e8757bdb1e83251ac3f3fb97e9070639",
+      "result_MD_SHA256": "ceff870cd83eccff8d7423e538eca4dcbd31ccd4f31365484faa062ef69c12a4",
+      "end_to_end_case_seconds": 23.71086175797973
+    },
+    {
+      "id": "1206337604",
+      "pdf": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/sources/1206337604/source-converted.pdf",
+      "page": 2,
+      "source_pdf_SHA256": "ccff40771d75e9412b65f364a1c72c1733c37b4d8f232f49cf639621f0ba165f",
+      "physical_page_one_based": 2,
+      "source_pdf_total_pages": 2,
+      "source_pdf_page_rotation": 0,
+      "expected_original_page_idx_zero_based": 1,
+      "official_parse_arguments": {
+        "tier": "advanced",
+        "ocr_mode": "txt",
+        "image_analysis": false,
+        "page_range": "2"
+      },
+      "cohort": "original_14",
+      "status": "completed",
+      "parse_seconds": 10.588446303037927,
+      "markdown_DEFAULT_seconds": 0.0009159400360658765,
+      "markdown_FULL_seconds": 0.0006350550102069974,
+      "PDF_to_DEFAULT_MD_component_seconds": 10.589362243073992,
+      "PDF_to_FULL_MD_component_seconds": 10.589081358048134,
+      "case_component_seconds": 10.5899972980842,
+      "official_save_seconds": 0.017398408032022417,
+      "direct_MD_write_seconds": 0.00045235001016408205,
+      "returned_original_page_indices_zero_based": [
+        1
+      ],
+      "model_HTTP_calls": 2,
+      "model_HTTP_seconds": 9.173096555052325,
+      "result_full_MD_SHA256": "80f2a81ab83449ea4d7047d23f918602145bf4d7e091070b2b5ca3ae549ee914",
+      "result_MD_SHA256": "80f2a81ab83449ea4d7047d23f918602145bf4d7e091070b2b5ca3ae549ee914",
+      "end_to_end_case_seconds": 10.791743193985894
+    },
+    {
+      "id": "1225474739",
+      "pdf": "/opt/mosaic-parse/pdf_sample/1225474739.pdf",
+      "page": 40,
+      "source_pdf_SHA256": "1c99c450a8efefe77c9ca02a6f670c958298f661e5ad8d30d6ba01aa0742cda9",
+      "physical_page_one_based": 40,
+      "source_pdf_total_pages": 134,
+      "source_pdf_page_rotation": 0,
+      "expected_original_page_idx_zero_based": 39,
+      "official_parse_arguments": {
+        "tier": "advanced",
+        "ocr_mode": "txt",
+        "image_analysis": false,
+        "page_range": "40"
+      },
+      "cohort": "original_14",
+      "status": "completed",
+      "parse_seconds": 33.86862048599869,
+      "markdown_DEFAULT_seconds": 0.0036840159446001053,
+      "markdown_FULL_seconds": 0.00378707202617079,
+      "PDF_to_DEFAULT_MD_component_seconds": 33.87230450194329,
+      "PDF_to_FULL_MD_component_seconds": 33.87240755802486,
+      "case_component_seconds": 33.87609157396946,
+      "official_save_seconds": 0.02838721696753055,
+      "direct_MD_write_seconds": 0.00047835707664489746,
+      "returned_original_page_indices_zero_based": [
+        39
+      ],
+      "model_HTTP_calls": 2,
+      "model_HTTP_seconds": 32.0397137029795,
+      "result_full_MD_SHA256": "18877a007d5a747eed958f4d10fbb127b13da8b6fe4cce419ed364d46dab3cd1",
+      "result_MD_SHA256": "15ca3a755e559cfc62171365e4cde34444254bef3ff9bb881b11d20044da19b8",
+      "end_to_end_case_seconds": 34.11618706898298
+    },
+    {
+      "id": "1225474739",
+      "pdf": "/opt/mosaic-parse/pdf_sample/1225474739.pdf",
+      "page": 74,
+      "source_pdf_SHA256": "1c99c450a8efefe77c9ca02a6f670c958298f661e5ad8d30d6ba01aa0742cda9",
+      "physical_page_one_based": 74,
+      "source_pdf_total_pages": 134,
+      "source_pdf_page_rotation": 0,
+      "expected_original_page_idx_zero_based": 73,
+      "official_parse_arguments": {
+        "tier": "advanced",
+        "ocr_mode": "txt",
+        "image_analysis": false,
+        "page_range": "74"
+      },
+      "cohort": "original_14",
+      "status": "completed",
+      "parse_seconds": 14.012862832983956,
+      "markdown_DEFAULT_seconds": 0.0034479640889912844,
+      "markdown_FULL_seconds": 0.0033841989934444427,
+      "PDF_to_DEFAULT_MD_component_seconds": 14.016310797072947,
+      "PDF_to_FULL_MD_component_seconds": 14.0162470319774,
+      "case_component_seconds": 14.019694996066391,
+      "official_save_seconds": 0.010640630964189768,
+      "direct_MD_write_seconds": 0.00022963201627135277,
+      "returned_original_page_indices_zero_based": [
+        73
+      ],
+      "model_HTTP_calls": 2,
+      "model_HTTP_seconds": 12.015486833988689,
+      "result_full_MD_SHA256": "ed09851388150ea3786428585efd378182e66b053ffd7c8032a29725fd0ff092",
+      "result_MD_SHA256": "335092eafa20f09b1b0c3b6cfcc2628cfaea76ce552cc89ca07d0aa12f42b686",
+      "end_to_end_case_seconds": 14.241395613993518
+    },
+    {
+      "id": "1225474739",
+      "pdf": "/opt/mosaic-parse/pdf_sample/1225474739.pdf",
+      "page": 131,
+      "source_pdf_SHA256": "1c99c450a8efefe77c9ca02a6f670c958298f661e5ad8d30d6ba01aa0742cda9",
+      "physical_page_one_based": 131,
+      "source_pdf_total_pages": 134,
+      "source_pdf_page_rotation": 0,
+      "expected_original_page_idx_zero_based": 130,
+      "official_parse_arguments": {
+        "tier": "advanced",
+        "ocr_mode": "txt",
+        "image_analysis": false,
+        "page_range": "131"
+      },
+      "cohort": "original_14",
+      "status": "completed",
+      "parse_seconds": 20.894636344979517,
+      "markdown_DEFAULT_seconds": 0.004680219921283424,
+      "markdown_FULL_seconds": 0.0046086449874565005,
+      "PDF_to_DEFAULT_MD_component_seconds": 20.8993165649008,
+      "PDF_to_FULL_MD_component_seconds": 20.899244989966974,
+      "case_component_seconds": 20.903925209888257,
+      "official_save_seconds": 0.02338194497860968,
+      "direct_MD_write_seconds": 0.00023279001470655203,
+      "returned_original_page_indices_zero_based": [
+        130
+      ],
+      "model_HTTP_calls": 5,
+      "model_HTTP_seconds": 19.139788597123697,
+      "result_full_MD_SHA256": "28f0e9df286c6addb3d0cc6f747c5a37366f5897d712035965710ea09662f942",
+      "result_MD_SHA256": "1cacc3424d7d4d12b6cb089486906843f88b96108415e1a0b966ad3edfabb8e7",
+      "end_to_end_case_seconds": 21.150791245978326
+    },
+    {
+      "id": "1225475375",
+      "pdf": "/opt/mosaic-parse/pdf_sample/1225475375.pdf",
+      "page": 74,
+      "source_pdf_SHA256": "5eef30b5c544d76df917d56df76a665ed13b5e6ffebdc54ab0eea0a47b7589d6",
+      "physical_page_one_based": 74,
+      "source_pdf_total_pages": 119,
+      "source_pdf_page_rotation": 0,
+      "expected_original_page_idx_zero_based": 73,
+      "official_parse_arguments": {
+        "tier": "advanced",
+        "ocr_mode": "txt",
+        "image_analysis": false,
+        "page_range": "74"
+      },
+      "cohort": "original_14",
+      "status": "completed",
+      "parse_seconds": 15.469976056017913,
+      "markdown_DEFAULT_seconds": 0.005818729987367988,
+      "markdown_FULL_seconds": 0.004937733057886362,
+      "PDF_to_DEFAULT_MD_component_seconds": 15.475794786005281,
+      "PDF_to_FULL_MD_component_seconds": 15.4749137890758,
+      "case_component_seconds": 15.480732519063167,
+      "official_save_seconds": 0.019866669084876776,
+      "direct_MD_write_seconds": 0.00021123001351952553,
+      "returned_original_page_indices_zero_based": [
+        73
+      ],
+      "model_HTTP_calls": 5,
+      "model_HTTP_seconds": 14.018430726020597,
+      "result_full_MD_SHA256": "edb84a9f2824157e27587291817a278b1f867c136e55a8689d2b083f14582330",
+      "result_MD_SHA256": "69b14b1d126ef7462a21fd8d1622b0ec9461ba6a18d5c6eaeb23a0615e0bf396",
+      "end_to_end_case_seconds": 15.777581211994402
+    },
+    {
+      "id": "1225475375",
+      "pdf": "/opt/mosaic-parse/pdf_sample/1225475375.pdf",
+      "page": 87,
+      "source_pdf_SHA256": "5eef30b5c544d76df917d56df76a665ed13b5e6ffebdc54ab0eea0a47b7589d6",
+      "physical_page_one_based": 87,
+      "source_pdf_total_pages": 119,
+      "source_pdf_page_rotation": 270,
+      "expected_original_page_idx_zero_based": 86,
+      "official_parse_arguments": {
+        "tier": "advanced",
+        "ocr_mode": "txt",
+        "image_analysis": false,
+        "page_range": "87"
+      },
+      "cohort": "original_14",
+      "status": "completed",
+      "parse_seconds": 11.511623861035332,
+      "markdown_DEFAULT_seconds": 0.001969104981981218,
+      "markdown_FULL_seconds": 0.0020634119864553213,
+      "PDF_to_DEFAULT_MD_component_seconds": 11.513592966017313,
+      "PDF_to_FULL_MD_component_seconds": 11.513687273021787,
+      "case_component_seconds": 11.515656378003769,
+      "official_save_seconds": 0.012386832037009299,
+      "direct_MD_write_seconds": 0.0002687739906832576,
+      "returned_original_page_indices_zero_based": [
+        86
+      ],
+      "model_HTTP_calls": 2,
+      "model_HTTP_seconds": 10.157023836974986,
+      "result_full_MD_SHA256": "0bce9b36785f334ade24819ba12c5eff0933e28cff9344f0fe34f9a08b584792",
+      "result_MD_SHA256": "256d27095830c9ad1cfee8ce32f4c5ab678a62808b8d6fd5546f6568aeadc96a",
+      "end_to_end_case_seconds": 11.780970723018982
+    },
+    {
+      "id": "1225474139",
+      "pdf": "/opt/mosaic-parse/pdf_sample/1225474139.pdf",
+      "page": 28,
+      "source_pdf_SHA256": "dc69826976c576302ee4156642039b790693202a611922dda647eb006e6d5c18",
+      "physical_page_one_based": 28,
+      "source_pdf_total_pages": 36,
+      "source_pdf_page_rotation": 0,
+      "expected_original_page_idx_zero_based": 27,
+      "official_parse_arguments": {
+        "tier": "advanced",
+        "ocr_mode": "txt",
+        "image_analysis": false,
+        "page_range": "28"
+      },
+      "cohort": "original_14",
+      "status": "completed",
+      "parse_seconds": 3.0908805469516665,
+      "markdown_DEFAULT_seconds": 0.0003867569612339139,
+      "markdown_FULL_seconds": 0.0003285770071670413,
+      "PDF_to_DEFAULT_MD_component_seconds": 3.0912673039129004,
+      "PDF_to_FULL_MD_component_seconds": 3.0912091239588335,
+      "case_component_seconds": 3.0915958809200674,
+      "official_save_seconds": 0.001760064042173326,
+      "direct_MD_write_seconds": 0.0003694049082696438,
+      "returned_original_page_indices_zero_based": [
+        27
+      ],
+      "model_HTTP_calls": 1,
+      "model_HTTP_seconds": 1.8966653080424294,
+      "result_full_MD_SHA256": "7c9bd5f3941bd98d2a0f59d0cace75c9edbef5f04fe0fc65e1be0dbf5b76d599",
+      "result_MD_SHA256": "29d5bc6684863b5cabb0545aa105e5191004b6c39fae5352c9944eb59a696673",
+      "end_to_end_case_seconds": 3.261777261039242
+    },
+    {
+      "id": "1225474139",
+      "pdf": "/opt/mosaic-parse/pdf_sample/1225474139.pdf",
+      "page": 30,
+      "source_pdf_SHA256": "dc69826976c576302ee4156642039b790693202a611922dda647eb006e6d5c18",
+      "physical_page_one_based": 30,
+      "source_pdf_total_pages": 36,
+      "source_pdf_page_rotation": 0,
+      "expected_original_page_idx_zero_based": 29,
+      "official_parse_arguments": {
+        "tier": "advanced",
+        "ocr_mode": "txt",
+        "image_analysis": false,
+        "page_range": "30"
+      },
+      "cohort": "original_14",
+      "status": "completed",
+      "parse_seconds": 4.491212592925876,
+      "markdown_DEFAULT_seconds": 0.0008069940377026796,
+      "markdown_FULL_seconds": 0.0007521179504692554,
+      "PDF_to_DEFAULT_MD_component_seconds": 4.492019586963579,
+      "PDF_to_FULL_MD_component_seconds": 4.491964710876346,
+      "case_component_seconds": 4.492771704914048,
+      "official_save_seconds": 0.0023459820076823235,
+      "direct_MD_write_seconds": 0.00020916201174259186,
+      "returned_original_page_indices_zero_based": [
+        29
+      ],
+      "model_HTTP_calls": 1,
+      "model_HTTP_seconds": 3.218662497936748,
+      "result_full_MD_SHA256": "820165562d8b7fac3be5080b88309e7f4c201c26f4aea88baae52e83c35678ac",
+      "result_MD_SHA256": "954c5a0ab9b5ede3ac7691bdb748df220f365083715a8168de6a8442e1b6e4ba",
+      "end_to_end_case_seconds": 4.671123625943437
+    },
+    {
+      "id": "1225474693",
+      "pdf": "/opt/mosaic-parse/pdf_sample/1225474693.pdf",
+      "page": 2,
+      "source_pdf_SHA256": "dc7f5b3bfdc5a5c69b9cf4b2a9e0d28e2f9ee0b2464770fb8a910fea688ee775",
+      "physical_page_one_based": 2,
+      "source_pdf_total_pages": 4,
+      "source_pdf_page_rotation": 0,
+      "expected_original_page_idx_zero_based": 1,
+      "official_parse_arguments": {
+        "tier": "advanced",
+        "ocr_mode": "txt",
+        "image_analysis": false,
+        "page_range": "2"
+      },
+      "cohort": "original_14",
+      "status": "completed",
+      "parse_seconds": 12.2668030729983,
+      "markdown_DEFAULT_seconds": 0.002771766041405499,
+      "markdown_FULL_seconds": 0.0027376420330256224,
+      "PDF_to_DEFAULT_MD_component_seconds": 12.269574839039706,
+      "PDF_to_FULL_MD_component_seconds": 12.269540715031326,
+      "case_component_seconds": 12.272312481072731,
+      "official_save_seconds": 0.0126217280048877,
+      "direct_MD_write_seconds": 0.000216913060285151,
+      "returned_original_page_indices_zero_based": [
+        1
+      ],
+      "model_HTTP_calls": 4,
+      "model_HTTP_seconds": 10.726532489992678,
+      "result_full_MD_SHA256": "81e01c9f683d8a5f965c7aa0a2fa37d56adc7d8119c3b2efea2f908bb1f17cdd",
+      "result_MD_SHA256": "2fb998f1c2cd0370dfa18159ed3a40c8e827dce682cca5e71a25d6e82c651796",
+      "end_to_end_case_seconds": 12.458092775079422
+    },
+    {
+      "id": "1225474693",
+      "pdf": "/opt/mosaic-parse/pdf_sample/1225474693.pdf",
+      "page": 3,
+      "source_pdf_SHA256": "dc7f5b3bfdc5a5c69b9cf4b2a9e0d28e2f9ee0b2464770fb8a910fea688ee775",
+      "physical_page_one_based": 3,
+      "source_pdf_total_pages": 4,
+      "source_pdf_page_rotation": 0,
+      "expected_original_page_idx_zero_based": 2,
+      "official_parse_arguments": {
+        "tier": "advanced",
+        "ocr_mode": "txt",
+        "image_analysis": false,
+        "page_range": "3"
+      },
+      "cohort": "original_14",
+      "status": "completed",
+      "parse_seconds": 18.108933779993095,
+      "markdown_DEFAULT_seconds": 0.003928037942387164,
+      "markdown_FULL_seconds": 0.003975181025452912,
+      "PDF_to_DEFAULT_MD_component_seconds": 18.11286181793548,
+      "PDF_to_FULL_MD_component_seconds": 18.112908961018547,
+      "case_component_seconds": 18.116836998960935,
+      "official_save_seconds": 0.023347354028373957,
+      "direct_MD_write_seconds": 0.00023418606724590063,
+      "returned_original_page_indices_zero_based": [
+        2
+      ],
+      "model_HTTP_calls": 3,
+      "model_HTTP_seconds": 16.62104391399771,
+      "result_full_MD_SHA256": "1a1430951eaa34fb2f1d14ae88a3798791d17f3fe85582d03a755dd989af42e6",
+      "result_MD_SHA256": "76df10f8f40567a438ecfd38377174650de9333fd14d635cfed6df457485926e",
+      "end_to_end_case_seconds": 18.318432160071097
+    },
+    {
+      "id": "1225473526",
+      "pdf": "/opt/mosaic-parse/pdf_sample/1225473526.pdf",
+      "page": 6,
+      "source_pdf_SHA256": "787297535ba74a4170cc859ae68f15f946f6dfd0bfc14a1e1fa0e6d068ba2b19",
+      "physical_page_one_based": 6,
+      "source_pdf_total_pages": 27,
+      "source_pdf_page_rotation": 0,
+      "expected_original_page_idx_zero_based": 5,
+      "official_parse_arguments": {
+        "tier": "advanced",
+        "ocr_mode": "txt",
+        "image_analysis": false,
+        "page_range": "6"
+      },
+      "cohort": "original_14",
+      "status": "completed",
+      "parse_seconds": 13.128260693978518,
+      "markdown_DEFAULT_seconds": 0.0037027719663456082,
+      "markdown_FULL_seconds": 0.003563127014786005,
+      "PDF_to_DEFAULT_MD_component_seconds": 13.131963465944864,
+      "PDF_to_FULL_MD_component_seconds": 13.131823820993304,
+      "case_component_seconds": 13.13552659295965,
+      "official_save_seconds": 0.015265422989614308,
+      "direct_MD_write_seconds": 0.0002221129834651947,
+      "returned_original_page_indices_zero_based": [
+        5
+      ],
+      "model_HTTP_calls": 3,
+      "model_HTTP_seconds": 11.509668046841398,
+      "result_full_MD_SHA256": "612f38d083735f76e63c06184770222cb2b22051b03fd7fdad9d14f3cf855da1",
+      "result_MD_SHA256": "cb335d76acfef67542a277412d7ea6b48582d4d4f2a30926d32d47f35702d085",
+      "end_to_end_case_seconds": 13.335165707045235
+    },
+    {
+      "id": "1225473526",
+      "pdf": "/opt/mosaic-parse/pdf_sample/1225473526.pdf",
+      "page": 7,
+      "source_pdf_SHA256": "787297535ba74a4170cc859ae68f15f946f6dfd0bfc14a1e1fa0e6d068ba2b19",
+      "physical_page_one_based": 7,
+      "source_pdf_total_pages": 27,
+      "source_pdf_page_rotation": 0,
+      "expected_original_page_idx_zero_based": 6,
+      "official_parse_arguments": {
+        "tier": "advanced",
+        "ocr_mode": "txt",
+        "image_analysis": false,
+        "page_range": "7"
+      },
+      "cohort": "original_14",
+      "status": "completed",
+      "parse_seconds": 20.16176984005142,
+      "markdown_DEFAULT_seconds": 0.004312432021833956,
+      "markdown_FULL_seconds": 0.004302215995267034,
+      "PDF_to_DEFAULT_MD_component_seconds": 20.166082272073254,
+      "PDF_to_FULL_MD_component_seconds": 20.166072056046687,
+      "case_component_seconds": 20.17038448806852,
+      "official_save_seconds": 0.022197611047886312,
+      "direct_MD_write_seconds": 0.0004951040027663112,
+      "returned_original_page_indices_zero_based": [
+        6
+      ],
+      "model_HTTP_calls": 4,
+      "model_HTTP_seconds": 18.580661331070587,
+      "result_full_MD_SHA256": "a519952250e70a22f5f0842046971f4a7e019ed5c1c59a89a4600dba1cdc1f71",
+      "result_MD_SHA256": "65ec2b304c1bdd0e070f3336062618a84a2d87661b7ab967d937851f9753d5fa",
+      "end_to_end_case_seconds": 20.383790902909823
+    },
+    {
+      "id": "1225475375",
+      "pdf": "/opt/mosaic-parse/pdf_sample/1225475375.pdf",
+      "page": 62,
+      "source_pdf_SHA256": "5eef30b5c544d76df917d56df76a665ed13b5e6ffebdc54ab0eea0a47b7589d6",
+      "physical_page_one_based": 62,
+      "source_pdf_total_pages": 119,
+      "source_pdf_page_rotation": 270,
+      "expected_original_page_idx_zero_based": 61,
+      "official_parse_arguments": {
+        "tier": "advanced",
+        "ocr_mode": "txt",
+        "image_analysis": false,
+        "page_range": "62"
+      },
+      "cohort": "additional_p62",
+      "status": "completed",
+      "parse_seconds": 8.186404887004755,
+      "markdown_DEFAULT_seconds": 0.0022167470306158066,
+      "markdown_FULL_seconds": 0.002047126996330917,
+      "PDF_to_DEFAULT_MD_component_seconds": 8.188621634035371,
+      "PDF_to_FULL_MD_component_seconds": 8.188452014001086,
+      "case_component_seconds": 8.190668761031702,
+      "official_save_seconds": 0.009882065001875162,
+      "direct_MD_write_seconds": 0.00023323995992541313,
+      "returned_original_page_indices_zero_based": [
+        61
+      ],
+      "model_HTTP_calls": 2,
+      "model_HTTP_seconds": 6.875515435007401,
+      "result_full_MD_SHA256": "0b990d83c31fbd7a1e1bcc83a1f02c92ce17093f2bc017fc9cb90675d8ff6e7c",
+      "result_MD_SHA256": "b6aaffee1b34cd7014db4e19ee6486c66c5a856b1a762d3e6ae66b97aa105915",
+      "end_to_end_case_seconds": 8.456277885008603
+    }
+  ],
+  "CPU_model_initialization": {
+    "seconds": 7.960667910985649,
+    "models": [
+      "ocr_model",
+      "layout_model",
+      "mfr_model"
+    ],
+    "GPU_used": false,
+    "model_inference_calls": 0
+  },
+  "status": "completed",
+  "finished_at": "2026-10-17T14:14:30.979382+00:00",
+  "unstarted_cases": []
+}

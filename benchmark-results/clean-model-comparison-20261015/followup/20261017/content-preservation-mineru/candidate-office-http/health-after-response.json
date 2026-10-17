@@ -1,0 +1,82 @@
+{
+  "status": 200,
+  "headers": {
+    "date": "Sat, 17 Oct 2026 13:27:07 GMT",
+    "server": "uvicorn",
+    "content-length": "1497",
+    "content-type": "application/json",
+    "x-request-id": "req_01M550PYDFFAQ76V7G1YTWBCFQ",
+    "x-content-type-options": "nosniff",
+    "referrer-policy": "no-referrer"
+  },
+  "body_path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/candidate-office-http/health-after-response-body.bin",
+  "body_sha256": "05db11c544b2e99a59a9726c635bf8bdcc737b68eb5329a6661bff4a999ba616",
+  "body_bytes": 1497,
+  "received_url": "http://127.0.0.1:12423/health",
+  "captured_utc": "2026-10-17T13:27:08.466365+00:00",
+  "body": {
+    "status": "ok",
+    "service": "mosaicparse",
+    "version": "0.4.0",
+    "uptime_seconds": 44.078892573015764,
+    "queue": {
+      "active": 0,
+      "capacity": 8
+    },
+    "config": {
+      "max_upload_bytes": 209715200,
+      "max_content_units": 1000,
+      "sync_max_bytes": 20971520,
+      "sync_max_units": 10,
+      "max_queued_jobs": 8,
+      "parser_workers": 1,
+      "job_retention_hours": 24,
+      "content_timeout_seconds": 900,
+      "max_video_seconds": 1800,
+      "video_max_keyframes": 24,
+      "video_max_frame_pixels": 33177600,
+      "ffmpeg_max_concurrency": 1,
+      "ffmpeg_threads": 2,
+      "docling_device": "cpu",
+      "docling_pdf_backend": "pypdfium",
+      "docling_do_cell_matching": false,
+      "docling_num_threads": 4,
+      "docling_page_workers": 3,
+      "docling_page_parallel_min_pages": 4,
+      "source_urls_enabled": true,
+      "private_source_urls_allowed": false,
+      "glm_ocr_enabled": true,
+      "glm_sdk_enabled": true,
+      "glm_sdk_orientation_enabled": true
+    },
+    "backends": [
+      {
+        "name": "docling-standard",
+        "state": "ready",
+        "enabled": true,
+        "detail": "3 converter profile(s) cached; 4 CPU thread(s) each, 3 page worker(s) per document; TableFormer V1 accurate, matching=False, PyPdfium, native OCR off",
+        "model": null,
+        "latency_ms": null,
+        "checked_at": "2026-10-17T13:27:08.463992Z"
+      },
+      {
+        "name": "glm-ocr-remote",
+        "state": "ready",
+        "enabled": true,
+        "detail": "OpenAI-compatible models endpoint responded",
+        "model": "zai-org/GLM-OCR",
+        "latency_ms": 12,
+        "checked_at": "2026-10-17T13:27:06.122732Z"
+      },
+      {
+        "name": "glm-sdk-remote",
+        "state": "ready",
+        "enabled": true,
+        "detail": "official GLM-OCR SDK pipeline responded; CPU document orientation on",
+        "model": "glmocr",
+        "latency_ms": 11,
+        "checked_at": "2026-10-17T13:27:06.124123Z"
+      }
+    ]
+  }
+}

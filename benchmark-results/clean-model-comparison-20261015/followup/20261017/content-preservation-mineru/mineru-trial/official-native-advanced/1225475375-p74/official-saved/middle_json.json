@@ -1,0 +1,279 @@
+{
+  "metadata": {
+    "file_suffix": "pdf",
+    "producer": {
+      "name": "mineru",
+      "version": "4.0.12"
+    },
+    "document": {
+      "page_count": 119,
+      "page_count_kind": "physical"
+    }
+  },
+  "extensions": {
+    "mineru": {
+      "tier": "advanced",
+      "parse_mode": "txt"
+    },
+    "docvortex_layout": {
+      "version": 1,
+      "pages": [
+        {
+          "page_idx": 73,
+          "width_pt": 595.3499755859375,
+          "height_pt": 842.0
+        }
+      ]
+    }
+  },
+  "pages": [
+    {
+      "page_idx": 73,
+      "blocks": [
+        {
+          "type": "table",
+          "index": 0,
+          "bbox": [
+            0.13,
+            0.08,
+            0.914,
+            0.321
+          ],
+          "content": [
+            {
+              "type": "table_body",
+              "index": 0,
+              "bbox": [
+                0.13,
+                0.08,
+                0.914,
+                0.321
+              ],
+              "image_path": "images/page_73_table_0.jpg",
+              "content": "<table><tr><td>项目</td><td>房屋及建筑物</td><td>机器设备</td><td>运输设备</td><td>其他设备</td><td>合计</td></tr><tr><td>2.本期增加金额</td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>(1)计提</td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>3.本期减少金额</td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>(1)处置或报废+</td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>4.期末余额</td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>四、账面价值</td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>1.期末账面价值</td><td>276,449,908.38</td><td>346,001,942.03</td><td>2,269,533.96</td><td>25,509,884.72</td><td>650,231,269.09</td></tr><tr><td>2.期初账面价值</td><td>247,681,027.24</td><td>305,135,056.18</td><td>2,377,578.64</td><td>27,044,400.95</td><td>582,238,063.01</td></tr></table>"
+            }
+          ]
+        },
+        {
+          "type": "list",
+          "index": 4,
+          "bbox": [
+            0.183,
+            0.332,
+            0.646,
+            0.41
+          ],
+          "content": [
+            {
+              "type": "text",
+              "index": 1,
+              "bbox": [
+                0.183,
+                0.332,
+                0.597,
+                0.348
+              ],
+              "content": [
+                {
+                  "type": "text",
+                  "content": "（2）本期公司不存在暂时闲置的固定资产情况"
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "index": 2,
+              "bbox": [
+                0.183,
+                0.362,
+                0.637,
+                0.379
+              ],
+              "content": [
+                {
+                  "type": "text",
+                  "content": "（3）本期公司不存在通过经营租赁租出的固定资产"
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "index": 3,
+              "bbox": [
+                0.183,
+                0.393,
+                0.646,
+                0.41
+              ],
+              "content": [
+                {
+                  "type": "text",
+                  "content": "（4）截至本期末，未办妥产权证书的固定资产如下:"
+                }
+              ]
+            }
+          ],
+          "sub_type": "text"
+        },
+        {
+          "type": "table",
+          "index": 5,
+          "bbox": [
+            0.131,
+            0.412,
+            0.913,
+            0.528
+          ],
+          "content": [
+            {
+              "type": "table_body",
+              "index": 5,
+              "bbox": [
+                0.131,
+                0.412,
+                0.913,
+                0.528
+              ],
+              "image_path": "images/page_73_table_5.jpg",
+              "content": "<table><tr><td>项目</td><td>账面价值</td><td>未办妥产权证书的原因</td></tr><tr><td>厂房、仓库</td><td>22,586,969.37</td><td>办理产权资料尚在准备之中</td></tr><tr><td>制氧车间</td><td>2,124,523.01</td><td>办理产权资料尚在准备之中</td></tr><tr><td>合计</td><td>24,711,492.38</td><td></td></tr></table>"
+            }
+          ]
+        },
+        {
+          "type": "paragraph_title",
+          "index": 6,
+          "bbox": [
+            0.184,
+            0.538,
+            0.341,
+            0.554
+          ],
+          "content": [
+            {
+              "type": "text",
+              "content": "（十三）在建工程"
+            }
+          ],
+          "level": 2
+        },
+        {
+          "type": "table",
+          "index": 7,
+          "bbox": [
+            0.131,
+            0.556,
+            0.913,
+            0.673
+          ],
+          "content": [
+            {
+              "type": "table_body",
+              "index": 7,
+              "bbox": [
+                0.131,
+                0.556,
+                0.913,
+                0.673
+              ],
+              "image_path": "images/page_73_table_7.jpg",
+              "content": "<table><tr><td>项目</td><td>期末余额</td><td>期初余额</td></tr><tr><td>在建工程</td><td>79,462,364.38</td><td>93,076,790.97</td></tr><tr><td>工程物资</td><td></td><td></td></tr><tr><td>合计</td><td>79,462,364.38</td><td>93,076,790.97</td></tr></table>"
+            }
+          ]
+        },
+        {
+          "type": "paragraph_title",
+          "index": 8,
+          "bbox": [
+            0.174,
+            0.683,
+            0.281,
+            0.699
+          ],
+          "content": [
+            {
+              "type": "text",
+              "content": "1.在建工程"
+            }
+          ],
+          "level": 2
+        },
+        {
+          "type": "paragraph_title",
+          "index": 9,
+          "bbox": [
+            0.184,
+            0.714,
+            0.352,
+            0.73
+          ],
+          "content": [
+            {
+              "type": "text",
+              "content": "（1）在建工程情况"
+            }
+          ],
+          "level": 2
+        },
+        {
+          "type": "table",
+          "index": 10,
+          "bbox": [
+            0.132,
+            0.732,
+            0.913,
+            0.818
+          ],
+          "content": [
+            {
+              "type": "table_body",
+              "index": 10,
+              "bbox": [
+                0.132,
+                0.732,
+                0.913,
+                0.818
+              ],
+              "image_path": "images/page_73_table_10.jpg",
+              "content": "<table><tr><td rowspan=\"2\">项目</td><td colspan=\"3\">期末余额</td><td colspan=\"3\">期初余额</td></tr><tr><td>账面余额</td><td>减值准备</td><td>账面价值</td><td>账面余额</td><td>减值准备</td><td>账面价值</td></tr><tr><td>在建工程</td><td>79,462,364.38</td><td></td><td>79,462,364.38</td><td>93,076,790.97</td><td></td><td>93,076,790.97</td></tr></table>"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "index": 11,
+          "bbox": [
+            0.173,
+            0.828,
+            0.637,
+            0.845
+          ],
+          "content": [
+            {
+              "type": "text",
+              "content": "—公司期末不存在需计提在建工程减值准备的情形。"
+            }
+          ]
+        },
+        {
+          "type": "page_number",
+          "index": 12,
+          "bbox": [
+            0.528,
+            0.903,
+            0.546,
+            0.914
+          ],
+          "content": [
+            {
+              "type": "text",
+              "content": "67"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "is_full_document": false,
+  "schema": "docvortex.middle",
+  "schema_version": "2.0"
+}

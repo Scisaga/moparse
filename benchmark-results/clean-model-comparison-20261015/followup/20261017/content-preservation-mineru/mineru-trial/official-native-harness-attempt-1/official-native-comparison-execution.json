@@ -1,0 +1,23 @@
+{
+  "started_at": "2026-10-17T14:04:50.394217+00:00",
+  "tiers": [
+    "standard",
+    "advanced"
+  ],
+  "phases": [
+    {
+      "tier": "standard",
+      "status": "failed",
+      "started_at": "2026-10-17T14:04:50.394250+00:00",
+      "exit_code": 1,
+      "finished_at": "2026-10-17T14:05:02.903726+00:00"
+    }
+  ],
+  "runner": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/mineru-trial/run-official-native-standard.py",
+  "remaining_tiers_not_started": [
+    "advanced"
+  ],
+  "finished_at": "2026-10-17T14:05:02.903776+00:00",
+  "wall_seconds": 12.509537614067085,
+  "status": "incomplete"
+}

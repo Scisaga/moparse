@@ -1,0 +1,84 @@
+{
+  "pages": [
+    {
+      "page_idx": 27,
+      "blocks": [
+        {
+          "type": "header",
+          "bbox": [
+            0.528,
+            0.05,
+            0.85,
+            0.063
+          ],
+          "content": "深圳兆日科技股份有限公司详式权益变动报告书"
+        },
+        {
+          "type": "paragraph_title",
+          "bbox": [
+            0.287,
+            0.086,
+            0.711,
+            0.109
+          ],
+          "level": 2,
+          "content": "第九节 信息披露义务人的财务资料"
+        },
+        {
+          "type": "text",
+          "bbox": [
+            0.146,
+            0.137,
+            0.853,
+            0.182
+          ],
+          "content": "信息披露义务人璟和珩成立于 2026 年 6 月 26 日，截至本报告书签署日，暂无经营相关财务资料。"
+        },
+        {
+          "type": "page_number",
+          "bbox": [
+            0.506,
+            0.929,
+            0.523,
+            0.94
+          ],
+          "content": "28"
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "file_suffix": "pdf",
+    "producer": {
+      "name": "mineru",
+      "version": "4.0.12"
+    },
+    "document": {
+      "authors": [
+        "宋凯"
+      ],
+      "created_at": "2026-08-14T17:10:29+09:10",
+      "modified_at": "2026-08-14T17:10:29+09:10",
+      "creator_application": "WPS 文字",
+      "page_count": 36,
+      "page_count_kind": "physical"
+    }
+  },
+  "extensions": {
+    "mineru": {
+      "tier": "advanced",
+      "parse_mode": "txt"
+    },
+    "docvortex_layout": {
+      "version": 1,
+      "pages": [
+        {
+          "page_idx": 27,
+          "width_pt": 595.2999877929688,
+          "height_pt": 841.9000244140625
+        }
+      ]
+    }
+  },
+  "is_full_document": false
+}

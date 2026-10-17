@@ -1,0 +1,119 @@
+[
+  {
+    "stage": "official_input_preparation",
+    "file_suffix": "pdf",
+    "prepared_size_bytes": 204248,
+    "original_function_seconds": 0.005048708990216255,
+    "prepared_SHA256": "e5988f59ffb4fa1da3355fd2fea080cc414e31836d78a70babc5fbd3b86b4d4e",
+    "retained_original_page_indices_zero_based": [
+      27
+    ],
+    "broken_original_page_indices_zero_based": [],
+    "derived_input_filename": "prepared-by-official-page-selection.pdf",
+    "transformation": "Official default page_range handling; runner did not crop or rewrite the source PDF."
+  },
+  {
+    "stage": "actual_VLM_options",
+    "image_analysis": false,
+    "not_extract_list": [
+      "caption",
+      "code_caption",
+      "doc_title",
+      "footer",
+      "footnote",
+      "header",
+      "image_caption",
+      "image_footnote",
+      "page_footnote",
+      "page_number",
+      "paragraph_title",
+      "phonetic",
+      "ref_text",
+      "table_caption",
+      "table_footnote",
+      "text",
+      "title"
+    ],
+    "image_sizes": [
+      [
+        1654,
+        2339
+      ]
+    ],
+    "model_inputs": []
+  },
+  {
+    "stage": "actual_VLM_results_before_native_body_fill",
+    "effort": "xhigh",
+    "tables": []
+  },
+  {
+    "stage": "native_PDF_text_fill",
+    "returned_spans": 5,
+    "nonempty_text_spans": 5,
+    "queued_for_post_OCR": 0,
+    "spans": [
+      {
+        "type": "text",
+        "bbox": [
+          315.72,
+          43.92,
+          505.08000000000004,
+          52.56
+        ],
+        "text": "深圳兆日科技股份有限公司详式权益变动报告书",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          172.44,
+          73.08,
+          421.56,
+          89.64
+        ],
+        "text": "第九节 信息披露义务人的财务资料",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          113.4,
+          116.64,
+          504.72,
+          128.52
+        ],
+        "text": "信息披露义务人璟和珩成立于 2026 年 6 月 26 日，截至本报告书签署日，暂",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          89.64,
+          140.76,
+          202.32,
+          151.92000000000002
+        ],
+        "text": "无经营相关财务资料。",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          299.88,
+          781.5600000000001,
+          312.48,
+          793.08
+        ],
+        "text": "28",
+        "queued_for_post_OCR": false
+      }
+    ]
+  },
+  {
+    "stage": "actual_post_OCR",
+    "candidate_spans": 0,
+    "content_changed": 0,
+    "spans": []
+  }
+]

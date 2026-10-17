@@ -1,0 +1,855 @@
+{
+  "schema": "mosaicparse-official-mineru-source-evaluation/1",
+  "created_UTC": "2026-10-17T13:24:03.556612+00:00",
+  "evaluator_SHA256": "b14eaea1ba46c9653ab8fd11bf958c17257cd44b8eb0107472c426aad2addcce",
+  "reference_SHA256": "9c7863cebe11c786963b745bc57e9351c8d3940d250f93ad898ede4fde6deb1b",
+  "prior_independent_reference_SHA256": "0418058adbf6d09b9024338c111dd4828b9f4da0163ed5341b22ed79b37919f4",
+  "scope": "Official per-page raw model content and explicit HTML cells/spans only; no whole-PDF HTTP/provenance or throughput equivalence claim.",
+  "run_manifests": [
+    {
+      "path": "benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/mineru-trial/first-pages-gpu/run-manifest.json",
+      "SHA256": "e88e58fe3cf672341d1c0dffcba6d9a535692c9467bc5c207f25714727799987",
+      "status": "complete",
+      "configuration": {
+        "started_at": "2026-10-17T21:19:57.068280+08:00",
+        "pid": 1129816,
+        "model_path": "/root/.cache/huggingface/hub/models--opendatalab--MinerU2.5-Pro-2605-1.2B/snapshots/08aaea840498d49ce16247b6263196cf02814885",
+        "model_revision": "08aaea840498d49ce16247b6263196cf02814885",
+        "model_weight_SHA256": "abf8681ca63b8dec7b67de257af47b821f179442f72998d0696ae2ed9232a5f0",
+        "device": "cuda:0",
+        "dtype": "float16",
+        "attention": "sdpa",
+        "threads": 4,
+        "batch_size": 1,
+        "max_concurrency": 1,
+        "input_DPI": 200,
+        "SDK_layout_size": [
+          1036,
+          1036
+        ],
+        "official_prompts": {
+          "table": "\nTable Recognition:",
+          "equation": "\nFormula Recognition:",
+          "image": "\nImage Analysis:",
+          "chart": "\nImage Analysis:",
+          "[default]": "\nText Recognition:",
+          "[layout]": "\nLayout Detection:",
+          "[cross_page_table_merge]": ""
+        },
+        "official_sampling_params": {
+          "table": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.005,
+            "repetition_penalty": 1.0,
+            "no_repeat_ngram_size": 100,
+            "max_new_tokens": null
+          },
+          "equation": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "no_repeat_ngram_size": 100,
+            "max_new_tokens": null
+          },
+          "image": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "no_repeat_ngram_size": 100,
+            "max_new_tokens": null
+          },
+          "chart": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "no_repeat_ngram_size": 100,
+            "max_new_tokens": null
+          },
+          "[default]": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "no_repeat_ngram_size": 100,
+            "max_new_tokens": null
+          },
+          "[layout]": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 0.0,
+            "frequency_penalty": 0.0,
+            "repetition_penalty": 1.0,
+            "no_repeat_ngram_size": 100,
+            "max_new_tokens": null
+          },
+          "[cross_page_table_merge]": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "no_repeat_ngram_size": 100,
+            "max_new_tokens": null
+          }
+        },
+        "image_analysis": false,
+        "abandon_paratext": false,
+        "enable_cross_page_table_merge": false,
+        "packages": {
+          "torch": "2.7.1+cu126",
+          "transformers": "5.10.1",
+          "torchvision": "0.22.1+cu126",
+          "mineru-vl-utils": "2.0.7",
+          "accelerate": "1.12.0",
+          "pillow": "11.3.0",
+          "pymupdf": "1.28.2"
+        },
+        "pages": [
+          {
+            "id": "1206337604",
+            "page": 1,
+            "source_pdf": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/sources/1206337604/source-converted.pdf",
+            "source_pdf_SHA256": "ccff40771d75e9412b65f364a1c72c1733c37b4d8f232f49cf639621f0ba165f",
+            "source_total_pages": 2,
+            "source_page_SHA256": "c64c87161f29bcb6640a1cf595e0f8a83da5cdbebd83622e4064a1077269d473",
+            "source_page_size": [
+              1654,
+              2339
+            ],
+            "source_pdf_page_rotation": 0,
+            "status": "complete",
+            "client_seconds": 17.709287093020976,
+            "pure_generate_seconds": 17.32718464510981,
+            "generated_tokens": 424,
+            "model_calls": 6,
+            "blocks": 5,
+            "blocks_SHA256": "841ae4ad7cc3d4d4d03e4e5ea1df1caed955d8ce88535601dcaab237d0987f2d",
+            "MD_SHA256": "f930a9a78bdf4a083fe0b8d047a91e50b89352d6a5e22b5fcaf7657194339b47"
+          },
+          {
+            "id": "1225474739",
+            "page": 19,
+            "source_pdf": "/opt/mosaic-parse/pdf_sample/1225474739.pdf",
+            "source_pdf_SHA256": "1c99c450a8efefe77c9ca02a6f670c958298f661e5ad8d30d6ba01aa0742cda9",
+            "source_total_pages": 134,
+            "source_page_SHA256": "e1f87567100070b0899a1b1c7b036e73a0d6a746688802fc9a911bbe37055430",
+            "source_page_size": [
+              1654,
+              2339
+            ],
+            "source_pdf_page_rotation": 0,
+            "status": "complete",
+            "client_seconds": 46.05941523401998,
+            "pure_generate_seconds": 45.42653151100967,
+            "generated_tokens": 1145,
+            "model_calls": 12,
+            "blocks": 11,
+            "blocks_SHA256": "29460053a02ae4bd7875e44576f03210036d607245e11704019212d7d195ff70",
+            "MD_SHA256": "43adcc984503346c9b3d69d65048f80d4d031a3ee69765e4795224b9f0a1ab5d"
+          }
+        ],
+        "status": "complete",
+        "transformers_backend_sampling_caveat": "Official Transformers backend does not implement presence_penalty/frequency_penalty; actual generate kwargs are archived. This is not a vLLM throughput benchmark.",
+        "runner_SHA256": "b5ce69398a75a73dffb2f30dad310e9ab77e796fbc35941bf4c85fdc67ab74e2",
+        "input_spec_SHA256": "103a3b33409ab0df95b96ed760a6ee99d5ae29520728c4cf0b76dafceac2fa90",
+        "load_seconds": 5.848630732973106,
+        "parameters": 1156026624,
+        "actual_dtype": "torch.float16",
+        "image_processor_config": {
+          "size": {
+            "longest_edge": 1605632,
+            "shortest_edge": 50176
+          },
+          "patch_size": 14,
+          "temporal_patch_size": 2,
+          "merge_size": 2,
+          "image_mean": [
+            0.48145466,
+            0.4578275,
+            0.40821073
+          ],
+          "image_std": [
+            0.26862954,
+            0.26130258,
+            0.27577711
+          ],
+          "image_processor_type": "Qwen2VLImageProcessor",
+          "do_convert_rgb": true,
+          "do_resize": true,
+          "resample": 3,
+          "do_rescale": true,
+          "rescale_factor": 0.00392156862745098,
+          "do_normalize": true
+        },
+        "processor_chat_template_SHA256": "a0bc6f6fc7a29a80017a433e8f03a1cc1236e838a944a2d034295a60c4f2fddb",
+        "actual_attention": "sdpa",
+        "gpu_allocator_budget_MiB": 3584,
+        "existing_CUDA_packages_imported_readonly_from": "/opt/qwen3-tts-openai/.tools/venv-gpu/lib/python3.12/site-packages",
+        "finished_at": "2026-10-17T21:21:12.912009+08:00"
+      }
+    }
+  ],
+  "pages": [
+    {
+      "source": "1206337604",
+      "source_page": 1,
+      "source_SHA256": "ccff40771d75e9412b65f364a1c72c1733c37b4d8f232f49cf639621f0ba165f",
+      "page_dir": "benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/mineru-trial/first-pages-gpu/1206337604-p1",
+      "official_blocks_SHA256": "841ae4ad7cc3d4d4d03e4e5ea1df1caed955d8ce88535601dcaab237d0987f2d",
+      "official_MD_SHA256": "f930a9a78bdf4a083fe0b8d047a91e50b89352d6a5e22b5fcaf7657194339b47",
+      "official_request": {
+        "id": "1206337604",
+        "page": 1,
+        "source_pdf": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/sources/1206337604/source-converted.pdf",
+        "source_pdf_SHA256": "ccff40771d75e9412b65f364a1c72c1733c37b4d8f232f49cf639621f0ba165f",
+        "source_total_pages": 2,
+        "source_page_SHA256": "c64c87161f29bcb6640a1cf595e0f8a83da5cdbebd83622e4064a1077269d473",
+        "source_page_size": [
+          1654,
+          2339
+        ],
+        "source_pdf_page_rotation": 0,
+        "status": "complete",
+        "client_seconds": 17.709287093020976,
+        "pure_generate_seconds": 17.32718464510981,
+        "generated_tokens": 424,
+        "model_calls": 6,
+        "blocks": 5,
+        "blocks_SHA256": "841ae4ad7cc3d4d4d03e4e5ea1df1caed955d8ce88535601dcaab237d0987f2d",
+        "MD_SHA256": "f930a9a78bdf4a083fe0b8d047a91e50b89352d6a5e22b5fcaf7657194339b47"
+      },
+      "generation_integrity": {
+        "status": "all_calls_EOS",
+        "limit_hit_calls": [],
+        "unknown_termination_calls": [],
+        "calls": [
+          {
+            "call": 0,
+            "input_tokens": 1394,
+            "generated_tokens": 112,
+            "output_tokens": 1506,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 1,
+            "input_tokens": 109,
+            "generated_tokens": 10,
+            "output_tokens": 119,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 2,
+            "input_tokens": 113,
+            "generated_tokens": 7,
+            "output_tokens": 120,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 3,
+            "input_tokens": 118,
+            "generated_tokens": 15,
+            "output_tokens": 133,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 4,
+            "input_tokens": 109,
+            "generated_tokens": 11,
+            "output_tokens": 120,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 5,
+            "input_tokens": 2014,
+            "generated_tokens": 269,
+            "output_tokens": 2283,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          }
+        ]
+      },
+      "HTML_reader_errors": [],
+      "table_shapes": [
+        [
+          6,
+          2
+        ]
+      ],
+      "checks": [
+        {
+          "check": "p1_independent_native_character_span_coverage",
+          "observed_pass": true,
+          "native_span_count": 60,
+          "missing_source_spans": [],
+          "literal_unmatched_source_spans_including_typography": [
+            {
+              "text": "董事会秘书：黄曦仪",
+              "bbox": [
+                173.25,
+                461.33074951171875,
+                281.25,
+                478.7067565917969
+              ],
+              "size": 12.0
+            },
+            {
+              "text": "公司主要从事以工程监理业务为主，包括通信监理、电力监",
+              "bbox": [
+                194.25,
+                522.7808227539062,
+                513.4498291015625,
+                540.1567993164062
+              ],
+              "size": 12.0
+            },
+            {
+              "text": "的工程监理业务与通信行业、房屋建筑行业的发展密切相关，未",
+              "bbox": [
+                173.25,
+                573.4807739257812,
+                513.1382446289062,
+                590.8567504882812
+              ],
+              "size": 12.0
+            },
+            {
+              "text": "来公司将会在立足于通信工程监理、房屋建筑监理的基础上，在",
+              "bbox": [
+                173.25,
+                598.8307495117188,
+                513.1382446289062,
+                616.2067260742188
+              ],
+              "size": 12.0
+            },
+            {
+              "text": "程领域，做大做强公司的主营业务，为国家基础建设提供更多的",
+              "bbox": [
+                173.25,
+                649.5308227539062,
+                513.1382446289062,
+                666.9067993164062
+              ],
+              "size": 12.0
+            },
+            {
+              "text": "、公司的现金流问题是否是因为施工进度、施工款有关？",
+              "bbox": [
+                180.0,
+                700.2307739257812,
+                480.0,
+                717.6067504882812
+              ],
+              "size": 12.0
+            },
+            {
+              "text": " 年年报对现金流情况进行了详细的分析，现金流量",
+              "bbox": [
+                247.49603271484375,
+                725.580810546875,
+                513.9000244140625,
+                742.956787109375
+              ],
+              "size": 12.0
+            },
+            {
+              "text": "净额下降与公司的应收账款对象为三大通信运营商有关，因三大",
+              "bbox": [
+                173.25,
+                750.9307861328125,
+                513.1382446289062,
+                768.3067626953125
+              ],
+              "size": 12.0
+            }
+          ],
+          "caution": "Coverage only; no table/reading-order/provenance claim",
+          "status": "pass"
+        },
+        {
+          "check": "p1_visible_complete_security_identification_line",
+          "observed_pass": true,
+          "expected": "证券代码:300635证券简称:达安股份",
+          "literal_character_exact": true,
+          "raw_locations": [
+            {
+              "JSON_pointer": "/blocks/0/content",
+              "bbox_normalized": [
+                0.149,
+                0.086,
+                0.308,
+                0.103
+              ],
+              "angle": 0,
+              "match_spans_adjacent_blocks": true
+            },
+            {
+              "JSON_pointer": "/blocks/1/content",
+              "bbox_normalized": [
+                0.666,
+                0.086,
+                0.837,
+                0.103
+              ],
+              "angle": 0,
+              "match_spans_adjacent_blocks": true
+            }
+          ],
+          "status": "pass"
+        },
+        {
+          "check": "p1_original_document_title",
+          "observed_pass": true,
+          "expected": "2019年6月4日投资者关系活动记录表",
+          "literal_character_exact": true,
+          "raw_locations": [
+            {
+              "JSON_pointer": "/blocks/2/content",
+              "bbox_normalized": [
+                0.263,
+                0.158,
+                0.737,
+                0.181
+              ],
+              "angle": 0
+            }
+          ],
+          "status": "pass"
+        },
+        {
+          "check": "p1_security_identification_precedes_title",
+          "observed_pass": true,
+          "positions": [
+            0,
+            20
+          ],
+          "status": "pass"
+        }
+      ],
+      "counts": {
+        "pass": 4,
+        "fail": 0,
+        "unknown": 0
+      },
+      "public_interface_source_mapping": {
+        "status": "unknown",
+        "reason": "Official per-page model trial, not MosaicParse HTTP; table-source and cross-page assembly not implemented or claimed."
+      }
+    },
+    {
+      "source": "1225474739",
+      "source_page": 19,
+      "source_SHA256": "1c99c450a8efefe77c9ca02a6f670c958298f661e5ad8d30d6ba01aa0742cda9",
+      "page_dir": "benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/mineru-trial/first-pages-gpu/1225474739-p19",
+      "official_blocks_SHA256": "29460053a02ae4bd7875e44576f03210036d607245e11704019212d7d195ff70",
+      "official_MD_SHA256": "43adcc984503346c9b3d69d65048f80d4d031a3ee69765e4795224b9f0a1ab5d",
+      "official_request": {
+        "id": "1225474739",
+        "page": 19,
+        "source_pdf": "/opt/mosaic-parse/pdf_sample/1225474739.pdf",
+        "source_pdf_SHA256": "1c99c450a8efefe77c9ca02a6f670c958298f661e5ad8d30d6ba01aa0742cda9",
+        "source_total_pages": 134,
+        "source_page_SHA256": "e1f87567100070b0899a1b1c7b036e73a0d6a746688802fc9a911bbe37055430",
+        "source_page_size": [
+          1654,
+          2339
+        ],
+        "source_pdf_page_rotation": 0,
+        "status": "complete",
+        "client_seconds": 46.05941523401998,
+        "pure_generate_seconds": 45.42653151100967,
+        "generated_tokens": 1145,
+        "model_calls": 12,
+        "blocks": 11,
+        "blocks_SHA256": "29460053a02ae4bd7875e44576f03210036d607245e11704019212d7d195ff70",
+        "MD_SHA256": "43adcc984503346c9b3d69d65048f80d4d031a3ee69765e4795224b9f0a1ab5d"
+      },
+      "generation_integrity": {
+        "status": "all_calls_EOS",
+        "limit_hit_calls": [],
+        "unknown_termination_calls": [],
+        "calls": [
+          {
+            "call": 0,
+            "input_tokens": 1394,
+            "generated_tokens": 244,
+            "output_tokens": 1638,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 1,
+            "input_tokens": 93,
+            "generated_tokens": 17,
+            "output_tokens": 110,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 2,
+            "input_tokens": 169,
+            "generated_tokens": 32,
+            "output_tokens": 201,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 3,
+            "input_tokens": 125,
+            "generated_tokens": 24,
+            "output_tokens": 149,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 4,
+            "input_tokens": 105,
+            "generated_tokens": 7,
+            "output_tokens": 112,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 5,
+            "input_tokens": 91,
+            "generated_tokens": 10,
+            "output_tokens": 101,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 6,
+            "input_tokens": 105,
+            "generated_tokens": 7,
+            "output_tokens": 112,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 7,
+            "input_tokens": 118,
+            "generated_tokens": 14,
+            "output_tokens": 132,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 8,
+            "input_tokens": 109,
+            "generated_tokens": 7,
+            "output_tokens": 116,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 9,
+            "input_tokens": 93,
+            "generated_tokens": 4,
+            "output_tokens": 97,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 10,
+            "input_tokens": 2049,
+            "generated_tokens": 776,
+            "output_tokens": 2825,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 11,
+            "input_tokens": 97,
+            "generated_tokens": 3,
+            "output_tokens": 100,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          }
+        ]
+      },
+      "HTML_reader_errors": [],
+      "table_shapes": [
+        [
+          2,
+          4
+        ],
+        [
+          8,
+          9
+        ]
+      ],
+      "checks": [
+        {
+          "check": "p19_entire_long_risk_cell_text_and_span",
+          "observed_pass": true,
+          "expected_label": "报告期衍生品持仓的风险分析\n及控制措施说明（包括但不限\n于市场风险、流动性风险、信\n用风险、操作风险、法律风险\n等） ",
+          "expected_text": "远期结售汇的风险分析： \n（1）汇率、利率波动风险：在外汇汇率波动较大时，公司判断汇率大幅波动方向与外\n汇套期保值合约方向不一致时，将造成汇兑损失；若汇率在未来发生波动时，与外汇套\n期保值合约偏差较大也将造成汇兑损失；  \n（2）内部控制风险：外汇套期保值业务专业性较强，复杂程度较高，可能会由于内控\n制度不完善而造成风险； \n（3）交易违约风险：外汇套期保值交易对手出现违约，不能按照约定支付公司套期保\n值盈利从而无法对冲公司实际的汇兑损失，将造成公司损失； \n（4）客户违约风险：客户应收账款发生逾期、客户调整订单等情况将使货款实际回款\n情况与预期回款情况不一致，可能使实际发生的现金流与已操作的外汇套 期保值业务\n期限或数额无法完全匹配，从而导致公司损失。 \n \n远期结售汇的风险控制措施： \n（1）公司制定了《广东银禧科技股份有限公司外汇套期保值业务管理制度》，（以下简\n称“《外汇套期保值业务管理制度》”）对外汇套期保值业务操作规范、审批权限及内\n部操作流程、信息隔离措施、内部风险报告制度及风险处理程序、信息披露等做出了明\n确规定； \n（2）为避免汇率大幅波动风险，公司会加强对汇率的研究分析，实时关注国际市场环\n境变化，适时调整经营策略，最大限度的避免汇兑损失； \n（3）为避免内部控制风险，公司财务部负责统一管理公司外汇套期保值业务，所有的\n外汇交易行为均以正常生产经营为基础，以具体经营业务为依托，不得进行投机和套利\n交易，并严格按照《外汇套期保值业务管理制度》的规定进行业务操作，有效地保证制\n度的执行； \n（4）为控制交易违约风险，公司仅与具有合法资质的大型银行等金融机构开展外汇套",
+          "expected_colspan": 8,
+          "candidates": [
+            {
+              "location": {
+                "JSON_pointer": "/blocks/9/content/table[0]",
+                "block_index": 9,
+                "bbox_normalized": [
+                  0.084,
+                  0.32,
+                  0.896,
+                  0.919
+                ],
+                "angle": 0,
+                "row_zero_based": 7,
+                "column_zero_based": 1,
+                "HTML_line_column": [
+                  1,
+                  874
+                ]
+              },
+              "actual_payloads": [
+                "远期结售汇的风险分析:(1)汇率、利率波动风险:在外汇汇率波动较大时,公司判断汇率大幅波动方向与外汇套期保值合约方向不一致时,将造成汇兑损失;若汇率在未来发生波动时,与外汇套期保值合约偏差较大也将造成汇兑损失;(2)内部控制风险:外汇套期保值业务专业性较强,复杂程度较高,可能会由于内控制度不完善而造成风险;(3)交易违约风险:外汇套期保值交易对手出现违约,不能按照约定支付公司套期保值盈利从而无法对冲公司实际的汇兑损失,将造成公司损失;(4)客户违约风险:客户应收账款发生逾期、客户调整订单等情况将使货款实际回款情况与预期回款情况不一致,可能使实际发生的现金流与已操作的外汇套期保值业务期限或数额无法完全匹配,从而导致公司损失。远期结售汇的风险控制措施:(1)公司制定了《广东银禧科技股份有限公司外汇套期保值业务管理制度》,(以下简称“《外汇套期保值业务管理制度》”)对外汇套期保值业务操作规范、审批权限及内部操作流程、信息隔离措施、内部风险报告制度及风险处理程序、信息披露等做出了明确规定;(2)为避免汇率大幅波动风险,公司会加强对汇率的研究分析,实时关注国际市场环境变化,适时调整经营策略,最大限度的避免汇兑损失;(3)为避免内部控制风险,公司财务部负责统一管理公司外汇套期保值业务,所有的外汇交易行为均以正常生产经营为基础,以具体经营业务为依托,不得进行投机和套利交易,并严格按照《外汇套期保值业务管理制度》的规定进行业务操作,有效地保证制度的执行;(4)为控制交易违约风险,公司仅与具有合法资质的大型银行等金融机构开展外汇套"
+              ],
+              "full_text_equal_under_explicit_typography": true,
+              "literal_character_exact": false,
+              "source_colspan_retained": true
+            }
+          ],
+          "status": "pass"
+        },
+        {
+          "check": "p19_previously_missing_risk_tail_present",
+          "observed_pass": true,
+          "expected": "外汇交易行为均以正常生产经营为基础,以具体经营业务为依托,不得进行投机和套利交易,并严格按照《外汇套期保值业务管理制度》的规定进行业务操作,有效地保证制度的执行;(4)为控制交易违约风险,公司仅与具有合法资质的大型银行等金融机构开展外汇套",
+          "literal_character_exact": false,
+          "status": "pass"
+        },
+        {
+          "check": "p19_exact_amount_and_separate_superscript_reference",
+          "observed_pass": true,
+          "expected_amount": "6,606.57",
+          "expected_reference": "1",
+          "candidates": [
+            {
+              "location": {
+                "JSON_pointer": "/blocks/9/content/table[0]",
+                "block_index": 9,
+                "bbox_normalized": [
+                  0.084,
+                  0.32,
+                  0.896,
+                  0.919
+                ],
+                "angle": 0,
+                "row_zero_based": 1,
+                "column_zero_based": 7,
+                "HTML_line_column": [
+                  1,
+                  270
+                ]
+              },
+              "raw_cell": "\\( 6,606.57^1 \\)",
+              "separate_numeric_and_reference": true
+            }
+          ],
+          "status": "pass"
+        },
+        {
+          "check": "p19_exact_negative_decimal_at_actual_profit_explanation",
+          "observed_pass": true,
+          "candidates": [
+            {
+              "location": {
+                "JSON_pointer": "/blocks/9/content/table[0]",
+                "block_index": 9,
+                "bbox_normalized": [
+                  0.084,
+                  0.32,
+                  0.896,
+                  0.919
+                ],
+                "angle": 0,
+                "row_zero_based": 4,
+                "column_zero_based": 1,
+                "HTML_line_column": [
+                  1,
+                  553
+                ]
+              },
+              "actual": [
+                "为规避和防范外汇汇率波动给公司带来的经营风险,公司按照一定比例,针对外汇开展远期结售汇业务,业务规模均在公司董事会审议的额度范围内。报告期内,公司远期结售汇实际损益金额为-0.61万元。",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ]
+            }
+          ],
+          "status": "pass"
+        }
+      ],
+      "counts": {
+        "pass": 4,
+        "fail": 0,
+        "unknown": 0
+      },
+      "public_interface_source_mapping": {
+        "status": "unknown",
+        "reason": "Official per-page model trial, not MosaicParse HTTP; table-source and cross-page assembly not implemented or claimed."
+      }
+    }
+  ],
+  "missing_or_unfinished_pages": [],
+  "counts": {
+    "pass": 8,
+    "fail": 0,
+    "unknown": 0
+  }
+}

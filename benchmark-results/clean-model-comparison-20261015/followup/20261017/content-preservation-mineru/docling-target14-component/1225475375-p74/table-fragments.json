@@ -1,0 +1,1774 @@
+[
+  {
+    "fragment_id": "p74_t1",
+    "page_number": 74,
+    "ordinal": 1,
+    "normalized_bbox": [
+      0.130900625020516,
+      0.08029669537397009,
+      0.912006179424895,
+      0.3208388013681153
+    ],
+    "num_rows": 9,
+    "num_cols": 6,
+    "rows": [
+      [
+        "项目 ",
+        "房屋及建筑物 ",
+        "机器设备 ",
+        "运输设备 ",
+        "其他设备 ",
+        "合计"
+      ],
+      [
+        "2.本期增加金额",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      [
+        "（1）计提",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      [
+        "3.本期减少金额",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      [
+        "（1）处置或报废+",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      [
+        "4.期末余额",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      [
+        "四、账面价值",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      [
+        "1.期末账面价值 ",
+        "276,449,908.38 ",
+        "346,001,942.03 ",
+        "2,269,533.96 ",
+        "25,509,884.72 ",
+        "650,231,269.09"
+      ],
+      [
+        "2.期初账面价值 ",
+        "247,681,027.24 ",
+        "305,135,056.18 ",
+        "2,377,578.64 ",
+        "27,044,400.95 ",
+        "582,238,063.01"
+      ]
+    ],
+    "column_boundaries": [
+      0.140476,
+      0.268346,
+      0.424988,
+      0.553901,
+      0.663593,
+      0.784435,
+      0.905436
+    ],
+    "markdown": "| 项目 | 房屋及建筑物 | 机器设备 | 运输设备 | 其他设备 | 合计 |\n| --- | --- | --- | --- | --- | --- |\n| 2.本期增加金额 |  |  |  |  |  |\n| （1）计提 |  |  |  |  |  |\n| 3.本期减少金额 |  |  |  |  |  |\n| （1）处置或报废+ |  |  |  |  |  |\n| 4.期末余额 |  |  |  |  |  |\n| 四、账面价值 |  |  |  |  |  |\n| 1.期末账面价值 | 276,449,908.38 | 346,001,942.03 | 2,269,533.96 | 25,509,884.72 | 650,231,269.09 |\n| 2.期初账面价值 | 247,681,027.24 | 305,135,056.18 | 2,377,578.64 | 27,044,400.95 | 582,238,063.01 |",
+    "rendered": "<!-- table-fragment: p74_t1 -->\n\n<!-- table-structure: {\"version\":1,\"table_id\":\"p74_t1\",\"source_pages\":[74],\"num_rows\":9,\"num_cols\":6,\"encoding\":\"anchor_and_blanks\",\"structure_valid\":true,\"header_rows\":null,\"header_scope_rows\":null,\"header_scope_complete\":false,\"spans\":[]} -->\n\n| 项目 | 房屋及建筑物 | 机器设备 | 运输设备 | 其他设备 | 合计 |\n| --- | --- | --- | --- | --- | --- |\n| 2.本期增加金额 |  |  |  |  |  |\n| （1）计提 |  |  |  |  |  |\n| 3.本期减少金额 |  |  |  |  |  |\n| （1）处置或报废+ |  |  |  |  |  |\n| 4.期末余额 |  |  |  |  |  |\n| 四、账面价值 |  |  |  |  |  |\n| 1.期末账面价值 | 276,449,908.38 | 346,001,942.03 | 2,269,533.96 | 25,509,884.72 | 650,231,269.09 |\n| 2.期初账面价值 | 247,681,027.24 | 305,135,056.18 | 2,377,578.64 | 27,044,400.95 | 582,238,063.01 |",
+    "valid": true,
+    "invalid_reasons": [],
+    "logical_table_id": null,
+    "has_column_header": false,
+    "caption": null,
+    "unit_text": null,
+    "source_kind": "docling",
+    "cells": [
+      {
+        "row": 0,
+        "column": 0,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "项目 ",
+        "normalized_bbox": [
+          0.19503719235676306,
+          0.08778768561939729,
+          0.22765945365042195,
+          0.1036949032063722
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 0,
+        "column": 1,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "房屋及建筑物 ",
+        "normalized_bbox": [
+          0.31150208587591766,
+          0.08805127009183097,
+          0.40531812501675557,
+          0.10430523597429597
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 0,
+        "column": 2,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "机器设备 ",
+        "normalized_bbox": [
+          0.4557176604384622,
+          0.08830628293674803,
+          0.5195541219755925,
+          0.10420563671906034
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 0,
+        "column": 3,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "运输设备 ",
+        "normalized_bbox": [
+          0.5747790673231719,
+          0.08855882197653879,
+          0.6360757536675302,
+          0.10428901682132213
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 0,
+        "column": 4,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "其他设备 ",
+        "normalized_bbox": [
+          0.6898700590818043,
+          0.08861132777537133,
+          0.7529737078371653,
+          0.10407879700853252
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 0,
+        "column": 5,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "合计",
+        "normalized_bbox": [
+          0.8304193234857904,
+          0.08819530668033557,
+          0.8622215639712871,
+          0.10381442159768238
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 1,
+        "column": 0,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "2.本期增加金额",
+        "normalized_bbox": [
+          0.13083140895956208,
+          0.11466625396542765,
+          0.24208127297516616,
+          0.13069097729590046
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 1,
+        "column": 1,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "",
+        "normalized_bbox": [
+          0.2984638981809154,
+          0.11281863969890069,
+          0.4161174418716298,
+          0.13191196099454602
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 1,
+        "column": 2,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "",
+        "normalized_bbox": [
+          0.43008550711590204,
+          0.11255187270477096,
+          0.5475399958385935,
+          0.13155960463288277
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 1,
+        "column": 3,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "",
+        "normalized_bbox": [
+          0.5612714017997119,
+          0.11299787260007972,
+          0.6562095997929075,
+          0.1317140101112266
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 1,
+        "column": 4,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "",
+        "normalized_bbox": [
+          0.6680887459135931,
+          0.11326650924750575,
+          0.7764346105829555,
+          0.13164913349933127
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 1,
+        "column": 5,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "",
+        "normalized_bbox": [
+          0.7851742677535,
+          0.11296416164293992,
+          0.9100513198905942,
+          0.13127215705688097
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 2,
+        "column": 0,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "（1）计提",
+        "normalized_bbox": [
+          0.13776821796404323,
+          0.14113119994942763,
+          0.20513015096663445,
+          0.15746810890716498
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 2,
+        "column": 1,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "",
+        "normalized_bbox": [
+          0.2977801653734286,
+          0.1374565983753023,
+          0.4163150652919087,
+          0.1586032708721886
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 2,
+        "column": 2,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "",
+        "normalized_bbox": [
+          0.42852984534628125,
+          0.13751115078314466,
+          0.5473997274368737,
+          0.15829700521788517
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 2,
+        "column": 3,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "",
+        "normalized_bbox": [
+          0.5612762900115209,
+          0.13786945571667225,
+          0.6578266668137291,
+          0.1581662581822085
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 2,
+        "column": 4,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "",
+        "normalized_bbox": [
+          0.6679627231577168,
+          0.13770231657668133,
+          0.7770478716701956,
+          0.1584135528981261
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 2,
+        "column": 5,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "",
+        "normalized_bbox": [
+          0.7848038344071726,
+          0.13796181229967402,
+          0.9101186841047623,
+          0.15768397342847248
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 3,
+        "column": 0,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "3.本期减少金额",
+        "normalized_bbox": [
+          0.13109690287308934,
+          0.16745827062112986,
+          0.24281918346353626,
+          0.1840640235683414
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 3,
+        "column": 1,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "",
+        "normalized_bbox": [
+          0.29868322758934623,
+          0.165030802867758,
+          0.4127891748368641,
+          0.18427311729931775
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 3,
+        "column": 2,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "",
+        "normalized_bbox": [
+          0.42781681818373896,
+          0.16491918134859226,
+          0.5443783004405198,
+          0.18369509056741437
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 3,
+        "column": 3,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "",
+        "normalized_bbox": [
+          0.5606835594138787,
+          0.1651259442689583,
+          0.655110497006249,
+          0.18371786244408253
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 3,
+        "column": 4,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "",
+        "normalized_bbox": [
+          0.6676990390464188,
+          0.16562014046587456,
+          0.7760670636093154,
+          0.18384832349072727
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 3,
+        "column": 5,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "",
+        "normalized_bbox": [
+          0.7877936044127632,
+          0.16589102212720133,
+          0.9104740338260789,
+          0.18375456913633187
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 4,
+        "column": 0,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "（1）处置或报废+",
+        "normalized_bbox": [
+          0.14667885780050743,
+          0.1943874626006763,
+          0.26938669611575217,
+          0.21118320521153067
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 4,
+        "column": 1,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "",
+        "normalized_bbox": [
+          0.29957288213858774,
+          0.1932157297881935,
+          0.41736021153107516,
+          0.2106965233764286
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 4,
+        "column": 2,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "",
+        "normalized_bbox": [
+          0.4296257358794651,
+          0.19338972551522515,
+          0.5478112683167949,
+          0.21029276406113723
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 4,
+        "column": 3,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "",
+        "normalized_bbox": [
+          0.5621757675387786,
+          0.1941064426281673,
+          0.6580935631785017,
+          0.2101954705924716
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 4,
+        "column": 4,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "",
+        "normalized_bbox": [
+          0.6674743675207967,
+          0.19371854140469694,
+          0.7764636139730223,
+          0.21013394005224995
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 4,
+        "column": 5,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "",
+        "normalized_bbox": [
+          0.7886370304446109,
+          0.19366136504748654,
+          0.9101294847251403,
+          0.21008191864734024
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 5,
+        "column": 0,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "4.期末余额",
+        "normalized_bbox": [
+          0.13100081459524346,
+          0.2208214645714205,
+          0.21269021279606531,
+          0.2367113583727857
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 5,
+        "column": 1,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "",
+        "normalized_bbox": [
+          0.2988690261924872,
+          0.21726539115158225,
+          0.4175094649316439,
+          0.2373271499563566
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 5,
+        "column": 2,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "",
+        "normalized_bbox": [
+          0.4274811144184548,
+          0.21747193243044854,
+          0.5473204452967713,
+          0.23666700147393196
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 5,
+        "column": 3,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "",
+        "normalized_bbox": [
+          0.5596259365959997,
+          0.21795046357814038,
+          0.6571115912576669,
+          0.2371988981749836
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 5,
+        "column": 4,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "",
+        "normalized_bbox": [
+          0.6666602242054049,
+          0.21772021380852632,
+          0.7763688292183255,
+          0.23697748546645647
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 5,
+        "column": 5,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "",
+        "normalized_bbox": [
+          0.7868625164491406,
+          0.2179480326713689,
+          0.9100756212864448,
+          0.23722008996225027
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 6,
+        "column": 0,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "四、账面价值",
+        "normalized_bbox": [
+          0.13097433678127796,
+          0.24723356693204396,
+          0.22845394519048143,
+          0.2631836900235355
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 6,
+        "column": 1,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "",
+        "normalized_bbox": [
+          0.29798073335939246,
+          0.24371861873499853,
+          0.4199590177007407,
+          0.2638594249082008
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 6,
+        "column": 2,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "",
+        "normalized_bbox": [
+          0.42838992610254784,
+          0.24391413513668359,
+          0.5509579731986541,
+          0.2629729590053513
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 6,
+        "column": 3,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "",
+        "normalized_bbox": [
+          0.559263370942965,
+          0.24473589602105691,
+          0.6593243218032163,
+          0.2631485276720586
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 6,
+        "column": 4,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "",
+        "normalized_bbox": [
+          0.6665075257793709,
+          0.24439336695750366,
+          0.7792756858407556,
+          0.26318756517491826
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 6,
+        "column": 5,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "",
+        "normalized_bbox": [
+          0.7870654005164139,
+          0.24535480488507594,
+          0.9109378087407594,
+          0.26282481668680696
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 7,
+        "column": 0,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "1.期末账面价值 ",
+        "normalized_bbox": [
+          0.13057263633727226,
+          0.27388578568388333,
+          0.24046145924485177,
+          0.2899411241402252
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 7,
+        "column": 1,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "276,449,908.38 ",
+        "normalized_bbox": [
+          0.307768132176802,
+          0.2739919448125391,
+          0.4223955817927449,
+          0.28992139089702146
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 7,
+        "column": 2,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "346,001,942.03 ",
+        "normalized_bbox": [
+          0.43584025921546576,
+          0.2739217345051981,
+          0.5521133602527136,
+          0.2899820205717925
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 7,
+        "column": 3,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "2,269,533.96 ",
+        "normalized_bbox": [
+          0.562095414647518,
+          0.2740118782480652,
+          0.6617125158755103,
+          0.28996257331762065
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 7,
+        "column": 4,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "25,509,884.72 ",
+        "normalized_bbox": [
+          0.6740427741145711,
+          0.27388424134311085,
+          0.7822627556912517,
+          0.2898222956974546
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 7,
+        "column": 5,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "650,231,269.09",
+        "normalized_bbox": [
+          0.7953575302572432,
+          0.27388904595884744,
+          0.9121937998492882,
+          0.2895005866354265
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 8,
+        "column": 0,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "2.期初账面价值 ",
+        "normalized_bbox": [
+          0.13032549067592814,
+          0.30000270446519106,
+          0.24158560829773162,
+          0.3164847385571858
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 8,
+        "column": 1,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "247,681,027.24 ",
+        "normalized_bbox": [
+          0.30933992504539254,
+          0.2998694478757591,
+          0.4214913789940718,
+          0.31623774412975175
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 8,
+        "column": 2,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "305,135,056.18 ",
+        "normalized_bbox": [
+          0.4370381969894627,
+          0.3000585867220319,
+          0.5523132182841052,
+          0.316394652012125
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 8,
+        "column": 3,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "2,377,578.64 ",
+        "normalized_bbox": [
+          0.5596566159444011,
+          0.3002701185095055,
+          0.6618362574658758,
+          0.31658562118820227
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 8,
+        "column": 4,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "27,044,400.95 ",
+        "normalized_bbox": [
+          0.6730691354310109,
+          0.3002988890061186,
+          0.781730545811245,
+          0.3164965070058501
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 8,
+        "column": 5,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "582,238,063.01",
+        "normalized_bbox": [
+          0.7950921701876107,
+          0.3003012055172773,
+          0.9127193990047532,
+          0.3162156371775829
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      }
+    ],
+    "cell_evidence": [],
+    "visual_obstructions": [],
+    "physical_num_rows": null,
+    "source_row_indices": [],
+    "header_scope_complete": true,
+    "caption_scope_complete": true,
+    "page_furniture": [
+      {
+        "source_ref": "#/texts/7",
+        "page_number": 74,
+        "label": "page_footer",
+        "text": "67",
+        "rendered": "<!-- source-furniture: #/texts/7; source-page: 74; role: page_footer -->\n\n67",
+        "normalized_bbox": [
+          0.5301536853712662,
+          0.904982188535133,
+          0.5440554205597704,
+          0.9124536854071176
+        ]
+      }
+    ],
+    "_structure_marker": "<!-- table-structure: {\"version\":1,\"table_id\":\"p74_t1\",\"source_pages\":[74],\"num_rows\":9,\"num_cols\":6,\"encoding\":\"anchor_and_blanks\",\"structure_valid\":true,\"header_rows\":null,\"header_scope_rows\":null,\"header_scope_complete\":false,\"spans\":[]} -->"
+  },
+  {
+    "fragment_id": "p74_t2",
+    "page_number": 74,
+    "ordinal": 2,
+    "normalized_bbox": [
+      0.13188117532169116,
+      0.4119365991152947,
+      0.9109404748227417,
+      0.5268202394317845
+    ],
+    "num_rows": 4,
+    "num_cols": 3,
+    "rows": [
+      [
+        "项目 ",
+        "账面价值 ",
+        "未办妥产权证书的原因"
+      ],
+      [
+        "厂房、仓库 ",
+        "22,586,969.37 ",
+        "办理产权资料尚在准备之中"
+      ],
+      [
+        "制氧车间 ",
+        "2,124,523.01 ",
+        "办理产权资料尚在准备之中"
+      ],
+      [
+        "合计 ",
+        "24,711,492.38",
+        ""
+      ]
+    ],
+    "column_boundaries": [
+      0.188856,
+      0.383403,
+      0.647357,
+      0.875695
+    ],
+    "markdown": "| 项目 | 账面价值 | 未办妥产权证书的原因 |\n| --- | --- | --- |\n| 厂房、仓库 | 22,586,969.37 | 办理产权资料尚在准备之中 |\n| 制氧车间 | 2,124,523.01 | 办理产权资料尚在准备之中 |\n| 合计 | 24,711,492.38 |  |",
+    "rendered": "<!-- table-fragment: p74_t2 -->\n\n<!-- table-structure: {\"version\":1,\"table_id\":\"p74_t2\",\"source_pages\":[74],\"num_rows\":4,\"num_cols\":3,\"encoding\":\"anchor_and_blanks\",\"structure_valid\":true,\"header_rows\":[0],\"header_scope_rows\":[0],\"header_scope_complete\":true,\"spans\":[]} -->\n\n| 项目 | 账面价值 | 未办妥产权证书的原因 |\n| --- | --- | --- |\n| 厂房、仓库 | 22,586,969.37 | 办理产权资料尚在准备之中 |\n| 制氧车间 | 2,124,523.01 | 办理产权资料尚在准备之中 |\n| 合计 | 24,711,492.38 |  |",
+    "valid": true,
+    "invalid_reasons": [],
+    "logical_table_id": null,
+    "has_column_header": true,
+    "caption": null,
+    "unit_text": null,
+    "source_kind": "docling",
+    "cells": [
+      {
+        "row": 0,
+        "column": 0,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "项目 ",
+        "normalized_bbox": [
+          0.24373020132551812,
+          0.41991584610875315,
+          0.27942471557997905,
+          0.4368878375039814
+        ],
+        "is_column_header": true,
+        "is_row_header": false
+      },
+      {
+        "row": 0,
+        "column": 1,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "账面价值 ",
+        "normalized_bbox": [
+          0.48341504565640486,
+          0.4203186621823107,
+          0.555514660325591,
+          0.43633896008027706
+        ],
+        "is_column_header": true,
+        "is_row_header": false
+      },
+      {
+        "row": 0,
+        "column": 2,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "未办妥产权证书的原因",
+        "normalized_bbox": [
+          0.6907515437846914,
+          0.42045810072729256,
+          0.8639860481470496,
+          0.4364535030234171
+        ],
+        "is_column_header": true,
+        "is_row_header": false
+      },
+      {
+        "row": 1,
+        "column": 0,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "厂房、仓库 ",
+        "normalized_bbox": [
+          0.1335204120481006,
+          0.44749647959394295,
+          0.2253854539251694,
+          0.4651253706910547
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 1,
+        "column": 1,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "22,586,969.37 ",
+        "normalized_bbox": [
+          0.5261811889632394,
+          0.44814098943157604,
+          0.6482231741631745,
+          0.46414772242378444
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 1,
+        "column": 2,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "办理产权资料尚在准备之中",
+        "normalized_bbox": [
+          0.6648818873429666,
+          0.4479826944316085,
+          0.8728620825725617,
+          0.4644357337662839
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 2,
+        "column": 0,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "制氧车间 ",
+        "normalized_bbox": [
+          0.1331233944259085,
+          0.47636724771343325,
+          0.20722834238727408,
+          0.49324828025281
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 2,
+        "column": 1,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "2,124,523.01 ",
+        "normalized_bbox": [
+          0.5347922629861245,
+          0.47701201161409496,
+          0.6484299600897174,
+          0.4933374289095826
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 2,
+        "column": 2,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "办理产权资料尚在准备之中",
+        "normalized_bbox": [
+          0.6636588790744378,
+          0.47641719513154646,
+          0.8727784596603261,
+          0.49351294526294964
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 3,
+        "column": 0,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "合计 ",
+        "normalized_bbox": [
+          0.24504973055247423,
+          0.5039863365562964,
+          0.28021965473056537,
+          0.521232890261607
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 3,
+        "column": 1,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "24,711,492.38",
+        "normalized_bbox": [
+          0.5305781132094228,
+          0.504768569155147,
+          0.6480846215663494,
+          0.5209622719367156
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 3,
+        "column": 2,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "",
+        "normalized_bbox": [
+          0.6593073819091805,
+          0.50161656022355,
+          0.8931519955599446,
+          0.5237388718439677
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      }
+    ],
+    "cell_evidence": [],
+    "visual_obstructions": [],
+    "physical_num_rows": null,
+    "source_row_indices": [],
+    "header_scope_complete": true,
+    "caption_scope_complete": true,
+    "page_furniture": [
+      {
+        "source_ref": "#/texts/7",
+        "page_number": 74,
+        "label": "page_footer",
+        "text": "67",
+        "rendered": "<!-- source-furniture: #/texts/7; source-page: 74; role: page_footer -->\n\n67",
+        "normalized_bbox": [
+          0.5301536853712662,
+          0.904982188535133,
+          0.5440554205597704,
+          0.9124536854071176
+        ]
+      }
+    ],
+    "_structure_marker": "<!-- table-structure: {\"version\":1,\"table_id\":\"p74_t2\",\"source_pages\":[74],\"num_rows\":4,\"num_cols\":3,\"encoding\":\"anchor_and_blanks\",\"structure_valid\":true,\"header_rows\":[0],\"header_scope_rows\":[0],\"header_scope_complete\":true,\"spans\":[]} -->"
+  },
+  {
+    "fragment_id": "p74_t3",
+    "page_number": 74,
+    "ordinal": 3,
+    "normalized_bbox": [
+      0.1320171708820247,
+      0.5565154376902093,
+      0.9111209132090337,
+      0.6715639526657141
+    ],
+    "num_rows": 4,
+    "num_cols": 3,
+    "rows": [
+      [
+        "项目 ",
+        "期末余额 ",
+        "期初余额"
+      ],
+      [
+        "在建工程 ",
+        "79,462,364.38 ",
+        "93,076,790.97"
+      ],
+      [
+        "工程物资",
+        "",
+        ""
+      ],
+      [
+        "合计 ",
+        "79,462,364.38 ",
+        "93,076,790.97"
+      ]
+    ],
+    "column_boundaries": [
+      0.188911,
+      0.368394,
+      0.69629,
+      0.884982
+    ],
+    "markdown": "| 项目 | 期末余额 | 期初余额 |\n| --- | --- | --- |\n| 在建工程 | 79,462,364.38 | 93,076,790.97 |\n| 工程物资 |  |  |\n| 合计 | 79,462,364.38 | 93,076,790.97 |",
+    "rendered": "<!-- table-fragment: p74_t3 -->\n\n<!-- table-structure: {\"version\":1,\"table_id\":\"p74_t3\",\"source_pages\":[74],\"num_rows\":4,\"num_cols\":3,\"encoding\":\"anchor_and_blanks\",\"structure_valid\":true,\"header_rows\":[0],\"header_scope_rows\":[0],\"header_scope_complete\":true,\"spans\":[]} -->\n\n| 项目 | 期末余额 | 期初余额 |\n| --- | --- | --- |\n| 在建工程 | 79,462,364.38 | 93,076,790.97 |\n| 工程物资 |  |  |\n| 合计 | 79,462,364.38 | 93,076,790.97 |",
+    "valid": true,
+    "invalid_reasons": [],
+    "logical_table_id": null,
+    "has_column_header": true,
+    "caption": null,
+    "unit_text": null,
+    "source_kind": "docling",
+    "cells": [
+      {
+        "row": 0,
+        "column": 0,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "项目 ",
+        "normalized_bbox": [
+          0.24410516015981656,
+          0.5656238338443277,
+          0.27865755416229593,
+          0.5816230139653077
+        ],
+        "is_column_header": true,
+        "is_row_header": false
+      },
+      {
+        "row": 0,
+        "column": 1,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "期末余额 ",
+        "normalized_bbox": [
+          0.48454694481517807,
+          0.5664205837136493,
+          0.5560616394632746,
+          0.5813891848022752
+        ],
+        "is_column_header": true,
+        "is_row_header": false
+      },
+      {
+        "row": 0,
+        "column": 2,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "期初余额",
+        "normalized_bbox": [
+          0.743817188368695,
+          0.5663621230250018,
+          0.8150075429298109,
+          0.5818224938635023
+        ],
+        "is_column_header": true,
+        "is_row_header": false
+      },
+      {
+        "row": 1,
+        "column": 0,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "在建工程 ",
+        "normalized_bbox": [
+          0.13351390797943483,
+          0.5933233508021702,
+          0.20653834327018974,
+          0.6095240869318221
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 1,
+        "column": 1,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "79,462,364.38 ",
+        "normalized_bbox": [
+          0.5217196006579823,
+          0.5941708591941417,
+          0.6502716573879633,
+          0.6093378214258479
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 1,
+        "column": 2,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "93,076,790.97",
+        "normalized_bbox": [
+          0.788328681843464,
+          0.5942518682774343,
+          0.9085468160983743,
+          0.6095658503915239
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 2,
+        "column": 0,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "工程物资",
+        "normalized_bbox": [
+          0.1326951630683912,
+          0.6215311852316958,
+          0.20571615945958877,
+          0.6376998792634724
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 2,
+        "column": 1,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "",
+        "normalized_bbox": [
+          0.44315130872739017,
+          0.6196078030910175,
+          0.6525855645570212,
+          0.6397983342621502
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 2,
+        "column": 2,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "",
+        "normalized_bbox": [
+          0.7435998336927122,
+          0.6183357555905884,
+          0.9074706114679,
+          0.6402867468972104
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 3,
+        "column": 0,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "合计 ",
+        "normalized_bbox": [
+          0.24533112350631384,
+          0.6495947962418871,
+          0.2795722492961199,
+          0.6661059703509767
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 3,
+        "column": 1,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "79,462,364.38 ",
+        "normalized_bbox": [
+          0.5272487253650063,
+          0.650087096062522,
+          0.6473142617113358,
+          0.6657832388073701
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 3,
+        "column": 2,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "93,076,790.97",
+        "normalized_bbox": [
+          0.788340363092845,
+          0.6503724983922093,
+          0.9089044848294222,
+          0.6653027976210497
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      }
+    ],
+    "cell_evidence": [],
+    "visual_obstructions": [],
+    "physical_num_rows": null,
+    "source_row_indices": [],
+    "header_scope_complete": true,
+    "caption_scope_complete": true,
+    "page_furniture": [
+      {
+        "source_ref": "#/texts/7",
+        "page_number": 74,
+        "label": "page_footer",
+        "text": "67",
+        "rendered": "<!-- source-furniture: #/texts/7; source-page: 74; role: page_footer -->\n\n67",
+        "normalized_bbox": [
+          0.5301536853712662,
+          0.904982188535133,
+          0.5440554205597704,
+          0.9124536854071176
+        ]
+      }
+    ],
+    "_structure_marker": "<!-- table-structure: {\"version\":1,\"table_id\":\"p74_t3\",\"source_pages\":[74],\"num_rows\":4,\"num_cols\":3,\"encoding\":\"anchor_and_blanks\",\"structure_valid\":true,\"header_rows\":[0],\"header_scope_rows\":[0],\"header_scope_complete\":true,\"spans\":[]} -->"
+  },
+  {
+    "fragment_id": "p74_t4",
+    "page_number": 74,
+    "ordinal": 4,
+    "normalized_bbox": [
+      0.13245067436154148,
+      0.732496465470049,
+      0.9104226505055146,
+      0.8170162391209546
+    ],
+    "num_rows": 3,
+    "num_cols": 7,
+    "rows": [
+      [
+        "项目",
+        "期末余额 ",
+        "",
+        "",
+        "期初余额",
+        "",
+        ""
+      ],
+      [
+        "",
+        "账面余额",
+        "减值\r\n准备",
+        "账面价值 ",
+        "账面余额",
+        "减值\r\n准备",
+        "账面价值"
+      ],
+      [
+        "在建工程 ",
+        "79,462,364.38 ",
+        "",
+        "79,462,364.38 ",
+        "93,076,790.97 ",
+        "",
+        "93,076,790.97 "
+      ]
+    ],
+    "column_boundaries": [
+      0.156036,
+      0.279249,
+      0.395765,
+      0.463426,
+      0.607936,
+      0.715286,
+      0.783039,
+      0.895194
+    ],
+    "markdown": "| 项目 | 期末余额 |  |  | 期初余额 |  |  |\n| --- | --- | --- | --- | --- | --- | --- |\n|  | 账面余额 | 减值 准备 | 账面价值 | 账面余额 | 减值 准备 | 账面价值 |\n| 在建工程 | 79,462,364.38 |  | 79,462,364.38 | 93,076,790.97 |  | 93,076,790.97 |",
+    "rendered": "<!-- table-fragment: p74_t4 -->\n\n<!-- table-structure: {\"version\":1,\"table_id\":\"p74_t4\",\"source_pages\":[74],\"num_rows\":3,\"num_cols\":7,\"encoding\":\"anchor_and_blanks\",\"structure_valid\":true,\"header_rows\":[0,1],\"header_scope_rows\":[0,1],\"header_scope_complete\":true,\"spans\":[[0,0,2,1],[0,1,1,3],[0,4,1,3]]} -->\n\n| 项目 | 期末余额 |  |  | 期初余额 |  |  |\n| --- | --- | --- | --- | --- | --- | --- |\n|  | 账面余额 | 减值 准备 | 账面价值 | 账面余额 | 减值 准备 | 账面价值 |\n| 在建工程 | 79,462,364.38 |  | 79,462,364.38 | 93,076,790.97 |  | 93,076,790.97 |",
+    "valid": true,
+    "invalid_reasons": [],
+    "logical_table_id": null,
+    "has_column_header": true,
+    "caption": null,
+    "unit_text": null,
+    "source_kind": "docling",
+    "cells": [
+      {
+        "row": 0,
+        "column": 0,
+        "row_span": 2,
+        "column_span": 1,
+        "text": "项目",
+        "normalized_bbox": [
+          0.17574683354108583,
+          0.7410733153658638,
+          0.2191975380421157,
+          0.7584422433178102
+        ],
+        "is_column_header": true,
+        "is_row_header": false
+      },
+      {
+        "row": 0,
+        "column": 1,
+        "row_span": 1,
+        "column_span": 3,
+        "text": "期末余额 ",
+        "normalized_bbox": [
+          0.39185956847647463,
+          0.7403511047593346,
+          0.5713682016730474,
+          0.7563222023058958
+        ],
+        "is_column_header": true,
+        "is_row_header": false
+      },
+      {
+        "row": 0,
+        "column": 4,
+        "row_span": 1,
+        "column_span": 3,
+        "text": "期初余额",
+        "normalized_bbox": [
+          0.7129933379186485,
+          0.7399881401335967,
+          0.9019526581144506,
+          0.7566770360475481
+        ],
+        "is_column_header": true,
+        "is_row_header": false
+      },
+      {
+        "row": 1,
+        "column": 1,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "账面余额",
+        "normalized_bbox": [
+          0.29997911383980586,
+          0.768644503735873,
+          0.3704683500786974,
+          0.7848739318213384
+        ],
+        "is_column_header": true,
+        "is_row_header": false
+      },
+      {
+        "row": 1,
+        "column": 2,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "减值\r\n准备",
+        "normalized_bbox": [
+          0.40794960876973274,
+          0.7615674078606087,
+          0.44680274212765886,
+          0.7893246352814156
+        ],
+        "is_column_header": true,
+        "is_row_header": false
+      },
+      {
+        "row": 1,
+        "column": 3,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "账面价值 ",
+        "normalized_bbox": [
+          0.4893773500279757,
+          0.7675756424169925,
+          0.5583709575700756,
+          0.7845697455338231
+        ],
+        "is_column_header": true,
+        "is_row_header": false
+      },
+      {
+        "row": 1,
+        "column": 4,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "账面余额",
+        "normalized_bbox": [
+          0.6201599923168464,
+          0.7681297990460294,
+          0.6884702699472377,
+          0.7847550708862495
+        ],
+        "is_column_header": true,
+        "is_row_header": false
+      },
+      {
+        "row": 1,
+        "column": 5,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "减值\r\n准备",
+        "normalized_bbox": [
+          0.7300502797231727,
+          0.7616371191029311,
+          0.7674305558674756,
+          0.7892299043877391
+        ],
+        "is_column_header": true,
+        "is_row_header": false
+      },
+      {
+        "row": 1,
+        "column": 6,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "账面价值",
+        "normalized_bbox": [
+          0.8087068995136679,
+          0.7681078477950674,
+          0.879592058257622,
+          0.7848688856722906
+        ],
+        "is_column_header": true,
+        "is_row_header": false
+      },
+      {
+        "row": 2,
+        "column": 0,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "在建工程 ",
+        "normalized_bbox": [
+          0.13632580372887626,
+          0.7952085254877593,
+          0.20650715850621715,
+          0.8123312752490373
+        ],
+        "is_column_header": false,
+        "is_row_header": true
+      },
+      {
+        "row": 2,
+        "column": 1,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "79,462,364.38 ",
+        "normalized_bbox": [
+          0.2787003969985674,
+          0.795925410371495,
+          0.39716285569546533,
+          0.8118539316637216
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 2,
+        "column": 2,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "",
+        "normalized_bbox": [
+          0.4074772830135102,
+          0.7951778816921977,
+          0.4538121175374978,
+          0.8151733980750812
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 2,
+        "column": 3,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "79,462,364.38 ",
+        "normalized_bbox": [
+          0.4637125326378969,
+          0.7961326492795469,
+          0.5831861494843408,
+          0.811992303704989
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 2,
+        "column": 4,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "93,076,790.97 ",
+        "normalized_bbox": [
+          0.6015402198659664,
+          0.79619870658725,
+          0.717696616836099,
+          0.8122312469040697
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 2,
+        "column": 5,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "",
+        "normalized_bbox": [
+          0.7249280982237524,
+          0.7951577976169043,
+          0.7690145240127113,
+          0.8149067161343726
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      },
+      {
+        "row": 2,
+        "column": 6,
+        "row_span": 1,
+        "column_span": 1,
+        "text": "93,076,790.97 ",
+        "normalized_bbox": [
+          0.7870029527470448,
+          0.796014627693951,
+          0.9040366486290246,
+          0.8116373443122148
+        ],
+        "is_column_header": false,
+        "is_row_header": false
+      }
+    ],
+    "cell_evidence": [],
+    "visual_obstructions": [],
+    "physical_num_rows": null,
+    "source_row_indices": [],
+    "header_scope_complete": true,
+    "caption_scope_complete": true,
+    "page_furniture": [
+      {
+        "source_ref": "#/texts/7",
+        "page_number": 74,
+        "label": "page_footer",
+        "text": "67",
+        "rendered": "<!-- source-furniture: #/texts/7; source-page: 74; role: page_footer -->\n\n67",
+        "normalized_bbox": [
+          0.5301536853712662,
+          0.904982188535133,
+          0.5440554205597704,
+          0.9124536854071176
+        ]
+      }
+    ],
+    "_structure_marker": "<!-- table-structure: {\"version\":1,\"table_id\":\"p74_t4\",\"source_pages\":[74],\"num_rows\":3,\"num_cols\":7,\"encoding\":\"anchor_and_blanks\",\"structure_valid\":true,\"header_rows\":[0,1],\"header_scope_rows\":[0,1],\"header_scope_complete\":true,\"spans\":[[0,0,2,1],[0,1,1,3],[0,4,1,3]]} -->"
+  }
+]

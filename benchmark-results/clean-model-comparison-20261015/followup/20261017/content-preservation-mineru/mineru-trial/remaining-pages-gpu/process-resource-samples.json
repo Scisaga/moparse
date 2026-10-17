@@ -1,0 +1,2746 @@
+[
+  {
+    "at": "2026-10-17T21:22:11.307337+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C      -      -      -      -      -      -    156      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:22:12.480182+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C      0      0      -      -      -      -    156      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:22:13.616377+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C      0      0      -      -      -      -    156      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:22:14.762675+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C      0      0      -      -      -      -    156      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:22:15.915049+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C      0      0      -      -      -      -    156      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:22:17.077002+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C      0      0      -      -      -      -   2444      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:22:18.223978+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     15      0      -      -      -      -   2524      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:22:19.372341+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     19      4      -      -      -      -   3164      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:22:20.518242+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     35     13      -      -      -      -   3184      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:22:21.716089+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     39     14      -      -      -      -   3694      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:22:22.854853+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     58     21      -      -      -      -   3698      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:22:23.991529+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     45     21      -      -      -      -   3702      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:22:25.128503+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     21     12      -      -      -      -   3702      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:22:26.267556+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     24     12      -      -      -      -   3702      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:22:27.405008+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     24     12      -      -      -      -   3702      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:22:28.541921+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     24     12      -      -      -      -   3702      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:22:29.682972+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     23     12      -      -      -      -   3702      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:22:30.818009+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     23     12      -      -      -      -   3702      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:22:31.955455+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     23     12      -      -      -      -   3704      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:22:33.081539+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     23     12      -      -      -      -   3704      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:22:34.228883+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     22     12      -      -      -      -   3704      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:22:35.355324+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     23     12      -      -      -      -   3704      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:22:36.489735+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     24     13      -      -      -      -   3704      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:22:37.626342+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     34     12      -      -      -      -   3704      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:22:38.761626+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     42     16      -      -      -      -   3704      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:22:39.888612+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     30     16      -      -      -      -   3704      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:22:41.013908+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     23     11      -      -      -      -   3704      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:22:42.150309+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     26     12      -      -      -      -   3704      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:22:43.276474+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     26     12      -      -      -      -   3704      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:22:44.413145+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     33     10      -      -      -      -   3704      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:22:45.550690+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     66     20      -      -      -      -   3306      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:22:46.686036+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     55     22      -      -      -      -   3308      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:22:47.812537+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     20     12      -      -      -      -   3308      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:22:48.948318+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     22     12      -      -      -      -   3308      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:22:50.074481+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     24     12      -      -      -      -   3308      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:22:51.211257+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     24     13      -      -      -      -   3308      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:22:52.346853+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     23     12      -      -      -      -   3308      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:22:53.474380+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     24     12      -      -      -      -   3308      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:22:54.609634+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     24     12      -      -      -      -   3308      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:22:55.736248+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     24     12      -      -      -      -   3308      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:22:56.872494+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     24     13      -      -      -      -   3308      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:22:58.009030+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     23     12      -      -      -      -   3308      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:22:59.145150+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     23     12      -      -      -      -   3308      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:23:00.273494+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     23     13      -      -      -      -   3308      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:23:01.419216+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     23     12      -      -      -      -   3308      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:23:02.561373+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     23     12      -      -      -      -   3308      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:23:03.699364+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     23     12      -      -      -      -   3308      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:23:04.834653+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     23     12      -      -      -      -   3308      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:23:05.971842+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     23     12      -      -      -      -   3308      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:23:07.117473+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     23     13      -      -      -      -   3308      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:23:08.254229+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     22     12      -      -      -      -   3308      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:23:09.399858+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     23     13      -      -      -      -   3308      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:23:10.537057+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     22     12      -      -      -      -   3310      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:23:11.673147+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     22     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:23:12.811264+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     23     13      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:23:13.947152+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     23     13      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:23:15.083245+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     23     13      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:23:16.217095+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     23     13      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:23:17.354216+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     20     11      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:23:18.491902+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     23     13      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:23:19.629216+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     23     13      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:23:20.756840+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     23     13      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:23:21.903912+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     23     13      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:23:23.031904+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     22     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:23:24.157933+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     20     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:23:25.296113+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     20     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:23:26.432022+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     21     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:23:27.568114+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     20     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:23:28.704550+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     22     13      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:23:29.841908+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     23     14      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:23:30.979953+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     24     14      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:23:32.115028+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     24     14      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:23:33.252942+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     24     14      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:23:34.400805+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     23     14      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:23:35.526595+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     22     13      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:23:36.652984+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     19     11      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:23:37.779914+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     21     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:23:38.907230+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     21     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:23:40.033339+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     21     13      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:23:41.169820+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     21     13      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:23:42.306168+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     21     13      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:23:43.443091+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     14      8      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:23:44.571097+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     21     13      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:23:45.718079+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     21     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:23:46.855716+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     21     13      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:23:47.992171+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     21     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:23:49.129761+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     23     14      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:23:50.278701+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     25     13      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:23:51.426342+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     25      8      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:23:52.564372+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     27      8      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:23:53.701036+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     31      8      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:23:54.838619+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     34     15      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:23:55.976787+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     18      9      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:23:57.165811+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     20      9      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:23:58.313264+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     22     10      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:23:59.466344+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     24     11      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:24:00.604826+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     24     11      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:24:01.742651+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     25     11      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:24:02.881544+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     25     11      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:24:04.020007+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     25     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:24:05.148662+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     25     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:24:06.276108+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     26     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:24:07.412357+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     24     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:24:08.550481+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     26     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:24:09.686718+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     26     13      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:24:10.823132+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     25     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:24:11.961143+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     25     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:24:13.098007+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     27     13      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:24:14.235140+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     27     13      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:24:15.373026+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     26     13      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:24:16.509415+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     25     13      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:24:17.646658+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     31     10      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:24:18.774616+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     30      9      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:24:19.910152+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     30     10      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:24:21.047126+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     27     10      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:24:22.175304+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     27      9      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:24:23.311761+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     29     10      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:24:24.449005+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     30     10      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:24:25.576718+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     26      9      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:24:26.703572+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     29     10      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:24:27.834116+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     28      9      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:24:28.961018+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     32      9      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:24:30.089149+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     33     10      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:24:31.225712+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     28      9      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:24:32.352627+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     28     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:24:33.479317+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     22      9      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:24:34.606528+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     31      9      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:24:35.741622+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     33     10      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:24:36.875602+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     28      9      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:24:38.001094+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     45     16      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:24:39.137470+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     22     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:24:40.274363+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     20     10      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:24:41.401691+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     26     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:24:42.541298+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     27     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:24:43.668709+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     26     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:24:44.805055+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     26     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:24:45.942847+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     26     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:24:47.081303+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     30     10      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:24:48.219173+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     27      9      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:24:49.366788+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     37     14      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:24:50.494386+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     19      8      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:24:51.632395+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     25      9      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:24:52.770069+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     26      9      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:24:53.898822+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     26      9      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:24:55.035598+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     28     10      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:24:56.163139+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     78     25      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:24:57.293806+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     22     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:24:58.420283+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     21     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:24:59.548393+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     26     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:25:00.676149+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     26     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:25:01.803117+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     26     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:25:02.930586+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     26     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:25:04.058985+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     26     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:25:05.195805+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     25     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:25:06.333256+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     25     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:25:07.461618+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     25     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:25:08.588636+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     26     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:25:09.725801+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     26     13      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:25:10.854888+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     26     13      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:25:11.982923+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     24     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:25:13.119934+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     26     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:25:14.246924+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     30     13      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:25:15.372164+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     28     11      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:25:16.509751+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     23      9      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:25:17.636459+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     42     13      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:25:18.762768+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     43     16      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:25:19.891206+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     24     13      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:25:21.019302+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     22     10      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:25:22.155152+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     26     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:25:23.283700+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     26     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:25:24.421714+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     26     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:25:25.549048+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     25     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:25:26.676180+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     25     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:25:27.804691+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     25     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:25:28.932203+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     36     15      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:25:30.059297+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     22     10      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:25:31.198126+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     25     11      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:25:32.325042+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     27     11      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:25:33.460617+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     27     11      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:25:34.609596+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     26     11      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:25:35.745192+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     24     10      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:25:36.881603+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     27      9      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:25:38.018147+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     33     11      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:25:39.165485+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     22      9      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:25:40.293592+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     30     11      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:25:41.422140+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     28     11      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:25:42.549388+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     29     10      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:25:43.686640+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     29     10      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:25:44.824915+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     23      9      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:25:45.955725+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     26      9      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:25:47.083479+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     47     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:25:48.209455+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     41     21      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:25:49.338248+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     22     11      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:25:50.466117+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     24     11      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:25:51.593678+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     47     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:25:52.721601+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     65     22      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:25:53.848124+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     40     21      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:25:54.977068+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     21     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:25:56.103783+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     24     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:25:57.231991+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     23     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:25:58.359458+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     23     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:25:59.486118+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     24     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:26:00.616506+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     24     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:26:01.734400+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     24     13      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:26:02.866626+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     23     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:26:03.995061+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     23     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:26:05.133749+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     24     13      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:26:06.262663+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     24     13      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:26:07.390430+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     22     11      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:26:08.516991+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     22     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:26:09.699037+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     24     13      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:26:10.836988+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     26     11      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:26:11.965261+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     47     16      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:26:13.102006+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     22     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:26:14.239854+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     23     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:26:15.377544+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     30     11      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:26:16.524904+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     41     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:26:17.656237+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     45     17      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:26:18.784586+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     29     16      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:26:19.922125+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     23     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:26:21.059913+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     26     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:26:22.207606+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     27     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:26:23.344599+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     25     10      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:26:24.481990+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     30     10      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:26:25.622250+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     39     11      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:26:26.770236+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     43     16      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:26:27.919494+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     29     15      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:26:29.078934+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     24     11      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:26:30.207848+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     25     11      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:26:31.356815+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     24     11      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:26:32.505540+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     25     11      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:26:33.654533+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     25     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:26:34.792774+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     25     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:26:35.930539+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     25     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:26:37.069718+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     23     11      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:26:38.197414+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     25     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:26:39.334431+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     32     10      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:26:40.473022+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     28     10      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:26:41.612142+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     29      9      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:26:42.789409+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     31     10      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:26:43.926724+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     26     10      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:26:45.055322+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     25      9      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:26:46.192428+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     30      9      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:26:47.330551+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     28     11      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:26:48.468174+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     33     14      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:26:49.606281+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     23      9      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:26:50.745343+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     31     10      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:26:51.894116+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     29     10      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:26:53.021635+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     21      8      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:26:54.160294+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     27      9      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:26:55.298636+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     64     20      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:26:56.426317+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     23     13      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:26:57.565190+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     22     11      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:26:58.713093+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     29     11      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:26:59.841442+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     36     14      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:27:00.968549+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     32     14      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:27:02.106356+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     27     11      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:27:03.245603+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     28     11      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:27:04.373485+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     26     10      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:27:05.502232+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     28     11      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:27:06.654942+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     25     10      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:27:07.808436+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     26     11      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:27:08.947275+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     26     10      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:27:10.174888+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     51     11      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:27:11.364484+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     80     32      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:27:12.523358+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     20     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:27:13.673338+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     21     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:27:14.848070+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     21     11      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:27:16.021346+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     22     11      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:27:17.157703+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     22     11      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:27:18.320023+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     23     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:27:19.489979+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     25     13      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:27:20.629530+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     24     13      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:27:21.790596+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     22     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:27:22.951544+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     22     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:27:24.094982+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     22     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:27:25.279761+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     22     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:27:26.439824+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     22     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:27:27.603834+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     22     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:27:28.753096+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     21     11      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:27:29.914656+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     22     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:27:31.075235+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     64     21      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:27:32.225923+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     20     11      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:27:33.397144+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     20     10      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:27:34.557535+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     23     10      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:27:35.706077+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     24     11      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:27:36.867456+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     23     10      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:27:38.028796+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     23     11      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:27:39.190027+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     25     11      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:27:40.330062+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     24     11      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:27:41.501021+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     22     10      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:27:42.650399+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     25     11      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:27:43.799235+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     29      9      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:27:44.929422+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     26     11      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:27:46.079207+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     29      9      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:27:47.229834+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     29      9      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:27:48.358035+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     41     15      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:27:49.496590+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     21      9      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:27:50.638148+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     24     10      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:27:51.776618+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     27     10      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:27:52.927802+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     21      7      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:27:54.069269+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     62     26      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:27:55.206314+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     28     15      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:27:56.334917+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     24     11      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:27:57.510140+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     23     10      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:27:58.682629+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     26     10      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:27:59.908118+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     24      9      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:28:01.068820+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     22      8      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:28:02.228188+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     65     22      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:28:03.399903+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     17      9      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:28:04.550096+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     20     10      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:28:05.710996+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     24     10      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:28:06.858694+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     23     10      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:28:08.022141+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     25     11      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:28:09.161128+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     22     10      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:28:10.311309+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     24     11      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:28:11.472385+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     25     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:28:12.611050+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     41     15      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:28:13.760458+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     20      8      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:28:14.911992+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     22      9      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:28:16.085216+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     25      9      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:28:17.268420+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     22      8      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:28:18.457316+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     32      9      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:28:19.633734+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     43     18      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:28:20.802318+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     19      9      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:28:21.963452+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     21      8      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:28:23.124247+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     24     10      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:28:24.285422+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     23      9      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:28:25.466844+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     24     10      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:28:26.628396+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     23     10      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:28:27.789773+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     23     10      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:28:28.950571+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     23     10      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:28:30.110184+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     33     12      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:28:31.270262+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     29     11      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:28:32.400251+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     23      9      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:28:33.530149+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     25      9      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:28:34.671735+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     26     10      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:28:35.810721+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     26     10      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:28:36.960476+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     26     10      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:28:38.111160+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     25     10      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:28:39.261289+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     26     10      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:28:40.402208+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     24      9      -      -      -      -   3324      0    python         "
+    ]
+  },
+  {
+    "at": "2026-10-17T21:28:41.562482+08:00",
+    "pid": 1133850,
+    "pmon_header": "gpu pid type sm% mem% enc% dec% jpg% ofa% fbMB ccpmMB command",
+    "process_gpu_lines": [
+      "    1    1133850     C     19      7      -      -      -      -   3324      0    python         "
+    ]
+  }
+]

@@ -1,0 +1,34 @@
+[
+  {
+    "index": 0,
+    "HTTP_status": 200,
+    "model_HTTP_seconds": 1.9598519239807501,
+    "usage": {
+      "prompt_tokens": 1394,
+      "total_tokens": 1486,
+      "completion_tokens": 92,
+      "prompt_tokens_details": null
+    },
+    "finish_reasons": [
+      "stop"
+    ],
+    "request_SHA256": "067ea40a8c6ae2c2667fe940d38236910aeb3afb3645ad01e03a3c684df973d5",
+    "response_SHA256": "4b55c630d17b5f6414257e2eefa62961deb03b8aea0f288b5cfba28de4a2d06e"
+  },
+  {
+    "index": 1,
+    "HTTP_status": 200,
+    "model_HTTP_seconds": 8.197171912994236,
+    "usage": {
+      "prompt_tokens": 2013,
+      "total_tokens": 2486,
+      "completion_tokens": 473,
+      "prompt_tokens_details": null
+    },
+    "finish_reasons": [
+      "stop"
+    ],
+    "request_SHA256": "fed828a39a96ac74deee8bfc8036bb5af806c34ed31bacce6e5285a5d7afe446",
+    "response_SHA256": "b8f02b726ce6eead113470248fa09af4ac2d30ec03897285af81fd7084c8a847"
+  }
+]

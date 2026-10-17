@@ -1,0 +1,194 @@
+[
+  {
+    "stage": "official_input_preparation",
+    "file_suffix": "pdf",
+    "prepared_size_bytes": 219542,
+    "original_function_seconds": 0.022578355041332543,
+    "prepared_SHA256": "348b9ba517d06536e3540f741c4710f808cf64528b1eb2e41f9f8254f0140cd9",
+    "retained_original_page_indices_zero_based": [
+      6
+    ],
+    "broken_original_page_indices_zero_based": [],
+    "derived_input_filename": "prepared-by-official-page-selection.pdf",
+    "transformation": "Official default page_range handling; runner did not crop or rewrite the source PDF."
+  },
+  {
+    "stage": "actual_VLM_options",
+    "image_analysis": false,
+    "not_extract_list": [
+      "caption",
+      "code_caption",
+      "doc_title",
+      "footer",
+      "footnote",
+      "header",
+      "image_caption",
+      "image_footnote",
+      "page_footnote",
+      "page_number",
+      "paragraph_title",
+      "phonetic",
+      "ref_text",
+      "table_caption",
+      "table_footnote",
+      "text",
+      "title"
+    ],
+    "image_sizes": [
+      [
+        1654,
+        2339
+      ]
+    ],
+    "model_inputs": []
+  },
+  {
+    "stage": "actual_VLM_results_before_native_body_fill",
+    "effort": "xhigh",
+    "tables": [
+      {
+        "window_page_index": 0,
+        "bbox": [
+          0.14,
+          0.084,
+          0.862,
+          0.252
+        ],
+        "content": "<table><tr><td>序号</td><td>股东名称</td><td>持股数量</td><td>持股比例</td><td>有限售条件的股份数量</td></tr><tr><td>7</td><td>全国社保基金一零二组合</td><td>14,818,700</td><td>1.42%</td><td>-</td></tr><tr><td>8</td><td>喻晓春</td><td>12,230,072</td><td>1.17%</td><td>-</td></tr><tr><td>9</td><td>马晓华</td><td>10,760,572</td><td>1.03%</td><td>-</td></tr><tr><td>10</td><td>上海旌德投资合伙企业(有限合伙)</td><td>10,746,723</td><td>1.03%</td><td>-</td></tr><tr><td colspan=\"2\">合计</td><td>610,984,731</td><td>58.64%</td><td>271,941,376</td></tr></table>"
+      },
+      {
+        "window_page_index": 0,
+        "bbox": [
+          0.14,
+          0.314,
+          0.861,
+          0.593
+        ],
+        "content": "<table><tr><td colspan=\"2\">首发前期末净资产(截至2010.12.31)</td><td colspan=\"2\">11,848.23</td></tr><tr><td rowspan=\"8\">历次筹资情况</td><td>时间</td><td>发行类型</td><td>筹资净额</td></tr><tr><td>2011年</td><td>首次公开发行</td><td>47,618.40</td></tr><tr><td>2015年</td><td>发行股份购买资产</td><td>494,496.00</td></tr><tr><td>2016年</td><td>非公开发行</td><td>75,028.76</td></tr><tr><td>2018年</td><td>第一期限制性股票(已回购注销)</td><td>9,014.70</td></tr><tr><td>2020年</td><td>非公开发行</td><td>99,092.46</td></tr><tr><td>2021年</td><td>公开发行可转债</td><td>111,281.49</td></tr><tr><td>2022年</td><td>2021年限制性股票</td><td>6,902.35</td></tr><tr><td colspan=\"2\">首发后累计派现金额(含税)(截至2026年6月30日)</td><td colspan=\"2\">298,376.19</td></tr><tr><td colspan=\"2\">本次发行前最近一期末(2026年6月30日)归属母公司股东的净资产额</td><td colspan=\"2\">512,816.84</td></tr></table>"
+      },
+      {
+        "window_page_index": 0,
+        "bbox": [
+          0.14,
+          0.691,
+          0.861,
+          0.869
+        ],
+        "content": "<table><tr><td>项目</td><td>2026年6月末</td><td>2025年末</td><td>2024年末</td><td>2023年末</td></tr><tr><td>流动资产</td><td>385,154.24</td><td>370,267.93</td><td>346,310.67</td><td>304,847.48</td></tr><tr><td>非流动资产</td><td>490,015.21</td><td>488,944.11</td><td>465,554.18</td><td>406,274.10</td></tr><tr><td>资产合计</td><td>875,169.45</td><td>859,212.04</td><td>811,864.85</td><td>711,121.58</td></tr><tr><td>流动负债</td><td>240,069.61</td><td>242,216.04</td><td>229,887.02</td><td>199,888.84</td></tr><tr><td>非流动负债</td><td>122,283.00</td><td>120,988.27</td><td>112,280.84</td><td>106,881.06</td></tr><tr><td>负债合计</td><td>362,352.61</td><td>363,204.32</td><td>342,167.86</td><td>306,769.89</td></tr><tr><td>所有者权益合计</td><td>512,816.84</td><td>496,007.72</td><td>469,697.00</td><td>404,351.68</td></tr></table>"
+      }
+    ]
+  },
+  {
+    "stage": "native_PDF_text_fill",
+    "returned_spans": 9,
+    "nonempty_text_spans": 9,
+    "queued_for_post_OCR": 0,
+    "spans": [
+      {
+        "type": "text",
+        "bbox": [
+          91.08,
+          43.92,
+          257.76,
+          54.36
+        ],
+        "text": "上海百润投资控股集团股份有限公司",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          451.8,
+          43.2,
+          505.08000000000004,
+          54.36
+        ],
+        "text": "发行保荐书",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          120.60000000000001,
+          225.72,
+          437.76,
+          236.52
+        ],
+        "text": "（四）发行人上市以来历次筹资及现金分红及净资产变动情况",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          451.8,
+          250.92000000000002,
+          505.8,
+          264.6
+        ],
+        "text": "单位：万元",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          120.60000000000001,
+          507.6,
+          318.24,
+          518.4
+        ],
+        "text": "（五）发行人主要财务数据及财务指标",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          113.76,
+          538.2,
+          263.52,
+          550.08
+        ],
+        "text": "1、合并资产负债表主要数据",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          451.8,
+          567.72,
+          506.16,
+          582.12
+        ],
+        "text": "单位：万元",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          112.68,
+          741.24,
+          239.76000000000002,
+          752.76
+        ],
+        "text": "2、合并利润表主要数据",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          282.96000000000004,
+          779.76,
+          311.40000000000003,
+          793.44
+        ],
+        "text": "3-1-6",
+        "queued_for_post_OCR": false
+      }
+    ]
+  },
+  {
+    "stage": "actual_post_OCR",
+    "candidate_spans": 0,
+    "content_changed": 0,
+    "spans": []
+  }
+]

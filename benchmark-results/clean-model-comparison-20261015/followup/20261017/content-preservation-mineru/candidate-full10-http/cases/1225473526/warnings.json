@@ -1,0 +1,18 @@
+{
+  "document_warnings": [
+    {
+      "code": "glm_sdk_scan_routing_used",
+      "message": "the GLM-OCR SDK parsed 2 scanned or mixed page(s)",
+      "severity": "info",
+      "page_number": null,
+      "backend": "glm-sdk-remote",
+      "details": {
+        "pages": [
+          25,
+          27
+        ]
+      }
+    }
+  ],
+  "units": []
+}

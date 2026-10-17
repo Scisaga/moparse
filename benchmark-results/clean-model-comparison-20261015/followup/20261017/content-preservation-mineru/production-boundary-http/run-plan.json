@@ -1,0 +1,132 @@
+{
+  "schema": "selected-pipeline-full-HTTP/1",
+  "base": "http://10.0.6.22:12303",
+  "container": "mosaicparse",
+  "sdk_container": "docling_glm_ocr_sdk",
+  "glm_container": "docling_glm_ocr",
+  "sources": [
+    {
+      "source": "1225474693",
+      "source_path": "/opt/mosaic-parse/pdf_sample/1225474693.pdf",
+      "manifest_path": "pdf_sample/1225474693.pdf",
+      "sha256": "dc7f5b3bfdc5a5c69b9cf4b2a9e0d28e2f9ee0b2464770fb8a910fea688ee775",
+      "page_count": 4,
+      "size_bytes": 144506
+    },
+    {
+      "source": "1225473526",
+      "source_path": "/opt/mosaic-parse/pdf_sample/1225473526.pdf",
+      "manifest_path": "pdf_sample/1225473526.pdf",
+      "sha256": "787297535ba74a4170cc859ae68f15f946f6dfd0bfc14a1e1fa0e6d068ba2b19",
+      "page_count": 27,
+      "size_bytes": 1175574
+    }
+  ],
+  "pages": 31,
+  "form": {
+    "scan_policy": "auto"
+  },
+  "unit_range_set": false,
+  "profile_override": false,
+  "parse_timeout_override": false,
+  "request_concurrency": 1,
+  "sampling_target_seconds": 2,
+  "service_control": false,
+  "source_manifest_SHA256": "dc5a4d24e61b0fd8e200a34b3e2ced68f3dd7b3ef55e19ef431c0afd805eb70a",
+  "capture_helper_SHA256": "3a4bdfcc443277d8f515e97b2e37bd71d77c1f98c9c3863fb9d3ce95a2a0852e",
+  "runner_SHA256": "30e179cdf16a340e07dc2f1b9be98d4e96d8411cd3947f5ebf7ff2769cb5b727",
+  "api_key_value_recorded": false,
+  "authorization_environment_variable": "MOSAICPARSE_API_KEY",
+  "started_UTC": "2026-10-17T13:51:24.466467+00:00",
+  "containers": {
+    "mosaicparse": {
+      "name": "mosaicparse",
+      "container_ID": "3466a7bef1c98f30c84db0460500eedece0cf7e0d308da912390077905cb3fa9",
+      "image_ID": "sha256:07a5df326885a6f83cf48aab766f6dd47fad5175066703fe6fa224380d86f9d4",
+      "started": "2026-10-17T13:50:56.919214112Z",
+      "restart_count": 0,
+      "pid": 1179707,
+      "ports": {
+        "12303/tcp": [
+          {
+            "HostIp": "0.0.0.0",
+            "HostPort": "12303"
+          },
+          {
+            "HostIp": "::",
+            "HostPort": "12303"
+          }
+        ]
+      },
+      "mounts": [
+        {
+          "Type": "volume",
+          "Source": "/var/lib/docker/volumes/mosaicparse-data/_data",
+          "Destination": "/data"
+        },
+        {
+          "Type": "volume",
+          "Source": "/var/lib/docker/volumes/mosaicparse-docling-models-selected-20261017/_data",
+          "Destination": "/models/docling"
+        },
+        {
+          "Type": "volume",
+          "Source": "/var/lib/docker/volumes/mosaicparse-huggingface-cache/_data",
+          "Destination": "/models/huggingface"
+        }
+      ]
+    },
+    "docling_glm_ocr_sdk": {
+      "name": "docling_glm_ocr_sdk",
+      "container_ID": "b0b2f735fb491fdb39b6b23e95d70848a15f1cebc67297c2f7d82c6b7fcd0a75",
+      "image_ID": "sha256:abe353926afba82931744bac4533f895c9e6ad6f768da4103a4ec40410c2e6cb",
+      "started": "2026-10-16T21:15:08.695015459Z",
+      "restart_count": 0,
+      "pid": 418554,
+      "ports": {
+        "12303/tcp": null,
+        "5002/tcp": null
+      },
+      "mounts": [
+        {
+          "Type": "volume",
+          "Source": "/var/lib/docker/volumes/mosaicparse-huggingface-cache/_data",
+          "Destination": "/models/huggingface"
+        },
+        {
+          "Type": "volume",
+          "Source": "/var/lib/docker/volumes/2d6b12646d90939ffba76ee495bbbd0e64862b1618e195e10277e21b5284fc26/_data",
+          "Destination": "/data"
+        },
+        {
+          "Type": "volume",
+          "Source": "/var/lib/docker/volumes/1aa962a748d64b015de2df5b7f3383359cc94077eab2ea26fc31e17d93502b08/_data",
+          "Destination": "/models/docling"
+        }
+      ]
+    },
+    "docling_glm_ocr": {
+      "name": "docling_glm_ocr",
+      "container_ID": "a803d464218327072544e69c70513d17e1604a864a86ca556ec3ca87d0275035",
+      "image_ID": "sha256:df7be4c4d818e250a8c80f78d110571e92e72a1fefec06fed82a2e37e473cd48",
+      "started": "2026-10-10T18:50:15.890807408Z",
+      "restart_count": 0,
+      "pid": 3145,
+      "ports": {
+        "8000/tcp": [
+          {
+            "HostIp": "127.0.0.1",
+            "HostPort": "8001"
+          }
+        ]
+      },
+      "mounts": [
+        {
+          "Type": "volume",
+          "Source": "/var/lib/docker/volumes/mosaicparse-huggingface-cache/_data",
+          "Destination": "/root/.cache/huggingface"
+        }
+      ]
+    }
+  }
+}

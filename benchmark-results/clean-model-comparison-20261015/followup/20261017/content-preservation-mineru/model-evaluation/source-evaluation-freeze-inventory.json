@@ -1,0 +1,603 @@
+{
+  "schema": "mosaicparse-source-evaluation-freeze-inventory/1",
+  "created_UTC": "2026-10-17T14:20:09.824177+00:00",
+  "scope": "Independent benchmark scripts, exact historical script bytes, current evaluation JSONs and frozen source references. This is not a release manifest; root owns the canonical report/release index. Historical/incremental JSON names retain their original scope. Model/API raw captures remain untouched and are indexed separately by runner.",
+  "all_source_artifacts_unchanged": true,
+  "original_source_artifact_count": 37,
+  "source_artifact_checks": [
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/source-reference/1206337604-p1-raw.json",
+      "recorded_SHA256": "ee241c25aece61140ebc80273050d172150b954073cbf0d48a4daafafc07f289",
+      "actual_SHA256": "ee241c25aece61140ebc80273050d172150b954073cbf0d48a4daafafc07f289",
+      "pass": true
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/source-reference/1206337604-p1-sorted.txt",
+      "recorded_SHA256": "873590c82f2bf18525d076fa7db3e83718a297545d20961a57aa2523cf690c43",
+      "actual_SHA256": "873590c82f2bf18525d076fa7db3e83718a297545d20961a57aa2523cf690c43",
+      "pass": true
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/source-reference/1206337604-p1.png",
+      "recorded_SHA256": "39a819030ccf39e5df10d838633c01e58450526d10be1245dcb96ac865a2f8bf",
+      "actual_SHA256": "39a819030ccf39e5df10d838633c01e58450526d10be1245dcb96ac865a2f8bf",
+      "pass": true
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/source-reference/1206337604-p2-raw.json",
+      "recorded_SHA256": "ecb8a216b1ef331b87d8d92a786095f3dd103cfc561d71ec2c334e0b53679573",
+      "actual_SHA256": "ecb8a216b1ef331b87d8d92a786095f3dd103cfc561d71ec2c334e0b53679573",
+      "pass": true
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/source-reference/1206337604-p2-sorted.txt",
+      "recorded_SHA256": "81ffd4aa776c0b50958d028e1c916a10cfaea78e1b31a6610e24516bcb1f2099",
+      "actual_SHA256": "81ffd4aa776c0b50958d028e1c916a10cfaea78e1b31a6610e24516bcb1f2099",
+      "pass": true
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/source-reference/1206337604-p2.png",
+      "recorded_SHA256": "f018fa9d7a1fdd443c95c7e99f5b5bac9297bc814d4838a19556a303c6dec020",
+      "actual_SHA256": "f018fa9d7a1fdd443c95c7e99f5b5bac9297bc814d4838a19556a303c6dec020",
+      "pass": true
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/source-reference/1225474139-p28-raw.json",
+      "recorded_SHA256": "dc357b35c91f14e112927436d2f4282a459c707e269f974ee2d7cd44a4a9dbad",
+      "actual_SHA256": "dc357b35c91f14e112927436d2f4282a459c707e269f974ee2d7cd44a4a9dbad",
+      "pass": true
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/source-reference/1225474139-p28-sorted.txt",
+      "recorded_SHA256": "5222eb8091ec20194b06d776b873ecc62a94fc5e08ef2cfd99c4fafce04f2105",
+      "actual_SHA256": "5222eb8091ec20194b06d776b873ecc62a94fc5e08ef2cfd99c4fafce04f2105",
+      "pass": true
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/source-reference/1225474139-p28.png",
+      "recorded_SHA256": "82fec56575cbf53684b1401fc8f5a9088322ceaeea4eb9a74d31decc4d0ec69b",
+      "actual_SHA256": "82fec56575cbf53684b1401fc8f5a9088322ceaeea4eb9a74d31decc4d0ec69b",
+      "pass": true
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/source-reference/1225474139-p30-raw.json",
+      "recorded_SHA256": "b408ea53298cc9fdf4f410d9dca58c7cb54298a6f8a84e889d3438fc0e3e63a1",
+      "actual_SHA256": "b408ea53298cc9fdf4f410d9dca58c7cb54298a6f8a84e889d3438fc0e3e63a1",
+      "pass": true
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/source-reference/1225474139-p30-sorted.txt",
+      "recorded_SHA256": "8eab86bf066f0612eb444f563ac580d34d029808bbc86a2316684c2177111729",
+      "actual_SHA256": "8eab86bf066f0612eb444f563ac580d34d029808bbc86a2316684c2177111729",
+      "pass": true
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/source-reference/1225474139-p30.png",
+      "recorded_SHA256": "e4e86444c7922f2d81c813425b290823c0ce1cc40e869c7b97879004e4f59060",
+      "actual_SHA256": "e4e86444c7922f2d81c813425b290823c0ce1cc40e869c7b97879004e4f59060",
+      "pass": true
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/source-reference/1225474739-p130-raw.json",
+      "recorded_SHA256": "9d0d1008c31411a0aecd0899beb3153ca482f3a4c0f396912a23004167ccf3c6",
+      "actual_SHA256": "9d0d1008c31411a0aecd0899beb3153ca482f3a4c0f396912a23004167ccf3c6",
+      "pass": true
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/source-reference/1225474739-p130-sorted.txt",
+      "recorded_SHA256": "be02f955ff1f2b6c5fee01d32f40c9486785e72952094e3509348a0a636e7165",
+      "actual_SHA256": "be02f955ff1f2b6c5fee01d32f40c9486785e72952094e3509348a0a636e7165",
+      "pass": true
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/source-reference/1225474739-p130.png",
+      "recorded_SHA256": "3428283dad1bc395b47013e8ca19ffd8907491c1e7af76b4438c75baf157d1e3",
+      "actual_SHA256": "3428283dad1bc395b47013e8ca19ffd8907491c1e7af76b4438c75baf157d1e3",
+      "pass": true
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/source-reference/1225474739-p131-raw.json",
+      "recorded_SHA256": "a2d75645ea9b51c5668922e679dce98546ef89e0652acab448e1913886f911e7",
+      "actual_SHA256": "a2d75645ea9b51c5668922e679dce98546ef89e0652acab448e1913886f911e7",
+      "pass": true
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/source-reference/1225474739-p131-sorted.txt",
+      "recorded_SHA256": "23679750b2eae7f386652e10d3d155969c19419df149c60d3cbbf25718da52a4",
+      "actual_SHA256": "23679750b2eae7f386652e10d3d155969c19419df149c60d3cbbf25718da52a4",
+      "pass": true
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/source-reference/1225474739-p131.png",
+      "recorded_SHA256": "30284682f0dfa7d6f5a86838e92d1c0dc5309f1a65715452632da51e1d26aa2c",
+      "actual_SHA256": "30284682f0dfa7d6f5a86838e92d1c0dc5309f1a65715452632da51e1d26aa2c",
+      "pass": true
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/source-reference/1225474739-p19-raw.json",
+      "recorded_SHA256": "ef96cb2e8d82c8d16854aca1ae08833251eb80305534701e91da46fa2c04dcc9",
+      "actual_SHA256": "ef96cb2e8d82c8d16854aca1ae08833251eb80305534701e91da46fa2c04dcc9",
+      "pass": true
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/source-reference/1225474739-p19-sorted.txt",
+      "recorded_SHA256": "0e528af80194a28f478a317f03d7c805e22ec5bc41b571cd7b49ee4b18cf99e4",
+      "actual_SHA256": "0e528af80194a28f478a317f03d7c805e22ec5bc41b571cd7b49ee4b18cf99e4",
+      "pass": true
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/source-reference/1225474739-p19.png",
+      "recorded_SHA256": "d7eff9eb85f5a177ae6244e3a35bbe08ac8a556e2d9cbfffa0f1bb30ee7d74f6",
+      "actual_SHA256": "d7eff9eb85f5a177ae6244e3a35bbe08ac8a556e2d9cbfffa0f1bb30ee7d74f6",
+      "pass": true
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/source-reference/1225474739-p40-raw.json",
+      "recorded_SHA256": "72be81dd55ded006d2aead393b577b12e0548d8b607bb89f4f15dad1080c8191",
+      "actual_SHA256": "72be81dd55ded006d2aead393b577b12e0548d8b607bb89f4f15dad1080c8191",
+      "pass": true
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/source-reference/1225474739-p40-sorted.txt",
+      "recorded_SHA256": "198f8ff8e69417d35045611635726ed35f75449d12d10941f72fa6fe63837248",
+      "actual_SHA256": "198f8ff8e69417d35045611635726ed35f75449d12d10941f72fa6fe63837248",
+      "pass": true
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/source-reference/1225474739-p40.png",
+      "recorded_SHA256": "6232df1d2fe82ce117a4c5e72213616f1019e99bb2b8372436d95a4353b28989",
+      "actual_SHA256": "6232df1d2fe82ce117a4c5e72213616f1019e99bb2b8372436d95a4353b28989",
+      "pass": true
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/source-reference/1225474739-p74-raw.json",
+      "recorded_SHA256": "433839c4e47afd4a6c04c6d0a59987e0d6fde01b5962b2645ee4df459f9b37bb",
+      "actual_SHA256": "433839c4e47afd4a6c04c6d0a59987e0d6fde01b5962b2645ee4df459f9b37bb",
+      "pass": true
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/source-reference/1225474739-p74-sorted.txt",
+      "recorded_SHA256": "d735a574c16ace85d15ed902347ca488413f2d01b7dae72891775c006b89b8b2",
+      "actual_SHA256": "d735a574c16ace85d15ed902347ca488413f2d01b7dae72891775c006b89b8b2",
+      "pass": true
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/source-reference/1225474739-p74.png",
+      "recorded_SHA256": "d9e9c3cb2c616425a732f4db12cbe20fe52b512f9cb613d7401c5f91e021b175",
+      "actual_SHA256": "d9e9c3cb2c616425a732f4db12cbe20fe52b512f9cb613d7401c5f91e021b175",
+      "pass": true
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/source-reference/1225475375-p74-raw.json",
+      "recorded_SHA256": "4a4ad7b9671b511071083163eaba0f4d36509ed7753aa2cfc62426e811c505a0",
+      "actual_SHA256": "4a4ad7b9671b511071083163eaba0f4d36509ed7753aa2cfc62426e811c505a0",
+      "pass": true
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/source-reference/1225475375-p74-sorted.txt",
+      "recorded_SHA256": "1d75245b28bf00e6cf5b7da630bc4c39a5eb1668985b306f64cb6a19769f31c6",
+      "actual_SHA256": "1d75245b28bf00e6cf5b7da630bc4c39a5eb1668985b306f64cb6a19769f31c6",
+      "pass": true
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/source-reference/1225475375-p74.png",
+      "recorded_SHA256": "84b7c761ad786343649ec68c4c9ade64a832b8644f15534ee935b2655c555eab",
+      "actual_SHA256": "84b7c761ad786343649ec68c4c9ade64a832b8644f15534ee935b2655c555eab",
+      "pass": true
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/source-reference/1225475375-p87-raw.json",
+      "recorded_SHA256": "08378794373aa7f5b1196405687cf079a8bab084cc17fad10161580c7f19709d",
+      "actual_SHA256": "08378794373aa7f5b1196405687cf079a8bab084cc17fad10161580c7f19709d",
+      "pass": true
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/source-reference/1225475375-p87-sorted.txt",
+      "recorded_SHA256": "575ad0d297a947be5c1892274c0814c6c6c75745e5acbaf7348c2d0b0d0bf8a7",
+      "actual_SHA256": "575ad0d297a947be5c1892274c0814c6c6c75745e5acbaf7348c2d0b0d0bf8a7",
+      "pass": true
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/source-reference/1225475375-p87.png",
+      "recorded_SHA256": "34f7600bdb590c04d10c3b930719f947a0ba05b45262ba16a688de08db42cd50",
+      "actual_SHA256": "34f7600bdb590c04d10c3b930719f947a0ba05b45262ba16a688de08db42cd50",
+      "pass": true
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/source-reference-p62/original-page-rotation.png",
+      "recorded_SHA256": "859d5f2876002e41f33400335f3b20f4c519e5c9132c425c9d8cf530856821c4",
+      "actual_SHA256": "859d5f2876002e41f33400335f3b20f4c519e5c9132c425c9d8cf530856821c4",
+      "pass": true
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/source-reference-p62/original-table.png",
+      "recorded_SHA256": "a07b7c118a9ac53176d85faecba65891802e5812d0a3964c4a94b0379d37d6ac",
+      "actual_SHA256": "a07b7c118a9ac53176d85faecba65891802e5812d0a3964c4a94b0379d37d6ac",
+      "pass": true
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/source-reference-p62/source-native-characters.json",
+      "recorded_SHA256": "faa8949e8c9c936ea90fdbad49f6deac210ddb903e8e7e7a1bf3809e89573315",
+      "actual_SHA256": "faa8949e8c9c936ea90fdbad49f6deac210ddb903e8e7e7a1bf3809e89573315",
+      "pass": true
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/source-reference-p62/upright.png",
+      "recorded_SHA256": "548b0458904ec6a9d5d779ad5298a263897723bfffe9ac5caf676c26228614b7",
+      "actual_SHA256": "548b0458904ec6a9d5d779ad5298a263897723bfffe9ac5caf676c26228614b7",
+      "pass": true
+    }
+  ],
+  "files": [
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/audit-evaluation-dependencies.py",
+      "bytes": 4454,
+      "SHA256": "96fc49dd6eda13c7bdd43582416d07f636fa8c83724fd185ada1a96d7da2f170"
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/audit-visible-source-spans.py",
+      "bytes": 9076,
+      "SHA256": "8c7e26f156bec535a2fe6b8bed2929cc395b723129312f4987128fdde2bebbd7"
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/build-component-comparison.py",
+      "bytes": 4549,
+      "SHA256": "0c22eaaa95d340c71be550a3a58b2d2bdfc1c0cbaf40d6d723f2bb7fd9e85dd7"
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/build-p62-source-reference.py",
+      "bytes": 5301,
+      "SHA256": "4ffc6859436465b6c77fe2fa77cc51387c911ed0ae352bc7261fd77c8551985c"
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/build-source-reference.py",
+      "bytes": 12900,
+      "SHA256": "03e1dc2867eb6d333d83a2b035794b3af20e25e8c3f80b31c32ac77d172bdb61"
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/build-target-comparison-matrix.py",
+      "bytes": 4333,
+      "SHA256": "766ae642a657ed4c5515cf543d55b5ca7c7f003b5b656b835ea5112629e243b2"
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/candidate-all-content-source-summary.json",
+      "bytes": 17043,
+      "SHA256": "617567e89336ccc3e5b21a765807be77595b093e7d9e0d8e818a27f71a01765e"
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/candidate-all-content-source.json",
+      "bytes": 138193,
+      "SHA256": "10a9af44d32cab3b6e0ed475887897b0bd5632be680003110f3112a678c19c7c"
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/candidate-user134-check-transition.json",
+      "bytes": 2816,
+      "SHA256": "b5a8070ca5dd80f2b4aa1e3277495b212350452b4987413202ed631bec051fbb"
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/deploy-source-content.py",
+      "bytes": 9816,
+      "SHA256": "66133cc903c1aa8b618eeac159db4f7fc5f516d4b8ec6fd06fcc3b0364998fba"
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/evaluate-docling-component.py",
+      "bytes": 9111,
+      "SHA256": "96c0cfeb6edc402461ee53815a0099323bdd5c60b1c914879ac31e3756f51e30"
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/evaluate-mineru-source.py",
+      "bytes": 35094,
+      "SHA256": "e016990f1b8b8cfc0cd31f29bc2c32abe14d000cb80655953a40dd419c95341d"
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/evaluate-native-mineru-source.py",
+      "bytes": 10593,
+      "SHA256": "dcc0e41c57f5c4d9bd81b5e8ae2942ba2f8d5d4b4e9ba03af7cd3b8c18e364e0"
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/evaluator-versions/audit-evaluation-dependencies-96fc49dd6eda13c7bdd43582416d07f636fa8c83724fd185ada1a96d7da2f170.py",
+      "bytes": 4454,
+      "SHA256": "96fc49dd6eda13c7bdd43582416d07f636fa8c83724fd185ada1a96d7da2f170"
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/evaluator-versions/audit-visible-source-spans-8c7e26f156bec535a2fe6b8bed2929cc395b723129312f4987128fdde2bebbd7.py",
+      "bytes": 9076,
+      "SHA256": "8c7e26f156bec535a2fe6b8bed2929cc395b723129312f4987128fdde2bebbd7"
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/evaluator-versions/build-component-comparison-0c22eaaa95d340c71be550a3a58b2d2bdfc1c0cbaf40d6d723f2bb7fd9e85dd7.py",
+      "bytes": 4549,
+      "SHA256": "0c22eaaa95d340c71be550a3a58b2d2bdfc1c0cbaf40d6d723f2bb7fd9e85dd7"
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/evaluator-versions/build-p62-source-reference-4ffc6859436465b6c77fe2fa77cc51387c911ed0ae352bc7261fd77c8551985c.py",
+      "bytes": 5301,
+      "SHA256": "4ffc6859436465b6c77fe2fa77cc51387c911ed0ae352bc7261fd77c8551985c"
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/evaluator-versions/build-source-reference-03e1dc2867eb6d333d83a2b035794b3af20e25e8c3f80b31c32ac77d172bdb61.py",
+      "bytes": 12900,
+      "SHA256": "03e1dc2867eb6d333d83a2b035794b3af20e25e8c3f80b31c32ac77d172bdb61"
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/evaluator-versions/build-target-comparison-matrix-766ae642a657ed4c5515cf543d55b5ca7c7f003b5b656b835ea5112629e243b2.py",
+      "bytes": 4333,
+      "SHA256": "766ae642a657ed4c5515cf543d55b5ca7c7f003b5b656b835ea5112629e243b2"
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/evaluator-versions/deploy-source-content-66133cc903c1aa8b618eeac159db4f7fc5f516d4b8ec6fd06fcc3b0364998fba.py",
+      "bytes": 9816,
+      "SHA256": "66133cc903c1aa8b618eeac159db4f7fc5f516d4b8ec6fd06fcc3b0364998fba"
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/evaluator-versions/evaluate-docling-component-96c0cfeb6edc402461ee53815a0099323bdd5c60b1c914879ac31e3756f51e30.py",
+      "bytes": 9111,
+      "SHA256": "96c0cfeb6edc402461ee53815a0099323bdd5c60b1c914879ac31e3756f51e30"
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/evaluator-versions/evaluate-mineru-source-20e9465e809dbfca76b0ce35c925b49e5c759b6bb100211413f8a5231ce013a8.py",
+      "bytes": 35060,
+      "SHA256": "20e9465e809dbfca76b0ce35c925b49e5c759b6bb100211413f8a5231ce013a8"
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/evaluator-versions/evaluate-mineru-source-25ae40c43f97404aa723b04bb717a04add76db558d4d7b9aa47d492e9dc63d75.py",
+      "bytes": 32415,
+      "SHA256": "25ae40c43f97404aa723b04bb717a04add76db558d4d7b9aa47d492e9dc63d75"
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/evaluator-versions/evaluate-mineru-source-df43f52cbded488c64cbceb25d235f4f920bd463756bb5ce3816ba6514e185b8.py",
+      "bytes": 34781,
+      "SHA256": "df43f52cbded488c64cbceb25d235f4f920bd463756bb5ce3816ba6514e185b8"
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/evaluator-versions/evaluate-mineru-source-e016990f1b8b8cfc0cd31f29bc2c32abe14d000cb80655953a40dd419c95341d.py",
+      "bytes": 35094,
+      "SHA256": "e016990f1b8b8cfc0cd31f29bc2c32abe14d000cb80655953a40dd419c95341d"
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/evaluator-versions/evaluate-native-mineru-source-dcc0e41c57f5c4d9bd81b5e8ae2942ba2f8d5d4b4e9ba03af7cd3b8c18e364e0.py",
+      "bytes": 10593,
+      "SHA256": "dcc0e41c57f5c4d9bd81b5e8ae2942ba2f8d5d4b4e9ba03af7cd3b8c18e364e0"
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/evaluator-versions/freeze-source-comparison-a2f9b2fc6b38899aec8ff4428bbc65cf53f7cf4ca7297e3ad89b5570e595e79c.py",
+      "bytes": 9387,
+      "SHA256": "a2f9b2fc6b38899aec8ff4428bbc65cf53f7cf4ca7297e3ad89b5570e595e79c"
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/evaluator-versions/record-mineru-extra-observations-6bde493acda09aa547918239f4cc63c4fd58d0ec27bcee3bdea9fb8fae0c35b2.py",
+      "bytes": 8289,
+      "SHA256": "6bde493acda09aa547918239f4cc63c4fd58d0ec27bcee3bdea9fb8fae0c35b2"
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/evaluator-versions/run-docling-target14-component-c33342d58273065c7ec4436733ab7156d581bcb45370f0a4cffaa081d3dcc991.py",
+      "bytes": 10394,
+      "SHA256": "c33342d58273065c7ec4436733ab7156d581bcb45370f0a4cffaa081d3dcc991"
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/evaluator-versions/run-http-5157889d15b3e9a7639b22d81fa15f1b680c8ad4bd2dae71c20c11e73f0b1ded.py",
+      "bytes": 2598,
+      "SHA256": "5157889d15b3e9a7639b22d81fa15f1b680c8ad4bd2dae71c20c11e73f0b1ded"
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/evaluator-versions/test-model-output-readers-16027b54049a01afaeca9028302a507b0013dcb557495c5007a0dc4fca762c97.py",
+      "bytes": 5334,
+      "SHA256": "16027b54049a01afaeca9028302a507b0013dcb557495c5007a0dc4fca762c97"
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/evaluator-versions/test-model-output-readers-ac5aa6e3a2e82129863a22bf521f124e1c3665dcf4cffeb6a74278fba32ddeb0.py",
+      "bytes": 8025,
+      "SHA256": "ac5aa6e3a2e82129863a22bf521f124e1c3665dcf4cffeb6a74278fba32ddeb0"
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/evaluator-versions/test-native-output-reader-ace32d94aa6cd00fde148e1a3079f0393e196145046a208cdd164ad893507bba.py",
+      "bytes": 3748,
+      "SHA256": "ace32d94aa6cd00fde148e1a3079f0393e196145046a208cdd164ad893507bba"
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/evaluator-versions/test-source-verifier-e922808282b7cfe673726b134be9b293604be4cf3899ea4fca29add689663a64.py",
+      "bytes": 13163,
+      "SHA256": "e922808282b7cfe673726b134be9b293604be4cf3899ea4fca29add689663a64"
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/evaluator-versions/verify-content-source-f2fd1d7e5dbb1a6b85c7e2621b660f00ab77e0bee1d2e2d073dfdefa5cca1906.py",
+      "bytes": 24000,
+      "SHA256": "f2fd1d7e5dbb1a6b85c7e2621b660f00ab77e0bee1d2e2d073dfdefa5cca1906"
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/evaluator-versions/verify-p62-source-2395cba556c3efbcb7eb39afd1ba09f42ed5c7e61472c49169c118c2beb13d73.py",
+      "bytes": 8282,
+      "SHA256": "2395cba556c3efbcb7eb39afd1ba09f42ed5c7e61472c49169c118c2beb13d73"
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/evaluator-versions/verify-p62-source-b3c79c5531181f635d62589a4d9da269401f926ca673b0e275721f871ff5045b.py",
+      "bytes": 10935,
+      "SHA256": "b3c79c5531181f635d62589a4d9da269401f926ca673b0e275721f871ff5045b"
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/freeze-source-comparison.py",
+      "bytes": 9387,
+      "SHA256": "a2f9b2fc6b38899aec8ff4428bbc65cf53f7cf4ca7297e3ad89b5570e595e79c"
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/model-evaluation/candidate-extra-p62-source-acceptance.json",
+      "bytes": 3585,
+      "SHA256": "6bdc4a73c2e855ad48ebb63e45409b463a21694b46be5f5ef5ea54fc93efe3db"
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/model-evaluation/candidate-extra-p62-source-localized-findings.json",
+      "bytes": 6809,
+      "SHA256": "6262de979802d372baad3b5d8b27b6ee4aacd19b59c4d08d4f0e91bfe140b2c6"
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/model-evaluation/docling-component-source-evaluation.json",
+      "bytes": 65805,
+      "SHA256": "caedf83c4c6edd537e8717af83980001b41d9be3e7ced582cd006cd68a6eccc2"
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/model-evaluation/final-evaluation-dependency-integrity.json",
+      "bytes": 48921,
+      "SHA256": "0cb040bf2096441bbde41aa9fdcb1289c03e89c1a2924b1480b4bc18ca9088b3"
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/model-evaluation/fixed-target-comparison-matrix.json",
+      "bytes": 20603,
+      "SHA256": "9f144078a963531634178e8818dc054c7903b6f46648527552ef445701285ed4"
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/model-evaluation/frozen-five-configuration-source-summary.json",
+      "bytes": 28069,
+      "SHA256": "9806605262ead44f08c260a0264af62bffa6d9db563b4f847e804452c19b37dc"
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/model-evaluation/native-reader-self-tests.json",
+      "bytes": 1301,
+      "SHA256": "ca2551837b90e3dea24b72201a180389c5495be1ab41ceff28bceea93a679fe5"
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/model-evaluation/official-native-advanced-extra-p62-DEFAULT-source-acceptance.json",
+      "bytes": 8291,
+      "SHA256": "d7acf3f081b0e8f5509c25a61fd6877a5551aa02daee92acb5c5a5f3170e2788"
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/model-evaluation/official-native-advanced-extra-p62-FULL-source-acceptance.json",
+      "bytes": 8303,
+      "SHA256": "5b73d335aafed188e05a00c77501a6dd77fd05ebf04db073ef5a8eff152c0713"
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/model-evaluation/official-native-advanced-extra-p62-raw_model_JSON-source-acceptance.json",
+      "bytes": 8527,
+      "SHA256": "16c13f574f82cb91b43c9363fa06659effbf1832609646099d50fa6577887a4a"
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/model-evaluation/official-native-advanced-source-evaluation.json",
+      "bytes": 512961,
+      "SHA256": "415a5d1b8a866b6cf63afc9a9814ad701df0cb5af8f91927b2714cdd888a630a"
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/model-evaluation/official-native-standard-extra-p62-DEFAULT-source-acceptance.json",
+      "bytes": 2811,
+      "SHA256": "8a700413a060a11093ab5973610fd4d09585e4943325f3b4592fe108ed17efaa"
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/model-evaluation/official-native-standard-extra-p62-FULL-source-acceptance.json",
+      "bytes": 2813,
+      "SHA256": "1ef771f73f3344c0f8d5957d22cd8e0bb197e60df39e61f2d7df56001d302f33"
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/model-evaluation/official-native-standard-extra-p62-raw_model_JSON-source-acceptance.json",
+      "bytes": 2841,
+      "SHA256": "64f0353112670aba956679d9b5a822921282d31d30d2bed9dfebd573e3138348"
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/model-evaluation/official-native-standard-source-evaluation.json",
+      "bytes": 270822,
+      "SHA256": "2c4ed5eb4434d04a5014064f894ed4b4189ad05b382fda0810cdf418fe18e88e"
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/model-evaluation/reader-self-tests-http-final.json",
+      "bytes": 2791,
+      "SHA256": "a6a1cab247b918fb4bcee8e9bee36a378cd4c1571dd25b1fc184170e6b06eeab"
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/model-evaluation/reader-self-tests.json",
+      "bytes": 2177,
+      "SHA256": "ab0c379ba7afd2cb9bca1a8d401a76fd487e48ac81e164e9ebcbc765938e4c62"
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/model-evaluation/transformers-additional-source-observations.json",
+      "bytes": 2382,
+      "SHA256": "d7681d278cc3fb342d8d1bd0a8471bf6989cbfe733d7fc17ea16a1b5526f4260"
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/model-evaluation/transformers-source-evaluation.json",
+      "bytes": 188907,
+      "SHA256": "9b3a54a8296bc737cdd4c4df03425332d8ccf087df71e52cc46a560b5b8a5a13"
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/model-evaluation/transformers-visible-coverage.json",
+      "bytes": 44186,
+      "SHA256": "8062d091fb1a83986a4075468f61a131376706c6edfac4e55c2b05c59b93a4b7"
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/model-evaluation/vllm-additional-source-observations.json",
+      "bytes": 2487,
+      "SHA256": "ca8cf2d2e9fedefd1c2e149b9e8782567b5e2f9f7b0d754b64f607f0672d5f42"
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/model-evaluation/vllm-extra-p62-source-acceptance.json",
+      "bytes": 12256,
+      "SHA256": "794faa028afd21252df367306cc238625601d6e0dd31c2ae72a82ecd765e97ad"
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/model-evaluation/vllm-incremental-source-evaluation-01.json",
+      "bytes": 103009,
+      "SHA256": "7058f5e84f5db2e93c60db80f3261b606d6c1b8fa8aeb2346dcb4a170035ab08"
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/model-evaluation/vllm-source-evaluation.json",
+      "bytes": 348229,
+      "SHA256": "55e787cf6b90ec519f316b001c683ed42d352820673e90d6beb35c16a59942df"
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/record-mineru-extra-observations.py",
+      "bytes": 8289,
+      "SHA256": "6bde493acda09aa547918239f4cc63c4fd58d0ec27bcee3bdea9fb8fae0c35b2"
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/run-docling-target14-component.py",
+      "bytes": 10394,
+      "SHA256": "c33342d58273065c7ec4436733ab7156d581bcb45370f0a4cffaa081d3dcc991"
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/run-http.py",
+      "bytes": 2598,
+      "SHA256": "5157889d15b3e9a7639b22d81fa15f1b680c8ad4bd2dae71c20c11e73f0b1ded"
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/source-reference-p62-review.json",
+      "bytes": 564,
+      "SHA256": "d8f97e6d327f15b21ebbe3a40515aeffdaf1ddbc9921e68ca081c27f0efba8d5"
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/source-reference-p62.json",
+      "bytes": 27743,
+      "SHA256": "a16aca8fa1fea13982c2b832581b5c2ac84fa6622aa32e5df5658f3cadfea493"
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/source-reference-review.json",
+      "bytes": 7998,
+      "SHA256": "f7673ed6cfcbf01a2b590a3c84b843b24b346aae6e031edf046e16fe97994b6c"
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/source-reference.json",
+      "bytes": 1005799,
+      "SHA256": "9c7863cebe11c786963b745bc57e9351c8d3940d250f93ad898ede4fde6deb1b"
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/test-model-output-readers.py",
+      "bytes": 8025,
+      "SHA256": "ac5aa6e3a2e82129863a22bf521f124e1c3665dcf4cffeb6a74278fba32ddeb0"
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/test-native-output-reader.py",
+      "bytes": 3748,
+      "SHA256": "ace32d94aa6cd00fde148e1a3079f0393e196145046a208cdd164ad893507bba"
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/test-source-verifier.py",
+      "bytes": 13163,
+      "SHA256": "e922808282b7cfe673726b134be9b293604be4cf3899ea4fca29add689663a64"
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/verify-content-source.py",
+      "bytes": 24000,
+      "SHA256": "f2fd1d7e5dbb1a6b85c7e2621b660f00ab77e0bee1d2e2d073dfdefa5cca1906"
+    },
+    {
+      "path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/verify-p62-source.py",
+      "bytes": 10935,
+      "SHA256": "b3c79c5531181f635d62589a4d9da269401f926ca673b0e275721f871ff5045b"
+    }
+  ]
+}

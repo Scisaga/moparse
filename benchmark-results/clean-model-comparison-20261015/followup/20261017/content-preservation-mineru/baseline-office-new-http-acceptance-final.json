@@ -1,0 +1,111 @@
+{
+  "schema": "mosaicparse-original-content-acceptance/1",
+  "created_UTC": "2026-10-17T13:37:00.621436+00:00",
+  "reference": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/source-reference.json",
+  "reference_SHA256": "9c7863cebe11c786963b745bc57e9351c8d3940d250f93ad898ede4fde6deb1b",
+  "verifier_SHA256": "f2fd1d7e5dbb1a6b85c7e2621b660f00ab77e0bee1d2e2d073dfdefa5cca1906",
+  "source": "Independent matching source PDF, character geometry and reviewed visible grids",
+  "scope": "Targeted content/structure only; no whole-document semantic accuracy claim",
+  "cases": [
+    {
+      "source": "1206337604",
+      "source_SHA256": "ccff40771d75e9412b65f364a1c72c1733c37b4d8f232f49cf639621f0ba165f",
+      "markdown": "benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/baseline-office-http/cases/1206337604/result.md",
+      "markdown_SHA256": "9085827fceaa30ba7ec1deacfaf2e83c6d66843f54444ca795b7a490715ac9b4",
+      "markdown_bytes": 3440,
+      "checks": [
+        {
+          "check": "p1_source_page_present",
+          "pass": true,
+          "provenance": "public_page_marker"
+        },
+        {
+          "check": "p2_source_page_present",
+          "pass": true,
+          "provenance": "public_page_marker"
+        },
+        {
+          "check": "p1_all_independent_native_spans_coverage",
+          "pass": false,
+          "span_count": 60,
+          "missing_source_spans": [
+            {
+              "text": "证券代码",
+              "bbox": [
+                90.0999984741211,
+                70.68077087402344,
+                138.10000610351562,
+                88.05677032470703
+              ],
+              "size": 12.0
+            },
+            {
+              "text": ":300635",
+              "bbox": [
+                138.10000610351562,
+                71.77276611328125,
+                181.7320556640625,
+                88.11676788330078
+              ],
+              "size": 12.0
+            },
+            {
+              "text": "                                    证券简称",
+              "bbox": [
+                181.75,
+                70.68077087402344,
+                445.71392822265625,
+                88.05677032470703
+              ],
+              "size": 12.0
+            },
+            {
+              "text": "达安股份",
+              "bbox": [
+                449.1499938964844,
+                70.68077087402344,
+                497.1499938964844,
+                88.05677032470703
+              ],
+              "size": 12.0
+            }
+          ],
+          "scope": "Character coverage only; table, order and provenance are separate checks."
+        },
+        {
+          "check": "p2_all_independent_native_spans_coverage",
+          "pass": true,
+          "span_count": 57,
+          "missing_source_spans": [],
+          "scope": "Character coverage only; table, order and provenance are separate checks."
+        },
+        {
+          "check": "p1_complete_security_identity_before_exact_title",
+          "pass": false,
+          "expected_identity": "证券代码:300635证券简称:达安股份",
+          "expected_title": "2019年6月4日投资者关系活动记录表"
+        },
+        {
+          "check": "p2_actual_record_date_retained",
+          "pass": true,
+          "expected": "2019年6月4日星期二"
+        }
+      ],
+      "passed_checks": 4,
+      "total_checks": 6,
+      "pass": false,
+      "inspected_output_pages": [
+        1,
+        2
+      ],
+      "selected_source_pages": [
+        1,
+        2
+      ],
+      "parsed_public_tables": 0
+    }
+  ],
+  "pass": false,
+  "passed_checks": 4,
+  "total_checks": 6
+}

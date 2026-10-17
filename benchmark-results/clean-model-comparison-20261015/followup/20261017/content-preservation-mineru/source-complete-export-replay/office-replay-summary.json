@@ -1,0 +1,25 @@
+{
+  "input_SHA256": "ccff40771d75e9412b65f364a1c72c1733c37b4d8f232f49cf639621f0ba165f",
+  "duration_seconds": 4.889706042944454,
+  "source_items": [
+    {
+      "ref": "#/texts/0",
+      "label": "page_header",
+      "layer": "ContentLayer.FURNITURE",
+      "text": "证券代码:300635",
+      "pages": [
+        1
+      ]
+    },
+    {
+      "ref": "#/texts/1",
+      "label": "page_header",
+      "layer": "ContentLayer.FURNITURE",
+      "text": "证券简称:达安股份",
+      "pages": [
+        1
+      ]
+    }
+  ],
+  "source_code_SHA256": "7f5311360f5e21d0212aea874253a72a67c9618c03b9604e0a416f63a3b0536a"
+}

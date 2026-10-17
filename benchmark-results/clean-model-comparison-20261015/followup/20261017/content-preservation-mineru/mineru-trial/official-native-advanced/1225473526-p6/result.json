@@ -1,0 +1,289 @@
+{
+  "metadata": {
+    "file_suffix": "pdf",
+    "producer": {
+      "name": "mineru",
+      "version": "4.0.12"
+    },
+    "document": {
+      "authors": [
+        "崔攀攀"
+      ],
+      "languages": [
+        "zh-CN"
+      ],
+      "created_at": "2026-08-14T13:20:45+08:00",
+      "modified_at": "2026-08-14T13:20:45+08:00",
+      "creator_application": "Microsoft® Word 2019",
+      "producer_application": "Microsoft® Word 2019",
+      "page_count": 27,
+      "page_count_kind": "physical"
+    }
+  },
+  "extensions": {
+    "mineru": {
+      "tier": "advanced",
+      "parse_mode": "txt"
+    },
+    "docvortex_layout": {
+      "version": 1,
+      "pages": [
+        {
+          "page_idx": 5,
+          "width_pt": 595.3200073242188,
+          "height_pt": 841.9199829101562
+        }
+      ]
+    }
+  },
+  "pages": [
+    {
+      "page_idx": 5,
+      "blocks": [
+        {
+          "type": "header",
+          "index": 0,
+          "bbox": [
+            0.149,
+            0.051,
+            0.434,
+            0.066
+          ],
+          "content": [
+            {
+              "type": "text",
+              "content": "上海百润投资控股集团股份有限公司"
+            }
+          ]
+        },
+        {
+          "type": "header",
+          "index": 1,
+          "bbox": [
+            0.758,
+            0.051,
+            0.85,
+            0.066
+          ],
+          "content": [
+            {
+              "type": "text",
+              "content": "发行保荐书"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "index": 2,
+          "bbox": [
+            0.146,
+            0.091,
+            0.85,
+            0.136
+          ],
+          "content": [
+            {
+              "type": "text",
+              "content": "业控股的成员企业，企业管理，投资与资产管理。（依法须经批准的项目，经相关部门批准后方可开展经营活动）"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "index": 3,
+          "bbox": [
+            0.146,
+            0.15,
+            0.855,
+            0.28
+          ],
+          "content": [
+            {
+              "type": "text",
+              "content": "发行人全资子公司巴克斯酒业经营范围:许可项目:食品生产；货物进出口，技术进出口；食品销售。（依法须经批准的项目，经相关部门批准后方可开展经营活动，具体经营项目以相关部门批准文件或许可证件为准）一般项目:技术服务、技术开发、技术咨询、技术交流、技术转让、技术推广。（除依法须经批准的项目外，凭营业执照依法自主开展经营活动）"
+            }
+          ]
+        },
+        {
+          "type": "paragraph_title",
+          "index": 4,
+          "bbox": [
+            0.197,
+            0.298,
+            0.416,
+            0.316
+          ],
+          "content": [
+            {
+              "type": "text",
+              "content": "（二）本次证券发行类型"
+            }
+          ],
+          "level": 2
+        },
+        {
+          "type": "text",
+          "index": 5,
+          "bbox": [
+            0.186,
+            0.331,
+            0.848,
+            0.349
+          ],
+          "content": [
+            {
+              "type": "text",
+              "content": "本次发行证券的种类为境内上市人民币普通股（A 股），上市地点为深交所。"
+            }
+          ]
+        },
+        {
+          "type": "paragraph_title",
+          "index": 6,
+          "bbox": [
+            0.197,
+            0.363,
+            0.396,
+            0.381
+          ],
+          "content": [
+            {
+              "type": "text",
+              "content": "（三）发行人股权结构"
+            }
+          ],
+          "level": 2
+        },
+        {
+          "type": "text",
+          "index": 7,
+          "bbox": [
+            0.188,
+            0.401,
+            0.637,
+            0.418
+          ],
+          "content": [
+            {
+              "type": "text",
+              "content": "1、截至 2026 年 6 月 30 日，公司的股本结构如下:"
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "index": 9,
+          "bbox": [
+            0.139,
+            0.445,
+            0.862,
+            0.618
+          ],
+          "content": [
+            {
+              "type": "table_caption",
+              "index": 8,
+              "bbox": [
+                0.776,
+                0.429,
+                0.85,
+                0.444
+              ],
+              "content": [
+                {
+                  "type": "text",
+                  "content": "单位:股"
+                }
+              ]
+            },
+            {
+              "type": "table_body",
+              "index": 9,
+              "bbox": [
+                0.139,
+                0.445,
+                0.862,
+                0.618
+              ],
+              "content": "<table><tr><td>股份类别</td><td>持股数量</td><td>持股比例</td></tr><tr><td>一、有限售条件股份</td><td>279,515,170</td><td>26.83%</td></tr><tr><td>其中:境内法人持股</td><td>-</td><td>-</td></tr><tr><td>境内自然人持股</td><td>279,515,170</td><td>26.83%</td></tr><tr><td>二、无限售条件股份</td><td>762,108,531</td><td>73.17%</td></tr><tr><td>其中:人民币普通股</td><td>762,108,531</td><td>73.17%</td></tr><tr><td>三、股份总数</td><td>1,041,623,701</td><td>100.00%</td></tr></table>"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "index": 10,
+          "bbox": [
+            0.186,
+            0.627,
+            0.797,
+            0.644
+          ],
+          "content": [
+            {
+              "type": "text",
+              "content": "2、截至 2026 年 6 月 30 日，发行人前十名股东持股情况如下表所示:"
+            }
+          ]
+        },
+        {
+          "type": "table",
+          "index": 12,
+          "bbox": [
+            0.139,
+            0.68,
+            0.862,
+            0.897
+          ],
+          "content": [
+            {
+              "type": "table_caption",
+              "index": 11,
+              "bbox": [
+                0.759,
+                0.665,
+                0.833,
+                0.679
+              ],
+              "content": [
+                {
+                  "type": "text",
+                  "content": "单位:股"
+                }
+              ]
+            },
+            {
+              "type": "table_body",
+              "index": 12,
+              "bbox": [
+                0.139,
+                0.68,
+                0.862,
+                0.897
+              ],
+              "content": "<table><tr><td>序号</td><td>股东名称</td><td>持股数量</td><td>持股比例</td><td>有限售条件的股份数量</td></tr><tr><td>1</td><td>刘晓东</td><td>362,588,502</td><td>34.81%</td><td>271,941,376</td></tr><tr><td>2</td><td>刘建国</td><td>63,000,000</td><td>6.05%</td><td>-</td></tr><tr><td>3</td><td>柳海彬</td><td>62,161,798</td><td>5.97%</td><td>-</td></tr><tr><td>4</td><td>刘晓俊</td><td>38,679,600</td><td>3.71%</td><td>-</td></tr><tr><td>5</td><td>基本养老保险基金一六零三二组合</td><td>18,669,504</td><td>1.79%</td><td>-</td></tr><tr><td>6</td><td>中国建设银行股份有限公司-鹏华中证酒交易型开放式指数证券投资基金</td><td>17,329,260</td><td>1.66%</td><td>-</td></tr></table>"
+            }
+          ]
+        },
+        {
+          "type": "page_number",
+          "index": 13,
+          "bbox": [
+            0.479,
+            0.928,
+            0.521,
+            0.94
+          ],
+          "content": [
+            {
+              "type": "text",
+              "content": "3-1-5"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "is_full_document": false,
+  "schema": "docvortex.middle",
+  "schema_version": "2.0"
+}

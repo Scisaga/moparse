@@ -1,0 +1,152 @@
+{
+  "_id": "6a0d945b0e625429f21ff9ee",
+  "id": "opendatalab/MinerU2.5-Pro-2605-1.2B",
+  "private": false,
+  "pipeline_tag": "image-text-to-text",
+  "library_name": "transformers",
+  "tags": [
+    "transformers",
+    "safetensors",
+    "qwen2_vl",
+    "image-text-to-text",
+    "conversational",
+    "zh",
+    "en",
+    "arxiv:2604.04771",
+    "license:apache-2.0",
+    "eval-results",
+    "text-generation-inference",
+    "endpoints_compatible",
+    "region:us"
+  ],
+  "downloads": 257408,
+  "likes": 101,
+  "modelId": "opendatalab/MinerU2.5-Pro-2605-1.2B",
+  "author": "opendatalab",
+  "sha": "08aaea840498d49ce16247b6263196cf02814885",
+  "lastModified": "2026-10-08T14:26:41.000Z",
+  "gated": false,
+  "disabled": false,
+  "model-index": null,
+  "config": {
+    "architectures": [
+      "Qwen2VLForConditionalGeneration"
+    ],
+    "model_type": "qwen2_vl",
+    "tokenizer_config": {
+      "bos_token": null,
+      "eos_token": "<|im_end|>",
+      "pad_token": "<|endoftext|>",
+      "unk_token": null
+    },
+    "chat_template_jinja": "{% set image_count = namespace(value=0) %}{% set video_count = namespace(value=0) %}{% for message in messages %}{% if loop.first and message['role'] != 'system' %}<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n{% endif %}<|im_start|>{{ message['role'] }}\n{% if message['content'] is string %}{{ message['content'] }}<|im_end|>\n{% else %}{% for content in message['content'] %}{% if content['type'] == 'image' or 'image' in content or 'image_url' in content %}{% set image_count.value = image_count.value + 1 %}{% if add_vision_id %}Picture {{ image_count.value }}: {% endif %}<|vision_start|><|image_pad|><|vision_end|>{% elif content['type'] == 'video' or 'video' in content %}{% set video_count.value = video_count.value + 1 %}{% if add_vision_id %}Video {{ video_count.value }}: {% endif %}<|vision_start|><|video_pad|><|vision_end|>{% elif 'text' in content %}{{ content['text'] }}{% endif %}{% endfor %}<|im_end|>\n{% endif %}{% endfor %}{% if add_generation_prompt %}<|im_start|>assistant\n{% endif %}"
+  },
+  "cardData": {
+    "license": "apache-2.0",
+    "language": [
+      "zh",
+      "en"
+    ],
+    "pipeline_tag": "image-text-to-text",
+    "library_name": "transformers"
+  },
+  "transformersInfo": {
+    "auto_model": "AutoModelForMultimodalLM",
+    "pipeline_tag": "image-text-to-text",
+    "processor": "AutoProcessor"
+  },
+  "siblings": [
+    {
+      "rfilename": ".gitattributes",
+      "blobId": "52373fe24473b1aa44333d318f578ae6bf04b49b",
+      "size": 1570
+    },
+    {
+      "rfilename": "README.md",
+      "blobId": "b4600696ae5bcd5e37d51fbb70a631c739c87c87",
+      "size": 15571
+    },
+    {
+      "rfilename": "added_tokens.json",
+      "blobId": "d9604a3ba04db43dc4aa59d1429d2bc7744a7ffb",
+      "size": 800
+    },
+    {
+      "rfilename": "chat_template.jinja",
+      "blobId": "6c226632394ae7474b0d4b13e15793eac2e21ee9",
+      "size": 1017
+    },
+    {
+      "rfilename": "config.json",
+      "blobId": "ee441affbde03aaab1093e09e036397819e82317",
+      "size": 2871
+    },
+    {
+      "rfilename": "generation_config.json",
+      "blobId": "0fd0c936289431166eb3794fe46578222c55f120",
+      "size": 215
+    },
+    {
+      "rfilename": "merges.txt",
+      "blobId": "31349551d90c7606f325fe0f11bbb8bd5fa0d7c7",
+      "size": 1671853
+    },
+    {
+      "rfilename": "model.safetensors",
+      "blobId": "f9af43dc39a152a7c6ae4b5e426fa85cc7796abf",
+      "size": 2312126640,
+      "lfs": {
+        "sha256": "abf8681ca63b8dec7b67de257af47b821f179442f72998d0696ae2ed9232a5f0",
+        "size": 2312126640,
+        "pointerSize": 135
+      }
+    },
+    {
+      "rfilename": "preprocessor_config.json",
+      "blobId": "3973ad8ffb828cdd565625b5c0edd8b53d3779bd",
+      "size": 316
+    },
+    {
+      "rfilename": "special_tokens_map.json",
+      "blobId": "3446fd17813474e7b8350844f7bf422b51b28f40",
+      "size": 919
+    },
+    {
+      "rfilename": "tokenizer.json",
+      "blobId": "5baa74d334609e8278004f9073b04a971e4dea72",
+      "size": 11423550,
+      "lfs": {
+        "sha256": "dceac5fc54a795ee7570d17902b47bd05412dc2afa62bdf325c3f97fcb5b87fe",
+        "size": 11423550,
+        "pointerSize": 133
+      }
+    },
+    {
+      "rfilename": "tokenizer_config.json",
+      "blobId": "0bedcd9f2b28e6e57d783dd088c69289753e17f5",
+      "size": 6596
+    },
+    {
+      "rfilename": "vocab.json",
+      "blobId": "4783fe10ac3adce15ac8f358ef5462739852c569",
+      "size": 2776833
+    }
+  ],
+  "spaces": [
+    "multimodalart/MinerU-zerogpu",
+    "lcdkhoa/bio-rag-be",
+    "hashirlodhi/InvoiceDataExtraction",
+    "bgst/MinerU",
+    "ColdBlood84835/mineru-document-extractor",
+    "Viannax74/Tawyn-MinerU-zerogpu",
+    "thangvckeygen/OCR-Demo"
+  ],
+  "createdAt": "2026-05-20T11:00:43.000Z",
+  "safetensors": {
+    "parameters": {
+      "BF16": 1156026624
+    },
+    "total": 1156026624
+  },
+  "usedStorage": 4647100380
+}

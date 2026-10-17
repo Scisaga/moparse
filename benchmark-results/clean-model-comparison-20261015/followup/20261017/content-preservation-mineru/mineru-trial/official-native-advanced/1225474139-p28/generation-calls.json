@@ -1,0 +1,18 @@
+[
+  {
+    "index": 0,
+    "HTTP_status": 200,
+    "model_HTTP_seconds": 1.8966653080424294,
+    "usage": {
+      "prompt_tokens": 1394,
+      "total_tokens": 1483,
+      "completion_tokens": 89,
+      "prompt_tokens_details": null
+    },
+    "finish_reasons": [
+      "stop"
+    ],
+    "request_SHA256": "a5b22eca1bd25c5180800090f6d68dc5ab085b61ba8df72b28375228100122ba",
+    "response_SHA256": "4577e5181228a89a4e5bc54eb700224122eaf32eaf80470a2f3bbf636712176f"
+  }
+]

@@ -1,0 +1,39 @@
+{
+  "UTC": "2026-10-17T13:45:37.174594+00:00",
+  "checks": [
+    {
+      "command": [
+        ".venv/bin/ruff",
+        "check",
+        "app",
+        "tests",
+        "scripts",
+        "docker"
+      ],
+      "returncode": 0,
+      "stdout": "All checks passed!\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        ".venv/bin/mypy",
+        "app"
+      ],
+      "returncode": 0,
+      "stdout": "Success: no issues found in 53 source files\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "uv",
+        "lock",
+        "--check"
+      ],
+      "returncode": 0,
+      "stdout": "",
+      "stderr": "Resolved 148 packages in 2ms\n"
+    }
+  ],
+  "app_table_service_SHA256": "1e350e7a20b0da8a299f0add1dbc5467d2973750e431dff507534e8e3bd733df",
+  "all_pass": true
+}

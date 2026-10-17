@@ -1,0 +1,493 @@
+[
+  {
+    "stage": "official_input_preparation",
+    "file_suffix": "pdf",
+    "prepared_size_bytes": 306507,
+    "original_function_seconds": 0.20625230798032135,
+    "prepared_SHA256": "744143d5a7f651e160deae9cfd18f763ce61881ca37ff8a868eb91acab53c981",
+    "retained_original_page_indices_zero_based": [
+      73
+    ],
+    "broken_original_page_indices_zero_based": [],
+    "derived_input_filename": "prepared-by-official-page-selection.pdf",
+    "transformation": "Official default page_range handling; runner did not crop or rewrite the source PDF."
+  },
+  {
+    "stage": "actual_VLM_options",
+    "image_analysis": false,
+    "not_extract_list": [
+      "caption",
+      "code_caption",
+      "doc_title",
+      "footer",
+      "footnote",
+      "header",
+      "image_caption",
+      "image_footnote",
+      "page_footnote",
+      "page_number",
+      "paragraph_title",
+      "phonetic",
+      "ref_text",
+      "table_caption",
+      "table_footnote",
+      "text",
+      "title"
+    ],
+    "image_sizes": [
+      [
+        1654,
+        2339
+      ]
+    ],
+    "model_inputs": []
+  },
+  {
+    "stage": "actual_VLM_results_before_native_body_fill",
+    "effort": "xhigh",
+    "tables": [
+      {
+        "window_page_index": 0,
+        "bbox": [
+          0.092,
+          0.661,
+          0.885,
+          0.735
+        ],
+        "content": "<table><tr><td>项目</td><td>预计使用寿命</td><td>摊销方法</td><td>残值率</td><td>预计使用寿命的确定依据</td></tr><tr><td>土地使用权</td><td>50 年</td><td>直线法</td><td></td><td>土地使用权证规定年限</td></tr><tr><td>专利权</td><td>10 年-20 年</td><td>直线法</td><td></td><td>专利权规定年限</td></tr><tr><td>软件</td><td>3 年-10 年</td><td>直线法</td><td></td><td>合同规定年限</td></tr></table>"
+      }
+    ]
+  },
+  {
+    "stage": "native_PDF_text_fill",
+    "returned_spans": 38,
+    "nonempty_text_spans": 38,
+    "queued_for_post_OCR": 0,
+    "spans": [
+      {
+        "type": "text",
+        "bbox": [
+          335.52000000000004,
+          43.92,
+          538.5600000000001,
+          52.56
+        ],
+        "text": "广东银禧科技股份有限公司 2026 年半年度报告全文",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          79.2,
+          75.60000000000001,
+          528.48,
+          84.24000000000001
+        ],
+        "text": "（1）资产支出已经发生，资产支出包括为购建或者生产符合资本化条件的资产而以支付现金、转移非现金资产或者",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          56.52,
+          91.44,
+          176.76000000000002,
+          99.72
+        ],
+        "text": "承担带息债务形式发生的支出；",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          78.84,
+          106.56,
+          172.08,
+          114.84
+        ],
+        "text": "（2）借款费用已经发生；",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          78.48,
+          122.04,
+          405.72,
+          129.96
+        ],
+        "text": "（3）为使资产达到预定可使用或者可销售状态所必要的购建或者生产活动已经开始。",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          74.88000000000001,
+          138.24,
+          455.40000000000003,
+          146.52
+        ],
+        "text": "当购建或者生产符合资本化条件的资产达到预定可使用或者可销售状态时，借款费用停止资本化。",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          73.8,
+          153.36,
+          150.84,
+          162.0
+        ],
+        "text": "3、暂停资本化期间",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          74.88000000000001,
+          169.20000000000002,
+          528.48,
+          176.76000000000002
+        ],
+        "text": "符合资本化条件的资产在购建或生产过程中发生的非正常中断、且中断时间连续超过 3 个月的，则借款费用暂停资",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          56.52,
+          185.04000000000002,
+          524.16,
+          192.6
+        ],
+        "text": "本化；该项中断如是所购建或生产的符合资本化条件的资产达到预定可使用状态或者可销售状态必要的程序，则借款费",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          56.160000000000004,
+          200.52,
+          523.8000000000001,
+          208.44
+        ],
+        "text": "用继续资本化。在中断期间发生的借款费用确认为当期损益，直至资产的购建或者生产活动重新开始后借款费用继续资",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          55.080000000000005,
+          214.92000000000002,
+          80.28,
+          225.72
+        ],
+        "text": "本化。",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          74.16,
+          231.48000000000002,
+          258.84000000000003,
+          239.76000000000002
+        ],
+        "text": "4、借款费用资本化率、资本化金额的计算方法",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          75.24000000000001,
+          248.04000000000002,
+          523.44,
+          254.88
+        ],
+        "text": "对于为购建或者生产符合资本化条件的资产而借入的专门借款，以专门借款当期实际发生的借款费用，减去尚未动",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          56.52,
+          262.8,
+          509.76,
+          271.08
+        ],
+        "text": "用的借款资金存入银行取得的利息收入或进行暂时性投资取得的投资收益后的金额，来确定借款费用的资本化金额。",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          74.88000000000001,
+          279.36,
+          523.8000000000001,
+          286.2
+        ],
+        "text": "对于为购建或者生产符合资本化条件的资产而占用的一般借款，根据累计资产支出超过专门借款部分的资产支出加",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          56.88,
+          294.12,
+          522.72,
+          300.96000000000004
+        ],
+        "text": "权平均数乘以所占用一般借款的资本化率，计算确定一般借款应予资本化的借款费用金额。资本化率根据一般借款加权",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          57.6,
+          310.32,
+          149.76000000000002,
+          317.16
+        ],
+        "text": "平均实际利率计算确定。",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          75.60000000000001,
+          325.44,
+          522.72,
+          332.28000000000003
+        ],
+        "text": "在资本化期间内，外币专门借款本金及利息的汇兑差额，予以资本化，计入符合资本化条件的资产的成本。除外币",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          57.24,
+          340.56,
+          357.48,
+          349.2
+        ],
+        "text": "专门借款之外的其他外币借款本金及其利息所产生的汇兑差额计入当期损益。",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          55.080000000000005,
+          369.0,
+          120.96000000000001,
+          380.88
+        ],
+        "text": "18、无形资产",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          61.92,
+          399.6,
+          351.0,
+          408.6
+        ],
+        "text": "（1） 使用寿命及其确定依据、估计情况、摊销方法或复核程序",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          73.8,
+          429.12,
+          169.20000000000002,
+          437.76
+        ],
+        "text": "1、无形资产的计价方法",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          78.12,
+          444.96000000000004,
+          262.08,
+          453.24
+        ],
+        "text": "（1）公司取得无形资产时按成本进行初始计量；",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          74.52,
+          460.8,
+          500.76,
+          469.08000000000004
+        ],
+        "text": "外购无形资产的成本，包括购买价款、相关税费以及直接归属于使该项资产达到预定用途所发生的其他支出。",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          78.12,
+          475.2,
+          133.20000000000002,
+          485.28000000000003
+        ],
+        "text": "（2）后续计量",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          74.52,
+          492.48,
+          230.76000000000002,
+          499.68
+        ],
+        "text": "在取得无形资产时分析判断其使用寿命。",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          74.88000000000001,
+          507.6,
+          522.72,
+          514.8000000000001
+        ],
+        "text": "对于使用寿命有限的无形资产，在为企业带来经济利益的期限内摊销；无法预见无形资产为企业带来经济利益期限",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          56.88,
+          523.08,
+          248.76000000000002,
+          531.36
+        ],
+        "text": "的，视为使用寿命不确定的无形资产，不予摊销。",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          73.8,
+          538.5600000000001,
+          267.48,
+          546.84
+        ],
+        "text": "2、使用寿命有限的无形资产的使用寿命估计情况",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          73.44,
+          628.2,
+          375.84000000000003,
+          636.84
+        ],
+        "text": "3、使用寿命不确定的无形资产的判断依据以及对其使用寿命进行复核的程序",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          74.88000000000001,
+          644.0400000000001,
+          275.40000000000003,
+          652.6800000000001
+        ],
+        "text": "使用寿命不确定的无形资产，每期末进行减值测试。",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          61.92,
+          673.5600000000001,
+          277.56,
+          683.64
+        ],
+        "text": "（2） 研发支出的归集范围及相关会计处理方法",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          73.8,
+          703.8000000000001,
+          168.48000000000002,
+          712.44
+        ],
+        "text": "1、研发支出的归集范围",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          75.60000000000001,
+          719.64,
+          523.8000000000001,
+          728.28
+        ],
+        "text": "公司将进行研究与开发过程中发生的支出，包括从事研发活动的人员的相关职工薪酬、耗用材料、相关折旧摊销费",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          56.52,
+          735.48,
+          176.76000000000002,
+          743.76
+        ],
+        "text": "用等相关支出归集为研发支出。",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          73.44,
+          750.6,
+          231.48000000000002,
+          758.88
+        ],
+        "text": "2、划分研究阶段和开发阶段的具体标准",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          74.52,
+          766.08,
+          330.12,
+          775.08
+        ],
+        "text": "公司内部研究开发项目的支出分为研究阶段支出和开发阶段支出。",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          527.76,
+          780.84,
+          540.36,
+          792.0
+        ],
+        "text": "74",
+        "queued_for_post_OCR": false
+      }
+    ]
+  },
+  {
+    "stage": "actual_post_OCR",
+    "candidate_spans": 0,
+    "content_changed": 0,
+    "spans": []
+  }
+]

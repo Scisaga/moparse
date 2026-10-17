@@ -1,0 +1,11 @@
+{"source": "1210860446", "pages": 6, "missing_before": 13, "missing_after": 0, "new_groups": 0, "removed_groups": []}
+{"source": "1211290753", "pages": 3, "missing_before": 3, "missing_after": 0, "new_groups": 0, "removed_groups": []}
+{"source": "1219858186", "pages": 15, "missing_before": 17, "missing_after": 0, "new_groups": 0, "removed_groups": []}
+{"source": "1225473526", "pages": 25, "missing_before": 72, "missing_after": 0, "new_groups": 1, "removed_groups": []}
+{"source": "1225474139", "pages": 36, "missing_before": 70, "missing_after": 0, "new_groups": 0, "removed_groups": []}
+{"source": "1225474693", "pages": 4, "missing_before": 4, "missing_after": 0, "new_groups": 0, "removed_groups": []}
+{"source": "1225474739", "pages": 134, "missing_before": 271, "missing_after": 0, "new_groups": 1, "removed_groups": []}
+{"source": "1225475333", "pages": 0, "missing_before": 0, "missing_after": 0, "new_groups": 0, "removed_groups": []}
+{"source": "1225475375", "pages": 103, "missing_before": 330, "missing_after": 227, "new_groups": 3, "removed_groups": []}
+{"source": "1225475642", "pages": 107, "missing_before": 426, "missing_after": 0, "new_groups": 4, "removed_groups": [["p115_t3", "p116_t1"]]}
+{"native_pages": 433, "native_tables": 632, "native_anchors": 20569, "native_span_cells": 659, "wall_seconds": 129.16750723996665, "exceptions": [{"source": "1225475375", "kind": "missing_visible_refs", "count": 227}]}

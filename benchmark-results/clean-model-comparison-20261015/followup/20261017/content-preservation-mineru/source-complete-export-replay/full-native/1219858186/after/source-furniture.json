@@ -1,0 +1,93 @@
+[
+  {
+    "page": 2,
+    "ref": "#/texts/17",
+    "text": "第 2 页 共 15 页",
+    "label": "page_footer",
+    "exact_block_present_after_assembly": true
+  },
+  {
+    "page": 3,
+    "ref": "#/texts/26",
+    "text": "第 3 页 共 15 页",
+    "label": "page_footer",
+    "exact_block_present_after_assembly": true
+  },
+  {
+    "page": 4,
+    "ref": "#/texts/36",
+    "text": "第 4 页 共 15 页",
+    "label": "page_footer",
+    "exact_block_present_after_assembly": true
+  },
+  {
+    "page": 5,
+    "ref": "#/texts/45",
+    "text": "第 5 页 共 15 页",
+    "label": "page_footer",
+    "exact_block_present_after_assembly": true
+  },
+  {
+    "page": 6,
+    "ref": "#/texts/47",
+    "text": "第 6 页 共 15 页",
+    "label": "page_footer",
+    "exact_block_present_after_assembly": true
+  },
+  {
+    "page": 9,
+    "ref": "#/texts/78",
+    "text": "附件 1",
+    "label": "page_header",
+    "exact_block_present_after_assembly": true
+  },
+  {
+    "page": 9,
+    "ref": "#/texts/81",
+    "text": "第 9 页 共 15 页",
+    "label": "page_footer",
+    "exact_block_present_after_assembly": true
+  },
+  {
+    "page": 10,
+    "ref": "#/texts/82",
+    "text": "第 10 页 共 15 页",
+    "label": "page_footer",
+    "exact_block_present_after_assembly": true
+  },
+  {
+    "page": 11,
+    "ref": "#/texts/83",
+    "text": "第 11 页 共 15 页",
+    "label": "page_footer",
+    "exact_block_present_after_assembly": true
+  },
+  {
+    "page": 12,
+    "ref": "#/texts/84",
+    "text": "第 12 页 共 15 页",
+    "label": "page_footer",
+    "exact_block_present_after_assembly": true
+  },
+  {
+    "page": 14,
+    "ref": "#/texts/89",
+    "text": "附件 2",
+    "label": "page_header",
+    "exact_block_present_after_assembly": true
+  },
+  {
+    "page": 14,
+    "ref": "#/texts/94",
+    "text": "第 14 页 共 15 页",
+    "label": "page_footer",
+    "exact_block_present_after_assembly": true
+  },
+  {
+    "page": 15,
+    "ref": "#/texts/95",
+    "text": "第 15 页 共 15 页",
+    "label": "page_footer",
+    "exact_block_present_after_assembly": true
+  }
+]

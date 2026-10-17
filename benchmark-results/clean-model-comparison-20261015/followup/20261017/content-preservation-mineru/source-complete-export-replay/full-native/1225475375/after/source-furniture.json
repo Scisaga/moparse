@@ -1,0 +1,422 @@
+[
+  {
+    "page": 19,
+    "ref": "#/texts/94",
+    "text": "12",
+    "label": "page_footer",
+    "exact_block_present_after_assembly": true
+  },
+  {
+    "page": 28,
+    "ref": "#/texts/202",
+    "text": "21",
+    "label": "page_footer",
+    "exact_block_present_after_assembly": true
+  },
+  {
+    "page": 33,
+    "ref": "#/texts/260",
+    "text": "26",
+    "label": "page_footer",
+    "exact_block_present_after_assembly": true
+  },
+  {
+    "page": 34,
+    "ref": "#/texts/270",
+    "text": "27",
+    "label": "page_footer",
+    "exact_block_present_after_assembly": true
+  },
+  {
+    "page": 41,
+    "ref": "#/texts/345",
+    "text": "34",
+    "label": "page_footer",
+    "exact_block_present_after_assembly": true
+  },
+  {
+    "page": 42,
+    "ref": "#/texts/360",
+    "text": "35",
+    "label": "page_footer",
+    "exact_block_present_after_assembly": true
+  },
+  {
+    "page": 44,
+    "ref": "#/texts/379",
+    "text": "37",
+    "label": "page_footer",
+    "exact_block_present_after_assembly": true
+  },
+  {
+    "page": 60,
+    "ref": "#/texts/597",
+    "text": "53",
+    "label": "page_footer",
+    "exact_block_present_after_assembly": true
+  },
+  {
+    "page": 61,
+    "ref": "#/texts/609",
+    "text": "54",
+    "label": "page_footer",
+    "exact_block_present_after_assembly": true
+  },
+  {
+    "page": 62,
+    "ref": "#/texts/838",
+    "text": "5 5",
+    "label": "page_footer",
+    "exact_block_present_after_assembly": true
+  },
+  {
+    "page": 63,
+    "ref": "#/texts/846",
+    "text": "56",
+    "label": "page_footer",
+    "exact_block_present_after_assembly": true
+  },
+  {
+    "page": 64,
+    "ref": "#/texts/848",
+    "text": "5 7",
+    "label": "page_footer",
+    "exact_block_present_after_assembly": true
+  },
+  {
+    "page": 65,
+    "ref": "#/texts/856",
+    "text": "58",
+    "label": "page_footer",
+    "exact_block_present_after_assembly": true
+  },
+  {
+    "page": 66,
+    "ref": "#/texts/865",
+    "text": "59",
+    "label": "page_footer",
+    "exact_block_present_after_assembly": true
+  },
+  {
+    "page": 67,
+    "ref": "#/texts/871",
+    "text": "60",
+    "label": "page_footer",
+    "exact_block_present_after_assembly": true
+  },
+  {
+    "page": 68,
+    "ref": "#/texts/878",
+    "text": "61",
+    "label": "page_footer",
+    "exact_block_present_after_assembly": true
+  },
+  {
+    "page": 69,
+    "ref": "#/texts/883",
+    "text": "62",
+    "label": "page_footer",
+    "exact_block_present_after_assembly": true
+  },
+  {
+    "page": 70,
+    "ref": "#/texts/885",
+    "text": "63",
+    "label": "page_footer",
+    "exact_block_present_after_assembly": true
+  },
+  {
+    "page": 71,
+    "ref": "#/texts/887",
+    "text": "6 4",
+    "label": "page_footer",
+    "exact_block_present_after_assembly": true
+  },
+  {
+    "page": 73,
+    "ref": "#/texts/895",
+    "text": "66",
+    "label": "page_footer",
+    "exact_block_present_after_assembly": true
+  },
+  {
+    "page": 74,
+    "ref": "#/texts/903",
+    "text": "67",
+    "label": "page_footer",
+    "exact_block_present_after_assembly": true
+  },
+  {
+    "page": 75,
+    "ref": "#/texts/905",
+    "text": "6 8",
+    "label": "page_footer",
+    "exact_block_present_after_assembly": true
+  },
+  {
+    "page": 76,
+    "ref": "#/texts/907",
+    "text": "69",
+    "label": "page_footer",
+    "exact_block_present_after_assembly": true
+  },
+  {
+    "page": 77,
+    "ref": "#/texts/910",
+    "text": "70",
+    "label": "page_footer",
+    "exact_block_present_after_assembly": true
+  },
+  {
+    "page": 78,
+    "ref": "#/texts/915",
+    "text": "71",
+    "label": "page_footer",
+    "exact_block_present_after_assembly": true
+  },
+  {
+    "page": 79,
+    "ref": "#/texts/921",
+    "text": "72",
+    "label": "page_footer",
+    "exact_block_present_after_assembly": true
+  },
+  {
+    "page": 80,
+    "ref": "#/texts/932",
+    "text": "73",
+    "label": "page_footer",
+    "exact_block_present_after_assembly": true
+  },
+  {
+    "page": 81,
+    "ref": "#/texts/937",
+    "text": "74",
+    "label": "page_footer",
+    "exact_block_present_after_assembly": true
+  },
+  {
+    "page": 82,
+    "ref": "#/texts/944",
+    "text": "75",
+    "label": "page_footer",
+    "exact_block_present_after_assembly": true
+  },
+  {
+    "page": 83,
+    "ref": "#/texts/1019",
+    "text": "7 6",
+    "label": "page_footer",
+    "exact_block_present_after_assembly": true
+  },
+  {
+    "page": 85,
+    "ref": "#/texts/1091",
+    "text": "78",
+    "label": "page_footer",
+    "exact_block_present_after_assembly": true
+  },
+  {
+    "page": 86,
+    "ref": "#/texts/1093",
+    "text": "79",
+    "label": "page_footer",
+    "exact_block_present_after_assembly": true
+  },
+  {
+    "page": 87,
+    "ref": "#/texts/1096",
+    "text": "8 0",
+    "label": "page_footer",
+    "exact_block_present_after_assembly": true
+  },
+  {
+    "page": 88,
+    "ref": "#/texts/1102",
+    "text": "81",
+    "label": "page_footer",
+    "exact_block_present_after_assembly": true
+  },
+  {
+    "page": 89,
+    "ref": "#/texts/1106",
+    "text": "82",
+    "label": "page_footer",
+    "exact_block_present_after_assembly": true
+  },
+  {
+    "page": 90,
+    "ref": "#/texts/1111",
+    "text": "83",
+    "label": "page_footer",
+    "exact_block_present_after_assembly": true
+  },
+  {
+    "page": 91,
+    "ref": "#/texts/1118",
+    "text": "84",
+    "label": "page_footer",
+    "exact_block_present_after_assembly": true
+  },
+  {
+    "page": 92,
+    "ref": "#/texts/1123",
+    "text": "85",
+    "label": "page_footer",
+    "exact_block_present_after_assembly": true
+  },
+  {
+    "page": 93,
+    "ref": "#/texts/1132",
+    "text": "86",
+    "label": "page_footer",
+    "exact_block_present_after_assembly": true
+  },
+  {
+    "page": 94,
+    "ref": "#/texts/1139",
+    "text": "87",
+    "label": "page_footer",
+    "exact_block_present_after_assembly": true
+  },
+  {
+    "page": 95,
+    "ref": "#/texts/1141",
+    "text": "88",
+    "label": "page_footer",
+    "exact_block_present_after_assembly": true
+  },
+  {
+    "page": 96,
+    "ref": "#/texts/1145",
+    "text": "89",
+    "label": "page_footer",
+    "exact_block_present_after_assembly": true
+  },
+  {
+    "page": 97,
+    "ref": "#/texts/1153",
+    "text": "90",
+    "label": "page_footer",
+    "exact_block_present_after_assembly": true
+  },
+  {
+    "page": 98,
+    "ref": "#/texts/1163",
+    "text": "91",
+    "label": "page_footer",
+    "exact_block_present_after_assembly": true
+  },
+  {
+    "page": 99,
+    "ref": "#/texts/1174",
+    "text": "92",
+    "label": "page_footer",
+    "exact_block_present_after_assembly": true
+  },
+  {
+    "page": 100,
+    "ref": "#/texts/1182",
+    "text": "93",
+    "label": "page_footer",
+    "exact_block_present_after_assembly": true
+  },
+  {
+    "page": 101,
+    "ref": "#/texts/1190",
+    "text": "94",
+    "label": "page_footer",
+    "exact_block_present_after_assembly": true
+  },
+  {
+    "page": 102,
+    "ref": "#/texts/1194",
+    "text": "95",
+    "label": "page_footer",
+    "exact_block_present_after_assembly": true
+  },
+  {
+    "page": 103,
+    "ref": "#/texts/1206",
+    "text": "96",
+    "label": "page_footer",
+    "exact_block_present_after_assembly": true
+  },
+  {
+    "page": 104,
+    "ref": "#/texts/1210",
+    "text": "97",
+    "label": "page_footer",
+    "exact_block_present_after_assembly": true
+  },
+  {
+    "page": 105,
+    "ref": "#/texts/1215",
+    "text": "98",
+    "label": "page_footer",
+    "exact_block_present_after_assembly": true
+  },
+  {
+    "page": 106,
+    "ref": "#/texts/1232",
+    "text": "99",
+    "label": "page_footer",
+    "exact_block_present_after_assembly": true
+  },
+  {
+    "page": 107,
+    "ref": "#/texts/1235",
+    "text": "100",
+    "label": "page_footer",
+    "exact_block_present_after_assembly": true
+  },
+  {
+    "page": 108,
+    "ref": "#/texts/1237",
+    "text": "1 0 1",
+    "label": "page_footer",
+    "exact_block_present_after_assembly": true
+  },
+  {
+    "page": 109,
+    "ref": "#/texts/1245",
+    "text": "102",
+    "label": "page_footer",
+    "exact_block_present_after_assembly": true
+  },
+  {
+    "page": 110,
+    "ref": "#/texts/1250",
+    "text": "103",
+    "label": "page_footer",
+    "exact_block_present_after_assembly": true
+  },
+  {
+    "page": 111,
+    "ref": "#/texts/1255",
+    "text": "104",
+    "label": "page_footer",
+    "exact_block_present_after_assembly": true
+  },
+  {
+    "page": 112,
+    "ref": "#/texts/1257",
+    "text": "105",
+    "label": "page_footer",
+    "exact_block_present_after_assembly": true
+  },
+  {
+    "page": 113,
+    "ref": "#/texts/1259",
+    "text": "1 0 6",
+    "label": "page_footer",
+    "exact_block_present_after_assembly": true
+  },
+  {
+    "page": 114,
+    "ref": "#/texts/1265",
+    "text": "107",
+    "label": "page_footer",
+    "exact_block_present_after_assembly": true
+  }
+]

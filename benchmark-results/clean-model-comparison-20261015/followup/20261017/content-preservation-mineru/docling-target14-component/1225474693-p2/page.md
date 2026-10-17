@@ -1,0 +1,50 @@
+<!-- source-furniture: #/texts/0; source-page: 2; role: page_header -->
+
+浙江出版传媒股份有限公司2026 年半年度报告摘要
+
+## 第一节 重要提示
+
+- 1 . 1 本半年度报告摘要来自半年度报告全文 ， 为全面了解本公司的经营成果 、 财务状况及未来发 展规划 ， 投资者应当到 www . sse . com . cn 网站仔细阅读半年度报告全文 。
+- 1 . 2 本公司董事会及董事 、 高级管理人员保证半年度报告内容的真实性 、 准确性 、 完整性 ， 不存 在虚假记载 、 误导性陈述或重大遗漏 ， 并承担个别和连带的法律责任 。
+- 1 . 3 公司全体董事出席董事会会议 。
+- 1 . 4 本半年度报告未经审计 。
+- 1 . 5 董事会决议通过的本报告期利润分配预案或公积金转增股本预案
+
+经公司2025年年度股东会授权 ， 公司第三届董事会第十五次会议于2026年8月14日审议通过了 《关于公司2026年半年度利润分配方案的议案》 ， 拟以总股本2 , 222 , 222 , 223股为基数 ， 向全体股 东每10股派发现金股利1 . 00元（含税） ， 共计派发现金股利222 , 222 , 222 . 30元（含税） ， 本次不进 行送股及资本公积金转增股本 。
+
+## 第二节 公司基本情况
+
+## 2 . 1 公司简介
+
+<!-- table-fragment: p2_t1 -->
+
+<!-- table-structure: {"version":1,"table_id":"p2_t1","source_pages":[2],"num_rows":3,"num_cols":5,"encoding":"anchor_and_blanks","structure_valid":true,"header_rows":[0],"header_scope_rows":[0],"header_scope_complete":true,"spans":[[0,0,1,5]]} -->
+
+| 公司股票简况 |  |  |  |  |
+| --- | --- | --- | --- | --- |
+| 股票种类 | 股票上市交易所 | 股票简称 | 股票代码 | 变更前股票简称 |
+| A股 | 上海证券交易所 | 浙版传媒 | 601921 | / |
+
+<!-- table-fragment: p2_t2 -->
+
+<!-- table-structure: {"version":1,"table_id":"p2_t2","source_pages":[2],"num_rows":5,"num_cols":3,"encoding":"anchor_and_blanks","structure_valid":true,"header_rows":[0],"header_scope_rows":[0],"header_scope_complete":true,"spans":[]} -->
+
+| 联系人和联系方式 | 董事会秘书 | 证券事务代表 |
+| --- | --- | --- |
+| 姓名 | 汪益信 | 刘子婧 |
+| 电话 | 0571-88909784 | 0571-88909784 |
+| 办公地址 | 浙江省杭州市环城北路177号 | 浙江省杭州市环城北路177号 |
+| 电子信箱 | zqfwb@zjcbcm.com | zqfwb@zjcbcm.com |
+
+## 2 . 2 主要财务数据
+
+单位： 元 币种： 人民币
+
+<!-- table-fragment: p2_t3 -->
+
+<!-- table-structure: {"version":1,"table_id":"p2_t3","source_pages":[2],"num_rows":3,"num_cols":4,"encoding":"anchor_and_blanks","structure_valid":true,"header_rows":[0],"header_scope_rows":[0],"header_scope_complete":true,"spans":[]} -->
+
+|  | 本报告期末 | 上年度末 | 本报告期末比 上年度末增减(%) |
+| --- | --- | --- | --- |
+| 总资产 | 21,467,154,275.58 | 21,158,183,575.04 | 1.46 |
+| 归属于上市公司股东的净资产 | 14,541,058,486.24 | 14,384,089,799.69 | 1.09 |

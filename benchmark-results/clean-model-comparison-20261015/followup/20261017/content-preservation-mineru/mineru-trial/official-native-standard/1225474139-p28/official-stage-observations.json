@@ -1,0 +1,177 @@
+[
+  {
+    "stage": "official_input_preparation",
+    "file_suffix": "pdf",
+    "prepared_size_bytes": 204248,
+    "original_function_seconds": 0.00434478500392288,
+    "prepared_SHA256": "ce54ef33d89bc60e35dc24111ea5c93289ff2a8e4fb8b50b05ffa9da825642c0",
+    "retained_original_page_indices_zero_based": [
+      27
+    ],
+    "broken_original_page_indices_zero_based": [],
+    "derived_input_filename": "prepared-by-official-page-selection.pdf",
+    "transformation": "Official default page_range handling; runner did not crop or rewrite the source PDF."
+  },
+  {
+    "stage": "native_table_priority",
+    "effort": "high",
+    "counts": {
+      "total": 0,
+      "accepted": 0,
+      "complex_fallbacks": 0,
+      "rejected": 0,
+      "errors": 0,
+      "removed_internal_text": 0,
+      "removed_formula_blocks": 0,
+      "removed_formula_layout_items": 0
+    },
+    "table_routes": []
+  },
+  {
+    "stage": "actual_VLM_options",
+    "image_analysis": false,
+    "not_extract_list": [
+      "caption",
+      "code_caption",
+      "doc_title",
+      "footer",
+      "footnote",
+      "header",
+      "image_caption",
+      "image_footnote",
+      "page_footnote",
+      "page_number",
+      "paragraph_title",
+      "phonetic",
+      "ref_text",
+      "table_caption",
+      "table_footnote",
+      "text",
+      "title"
+    ],
+    "image_sizes": [
+      [
+        1654,
+        2339
+      ]
+    ],
+    "model_inputs": [
+      [
+        {
+          "type": "header",
+          "bbox": [
+            0.527,
+            0.05,
+            0.852,
+            0.064
+          ],
+          "has_content": false
+        },
+        {
+          "type": "paragraph_title",
+          "bbox": [
+            0.286,
+            0.087,
+            0.712,
+            0.109
+          ],
+          "has_content": false
+        },
+        {
+          "type": "text",
+          "bbox": [
+            0.148,
+            0.137,
+            0.851,
+            0.183
+          ],
+          "has_content": false
+        },
+        {
+          "type": "page_number",
+          "bbox": [
+            0.505,
+            0.929,
+            0.525,
+            0.941
+          ],
+          "has_content": false
+        }
+      ]
+    ]
+  },
+  {
+    "stage": "actual_VLM_results_before_native_body_fill",
+    "effort": "high",
+    "tables": []
+  },
+  {
+    "stage": "native_PDF_text_fill",
+    "returned_spans": 5,
+    "nonempty_text_spans": 5,
+    "queued_for_post_OCR": 0,
+    "spans": [
+      {
+        "type": "text",
+        "bbox": [
+          315.72,
+          43.92,
+          505.08000000000004,
+          52.56
+        ],
+        "text": "深圳兆日科技股份有限公司详式权益变动报告书",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          172.8,
+          73.08,
+          421.56,
+          89.64
+        ],
+        "text": "第九节 信息披露义务人的财务资料",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          114.48,
+          117.36,
+          504.72,
+          128.52
+        ],
+        "text": "信息披露义务人璟和珩成立于 2026 年 6 月 26 日，截至本报告书签署日，暂",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          90.36,
+          140.76,
+          202.32,
+          151.92000000000002
+        ],
+        "text": "无经营相关财务资料。",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          299.88,
+          781.5600000000001,
+          312.84000000000003,
+          793.08
+        ],
+        "text": "28",
+        "queued_for_post_OCR": false
+      }
+    ]
+  },
+  {
+    "stage": "actual_post_OCR",
+    "candidate_spans": 0,
+    "content_changed": 0,
+    "spans": []
+  }
+]

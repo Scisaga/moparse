@@ -1,0 +1,64 @@
+[
+  {
+    "source": "1225474693",
+    "page_count": 4,
+    "started_UTC": "2026-10-17T13:51:24.628060+00:00",
+    "status": "completed",
+    "job": "job_01M5523CESCQ9ZQDA0AAX69Z29",
+    "submit_to_terminal_s": 9.241373152006418,
+    "submit_to_saved_MD_s": 9.25057780102361,
+    "MD_SHA256": "9a68e8c74cf32bb87fbd4891d394a5da2f1a6b63eea38c9b427addb15966482c",
+    "MD_bytes": 7779,
+    "asset_count": 0,
+    "asset_errors": [],
+    "asset_status": "completed",
+    "asset_capture_s": 0.01024302700534463,
+    "local_diagnostics": [
+      {
+        "source": "/var/lib/docker/volumes/mosaicparse-data/_data/jobs/job_01M5523CESCQ9ZQDA0AAX69Z29/logs/warnings.json",
+        "saved": "warnings.json",
+        "sha256": "3f819417a4f7dfa557a154a67860f4b1f13818f6e9208b802067682c3fa6de26",
+        "scope": "Optional local diagnostics; frozen quality reads public Markdown only."
+      },
+      {
+        "source": "/var/lib/docker/volumes/mosaicparse-data/_data/jobs/job_01M5523CESCQ9ZQDA0AAX69Z29/output/asset-index.json",
+        "saved": "asset-index.json",
+        "sha256": "16db168f4d5d20020c5ed46612415dad90d66619f84d79abe575dd9d0e142337",
+        "scope": "Optional local diagnostics; frozen quality reads public Markdown only."
+      }
+    ],
+    "completed_UTC": "2026-10-17T13:51:33.890426+00:00",
+    "full_capture_s": 9.262385839014314
+  },
+  {
+    "source": "1225473526",
+    "page_count": 27,
+    "started_UTC": "2026-10-17T13:51:33.891586+00:00",
+    "status": "completed",
+    "job": "job_01M5523NGH51ZHS677219YPS60",
+    "submit_to_terminal_s": 37.208731452934444,
+    "submit_to_saved_MD_s": 37.21879942296073,
+    "MD_SHA256": "6fab180cf837a82ea299ee76200a8595cc73a4e914eebf34478e586090a8d74d",
+    "MD_bytes": 51972,
+    "asset_count": 4,
+    "asset_errors": [],
+    "asset_status": "completed",
+    "asset_capture_s": 0.06419699697289616,
+    "local_diagnostics": [
+      {
+        "source": "/var/lib/docker/volumes/mosaicparse-data/_data/jobs/job_01M5523NGH51ZHS677219YPS60/logs/warnings.json",
+        "saved": "warnings.json",
+        "sha256": "5c864f02ff0aff599e37fe67b2797d915ac59a40ed2092446447d917e2520425",
+        "scope": "Optional local diagnostics; frozen quality reads public Markdown only."
+      },
+      {
+        "source": "/var/lib/docker/volumes/mosaicparse-data/_data/jobs/job_01M5523NGH51ZHS677219YPS60/output/asset-index.json",
+        "saved": "asset-index.json",
+        "sha256": "982efd0db34aed6d5479f9ff40f7766703e3e9b10e3e3b8ee57b44ad363e9a3d",
+        "scope": "Optional local diagnostics; frozen quality reads public Markdown only."
+      }
+    ],
+    "completed_UTC": "2026-10-17T13:52:11.177399+00:00",
+    "full_capture_s": 37.285836894996464
+  }
+]

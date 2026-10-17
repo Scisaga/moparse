@@ -1,0 +1,17 @@
+{
+  "id": "1225475375",
+  "pdf": "/opt/mosaic-parse/pdf_sample/1225475375.pdf",
+  "page": 62,
+  "source_pdf_SHA256": "5eef30b5c544d76df917d56df76a665ed13b5e6ffebdc54ab0eea0a47b7589d6",
+  "physical_page_one_based": 62,
+  "source_pdf_total_pages": 119,
+  "source_pdf_page_rotation": 270,
+  "expected_original_page_idx_zero_based": 61,
+  "official_parse_arguments": {
+    "tier": "standard",
+    "ocr_mode": "txt",
+    "image_analysis": false,
+    "page_range": "62"
+  },
+  "cohort": "additional_p62"
+}

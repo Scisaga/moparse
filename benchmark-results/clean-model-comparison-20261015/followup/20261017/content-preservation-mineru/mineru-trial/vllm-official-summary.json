@@ -1,0 +1,5823 @@
+{
+  "created_at": "2026-10-17T22:05:03.986942+08:00",
+  "experiment": "Official SDK2.0.7 two_step_extract via isolated vLLM0.19.1 FP16",
+  "source_pages": 14,
+  "source_documents": 6,
+  "whole_document_HTTP_acceptance": false,
+  "render_MD_persist_fullcase_timers": "unknown; no retrospective timing invented",
+  "client_seconds_sum": 236.18429279793054,
+  "model_HTTP_seconds_sum": 232.72021470754407,
+  "server_request_inference_seconds_sum": 225.27950903133024,
+  "server_request_prefill_seconds_sum": 25.130363478907384,
+  "server_request_decode_seconds_sum": 200.14914555242285,
+  "server_start_seconds": 49.00864160503261,
+  "model_calls": 155,
+  "generated_completion_tokens": 12423,
+  "max_request_prompt_tokens": 2053,
+  "max_request_total_tokens": 3565,
+  "all_calls_finish_stop": true,
+  "length_abort_error_calls": 0,
+  "input_truncation_requested": false,
+  "configured_EOS_ids": [
+    151645,
+    151643
+  ],
+  "EOS_verification_scope": "OpenAI finish_reason=stop with no stop strings or input truncation requested; raw request/response plus model EOS config retained. EOS token IDs are not returned by API, so no last-token tracing claim.",
+  "KV_cache_bytes": 134217728,
+  "actual_KV_capacity_tokens": 10912,
+  "max_model_len": 8192,
+  "actual_official_sampling_by_prompt": {
+    "\nLayout Detection:": {
+      "temperature": 0.0,
+      "top_p": 0.01,
+      "top_k": 1,
+      "presence_penalty": 0.0,
+      "frequency_penalty": 0.0,
+      "repetition_penalty": 1.0,
+      "vllm_xargs": {
+        "no_repeat_ngram_size": 100,
+        "debug": false
+      },
+      "skip_special_tokens": false
+    },
+    "\nText Recognition:": {
+      "temperature": 0.0,
+      "top_p": 0.01,
+      "top_k": 1,
+      "presence_penalty": 1.0,
+      "frequency_penalty": 0.05,
+      "repetition_penalty": 1.0,
+      "vllm_xargs": {
+        "no_repeat_ngram_size": 100,
+        "debug": false
+      },
+      "skip_special_tokens": false
+    },
+    "\nTable Recognition:": {
+      "temperature": 0.0,
+      "top_p": 0.01,
+      "top_k": 1,
+      "presence_penalty": 1.0,
+      "frequency_penalty": 0.005,
+      "repetition_penalty": 1.0,
+      "vllm_xargs": {
+        "no_repeat_ngram_size": 100,
+        "debug": false
+      },
+      "skip_special_tokens": false
+    }
+  },
+  "gpu_own_PMON_peak_FB_MiB_original14": 3430.0,
+  "gpu_own_PMON_SM_mean_valid_samples_pct_original14": 24.346341463414635,
+  "gpu_own_PMON_SM_valid_samples_original14": 205,
+  "runtime_environment": "Shared GPU1 GLM+TTS unchanged; root confirmed no production GLM inference overlaps this phase. Host CPU shared with170 native Docling pages. Observed component costs; not an exclusive-hardware end-to-end benchmark.",
+  "server_packages": "{\"vllm\": \"0.19.1\", \"torch\": \"2.10.0+cu129\", \"transformers\": \"5.5.4\", \"huggingface-hub\": \"1.11.0\", \"mineru-vl-utils\": \"2.0.7\", \"pillow\": \"12.2.0\", \"pydantic\": \"2.13.2\"}\n",
+  "pages": [
+    {
+      "id": "1206337604",
+      "page": 1,
+      "source_pdf_SHA256": "ccff40771d75e9412b65f364a1c72c1733c37b4d8f232f49cf639621f0ba165f",
+      "source_page_SHA256": "c64c87161f29bcb6640a1cf595e0f8a83da5cdbebd83622e4064a1077269d473",
+      "source_page_size": [
+        1654,
+        2339
+      ],
+      "source_pdf_page_rotation": 0,
+      "source_total_pages": 2,
+      "status": "complete",
+      "client_seconds": 11.574466906953603,
+      "model_HTTP_seconds": 11.327052530017681,
+      "model_calls": 6,
+      "blocks": 5,
+      "blocks_SHA256": "841ae4ad7cc3d4d4d03e4e5ea1df1caed955d8ce88535601dcaab237d0987f2d",
+      "MD_SHA256": "f930a9a78bdf4a083fe0b8d047a91e50b89352d6a5e22b5fcaf7657194339b47",
+      "timing_boundary": "client_seconds wraps only two_step_extract; excludes PDF rendering/json2md/persistence/metrics snapshots",
+      "PDF_render_seconds": null,
+      "MD_conversion_and_persistence_seconds": null,
+      "whole_case_PDF_to_MD_seconds": null,
+      "source_page_PNG_byte_identical_to_TF": true,
+      "model_inference_metrics_delta": {
+        "vllm:request_inference_time_seconds_sum": 10.72810177586507,
+        "vllm:request_prefill_time_seconds_sum": 2.723126715864055,
+        "vllm:request_decode_time_seconds_sum": 8.004975060001016,
+        "vllm:request_queue_time_seconds_sum": 0.00016409019008278847,
+        "vllm:e2e_request_latency_seconds_sum": 11.210360050201416
+      },
+      "HTTP_calls": [
+        {
+          "call": "000",
+          "prompt": "\nLayout Detection:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 0.0,
+            "frequency_penalty": 0.0,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 1394,
+            "total_tokens": 1506,
+            "completion_tokens": 112,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "0731b435ff01dcf5d87b98b79e4e0703b76ed4344a71a922545d1702ad3069fb",
+          "response_SHA256": "402e9add562d9dd1cc59990d26366626b3f2a9e46b7b62849819f08184f14f71"
+        },
+        {
+          "call": "001",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 109,
+            "total_tokens": 119,
+            "completion_tokens": 10,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "c0b32d9143202e83f296e12430ca992ad9bcd470d2e105005309989c5c70d327",
+          "response_SHA256": "3ebd85ba4b210672a9884445bd5a2e9d0f782a63736fb078bb302926faf3cb27"
+        },
+        {
+          "call": "002",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 113,
+            "total_tokens": 120,
+            "completion_tokens": 7,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "03e3e84437c46e594bdb6fcd8451fb1843e072c0ab59dd78e1e9c58d603a29ac",
+          "response_SHA256": "a210b8415feb6cb4c022ed55efdde60a97e633266ff962f3e0e908f03e4b3191"
+        },
+        {
+          "call": "003",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 118,
+            "total_tokens": 133,
+            "completion_tokens": 15,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "88063d4b9a1e2e590cb4c9b4b167accd47381a415d4b1ba4aa717a5f7eb802fb",
+          "response_SHA256": "d61f9420fd51f2be4aea66bf0b391f346f938e2dba23189b5f2b26846306e1e9"
+        },
+        {
+          "call": "004",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 109,
+            "total_tokens": 120,
+            "completion_tokens": 11,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "b7c7e65d520c30f5f112585a6739bd6d31e51a00e93641a7365e152ffcd6107a",
+          "response_SHA256": "8c830061f65362d900acc5dc668dd625f55516e9f5b5e26b0152fead8d21fac3"
+        },
+        {
+          "call": "005",
+          "prompt": "\nTable Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.005,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 2014,
+            "total_tokens": 2283,
+            "completion_tokens": 269,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "3c12c90b704d614dd9f700d9de03c09e1b743ffd55f011058c1debbd16933bd9",
+          "response_SHA256": "c826fa3a4c517b1ed82e625388d016e8b405d5f0ab796688024abdf1723f6245"
+        }
+      ],
+      "all_calls_finish_stop_without_truncation": true
+    },
+    {
+      "id": "1225474739",
+      "page": 19,
+      "source_pdf_SHA256": "1c99c450a8efefe77c9ca02a6f670c958298f661e5ad8d30d6ba01aa0742cda9",
+      "source_page_SHA256": "e1f87567100070b0899a1b1c7b036e73a0d6a746688802fc9a911bbe37055430",
+      "source_page_size": [
+        1654,
+        2339
+      ],
+      "source_pdf_page_rotation": 0,
+      "source_total_pages": 134,
+      "status": "complete",
+      "client_seconds": 25.082505087018944,
+      "model_HTTP_seconds": 24.734935082960874,
+      "model_calls": 12,
+      "blocks": 11,
+      "blocks_SHA256": "29460053a02ae4bd7875e44576f03210036d607245e11704019212d7d195ff70",
+      "MD_SHA256": "43adcc984503346c9b3d69d65048f80d4d031a3ee69765e4795224b9f0a1ab5d",
+      "timing_boundary": "client_seconds wraps only two_step_extract; excludes PDF rendering/json2md/persistence/metrics snapshots",
+      "PDF_render_seconds": null,
+      "MD_conversion_and_persistence_seconds": null,
+      "whole_case_PDF_to_MD_seconds": null,
+      "source_page_PNG_byte_identical_to_TF": true,
+      "model_inference_metrics_delta": {
+        "vllm:request_inference_time_seconds_sum": 24.076938698184676,
+        "vllm:request_prefill_time_seconds_sum": 2.4031609230441973,
+        "vllm:request_decode_time_seconds_sum": 21.67377777514048,
+        "vllm:request_queue_time_seconds_sum": 0.00031069060787558556,
+        "vllm:e2e_request_latency_seconds_sum": 24.614468336105347
+      },
+      "HTTP_calls": [
+        {
+          "call": "000",
+          "prompt": "\nLayout Detection:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 0.0,
+            "frequency_penalty": 0.0,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 1394,
+            "total_tokens": 1638,
+            "completion_tokens": 244,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "c7b2824c2359bcf46987a87323ee84cca2bb4f03941c3856dc7751d45dcc786e",
+          "response_SHA256": "77b38ee71e988384a483b7a8214640aa3f97047546693afcb9d8d40dd284169a"
+        },
+        {
+          "call": "001",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 93,
+            "total_tokens": 110,
+            "completion_tokens": 17,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "43bc23ab8ee2ab2a4118c89f64199b581cfd7f9d0dab7f1507344180b129e765",
+          "response_SHA256": "0d87b6464752a271b8a0ef41deed7b8f4bb902ff7790c3093c601fd0341f2d06"
+        },
+        {
+          "call": "002",
+          "prompt": "\nTable Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.005,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 169,
+            "total_tokens": 201,
+            "completion_tokens": 32,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "8576a389de8c8cb7878473bcdee8bffb1b59ce14f080d0937e42cb47aa57f0c4",
+          "response_SHA256": "04580448bd91eef68f2ea3206d13182786de777c271da4377a52cf8d3dc8616a"
+        },
+        {
+          "call": "003",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 125,
+            "total_tokens": 149,
+            "completion_tokens": 24,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "d2e3664c9b91713c95666f4fcb33e72f28d01ff735dc4b12f8c474a967819b1c",
+          "response_SHA256": "98a6709304685938ec6df89c435f86b86eccfa2fef2699a35c77c6648dd49e31"
+        },
+        {
+          "call": "004",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 105,
+            "total_tokens": 112,
+            "completion_tokens": 7,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "73db967e37472e500bee418d93f2e0f5b848520fd86e2363e67b76e78beddf55",
+          "response_SHA256": "fdb1503ce698c62c36b954574f0fe169ef9820ddf1a835de82fe1b86b4519067"
+        },
+        {
+          "call": "005",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 91,
+            "total_tokens": 101,
+            "completion_tokens": 10,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "7e12da31c0ba5a4f09a04b80b79cea679ca8f9190f7668aff0af4005f9c58167",
+          "response_SHA256": "d7a913258d5ce78213f6a8fa2aa4e5873fb91e1a71f6fa73d74030d0823bdf76"
+        },
+        {
+          "call": "006",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 105,
+            "total_tokens": 112,
+            "completion_tokens": 7,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "a919d3c5472c7e782efbfd5d3982bc1be4188b7b8bc011bf78c4c9e7bfe58418",
+          "response_SHA256": "06c941c086d0b73a5e4df74c5454f3eed35f808d4b53914750ecffc5782d65e8"
+        },
+        {
+          "call": "007",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 118,
+            "total_tokens": 132,
+            "completion_tokens": 14,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "6c50fcda2ce5b61934e96c2054db1ab0d302cca5c0c8021ac277021b0c85dd2d",
+          "response_SHA256": "0023d38ed052e673b447b569ff678796143402a9c844a230ca24f46625e11431"
+        },
+        {
+          "call": "008",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 109,
+            "total_tokens": 116,
+            "completion_tokens": 7,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "880d8920aa6c1434000ddabe0f0da9a29116bc58092e023096e3a54bbba6743e",
+          "response_SHA256": "1e710c7e5da97dec020e5954257daf14c4f46942c8d05b0c90c1ee835fa775d2"
+        },
+        {
+          "call": "009",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 93,
+            "total_tokens": 97,
+            "completion_tokens": 4,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "2a2a0c795c92bf498502035ac1404ccd846599d2ac08d50170e74caf19081517",
+          "response_SHA256": "cfe3eaa2d40611ff4454de05d3aaa52c03dbcc69f042bff880c8acd790e184cf"
+        },
+        {
+          "call": "010",
+          "prompt": "\nTable Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.005,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 2049,
+            "total_tokens": 2825,
+            "completion_tokens": 776,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "6dd9f1cb86af5a57806f137678112e28b47c13c5c2c1bcf96dc813e08ee4a400",
+          "response_SHA256": "4e00913113302dc932c3800c7a8856ed92fa302269e35ad90200a67518d84aac"
+        },
+        {
+          "call": "011",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 97,
+            "total_tokens": 100,
+            "completion_tokens": 3,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "2b5b9fbe97fe6e3e3a41f7a3a332c3fa63feb9db79e82062a08d1e8399c7d30f",
+          "response_SHA256": "1024390b357452e7e4098587054ce26916ea6681d61d8bc1f449a115829ebe05"
+        }
+      ],
+      "all_calls_finish_stop_without_truncation": true
+    },
+    {
+      "id": "1206337604",
+      "page": 2,
+      "source_pdf_SHA256": "ccff40771d75e9412b65f364a1c72c1733c37b4d8f232f49cf639621f0ba165f",
+      "source_page_SHA256": "ad489109c8a15e625a5be8c0ce40405d18e664ed13a23f4d2b409109a534aeab",
+      "source_page_size": [
+        1654,
+        2339
+      ],
+      "source_pdf_page_rotation": 0,
+      "source_total_pages": 2,
+      "status": "complete",
+      "client_seconds": 8.57381800794974,
+      "model_HTTP_seconds": 8.33061904401984,
+      "model_calls": 2,
+      "blocks": 1,
+      "blocks_SHA256": "3f107b1867cae2724433e4c326d618045518710c684623c7571e4e298b31ea7d",
+      "MD_SHA256": "a7d5e11f15864fd7fc27112d51a3456f5660c10188721744b9c39bca333ae983",
+      "timing_boundary": "client_seconds wraps only two_step_extract; excludes PDF rendering/json2md/persistence/metrics snapshots",
+      "PDF_render_seconds": null,
+      "MD_conversion_and_persistence_seconds": null,
+      "whole_case_PDF_to_MD_seconds": null,
+      "source_page_PNG_byte_identical_to_TF": true,
+      "model_inference_metrics_delta": {
+        "vllm:request_inference_time_seconds_sum": 8.040881494991481,
+        "vllm:request_prefill_time_seconds_sum": 1.3707425160100684,
+        "vllm:request_decode_time_seconds_sum": 6.670138978981413,
+        "vllm:request_queue_time_seconds_sum": 6.466393824666739e-05,
+        "vllm:e2e_request_latency_seconds_sum": 8.30678915977478
+      },
+      "HTTP_calls": [
+        {
+          "call": "000",
+          "prompt": "\nLayout Detection:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 0.0,
+            "frequency_penalty": 0.0,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 1394,
+            "total_tokens": 1416,
+            "completion_tokens": 22,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "8a8670eaaca1094e17317d3de8cdca00206ac095c87bdfee5a02daa45fcf8ae5",
+          "response_SHA256": "cc03498aec5d33c83728ae8c8d6e8ecb4913fbad0116be07b990f97deb78d787"
+        },
+        {
+          "call": "001",
+          "prompt": "\nTable Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.005,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 1997,
+            "total_tokens": 2382,
+            "completion_tokens": 385,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "9be255011ec70c831c27ea630f00a6bb6bd49b7cc88e43e30663c0ac873f6feb",
+          "response_SHA256": "a3737b3f7da196cce7b45923200d1d2718d56d01210416d913f333824f019721"
+        }
+      ],
+      "all_calls_finish_stop_without_truncation": true
+    },
+    {
+      "id": "1225474739",
+      "page": 40,
+      "source_pdf_SHA256": "1c99c450a8efefe77c9ca02a6f670c958298f661e5ad8d30d6ba01aa0742cda9",
+      "source_page_SHA256": "2282743782e35088c560399cdb96fbe51193eb1942436f5ca58c356d2363e87e",
+      "source_page_size": [
+        1654,
+        2339
+      ],
+      "source_pdf_page_rotation": 0,
+      "source_total_pages": 134,
+      "status": "complete",
+      "client_seconds": 31.485640858998522,
+      "model_HTTP_seconds": 31.148658209014684,
+      "model_calls": 8,
+      "blocks": 8,
+      "blocks_SHA256": "4363de83b7a98b096ff217ac956f3e11694d14e8c901983c3c6827ae226017e8",
+      "MD_SHA256": "68daffc1f63db9f227ee35042a7a48957032bf9652c9979866c3dcacbcc73e0d",
+      "timing_boundary": "client_seconds wraps only two_step_extract; excludes PDF rendering/json2md/persistence/metrics snapshots",
+      "PDF_render_seconds": null,
+      "MD_conversion_and_persistence_seconds": null,
+      "whole_case_PDF_to_MD_seconds": null,
+      "source_page_PNG_byte_identical_to_TF": true,
+      "model_inference_metrics_delta": {
+        "vllm:request_inference_time_seconds_sum": 30.635721296304837,
+        "vllm:request_prefill_time_seconds_sum": 1.8442632701480761,
+        "vllm:request_decode_time_seconds_sum": 28.79145802615676,
+        "vllm:request_queue_time_seconds_sum": 0.0001671029021963477,
+        "vllm:e2e_request_latency_seconds_sum": 31.07014560699463
+      },
+      "HTTP_calls": [
+        {
+          "call": "000",
+          "prompt": "\nLayout Detection:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 0.0,
+            "frequency_penalty": 0.0,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 1394,
+            "total_tokens": 1579,
+            "completion_tokens": 185,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "9d9ad494f2f253ff4c8e92263ee62b94d68176f6c2d911801a4f09ced71de636",
+          "response_SHA256": "9718243d0f4b8f830855870d804d2ab59f44c38b2d1be9f9d7d38b4a48709e3e"
+        },
+        {
+          "call": "001",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 93,
+            "total_tokens": 110,
+            "completion_tokens": 17,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "43bc23ab8ee2ab2a4118c89f64199b581cfd7f9d0dab7f1507344180b129e765",
+          "response_SHA256": "e638da18bf5bcf019d1a6a1ee26fb1db222d6c98477ac8ad9a2259f935ab3b7e"
+        },
+        {
+          "call": "002",
+          "prompt": "\nTable Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.005,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 2053,
+            "total_tokens": 3565,
+            "completion_tokens": 1512,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "d39b6bb7a14f8181fa3a978466ef40336d44feb2df60d4f32af334777834e495",
+          "response_SHA256": "f195ff1b4387b6d7b0b22e23d5d638f854f7a5ec1ee337be941c63067f05d4ed"
+        },
+        {
+          "call": "003",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 113,
+            "total_tokens": 148,
+            "completion_tokens": 35,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "e3beb8d2b3ecffe2cad547ca6da47e3348ad0f96fee7e4050f090ad72814cf9c",
+          "response_SHA256": "ead1bfbc3e6652bcd034027255fe4b573bfdd5ccdfa587eea205506c8681f0e9"
+        },
+        {
+          "call": "004",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 105,
+            "total_tokens": 112,
+            "completion_tokens": 7,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "7c740cce89a20c8275237b1f70f389de26e125a8def9211b5a0bf8701430948b",
+          "response_SHA256": "b957d817e5ec2b338ebf53ab24debd70612898e9029f7ad86d7229e06a304b05"
+        },
+        {
+          "call": "005",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 111,
+            "total_tokens": 142,
+            "completion_tokens": 31,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "faf37ed87d5f0a23a34159db0c79f5f3ba265ad474c0425aa05efaa414885652",
+          "response_SHA256": "38e400479b0c45e9681837ca38efdf96fd00f5fc010df6f63298ad7fb1fd984c"
+        },
+        {
+          "call": "006",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 109,
+            "total_tokens": 116,
+            "completion_tokens": 7,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "e23dcc40f882d7b95216d2b6ec943c820b21c0e7ce72e83cb8df4cdc390730a9",
+          "response_SHA256": "8ec7ee7753c4c2bad6735e270c99f254a38f78ef9375dcab807fb56e6cbf932e"
+        },
+        {
+          "call": "007",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 95,
+            "total_tokens": 98,
+            "completion_tokens": 3,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "5225531f91e8379dd304d3ddf5fb2a7b1ba3725b17049abe5582abb0d4bdba95",
+          "response_SHA256": "2f048779d3a371596c67b390c689a718dc445ff48c60a754d40b052b08ca223d"
+        }
+      ],
+      "all_calls_finish_stop_without_truncation": true
+    },
+    {
+      "id": "1225474739",
+      "page": 74,
+      "source_pdf_SHA256": "1c99c450a8efefe77c9ca02a6f670c958298f661e5ad8d30d6ba01aa0742cda9",
+      "source_page_SHA256": "5f80ffe21d228b27c2b5b7b29b5daea1a9360e68cc114ae0506338abb7df3b10",
+      "source_page_size": [
+        1654,
+        2339
+      ],
+      "source_pdf_page_rotation": 0,
+      "source_total_pages": 134,
+      "status": "complete",
+      "client_seconds": 26.962432462954894,
+      "model_HTTP_seconds": 26.65523083973676,
+      "model_calls": 30,
+      "blocks": 30,
+      "blocks_SHA256": "ed904df40e03e4c8666432b0471f7db95ae0431b8f8a3ee9aa8e92b32ee07f74",
+      "MD_SHA256": "9a89070ca424b2cf5e656ebd0ade8756e7def6ae425da0aca45643308f92ce9d",
+      "timing_boundary": "client_seconds wraps only two_step_extract; excludes PDF rendering/json2md/persistence/metrics snapshots",
+      "PDF_render_seconds": null,
+      "MD_conversion_and_persistence_seconds": null,
+      "whole_case_PDF_to_MD_seconds": null,
+      "source_page_PNG_byte_identical_to_TF": true,
+      "model_inference_metrics_delta": {
+        "vllm:request_inference_time_seconds_sum": 25.450771771837026,
+        "vllm:request_prefill_time_seconds_sum": 2.5385352759622037,
+        "vllm:request_decode_time_seconds_sum": 22.912236495874822,
+        "vllm:request_queue_time_seconds_sum": 0.0005794580793008208,
+        "vllm:e2e_request_latency_seconds_sum": 26.39445686340332
+      },
+      "HTTP_calls": [
+        {
+          "call": "000",
+          "prompt": "\nLayout Detection:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 0.0,
+            "frequency_penalty": 0.0,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 1394,
+            "total_tokens": 2055,
+            "completion_tokens": 661,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "ce88c62fdf26050a21b9c545b4d47ffb3a72966416eac9430715d127cca9f76c",
+          "response_SHA256": "d039b1cb50420096bc9977d2e06f6768e70a1f0c6727a52c1ee9904aea31f662"
+        },
+        {
+          "call": "001",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 93,
+            "total_tokens": 110,
+            "completion_tokens": 17,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "43bc23ab8ee2ab2a4118c89f64199b581cfd7f9d0dab7f1507344180b129e765",
+          "response_SHA256": "d16726d304da46759fb860c3f99aa6e3da0624dc898d07b3cf367fdfa1d19f4d"
+        },
+        {
+          "call": "002",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 166,
+            "total_tokens": 207,
+            "completion_tokens": 41,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "8d93f2a4ea2d3ee0672627b9e960d2ae917c14ab5a880dc0824e6ddd24b4adbf",
+          "response_SHA256": "4a440882649e7e5575727e5b6d89e3ad06a8d008929207b67affee4e7f43877b"
+        },
+        {
+          "call": "003",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 100,
+            "total_tokens": 109,
+            "completion_tokens": 9,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "5aa60f4e737eb70cfca8776d15baaff6962baed9e2c8fd4661885194ff6128d8",
+          "response_SHA256": "55be80e6d1dc4f22a1b62ac0d8eaa86babbf50f9c7e1cd44dcead1eb5834dc06"
+        },
+        {
+          "call": "004",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 113,
+            "total_tokens": 137,
+            "completion_tokens": 24,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "e1ca8e25b9c0554e65b3832e1aa4ed5b055c63c7709f67141f6d516de9fecb21",
+          "response_SHA256": "5c91a710fe4b60967603161a172ff5e4cd662bcec1828ad822170b1aa4b6d3e8"
+        },
+        {
+          "call": "005",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 121,
+            "total_tokens": 149,
+            "completion_tokens": 28,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "dcad973d97fd8ca46bd890106043c3ac8c77b71edb65080c95d5af85792a6497",
+          "response_SHA256": "ae8f73e0ea2318242ab98b6c3bc252f9757d2c6218ae3e2040be35f40279b423"
+        },
+        {
+          "call": "006",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 91,
+            "total_tokens": 98,
+            "completion_tokens": 7,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "61ab04efa934b651585b12a9b9de6b18e38e2828274914cdb685b8dddee0e5c2",
+          "response_SHA256": "568e51c93390dc00087c842232ea1438e8e282df39313a53ef062c9314fe50b1"
+        },
+        {
+          "call": "007",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 307,
+            "total_tokens": 403,
+            "completion_tokens": 96,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "489134a24e06e206f7633737f163b89f51a8673c4bb0b6143e106e66e4afd719",
+          "response_SHA256": "7789ef24f9e3c4f24e33c9d0e82546d7a827aef9ca4ed8610395f0b41ec2a5c8"
+        },
+        {
+          "call": "008",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 93,
+            "total_tokens": 108,
+            "completion_tokens": 15,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "577ef7589de7cebed04aa77da1d1d80b45008439f8ff4545d508b3a6c1b6af61",
+          "response_SHA256": "4f42915a201636f2de039c05638b4b4954e0f76cefc2f26e5e21072041ebca5c"
+        },
+        {
+          "call": "009",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 166,
+            "total_tokens": 231,
+            "completion_tokens": 65,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "42adb25f3d20499fd484ba6b86b343dc97827c0791e587d954d26c1bc31d133b",
+          "response_SHA256": "13cf33e9d4207ccd021ecdae694b5b226e4cb7a57a900dbc52b107b594bc1a99"
+        },
+        {
+          "call": "010",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 213,
+            "total_tokens": 284,
+            "completion_tokens": 71,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "0dece1da9b88db7140a7350fefce175aa97730d578a12c253bf7ca40df071f1d",
+          "response_SHA256": "c74e678df6d4dfe8965901e395780616a9997e661c709040956cb67d9082e021"
+        },
+        {
+          "call": "011",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 166,
+            "total_tokens": 223,
+            "completion_tokens": 57,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "4052f434f7274c9a684882c1572c36ac9278ef6b92e1aec2368182b3b243bc07",
+          "response_SHA256": "2b39a4ef17fc0424cbea3bbd8e548e4810bed4efdfda1d886d4da78769e8a30c"
+        },
+        {
+          "call": "012",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 101,
+            "total_tokens": 107,
+            "completion_tokens": 6,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "052fd3d61b39b3741799f2326a7b35a92c5b03f840d5a3153a12e7347ee57034",
+          "response_SHA256": "b424345a3b5a8e01480513edd05abf52ee174997f9c8e7994e73b1a48b5c944e"
+        },
+        {
+          "call": "013",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 103,
+            "total_tokens": 122,
+            "completion_tokens": 19,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "de1342cba5e27212699e2f15d4d8d330a3232b4c010660d3cb6ff0ed7b7454ee",
+          "response_SHA256": "a0cfbf3621c57b6d67de976e2bfced3965859c59a9b5702b72012f22e53ebd80"
+        },
+        {
+          "call": "014",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 97,
+            "total_tokens": 106,
+            "completion_tokens": 9,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "dd4d71324d0957946c03a2c3c0b3cf4c3cbac1eacbaa9f4eb14c19b6e75a8ac0",
+          "response_SHA256": "8314392e4b9bace698a75da46a149947c34681eaa164fb2d8468e43be3bb0821"
+        },
+        {
+          "call": "015",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 121,
+            "total_tokens": 136,
+            "completion_tokens": 15,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "8a16832eaa29a644c5dfa079143ab6057c4c0c7992fa42f1c5c69c5bacd65348",
+          "response_SHA256": "7667dd17eea49c0b55fe56746552a5bb0f3fa96c44d940a1b758243e3a5ed1e7"
+        },
+        {
+          "call": "016",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 127,
+            "total_tokens": 155,
+            "completion_tokens": 28,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "4336d9bbfa1cdc26541d5317c5f7fdeacb01f4ef9ec98a2d532ad5e376283fa6",
+          "response_SHA256": "538a431039f293a63eb8702f0ba7894a67012ddfb66a66b2acf339ce25031ecc"
+        },
+        {
+          "call": "017",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 101,
+            "total_tokens": 109,
+            "completion_tokens": 8,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "9a44f7688eefd6ce4a7c9905b6772b420dbc64e08fb1e7cd5c53ec47b67f48c9",
+          "response_SHA256": "dc822a6b0416ae1bee4cc3edcca895cc192e34ebbc04d7fa85610740132626e1"
+        },
+        {
+          "call": "018",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 118,
+            "total_tokens": 129,
+            "completion_tokens": 11,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "245f766da2e758fec7c2e7bed3b33e44542f7ccd57cc9100fcea350fe093ad75",
+          "response_SHA256": "697b0cef3ddd97cc18b3b8f99d487553edeb3ef09254491a02df63fbd8f8318f"
+        },
+        {
+          "call": "019",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 166,
+            "total_tokens": 206,
+            "completion_tokens": 40,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "974f1a343e03b8641fc25c3b6ae86db1cac05d5b7200e2d8036bb1b7c21a891d",
+          "response_SHA256": "3dd2999c5dc08016306109a09c09f11a97950fcdbc21d70ba82f3c30ea2527ae"
+        },
+        {
+          "call": "020",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 93,
+            "total_tokens": 105,
+            "completion_tokens": 12,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "1dbef480e444b1c88f5e126ced3ce0732d0229d0c50d6f8b71b6fc14ccb5ab5b",
+          "response_SHA256": "654a41a46ff894534310c193f1486d3b3e78712d2ff91c4c06c75eeea8841ea2"
+        },
+        {
+          "call": "021",
+          "prompt": "\nTable Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.005,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 307,
+            "total_tokens": 393,
+            "completion_tokens": 86,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "34d2e3e97ccc03c2f7ca6f8ee938d2ee226c2c686435db34074a8369d32d237f",
+          "response_SHA256": "70f987309f7bb3865f80e336d675f6ec8208439da1274b3fb5b8e6110b2bb56c"
+        },
+        {
+          "call": "022",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 111,
+            "total_tokens": 130,
+            "completion_tokens": 19,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "f0d63c43582296b7348490fe1abdc7bdfcfe5c14929ee9158f3d7bdbc3695c82",
+          "response_SHA256": "96ac77515e1c3183ff9981619d53b079c3dbed9090682dcde70a1e6a542e6702"
+        },
+        {
+          "call": "023",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 95,
+            "total_tokens": 108,
+            "completion_tokens": 13,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "74fb9f2777f5ae1c41f3c6dc9dfb8599a9bbc3a16d6683ed31ab92d35367fd70",
+          "response_SHA256": "7c04fe787a1f1157c65e2437e545dd6d5edcb5012d9372d28e61951b24abe17d"
+        },
+        {
+          "call": "024",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 93,
+            "total_tokens": 110,
+            "completion_tokens": 17,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "eebaeba2980308ffad2df172bae8e4c15beff0c364247b68b250ec1aaa52e2bf",
+          "response_SHA256": "b87102a925d5271cb525eb4b1cf675ce64bf6415b41d144791f82da3146073a5"
+        },
+        {
+          "call": "025",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 100,
+            "total_tokens": 109,
+            "completion_tokens": 9,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "94bd4e56fa1edac32589a06cb7ab1e2af8ea988276deb2bc1f60b72072bc9af0",
+          "response_SHA256": "8c203ddcb7a2d31e36a72b3e722ae1d21bb44e38e652c0cbf26bf65c38403655"
+        },
+        {
+          "call": "026",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 166,
+            "total_tokens": 205,
+            "completion_tokens": 39,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "3a66e2858680a205a723c20060e9cb11b1bda334540f3e0ec215dce39cdd6590",
+          "response_SHA256": "c097a5319725e16bd9316a555354a34dba17a4f2f6323584f8f70cb91d179a59"
+        },
+        {
+          "call": "027",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 121,
+            "total_tokens": 132,
+            "completion_tokens": 11,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "5ed3931228e367fe3d909ff5e44f4414e2345b012d74880525178b1a72a19e77",
+          "response_SHA256": "bbddb0674bad7c67c4e235a2499923166dd2f078f473befa725e3ca487ad6644"
+        },
+        {
+          "call": "028",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 101,
+            "total_tokens": 117,
+            "completion_tokens": 16,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "f298942d22dba52d0a3ffe65613fd904ce98b8fced33fbfef267d6accde04c68",
+          "response_SHA256": "5745570d7da89dfade067417bf28b18a2772e8ec3ea7a65c2f6bf9e35aa7c919"
+        },
+        {
+          "call": "029",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 97,
+            "total_tokens": 100,
+            "completion_tokens": 3,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "22c89cd00edae6cc99a6c36817ac27db173274c55c45605bdcdd92a1b9a5906b",
+          "response_SHA256": "82fd99c35c059f73b2847b3308bd90a72f6a6a993774d1591e5a7c433637da74"
+        }
+      ],
+      "all_calls_finish_stop_without_truncation": true
+    },
+    {
+      "id": "1225474739",
+      "page": 131,
+      "source_pdf_SHA256": "1c99c450a8efefe77c9ca02a6f670c958298f661e5ad8d30d6ba01aa0742cda9",
+      "source_page_SHA256": "6aa11f48e25d7b852ee475439588ba2caa421e1a817b50c6c24b4d5d65a7e734",
+      "source_page_size": [
+        1654,
+        2339
+      ],
+      "source_pdf_page_rotation": 0,
+      "source_total_pages": 134,
+      "status": "complete",
+      "client_seconds": 21.98509826802183,
+      "model_HTTP_seconds": 21.701814130297862,
+      "model_calls": 13,
+      "blocks": 12,
+      "blocks_SHA256": "34eb7c38a46254ce395f73b5917ea1201a02b828edf16a62d9170a0f3867f402",
+      "MD_SHA256": "c00db06610193b35ada690152d6003954296ac6ff31a5080fefb2fa7727ef35e",
+      "timing_boundary": "client_seconds wraps only two_step_extract; excludes PDF rendering/json2md/persistence/metrics snapshots",
+      "PDF_render_seconds": null,
+      "MD_conversion_and_persistence_seconds": null,
+      "whole_case_PDF_to_MD_seconds": null,
+      "source_page_PNG_byte_identical_to_TF": true,
+      "model_inference_metrics_delta": {
+        "vllm:request_inference_time_seconds_sum": 21.04780825227499,
+        "vllm:request_prefill_time_seconds_sum": 2.037962456117384,
+        "vllm:request_decode_time_seconds_sum": 19.009845796157606,
+        "vllm:request_queue_time_seconds_sum": 0.0003731648903340101,
+        "vllm:e2e_request_latency_seconds_sum": 21.59361982345581
+      },
+      "HTTP_calls": [
+        {
+          "call": "000",
+          "prompt": "\nLayout Detection:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 0.0,
+            "frequency_penalty": 0.0,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 1394,
+            "total_tokens": 1662,
+            "completion_tokens": 268,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "2982a932b41cba20175cb2eb5d23f1febb3707af6514366253937312522d99e7",
+          "response_SHA256": "545b22155264a182f6b2374a1bbbd72e4e1929bc5daa258e31d71ed998d64aed"
+        },
+        {
+          "call": "001",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 93,
+            "total_tokens": 110,
+            "completion_tokens": 17,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "43bc23ab8ee2ab2a4118c89f64199b581cfd7f9d0dab7f1507344180b129e765",
+          "response_SHA256": "75cbe6b857e97b4130b88f0f5f5c94884eef001a326d4ec217d58eb30f7ddac5"
+        },
+        {
+          "call": "002",
+          "prompt": "\nTable Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.005,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 169,
+            "total_tokens": 221,
+            "completion_tokens": 52,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "3b4789d1d3728d0b142ae4e23c8d027dfd1dc9303f1b89e431820db890c879c2",
+          "response_SHA256": "dd2ea44cc00a8a5a8f51c45655dcadc1b87933b1a5a9f917a51561a83abf922f"
+        },
+        {
+          "call": "003",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 105,
+            "total_tokens": 110,
+            "completion_tokens": 5,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "c939799b801ca421c09632778488955f833851609228867ea85d82ca111a4a77",
+          "response_SHA256": "cfc733c657f76f153d69286570dc81df75912f10e641b277fe02ce88c8180ccf"
+        },
+        {
+          "call": "004",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 100,
+            "total_tokens": 104,
+            "completion_tokens": 4,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "bcb166c285f457589322806117edd9bdbf4c7ad56a0da1dd41af4b9a01daf34a",
+          "response_SHA256": "c366c8b4d5c9901150ef4513c583ca802edcbcf0cbec4ebe964db8769f8542a6"
+        },
+        {
+          "call": "005",
+          "prompt": "\nTable Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.005,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 505,
+            "total_tokens": 736,
+            "completion_tokens": 231,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "31861411507e5b5cf8b46e2fb3d7a9fb218be6e970ad5a9b37b197ebc6e300b6",
+          "response_SHA256": "da0e234ae5eba86bc77a15e4f17619195bae5cf3a6131d13a77aa9a0d351cc1c"
+        },
+        {
+          "call": "006",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 113,
+            "total_tokens": 120,
+            "completion_tokens": 7,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "93963dad6c8250ac991913acad28a0efb37e75df3a413b45011b97684a0f42cd",
+          "response_SHA256": "4e7e0dce02f6e85150d79b5fb93ea0e8309be16e3cd2b319ea1d03b17a1b692d"
+        },
+        {
+          "call": "007",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 100,
+            "total_tokens": 104,
+            "completion_tokens": 4,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "f995e484aab153fc4068ab65086a6dfee054882451c66675d60b5a6732354315",
+          "response_SHA256": "6082be16844aedcc00ca3be3185e485fe24f0628cb5541e846a5d1406197ed07"
+        },
+        {
+          "call": "008",
+          "prompt": "\nTable Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.005,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 1561,
+            "total_tokens": 2068,
+            "completion_tokens": 507,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "4a0d041fd28649da8c2e0ece0d5ab1a8ed0e971c4d237d605e83ed8de07baeb8",
+          "response_SHA256": "30679fdd211098764237a928c3af641a0763662fa98ecd6b14fa88a9a022d8f5"
+        },
+        {
+          "call": "009",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 103,
+            "total_tokens": 115,
+            "completion_tokens": 12,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "59c6b78c3a2a96b39237ca2c5b4d428429be7ab7b82c213f3e164c04c8b3d144",
+          "response_SHA256": "005a0078ef13bf260c58610fd3bbde205713060a653f40e7002a0a4ef6aa539d"
+        },
+        {
+          "call": "010",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 105,
+            "total_tokens": 109,
+            "completion_tokens": 4,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "7ca9a54d0b7e1bd79f9751260e350101bd4825807b253a8e1c56f775f7637cec",
+          "response_SHA256": "9f7385ed132a5cc2911801f518ae6b117ebd2fd6306e17bf690dcb22e35734a8"
+        },
+        {
+          "call": "011",
+          "prompt": "\nTable Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.005,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 457,
+            "total_tokens": 548,
+            "completion_tokens": 91,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "e1b35b1e9f0751b2cc6b1bdbc71f8930a7efa776b775281482054b46cb95021d",
+          "response_SHA256": "e6c5bbc9d45805aef11f4f88a6fe5bd019c0347867feb2f59a4fd40173d58482"
+        },
+        {
+          "call": "012",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 95,
+            "total_tokens": 99,
+            "completion_tokens": 4,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "f6caf12619a04811f58625dd1ff32ac154f61b4d38074ea85d60dc92850042dc",
+          "response_SHA256": "52ba5150d567fe4806498938ee7d434bc6f2d6816e1fc95d439f6bf05d0d54d1"
+        }
+      ],
+      "all_calls_finish_stop_without_truncation": true
+    },
+    {
+      "id": "1225475375",
+      "page": 74,
+      "source_pdf_SHA256": "5eef30b5c544d76df917d56df76a665ed13b5e6ffebdc54ab0eea0a47b7589d6",
+      "source_page_SHA256": "d0cfd206c2e172f244d8e2d0a8d3e61f5100a6a0c374b98b2220aeebc13b5ca3",
+      "source_page_size": [
+        1654,
+        2339
+      ],
+      "source_pdf_page_rotation": 0,
+      "source_total_pages": 119,
+      "status": "complete",
+      "client_seconds": 16.85073598800227,
+      "model_HTTP_seconds": 16.609976348816417,
+      "model_calls": 14,
+      "blocks": 14,
+      "blocks_SHA256": "7bbec0c194fc56e2fd70fb56e89c4ef6056d97f798e17fc33e51416619e002a7",
+      "MD_SHA256": "1ccfb1908cb121695b2bdfc3e3043f7958833ef2597307434e4ad58f1b106b48",
+      "timing_boundary": "client_seconds wraps only two_step_extract; excludes PDF rendering/json2md/persistence/metrics snapshots",
+      "PDF_render_seconds": null,
+      "MD_conversion_and_persistence_seconds": null,
+      "whole_case_PDF_to_MD_seconds": null,
+      "source_page_PNG_byte_identical_to_TF": true,
+      "model_inference_metrics_delta": {
+        "vllm:request_inference_time_seconds_sum": 16.05761573498603,
+        "vllm:request_prefill_time_seconds_sum": 1.6945593598065898,
+        "vllm:request_decode_time_seconds_sum": 14.36305637517944,
+        "vllm:request_queue_time_seconds_sum": 0.00024611514527350664,
+        "vllm:e2e_request_latency_seconds_sum": 16.493489503860474
+      },
+      "HTTP_calls": [
+        {
+          "call": "000",
+          "prompt": "\nLayout Detection:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 0.0,
+            "frequency_penalty": 0.0,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 1394,
+            "total_tokens": 1703,
+            "completion_tokens": 309,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "5038f79d02e65eabd0698b4a63551e5c9b7caeeda10bc558e361454222021f8e",
+          "response_SHA256": "66479a62dbcd7c001761784c1a1f7f8cb8f15c8e02b7290a5ae1a0fd04b897be"
+        },
+        {
+          "call": "001",
+          "prompt": "\nTable Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.005,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 945,
+            "total_tokens": 1205,
+            "completion_tokens": 260,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "cf221506a15f71514b8a957d9ca68eb87b3da5806da4898979c584416dfeafe8",
+          "response_SHA256": "214fdaaee56851425563d2531c3a6b258a9e75b115d1c953d0afc3e98e630f98"
+        },
+        {
+          "call": "002",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 93,
+            "total_tokens": 106,
+            "completion_tokens": 13,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "eecff6dd77fb8d2c6c780e88264ee4f492b62bbc0d28049eab6069e0bf40c322",
+          "response_SHA256": "200e720bf90205248aad92e0d5f11e8718055ae50d052681f8ef426e0d22d7f3"
+        },
+        {
+          "call": "003",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 99,
+            "total_tokens": 114,
+            "completion_tokens": 15,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "59f6c9c110b18ab5e22b18d232fd6bd721aa1b74b35b2e478a7794f56b8da354",
+          "response_SHA256": "9524412e6b56e10f998ccf2afb743ee4583ed83243f9a5ed5fc00666e78936e5"
+        },
+        {
+          "call": "004",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 95,
+            "total_tokens": 112,
+            "completion_tokens": 17,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "fc6edc9cce4abd8443dfd76cb337c326ecca5e9b763a4d42b5dffa26b7099902",
+          "response_SHA256": "0be7e15af1206bb402dc6ef5211c2ac46e5da62d8d815fa761dcfaa993eea939"
+        },
+        {
+          "call": "005",
+          "prompt": "\nTable Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.005,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 485,
+            "total_tokens": 574,
+            "completion_tokens": 89,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "45599c04a740a2367b8c4dec3b4e2acb61b18fb09f10622e3e8d12517378722f",
+          "response_SHA256": "2fa84609f25e71063084645919b2fe8b07fc33101c5d5a78995822f70e56e7be"
+        },
+        {
+          "call": "006",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 109,
+            "total_tokens": 116,
+            "completion_tokens": 7,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "97b64f5f1392003c89c6378c7de5f0a082090fc2c25a10b32ba6d0ff7d11b071",
+          "response_SHA256": "97a67bfcc669bb84e893c66df3f8cce60f4bffa791c95a436bfcdf7b3730bf3b"
+        },
+        {
+          "call": "007",
+          "prompt": "\nTable Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.005,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 485,
+            "total_tokens": 569,
+            "completion_tokens": 84,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "1381c9d9427a68195103bb759d91ed61deba0ea8856d495ee45a8ffa93dd2e19",
+          "response_SHA256": "3f438176937e0074aa9e158abfea7aed98f5a33122355c4efa235c5f264e8046"
+        },
+        {
+          "call": "008",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 97,
+            "total_tokens": 103,
+            "completion_tokens": 6,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "56594371903be934608887e2b28ed9bd82caaad76fdbf5be2c7e97a651aa574b",
+          "response_SHA256": "9ddc0b41bc5a6ebd7129fe6b269e64c1b899811f024edc191fb31854dd2b76a7"
+        },
+        {
+          "call": "009",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 91,
+            "total_tokens": 99,
+            "completion_tokens": 8,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "e77558e392eed8679d11675b615f5ceccd9cfb05ea697d25bf02855701fd3a71",
+          "response_SHA256": "a34840beb75c07d6cdf46a8d2c48bc31716374d46f86ccff01ffb4ad5fa2a656"
+        },
+        {
+          "call": "010",
+          "prompt": "\nTable Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.005,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 347,
+            "total_tokens": 451,
+            "completion_tokens": 104,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "457666a3ccbe7fcb2b9d2399339cab5df33506e5e95ed5c3eccfa1507ae23e38",
+          "response_SHA256": "48585c4d69a60fc261d4e8ba6d2d20daf333dc9474a819a3b5b8da239979167e"
+        },
+        {
+          "call": "011",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 97,
+            "total_tokens": 111,
+            "completion_tokens": 14,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "02985b91c9c10ba693d6baeb2184772b46a81f23f24f3ae2e82836023897aef3",
+          "response_SHA256": "c9cbb686deea7e1f902b3054ac3412ed8248b18a98c042d143413e8fbcedc41c"
+        },
+        {
+          "call": "012",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 97,
+            "total_tokens": 100,
+            "completion_tokens": 3,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "7e726cbb7669b21d0b19696617157ed35f3a7116164c9c1676f23b3b1eeaf053",
+          "response_SHA256": "b2112b435ca754b4b0c359bc4ef1fd92d51ca40360ca871cc57851337862aca4"
+        },
+        {
+          "call": "013",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 97,
+            "total_tokens": 99,
+            "completion_tokens": 2,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "a700eaa5bea253a7964cfe14f647a0b0dc4b7f02d32e5daa366b15c363e93ab5",
+          "response_SHA256": "16ddec323b87c1248789ba33b6197d64092e331d93235e301b06c19be4dd84ca"
+        }
+      ],
+      "all_calls_finish_stop_without_truncation": true
+    },
+    {
+      "id": "1225475375",
+      "page": 87,
+      "source_pdf_SHA256": "5eef30b5c544d76df917d56df76a665ed13b5e6ffebdc54ab0eea0a47b7589d6",
+      "source_page_SHA256": "b01a7341f79a8834efdc72f8df6d2055027d071b898c75d75f6d1c8ca30f72a5",
+      "source_page_size": [
+        1654,
+        2339
+      ],
+      "source_pdf_page_rotation": 270,
+      "source_total_pages": 119,
+      "status": "complete",
+      "client_seconds": 11.982248196960427,
+      "model_HTTP_seconds": 11.752234307001345,
+      "model_calls": 6,
+      "blocks": 5,
+      "blocks_SHA256": "cf18b9a0b961e00b5d45e176d5da965019e025e5c3476a77c246c60fe6256a8d",
+      "MD_SHA256": "943ea06217e122b414230996231f8060365ae3a6b2aedf2140e9063866d043e8",
+      "timing_boundary": "client_seconds wraps only two_step_extract; excludes PDF rendering/json2md/persistence/metrics snapshots",
+      "PDF_render_seconds": null,
+      "MD_conversion_and_persistence_seconds": null,
+      "whole_case_PDF_to_MD_seconds": null,
+      "source_page_PNG_byte_identical_to_TF": true,
+      "model_inference_metrics_delta": {
+        "vllm:request_inference_time_seconds_sum": 11.380312414024957,
+        "vllm:request_prefill_time_seconds_sum": 1.6566283620195463,
+        "vllm:request_decode_time_seconds_sum": 9.72368405200541,
+        "vllm:request_queue_time_seconds_sum": 0.0001117469510063529,
+        "vllm:e2e_request_latency_seconds_sum": 11.69533371925354
+      },
+      "HTTP_calls": [
+        {
+          "call": "000",
+          "prompt": "\nLayout Detection:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 0.0,
+            "frequency_penalty": 0.0,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 1394,
+            "total_tokens": 1508,
+            "completion_tokens": 114,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "b414f67345985ce54f4473a7634fabb38061eb1d1028879ac07d429fed6f407c",
+          "response_SHA256": "b594e43a1ec5ee140f2fcf5cbbfef85080a6f4a897489692bb9ebc89b888cefe"
+        },
+        {
+          "call": "001",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 106,
+            "total_tokens": 114,
+            "completion_tokens": 8,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "c5dcb9790aaa9f024505893c7af52087c65c04008ab34e2e0e8e6d57e9dd4a2d",
+          "response_SHA256": "5189f2c02087382139ee62976b1f56525b6aa5e0599591a48ab7543e2d03c344"
+        },
+        {
+          "call": "002",
+          "prompt": "\nTable Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.005,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 2013,
+            "total_tokens": 2486,
+            "completion_tokens": 473,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "440e82d0c3f0c1064249d35f46ee021e066b08aca160deac480c47bd7ee1f83e",
+          "response_SHA256": "2468f16ef584aaf7340a4eb4707b802a98317c136ed39c67ae6d2d492a51462b"
+        },
+        {
+          "call": "003",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 95,
+            "total_tokens": 109,
+            "completion_tokens": 14,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "8e6b1dcd968c53626b049f8e29c6a4df03048f6c968c8f19a35ef91583b696e6",
+          "response_SHA256": "1e1a465e6d1420625c00570c03276159e6cca86b827fb5a0f7f7b158c960ca69"
+        },
+        {
+          "call": "004",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 97,
+            "total_tokens": 100,
+            "completion_tokens": 3,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "a09167d9d8bf558959114478d5020a2dad811669353d30dea4b3d4c751bd3421",
+          "response_SHA256": "e6d4209ea7938db3a4f56183d9f983602f0778038ad8f159ae1d445cf5c00d9d"
+        },
+        {
+          "call": "005",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 89,
+            "total_tokens": 91,
+            "completion_tokens": 2,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "168e55c3e2906c992532d790aa01acb4b1966446d485a90a8eabd7d66329c036",
+          "response_SHA256": "bda951457da2f2a9ae861560bccf3b1904d25bdf5d209de3da2d736c7ae3c14b"
+        }
+      ],
+      "all_calls_finish_stop_without_truncation": true
+    },
+    {
+      "id": "1225474139",
+      "page": 28,
+      "source_pdf_SHA256": "dc69826976c576302ee4156642039b790693202a611922dda647eb006e6d5c18",
+      "source_page_SHA256": "f8fc7284a6542aabff3a31f9f5af34983cccbb922aad612c15a2f2cbe9b3dd59",
+      "source_page_size": [
+        1654,
+        2339
+      ],
+      "source_pdf_page_rotation": 0,
+      "source_total_pages": 36,
+      "status": "complete",
+      "client_seconds": 3.375570354051888,
+      "model_HTTP_seconds": 3.2635491869878024,
+      "model_calls": 5,
+      "blocks": 4,
+      "blocks_SHA256": "749495803548c37b517dd682743cab6bfda1f07440cc43026450668c232f3600",
+      "MD_SHA256": "7cf369cb41c97fe04c0e80f8c5de252abd6828f5045f3ac01ca3c35f9f3a8d4e",
+      "timing_boundary": "client_seconds wraps only two_step_extract; excludes PDF rendering/json2md/persistence/metrics snapshots",
+      "PDF_render_seconds": null,
+      "MD_conversion_and_persistence_seconds": null,
+      "whole_case_PDF_to_MD_seconds": null,
+      "source_page_PNG_byte_identical_to_TF": true,
+      "model_inference_metrics_delta": {
+        "vllm:request_inference_time_seconds_sum": 3.095340308966115,
+        "vllm:request_prefill_time_seconds_sum": 0.7538322609616444,
+        "vllm:request_decode_time_seconds_sum": 2.3415080480044708,
+        "vllm:request_queue_time_seconds_sum": 7.970212027430534e-05,
+        "vllm:e2e_request_latency_seconds_sum": 3.234095811843872
+      },
+      "HTTP_calls": [
+        {
+          "call": "000",
+          "prompt": "\nLayout Detection:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 0.0,
+            "frequency_penalty": 0.0,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 1394,
+            "total_tokens": 1483,
+            "completion_tokens": 89,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "a17b36cb71a0b97a28f2dfc2a78ebbd602e8cf95c6d9ac748f0c7e87578d7459",
+          "response_SHA256": "100c9f16f77b47ceb750460a7bb612fbc7752bb6952e73c4b4af6d8c2b2d60b0"
+        },
+        {
+          "call": "001",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 93,
+            "total_tokens": 105,
+            "completion_tokens": 12,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "ab799b6b3699c6c3acdaeaf0cb99207c5f1066ec6451be64f5815a7cf9c5e6d4",
+          "response_SHA256": "ad4dd37182635386d64a9d31af9e55830ce6d72364546032c0bcd1e7c71a5f24"
+        },
+        {
+          "call": "002",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 112,
+            "total_tokens": 121,
+            "completion_tokens": 9,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "12405723e283220699382b750a537f7839f416bef539bcb61416fb21c7881aaa",
+          "response_SHA256": "5f8faf19bf16cd8fbc592481950d29066bdb887618e4b00844afc0287a1bae37"
+        },
+        {
+          "call": "003",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 193,
+            "total_tokens": 231,
+            "completion_tokens": 38,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "e2dd0a4914f8a5b05ca58362b7129469136007ea5f0aa2cfe4d528cbc5146384",
+          "response_SHA256": "d93e07eac770a5e2bdfaa34cbc678175cc055f8ba23acded4a999f16026e378f"
+        },
+        {
+          "call": "004",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 97,
+            "total_tokens": 100,
+            "completion_tokens": 3,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "e82699a5959815989cad9cae07dfbf824d5c3ecacde9307fd4d829eb6abd3bec",
+          "response_SHA256": "2e98f745ffe01e8f65041dc33bbc2fdcc8fbc5c57d1c87c7c9dd9d5d66695b4b"
+        }
+      ],
+      "all_calls_finish_stop_without_truncation": true
+    },
+    {
+      "id": "1225474139",
+      "page": 30,
+      "source_pdf_SHA256": "dc69826976c576302ee4156642039b790693202a611922dda647eb006e6d5c18",
+      "source_page_SHA256": "bffa48e6b70cbf8ba98c4d9466af5e4e989f1328021ee9ee2fa3364dd49199cd",
+      "source_page_size": [
+        1654,
+        2339
+      ],
+      "source_pdf_page_rotation": 0,
+      "source_total_pages": 36,
+      "status": "complete",
+      "client_seconds": 5.251728705945425,
+      "model_HTTP_seconds": 5.130283944774419,
+      "model_calls": 9,
+      "blocks": 8,
+      "blocks_SHA256": "d95358d0be792381417ba17b90f3c32f6ff3a0cea7f461f0e0db118ab008a744",
+      "MD_SHA256": "62367724b1e6f9434ed24f348515d21bb842eea87a847d5c66ababd560cc7753",
+      "timing_boundary": "client_seconds wraps only two_step_extract; excludes PDF rendering/json2md/persistence/metrics snapshots",
+      "PDF_render_seconds": null,
+      "MD_conversion_and_persistence_seconds": null,
+      "whole_case_PDF_to_MD_seconds": null,
+      "source_page_PNG_byte_identical_to_TF": true,
+      "model_inference_metrics_delta": {
+        "vllm:request_inference_time_seconds_sum": 4.869435013853945,
+        "vllm:request_prefill_time_seconds_sum": 0.9655880738282576,
+        "vllm:request_decode_time_seconds_sum": 3.903846940025687,
+        "vllm:request_queue_time_seconds_sum": 0.00013187492731958628,
+        "vllm:e2e_request_latency_seconds_sum": 5.076890468597412
+      },
+      "HTTP_calls": [
+        {
+          "call": "000",
+          "prompt": "\nLayout Detection:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 0.0,
+            "frequency_penalty": 0.0,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 1394,
+            "total_tokens": 1571,
+            "completion_tokens": 177,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "7c67203764aee9d668bdcfec7df6b2f037c04708455cd851a0a317d5f2f2f6c7",
+          "response_SHA256": "514de361d7faa43a6e228eafdcbab363e12b48bdcf680e00ed3400b87de50eba"
+        },
+        {
+          "call": "001",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 93,
+            "total_tokens": 105,
+            "completion_tokens": 12,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "ab799b6b3699c6c3acdaeaf0cb99207c5f1066ec6451be64f5815a7cf9c5e6d4",
+          "response_SHA256": "998d0bfeab3d0cbd679089a6797c42162e680e00aaa83b3bfed603fc29099cc2"
+        },
+        {
+          "call": "002",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 97,
+            "total_tokens": 102,
+            "completion_tokens": 5,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "f63d22d39bbc5b1f8100ce75348e1e48047daa06397d629039c1628fe7566fbf",
+          "response_SHA256": "b8c55caff8767deeff4a2e61249704dad26466b26089657f0779ab0fcf0eb8ad"
+        },
+        {
+          "call": "003",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 193,
+            "total_tokens": 232,
+            "completion_tokens": 39,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "a849d3a55c330fc20c19f3ca731507bd6b2e9f2ee9abe8a04519bf6f6c73bf8e",
+          "response_SHA256": "a1ab19358426d31603ee06bb0a4678d10d63926f9583c7de548758980dabd532"
+        },
+        {
+          "call": "004",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 121,
+            "total_tokens": 132,
+            "completion_tokens": 11,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "2f819baee56039fb5fa0de9ba1ad8d97d2a401d58fd4e531a03830eef43c6ebd",
+          "response_SHA256": "2f0e42952019e83b6d4e1a7e17150adf40dea363004826cb2ecb6aa167ff700e"
+        },
+        {
+          "call": "005",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 106,
+            "total_tokens": 111,
+            "completion_tokens": 5,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "8dfe865f502df853adac77ddafa5e2b843d21cf179f9bd8e5014c95f0ef42433",
+          "response_SHA256": "37b4a047f8ff223ad82ef0d201b6a0b31a45d38607754cf4480a37391d27f716"
+        },
+        {
+          "call": "006",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 95,
+            "total_tokens": 99,
+            "completion_tokens": 4,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "d76656797b3f48602d99e96d2665f66e56888f8429d5910a4ac61177a5c44cfd",
+          "response_SHA256": "9cbc707b213cc4eb4d4b4e5d63950c95e5384f5c95b5aa19ce8bbf690395b12d"
+        },
+        {
+          "call": "007",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 105,
+            "total_tokens": 110,
+            "completion_tokens": 5,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "d0678ce5043cbe50f96f49242052d4d7e3edbb442ae0fb05078935ca8131bd16",
+          "response_SHA256": "eeb5467e8ec8a34448a019790f100434bed505cf9b088480dbdf5b24c6f1837d"
+        },
+        {
+          "call": "008",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 97,
+            "total_tokens": 100,
+            "completion_tokens": 3,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "13ffac9d9ed14650ce1ff05020a904d91a1e345de74aeb73195d31110483105a",
+          "response_SHA256": "b612d1a0db1042ff33acd5f8c7936c05e56d1ace341ccd7349e55faa32d21a87"
+        }
+      ],
+      "all_calls_finish_stop_without_truncation": true
+    },
+    {
+      "id": "1225474693",
+      "page": 2,
+      "source_pdf_SHA256": "dc7f5b3bfdc5a5c69b9cf4b2a9e0d28e2f9ee0b2464770fb8a910fea688ee775",
+      "source_page_SHA256": "61722b8f5f5bec11f097e7f1d488d09b361b7add4222d508bb66ecf98b7de2cd",
+      "source_page_size": [
+        1654,
+        2339
+      ],
+      "source_pdf_page_rotation": 0,
+      "source_total_pages": 4,
+      "status": "complete",
+      "client_seconds": 16.897363102063537,
+      "model_HTTP_seconds": 16.68325431679841,
+      "model_calls": 16,
+      "blocks": 16,
+      "blocks_SHA256": "799b483a478ee17c6a7163c4597dadcda8587b5883ec7188ce119bc577970cf7",
+      "MD_SHA256": "3fe42608cd47e7801bb0139979f97e458435f09da55878b7c73f6176ba61fedf",
+      "timing_boundary": "client_seconds wraps only two_step_extract; excludes PDF rendering/json2md/persistence/metrics snapshots",
+      "PDF_render_seconds": null,
+      "MD_conversion_and_persistence_seconds": null,
+      "whole_case_PDF_to_MD_seconds": null,
+      "source_page_PNG_byte_identical_to_TF": true,
+      "model_inference_metrics_delta": {
+        "vllm:request_inference_time_seconds_sum": 16.173502975027077,
+        "vllm:request_prefill_time_seconds_sum": 1.6332794009940699,
+        "vllm:request_decode_time_seconds_sum": 14.540223574033007,
+        "vllm:request_queue_time_seconds_sum": 0.00026246102061122656,
+        "vllm:e2e_request_latency_seconds_sum": 16.575403213500977
+      },
+      "HTTP_calls": [
+        {
+          "call": "000",
+          "prompt": "\nLayout Detection:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 0.0,
+            "frequency_penalty": 0.0,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 1394,
+            "total_tokens": 1747,
+            "completion_tokens": 353,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "3b78202feae4b67ad0b6d0a7d86672a9f1a590e4545f5e73ca6bc354db21639e",
+          "response_SHA256": "f1ef0f89474c51709c6d730897cb4b264a67d3b9aecd4511350485441f4bdcee"
+        },
+        {
+          "call": "001",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 93,
+            "total_tokens": 108,
+            "completion_tokens": 15,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "052911b63565b10d76b2820f988586059a38e02d0d8f71ec211c10ed0e038e7c",
+          "response_SHA256": "631e85a391efc6dce45e41fe7cbb974f5a0eec0ef4a8eeb8eb066173a1d493be"
+        },
+        {
+          "call": "002",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 109,
+            "total_tokens": 114,
+            "completion_tokens": 5,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "09979586e2112e10c2312e2d28dc38533acebec2309b86482d4c199afcf52e57",
+          "response_SHA256": "8417616aeb0adb4a6e349e1182bdbfee2259e477bae2939ca40dbd01c6498d3d"
+        },
+        {
+          "call": "003",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 201,
+            "total_tokens": 250,
+            "completion_tokens": 49,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "ee4e0bbb8bb8e01620c0f4d2ef5dd43a548deea51160a1019d4ca24c0d586031",
+          "response_SHA256": "c80a03843557054d6d2997e96d8f30304311d8d957119650f50d007575705d25"
+        },
+        {
+          "call": "004",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 201,
+            "total_tokens": 243,
+            "completion_tokens": 42,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "9a46993e9bd4478e331826e0e3013dee3d21f2db267934ce2ec17d8b7085f872",
+          "response_SHA256": "822545fc062caf08e505a3035e3ca9c4f1dfa1d9d0e8277160ddbba522ebc266"
+        },
+        {
+          "call": "005",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 112,
+            "total_tokens": 125,
+            "completion_tokens": 13,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "257d5c7279e204a22f78b8ddbe08738d280c6354bf4fc96130144207bd0cf040",
+          "response_SHA256": "efc710a9e0828d8a0dc1ae43cddcf312f9611cedf52f3d507b3400968729304c"
+        },
+        {
+          "call": "006",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 103,
+            "total_tokens": 115,
+            "completion_tokens": 12,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "929e8694c7dff8ff245f93eb1683eaa743ed91ff344631fe49a5c8d0df349f95",
+          "response_SHA256": "022e02024e2ed55c4ee1f4e2e180cb83394a55cfaffcd80e591d69706db018c5"
+        },
+        {
+          "call": "007",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 101,
+            "total_tokens": 125,
+            "completion_tokens": 24,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "e5521480a6b2ce8882a80b1818070294c64a3fa92daf046327729596cc37563f",
+          "response_SHA256": "615fb1676d477c38da1bf479bcd0fcf8fe2f9efd4a61970f9ca355ef2d722fd5"
+        },
+        {
+          "call": "008",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 333,
+            "total_tokens": 460,
+            "completion_tokens": 127,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "6385c636bd9e7a3665c6d1e98c31c58829863315359066ab2f574f53031fad25",
+          "response_SHA256": "a37fabe32be65f925d8a5d44620c258038485a93b1e4e06edcd1670a9b6b9042"
+        },
+        {
+          "call": "009",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 94,
+            "total_tokens": 100,
+            "completion_tokens": 6,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "cd2b8bf6eaf2ff6e528b1aacef60918cf01e393e3de12de400c20aaa863d920b",
+          "response_SHA256": "5e5566dfb85bb897b074446617740c7c2bed428d83fee0c58307b3246f48c48a"
+        },
+        {
+          "call": "010",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 97,
+            "total_tokens": 105,
+            "completion_tokens": 8,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "2e5fb554b6ae1c15880e4db5a82431053266631df57b8dd9d9f572e7d5200b4f",
+          "response_SHA256": "fc6c23f0e5b31e3762a1aac8a14ae42791becbba536a0fef34c8781172aafff0"
+        },
+        {
+          "call": "011",
+          "prompt": "\nTable Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.005,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 245,
+            "total_tokens": 297,
+            "completion_tokens": 52,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "5d66efd679e103ca4513c5f08acb66b77bc654b72c5f68b42769ee059f67c8da",
+          "response_SHA256": "c9c32797d417569e0c13c678827ed596ee88fb55ee3e42ad8a264abc2b572efc"
+        },
+        {
+          "call": "012",
+          "prompt": "\nTable Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.005,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 475,
+            "total_tokens": 585,
+            "completion_tokens": 110,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "69729ac61e385438c613f6b02aa95ac011a609ac20b0b5fa1d6dd7251ded3ff4",
+          "response_SHA256": "5b3fe9fe4a608dfe7caee129b4aa9f436ba1357ef1eb22e57dffd4ac8d1ac0df"
+        },
+        {
+          "call": "013",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 109,
+            "total_tokens": 117,
+            "completion_tokens": 8,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "0adfb989334f96cfae79552ed6e0c3fd355bad88cfe128baab406610817a583e",
+          "response_SHA256": "128a31ae6664efc676aad032c0615a2b715bfa9d76d596cda6f9c8075d8bf5f8"
+        },
+        {
+          "call": "014",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 100,
+            "total_tokens": 110,
+            "completion_tokens": 10,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "ed5d3001e67461d4bd8e7418f452276c434b9e8f8faf74124ec39dd7ef1a4922",
+          "response_SHA256": "841bddf7f5d618c29a7c7b25208588cfa01ce30065a693c3efd86807b4039ceb"
+        },
+        {
+          "call": "015",
+          "prompt": "\nTable Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.005,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 385,
+            "total_tokens": 501,
+            "completion_tokens": 116,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "346312cfb9c3ef910f321cbacddfabdba5ac7be48cf8b9f30a27978d68c1bbaf",
+          "response_SHA256": "bf5df1b9bbacc3dfe6e305f97ba13a2ea971c53e77d2685f4ef87043ca9f111e"
+        }
+      ],
+      "all_calls_finish_stop_without_truncation": true
+    },
+    {
+      "id": "1225474693",
+      "page": 3,
+      "source_pdf_SHA256": "dc7f5b3bfdc5a5c69b9cf4b2a9e0d28e2f9ee0b2464770fb8a910fea688ee775",
+      "source_page_SHA256": "7a0be2e543dce52d2f3f229f2fd38679c7a9c23e90f0e8443c434dda193578e9",
+      "source_page_size": [
+        1654,
+        2339
+      ],
+      "source_pdf_page_rotation": 0,
+      "source_total_pages": 4,
+      "status": "complete",
+      "client_seconds": 17.837765285978094,
+      "model_HTTP_seconds": 17.58897571999114,
+      "model_calls": 6,
+      "blocks": 5,
+      "blocks_SHA256": "830f848f0657c5efd11c1d9639221e5183917f25eeefa8ee879b96d8f02a5536",
+      "MD_SHA256": "f27e4449ab32d927413ba75596e1141472a1c7bfdf1e65b1c953f33a99e9d77b",
+      "timing_boundary": "client_seconds wraps only two_step_extract; excludes PDF rendering/json2md/persistence/metrics snapshots",
+      "PDF_render_seconds": null,
+      "MD_conversion_and_persistence_seconds": null,
+      "whole_case_PDF_to_MD_seconds": null,
+      "source_page_PNG_byte_identical_to_TF": true,
+      "model_inference_metrics_delta": {
+        "vllm:request_inference_time_seconds_sum": 17.21923195105046,
+        "vllm:request_prefill_time_seconds_sum": 1.8447239549132064,
+        "vllm:request_decode_time_seconds_sum": 15.374507996137254,
+        "vllm:request_queue_time_seconds_sum": 0.0001120278611779213,
+        "vllm:e2e_request_latency_seconds_sum": 17.537681579589844
+      },
+      "HTTP_calls": [
+        {
+          "call": "000",
+          "prompt": "\nLayout Detection:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 0.0,
+            "frequency_penalty": 0.0,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 1394,
+            "total_tokens": 1505,
+            "completion_tokens": 111,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "0626efda023022374aabab7047f3dfd5a2d9d3b74cfb55a41f17a37e14c575b2",
+          "response_SHA256": "4b4417c88cc58a4df06d52d9c461d21e9b0b033cd1af21fc93aab69d0dc36fea"
+        },
+        {
+          "call": "001",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 93,
+            "total_tokens": 108,
+            "completion_tokens": 15,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "052911b63565b10d76b2820f988586059a38e02d0d8f71ec211c10ed0e038e7c",
+          "response_SHA256": "51dae0114708fe717421698f5ba592a8d2a4deee287cc60b023ba31903fe986f"
+        },
+        {
+          "call": "002",
+          "prompt": "\nTable Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.005,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 880,
+            "total_tokens": 1217,
+            "completion_tokens": 337,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "1d29de410f1f64fa2ee6e5784cc6f676de7faa3371d121ac3eeeee5a7e019ee4",
+          "response_SHA256": "c213ed8d9a181ca5b10008674458cbda7ccf16e96de0ed1737ca3fff6b59845f"
+        },
+        {
+          "call": "003",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 100,
+            "total_tokens": 115,
+            "completion_tokens": 15,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "e0f86786af4cfbdcd9f67a0de874001b5a7a9def63eebe19486e62b2eca7c781",
+          "response_SHA256": "8fe1e994d376edcc415cbc29cdf393b4fddc4de816df76eedac9fba8c1556a8b"
+        },
+        {
+          "call": "004",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 100,
+            "total_tokens": 104,
+            "completion_tokens": 4,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "93c2a6388ac6532b771a160938b7cefaf23a261ded2f66101f0e9a34701e8d6b",
+          "response_SHA256": "37537a8ecbbf3fb641fd86a827e03683578f48c7e85197024e964ecbce82db53"
+        },
+        {
+          "call": "005",
+          "prompt": "\nTable Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.005,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 2005,
+            "total_tokens": 2494,
+            "completion_tokens": 489,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "f3620fea1286d294589f7767446f5872b590fd1111f7f832d3fb7c4dfe5e5f1e",
+          "response_SHA256": "0ab54d7cd401fa33fc47b8a77d5408ab01a971df6b6a7b07203ef446d583d903"
+        }
+      ],
+      "all_calls_finish_stop_without_truncation": true
+    },
+    {
+      "id": "1225473526",
+      "page": 6,
+      "source_pdf_SHA256": "787297535ba74a4170cc859ae68f15f946f6dfd0bfc14a1e1fa0e6d068ba2b19",
+      "source_page_SHA256": "7dbc8398530f38c488c88934474c08bc6558f2e13a40619e135df1dbd4312c99",
+      "source_page_size": [
+        1654,
+        2339
+      ],
+      "source_pdf_page_rotation": 0,
+      "source_total_pages": 27,
+      "status": "complete",
+      "client_seconds": 16.981783388997428,
+      "model_HTTP_seconds": 16.72301525925286,
+      "model_calls": 15,
+      "blocks": 14,
+      "blocks_SHA256": "42684610f96715847b73cfb8ec6279050adb028a109daccdfee66f5458223d6b",
+      "MD_SHA256": "b4fee6f3b8929f08c4c4797c5c37c03efbda03f9751c7e293e3eab76ab7c04cd",
+      "timing_boundary": "client_seconds wraps only two_step_extract; excludes PDF rendering/json2md/persistence/metrics snapshots",
+      "PDF_render_seconds": null,
+      "MD_conversion_and_persistence_seconds": null,
+      "whole_case_PDF_to_MD_seconds": null,
+      "source_page_PNG_byte_identical_to_TF": true,
+      "model_inference_metrics_delta": {
+        "vllm:request_inference_time_seconds_sum": 16.049449889920652,
+        "vllm:request_prefill_time_seconds_sum": 1.8151500291423872,
+        "vllm:request_decode_time_seconds_sum": 14.234299860778265,
+        "vllm:request_queue_time_seconds_sum": 0.0003347080200910568,
+        "vllm:e2e_request_latency_seconds_sum": 16.5992271900177
+      },
+      "HTTP_calls": [
+        {
+          "call": "000",
+          "prompt": "\nLayout Detection:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 0.0,
+            "frequency_penalty": 0.0,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 1394,
+            "total_tokens": 1705,
+            "completion_tokens": 311,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "d8fb9cc3176945643fbb28963ab533c169aa5ee025f0312d106ca64d9e9333dd",
+          "response_SHA256": "b2404a290c99b111454f92aef5dd9b6bc9a6e101af0e89d454a99a48607e260c"
+        },
+        {
+          "call": "001",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 115,
+            "total_tokens": 123,
+            "completion_tokens": 8,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "3c5b999a88df77b21b2b0a8eb042bde71887fa6744d7db069393ef31351ed03a",
+          "response_SHA256": "f3b55f903278a8188431cedb5bf9bc8449dbef93ad33d03b87f569417c636422"
+        },
+        {
+          "call": "002",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 93,
+            "total_tokens": 97,
+            "completion_tokens": 4,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "f0f2a78d665c50a3a7ef434ec5c3de6b48dc3f12727fda2387d10c8a2588f6ed",
+          "response_SHA256": "a36e61a8b57723a60925e0c99786cf5f1ac16e9273cfbaafda020c360142bd9d"
+        },
+        {
+          "call": "003",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 193,
+            "total_tokens": 221,
+            "completion_tokens": 28,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "a849e6126a8ee0ed25dcfa42bcebf95ca2aad1b70ae59e41607917ae27b31ee0",
+          "response_SHA256": "3c860ecbbcc937bb228af8e280e4cc8a36be7296a535aae68f67ee1dbd447a80"
+        },
+        {
+          "call": "004",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 487,
+            "total_tokens": 574,
+            "completion_tokens": 87,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "51aa7429a40dfdb7aeed401da8e1a4dd363f71102cf4281ec9856cde50fffaa5",
+          "response_SHA256": "33095cdab470041a7b7cb5d9dc1ff8e9b28a101e85bb6a1b87ba7ceaff6dc032"
+        },
+        {
+          "call": "005",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 97,
+            "total_tokens": 105,
+            "completion_tokens": 8,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "68928db2994cfaef6fd5cbb651846616044df8e4de9a9eb6680a391a41347544",
+          "response_SHA256": "1cfdd5a49b84e7665d1ea81c94394e23b0741dc344a776a2a959322028f8fc36"
+        },
+        {
+          "call": "006",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 103,
+            "total_tokens": 126,
+            "completion_tokens": 23,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "9d7b5153480b52a7635dd27e8c37b952fb0be57f12e612e0d51867d7207914fe",
+          "response_SHA256": "da376f5f145ee8a63ef3a280088212d6bc00e4477b91ddc3bd85f50f8ce388df"
+        },
+        {
+          "call": "007",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 94,
+            "total_tokens": 101,
+            "completion_tokens": 7,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "4525e4ac7920197f1b476029a118d698e195ee66097596080c5e31307bfb8e68",
+          "response_SHA256": "9ba896ea35995529092399083c397d64ffe2b7759ecf2a0fab051467f5b72dbc"
+        },
+        {
+          "call": "008",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 93,
+            "total_tokens": 118,
+            "completion_tokens": 25,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "6574392bc8bdeb189c1c5c5b6e738497924cff189273effd849309e79e30c59c",
+          "response_SHA256": "a655ee3689ac0df85725b4d233389ee263eef1284a10f83ed1248069acca2eac"
+        },
+        {
+          "call": "009",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 100,
+            "total_tokens": 104,
+            "completion_tokens": 4,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "53997a5a432cc35e6647d4cd3ac2b31b8c785445fc7ea5a1fa78a1194088d04c",
+          "response_SHA256": "267e22703d3202ea05c66cc065a9becc28d212a1e214e4ec34ca6bd1e3ac1f6d"
+        },
+        {
+          "call": "010",
+          "prompt": "\nTable Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.005,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 627,
+            "total_tokens": 788,
+            "completion_tokens": 161,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "573e7bfab250fc320d950cefbf331671ed034cea6be98ce4a85322d91ea8fab6",
+          "response_SHA256": "e1d3d9d29f7407392c75003c00e3d97e09a904af5b8decd238cfa65e047ede59"
+        },
+        {
+          "call": "011",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 107,
+            "total_tokens": 137,
+            "completion_tokens": 30,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "5a33a74b4d483fde9541ab08c19a8893a98665334b5b43f1adbeb69eb4b2d2e6",
+          "response_SHA256": "0df479e1375e83124c7059e5017554381167adca90332fa86efb9b6150e322f9"
+        },
+        {
+          "call": "012",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 105,
+            "total_tokens": 109,
+            "completion_tokens": 4,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "0b90fd9bbbdb920d38d129fe09f7cccf569f7537667412d81ec36863ab973b5c",
+          "response_SHA256": "f257528a298828d4fbd5d467ca7ad973f98f5a48e4952ccc52ee0c9e368337fa"
+        },
+        {
+          "call": "013",
+          "prompt": "\nTable Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.005,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 799,
+            "total_tokens": 1015,
+            "completion_tokens": 216,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "2581a6aa04513c4bc15128c8eb71f3449fe54f7208fbf14898f7d748a4b902a4",
+          "response_SHA256": "4f49c5361025e48ac86c53746094ed3874f060ba164a7380f53426c1b24451d0"
+        },
+        {
+          "call": "014",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 103,
+            "total_tokens": 109,
+            "completion_tokens": 6,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "e4a0efe3c3ac14e3181f8996668af48dd89abc60b3779da7cfd5d7eca82f2528",
+          "response_SHA256": "66daa91c8128112b521ae427a64515257e3d2e9c956448a53ab2e1a74950f042"
+        }
+      ],
+      "all_calls_finish_stop_without_truncation": true
+    },
+    {
+      "id": "1225473526",
+      "page": 7,
+      "source_pdf_SHA256": "787297535ba74a4170cc859ae68f15f946f6dfd0bfc14a1e1fa0e6d068ba2b19",
+      "source_page_SHA256": "00ea1132e27ac90d9ec92d900770e1719963fd013cf186178fa7168c280ec5b7",
+      "source_page_size": [
+        1654,
+        2339
+      ],
+      "source_pdf_page_rotation": 0,
+      "source_total_pages": 27,
+      "status": "complete",
+      "client_seconds": 21.343136184033938,
+      "model_HTTP_seconds": 21.070615787873976,
+      "model_calls": 13,
+      "blocks": 12,
+      "blocks_SHA256": "4b41b5c52beb143328b9d8aaccc2c463cd9bf167527830b17c886c59e02f81e0",
+      "MD_SHA256": "f50e2e8d4f80e9d902daa36f7a6406ab5441dce4fc8d54d522f93af0f2d82d59",
+      "timing_boundary": "client_seconds wraps only two_step_extract; excludes PDF rendering/json2md/persistence/metrics snapshots",
+      "PDF_render_seconds": null,
+      "MD_conversion_and_persistence_seconds": null,
+      "whole_case_PDF_to_MD_seconds": null,
+      "source_page_PNG_byte_identical_to_TF": true,
+      "model_inference_metrics_delta": {
+        "vllm:request_inference_time_seconds_sum": 20.45439745404292,
+        "vllm:request_prefill_time_seconds_sum": 1.848810880095698,
+        "vllm:request_decode_time_seconds_sum": 18.60558657394722,
+        "vllm:request_queue_time_seconds_sum": 0.00034277269151061773,
+        "vllm:e2e_request_latency_seconds_sum": 20.95661449432373
+      },
+      "HTTP_calls": [
+        {
+          "call": "000",
+          "prompt": "\nLayout Detection:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 0.0,
+            "frequency_penalty": 0.0,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 1394,
+            "total_tokens": 1661,
+            "completion_tokens": 267,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "4d2cef958ba8bfa86c09a522ae5f6bf3334d29c6c6cce79f53d795427ecf3c7b",
+          "response_SHA256": "faa0c4814c74562ea2536c45e2407b16fdfc0006859cfc75166394957b51b456"
+        },
+        {
+          "call": "001",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 115,
+            "total_tokens": 123,
+            "completion_tokens": 8,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "b97750f1b10bc6cf6199e43cc1d0216495139ca751300e37c061991ab0912aa5",
+          "response_SHA256": "2d935efe88abd1123c7ee8278d779829c128514c0c65d51c3437ab00a14396a1"
+        },
+        {
+          "call": "002",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 93,
+            "total_tokens": 97,
+            "completion_tokens": 4,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "f0f2a78d665c50a3a7ef434ec5c3de6b48dc3f12727fda2387d10c8a2588f6ed",
+          "response_SHA256": "f3f23ce8d4ed3b9c1e007971de920f99f5896e6cbbc7fbb194ad31e316e08ef1"
+        },
+        {
+          "call": "003",
+          "prompt": "\nTable Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.005,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 613,
+            "total_tokens": 792,
+            "completion_tokens": 179,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "8eac16c9473370623298b72586283ea33995ea58d1047e91370dff57025cc656",
+          "response_SHA256": "39c03edcf345234995d838c9fc22fc0eb75fa912e80162e8c41d52033ee35cb2"
+        },
+        {
+          "call": "004",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 89,
+            "total_tokens": 106,
+            "completion_tokens": 17,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "3dcb5d7d16d1d4ec8aa24c012a650580356369635b612835cca372ed7be05c25",
+          "response_SHA256": "86685437c38fe0a0f41ebe75441c2a1da2377f28ef57530647ed000209e0bcd2"
+        },
+        {
+          "call": "005",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 97,
+            "total_tokens": 101,
+            "completion_tokens": 4,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "41692707faa0a6fe34476030457c1cd96b88a958f917841341f67916a8b978cf",
+          "response_SHA256": "4aef00c44d92eb3d67900d1b7d34eec83bb944b25f8c7409986c575073c3663f"
+        },
+        {
+          "call": "006",
+          "prompt": "\nTable Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.005,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 991,
+            "total_tokens": 1290,
+            "completion_tokens": 299,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "9a6a54f1171499059e89b48fd24ae2115d092421b4e08b6233be786343b3f289",
+          "response_SHA256": "f5aca499a08a0eac14f538f2a951216404babe9abf15e7ceb0c955e573cbf11f"
+        },
+        {
+          "call": "007",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 112,
+            "total_tokens": 123,
+            "completion_tokens": 11,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "73991acf5c33de016a5a81497f86f0814f84e5c18ea377cdfc85dffe0e846388",
+          "response_SHA256": "04bffed02877e09f9cf07bd3e0aa7097b797bfe2d3c21d1c5e8a3eb83310de40"
+        },
+        {
+          "call": "008",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 106,
+            "total_tokens": 114,
+            "completion_tokens": 8,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "028174e565268e81ff315f073718c85dc45955a83bc5bb79eedcd19f7ae0ec7f",
+          "response_SHA256": "45f714c66d3d6902402b2eb8871da2575c5302ec12c4d512fd4a6cf54d0a0ae6"
+        },
+        {
+          "call": "009",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 93,
+            "total_tokens": 97,
+            "completion_tokens": 4,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "b4914838aa040c5679b9a476e2b074b289f6997d35a5afb542910316993caee3",
+          "response_SHA256": "540ce7516cbaef090eaff522b6688a90e2d9c79d5c0820df00e574f7e93525d2"
+        },
+        {
+          "call": "010",
+          "prompt": "\nTable Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.005,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 655,
+            "total_tokens": 1032,
+            "completion_tokens": 377,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "87406711037070a6c26865ebd3db3b36a9be992b862f8d117c7d8d971bb34636",
+          "response_SHA256": "ac5a818cafb3b8648884f7d936c46e9d1bf3e386c640792ed7feabf7e06d4216"
+        },
+        {
+          "call": "011",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 97,
+            "total_tokens": 105,
+            "completion_tokens": 8,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "7dc61b01f080feda61482afe30a0947d71e6e67b567de2e6e7b23d06a3e98907",
+          "response_SHA256": "d43eb139f17d41dbeac95443a9d69588bfb5f293897c36963314d92b8b12ec3d"
+        },
+        {
+          "call": "012",
+          "prompt": "\nText Recognition:",
+          "params": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "vllm_xargs": {
+              "no_repeat_ngram_size": 100,
+              "debug": false
+            },
+            "skip_special_tokens": false
+          },
+          "model": "mineru-trial",
+          "usage": {
+            "prompt_tokens": 103,
+            "total_tokens": 109,
+            "completion_tokens": 6,
+            "prompt_tokens_details": null
+          },
+          "finish_reasons": [
+            "stop"
+          ],
+          "stop_reasons": [
+            null
+          ],
+          "input_truncation_requested": false,
+          "custom_stop_requested": false,
+          "request_SHA256": "36fca880e7cb89f45ce8703569665c3621dca6f101ecd27b85a3c4f94412dc05",
+          "response_SHA256": "0ceaec7c99b715a640bab1419ab4201b01382e982a9b9817834e74deda3c2aaf"
+        }
+      ],
+      "all_calls_finish_stop_without_truncation": true
+    }
+  ]
+}

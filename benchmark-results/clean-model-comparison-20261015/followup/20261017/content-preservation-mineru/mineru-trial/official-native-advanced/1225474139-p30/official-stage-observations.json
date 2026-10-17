@@ -1,0 +1,185 @@
+[
+  {
+    "stage": "official_input_preparation",
+    "file_suffix": "pdf",
+    "prepared_size_bytes": 204423,
+    "original_function_seconds": 0.004387415945529938,
+    "prepared_SHA256": "4555b76d57be9ff5e034f15796743b13bb3f1fff3c0194b2313683490f4a0252",
+    "retained_original_page_indices_zero_based": [
+      29
+    ],
+    "broken_original_page_indices_zero_based": [],
+    "derived_input_filename": "prepared-by-official-page-selection.pdf",
+    "transformation": "Official default page_range handling; runner did not crop or rewrite the source PDF."
+  },
+  {
+    "stage": "actual_VLM_options",
+    "image_analysis": false,
+    "not_extract_list": [
+      "caption",
+      "code_caption",
+      "doc_title",
+      "footer",
+      "footnote",
+      "header",
+      "image_caption",
+      "image_footnote",
+      "page_footnote",
+      "page_number",
+      "paragraph_title",
+      "phonetic",
+      "ref_text",
+      "table_caption",
+      "table_footnote",
+      "text",
+      "title"
+    ],
+    "image_sizes": [
+      [
+        1654,
+        2339
+      ]
+    ],
+    "model_inputs": []
+  },
+  {
+    "stage": "actual_VLM_results_before_native_body_fill",
+    "effort": "xhigh",
+    "tables": []
+  },
+  {
+    "stage": "native_PDF_text_fill",
+    "returned_spans": 11,
+    "nonempty_text_spans": 11,
+    "queued_for_post_OCR": 0,
+    "spans": [
+      {
+        "type": "text",
+        "bbox": [
+          315.72,
+          43.92,
+          505.08000000000004,
+          52.56
+        ],
+        "text": "深圳兆日科技股份有限公司详式权益变动报告书",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          235.8,
+          80.64,
+          380.16,
+          98.28
+        ],
+        "text": "信息披露义务人声明",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          114.12,
+          156.6,
+          504.36,
+          167.4
+        ],
+        "text": "本人（以及本人所代表的机构）承诺本报告书不存在虚假记载、误导性陈述",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          90.36,
+          180.0,
+          477.0,
+          190.44
+        ],
+        "text": "或重大遗漏，并对其真实性、准确性、完整性承担个别和连带的法律责任。",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          277.92,
+          272.88,
+          503.64000000000004,
+          283.68
+        ],
+        "text": "信息披露义务人：上海璟和珩科技有限公司",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          342.36,
+          333.72,
+          414.72,
+          347.40000000000003
+        ],
+        "text": "法定代表人：",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          443.88,
+          362.88,
+          482.76,
+          380.16
+        ],
+        "text": "曲嘉麟",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          419.40000000000003,
+          426.24,
+          435.96000000000004,
+          441.36
+        ],
+        "text": "年",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          452.88,
+          425.88,
+          470.52000000000004,
+          442.8
+        ],
+        "text": "月",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          490.68,
+          426.96000000000004,
+          505.08000000000004,
+          440.64000000000004
+        ],
+        "text": "日",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          300.24,
+          781.5600000000001,
+          312.48,
+          793.08
+        ],
+        "text": "30",
+        "queued_for_post_OCR": false
+      }
+    ]
+  },
+  {
+    "stage": "actual_post_OCR",
+    "candidate_spans": 0,
+    "content_changed": 0,
+    "spans": []
+  }
+]

@@ -1,0 +1,19 @@
+{
+  "origin": "user supplied prior job; GET-only; job-time deployed build unknown",
+  "url": "http://10.0.6.22:12303/v1/content/jobs/job_01M54S6SZB4PH061X16NW8TVCQ/result",
+  "retrieved_UTC": "2026-10-17T13:10:09Z",
+  "http_status": 200,
+  "bytes": 443135,
+  "sha256": "57acd94eca552844fd9c96ba1a218feaf35fed4b72e94843d09e19de7e3676ad",
+  "headers": {
+    "date": "Sat, 17 Oct 2026 13:10:08 GMT",
+    "server": "uvicorn",
+    "x-content-id": "job_01M54S6SZB4PH061X16NW8TVCQ",
+    "content-length": "443135",
+    "content-type": "text/markdown; charset=utf-8",
+    "x-request-id": "req_01M54ZQTY109CCVFFJJXZT6412",
+    "x-content-type-options": "nosniff",
+    "referrer-policy": "no-referrer",
+    "connection": "close"
+  }
+}

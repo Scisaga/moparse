@@ -1,0 +1,153 @@
+{
+  "pages": [
+    {
+      "page_idx": 73,
+      "blocks": [
+        {
+          "type": "table",
+          "bbox": [
+            0.13,
+            0.08,
+            0.914,
+            0.321
+          ],
+          "content": "| 项目 | 房屋及建筑物 | 机器设备 | 运输设备 | 其他设备 | 合计 |\n| --- | --- | --- | --- | --- | --- |\n| 2.本期增加金额 |  |  |  |  |  |\n| (1)计提 |  |  |  |  |  |\n| 3.本期减少金额 |  |  |  |  |  |\n| (1)处置或报废+ |  |  |  |  |  |\n| 4.期末余额 |  |  |  |  |  |\n| 四、账面价值 |  |  |  |  |  |\n| 1.期末账面价值 | 276,449,908.38 | 346,001,942.03 | 2,269,533.96 | 25,509,884.72 | 650,231,269.09 |\n| 2.期初账面价值 | 247,681,027.24 | 305,135,056.18 | 2,377,578.64 | 27,044,400.95 | 582,238,063.01 |",
+          "captions": [],
+          "footnotes": [],
+          "image_source": "images/page_73_table_0.jpg"
+        },
+        {
+          "type": "list",
+          "bbox": [
+            0.183,
+            0.332,
+            0.646,
+            0.41
+          ],
+          "sub_type": "text",
+          "content": "（2）本期公司不存在暂时闲置的固定资产情况\n（3）本期公司不存在通过经营租赁租出的固定资产\n（4）截至本期末，未办妥产权证书的固定资产如下:"
+        },
+        {
+          "type": "table",
+          "bbox": [
+            0.131,
+            0.412,
+            0.913,
+            0.528
+          ],
+          "content": "| 项目 | 账面价值 | 未办妥产权证书的原因 |\n| --- | --- | --- |\n| 厂房、仓库 | 22,586,969.37 | 办理产权资料尚在准备之中 |\n| 制氧车间 | 2,124,523.01 | 办理产权资料尚在准备之中 |\n| 合计 | 24,711,492.38 |  |",
+          "captions": [],
+          "footnotes": [],
+          "image_source": "images/page_73_table_5.jpg"
+        },
+        {
+          "type": "paragraph_title",
+          "bbox": [
+            0.184,
+            0.538,
+            0.341,
+            0.554
+          ],
+          "level": 2,
+          "content": "（十三）在建工程"
+        },
+        {
+          "type": "table",
+          "bbox": [
+            0.131,
+            0.556,
+            0.913,
+            0.673
+          ],
+          "content": "| 项目 | 期末余额 | 期初余额 |\n| --- | --- | --- |\n| 在建工程 | 79,462,364.38 | 93,076,790.97 |\n| 工程物资 |  |  |\n| 合计 | 79,462,364.38 | 93,076,790.97 |",
+          "captions": [],
+          "footnotes": [],
+          "image_source": "images/page_73_table_7.jpg"
+        },
+        {
+          "type": "paragraph_title",
+          "bbox": [
+            0.174,
+            0.683,
+            0.281,
+            0.699
+          ],
+          "level": 2,
+          "content": "1.在建工程"
+        },
+        {
+          "type": "paragraph_title",
+          "bbox": [
+            0.184,
+            0.714,
+            0.352,
+            0.73
+          ],
+          "level": 2,
+          "content": "（1）在建工程情况"
+        },
+        {
+          "type": "table",
+          "bbox": [
+            0.132,
+            0.732,
+            0.913,
+            0.818
+          ],
+          "content": "<table><tr><td rowspan=\"2\">项目</td><td colspan=\"3\">期末余额</td><td colspan=\"3\">期初余额</td></tr><tr><td>账面余额</td><td>减值准备</td><td>账面价值</td><td>账面余额</td><td>减值准备</td><td>账面价值</td></tr><tr><td>在建工程</td><td>79,462,364.38</td><td></td><td>79,462,364.38</td><td>93,076,790.97</td><td></td><td>93,076,790.97</td></tr></table>",
+          "captions": [],
+          "footnotes": [],
+          "image_source": "images/page_73_table_10.jpg"
+        },
+        {
+          "type": "text",
+          "bbox": [
+            0.173,
+            0.828,
+            0.637,
+            0.845
+          ],
+          "content": "—公司期末不存在需计提在建工程减值准备的情形。"
+        },
+        {
+          "type": "page_number",
+          "bbox": [
+            0.528,
+            0.903,
+            0.546,
+            0.914
+          ],
+          "content": "67"
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "file_suffix": "pdf",
+    "producer": {
+      "name": "mineru",
+      "version": "4.0.12"
+    },
+    "document": {
+      "page_count": 119,
+      "page_count_kind": "physical"
+    }
+  },
+  "extensions": {
+    "mineru": {
+      "tier": "advanced",
+      "parse_mode": "txt"
+    },
+    "docvortex_layout": {
+      "version": 1,
+      "pages": [
+        {
+          "page_idx": 73,
+          "width_pt": 595.3499755859375,
+          "height_pt": 842.0
+        }
+      ]
+    }
+  },
+  "is_full_document": false
+}

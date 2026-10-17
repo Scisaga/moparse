@@ -1,0 +1,12 @@
+{"source": "1210860446", "pages": 6, "missing_before": 13, "missing_after": 0, "new_groups": 0, "removed_groups": []}
+{"source": "1211290753", "pages": 3, "missing_before": 3, "missing_after": 0, "new_groups": 0, "removed_groups": []}
+{"source": "1219858186", "pages": 15, "missing_before": 17, "missing_after": 0, "new_groups": 0, "removed_groups": []}
+{"source": "1225473526", "pages": 25, "missing_before": 72, "missing_after": 0, "new_groups": 1, "removed_groups": []}
+{"source": "1225474139", "pages": 36, "missing_before": 70, "missing_after": 0, "new_groups": 0, "removed_groups": []}
+{"source": "1225474693", "pages": 4, "missing_before": 4, "missing_after": 0, "new_groups": 0, "removed_groups": []}
+{"source": "1225474739", "pages": 134, "missing_before": 271, "missing_after": 0, "new_groups": 1, "removed_groups": []}
+Traceback (most recent call last):
+  File "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/source-complete-export-replay/full-native/replay.py", line 98, in <module>
+    selected = native[stem]
+               ~~~~~~^^^^^^
+KeyError: '1225475333'

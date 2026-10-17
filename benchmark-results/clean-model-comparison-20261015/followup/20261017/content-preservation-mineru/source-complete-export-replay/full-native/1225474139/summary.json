@@ -1,0 +1,615 @@
+{
+  "source": "1225474139",
+  "input_SHA256": "dc69826976c576302ee4156642039b790693202a611922dda647eb006e6d5c18",
+  "raw_SHA256": "ea7f0dd43d6f2fb43428b7cca049891a8d62f76896cca1a84eea21450d3be430",
+  "native_pages": 36,
+  "phases": {
+    "before": {
+      "tables": 12,
+      "anchors": 366,
+      "span_cells": 14,
+      "actual_groups": {},
+      "public_table_coverage": {
+        "all_source_tables_projected_once": true,
+        "emitted_source_cell_anchors": 366,
+        "only_equivalent_complete_repeated_header_cells_removed": 0,
+        "source_rows_text_spans_header_roles_and_pages_preserved": true
+      },
+      "visible_source_items": 341,
+      "serialized_source_events": 271,
+      "duplicate_source_refs": [],
+      "wrong_source_pages": [],
+      "serialized_blocks_absent_from_page": [],
+      "missing_visible_refs": [
+        {
+          "ref": "#/texts/19",
+          "page": 2,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "深圳兆日科技股份有限公司详式权益变动报告书"
+        },
+        {
+          "ref": "#/texts/30",
+          "page": 2,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "2"
+        },
+        {
+          "ref": "#/texts/31",
+          "page": 3,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "深圳兆日科技股份有限公司详式权益变动报告书"
+        },
+        {
+          "ref": "#/texts/33",
+          "page": 3,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "3"
+        },
+        {
+          "ref": "#/texts/34",
+          "page": 4,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "深圳兆日科技股份有限公司详式权益变动报告书"
+        },
+        {
+          "ref": "#/texts/36",
+          "page": 4,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "4"
+        },
+        {
+          "ref": "#/texts/37",
+          "page": 5,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "深圳兆日科技股份有限公司详式权益变动报告书"
+        },
+        {
+          "ref": "#/texts/40",
+          "page": 5,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "5"
+        },
+        {
+          "ref": "#/texts/41",
+          "page": 6,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "深圳兆日科技股份有限公司详式权益变动报告书"
+        },
+        {
+          "ref": "#/texts/47",
+          "page": 6,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "6"
+        },
+        {
+          "ref": "#/texts/48",
+          "page": 7,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "深圳兆日科技股份有限公司详式权益变动报告书"
+        },
+        {
+          "ref": "#/texts/54",
+          "page": 7,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "7"
+        },
+        {
+          "ref": "#/texts/55",
+          "page": 8,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "深圳兆日科技股份有限公司详式权益变动报告书"
+        },
+        {
+          "ref": "#/texts/56",
+          "page": 8,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "8"
+        },
+        {
+          "ref": "#/texts/57",
+          "page": 9,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "深圳兆日科技股份有限公司详式权益变动报告书"
+        },
+        {
+          "ref": "#/texts/68",
+          "page": 9,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "9"
+        },
+        {
+          "ref": "#/texts/69",
+          "page": 10,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "深圳兆日科技股份有限公司详式权益变动报告书"
+        },
+        {
+          "ref": "#/texts/71",
+          "page": 10,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "10"
+        },
+        {
+          "ref": "#/texts/72",
+          "page": 11,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "深圳兆日科技股份有限公司详式权益变动报告书"
+        },
+        {
+          "ref": "#/texts/85",
+          "page": 11,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "11"
+        },
+        {
+          "ref": "#/texts/86",
+          "page": 12,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "深圳兆日科技股份有限公司详式权益变动报告书"
+        },
+        {
+          "ref": "#/texts/93",
+          "page": 12,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "12"
+        },
+        {
+          "ref": "#/texts/94",
+          "page": 13,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "深圳兆日科技股份有限公司详式权益变动报告书"
+        },
+        {
+          "ref": "#/texts/109",
+          "page": 13,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "13"
+        },
+        {
+          "ref": "#/texts/110",
+          "page": 14,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "深圳兆日科技股份有限公司详式权益变动报告书"
+        },
+        {
+          "ref": "#/texts/120",
+          "page": 14,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "14"
+        },
+        {
+          "ref": "#/texts/121",
+          "page": 15,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "深圳兆日科技股份有限公司详式权益变动报告书"
+        },
+        {
+          "ref": "#/texts/134",
+          "page": 15,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "15"
+        },
+        {
+          "ref": "#/texts/135",
+          "page": 16,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "深圳兆日科技股份有限公司详式权益变动报告书"
+        },
+        {
+          "ref": "#/texts/147",
+          "page": 16,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "16"
+        },
+        {
+          "ref": "#/texts/148",
+          "page": 17,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "深圳兆日科技股份有限公司详式权益变动报告书"
+        },
+        {
+          "ref": "#/texts/163",
+          "page": 17,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "17"
+        },
+        {
+          "ref": "#/texts/164",
+          "page": 18,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "深圳兆日科技股份有限公司详式权益变动报告书"
+        },
+        {
+          "ref": "#/texts/172",
+          "page": 18,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "18"
+        },
+        {
+          "ref": "#/texts/173",
+          "page": 19,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "深圳兆日科技股份有限公司详式权益变动报告书"
+        },
+        {
+          "ref": "#/texts/185",
+          "page": 19,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "19"
+        },
+        {
+          "ref": "#/texts/186",
+          "page": 20,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "深圳兆日科技股份有限公司详式权益变动报告书"
+        },
+        {
+          "ref": "#/texts/193",
+          "page": 20,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "20"
+        },
+        {
+          "ref": "#/texts/194",
+          "page": 21,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "深圳兆日科技股份有限公司详式权益变动报告书"
+        },
+        {
+          "ref": "#/texts/204",
+          "page": 21,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "21"
+        },
+        {
+          "ref": "#/texts/205",
+          "page": 22,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "深圳兆日科技股份有限公司详式权益变动报告书"
+        },
+        {
+          "ref": "#/texts/215",
+          "page": 22,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "22"
+        },
+        {
+          "ref": "#/texts/216",
+          "page": 23,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "深圳兆日科技股份有限公司详式权益变动报告书"
+        },
+        {
+          "ref": "#/texts/235",
+          "page": 23,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "23"
+        },
+        {
+          "ref": "#/texts/236",
+          "page": 24,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "深圳兆日科技股份有限公司详式权益变动报告书"
+        },
+        {
+          "ref": "#/texts/251",
+          "page": 24,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "24"
+        },
+        {
+          "ref": "#/texts/252",
+          "page": 25,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "深圳兆日科技股份有限公司详式权益变动报告书"
+        },
+        {
+          "ref": "#/texts/259",
+          "page": 25,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "25"
+        },
+        {
+          "ref": "#/texts/260",
+          "page": 26,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "深圳兆日科技股份有限公司详式权益变动报告书"
+        },
+        {
+          "ref": "#/texts/270",
+          "page": 26,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "26"
+        },
+        {
+          "ref": "#/texts/271",
+          "page": 27,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "深圳兆日科技股份有限公司详式权益变动报告书"
+        },
+        {
+          "ref": "#/texts/277",
+          "page": 27,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "27"
+        },
+        {
+          "ref": "#/texts/278",
+          "page": 28,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "深圳兆日科技股份有限公司详式权益变动报告书"
+        },
+        {
+          "ref": "#/texts/281",
+          "page": 28,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "28"
+        },
+        {
+          "ref": "#/texts/282",
+          "page": 29,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "深圳兆日科技股份有限公司详式权益变动报告书"
+        },
+        {
+          "ref": "#/texts/286",
+          "page": 29,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "29"
+        },
+        {
+          "ref": "#/texts/287",
+          "page": 30,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "深圳兆日科技股份有限公司详式权益变动报告书"
+        },
+        {
+          "ref": "#/texts/294",
+          "page": 30,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "30"
+        },
+        {
+          "ref": "#/texts/295",
+          "page": 31,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "深圳兆日科技股份有限公司详式权益变动报告书"
+        },
+        {
+          "ref": "#/texts/305",
+          "page": 31,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "31"
+        },
+        {
+          "ref": "#/texts/306",
+          "page": 32,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "深圳兆日科技股份有限公司详式权益变动报告书"
+        },
+        {
+          "ref": "#/texts/321",
+          "page": 32,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "32"
+        },
+        {
+          "ref": "#/texts/322",
+          "page": 33,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "深圳兆日科技股份有限公司详式权益变动报告书"
+        },
+        {
+          "ref": "#/texts/328",
+          "page": 33,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "33"
+        },
+        {
+          "ref": "#/texts/329",
+          "page": 34,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "深圳兆日科技股份有限公司详式权益变动报告书"
+        },
+        {
+          "ref": "#/texts/331",
+          "page": 34,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "34"
+        },
+        {
+          "ref": "#/texts/332",
+          "page": 35,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "深圳兆日科技股份有限公司详式权益变动报告书"
+        },
+        {
+          "ref": "#/texts/333",
+          "page": 35,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "35"
+        },
+        {
+          "ref": "#/texts/334",
+          "page": 36,
+          "label": "page_header",
+          "layer": "furniture",
+          "text": "深圳兆日科技股份有限公司详式权益变动报告书"
+        },
+        {
+          "ref": "#/texts/340",
+          "page": 36,
+          "label": "page_footer",
+          "layer": "furniture",
+          "text": "36"
+        }
+      ],
+      "hidden_source_refs_exported": [],
+      "non_table_narrative_preserved_during_assembly": true
+    },
+    "after": {
+      "tables": 12,
+      "anchors": 366,
+      "span_cells": 14,
+      "actual_groups": {},
+      "public_table_coverage": {
+        "all_source_tables_projected_once": true,
+        "emitted_source_cell_anchors": 366,
+        "only_equivalent_complete_repeated_header_cells_removed": 0,
+        "source_rows_text_spans_header_roles_and_pages_preserved": true
+      },
+      "visible_source_items": 341,
+      "serialized_source_events": 341,
+      "duplicate_source_refs": [],
+      "wrong_source_pages": [],
+      "serialized_blocks_absent_from_page": [],
+      "missing_visible_refs": [],
+      "hidden_source_refs_exported": [],
+      "non_table_narrative_preserved_during_assembly": true
+    }
+  },
+  "source_cells_spans_header_roles_scope_and_pages_unchanged": true,
+  "raw_model_unchanged": true,
+  "recovered_visible_refs": [
+    "#/texts/334",
+    "#/texts/72",
+    "#/texts/147",
+    "#/texts/204",
+    "#/texts/85",
+    "#/texts/270",
+    "#/texts/331",
+    "#/texts/322",
+    "#/texts/48",
+    "#/texts/40",
+    "#/texts/305",
+    "#/texts/260",
+    "#/texts/259",
+    "#/texts/333",
+    "#/texts/109",
+    "#/texts/252",
+    "#/texts/172",
+    "#/texts/69",
+    "#/texts/55",
+    "#/texts/41",
+    "#/texts/19",
+    "#/texts/31",
+    "#/texts/86",
+    "#/texts/30",
+    "#/texts/251",
+    "#/texts/215",
+    "#/texts/134",
+    "#/texts/281",
+    "#/texts/306",
+    "#/texts/47",
+    "#/texts/173",
+    "#/texts/332",
+    "#/texts/340",
+    "#/texts/120",
+    "#/texts/164",
+    "#/texts/186",
+    "#/texts/148",
+    "#/texts/277",
+    "#/texts/287",
+    "#/texts/135",
+    "#/texts/194",
+    "#/texts/94",
+    "#/texts/121",
+    "#/texts/216",
+    "#/texts/110",
+    "#/texts/235",
+    "#/texts/68",
+    "#/texts/286",
+    "#/texts/205",
+    "#/texts/34",
+    "#/texts/185",
+    "#/texts/36",
+    "#/texts/295",
+    "#/texts/163",
+    "#/texts/329",
+    "#/texts/282",
+    "#/texts/93",
+    "#/texts/236",
+    "#/texts/57",
+    "#/texts/321",
+    "#/texts/294",
+    "#/texts/33",
+    "#/texts/56",
+    "#/texts/193",
+    "#/texts/278",
+    "#/texts/37",
+    "#/texts/54",
+    "#/texts/71",
+    "#/texts/271",
+    "#/texts/328"
+  ],
+  "removed_groups": [],
+  "added_groups": []
+}

@@ -1,0 +1,15 @@
+{
+  "input_kind": "original_DOCX_not_parser_PDF",
+  "input_SHA256": "de53a6b0ee17abeb6f4584fc156de278399fe8d9db88dcea72ceeba0a4ed073e",
+  "source_pages": 0,
+  "source_text_items": 26,
+  "items_with_provenance": 0,
+  "old_unpaginated_MD_bytes": 11027,
+  "old_page_specific_MD_bytes": 0,
+  "new_page_specific_MD_bytes": 0,
+  "same_page_filter_behavior": true,
+  "current_service_allowed_formats": [
+    "PDF",
+    "IMAGE"
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "classification": "harness output directory permission failure before any source conversion",
+  "source_pages_converted": 0,
+  "model_quality_failure": false,
+  "model_initialization_happened": true,
+  "correction": "Isolated benchmark container user set explicitly to 0:0; image/model/options unchanged. Successful init timing may benefit from filesystem caches; per-page conversion/export are reported separately."
+}

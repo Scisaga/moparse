@@ -1,0 +1,283 @@
+[
+  {
+    "stage": "official_input_preparation",
+    "file_suffix": "pdf",
+    "prepared_size_bytes": 204423,
+    "original_function_seconds": 0.004816225031390786,
+    "prepared_SHA256": "3c7c9cfbbc009af6390172d01d4516569ea96f4dedb88d7b3e2d66114460d2f8",
+    "retained_original_page_indices_zero_based": [
+      29
+    ],
+    "broken_original_page_indices_zero_based": [],
+    "derived_input_filename": "prepared-by-official-page-selection.pdf",
+    "transformation": "Official default page_range handling; runner did not crop or rewrite the source PDF."
+  },
+  {
+    "stage": "native_table_priority",
+    "effort": "high",
+    "counts": {
+      "total": 0,
+      "accepted": 0,
+      "complex_fallbacks": 0,
+      "rejected": 0,
+      "errors": 0,
+      "removed_internal_text": 0,
+      "removed_formula_blocks": 0,
+      "removed_formula_layout_items": 0
+    },
+    "table_routes": []
+  },
+  {
+    "stage": "actual_VLM_options",
+    "image_analysis": false,
+    "not_extract_list": [
+      "caption",
+      "code_caption",
+      "doc_title",
+      "footer",
+      "footnote",
+      "header",
+      "image_caption",
+      "image_footnote",
+      "page_footnote",
+      "page_number",
+      "paragraph_title",
+      "phonetic",
+      "ref_text",
+      "table_caption",
+      "table_footnote",
+      "text",
+      "title"
+    ],
+    "image_sizes": [
+      [
+        1654,
+        2339
+      ]
+    ],
+    "model_inputs": [
+      [
+        {
+          "type": "header",
+          "bbox": [
+            0.527,
+            0.05,
+            0.852,
+            0.065
+          ],
+          "has_content": false
+        },
+        {
+          "type": "paragraph_title",
+          "bbox": [
+            0.392,
+            0.096,
+            0.641,
+            0.118
+          ],
+          "has_content": false
+        },
+        {
+          "type": "text",
+          "bbox": [
+            0.147,
+            0.183,
+            0.851,
+            0.23
+          ],
+          "has_content": false
+        },
+        {
+          "type": "text",
+          "bbox": [
+            0.463,
+            0.322,
+            0.851,
+            0.34
+          ],
+          "has_content": false
+        },
+        {
+          "type": "text",
+          "bbox": [
+            0.573,
+            0.396,
+            0.851,
+            0.415
+          ],
+          "has_content": false
+        },
+        {
+          "type": "text",
+          "bbox": [
+            0.745,
+            0.434,
+            0.812,
+            0.451
+          ],
+          "has_content": false
+        },
+        {
+          "type": "text",
+          "bbox": [
+            0.704,
+            0.507,
+            0.849,
+            0.524
+          ],
+          "has_content": false
+        },
+        {
+          "type": "page_number",
+          "bbox": [
+            0.505,
+            0.929,
+            0.525,
+            0.941
+          ],
+          "has_content": false
+        }
+      ]
+    ]
+  },
+  {
+    "stage": "actual_VLM_results_before_native_body_fill",
+    "effort": "high",
+    "tables": []
+  },
+  {
+    "stage": "native_PDF_text_fill",
+    "returned_spans": 11,
+    "nonempty_text_spans": 11,
+    "queued_for_post_OCR": 0,
+    "spans": [
+      {
+        "type": "text",
+        "bbox": [
+          316.08,
+          44.28,
+          505.08000000000004,
+          52.2
+        ],
+        "text": "深圳兆日科技股份有限公司详式权益变动报告书",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          236.52,
+          80.64,
+          379.8,
+          98.28
+        ],
+        "text": "信息披露义务人声明",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          114.48,
+          156.24,
+          504.0,
+          167.04
+        ],
+        "text": "本人（以及本人所代表的机构）承诺本报告书不存在虚假记载、误导性陈述",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          90.36,
+          179.64000000000001,
+          477.72,
+          190.8
+        ],
+        "text": "或重大遗漏，并对其真实性、准确性、完整性承担个别和连带的法律责任。",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          277.56,
+          272.88,
+          504.0,
+          283.68
+        ],
+        "text": "信息披露义务人：上海璟和珩科技有限公司",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          342.0,
+          334.08,
+          415.44,
+          347.76
+        ],
+        "text": "法定代表人：",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          444.6,
+          364.32,
+          481.32,
+          379.44
+        ],
+        "text": "曲嘉麟",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          419.04,
+          425.88,
+          435.96000000000004,
+          441.36
+        ],
+        "text": "年",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          453.24,
+          425.88,
+          470.88,
+          442.8
+        ],
+        "text": "月",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          491.04,
+          425.88,
+          505.44,
+          441.36
+        ],
+        "text": "日",
+        "queued_for_post_OCR": false
+      },
+      {
+        "type": "text",
+        "bbox": [
+          300.24,
+          781.5600000000001,
+          312.48,
+          793.08
+        ],
+        "text": "30",
+        "queued_for_post_OCR": false
+      }
+    ]
+  },
+  {
+    "stage": "actual_post_OCR",
+    "candidate_spans": 0,
+    "content_changed": 0,
+    "spans": []
+  }
+]

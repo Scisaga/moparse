@@ -1,0 +1,5813 @@
+{
+  "schema": "mosaicparse-official-mineru-source-evaluation/1",
+  "created_UTC": "2026-10-17T13:38:41.621740+00:00",
+  "evaluator_SHA256": "25ae40c43f97404aa723b04bb717a04add76db558d4d7b9aa47d492e9dc63d75",
+  "reference_SHA256": "9c7863cebe11c786963b745bc57e9351c8d3940d250f93ad898ede4fde6deb1b",
+  "prior_independent_reference_SHA256": "0418058adbf6d09b9024338c111dd4828b9f4da0163ed5341b22ed79b37919f4",
+  "scope": "Official per-page raw model content and explicit HTML cells/spans only; no whole-PDF HTTP/provenance or throughput equivalence claim.",
+  "comparison_policy": {
+    "prose_only_punctuation_width_equivalence": {
+      "！": "!",
+      "＂": "\"",
+      "＃": "#",
+      "＄": "$",
+      "％": "%",
+      "＆": "&",
+      "＇": "'",
+      "（": "(",
+      "）": ")",
+      "＊": "*",
+      "＋": "+",
+      "，": ",",
+      "－": "-",
+      "．": ".",
+      "／": "/",
+      "：": ":",
+      "；": ";",
+      "＜": "<",
+      "＝": "=",
+      "＞": ">",
+      "？": "?",
+      "＠": "@",
+      "［": "[",
+      "＼": "\\",
+      "］": "]",
+      "＾": "^",
+      "＿": "_",
+      "｀": "`",
+      "｛": "{",
+      "｜": "|",
+      "｝": "}",
+      "～": "~"
+    },
+    "literal_character_mismatches": "Reported separately; typography equality is never called original-character exactness.",
+    "numbers_and_relations": "No digit, sign, decimal point, percentage, person/account binding, source row or span is deleted or inferred.",
+    "superscript": "Explicit HTML sup, Unicode superscript 1, or latex ^1 is read as a separate reference; 6,606.571 cannot pass.",
+    "source_mapping": "Only evaluation input page identity is known; no MosaicParse page/table-source output is fabricated."
+  },
+  "run_manifests": [
+    {
+      "path": "benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/mineru-trial/first-pages-gpu/run-manifest.json",
+      "SHA256": "e88e58fe3cf672341d1c0dffcba6d9a535692c9467bc5c207f25714727799987",
+      "status": "complete",
+      "configuration": {
+        "started_at": "2026-10-17T21:19:57.068280+08:00",
+        "pid": 1129816,
+        "model_path": "/root/.cache/huggingface/hub/models--opendatalab--MinerU2.5-Pro-2605-1.2B/snapshots/08aaea840498d49ce16247b6263196cf02814885",
+        "model_revision": "08aaea840498d49ce16247b6263196cf02814885",
+        "model_weight_SHA256": "abf8681ca63b8dec7b67de257af47b821f179442f72998d0696ae2ed9232a5f0",
+        "device": "cuda:0",
+        "dtype": "float16",
+        "attention": "sdpa",
+        "threads": 4,
+        "batch_size": 1,
+        "max_concurrency": 1,
+        "input_DPI": 200,
+        "SDK_layout_size": [
+          1036,
+          1036
+        ],
+        "official_prompts": {
+          "table": "\nTable Recognition:",
+          "equation": "\nFormula Recognition:",
+          "image": "\nImage Analysis:",
+          "chart": "\nImage Analysis:",
+          "[default]": "\nText Recognition:",
+          "[layout]": "\nLayout Detection:",
+          "[cross_page_table_merge]": ""
+        },
+        "official_sampling_params": {
+          "table": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.005,
+            "repetition_penalty": 1.0,
+            "no_repeat_ngram_size": 100,
+            "max_new_tokens": null
+          },
+          "equation": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "no_repeat_ngram_size": 100,
+            "max_new_tokens": null
+          },
+          "image": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "no_repeat_ngram_size": 100,
+            "max_new_tokens": null
+          },
+          "chart": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "no_repeat_ngram_size": 100,
+            "max_new_tokens": null
+          },
+          "[default]": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "no_repeat_ngram_size": 100,
+            "max_new_tokens": null
+          },
+          "[layout]": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 0.0,
+            "frequency_penalty": 0.0,
+            "repetition_penalty": 1.0,
+            "no_repeat_ngram_size": 100,
+            "max_new_tokens": null
+          },
+          "[cross_page_table_merge]": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "no_repeat_ngram_size": 100,
+            "max_new_tokens": null
+          }
+        },
+        "image_analysis": false,
+        "abandon_paratext": false,
+        "enable_cross_page_table_merge": false,
+        "packages": {
+          "torch": "2.7.1+cu126",
+          "transformers": "5.10.1",
+          "torchvision": "0.22.1+cu126",
+          "mineru-vl-utils": "2.0.7",
+          "accelerate": "1.12.0",
+          "pillow": "11.3.0",
+          "pymupdf": "1.28.2"
+        },
+        "pages": [
+          {
+            "id": "1206337604",
+            "page": 1,
+            "source_pdf": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/sources/1206337604/source-converted.pdf",
+            "source_pdf_SHA256": "ccff40771d75e9412b65f364a1c72c1733c37b4d8f232f49cf639621f0ba165f",
+            "source_total_pages": 2,
+            "source_page_SHA256": "c64c87161f29bcb6640a1cf595e0f8a83da5cdbebd83622e4064a1077269d473",
+            "source_page_size": [
+              1654,
+              2339
+            ],
+            "source_pdf_page_rotation": 0,
+            "status": "complete",
+            "client_seconds": 17.709287093020976,
+            "pure_generate_seconds": 17.32718464510981,
+            "generated_tokens": 424,
+            "model_calls": 6,
+            "blocks": 5,
+            "blocks_SHA256": "841ae4ad7cc3d4d4d03e4e5ea1df1caed955d8ce88535601dcaab237d0987f2d",
+            "MD_SHA256": "f930a9a78bdf4a083fe0b8d047a91e50b89352d6a5e22b5fcaf7657194339b47"
+          },
+          {
+            "id": "1225474739",
+            "page": 19,
+            "source_pdf": "/opt/mosaic-parse/pdf_sample/1225474739.pdf",
+            "source_pdf_SHA256": "1c99c450a8efefe77c9ca02a6f670c958298f661e5ad8d30d6ba01aa0742cda9",
+            "source_total_pages": 134,
+            "source_page_SHA256": "e1f87567100070b0899a1b1c7b036e73a0d6a746688802fc9a911bbe37055430",
+            "source_page_size": [
+              1654,
+              2339
+            ],
+            "source_pdf_page_rotation": 0,
+            "status": "complete",
+            "client_seconds": 46.05941523401998,
+            "pure_generate_seconds": 45.42653151100967,
+            "generated_tokens": 1145,
+            "model_calls": 12,
+            "blocks": 11,
+            "blocks_SHA256": "29460053a02ae4bd7875e44576f03210036d607245e11704019212d7d195ff70",
+            "MD_SHA256": "43adcc984503346c9b3d69d65048f80d4d031a3ee69765e4795224b9f0a1ab5d"
+          }
+        ],
+        "status": "complete",
+        "transformers_backend_sampling_caveat": "Official Transformers backend does not implement presence_penalty/frequency_penalty; actual generate kwargs are archived. This is not a vLLM throughput benchmark.",
+        "runner_SHA256": "b5ce69398a75a73dffb2f30dad310e9ab77e796fbc35941bf4c85fdc67ab74e2",
+        "input_spec_SHA256": "103a3b33409ab0df95b96ed760a6ee99d5ae29520728c4cf0b76dafceac2fa90",
+        "load_seconds": 5.848630732973106,
+        "parameters": 1156026624,
+        "actual_dtype": "torch.float16",
+        "image_processor_config": {
+          "size": {
+            "longest_edge": 1605632,
+            "shortest_edge": 50176
+          },
+          "patch_size": 14,
+          "temporal_patch_size": 2,
+          "merge_size": 2,
+          "image_mean": [
+            0.48145466,
+            0.4578275,
+            0.40821073
+          ],
+          "image_std": [
+            0.26862954,
+            0.26130258,
+            0.27577711
+          ],
+          "image_processor_type": "Qwen2VLImageProcessor",
+          "do_convert_rgb": true,
+          "do_resize": true,
+          "resample": 3,
+          "do_rescale": true,
+          "rescale_factor": 0.00392156862745098,
+          "do_normalize": true
+        },
+        "processor_chat_template_SHA256": "a0bc6f6fc7a29a80017a433e8f03a1cc1236e838a944a2d034295a60c4f2fddb",
+        "actual_attention": "sdpa",
+        "gpu_allocator_budget_MiB": 3584,
+        "existing_CUDA_packages_imported_readonly_from": "/opt/qwen3-tts-openai/.tools/venv-gpu/lib/python3.12/site-packages",
+        "finished_at": "2026-10-17T21:21:12.912009+08:00"
+      }
+    },
+    {
+      "path": "benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/mineru-trial/remaining-pages-gpu/run-manifest.json",
+      "SHA256": "7e165390cd97c80a984f351ebbe067934c9e2be04b64ea34fb00e638713d1330",
+      "status": "complete",
+      "configuration": {
+        "started_at": "2026-10-17T21:22:05.027377+08:00",
+        "pid": 1133850,
+        "model_path": "/root/.cache/huggingface/hub/models--opendatalab--MinerU2.5-Pro-2605-1.2B/snapshots/08aaea840498d49ce16247b6263196cf02814885",
+        "model_revision": "08aaea840498d49ce16247b6263196cf02814885",
+        "model_weight_SHA256": "abf8681ca63b8dec7b67de257af47b821f179442f72998d0696ae2ed9232a5f0",
+        "device": "cuda:0",
+        "dtype": "float16",
+        "attention": "sdpa",
+        "threads": 4,
+        "batch_size": 1,
+        "max_concurrency": 1,
+        "input_DPI": 200,
+        "SDK_layout_size": [
+          1036,
+          1036
+        ],
+        "official_prompts": {
+          "table": "\nTable Recognition:",
+          "equation": "\nFormula Recognition:",
+          "image": "\nImage Analysis:",
+          "chart": "\nImage Analysis:",
+          "[default]": "\nText Recognition:",
+          "[layout]": "\nLayout Detection:",
+          "[cross_page_table_merge]": ""
+        },
+        "official_sampling_params": {
+          "table": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.005,
+            "repetition_penalty": 1.0,
+            "no_repeat_ngram_size": 100,
+            "max_new_tokens": null
+          },
+          "equation": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "no_repeat_ngram_size": 100,
+            "max_new_tokens": null
+          },
+          "image": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "no_repeat_ngram_size": 100,
+            "max_new_tokens": null
+          },
+          "chart": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "no_repeat_ngram_size": 100,
+            "max_new_tokens": null
+          },
+          "[default]": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "no_repeat_ngram_size": 100,
+            "max_new_tokens": null
+          },
+          "[layout]": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 0.0,
+            "frequency_penalty": 0.0,
+            "repetition_penalty": 1.0,
+            "no_repeat_ngram_size": 100,
+            "max_new_tokens": null
+          },
+          "[cross_page_table_merge]": {
+            "temperature": 0.0,
+            "top_p": 0.01,
+            "top_k": 1,
+            "presence_penalty": 1.0,
+            "frequency_penalty": 0.05,
+            "repetition_penalty": 1.0,
+            "no_repeat_ngram_size": 100,
+            "max_new_tokens": null
+          }
+        },
+        "image_analysis": false,
+        "abandon_paratext": false,
+        "enable_cross_page_table_merge": false,
+        "packages": {
+          "torch": "2.7.1+cu126",
+          "transformers": "5.10.1",
+          "torchvision": "0.22.1+cu126",
+          "mineru-vl-utils": "2.0.7",
+          "accelerate": "1.12.0",
+          "pillow": "11.3.0",
+          "pymupdf": "1.28.2"
+        },
+        "pages": [
+          {
+            "id": "1206337604",
+            "page": 2,
+            "source_pdf": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/sources/1206337604/source-converted.pdf",
+            "source_pdf_SHA256": "ccff40771d75e9412b65f364a1c72c1733c37b4d8f232f49cf639621f0ba165f",
+            "source_total_pages": 2,
+            "source_page_SHA256": "ad489109c8a15e625a5be8c0ce40405d18e664ed13a23f4d2b409109a534aeab",
+            "source_page_size": [
+              1654,
+              2339
+            ],
+            "source_pdf_page_rotation": 0,
+            "status": "complete",
+            "client_seconds": 18.326731035020202,
+            "pure_generate_seconds": 17.815465947031043,
+            "generated_tokens": 407,
+            "model_calls": 2,
+            "blocks": 1,
+            "blocks_SHA256": "3f107b1867cae2724433e4c326d618045518710c684623c7571e4e298b31ea7d",
+            "MD_SHA256": "a7d5e11f15864fd7fc27112d51a3456f5660c10188721744b9c39bca333ae983"
+          },
+          {
+            "id": "1225474739",
+            "page": 40,
+            "source_pdf": "/opt/mosaic-parse/pdf_sample/1225474739.pdf",
+            "source_pdf_SHA256": "1c99c450a8efefe77c9ca02a6f670c958298f661e5ad8d30d6ba01aa0742cda9",
+            "source_total_pages": 134,
+            "source_page_SHA256": "2282743782e35088c560399cdb96fbe51193eb1942436f5ca58c356d2363e87e",
+            "source_page_size": [
+              1654,
+              2339
+            ],
+            "source_pdf_page_rotation": 0,
+            "status": "complete",
+            "client_seconds": 75.41214508598205,
+            "pure_generate_seconds": 74.94495572207961,
+            "generated_tokens": 1797,
+            "model_calls": 8,
+            "blocks": 8,
+            "blocks_SHA256": "4363de83b7a98b096ff217ac956f3e11694d14e8c901983c3c6827ae226017e8",
+            "MD_SHA256": "68daffc1f63db9f227ee35042a7a48957032bf9652c9979866c3dcacbcc73e0d"
+          },
+          {
+            "id": "1225474739",
+            "page": 74,
+            "source_pdf": "/opt/mosaic-parse/pdf_sample/1225474739.pdf",
+            "source_pdf_SHA256": "1c99c450a8efefe77c9ca02a6f670c958298f661e5ad8d30d6ba01aa0742cda9",
+            "source_total_pages": 134,
+            "source_page_SHA256": "5f80ffe21d228b27c2b5b7b29b5daea1a9360e68cc114ae0506338abb7df3b10",
+            "source_page_size": [
+              1654,
+              2339
+            ],
+            "source_pdf_page_rotation": 0,
+            "status": "complete",
+            "client_seconds": 44.31478942302056,
+            "pure_generate_seconds": 43.790194317814894,
+            "generated_tokens": 1452,
+            "model_calls": 30,
+            "blocks": 30,
+            "blocks_SHA256": "ed904df40e03e4c8666432b0471f7db95ae0431b8f8a3ee9aa8e92b32ee07f74",
+            "MD_SHA256": "9a89070ca424b2cf5e656ebd0ade8756e7def6ae425da0aca45643308f92ce9d"
+          },
+          {
+            "id": "1225474739",
+            "page": 131,
+            "source_pdf": "/opt/mosaic-parse/pdf_sample/1225474739.pdf",
+            "source_pdf_SHA256": "1c99c450a8efefe77c9ca02a6f670c958298f661e5ad8d30d6ba01aa0742cda9",
+            "source_total_pages": 134,
+            "source_page_SHA256": "6aa11f48e25d7b852ee475439588ba2caa421e1a817b50c6c24b4d5d65a7e734",
+            "source_page_size": [
+              1654,
+              2339
+            ],
+            "source_pdf_page_rotation": 0,
+            "status": "complete",
+            "client_seconds": 39.43995431193616,
+            "pure_generate_seconds": 38.92152497905772,
+            "generated_tokens": 1206,
+            "model_calls": 13,
+            "blocks": 12,
+            "blocks_SHA256": "34eb7c38a46254ce395f73b5917ea1201a02b828edf16a62d9170a0f3867f402",
+            "MD_SHA256": "c00db06610193b35ada690152d6003954296ac6ff31a5080fefb2fa7727ef35e"
+          },
+          {
+            "id": "1225475375",
+            "page": 74,
+            "source_pdf": "/opt/mosaic-parse/pdf_sample/1225475375.pdf",
+            "source_pdf_SHA256": "5eef30b5c544d76df917d56df76a665ed13b5e6ffebdc54ab0eea0a47b7589d6",
+            "source_total_pages": 119,
+            "source_page_SHA256": "d0cfd206c2e172f244d8e2d0a8d3e61f5100a6a0c374b98b2220aeebc13b5ca3",
+            "source_page_size": [
+              1654,
+              2339
+            ],
+            "source_pdf_page_rotation": 0,
+            "status": "complete",
+            "client_seconds": 29.123538616928272,
+            "pure_generate_seconds": 28.733358183992095,
+            "generated_tokens": 931,
+            "model_calls": 14,
+            "blocks": 14,
+            "blocks_SHA256": "7bbec0c194fc56e2fd70fb56e89c4ef6056d97f798e17fc33e51416619e002a7",
+            "MD_SHA256": "1ccfb1908cb121695b2bdfc3e3043f7958833ef2597307434e4ad58f1b106b48"
+          },
+          {
+            "id": "1225475375",
+            "page": 87,
+            "source_pdf": "/opt/mosaic-parse/pdf_sample/1225475375.pdf",
+            "source_pdf_SHA256": "5eef30b5c544d76df917d56df76a665ed13b5e6ffebdc54ab0eea0a47b7589d6",
+            "source_total_pages": 119,
+            "source_page_SHA256": "b01a7341f79a8834efdc72f8df6d2055027d071b898c75d75f6d1c8ca30f72a5",
+            "source_page_size": [
+              1654,
+              2339
+            ],
+            "source_pdf_page_rotation": 270,
+            "status": "complete",
+            "client_seconds": 24.64975404192228,
+            "pure_generate_seconds": 24.301784464041702,
+            "generated_tokens": 614,
+            "model_calls": 6,
+            "blocks": 5,
+            "blocks_SHA256": "cf18b9a0b961e00b5d45e176d5da965019e025e5c3476a77c246c60fe6256a8d",
+            "MD_SHA256": "943ea06217e122b414230996231f8060365ae3a6b2aedf2140e9063866d043e8"
+          },
+          {
+            "id": "1225474139",
+            "page": 28,
+            "source_pdf": "/opt/mosaic-parse/pdf_sample/1225474139.pdf",
+            "source_pdf_SHA256": "dc69826976c576302ee4156642039b790693202a611922dda647eb006e6d5c18",
+            "source_total_pages": 36,
+            "source_page_SHA256": "f8fc7284a6542aabff3a31f9f5af34983cccbb922aad612c15a2f2cbe9b3dd59",
+            "source_page_size": [
+              1654,
+              2339
+            ],
+            "source_pdf_page_rotation": 0,
+            "status": "complete",
+            "client_seconds": 5.229699723073281,
+            "pure_generate_seconds": 5.067207826068625,
+            "generated_tokens": 151,
+            "model_calls": 5,
+            "blocks": 4,
+            "blocks_SHA256": "749495803548c37b517dd682743cab6bfda1f07440cc43026450668c232f3600",
+            "MD_SHA256": "7cf369cb41c97fe04c0e80f8c5de252abd6828f5045f3ac01ca3c35f9f3a8d4e"
+          },
+          {
+            "id": "1225474139",
+            "page": 30,
+            "source_pdf": "/opt/mosaic-parse/pdf_sample/1225474139.pdf",
+            "source_pdf_SHA256": "dc69826976c576302ee4156642039b790693202a611922dda647eb006e6d5c18",
+            "source_total_pages": 36,
+            "source_page_SHA256": "bffa48e6b70cbf8ba98c4d9466af5e4e989f1328021ee9ee2fa3364dd49199cd",
+            "source_page_size": [
+              1654,
+              2339
+            ],
+            "source_pdf_page_rotation": 0,
+            "status": "complete",
+            "client_seconds": 8.891208145068958,
+            "pure_generate_seconds": 8.682533718878403,
+            "generated_tokens": 261,
+            "model_calls": 9,
+            "blocks": 8,
+            "blocks_SHA256": "d95358d0be792381417ba17b90f3c32f6ff3a0cea7f461f0e0db118ab008a744",
+            "MD_SHA256": "62367724b1e6f9434ed24f348515d21bb842eea87a847d5c66ababd560cc7753"
+          },
+          {
+            "id": "1225474693",
+            "page": 2,
+            "source_pdf": "/opt/mosaic-parse/pdf_sample/1225474693.pdf",
+            "source_pdf_SHA256": "dc7f5b3bfdc5a5c69b9cf4b2a9e0d28e2f9ee0b2464770fb8a910fea688ee775",
+            "source_total_pages": 4,
+            "source_page_SHA256": "61722b8f5f5bec11f097e7f1d488d09b361b7add4222d508bb66ecf98b7de2cd",
+            "source_page_size": [
+              1654,
+              2339
+            ],
+            "source_pdf_page_rotation": 0,
+            "status": "complete",
+            "client_seconds": 28.771628774004057,
+            "pure_generate_seconds": 28.396543036215007,
+            "generated_tokens": 950,
+            "model_calls": 16,
+            "blocks": 16,
+            "blocks_SHA256": "799b483a478ee17c6a7163c4597dadcda8587b5883ec7188ce119bc577970cf7",
+            "MD_SHA256": "3fe42608cd47e7801bb0139979f97e458435f09da55878b7c73f6176ba61fedf"
+          },
+          {
+            "id": "1225474693",
+            "page": 3,
+            "source_pdf": "/opt/mosaic-parse/pdf_sample/1225474693.pdf",
+            "source_pdf_SHA256": "dc7f5b3bfdc5a5c69b9cf4b2a9e0d28e2f9ee0b2464770fb8a910fea688ee775",
+            "source_total_pages": 4,
+            "source_page_SHA256": "7a0be2e543dce52d2f3f229f2fd38679c7a9c23e90f0e8443c434dda193578e9",
+            "source_page_size": [
+              1654,
+              2339
+            ],
+            "source_pdf_page_rotation": 0,
+            "status": "complete",
+            "client_seconds": 35.94771044398658,
+            "pure_generate_seconds": 35.5488190719625,
+            "generated_tokens": 971,
+            "model_calls": 6,
+            "blocks": 5,
+            "blocks_SHA256": "2cd87e55578e7a48fb2d802cbaae7484e00494b3b1d9449fb0c9c6ffa9a64903",
+            "MD_SHA256": "dd3d8ae73dde81e20159135dd74bddfbbf34298dfa8820422449577de4efd2db"
+          },
+          {
+            "id": "1225473526",
+            "page": 6,
+            "source_pdf": "/opt/mosaic-parse/pdf_sample/1225473526.pdf",
+            "source_pdf_SHA256": "787297535ba74a4170cc859ae68f15f946f6dfd0bfc14a1e1fa0e6d068ba2b19",
+            "source_total_pages": 27,
+            "source_page_SHA256": "7dbc8398530f38c488c88934474c08bc6558f2e13a40619e135df1dbd4312c99",
+            "source_page_size": [
+              1654,
+              2339
+            ],
+            "source_pdf_page_rotation": 0,
+            "status": "complete",
+            "client_seconds": 30.84563336300198,
+            "pure_generate_seconds": 30.46501776727382,
+            "generated_tokens": 920,
+            "model_calls": 15,
+            "blocks": 14,
+            "blocks_SHA256": "94d6bbb3ae63d4729f174693c7e213c37340f352f08568dacee786213c4951c2",
+            "MD_SHA256": "6be13b818c60573f63a8db6353e90fc5d8fb95956b95e45b1e7fe756c9e4bb68"
+          },
+          {
+            "id": "1225473526",
+            "page": 7,
+            "source_pdf": "/opt/mosaic-parse/pdf_sample/1225473526.pdf",
+            "source_pdf_SHA256": "787297535ba74a4170cc859ae68f15f946f6dfd0bfc14a1e1fa0e6d068ba2b19",
+            "source_total_pages": 27,
+            "source_page_SHA256": "00ea1132e27ac90d9ec92d900770e1719963fd013cf186178fa7168c280ec5b7",
+            "source_page_size": [
+              1654,
+              2339
+            ],
+            "source_pdf_page_rotation": 0,
+            "status": "complete",
+            "client_seconds": 39.80228290206287,
+            "pure_generate_seconds": 39.37998314015567,
+            "generated_tokens": 1192,
+            "model_calls": 13,
+            "blocks": 12,
+            "blocks_SHA256": "4b41b5c52beb143328b9d8aaccc2c463cd9bf167527830b17c886c59e02f81e0",
+            "MD_SHA256": "f50e2e8d4f80e9d902daa36f7a6406ab5441dce4fc8d54d522f93af0f2d82d59"
+          }
+        ],
+        "status": "complete",
+        "transformers_backend_sampling_caveat": "Official Transformers backend does not implement presence_penalty/frequency_penalty; actual generate kwargs are archived. This is not a vLLM throughput benchmark.",
+        "runner_SHA256": "b5ce69398a75a73dffb2f30dad310e9ab77e796fbc35941bf4c85fdc67ab74e2",
+        "input_spec_SHA256": "3a676cfcd73144a5f67bad715b75a2cbb40227b14835e39bc57aee6dcfff1713",
+        "load_seconds": 6.710073086898774,
+        "parameters": 1156026624,
+        "actual_dtype": "torch.float16",
+        "image_processor_config": {
+          "size": {
+            "longest_edge": 1605632,
+            "shortest_edge": 50176
+          },
+          "patch_size": 14,
+          "temporal_patch_size": 2,
+          "merge_size": 2,
+          "image_mean": [
+            0.48145466,
+            0.4578275,
+            0.40821073
+          ],
+          "image_std": [
+            0.26862954,
+            0.26130258,
+            0.27577711
+          ],
+          "image_processor_type": "Qwen2VLImageProcessor",
+          "do_convert_rgb": true,
+          "do_resize": true,
+          "resample": 3,
+          "do_rescale": true,
+          "rescale_factor": 0.00392156862745098,
+          "do_normalize": true
+        },
+        "processor_chat_template_SHA256": "a0bc6f6fc7a29a80017a433e8f03a1cc1236e838a944a2d034295a60c4f2fddb",
+        "actual_attention": "sdpa",
+        "gpu_allocator_budget_MiB": 3584,
+        "existing_CUDA_packages_imported_readonly_from": "/opt/qwen3-tts-openai/.tools/venv-gpu/lib/python3.12/site-packages",
+        "finished_at": "2026-10-17T21:28:40.829295+08:00"
+      }
+    }
+  ],
+  "pages": [
+    {
+      "source": "1206337604",
+      "source_page": 1,
+      "source_SHA256": "ccff40771d75e9412b65f364a1c72c1733c37b4d8f232f49cf639621f0ba165f",
+      "page_dir": "benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/mineru-trial/first-pages-gpu/1206337604-p1",
+      "official_blocks_SHA256": "841ae4ad7cc3d4d4d03e4e5ea1df1caed955d8ce88535601dcaab237d0987f2d",
+      "official_MD_SHA256": "f930a9a78bdf4a083fe0b8d047a91e50b89352d6a5e22b5fcaf7657194339b47",
+      "official_request": {
+        "id": "1206337604",
+        "page": 1,
+        "source_pdf": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/sources/1206337604/source-converted.pdf",
+        "source_pdf_SHA256": "ccff40771d75e9412b65f364a1c72c1733c37b4d8f232f49cf639621f0ba165f",
+        "source_total_pages": 2,
+        "source_page_SHA256": "c64c87161f29bcb6640a1cf595e0f8a83da5cdbebd83622e4064a1077269d473",
+        "source_page_size": [
+          1654,
+          2339
+        ],
+        "source_pdf_page_rotation": 0,
+        "status": "complete",
+        "client_seconds": 17.709287093020976,
+        "pure_generate_seconds": 17.32718464510981,
+        "generated_tokens": 424,
+        "model_calls": 6,
+        "blocks": 5,
+        "blocks_SHA256": "841ae4ad7cc3d4d4d03e4e5ea1df1caed955d8ce88535601dcaab237d0987f2d",
+        "MD_SHA256": "f930a9a78bdf4a083fe0b8d047a91e50b89352d6a5e22b5fcaf7657194339b47"
+      },
+      "generation_integrity": {
+        "status": "all_calls_EOS",
+        "limit_hit_calls": [],
+        "unknown_termination_calls": [],
+        "calls": [
+          {
+            "call": 0,
+            "input_tokens": 1394,
+            "generated_tokens": 112,
+            "output_tokens": 1506,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 1,
+            "input_tokens": 109,
+            "generated_tokens": 10,
+            "output_tokens": 119,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 2,
+            "input_tokens": 113,
+            "generated_tokens": 7,
+            "output_tokens": 120,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 3,
+            "input_tokens": 118,
+            "generated_tokens": 15,
+            "output_tokens": 133,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 4,
+            "input_tokens": 109,
+            "generated_tokens": 11,
+            "output_tokens": 120,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 5,
+            "input_tokens": 2014,
+            "generated_tokens": 269,
+            "output_tokens": 2283,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          }
+        ]
+      },
+      "HTML_reader_errors": [],
+      "table_shapes": [
+        [
+          6,
+          2
+        ]
+      ],
+      "checks": [
+        {
+          "check": "p1_independent_native_character_span_coverage",
+          "observed_pass": true,
+          "native_span_count": 60,
+          "missing_source_spans": [],
+          "literal_unmatched_source_spans_including_typography": [
+            {
+              "text": "董事会秘书：黄曦仪",
+              "bbox": [
+                173.25,
+                461.33074951171875,
+                281.25,
+                478.7067565917969
+              ],
+              "size": 12.0
+            },
+            {
+              "text": "公司主要从事以工程监理业务为主，包括通信监理、电力监",
+              "bbox": [
+                194.25,
+                522.7808227539062,
+                513.4498291015625,
+                540.1567993164062
+              ],
+              "size": 12.0
+            },
+            {
+              "text": "的工程监理业务与通信行业、房屋建筑行业的发展密切相关，未",
+              "bbox": [
+                173.25,
+                573.4807739257812,
+                513.1382446289062,
+                590.8567504882812
+              ],
+              "size": 12.0
+            },
+            {
+              "text": "来公司将会在立足于通信工程监理、房屋建筑监理的基础上，在",
+              "bbox": [
+                173.25,
+                598.8307495117188,
+                513.1382446289062,
+                616.2067260742188
+              ],
+              "size": 12.0
+            },
+            {
+              "text": "程领域，做大做强公司的主营业务，为国家基础建设提供更多的",
+              "bbox": [
+                173.25,
+                649.5308227539062,
+                513.1382446289062,
+                666.9067993164062
+              ],
+              "size": 12.0
+            },
+            {
+              "text": "、公司的现金流问题是否是因为施工进度、施工款有关？",
+              "bbox": [
+                180.0,
+                700.2307739257812,
+                480.0,
+                717.6067504882812
+              ],
+              "size": 12.0
+            },
+            {
+              "text": " 年年报对现金流情况进行了详细的分析，现金流量",
+              "bbox": [
+                247.49603271484375,
+                725.580810546875,
+                513.9000244140625,
+                742.956787109375
+              ],
+              "size": 12.0
+            },
+            {
+              "text": "净额下降与公司的应收账款对象为三大通信运营商有关，因三大",
+              "bbox": [
+                173.25,
+                750.9307861328125,
+                513.1382446289062,
+                768.3067626953125
+              ],
+              "size": 12.0
+            }
+          ],
+          "caution": "Coverage only; no table/reading-order/provenance claim",
+          "status": "pass"
+        },
+        {
+          "check": "p1_visible_complete_security_identification_line",
+          "observed_pass": true,
+          "expected": "证券代码:300635证券简称:达安股份",
+          "literal_character_exact": true,
+          "raw_locations": [
+            {
+              "JSON_pointer": "/blocks/0/content",
+              "bbox_normalized": [
+                0.149,
+                0.086,
+                0.308,
+                0.103
+              ],
+              "angle": 0,
+              "match_spans_adjacent_blocks": true
+            },
+            {
+              "JSON_pointer": "/blocks/1/content",
+              "bbox_normalized": [
+                0.666,
+                0.086,
+                0.837,
+                0.103
+              ],
+              "angle": 0,
+              "match_spans_adjacent_blocks": true
+            }
+          ],
+          "status": "pass"
+        },
+        {
+          "check": "p1_original_document_title",
+          "observed_pass": true,
+          "expected": "2019年6月4日投资者关系活动记录表",
+          "literal_character_exact": true,
+          "raw_locations": [
+            {
+              "JSON_pointer": "/blocks/2/content",
+              "bbox_normalized": [
+                0.263,
+                0.158,
+                0.737,
+                0.181
+              ],
+              "angle": 0
+            }
+          ],
+          "status": "pass"
+        },
+        {
+          "check": "p1_security_identification_precedes_title",
+          "observed_pass": true,
+          "positions": [
+            0,
+            20
+          ],
+          "status": "pass"
+        }
+      ],
+      "counts": {
+        "pass": 4,
+        "fail": 0,
+        "unknown": 0
+      },
+      "public_interface_source_mapping": {
+        "status": "unknown",
+        "reason": "Official per-page model trial, not MosaicParse HTTP; table-source and cross-page assembly not implemented or claimed."
+      }
+    },
+    {
+      "source": "1225474739",
+      "source_page": 19,
+      "source_SHA256": "1c99c450a8efefe77c9ca02a6f670c958298f661e5ad8d30d6ba01aa0742cda9",
+      "page_dir": "benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/mineru-trial/first-pages-gpu/1225474739-p19",
+      "official_blocks_SHA256": "29460053a02ae4bd7875e44576f03210036d607245e11704019212d7d195ff70",
+      "official_MD_SHA256": "43adcc984503346c9b3d69d65048f80d4d031a3ee69765e4795224b9f0a1ab5d",
+      "official_request": {
+        "id": "1225474739",
+        "page": 19,
+        "source_pdf": "/opt/mosaic-parse/pdf_sample/1225474739.pdf",
+        "source_pdf_SHA256": "1c99c450a8efefe77c9ca02a6f670c958298f661e5ad8d30d6ba01aa0742cda9",
+        "source_total_pages": 134,
+        "source_page_SHA256": "e1f87567100070b0899a1b1c7b036e73a0d6a746688802fc9a911bbe37055430",
+        "source_page_size": [
+          1654,
+          2339
+        ],
+        "source_pdf_page_rotation": 0,
+        "status": "complete",
+        "client_seconds": 46.05941523401998,
+        "pure_generate_seconds": 45.42653151100967,
+        "generated_tokens": 1145,
+        "model_calls": 12,
+        "blocks": 11,
+        "blocks_SHA256": "29460053a02ae4bd7875e44576f03210036d607245e11704019212d7d195ff70",
+        "MD_SHA256": "43adcc984503346c9b3d69d65048f80d4d031a3ee69765e4795224b9f0a1ab5d"
+      },
+      "generation_integrity": {
+        "status": "all_calls_EOS",
+        "limit_hit_calls": [],
+        "unknown_termination_calls": [],
+        "calls": [
+          {
+            "call": 0,
+            "input_tokens": 1394,
+            "generated_tokens": 244,
+            "output_tokens": 1638,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 1,
+            "input_tokens": 93,
+            "generated_tokens": 17,
+            "output_tokens": 110,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 2,
+            "input_tokens": 169,
+            "generated_tokens": 32,
+            "output_tokens": 201,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 3,
+            "input_tokens": 125,
+            "generated_tokens": 24,
+            "output_tokens": 149,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 4,
+            "input_tokens": 105,
+            "generated_tokens": 7,
+            "output_tokens": 112,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 5,
+            "input_tokens": 91,
+            "generated_tokens": 10,
+            "output_tokens": 101,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 6,
+            "input_tokens": 105,
+            "generated_tokens": 7,
+            "output_tokens": 112,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 7,
+            "input_tokens": 118,
+            "generated_tokens": 14,
+            "output_tokens": 132,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 8,
+            "input_tokens": 109,
+            "generated_tokens": 7,
+            "output_tokens": 116,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 9,
+            "input_tokens": 93,
+            "generated_tokens": 4,
+            "output_tokens": 97,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 10,
+            "input_tokens": 2049,
+            "generated_tokens": 776,
+            "output_tokens": 2825,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 11,
+            "input_tokens": 97,
+            "generated_tokens": 3,
+            "output_tokens": 100,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          }
+        ]
+      },
+      "HTML_reader_errors": [],
+      "table_shapes": [
+        [
+          2,
+          4
+        ],
+        [
+          8,
+          9
+        ]
+      ],
+      "checks": [
+        {
+          "check": "p19_entire_long_risk_cell_text_and_span",
+          "observed_pass": true,
+          "expected_label": "报告期衍生品持仓的风险分析\n及控制措施说明（包括但不限\n于市场风险、流动性风险、信\n用风险、操作风险、法律风险\n等） ",
+          "expected_text": "远期结售汇的风险分析： \n（1）汇率、利率波动风险：在外汇汇率波动较大时，公司判断汇率大幅波动方向与外\n汇套期保值合约方向不一致时，将造成汇兑损失；若汇率在未来发生波动时，与外汇套\n期保值合约偏差较大也将造成汇兑损失；  \n（2）内部控制风险：外汇套期保值业务专业性较强，复杂程度较高，可能会由于内控\n制度不完善而造成风险； \n（3）交易违约风险：外汇套期保值交易对手出现违约，不能按照约定支付公司套期保\n值盈利从而无法对冲公司实际的汇兑损失，将造成公司损失； \n（4）客户违约风险：客户应收账款发生逾期、客户调整订单等情况将使货款实际回款\n情况与预期回款情况不一致，可能使实际发生的现金流与已操作的外汇套 期保值业务\n期限或数额无法完全匹配，从而导致公司损失。 \n \n远期结售汇的风险控制措施： \n（1）公司制定了《广东银禧科技股份有限公司外汇套期保值业务管理制度》，（以下简\n称“《外汇套期保值业务管理制度》”）对外汇套期保值业务操作规范、审批权限及内\n部操作流程、信息隔离措施、内部风险报告制度及风险处理程序、信息披露等做出了明\n确规定； \n（2）为避免汇率大幅波动风险，公司会加强对汇率的研究分析，实时关注国际市场环\n境变化，适时调整经营策略，最大限度的避免汇兑损失； \n（3）为避免内部控制风险，公司财务部负责统一管理公司外汇套期保值业务，所有的\n外汇交易行为均以正常生产经营为基础，以具体经营业务为依托，不得进行投机和套利\n交易，并严格按照《外汇套期保值业务管理制度》的规定进行业务操作，有效地保证制\n度的执行； \n（4）为控制交易违约风险，公司仅与具有合法资质的大型银行等金融机构开展外汇套",
+          "expected_colspan": 8,
+          "candidates": [
+            {
+              "location": {
+                "JSON_pointer": "/blocks/9/content/table[0]",
+                "block_index": 9,
+                "bbox_normalized": [
+                  0.084,
+                  0.32,
+                  0.896,
+                  0.919
+                ],
+                "angle": 0,
+                "row_zero_based": 7,
+                "column_zero_based": 1,
+                "HTML_line_column": [
+                  1,
+                  874
+                ]
+              },
+              "actual_payloads": [
+                "远期结售汇的风险分析:(1)汇率、利率波动风险:在外汇汇率波动较大时,公司判断汇率大幅波动方向与外汇套期保值合约方向不一致时,将造成汇兑损失;若汇率在未来发生波动时,与外汇套期保值合约偏差较大也将造成汇兑损失;(2)内部控制风险:外汇套期保值业务专业性较强,复杂程度较高,可能会由于内控制度不完善而造成风险;(3)交易违约风险:外汇套期保值交易对手出现违约,不能按照约定支付公司套期保值盈利从而无法对冲公司实际的汇兑损失,将造成公司损失;(4)客户违约风险:客户应收账款发生逾期、客户调整订单等情况将使货款实际回款情况与预期回款情况不一致,可能使实际发生的现金流与已操作的外汇套期保值业务期限或数额无法完全匹配,从而导致公司损失。远期结售汇的风险控制措施:(1)公司制定了《广东银禧科技股份有限公司外汇套期保值业务管理制度》,(以下简称“《外汇套期保值业务管理制度》”)对外汇套期保值业务操作规范、审批权限及内部操作流程、信息隔离措施、内部风险报告制度及风险处理程序、信息披露等做出了明确规定;(2)为避免汇率大幅波动风险,公司会加强对汇率的研究分析,实时关注国际市场环境变化,适时调整经营策略,最大限度的避免汇兑损失;(3)为避免内部控制风险,公司财务部负责统一管理公司外汇套期保值业务,所有的外汇交易行为均以正常生产经营为基础,以具体经营业务为依托,不得进行投机和套利交易,并严格按照《外汇套期保值业务管理制度》的规定进行业务操作,有效地保证制度的执行;(4)为控制交易违约风险,公司仅与具有合法资质的大型银行等金融机构开展外汇套"
+              ],
+              "full_text_equal_under_explicit_typography": true,
+              "literal_character_exact": false,
+              "source_colspan_retained": true
+            }
+          ],
+          "status": "pass"
+        },
+        {
+          "check": "p19_previously_missing_risk_tail_present",
+          "observed_pass": true,
+          "expected": "外汇交易行为均以正常生产经营为基础,以具体经营业务为依托,不得进行投机和套利交易,并严格按照《外汇套期保值业务管理制度》的规定进行业务操作,有效地保证制度的执行;(4)为控制交易违约风险,公司仅与具有合法资质的大型银行等金融机构开展外汇套",
+          "literal_character_exact": false,
+          "status": "pass"
+        },
+        {
+          "check": "p19_exact_amount_and_separate_superscript_reference",
+          "observed_pass": true,
+          "expected_amount": "6,606.57",
+          "expected_reference": "1",
+          "candidates": [
+            {
+              "location": {
+                "JSON_pointer": "/blocks/9/content/table[0]",
+                "block_index": 9,
+                "bbox_normalized": [
+                  0.084,
+                  0.32,
+                  0.896,
+                  0.919
+                ],
+                "angle": 0,
+                "row_zero_based": 1,
+                "column_zero_based": 7,
+                "HTML_line_column": [
+                  1,
+                  270
+                ]
+              },
+              "raw_cell": "\\( 6,606.57^1 \\)",
+              "separate_numeric_and_reference": true
+            }
+          ],
+          "status": "pass"
+        },
+        {
+          "check": "p19_exact_negative_decimal_at_actual_profit_explanation",
+          "observed_pass": true,
+          "candidates": [
+            {
+              "location": {
+                "JSON_pointer": "/blocks/9/content/table[0]",
+                "block_index": 9,
+                "bbox_normalized": [
+                  0.084,
+                  0.32,
+                  0.896,
+                  0.919
+                ],
+                "angle": 0,
+                "row_zero_based": 4,
+                "column_zero_based": 1,
+                "HTML_line_column": [
+                  1,
+                  553
+                ]
+              },
+              "actual": [
+                "为规避和防范外汇汇率波动给公司带来的经营风险,公司按照一定比例,针对外汇开展远期结售汇业务,业务规模均在公司董事会审议的额度范围内。报告期内,公司远期结售汇实际损益金额为-0.61万元。",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+              ]
+            }
+          ],
+          "status": "pass"
+        }
+      ],
+      "counts": {
+        "pass": 4,
+        "fail": 0,
+        "unknown": 0
+      },
+      "public_interface_source_mapping": {
+        "status": "unknown",
+        "reason": "Official per-page model trial, not MosaicParse HTTP; table-source and cross-page assembly not implemented or claimed."
+      }
+    },
+    {
+      "source": "1206337604",
+      "source_page": 2,
+      "source_SHA256": "ccff40771d75e9412b65f364a1c72c1733c37b4d8f232f49cf639621f0ba165f",
+      "page_dir": "benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/mineru-trial/remaining-pages-gpu/1206337604-p2",
+      "official_blocks_SHA256": "3f107b1867cae2724433e4c326d618045518710c684623c7571e4e298b31ea7d",
+      "official_MD_SHA256": "a7d5e11f15864fd7fc27112d51a3456f5660c10188721744b9c39bca333ae983",
+      "official_request": {
+        "id": "1206337604",
+        "page": 2,
+        "source_pdf": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/sources/1206337604/source-converted.pdf",
+        "source_pdf_SHA256": "ccff40771d75e9412b65f364a1c72c1733c37b4d8f232f49cf639621f0ba165f",
+        "source_total_pages": 2,
+        "source_page_SHA256": "ad489109c8a15e625a5be8c0ce40405d18e664ed13a23f4d2b409109a534aeab",
+        "source_page_size": [
+          1654,
+          2339
+        ],
+        "source_pdf_page_rotation": 0,
+        "status": "complete",
+        "client_seconds": 18.326731035020202,
+        "pure_generate_seconds": 17.815465947031043,
+        "generated_tokens": 407,
+        "model_calls": 2,
+        "blocks": 1,
+        "blocks_SHA256": "3f107b1867cae2724433e4c326d618045518710c684623c7571e4e298b31ea7d",
+        "MD_SHA256": "a7d5e11f15864fd7fc27112d51a3456f5660c10188721744b9c39bca333ae983"
+      },
+      "generation_integrity": {
+        "status": "all_calls_EOS",
+        "limit_hit_calls": [],
+        "unknown_termination_calls": [],
+        "calls": [
+          {
+            "call": 0,
+            "input_tokens": 1394,
+            "generated_tokens": 22,
+            "output_tokens": 1416,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 1,
+            "input_tokens": 1997,
+            "generated_tokens": 385,
+            "output_tokens": 2382,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          }
+        ]
+      },
+      "HTML_reader_errors": [],
+      "table_shapes": [
+        [
+          3,
+          2
+        ]
+      ],
+      "checks": [
+        {
+          "check": "p2_independent_native_character_span_coverage",
+          "observed_pass": true,
+          "native_span_count": 57,
+          "missing_source_spans": [],
+          "literal_unmatched_source_spans_including_typography": [
+            {
+              "text": "通信运营商的信用周期较长，付款审批流程繁琐，耗时较久导",
+              "bbox": [
+                173.25,
+                5.130781173706055,
+                513.7857666015625,
+                22.50678062438965
+              ],
+              "size": 12.0
+            },
+            {
+              "text": "、公司的竞争对手有哪些？ ",
+              "bbox": [
+                180.0,
+                55.83079528808594,
+                326.7239990234375,
+                73.20679473876953
+              ],
+              "size": 12.0
+            },
+            {
+              "text": "公司的竞争对手主要包括：一是三大电信运营商所属的通信",
+              "bbox": [
+                194.25,
+                81.18077087402344,
+                506.25,
+                98.55677032470703
+              ],
+              "size": 12.0
+            },
+            {
+              "text": "服务企业，主要由下属的子公司运营通信监理业务；二是国有背",
+              "bbox": [
+                173.25,
+                103.23075866699219,
+                509.25,
+                120.60675811767578
+              ],
+              "size": 12.0
+            },
+            {
+              "text": "景的建设工程监理企业；三是大型民营建设工程监理企业。",
+              "bbox": [
+                173.25,
+                125.28074645996094,
+                485.25,
+                142.65673828125
+              ],
+              "size": 12.0
+            },
+            {
+              "text": "、目前公司收入区域主要以华南地区为主，未来公司的目标是",
+              "bbox": [
+                180.0,
+                147.33079528808594,
+                504.0,
+                164.706787109375
+              ],
+              "size": 12.0
+            },
+            {
+              "text": "否会全国均衡发展？",
+              "bbox": [
+                173.25,
+                169.3807830810547,
+                281.25,
+                186.75677490234375
+              ],
+              "size": 12.0
+            },
+            {
+              "text": "   主要是公司的发源地在广东地区，公司在华南地区的营业收",
+              "bbox": [
+                173.25,
+                191.43077087402344,
+                503.25,
+                208.8067626953125
+              ],
+              "size": 12.0
+            },
+            {
+              "text": "入所占比例一直较高，未来公司会逐年降低华南地区的占比。",
+              "bbox": [
+                173.25,
+                213.4807586669922,
+                497.25,
+                230.85675048828125
+              ],
+              "size": 12.0
+            },
+            {
+              "text": " 亿元，此项目会",
+              "bbox": [
+                426.67999267578125,
+                260.8807678222656,
+                514.4019165039062,
+                278.25677490234375
+              ],
+              "size": 12.0
+            },
+            {
+              "text": "百分之百转化为订单吗？",
+              "bbox": [
+                173.25,
+                286.2307434082031,
+                305.25,
+                303.60675048828125
+              ],
+              "size": 12.0
+            },
+            {
+              "text": "项目的公开招投标的合同仅为框架协议，依据业务特点及区域问",
+              "bbox": [
+                173.25,
+                336.9307556152344,
+                514.0960693359375,
+                354.3067626953125
+              ],
+              "size": 12.0
+            },
+            {
+              "text": "题，公司在与电信运营商签订的包含监理服务范围、服务周期、",
+              "bbox": [
+                173.25,
+                362.28076171875,
+                513.27001953125,
+                379.6567687988281
+              ],
+              "size": 12.0
+            },
+            {
+              "text": "建设规模、取费标准等内容的框架合同基础上，根据实际工程委",
+              "bbox": [
+                173.25,
+                387.6307678222656,
+                513.2999877929688,
+                405.00677490234375
+              ],
+              "size": 12.0
+            },
+            {
+              "text": "高程调整系数确定具体监理业务的取费单价，签订相应的工作量",
+              "bbox": [
+                173.25,
+                438.33074951171875,
+                513.2999877929688,
+                455.7067565917969
+              ],
+              "size": 12.0
+            },
+            {
+              "text": "订单。故具体收入需要依据合同进展，与业主方确认的具体完成",
+              "bbox": [
+                173.25,
+                463.6807556152344,
+                513.39404296875,
+                481.0567626953125
+              ],
+              "size": 12.0
+            },
+            {
+              "text": "、公司一季度报告的数据呈现负增长，主要是什么所致？",
+              "bbox": [
+                180.0,
+                514.3807983398438,
+                480.0,
+                531.7567749023438
+              ],
+              "size": 12.0
+            },
+            {
+              "text": "公司业绩变动主要受外部市场环境影响，营业收入同比下",
+              "bbox": [
+                194.25,
+                536.4307861328125,
+                494.25,
+                553.8067626953125
+              ],
+              "size": 12.0
+            },
+            {
+              "text": "降，归属于上市公司股东的净利润较上年同期预计下降。",
+              "bbox": [
+                173.25,
+                558.4807739257812,
+                473.25,
+                575.8567504882812
+              ],
+              "size": 12.0
+            },
+            {
+              "text": " 年的发展目标？",
+              "bbox": [
+                245.4659881591797,
+                580.5308227539062,
+                331.8500061035156,
+                597.9067993164062
+              ],
+              "size": 12.0
+            },
+            {
+              "text": "公司将继续做大做强监理主业，针对现有市场分布状况，将",
+              "bbox": [
+                194.25,
+                605.8807983398438,
+                513.7259521484375,
+                623.2567749023438
+              ],
+              "size": 12.0
+            }
+          ],
+          "caution": "Coverage only; no table/reading-order/provenance claim",
+          "status": "pass"
+        },
+        {
+          "check": "p2_original_record_date",
+          "observed_pass": true,
+          "expected": "2019年6月4日星期二",
+          "literal_character_exact": true,
+          "raw_locations": [
+            {
+              "JSON_pointer": "/blocks/0/content",
+              "bbox_normalized": [
+                0.136,
+                0.0,
+                0.874,
+                0.88
+              ],
+              "angle": 0
+            }
+          ],
+          "status": "pass"
+        }
+      ],
+      "counts": {
+        "pass": 2,
+        "fail": 0,
+        "unknown": 0
+      },
+      "public_interface_source_mapping": {
+        "status": "unknown",
+        "reason": "Official per-page model trial, not MosaicParse HTTP; table-source and cross-page assembly not implemented or claimed."
+      }
+    },
+    {
+      "source": "1225473526",
+      "source_page": 6,
+      "source_SHA256": "787297535ba74a4170cc859ae68f15f946f6dfd0bfc14a1e1fa0e6d068ba2b19",
+      "page_dir": "benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/mineru-trial/remaining-pages-gpu/1225473526-p6",
+      "official_blocks_SHA256": "94d6bbb3ae63d4729f174693c7e213c37340f352f08568dacee786213c4951c2",
+      "official_MD_SHA256": "6be13b818c60573f63a8db6353e90fc5d8fb95956b95e45b1e7fe756c9e4bb68",
+      "official_request": {
+        "id": "1225473526",
+        "page": 6,
+        "source_pdf": "/opt/mosaic-parse/pdf_sample/1225473526.pdf",
+        "source_pdf_SHA256": "787297535ba74a4170cc859ae68f15f946f6dfd0bfc14a1e1fa0e6d068ba2b19",
+        "source_total_pages": 27,
+        "source_page_SHA256": "7dbc8398530f38c488c88934474c08bc6558f2e13a40619e135df1dbd4312c99",
+        "source_page_size": [
+          1654,
+          2339
+        ],
+        "source_pdf_page_rotation": 0,
+        "status": "complete",
+        "client_seconds": 30.84563336300198,
+        "pure_generate_seconds": 30.46501776727382,
+        "generated_tokens": 920,
+        "model_calls": 15,
+        "blocks": 14,
+        "blocks_SHA256": "94d6bbb3ae63d4729f174693c7e213c37340f352f08568dacee786213c4951c2",
+        "MD_SHA256": "6be13b818c60573f63a8db6353e90fc5d8fb95956b95e45b1e7fe756c9e4bb68"
+      },
+      "generation_integrity": {
+        "status": "all_calls_EOS",
+        "limit_hit_calls": [],
+        "unknown_termination_calls": [],
+        "calls": [
+          {
+            "call": 0,
+            "input_tokens": 1394,
+            "generated_tokens": 311,
+            "output_tokens": 1705,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 1,
+            "input_tokens": 115,
+            "generated_tokens": 8,
+            "output_tokens": 123,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 2,
+            "input_tokens": 93,
+            "generated_tokens": 4,
+            "output_tokens": 97,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 3,
+            "input_tokens": 193,
+            "generated_tokens": 28,
+            "output_tokens": 221,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 4,
+            "input_tokens": 487,
+            "generated_tokens": 87,
+            "output_tokens": 574,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 5,
+            "input_tokens": 97,
+            "generated_tokens": 8,
+            "output_tokens": 105,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 6,
+            "input_tokens": 103,
+            "generated_tokens": 21,
+            "output_tokens": 124,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 7,
+            "input_tokens": 94,
+            "generated_tokens": 7,
+            "output_tokens": 101,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 8,
+            "input_tokens": 93,
+            "generated_tokens": 25,
+            "output_tokens": 118,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 9,
+            "input_tokens": 100,
+            "generated_tokens": 4,
+            "output_tokens": 104,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 10,
+            "input_tokens": 627,
+            "generated_tokens": 161,
+            "output_tokens": 788,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 11,
+            "input_tokens": 107,
+            "generated_tokens": 30,
+            "output_tokens": 137,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 12,
+            "input_tokens": 105,
+            "generated_tokens": 4,
+            "output_tokens": 109,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 13,
+            "input_tokens": 799,
+            "generated_tokens": 216,
+            "output_tokens": 1015,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 14,
+            "input_tokens": 103,
+            "generated_tokens": 6,
+            "output_tokens": 109,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          }
+        ]
+      },
+      "HTML_reader_errors": [],
+      "table_shapes": [
+        [
+          7,
+          3
+        ],
+        [
+          7,
+          5
+        ]
+      ],
+      "checks": [
+        {
+          "check": "p6_original_shareholder_continuation_source_grid",
+          "observed_pass": true,
+          "source_shape": [
+            7,
+            5
+          ],
+          "expected_spans": [],
+          "actual_shapes": [
+            [
+              7,
+              3
+            ],
+            [
+              7,
+              5
+            ]
+          ],
+          "candidates": [
+            {
+              "location": {
+                "JSON_pointer": "/blocks/12/content/table[0]",
+                "block_index": 12,
+                "bbox_normalized": [
+                  0.139,
+                  0.68,
+                  0.86,
+                  0.897
+                ],
+                "angle": 0
+              },
+              "mismatches": [],
+              "literal_character_mismatches_including_typography": [
+                {
+                  "row": 6,
+                  "column": 1,
+                  "source": "中国建设银行股份有限公司－鹏华中证酒交易型开放式指数证券投资基金",
+                  "actual": "中国建设银行股份有限公司-鹏华中证酒交易型开放式指数证券投资基金"
+                }
+              ],
+              "spans_match": true,
+              "actual_spans": [],
+              "complete_explicit_cell_or_span_coverage": true,
+              "uncovered_grid_positions": [],
+              "literal_exact_positions": 34,
+              "positions_equal_under_explicit_typography": 35
+            }
+          ],
+          "status": "pass"
+        }
+      ],
+      "counts": {
+        "pass": 1,
+        "fail": 0,
+        "unknown": 0
+      },
+      "public_interface_source_mapping": {
+        "status": "unknown",
+        "reason": "Official per-page model trial, not MosaicParse HTTP; table-source and cross-page assembly not implemented or claimed."
+      }
+    },
+    {
+      "source": "1225473526",
+      "source_page": 7,
+      "source_SHA256": "787297535ba74a4170cc859ae68f15f946f6dfd0bfc14a1e1fa0e6d068ba2b19",
+      "page_dir": "benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/mineru-trial/remaining-pages-gpu/1225473526-p7",
+      "official_blocks_SHA256": "4b41b5c52beb143328b9d8aaccc2c463cd9bf167527830b17c886c59e02f81e0",
+      "official_MD_SHA256": "f50e2e8d4f80e9d902daa36f7a6406ab5441dce4fc8d54d522f93af0f2d82d59",
+      "official_request": {
+        "id": "1225473526",
+        "page": 7,
+        "source_pdf": "/opt/mosaic-parse/pdf_sample/1225473526.pdf",
+        "source_pdf_SHA256": "787297535ba74a4170cc859ae68f15f946f6dfd0bfc14a1e1fa0e6d068ba2b19",
+        "source_total_pages": 27,
+        "source_page_SHA256": "00ea1132e27ac90d9ec92d900770e1719963fd013cf186178fa7168c280ec5b7",
+        "source_page_size": [
+          1654,
+          2339
+        ],
+        "source_pdf_page_rotation": 0,
+        "status": "complete",
+        "client_seconds": 39.80228290206287,
+        "pure_generate_seconds": 39.37998314015567,
+        "generated_tokens": 1192,
+        "model_calls": 13,
+        "blocks": 12,
+        "blocks_SHA256": "4b41b5c52beb143328b9d8aaccc2c463cd9bf167527830b17c886c59e02f81e0",
+        "MD_SHA256": "f50e2e8d4f80e9d902daa36f7a6406ab5441dce4fc8d54d522f93af0f2d82d59"
+      },
+      "generation_integrity": {
+        "status": "all_calls_EOS",
+        "limit_hit_calls": [],
+        "unknown_termination_calls": [],
+        "calls": [
+          {
+            "call": 0,
+            "input_tokens": 1394,
+            "generated_tokens": 267,
+            "output_tokens": 1661,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 1,
+            "input_tokens": 115,
+            "generated_tokens": 8,
+            "output_tokens": 123,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 2,
+            "input_tokens": 93,
+            "generated_tokens": 4,
+            "output_tokens": 97,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 3,
+            "input_tokens": 613,
+            "generated_tokens": 179,
+            "output_tokens": 792,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 4,
+            "input_tokens": 89,
+            "generated_tokens": 17,
+            "output_tokens": 106,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 5,
+            "input_tokens": 97,
+            "generated_tokens": 4,
+            "output_tokens": 101,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 6,
+            "input_tokens": 991,
+            "generated_tokens": 299,
+            "output_tokens": 1290,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 7,
+            "input_tokens": 112,
+            "generated_tokens": 11,
+            "output_tokens": 123,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 8,
+            "input_tokens": 106,
+            "generated_tokens": 8,
+            "output_tokens": 114,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 9,
+            "input_tokens": 93,
+            "generated_tokens": 4,
+            "output_tokens": 97,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 10,
+            "input_tokens": 655,
+            "generated_tokens": 377,
+            "output_tokens": 1032,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 11,
+            "input_tokens": 97,
+            "generated_tokens": 8,
+            "output_tokens": 105,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 12,
+            "input_tokens": 103,
+            "generated_tokens": 6,
+            "output_tokens": 109,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          }
+        ]
+      },
+      "HTML_reader_errors": [],
+      "table_shapes": [
+        [
+          6,
+          5
+        ],
+        [
+          11,
+          4
+        ],
+        [
+          8,
+          5
+        ]
+      ],
+      "checks": [
+        {
+          "check": "p7_original_shareholder_continuation_source_grid",
+          "observed_pass": true,
+          "source_shape": [
+            6,
+            5
+          ],
+          "expected_spans": [
+            [
+              5,
+              0,
+              1,
+              2
+            ]
+          ],
+          "actual_shapes": [
+            [
+              6,
+              5
+            ],
+            [
+              11,
+              4
+            ],
+            [
+              8,
+              5
+            ]
+          ],
+          "candidates": [
+            {
+              "location": {
+                "JSON_pointer": "/blocks/2/content/table[0]",
+                "block_index": 2,
+                "bbox_normalized": [
+                  0.14,
+                  0.084,
+                  0.86,
+                  0.251
+                ],
+                "angle": 0
+              },
+              "mismatches": [],
+              "literal_character_mismatches_including_typography": [
+                {
+                  "row": 4,
+                  "column": 1,
+                  "source": "上海旌德投资合伙企业（有限合伙）",
+                  "actual": "上海旌德投资合伙企业(有限合伙)"
+                }
+              ],
+              "spans_match": true,
+              "actual_spans": [
+                [
+                  5,
+                  0,
+                  1,
+                  2
+                ]
+              ],
+              "complete_explicit_cell_or_span_coverage": true,
+              "uncovered_grid_positions": [],
+              "literal_exact_positions": 29,
+              "positions_equal_under_explicit_typography": 30
+            }
+          ],
+          "status": "pass"
+        },
+        {
+          "check": "p7_fundraising_full_grid_and_all_seven_merged_spans",
+          "observed_pass": true,
+          "source_shape": [
+            11,
+            4
+          ],
+          "expected_spans": [
+            [
+              0,
+              0,
+              1,
+              2
+            ],
+            [
+              0,
+              2,
+              1,
+              2
+            ],
+            [
+              1,
+              0,
+              8,
+              1
+            ],
+            [
+              9,
+              0,
+              1,
+              2
+            ],
+            [
+              9,
+              2,
+              1,
+              2
+            ],
+            [
+              10,
+              0,
+              1,
+              2
+            ],
+            [
+              10,
+              2,
+              1,
+              2
+            ]
+          ],
+          "actual_shapes": [
+            [
+              6,
+              5
+            ],
+            [
+              11,
+              4
+            ],
+            [
+              8,
+              5
+            ]
+          ],
+          "candidates": [
+            {
+              "location": {
+                "JSON_pointer": "/blocks/5/content/table[0]",
+                "block_index": 5,
+                "bbox_normalized": [
+                  0.14,
+                  0.314,
+                  0.86,
+                  0.591
+                ],
+                "angle": 0
+              },
+              "mismatches": [],
+              "literal_character_mismatches_including_typography": [
+                {
+                  "row": 0,
+                  "column": 0,
+                  "source": "首发前期末净资产（截至2010.12.31）",
+                  "actual": "首发前期末净资产(截至2010.12.31)"
+                },
+                {
+                  "row": 5,
+                  "column": 2,
+                  "source": "第一期限制性股票（已回购注销）",
+                  "actual": "第一期限制性股票(已回购注销)"
+                },
+                {
+                  "row": 9,
+                  "column": 0,
+                  "source": "首发后累计派现金额（含税）（截至2026年6月30日）",
+                  "actual": "首发后累计派现金额(含税)(截至2026年6月30日)"
+                },
+                {
+                  "row": 10,
+                  "column": 0,
+                  "source": "本次发行前最近一期末（2026年6月30日）归属母公司股东的净资产额",
+                  "actual": "本次发行前最近一期末(2026年6月30日)归属母公司股东的净资产额"
+                }
+              ],
+              "spans_match": true,
+              "actual_spans": [
+                [
+                  0,
+                  0,
+                  1,
+                  2
+                ],
+                [
+                  0,
+                  2,
+                  1,
+                  2
+                ],
+                [
+                  1,
+                  0,
+                  8,
+                  1
+                ],
+                [
+                  9,
+                  0,
+                  1,
+                  2
+                ],
+                [
+                  9,
+                  2,
+                  1,
+                  2
+                ],
+                [
+                  10,
+                  0,
+                  1,
+                  2
+                ],
+                [
+                  10,
+                  2,
+                  1,
+                  2
+                ]
+              ],
+              "complete_explicit_cell_or_span_coverage": true,
+              "uncovered_grid_positions": [],
+              "literal_exact_positions": 40,
+              "positions_equal_under_explicit_typography": 44
+            }
+          ],
+          "status": "pass"
+        }
+      ],
+      "counts": {
+        "pass": 2,
+        "fail": 0,
+        "unknown": 0
+      },
+      "public_interface_source_mapping": {
+        "status": "unknown",
+        "reason": "Official per-page model trial, not MosaicParse HTTP; table-source and cross-page assembly not implemented or claimed."
+      }
+    },
+    {
+      "source": "1225474139",
+      "source_page": 28,
+      "source_SHA256": "dc69826976c576302ee4156642039b790693202a611922dda647eb006e6d5c18",
+      "page_dir": "benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/mineru-trial/remaining-pages-gpu/1225474139-p28",
+      "official_blocks_SHA256": "749495803548c37b517dd682743cab6bfda1f07440cc43026450668c232f3600",
+      "official_MD_SHA256": "7cf369cb41c97fe04c0e80f8c5de252abd6828f5045f3ac01ca3c35f9f3a8d4e",
+      "official_request": {
+        "id": "1225474139",
+        "page": 28,
+        "source_pdf": "/opt/mosaic-parse/pdf_sample/1225474139.pdf",
+        "source_pdf_SHA256": "dc69826976c576302ee4156642039b790693202a611922dda647eb006e6d5c18",
+        "source_total_pages": 36,
+        "source_page_SHA256": "f8fc7284a6542aabff3a31f9f5af34983cccbb922aad612c15a2f2cbe9b3dd59",
+        "source_page_size": [
+          1654,
+          2339
+        ],
+        "source_pdf_page_rotation": 0,
+        "status": "complete",
+        "client_seconds": 5.229699723073281,
+        "pure_generate_seconds": 5.067207826068625,
+        "generated_tokens": 151,
+        "model_calls": 5,
+        "blocks": 4,
+        "blocks_SHA256": "749495803548c37b517dd682743cab6bfda1f07440cc43026450668c232f3600",
+        "MD_SHA256": "7cf369cb41c97fe04c0e80f8c5de252abd6828f5045f3ac01ca3c35f9f3a8d4e"
+      },
+      "generation_integrity": {
+        "status": "all_calls_EOS",
+        "limit_hit_calls": [],
+        "unknown_termination_calls": [],
+        "calls": [
+          {
+            "call": 0,
+            "input_tokens": 1394,
+            "generated_tokens": 89,
+            "output_tokens": 1483,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 1,
+            "input_tokens": 93,
+            "generated_tokens": 12,
+            "output_tokens": 105,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 2,
+            "input_tokens": 112,
+            "generated_tokens": 9,
+            "output_tokens": 121,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 3,
+            "input_tokens": 193,
+            "generated_tokens": 38,
+            "output_tokens": 231,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 4,
+            "input_tokens": 97,
+            "generated_tokens": 3,
+            "output_tokens": 100,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          }
+        ]
+      },
+      "HTML_reader_errors": [],
+      "table_shapes": [],
+      "checks": [
+        {
+          "check": "p28_exact_business_paragraph_reading_order",
+          "observed_pass": true,
+          "expected": "信息披露义务人璟和珩成立于2026年6月26日,截至本报告书签署日,暂无经营相关财务资料。",
+          "literal_character_exact": true,
+          "raw_locations": [
+            {
+              "JSON_pointer": "/blocks/2/content",
+              "bbox_normalized": [
+                0.146,
+                0.136,
+                0.853,
+                0.182
+              ],
+              "angle": 0
+            }
+          ],
+          "status": "pass"
+        }
+      ],
+      "counts": {
+        "pass": 1,
+        "fail": 0,
+        "unknown": 0
+      },
+      "public_interface_source_mapping": {
+        "status": "unknown",
+        "reason": "Official per-page model trial, not MosaicParse HTTP; table-source and cross-page assembly not implemented or claimed."
+      }
+    },
+    {
+      "source": "1225474139",
+      "source_page": 30,
+      "source_SHA256": "dc69826976c576302ee4156642039b790693202a611922dda647eb006e6d5c18",
+      "page_dir": "benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/mineru-trial/remaining-pages-gpu/1225474139-p30",
+      "official_blocks_SHA256": "d95358d0be792381417ba17b90f3c32f6ff3a0cea7f461f0e0db118ab008a744",
+      "official_MD_SHA256": "62367724b1e6f9434ed24f348515d21bb842eea87a847d5c66ababd560cc7753",
+      "official_request": {
+        "id": "1225474139",
+        "page": 30,
+        "source_pdf": "/opt/mosaic-parse/pdf_sample/1225474139.pdf",
+        "source_pdf_SHA256": "dc69826976c576302ee4156642039b790693202a611922dda647eb006e6d5c18",
+        "source_total_pages": 36,
+        "source_page_SHA256": "bffa48e6b70cbf8ba98c4d9466af5e4e989f1328021ee9ee2fa3364dd49199cd",
+        "source_page_size": [
+          1654,
+          2339
+        ],
+        "source_pdf_page_rotation": 0,
+        "status": "complete",
+        "client_seconds": 8.891208145068958,
+        "pure_generate_seconds": 8.682533718878403,
+        "generated_tokens": 261,
+        "model_calls": 9,
+        "blocks": 8,
+        "blocks_SHA256": "d95358d0be792381417ba17b90f3c32f6ff3a0cea7f461f0e0db118ab008a744",
+        "MD_SHA256": "62367724b1e6f9434ed24f348515d21bb842eea87a847d5c66ababd560cc7753"
+      },
+      "generation_integrity": {
+        "status": "all_calls_EOS",
+        "limit_hit_calls": [],
+        "unknown_termination_calls": [],
+        "calls": [
+          {
+            "call": 0,
+            "input_tokens": 1394,
+            "generated_tokens": 177,
+            "output_tokens": 1571,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 1,
+            "input_tokens": 93,
+            "generated_tokens": 12,
+            "output_tokens": 105,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 2,
+            "input_tokens": 97,
+            "generated_tokens": 5,
+            "output_tokens": 102,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 3,
+            "input_tokens": 193,
+            "generated_tokens": 39,
+            "output_tokens": 232,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 4,
+            "input_tokens": 121,
+            "generated_tokens": 11,
+            "output_tokens": 132,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 5,
+            "input_tokens": 106,
+            "generated_tokens": 5,
+            "output_tokens": 111,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 6,
+            "input_tokens": 95,
+            "generated_tokens": 4,
+            "output_tokens": 99,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 7,
+            "input_tokens": 105,
+            "generated_tokens": 5,
+            "output_tokens": 110,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 8,
+            "input_tokens": 97,
+            "generated_tokens": 3,
+            "output_tokens": 100,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          }
+        ]
+      },
+      "HTML_reader_errors": [],
+      "table_shapes": [],
+      "checks": [
+        {
+          "check": "p30_date_field_left_blank_without_invented_numbers",
+          "observed_pass": true,
+          "expected": "年月日",
+          "numeric_dates": [],
+          "status": "pass"
+        }
+      ],
+      "counts": {
+        "pass": 1,
+        "fail": 0,
+        "unknown": 0
+      },
+      "public_interface_source_mapping": {
+        "status": "unknown",
+        "reason": "Official per-page model trial, not MosaicParse HTTP; table-source and cross-page assembly not implemented or claimed."
+      }
+    },
+    {
+      "source": "1225474693",
+      "source_page": 2,
+      "source_SHA256": "dc7f5b3bfdc5a5c69b9cf4b2a9e0d28e2f9ee0b2464770fb8a910fea688ee775",
+      "page_dir": "benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/mineru-trial/remaining-pages-gpu/1225474693-p2",
+      "official_blocks_SHA256": "799b483a478ee17c6a7163c4597dadcda8587b5883ec7188ce119bc577970cf7",
+      "official_MD_SHA256": "3fe42608cd47e7801bb0139979f97e458435f09da55878b7c73f6176ba61fedf",
+      "official_request": {
+        "id": "1225474693",
+        "page": 2,
+        "source_pdf": "/opt/mosaic-parse/pdf_sample/1225474693.pdf",
+        "source_pdf_SHA256": "dc7f5b3bfdc5a5c69b9cf4b2a9e0d28e2f9ee0b2464770fb8a910fea688ee775",
+        "source_total_pages": 4,
+        "source_page_SHA256": "61722b8f5f5bec11f097e7f1d488d09b361b7add4222d508bb66ecf98b7de2cd",
+        "source_page_size": [
+          1654,
+          2339
+        ],
+        "source_pdf_page_rotation": 0,
+        "status": "complete",
+        "client_seconds": 28.771628774004057,
+        "pure_generate_seconds": 28.396543036215007,
+        "generated_tokens": 950,
+        "model_calls": 16,
+        "blocks": 16,
+        "blocks_SHA256": "799b483a478ee17c6a7163c4597dadcda8587b5883ec7188ce119bc577970cf7",
+        "MD_SHA256": "3fe42608cd47e7801bb0139979f97e458435f09da55878b7c73f6176ba61fedf"
+      },
+      "generation_integrity": {
+        "status": "all_calls_EOS",
+        "limit_hit_calls": [],
+        "unknown_termination_calls": [],
+        "calls": [
+          {
+            "call": 0,
+            "input_tokens": 1394,
+            "generated_tokens": 353,
+            "output_tokens": 1747,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 1,
+            "input_tokens": 93,
+            "generated_tokens": 15,
+            "output_tokens": 108,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 2,
+            "input_tokens": 109,
+            "generated_tokens": 5,
+            "output_tokens": 114,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 3,
+            "input_tokens": 201,
+            "generated_tokens": 49,
+            "output_tokens": 250,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 4,
+            "input_tokens": 201,
+            "generated_tokens": 42,
+            "output_tokens": 243,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 5,
+            "input_tokens": 112,
+            "generated_tokens": 13,
+            "output_tokens": 125,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 6,
+            "input_tokens": 103,
+            "generated_tokens": 12,
+            "output_tokens": 115,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 7,
+            "input_tokens": 101,
+            "generated_tokens": 24,
+            "output_tokens": 125,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 8,
+            "input_tokens": 333,
+            "generated_tokens": 127,
+            "output_tokens": 460,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 9,
+            "input_tokens": 94,
+            "generated_tokens": 6,
+            "output_tokens": 100,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 10,
+            "input_tokens": 97,
+            "generated_tokens": 8,
+            "output_tokens": 105,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 11,
+            "input_tokens": 245,
+            "generated_tokens": 52,
+            "output_tokens": 297,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 12,
+            "input_tokens": 475,
+            "generated_tokens": 110,
+            "output_tokens": 585,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 13,
+            "input_tokens": 109,
+            "generated_tokens": 8,
+            "output_tokens": 117,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 14,
+            "input_tokens": 100,
+            "generated_tokens": 10,
+            "output_tokens": 110,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 15,
+            "input_tokens": 385,
+            "generated_tokens": 116,
+            "output_tokens": 501,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          }
+        ]
+      },
+      "HTML_reader_errors": [],
+      "table_shapes": [
+        [
+          3,
+          5
+        ],
+        [
+          5,
+          3
+        ],
+        [
+          3,
+          4
+        ]
+      ],
+      "checks": [
+        {
+          "check": "p2_original_financial_full_grid_and_header",
+          "observed_pass": true,
+          "source_shape": [
+            3,
+            4
+          ],
+          "expected_spans": [],
+          "actual_shapes": [
+            [
+              3,
+              5
+            ],
+            [
+              5,
+              3
+            ],
+            [
+              3,
+              4
+            ]
+          ],
+          "candidates": [
+            {
+              "location": {
+                "JSON_pointer": "/blocks/15/content/table[0]",
+                "block_index": 15,
+                "bbox_normalized": [
+                  0.144,
+                  0.807,
+                  0.9,
+                  0.897
+                ],
+                "angle": 0
+              },
+              "mismatches": [],
+              "literal_character_mismatches_including_typography": [],
+              "spans_match": true,
+              "actual_spans": [],
+              "complete_explicit_cell_or_span_coverage": true,
+              "uncovered_grid_positions": [],
+              "literal_exact_positions": 12,
+              "positions_equal_under_explicit_typography": 12
+            }
+          ],
+          "status": "pass"
+        }
+      ],
+      "counts": {
+        "pass": 1,
+        "fail": 0,
+        "unknown": 0
+      },
+      "public_interface_source_mapping": {
+        "status": "unknown",
+        "reason": "Official per-page model trial, not MosaicParse HTTP; table-source and cross-page assembly not implemented or claimed."
+      }
+    },
+    {
+      "source": "1225474693",
+      "source_page": 3,
+      "source_SHA256": "dc7f5b3bfdc5a5c69b9cf4b2a9e0d28e2f9ee0b2464770fb8a910fea688ee775",
+      "page_dir": "benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/mineru-trial/remaining-pages-gpu/1225474693-p3",
+      "official_blocks_SHA256": "2cd87e55578e7a48fb2d802cbaae7484e00494b3b1d9449fb0c9c6ffa9a64903",
+      "official_MD_SHA256": "dd3d8ae73dde81e20159135dd74bddfbbf34298dfa8820422449577de4efd2db",
+      "official_request": {
+        "id": "1225474693",
+        "page": 3,
+        "source_pdf": "/opt/mosaic-parse/pdf_sample/1225474693.pdf",
+        "source_pdf_SHA256": "dc7f5b3bfdc5a5c69b9cf4b2a9e0d28e2f9ee0b2464770fb8a910fea688ee775",
+        "source_total_pages": 4,
+        "source_page_SHA256": "7a0be2e543dce52d2f3f229f2fd38679c7a9c23e90f0e8443c434dda193578e9",
+        "source_page_size": [
+          1654,
+          2339
+        ],
+        "source_pdf_page_rotation": 0,
+        "status": "complete",
+        "client_seconds": 35.94771044398658,
+        "pure_generate_seconds": 35.5488190719625,
+        "generated_tokens": 971,
+        "model_calls": 6,
+        "blocks": 5,
+        "blocks_SHA256": "2cd87e55578e7a48fb2d802cbaae7484e00494b3b1d9449fb0c9c6ffa9a64903",
+        "MD_SHA256": "dd3d8ae73dde81e20159135dd74bddfbbf34298dfa8820422449577de4efd2db"
+      },
+      "generation_integrity": {
+        "status": "all_calls_EOS",
+        "limit_hit_calls": [],
+        "unknown_termination_calls": [],
+        "calls": [
+          {
+            "call": 0,
+            "input_tokens": 1394,
+            "generated_tokens": 111,
+            "output_tokens": 1505,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 1,
+            "input_tokens": 93,
+            "generated_tokens": 15,
+            "output_tokens": 108,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 2,
+            "input_tokens": 880,
+            "generated_tokens": 337,
+            "output_tokens": 1217,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 3,
+            "input_tokens": 100,
+            "generated_tokens": 15,
+            "output_tokens": 115,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 4,
+            "input_tokens": 100,
+            "generated_tokens": 4,
+            "output_tokens": 104,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 5,
+            "input_tokens": 2005,
+            "generated_tokens": 489,
+            "output_tokens": 2494,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          }
+        ]
+      },
+      "HTML_reader_errors": [],
+      "table_shapes": [
+        [
+          9,
+          4
+        ],
+        [
+          14,
+          7
+        ]
+      ],
+      "checks": [
+        {
+          "check": "p3_original_financial_full_grid_and_header",
+          "observed_pass": true,
+          "source_shape": [
+            9,
+            4
+          ],
+          "expected_spans": [],
+          "actual_shapes": [
+            [
+              9,
+              4
+            ],
+            [
+              14,
+              7
+            ]
+          ],
+          "candidates": [
+            {
+              "location": {
+                "JSON_pointer": "/blocks/1/content/table[0]",
+                "block_index": 1,
+                "bbox_normalized": [
+                  0.144,
+                  0.089,
+                  0.901,
+                  0.313
+                ],
+                "angle": 0
+              },
+              "mismatches": [],
+              "literal_character_mismatches_including_typography": [
+                {
+                  "row": 6,
+                  "column": 0,
+                  "source": "加权平均净资产收益率（%）",
+                  "actual": "加权平均净资产收益率(%)"
+                },
+                {
+                  "row": 7,
+                  "column": 0,
+                  "source": "基本每股收益（元／股）",
+                  "actual": "基本每股收益(元/股)"
+                },
+                {
+                  "row": 8,
+                  "column": 0,
+                  "source": "稀释每股收益（元／股）",
+                  "actual": "稀释每股收益(元/股)"
+                }
+              ],
+              "spans_match": true,
+              "actual_spans": [],
+              "complete_explicit_cell_or_span_coverage": true,
+              "uncovered_grid_positions": [],
+              "literal_exact_positions": 33,
+              "positions_equal_under_explicit_typography": 36
+            }
+          ],
+          "status": "pass"
+        }
+      ],
+      "counts": {
+        "pass": 1,
+        "fail": 0,
+        "unknown": 0
+      },
+      "public_interface_source_mapping": {
+        "status": "unknown",
+        "reason": "Official per-page model trial, not MosaicParse HTTP; table-source and cross-page assembly not implemented or claimed."
+      }
+    },
+    {
+      "source": "1225474739",
+      "source_page": 131,
+      "source_SHA256": "1c99c450a8efefe77c9ca02a6f670c958298f661e5ad8d30d6ba01aa0742cda9",
+      "page_dir": "benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/mineru-trial/remaining-pages-gpu/1225474739-p131",
+      "official_blocks_SHA256": "34eb7c38a46254ce395f73b5917ea1201a02b828edf16a62d9170a0f3867f402",
+      "official_MD_SHA256": "c00db06610193b35ada690152d6003954296ac6ff31a5080fefb2fa7727ef35e",
+      "official_request": {
+        "id": "1225474739",
+        "page": 131,
+        "source_pdf": "/opt/mosaic-parse/pdf_sample/1225474739.pdf",
+        "source_pdf_SHA256": "1c99c450a8efefe77c9ca02a6f670c958298f661e5ad8d30d6ba01aa0742cda9",
+        "source_total_pages": 134,
+        "source_page_SHA256": "6aa11f48e25d7b852ee475439588ba2caa421e1a817b50c6c24b4d5d65a7e734",
+        "source_page_size": [
+          1654,
+          2339
+        ],
+        "source_pdf_page_rotation": 0,
+        "status": "complete",
+        "client_seconds": 39.43995431193616,
+        "pure_generate_seconds": 38.92152497905772,
+        "generated_tokens": 1206,
+        "model_calls": 13,
+        "blocks": 12,
+        "blocks_SHA256": "34eb7c38a46254ce395f73b5917ea1201a02b828edf16a62d9170a0f3867f402",
+        "MD_SHA256": "c00db06610193b35ada690152d6003954296ac6ff31a5080fefb2fa7727ef35e"
+      },
+      "generation_integrity": {
+        "status": "all_calls_EOS",
+        "limit_hit_calls": [],
+        "unknown_termination_calls": [],
+        "calls": [
+          {
+            "call": 0,
+            "input_tokens": 1394,
+            "generated_tokens": 268,
+            "output_tokens": 1662,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 1,
+            "input_tokens": 93,
+            "generated_tokens": 17,
+            "output_tokens": 110,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 2,
+            "input_tokens": 169,
+            "generated_tokens": 52,
+            "output_tokens": 221,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 3,
+            "input_tokens": 105,
+            "generated_tokens": 5,
+            "output_tokens": 110,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 4,
+            "input_tokens": 100,
+            "generated_tokens": 4,
+            "output_tokens": 104,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 5,
+            "input_tokens": 505,
+            "generated_tokens": 231,
+            "output_tokens": 736,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 6,
+            "input_tokens": 113,
+            "generated_tokens": 7,
+            "output_tokens": 120,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 7,
+            "input_tokens": 100,
+            "generated_tokens": 4,
+            "output_tokens": 104,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 8,
+            "input_tokens": 1561,
+            "generated_tokens": 507,
+            "output_tokens": 2068,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 9,
+            "input_tokens": 103,
+            "generated_tokens": 12,
+            "output_tokens": 115,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 10,
+            "input_tokens": 105,
+            "generated_tokens": 4,
+            "output_tokens": 109,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 11,
+            "input_tokens": 457,
+            "generated_tokens": 91,
+            "output_tokens": 548,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 12,
+            "input_tokens": 95,
+            "generated_tokens": 4,
+            "output_tokens": 99,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          }
+        ]
+      },
+      "HTML_reader_errors": [],
+      "table_shapes": [
+        [
+          2,
+          6
+        ],
+        [
+          5,
+          7
+        ],
+        [
+          12,
+          9
+        ],
+        [
+          2,
+          13
+        ]
+      ],
+      "checks": [
+        {
+          "check": "p131_six_columns_total_with_two_blanks_and_92_29_percent",
+          "observed_pass": true,
+          "expected": [
+            "合计",
+            "",
+            "364,387,828.90",
+            "",
+            "92.29%",
+            "177,026,163.05"
+          ],
+          "candidates": [
+            {
+              "location": {
+                "JSON_pointer": "/blocks/1/content/table[0]",
+                "block_index": 1,
+                "bbox_normalized": [
+                  0.084,
+                  0.083,
+                  0.898,
+                  0.121
+                ],
+                "angle": 0,
+                "row_zero_based": 1
+              },
+              "row": [
+                "合计",
+                "",
+                "364,387,828.90",
+                "",
+                "92.29%",
+                "177,026,163.05"
+              ],
+              "columns": 6,
+              "complete_explicit_cell_coverage": true
+            },
+            {
+              "location": {
+                "JSON_pointer": "/blocks/4/content/table[0]",
+                "block_index": 4,
+                "bbox_normalized": [
+                  0.084,
+                  0.187,
+                  0.898,
+                  0.301
+                ],
+                "angle": 0,
+                "row_zero_based": 4
+              },
+              "row": [
+                "合计",
+                "973,427,062.90",
+                "",
+                "973,427,062.90",
+                "974,427,061.21",
+                "",
+                "974,427,061.21"
+              ],
+              "columns": 7,
+              "complete_explicit_cell_coverage": true
+            },
+            {
+              "location": {
+                "JSON_pointer": "/blocks/7/content/table[0]",
+                "block_index": 7,
+                "bbox_normalized": [
+                  0.084,
+                  0.367,
+                  0.898,
+                  0.744
+                ],
+                "angle": 0,
+                "row_zero_based": 11
+              },
+              "row": [
+                "合计",
+                "973,791,235.83",
+                "",
+                "",
+                "1,000,000.00",
+                "",
+                "",
+                "972,791,235.83",
+                ""
+              ],
+              "columns": 9,
+              "complete_explicit_cell_coverage": true
+            }
+          ],
+          "status": "pass"
+        }
+      ],
+      "counts": {
+        "pass": 1,
+        "fail": 0,
+        "unknown": 0
+      },
+      "public_interface_source_mapping": {
+        "status": "unknown",
+        "reason": "Official per-page model trial, not MosaicParse HTTP; table-source and cross-page assembly not implemented or claimed."
+      }
+    },
+    {
+      "source": "1225474739",
+      "source_page": 40,
+      "source_SHA256": "1c99c450a8efefe77c9ca02a6f670c958298f661e5ad8d30d6ba01aa0742cda9",
+      "page_dir": "benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/mineru-trial/remaining-pages-gpu/1225474739-p40",
+      "official_blocks_SHA256": "4363de83b7a98b096ff217ac956f3e11694d14e8c901983c3c6827ae226017e8",
+      "official_MD_SHA256": "68daffc1f63db9f227ee35042a7a48957032bf9652c9979866c3dcacbcc73e0d",
+      "official_request": {
+        "id": "1225474739",
+        "page": 40,
+        "source_pdf": "/opt/mosaic-parse/pdf_sample/1225474739.pdf",
+        "source_pdf_SHA256": "1c99c450a8efefe77c9ca02a6f670c958298f661e5ad8d30d6ba01aa0742cda9",
+        "source_total_pages": 134,
+        "source_page_SHA256": "2282743782e35088c560399cdb96fbe51193eb1942436f5ca58c356d2363e87e",
+        "source_page_size": [
+          1654,
+          2339
+        ],
+        "source_pdf_page_rotation": 0,
+        "status": "complete",
+        "client_seconds": 75.41214508598205,
+        "pure_generate_seconds": 74.94495572207961,
+        "generated_tokens": 1797,
+        "model_calls": 8,
+        "blocks": 8,
+        "blocks_SHA256": "4363de83b7a98b096ff217ac956f3e11694d14e8c901983c3c6827ae226017e8",
+        "MD_SHA256": "68daffc1f63db9f227ee35042a7a48957032bf9652c9979866c3dcacbcc73e0d"
+      },
+      "generation_integrity": {
+        "status": "all_calls_EOS",
+        "limit_hit_calls": [],
+        "unknown_termination_calls": [],
+        "calls": [
+          {
+            "call": 0,
+            "input_tokens": 1394,
+            "generated_tokens": 185,
+            "output_tokens": 1579,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 1,
+            "input_tokens": 93,
+            "generated_tokens": 17,
+            "output_tokens": 110,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 2,
+            "input_tokens": 2053,
+            "generated_tokens": 1512,
+            "output_tokens": 3565,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 3,
+            "input_tokens": 113,
+            "generated_tokens": 35,
+            "output_tokens": 148,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 4,
+            "input_tokens": 105,
+            "generated_tokens": 7,
+            "output_tokens": 112,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 5,
+            "input_tokens": 111,
+            "generated_tokens": 31,
+            "output_tokens": 142,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 6,
+            "input_tokens": 109,
+            "generated_tokens": 7,
+            "output_tokens": 116,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 7,
+            "input_tokens": 95,
+            "generated_tokens": 3,
+            "output_tokens": 98,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          }
+        ]
+      },
+      "HTML_reader_errors": [],
+      "table_shapes": [
+        [
+          25,
+          9
+        ]
+      ],
+      "checks": [
+        {
+          "check": "p40_entire_seven_item_financing_cell",
+          "observed_pass": true,
+          "expected_label": "前10 名普通股股东参\n与融资融券业务股东\n情况说明（如有）（参\n见注4） ",
+          "expected_text": "1、彭朝晖通过中信建投证券股份有限公司客户信用交易担保证券账户持有公司15,205,800 股,\n通过普通证券账户持有公司927,300 股，共计持有公司16,133,100 股。 \n2、罗洪波通过国泰海通证券股份有限公司客户信用交易担保证券账户持有公司6,029,600 股，\n通过普通证券账户持有公司4,418,300 股，共计持有公司10,447,900 股。 \n3、谭志琴通过中信证券股份有限公司客户信用交易担保证券账户持有公司5,981,100 股，通过\n普通证券账户持有公司182,000 股，共计持有公司6,163,100 股。 \n4、陈庆良通过国投证券股份有限公司客户信用交易担保证券账户持有公司5,543,500 股，通过\n普通证券账户持有公司18,900 股，共计持有公司5,562,400 股。 \n5、尹倩倩通过国投证券股份有限公司客户信用交易担保证券账户持有公司4,649,700 股，通过\n普通证券账户持有公司98,400 股，共计持有公司4,748,100 股。 \n6、谭纯通过国投证券股份有限公司客户信用交易担保证券账户持有公司3,093,000 股，通过普\n通证券账户持有公司10,800 股，共计持有公司3,103,800 股。 \n7、尹缘平通过太平洋证券股份有限公司客户信用交易担保证券账户持有公司2,787,200 股，通\n过普通证券账户持有公司75,900 股，共计持有公司2,863,100 股。 ",
+          "expected_colspan": null,
+          "candidates": [
+            {
+              "location": {
+                "JSON_pointer": "/blocks/1/content/table[0]",
+                "block_index": 1,
+                "bbox_normalized": [
+                  0.084,
+                  0.084,
+                  0.896,
+                  0.845
+                ],
+                "angle": 0,
+                "row_zero_based": 24,
+                "column_zero_based": 1
+              },
+              "actual_payloads": [
+                "1、彭朝晖通过中信建投证券股份有限公司客户信用交易担保证券账户持有公司15,205,800股,通过普通证券账户持有公司927,300股,共计持有公司16,133,100股。2、罗洪波通过国泰海通证券股份有限公司客户信用交易担保证券账户持有公司6,029,600股,通过普通证券账户持有公司4,418,300股,共计持有公司10,447,900股。3、谭志琴通过中信证券股份有限公司客户信用交易担保证券账户持有公司5,981,100股,通过普通证券账户持有公司182,000股,共计持有公司6,163,100股。4、陈庆良通过国投证券股份有限公司客户信用交易担保证券账户持有公司5,543,500股,通过普通证券账户持有公司18,900股,共计持有公司5,562,400股。5、尹倩倩通过国投证券股份有限公司客户信用交易担保证券账户持有公司4,649,700股,通过普通证券账户持有公司98,400股,共计持有公司4,748,100股。6、谭纯通过国投证券股份有限公司客户信用交易担保证券账户持有公司3,093,000股,通过普通证券账户持有公司10,800股,共计持有公司3,103,800股。7、尹缘平通过太平洋证券股份有限公司客户信用交易担保证券账户持有公司2,787,200股,通过普通证券账户持有公司75,900股,共计持有公司2,863,100股。"
+              ],
+              "full_text_equal_under_explicit_typography": true,
+              "literal_character_exact": false,
+              "source_colspan_retained": true
+            }
+          ],
+          "status": "pass"
+        },
+        {
+          "check": "p40_account_1_person_credit_ordinary_total_binding",
+          "observed_pass": true,
+          "expected": {
+            "number": 1,
+            "person": "彭朝晖",
+            "broker": "中信建投证券股份有限公司",
+            "credit_shares": "15,205,800",
+            "ordinary_shares": "927,300",
+            "total_shares": "16,133,100",
+            "raw_source_paragraph": "1、彭朝晖通过中信建投证券股份有限公司客户信用交易担保证券账户持有公司15,205,800股,通过普通证券账户持有公司927,300股，共计持有公司16,133,100股。"
+          },
+          "raw_locations": [
+            {
+              "location": {
+                "JSON_pointer": "/blocks/1/content/table[0]",
+                "block_index": 1,
+                "bbox_normalized": [
+                  0.084,
+                  0.084,
+                  0.896,
+                  0.845
+                ],
+                "angle": 0,
+                "row_zero_based": 24,
+                "column_zero_based": 1
+              }
+            }
+          ],
+          "status": "pass"
+        },
+        {
+          "check": "p40_account_2_person_credit_ordinary_total_binding",
+          "observed_pass": true,
+          "expected": {
+            "number": 2,
+            "person": "罗洪波",
+            "broker": "国泰海通证券股份有限公司",
+            "credit_shares": "6,029,600",
+            "ordinary_shares": "4,418,300",
+            "total_shares": "10,447,900",
+            "raw_source_paragraph": "2、罗洪波通过国泰海通证券股份有限公司客户信用交易担保证券账户持有公司6,029,600股，通过普通证券账户持有公司4,418,300股，共计持有公司10,447,900股。"
+          },
+          "raw_locations": [
+            {
+              "location": {
+                "JSON_pointer": "/blocks/1/content/table[0]",
+                "block_index": 1,
+                "bbox_normalized": [
+                  0.084,
+                  0.084,
+                  0.896,
+                  0.845
+                ],
+                "angle": 0,
+                "row_zero_based": 24,
+                "column_zero_based": 1
+              }
+            }
+          ],
+          "status": "pass"
+        },
+        {
+          "check": "p40_account_3_person_credit_ordinary_total_binding",
+          "observed_pass": true,
+          "expected": {
+            "number": 3,
+            "person": "谭志琴",
+            "broker": "中信证券股份有限公司",
+            "credit_shares": "5,981,100",
+            "ordinary_shares": "182,000",
+            "total_shares": "6,163,100",
+            "raw_source_paragraph": "3、谭志琴通过中信证券股份有限公司客户信用交易担保证券账户持有公司5,981,100股，通过普通证券账户持有公司182,000股，共计持有公司6,163,100股。"
+          },
+          "raw_locations": [
+            {
+              "location": {
+                "JSON_pointer": "/blocks/1/content/table[0]",
+                "block_index": 1,
+                "bbox_normalized": [
+                  0.084,
+                  0.084,
+                  0.896,
+                  0.845
+                ],
+                "angle": 0,
+                "row_zero_based": 24,
+                "column_zero_based": 1
+              }
+            }
+          ],
+          "status": "pass"
+        },
+        {
+          "check": "p40_account_4_person_credit_ordinary_total_binding",
+          "observed_pass": true,
+          "expected": {
+            "number": 4,
+            "person": "陈庆良",
+            "broker": "国投证券股份有限公司",
+            "credit_shares": "5,543,500",
+            "ordinary_shares": "18,900",
+            "total_shares": "5,562,400",
+            "raw_source_paragraph": "4、陈庆良通过国投证券股份有限公司客户信用交易担保证券账户持有公司5,543,500股，通过普通证券账户持有公司18,900股，共计持有公司5,562,400股。"
+          },
+          "raw_locations": [
+            {
+              "location": {
+                "JSON_pointer": "/blocks/1/content/table[0]",
+                "block_index": 1,
+                "bbox_normalized": [
+                  0.084,
+                  0.084,
+                  0.896,
+                  0.845
+                ],
+                "angle": 0,
+                "row_zero_based": 24,
+                "column_zero_based": 1
+              }
+            }
+          ],
+          "status": "pass"
+        },
+        {
+          "check": "p40_account_5_person_credit_ordinary_total_binding",
+          "observed_pass": true,
+          "expected": {
+            "number": 5,
+            "person": "尹倩倩",
+            "broker": "国投证券股份有限公司",
+            "credit_shares": "4,649,700",
+            "ordinary_shares": "98,400",
+            "total_shares": "4,748,100",
+            "raw_source_paragraph": "5、尹倩倩通过国投证券股份有限公司客户信用交易担保证券账户持有公司4,649,700股，通过普通证券账户持有公司98,400股，共计持有公司4,748,100股。"
+          },
+          "raw_locations": [
+            {
+              "location": {
+                "JSON_pointer": "/blocks/1/content/table[0]",
+                "block_index": 1,
+                "bbox_normalized": [
+                  0.084,
+                  0.084,
+                  0.896,
+                  0.845
+                ],
+                "angle": 0,
+                "row_zero_based": 24,
+                "column_zero_based": 1
+              }
+            }
+          ],
+          "status": "pass"
+        },
+        {
+          "check": "p40_account_6_person_credit_ordinary_total_binding",
+          "observed_pass": true,
+          "expected": {
+            "number": 6,
+            "person": "谭纯",
+            "broker": "国投证券股份有限公司",
+            "credit_shares": "3,093,000",
+            "ordinary_shares": "10,800",
+            "total_shares": "3,103,800",
+            "raw_source_paragraph": "6、谭纯通过国投证券股份有限公司客户信用交易担保证券账户持有公司3,093,000股，通过普通证券账户持有公司10,800股，共计持有公司3,103,800股。"
+          },
+          "raw_locations": [
+            {
+              "location": {
+                "JSON_pointer": "/blocks/1/content/table[0]",
+                "block_index": 1,
+                "bbox_normalized": [
+                  0.084,
+                  0.084,
+                  0.896,
+                  0.845
+                ],
+                "angle": 0,
+                "row_zero_based": 24,
+                "column_zero_based": 1
+              }
+            }
+          ],
+          "status": "pass"
+        },
+        {
+          "check": "p40_account_7_person_credit_ordinary_total_binding",
+          "observed_pass": true,
+          "expected": {
+            "number": 7,
+            "person": "尹缘平",
+            "broker": "太平洋证券股份有限公司",
+            "credit_shares": "2,787,200",
+            "ordinary_shares": "75,900",
+            "total_shares": "2,863,100",
+            "raw_source_paragraph": "7、尹缘平通过太平洋证券股份有限公司客户信用交易担保证券账户持有公司2,787,200股，通过普通证券账户持有公司75,900股，共计持有公司2,863,100股。"
+          },
+          "raw_locations": [
+            {
+              "location": {
+                "JSON_pointer": "/blocks/1/content/table[0]",
+                "block_index": 1,
+                "bbox_normalized": [
+                  0.084,
+                  0.084,
+                  0.896,
+                  0.845
+                ],
+                "angle": 0,
+                "row_zero_based": 24,
+                "column_zero_based": 1
+              }
+            }
+          ],
+          "status": "pass"
+        },
+        {
+          "check": "p40_independent_explanation_row_label_and_text",
+          "observed_pass": true,
+          "expected_label": "前10 名无限售条件股\n东之间，以及前10 名\n无限售条件股东和前\n10 名股东之间关联关\n系或一致行动的说明 ",
+          "expected_text": "公司未知前10 名无限售条件股东之间，以及前10 名无限售条件股东和前10 名股东之间是否有\n关联关系或一致行动的情况。 ",
+          "expected_colspan": null,
+          "candidates": [
+            {
+              "location": {
+                "JSON_pointer": "/blocks/1/content/table[0]",
+                "block_index": 1,
+                "bbox_normalized": [
+                  0.084,
+                  0.084,
+                  0.896,
+                  0.845
+                ],
+                "angle": 0,
+                "row_zero_based": 23,
+                "column_zero_based": 1
+              },
+              "actual_payloads": [
+                "公司未知前10名无限售条件股东之间,以及前10名无限售条件股东和前10名股东之间是否有关联关系或一致行动的情况。"
+              ],
+              "full_text_equal_under_explicit_typography": true,
+              "literal_character_exact": false,
+              "source_colspan_retained": true
+            }
+          ],
+          "status": "pass"
+        },
+        {
+          "check": "p40_four_source_cells_彭朝晖",
+          "observed_pass": true,
+          "expected": [
+            "彭朝晖 ",
+            "16,133,100.00 ",
+            "人民币普通股",
+            " \n16,133,100.00 "
+          ],
+          "candidates": [
+            {
+              "location": {
+                "JSON_pointer": "/blocks/1/content/table[0]",
+                "block_index": 1,
+                "bbox_normalized": [
+                  0.084,
+                  0.084,
+                  0.896,
+                  0.845
+                ],
+                "angle": 0,
+                "row_zero_based": 13
+              },
+              "anchors": [
+                "彭朝晖",
+                "16,133,100.00",
+                "人民币普通股",
+                "16,133,100.00"
+              ]
+            }
+          ],
+          "status": "pass"
+        },
+        {
+          "check": "p40_four_source_cells_罗洪波",
+          "observed_pass": true,
+          "expected": [
+            "罗洪波 ",
+            "10,447,900.00 ",
+            "人民币普通股",
+            " \n10,447,900.00 "
+          ],
+          "candidates": [
+            {
+              "location": {
+                "JSON_pointer": "/blocks/1/content/table[0]",
+                "block_index": 1,
+                "bbox_normalized": [
+                  0.084,
+                  0.084,
+                  0.896,
+                  0.845
+                ],
+                "angle": 0,
+                "row_zero_based": 14
+              },
+              "anchors": [
+                "罗洪波",
+                "10,447,900.00",
+                "人民币普通股",
+                "10,447,900.00"
+              ]
+            }
+          ],
+          "status": "pass"
+        },
+        {
+          "check": "p40_four_source_cells_倪冬梅",
+          "observed_pass": true,
+          "expected": [
+            "倪冬梅 ",
+            "6,419,700.00 ",
+            "人民币普通股",
+            " \n6,419,700.00 "
+          ],
+          "candidates": [
+            {
+              "location": {
+                "JSON_pointer": "/blocks/1/content/table[0]",
+                "block_index": 1,
+                "bbox_normalized": [
+                  0.084,
+                  0.084,
+                  0.896,
+                  0.845
+                ],
+                "angle": 0,
+                "row_zero_based": 15
+              },
+              "anchors": [
+                "倪冬梅",
+                "6,419,700.00",
+                "人民币普通股",
+                "6,419,700.00"
+              ]
+            }
+          ],
+          "status": "pass"
+        },
+        {
+          "check": "p40_four_source_cells_谭志琴",
+          "observed_pass": true,
+          "expected": [
+            "谭志琴 ",
+            "6,163,100.00 ",
+            "人民币普通股",
+            " \n6,163,100.00 "
+          ],
+          "candidates": [
+            {
+              "location": {
+                "JSON_pointer": "/blocks/1/content/table[0]",
+                "block_index": 1,
+                "bbox_normalized": [
+                  0.084,
+                  0.084,
+                  0.896,
+                  0.845
+                ],
+                "angle": 0,
+                "row_zero_based": 0
+              },
+              "anchors": [
+                "谭志琴",
+                "境内自然人",
+                "1.30%",
+                "6,163,100",
+                "600,000",
+                "0.00",
+                "6,163,100.00",
+                "不适用",
+                "0"
+              ]
+            },
+            {
+              "location": {
+                "JSON_pointer": "/blocks/1/content/table[0]",
+                "block_index": 1,
+                "bbox_normalized": [
+                  0.084,
+                  0.084,
+                  0.896,
+                  0.845
+                ],
+                "angle": 0,
+                "row_zero_based": 16
+              },
+              "anchors": [
+                "谭志琴",
+                "6,163,100.00",
+                "人民币普通股",
+                "6,163,100.00"
+              ]
+            }
+          ],
+          "status": "pass"
+        },
+        {
+          "check": "p40_four_source_cells_陈庆良",
+          "observed_pass": true,
+          "expected": [
+            "陈庆良 ",
+            "5,562,400.00 ",
+            "人民币普通股",
+            " \n5,562,400.00 "
+          ],
+          "candidates": [
+            {
+              "location": {
+                "JSON_pointer": "/blocks/1/content/table[0]",
+                "block_index": 1,
+                "bbox_normalized": [
+                  0.084,
+                  0.084,
+                  0.896,
+                  0.845
+                ],
+                "angle": 0,
+                "row_zero_based": 1
+              },
+              "anchors": [
+                "陈庆良",
+                "境内自然人",
+                "1.17%",
+                "5,562,400",
+                "1,314,000",
+                "0.00",
+                "5,562,400.00",
+                "不适用",
+                "0"
+              ]
+            },
+            {
+              "location": {
+                "JSON_pointer": "/blocks/1/content/table[0]",
+                "block_index": 1,
+                "bbox_normalized": [
+                  0.084,
+                  0.084,
+                  0.896,
+                  0.845
+                ],
+                "angle": 0,
+                "row_zero_based": 17
+              },
+              "anchors": [
+                "陈庆良",
+                "5,562,400.00",
+                "人民币普通股",
+                "5,562,400.00"
+              ]
+            }
+          ],
+          "status": "pass"
+        },
+        {
+          "check": "p40_four_source_cells_徐志谦",
+          "observed_pass": true,
+          "expected": [
+            "徐志谦 ",
+            "5,438,800.00 ",
+            "人民币普通股",
+            " \n5,438,800.00 "
+          ],
+          "candidates": [
+            {
+              "location": {
+                "JSON_pointer": "/blocks/1/content/table[0]",
+                "block_index": 1,
+                "bbox_normalized": [
+                  0.084,
+                  0.084,
+                  0.896,
+                  0.845
+                ],
+                "angle": 0,
+                "row_zero_based": 2
+              },
+              "anchors": [
+                "徐志谦",
+                "境内自然人",
+                "1.15%",
+                "5,438,800",
+                "3,106,700",
+                "0.00",
+                "5,438,800.00",
+                "不适用",
+                "0"
+              ]
+            },
+            {
+              "location": {
+                "JSON_pointer": "/blocks/1/content/table[0]",
+                "block_index": 1,
+                "bbox_normalized": [
+                  0.084,
+                  0.084,
+                  0.896,
+                  0.845
+                ],
+                "angle": 0,
+                "row_zero_based": 18
+              },
+              "anchors": [
+                "徐志谦",
+                "5,438,800.00",
+                "人民币普通股",
+                "5,438,800.00"
+              ]
+            }
+          ],
+          "status": "pass"
+        },
+        {
+          "check": "p40_four_source_cells_尹倩倩",
+          "observed_pass": true,
+          "expected": [
+            "尹倩倩 ",
+            "4,748,100.00 ",
+            "人民币普通股",
+            " \n4,748,100.00 "
+          ],
+          "candidates": [
+            {
+              "location": {
+                "JSON_pointer": "/blocks/1/content/table[0]",
+                "block_index": 1,
+                "bbox_normalized": [
+                  0.084,
+                  0.084,
+                  0.896,
+                  0.845
+                ],
+                "angle": 0,
+                "row_zero_based": 4
+              },
+              "anchors": [
+                "尹倩倩",
+                "境内自然人",
+                "1.00%",
+                "4,748,100",
+                "2,302,300",
+                "0.00",
+                "4,748,100.00",
+                "冻结",
+                "98,400.00"
+              ]
+            },
+            {
+              "location": {
+                "JSON_pointer": "/blocks/1/content/table[0]",
+                "block_index": 1,
+                "bbox_normalized": [
+                  0.084,
+                  0.084,
+                  0.896,
+                  0.845
+                ],
+                "angle": 0,
+                "row_zero_based": 19
+              },
+              "anchors": [
+                "尹倩倩",
+                "4,748,100.00",
+                "人民币普通股",
+                "4,748,100.00"
+              ]
+            }
+          ],
+          "status": "pass"
+        },
+        {
+          "check": "p40_four_source_cells_李梦霞",
+          "observed_pass": true,
+          "expected": [
+            "李梦霞 ",
+            "3,327,100.00 ",
+            "人民币普通股",
+            " \n3,327,100.00 "
+          ],
+          "candidates": [
+            {
+              "location": {
+                "JSON_pointer": "/blocks/1/content/table[0]",
+                "block_index": 1,
+                "bbox_normalized": [
+                  0.084,
+                  0.084,
+                  0.896,
+                  0.845
+                ],
+                "angle": 0,
+                "row_zero_based": 5
+              },
+              "anchors": [
+                "李梦霞",
+                "境内自然人",
+                "0.70%",
+                "3,327,100",
+                "-164,400",
+                "0.00",
+                "3,327,100.00",
+                "不适用",
+                "0"
+              ]
+            },
+            {
+              "location": {
+                "JSON_pointer": "/blocks/1/content/table[0]",
+                "block_index": 1,
+                "bbox_normalized": [
+                  0.084,
+                  0.084,
+                  0.896,
+                  0.845
+                ],
+                "angle": 0,
+                "row_zero_based": 20
+              },
+              "anchors": [
+                "李梦霞",
+                "3,327,100.00",
+                "人民币普通股",
+                "3,327,100.00"
+              ]
+            }
+          ],
+          "status": "pass"
+        },
+        {
+          "check": "p40_four_source_cells_谭纯",
+          "observed_pass": true,
+          "expected": [
+            "谭纯 ",
+            "3,103,800.00 ",
+            "人民币普通股",
+            " \n3,103,800.00 "
+          ],
+          "candidates": [
+            {
+              "location": {
+                "JSON_pointer": "/blocks/1/content/table[0]",
+                "block_index": 1,
+                "bbox_normalized": [
+                  0.084,
+                  0.084,
+                  0.896,
+                  0.845
+                ],
+                "angle": 0,
+                "row_zero_based": 21
+              },
+              "anchors": [
+                "谭纯",
+                "3,103,800.00",
+                "人民币普通股",
+                "3,103,800.00"
+              ]
+            }
+          ],
+          "status": "pass"
+        },
+        {
+          "check": "p40_four_source_cells_尹缘平",
+          "observed_pass": true,
+          "expected": [
+            "尹缘平 ",
+            "2,863,100.00 ",
+            "人民币普通股",
+            " \n2,863,100.00 "
+          ],
+          "candidates": [
+            {
+              "location": {
+                "JSON_pointer": "/blocks/1/content/table[0]",
+                "block_index": 1,
+                "bbox_normalized": [
+                  0.084,
+                  0.084,
+                  0.896,
+                  0.845
+                ],
+                "angle": 0,
+                "row_zero_based": 22
+              },
+              "anchors": [
+                "尹缘平",
+                "2,863,100.00",
+                "人民币普通股",
+                "2,863,100.00"
+              ]
+            }
+          ],
+          "status": "pass"
+        },
+        {
+          "check": "p40_top_chenqingliang_all_nine_cells",
+          "observed_pass": true,
+          "expected": [
+            "陈庆良 ",
+            "境内自然人 ",
+            "1.17% ",
+            "5,562,400 ",
+            "1,314,000 ",
+            "0.00 ",
+            "5,562,400.00 ",
+            "不适用 ",
+            "0 "
+          ],
+          "candidates": [
+            {
+              "location": {
+                "JSON_pointer": "/blocks/1/content/table[0]",
+                "block_index": 1,
+                "bbox_normalized": [
+                  0.084,
+                  0.084,
+                  0.896,
+                  0.845
+                ],
+                "angle": 0,
+                "row_zero_based": 1
+              },
+              "anchors": [
+                "陈庆良",
+                "境内自然人",
+                "1.17%",
+                "5,562,400",
+                "1,314,000",
+                "0.00",
+                "5,562,400.00",
+                "不适用",
+                "0"
+              ]
+            },
+            {
+              "location": {
+                "JSON_pointer": "/blocks/1/content/table[0]",
+                "block_index": 1,
+                "bbox_normalized": [
+                  0.084,
+                  0.084,
+                  0.896,
+                  0.845
+                ],
+                "angle": 0,
+                "row_zero_based": 17
+              },
+              "anchors": [
+                "陈庆良",
+                "",
+                "5,562,400.00",
+                "",
+                "",
+                "",
+                "人民币普通股",
+                "",
+                "5,562,400.00"
+              ]
+            }
+          ],
+          "status": "pass"
+        }
+      ],
+      "counts": {
+        "pass": 20,
+        "fail": 0,
+        "unknown": 0
+      },
+      "public_interface_source_mapping": {
+        "status": "unknown",
+        "reason": "Official per-page model trial, not MosaicParse HTTP; table-source and cross-page assembly not implemented or claimed."
+      }
+    },
+    {
+      "source": "1225474739",
+      "source_page": 74,
+      "source_SHA256": "1c99c450a8efefe77c9ca02a6f670c958298f661e5ad8d30d6ba01aa0742cda9",
+      "page_dir": "benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/mineru-trial/remaining-pages-gpu/1225474739-p74",
+      "official_blocks_SHA256": "ed904df40e03e4c8666432b0471f7db95ae0431b8f8a3ee9aa8e92b32ee07f74",
+      "official_MD_SHA256": "9a89070ca424b2cf5e656ebd0ade8756e7def6ae425da0aca45643308f92ce9d",
+      "official_request": {
+        "id": "1225474739",
+        "page": 74,
+        "source_pdf": "/opt/mosaic-parse/pdf_sample/1225474739.pdf",
+        "source_pdf_SHA256": "1c99c450a8efefe77c9ca02a6f670c958298f661e5ad8d30d6ba01aa0742cda9",
+        "source_total_pages": 134,
+        "source_page_SHA256": "5f80ffe21d228b27c2b5b7b29b5daea1a9360e68cc114ae0506338abb7df3b10",
+        "source_page_size": [
+          1654,
+          2339
+        ],
+        "source_pdf_page_rotation": 0,
+        "status": "complete",
+        "client_seconds": 44.31478942302056,
+        "pure_generate_seconds": 43.790194317814894,
+        "generated_tokens": 1452,
+        "model_calls": 30,
+        "blocks": 30,
+        "blocks_SHA256": "ed904df40e03e4c8666432b0471f7db95ae0431b8f8a3ee9aa8e92b32ee07f74",
+        "MD_SHA256": "9a89070ca424b2cf5e656ebd0ade8756e7def6ae425da0aca45643308f92ce9d"
+      },
+      "generation_integrity": {
+        "status": "all_calls_EOS",
+        "limit_hit_calls": [],
+        "unknown_termination_calls": [],
+        "calls": [
+          {
+            "call": 0,
+            "input_tokens": 1394,
+            "generated_tokens": 661,
+            "output_tokens": 2055,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 1,
+            "input_tokens": 93,
+            "generated_tokens": 17,
+            "output_tokens": 110,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 2,
+            "input_tokens": 166,
+            "generated_tokens": 41,
+            "output_tokens": 207,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 3,
+            "input_tokens": 100,
+            "generated_tokens": 9,
+            "output_tokens": 109,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 4,
+            "input_tokens": 113,
+            "generated_tokens": 24,
+            "output_tokens": 137,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 5,
+            "input_tokens": 121,
+            "generated_tokens": 28,
+            "output_tokens": 149,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 6,
+            "input_tokens": 91,
+            "generated_tokens": 7,
+            "output_tokens": 98,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 7,
+            "input_tokens": 307,
+            "generated_tokens": 96,
+            "output_tokens": 403,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 8,
+            "input_tokens": 93,
+            "generated_tokens": 15,
+            "output_tokens": 108,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 9,
+            "input_tokens": 166,
+            "generated_tokens": 65,
+            "output_tokens": 231,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 10,
+            "input_tokens": 213,
+            "generated_tokens": 71,
+            "output_tokens": 284,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 11,
+            "input_tokens": 166,
+            "generated_tokens": 57,
+            "output_tokens": 223,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 12,
+            "input_tokens": 101,
+            "generated_tokens": 6,
+            "output_tokens": 107,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 13,
+            "input_tokens": 103,
+            "generated_tokens": 19,
+            "output_tokens": 122,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 14,
+            "input_tokens": 97,
+            "generated_tokens": 9,
+            "output_tokens": 106,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 15,
+            "input_tokens": 121,
+            "generated_tokens": 15,
+            "output_tokens": 136,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 16,
+            "input_tokens": 127,
+            "generated_tokens": 28,
+            "output_tokens": 155,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 17,
+            "input_tokens": 101,
+            "generated_tokens": 8,
+            "output_tokens": 109,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 18,
+            "input_tokens": 118,
+            "generated_tokens": 11,
+            "output_tokens": 129,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 19,
+            "input_tokens": 166,
+            "generated_tokens": 40,
+            "output_tokens": 206,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 20,
+            "input_tokens": 93,
+            "generated_tokens": 12,
+            "output_tokens": 105,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 21,
+            "input_tokens": 307,
+            "generated_tokens": 86,
+            "output_tokens": 393,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 22,
+            "input_tokens": 111,
+            "generated_tokens": 19,
+            "output_tokens": 130,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 23,
+            "input_tokens": 95,
+            "generated_tokens": 13,
+            "output_tokens": 108,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 24,
+            "input_tokens": 93,
+            "generated_tokens": 17,
+            "output_tokens": 110,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 25,
+            "input_tokens": 100,
+            "generated_tokens": 9,
+            "output_tokens": 109,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 26,
+            "input_tokens": 166,
+            "generated_tokens": 39,
+            "output_tokens": 205,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 27,
+            "input_tokens": 121,
+            "generated_tokens": 11,
+            "output_tokens": 132,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 28,
+            "input_tokens": 101,
+            "generated_tokens": 16,
+            "output_tokens": 117,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 29,
+            "input_tokens": 97,
+            "generated_tokens": 3,
+            "output_tokens": 100,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          }
+        ]
+      },
+      "HTML_reader_errors": [],
+      "table_shapes": [
+        [
+          4,
+          5
+        ]
+      ],
+      "checks": [
+        {
+          "check": "p74_accounting_policy_heading",
+          "observed_pass": true,
+          "expected": "3、使用寿命不确定的无形资产的判断依据以及对其使用寿命进行复核的程序",
+          "literal_character_exact": true,
+          "raw_locations": [
+            {
+              "JSON_pointer": "/blocks/22/content",
+              "bbox_normalized": [
+                0.12,
+                0.745,
+                0.632,
+                0.758
+              ],
+              "angle": 0
+            }
+          ],
+          "status": "pass"
+        },
+        {
+          "check": "p74_accounting_policy_sentence",
+          "observed_pass": true,
+          "expected": "使用寿命不确定的无形资产,每期末进行减值测试。",
+          "literal_character_exact": true,
+          "raw_locations": [
+            {
+              "JSON_pointer": "/blocks/23/content",
+              "bbox_normalized": [
+                0.121,
+                0.763,
+                0.465,
+                0.776
+              ],
+              "angle": 0
+            }
+          ],
+          "status": "pass"
+        },
+        {
+          "check": "p74_policy_precedes_next_section_in_correct_order",
+          "observed_pass": true,
+          "positions": [
+            986,
+            1020,
+            1046
+          ],
+          "status": "pass"
+        }
+      ],
+      "counts": {
+        "pass": 3,
+        "fail": 0,
+        "unknown": 0
+      },
+      "public_interface_source_mapping": {
+        "status": "unknown",
+        "reason": "Official per-page model trial, not MosaicParse HTTP; table-source and cross-page assembly not implemented or claimed."
+      }
+    },
+    {
+      "source": "1225475375",
+      "source_page": 74,
+      "source_SHA256": "5eef30b5c544d76df917d56df76a665ed13b5e6ffebdc54ab0eea0a47b7589d6",
+      "page_dir": "benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/mineru-trial/remaining-pages-gpu/1225475375-p74",
+      "official_blocks_SHA256": "7bbec0c194fc56e2fd70fb56e89c4ef6056d97f798e17fc33e51416619e002a7",
+      "official_MD_SHA256": "1ccfb1908cb121695b2bdfc3e3043f7958833ef2597307434e4ad58f1b106b48",
+      "official_request": {
+        "id": "1225475375",
+        "page": 74,
+        "source_pdf": "/opt/mosaic-parse/pdf_sample/1225475375.pdf",
+        "source_pdf_SHA256": "5eef30b5c544d76df917d56df76a665ed13b5e6ffebdc54ab0eea0a47b7589d6",
+        "source_total_pages": 119,
+        "source_page_SHA256": "d0cfd206c2e172f244d8e2d0a8d3e61f5100a6a0c374b98b2220aeebc13b5ca3",
+        "source_page_size": [
+          1654,
+          2339
+        ],
+        "source_pdf_page_rotation": 0,
+        "status": "complete",
+        "client_seconds": 29.123538616928272,
+        "pure_generate_seconds": 28.733358183992095,
+        "generated_tokens": 931,
+        "model_calls": 14,
+        "blocks": 14,
+        "blocks_SHA256": "7bbec0c194fc56e2fd70fb56e89c4ef6056d97f798e17fc33e51416619e002a7",
+        "MD_SHA256": "1ccfb1908cb121695b2bdfc3e3043f7958833ef2597307434e4ad58f1b106b48"
+      },
+      "generation_integrity": {
+        "status": "all_calls_EOS",
+        "limit_hit_calls": [],
+        "unknown_termination_calls": [],
+        "calls": [
+          {
+            "call": 0,
+            "input_tokens": 1394,
+            "generated_tokens": 309,
+            "output_tokens": 1703,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 1,
+            "input_tokens": 945,
+            "generated_tokens": 260,
+            "output_tokens": 1205,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 2,
+            "input_tokens": 93,
+            "generated_tokens": 13,
+            "output_tokens": 106,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 3,
+            "input_tokens": 99,
+            "generated_tokens": 15,
+            "output_tokens": 114,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 4,
+            "input_tokens": 95,
+            "generated_tokens": 17,
+            "output_tokens": 112,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 5,
+            "input_tokens": 485,
+            "generated_tokens": 89,
+            "output_tokens": 574,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 6,
+            "input_tokens": 109,
+            "generated_tokens": 7,
+            "output_tokens": 116,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 7,
+            "input_tokens": 485,
+            "generated_tokens": 84,
+            "output_tokens": 569,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 8,
+            "input_tokens": 97,
+            "generated_tokens": 6,
+            "output_tokens": 103,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 9,
+            "input_tokens": 91,
+            "generated_tokens": 8,
+            "output_tokens": 99,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 10,
+            "input_tokens": 347,
+            "generated_tokens": 104,
+            "output_tokens": 451,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 11,
+            "input_tokens": 97,
+            "generated_tokens": 14,
+            "output_tokens": 111,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 12,
+            "input_tokens": 97,
+            "generated_tokens": 3,
+            "output_tokens": 100,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 13,
+            "input_tokens": 97,
+            "generated_tokens": 2,
+            "output_tokens": 99,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          }
+        ]
+      },
+      "HTML_reader_errors": [],
+      "table_shapes": [
+        [
+          9,
+          6
+        ],
+        [
+          4,
+          3
+        ],
+        [
+          4,
+          3
+        ],
+        [
+          3,
+          7
+        ]
+      ],
+      "checks": [
+        {
+          "check": "p74_negative_business_conclusion",
+          "observed_pass": false,
+          "expected": "—公司期末不存在需计提在建工程减值准备的情形。",
+          "literal_character_exact": false,
+          "raw_locations": [],
+          "status": "fail"
+        },
+        {
+          "check": "p74_negative_business_statement_body_restored",
+          "observed_pass": true,
+          "expected": "公司期末不存在需计提在建工程减值准备的情形。",
+          "literal_character_exact": true,
+          "raw_locations": [
+            {
+              "JSON_pointer": "/blocks/11/content",
+              "bbox_normalized": [
+                0.173,
+                0.828,
+                0.637,
+                0.845
+              ],
+              "angle": 0
+            }
+          ],
+          "status": "pass"
+        }
+      ],
+      "counts": {
+        "pass": 1,
+        "fail": 1,
+        "unknown": 0
+      },
+      "public_interface_source_mapping": {
+        "status": "unknown",
+        "reason": "Official per-page model trial, not MosaicParse HTTP; table-source and cross-page assembly not implemented or claimed."
+      }
+    },
+    {
+      "source": "1225475375",
+      "source_page": 87,
+      "source_SHA256": "5eef30b5c544d76df917d56df76a665ed13b5e6ffebdc54ab0eea0a47b7589d6",
+      "page_dir": "benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/mineru-trial/remaining-pages-gpu/1225475375-p87",
+      "official_blocks_SHA256": "cf18b9a0b961e00b5d45e176d5da965019e025e5c3476a77c246c60fe6256a8d",
+      "official_MD_SHA256": "943ea06217e122b414230996231f8060365ae3a6b2aedf2140e9063866d043e8",
+      "official_request": {
+        "id": "1225475375",
+        "page": 87,
+        "source_pdf": "/opt/mosaic-parse/pdf_sample/1225475375.pdf",
+        "source_pdf_SHA256": "5eef30b5c544d76df917d56df76a665ed13b5e6ffebdc54ab0eea0a47b7589d6",
+        "source_total_pages": 119,
+        "source_page_SHA256": "b01a7341f79a8834efdc72f8df6d2055027d071b898c75d75f6d1c8ca30f72a5",
+        "source_page_size": [
+          1654,
+          2339
+        ],
+        "source_pdf_page_rotation": 270,
+        "status": "complete",
+        "client_seconds": 24.64975404192228,
+        "pure_generate_seconds": 24.301784464041702,
+        "generated_tokens": 614,
+        "model_calls": 6,
+        "blocks": 5,
+        "blocks_SHA256": "cf18b9a0b961e00b5d45e176d5da965019e025e5c3476a77c246c60fe6256a8d",
+        "MD_SHA256": "943ea06217e122b414230996231f8060365ae3a6b2aedf2140e9063866d043e8"
+      },
+      "generation_integrity": {
+        "status": "all_calls_EOS",
+        "limit_hit_calls": [],
+        "unknown_termination_calls": [],
+        "calls": [
+          {
+            "call": 0,
+            "input_tokens": 1394,
+            "generated_tokens": 114,
+            "output_tokens": 1508,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 1,
+            "input_tokens": 106,
+            "generated_tokens": 8,
+            "output_tokens": 114,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 2,
+            "input_tokens": 2013,
+            "generated_tokens": 473,
+            "output_tokens": 2486,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 3,
+            "input_tokens": 95,
+            "generated_tokens": 14,
+            "output_tokens": 109,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 4,
+            "input_tokens": 97,
+            "generated_tokens": 3,
+            "output_tokens": 100,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          },
+          {
+            "call": 5,
+            "input_tokens": 89,
+            "generated_tokens": 2,
+            "output_tokens": 91,
+            "max_length": 8192,
+            "max_new_tokens": null,
+            "last_token_id": 151645,
+            "eos_token_id": [
+              151645,
+              151643
+            ],
+            "ended_with_EOS": true,
+            "reached_generation_limit": false
+          }
+        ]
+      },
+      "HTML_reader_errors": [],
+      "table_shapes": [
+        [
+          10,
+          9
+        ]
+      ],
+      "checks": [
+        {
+          "check": "p87_exact_ninety_grid_positions_and_all_four_header_spans",
+          "observed_pass": true,
+          "source_shape": [
+            10,
+            9
+          ],
+          "expected_spans": [
+            [
+              0,
+              0,
+              2,
+              1
+            ],
+            [
+              0,
+              1,
+              2,
+              1
+            ],
+            [
+              0,
+              2,
+              1,
+              6
+            ],
+            [
+              0,
+              8,
+              2,
+              1
+            ]
+          ],
+          "actual_shapes": [
+            [
+              10,
+              9
+            ]
+          ],
+          "candidates": [
+            {
+              "location": {
+                "JSON_pointer": "/blocks/1/content/table[0]",
+                "block_index": 1,
+                "bbox_normalized": [
+                  0.179,
+                  0.069,
+                  0.649,
+                  0.919
+                ],
+                "angle": 270
+              },
+              "mismatches": [],
+              "literal_character_mismatches_including_typography": [
+                {
+                  "row": 1,
+                  "column": 3,
+                  "source": "减：前期计入其他综合收益当期转入损益",
+                  "actual": "减:前期计入其他综合收益当期转入损益"
+                },
+                {
+                  "row": 1,
+                  "column": 4,
+                  "source": "减：前期计入其他综合收益当期转入留存收益",
+                  "actual": "减:前期计入其他综合收益当期转入留存收益"
+                },
+                {
+                  "row": 1,
+                  "column": 5,
+                  "source": "减：所得税费用",
+                  "actual": "减:所得税费用"
+                },
+                {
+                  "row": 4,
+                  "column": 0,
+                  "source": "其中：权益法下可转损益的其他综合收益",
+                  "actual": "其中:权益法下可转损益的其他综合收益"
+                }
+              ],
+              "spans_match": true,
+              "actual_spans": [
+                [
+                  0,
+                  0,
+                  2,
+                  1
+                ],
+                [
+                  0,
+                  1,
+                  2,
+                  1
+                ],
+                [
+                  0,
+                  2,
+                  1,
+                  6
+                ],
+                [
+                  0,
+                  8,
+                  2,
+                  1
+                ]
+              ],
+              "complete_explicit_cell_or_span_coverage": true,
+              "uncovered_grid_positions": [],
+              "literal_exact_positions": 86,
+              "positions_equal_under_explicit_typography": 90
+            }
+          ],
+          "status": "pass"
+        },
+        {
+          "check": "p87_six_column_current_period_group_opening_and_closing_outside",
+          "observed_pass": true,
+          "raw_locations": [
+            {
+              "JSON_pointer": "/blocks/1/content/table[0]",
+              "block_index": 1,
+              "bbox_normalized": [
+                0.179,
+                0.069,
+                0.649,
+                0.919
+              ],
+              "angle": 270
+            }
+          ],
+          "status": "pass"
+        },
+        {
+          "check": "p87_business_footnote",
+          "observed_pass": true,
+          "expected": "—其他债权投资公允价值变动源于应收款项融资。",
+          "literal_character_exact": true,
+          "raw_locations": [
+            {
+              "JSON_pointer": "/blocks/2/content",
+              "bbox_normalized": [
+                0.664,
+                0.581,
+                0.687,
+                0.887
+              ],
+              "angle": 270
+            }
+          ],
+          "status": "pass"
+        }
+      ],
+      "counts": {
+        "pass": 3,
+        "fail": 0,
+        "unknown": 0
+      },
+      "public_interface_source_mapping": {
+        "status": "unknown",
+        "reason": "Official per-page model trial, not MosaicParse HTTP; table-source and cross-page assembly not implemented or claimed."
+      }
+    }
+  ],
+  "missing_or_unfinished_pages": [],
+  "counts": {
+    "pass": 45,
+    "fail": 1,
+    "unknown": 0
+  }
+}

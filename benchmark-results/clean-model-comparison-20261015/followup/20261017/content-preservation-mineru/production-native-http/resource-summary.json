@@ -1,0 +1,45 @@
+{
+  "sample_count": 176,
+  "target_interval_seconds": 2,
+  "actual_interval_mean_s": 2.0002002798227063,
+  "actual_interval_max_s": 2.001927464036271,
+  "service_peaks": {
+    "mosaicparse": {
+      "RSS_bytes": 5656125440,
+      "CPU_percent": 2351.288935876269
+    },
+    "docling_glm_ocr_sdk": {
+      "RSS_bytes": 6094082048,
+      "CPU_percent": 0.9981659842657336
+    },
+    "docling_glm_ocr": {
+      "RSS_bytes": 8774762496,
+      "CPU_percent": 5.909329316205609
+    }
+  },
+  "root_identities": {
+    "mosaicparse": {
+      "pid": 1179707,
+      "create_time": 1792245056.87,
+      "proc_starttime_ticks": 58699987,
+      "boot_id": "74913799-52a2-4c2e-871f-473f4bde606d"
+    },
+    "docling_glm_ocr_sdk": {
+      "pid": 418554,
+      "create_time": 1792185308.65,
+      "proc_starttime_ticks": 52725165,
+      "boot_id": "74913799-52a2-4c2e-871f-473f4bde606d"
+    },
+    "docling_glm_ocr": {
+      "pid": 3145,
+      "create_time": 1791658215.87,
+      "proc_starttime_ticks": 15887,
+      "boot_id": "74913799-52a2-4c2e-871f-473f4bde606d"
+    }
+  },
+  "thread_joined": true,
+  "error": null,
+  "GPU_scope": "Whole-card only; pmon - / unsupported counters remain unknown, never zero.",
+  "CPU_scope": "Separate process trees; RSS may include shared pages; no aggregate of API and preexisting inference services.",
+  "pure_model_inference_duration": "Not available from HTTP alone; SDK end-to-end page duration includes preprocessing/layout/region inference/network."
+}

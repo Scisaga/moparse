@@ -1,0 +1,377 @@
+{
+  "schema": "mosaicparse-targeted-content-acceptance-summary/1",
+  "created_UTC": "2026-10-17T13:44:31.315921+00:00",
+  "scope": "Four completed full-PDF actual candidate HTTP results, 291 original input pages. Targeted content/structure and source-furniture provenance have separate denominators; no whole-document semantic quality percentage.",
+  "acceptance_evidence": {
+    "path": "candidate-all-content-source.json",
+    "SHA256": "10a9af44d32cab3b6e0ed475887897b0bd5632be680003110f3112a678c19c7c",
+    "verifier_SHA256": "f2fd1d7e5dbb1a6b85c7e2621b660f00ab77e0bee1d2e2d073dfdefa5cca1906"
+  },
+  "source_reference_SHA256": "9c7863cebe11c786963b745bc57e9351c8d3940d250f93ad898ede4fde6deb1b",
+  "source_review_SHA256": "f7673ed6cfcbf01a2b590a3c84b843b24b346aae6e031edf046e16fe97994b6c",
+  "documents": [
+    {
+      "source": "1225474739",
+      "source_SHA256": "1c99c450a8efefe77c9ca02a6f670c958298f661e5ad8d30d6ba01aa0742cda9",
+      "current_MD_SHA256": "af59114727091d2e0f627b048ddd925e605d0fb2445bf86f33aa3e5a1592e775",
+      "targeted_content_and_structure": {
+        "passed": 9,
+        "total": 31
+      },
+      "furniture_provenance": {
+        "passed": 269,
+        "total": 269
+      },
+      "whole_document_semantic_accuracy": "not_measured"
+    },
+    {
+      "source": "1225474139",
+      "source_SHA256": "dc69826976c576302ee4156642039b790693202a611922dda647eb006e6d5c18",
+      "current_MD_SHA256": "4a0574b6ef4bca73689f1504d03dde8f958748c44873d0b5da36e4abda4a30a4",
+      "targeted_content_and_structure": {
+        "passed": 4,
+        "total": 4
+      },
+      "furniture_provenance": {
+        "passed": 70,
+        "total": 70
+      },
+      "whole_document_semantic_accuracy": "not_measured"
+    },
+    {
+      "source": "1225475375",
+      "source_SHA256": "5eef30b5c544d76df917d56df76a665ed13b5e6ffebdc54ab0eea0a47b7589d6",
+      "current_MD_SHA256": "29a586145a5411d379cfcde209c9aa6c7de133a971a81c2c120388ae537e98eb",
+      "targeted_content_and_structure": {
+        "passed": 4,
+        "total": 6
+      },
+      "furniture_provenance": {
+        "passed": 102,
+        "total": 102
+      },
+      "whole_document_semantic_accuracy": "not_measured"
+    },
+    {
+      "source": "1206337604",
+      "source_SHA256": "ccff40771d75e9412b65f364a1c72c1733c37b4d8f232f49cf639621f0ba165f",
+      "current_MD_SHA256": "649778d8b6174ba2984c7dd6d0daa696ad366a016eea955fe470f46c88c3b803",
+      "targeted_content_and_structure": {
+        "passed": 6,
+        "total": 6
+      },
+      "furniture_provenance": {
+        "passed": 2,
+        "total": 2
+      },
+      "whole_document_semantic_accuracy": "not_measured"
+    }
+  ],
+  "six_user_134_page_issues": [
+    {
+      "issue": "134-p19-long-risk-merged-cell",
+      "current_status": "fail",
+      "check": "p19_complete_risk_cell_and_binding",
+      "evidence": {
+        "check": "p19_complete_risk_cell_and_binding",
+        "pass": false,
+        "matching_rows": 1,
+        "source_page": 19,
+        "table_id": "p19_t2",
+        "row_zero_based": 7,
+        "expected_text": "远期结售汇的风险分析： \n（1）汇率、利率波动风险：在外汇汇率波动较大时，公司判断汇率大幅波动方向与外\n汇套期保值合约方向不一致时，将造成汇兑损失；若汇率在未来发生波动时，与外汇套\n期保值合约偏差较大也将造成汇兑损失；  \n（2）内部控制风险：外汇套期保值业务专业性较强，复杂程度较高，可能会由于内控\n制度不完善而造成风险； \n（3）交易违约风险：外汇套期保值交易对手出现违约，不能按照约定支付公司套期保\n值盈利从而无法对冲公司实际的汇兑损失，将造成公司损失； \n（4）客户违约风险：客户应收账款发生逾期、客户调整订单等情况将使货款实际回款\n情况与预期回款情况不一致，可能使实际发生的现金流与已操作的外汇套 期保值业务\n期限或数额无法完全匹配，从而导致公司损失。 \n \n远期结售汇的风险控制措施： \n（1）公司制定了《广东银禧科技股份有限公司外汇套期保值业务管理制度》，（以下简\n称“《外汇套期保值业务管理制度》”）对外汇套期保值业务操作规范、审批权限及内\n部操作流程、信息隔离措施、内部风险报告制度及风险处理程序、信息披露等做出了明\n确规定； \n（2）为避免汇率大幅波动风险，公司会加强对汇率的研究分析，实时关注国际市场环\n境变化，适时调整经营策略，最大限度的避免汇兑损失； \n（3）为避免内部控制风险，公司财务部负责统一管理公司外汇套期保值业务，所有的\n外汇交易行为均以正常生产经营为基础，以具体经营业务为依托，不得进行投机和套利\n交易，并严格按照《外汇套期保值业务管理制度》的规定进行业务操作，有效地保证制\n度的执行； \n（4）为控制交易违约风险，公司仅与具有合法资质的大型银行等金融机构开展外汇套",
+        "actual_payloads": [
+          "远期结售汇的风险分析： （1）汇率、利率波动风险：在外汇汇率波动较大时，公司判断汇率大幅波动方向与外 汇套期保值合约方向不一致时，将造成汇兑损失；若汇率在未来发生波动时，与外汇套 期保值合约偏差较大也将造成汇兑损失； （2）内部控制风险：外汇套期保值业务专业性较强，复杂程度较高，可能会由于内控 制度不完善而造成风险； （3）交易违约风险：外汇套期保值交易对手出现违约，不能按照约定支付公司套期保 值盈利从而无法对冲公司实际的汇兑损失，将造成公司损失； （4）客户违约风险：客户应收账款发生逾期、客户调整订单等情况将使货款实际回款 情况与预期回款情况不一致，可能使实际发生的现金流与已操作的外汇套 期保值业务 期限或数额无法完全匹配，从而导致公司损失。 远期结售汇的风险控制措施： （1）公司制定了《广东银禧科技股份有限公司外汇套期保值业务管理制度》，（以下简 称“《外汇套期保值业务管理制度》”）对外汇套期保值业务操作规范、审批权限及内 部操作流程、信息隔离措施、内部风险报告制度及风险处理程序、信息披露等做出了明 确规定； （2）为避免汇率大幅波动风险，公司会加强对汇率的研究分析，实时关注国际市场环 境变化，适时调整经营策略，最大限度的避免汇兑损失； （3）为避免内部控制风险公司财务部负责统一管理公司外汇套期保值业务所有的"
+        ],
+        "expected_payload_span": [
+          7,
+          1,
+          1,
+          8
+        ],
+        "actual_spans": [
+          [
+            3,
+            1,
+            1,
+            8
+          ],
+          [
+            4,
+            1,
+            1,
+            8
+          ],
+          [
+            5,
+            1,
+            1,
+            8
+          ],
+          [
+            6,
+            1,
+            1,
+            8
+          ],
+          [
+            7,
+            1,
+            1,
+            8
+          ]
+        ]
+      }
+    },
+    {
+      "issue": "134-p19-amount-and-independent-footnote",
+      "current_status": "fail",
+      "check": "p19_exact_amount_separate_footnote",
+      "evidence": {
+        "check": "p19_exact_amount_separate_footnote",
+        "pass": false,
+        "expected_amount": "6,606.57",
+        "expected_footnote": "1",
+        "actual_cell": "6,606.571"
+      }
+    },
+    {
+      "issue": "134-p40-full-financing-explanation",
+      "current_status": "fail",
+      "check": "p40_complete_financing_explanation_same_cell",
+      "evidence": {
+        "check": "p40_complete_financing_explanation_same_cell",
+        "pass": false,
+        "matching_rows": 1,
+        "source_page": 40,
+        "table_id": "p40_t1",
+        "row_zero_based": 23,
+        "expected_text": "1、彭朝晖通过中信建投证券股份有限公司客户信用交易担保证券账户持有公司15,205,800 股,\n通过普通证券账户持有公司927,300 股，共计持有公司16,133,100 股。 \n2、罗洪波通过国泰海通证券股份有限公司客户信用交易担保证券账户持有公司6,029,600 股，\n通过普通证券账户持有公司4,418,300 股，共计持有公司10,447,900 股。 \n3、谭志琴通过中信证券股份有限公司客户信用交易担保证券账户持有公司5,981,100 股，通过\n普通证券账户持有公司182,000 股，共计持有公司6,163,100 股。 \n4、陈庆良通过国投证券股份有限公司客户信用交易担保证券账户持有公司5,543,500 股，通过\n普通证券账户持有公司18,900 股，共计持有公司5,562,400 股。 \n5、尹倩倩通过国投证券股份有限公司客户信用交易担保证券账户持有公司4,649,700 股，通过\n普通证券账户持有公司98,400 股，共计持有公司4,748,100 股。 \n6、谭纯通过国投证券股份有限公司客户信用交易担保证券账户持有公司3,093,000 股，通过普\n通证券账户持有公司10,800 股，共计持有公司3,103,800 股。 \n7、尹缘平通过太平洋证券股份有限公司客户信用交易担保证券账户持有公司2,787,200 股，通\n过普通证券账户持有公司75,900 股，共计持有公司2,863,100 股。 ",
+        "actual_payloads": [
+          "1、彭朝晖通过中信建投证券股份有限公司客户信用交易担保证券账户持有公司 15,205,800 股, 通过普通证券账户持有公司 927,300 股，共计持有公司 16,133,100 股。 2、罗洪波通过国泰海通证券股份有限公司客户信用交易担保证券账户持有公司 6,029,600 股， 通过普通证券账户持有公司 4,418,300 股，共计持有公司 10,447,900 股。 3、谭志琴通过中信证券股份有限公司客户信用交易担保证券账户持有公司 5,981,100 股，通过 普通证券账户持有公司 182,000 股，共计持有公司 6,163,100 股。 4、陈庆良通过国投证券股份有限公司客户信用交易担保证券账户持有公司 5,543,500 股，通过 普通证券账户持有公司 18,900 股，共计持有公司 5,562,400 股。 5、尹倩倩通过国投证券股份有限公司客户信用交易担保证券账户持有公司 4,649,700 股，通过 普通证券账户持有公司 股共计持有公司 股"
+        ]
+      }
+    },
+    {
+      "issue": "134-p40-independent-business-explanation-row",
+      "current_status": "fail",
+      "check": "p40_independent_explanation_row",
+      "evidence": {
+        "check": "p40_independent_explanation_row",
+        "pass": false,
+        "matching_rows": 0,
+        "source_page": 40
+      }
+    },
+    {
+      "issue": "134-p74-business-accounting-policy",
+      "current_status": "pass",
+      "check": "p74_complete_policy_heading_sentence_and_order",
+      "evidence": {
+        "check": "p74_complete_policy_heading_sentence_and_order",
+        "pass": true,
+        "expected_heading": "3、使用寿命不确定的无形资产的判断依据以及对其使用寿命进行复核的程序",
+        "expected_sentence": "使用寿命不确定的无形资产，每期末进行减值测试。",
+        "actual_positions": [
+          1031,
+          1065,
+          1091
+        ]
+      }
+    },
+    {
+      "issue": "134-p131-six-column-total-and-empty-cells",
+      "current_status": "fail",
+      "check": "p131_exact_six_columns_total_with_blank_cells_and_percentage",
+      "evidence": {
+        "check": "p131_exact_six_columns_total_with_blank_cells_and_percentage",
+        "pass": false,
+        "expected": [
+          "合计",
+          "",
+          "364,387,828.90",
+          "",
+          "92.29%",
+          "177,026,163.05"
+        ],
+        "actual_candidates": [
+          {
+            "table_id": "p131_t1",
+            "declared_cols": 5,
+            "row": [
+              "合计",
+              "",
+              "364,387,828.90",
+              "",
+              "177,026,163.05"
+            ]
+          },
+          {
+            "table_id": "p131_t2",
+            "declared_cols": 7,
+            "row": [
+              "合计",
+              "973,427,062.90",
+              "",
+              "973,427,062.90",
+              "974,427,061.21",
+              "",
+              "974,427,061.21"
+            ]
+          },
+          {
+            "table_id": "p131_t3",
+            "declared_cols": 9,
+            "row": [
+              "合计",
+              "973,791,235.83",
+              "",
+              "",
+              "1,000,000.00",
+              "",
+              "",
+              "972,791,235.83",
+              ""
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "additional_current_checks": [
+    {
+      "source": "1225474739",
+      "check": "p19_negative_decimal_in_own_explanation_cell",
+      "status": "fail",
+      "evidence": {
+        "check": "p19_negative_decimal_in_own_explanation_cell",
+        "pass": false,
+        "actual_cell": "为规避和防范外汇汇率波动给公司带来的经营风险，公司按照一定比例，针对外汇开展 远期结售汇业务，业务规模均在公司董事会审议的额度范围内。报告期内，公司远期结 售汇实际损益金额为061 万元"
+      }
+    },
+    {
+      "source": "1225474139",
+      "check": "p28_complete_paragraph_exact_order",
+      "status": "pass",
+      "evidence": {
+        "check": "p28_complete_paragraph_exact_order",
+        "pass": true,
+        "expected": "信息披露义务人璟和珩成立于2026年6月26日，截至本报告书签署日，暂无经营相关财务资料。"
+      }
+    },
+    {
+      "source": "1225474139",
+      "check": "p30_blank_date_not_fabricated",
+      "status": "pass",
+      "evidence": {
+        "check": "p30_blank_date_not_fabricated",
+        "pass": true,
+        "expected": "年月日",
+        "observed_numeric_dates": []
+      }
+    },
+    {
+      "source": "1206337604",
+      "check": "p1_complete_security_identity_before_exact_title",
+      "status": "pass",
+      "evidence": {
+        "check": "p1_complete_security_identity_before_exact_title",
+        "pass": true,
+        "expected_identity": "证券代码:300635证券简称:达安股份",
+        "expected_title": "2019年6月4日投资者关系活动记录表"
+      }
+    },
+    {
+      "source": "1206337604",
+      "check": "p2_actual_record_date_retained",
+      "status": "pass",
+      "evidence": {
+        "check": "p2_actual_record_date_retained",
+        "pass": true,
+        "expected": "2019年6月4日星期二"
+      }
+    }
+  ],
+  "compared_134_user_prior_raw": {
+    "job": "job_01M54S6SZB4PH061X16NW8TVCQ",
+    "origin": "GET of user-supplied existing result; no claim that it was this experiment new POST",
+    "MD_SHA256": "57acd94eca552844fd9c96ba1a218feaf35fed4b72e94843d09e19de7e3676ad",
+    "targeted_passed_before": 8,
+    "targeted_total_before": 31,
+    "targeted_passed_current": 9,
+    "targeted_total_current": 31,
+    "six_issues_current_passed": 1,
+    "six_issues_total": 6
+  },
+  "119_page_issues": [
+    {
+      "check": "p74_negative_business_conclusion_after_table",
+      "status": "pass",
+      "evidence": {
+        "check": "p74_negative_business_conclusion_after_table",
+        "pass": true,
+        "expected": "—公司期末不存在需计提在建工程减值准备的情形。"
+      }
+    },
+    {
+      "check": "p87_upright_nine_columns_all_ninety_positions",
+      "status": "fail",
+      "evidence": {
+        "check": "p87_upright_nine_columns_all_ninety_positions",
+        "pass": false,
+        "source_rows": 10,
+        "source_columns": 9,
+        "candidate_shapes": [
+          [
+            9,
+            9
+          ]
+        ],
+        "exact_positions": 0
+      }
+    },
+    {
+      "check": "p87_six_column_group_full_spans_and_two_header_rows",
+      "status": "fail",
+      "evidence": {
+        "check": "p87_six_column_group_full_spans_and_two_header_rows",
+        "pass": false,
+        "expected_spans": [
+          [
+            0,
+            0,
+            2,
+            1
+          ],
+          [
+            0,
+            1,
+            2,
+            1
+          ],
+          [
+            0,
+            2,
+            1,
+            6
+          ],
+          [
+            0,
+            8,
+            2,
+            1
+          ]
+        ]
+      }
+    },
+    {
+      "check": "p87_business_footnote_retained",
+      "status": "pass",
+      "evidence": {
+        "check": "p87_business_footnote_retained",
+        "pass": true
+      }
+    }
+  ],
+  "119_page87_actual_shape_and_content": "9x9 transposed: closing balance is first row, item labels are last row; source is 10x9, two header rows and a six-column current-period group."
+}

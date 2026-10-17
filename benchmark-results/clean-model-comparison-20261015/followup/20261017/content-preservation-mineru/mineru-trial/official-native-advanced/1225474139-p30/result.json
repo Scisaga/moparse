@@ -1,0 +1,174 @@
+{
+  "metadata": {
+    "file_suffix": "pdf",
+    "producer": {
+      "name": "mineru",
+      "version": "4.0.12"
+    },
+    "document": {
+      "authors": [
+        "宋凯"
+      ],
+      "created_at": "2026-08-14T17:10:29+09:10",
+      "modified_at": "2026-08-14T17:10:29+09:10",
+      "creator_application": "WPS 文字",
+      "page_count": 36,
+      "page_count_kind": "physical"
+    }
+  },
+  "extensions": {
+    "mineru": {
+      "tier": "advanced",
+      "parse_mode": "txt"
+    },
+    "docvortex_layout": {
+      "version": 1,
+      "pages": [
+        {
+          "page_idx": 29,
+          "width_pt": 595.2999877929688,
+          "height_pt": 841.9000244140625
+        }
+      ]
+    }
+  },
+  "pages": [
+    {
+      "page_idx": 29,
+      "blocks": [
+        {
+          "type": "header",
+          "index": 0,
+          "bbox": [
+            0.528,
+            0.05,
+            0.85,
+            0.063
+          ],
+          "content": [
+            {
+              "type": "text",
+              "content": "深圳兆日科技股份有限公司详式权益变动报告书"
+            }
+          ]
+        },
+        {
+          "type": "paragraph_title",
+          "index": 1,
+          "bbox": [
+            0.392,
+            0.096,
+            0.64,
+            0.117
+          ],
+          "content": [
+            {
+              "type": "text",
+              "content": "信息披露义务人声明"
+            }
+          ],
+          "level": 2
+        },
+        {
+          "type": "text",
+          "index": 2,
+          "bbox": [
+            0.147,
+            0.183,
+            0.853,
+            0.229
+          ],
+          "content": [
+            {
+              "type": "text",
+              "content": "本人（以及本人所代表的机构）承诺本报告书不存在虚假记载、误导性陈述或重大遗漏，并对其真实性、准确性、完整性承担个别和连带的法律责任。"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "index": 3,
+          "bbox": [
+            0.462,
+            0.322,
+            0.851,
+            0.34
+          ],
+          "content": [
+            {
+              "type": "text",
+              "content": "信息披露义务人:上海璟和珩科技有限公司"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "index": 4,
+          "bbox": [
+            0.572,
+            0.396,
+            0.851,
+            0.414
+          ],
+          "content": [
+            {
+              "type": "text",
+              "content": "法定代表人:"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "index": 5,
+          "bbox": [
+            0.746,
+            0.433,
+            0.811,
+            0.45
+          ],
+          "content": [
+            {
+              "type": "text",
+              "content": "曲嘉麟"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "index": 6,
+          "bbox": [
+            0.704,
+            0.507,
+            0.848,
+            0.524
+          ],
+          "content": [
+            {
+              "type": "text",
+              "content": "年 月 日"
+            }
+          ]
+        },
+        {
+          "type": "page_number",
+          "index": 7,
+          "bbox": [
+            0.506,
+            0.929,
+            0.524,
+            0.941
+          ],
+          "content": [
+            {
+              "type": "text",
+              "content": "30"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "is_full_document": false,
+  "schema": "docvortex.middle",
+  "schema_version": "2.0"
+}

@@ -1,0 +1,18 @@
+{
+  "schema": "actual-public-asset-capture/1",
+  "job": "job_01M550PW7HDS9SQNK8HV6DASG6",
+  "base": "http://127.0.0.1:12423",
+  "started_utc": "2026-10-17T13:27:08.450336+00:00",
+  "status": "completed",
+  "metadata": [],
+  "downloads": [],
+  "markdown_asset_urls": [],
+  "errors": [],
+  "filenames": "Local files use validated asset_id only; untrusted public filename never becomes a filesystem path",
+  "scope": "Public metadata/bytes/MD URL availability only; image identity versus original PDF requires separate source/engine provenance.",
+  "redirects_followed": false,
+  "duplicate_public_filename_groups": {},
+  "all_MD_asset_URLs_obtained_and_verified": true,
+  "completed_utc": "2026-10-17T13:27:08.459684+00:00",
+  "asset_capture_seconds": 0.009520010906271636
+}

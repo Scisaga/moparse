@@ -1,0 +1,173 @@
+{
+  "scope": "14 identical rendered full-page inputs; output differences are observations, independent source evaluator judges correctness",
+  "MD_byte_identical_pages": 12,
+  "changed_pages": 2,
+  "rows": [
+    {
+      "id": "1206337604",
+      "page": 1,
+      "source_page_PNG_identical": true,
+      "MD_identical": true,
+      "blocks_equal": true,
+      "TF_block_count": 5,
+      "vLLM_block_count": 5,
+      "changes": []
+    },
+    {
+      "id": "1225474739",
+      "page": 19,
+      "source_page_PNG_identical": true,
+      "MD_identical": true,
+      "blocks_equal": true,
+      "TF_block_count": 11,
+      "vLLM_block_count": 11,
+      "changes": []
+    },
+    {
+      "id": "1206337604",
+      "page": 2,
+      "source_page_PNG_identical": true,
+      "MD_identical": true,
+      "blocks_equal": true,
+      "TF_block_count": 1,
+      "vLLM_block_count": 1,
+      "changes": []
+    },
+    {
+      "id": "1225474739",
+      "page": 40,
+      "source_page_PNG_identical": true,
+      "MD_identical": true,
+      "blocks_equal": true,
+      "TF_block_count": 8,
+      "vLLM_block_count": 8,
+      "changes": []
+    },
+    {
+      "id": "1225474739",
+      "page": 74,
+      "source_page_PNG_identical": true,
+      "MD_identical": true,
+      "blocks_equal": true,
+      "TF_block_count": 30,
+      "vLLM_block_count": 30,
+      "changes": []
+    },
+    {
+      "id": "1225474739",
+      "page": 131,
+      "source_page_PNG_identical": true,
+      "MD_identical": true,
+      "blocks_equal": true,
+      "TF_block_count": 12,
+      "vLLM_block_count": 12,
+      "changes": []
+    },
+    {
+      "id": "1225475375",
+      "page": 74,
+      "source_page_PNG_identical": true,
+      "MD_identical": true,
+      "blocks_equal": true,
+      "TF_block_count": 14,
+      "vLLM_block_count": 14,
+      "changes": []
+    },
+    {
+      "id": "1225475375",
+      "page": 87,
+      "source_page_PNG_identical": true,
+      "MD_identical": true,
+      "blocks_equal": true,
+      "TF_block_count": 5,
+      "vLLM_block_count": 5,
+      "changes": []
+    },
+    {
+      "id": "1225474139",
+      "page": 28,
+      "source_page_PNG_identical": true,
+      "MD_identical": true,
+      "blocks_equal": true,
+      "TF_block_count": 4,
+      "vLLM_block_count": 4,
+      "changes": []
+    },
+    {
+      "id": "1225474139",
+      "page": 30,
+      "source_page_PNG_identical": true,
+      "MD_identical": true,
+      "blocks_equal": true,
+      "TF_block_count": 8,
+      "vLLM_block_count": 8,
+      "changes": []
+    },
+    {
+      "id": "1225474693",
+      "page": 2,
+      "source_page_PNG_identical": true,
+      "MD_identical": true,
+      "blocks_equal": true,
+      "TF_block_count": 16,
+      "vLLM_block_count": 16,
+      "changes": []
+    },
+    {
+      "id": "1225474693",
+      "page": 3,
+      "source_page_PNG_identical": true,
+      "MD_identical": false,
+      "blocks_equal": false,
+      "TF_block_count": 5,
+      "vLLM_block_count": 5,
+      "changes": [
+        {
+          "block": 4,
+          "TF_type": "table",
+          "vLLM_type": "table",
+          "bbox_equal": true,
+          "angle_equal": true,
+          "TF_content_length": 1459,
+          "vLLM_content_length": 1459,
+          "first_diff_char": 890,
+          "TF_snippet": "td>0</td><td>无</td><td>0</td></tr><tr><td>基本养老保险基金-零零一组合</td><td>未知</td><td>0.60</td><td>13,400,000</td><td>0</td><td>无</td><td>0</td></tr><tr><td>中国银",
+          "vLLM_snippet": "td>0</td><td>无</td><td>0</td></tr><tr><td>基本养老保险基金一零零一组合</td><td>未知</td><td>0.60</td><td>13,400,000</td><td>0</td><td>无</td><td>0</td></tr><tr><td>中国银"
+        }
+      ]
+    },
+    {
+      "id": "1225473526",
+      "page": 6,
+      "source_page_PNG_identical": true,
+      "MD_identical": false,
+      "blocks_equal": false,
+      "TF_block_count": 14,
+      "vLLM_block_count": 14,
+      "changes": [
+        {
+          "block": 5,
+          "TF_type": "text",
+          "vLLM_type": "text",
+          "bbox_equal": true,
+          "angle_equal": true,
+          "TF_content_length": 34,
+          "vLLM_content_length": 35,
+          "first_diff_char": 22,
+          "TF_snippet": "本次发行证券的种类为境内上市人民币普通股（A股），上市地点为深交所。",
+          "vLLM_snippet": "本次发行证券的种类为境内上市人民币普通股（A 股），上市地点为深交所。"
+        }
+      ]
+    },
+    {
+      "id": "1225473526",
+      "page": 7,
+      "source_page_PNG_identical": true,
+      "MD_identical": true,
+      "blocks_equal": true,
+      "TF_block_count": 12,
+      "vLLM_block_count": 12,
+      "changes": []
+    }
+  ]
+}
