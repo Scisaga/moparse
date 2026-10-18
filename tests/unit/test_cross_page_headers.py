@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from copy import deepcopy
 
 import pytest
@@ -113,8 +114,8 @@ def test_actual_financial_period_change_keeps_both_headers_and_values() -> None:
     content = assemble_logical_tables(pages, [assets, income], enabled=True)
 
     assert "logical-table" not in "\n".join(content.values())
-    assert content[2] == assets.rendered
-    assert content[3] == income.rendered
+    assert re.sub(r"<!-- table-source: [^\n]* -->\n\n", "", content[2]) == assets.rendered
+    assert re.sub(r"<!-- table-source: [^\n]* -->\n\n", "", content[3]) == income.rendered
     assert "|  | 本报告期末 | 上年度末 | 本报告期末比上年度末增减(%) |" in content[2]
     assert "| 总资产 | 21,467,154,275.58 | 21,158,183,575.04 |" in content[2]
     assert "|  | 本报告期 | 上年同期 | 本报告期比上年同期增减(%) |" in content[3]
@@ -310,7 +311,9 @@ def test_unavailable_unique_rendered_fragment_aborts_group_without_data_loss(
 
     content = assemble_logical_tables(pages, fragments, enabled=True)
 
-    assert content == original
+    assert {
+        p: re.sub(r"<!-- table-source: [^\n]* -->\n\n", "", text) for p, text in content.items()
+    } == original
     assert all(fragment.logical_table_id is None for fragment in fragments)
     assert all(
         page.diagnostics.logical_table_ids == [fragment.fragment_id]
@@ -379,7 +382,9 @@ def test_explicit_nearby_units_govern_safe_merge_scope(
         assert "| 净利润 | 100 | 60 | 90 | 55 |" in content[1]
         assert content[2] == ""
     else:
-        assert content == original
+        assert {
+            p: re.sub(r"<!-- table-source: [^\n]* -->\n\n", "", text) for p, text in content.items()
+        } == original
         assert first.logical_table_id is second.logical_table_id is None
 
 
@@ -417,5 +422,7 @@ def test_three_page_continuation_carries_explicit_unit_scope_past_omitted_unit(
             assert f"| 财务行{page} | 100 | 60 | 90 | 55 |" in content[1]
         assert all(fragment.logical_table_id == "table_p1_t1_p3_t1" for fragment in fragments)
     else:
-        assert content == original
+        assert {
+            p: re.sub(r"<!-- table-source: [^\n]* -->\n\n", "", text) for p, text in content.items()
+        } == original
         assert all(fragment.logical_table_id is None for fragment in fragments)

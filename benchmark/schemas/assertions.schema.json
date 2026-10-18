@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "moparse:source-assertions:1",
+  "type": "object",
+  "required": ["schema", "id", "source_documents", "review", "checks"],
+  "properties": {
+    "schema": {"const": "moparse-source-assertions/1"},
+    "id": {"type": "string"},
+    "source_documents": {
+      "type": "array", "minItems": 1,
+      "items": {"type": "object", "required": ["id", "sha256"], "properties": {
+        "id": {"type": "string"}, "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        "source_path": {"type": "string"}
+      }}
+    },
+    "review": {"type": "object", "required": ["method", "model_outputs_seen"], "properties": {
+      "method": {"type": "string"}, "model_outputs_seen": {"type": "boolean"}
+    }},
+    "checks": {
+      "type": "array", "minItems": 1,
+      "items": {"type": "object", "required": ["id", "document_id", "kind", "expected", "source_evidence"], "properties": {
+        "id": {"type": "string"}, "document_id": {"type": "string"},
+        "page": {"type": "integer", "minimum": 1},
+        "kind": {"enum": ["text", "absent_text", "ordered_text", "regex", "table_grid", "table_span"]},
+        "normalize_whitespace": {"type": "boolean", "default": false},
+        "selector": {"type": "object", "properties": {"text": {"type": "string"}}},
+        "expected": {"type": ["string", "array"]},
+        "source_evidence": {"type": "object", "required": ["physical_page"], "properties": {
+          "physical_page": {"type": "integer", "minimum": 1},
+          "bbox_pdf_points": {"type": "array", "items": {"type": "number"}, "minItems": 4, "maxItems": 4},
+          "note": {"type": "string"}
+        }}
+      }}
+    }
+  }
+}

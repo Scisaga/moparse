@@ -1,0 +1,48 @@
+{
+  "schema": "moparse-evidence/1",
+  "id": "source-v6-final550-identity-resources-and-tests-20261018",
+  "method_id": "mineru-advanced-txt-vllm-c2-docling-source-glm-v6",
+  "cohort_id": "regression-504",
+  "origin": "fresh_component",
+  "fresh_model_inference": false,
+  "output_stage": "diagnostic-only",
+  "quality": {},
+  "performance": {},
+  "provenance": [
+    {
+      "path": "benchmark/evidence/artifacts/256f8a7525b607ca8c186b161f7fabe2deecb9e2fce1b7a2ebe576a0641451c2.json",
+      "sha256": "256f8a7525b607ca8c186b161f7fabe2deecb9e2fce1b7a2ebe576a0641451c2",
+      "bytes": 5503,
+      "original_path": "benchmark/runs/source-v6-http-20261018/final-identity-resource-readback.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/f0ec65e8a11fedf2a2953b1661b411d9857f817903411757d6741dde4fab3a7e.json",
+      "sha256": "f0ec65e8a11fedf2a2953b1661b411d9857f817903411757d6741dde4fab3a7e",
+      "bytes": 100287,
+      "original_path": "benchmark/runs/source-v6-http-20261018/deployment-after.raw.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/01973143ca9ff910a44e403cb113b7383a97565449ab80215d95604d442392cf.json",
+      "sha256": "01973143ca9ff910a44e403cb113b7383a97565449ab80215d95604d442392cf",
+      "bytes": 666,
+      "original_path": "benchmark/runs/source-v6-http-20261018/final-606-tests-safe-summary.json",
+      "snapshot_bytes_unchanged": true
+    }
+  ],
+  "qualification": {
+    "all550_transport_and_actual_statuses_preserved": true,
+    "source_freeze173_unchanged": true,
+    "all5_actual_deployment_identities_unchanged": true,
+    "resource_identity_and_test_verification": true,
+    "complete_source_accuracy_claim": false,
+    "NASA_API_status_partial_kept": true,
+    "Census_severe_source_error_not_resolved": true,
+    "financial_separator_errors_not_resolved": true,
+    "deployment_acceptance": false,
+    "production159_still_required": true,
+    "selected_for_production_validation_by_root": true,
+    "live_selected": false
+  }
+}

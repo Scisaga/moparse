@@ -1,0 +1,38 @@
+{
+  "observed_utc": "2026-10-17T21:15:51.816733+00:00",
+  "read_only": true,
+  "no_inference_no_gc_no_restart_no_config_change": true,
+  "main_host_pid": 2195661,
+  "cgroup": {
+    "memory.current": "8028340224\n",
+    "memory.peak": "8589934592\n",
+    "memory.max": "8589934592\n",
+    "memory.swap.current": "167014400\n",
+    "memory.swap.peak": "171999232\n",
+    "memory.events": "low 0\nhigh 0\nmax 507\noom 0\noom_kill 0\noom_group_kill 0\n",
+    "memory.pressure": "some avg10=0.14 avg60=0.19 avg300=0.05 total=2962453\nfull avg10=0.14 avg60=0.19 avg300=0.05 total=2962453\n",
+    "memory.stat": "anon 7986606080\nfile 11886592\nkernel 26750976\nkernel_stack 1114112\npagetables 17620992\nsec_pagetables 0\npercpu 32264\nsock 4096\nvmalloc 12288\nshmem 4096\nzswap 0\nzswapped 0\nfile_mapped 49152\nfile_dirty 8192\nfile_writeback 0\nswapcached 2834432\nanon_thp 1702887424\nfile_thp 0\nshmem_thp 0\ninactive_anon 7454920704\nactive_anon 534523904\ninactive_file 11755520\nactive_file 126976\nunevictable 0\nslab_reclaimable 5898496\nslab_unreclaimable 1986176\nslab 7884672\nworkingset_refault_anon 291\nworkingset_refault_file 12360\nworkingset_activate_anon 291\nworkingset_activate_file 7\nworkingset_restore_anon 291\nworkingset_restore_file 0\nworkingset_nodereclaim 0\npgscan 193957\npgsteal 154448\npgscan_kswapd 0\npgscan_direct 193701\npgscan_khugepaged 256\npgsteal_kswapd 0\npgsteal_direct 154200\npgsteal_khugepaged 248\npgfault 9979012\npgmajfault 321\npgrefill 162498\npgactivate 17182\npgdeactivate 0\npglazyfree 0\npglazyfreed 0\nzswpin 0\nzswpout 0\nzswpwb 0\nthp_fault_alloc 2214\nthp_collapse_alloc 26\nthp_swpout 0\nthp_swpout_fallback 17\n"
+  },
+  "main_status": "Name:\tuvicorn\nUmask:\t0022\nState:\tS (sleeping)\nTgid:\t2195661\nNgid:\t2200128\nPid:\t2195661\nPPid:\t2195471\nTracerPid:\t0\nUid:\t0\t0\t0\t0\nGid:\t0\t0\t0\t0\nFDSize:\t64\nGroups:\t0 \nNStgid:\t2195661\t7\nNSpid:\t2195661\t7\nNSpgid:\t2195661\t7\nNSsid:\t2195471\t1\nKthread:\t0\nVmPeak:\t12158024 kB\nVmSize:\t11497544 kB\nVmLck:\t       0 kB\nVmPin:\t       0 kB\nVmHWM:\t 8217288 kB\nVmRSS:\t 7662952 kB\nRssAnon:\t 7597944 kB\nRssFile:\t   65004 kB\nRssShmem:\t       4 kB\nVmData:\t 8589428 kB\nVmStk:\t     132 kB\nVmExe:\t       4 kB\nVmLib:\t   95652 kB\nVmPTE:\t   15932 kB\nVmSwap:\t  106916 kB\nHugetlbPages:\t       0 kB\nCoreDumping:\t0\nTHP_enabled:\t1\nuntag_mask:\t0xffffffffffffffff\nThreads:\t51\nSigQ:\t1/512866\nSigPnd:\t0000000000000000\nShdPnd:\t0000000000000000\nSigBlk:\t0000000000000000\nSigIgn:\t0000000001001000\nSigCgt:\t0000000100004002\nCapInh:\t0000000000000000\nCapPrm:\t00000000a80425fb\nCapEff:\t00000000a80425fb\nCapBnd:\t00000000a80425fb\nCapAmb:\t0000000000000000\nNoNewPrivs:\t0\nSeccomp:\t2\nSeccomp_filters:\t1\nSpeculation_Store_Bypass:\tthread vulnerable\nSpeculationIndirectBranch:\tconditional enabled\nCpus_allowed:\tff,ffffffff,ffffffff\nCpus_allowed_list:\t0-71\nMems_allowed:\t00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000000,00000003\nMems_allowed_list:\t0-1\nvoluntary_ctxt_switches:\t55866\nnonvoluntary_ctxt_switches:\t776\nx86_Thread_features:\t\nx86_Thread_features_locked:\t\n",
+  "main_smaps_rollup": "5a50a0e69000-7ffdbe5a6000 ---p 00000000 00:00 0                          [rollup]\nRss:             7662952 kB\nPss:             7639790 kB\nPss_Dirty:       7159676 kB\nPss_Anon:        7597944 kB\nPss_File:          41842 kB\nPss_Shmem:             4 kB\nShared_Clean:      30772 kB\nShared_Dirty:          0 kB\nPrivate_Clean:    472504 kB\nPrivate_Dirty:   7159676 kB\nReferenced:      5761244 kB\nAnonymous:       7597944 kB\nKSM:                   0 kB\nLazyFree:              0 kB\nAnonHugePages:   1662976 kB\nShmemPmdMapped:        0 kB\nFilePmdMapped:         0 kB\nShared_Hugetlb:        0 kB\nPrivate_Hugetlb:       0 kB\nSwap:             106916 kB\nSwapPss:          106916 kB\nLocked:                0 kB\n",
+  "only_whitelisted_env": {
+    "MINERU_MODEL_SMALL_BACKEND": "onnx",
+    "MINERU_DEVICE_MODE": "cpu",
+    "MINERU_PROCESSING_WINDOW_SIZE": "64",
+    "OMP_NUM_THREADS": "4"
+  },
+  "installed_upstream_source_sha256": {
+    "mineru/parser/__init__.py": "8852e3809641fdc24a0f29ae851a1236caa5255787ea269571ad2002b2168e16",
+    "mineru/parser/mineru_parser.py": "ee26543dc29856996dbbfe52629fec66c7ac63f0035340aebfc639a56b8da648",
+    "mineru/backend/analysis/pdf/pipeline.py": "9c3a166a98d242190ee2137485e8f00b0c621a79c767e710184467c453402491",
+    "mineru/backend/analysis/pdf/window.py": "655e823dd4002173e7740775d6f67296e24f6520d6b9e7b8c23e795baf4ac535",
+    "mineru/model/runtime/hybrid.py": "ac6b34a6584c668e7e6bba28be98722faf4acc443ff93ff788bfcb2fd9c2ce1a",
+    "mineru/model/runtime/memory.py": "0401bf4258b2909400039add707baeccfc843c4df7bf15ce7b66aefdb108c4d2",
+    "mineru/model/runtime/onnx.py": "e107f4ce5dc156ca3181ed6a7280ce0740e0e0ced2b35f9cd3bed0f3545a3be3",
+    "mineru/model/vlm/async_runtime.py": "df541cc225170d9a01b85b08f4ad656e9aee168e0d23aea1768c662915649887",
+    "mineru/model/vlm/runtime.py": "9cd3eb9f259c29f555cdafae5a462ba7440aa1e83b3ed7d37e0727041afea00f",
+    "docvortex/document/pdf/_document.py": "297252488ee9ec94df95d0d7b18cbff9ce6e354940953a5139f7a331f650a370",
+    "docvortex/document/pdf/render_session.py": "fa9450b9707db0dbc1669d5c2b350113023b26643660cae011c3b3a8f1bc9967"
+  },
+  "worker_source_sha256": "d9b9a9db2fe4446b5e5298a28e275c1005c56941abdb048e59d6f138af27dca4"
+}

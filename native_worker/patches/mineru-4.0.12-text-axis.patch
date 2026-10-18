@@ -1,0 +1,158 @@
+--- a/mineru/backend/analysis/pdf/text/native.py
++++ b/mineru/backend/analysis/pdf/text/native.py
+@@ -140,6 +140,14 @@
+     else:
+         median_span_height = statistics.median(span_height_list)
+ 
++    # A line's writing direction is independent of other spans on the page.
++    # Nonhorizontal source glyphs use projected character matching below;
++    # the old page-median vertical heuristic cannot establish their axis.
++    has_directional_chars = any(
++        abs(math.sin(float(char.get("writing_angle", 0.0)))) > 1e-6
++        or math.cos(float(char.get("writing_angle", 0.0))) < 0
++        for char in page_all_chars
++    )
+     useful_spans = []
+     unuseful_spans = []
+     # 纵向span的两个特征：1. 高度超过多个line 2. 高宽比超过某个值
+@@ -153,7 +161,8 @@
+                     # 新增几何词界只服务普通文字，不改变代码内容。
+                     span.metadata.setdefault("_native_tight_spacing", block[7] not in {BlockType.CODE, "algorithm"})
+                     if (
+-                        span.metadata["height"] > median_span_height * 2.3
++                        not has_directional_chars
++                        and span.metadata["height"] > median_span_height * 2.3
+                         and span.metadata["height"] > span.metadata["width"] * 2.3
+                     ):
+                         vertical_spans.append(span)
+@@ -435,6 +444,7 @@
+     span_bboxes: list[BBox],
+     grid: dict[int, list[int]],
+     grid_size: float,
++    writing_angle: float = 0.0,
+ ) -> int | None:
+     """在给定 bbox 对应的全部候选 Span 中返回几何距离最优者。"""
+     char_center_x = (char_bbox[0] + char_bbox[2]) / 2
+@@ -449,13 +459,16 @@
+             and not span_bbox[0] < char_center_x < span_bbox[2]
+         ):
+             continue
+-        if calculate_char_in_span(char_bbox, span_bbox, char_text):
++        if calculate_char_in_span(char_bbox, span_bbox, char_text, writing_angle=writing_angle):
+             matches.append(span_index)
+     if not matches:
+         return None
+     return min(
+         matches,
+-        key=lambda span_index: _span_match_rank(char_bbox, span_bboxes[span_index], span_index),
++        key=lambda span_index: _span_match_rank(
++            _project_text_axis_bbox(char_bbox, writing_angle),
++            _project_text_axis_bbox(span_bboxes[span_index], writing_angle), span_index
++        ),
+     )
+ 
+ 
+@@ -465,6 +478,7 @@
+     span_bboxes: list[BBox],
+     grid: dict[int, list[int]],
+     grid_size: float,
++    writing_angle: float = 0.0,
+ ) -> int | None:
+     """按旧 loose 顺序归属无可见字形的空白，避免重叠 Span 改变词间距。"""
+     char_center_x = (char_bbox[0] + char_bbox[2]) / 2
+@@ -477,7 +491,7 @@
+             and not span_bbox[0] < char_center_x < span_bbox[2]
+         ):
+             continue
+-        if calculate_char_in_span(char_bbox, span_bbox, char_text):
++        if calculate_char_in_span(char_bbox, span_bbox, char_text, writing_angle=writing_angle):
+             return span_index
+     return None
+ 
+@@ -626,6 +640,15 @@
+     tight_bboxes = tight_bboxes or {}
+     origins = origins or {}
+ 
++    # Protocol 34 Rust matching has no writing-angle argument. Keep that fast
++    # path for its supported horizontal coordinate frame, and use the shared
++    # Python matching algorithm for pages containing another writing axis.
++    if any(
++        abs(math.sin(float(char.get("writing_angle", 0.0)))) > 1e-6
++        or math.cos(float(char.get("writing_angle", 0.0))) < 0
++        for char in all_chars
++    ):
++        _native_text = None
+     native_contents = _owned_span_texts(_native_text, spans, median_span_height, detect_scripts)
+     if native_contents is not None and len(native_contents) != len(spans):
+         raise RuntimeError("Native content count differs from span count")
+@@ -661,6 +684,7 @@
+                     span_bboxes,
+                     grid,
+                     grid_size,
++                    writing_angle=float(char.get("writing_angle", 0.0)),
+                 )
+                 if assigned_span_indices[char_position] is not None:
+                     break
+@@ -712,7 +736,10 @@
+             if (
+                 char_text not in CONTROL_LINE_BREAK_CHARS
+                 and neighbor_owner is not None
+-                and (same_neighbor_owner or calculate_char_in_span(loose_bbox, span_bboxes[neighbor_owner], char_text))
++                and (same_neighbor_owner or calculate_char_in_span(
++                    loose_bbox, span_bboxes[neighbor_owner], char_text,
++                    writing_angle=float(char.get("writing_angle", 0.0)),
++                ))
+             ):
+                 assigned_span_indices[char_position] = neighbor_owner
+             else:
+@@ -722,6 +749,7 @@
+                     span_bboxes,
+                     grid,
+                     grid_size,
++                    writing_angle=float(char.get("writing_angle", 0.0)),
+                 )
+ 
+     for char, span_index in zip(all_chars, assigned_span_indices):
+@@ -884,13 +912,41 @@
+     return True
+ 
+ 
++def _project_text_axis_bbox(bbox: BBox, writing_angle: float) -> BBox:
++    """Express geometry in the glyph's writing frame, not page x/y axes.
++
++    Project both rectangles identically. Source angles are radians; this
++    handles all directions, including 90/180/270-degree PDF text, without
++    deriving direction from text or the heights of unrelated page spans.
++    """
++    if writing_angle == 0.0:
++        return bbox
++    cosine, sine = math.cos(writing_angle), math.sin(writing_angle)
++    corners = [(x * cosine + y * sine, -x * sine + y * cosine)
++               for x in (bbox[0], bbox[2]) for y in (bbox[1], bbox[3])]
++    return (min(p[0] for p in corners), min(p[1] for p in corners),
++            max(p[0] for p in corners), max(p[1] for p in corners))
++
++
+ def calculate_char_in_span(
+     char_bbox: BBox,
+     span_bbox: BBox,
+     char: str,
+     span_height_ratio: float = Span_Height_Ratio,
++    *,
++    writing_angle: float = 0.0,
+ ) -> bool:
+-    """根据字符中心、Span 中轴和边界标点规则判断字符是否属于 Span。"""
++    """根据同一书写坐标系的字符中心、Span 中轴和边界标点判断归属。"""
++    if writing_angle and char not in LINE_START_FLAG and char not in LINE_STOP_FLAG:
++        # Rotation of an axis-aligned enclosing box enlarges its bounds. Keep
++        # the original source-region containment before testing its text axis.
++        original_center_x = (char_bbox[0] + char_bbox[2]) / 2
++        original_center_y = (char_bbox[1] + char_bbox[3]) / 2
++        if not (span_bbox[0] < original_center_x < span_bbox[2]
++                and span_bbox[1] < original_center_y < span_bbox[3]):
++            return False
++    char_bbox = _project_text_axis_bbox(char_bbox, writing_angle)
++    span_bbox = _project_text_axis_bbox(span_bbox, writing_angle)
+     char_center_x = (char_bbox[0] + char_bbox[2]) / 2
+     char_center_y = (char_bbox[1] + char_bbox[3]) / 2
+     span_center_y = (span_bbox[1] + span_bbox[3]) / 2

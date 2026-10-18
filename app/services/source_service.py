@@ -37,7 +37,7 @@ class SourceService:
         self.allow_private_source_urls = bool(setting(settings, "allow_private_source_urls", False))
         self.max_redirects = int(setting(settings, "source_url_max_redirects", 3))
         self.timeout_seconds = float(setting(settings, "source_url_timeout_seconds", 30))
-        self.user_agent = str(setting(settings, "source_url_user_agent", "mosaicparse/0.3"))
+        self.user_agent = str(setting(settings, "source_url_user_agent", "moparse/0.5.0"))
         self.max_upload_bytes = int(setting(settings, "max_upload_bytes", 200 * 1024 * 1024))
         self._owns_client = http_client is None
         self._client = http_client or httpx.AsyncClient(

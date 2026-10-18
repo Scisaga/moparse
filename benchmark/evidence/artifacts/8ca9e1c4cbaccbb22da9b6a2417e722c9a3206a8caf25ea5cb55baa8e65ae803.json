@@ -1,0 +1,66 @@
+{
+  "schema": "header-verifier-source-freeze/1",
+  "phase": "frozen_before_new_complete_HTTP_and_holdout",
+  "frozen_utc": "2026-10-17T18:34:55.975341+00:00",
+  "source_changes_closed": true,
+  "method": "MinerU 4.0.12 Advanced TXT + independent Docling 2.139 / TableFormer V1 complete-header verification + GLM SDK scan/mixed route",
+  "settings": {
+    "NATIVE_PARSER_BACKEND": "mineru",
+    "MINERU_HEADER_VERIFIER": "docling",
+    "verifier_device": "cpu",
+    "verifier_table_mode": "accurate",
+    "verifier_matching": false,
+    "verifier_pdf_backend": "pypdfium",
+    "verifier_page_workers": 1,
+    "verifier_parser_workers": 1,
+    "verifier_cpu_threads": 4
+  },
+  "boundary": "Only last-bottom/first-top adjacent native candidate pages receive independent inference. Unique same-physical-page geometry match, whole header text/anchor/span agreement on both ends, observed source-cell-supported boundaries, title/unit/native typed furniture and complete native body context are required. Transfers header-role/geometry/scope metadata only; rejects preserve every native value and header. Per-edge allowlist prevents permission leakage. Docling-only footer roles never hide native business text. All single tables emit table-source. Whole-document native typed furniture provides hierarchical pagination evidence even on pages without tables.",
+  "native_patch_sha256": "616f44e2a1749f4b82074df36c3da852694a9401828c6c36aad62553b2a182cf",
+  "verification": {
+    "complete_pytest": "448 passed, 1 FFmpeg skip in 24.60s",
+    "ruff": "passed",
+    "mypy": "55 source files passed",
+    "cached_original14": {
+      "documents": 6,
+      "pages": 14,
+      "tables": 25,
+      "all_native_values_and_spans_unchanged": true,
+      "all_visible_page_markdown_unchanged": true
+    },
+    "complete_HTTP_and_new_holdout": "Pending parent-controlled fresh execution; no such quality/performance result is claimed by this freeze."
+  },
+  "limitations": [
+    "Cached normal continuation has only two hierarchical footer pages and remains split until a full source document supplies the independent third consecutive page.",
+    "Averaged source text-cell edges are independent geometry evidence, not an assertion that each table grid border was observed.",
+    "No speed gain is claimed for the added CPU verifier; fresh HTTP timings and runtime resources must decide."
+  ],
+  "files": {
+    "app/config.py": "70da7304ef60ba97422c36473161b74cc94578d87575044ff4746ace15a8ec5c",
+    "app/api/health.py": "28dbb1deb7b65508879b822e3441031419bc162178b72b440259d6f05f922815",
+    "app/lifespan.py": "83090cb0bf904798a44b657ba816e5ce1d41408001d46fc3f4251e174b49bed9",
+    "app/models/parse_result.py": "fa0870e011801e6dcdeda05f799246832a7d10367d11f2daeb95a00db31ab4bd",
+    "app/services/export_service.py": "8088a567770dbaef7c80bea2d8c30dda6aa8be3d46fcd58343fe37ef494375a4",
+    "app/services/parser_service.py": "9c064b771835f6b2cdc0c220d097b25a5bb56a55c0daabfa5afe9c1770e39ffd",
+    "app/services/table_service.py": "2c4452f17e54eaed6fde7e862013a8a220013e0afb92e37bcf1283e175c70065",
+    "app/parsers/mineru_native_remote.py": "2b26842924c97e6fc1dd7f7b0acf67ecee1ff5a2633615472027f9b7d096bdbe",
+    "app/services/header_verification_service.py": "25e8e71bc74332b48abad42fa5445b2bf5c12eb245ebc2cd1cd9dc591326fe71",
+    "tests/unit/test_mineru_native_remote.py": "09c18d5f4ce83ad6b2f446374b938e9619736662ecdbe82a5627b2c346a5416d",
+    "tests/unit/test_header_verification_service.py": "70a0201d35f5df7d72c1baa53b3421ae3102f347f45f9abfdcc396ee9a63f802",
+    "tests/unit/test_cross_page_headers.py": "6157b92f51ca4f119abbb8ac1dd0e5b016ee73b9810b19703a9803e7ca3733f8",
+    "tests/unit/test_quality_tuning.py": "157ab3ee116245307de247cac8036ca370a4903b9119dddeef346a0fd73cfcdf",
+    "tests/unit/test_table_structure_metadata.py": "5a427806740015b63a7c764081aecd0aec0386ea4a606406284a4826722b35c6",
+    "Dockerfile.native-worker": "a93381f34a115524568ec20121b9cff41ae6a0fb6cc786279a82282d3d70b214",
+    "native_worker/server.py": "d9b9a9db2fe4446b5e5298a28e275c1005c56941abdb048e59d6f138af27dca4",
+    "native_worker/patch_dependency.py": "9be9f5b52980d559c2acc18a8195f3d3407a4ff061147003042703df930269ab",
+    "native_worker/patches/mineru-4.0.12-text-axis.patch": "a8d2c14a6cfa94061f813b8cf1ed9554360ffc986646520d543f1c100d0d18bd",
+    "native_worker/requirements.lock.txt": "6943a9ea684ab6ea9f8468bc3af53bd3d6cc253213fb7df27aec046347c297a5"
+  },
+  "evidence_files": {
+    "benchmark/runs/header-verifier-20261018/backend-pytest.txt": "c1fbd97bf5a16ef232d9ef5625e8e255fa8a0c4219cce6e598243af2398ad0e7",
+    "benchmark/runs/header-verifier-20261018/ruff.txt": "82b3e6a6c090a57601d22943bd23fca9218d1031dbe5a7b754092f9a156b4f18",
+    "benchmark/runs/header-verifier-20261018/mypy.txt": "8e71d79dbad0b69ea084d2b82ffa1e884da682da321d892911c2549f0a4a4d72",
+    "benchmark/runs/header-verifier-20261018/cached-replay.py": "4517ab52b1a879dea683548f0071d3be0e72d31acb1618def665e8f81aabf7e2",
+    "benchmark/runs/header-verifier-20261018/cached-replay.json": "519f4660080fa0d42c49fa7241b223daf2f98a77689f878949b929f47d15b5c6"
+  }
+}

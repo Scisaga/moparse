@@ -1,0 +1,78 @@
+{
+  "schema": "moparse-dataset/1",
+  "id": "moparse-addon-20261018",
+  "version": "1.0.0",
+  "documents": "documents.jsonl",
+  "parent_dataset": {
+    "path": "benchmark/datasets/moparse-v1/dataset.json",
+    "version": "1.1.0",
+    "sha256": "ef79743aaa25fcb8a63805b89a43445cb28521359df32b0927a428fc07746453"
+  },
+  "artifacts": [
+    {
+      "path": "documents.jsonl",
+      "sha256": "3c20ee52be034182ce67cd03151fde9cdb7dd91bc8b336936d8caf4de505cd1d"
+    },
+    {
+      "path": "annotations/fresh7.assertions.json",
+      "sha256": "8da34499ea3ed33cadcb044a352671010207c4fd30819bdafe2201303168b40c"
+    },
+    {
+      "path": "annotations/fresh7/gold-seal.json",
+      "sha256": "fa3b5a2a074998a82d7ce5a7c27bca85b758c2513f2d6c9d87932127652e9b68"
+    },
+    {
+      "path": "annotations/fresh7/source-records.json",
+      "sha256": "def057d8cb95ec474741223aee60e2a568b877139c2f729954a683245ddde15a"
+    },
+    {
+      "path": "annotations/fresh7/source-images-manifest.json",
+      "sha256": "4bcce09e5f7231f7d217e6b499daf46ae450d75be8421ffae854602776eb4144"
+    },
+    {
+      "path": "annotations/fresh7/path-relocation-proof.json",
+      "sha256": "45fa0a9d80c5d706b6c4e589f3096109ba0ed58093fb55bae8cdd76ecea2b429"
+    },
+    {
+      "path": "annotations/fresh7/initial-provisional-seal.json",
+      "sha256": "05df5fe94ea5721c1fb0857118c79dcec36497ed839d2c3cbb7ba7ab40700bcc"
+    },
+    {
+      "path": "annotations/fresh7/download-provenance.json",
+      "sha256": "46f9462df7b363e2607eed5e72f4f30b679201a77efa077fa790b7fd0aaa5f48"
+    }
+  ],
+  "cohorts": [
+    {
+      "id": "fresh7-20261018",
+      "document_ids": [
+        "nasa-maax-factsheet",
+        "gsa-sf95-2007",
+        "nara-telegram-32171186"
+      ],
+      "whole_documents": true,
+      "annotation": "annotations/fresh7.assertions.json"
+    }
+  ],
+  "policy": {
+    "role": "independent addendum source-only first-use holdout",
+    "whole_original_documents_only": true,
+    "source_originals_private": true,
+    "no_candidate_output_or_scoring_access_by_annotator": true,
+    "main_dataset_or_prior_gold_changed": false,
+    "coverage": "partial source assertions; not whole-document semantic accuracy"
+  },
+  "holdout": {
+    "sealed_at": "2026-10-17T19:31:24.906106+00:00",
+    "model_outputs_seen_at_seal": false,
+    "gold_sha256": "8da34499ea3ed33cadcb044a352671010207c4fd30819bdafe2201303168b40c",
+    "document_count": 3,
+    "physical_pages": 7,
+    "source_families": [
+      "nasa-maax-smex-two-page-factsheet",
+      "gsa-doj-sf95-2007-blank-claim-form",
+      "nara-jfk-state-telegram-1963-image-scans"
+    ],
+    "public_pretraining_exposure_unknown": true
+  }
+}

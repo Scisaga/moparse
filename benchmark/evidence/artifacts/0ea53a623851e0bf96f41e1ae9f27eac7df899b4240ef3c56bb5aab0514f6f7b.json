@@ -1,0 +1,107 @@
+{
+  "schema": "moparse-posthoc-unannotated-source-failure/1",
+  "at": "2026-10-17T23:08:35.893780+00:00",
+  "source_document_id": "nasa-maax-factsheet",
+  "physical_page": 2,
+  "source_image_private_preserved": {
+    "path": "benchmark/datasets/moparse-addon-20261018/source-images/nasa-maax-factsheet-p02.png",
+    "sha256": "782d3a4d0adb4ce6cb5213083949275f2826152e3ca992ebf2db931be4686609",
+    "bytes": 1741567
+  },
+  "source_PDF": {
+    "schema": "moparse-document/1",
+    "id": "nasa-maax-factsheet",
+    "source_path": "benchmark/datasets/moparse-addon-20261018/sources/nasa-maax-factsheet.pdf",
+    "sha256": "79ab8e7686605ece7144aaa7d1d95e0c43dc4066ad35db9629f7b10075369411",
+    "page_count": 2,
+    "title": "NASA-hosted MAAX mission proposal factsheet",
+    "split": "holdout",
+    "exposure": "unseen_at_freeze",
+    "leakage_group": "nasa-maax-smex-two-page-factsheet",
+    "template_family": "nasa-maax-smex-two-page-factsheet",
+    "origin": {
+      "id": "nasa-maax-factsheet",
+      "download_url": "https://science.nasa.gov/wp-content/uploads/2023/11/maax-submitted-dec7-2022-factsheet.pdf",
+      "resolved_url": "https://science.nasa.gov/wp-content/uploads/2023/11/maax-submitted-dec7-2022-factsheet.pdf",
+      "downloaded_at": "2026-10-17T19:26:16.022646+00:00",
+      "status": 200,
+      "content_type": "application/pdf",
+      "bytes": 1405078,
+      "sha256": "79ab8e7686605ece7144aaa7d1d95e0c43dc4066ad35db9629f7b10075369411",
+      "path": "benchmark/runs/fresh-sealed-after-repair-20261018/sources/nasa-maax-factsheet.pdf",
+      "rights_note_source_only": "No blanket document license is printed. The first page credits 'Courtesy of Bud Kuenzli via NASA' and 'Christy Turner Photography courtesy of Auroasaurus'. No rights for those third-party images are inferred."
+    },
+    "source_properties": {
+      "route_evidence": "native text",
+      "pages": [
+        {
+          "physical_page": 1,
+          "pdf_points": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "native_text_characters": 3963,
+          "embedded_images": 25,
+          "render_dpi": 300,
+          "image_path": "benchmark/datasets/moparse-addon-20261018/source-images/nasa-maax-factsheet-p01.png",
+          "image_sha256": "b328af27d47f05883f3a51d186e6b224cc6d4e65be38af95b8e31dd01b7f77cc",
+          "visually_reviewed": true
+        },
+        {
+          "physical_page": 2,
+          "pdf_points": [
+            0.0,
+            0.0,
+            612.0,
+            792.0
+          ],
+          "native_text_characters": 3278,
+          "embedded_images": 8,
+          "render_dpi": 300,
+          "image_path": "benchmark/datasets/moparse-addon-20261018/source-images/nasa-maax-factsheet-p02.png",
+          "image_sha256": "782d3a4d0adb4ce6cb5213083949275f2826152e3ca992ebf2db931be4686609",
+          "visually_reviewed": true
+        }
+      ]
+    },
+    "whole_original_pdf": true,
+    "cropped_or_reassembled_input": false
+  },
+  "V4_public_MD": {
+    "path": "benchmark/runs/header-v4-http-20261018/fresh7/cases/nasa-maax-factsheet/result.md",
+    "sha256": "e15faf335064e209f0075cad4ef41279148d6af54cef6292b07338830a4d3bc5",
+    "bytes": 17508
+  },
+  "baseline_public_MD": {
+    "path": "benchmark/runs/production-baseline-20261018/fresh7/cases/nasa-maax-factsheet/result.md",
+    "sha256": "99c5cbcaaef9d03ee4ed6a563affbf7f8811e98571b462fed37d2d12541eec09",
+    "bytes": 4318
+  },
+  "source_region": "Bottom Schedule Summary monthlyGantt FY23–FY29/CY23–CY29",
+  "actual_public_table": {
+    "id": "mineru_p2_t5",
+    "rows": 3,
+    "columns": 313,
+    "Launch_occurrences_in_entire_V4_document": 126,
+    "Masseset_occurrences": 34,
+    "50consecutive5_occurrences": 5
+  },
+  "baseline": {
+    "MD_bytes": 4318,
+    "Launch_occurrences": 1,
+    "Masseset_occurrences": 0,
+    "50consecutive5_occurrences": 0
+  },
+  "source_manual_reviewers": [
+    "benchmark subagent viewed originalpage2",
+    "root confirmed seriousNASA schedulehallucination"
+  ],
+  "source_contains_repeated_Launch_Masseset_or_long5_sequences": false,
+  "root_release_decision": "blocked-new-source-schedule-hallucination",
+  "root_cause_attribution": "Pending independent read-only audit; publicoutput failure confirmed, not yet assigned to model OTSL vs SDK/source recovery/adapter",
+  "cost_fixed_grid_fail_explanation": "Expected10x4 includes mergedCostSummary title. Actual9x4 omits titlefromgrid but preserves it asparagraph; remaining9rows/allamounts/footnotes exact. Titlecolspan absent. Separate from unannotatedschedule failure.",
+  "frozen28_changed_or_extended": false,
+  "new_model_or_HTTP_requests": false
+}

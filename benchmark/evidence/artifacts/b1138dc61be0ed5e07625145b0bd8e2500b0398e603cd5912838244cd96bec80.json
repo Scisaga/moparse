@@ -1,0 +1,20 @@
+{
+  "id": "1206337604",
+  "source": "benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/sources/1206337604/source-converted.pdf",
+  "source_sha256": "ccff40771d75e9412b65f364a1c72c1733c37b4d8f232f49cf639621f0ba165f",
+  "page_count": 2,
+  "submit_http_status": 200,
+  "http_status": 200,
+  "status": "completed",
+  "submit_to_saved_MD_seconds": 1.866672992007807,
+  "job": "job_01M55N39E0VNMCJ11VBPK2E6XK",
+  "submit_to_terminal_seconds": 1.8746945339953527,
+  "poll_count": 1,
+  "final_http_status": 200,
+  "MD_SHA256": "649778d8b6174ba2984c7dd6d0daa696ad366a016eea955fe470f46c88c3b803",
+  "persisted_MD_SHA256": "649778d8b6174ba2984c7dd6d0daa696ad366a016eea955fe470f46c88c3b803",
+  "response_and_persisted_MD_equal": true,
+  "assets": [],
+  "full_capture_seconds": 1.9026190610602498,
+  "duration_seconds": 1.9026190610602498
+}

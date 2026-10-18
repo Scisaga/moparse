@@ -1,0 +1,140 @@
+{
+  "schema": "moparse-header-stage-cohort-observation/1",
+  "observed_at": "2026-10-18T03:26:34.328886+00:00",
+  "cohort_id": "regression-504",
+  "capture_directory": "benchmark/runs/table-syntax-v7-http-20261018/regression504",
+  "dataset": {
+    "path": "benchmark/datasets/moparse-v1/dataset.json",
+    "sha256": "ef79743aaa25fcb8a63805b89a43445cb28521359df32b0927a428fc07746453",
+    "bytes": 5879
+  },
+  "actual_storage_identity": {
+    "container": "moparse-candidate-table-v7",
+    "container_id": "0e96848093a39b8def0a1684890a284bef53a7607bd50834c75faba937ebedf0",
+    "deployed_image_id": "sha256:3a2c30f2b67172232aabd24c636e425a2333f3b127dde386c513bb0e3198da19",
+    "data_volume": {
+      "Type": "volume",
+      "Name": "moparse-candidate-table-v7-data",
+      "Source": "/var/lib/docker/volumes/moparse-candidate-table-v7-data/_data",
+      "Destination": "/data",
+      "RW": true
+    },
+    "deployment": {
+      "path": "benchmark/runs/table-syntax-v7-http-20261018/deployment-before.json",
+      "sha256": "8f9cec00bcb078b9080c949bcf7402e9a772eb3d08a64f4b16263519f6c37b14",
+      "bytes": 100289
+    },
+    "container_environment_read": false
+  },
+  "expected_documents": 11,
+  "completed_HTTP_documents": 11,
+  "timing_recorded_documents": 9,
+  "completed_documents_without_measured_stage": 2,
+  "not_yet_completed_documents": 0,
+  "observed_stage_wall_clock_seconds": 801.105,
+  "full_cohort_stage_wall_clock_seconds": null,
+  "observed_unique_document_pages": 164,
+  "observed_candidate_pairs": 111,
+  "observed_accepted_pairs": 4,
+  "observation_status_counts": {
+    "observed": 9,
+    "unknown_no_selected_code; absence_not_zero": 2
+  },
+  "percase_observations": [
+    {
+      "path": "benchmark/evidence/artifacts/e0bfe73dddea10a92a9ea1992b97032a676c167b441dd1b52d2ee6d53a6fcec9.json",
+      "sha256": "e0bfe73dddea10a92a9ea1992b97032a676c167b441dd1b52d2ee6d53a6fcec9",
+      "bytes": 2473,
+      "original_path": "benchmark/runs/table-syntax-v7-http-20261018/header-stage/regression504/1206337604.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/9e5742917aa252657eae8bd9898a9bda04cd4dac9a26cc7c30eb1e991ec4edd4.json",
+      "sha256": "9e5742917aa252657eae8bd9898a9bda04cd4dac9a26cc7c30eb1e991ec4edd4",
+      "bytes": 2473,
+      "original_path": "benchmark/runs/table-syntax-v7-http-20261018/header-stage/regression504/1210860446.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/eb047812477679c0d6c72d138dc537effa909ce36b22a1bf7ab2d7a5924b2ec0.json",
+      "sha256": "eb047812477679c0d6c72d138dc537effa909ce36b22a1bf7ab2d7a5924b2ec0",
+      "bytes": 2363,
+      "original_path": "benchmark/runs/table-syntax-v7-http-20261018/header-stage/regression504/1211290753.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/1228beafa8aa5cf7a5e3513c2e4beaca0e04e15e6f3cbbae0c32c3d56881ae4e.json",
+      "sha256": "1228beafa8aa5cf7a5e3513c2e4beaca0e04e15e6f3cbbae0c32c3d56881ae4e",
+      "bytes": 2498,
+      "original_path": "benchmark/runs/table-syntax-v7-http-20261018/header-stage/regression504/1219858186.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/c0c2a0358407b17ae90e89d035cfa4c82f63f3b7c6878537b2bdfee8c8682f90.json",
+      "sha256": "c0c2a0358407b17ae90e89d035cfa4c82f63f3b7c6878537b2bdfee8c8682f90",
+      "bytes": 2500,
+      "original_path": "benchmark/runs/table-syntax-v7-http-20261018/header-stage/regression504/1225473526.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/2f90a0082d0ea916caa90244f5024e6a9aa3f75f3d3f320fed03e8665c17f9a6.json",
+      "sha256": "2f90a0082d0ea916caa90244f5024e6a9aa3f75f3d3f320fed03e8665c17f9a6",
+      "bytes": 2487,
+      "original_path": "benchmark/runs/table-syntax-v7-http-20261018/header-stage/regression504/1225474139.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/36be9ee1258bb6bb98880c69fc93dc271f1129b42fb59404304620dfdee661e4.json",
+      "sha256": "36be9ee1258bb6bb98880c69fc93dc271f1129b42fb59404304620dfdee661e4",
+      "bytes": 2473,
+      "original_path": "benchmark/runs/table-syntax-v7-http-20261018/header-stage/regression504/1225474693.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/073d89fd9a4970f03306c36cc0d7025ae76d3d5a9f87ab20d27d683d04e6aa5c.json",
+      "sha256": "073d89fd9a4970f03306c36cc0d7025ae76d3d5a9f87ab20d27d683d04e6aa5c",
+      "bytes": 3358,
+      "original_path": "benchmark/runs/table-syntax-v7-http-20261018/header-stage/regression504/1225474739.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/8d4bfce9813a475621a2c4107596091e56e7eede0e7a9572468f63e5a7ebb5d9.json",
+      "sha256": "8d4bfce9813a475621a2c4107596091e56e7eede0e7a9572468f63e5a7ebb5d9",
+      "bytes": 2366,
+      "original_path": "benchmark/runs/table-syntax-v7-http-20261018/header-stage/regression504/1225475333.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/bf927128cda1b30128919d6034db9cd43bd07c2802adccfe998e517d44b2a487.json",
+      "sha256": "bf927128cda1b30128919d6034db9cd43bd07c2802adccfe998e517d44b2a487",
+      "bytes": 2843,
+      "original_path": "benchmark/runs/table-syntax-v7-http-20261018/header-stage/regression504/1225475375.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/18ca677445d239cecdb5b34150bcfd00cdad9765cd0c6d766a752b5fa15c1bf8.json",
+      "sha256": "18ca677445d239cecdb5b34150bcfd00cdad9765cd0c6d766a752b5fa15c1bf8",
+      "bytes": 2996,
+      "original_path": "benchmark/runs/table-syntax-v7-http-20261018/header-stage/regression504/1225475642.json",
+      "snapshot_bytes_unchanged": true
+    }
+  ],
+  "source_producer_sha256": {
+    "app/services/header_verification_service.py": "25e8e71bc74332b48abad42fa5445b2bf5c12eb245ebc2cd1cd9dc591326fe71",
+    "app/services/storage_service.py": "998dd7996e54204580e11c0069418637f8433821e0b293f806e4280fadf72dec"
+  },
+  "policy": {
+    "missing_code_is_zero": false,
+    "other_warning_content_exported": false,
+    "additional_inference_or_API_requests": false,
+    "whole_pipeline_or_GPU_inference_time": false,
+    "full_cohort_total_requires_all_documents_observed": true,
+    "scope": "Sum of recorded independent header-verification elapsed wall clocks only; coverage k/n explicit; absent records remain unknown; do not substitute for upload-through-Markdown latency"
+  },
+  "finalized": true,
+  "extractor": {
+    "path": "benchmark/runs/table-syntax-v7-http-20261018/extract_header_stage.py",
+    "sha256": "26122b796b1dbdbc56cb4e69f4b037029c329e4736c7b5f94e6e5492e40ba622",
+    "bytes": 11443
+  }
+}

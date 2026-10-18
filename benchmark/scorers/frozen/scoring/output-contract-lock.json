@@ -1,0 +1,31 @@
+{
+  "schema_version": "clean-common-output-lock/1",
+  "version": "1.1.0",
+  "frozen_at": "2026-10-16T00:41:38.329722+08:00",
+  "files": [
+    {
+      "path": "benchmark-results/clean-model-comparison-20261015/scoring/faithful-gfm.py",
+      "sha256": "14c816652fcd343e0fd9d0fc3ab0a920e987140da95a1975892fac3c257a680d"
+    },
+    {
+      "path": "benchmark-results/clean-model-comparison-20261015/scoring/official-native-export.py",
+      "sha256": "eed697ea47a7c20d956f2957ad1a7ab6aebab395f2acdbaaec82800421bc50a2"
+    },
+    {
+      "path": "benchmark-results/clean-model-comparison-20261015/scoring/test-faithful-gfm.py",
+      "sha256": "fe37c9b8370bef312402da6c720a2b65eca746bec04954fcdf322f9b5859ac92"
+    },
+    {
+      "path": "benchmark-results/clean-model-comparison-20261015/scoring/faithful-gfm-tests.json",
+      "sha256": "bf43e9350e378e2ac26d951efb550802c5686de4e09978ca6794328affaa3783"
+    },
+    {
+      "path": "benchmark-results/clean-model-comparison-20261015/scoring/faithful-output-contract.md",
+      "sha256": "8fcbbf7afce0ff2f65705563d448905b6f2c62d0321a080492d45d8b7eaa2414"
+    }
+  ],
+  "common_environment_python": "benchmark-results/model-upgrade-20261015/docling-2.139.0-eval/.venv/bin/python",
+  "common_docling_core": "2.101.1",
+  "inference_environments_unchanged": true,
+  "exporter_tests_passed": 11
+}

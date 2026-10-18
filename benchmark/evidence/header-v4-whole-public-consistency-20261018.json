@@ -1,0 +1,53 @@
+{
+  "schema": "moparse-evidence/1",
+  "id": "header-v4-whole-public-consistency-20261018",
+  "method_id": "mineru-advanced-txt-vllm-c2-docling-header-glm-v4",
+  "cohort_id": "regression-504",
+  "origin": "fresh_component",
+  "fresh_model_inference": false,
+  "new_HTTP_requests": false,
+  "output_stage": "diagnostic-only",
+  "quality": {},
+  "performance": {},
+  "provenance": [
+    {
+      "path": "benchmark/evidence/artifacts/32e5568c57ad9dad5ad45369d61d39f43d004de5300d33b1fbee51d675d52cd5.json",
+      "sha256": "32e5568c57ad9dad5ad45369d61d39f43d004de5300d33b1fbee51d675d52cd5",
+      "bytes": 240163,
+      "original_path": "benchmark/runs/header-v4-http-20261018/V3-V4-complete11docs504pages-consistency.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/571b1adcae6af9d8c79558a3a780470a89a3271998341206de1a721ca353c926.json",
+      "sha256": "571b1adcae6af9d8c79558a3a780470a89a3271998341206de1a721ca353c926",
+      "bytes": 8803,
+      "original_path": "benchmark/runs/header-v4-http-20261018/source130/source-review.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/0595608b76b15c806d24cc7cf9a46acd21deaadc9d5ea10152e9e42dde0c6ae5.py",
+      "sha256": "0595608b76b15c806d24cc7cf9a46acd21deaadc9d5ea10152e9e42dde0c6ae5",
+      "bytes": 9348,
+      "original_path": "benchmark/runs/header-v4-http-20261018/compare_v3_v4_public.py",
+      "snapshot_bytes_unchanged": true
+    }
+  ],
+  "public_output_observation": {
+    "same_source_documents": 11,
+    "same_source_pages": 504,
+    "same_raw_grid_span_header_and_source_tables": 670,
+    "changed_tables": 0,
+    "raw_exact_body_pages": 501,
+    "body_pages_with_only_whitespace_change": 1,
+    "body_pages_with_only_fullwidth_ASCII_change": 1,
+    "body_pages_with_extra_genuine_numeric_character_error": 1,
+    "cross_window104105_logical_table_unchanged": true
+  },
+  "qualification": {
+    "observation_only": true,
+    "deployment_acceptance": false,
+    "unannotated_source_accuracy_claim": false,
+    "fullbody_zero_regression_claim": false,
+    "gold_or_score_or_output_changed": false
+  }
+}

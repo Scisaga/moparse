@@ -1,0 +1,27 @@
+{
+  "schema_version": "source-coordinate-view-contract/1",
+  "version": "1.0.0",
+  "frozen_at": "2026-10-15T16:58:47.685411+00:00",
+  "no_text_span_role_or_source_change": true,
+  "no_input_rotation_override": true,
+  "final_readback_uses_only_id_bound_coordinate_sidecar": true,
+  "official_affine_including_half_pixel": true,
+  "files": [
+    {
+      "path": "benchmark-results/clean-model-comparison-20261015/scoring/source-coordinate-view.py",
+      "sha256": "20fa0f3375439abf2e133bc5c50eb11bb67b9ab872ce37561af09dcf69ab493d"
+    },
+    {
+      "path": "benchmark-results/clean-model-comparison-20261015/scoring/source-pdf-page-sizes.json",
+      "sha256": "80408ccadc1fdab1ef0234e827129c82db5136fe90c1c4cef29fd087d0ac06dd"
+    },
+    {
+      "path": "benchmark-results/clean-model-comparison-20261015/scoring/test-source-coordinate-view.py",
+      "sha256": "728284e3c40bebc4d555be286a04f31eb04752c9b2b94b2d7ae9063142285634"
+    },
+    {
+      "path": "benchmark-results/clean-model-comparison-20261015/scoring/source-coordinate-tests.json",
+      "sha256": "4a349eca738b9572a57684483b7eb36268707a313caf0adba760c217cfb51ccf"
+    }
+  ]
+}

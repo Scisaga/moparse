@@ -213,6 +213,27 @@ class StorageService:
             temporary.unlink(missing_ok=True)
             raise
 
+    async def write_native_evidence(self, job_id: str, content: bytes) -> Path:
+        """Keep the unmodified worker response privately with the owning job.
+
+        This path is neither an indexed asset nor a public result endpoint. Job
+        retention/deletion removes it together with the input and other logs.
+        """
+        await self.create_job_layout(job_id)
+        target = self.logs_dir(job_id) / "mineru-native-worker.json"
+        await asyncio.to_thread(self._atomic_write, target, content)
+        return target
+
+    async def write_source_verification_evidence(
+        self, job_id: str, evidence: dict[str, object]
+    ) -> Path:
+        """Retain source/model observations without publishing private geometry."""
+        await self.create_job_layout(job_id)
+        target = self.logs_dir(job_id) / "native-source-verification.json"
+        content = json.dumps(evidence, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
+        await asyncio.to_thread(self._atomic_write, target, content)
+        return target
+
     async def write_result(self, job_id: str, result: DocumentParseResult) -> StoredResultPaths:
         await self.create_job_layout(job_id)
         output = self.output_dir(job_id)
@@ -394,7 +415,9 @@ class StorageService:
         path = self.result_path(job_id)
         if path is None:
             raise FileNotFoundError(job_id)
-        return await asyncio.to_thread(path.read_text, encoding="utf-8")
+        # Preserve the same UTF-8 bytes returned by the initial parse response,
+        # including original PDF literal regions with CRLF or CR line endings.
+        return (await asyncio.to_thread(path.read_bytes)).decode("utf-8")
 
     async def read_asset_index(self, job_id: str) -> dict[str, object]:
         path = self.output_dir(job_id) / "asset-index.json"

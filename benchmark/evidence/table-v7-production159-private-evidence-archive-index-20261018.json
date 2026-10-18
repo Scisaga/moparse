@@ -1,0 +1,38 @@
+{
+  "schema": "moparse-evidence/1",
+  "id": "table-v7-production159-private-evidence-archive-index-20261018",
+  "method_id": "mineru-advanced-txt-vllm-c2-docling-source-glm-v7",
+  "cohort_id": "production-smoke-159",
+  "origin": "fresh_component",
+  "fresh_model_inference": false,
+  "output_stage": "diagnostic-only",
+  "quality": {},
+  "performance": {},
+  "provenance": [
+    {
+      "path": "benchmark/evidence/artifacts/226c36ca3047290fe8d50823f0c403dc9fc9fc3d81a56f55188e1d863d4d8273.json",
+      "sha256": "226c36ca3047290fe8d50823f0c403dc9fc9fc3d81a56f55188e1d863d4d8273",
+      "bytes": 481,
+      "original_path": "benchmark/runs/production-release-v7-20261018/private-evidence/archive-receipt.json",
+      "snapshot_bytes_unchanged": true
+    }
+  ],
+  "qualification": {
+    "archive_only": true,
+    "quality_reassessed": false,
+    "private_originals_or_raw_HTML_or_glyphs_exported": false
+  },
+  "private_manifest_reference": {
+    "path": "benchmark/runs/production-release-v7-20261018/private-evidence/manifest.json",
+    "sha256": "252b6640ed3b04c454ea3de13ce07daf37b8506c6cc8d236be3729ce4510a4b8",
+    "bytes": 50305
+  },
+  "archive_scope": {
+    "files": 85,
+    "actual_API_status_counts": {
+      "completed": 6,
+      "partial": 1
+    },
+    "quality_fully_resolved": false
+  }
+}

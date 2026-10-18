@@ -1,0 +1,1348 @@
+{
+  "schema": "mosaicparse-additional-original-p62-table-reference/1",
+  "created_UTC": "2026-10-17T13:45:43.688089+00:00",
+  "builder_SHA256": "4ffc6859436465b6c77fe2fa77cc51387c911ed0ae352bc7261fd77c8551985c",
+  "source_pdf": "pdf_sample/1225475375.pdf",
+  "source_SHA256": "5eef30b5c544d76df917d56df76a665ed13b5e6ffebdc54ab0eea0a47b7589d6",
+  "source_total_pages": 119,
+  "source_physical_page": 62,
+  "printed_page": "55",
+  "source_page_rotation": 270,
+  "source_review_rotation": 0,
+  "independence": {
+    "model_or_parser_output_read": false,
+    "old_gold_or_main_reference_modified": false,
+    "scope": "Extra p62-only original-PDF evidence, explicitly outside the fixed 14-page trial denominator."
+  },
+  "source_title": "4.按坏账计提方法分类披露",
+  "grid_rows": 9,
+  "grid_columns": 11,
+  "header_rows_zero_based": [
+    0,
+    1,
+    2
+  ],
+  "body_rows_zero_based": [
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "rows_raw": [
+    [
+      "类别",
+      "期末余额",
+      "",
+      "",
+      "",
+      "",
+      "期初余额",
+      "",
+      "",
+      "",
+      ""
+    ],
+    [
+      "",
+      "账面余额",
+      "",
+      "坏账准备",
+      "",
+      "账面\n价值",
+      "账面余额",
+      "",
+      "坏账准备",
+      "",
+      "账面\n价值"
+    ],
+    [
+      "",
+      "金额",
+      "比例（%）",
+      "金额",
+      "计提比例\n（%）",
+      "",
+      "金额",
+      "比例（%）",
+      "金额",
+      "计提比例\n（%）",
+      ""
+    ],
+    [
+      "按单项计提坏账准备",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    [
+      "按组合计提坏账准备",
+      "1,350,072.47",
+      "100.00",
+      "6,750.36",
+      "0.50",
+      "1,343,322.11",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    [
+      "其中：",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    [
+      "银行承兑票据",
+      "1,350,072.47",
+      "100.00",
+      "6,750.36",
+      "0.50",
+      "1,343,322.11",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    [
+      "商业承兑票据",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    [
+      "合计",
+      "1,350,072.47",
+      "100.00",
+      "6,750.36",
+      "0.50",
+      "1,343,322.11",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ]
+  ],
+  "spans": [
+    [
+      0,
+      0,
+      3,
+      1
+    ],
+    [
+      0,
+      1,
+      1,
+      5
+    ],
+    [
+      0,
+      6,
+      1,
+      5
+    ],
+    [
+      1,
+      1,
+      1,
+      2
+    ],
+    [
+      1,
+      3,
+      1,
+      2
+    ],
+    [
+      1,
+      5,
+      2,
+      1
+    ],
+    [
+      1,
+      6,
+      1,
+      2
+    ],
+    [
+      1,
+      8,
+      1,
+      2
+    ],
+    [
+      1,
+      10,
+      2,
+      1
+    ]
+  ],
+  "physical_cells": [
+    {
+      "row_zero_based": 0,
+      "column_zero_based": 0,
+      "rowspan": 3,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        68.40999984741211,
+        107.59000015258789,
+        168.1999969482422,
+        177.3300018310547
+      ],
+      "text": "类别"
+    },
+    {
+      "row_zero_based": 0,
+      "column_zero_based": 1,
+      "rowspan": 1,
+      "colspan": 5,
+      "bbox_PDF_points_upright": [
+        168.1999969482422,
+        107.59000015258789,
+        473.04998779296875,
+        130.0800018310547
+      ],
+      "text": "期末余额"
+    },
+    {
+      "row_zero_based": 0,
+      "column_zero_based": 6,
+      "rowspan": 1,
+      "colspan": 5,
+      "bbox_PDF_points_upright": [
+        473.04998779296875,
+        107.59000015258789,
+        782.1400146484375,
+        130.0800018310547
+      ],
+      "text": "期初余额"
+    },
+    {
+      "row_zero_based": 1,
+      "column_zero_based": 1,
+      "rowspan": 1,
+      "colspan": 2,
+      "bbox_PDF_points_upright": [
+        168.1999969482422,
+        130.0800018310547,
+        286.04998779296875,
+        152.3300018310547
+      ],
+      "text": "账面余额"
+    },
+    {
+      "row_zero_based": 1,
+      "column_zero_based": 3,
+      "rowspan": 1,
+      "colspan": 2,
+      "bbox_PDF_points_upright": [
+        286.04998779296875,
+        130.0800018310547,
+        400.29998779296875,
+        152.3300018310547
+      ],
+      "text": "坏账准备"
+    },
+    {
+      "row_zero_based": 1,
+      "column_zero_based": 5,
+      "rowspan": 2,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        400.29998779296875,
+        130.0800018310547,
+        473.04998779296875,
+        177.3300018310547
+      ],
+      "text": "账面\n价值"
+    },
+    {
+      "row_zero_based": 1,
+      "column_zero_based": 6,
+      "rowspan": 1,
+      "colspan": 2,
+      "bbox_PDF_points_upright": [
+        473.04998779296875,
+        130.0800018310547,
+        591.8499755859375,
+        152.3300018310547
+      ],
+      "text": "账面余额"
+    },
+    {
+      "row_zero_based": 1,
+      "column_zero_based": 8,
+      "rowspan": 1,
+      "colspan": 2,
+      "bbox_PDF_points_upright": [
+        591.8499755859375,
+        130.0800018310547,
+        703.5499877929688,
+        152.3300018310547
+      ],
+      "text": "坏账准备"
+    },
+    {
+      "row_zero_based": 1,
+      "column_zero_based": 10,
+      "rowspan": 2,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        703.5499877929688,
+        130.0800018310547,
+        782.1400146484375,
+        177.3300018310547
+      ],
+      "text": "账面\n价值"
+    },
+    {
+      "row_zero_based": 2,
+      "column_zero_based": 1,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        168.1999969482422,
+        152.3300018310547,
+        242.25,
+        177.3300018310547
+      ],
+      "text": "金额"
+    },
+    {
+      "row_zero_based": 2,
+      "column_zero_based": 2,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        242.25,
+        152.3300018310547,
+        286.04998779296875,
+        177.3300018310547
+      ],
+      "text": "比例（%）"
+    },
+    {
+      "row_zero_based": 2,
+      "column_zero_based": 3,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        286.04998779296875,
+        152.3300018310547,
+        344.1000061035156,
+        177.3300018310547
+      ],
+      "text": "金额"
+    },
+    {
+      "row_zero_based": 2,
+      "column_zero_based": 4,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        344.1000061035156,
+        152.3300018310547,
+        400.29998779296875,
+        177.3300018310547
+      ],
+      "text": "计提比例\n（%）"
+    },
+    {
+      "row_zero_based": 2,
+      "column_zero_based": 6,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        473.04998779296875,
+        152.3300018310547,
+        550.5,
+        177.3300018310547
+      ],
+      "text": "金额"
+    },
+    {
+      "row_zero_based": 2,
+      "column_zero_based": 7,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        550.5,
+        152.3300018310547,
+        591.8499755859375,
+        177.3300018310547
+      ],
+      "text": "比例（%）"
+    },
+    {
+      "row_zero_based": 2,
+      "column_zero_based": 8,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        591.8499755859375,
+        152.3300018310547,
+        654.5999755859375,
+        177.3300018310547
+      ],
+      "text": "金额"
+    },
+    {
+      "row_zero_based": 2,
+      "column_zero_based": 9,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        654.5999755859375,
+        152.3300018310547,
+        703.5499877929688,
+        177.3300018310547
+      ],
+      "text": "计提比例\n（%）"
+    },
+    {
+      "row_zero_based": 3,
+      "column_zero_based": 0,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        68.40999984741211,
+        177.3300018310547,
+        168.1999969482422,
+        199.5800018310547
+      ],
+      "text": "按单项计提坏账准备"
+    },
+    {
+      "row_zero_based": 3,
+      "column_zero_based": 1,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        168.1999969482422,
+        177.3300018310547,
+        242.25,
+        199.5800018310547
+      ],
+      "text": ""
+    },
+    {
+      "row_zero_based": 3,
+      "column_zero_based": 2,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        242.25,
+        177.3300018310547,
+        286.04998779296875,
+        199.5800018310547
+      ],
+      "text": ""
+    },
+    {
+      "row_zero_based": 3,
+      "column_zero_based": 3,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        286.04998779296875,
+        177.3300018310547,
+        344.1000061035156,
+        199.5800018310547
+      ],
+      "text": ""
+    },
+    {
+      "row_zero_based": 3,
+      "column_zero_based": 4,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        344.1000061035156,
+        177.3300018310547,
+        400.29998779296875,
+        199.5800018310547
+      ],
+      "text": ""
+    },
+    {
+      "row_zero_based": 3,
+      "column_zero_based": 5,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        400.29998779296875,
+        177.3300018310547,
+        473.04998779296875,
+        199.5800018310547
+      ],
+      "text": ""
+    },
+    {
+      "row_zero_based": 3,
+      "column_zero_based": 6,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        473.04998779296875,
+        177.3300018310547,
+        550.5,
+        199.5800018310547
+      ],
+      "text": ""
+    },
+    {
+      "row_zero_based": 3,
+      "column_zero_based": 7,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        550.5,
+        177.3300018310547,
+        591.8499755859375,
+        199.5800018310547
+      ],
+      "text": ""
+    },
+    {
+      "row_zero_based": 3,
+      "column_zero_based": 8,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        591.8499755859375,
+        177.3300018310547,
+        654.5999755859375,
+        199.5800018310547
+      ],
+      "text": ""
+    },
+    {
+      "row_zero_based": 3,
+      "column_zero_based": 9,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        654.5999755859375,
+        177.3300018310547,
+        703.5499877929688,
+        199.5800018310547
+      ],
+      "text": ""
+    },
+    {
+      "row_zero_based": 3,
+      "column_zero_based": 10,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        703.5499877929688,
+        177.3300018310547,
+        782.1400146484375,
+        199.5800018310547
+      ],
+      "text": ""
+    },
+    {
+      "row_zero_based": 4,
+      "column_zero_based": 0,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        68.40999984741211,
+        199.5800018310547,
+        168.1999969482422,
+        221.8300018310547
+      ],
+      "text": "按组合计提坏账准备"
+    },
+    {
+      "row_zero_based": 4,
+      "column_zero_based": 1,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        168.1999969482422,
+        199.5800018310547,
+        242.25,
+        221.8300018310547
+      ],
+      "text": "1,350,072.47"
+    },
+    {
+      "row_zero_based": 4,
+      "column_zero_based": 2,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        242.25,
+        199.5800018310547,
+        286.04998779296875,
+        221.8300018310547
+      ],
+      "text": "100.00"
+    },
+    {
+      "row_zero_based": 4,
+      "column_zero_based": 3,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        286.04998779296875,
+        199.5800018310547,
+        344.1000061035156,
+        221.8300018310547
+      ],
+      "text": "6,750.36"
+    },
+    {
+      "row_zero_based": 4,
+      "column_zero_based": 4,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        344.1000061035156,
+        199.5800018310547,
+        400.29998779296875,
+        221.8300018310547
+      ],
+      "text": "0.50"
+    },
+    {
+      "row_zero_based": 4,
+      "column_zero_based": 5,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        400.29998779296875,
+        199.5800018310547,
+        473.04998779296875,
+        221.8300018310547
+      ],
+      "text": "1,343,322.11"
+    },
+    {
+      "row_zero_based": 4,
+      "column_zero_based": 6,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        473.04998779296875,
+        199.5800018310547,
+        550.5,
+        221.8300018310547
+      ],
+      "text": ""
+    },
+    {
+      "row_zero_based": 4,
+      "column_zero_based": 7,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        550.5,
+        199.5800018310547,
+        591.8499755859375,
+        221.8300018310547
+      ],
+      "text": ""
+    },
+    {
+      "row_zero_based": 4,
+      "column_zero_based": 8,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        591.8499755859375,
+        199.5800018310547,
+        654.5999755859375,
+        221.8300018310547
+      ],
+      "text": ""
+    },
+    {
+      "row_zero_based": 4,
+      "column_zero_based": 9,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        654.5999755859375,
+        199.5800018310547,
+        703.5499877929688,
+        221.8300018310547
+      ],
+      "text": ""
+    },
+    {
+      "row_zero_based": 4,
+      "column_zero_based": 10,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        703.5499877929688,
+        199.5800018310547,
+        782.1400146484375,
+        221.8300018310547
+      ],
+      "text": ""
+    },
+    {
+      "row_zero_based": 5,
+      "column_zero_based": 0,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        68.40999984741211,
+        221.8300018310547,
+        168.1999969482422,
+        244.0800018310547
+      ],
+      "text": "其中："
+    },
+    {
+      "row_zero_based": 5,
+      "column_zero_based": 1,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        168.1999969482422,
+        221.8300018310547,
+        242.25,
+        244.0800018310547
+      ],
+      "text": ""
+    },
+    {
+      "row_zero_based": 5,
+      "column_zero_based": 2,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        242.25,
+        221.8300018310547,
+        286.04998779296875,
+        244.0800018310547
+      ],
+      "text": ""
+    },
+    {
+      "row_zero_based": 5,
+      "column_zero_based": 3,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        286.04998779296875,
+        221.8300018310547,
+        344.1000061035156,
+        244.0800018310547
+      ],
+      "text": ""
+    },
+    {
+      "row_zero_based": 5,
+      "column_zero_based": 4,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        344.1000061035156,
+        221.8300018310547,
+        400.29998779296875,
+        244.0800018310547
+      ],
+      "text": ""
+    },
+    {
+      "row_zero_based": 5,
+      "column_zero_based": 5,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        400.29998779296875,
+        221.8300018310547,
+        473.04998779296875,
+        244.0800018310547
+      ],
+      "text": ""
+    },
+    {
+      "row_zero_based": 5,
+      "column_zero_based": 6,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        473.04998779296875,
+        221.8300018310547,
+        550.5,
+        244.0800018310547
+      ],
+      "text": ""
+    },
+    {
+      "row_zero_based": 5,
+      "column_zero_based": 7,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        550.5,
+        221.8300018310547,
+        591.8499755859375,
+        244.0800018310547
+      ],
+      "text": ""
+    },
+    {
+      "row_zero_based": 5,
+      "column_zero_based": 8,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        591.8499755859375,
+        221.8300018310547,
+        654.5999755859375,
+        244.0800018310547
+      ],
+      "text": ""
+    },
+    {
+      "row_zero_based": 5,
+      "column_zero_based": 9,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        654.5999755859375,
+        221.8300018310547,
+        703.5499877929688,
+        244.0800018310547
+      ],
+      "text": ""
+    },
+    {
+      "row_zero_based": 5,
+      "column_zero_based": 10,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        703.5499877929688,
+        221.8300018310547,
+        782.1400146484375,
+        244.0800018310547
+      ],
+      "text": ""
+    },
+    {
+      "row_zero_based": 6,
+      "column_zero_based": 0,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        68.40999984741211,
+        244.0800018310547,
+        168.1999969482422,
+        266.3299865722656
+      ],
+      "text": "银行承兑票据"
+    },
+    {
+      "row_zero_based": 6,
+      "column_zero_based": 1,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        168.1999969482422,
+        244.0800018310547,
+        242.25,
+        266.3299865722656
+      ],
+      "text": "1,350,072.47"
+    },
+    {
+      "row_zero_based": 6,
+      "column_zero_based": 2,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        242.25,
+        244.0800018310547,
+        286.04998779296875,
+        266.3299865722656
+      ],
+      "text": "100.00"
+    },
+    {
+      "row_zero_based": 6,
+      "column_zero_based": 3,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        286.04998779296875,
+        244.0800018310547,
+        344.1000061035156,
+        266.3299865722656
+      ],
+      "text": "6,750.36"
+    },
+    {
+      "row_zero_based": 6,
+      "column_zero_based": 4,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        344.1000061035156,
+        244.0800018310547,
+        400.29998779296875,
+        266.3299865722656
+      ],
+      "text": "0.50"
+    },
+    {
+      "row_zero_based": 6,
+      "column_zero_based": 5,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        400.29998779296875,
+        244.0800018310547,
+        473.04998779296875,
+        266.3299865722656
+      ],
+      "text": "1,343,322.11"
+    },
+    {
+      "row_zero_based": 6,
+      "column_zero_based": 6,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        473.04998779296875,
+        244.0800018310547,
+        550.5,
+        266.3299865722656
+      ],
+      "text": ""
+    },
+    {
+      "row_zero_based": 6,
+      "column_zero_based": 7,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        550.5,
+        244.0800018310547,
+        591.8499755859375,
+        266.3299865722656
+      ],
+      "text": ""
+    },
+    {
+      "row_zero_based": 6,
+      "column_zero_based": 8,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        591.8499755859375,
+        244.0800018310547,
+        654.5999755859375,
+        266.3299865722656
+      ],
+      "text": ""
+    },
+    {
+      "row_zero_based": 6,
+      "column_zero_based": 9,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        654.5999755859375,
+        244.0800018310547,
+        703.5499877929688,
+        266.3299865722656
+      ],
+      "text": ""
+    },
+    {
+      "row_zero_based": 6,
+      "column_zero_based": 10,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        703.5499877929688,
+        244.0800018310547,
+        782.1400146484375,
+        266.3299865722656
+      ],
+      "text": ""
+    },
+    {
+      "row_zero_based": 7,
+      "column_zero_based": 0,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        68.40999984741211,
+        266.3299865722656,
+        168.1999969482422,
+        288.5799865722656
+      ],
+      "text": "商业承兑票据"
+    },
+    {
+      "row_zero_based": 7,
+      "column_zero_based": 1,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        168.1999969482422,
+        266.3299865722656,
+        242.25,
+        288.5799865722656
+      ],
+      "text": ""
+    },
+    {
+      "row_zero_based": 7,
+      "column_zero_based": 2,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        242.25,
+        266.3299865722656,
+        286.04998779296875,
+        288.5799865722656
+      ],
+      "text": ""
+    },
+    {
+      "row_zero_based": 7,
+      "column_zero_based": 3,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        286.04998779296875,
+        266.3299865722656,
+        344.1000061035156,
+        288.5799865722656
+      ],
+      "text": ""
+    },
+    {
+      "row_zero_based": 7,
+      "column_zero_based": 4,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        344.1000061035156,
+        266.3299865722656,
+        400.29998779296875,
+        288.5799865722656
+      ],
+      "text": ""
+    },
+    {
+      "row_zero_based": 7,
+      "column_zero_based": 5,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        400.29998779296875,
+        266.3299865722656,
+        473.04998779296875,
+        288.5799865722656
+      ],
+      "text": ""
+    },
+    {
+      "row_zero_based": 7,
+      "column_zero_based": 6,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        473.04998779296875,
+        266.3299865722656,
+        550.5,
+        288.5799865722656
+      ],
+      "text": ""
+    },
+    {
+      "row_zero_based": 7,
+      "column_zero_based": 7,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        550.5,
+        266.3299865722656,
+        591.8499755859375,
+        288.5799865722656
+      ],
+      "text": ""
+    },
+    {
+      "row_zero_based": 7,
+      "column_zero_based": 8,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        591.8499755859375,
+        266.3299865722656,
+        654.5999755859375,
+        288.5799865722656
+      ],
+      "text": ""
+    },
+    {
+      "row_zero_based": 7,
+      "column_zero_based": 9,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        654.5999755859375,
+        266.3299865722656,
+        703.5499877929688,
+        288.5799865722656
+      ],
+      "text": ""
+    },
+    {
+      "row_zero_based": 7,
+      "column_zero_based": 10,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        703.5499877929688,
+        266.3299865722656,
+        782.1400146484375,
+        288.5799865722656
+      ],
+      "text": ""
+    },
+    {
+      "row_zero_based": 8,
+      "column_zero_based": 0,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        68.40999984741211,
+        288.5799865722656,
+        168.1999969482422,
+        311.0699920654297
+      ],
+      "text": "合计"
+    },
+    {
+      "row_zero_based": 8,
+      "column_zero_based": 1,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        168.1999969482422,
+        288.5799865722656,
+        242.25,
+        311.0699920654297
+      ],
+      "text": "1,350,072.47"
+    },
+    {
+      "row_zero_based": 8,
+      "column_zero_based": 2,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        242.25,
+        288.5799865722656,
+        286.04998779296875,
+        311.0699920654297
+      ],
+      "text": "100.00"
+    },
+    {
+      "row_zero_based": 8,
+      "column_zero_based": 3,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        286.04998779296875,
+        288.5799865722656,
+        344.1000061035156,
+        311.0699920654297
+      ],
+      "text": "6,750.36"
+    },
+    {
+      "row_zero_based": 8,
+      "column_zero_based": 4,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        344.1000061035156,
+        288.5799865722656,
+        400.29998779296875,
+        311.0699920654297
+      ],
+      "text": "0.50"
+    },
+    {
+      "row_zero_based": 8,
+      "column_zero_based": 5,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        400.29998779296875,
+        288.5799865722656,
+        473.04998779296875,
+        311.0699920654297
+      ],
+      "text": "1,343,322.11"
+    },
+    {
+      "row_zero_based": 8,
+      "column_zero_based": 6,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        473.04998779296875,
+        288.5799865722656,
+        550.5,
+        311.0699920654297
+      ],
+      "text": ""
+    },
+    {
+      "row_zero_based": 8,
+      "column_zero_based": 7,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        550.5,
+        288.5799865722656,
+        591.8499755859375,
+        311.0699920654297
+      ],
+      "text": ""
+    },
+    {
+      "row_zero_based": 8,
+      "column_zero_based": 8,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        591.8499755859375,
+        288.5799865722656,
+        654.5999755859375,
+        311.0699920654297
+      ],
+      "text": ""
+    },
+    {
+      "row_zero_based": 8,
+      "column_zero_based": 9,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        654.5999755859375,
+        288.5799865722656,
+        703.5499877929688,
+        311.0699920654297
+      ],
+      "text": ""
+    },
+    {
+      "row_zero_based": 8,
+      "column_zero_based": 10,
+      "rowspan": 1,
+      "colspan": 1,
+      "bbox_PDF_points_upright": [
+        703.5499877929688,
+        288.5799865722656,
+        782.1400146484375,
+        311.0699920654297
+      ],
+      "text": ""
+    }
+  ],
+  "table_bbox_upright": [
+    68.40999984741211,
+    107.59000015258789,
+    782.1400146484375,
+    311.0699920654297
+  ],
+  "column_boundaries_upright": [
+    68.41,
+    168.2,
+    242.25,
+    286.05,
+    344.1,
+    400.3,
+    473.05,
+    550.5,
+    591.85,
+    654.6,
+    703.55,
+    782.14
+  ],
+  "row_boundaries_upright": [
+    107.59,
+    130.08,
+    152.33,
+    177.33,
+    199.58,
+    221.83,
+    244.08,
+    266.33,
+    288.58,
+    311.07
+  ],
+  "source_positions": 99,
+  "body_positions": 66,
+  "body_nonempty_physical_anchors": 21,
+  "explicit_unit_on_this_page": null,
+  "acceptance": "Require the actual eleven-column table, three-level header topology, all six source body rows with exact cell bindings and blanks. Picture/text character coverage alone cannot pass table restoration.",
+  "source_evidence": [
+    {
+      "path": "source-reference-p62/original-page-rotation.png",
+      "SHA256": "859d5f2876002e41f33400335f3b20f4c519e5c9132c425c9d8cf530856821c4",
+      "bytes": 85021
+    },
+    {
+      "path": "source-reference-p62/original-table.png",
+      "SHA256": "a07b7c118a9ac53176d85faecba65891802e5812d0a3964c4a94b0379d37d6ac",
+      "bytes": 68651
+    },
+    {
+      "path": "source-reference-p62/source-native-characters.json",
+      "SHA256": "faa8949e8c9c936ea90fdbad49f6deac210ddb903e8e7e7a1bf3809e89573315",
+      "bytes": 150033
+    },
+    {
+      "path": "source-reference-p62/upright.png",
+      "SHA256": "548b0458904ec6a9d5d779ad5298a263897723bfffe9ac5caf676c26228614b7",
+      "bytes": 78589
+    }
+  ]
+}

@@ -335,6 +335,58 @@ async def test_glm_page_selection_uses_measured_source_kind_and_keeps_sdk_output
     assert original.pages[1].diagnostics.glm.sdk_requests == observed_requests
 
 
+async def test_failed_scan_structure_keeps_original_page_image_and_other_page_content() -> None:
+    from app.models import BackendState, BackendStatus
+    from app.models.parse_result import PageStatus, PipelineWarning, WarningSeverity
+
+    service = ParserService(SimpleNamespace(parser_workers=1))
+    original = result("doc_scan_structure_failure", "Original native text")
+    native_page = original.pages[0]
+    original.pages.extend(
+        PageParseResult(page_number=n, content=f"pending-{n}") for n in (2, 3)
+    )
+    original.page_count = original.processed_pages = 3
+    sdk = result(original.document_id)
+    sdk.pages = [
+        PageParseResult(
+            page_number=2, status=PageStatus.FAILED, backend="glm-sdk-remote",
+            warnings=[PipelineWarning(
+                code="glm_sdk_unusable_table_structure", message="unusable structure",
+                severity=WarningSeverity.ERROR, page_number=2, backend="glm-sdk-remote",
+            )],
+        ),
+        PageParseResult(page_number=3, backend="glm-sdk-remote", content="Other source text"),
+    ]
+    sdk.page_count = 3
+    sdk.processed_pages = 2
+    service.glm_adapter = SimpleNamespace(enabled=True)
+    service.glm_sdk_parser = SimpleNamespace(
+        enabled=True, name="glm-sdk-remote", parse=AsyncMock(return_value=sdk),
+        probe=AsyncMock(return_value=BackendStatus(name="glm-sdk-remote", state=BackendState.READY)),
+    )
+    evidence = {
+        1: PageEvidence(page_number=1, source_kind=PageSourceKind.NATIVE),
+        2: PageEvidence(page_number=2, source_kind=PageSourceKind.SCANNED),
+        3: PageEvidence(page_number=3, source_kind=PageSourceKind.MIXED),
+    }
+    await service._apply_scan_ocr(
+        original, stored_source().model_copy(update={"page_count": 3}),
+        ContentParseOptions(), evidence, document_id=original.document_id, cancel_event=None,
+    )
+
+    assert original.pages[0] is native_page
+    assert original.pages[0].content == "Original native text"
+    assert original.pages[1].status == PageStatus.FAILED
+    assert original.pages[1].warnings[0].code == "glm_sdk_unusable_table_structure"
+    assert original.pages[2].content == "Other source text"
+    assert original.route_summary.pages_with_ocr == 1
+    assert {picture.page_number for picture in original._picture_candidates} == {2, 3}
+    failed_source_image = next(p for p in original._picture_candidates if p.page_number == 2)
+    assert failed_source_image.normalized_bbox == (0.0, 0.0, 1.0, 1.0)
+    assert failed_source_image.allow_description is False
+    assert not any("<table" in (page.content or "").casefold() for page in original.pages)
+
+
 async def test_native_pages_do_not_probe_or_call_remote_ocr() -> None:
     service = ParserService(SimpleNamespace(parser_workers=1))
     parsed = result("docparse_no_remote")

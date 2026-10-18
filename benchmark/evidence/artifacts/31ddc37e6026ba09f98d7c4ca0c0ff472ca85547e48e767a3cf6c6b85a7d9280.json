@@ -1,0 +1,68 @@
+{
+  "schema": "moparse-provider-RUNNING-window-safe-summary/1",
+  "created_at": "2026-10-18T03:37:48.102958+00:00",
+  "method_id": "mineru-advanced-txt-vllm-c2-docling-source-glm-v7",
+  "scope": "Native provider shared service window covering actual full550 captures; request durations RUNNING phase may overlap and include other accepted clients. Not GPU forward/CUDA or isolated inference walltime.",
+  "before": {
+    "observed_at": "2026-10-18T02:10:09.580666+00:00",
+    "private_raw": {
+      "path": "benchmark/runs/table-syntax-v7-http-20261018/vllm-metrics.before.prom",
+      "sha256": "800d92c1126124c903e85532acdb535342d30ffaea4358ea19610a4d9d609ddc",
+      "bytes": 52229
+    },
+    "private_metadata": {
+      "path": "benchmark/runs/table-syntax-v7-http-20261018/vllm-metrics.before.meta.json",
+      "sha256": "32e584f79dca6b8caec4a77c4428e11bb5f165d7be33c735ba3d88a71d464197",
+      "bytes": 285
+    },
+    "labels": {
+      "engine": "0",
+      "model_name": "mineru2.5-pro"
+    },
+    "count": 2550.0,
+    "sum": 13133.539998114924,
+    "created": 1792273043.6794286
+  },
+  "after": {
+    "observed_at": "2026-10-18T03:34:41.139688+00:00",
+    "private_raw": {
+      "path": "benchmark/runs/table-syntax-v7-http-20261018/vllm-metrics.after.prom",
+      "sha256": "0a835185ef31d49d7ecfd9e86c304bfae98e35946c5747a26ca7ffc655b4547e",
+      "bytes": 52242
+    },
+    "private_metadata": {
+      "path": "benchmark/runs/table-syntax-v7-http-20261018/vllm-metrics.after.meta.json",
+      "sha256": "ff297faedd8855c53e81ab3af6f65c06bb1418ef569887ca036e715a4f7a8334",
+      "bytes": 406
+    },
+    "labels": {
+      "engine": "0",
+      "model_name": "mineru2.5-pro"
+    },
+    "count": 3658.0,
+    "sum": 18782.964960211073,
+    "created": 1792273043.6794286
+  },
+  "delta": {
+    "request_count": 1108,
+    "RUNNING_request_duration_sum_seconds": 5649.424962096149
+  },
+  "same_series_labels": true,
+  "same_counter_creation_timestamp": true,
+  "same_provider_container_image_start_identity": {
+    "container": "moparse-mineru-vllm",
+    "unchanged_identity": true,
+    "live_matches_before_and_after": true,
+    "container_id": "5d54174333dba8bab3fdde4852049e71a65c9097a2f6b2c5d1d16bf719bd9492",
+    "image_id": "sha256:ea407324215fa2393585447521828b34d1ffc6474fd04b24865fb9476ff5ccfe",
+    "started_at": "2026-10-17T21:36:52.570094085Z",
+    "running": true,
+    "restart_count": 0,
+    "OOMKilled": false
+  },
+  "counter_reset_observed": false,
+  "counter_epoch_observation": "Same Prometheus creation time, unchanged provider identity/start, endpoints nondecreasing; no reset observed.",
+  "raw_metrics_or_customer_prompts_exported": false,
+  "new_model_or_result_requests": 0,
+  "inference_stage_labels_not_changed": true
+}

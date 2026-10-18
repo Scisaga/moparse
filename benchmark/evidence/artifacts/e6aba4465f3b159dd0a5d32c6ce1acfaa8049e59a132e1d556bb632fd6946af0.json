@@ -1,0 +1,12 @@
+{
+  "source": {
+    "path": "benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/sources/1206337604/source-converted.pdf",
+    "sha256": "ccff40771d75e9412b65f364a1c72c1733c37b4d8f232f49cf639621f0ba165f",
+    "bytes": 181311
+  },
+  "endpoint": "/v1/content/parse",
+  "form": {
+    "scan_policy": "auto"
+  },
+  "unit_range_omitted": true
+}

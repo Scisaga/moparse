@@ -1,0 +1,11 @@
+{
+  "schema": "moparse-frozen-source-archive/1",
+  "path": "benchmark/runs/header-v3-http-20261018/frozen-reviewed-source.tar.gz",
+  "sha256": "c3229def9e3e80640d0f273dc84774d46d2945f1deca1e09f02d8ad07bb29b90",
+  "bytes": 381421,
+  "files": 131,
+  "freeze_sha256": "fcf437d3163b932d5e318d7a05da20fae011c479a3e0c13cec73801387646b45",
+  "includes_final_frontend_timeout_and_generic_source_scope_order": true,
+  "candidate_new7_not_inferred_at_archive": true,
+  "runtime_identity": "deployment-before.json"
+}

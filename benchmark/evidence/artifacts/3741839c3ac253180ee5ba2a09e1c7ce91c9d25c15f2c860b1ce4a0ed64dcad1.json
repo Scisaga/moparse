@@ -1,0 +1,66 @@
+{
+  "schema": "moparse-preflight-transport-closure-with-partial-quality/1",
+  "at": "2026-10-17T23:56:47.319811+00:00",
+  "original_run": {
+    "path": "benchmark/runs/source-v6-http-20261018/preflight2/run.json",
+    "sha256": "d753d43f32b479450ad3dc43eb64fc0dc9db76eaec2dc30e4e081fd76f8a6df5",
+    "bytes": 108384
+  },
+  "original_summary": {
+    "path": "benchmark/runs/source-v6-http-20261018/preflight2/cases/nasa-maax-factsheet/summary.json",
+    "sha256": "2e6c6d81b49a5c2b58a77949735fe36e7d13c1edb9527b89373207f9bd445e4d",
+    "bytes": 2619
+  },
+  "original_run_status": "failed",
+  "actual_job_status": "partial",
+  "supplemental_capture_status": "completed",
+  "transport_complete": true,
+  "quality_fully_resolved": false,
+  "original_run_or_case_status_rewritten": false,
+  "same_original_request_replayed": false,
+  "transport_receipt": {
+    "transport_complete": true,
+    "capture_status": "completed",
+    "actual_job_status": "partial",
+    "quality_fully_resolved": false,
+    "quality_status_scope": "API completed/partial state, never an original-source accuracy claim",
+    "errors": [],
+    "assets_checked": 5,
+    "declared_assets": 5,
+    "event_response_bytes": 0,
+    "event_scope": "Exact successful GET response; terminal SSE may be empty. No complete historical event timeline claim."
+  },
+  "source_preservation_B": {
+    "path": "benchmark/runs/source-v6-http-20261018/preflight-B-v2.json",
+    "sha256": "52c8b98f07450bff90299f5ad9ca6dee5be4e697076237a126f96bfa3517a0b0",
+    "bytes": 5812
+  },
+  "public_MD": {
+    "path": "benchmark/runs/source-v6-http-20261018/preflight2/cases/nasa-maax-factsheet/result.md",
+    "sha256": "3419f5d493126069cd05660b1df8164454eafcb527f7c273e280fc25b7c4d14c",
+    "bytes": 9920
+  },
+  "persisted_MD": {
+    "path": "benchmark/runs/source-v6-http-20261018/preflight2/cases/nasa-maax-factsheet/persisted-result.md",
+    "sha256": "3419f5d493126069cd05660b1df8164454eafcb527f7c273e280fc25b7c4d14c",
+    "bytes": 9920
+  },
+  "captured_asset_count": 5,
+  "source_region_structure": "unknown",
+  "Gantt_semantics_recovered_claim": false,
+  "private_original_evidence": [
+    {
+      "path": "benchmark/runs/source-v6-http-20261018/preflight-source-evidence/native-source-verification.json",
+      "sha256": "f196d5614c9cd1dc15ec858984aadd81e6ccd8a236bdc8571894cb95eb8d97b8",
+      "bytes": 192451
+    },
+    {
+      "path": "benchmark/runs/source-v6-http-20261018/preflight-source-evidence/mineru-native-worker.json",
+      "sha256": "e9c5d243a2fafb85fff766ea19dc9c7305f57bfe5aa61dbc44ef3aac860ad749",
+      "bytes": 42408
+    }
+  ],
+  "quality_parser_partial_reason": "Source region preserved with explicit unknown/conflicted structure; separate private warning/source proof still required for release",
+  "no_new_model_or_HTTP_requests": true,
+  "full550_or_release_claim": false
+}

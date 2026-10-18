@@ -1,3 +1,3 @@
-"""MosaicParse multimodal content parsing service."""
+"""moparse multimodal content parsing service."""
 
-__version__ = "0.4.0"
+__version__ = "0.5.0"

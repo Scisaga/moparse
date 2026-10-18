@@ -1,0 +1,183 @@
+{
+  "schema": "moparse-V7-production159-final-release-safe-summary/1",
+  "created_at": "2026-10-18T04:05:41.313231+00:00",
+  "method_id": "mineru-advanced-txt-vllm-c2-docling-source-glm-v7",
+  "fingerprint": "e760367d7fb88f11a7bc0bb5388db12ebe7f4fc54983b1ac8559d266736c11c7",
+  "status": "read_only_receipts_verified",
+  "final_release_receipts_pass": true,
+  "observed_at": "2026-10-18T04:03:12.659360+00:00",
+  "scope": "7 complete PDFs159pages production acceptance subset; not full502/full46/full39/new independent holdout",
+  "private_final_receipt": {
+    "path": "benchmark/runs/production-release-v7-20261018/deployment/readonly-receipts.final.json",
+    "sha256": "3dfc2e69d504c2d24ab276282dc1c23718d7152ccbe4265788d4444ca2c54280",
+    "bytes": 8411
+  },
+  "private_CPU_acceptance": {
+    "path": "benchmark/runs/production-release-v7-20261018/CPU-acceptance/acceptance-summary.json",
+    "sha256": "ea0d22416286b99076450b0015acfad272c23046d031e754561b4fc48a0a2b45",
+    "bytes": 13565
+  },
+  "private_source_region_preservation": {
+    "path": "benchmark/runs/production-release-v7-20261018/source-region-preservation.json",
+    "sha256": "8b8947dd324c4f3623b1905dacfea423fadf7c0eefa2e70efa9f9725c3ea47dd",
+    "bytes": 13093
+  },
+  "production_run": {
+    "path": "benchmark/runs/production-release-v7-20261018/http159/run.json",
+    "sha256": "1b5ae6f7673d3565bb02a07350ba500ebc8a04eedff37892269119f4daded0df",
+    "bytes": 123895
+  },
+  "production_identity_before_smoke": {
+    "path": "benchmark/runs/production-release-v7-20261018/identity-before-smoke.json",
+    "sha256": "3dd7e22b2cff2f919d009f042db9667a74de6da2ecccdc6e508981a379a6e239",
+    "bytes": 100212
+  },
+  "same_actual_images_as_tested_candidate": {
+    "app": "sha256:3a2c30f2b67172232aabd24c636e425a2333f3b127dde386c513bb0e3198da19",
+    "native_worker": "sha256:f84c8dd3e4251df6cf3e79b388c9c770975b7de759167717bd6ceb67df020e9a",
+    "native_vllm": "sha256:ea407324215fa2393585447521828b34d1ffc6474fd04b24865fb9476ff5ccfe"
+  },
+  "selected_API": {
+    "id": "e6132b9083758b8656cbed647c81b9058d4a9c81258e01f09bd33112597b9b78",
+    "image_id": "sha256:3a2c30f2b67172232aabd24c636e425a2333f3b127dde386c513bb0e3198da19",
+    "name": "moparse",
+    "running": true,
+    "started_at": "2026-10-18T03:39:27.236179216Z",
+    "mounts": [
+      {
+        "Type": "volume",
+        "Name": "mosaicparse-data",
+        "Destination": "/data",
+        "RW": true
+      },
+      {
+        "Type": "volume",
+        "Name": "mosaicparse-docling-models-selected-20261017",
+        "Destination": "/models/docling",
+        "RW": true
+      },
+      {
+        "Type": "volume",
+        "Name": "mosaicparse-huggingface-cache",
+        "Destination": "/models/huggingface",
+        "RW": true
+      }
+    ],
+    "networks": {
+      "moparse_backend": {
+        "NetworkID": "02aad3f416c2aa31c112771887ee3286d85d8a0fb15ffeb1db15dd8d19eb6d8c",
+        "EndpointID": "5e7fa50c40b7d39ee8a851ea687a9f21d63f5b30646f27a894d49d67078e2b7a",
+        "IPAddress": "172.24.0.5",
+        "Aliases": [
+          "moparse",
+          "moparse",
+          "moparse",
+          "mosaicparse"
+        ]
+      },
+      "mosaicparse_default": {
+        "NetworkID": "c187865beb615e68089f457e6e5e2e4bc481e63f1dffb4e52b4de66e4580657d",
+        "EndpointID": "6a83537262d7cb1ee9022213905d760782ab059ad25649aa0f027487b0cb5fa4",
+        "IPAddress": "172.23.0.3",
+        "Aliases": [
+          "moparse",
+          "moparse",
+          "moparse",
+          "mosaicparse"
+        ]
+      }
+    },
+    "compose_config_files": [
+      "/opt/moparse/docker-compose.yml",
+      "/root/.cache/moparse-migration/20261018/v7-release/promotion-20261018T033910354730Z/compose.override.json"
+    ]
+  },
+  "actual_API_status_counts": {
+    "completed": 6,
+    "partial": 1
+  },
+  "partial_document_ids": [
+    "nasa-maax-factsheet"
+  ],
+  "quality_fully_resolved": false,
+  "HTTP_receipts_complete": true,
+  "original_source_functional_checks_pass": true,
+  "original_strict_release_verdict": false,
+  "source_fixed_subset": {
+    "pass": 16,
+    "total": 16,
+    "fail": 0,
+    "unknown": 0,
+    "uncovered_of_fixed46": 30,
+    "complete46_claim": false
+  },
+  "office_source6": {
+    "pass": 6,
+    "total": 6
+  },
+  "fresh7_source28": {
+    "counts": {
+      "pass": 24,
+      "fail": 4
+    },
+    "total": 28,
+    "candidate_counts": {
+      "pass": 24,
+      "fail": 4
+    },
+    "status_changes_from_candidate": [],
+    "new_regressions_from_candidate": [],
+    "independent_test_claim": false
+  },
+  "NASA_source_region_preservation_pass": true,
+  "preserved_unknown_source_region_count": 1,
+  "raw_strict_width_differences_retained": true,
+  "same7_public_output_comparison": {
+    "path": "benchmark/runs/production-release-v7-20261018/V7-production159-candidate-public-safe-summary.json",
+    "sha256": "06450f01110ff606801726f62d28d3578e2e6e73555e0f381ccef154ca848cb4",
+    "bytes": 9097
+  },
+  "full_capture_seconds": 1260.2019017296843,
+  "old_jobs_preserved": 37,
+  "shared_containers_unchanged": true,
+  "source_model_static_identity_verified": true,
+  "effective_timeouts_seconds": {
+    "content": 7200,
+    "mineru_native": 7200
+  },
+  "worker_resource_policy": {
+    "container_id": "412d69fdaf2a076732af0a381e4e14a617b6b3f08f427be5ca8515ae27bb2ad2",
+    "image_id": "sha256:f84c8dd3e4251df6cf3e79b388c9c770975b7de759167717bd6ceb67df020e9a",
+    "GET_url": "http://127.0.0.1:12432/ready",
+    "CPU_limit": 4,
+    "memory_limit_bytes": 8589934592,
+    "ready": true,
+    "max_concurrency": 2,
+    "resource_policy": {
+      "name": "cpu-mfr-microbatch-limit-v1",
+      "source_sha256": "e2b45491bea11a6af82fef90ec1d4d6beb72373b2aaaa611b7228c309947c5e2",
+      "cpu_mfr_batch_size": 1,
+      "processing_window_size": 8,
+      "malloc_trim": true
+    }
+  },
+  "private_archive_manifest": {
+    "path": "benchmark/runs/production-release-v7-20261018/private-evidence/manifest.json",
+    "sha256": "252b6640ed3b04c454ea3de13ce07daf37b8506c6cc8d236be3729ce4510a4b8",
+    "bytes": 50305
+  },
+  "archive_files": 85,
+  "archive_pass": true,
+  "private_source_content_or_APIkey_path_exported": false,
+  "known_source_errors_not_cleared_by_release_receipt": [
+    "134p54/p56 financial separators",
+    "Census7age rows folded and source numbers wrong",
+    "119p14 source16 versus model17 columns",
+    "scan-seal/name OCR wrong or duplicated",
+    "IRS blank source topology unknown",
+    "NASA structure unknown, source A8/19 remains failed"
+  ],
+  "acceptance_is_complete_source_accuracy": false,
+  "gold_reader_or_source_outputs_changed": false,
+  "new_model_or_HTTP_requests": 0
+}

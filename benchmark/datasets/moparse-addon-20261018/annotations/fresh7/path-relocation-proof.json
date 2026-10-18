@@ -1,0 +1,14 @@
+{
+  "schema": "moparse-source-gold-path-relocation/1",
+  "at": "2026-10-17T19:31:24.893739+00:00",
+  "model_outputs_seen": false,
+  "inference_calls": 0,
+  "original_gold_sha256": "cb50c0efcb413806b13bdf79a25273383fbb3dd29957e95634c88a83e0f05d29",
+  "relocated_gold_sha256": "8da34499ea3ed33cadcb044a352671010207c4fd30819bdafe2201303168b40c",
+  "only_changed_fields": [
+    "source_documents[*].source_path",
+    "checks[*].source_evidence.image_path"
+  ],
+  "all_scoring_predicates_and_source_facts_unchanged": true,
+  "all_original_pdf_bytes_unchanged": true
+}

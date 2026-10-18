@@ -1,0 +1,22 @@
+{
+  "schema": "moparse-public-result-readback-byte-mismatch/1",
+  "at": "2026-10-17T23:45:03.998649+00:00",
+  "job": "job_01M563X57F9AJT730XZBRB76K6",
+  "HTTP_MD": {
+    "path": "benchmark/runs/source-v5-http-20261018/preflight2/cases/nasa-maax-factsheet/result.md",
+    "sha256": "640a301f5bded840e613a874f871e5769d8e147513aca04b952a4168a3458232",
+    "bytes": 9920
+  },
+  "persisted_endpoint_MD": {
+    "path": "benchmark/runs/source-v5-http-20261018/preflight2/cases/nasa-maax-factsheet/persisted-result.md",
+    "sha256": "d652bea383364df616c702fd009abf4f8368ed8f53057c7b40e95add08661d2f",
+    "bytes": 9895
+  },
+  "bytes_identical": false,
+  "HTTP_MD_CRLF": 25,
+  "persisted_MD_CRLF": 0,
+  "equal_after_only_CRLF_to_LF_diagnostic": true,
+  "no_rewrite_or_score_change": true,
+  "full_asset_capture_completed": false,
+  "source_model_or_storage_new_inference_by_diagnostic": false
+}

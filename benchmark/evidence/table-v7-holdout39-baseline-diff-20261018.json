@@ -1,0 +1,27 @@
+{
+  "schema": "moparse-evidence/1",
+  "id": "table-v7-holdout39-baseline-diff-20261018",
+  "method_id": "mineru-advanced-txt-vllm-c2-docling-source-glm-v7",
+  "cohort_id": "holdout-20261018",
+  "origin": "fresh_component",
+  "fresh_model_inference": false,
+  "output_stage": "diagnostic-only",
+  "quality": {},
+  "performance": {},
+  "provenance": [
+    {
+      "path": "benchmark/evidence/artifacts/5f774b52e77a819ac49a30fccdb45408cc6d851258692a766b58b2cf3450b1dc.json",
+      "sha256": "5f774b52e77a819ac49a30fccdb45408cc6d851258692a766b58b2cf3450b1dc",
+      "bytes": 15961,
+      "original_path": "benchmark/runs/table-syntax-v7-http-20261018/holdout39-baseline-V7-per-assertion-diff.json",
+      "snapshot_bytes_unchanged": true
+    }
+  ],
+  "qualification": {
+    "observation_only": true,
+    "gold_or_scoring_predicates_changed": false,
+    "deployment_acceptance": false,
+    "full_HTTP_inference_repeated": false
+  },
+  "comparison_scope": "Same frozen source assertions, every baselinepass to currentfail/unknown listed separately"
+}

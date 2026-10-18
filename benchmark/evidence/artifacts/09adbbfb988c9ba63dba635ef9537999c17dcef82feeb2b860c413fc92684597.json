@@ -1,0 +1,159 @@
+{
+  "schema": "moparse-sealed-assertion-same-gold-comparison/1",
+  "scope": "Original exposed39 development retest, fixed36 conditions only, no newgold",
+  "baseline": {
+    "path": "benchmark/runs/production-baseline-20261018/holdout39-final-assertions/evaluation.json",
+    "sha256": "d412d938eae97963e53fb0370cfb93a9058b5ef7f2a3219260fd4db51109bc87",
+    "bytes": 9747
+  },
+  "current": {
+    "path": "benchmark/runs/header-v4-http-20261018/holdout39-final-assertions/evaluation.json",
+    "sha256": "6172f8aa683e3952b055096cbde119cbb77fdf4da6a031f4c266692e7e9853dc",
+    "bytes": 9746
+  },
+  "annotation": {
+    "path": "benchmark/datasets/moparse-v1/annotations/holdout-20261018.assertions.json",
+    "sha256": "cef9ea7229d722e66ae4403fa8f337295534f89e6e6c5ac983e8c77523dccafc",
+    "bytes": 23321
+  },
+  "baseline_counts": {
+    "pass": 24,
+    "fail": 12
+  },
+  "V4_counts": {
+    "pass": 31,
+    "fail": 5
+  },
+  "changed_assertions": [
+    {
+      "id": "irs-dependent-claim-checkbox-order",
+      "document_id": "holdout-irs-form1040-2025",
+      "baseline_status": "fail",
+      "V4_status": "pass",
+      "source_assertion": {
+        "id": "irs-dependent-claim-checkbox-order",
+        "document_id": "holdout-irs-form1040-2025",
+        "kind": "ordered_text"
+      },
+      "baseline_MD_SHA256": "fd8e5648e22da3d1df649e999e1cf0ded28c8f1cfe46a81b36a900c9544c5a85",
+      "V4_MD_SHA256": "d143d75b395f20fb82f78badb3f8de9cbedea94582283bbec8340baf3bd08f1d"
+    },
+    {
+      "id": "irs-direct-deposit-label-order",
+      "document_id": "holdout-irs-form1040-2025",
+      "baseline_status": "fail",
+      "V4_status": "pass",
+      "source_assertion": {
+        "id": "irs-direct-deposit-label-order",
+        "document_id": "holdout-irs-form1040-2025",
+        "kind": "ordered_text"
+      },
+      "baseline_MD_SHA256": "fd8e5648e22da3d1df649e999e1cf0ded28c8f1cfe46a81b36a900c9544c5a85",
+      "V4_MD_SHA256": "d143d75b395f20fb82f78badb3f8de9cbedea94582283bbec8340baf3bd08f1d"
+    },
+    {
+      "id": "irs-footer-instruction",
+      "document_id": "holdout-irs-form1040-2025",
+      "baseline_status": "fail",
+      "V4_status": "pass",
+      "source_assertion": {
+        "id": "irs-footer-instruction",
+        "document_id": "holdout-irs-form1040-2025",
+        "kind": "text"
+      },
+      "baseline_MD_SHA256": "fd8e5648e22da3d1df649e999e1cf0ded28c8f1cfe46a81b36a900c9544c5a85",
+      "V4_MD_SHA256": "d143d75b395f20fb82f78badb3f8de9cbedea94582283bbec8340baf3bd08f1d"
+    },
+    {
+      "id": "irs-standard-deduction-head-amount",
+      "document_id": "holdout-irs-form1040-2025",
+      "baseline_status": "fail",
+      "V4_status": "pass",
+      "source_assertion": {
+        "id": "irs-standard-deduction-head-amount",
+        "document_id": "holdout-irs-form1040-2025",
+        "kind": "text"
+      },
+      "baseline_MD_SHA256": "fd8e5648e22da3d1df649e999e1cf0ded28c8f1cfe46a81b36a900c9544c5a85",
+      "V4_MD_SHA256": "d143d75b395f20fb82f78badb3f8de9cbedea94582283bbec8340baf3bd08f1d"
+    },
+    {
+      "id": "irs-standard-deduction-joint-amount",
+      "document_id": "holdout-irs-form1040-2025",
+      "baseline_status": "fail",
+      "V4_status": "pass",
+      "source_assertion": {
+        "id": "irs-standard-deduction-joint-amount",
+        "document_id": "holdout-irs-form1040-2025",
+        "kind": "text"
+      },
+      "baseline_MD_SHA256": "fd8e5648e22da3d1df649e999e1cf0ded28c8f1cfe46a81b36a900c9544c5a85",
+      "V4_MD_SHA256": "d143d75b395f20fb82f78badb3f8de9cbedea94582283bbec8340baf3bd08f1d"
+    },
+    {
+      "id": "irs-standard-deduction-single-amount",
+      "document_id": "holdout-irs-form1040-2025",
+      "baseline_status": "fail",
+      "V4_status": "pass",
+      "source_assertion": {
+        "id": "irs-standard-deduction-single-amount",
+        "document_id": "holdout-irs-form1040-2025",
+        "kind": "text"
+      },
+      "baseline_MD_SHA256": "fd8e5648e22da3d1df649e999e1cf0ded28c8f1cfe46a81b36a900c9544c5a85",
+      "V4_MD_SHA256": "d143d75b395f20fb82f78badb3f8de9cbedea94582283bbec8340baf3bd08f1d"
+    },
+    {
+      "id": "irs-third-party-checkbox-order",
+      "document_id": "holdout-irs-form1040-2025",
+      "baseline_status": "fail",
+      "V4_status": "pass",
+      "source_assertion": {
+        "id": "irs-third-party-checkbox-order",
+        "document_id": "holdout-irs-form1040-2025",
+        "kind": "ordered_text"
+      },
+      "baseline_MD_SHA256": "fd8e5648e22da3d1df649e999e1cf0ded28c8f1cfe46a81b36a900c9544c5a85",
+      "V4_MD_SHA256": "d143d75b395f20fb82f78badb3f8de9cbedea94582283bbec8340baf3bd08f1d"
+    }
+  ],
+  "baseline_pass_to_V4_fail_or_unknown": [],
+  "V4_nonpass_assertions": [
+    {
+      "id": "irs-signature-field-order",
+      "document_id": "holdout-irs-form1040-2025",
+      "kind": "ordered_text",
+      "status": "fail",
+      "MD_sha256": "d143d75b395f20fb82f78badb3f8de9cbedea94582283bbec8340baf3bd08f1d"
+    },
+    {
+      "id": "nist-emission-yields-grid",
+      "document_id": "holdout-nist-tn2354",
+      "kind": "table_grid",
+      "status": "fail",
+      "MD_sha256": "046b0dd90a8be180988feb07c93c32a8bf7aea6519c567aa694e46c6086e6cce"
+    },
+    {
+      "id": "census-naval-governor-footnote",
+      "document_id": "holdout-census-samoa-1930",
+      "kind": "text",
+      "status": "fail",
+      "MD_sha256": "02ef7c08b820aa554acb51438f653ce78fa1733aea28875572fb5ca93ec79f31"
+    },
+    {
+      "id": "census-annexation-footnote",
+      "document_id": "holdout-census-samoa-1930",
+      "kind": "text",
+      "status": "fail",
+      "MD_sha256": "02ef7c08b820aa554acb51438f653ce78fa1733aea28875572fb5ca93ec79f31"
+    },
+    {
+      "id": "census-copra-produced-grid",
+      "document_id": "holdout-census-samoa-1930",
+      "kind": "table_grid",
+      "status": "fail",
+      "MD_sha256": "02ef7c08b820aa554acb51438f653ce78fa1733aea28875572fb5ca93ec79f31"
+    }
+  ],
+  "frozen_gold_reader_or_output_changed": false
+}

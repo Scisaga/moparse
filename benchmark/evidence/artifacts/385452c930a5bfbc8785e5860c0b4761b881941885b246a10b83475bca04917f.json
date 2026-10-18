@@ -1,0 +1,140 @@
+{
+  "schema": "moparse-header-stage-cohort-observation/1",
+  "observed_at": "2026-10-17T21:12:00.915319+00:00",
+  "cohort_id": "regression-504",
+  "capture_directory": "benchmark/runs/header-v3-http-20261018/regression504",
+  "dataset": {
+    "path": "benchmark/datasets/moparse-v1/dataset.json",
+    "sha256": "ef79743aaa25fcb8a63805b89a43445cb28521359df32b0927a428fc07746453",
+    "bytes": 5879
+  },
+  "actual_storage_identity": {
+    "container": "moparse-candidate-header-v3",
+    "container_id": "ca36b35b7072e376e4601b2dd8a518fcfd6388ff54fb4bd42c502dcb340c021f",
+    "deployed_image_id": "sha256:efde0f1563e14cd4fb0df20e1107ce4c2246b348741724fb4defebd59bc65d01",
+    "data_volume": {
+      "Type": "volume",
+      "Name": "moparse-candidate-header-v3-data",
+      "Source": "/var/lib/docker/volumes/moparse-candidate-header-v3-data/_data",
+      "Destination": "/data",
+      "RW": true
+    },
+    "deployment": {
+      "path": "benchmark/runs/header-v3-http-20261018/deployment-before.json",
+      "sha256": "98959df66107e08c53a3151bf5b0f04dac6f4ddde25adc32b1c51fe062761631",
+      "bytes": 99509
+    },
+    "container_environment_read": false
+  },
+  "expected_documents": 11,
+  "completed_HTTP_documents": 11,
+  "timing_recorded_documents": 9,
+  "completed_documents_without_measured_stage": 2,
+  "not_yet_completed_documents": 0,
+  "observed_stage_wall_clock_seconds": 803.741,
+  "full_cohort_stage_wall_clock_seconds": null,
+  "observed_unique_document_pages": 164,
+  "observed_candidate_pairs": 111,
+  "observed_accepted_pairs": 4,
+  "observation_status_counts": {
+    "observed": 9,
+    "unknown_no_selected_code; absence_not_zero": 2
+  },
+  "percase_observations": [
+    {
+      "path": "benchmark/evidence/artifacts/85b30cbae4900dc71a6a0f70970a7de79b91c1c8842d51d4bbd94cdb9042cc09.json",
+      "sha256": "85b30cbae4900dc71a6a0f70970a7de79b91c1c8842d51d4bbd94cdb9042cc09",
+      "bytes": 2395,
+      "original_path": "benchmark/runs/header-v3-http-20261018/header-stage/regression504/1206337604.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/8b02cd7169d98f6f36531f8953be1b1fa63a3ba06186d04050d5cbf21253008f.json",
+      "sha256": "8b02cd7169d98f6f36531f8953be1b1fa63a3ba06186d04050d5cbf21253008f",
+      "bytes": 2395,
+      "original_path": "benchmark/runs/header-v3-http-20261018/header-stage/regression504/1210860446.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/31f4e327639fa37d9b23956c4a82a4b7ff1a1bb3cd3edba32ae16f24f785eb9e.json",
+      "sha256": "31f4e327639fa37d9b23956c4a82a4b7ff1a1bb3cd3edba32ae16f24f785eb9e",
+      "bytes": 2285,
+      "original_path": "benchmark/runs/header-v3-http-20261018/header-stage/regression504/1211290753.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/bb386bd4006ef7669cd4fdbaefe5a15b6890cf24ab452a1f518f28ed3bf41495.json",
+      "sha256": "bb386bd4006ef7669cd4fdbaefe5a15b6890cf24ab452a1f518f28ed3bf41495",
+      "bytes": 2422,
+      "original_path": "benchmark/runs/header-v3-http-20261018/header-stage/regression504/1219858186.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/365827c118b3cb4949b1381b446db65722c9547fe2d0d347d69ed55994ea5dfb.json",
+      "sha256": "365827c118b3cb4949b1381b446db65722c9547fe2d0d347d69ed55994ea5dfb",
+      "bytes": 2422,
+      "original_path": "benchmark/runs/header-v3-http-20261018/header-stage/regression504/1225473526.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/d00107829b1b26fa1847f225810689613443c2c17b20cdfdeb06d8219bc2c069.json",
+      "sha256": "d00107829b1b26fa1847f225810689613443c2c17b20cdfdeb06d8219bc2c069",
+      "bytes": 2411,
+      "original_path": "benchmark/runs/header-v3-http-20261018/header-stage/regression504/1225474139.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/83e73265c2a188b5c3476ed25dc409f05f7a60386a71f8569b7e4d8a3d598489.json",
+      "sha256": "83e73265c2a188b5c3476ed25dc409f05f7a60386a71f8569b7e4d8a3d598489",
+      "bytes": 2395,
+      "original_path": "benchmark/runs/header-v3-http-20261018/header-stage/regression504/1225474693.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/49fd57e447e20b5f3dd370cf5dfd20dab826e672c6444fe2124bc0e6c5196bcb.json",
+      "sha256": "49fd57e447e20b5f3dd370cf5dfd20dab826e672c6444fe2124bc0e6c5196bcb",
+      "bytes": 3280,
+      "original_path": "benchmark/runs/header-v3-http-20261018/header-stage/regression504/1225474739.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/766ef70dda604eb82bd0163b6a305d123fabc26024720d6104972b78f0116627.json",
+      "sha256": "766ef70dda604eb82bd0163b6a305d123fabc26024720d6104972b78f0116627",
+      "bytes": 2288,
+      "original_path": "benchmark/runs/header-v3-http-20261018/header-stage/regression504/1225475333.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/cc1a1df7f51a36b1a58b6423adaff615e77bd6e1aa2f8f62ea9e3cb95e45a130.json",
+      "sha256": "cc1a1df7f51a36b1a58b6423adaff615e77bd6e1aa2f8f62ea9e3cb95e45a130",
+      "bytes": 2765,
+      "original_path": "benchmark/runs/header-v3-http-20261018/header-stage/regression504/1225475375.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/933132fb24c01b4edaab5cddeb75e9c7aea98606ac2050b245c02a5a8337acc9.json",
+      "sha256": "933132fb24c01b4edaab5cddeb75e9c7aea98606ac2050b245c02a5a8337acc9",
+      "bytes": 2917,
+      "original_path": "benchmark/runs/header-v3-http-20261018/header-stage/regression504/1225475642.json",
+      "snapshot_bytes_unchanged": true
+    }
+  ],
+  "source_producer_sha256": {
+    "app/services/header_verification_service.py": "25e8e71bc74332b48abad42fa5445b2bf5c12eb245ebc2cd1cd9dc591326fe71",
+    "app/services/storage_service.py": "c82e366429cb9cb669a202533b0da424b16186db5aa457d1ea3ea9c3aea00b6e"
+  },
+  "policy": {
+    "missing_code_is_zero": false,
+    "other_warning_content_exported": false,
+    "additional_inference_or_API_requests": false,
+    "whole_pipeline_or_GPU_inference_time": false,
+    "full_cohort_total_requires_all_documents_observed": true,
+    "scope": "Sum of recorded independent header-verification elapsed wall clocks only; coverage k/n explicit; absent records remain unknown; do not substitute for upload-through-Markdown latency"
+  },
+  "finalized": true,
+  "extractor": {
+    "path": "benchmark/runs/header-v3-http-20261018/extract_header_stage.py",
+    "sha256": "c18cc72253168b02462b893c8dc0541d3e11b836362c1ffba343305d0c3460b9",
+    "bytes": 11046
+  }
+}

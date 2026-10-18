@@ -1,0 +1,680 @@
+{
+  "schema": "moparse-evidence/1",
+  "id": "header-v3-holdout39-20261018",
+  "method_id": "mineru-advanced-txt-vllm-c2-docling-header-glm-v3",
+  "cohort_id": "holdout-20261018",
+  "origin": "fresh_HTTP",
+  "fresh_model_inference": null,
+  "new_HTTP_requests": true,
+  "output_stage": "public-HTTP-GFM",
+  "status": "failed",
+  "quality": {
+    "source_text": {
+      "pass": 12,
+      "total": 17,
+      "unknown": 3,
+      "fail": 2,
+      "gold_fingerprint": "cef9ea7229d722e66ae4403fa8f337295534f89e6e6c5ac983e8c77523dccafc",
+      "reader_fingerprint": "b901a3a17185739f107b3e65af827c7540e76e876a054948ca30501e5913e4ef"
+    },
+    "source_ordered_text": {
+      "pass": 7,
+      "total": 10,
+      "unknown": 2,
+      "fail": 1,
+      "gold_fingerprint": "cef9ea7229d722e66ae4403fa8f337295534f89e6e6c5ac983e8c77523dccafc",
+      "reader_fingerprint": "b901a3a17185739f107b3e65af827c7540e76e876a054948ca30501e5913e4ef"
+    },
+    "source_regex": {
+      "pass": 3,
+      "total": 4,
+      "unknown": 1,
+      "fail": 0,
+      "gold_fingerprint": "cef9ea7229d722e66ae4403fa8f337295534f89e6e6c5ac983e8c77523dccafc",
+      "reader_fingerprint": "b901a3a17185739f107b3e65af827c7540e76e876a054948ca30501e5913e4ef"
+    },
+    "source_table_grid": {
+      "pass": 0,
+      "total": 3,
+      "unknown": 2,
+      "fail": 1,
+      "gold_fingerprint": "cef9ea7229d722e66ae4403fa8f337295534f89e6e6c5ac983e8c77523dccafc",
+      "reader_fingerprint": "b901a3a17185739f107b3e65af827c7540e76e876a054948ca30501e5913e4ef"
+    },
+    "source_table_span": {
+      "pass": 2,
+      "total": 2,
+      "unknown": 0,
+      "fail": 0,
+      "gold_fingerprint": "cef9ea7229d722e66ae4403fa8f337295534f89e6e6c5ac983e8c77523dccafc",
+      "reader_fingerprint": "b901a3a17185739f107b3e65af827c7540e76e876a054948ca30501e5913e4ef"
+    }
+  },
+  "performance": {
+    "seconds": 315.66402126208413,
+    "scope": "HTTP cohort attempt until received Markdown/assets or terminal error; incomplete cohort not complete saved-Markdown latency",
+    "power_limit_W": 220,
+    "hardware_fingerprint": "RTX2080Ti22GiB-dual-shared-host",
+    "warmup": "MinerU provider restarted before504; CPU verifier required-ready before measured requests; original39 and sealed7 follow without provider restart; common GLM unchanged; monitor windows separated by cohort",
+    "own_GPU_peak_MiB": 3528.0,
+    "native_provider_identity": [
+      {
+        "name": "moparse-mineru-vllm",
+        "id": "0ea8156e6bf2ff3e9e59f1a2e06544b7dcdb9c66608b2311d585c1ffcc69d0c9",
+        "image_id": "sha256:ec829f310dea61ba263ab9a0df0dec72a10ff3fa1584ab93b9c24d7828213db9",
+        "identity_source": {
+          "path": "benchmark/runs/header-v3-http-20261018/deployment-before.json",
+          "sha256": "98959df66107e08c53a3151bf5b0f04dac6f4ddde25adc32b1c51fe062761631",
+          "bytes": 99509
+        }
+      }
+    ],
+    "native_GPU_attribution": "Only PID-owned MinerU vLLM containers matched to deployed identity; common GLM and TTS never assigned to native model",
+    "shared_GPU_energy_Wh": 11.988335484552893,
+    "shared_GPU_energy_scope": "GPU1 whole device across adjacent valid samples within cohort; includes other services; no boundary extrapolation",
+    "all_shared_devices": {
+      "GPU-95b5895b-c5f3-440b-4bd2-7160ec4da0d1": {
+        "index": 0,
+        "name": "NVIDIA GeForce RTX 2080 Ti",
+        "energy_joules_shared_device": 54979.909789178375,
+        "energy_intervals_observed": 155,
+        "energy_gaps": 0,
+        "gpu_utilization_samples": 156,
+        "gpu_utilization_sum": 8771.0,
+        "memory_used_peak_MiB_shared_device": 19918.0,
+        "gpu_utilization_mean_pct_shared_device": 56.22435897435897
+      },
+      "GPU-87a92d2a-6521-1e36-1ca9-21fd8085b365": {
+        "index": 1,
+        "name": "NVIDIA GeForce RTX 2080 Ti",
+        "energy_joules_shared_device": 43158.007744390416,
+        "energy_intervals_observed": 155,
+        "energy_gaps": 0,
+        "gpu_utilization_samples": 156,
+        "gpu_utilization_sum": 7379.0,
+        "memory_used_peak_MiB_shared_device": 20422.0,
+        "gpu_utilization_mean_pct_shared_device": 47.30128205128205
+      }
+    },
+    "owned_containers": {
+      "moparse-candidate-header-v3": {
+        "gpu_memory_peak_MiB_by_uuid": {},
+        "sm_observed_sum": 0.0,
+        "sm_samples": 0,
+        "cpu_pct_peak_one_core_100": 107.68,
+        "memory_peak_bytes": 3068754132,
+        "sm_mean_observed_process_sum_pct": null
+      },
+      "moparse-native-worker": {
+        "gpu_memory_peak_MiB_by_uuid": {},
+        "sm_observed_sum": 0.0,
+        "sm_samples": 0,
+        "cpu_pct_peak_one_core_100": 401.3,
+        "memory_peak_bytes": 8274254495,
+        "sm_mean_observed_process_sum_pct": null
+      },
+      "moparse-mineru-vllm": {
+        "gpu_memory_peak_MiB_by_uuid": {
+          "GPU-87a92d2a-6521-1e36-1ca9-21fd8085b365": 3528.0
+        },
+        "sm_observed_sum": 1853.0,
+        "sm_samples": 78,
+        "cpu_pct_peak_one_core_100": 133.98,
+        "memory_peak_bytes": 7515119026,
+        "sm_mean_observed_process_sum_pct": 23.756410256410255
+      },
+      "docling_glm_ocr": {
+        "gpu_memory_peak_MiB_by_uuid": {
+          "GPU-87a92d2a-6521-1e36-1ca9-21fd8085b365": 11612.0
+        },
+        "sm_observed_sum": 5302.0,
+        "sm_samples": 71,
+        "cpu_pct_peak_one_core_100": 245.74,
+        "memory_peak_bytes": 7432440905,
+        "sm_mean_observed_process_sum_pct": 74.67605633802818
+      },
+      "docling_glm_ocr_sdk": {
+        "gpu_memory_peak_MiB_by_uuid": {},
+        "sm_observed_sum": 0.0,
+        "sm_samples": 0,
+        "cpu_pct_peak_one_core_100": 2439.24,
+        "memory_peak_bytes": 6939593408,
+        "sm_mean_observed_process_sum_pct": null
+      }
+    },
+    "observation_errors_by_source": {},
+    "vllm_metrics": [
+      {
+        "name": "vllm:num_requests_running",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+        "first": 0.0,
+        "last": 0.0,
+        "counter_resets": 0,
+        "observed_counter_increase": null
+      },
+      {
+        "name": "vllm:num_requests_waiting",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+        "first": 0.0,
+        "last": 0.0,
+        "counter_resets": 0,
+        "observed_counter_increase": null
+      },
+      {
+        "name": "vllm:kv_cache_usage_perc",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+        "first": 0.0,
+        "last": 0.0,
+        "counter_resets": 0,
+        "observed_counter_increase": null
+      },
+      {
+        "name": "vllm:prefix_cache_queries_total",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+        "first": 1072044.0,
+        "last": 1107646.0,
+        "counter_resets": 0,
+        "observed_counter_increase": 35602.0
+      },
+      {
+        "name": "vllm:prefix_cache_queries_created",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+        "first": 1792266938.769932,
+        "last": 1792266938.769932,
+        "counter_resets": 0,
+        "observed_counter_increase": null
+      },
+      {
+        "name": "vllm:prefix_cache_hits_total",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+        "first": 0.0,
+        "last": 0.0,
+        "counter_resets": 0,
+        "observed_counter_increase": 0.0
+      },
+      {
+        "name": "vllm:prefix_cache_hits_created",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+        "first": 1792266938.769981,
+        "last": 1792266938.769981,
+        "counter_resets": 0,
+        "observed_counter_increase": null
+      },
+      {
+        "name": "vllm:num_preemptions_total",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+        "first": 0.0,
+        "last": 0.0,
+        "counter_resets": 0,
+        "observed_counter_increase": 0.0
+      },
+      {
+        "name": "vllm:num_preemptions_created",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+        "first": 1792266938.7701843,
+        "last": 1792266938.7701843,
+        "counter_resets": 0,
+        "observed_counter_increase": null
+      },
+      {
+        "name": "vllm:prompt_tokens_total",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+        "first": 1072044.0,
+        "last": 1107646.0,
+        "counter_resets": 0,
+        "observed_counter_increase": 35602.0
+      },
+      {
+        "name": "vllm:prompt_tokens_created",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+        "first": 1792266938.7702222,
+        "last": 1792266938.7702222,
+        "counter_resets": 0,
+        "observed_counter_increase": null
+      },
+      {
+        "name": "vllm:prompt_tokens_by_source_total",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\",source=\"local_compute\"}",
+        "first": 1072044.0,
+        "last": 1107646.0,
+        "counter_resets": 0,
+        "observed_counter_increase": 35602.0
+      },
+      {
+        "name": "vllm:prompt_tokens_by_source_total",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\",source=\"local_cache_hit\"}",
+        "first": 0.0,
+        "last": 0.0,
+        "counter_resets": 0,
+        "observed_counter_increase": 0.0
+      },
+      {
+        "name": "vllm:prompt_tokens_by_source_total",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\",source=\"external_kv_transfer\"}",
+        "first": 0.0,
+        "last": 0.0,
+        "counter_resets": 0,
+        "observed_counter_increase": 0.0
+      },
+      {
+        "name": "vllm:prompt_tokens_by_source_created",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\",source=\"local_compute\"}",
+        "first": 1792266938.770269,
+        "last": 1792266938.770269,
+        "counter_resets": 0,
+        "observed_counter_increase": null
+      },
+      {
+        "name": "vllm:prompt_tokens_by_source_created",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\",source=\"local_cache_hit\"}",
+        "first": 1792266938.7702892,
+        "last": 1792266938.7702892,
+        "counter_resets": 0,
+        "observed_counter_increase": null
+      },
+      {
+        "name": "vllm:prompt_tokens_by_source_created",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\",source=\"external_kv_transfer\"}",
+        "first": 1792266938.770306,
+        "last": 1792266938.770306,
+        "counter_resets": 0,
+        "observed_counter_increase": null
+      },
+      {
+        "name": "vllm:prompt_tokens_cached_total",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+        "first": 0.0,
+        "last": 0.0,
+        "counter_resets": 0,
+        "observed_counter_increase": 0.0
+      },
+      {
+        "name": "vllm:prompt_tokens_cached_created",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+        "first": 1792266938.7703438,
+        "last": 1792266938.7703438,
+        "counter_resets": 0,
+        "observed_counter_increase": null
+      },
+      {
+        "name": "vllm:prompt_tokens_recomputed_total",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+        "first": 0.0,
+        "last": 0.0,
+        "counter_resets": 0,
+        "observed_counter_increase": 0.0
+      },
+      {
+        "name": "vllm:prompt_tokens_recomputed_created",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+        "first": 1792266938.7703953,
+        "last": 1792266938.7703953,
+        "counter_resets": 0,
+        "observed_counter_increase": null
+      },
+      {
+        "name": "vllm:generation_tokens_total",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+        "first": 277646.0,
+        "last": 289918.0,
+        "counter_resets": 0,
+        "observed_counter_increase": 12272.0
+      },
+      {
+        "name": "vllm:generation_tokens_created",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+        "first": 1792266938.7704515,
+        "last": 1792266938.7704515,
+        "counter_resets": 0,
+        "observed_counter_increase": null
+      },
+      {
+        "name": "vllm:request_success_total",
+        "labels": "{engine=\"0\",finished_reason=\"stop\",model_name=\"mineru2.5-pro\"}",
+        "first": 1071.0,
+        "last": 1098.0,
+        "counter_resets": 0,
+        "observed_counter_increase": 27.0
+      },
+      {
+        "name": "vllm:request_success_total",
+        "labels": "{engine=\"0\",finished_reason=\"length\",model_name=\"mineru2.5-pro\"}",
+        "first": 0.0,
+        "last": 0.0,
+        "counter_resets": 0,
+        "observed_counter_increase": 0.0
+      },
+      {
+        "name": "vllm:request_success_total",
+        "labels": "{engine=\"0\",finished_reason=\"abort\",model_name=\"mineru2.5-pro\"}",
+        "first": 0.0,
+        "last": 0.0,
+        "counter_resets": 0,
+        "observed_counter_increase": 0.0
+      },
+      {
+        "name": "vllm:request_success_total",
+        "labels": "{engine=\"0\",finished_reason=\"error\",model_name=\"mineru2.5-pro\"}",
+        "first": 0.0,
+        "last": 0.0,
+        "counter_resets": 0,
+        "observed_counter_increase": 0.0
+      },
+      {
+        "name": "vllm:request_success_total",
+        "labels": "{engine=\"0\",finished_reason=\"repetition\",model_name=\"mineru2.5-pro\"}",
+        "first": 0.0,
+        "last": 0.0,
+        "counter_resets": 0,
+        "observed_counter_increase": 0.0
+      },
+      {
+        "name": "vllm:request_success_created",
+        "labels": "{engine=\"0\",finished_reason=\"stop\",model_name=\"mineru2.5-pro\"}",
+        "first": 1792266938.7705178,
+        "last": 1792266938.7705178,
+        "counter_resets": 0,
+        "observed_counter_increase": null
+      },
+      {
+        "name": "vllm:request_success_created",
+        "labels": "{engine=\"0\",finished_reason=\"length\",model_name=\"mineru2.5-pro\"}",
+        "first": 1792266938.7705421,
+        "last": 1792266938.7705421,
+        "counter_resets": 0,
+        "observed_counter_increase": null
+      },
+      {
+        "name": "vllm:request_success_created",
+        "labels": "{engine=\"0\",finished_reason=\"abort\",model_name=\"mineru2.5-pro\"}",
+        "first": 1792266938.7705636,
+        "last": 1792266938.7705636,
+        "counter_resets": 0,
+        "observed_counter_increase": null
+      },
+      {
+        "name": "vllm:request_success_created",
+        "labels": "{engine=\"0\",finished_reason=\"error\",model_name=\"mineru2.5-pro\"}",
+        "first": 1792266938.7705824,
+        "last": 1792266938.7705824,
+        "counter_resets": 0,
+        "observed_counter_increase": null
+      },
+      {
+        "name": "vllm:request_success_created",
+        "labels": "{engine=\"0\",finished_reason=\"repetition\",model_name=\"mineru2.5-pro\"}",
+        "first": 1792266938.770601,
+        "last": 1792266938.770601,
+        "counter_resets": 0,
+        "observed_counter_increase": null
+      },
+      {
+        "name": "vllm:request_prompt_tokens_count",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+        "first": 1071.0,
+        "last": 1098.0,
+        "counter_resets": 0,
+        "observed_counter_increase": null
+      },
+      {
+        "name": "vllm:request_prompt_tokens_sum",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+        "first": 1072044.0,
+        "last": 1107646.0,
+        "counter_resets": 0,
+        "observed_counter_increase": null
+      },
+      {
+        "name": "vllm:request_generation_tokens_count",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+        "first": 1071.0,
+        "last": 1098.0,
+        "counter_resets": 0,
+        "observed_counter_increase": null
+      },
+      {
+        "name": "vllm:request_generation_tokens_sum",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+        "first": 277646.0,
+        "last": 289918.0,
+        "counter_resets": 0,
+        "observed_counter_increase": null
+      }
+    ],
+    "resource_window": {
+      "path": "benchmark/evidence/artifacts/f7959e7be2e9c1c32b0cf644093753f630c780709351f3f126aac258c9cc7c76.json",
+      "sha256": "f7959e7be2e9c1c32b0cf644093753f630c780709351f3f126aac258c9cc7c76",
+      "bytes": 12916,
+      "original_path": "benchmark/runs/header-v3-http-20261018/holdout39-resource-window.json",
+      "snapshot_bytes_unchanged": true
+    },
+    "http_performance": {
+      "scope": "full HTTP upload through saved Markdown and public assets",
+      "documents": 3,
+      "total_seconds": 315.66402126208413,
+      "median_document_seconds": 103.20908166503068,
+      "p95_document_seconds": 133.9377731114393,
+      "per_page_time_limit": "document duration/page count is not measured per-page latency"
+    },
+    "model_forward_observation_limit": "Shared endpoint counters and PID samples do not identify every individual HTTP request",
+    "attempted_documents": 3,
+    "successful_documents": 2,
+    "attempted_pages": 39,
+    "successful_pages": 14,
+    "independent_header_verification_stage": {
+      "observed_wall_clock_seconds": 0,
+      "full_cohort_wall_clock_seconds": null,
+      "recorded_documents": 0,
+      "expected_documents": 3,
+      "completed_HTTP_documents": 2,
+      "observed_unique_document_pages": 0,
+      "observed_candidate_pairs": 0,
+      "observed_accepted_pairs": 0,
+      "scope": "Sum of recorded independent header-verification elapsed wall clocks only; coverage k/n explicit; absent records remain unknown; do not substitute for upload-through-Markdown latency",
+      "GPU_inference_time": false,
+      "absent_warning_is_zero": false
+    },
+    "header_stage_observation": {
+      "path": "benchmark/evidence/artifacts/ba3570813cdb4b875116118be0beb5b4d40a1ff77d6f55059b1bced009b35ce0.json",
+      "sha256": "ba3570813cdb4b875116118be0beb5b4d40a1ff77d6f55059b1bced009b35ce0",
+      "bytes": 3379,
+      "original_path": "benchmark/runs/header-v3-http-20261018/holdout39-header-stage-final.json",
+      "snapshot_bytes_unchanged": true
+    }
+  },
+  "provenance": [
+    {
+      "path": "benchmark/evidence/artifacts/ef79743aaa25fcb8a63805b89a43445cb28521359df32b0927a428fc07746453.json",
+      "sha256": "ef79743aaa25fcb8a63805b89a43445cb28521359df32b0927a428fc07746453",
+      "bytes": 5879,
+      "original_path": "benchmark/datasets/moparse-v1/dataset.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/616630380f0103d23e392b8c43c09db1dbec8c725050fb5e601e5e34a7f83408.json",
+      "sha256": "616630380f0103d23e392b8c43c09db1dbec8c725050fb5e601e5e34a7f83408",
+      "bytes": 9436,
+      "original_path": "benchmark/runs/header-v3-http-20261018/holdout39-final-assertions/evaluation.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/9e3b1fd6ef5b1a3fdedb6637f282199ee563b679c23975a289f3005a24a528ec.json",
+      "sha256": "9e3b1fd6ef5b1a3fdedb6637f282199ee563b679c23975a289f3005a24a528ec",
+      "bytes": 15214,
+      "original_path": "benchmark/runs/header-v3-http-20261018/holdout39-performance.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/98959df66107e08c53a3151bf5b0f04dac6f4ddde25adc32b1c51fe062761631.json",
+      "sha256": "98959df66107e08c53a3151bf5b0f04dac6f4ddde25adc32b1c51fe062761631",
+      "bytes": 99509,
+      "original_path": "benchmark/runs/header-v3-http-20261018/deployment-before.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/bd0e6675fbf1ea510b1b5bb4db47bb73dfc7386a7b31c219d0fd050b8cd754c9.json",
+      "sha256": "bd0e6675fbf1ea510b1b5bb4db47bb73dfc7386a7b31c219d0fd050b8cd754c9",
+      "bytes": 111882,
+      "original_path": "benchmark/runs/header-v3-http-20261018/holdout39/run.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/de5842441b90ca3985a11c28c3846d0b0099616d7c44de3b98151e06649ee2b4.json",
+      "sha256": "de5842441b90ca3985a11c28c3846d0b0099616d7c44de3b98151e06649ee2b4",
+      "bytes": 104287,
+      "original_path": "benchmark/runs/header-v3-http-20261018/holdout39/plan.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/f665e19df9c23dfecdf8df1224775a4065ed66e0c9ab7fad6e96acf4a661f681.json",
+      "sha256": "f665e19df9c23dfecdf8df1224775a4065ed66e0c9ab7fad6e96acf4a661f681",
+      "bytes": 324,
+      "original_path": "benchmark/runs/header-v3-http-20261018/holdout39/cases/holdout-irs-form1040-2025/request.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/c659889ca5755c1e5c63c5c8f487939a86d6c8c719a2c3b5d427f41ae6f0975e.json",
+      "sha256": "c659889ca5755c1e5c63c5c8f487939a86d6c8c719a2c3b5d427f41ae6f0975e",
+      "bytes": 453,
+      "original_path": "benchmark/runs/header-v3-http-20261018/holdout39/cases/holdout-irs-form1040-2025/response.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/757ad131c0136b4f10d5c9c17a2cdabe39bf18cb235c5b8ac20c149ca525dcd3.json",
+      "sha256": "757ad131c0136b4f10d5c9c17a2cdabe39bf18cb235c5b8ac20c149ca525dcd3",
+      "bytes": 827,
+      "original_path": "benchmark/runs/header-v3-http-20261018/holdout39/cases/holdout-irs-form1040-2025/summary.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/5801bc141f12c2ec08ffa6c6ddd62b956f94c2b7827ca267a7515087d666f3e9.json",
+      "sha256": "5801bc141f12c2ec08ffa6c6ddd62b956f94c2b7827ca267a7515087d666f3e9",
+      "bytes": 324,
+      "original_path": "benchmark/runs/header-v3-http-20261018/holdout39/cases/holdout-census-samoa-1930/request.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/b46984bb7d7e70e7bec6420d0460d0ff745b68f401652dbfc5bebcf5ecdc4097.json",
+      "sha256": "b46984bb7d7e70e7bec6420d0460d0ff745b68f401652dbfc5bebcf5ecdc4097",
+      "bytes": 311,
+      "original_path": "benchmark/runs/header-v3-http-20261018/holdout39/cases/holdout-census-samoa-1930/response.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/d1c819ea1294b8f0b0efbc562c5bcf0a48007443b922f60c7ba719e6509f0dea.json",
+      "sha256": "d1c819ea1294b8f0b0efbc562c5bcf0a48007443b922f60c7ba719e6509f0dea",
+      "bytes": 5229,
+      "original_path": "benchmark/runs/header-v3-http-20261018/holdout39/cases/holdout-census-samoa-1930/summary.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/565c11a765469c2c5413e42bc4c9f993073721b38eda38d8aee153dd0abd5371.json",
+      "sha256": "565c11a765469c2c5413e42bc4c9f993073721b38eda38d8aee153dd0abd5371",
+      "bytes": 319,
+      "original_path": "benchmark/runs/header-v3-http-20261018/holdout39/cases/holdout-nist-tn2354/request.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/304562d458a0269ef164b248c0ac0bf2bc6b583006659b9f746a7b767a1924a0.json",
+      "sha256": "304562d458a0269ef164b248c0ac0bf2bc6b583006659b9f746a7b767a1924a0",
+      "bytes": 311,
+      "original_path": "benchmark/runs/header-v3-http-20261018/holdout39/cases/holdout-nist-tn2354/response.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/69e505a664bab659f37e6ec6c3f209f3884b1e259c8543be0a49d60179c35626.json",
+      "sha256": "69e505a664bab659f37e6ec6c3f209f3884b1e259c8543be0a49d60179c35626",
+      "bytes": 551,
+      "original_path": "benchmark/runs/header-v3-http-20261018/holdout39/cases/holdout-nist-tn2354/summary.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/3db8f32eb0a5a9ba25235c388003283eb2e7ad19689ff0b713e2a008fea3ce68.bin",
+      "sha256": "3db8f32eb0a5a9ba25235c388003283eb2e7ad19689ff0b713e2a008fea3ce68",
+      "bytes": 720,
+      "original_path": "benchmark/runs/header-v3-http-20261018/holdout39/cases/holdout-nist-tn2354/response-body.bin",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/ba3570813cdb4b875116118be0beb5b4d40a1ff77d6f55059b1bced009b35ce0.json",
+      "sha256": "ba3570813cdb4b875116118be0beb5b4d40a1ff77d6f55059b1bced009b35ce0",
+      "bytes": 3379,
+      "original_path": "benchmark/runs/header-v3-http-20261018/holdout39-header-stage-final.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/85230cefd242084b70d7b7d976e93f8781a5d8f62db7aee691f5244173d606ed.json",
+      "sha256": "85230cefd242084b70d7b7d976e93f8781a5d8f62db7aee691f5244173d606ed",
+      "bytes": 2314,
+      "original_path": "benchmark/runs/header-v3-http-20261018/header-stage/holdout39/holdout-census-samoa-1930.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/a0cba2a11116c171d4e2728e8f1b65caf91c408d889bc89cad5f5d1af56ad6ff.json",
+      "sha256": "a0cba2a11116c171d4e2728e8f1b65caf91c408d889bc89cad5f5d1af56ad6ff",
+      "bytes": 2311,
+      "original_path": "benchmark/runs/header-v3-http-20261018/header-stage/holdout39/holdout-irs-form1040-2025.json",
+      "snapshot_bytes_unchanged": true
+    }
+  ],
+  "received_MD_proofs": [
+    {
+      "document_id": "holdout-irs-form1040-2025",
+      "source_sha256": "3d31c226df0d189ced80e039d01cf0f8820c1019681a0f0ca6264de277b7e982",
+      "path": "benchmark/runs/header-v3-http-20261018/holdout39/cases/holdout-irs-form1040-2025/result.md",
+      "sha256": "14c0f67fd56e8283ed158a834a1842eb1a8083f0733690c1e01808d921856d72",
+      "bytes": 33262
+    },
+    {
+      "document_id": "holdout-census-samoa-1930",
+      "source_sha256": "4ebad09d258f11e8d4e04c3f5f0af1493d0622672209a71bb175f7f0fc4ac77d",
+      "path": "benchmark/runs/header-v3-http-20261018/holdout39/cases/holdout-census-samoa-1930/result.md",
+      "sha256": "54a6716280e1fade9e5739024db79563b3197bfee44f1d4938662ab4ba94077d",
+      "bytes": 60112
+    }
+  ],
+  "service_failures": [
+    {
+      "document_id": "holdout-nist-tn2354",
+      "source_sha256": "171dec979423da69147527794a29d056e8e0751fe7d20d32484e402d39b4dcff",
+      "page_count": 25,
+      "submit_http_status": 202,
+      "status": "failed",
+      "error": "Job terminated with status failed",
+      "public_Markdown_available": false
+    }
+  ],
+  "assertion_counts": {
+    "pass": 24,
+    "fail": 4,
+    "unknown": 8
+  },
+  "registered_method_fingerprint": "14632f190c963705507f657cf1624787fcdb96b6d4539f507ffb78be27367087",
+  "observed_recipe_fingerprint": null,
+  "coverage": {
+    "attempted_documents": 3,
+    "completed_documents": 2,
+    "failed_documents": 1,
+    "attempted_pages": 39,
+    "completed_pages": 14,
+    "all_successful": false
+  },
+  "qualification": {
+    "full_HTTP": true,
+    "complete_document_capture": false,
+    "full_cohort_success": false,
+    "deployment_acceptance": false,
+    "note": "Failed attempt preserved. All sealed assertions retain denominator; missing output is unknown and service failure is separate."
+  },
+  "evaluation_role": "development_after_holdout_exposure",
+  "source_freeze": {
+    "path": "benchmark/evidence/artifacts/fcf437d3163b932d5e318d7a05da20fae011c479a3e0c13cec73801387646b45.json",
+    "sha256": "fcf437d3163b932d5e318d7a05da20fae011c479a3e0c13cec73801387646b45",
+    "bytes": 20598,
+    "original_path": "benchmark/runs/header-verifier-v3-20261018/source-freeze.json",
+    "snapshot_bytes_unchanged": true
+  },
+  "independent_first_test": false,
+  "original_first_attempt_evidence": "benchmark/evidence/primary-holdout39-first-attempt-20261018.json",
+  "exposure_note": "Original39 was exposed before generic adapter v3 repair; this is a development regression retest, original failure and gold unchanged"
+}

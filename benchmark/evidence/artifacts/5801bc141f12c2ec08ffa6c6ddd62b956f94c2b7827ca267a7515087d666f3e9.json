@@ -1,0 +1,12 @@
+{
+  "source": {
+    "path": "benchmark/datasets/moparse-v1/sources/holdout-20261018/census-samoa-1930.pdf",
+    "sha256": "4ebad09d258f11e8d4e04c3f5f0af1493d0622672209a71bb175f7f0fc4ac77d",
+    "bytes": 965148
+  },
+  "endpoint": "/v1/content/parse",
+  "form": {
+    "scan_policy": "auto"
+  },
+  "unit_range_omitted": true
+}

@@ -1,0 +1,104 @@
+{
+  "schema": "moparse-evidence/1",
+  "id": "header-v4-source-character-budget-observation-20261018",
+  "method_id": "mineru-advanced-txt-vllm-c2-docling-header-glm-v4",
+  "cohort_id": "formal550-source-character-budget-diagnostic",
+  "origin": "fresh_component",
+  "fresh_model_inference": false,
+  "new_HTTP_requests": false,
+  "output_stage": "read-only-whole-source-page-character-budget-observation",
+  "quality": {},
+  "performance": {},
+  "provenance": [
+    {
+      "path": "benchmark/evidence/artifacts/64ff386a3a1249d3d4fe019857fc409558448097917243cac867b7613e430030.json",
+      "sha256": "64ff386a3a1249d3d4fe019857fc409558448097917243cac867b7613e430030",
+      "bytes": 778902,
+      "original_path": "benchmark/runs/header-v4-http-20261018/source-character-budget-compact-audit.json",
+      "snapshot_bytes_unchanged": true
+    }
+  ],
+  "diagnostic_summary": {
+    "whole_PDFs": 17,
+    "pages": 550,
+    "public_tables": 700,
+    "original_coarse_700_counts": {
+      "within_page_budget_not_proof_of_accuracy": 553,
+      "page_budget_exceeded_review_candidate": 107,
+      "unknown": 40
+    },
+    "conservative_possible_script_700_counts": {
+      "within_page_budget_not_proof_of_accuracy": 553,
+      "page_budget_exceeded_review_candidate": 105,
+      "unknown": 42
+    },
+    "cohort_summaries": [
+      {
+        "cohort": "regression504",
+        "public_tables": 670,
+        "original_coarse_status_counts": {
+          "within_page_budget_not_proof_of_accuracy": 541,
+          "page_budget_exceeded_review_candidate": 92,
+          "unknown": 37
+        },
+        "conservative_possible_script_status_counts": {
+          "within_page_budget_not_proof_of_accuracy": 541,
+          "page_budget_exceeded_review_candidate": 90,
+          "unknown": 39
+        },
+        "eligible_witnessed_LN_excess_review_candidates": 0,
+        "unknown_tables_not_tested_as_witnessed_LN": 39
+      },
+      {
+        "cohort": "holdout39",
+        "public_tables": 23,
+        "original_coarse_status_counts": {
+          "page_budget_exceeded_review_candidate": 11,
+          "within_page_budget_not_proof_of_accuracy": 11,
+          "unknown": 1
+        },
+        "conservative_possible_script_status_counts": {
+          "page_budget_exceeded_review_candidate": 11,
+          "within_page_budget_not_proof_of_accuracy": 11,
+          "unknown": 1
+        },
+        "eligible_witnessed_LN_excess_review_candidates": 8,
+        "unknown_tables_not_tested_as_witnessed_LN": 1
+      },
+      {
+        "cohort": "fresh7",
+        "public_tables": 7,
+        "original_coarse_status_counts": {
+          "unknown": 2,
+          "page_budget_exceeded_review_candidate": 4,
+          "within_page_budget_not_proof_of_accuracy": 1
+        },
+        "conservative_possible_script_status_counts": {
+          "unknown": 2,
+          "page_budget_exceeded_review_candidate": 4,
+          "within_page_budget_not_proof_of_accuracy": 1
+        },
+        "eligible_witnessed_LN_excess_review_candidates": 1,
+        "unknown_tables_not_tested_as_witnessed_LN": 2
+      }
+    ],
+    "witnessed_LN_review_candidates": 9,
+    "candidate_documents": {
+      "holdout-census-samoa-1930": 8,
+      "nasa-maax-factsheet": 1
+    },
+    "IRS4_actual_V4_tables_witnessed_LN_candidates": 0,
+    "old_202_columns_not_reinterpreted_as_current149": true
+  },
+  "qualification": {
+    "observation_only": true,
+    "model_quality_or_performance_result": false,
+    "source_textlayer_complete_or_correct": false,
+    "automatic_error_rejection_or_repair_authorized": false,
+    "new_inference_or_HTTP": false,
+    "quality_gold_reader_or_scores_changed": false,
+    "original_outputs_or_raw_character_budgets_changed": false,
+    "raw_punctuation_sign_and_amount_separator_conflicts_preserved": true,
+    "limitation": "A review upper bound; within-budget is not a correctness proof. Scan/OCR layers and font glyph maps require independent review."
+  }
+}

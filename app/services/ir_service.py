@@ -38,6 +38,7 @@ from app.models.parse_result import (
     QualityVerdict,
 )
 from app.models.source import StoredSource
+from app.models.source_evidence import SourceRegionEvidence
 from app.services.evidence_service import PageEvidence, compact_text
 from app.services.table_service import TableCellFragment, TableFragment
 from app.utils.settings import setting
@@ -82,6 +83,8 @@ def _native_bbox(
 
 def _source_kind(value: str) -> ProvenanceSourceKind:
     normalized = value.casefold()
+    if "mineru" in normalized:
+        return ProvenanceSourceKind.MINERU
     if "glm" in normalized or "sdk" in normalized:
         return ProvenanceSourceKind.GLM
     if "native" in normalized or "pymupdf" in normalized:
@@ -217,12 +220,18 @@ class DocumentIRService:
             if isinstance(page_number, int):
                 pictures_by_page.setdefault(page_number, []).append(picture)
 
+        source_regions_by_page: dict[int, list[SourceRegionEvidence]] = {}
+        for region in result._source_regions:
+            if isinstance(region, SourceRegionEvidence):
+                source_regions_by_page.setdefault(region.page_number, []).append(region)
+
         units = [
             self._page(
                 page,
                 evidence_by_page.get(page.page_number),
                 tables_by_page,
                 pictures_by_page.get(page.page_number, []),
+                source_regions_by_page.get(page.page_number, []),
             )
             for page in sorted(result.pages, key=lambda item: item.page_number)
         ]
@@ -244,7 +253,11 @@ class DocumentIRService:
         summary = result.quality_summary
         glm_calls = summary.glm_calls if summary is not None else None
         return ContentParseResult(
-            status="partial" if result.route_summary.failed_pages else "completed",
+            status=(
+                "partial"
+                if result.route_summary.failed_pages or result._source_regions
+                else "completed"
+            ),
             source=ContentSource(
                 content_id=result.document_id,
                 source_sha256=_sha256(source.path),
@@ -288,7 +301,7 @@ class DocumentIRService:
                 primary_backend=result.pipeline.primary,
                 ocr_backend=result.pipeline.ocr,
                 visual_backend=result.pipeline.ocr,
-                parser_version=str(setting(self.settings, "version", "0.4.0")),
+                parser_version=str(setting(self.settings, "version", "0.5.0")),
                 input_bytes=result.usage.input_bytes,
                 duration_ms=result.usage.duration_ms,
                 glm_calls=glm_calls,
@@ -331,12 +344,14 @@ class DocumentIRService:
         evidence: PageEvidence | None,
         tables_by_page: dict[int, list[ParsedTable]],
         picture_candidates: list[object],
+        source_regions: list[SourceRegionEvidence] | None = None,
     ) -> ContentUnit:
         page_number = int(page.page_number)
         page_id = f"p{page_number}"
         page_tables = tables_by_page.get(page_number, [])
         blocks: list[TextBlock] = []
         regions: list[ContentRegion] = []
+        source_regions = source_regions or []
         if evidence and evidence.native_blocks:
             ordered = evidence._blocks_in_reading_order()
             sizes = [block.max_font_size for block in ordered if block.max_font_size > 0]
@@ -423,8 +438,44 @@ class DocumentIRService:
                 )
             )
 
+        for source_region in source_regions:
+            region_id = f"{page_id}-source-{source_region.source_ref}"
+            block_id = f"{region_id}-text"
+            box = _bbox(source_region.normalized_bbox)
+            blocks.append(
+                TextBlock(
+                    block_id=block_id,
+                    unit_id=page_id,
+                    region_id=region_id,
+                    block_type=RegionType.UNKNOWN,
+                    bbox=box,
+                    reading_order=len(regions) + 1,
+                    text=source_region.literal_text,
+                    quality=ElementQuality.CONFLICTED,
+                    provenance=ElementProvenance(
+                        selected_source=ProvenanceSourceKind.NATIVE,
+                        supporting_sources=[ProvenanceSourceKind.NATIVE],
+                        sources=[ProvenanceSource(source=ProvenanceSourceKind.NATIVE)],
+                        reason_codes=list(source_region.reason_codes),
+                    ),
+                )
+            )
+            regions.append(
+                ContentRegion(
+                    region_id=region_id,
+                    unit_id=page_id,
+                    region_type=RegionType.UNKNOWN,
+                    bbox=box,
+                    reading_order=len(regions) + 1,
+                    block_ids=[block_id],
+                    quality=ElementQuality.CONFLICTED,
+                )
+            )
+
         if picture_candidates:
             for index, picture in enumerate(picture_candidates, 1):
+                if getattr(picture, "source_region_ref", None) is not None:
+                    continue
                 regions.append(
                     ContentRegion(
                         region_id=f"{page_id}-image-{index}",

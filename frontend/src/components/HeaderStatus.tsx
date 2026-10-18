@@ -79,7 +79,7 @@ export function HeaderStatus({ snapshot, loading, onRefresh, apiKey, onApiKeyCha
       <div className="brand-lockup">
         <img className="brand-logo" src="/logo.png?v=4" alt="" aria-hidden="true" />
         <div className="brand-copy">
-          <h1>MosaicParse</h1>
+          <h1>moparse</h1>
           <p>多模态内容解析</p>
         </div>
       </div>

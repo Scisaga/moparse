@@ -87,7 +87,7 @@ def create_app(
         mcp_bundle = create_mcp(current_runtime, current_settings)
 
     application = FastAPI(
-        title="MosaicParse",
+        title=current_settings.app_name,
         summary="Self-hosted multimodal content parser for external RAG systems",
         description=(
             "An independent document and media parsing service with Docling and optional GLM-OCR "
@@ -252,7 +252,7 @@ def create_app(
         @application.get("/", include_in_schema=False)
         async def development_root() -> HTMLResponse:
             return HTMLResponse(
-                "<h1>MosaicParse</h1><p>Frontend assets are not built. "
+                "<h1>moparse</h1><p>Frontend assets are not built. "
                 '<a href="/docs">Open the API documentation</a>.</p>'
             )
 

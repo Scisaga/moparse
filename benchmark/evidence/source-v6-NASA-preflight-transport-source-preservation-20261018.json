@@ -1,0 +1,74 @@
+{
+  "schema": "moparse-evidence/1",
+  "id": "source-v6-NASA-preflight-transport-source-preservation-20261018",
+  "method_id": "mineru-advanced-txt-vllm-c2-docling-source-glm-v6",
+  "cohort_id": "source-preservation-preflight-2pages",
+  "origin": "fresh_HTTP",
+  "fresh_model_inference": null,
+  "new_HTTP_requests": true,
+  "output_stage": "public-HTTP-GFM-with-unknown-source-region",
+  "status": "transport-complete-quality-partial-supplement",
+  "quality": {},
+  "performance": {
+    "seconds": 65.2809027149342,
+    "scope": "Complete original2page preflight upload/received and persisted MD/events/assets; actual API status partial and original old-scope run failed preserved",
+    "power_limit_W": 220,
+    "warmup": "Resident V4 worker/provider retained without reset; cache differs from old timing; preflight separate from formal550"
+  },
+  "provenance": [
+    {
+      "path": "benchmark/evidence/artifacts/3741839c3ac253180ee5ba2a09e1c7ce91c9d25c15f2c860b1ce4a0ed64dcad1.json",
+      "sha256": "3741839c3ac253180ee5ba2a09e1c7ce91c9d25c15f2c860b1ce4a0ed64dcad1",
+      "bytes": 2847,
+      "original_path": "benchmark/runs/source-v6-http-20261018/preflight-transport-quality-supplement.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/52c8b98f07450bff90299f5ad9ca6dee5be4e697076237a126f96bfa3517a0b0.json",
+      "sha256": "52c8b98f07450bff90299f5ad9ca6dee5be4e697076237a126f96bfa3517a0b0",
+      "bytes": 5812,
+      "original_path": "benchmark/runs/source-v6-http-20261018/preflight-B-v2.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/0f0061fe33c00564fc3c14b852fdc019e7c9988fb929a19c5ccf8e16e0112b60.json",
+      "sha256": "0f0061fe33c00564fc3c14b852fdc019e7c9988fb929a19c5ccf8e16e0112b60",
+      "bytes": 100287,
+      "original_path": "benchmark/runs/source-v6-http-20261018/deployment-before-preflight.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/d219cbca7cc5a91946bb97f6ee28d66b81f3bf1e1f472583f4471d7ed39fab95.json",
+      "sha256": "d219cbca7cc5a91946bb97f6ee28d66b81f3bf1e1f472583f4471d7ed39fab95",
+      "bytes": 322,
+      "original_path": "benchmark/runs/source-v6-http-20261018/preflight2/cases/nasa-maax-factsheet/request.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/2e6c6d81b49a5c2b58a77949735fe36e7d13c1edb9527b89373207f9bd445e4d.json",
+      "sha256": "2e6c6d81b49a5c2b58a77949735fe36e7d13c1edb9527b89373207f9bd445e4d",
+      "bytes": 2619,
+      "original_path": "benchmark/runs/source-v6-http-20261018/preflight2/cases/nasa-maax-factsheet/summary.json",
+      "snapshot_bytes_unchanged": true
+    }
+  ],
+  "actual_job_status": "partial",
+  "capture_status": "completed",
+  "transport_complete": true,
+  "quality_fully_resolved": false,
+  "source_preservation_B_pass": true,
+  "original_failed_capture_status_preserved": true,
+  "original_request_replayed_at_registration": false,
+  "registered_method_fingerprint": "7766f0248f6870a84d2e224087b059815dbaae39d8dd396d202944006a5ba1c6",
+  "qualification": {
+    "full_HTTP": true,
+    "complete_document_capture": true,
+    "deployment_acceptance": false,
+    "full550_result": false,
+    "quality_unknown_explicitly_preserved": true,
+    "typed_Gantt_semantic_reconstruction": false,
+    "new_independent_holdout": false,
+    "original_fixed28_gold_or_reader_changed": false,
+    "same2preflight_not_counted_twice": true
+  }
+}

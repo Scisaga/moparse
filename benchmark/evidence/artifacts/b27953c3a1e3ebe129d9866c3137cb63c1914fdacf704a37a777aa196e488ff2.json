@@ -1,0 +1,688 @@
+{
+  "schema": "moparse-other-cohort-public-consistency/1",
+  "created_at": "2026-10-18T03:34:06.345339+00:00",
+  "cohort_id": "holdout-20261018",
+  "scope": "Same exposed original sources, V6 versus V7 allpublictables and visible non-table body; changes require source review; no new originalsource accuracy score",
+  "dataset": {
+    "path": "benchmark/datasets/moparse-v1/dataset.json",
+    "sha256": "ef79743aaa25fcb8a63805b89a43445cb28521359df32b0927a428fc07746453",
+    "bytes": 5879
+  },
+  "documents": [
+    {
+      "document_id": "holdout-census-samoa-1930",
+      "source_sha256": "4ebad09d258f11e8d4e04c3f5f0af1493d0622672209a71bb175f7f0fc4ac77d",
+      "MDs": [
+        {
+          "path": "benchmark/runs/source-v6-http-20261018/holdout39/cases/holdout-census-samoa-1930/result.md",
+          "sha256": "3bfdf38bd885eb94fa3dcc403804cdf191c600136de8b513d1af5a4a991d2892",
+          "bytes": 60112
+        },
+        {
+          "path": "benchmark/runs/table-syntax-v7-http-20261018/holdout39/cases/holdout-census-samoa-1930/result.md",
+          "sha256": "cd9d4bd4db35da4586ec6364c8062f686a34774aac181e22c8815b404b859d01",
+          "bytes": 60086
+        }
+      ],
+      "pages": 12,
+      "table_counts": [
+        16,
+        16
+      ],
+      "equal_tables": [
+        {
+          "id": "sdk_p10_t1",
+          "rendered_page": 10,
+          "shape": [
+            7,
+            3
+          ],
+          "source_maps": [
+            {
+              "fragment": "sdk_p10_t1",
+              "page": 10,
+              "source_rows": "1-7",
+              "logical_rows": "1-7",
+              "repeated_header_rows": 0
+            }
+          ],
+          "public_table_SHA256": "fe9fea25cb6cd4a6cd88d2183db13b9bed1eda550182e9ebd9883e403c4e367d"
+        },
+        {
+          "id": "sdk_p11_t1",
+          "rendered_page": 11,
+          "shape": [
+            7,
+            6
+          ],
+          "source_maps": [
+            {
+              "fragment": "sdk_p11_t1",
+              "page": 11,
+              "source_rows": "1-7",
+              "logical_rows": "1-7",
+              "repeated_header_rows": 0
+            }
+          ],
+          "public_table_SHA256": "c066a3e3afe099747704b64a451ed0f09948bdca8eede7cc140805dbb619fa9f"
+        },
+        {
+          "id": "sdk_p11_t2",
+          "rendered_page": 11,
+          "shape": [
+            48,
+            20
+          ],
+          "source_maps": [
+            {
+              "fragment": "sdk_p11_t2",
+              "page": 11,
+              "source_rows": "1-48",
+              "logical_rows": "1-48",
+              "repeated_header_rows": 0
+            }
+          ],
+          "public_table_SHA256": "60a8877b42249f1df311a65d54aff35603831ff4c9332e1ba44f997892e102dd"
+        },
+        {
+          "id": "sdk_p11_t3",
+          "rendered_page": 11,
+          "shape": [
+            5,
+            8
+          ],
+          "source_maps": [
+            {
+              "fragment": "sdk_p11_t3",
+              "page": 11,
+              "source_rows": "1-5",
+              "logical_rows": "1-5",
+              "repeated_header_rows": 0
+            }
+          ],
+          "public_table_SHA256": "c34234bc200b38b6bc3256a5715d10dfe469d1a2d174d9f8d3f24f99d0c4ec9b"
+        },
+        {
+          "id": "sdk_p12_t1",
+          "rendered_page": 12,
+          "shape": [
+            24,
+            20
+          ],
+          "source_maps": [
+            {
+              "fragment": "sdk_p12_t1",
+              "page": 12,
+              "source_rows": "1-24",
+              "logical_rows": "1-24",
+              "repeated_header_rows": 0
+            }
+          ],
+          "public_table_SHA256": "875228a71b9e96ed947bb01cac12ddf38223b701c11097d4e09cb7855ef7c301"
+        },
+        {
+          "id": "sdk_p12_t2",
+          "rendered_page": 12,
+          "shape": [
+            23,
+            20
+          ],
+          "source_maps": [
+            {
+              "fragment": "sdk_p12_t2",
+              "page": 12,
+              "source_rows": "1-23",
+              "logical_rows": "1-23",
+              "repeated_header_rows": 0
+            }
+          ],
+          "public_table_SHA256": "710da514feff92ee0c52539adb0c0ff140d77922c2999c399e0eefa4786f19cc"
+        },
+        {
+          "id": "sdk_p2_t1",
+          "rendered_page": 2,
+          "shape": [
+            2,
+            1
+          ],
+          "source_maps": [
+            {
+              "fragment": "sdk_p2_t1",
+              "page": 2,
+              "source_rows": "1-2",
+              "logical_rows": "1-2",
+              "repeated_header_rows": 0
+            }
+          ],
+          "public_table_SHA256": "4bfb84df13cbc52c415e958830b3ebedc0ba2071bc255941c71ac83f622c1add"
+        },
+        {
+          "id": "sdk_p5_t1",
+          "rendered_page": 5,
+          "shape": [
+            17,
+            11
+          ],
+          "source_maps": [
+            {
+              "fragment": "sdk_p5_t1",
+              "page": 5,
+              "source_rows": "1-17",
+              "logical_rows": "1-17",
+              "repeated_header_rows": 0
+            }
+          ],
+          "public_table_SHA256": "eb4319c2ef7f55de0b0a8408afd3cd7b8d78a5cad60427e3b64f39ea935272c0"
+        },
+        {
+          "id": "sdk_p5_t2",
+          "rendered_page": 5,
+          "shape": [
+            60,
+            16
+          ],
+          "source_maps": [
+            {
+              "fragment": "sdk_p5_t2",
+              "page": 5,
+              "source_rows": "1-60",
+              "logical_rows": "1-60",
+              "repeated_header_rows": 0
+            }
+          ],
+          "public_table_SHA256": "a374c84d40f304e1240d55a73ef0a2477916a413941b284ff147fb548add0d22"
+        },
+        {
+          "id": "sdk_p6_t2",
+          "rendered_page": 6,
+          "shape": [
+            9,
+            14
+          ],
+          "source_maps": [
+            {
+              "fragment": "sdk_p6_t2",
+              "page": 6,
+              "source_rows": "1-9",
+              "logical_rows": "1-9",
+              "repeated_header_rows": 0
+            }
+          ],
+          "public_table_SHA256": "b5ae673d7c55f660a92ab4e9d1316514c0e509a4a65d57e7e3d1f07767e8f777"
+        },
+        {
+          "id": "sdk_p6_t3",
+          "rendered_page": 6,
+          "shape": [
+            9,
+            17
+          ],
+          "source_maps": [
+            {
+              "fragment": "sdk_p6_t3",
+              "page": 6,
+              "source_rows": "1-9",
+              "logical_rows": "1-9",
+              "repeated_header_rows": 0
+            }
+          ],
+          "public_table_SHA256": "7a8d99ff60e7f91bb3f048dba79207dad697b002eb81f83de6420baa1d996e9a"
+        },
+        {
+          "id": "sdk_p7_t1",
+          "rendered_page": 7,
+          "shape": [
+            37,
+            13
+          ],
+          "source_maps": [
+            {
+              "fragment": "sdk_p7_t1",
+              "page": 7,
+              "source_rows": "1-37",
+              "logical_rows": "1-37",
+              "repeated_header_rows": 0
+            }
+          ],
+          "public_table_SHA256": "aff918619823100b71a67bd2e9205eda065375374fbc59e77a16604c30b7ba17"
+        },
+        {
+          "id": "sdk_p8_t1",
+          "rendered_page": 8,
+          "shape": [
+            56,
+            11
+          ],
+          "source_maps": [
+            {
+              "fragment": "sdk_p8_t1",
+              "page": 8,
+              "source_rows": "1-56",
+              "logical_rows": "1-56",
+              "repeated_header_rows": 0
+            }
+          ],
+          "public_table_SHA256": "e2da0947184a6d40374d3a4b58093fef82e27ada9091696ac0765f70737360b5"
+        },
+        {
+          "id": "sdk_p9_t1",
+          "rendered_page": 9,
+          "shape": [
+            42,
+            13
+          ],
+          "source_maps": [
+            {
+              "fragment": "sdk_p9_t1",
+              "page": 9,
+              "source_rows": "1-42",
+              "logical_rows": "1-42",
+              "repeated_header_rows": 0
+            }
+          ],
+          "public_table_SHA256": "e1bf18d3fc855b1157e5a8ac886c7bc08b2a94f6bb1c8c0c4bdac000fbf37b05"
+        }
+      ],
+      "changed_tables": [
+        {
+          "table_id": "sdk_p4_t1",
+          "left": {
+            "id": "sdk_p4_t1",
+            "rendered_page": 4,
+            "shape": [
+              8,
+              11
+            ],
+            "source_maps": [
+              {
+                "fragment": "sdk_p4_t1",
+                "page": 4,
+                "source_rows": "1-8",
+                "logical_rows": "1-8",
+                "repeated_header_rows": 0
+              }
+            ],
+            "public_table_SHA256": "e83f8ff7de79f1ac427e2fc6f2879efd5ca98d49b13e43e3d39289041f434d2c"
+          },
+          "right": {
+            "id": "sdk_p4_t1",
+            "rendered_page": 4,
+            "shape": [
+              8,
+              11
+            ],
+            "source_maps": [
+              {
+                "fragment": "sdk_p4_t1",
+                "page": 4,
+                "source_rows": "1-8",
+                "logical_rows": "1-8",
+                "repeated_header_rows": 0
+              }
+            ],
+            "public_table_SHA256": "8f69bd3a11b9b41d7f8e83651e18edd060f03bad688e76931294b6e6b716d94a"
+          },
+          "grid_equal": false,
+          "spans_equal": true,
+          "structure_equal": true,
+          "source_maps_equal": true,
+          "different_cells": [
+            {
+              "row": 5,
+              "column": 0,
+              "V6": "Tutulla:Eastern District",
+              "V7": "Tutuilla: Eastern District",
+              "ASCII_width_only_equivalent": false
+            }
+          ]
+        },
+        {
+          "table_id": "sdk_p6_t1",
+          "left": {
+            "id": "sdk_p6_t1",
+            "rendered_page": 6,
+            "shape": [
+              7,
+              14
+            ],
+            "source_maps": [
+              {
+                "fragment": "sdk_p6_t1",
+                "page": 6,
+                "source_rows": "1-7",
+                "logical_rows": "1-7",
+                "repeated_header_rows": 0
+              }
+            ],
+            "public_table_SHA256": "3be8df6b5c2e1251a730ece5c3037998dd179fc261e6dcd8696e977922ee7f2b"
+          },
+          "right": {
+            "id": "sdk_p6_t1",
+            "rendered_page": 6,
+            "shape": [
+              7,
+              14
+            ],
+            "source_maps": [
+              {
+                "fragment": "sdk_p6_t1",
+                "page": 6,
+                "source_rows": "1-7",
+                "logical_rows": "1-7",
+                "repeated_header_rows": 0
+              }
+            ],
+            "public_table_SHA256": "f6a81a5b73faa0c44e8a34fd7e60673f1d3cc66c969bf3c2dd2b6a99eb00dd72"
+          },
+          "grid_equal": false,
+          "spans_equal": true,
+          "structure_equal": true,
+          "source_maps_equal": true,
+          "different_cells": [
+            {
+              "row": 6,
+              "column": 11,
+              "V6": "231962.9222",
+              "V7": "22",
+              "ASCII_width_only_equivalent": false
+            },
+            {
+              "row": 6,
+              "column": 12,
+              "V6": "231962.9222",
+              "V7": "23",
+              "ASCII_width_only_equivalent": false
+            },
+            {
+              "row": 6,
+              "column": 13,
+              "V6": "231962.9222",
+              "V7": "3",
+              "ASCII_width_only_equivalent": false
+            }
+          ]
+        }
+      ],
+      "removed_tables": [],
+      "added_tables": [],
+      "raw_visible_equal_pages": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "body_changes": [],
+      "actual_V7_job_status": "completed"
+    },
+    {
+      "document_id": "holdout-irs-form1040-2025",
+      "source_sha256": "3d31c226df0d189ced80e039d01cf0f8820c1019681a0f0ca6264de277b7e982",
+      "MDs": [
+        {
+          "path": "benchmark/runs/source-v6-http-20261018/holdout39/cases/holdout-irs-form1040-2025/result.md",
+          "sha256": "d143d75b395f20fb82f78badb3f8de9cbedea94582283bbec8340baf3bd08f1d",
+          "bytes": 19519
+        },
+        {
+          "path": "benchmark/runs/table-syntax-v7-http-20261018/holdout39/cases/holdout-irs-form1040-2025/result.md",
+          "sha256": "fcad56d50cffc4b804cdf2f3ab56ba28b0fa6d3b223c6b8b51b0373d4c912d97",
+          "bytes": 24138
+        }
+      ],
+      "pages": 2,
+      "table_counts": [
+        4,
+        4
+      ],
+      "equal_tables": [
+        {
+          "id": "mineru_p1_t1",
+          "rendered_page": 1,
+          "shape": [
+            9,
+            8
+          ],
+          "source_maps": [
+            {
+              "fragment": "mineru_p1_t1",
+              "page": 1,
+              "source_rows": "1-9",
+              "logical_rows": "1-9",
+              "repeated_header_rows": 0
+            }
+          ],
+          "public_table_SHA256": "37d20fd465453ea81421bb0cafcb6c1b66801671776fa2f8300d38f296339f48"
+        },
+        {
+          "id": "mineru_p1_t2",
+          "rendered_page": 1,
+          "shape": [
+            8,
+            10
+          ],
+          "source_maps": [
+            {
+              "fragment": "mineru_p1_t2",
+              "page": 1,
+              "source_rows": "1-8",
+              "logical_rows": "1-8",
+              "repeated_header_rows": 0
+            }
+          ],
+          "public_table_SHA256": "4c5361b463fd6d425c6877d3ff43a672127f55d2c6fda1b06e7816bba6b24bce"
+        },
+        {
+          "id": "mineru_p2_t1",
+          "rendered_page": 2,
+          "shape": [
+            51,
+            10
+          ],
+          "source_maps": [
+            {
+              "fragment": "mineru_p2_t1",
+              "page": 2,
+              "source_rows": "1-51",
+              "logical_rows": "1-51",
+              "repeated_header_rows": 0
+            }
+          ],
+          "public_table_SHA256": "1af8ca8e51ad5fade4885db3fa5341e222225a3896d9185e5807066bd80c7e59"
+        }
+      ],
+      "changed_tables": [
+        {
+          "table_id": "mineru_p1_t3",
+          "left": {
+            "id": "mineru_p1_t3",
+            "rendered_page": 1,
+            "shape": [
+              11,
+              149
+            ],
+            "source_maps": [
+              {
+                "fragment": "mineru_p1_t3",
+                "page": 1,
+                "source_rows": "1-11",
+                "logical_rows": "1-11",
+                "repeated_header_rows": 0
+              }
+            ],
+            "public_table_SHA256": "48cc2d8c4a557f9ab1de066f8756f1f2629818795903fae990b312195367510a"
+          },
+          "right": {
+            "id": "mineru_p1_t3",
+            "rendered_page": 1,
+            "shape": [
+              13,
+              202
+            ],
+            "source_maps": [
+              {
+                "fragment": "mineru_p1_t3",
+                "page": 1,
+                "source_rows": "1-13",
+                "logical_rows": "1-13",
+                "repeated_header_rows": 0
+              }
+            ],
+            "public_table_SHA256": "5fdfc224a94d65c997ee3e4ab3ceef24fd9bc10eb28af1ea019387875b60e7c1"
+          },
+          "grid_equal": false,
+          "spans_equal": false,
+          "structure_equal": false,
+          "source_maps_equal": false,
+          "different_cells": []
+        }
+      ],
+      "removed_tables": [],
+      "added_tables": [],
+      "raw_visible_equal_pages": [
+        1,
+        2
+      ],
+      "body_changes": [],
+      "actual_V7_job_status": "completed"
+    },
+    {
+      "document_id": "holdout-nist-tn2354",
+      "source_sha256": "171dec979423da69147527794a29d056e8e0751fe7d20d32484e402d39b4dcff",
+      "MDs": [
+        {
+          "path": "benchmark/runs/source-v6-http-20261018/holdout39/cases/holdout-nist-tn2354/result.md",
+          "sha256": "df02ce127f655436e4236c55a46d31a7e27df3f1ddc61bea50e18e29df5561c7",
+          "bytes": 44559
+        },
+        {
+          "path": "benchmark/runs/table-syntax-v7-http-20261018/holdout39/cases/holdout-nist-tn2354/result.md",
+          "sha256": "2a40ed88bfdc10e88a8995559d390e1805350f231ef4560d16f2280b0db9fde1",
+          "bytes": 44559
+        }
+      ],
+      "pages": 25,
+      "table_counts": [
+        3,
+        3
+      ],
+      "equal_tables": [
+        {
+          "id": "mineru_p11_t1",
+          "rendered_page": 11,
+          "shape": [
+            7,
+            6
+          ],
+          "source_maps": [
+            {
+              "fragment": "mineru_p11_t1",
+              "page": 11,
+              "source_rows": "1-7",
+              "logical_rows": "1-7",
+              "repeated_header_rows": 0
+            }
+          ],
+          "public_table_SHA256": "77fb75605af5375882c103581234c35e759759f81319dec0aa5e5badeb5e2b60"
+        },
+        {
+          "id": "mineru_p12_t1",
+          "rendered_page": 12,
+          "shape": [
+            7,
+            5
+          ],
+          "source_maps": [
+            {
+              "fragment": "mineru_p12_t1",
+              "page": 12,
+              "source_rows": "1-7",
+              "logical_rows": "1-7",
+              "repeated_header_rows": 0
+            }
+          ],
+          "public_table_SHA256": "2a18876cb3afc7ca5f93a7766eedca1d35547c76cafa8df57bb72dbed045674c"
+        },
+        {
+          "id": "mineru_p25_t1",
+          "rendered_page": 25,
+          "shape": [
+            30,
+            4
+          ],
+          "source_maps": [
+            {
+              "fragment": "mineru_p25_t1",
+              "page": 25,
+              "source_rows": "1-30",
+              "logical_rows": "1-30",
+              "repeated_header_rows": 0
+            }
+          ],
+          "public_table_SHA256": "41d43a08ac0c0af0e8bf44f151d02ac841653486d553e5425e902ddce979b3c9"
+        }
+      ],
+      "changed_tables": [],
+      "removed_tables": [],
+      "added_tables": [],
+      "raw_visible_equal_pages": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25
+      ],
+      "body_changes": [],
+      "actual_V7_job_status": "completed"
+    }
+  ],
+  "frozen_visible_reader": {
+    "path": "benchmark/scorers/frozen/followup/20261017/content-preservation-mineru/verify-content-source.py",
+    "sha256": "f2fd1d7e5dbb1a6b85c7e2621b660f00ab77e0bee1d2e2d073dfdefa5cca1906",
+    "bytes": 24000
+  },
+  "summary": {
+    "documents": 3,
+    "pages": 39,
+    "equal_tables": 20,
+    "changed_tables": 3,
+    "removed_tables": 0,
+    "added_tables": 0,
+    "raw_visible_equal_pages": 39,
+    "body_changed_pages": 0
+  },
+  "policy": {
+    "gold_or_scoring_predicates_changed": false,
+    "unknown_source_preservation_not_recognition_accuracy": true,
+    "removed_model_table_rows_or_private_HTML_republished": false,
+    "API_partial_preserved": true,
+    "original_source_accuracy_outside_reviewed_gold_unknown": true
+  }
+}

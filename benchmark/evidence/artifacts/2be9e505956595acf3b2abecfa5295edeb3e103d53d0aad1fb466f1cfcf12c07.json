@@ -1,0 +1,159 @@
+{
+  "schema": "moparse-captured-public-format-observation/1",
+  "created_at": "2026-10-18T03:26:35.196392+00:00",
+  "run": {
+    "path": "benchmark/runs/table-syntax-v7-http-20261018/regression504/run.json",
+    "sha256": "0b63b1215bdfb6b136b18c216c6252e53da115133b1b868e4b1e09c6cbe105e0",
+    "bytes": 143380
+  },
+  "documents": [
+    {
+      "id": "1210860446",
+      "actual_API_status": "completed",
+      "capture_status": null,
+      "Markdown": {
+        "path": "benchmark/runs/table-syntax-v7-http-20261018/regression504/cases/1210860446/result.md",
+        "sha256": "a0f596aeaa1c8d4a038d2e3e944c5ee65469085e6d1bab3136db68750bb248d9",
+        "bytes": 18664
+      },
+      "pass": true,
+      "visible_HTML_leaks": [],
+      "original_strict_table_substring_absent": true
+    },
+    {
+      "id": "1211290753",
+      "actual_API_status": "completed",
+      "capture_status": null,
+      "Markdown": {
+        "path": "benchmark/runs/table-syntax-v7-http-20261018/regression504/cases/1211290753/result.md",
+        "sha256": "a749500c166dfdfb945a4e7d34b25381b5b8cb6df1688b67879661bfa1d2ec61",
+        "bytes": 5716
+      },
+      "pass": true,
+      "visible_HTML_leaks": [],
+      "original_strict_table_substring_absent": true
+    },
+    {
+      "id": "1219858186",
+      "actual_API_status": "completed",
+      "capture_status": null,
+      "Markdown": {
+        "path": "benchmark/runs/table-syntax-v7-http-20261018/regression504/cases/1219858186/result.md",
+        "sha256": "ff75d5d3d90d99708c7e7cf57fb82cd7f72474e1e28c1a86293c1ec7c8238bac",
+        "bytes": 39705
+      },
+      "pass": true,
+      "visible_HTML_leaks": [],
+      "original_strict_table_substring_absent": true
+    },
+    {
+      "id": "1225473526",
+      "actual_API_status": "completed",
+      "capture_status": null,
+      "Markdown": {
+        "path": "benchmark/runs/table-syntax-v7-http-20261018/regression504/cases/1225473526/result.md",
+        "sha256": "b9f573367c9fa9ac9dc0d2ce179506c53782cfc2bd1006473b622ebb28ee0ad1",
+        "bytes": 52978
+      },
+      "pass": true,
+      "visible_HTML_leaks": [],
+      "original_strict_table_substring_absent": true
+    },
+    {
+      "id": "1225474139",
+      "actual_API_status": "completed",
+      "capture_status": null,
+      "Markdown": {
+        "path": "benchmark/runs/table-syntax-v7-http-20261018/regression504/cases/1225474139/result.md",
+        "sha256": "bea4165c1d5cfe6c417058190723381ed7d820f4cf9a6bb3fe5a00468bc6e8f8",
+        "bytes": 60934
+      },
+      "pass": true,
+      "visible_HTML_leaks": [],
+      "original_strict_table_substring_absent": true
+    },
+    {
+      "id": "1225474693",
+      "actual_API_status": "completed",
+      "capture_status": null,
+      "Markdown": {
+        "path": "benchmark/runs/table-syntax-v7-http-20261018/regression504/cases/1225474693/result.md",
+        "sha256": "b021b0375af7ced8a02975afa6bec641974986885338308afc58ff00e1a73681",
+        "bytes": 8399
+      },
+      "pass": true,
+      "visible_HTML_leaks": [],
+      "original_strict_table_substring_absent": true
+    },
+    {
+      "id": "1225474739",
+      "actual_API_status": "completed",
+      "capture_status": null,
+      "Markdown": {
+        "path": "benchmark/runs/table-syntax-v7-http-20261018/regression504/cases/1225474739/result.md",
+        "sha256": "85a9f02341097b2de71774553c9f300bbd7421c85bd4e1091782955de57ca2f4",
+        "bytes": 500158
+      },
+      "pass": true,
+      "visible_HTML_leaks": [],
+      "original_strict_table_substring_absent": true
+    },
+    {
+      "id": "1225475333",
+      "actual_API_status": "completed",
+      "capture_status": null,
+      "Markdown": {
+        "path": "benchmark/runs/table-syntax-v7-http-20261018/regression504/cases/1225475333/result.md",
+        "sha256": "089268e6ecb442ee07ac853aa4261bde958abc127012c6b8f6bde5df5e7f1dcd",
+        "bytes": 60797
+      },
+      "pass": true,
+      "visible_HTML_leaks": [],
+      "original_strict_table_substring_absent": true
+    },
+    {
+      "id": "1225475375",
+      "actual_API_status": "completed",
+      "capture_status": null,
+      "Markdown": {
+        "path": "benchmark/runs/table-syntax-v7-http-20261018/regression504/cases/1225475375/result.md",
+        "sha256": "655acf99dde686d076faebb8fdad8030130d32318dfcfb31ec1c46ce35a5b631",
+        "bytes": 314147
+      },
+      "pass": true,
+      "visible_HTML_leaks": [],
+      "original_strict_table_substring_absent": true
+    },
+    {
+      "id": "1225475642",
+      "actual_API_status": "completed",
+      "capture_status": null,
+      "Markdown": {
+        "path": "benchmark/runs/table-syntax-v7-http-20261018/regression504/cases/1225475642/result.md",
+        "sha256": "429b330cce8c07aeac546fca261f42f0d20f339e72560927ec6e9ccaf41e33a7",
+        "bytes": 410529
+      },
+      "pass": true,
+      "visible_HTML_leaks": [],
+      "original_strict_table_substring_absent": true
+    },
+    {
+      "id": "1206337604",
+      "actual_API_status": "completed",
+      "capture_status": null,
+      "Markdown": {
+        "path": "benchmark/runs/table-syntax-v7-http-20261018/regression504/cases/1206337604/result.md",
+        "sha256": "05d0210f8d15634586b75c0f7332a0d6007a76198606c3d33ae0cdb5ac9e52a7",
+        "bytes": 4291
+      },
+      "pass": true,
+      "visible_HTML_leaks": [],
+      "original_strict_table_substring_absent": true
+    }
+  ],
+  "pass": true,
+  "scope": "Rendered HTML table leakage only, not source cell accuracy or semantic completeness",
+  "frozen_gold_reader_or_production_checker_changed": false,
+  "new_inference_API_or_service_operations": false,
+  "source_literal_code_fences_and_comments_not_rendered_as_HTML": true
+}

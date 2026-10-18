@@ -1,0 +1,12 @@
+{
+  "source": {
+    "path": "benchmark/datasets/moparse-v1/sources/holdout-20261018/nist-tn2354.pdf",
+    "sha256": "171dec979423da69147527794a29d056e8e0751fe7d20d32484e402d39b4dcff",
+    "bytes": 6122830
+  },
+  "endpoint": "/v1/content/parse",
+  "form": {
+    "scan_policy": "auto"
+  },
+  "unit_range_omitted": true
+}

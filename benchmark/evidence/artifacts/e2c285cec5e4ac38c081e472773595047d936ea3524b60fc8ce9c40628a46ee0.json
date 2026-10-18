@@ -1,0 +1,60 @@
+{
+  "schema": "moparse-scan-seal-OCR-source-review-safe-summary/1",
+  "created_at": "2026-10-18T02:54:22.044243+00:00",
+  "scope": "Source-pixel review of2 observed OCR line changes on page4 in actual V7 whole28page HTTP; no new model inference, no gold/scoring changes",
+  "method_id": "mineru-advanced-txt-vllm-c2-docling-source-glm-v7",
+  "fingerprint": "e760367d7fb88f11a7bc0bb5388db12ebe7f4fc54983b1ac8559d266736c11c7",
+  "document_id": "1225475333",
+  "physical_page": 4,
+  "private_source_review": {
+    "path": "benchmark/runs/v7-original-issues-independent-20261018/28page-p4-followup/independent-source-review-proof.json",
+    "sha256": "32db39c4d5213200118e5715e558b7d849fcf8aa436d2bffad6207701ff40e60",
+    "bytes": 3531
+  },
+  "source_SHA256": "bdb4210e0cd5dc000e8278d2438937b61ae9042969f100289c0d4cab4537e62b",
+  "MDs": {
+    "V6": {
+      "path": "benchmark/runs/source-v6-http-20261018/regression504/cases/1225475333/result.md",
+      "sha256": "289a3eb6c961f0a56ebe45d5701643a0d822319424fc1ae66ed1eb104f518175",
+      "bytes": 60797
+    },
+    "V7": {
+      "path": "benchmark/runs/table-syntax-v7-http-20261018/regression504/cases/1225475333/result.md",
+      "sha256": "089268e6ecb442ee07ac853aa4261bde958abc127012c6b8f6bde5df5e7f1dcd",
+      "bytes": 60797
+    }
+  },
+  "actual_changes": [
+    {
+      "kind": "replace",
+      "V6_lines": [
+        "中國社會"
+      ],
+      "V7_lines": [
+        "中國造本"
+      ]
+    },
+    {
+      "kind": "replace",
+      "V6_lines": [
+        "練業粉"
+      ],
+      "V7_lines": [
+        "緻嘉粉"
+      ]
+    }
+  ],
+  "source_observation": {
+    "changed_region_type": "red seal in cursive seal script, not ordinary printed body",
+    "both_V6_and_V7_source_readings_accurate": false,
+    "ordinary_printed_label_and_name_retained_in_both": true,
+    "ordinary_printed_body_new_omission_proved": false,
+    "page_text_bytes_other_than_two_seal_lines_unchanged": true,
+    "native_extractable_characters": 0,
+    "source_image_objects": 7,
+    "all_other_unchanged_OCR_source_correctness_claim": false
+  },
+  "internal_first_error_layer": "Not attributed: original per-region provider response is not captured here. Source image and received finalMD are enough to distinguish seal OCR from ordinary printed body; no claim of exact internal prompt/input equivalence.",
+  "private_source_crops_coordinates_and_full_page_text_exported": false,
+  "new_model_or_API_calls": 0
+}

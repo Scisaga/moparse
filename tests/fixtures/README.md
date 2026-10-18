@@ -1,8 +1,19 @@
 # Test fixtures
 
-Every file in this directory is generated from original test text by
-[`scripts/generate_fixtures.py`](../../scripts/generate_fixtures.py). No company
-report, article, logo, or other third-party copyrighted document is included.
+The document, image and video fixtures in this directory are generated from
+original test text by [`scripts/generate_fixtures.py`](../../scripts/generate_fixtures.py).
+They contain no company report, article or third-party logo.
+
+`mineru-4.0.12-pp-formulanet-plus-m-onnx.py.txt` is an unmodified upstream Python
+source fixture from the installed `mineru==4.0.12` distribution, originally at
+`mineru/model/mfr/pp_formulanet_plus_m_onnx.py`. Its SHA256 is
+`06f787c9414b99388a89b75a9c8a6c752058146d4538725e4afb2451829f1c1f`.
+The CPU microbatch tests apply our patch to this pinned source and replace the
+ONNX session with a fake; they do not load weights or run model inference.
+The Opendatalab copyright notice is retained. This fixture is governed by the
+[MinerU Open Source License](LICENSE.MinerU.md), copied from that exact installed
+distribution, rather than the repository's Apache-2.0 license alone.
+Upstream: [Opendatalab/MinerU](https://github.com/opendatalab/MinerU).
 
 | File | Purpose |
 |---|---|
@@ -29,3 +40,7 @@ uv run python scripts/generate_fixtures.py --check
 
 The fixtures are deliberately tiny. They validate routing and contracts, not
 model quality. GPU golden tests should use a separately governed private corpus.
+
+Fixtures created before the 2026-10-18 rename retain their original MosaicParse text
+and metadata. Those strings are test data, not a current service or repository name;
+the existing fixture bytes and hashes are preserved.

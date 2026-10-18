@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "moparse:evidence:1",
+  "type": "object",
+  "required": ["schema", "id", "method_id", "cohort_id", "origin", "output_stage", "quality", "performance", "provenance", "qualification"],
+  "properties": {
+    "schema": {"const": "moparse-evidence/1"}, "id": {"type": "string"}, "method_id": {"type": "string"},
+    "cohort_id": {"type": "string"}, "origin": {"enum": ["historical_reuse", "fresh_HTTP", "fresh_component"]},
+    "fresh_model_inference": {"type": ["boolean", "null"]}, "output_stage": {"type": "string"},
+    "quality": {"type": "object", "additionalProperties": {"type": "object", "required": ["pass", "total", "gold_fingerprint", "reader_fingerprint"],
+      "properties": {"pass": {"type": "integer", "minimum": 0}, "total": {"type": "integer", "minimum": 0},
+        "gold_fingerprint": {"type": "string"}, "reader_fingerprint": {"type": "string"}}}},
+    "performance": {"type": "object"}, "provenance": {"type": "array"}, "qualification": {"type": "object"}
+  }
+}

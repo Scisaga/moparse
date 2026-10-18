@@ -42,8 +42,8 @@ def validate(schema: dict[str, Any]) -> None:
     missing = REQUIRED_PATHS - paths
     if missing:
         raise SystemExit(f"OpenAPI schema is missing required paths: {sorted(missing)}")
-    if schema.get("info", {}).get("title") != "MosaicParse":
-        raise SystemExit("OpenAPI title is not MosaicParse")
+    if schema.get("info", {}).get("title") != "moparse":
+        raise SystemExit("OpenAPI title is not moparse")
     schemas = schema.get("components", {}).get("schemas", {})
     if "PublicContentParseOptions" not in schemas:
         raise SystemExit("OpenAPI does not expose PublicContentParseOptions")

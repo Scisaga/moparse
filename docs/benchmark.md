@@ -1,5 +1,15 @@
 # Benchmark guide
 
+The maintained dataset, method registry, evaluation CLI and comparison report now
+live in [`benchmark/`](../benchmark/README.md). The current comparison is
+[`benchmark/report.md`](../benchmark/report.md); the earlier report under
+`benchmark-results/clean-model-comparison-20261015/` is historical evidence.
+
+Run `python -m benchmark validate --require-sources`, `python -m benchmark compare`
+and `python -m benchmark.tools.render_report` from the repository root. Use `run-http` to retain
+whole-document requests, final Markdown, public assets and resource samples, then
+`evaluate` to score the received output. See the benchmark README for exact commands.
+
 Parsing quality is evaluated at the content level, not by exact whole-document string
 equality. Docling and model upgrades can make harmless Markdown formatting
 changes.
@@ -41,9 +51,15 @@ Record at least:
 Unknown route counts are not zeros. Report them as unavailable when the parser
 or upstream component cannot observe them reliably.
 
-Performance release gates are: `scan_policy=auto` native numeric pages p95 no more than
-10% above the fixed baseline; automatically routed complex pages p95 no more than about
-2x baseline. A page timeout must stop later candidates while retaining the primary page with
+The earlier Docling rollout used page-level budget targets: native numeric pages p95
+within 10% of its fixed baseline, and automatically routed complex pages p95 within
+about 2x. The current method comparison measures complete-document HTTP latency and
+does not establish those page-level targets; keep missing p95 measurements unknown.
+Its selection prioritizes the source-backed body/header/span acceptance requested for
+Advanced＋TXT, with the measured time and shared-resource cost reported alongside
+quality. Do not present that tradeoff as satisfying the earlier page-level budgets.
+
+A page timeout must stop later candidates while retaining the primary page with
 a warning. Do not attribute another process's GPU load or service-resident memory to per-request
 inference. Compare complete PDFs with `scan_policy=auto` and no `unit_range`, and retain the
 requests, final public Markdown, source hashes, model settings, and actual deployed image.
@@ -54,7 +70,7 @@ continuations against the original PDFs. Check units, merged cells, and source-p
 
 ## Comparison evidence
 
-The single maintained report is [report.md](../benchmark-results/clean-model-comparison-20261015/report.md).
+The single maintained report is [benchmark/report.md](../benchmark/report.md).
 It separates new full-HTTP runs, saved full-HTTP results, and rescoring of existing final Markdown.
 All displayed configurations must use the same gold and public-output scoring rules; neither
 component timing nor offline output scoring substitutes for complete service acceptance.

@@ -27,6 +27,9 @@ jobs:
       github.event_name == 'push'
     runs-on: ubuntu-latest
     timeout-minutes: 60
+    outputs:
+      sha: ${{ steps.revision.outputs.sha }}
+      short_sha: ${{ steps.revision.outputs.short_sha }}
     steps:
       - name: Resolve the verified source revision
         id: revision
@@ -115,8 +118,8 @@ jobs:
         env:
           GLM_OCR_ENABLED: "0"
           DOCLING_MODEL_DOWNLOAD: "0"
-          DATA_DIR: ${{ runner.temp }}/mosaicparse-data
-          STATIC_DIR: ${{ runner.temp }}/mosaicparse-static
+          DATA_DIR: ${{ runner.temp }}/moparse-data
+          STATIC_DIR: ${{ runner.temp }}/moparse-static
         run: |
           uv run ruff check app scripts tests
           uv run mypy app
@@ -141,9 +144,10 @@ jobs:
         id: meta
         uses: docker/metadata-action@v6
         with:
-          images: ghcr.io/scisaga/mosaic-parse
+          images: ghcr.io/scisaga/moparse
           labels: |
-            org.opencontainers.image.source=https://github.com/Scisaga/mosaic-parse
+            org.opencontainers.image.source=https://github.com/Scisaga/moparse
+            org.opencontainers.image.revision=${{ steps.revision.outputs.sha }}
           tags: |
             type=raw,value=latest,enable=${{ github.event_name == 'workflow_run' }}
             type=raw,value=main,enable=${{ github.event_name == 'workflow_run' }}
@@ -154,22 +158,22 @@ jobs:
       - name: Build image for smoke testing
         run: |
           docker buildx build --load \
-            --tag mosaic-parse:publish-candidate \
+            --tag moparse:publish-candidate \
             --cache-from type=gha \
             --cache-to type=gha,mode=max \
             .
 
       - name: Smoke test image startup
         run: |
-          docker run --detach --name mosaicparse-smoke \
+          docker run --detach --name moparse-smoke \
             --env DOCLING_MODEL_DOWNLOAD=0 \
             --env GLM_OCR_ENABLED=0 \
             --publish 127.0.0.1:12303:12303 \
-            mosaic-parse:publish-candidate
+            moparse:publish-candidate
           for attempt in $(seq 1 60); do
             if curl --fail --silent http://127.0.0.1:12303/health >/dev/null; then
-              docker exec mosaicparse-smoke ffmpeg -version >/dev/null
-              docker exec mosaicparse-smoke ffprobe -version >/dev/null
+              docker exec moparse-smoke ffmpeg -version >/dev/null
+              docker exec moparse-smoke ffprobe -version >/dev/null
               exit 0
             fi
             echo "health check attempt ${attempt}/60 did not succeed yet"
@@ -180,8 +184,8 @@ jobs:
       - name: Remove smoke-test container
         if: always()
         run: |
-          docker logs mosaicparse-smoke || true
-          docker rm --force mosaicparse-smoke || true
+          docker logs moparse-smoke || true
+          docker rm --force moparse-smoke || true
 
       - name: Recheck main immediately before publishing mutable tags
         if: github.event_name == 'workflow_run'
@@ -205,5 +209,126 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          provenance: mode=max
+          sbom: true
+
+  publish-model-images:
+    name: Publish ${{ matrix.image }}
+    needs: [publish]
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - image: moparse-native-worker
+            dockerfile: Dockerfile.native-worker
+            smoke: cpu-native
+          - image: moparse-mineru-vllm
+            dockerfile: Dockerfile.mineru-vllm
+            smoke: gpu-sdk-import
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ needs.publish.outputs.sha }}
+
+      - name: Make room for the pinned 22 GiB vLLM image on the hosted runner
+        if: matrix.smoke == 'gpu-sdk-import'
+        run: |
+          sudo rm -rf /usr/local/lib/android /usr/share/dotnet /opt/ghc \
+            /usr/local/.ghcup /opt/hostedtoolcache /usr/local/share/boost
+          docker image prune --all --force
+          df -h /
+
+      - name: Verify source revision before building dependent images
+        env:
+          VERIFIED_SHA: ${{ needs.publish.outputs.sha }}
+        run: |
+          test "$(git rev-parse HEAD)" = "$VERIFIED_SHA"
+          main_sha=$(git ls-remote \
+            "https://github.com/${GITHUB_REPOSITORY}.git" \
+            refs/heads/main | cut -f1)
+          if [ "$VERIFIED_SHA" != "$main_sha" ]; then
+            echo "main advanced before the dependent image build" >&2
+            exit 1
+          fi
+
+      - name: Set up Buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Generate dependent image metadata
+        id: meta
+        uses: docker/metadata-action@v6
+        with:
+          images: ghcr.io/scisaga/${{ matrix.image }}
+          labels: |
+            org.opencontainers.image.source=https://github.com/Scisaga/moparse
+            org.opencontainers.image.revision=${{ needs.publish.outputs.sha }}
+          tags: |
+            type=raw,value=latest,enable=${{ github.event_name == 'workflow_run' }}
+            type=raw,value=main,enable=${{ github.event_name == 'workflow_run' }}
+            type=semver,pattern={{version}},enable=${{ startsWith(github.ref, 'refs/tags/v') }}
+            type=semver,pattern={{major}}.{{minor}},enable=${{ startsWith(github.ref, 'refs/tags/v') }}
+            type=raw,value=sha-${{ needs.publish.outputs.short_sha }}
+
+      - name: Build dependent image and run Dockerfile checks
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: ${{ matrix.dockerfile }}
+          platforms: linux/amd64
+          push: false
+          # GPU SDK validation runs in Dockerfile.mineru-vllm's RUN step.
+          # Keep that large image only in BuildKit, without a second daemon
+          # copy or a temporary Docker-load tar on the hosted runner.
+          load: ${{ matrix.smoke == 'cpu-native' }}
+          tags: ${{ matrix.image }}:publish-candidate
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha,scope=${{ matrix.image }}
+          cache-to: type=gha,scope=${{ matrix.image }},mode=max
+
+      - name: Verify CPU worker dependency patch without starting inference
+        if: matrix.smoke == 'cpu-native'
+        run: |
+          docker run --rm --network none --entrypoint python \
+            moparse-native-worker:publish-candidate -c '
+          import importlib.util
+          from native_worker.patch_dependency import PATCHED_SHA256, verify_patch
+          assert importlib.util.find_spec("torch") is None, "CPU worker unexpectedly contains torch"
+          report = verify_patch()
+          assert report["source_sha256"] == PATCHED_SHA256
+          print(report)
+          '
+
+      - name: Recheck verified main immediately before publishing dependent images
+        env:
+          VERIFIED_SHA: ${{ needs.publish.outputs.sha }}
+        run: |
+          main_sha=$(git ls-remote \
+            "https://github.com/${GITHUB_REPOSITORY}.git" \
+            refs/heads/main | cut -f1)
+          if [ "$VERIFIED_SHA" != "$main_sha" ]; then
+            echo "main advanced while the dependent image was being tested" >&2
+            exit 1
+          fi
+
+      - name: Push verified dependent image
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: ${{ matrix.dockerfile }}
+          platforms: linux/amd64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha,scope=${{ matrix.image }}
+          cache-to: type=gha,scope=${{ matrix.image }},mode=max
           provenance: mode=max
           sbom: true

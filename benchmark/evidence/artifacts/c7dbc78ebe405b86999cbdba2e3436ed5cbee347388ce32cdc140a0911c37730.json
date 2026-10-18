@@ -1,0 +1,63 @@
+{
+  "schema": "moparse-source-stage-case-observation/1",
+  "observed_at": "2026-10-18T03:34:26.698870+00:00",
+  "document_id": "nasa-maax-factsheet",
+  "source_sha256": "79ab8e7686605ece7144aaa7d1d95e0c43dc4066ad35db9629f7b10075369411",
+  "page_count": 2,
+  "captured_summary": {
+    "path": "benchmark/runs/table-syntax-v7-http-20261018/fresh7/cases/nasa-maax-factsheet/summary.json",
+    "sha256": "1bbb848fc77761c0d0d19a297c6c49890d371dd839011272640a485739fdfa9e",
+    "bytes": 2766
+  },
+  "received_MD_sha256": "c8ac03175b6715831f3a63ab656bb3eed65c2aa6a29f67a49f55a3d92db0bce3",
+  "job_id": "job_01M56H32668WED62FQ6QRBA03J",
+  "actual_job_status": "partial",
+  "capture_status": "completed",
+  "actual_storage_identity": {
+    "container": "moparse-candidate-table-v7",
+    "container_id": "0e96848093a39b8def0a1684890a284bef53a7607bd50834c75faba937ebedf0",
+    "deployed_image_id": "sha256:3a2c30f2b67172232aabd24c636e425a2333f3b127dde386c513bb0e3198da19",
+    "data_volume": {
+      "Type": "volume",
+      "Name": "moparse-candidate-table-v7-data",
+      "Source": "/var/lib/docker/volumes/moparse-candidate-table-v7-data/_data",
+      "Destination": "/data",
+      "RW": true
+    },
+    "deployment": {
+      "path": "benchmark/runs/table-syntax-v7-http-20261018/deployment-before.json",
+      "sha256": "8f9cec00bcb078b9080c949bcf7402e9a772eb3d08a64f4b16263519f6c37b14",
+      "bytes": 100289
+    },
+    "container_environment_read": false
+  },
+  "selected_warning_code": "independent_source_verification_used",
+  "projected_detail_fields": [
+    "duration_ms",
+    "pages",
+    "review_candidates",
+    "preserved_regions"
+  ],
+  "selected_records": [
+    {
+      "duration_ms": 1115,
+      "pages": [
+        2
+      ],
+      "review_candidates": 1,
+      "preserved_regions": 1
+    }
+  ],
+  "stage_wall_clock_seconds": 1.115,
+  "warning_file": {
+    "container_path": "/data/jobs/job_01M56H32668WED62FQ6QRBA03J/logs/warnings.json",
+    "host_path": "/var/lib/docker/volumes/moparse-candidate-table-v7-data/_data/jobs/job_01M56H32668WED62FQ6QRBA03J/logs/warnings.json",
+    "exists": true,
+    "sha256": "fb1a1812aabdaa154fb216517485fff53ace05074600608b7fb400df4f11c59e",
+    "bytes": 2267
+  },
+  "other_warnings_exported": false,
+  "model_or_API_requests": false,
+  "timing_scope": "SourceVerifier independent CPU candidate check plus region-type verification and glyph preservation elapsed wall clock; not GPU-forward time, CPU-seconds or entire request latency",
+  "observation_status": "observed"
+}

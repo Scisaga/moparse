@@ -937,8 +937,8 @@ wheels = [
 ]
 
 [[package]]
-name = "mosaicparse"
-version = "0.4.0"
+name = "moparse"
+version = "0.5.0"
 source = { editable = "." }
 dependencies = [
     { name = "aiofiles" },

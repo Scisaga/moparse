@@ -1,0 +1,84 @@
+{
+  "schema": "moparse-source-stage-cohort-observation/1",
+  "observed_at": "2026-10-18T01:17:26.164044+00:00",
+  "cohort_id": "fresh7-20261018",
+  "capture_directory": "benchmark/runs/source-v6-http-20261018/fresh7",
+  "dataset": {
+    "path": "benchmark/datasets/moparse-addon-20261018/dataset.json",
+    "sha256": "00ec68415354e156d8b3f0a1a2b541e42c47e5c22dcab281e2f9ac2060f66fa1",
+    "bytes": 2652
+  },
+  "actual_storage_identity": {
+    "container": "moparse-candidate-source-v6",
+    "container_id": "5ea0e03bf49d10e261d8cb4f0435c05e8232aa3d3e75552a8de43ee00dbfaef6",
+    "deployed_image_id": "sha256:7c887e795ecd42039fee0327059ae0b755372dd2cda9f9ae17b07187077b3905",
+    "data_volume": {
+      "Type": "volume",
+      "Name": "moparse-candidate-source-v6-data",
+      "Source": "/var/lib/docker/volumes/moparse-candidate-source-v6-data/_data",
+      "Destination": "/data",
+      "RW": true
+    },
+    "deployment": {
+      "path": "benchmark/runs/source-v6-http-20261018/deployment-before.json",
+      "sha256": "b6c8bfb6495aff88ed40dc327a632cb005c70a847eba61fbc29503d3c7965f49",
+      "bytes": 100288
+    },
+    "container_environment_read": false
+  },
+  "expected_documents": 3,
+  "completed_HTTP_documents": 3,
+  "timing_recorded_documents": 1,
+  "completed_documents_without_measured_stage": 2,
+  "not_yet_completed_documents": 0,
+  "observed_stage_wall_clock_seconds": 1.12,
+  "full_cohort_stage_wall_clock_seconds": null,
+  "observed_unique_document_pages": 1,
+  "observed_review_candidates": 1,
+  "observed_preserved_regions": 1,
+  "observation_status_counts": {
+    "unknown_no_selected_code; absence_not_zero": 2,
+    "observed": 1
+  },
+  "percase_observations": [
+    {
+      "path": "benchmark/evidence/artifacts/de321162e2253535adc097296b70b615dc7d5971820a74a5c1f207cfad3a6208.json",
+      "sha256": "de321162e2253535adc097296b70b615dc7d5971820a74a5c1f207cfad3a6208",
+      "bytes": 2390,
+      "original_path": "benchmark/runs/source-v6-http-20261018/source-stage/fresh7/gsa-sf95-2007.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/e5a494956b79a421bb9d5d0b99ced7e8311ea2a4d3202e72970fa0692a00b976.json",
+      "sha256": "e5a494956b79a421bb9d5d0b99ced7e8311ea2a4d3202e72970fa0692a00b976",
+      "bytes": 2409,
+      "original_path": "benchmark/runs/source-v6-http-20261018/source-stage/fresh7/nara-telegram-32171186.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/82a3d34e07bea586fd8f08274f3ad317024e37d4c8d11453bd364cbf3749b0b6.json",
+      "sha256": "82a3d34e07bea586fd8f08274f3ad317024e37d4c8d11453bd364cbf3749b0b6",
+      "bytes": 2505,
+      "original_path": "benchmark/runs/source-v6-http-20261018/source-stage/fresh7/nasa-maax-factsheet.json",
+      "snapshot_bytes_unchanged": true
+    }
+  ],
+  "source_producer_sha256": {
+    "app/services/source_verification_service.py": "20856c4a87705054638af42463a6924336623e147bcb755aafda241ad0d9af65",
+    "app/services/storage_service.py": "998dd7996e54204580e11c0069418637f8433821e0b293f806e4280fadf72dec"
+  },
+  "policy": {
+    "missing_code_is_zero": false,
+    "other_warning_content_exported": false,
+    "additional_inference_or_API_requests": false,
+    "whole_pipeline_or_GPU_inference_time": false,
+    "full_cohort_total_requires_all_documents_observed": true,
+    "scope": "Sum of recorded independent source-verification elapsed wall clocks only; coverage k/n explicit; absent records remain unknown; do not substitute for upload-through-Markdown latency"
+  },
+  "finalized": true,
+  "extractor": {
+    "path": "benchmark/runs/source-v6-http-20261018/extract_source_stage.py",
+    "sha256": "4e2445eeaf81f5b6f98e6addfcc192bb094f336c7fa6fa358f1480503194c8f4",
+    "bytes": 11515
+  }
+}

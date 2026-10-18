@@ -1,0 +1,27 @@
+{
+  "schema": "moparse-evidence/1",
+  "id": "table-v7-production159-final-release-20261018",
+  "method_id": "mineru-advanced-txt-vllm-c2-docling-source-glm-v7",
+  "cohort_id": "production-smoke-159",
+  "origin": "fresh_component",
+  "fresh_model_inference": false,
+  "output_stage": "diagnostic-only",
+  "quality": {},
+  "performance": {},
+  "provenance": [
+    {
+      "path": "benchmark/evidence/artifacts/0416e68df4538d87798d8706450d9717532ac8184451a7902c734f2d78c11d87.json",
+      "sha256": "0416e68df4538d87798d8706450d9717532ac8184451a7902c734f2d78c11d87",
+      "bytes": 6623,
+      "original_path": "benchmark/runs/production-release-v7-20261018/V7-production159-final-release-safe-summary.json",
+      "snapshot_bytes_unchanged": true
+    }
+  ],
+  "qualification": {
+    "production159_receipts_and_functional_source_acceptance": true,
+    "strict_original_all_pass": false,
+    "known_source_errors_and_NASA_partial_retained": true,
+    "entire_source_accuracy_claim": false,
+    "no_new_model_or_HTTP_requests": true
+  }
+}

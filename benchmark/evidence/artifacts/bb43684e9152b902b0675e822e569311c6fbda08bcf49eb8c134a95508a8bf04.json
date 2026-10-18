@@ -1,0 +1,92 @@
+{
+  "schema": "moparse-public-GFM-contract-failure-observation/1",
+  "created_at": "2026-10-18T01:58:37.380496+00:00",
+  "scope": "All17 complete550 sourceV6 HTTP outputs scanned for raw table tags; production119page14 exact output checked",
+  "candidate550_raw_HTML_occurrences": 1,
+  "candidate550_raw_HTML_source_document": "1225475375",
+  "candidate550_raw_HTML_source_page": 14,
+  "actual_route": "glm-sdk-remote",
+  "actual_route_backend": "glm-sdk-remote",
+  "route_proof": {
+    "path": "benchmark/runs/production-release-20261018/private-evidence/jobs/job_01M56ADRG4S50V269988JDHDNF/logs/warnings.json",
+    "sha256": "5f1921c0bed8e78a6161a9f7b1fbed9541c70de4287cdf2f71a4b25c361948d6",
+    "bytes": 12602
+  },
+  "native_worker_selected_pages": 103,
+  "native_worker_includes_page14": false,
+  "native_worker_raw": {
+    "path": "benchmark/runs/production-release-20261018/private-evidence/jobs/job_01M56ADRG4S50V269988JDHDNF/logs/mineru-native-worker.json",
+    "sha256": "5b5d3aedca2f1ae3b9569dbdb5a18ae508ce3f76aefa4cef5ccd04748d0c16af",
+    "bytes": 646009
+  },
+  "same_raw_public_HTML_in_candidates_and_production": [
+    {
+      "run": "source-v6-http-20261018/regression504",
+      "MD": {
+        "path": "benchmark/runs/source-v6-http-20261018/regression504/cases/1225475375/result.md",
+        "sha256": "f29c082c058043237d12dcd299b76d7acdf3d24f5c76c1089ee1aec5663fa744",
+        "bytes": 316810
+      },
+      "source_page": 14,
+      "HTML_bytes": 6676,
+      "HTML_SHA256": "4e2df0391391ed0215ba9ac52f3958b063658afb8b31645caa46413b040e4497",
+      "physical_TR_count": 33,
+      "TD_TH_count": 503,
+      "public_table_source_comment_present": false,
+      "public_table_structure_comment_present": false,
+      "public_anchored_GFM_table_ids": []
+    },
+    {
+      "run": "production-release-20261018/http159",
+      "MD": {
+        "path": "benchmark/runs/production-release-20261018/http159/cases/1225475375/result.md",
+        "sha256": "b7eeaca0fc02275f8f282b3ee05197ac6869e4791a7b5fb68775bb45e2b4cf04",
+        "bytes": 316808
+      },
+      "source_page": 14,
+      "HTML_bytes": 6676,
+      "HTML_SHA256": "4e2df0391391ed0215ba9ac52f3958b063658afb8b31645caa46413b040e4497",
+      "physical_TR_count": 33,
+      "TD_TH_count": 503,
+      "public_table_source_comment_present": false,
+      "public_table_structure_comment_present": false,
+      "public_anchored_GFM_table_ids": []
+    },
+    {
+      "run": "header-v4-http-20261018/regression504",
+      "MD": {
+        "path": "benchmark/runs/header-v4-http-20261018/regression504/cases/1225475375/result.md",
+        "sha256": "46b94f2789cfe1696a83492f8322f8ad7a843ec457f4361293555ca01952ee8f",
+        "bytes": 316808
+      },
+      "source_page": 14,
+      "HTML_bytes": 6676,
+      "HTML_SHA256": "4e2df0391391ed0215ba9ac52f3958b063658afb8b31645caa46413b040e4497",
+      "physical_TR_count": 33,
+      "TD_TH_count": 503,
+      "public_table_source_comment_present": false,
+      "public_table_structure_comment_present": false,
+      "public_anchored_GFM_table_ids": []
+    }
+  ],
+  "first_detected_markup_defect": "Open th closes with td in the four-band header; strict parser rejects nested unclosed cell",
+  "application_fallback_path": "GlmSdkRemoteParser._table_fragment returns None -> _render_regions appends raw content",
+  "GFM_contract_pass": false,
+  "production_CPU_acceptance": {
+    "path": "benchmark/runs/production-release-20261018/CPU-acceptance/acceptance-summary.json",
+    "sha256": "92690d2e529ce04640172e10f5c23efe41799840e6476d32c310b605afb6000a",
+    "bytes": 13522
+  },
+  "private_full_IR_reexport_limit": {
+    "entire550_private_IR_available": false,
+    "native_worker_raw_native_pages_retained": true,
+    "GLM_original_response_and_crop_bbox_retained": false,
+    "existing_source_of_malformed_table": "Complete raw HTML preserved in existing public passthrough output",
+    "CPU_replay_of_stored_outputs_and_native_raw_is_new_HTTP550": false,
+    "requires_new_real_HTTP_final119_or159": true,
+    "past550_latency_or_quality_must_remain_qualified_as_old_method": true
+  },
+  "gold_reader_scores_changed": false,
+  "new_API_or_model_requests": false,
+  "private_raw_full_HTML_not_bundled": true
+}

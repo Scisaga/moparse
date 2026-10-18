@@ -1,0 +1,482 @@
+{
+  "schema": "moparse-sealed-assertion-same-gold-comparison/1",
+  "created_at": "2026-10-18T03:32:50.781579+00:00",
+  "scope": "Existing exposed source-gold development regression only; unchanged frozen predicates; no new independent holdout",
+  "baseline": {
+    "path": "benchmark/runs/production-baseline-20261018/holdout39-final-assertions/evaluation.json",
+    "sha256": "d412d938eae97963e53fb0370cfb93a9058b5ef7f2a3219260fd4db51109bc87",
+    "bytes": 9747
+  },
+  "current": {
+    "path": "benchmark/runs/table-syntax-v7-http-20261018/holdout39-final-assertions/evaluation.json",
+    "sha256": "2509e350d58d370c8edfdbfd006d3a3a3dc0e805f18648f52b4678edd10a9164",
+    "bytes": 9746
+  },
+  "annotation": {
+    "path": "benchmark/datasets/moparse-v1/annotations/holdout-20261018.assertions.json",
+    "sha256": "cef9ea7229d722e66ae4403fa8f337295534f89e6e6c5ac983e8c77523dccafc",
+    "bytes": 23321
+  },
+  "baseline_counts": {
+    "pass": 24,
+    "fail": 12
+  },
+  "V7_counts": {
+    "pass": 31,
+    "fail": 5
+  },
+  "changed_assertions": [
+    {
+      "id": "irs-dependent-claim-checkbox-order",
+      "document_id": "holdout-irs-form1040-2025",
+      "kind": "ordered_text",
+      "baseline_status": "fail",
+      "V7_status": "pass",
+      "source_assertion": {
+        "id": "irs-dependent-claim-checkbox-order",
+        "document_id": "holdout-irs-form1040-2025",
+        "page": 2,
+        "kind": "ordered_text",
+        "expected": [
+          "You as a dependent",
+          "Your spouse as a dependent",
+          "Spouse itemizes on a separate return",
+          "You were a dual-status alien"
+        ],
+        "source_evidence": {
+          "physical_page": 2,
+          "bbox_pdf_points": [
+            111,
+            49,
+            425,
+            73
+          ],
+          "note": "Blank checkboxes; assertions cover the labels and their local reading order."
+        },
+        "normalize_whitespace": true
+      },
+      "baseline_MD_SHA256": "fd8e5648e22da3d1df649e999e1cf0ded28c8f1cfe46a81b36a900c9544c5a85",
+      "V7_MD_SHA256": "fcad56d50cffc4b804cdf2f3ab56ba28b0fa6d3b223c6b8b51b0373d4c912d97"
+    },
+    {
+      "id": "irs-direct-deposit-label-order",
+      "document_id": "holdout-irs-form1040-2025",
+      "kind": "ordered_text",
+      "baseline_status": "fail",
+      "V7_status": "pass",
+      "source_assertion": {
+        "id": "irs-direct-deposit-label-order",
+        "document_id": "holdout-irs-form1040-2025",
+        "page": 2,
+        "kind": "ordered_text",
+        "expected": [
+          "Routing number",
+          "Type:",
+          "Checking",
+          "Savings",
+          "Account number"
+        ],
+        "source_evidence": {
+          "physical_page": 2,
+          "bbox_pdf_points": [
+            98,
+            503,
+            479,
+            529
+          ],
+          "note": "Direct-deposit field and empty-checkbox labels in printed reading order."
+        },
+        "normalize_whitespace": true
+      },
+      "baseline_MD_SHA256": "fd8e5648e22da3d1df649e999e1cf0ded28c8f1cfe46a81b36a900c9544c5a85",
+      "V7_MD_SHA256": "fcad56d50cffc4b804cdf2f3ab56ba28b0fa6d3b223c6b8b51b0373d4c912d97"
+    },
+    {
+      "id": "irs-footer-instruction",
+      "document_id": "holdout-irs-form1040-2025",
+      "kind": "text",
+      "baseline_status": "fail",
+      "V7_status": "pass",
+      "source_assertion": {
+        "id": "irs-footer-instruction",
+        "document_id": "holdout-irs-form1040-2025",
+        "page": 2,
+        "kind": "text",
+        "expected": "Go to www.irs.gov/Form1040 for instructions and the latest information.",
+        "source_evidence": {
+          "physical_page": 2,
+          "bbox_pdf_points": [
+            34,
+            755,
+            410,
+            770
+          ],
+          "note": "Complete short instruction in the bottom footer."
+        },
+        "normalize_whitespace": true
+      },
+      "baseline_MD_SHA256": "fd8e5648e22da3d1df649e999e1cf0ded28c8f1cfe46a81b36a900c9544c5a85",
+      "V7_MD_SHA256": "fcad56d50cffc4b804cdf2f3ab56ba28b0fa6d3b223c6b8b51b0373d4c912d97"
+    },
+    {
+      "id": "irs-standard-deduction-head-amount",
+      "document_id": "holdout-irs-form1040-2025",
+      "kind": "text",
+      "baseline_status": "fail",
+      "V7_status": "pass",
+      "source_assertion": {
+        "id": "irs-standard-deduction-head-amount",
+        "document_id": "holdout-irs-form1040-2025",
+        "page": 2,
+        "kind": "text",
+        "expected": "$23,625",
+        "source_evidence": {
+          "physical_page": 2,
+          "bbox_pdf_points": [
+            29,
+            187,
+            87,
+            213
+          ],
+          "note": "Exact printed standard-deduction amount in left sidebar."
+        },
+        "normalize_whitespace": true
+      },
+      "baseline_MD_SHA256": "fd8e5648e22da3d1df649e999e1cf0ded28c8f1cfe46a81b36a900c9544c5a85",
+      "V7_MD_SHA256": "fcad56d50cffc4b804cdf2f3ab56ba28b0fa6d3b223c6b8b51b0373d4c912d97"
+    },
+    {
+      "id": "irs-standard-deduction-joint-amount",
+      "document_id": "holdout-irs-form1040-2025",
+      "kind": "text",
+      "baseline_status": "fail",
+      "V7_status": "pass",
+      "source_assertion": {
+        "id": "irs-standard-deduction-joint-amount",
+        "document_id": "holdout-irs-form1040-2025",
+        "page": 2,
+        "kind": "text",
+        "expected": "$31,500",
+        "source_evidence": {
+          "physical_page": 2,
+          "bbox_pdf_points": [
+            29,
+            142,
+            87,
+            190
+          ],
+          "note": "Exact printed standard-deduction amount in left sidebar."
+        },
+        "normalize_whitespace": true
+      },
+      "baseline_MD_SHA256": "fd8e5648e22da3d1df649e999e1cf0ded28c8f1cfe46a81b36a900c9544c5a85",
+      "V7_MD_SHA256": "fcad56d50cffc4b804cdf2f3ab56ba28b0fa6d3b223c6b8b51b0373d4c912d97"
+    },
+    {
+      "id": "irs-standard-deduction-single-amount",
+      "document_id": "holdout-irs-form1040-2025",
+      "kind": "text",
+      "baseline_status": "fail",
+      "V7_status": "pass",
+      "source_assertion": {
+        "id": "irs-standard-deduction-single-amount",
+        "document_id": "holdout-irs-form1040-2025",
+        "page": 2,
+        "kind": "text",
+        "expected": "$15,750",
+        "source_evidence": {
+          "physical_page": 2,
+          "bbox_pdf_points": [
+            29,
+            92,
+            87,
+            142
+          ],
+          "note": "Exact printed standard-deduction amount in left sidebar."
+        },
+        "normalize_whitespace": true
+      },
+      "baseline_MD_SHA256": "fd8e5648e22da3d1df649e999e1cf0ded28c8f1cfe46a81b36a900c9544c5a85",
+      "V7_MD_SHA256": "fcad56d50cffc4b804cdf2f3ab56ba28b0fa6d3b223c6b8b51b0373d4c912d97"
+    },
+    {
+      "id": "irs-third-party-checkbox-order",
+      "document_id": "holdout-irs-form1040-2025",
+      "kind": "ordered_text",
+      "baseline_status": "fail",
+      "V7_status": "pass",
+      "source_assertion": {
+        "id": "irs-third-party-checkbox-order",
+        "document_id": "holdout-irs-form1040-2025",
+        "page": 2,
+        "kind": "ordered_text",
+        "expected": [
+          "Yes. Complete below.",
+          "No"
+        ],
+        "source_evidence": {
+          "physical_page": 2,
+          "bbox_pdf_points": [
+            429,
+            575,
+            566,
+            589
+          ],
+          "note": "Two empty-checkbox labels beside the third-party designation question."
+        },
+        "normalize_whitespace": true
+      },
+      "baseline_MD_SHA256": "fd8e5648e22da3d1df649e999e1cf0ded28c8f1cfe46a81b36a900c9544c5a85",
+      "V7_MD_SHA256": "fcad56d50cffc4b804cdf2f3ab56ba28b0fa6d3b223c6b8b51b0373d4c912d97"
+    }
+  ],
+  "baseline_pass_to_V7_fail_or_unknown": [],
+  "baseline_nonpass_to_V7_pass": [
+    {
+      "id": "irs-dependent-claim-checkbox-order",
+      "document_id": "holdout-irs-form1040-2025",
+      "kind": "ordered_text",
+      "baseline_status": "fail",
+      "V7_status": "pass",
+      "source_assertion": {
+        "id": "irs-dependent-claim-checkbox-order",
+        "document_id": "holdout-irs-form1040-2025",
+        "page": 2,
+        "kind": "ordered_text",
+        "expected": [
+          "You as a dependent",
+          "Your spouse as a dependent",
+          "Spouse itemizes on a separate return",
+          "You were a dual-status alien"
+        ],
+        "source_evidence": {
+          "physical_page": 2,
+          "bbox_pdf_points": [
+            111,
+            49,
+            425,
+            73
+          ],
+          "note": "Blank checkboxes; assertions cover the labels and their local reading order."
+        },
+        "normalize_whitespace": true
+      },
+      "baseline_MD_SHA256": "fd8e5648e22da3d1df649e999e1cf0ded28c8f1cfe46a81b36a900c9544c5a85",
+      "V7_MD_SHA256": "fcad56d50cffc4b804cdf2f3ab56ba28b0fa6d3b223c6b8b51b0373d4c912d97"
+    },
+    {
+      "id": "irs-direct-deposit-label-order",
+      "document_id": "holdout-irs-form1040-2025",
+      "kind": "ordered_text",
+      "baseline_status": "fail",
+      "V7_status": "pass",
+      "source_assertion": {
+        "id": "irs-direct-deposit-label-order",
+        "document_id": "holdout-irs-form1040-2025",
+        "page": 2,
+        "kind": "ordered_text",
+        "expected": [
+          "Routing number",
+          "Type:",
+          "Checking",
+          "Savings",
+          "Account number"
+        ],
+        "source_evidence": {
+          "physical_page": 2,
+          "bbox_pdf_points": [
+            98,
+            503,
+            479,
+            529
+          ],
+          "note": "Direct-deposit field and empty-checkbox labels in printed reading order."
+        },
+        "normalize_whitespace": true
+      },
+      "baseline_MD_SHA256": "fd8e5648e22da3d1df649e999e1cf0ded28c8f1cfe46a81b36a900c9544c5a85",
+      "V7_MD_SHA256": "fcad56d50cffc4b804cdf2f3ab56ba28b0fa6d3b223c6b8b51b0373d4c912d97"
+    },
+    {
+      "id": "irs-footer-instruction",
+      "document_id": "holdout-irs-form1040-2025",
+      "kind": "text",
+      "baseline_status": "fail",
+      "V7_status": "pass",
+      "source_assertion": {
+        "id": "irs-footer-instruction",
+        "document_id": "holdout-irs-form1040-2025",
+        "page": 2,
+        "kind": "text",
+        "expected": "Go to www.irs.gov/Form1040 for instructions and the latest information.",
+        "source_evidence": {
+          "physical_page": 2,
+          "bbox_pdf_points": [
+            34,
+            755,
+            410,
+            770
+          ],
+          "note": "Complete short instruction in the bottom footer."
+        },
+        "normalize_whitespace": true
+      },
+      "baseline_MD_SHA256": "fd8e5648e22da3d1df649e999e1cf0ded28c8f1cfe46a81b36a900c9544c5a85",
+      "V7_MD_SHA256": "fcad56d50cffc4b804cdf2f3ab56ba28b0fa6d3b223c6b8b51b0373d4c912d97"
+    },
+    {
+      "id": "irs-standard-deduction-head-amount",
+      "document_id": "holdout-irs-form1040-2025",
+      "kind": "text",
+      "baseline_status": "fail",
+      "V7_status": "pass",
+      "source_assertion": {
+        "id": "irs-standard-deduction-head-amount",
+        "document_id": "holdout-irs-form1040-2025",
+        "page": 2,
+        "kind": "text",
+        "expected": "$23,625",
+        "source_evidence": {
+          "physical_page": 2,
+          "bbox_pdf_points": [
+            29,
+            187,
+            87,
+            213
+          ],
+          "note": "Exact printed standard-deduction amount in left sidebar."
+        },
+        "normalize_whitespace": true
+      },
+      "baseline_MD_SHA256": "fd8e5648e22da3d1df649e999e1cf0ded28c8f1cfe46a81b36a900c9544c5a85",
+      "V7_MD_SHA256": "fcad56d50cffc4b804cdf2f3ab56ba28b0fa6d3b223c6b8b51b0373d4c912d97"
+    },
+    {
+      "id": "irs-standard-deduction-joint-amount",
+      "document_id": "holdout-irs-form1040-2025",
+      "kind": "text",
+      "baseline_status": "fail",
+      "V7_status": "pass",
+      "source_assertion": {
+        "id": "irs-standard-deduction-joint-amount",
+        "document_id": "holdout-irs-form1040-2025",
+        "page": 2,
+        "kind": "text",
+        "expected": "$31,500",
+        "source_evidence": {
+          "physical_page": 2,
+          "bbox_pdf_points": [
+            29,
+            142,
+            87,
+            190
+          ],
+          "note": "Exact printed standard-deduction amount in left sidebar."
+        },
+        "normalize_whitespace": true
+      },
+      "baseline_MD_SHA256": "fd8e5648e22da3d1df649e999e1cf0ded28c8f1cfe46a81b36a900c9544c5a85",
+      "V7_MD_SHA256": "fcad56d50cffc4b804cdf2f3ab56ba28b0fa6d3b223c6b8b51b0373d4c912d97"
+    },
+    {
+      "id": "irs-standard-deduction-single-amount",
+      "document_id": "holdout-irs-form1040-2025",
+      "kind": "text",
+      "baseline_status": "fail",
+      "V7_status": "pass",
+      "source_assertion": {
+        "id": "irs-standard-deduction-single-amount",
+        "document_id": "holdout-irs-form1040-2025",
+        "page": 2,
+        "kind": "text",
+        "expected": "$15,750",
+        "source_evidence": {
+          "physical_page": 2,
+          "bbox_pdf_points": [
+            29,
+            92,
+            87,
+            142
+          ],
+          "note": "Exact printed standard-deduction amount in left sidebar."
+        },
+        "normalize_whitespace": true
+      },
+      "baseline_MD_SHA256": "fd8e5648e22da3d1df649e999e1cf0ded28c8f1cfe46a81b36a900c9544c5a85",
+      "V7_MD_SHA256": "fcad56d50cffc4b804cdf2f3ab56ba28b0fa6d3b223c6b8b51b0373d4c912d97"
+    },
+    {
+      "id": "irs-third-party-checkbox-order",
+      "document_id": "holdout-irs-form1040-2025",
+      "kind": "ordered_text",
+      "baseline_status": "fail",
+      "V7_status": "pass",
+      "source_assertion": {
+        "id": "irs-third-party-checkbox-order",
+        "document_id": "holdout-irs-form1040-2025",
+        "page": 2,
+        "kind": "ordered_text",
+        "expected": [
+          "Yes. Complete below.",
+          "No"
+        ],
+        "source_evidence": {
+          "physical_page": 2,
+          "bbox_pdf_points": [
+            429,
+            575,
+            566,
+            589
+          ],
+          "note": "Two empty-checkbox labels beside the third-party designation question."
+        },
+        "normalize_whitespace": true
+      },
+      "baseline_MD_SHA256": "fd8e5648e22da3d1df649e999e1cf0ded28c8f1cfe46a81b36a900c9544c5a85",
+      "V7_MD_SHA256": "fcad56d50cffc4b804cdf2f3ab56ba28b0fa6d3b223c6b8b51b0373d4c912d97"
+    }
+  ],
+  "V7_nonpass_assertions": [
+    {
+      "id": "irs-signature-field-order",
+      "document_id": "holdout-irs-form1040-2025",
+      "kind": "ordered_text",
+      "status": "fail",
+      "MD_sha256": "fcad56d50cffc4b804cdf2f3ab56ba28b0fa6d3b223c6b8b51b0373d4c912d97"
+    },
+    {
+      "id": "nist-emission-yields-grid",
+      "document_id": "holdout-nist-tn2354",
+      "kind": "table_grid",
+      "status": "fail",
+      "MD_sha256": "2a40ed88bfdc10e88a8995559d390e1805350f231ef4560d16f2280b0db9fde1"
+    },
+    {
+      "id": "census-naval-governor-footnote",
+      "document_id": "holdout-census-samoa-1930",
+      "kind": "text",
+      "status": "fail",
+      "MD_sha256": "cd9d4bd4db35da4586ec6364c8062f686a34774aac181e22c8815b404b859d01"
+    },
+    {
+      "id": "census-annexation-footnote",
+      "document_id": "holdout-census-samoa-1930",
+      "kind": "text",
+      "status": "fail",
+      "MD_sha256": "cd9d4bd4db35da4586ec6364c8062f686a34774aac181e22c8815b404b859d01"
+    },
+    {
+      "id": "census-copra-produced-grid",
+      "document_id": "holdout-census-samoa-1930",
+      "kind": "table_grid",
+      "status": "fail",
+      "MD_sha256": "cd9d4bd4db35da4586ec6364c8062f686a34774aac181e22c8815b404b859d01"
+    }
+  ],
+  "policy": {
+    "API_partial_never_relabelled_completed": true,
+    "same_assertion_pass_does_not_prove_unannotated_source_accuracy": true,
+    "gold_and_scorer_changed": false,
+    "NASA_posthoc_A_B_not_added_to_original_denominator": true
+  }
+}

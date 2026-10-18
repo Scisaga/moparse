@@ -1,0 +1,37 @@
+{
+  "scope": "supplementary proof only; primary audit-proof and first/second raw evidence unchanged",
+  "artifacts": {
+    "benchmark/runs/mineru-nasa-model-audit-20261018/audit-proof.json": {
+      "sha256": "8b32bca243afb355971a5c914e0b3dae6410e47515cc3fa82b1046a27f142206",
+      "bytes": 6562
+    },
+    "benchmark/runs/mineru-nasa-model-audit-20261018/report.md": {
+      "sha256": "adaa229661f59699e1f12784c6e9b8e6d0515c1b15eb018b3f9734307adea3ab",
+      "bytes": 7253
+    },
+    "/root/.cache/moparse-migration/20261018/nasa-audit/exact-replay-attempt2-20261017T231753Z/cpu-source-month-row-ngram-conflict.json": {
+      "sha256": "9e0c531a645e9dc9e9db159bdd822373c2b70bb912104bbcb536869a351e9b52",
+      "bytes": 2123
+    },
+    "/root/.cache/moparse-migration/20261018/nasa-audit/exact-replay-attempt2-20261017T231753Z/cpu-otsl-ngram-analysis.json": {
+      "sha256": "2023a37c2c4d305fee2962c4d577480935d98cac507f725a46d57513cd950b74",
+      "bytes": 2890
+    },
+    "/root/.cache/moparse-migration/20261018/nasa-audit/check_wire_complete.py": {
+      "sha256": "2f658fb5521605d1f1a1647dc637b63804d460eaf9cde303babe13d4c3419987",
+      "bytes": 5967
+    },
+    "/root/.cache/moparse-migration/20261018/nasa-audit/run_attempt2_complete_capture.py": {
+      "sha256": "7d65220f9d097ca605421706e079d2b63f4c41ed3a41fe2cb26f588309307c7b",
+      "bytes": 5569
+    },
+    "/root/.cache/moparse-migration/20261018/nasa-audit/incremental-checker-selftest.json": {
+      "sha256": "fbefb67584693599f4c1c4198d07e3e536126cca46891d600c2214651cbaa678",
+      "bytes": 204
+    }
+  },
+  "capture_pid": 3658247,
+  "capture_pid_exists": false,
+  "private_pcap_mode": "0o600",
+  "private_directory_mode": "0o700"
+}

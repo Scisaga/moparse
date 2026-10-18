@@ -1,0 +1,174 @@
+{
+  "schema": "cached-header-verifier-replay/1",
+  "scope": "Existing original14 predictions only; no new CPU/GPU inference, no HTTP, no full-document quality score. Hierarchical pagination needs a third consecutive source page unavailable in the fourteen-page subset, so the normal continuation waits for full-document HTTP verification.",
+  "documents": 6,
+  "source_pages": 14,
+  "tables": 25,
+  "all_native_values_unchanged": true,
+  "all_visible_page_markdown_unchanged": true,
+  "inputs_sha256": {
+    "benchmark/runs/native-axis-adapter-20261018/adapter-render/1206337604-p1/worker-page.json": "b1559411790ea2f5acf64e0704bee64e6109dd35ff450b6fb60e743692165219",
+    "benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/docling-target14-component/1206337604-p1/table-fragments.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+    "benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/docling-target14-component/1206337604-p1/page.md": "9842d185f2ceb15743e72fa81f22a14253858300eaffdf3e2f8bf93bcb99e66f",
+    "benchmark/runs/native-axis-adapter-20261018/adapter-render/1206337604-p2/worker-page.json": "d1157c4b50a054ed68942ee2655951fb414fe14e4b79dd17735d388b767ba09a",
+    "benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/docling-target14-component/1206337604-p2/table-fragments.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+    "benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/docling-target14-component/1206337604-p2/page.md": "b0776682ce5fc5a68ca3408220a8283ab911866a99f50eb429d6eb03eeb55789",
+    "benchmark/runs/native-axis-adapter-20261018/adapter-render/1225474739-p19/worker-page.json": "8a1bd5806e1d256c06e29f84476256e4983ad3579c051606fec184a1a9c7b43d",
+    "benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/docling-target14-component/1225474739-p19/table-fragments.json": "7518e19a4d049354403585116a3e37f5ef792bb4a259e707f3a4db4f9461bf4e",
+    "benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/docling-target14-component/1225474739-p19/page.md": "0c7c167ea9dc16be89db3738047a40ed36a154553726ba9ecf2bb21a3ea5f705",
+    "benchmark/runs/native-axis-adapter-20261018/adapter-render/1225474739-p40/worker-page.json": "8b6eee298a8c9eb56e1e4fc0d51044c9fce5628b5652cd7e9af0d324fc9f40b5",
+    "benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/docling-target14-component/1225474739-p40/table-fragments.json": "6c6cdd85072061a19bc6554f092544e8488dd7445411fecc1809a910e03b1ad3",
+    "benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/docling-target14-component/1225474739-p40/page.md": "9769e241a6a298a61036c652717a755f5e4cb36cd9249fde3c4d8f48eec37d20",
+    "benchmark/runs/native-axis-adapter-20261018/adapter-render/1225474739-p74/worker-page.json": "07d791100469eba14d22eee2f6d63a13f84251949eb31e98d9a981613755483a",
+    "benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/docling-target14-component/1225474739-p74/table-fragments.json": "f2d538a2535d44bc764c02e6e393558284cfedec2dc5286c653fcc7a78a860be",
+    "benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/docling-target14-component/1225474739-p74/page.md": "1d57fb210a96f69b57da498c49914c5aa98a0f3cdee4da90aa03ac399d824f7c",
+    "benchmark/runs/native-axis-adapter-20261018/adapter-render/1225474739-p131/worker-page.json": "dcfdbb0e31a01c57e613ba3d3739b76dd798e5b621e6431d720b3f3fbae70ba4",
+    "benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/docling-target14-component/1225474739-p131/table-fragments.json": "1cda2df9f7626df82313d7c97139bac63c1d0a684772fff89e5a7752a75fa99c",
+    "benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/docling-target14-component/1225474739-p131/page.md": "68b6dfdafd274d67ff6b29364a8a4e470e3698f498ce5ccddb5c7adeacf9d938",
+    "benchmark/runs/native-axis-adapter-20261018/adapter-render/1225475375-p74/worker-page.json": "c934917d9da5f1e3c30bccda4b1122517edbdddbb698a91da2a67110600a14cc",
+    "benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/docling-target14-component/1225475375-p74/table-fragments.json": "fb54418306c078878f263df0383d897b940de9e0fe80e2011b83ca6960812ccd",
+    "benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/docling-target14-component/1225475375-p74/page.md": "1740fc78677095c090676ea5c48dc8e390ad31cd15b88b5d6e3f5e39eef154bd",
+    "benchmark/runs/native-axis-adapter-20261018/adapter-render/1225475375-p87/worker-page.json": "acf0b3f61ea2384063a76655a5058a425c6909f244f60694918411860f999004",
+    "benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/docling-target14-component/1225475375-p87/table-fragments.json": "4686c46b509c1137c5a4a9578a05d4487bd09406f660c55b1c815482647c47e3",
+    "benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/docling-target14-component/1225475375-p87/page.md": "cc0d85f8003c7911388aef7bdef2fb6f479508f9d43568d98d7a620722629e05",
+    "benchmark/runs/native-axis-adapter-20261018/adapter-render/1225474139-p28/worker-page.json": "8c5de5ef23397e46d1720d3f3498dedd848c836f8692a91ebaef0426472f4db7",
+    "benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/docling-target14-component/1225474139-p28/table-fragments.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+    "benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/docling-target14-component/1225474139-p28/page.md": "9a26ce4548302063e3183ba8e917305be90e4208269464d41413257d98d90102",
+    "benchmark/runs/native-axis-adapter-20261018/adapter-render/1225474139-p30/worker-page.json": "883a66fca5c53183f41337be0fe62bad694bb5a0781ebc6f502475c9a14997d3",
+    "benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/docling-target14-component/1225474139-p30/table-fragments.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+    "benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/docling-target14-component/1225474139-p30/page.md": "b95502fb751060dd157143202b29d9a5d600f269b694e3bcc39a4fb586db07cf",
+    "benchmark/runs/native-axis-adapter-20261018/adapter-render/1225474693-p2/worker-page.json": "a25471bd02c9f61124a437f1768b42c02e77c574f3f8ecb41a0c7beee4676611",
+    "benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/docling-target14-component/1225474693-p2/table-fragments.json": "5a449b9434988b54af98f368cdbdef03628ab571dd15d2d337e72cfc044fd1cc",
+    "benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/docling-target14-component/1225474693-p2/page.md": "b1a18e3daab4faf38b379f1cbdea9438865632a5f10ea9ffb82ac64f13c274c8",
+    "benchmark/runs/native-axis-adapter-20261018/adapter-render/1225474693-p3/worker-page.json": "4fd469daf161a0551d3f9d60d40cfd0a886de616d5928677cadbe4e84c0560e7",
+    "benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/docling-target14-component/1225474693-p3/table-fragments.json": "29ebdd3525e3fba2b22c456898efff3e2b489c9677d43a0b87f3e3b540d2edbb",
+    "benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/docling-target14-component/1225474693-p3/page.md": "3c722218852d068c4b6c5a8a9758d8753da470428f286997fd4c3a065742144d",
+    "benchmark/runs/native-axis-adapter-20261018/adapter-render/1225473526-p6/worker-page.json": "acc7eeb348578965dd317c9fd553287973b83ac4f7c640681573b4f88e375c76",
+    "benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/docling-target14-component/1225473526-p6/table-fragments.json": "adc0835ceec4079fdc2d02f6dcf2d09d128a7d735657f89b2e1ba5087be90556",
+    "benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/docling-target14-component/1225473526-p6/page.md": "a0693099a42b7aaae3791acd85c3929e03df36875962770e997f89fb1b7f8a76",
+    "benchmark/runs/native-axis-adapter-20261018/adapter-render/1225473526-p7/worker-page.json": "842507629bf2c7d844bb9c26723623cd1c3266edfcc202a55761fb5dcec1af97",
+    "benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/docling-target14-component/1225473526-p7/table-fragments.json": "f3276870237e6e2c476ac94afd04100785f56767b4351134ea7208d02b4db6c6",
+    "benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/docling-target14-component/1225473526-p7/page.md": "86cf538419011dfc734f316a74ec9513eb7aaf587de51e0515ef3a1e9e7bf474"
+  },
+  "cases": [
+    {
+      "id": "1206337604",
+      "source_pages": [
+        1,
+        2
+      ],
+      "tables": 2,
+      "native_value_sha256_before": "4cae456322d856ff822ef138305a6386cd96b452953d8f08f6451ead005eaaba",
+      "native_value_sha256_after": "4cae456322d856ff822ef138305a6386cd96b452953d8f08f6451ead005eaaba",
+      "all_native_values_unchanged": true,
+      "visible_page_markdown_unchanged": true,
+      "table_source_markers": 2,
+      "decisions": [
+        {
+          "left": "mineru_p1_t1",
+          "right": "mineru_p2_t1",
+          "accepted": false,
+          "reason": "missing_or_ambiguous_physical_table_match"
+        }
+      ],
+      "markdown": "benchmark/runs/header-verifier-v2-20261018/cached-replay/1206337604.md",
+      "markdown_sha256": "fee24dbd5af0f66acf51b59c87be12ce8b3b3de1da2c235fd12cec60201b7656"
+    },
+    {
+      "id": "1225474739",
+      "source_pages": [
+        19,
+        40,
+        74,
+        131
+      ],
+      "tables": 8,
+      "native_value_sha256_before": "2e1ae6d515717923bce96376114d39ae5ed21afc60fdc2de824b560169cbc042",
+      "native_value_sha256_after": "2e1ae6d515717923bce96376114d39ae5ed21afc60fdc2de824b560169cbc042",
+      "all_native_values_unchanged": true,
+      "visible_page_markdown_unchanged": true,
+      "table_source_markers": 8,
+      "decisions": [],
+      "markdown": "benchmark/runs/header-verifier-v2-20261018/cached-replay/1225474739.md",
+      "markdown_sha256": "e5e0cecc55a011b92490c2d50ac226ec8bd383f0bf5a480049ac9f48b46dbd7a"
+    },
+    {
+      "id": "1225475375",
+      "source_pages": [
+        74,
+        87
+      ],
+      "tables": 5,
+      "native_value_sha256_before": "ca09717be34d601dea45756c680c415e445b1e654bfac3b26e9621c841666327",
+      "native_value_sha256_after": "ca09717be34d601dea45756c680c415e445b1e654bfac3b26e9621c841666327",
+      "all_native_values_unchanged": true,
+      "visible_page_markdown_unchanged": true,
+      "table_source_markers": 5,
+      "decisions": [],
+      "markdown": "benchmark/runs/header-verifier-v2-20261018/cached-replay/1225475375.md",
+      "markdown_sha256": "1276f69321fd45ab0c62b9d0d0e71d26a0dbb37310aa6ff39ddaacf304fb8f63"
+    },
+    {
+      "id": "1225474139",
+      "source_pages": [
+        28,
+        30
+      ],
+      "tables": 0,
+      "native_value_sha256_before": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "native_value_sha256_after": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "all_native_values_unchanged": true,
+      "visible_page_markdown_unchanged": true,
+      "table_source_markers": 0,
+      "decisions": [],
+      "markdown": "benchmark/runs/header-verifier-v2-20261018/cached-replay/1225474139.md",
+      "markdown_sha256": "1451ffbf54b6f19c20451d07e871bb53cfe1578798622de92e91dab96a489345"
+    },
+    {
+      "id": "1225474693",
+      "source_pages": [
+        2,
+        3
+      ],
+      "tables": 5,
+      "native_value_sha256_before": "891e75936cb28cbc0b41d9c2576923be809f12c10e7aaf0df3c73819343066d4",
+      "native_value_sha256_after": "891e75936cb28cbc0b41d9c2576923be809f12c10e7aaf0df3c73819343066d4",
+      "all_native_values_unchanged": true,
+      "visible_page_markdown_unchanged": true,
+      "table_source_markers": 5,
+      "decisions": [
+        {
+          "left": "mineru_p2_t3",
+          "right": "mineru_p3_t1",
+          "accepted": false,
+          "reason": "independent_complete_headers_differ"
+        }
+      ],
+      "markdown": "benchmark/runs/header-verifier-v2-20261018/cached-replay/1225474693.md",
+      "markdown_sha256": "327d333d088e7b44859a78711a8294f94d4859e36da51d1f1f9347cd4a575798"
+    },
+    {
+      "id": "1225473526",
+      "source_pages": [
+        6,
+        7
+      ],
+      "tables": 5,
+      "native_value_sha256_before": "96073e40e5d321c0420d2a1dec5d188e93265171ef58fe0cdb932ba97104e5dc",
+      "native_value_sha256_after": "96073e40e5d321c0420d2a1dec5d188e93265171ef58fe0cdb932ba97104e5dc",
+      "all_native_values_unchanged": true,
+      "visible_page_markdown_unchanged": true,
+      "table_source_markers": 5,
+      "decisions": [
+        {
+          "left": "mineru_p6_t2",
+          "right": "mineru_p7_t1",
+          "accepted": false,
+          "reason": "cross_page_source_context_not_established"
+        }
+      ],
+      "markdown": "benchmark/runs/header-verifier-v2-20261018/cached-replay/1225473526.md",
+      "markdown_sha256": "559b6b53833b49394e71380a2cc47c52ee97ee59bb2dcd0ada35d7facc9106a0"
+    }
+  ]
+}

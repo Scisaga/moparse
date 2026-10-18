@@ -1,0 +1,26 @@
+{
+  "schema": "moparse-evidence/1",
+  "id": "plain-source-diagnostic-compaction-correction-20261018",
+  "method_id": "mineru-advanced-txt-vllm-c2-docling-header-glm-v4",
+  "cohort_id": "regression-502",
+  "origin": "fresh_component",
+  "fresh_model_inference": false,
+  "output_stage": "diagnostic-correction-only",
+  "quality": {},
+  "performance": {},
+  "provenance": [
+    {
+      "path": "benchmark/evidence/artifacts/4b42f703842293732837c2fc90610d37988cabb7b141ef4e87384d6e6d08c206.json",
+      "sha256": "4b42f703842293732837c2fc90610d37988cabb7b141ef4e87384d6e6d08c206",
+      "bytes": 26919,
+      "original_path": "benchmark/runs/header-v4-http-20261018/plain-source-diagnostic-compaction-correction.json",
+      "snapshot_bytes_unchanged": true
+    }
+  ],
+  "qualification": {
+    "observation_only": true,
+    "deployment_acceptance": false,
+    "score_gold_reader_or_model_output_changed": false,
+    "source_text_is_PDF_plain_text_not_Markdown": true
+  }
+}

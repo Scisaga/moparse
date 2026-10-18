@@ -25,6 +25,7 @@ class ElementQuality(StrEnum):
 class ProvenanceSourceKind(StrEnum):
     NATIVE = "native"
     DOCLING = "docling"
+    MINERU = "mineru"
     GLM = "glm"
     FFMPEG = "ffmpeg"
     OOXML = "ooxml"
@@ -203,6 +204,7 @@ class UnitDiagnostics(BaseModel):
     quality_verdict: Literal["trusted", "degraded", "untrusted"]
     selected_strategy: Literal[
         "docling",
+        "mineru",
         "native_repair",
         "scan_skipped",
         "glm_table",

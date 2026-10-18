@@ -1,0 +1,323 @@
+{
+  "schema": "moparse-single-crop-component-ablation/1",
+  "created_at": "2026-10-17T23:29:51.706414+00:00",
+  "scope": "exact same saved crop/official task prompt; two isolated sequential provider requests; not wholePDF/worker/publicAPI evaluation",
+  "source_pdf": {
+    "path": "benchmark/datasets/moparse-addon-20261018/sources/nasa-maax-factsheet.pdf",
+    "sha256": "79ab8e7686605ece7144aaa7d1d95e0c43dc4066ad35db9629f7b10075369411",
+    "physical_page": 2,
+    "source_figure": "Schedule Summary monthly Gantt",
+    "crop_pixels": [
+      1486,
+      216
+    ],
+    "crop_sha256": "795fca8ed10e0f6856994db9f7fdbb7bdfdc256e2c721248d83e20a1396899e9"
+  },
+  "baseline_method": "mineru-advanced-txt-vllm-c2-docling-header-glm-v4",
+  "model": "MinerU2.5-Pro-2605-1.2B",
+  "model_revision": "08aaea840498d49ce16247b6263196cf02814885",
+  "provider_identity_unchanged": {
+    "worker": {
+      "id": true,
+      "image_id": true,
+      "restart_count": true,
+      "pid": true
+    },
+    "provider": {
+      "id": true,
+      "image_id": true,
+      "restart_count": true,
+      "pid": true
+    }
+  },
+  "precision": "FP16",
+  "provider_max_num_seqs": 2,
+  "component_request_concurrency": 1,
+  "request_difference_only": "vllm_xargs.no_repeat_ngram_size100→0",
+  "control_request_body_byte_identical_to_original_PCAP": true,
+  "treatment_request_body_original_bytes_except_numeric_literal": true,
+  "unchanged_sampling": {
+    "model": "mineru2.5-pro",
+    "temperature": 0.0,
+    "top_p": 0.01,
+    "top_k": 1,
+    "presence_penalty": 1.0,
+    "frequency_penalty": 0.005,
+    "repetition_penalty": 1.0,
+    "vllm_xargs": {
+      "no_repeat_ngram_size": 100,
+      "debug": false
+    },
+    "skip_special_tokens": false
+  },
+  "seed_added": false,
+  "model_completion_calls": 2,
+  "worker_parse_calls": 0,
+  "service_restarts_or_config_changes": 0,
+  "automatic_retries": 0,
+  "CPU_zero_supported_preflight": {
+    "path": "/root/.cache/moparse-migration/20261018/nasa-audit/component-ngram-ablation-20261017T232412Z/cpu-zero-preflight.json",
+    "sha256": "b7751ca14026a3dfa0938936b8660bc8d401798474e3307bc821b4d83886746d"
+  },
+  "control_raw_output_byte_identical_to_original_capture": true,
+  "arms": [
+    {
+      "arm": "control100",
+      "no_repeat_ngram_size": 100,
+      "HTTP_status": 200,
+      "duration_seconds": 43.987326889066026,
+      "finish_reasons": [
+        "stop"
+      ],
+      "usage": {
+        "prompt_tokens": 449,
+        "total_tokens": 3044,
+        "completion_tokens": 2595,
+        "prompt_tokens_details": null
+      },
+      "raw_output_sha256": "f04f9c857d021aafd772745416272c96c5670bd10e3c15c5e1142b024e9b8203",
+      "raw_characters": 6688,
+      "row_widths_before_official_empty_padding": [
+        107,
+        201,
+        313
+      ],
+      "official_html_projected_shape": [
+        3,
+        313
+      ],
+      "official_conversion_error": null,
+      "official_html_sha256": "c1910e9ed4b04765e873fb5c21f0306b06d0249e81a03f1e97c32d1674f449fa",
+      "OTSL_token_counts": {
+        "<ecel>": 101,
+        "<fcel>": 315,
+        "<lcel>": 203,
+        "<nl>": 3,
+        "<ucel>": 2
+      },
+      "longest_consecutive_lcel": 100,
+      "literal_occurrences": {
+        "Launch": 122,
+        "Masseset": 34,
+        "FY23": 1,
+        "FY24": 1,
+        "FY25": 0,
+        "FY26": 0,
+        "FY27": 0,
+        "FY28": 0,
+        "FY29": 0,
+        "CY23": 1,
+        "CY24": 0,
+        "CY25": 0,
+        "CY26": 0,
+        "CY27": 0,
+        "CY28": 0,
+        "CY29": 0,
+        "Ph A": 0,
+        "Ph B": 0,
+        "Ph C": 0,
+        "Ph D": 0,
+        "Ph E": 0,
+        "Milestones": 0
+      },
+      "source_character_budget": {
+        "normalization": "Exact nonwhitespace characters; fullwidthASCII folded only; wholephysicalpage2 budget; HTML text counted once at anchors, no span duplication; no NFKC/casefold/punctuation deletion",
+        "source_text_complete_or_font_map_fidelity_proven": false,
+        "source_page_text_sha256": "c40ab4eba3b0ec1b0d3c747f2a1498c63f6ac2d1e6757e62018cbcb1e95a9b91",
+        "all_excess_distinct_characters": 19,
+        "all_excess_occurrences": 1475,
+        "witnessed_LN_excess_distinct_characters": 18,
+        "witnessed_LN_excess_occurrences": 1307,
+        "not_a_correctness_or_completeness_proof": true
+      },
+      "visible_source_agreement": {
+        "FY25_to_FY29_missing": true,
+        "CY24_to_CY29_missing": true,
+        "phase_labels_Ph_A_to_Ph_E_missing": true,
+        "Milestones_missing": true,
+        "source_periods_or_values_not_rewritten": true
+      }
+    },
+    {
+      "arm": "treatment0",
+      "no_repeat_ngram_size": 0,
+      "HTTP_status": 200,
+      "duration_seconds": 42.955680469051,
+      "finish_reasons": [
+        "stop"
+      ],
+      "usage": {
+        "prompt_tokens": 449,
+        "total_tokens": 3110,
+        "completion_tokens": 2661,
+        "prompt_tokens_details": null
+      },
+      "raw_output_sha256": "84515769e3db56f99f8a40086b0ea501185ad732b5b50b5c502d89a84bf3857d",
+      "raw_characters": 15925,
+      "row_widths_before_official_empty_padding": [
+        2652
+      ],
+      "official_html_projected_shape": [
+        1,
+        2652
+      ],
+      "official_conversion_error": null,
+      "official_html_sha256": "82ae4bf032cb58e0132cf8edb3a390b7e4f3e34867a21df75d9009b77c45fc88",
+      "OTSL_token_counts": {
+        "<ecel>": 1,
+        "<fcel>": 2,
+        "<lcel>": 2649,
+        "<nl>": 1
+      },
+      "longest_consecutive_lcel": 2645,
+      "literal_occurrences": {
+        "Launch": 0,
+        "Masseset": 0,
+        "FY23": 1,
+        "FY24": 1,
+        "FY25": 0,
+        "FY26": 0,
+        "FY27": 0,
+        "FY28": 0,
+        "FY29": 0,
+        "CY23": 0,
+        "CY24": 0,
+        "CY25": 0,
+        "CY26": 0,
+        "CY27": 0,
+        "CY28": 0,
+        "CY29": 0,
+        "Ph A": 0,
+        "Ph B": 0,
+        "Ph C": 0,
+        "Ph D": 0,
+        "Ph E": 0,
+        "Milestones": 0
+      },
+      "source_character_budget": {
+        "normalization": "Exact nonwhitespace characters; fullwidthASCII folded only; wholephysicalpage2 budget; HTML text counted once at anchors, no span duplication; no NFKC/casefold/punctuation deletion",
+        "source_text_complete_or_font_map_fidelity_proven": false,
+        "source_page_text_sha256": "c40ab4eba3b0ec1b0d3c747f2a1498c63f6ac2d1e6757e62018cbcb1e95a9b91",
+        "all_excess_distinct_characters": 0,
+        "all_excess_occurrences": 0,
+        "witnessed_LN_excess_distinct_characters": 0,
+        "witnessed_LN_excess_occurrences": 0,
+        "not_a_correctness_or_completeness_proof": true
+      },
+      "visible_source_agreement": {
+        "FY25_to_FY29_missing": true,
+        "CY24_to_CY29_missing": true,
+        "phase_labels_Ph_A_to_Ph_E_missing": true,
+        "Milestones_missing": true,
+        "source_periods_or_values_not_rewritten": true
+      }
+    }
+  ],
+  "limitations": [
+    "One exposed singlefigure/crop; no untouchedholdout, wholePDF acceptance or new qualitydenominator.",
+    "Control100 first and treatment0 second on same warmprovider; cache/order can affect timing; no generalperformance claim.",
+    "Both receivedHTTP200 and finishstop; neither correctness nor faithfulstructure follows from stop.",
+    "OriginalPDF native text layer may omit source figure glyphs; wholepage occurrencebudget is diagnostic only.",
+    "Treatment0 has zero sourcecharacter excess while losing most sourcecontent and producing2652columns; zeroexcess cannot prove completeness or accuracy.",
+    "No change to frozenV4/runtime/reader/gold/formal550 outputs.",
+    "No additionalmodel/parameter trials authorized or executed."
+  ],
+  "artifacts_private": {
+    "/root/.cache/moparse-migration/20261018/nasa-audit/component-ngram-ablation-20261017T232412Z/control100/request-body.bin": {
+      "sha256": "f7db77dc3c4fe6f65b9080e629e2975fb6b67a00a6193207c63d428bbb0e0ce6",
+      "bytes": 73176,
+      "private_mode": "0o600"
+    },
+    "/root/.cache/moparse-migration/20261018/nasa-audit/component-ngram-ablation-20261017T232412Z/control100/request.json": {
+      "sha256": "caa6341b021ce87afcf5222ade0934e132d354d5faa7da2832f207caa18024e3",
+      "bytes": 73404,
+      "private_mode": "0o600"
+    },
+    "/root/.cache/moparse-migration/20261018/nasa-audit/component-ngram-ablation-20261017T232412Z/control100/response-body.bin": {
+      "sha256": "f59efec17d38d8628b9116c3675edd62f6f4198c759c05abd7ae7fb117e19a77",
+      "bytes": 7600,
+      "private_mode": "0o600"
+    },
+    "/root/.cache/moparse-migration/20261018/nasa-audit/component-ngram-ablation-20261017T232412Z/control100/response.json": {
+      "sha256": "e96ffbe24248d62da71e14ed078d6737f0f4affbc6a3ebddb05494d3e88acca4",
+      "bytes": 7821,
+      "private_mode": "0o600"
+    },
+    "/root/.cache/moparse-migration/20261018/nasa-audit/component-ngram-ablation-20261017T232412Z/control100/receipt.json": {
+      "sha256": "5af0db527ccf88b9760515585d2131a8c2507f0fb857badda4e655b04325c915",
+      "bytes": 440,
+      "private_mode": "0o600"
+    },
+    "/root/.cache/moparse-migration/20261018/nasa-audit/component-ngram-ablation-20261017T232412Z/control100/raw-output.txt": {
+      "sha256": "f04f9c857d021aafd772745416272c96c5670bd10e3c15c5e1142b024e9b8203",
+      "bytes": 7024,
+      "private_mode": "0o600"
+    },
+    "/root/.cache/moparse-migration/20261018/nasa-audit/component-ngram-ablation-20261017T232412Z/control100/official-converted.html": {
+      "sha256": "c1910e9ed4b04765e873fb5c21f0306b06d0249e81a03f1e97c32d1674f449fa",
+      "bytes": 9983,
+      "private_mode": "0o600"
+    },
+    "/root/.cache/moparse-migration/20261018/nasa-audit/component-ngram-ablation-20261017T232412Z/control100/analysis.json": {
+      "sha256": "b0de2e7c370bdf52261e0bcb3ed81111e98a40161be475cfd27caf9b72815636",
+      "bytes": 8176,
+      "private_mode": "0o600"
+    },
+    "/root/.cache/moparse-migration/20261018/nasa-audit/component-ngram-ablation-20261017T232412Z/treatment0/request-body.bin": {
+      "sha256": "4e72b6d3d0e7c200429d6b2fe7140aa145b8167f4c01063d5733a3c67bb54119",
+      "bytes": 73174,
+      "private_mode": "0o600"
+    },
+    "/root/.cache/moparse-migration/20261018/nasa-audit/component-ngram-ablation-20261017T232412Z/treatment0/request.json": {
+      "sha256": "4820e35f2b0d0c309e8f7de4b641e5123884c52d40f6912494ea9c0098bcf997",
+      "bytes": 73402,
+      "private_mode": "0o600"
+    },
+    "/root/.cache/moparse-migration/20261018/nasa-audit/component-ngram-ablation-20261017T232412Z/treatment0/response-body.bin": {
+      "sha256": "9cc31ab55d56dabf19beb6a5d997789d995be6f56d7aa79919b1b3fda41d5d57",
+      "bytes": 16499,
+      "private_mode": "0o600"
+    },
+    "/root/.cache/moparse-migration/20261018/nasa-audit/component-ngram-ablation-20261017T232412Z/treatment0/response.json": {
+      "sha256": "b904ef9f6035f515aa55c70690071853936d68d574641549dc571ee74988f3be",
+      "bytes": 16720,
+      "private_mode": "0o600"
+    },
+    "/root/.cache/moparse-migration/20261018/nasa-audit/component-ngram-ablation-20261017T232412Z/treatment0/receipt.json": {
+      "sha256": "a4ed26c37642d5e9cb494c4baa81af9729b8b365f9c3b08eb544278adb9ace3e",
+      "bytes": 439,
+      "private_mode": "0o600"
+    },
+    "/root/.cache/moparse-migration/20261018/nasa-audit/component-ngram-ablation-20261017T232412Z/treatment0/raw-output.txt": {
+      "sha256": "84515769e3db56f99f8a40086b0ea501185ad732b5b50b5c502d89a84bf3857d",
+      "bytes": 15925,
+      "private_mode": "0o600"
+    },
+    "/root/.cache/moparse-migration/20261018/nasa-audit/component-ngram-ablation-20261017T232412Z/treatment0/official-converted.html": {
+      "sha256": "82ae4bf032cb58e0132cf8edb3a390b7e4f3e34867a21df75d9009b77c45fc88",
+      "bytes": 86,
+      "private_mode": "0o600"
+    },
+    "/root/.cache/moparse-migration/20261018/nasa-audit/component-ngram-ablation-20261017T232412Z/treatment0/analysis.json": {
+      "sha256": "c3c710ac620328b8a2e0d8149a6c9b96b2a7c0aa5f6d86c4bd562745036d6a6c",
+      "bytes": 1646,
+      "private_mode": "0o600"
+    },
+    "/root/.cache/moparse-migration/20261018/nasa-audit/component-ngram-ablation-20261017T232412Z/cpu-zero-preflight.json": {
+      "sha256": "b7751ca14026a3dfa0938936b8660bc8d401798474e3307bc821b4d83886746d",
+      "bytes": 838
+    },
+    "/root/.cache/moparse-migration/20261018/nasa-audit/component-ngram-ablation-20261017T232412Z/binding-before.json": {
+      "sha256": "89ffc6c0068397fbd91dcf8a5edc1294b8b2601a1ae1a88570070db9b01ee008",
+      "bytes": 2074
+    },
+    "/root/.cache/moparse-migration/20261018/nasa-audit/component-ngram-ablation-20261017T232412Z/binding-after.json": {
+      "sha256": "0bd7803408116943adbf6409e703091713ef5d26485f142cdfcf1d0f0990fc82",
+      "bytes": 1301
+    },
+    "/root/.cache/moparse-migration/20261018/nasa-audit/component-ngram-ablation-20261017T232412Z/source-page2.txt": {
+      "sha256": "c40ab4eba3b0ec1b0d3c747f2a1498c63f6ac2d1e6757e62018cbcb1e95a9b91",
+      "bytes": 3437
+    }
+  }
+}

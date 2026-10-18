@@ -1,4 +1,4 @@
-# MosaicParse 产品与工程规格
+# moparse 产品与工程规格
 
 > 当前结果契约：GFM Markdown（`text/markdown`）
 >
@@ -8,7 +8,7 @@
 
 ## 1. 产品目标
 
-MosaicParse 把 PDF、DOCX、PPTX、图片和独立视频转换为一份适合 LLM/RAG/ER 消费的
+moparse 把 PDF、DOCX、PPTX、图片和独立视频转换为一份适合 LLM/RAG/ER 消费的
 GFM Markdown。它完成版面恢复、表格识别、跨页表合并和媒体引用，但不把表格按领域规则
 改写成另一套事实语法，也不向下游返回解析坐标对象。
 
@@ -24,7 +24,7 @@ GFM Markdown。它完成版面恢复、表格识别、跨页表合并和媒体�
 
 ## 3. 与 EventRail 的边界
 
-MosaicParse 只恢复可见标签、期间、单位和值在文档中的结构关系；EventRail 继续负责指标
+moparse 只恢复可见标签、期间、单位和值在文档中的结构关系；EventRail 继续负责指标
 别名归一、公司实体消歧、关系/事件 ontology、事件去重、修订和训练数据生命周期。
 下游无需把 Evidence IR 放入 LLM 上下文。
 
@@ -45,8 +45,10 @@ prefer_async                  # 仅 /parse
 
 `profile`、`include_renderings` 与旧后端选择参数已删除。路由原则：
 
-- 原生 PDF 页：Docling 2.139.0／TableFormer V1 Accurate／matching=False／PyPdfium，
-  CPU 解析，不做无条件全页 OCR；
+- 原生 PDF 页：保留原生文字，由服务配置选择版面和表格后端，不做无条件全页 OCR。
+  候选配置见 [README](../README.md#模型配置与选择依据)，实际上线组合以
+  [当前比较报告](../benchmark/report.md) 关联的 release proof 为准，方法登记见
+  [benchmark](../benchmark/README.md)；
 - 扫描、混合页：官方 GLM-OCR SDK，开启方向预处理，PP-DocLayoutV3 布局与区域 OCR；
 - 结构验证保留不确定的原格、候选和告警，不调用额外模型重写单元格；
 - Office 直接提取嵌图；原生 PDF 图片依赖模型检测与裁边；扫描／混合页保留整页来源图；

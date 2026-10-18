@@ -1,0 +1,113 @@
+{
+  "schema": "moparse-completed-source-stage-observation/1",
+  "created_at": "2026-10-17T18:58:37.882697+00:00",
+  "stage": "First7 completed whole documents;225 physicalpages;complete543 experiment still running",
+  "gold_and_scorer_changed": false,
+  "scope": {
+    "document_ids": [
+      "1210860446",
+      "1211290753",
+      "1219858186",
+      "1225473526",
+      "1225474139",
+      "1225474693",
+      "1225474739"
+    ],
+    "pages": 225,
+    "supplement_atomic_fields": 325
+  },
+  "metrics": {
+    "old_Docling": {
+      "literal_unique_row": 295,
+      "complete_header": 249,
+      "submit_to_saved_MD_s": 421.4444514090428,
+      "power_limit_W": 180
+    },
+    "primary_AdvancedTXT": {
+      "literal_unique_row": 276,
+      "complete_header": 222,
+      "submit_to_saved_MD_s": 1755.435247372021,
+      "power_limit_W": 220
+    }
+  },
+  "diagnostic_counts": {
+    "label_typography_with_identical_own_cell": 19,
+    "header_colon_width_changed_value_preserved": 10,
+    "actual_numeric_literal_regression": 2,
+    "actual_numeric_literal_recovery": 2
+  },
+  "diagnostic_not_rescoring": "Width/punctuation observations do not change any frozen pass/fail count",
+  "actual_numeric_literal_changes": [
+    {
+      "source_page": 54,
+      "source_ordinal": 2,
+      "row_zero_based": 8,
+      "column_zero_based": 13,
+      "source_text": "1,4\n65,\n510\n,36\n8.4\n4",
+      "actual": "1,465.510,368.44",
+      "category": "actual_numeric_literal_regression"
+    },
+    {
+      "source_page": 56,
+      "source_ordinal": 2,
+      "row_zero_based": 8,
+      "column_zero_based": 11,
+      "source_text": "-\n113\n,70\n3,7\n44.\n77",
+      "actual": "-113,703,744.77",
+      "category": "actual_numeric_literal_recovery"
+    },
+    {
+      "source_page": 56,
+      "source_ordinal": 2,
+      "row_zero_based": 8,
+      "column_zero_based": 13,
+      "source_text": "1,3\n42,\n788\n,51\n5.8\n6",
+      "actual": "1.342,788,515.86",
+      "category": "actual_numeric_literal_regression"
+    },
+    {
+      "source_page": 60,
+      "source_ordinal": 1,
+      "row_zero_based": 10,
+      "column_zero_based": 12,
+      "source_text": "-\n7,735\n,172.\n19",
+      "actual": "-7,735,172.19",
+      "category": "actual_numeric_literal_recovery"
+    }
+  ],
+  "original_28_source_content_conditions": {
+    "pages": [
+      19,
+      40,
+      74,
+      131
+    ],
+    "historical_Advanced_FULL_pass": 28,
+    "new_full_document_HTTP_pass": 28,
+    "prose_typography_exceptions_preserved": true
+  },
+  "detailed_private_proofs": [
+    {
+      "path": "benchmark/runs/candidate-http-20261018/partial7-old-new-source-diff.json",
+      "sha256": "fde1475cf1a2fef853114e10c5d2af8f38140bfcb351a0e39e6de27e996f7d21",
+      "bytes": 1308278
+    },
+    {
+      "path": "benchmark/runs/candidate-http-20261018/partial7-content134-detail.json",
+      "sha256": "f3854c1849233041535db4f9832386035ed18b57daae44ce138ef31a06a699b7",
+      "bytes": 45247
+    }
+  ],
+  "public_evaluation_summary": {
+    "path": "benchmark/evidence/artifacts/58521b6d6fd51b6cec2a549825244cbea65aa3be0af02324dc6c55350a78ab37.json",
+    "sha256": "58521b6d6fd51b6cec2a549825244cbea65aa3be0af02324dc6c55350a78ab37",
+    "bytes": 63031,
+    "original_path": "benchmark/runs/candidate-http-20261018/partial7-public/evaluation.json",
+    "snapshot_bytes_unchanged": true
+  },
+  "notes": [
+    "Same selected325 denominator, not globaldocument accuracy",
+    "Power and sharedload differ; actual latency comparison is not isolated model causal timing",
+    "Header-only new combination does not replace these bodyvalues or punctuation; complete next-method results still required"
+  ]
+}

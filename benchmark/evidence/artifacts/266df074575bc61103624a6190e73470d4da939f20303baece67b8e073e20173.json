@@ -1,0 +1,229 @@
+{
+  "schema": "moparse-assertion-evaluation/1",
+  "annotation": {
+    "path": "benchmark/datasets/moparse-addon-20261018/annotations/fresh7.assertions.json",
+    "sha256": "8da34499ea3ed33cadcb044a352671010207c4fd30819bdafe2201303168b40c",
+    "bytes": 22361
+  },
+  "checks": [
+    {
+      "id": "maax-mission-title",
+      "document_id": "nasa-maax-factsheet",
+      "kind": "text",
+      "status": "pass",
+      "MD_sha256": "c8ac03175b6715831f3a63ab656bb3eed65c2aa6a29f67a49f55a3d92db0bce3"
+    },
+    {
+      "id": "maax-objective-one",
+      "document_id": "nasa-maax-factsheet",
+      "kind": "text",
+      "status": "pass",
+      "MD_sha256": "c8ac03175b6715831f3a63ab656bb3eed65c2aa6a29f67a49f55a3d92db0bce3"
+    },
+    {
+      "id": "maax-objective-two",
+      "document_id": "nasa-maax-factsheet",
+      "kind": "text",
+      "status": "pass",
+      "MD_sha256": "c8ac03175b6715831f3a63ab656bb3eed65c2aa6a29f67a49f55a3d92db0bce3"
+    },
+    {
+      "id": "maax-observation-duration",
+      "document_id": "nasa-maax-factsheet",
+      "kind": "text",
+      "status": "pass",
+      "MD_sha256": "c8ac03175b6715831f3a63ab656bb3eed65c2aa6a29f67a49f55a3d92db0bce3"
+    },
+    {
+      "id": "maax-phase-sequence",
+      "document_id": "nasa-maax-factsheet",
+      "kind": "ordered_text",
+      "status": "pass",
+      "MD_sha256": "c8ac03175b6715831f3a63ab656bb3eed65c2aa6a29f67a49f55a3d92db0bce3"
+    },
+    {
+      "id": "maax-instrument-header-order",
+      "document_id": "nasa-maax-factsheet",
+      "kind": "ordered_text",
+      "status": "pass",
+      "MD_sha256": "c8ac03175b6715831f3a63ab656bb3eed65c2aa6a29f67a49f55a3d92db0bce3"
+    },
+    {
+      "id": "maax-cost-full-grid",
+      "document_id": "nasa-maax-factsheet",
+      "kind": "table_grid",
+      "status": "fail",
+      "MD_sha256": "c8ac03175b6715831f3a63ab656bb3eed65c2aa6a29f67a49f55a3d92db0bce3"
+    },
+    {
+      "id": "maax-cost-title-colspan",
+      "document_id": "nasa-maax-factsheet",
+      "kind": "table_span",
+      "status": "fail",
+      "MD_sha256": "c8ac03175b6715831f3a63ab656bb3eed65c2aa6a29f67a49f55a3d92db0bce3"
+    },
+    {
+      "id": "maax-cost-footnote-colspan",
+      "document_id": "nasa-maax-factsheet",
+      "kind": "table_span",
+      "status": "pass",
+      "MD_sha256": "c8ac03175b6715831f3a63ab656bb3eed65c2aa6a29f67a49f55a3d92db0bce3"
+    },
+    {
+      "id": "maax-page-two-section-order",
+      "document_id": "nasa-maax-factsheet",
+      "kind": "ordered_text",
+      "status": "pass",
+      "MD_sha256": "c8ac03175b6715831f3a63ab656bb3eed65c2aa6a29f67a49f55a3d92db0bce3"
+    },
+    {
+      "id": "sf95-title",
+      "document_id": "gsa-sf95-2007",
+      "kind": "text",
+      "status": "pass",
+      "MD_sha256": "692f7671ca0e0eea8ce5951ca7aec7c9be036cc3a0d1257df6a181d47d25a39c"
+    },
+    {
+      "id": "sf95-opening-instructions",
+      "document_id": "gsa-sf95-2007",
+      "kind": "text",
+      "status": "pass",
+      "MD_sha256": "692f7671ca0e0eea8ce5951ca7aec7c9be036cc3a0d1257df6a181d47d25a39c"
+    },
+    {
+      "id": "sf95-employment-options",
+      "document_id": "gsa-sf95-2007",
+      "kind": "ordered_text",
+      "status": "pass",
+      "MD_sha256": "692f7671ca0e0eea8ce5951ca7aec7c9be036cc3a0d1257df6a181d47d25a39c"
+    },
+    {
+      "id": "sf95-date-field-order",
+      "document_id": "gsa-sf95-2007",
+      "kind": "ordered_text",
+      "status": "pass",
+      "MD_sha256": "692f7671ca0e0eea8ce5951ca7aec7c9be036cc3a0d1257df6a181d47d25a39c"
+    },
+    {
+      "id": "sf95-amount-columns",
+      "document_id": "gsa-sf95-2007",
+      "kind": "ordered_text",
+      "status": "pass",
+      "MD_sha256": "692f7671ca0e0eea8ce5951ca7aec7c9be036cc3a0d1257df6a181d47d25a39c"
+    },
+    {
+      "id": "sf95-certification",
+      "document_id": "gsa-sf95-2007",
+      "kind": "text",
+      "status": "pass",
+      "MD_sha256": "692f7671ca0e0eea8ce5951ca7aec7c9be036cc3a0d1257df6a181d47d25a39c"
+    },
+    {
+      "id": "sf95-local-reproduction",
+      "document_id": "gsa-sf95-2007",
+      "kind": "text",
+      "status": "pass",
+      "MD_sha256": "692f7671ca0e0eea8ce5951ca7aec7c9be036cc3a0d1257df6a181d47d25a39c"
+    },
+    {
+      "id": "sf95-all-items-instruction",
+      "document_id": "gsa-sf95-2007",
+      "kind": "text",
+      "status": "pass",
+      "MD_sha256": "692f7671ca0e0eea8ce5951ca7aec7c9be036cc3a0d1257df6a181d47d25a39c"
+    },
+    {
+      "id": "sf95-received-not-mailed",
+      "document_id": "gsa-sf95-2007",
+      "kind": "text",
+      "status": "pass",
+      "MD_sha256": "692f7671ca0e0eea8ce5951ca7aec7c9be036cc3a0d1257df6a181d47d25a39c"
+    },
+    {
+      "id": "sf95-notice-order",
+      "document_id": "gsa-sf95-2007",
+      "kind": "ordered_text",
+      "status": "pass",
+      "MD_sha256": "692f7671ca0e0eea8ce5951ca7aec7c9be036cc3a0d1257df6a181d47d25a39c"
+    },
+    {
+      "id": "nara-identification-title",
+      "document_id": "nara-telegram-32171186",
+      "kind": "text",
+      "status": "fail",
+      "MD_sha256": "26858e39916422d7ee6b8b8f2aeb54038860d0e5749423b418e33ae4074127b9"
+    },
+    {
+      "id": "nara-record-identity",
+      "document_id": "nara-telegram-32171186",
+      "kind": "ordered_text",
+      "status": "pass",
+      "MD_sha256": "26858e39916422d7ee6b8b8f2aeb54038860d0e5749423b418e33ae4074127b9"
+    },
+    {
+      "id": "nara-document-routing",
+      "document_id": "nara-telegram-32171186",
+      "kind": "ordered_text",
+      "status": "pass",
+      "MD_sha256": "26858e39916422d7ee6b8b8f2aeb54038860d0e5749423b418e33ae4074127b9"
+    },
+    {
+      "id": "nara-document-subject",
+      "document_id": "nara-telegram-32171186",
+      "kind": "text",
+      "status": "pass",
+      "MD_sha256": "26858e39916422d7ee6b8b8f2aeb54038860d0e5749423b418e33ae4074127b9"
+    },
+    {
+      "id": "nara-telegram-header-order",
+      "document_id": "nara-telegram-32171186",
+      "kind": "ordered_text",
+      "status": "fail",
+      "MD_sha256": "26858e39916422d7ee6b8b8f2aeb54038860d0e5749423b418e33ae4074127b9"
+    },
+    {
+      "id": "nara-alvarado-conclusion",
+      "document_id": "nara-telegram-32171186",
+      "kind": "text",
+      "status": "pass",
+      "MD_sha256": "26858e39916422d7ee6b8b8f2aeb54038860d0e5749423b418e33ae4074127b9"
+    },
+    {
+      "id": "nara-corrected-control",
+      "document_id": "nara-telegram-32171186",
+      "kind": "ordered_text",
+      "status": "pass",
+      "MD_sha256": "26858e39916422d7ee6b8b8f2aeb54038860d0e5749423b418e33ae4074127b9"
+    },
+    {
+      "id": "nara-appreciation-sentence",
+      "document_id": "nara-telegram-32171186",
+      "kind": "text",
+      "status": "pass",
+      "MD_sha256": "26858e39916422d7ee6b8b8f2aeb54038860d0e5749423b418e33ae4074127b9"
+    }
+  ],
+  "counts": {
+    "pass": 24,
+    "fail": 4
+  },
+  "passed": false,
+  "source_proofs": [
+    {
+      "path": "benchmark/datasets/moparse-addon-20261018/sources/nasa-maax-factsheet.pdf",
+      "sha256": "79ab8e7686605ece7144aaa7d1d95e0c43dc4066ad35db9629f7b10075369411",
+      "bytes": 1405078
+    },
+    {
+      "path": "benchmark/datasets/moparse-addon-20261018/sources/gsa-sf95-2007.pdf",
+      "sha256": "7c58078520934a0dc2c28ec9e59064548a38df3ac26f63c6a7d83a3280c9afe4",
+      "bytes": 591001
+    },
+    {
+      "path": "benchmark/datasets/moparse-addon-20261018/sources/nara-telegram-32171186.pdf",
+      "sha256": "adbe2f9e5428734c3ab259353afac28a971d2d89bfa871ac21c7858b7c317fc4",
+      "bytes": 519021
+    }
+  ],
+  "scope": "Only explicitly source-reviewed assertions; table topology uses public-209-402 suite"
+}

@@ -1,0 +1,447 @@
+{
+  "seconds": 102.34804924100172,
+  "scope": "Full HTTP upload through exact received/persisted Markdown, events and all public assets; API quality states separate",
+  "power_limit_W": 220,
+  "hardware_fingerprint": "RTX2080Ti22GiB-dual-shared-host",
+  "warmup": "Resident V4 worker and GPU images/container cache reused without reset for V6; cache_warm differs from V4 and is not a controlled speedup comparison; commonGLM unchanged; actual percohort windows separate",
+  "own_GPU_peak_MiB": 3528.0,
+  "native_provider_identity": [
+    {
+      "name": "moparse-mineru-vllm",
+      "id": "5d54174333dba8bab3fdde4852049e71a65c9097a2f6b2c5d1d16bf719bd9492",
+      "image_id": "sha256:ea407324215fa2393585447521828b34d1ffc6474fd04b24865fb9476ff5ccfe",
+      "identity_source": {
+        "path": "benchmark/runs/source-v6-http-20261018/deployment-before.json",
+        "sha256": "b6c8bfb6495aff88ed40dc327a632cb005c70a847eba61fbc29503d3c7965f49",
+        "bytes": 100288
+      }
+    }
+  ],
+  "native_GPU_attribution": "Only PID-owned MinerU vLLM containers matched to deployed identity; common GLM and TTS never assigned to native model",
+  "shared_GPU_energy_Wh": 2.709517634118292,
+  "shared_GPU_energy_scope": "GPU1 whole device across adjacent valid samples within cohort; includes other services; no boundary extrapolation",
+  "all_shared_devices": {
+    "GPU-95b5895b-c5f3-440b-4bd2-7160ec4da0d1": {
+      "index": 0,
+      "name": "NVIDIA GeForce RTX 2080 Ti",
+      "energy_joules_shared_device": 18312.41687905994,
+      "energy_intervals_observed": 49,
+      "energy_gaps": 0,
+      "gpu_utilization_samples": 50,
+      "gpu_utilization_sum": 3027.0,
+      "memory_used_peak_MiB_shared_device": 19918.0,
+      "gpu_utilization_mean_pct_shared_device": 60.54
+    },
+    "GPU-87a92d2a-6521-1e36-1ca9-21fd8085b365": {
+      "index": 1,
+      "name": "NVIDIA GeForce RTX 2080 Ti",
+      "energy_joules_shared_device": 9754.26348282585,
+      "energy_intervals_observed": 49,
+      "energy_gaps": 0,
+      "gpu_utilization_samples": 50,
+      "gpu_utilization_sum": 1096.0,
+      "memory_used_peak_MiB_shared_device": 20422.0,
+      "gpu_utilization_mean_pct_shared_device": 21.92
+    }
+  },
+  "owned_containers": {
+    "moparse-candidate-source-v6": {
+      "gpu_memory_peak_MiB_by_uuid": {},
+      "sm_observed_sum": 0.0,
+      "sm_samples": 0,
+      "cpu_pct_peak_one_core_100": 253.6,
+      "memory_peak_bytes": 2397665492,
+      "sm_mean_observed_process_sum_pct": null
+    },
+    "moparse-native-worker": {
+      "gpu_memory_peak_MiB_by_uuid": {},
+      "sm_observed_sum": 0.0,
+      "sm_samples": 0,
+      "cpu_pct_peak_one_core_100": 306.7,
+      "memory_peak_bytes": 3983582167,
+      "sm_mean_observed_process_sum_pct": null
+    },
+    "moparse-mineru-vllm": {
+      "gpu_memory_peak_MiB_by_uuid": {
+        "GPU-87a92d2a-6521-1e36-1ca9-21fd8085b365": 3528.0
+      },
+      "sm_observed_sum": 1028.0,
+      "sm_samples": 44,
+      "cpu_pct_peak_one_core_100": 152.92,
+      "memory_peak_bytes": 7517266509,
+      "sm_mean_observed_process_sum_pct": 23.363636363636363
+    },
+    "docling_glm_ocr": {
+      "gpu_memory_peak_MiB_by_uuid": {
+        "GPU-87a92d2a-6521-1e36-1ca9-21fd8085b365": 11612.0
+      },
+      "sm_observed_sum": 87.0,
+      "sm_samples": 7,
+      "cpu_pct_peak_one_core_100": 316.72,
+      "memory_peak_bytes": 7246683570,
+      "sm_mean_observed_process_sum_pct": 12.428571428571429
+    },
+    "docling_glm_ocr_sdk": {
+      "gpu_memory_peak_MiB_by_uuid": {},
+      "sm_observed_sum": 0.0,
+      "sm_samples": 0,
+      "cpu_pct_peak_one_core_100": 2503.9,
+      "memory_peak_bytes": 7329361690,
+      "sm_mean_observed_process_sum_pct": null
+    }
+  },
+  "observation_errors_by_source": {},
+  "vllm_metrics": [
+    {
+      "name": "vllm:num_requests_running",
+      "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+      "first": 0.0,
+      "last": 0.0,
+      "counter_resets": 0,
+      "observed_counter_increase": null
+    },
+    {
+      "name": "vllm:num_requests_waiting",
+      "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+      "first": 0.0,
+      "last": 0.0,
+      "counter_resets": 0,
+      "observed_counter_increase": null
+    },
+    {
+      "name": "vllm:kv_cache_usage_perc",
+      "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+      "first": 0.0,
+      "last": 0.0,
+      "counter_resets": 0,
+      "observed_counter_increase": null
+    },
+    {
+      "name": "vllm:prefix_cache_queries_total",
+      "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+      "first": 2238138.0,
+      "last": 2248030.0,
+      "counter_resets": 0,
+      "observed_counter_increase": 9892.0
+    },
+    {
+      "name": "vllm:prefix_cache_queries_created",
+      "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+      "first": 1792273043.6193871,
+      "last": 1792273043.6193871,
+      "counter_resets": 0,
+      "observed_counter_increase": null
+    },
+    {
+      "name": "vllm:prefix_cache_hits_total",
+      "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+      "first": 7680.0,
+      "last": 7680.0,
+      "counter_resets": 0,
+      "observed_counter_increase": 0.0
+    },
+    {
+      "name": "vllm:prefix_cache_hits_created",
+      "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+      "first": 1792273043.6194363,
+      "last": 1792273043.6194363,
+      "counter_resets": 0,
+      "observed_counter_increase": null
+    },
+    {
+      "name": "vllm:num_preemptions_total",
+      "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+      "first": 0.0,
+      "last": 0.0,
+      "counter_resets": 0,
+      "observed_counter_increase": 0.0
+    },
+    {
+      "name": "vllm:num_preemptions_created",
+      "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+      "first": 1792273043.619658,
+      "last": 1792273043.619658,
+      "counter_resets": 0,
+      "observed_counter_increase": null
+    },
+    {
+      "name": "vllm:prompt_tokens_total",
+      "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+      "first": 2238138.0,
+      "last": 2248030.0,
+      "counter_resets": 0,
+      "observed_counter_increase": 9892.0
+    },
+    {
+      "name": "vllm:prompt_tokens_created",
+      "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+      "first": 1792273043.619697,
+      "last": 1792273043.619697,
+      "counter_resets": 0,
+      "observed_counter_increase": null
+    },
+    {
+      "name": "vllm:prompt_tokens_by_source_total",
+      "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\",source=\"local_compute\"}",
+      "first": 2230458.0,
+      "last": 2240350.0,
+      "counter_resets": 0,
+      "observed_counter_increase": 9892.0
+    },
+    {
+      "name": "vllm:prompt_tokens_by_source_total",
+      "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\",source=\"local_cache_hit\"}",
+      "first": 7685.0,
+      "last": 7685.0,
+      "counter_resets": 0,
+      "observed_counter_increase": 0.0
+    },
+    {
+      "name": "vllm:prompt_tokens_by_source_total",
+      "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\",source=\"external_kv_transfer\"}",
+      "first": 0.0,
+      "last": 0.0,
+      "counter_resets": 0,
+      "observed_counter_increase": 0.0
+    },
+    {
+      "name": "vllm:prompt_tokens_by_source_created",
+      "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\",source=\"local_compute\"}",
+      "first": 1792273043.6197474,
+      "last": 1792273043.6197474,
+      "counter_resets": 0,
+      "observed_counter_increase": null
+    },
+    {
+      "name": "vllm:prompt_tokens_by_source_created",
+      "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\",source=\"local_cache_hit\"}",
+      "first": 1792273043.6197696,
+      "last": 1792273043.6197696,
+      "counter_resets": 0,
+      "observed_counter_increase": null
+    },
+    {
+      "name": "vllm:prompt_tokens_by_source_created",
+      "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\",source=\"external_kv_transfer\"}",
+      "first": 1792273043.619789,
+      "last": 1792273043.619789,
+      "counter_resets": 0,
+      "observed_counter_increase": null
+    },
+    {
+      "name": "vllm:prompt_tokens_cached_total",
+      "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+      "first": 7680.0,
+      "last": 7680.0,
+      "counter_resets": 0,
+      "observed_counter_increase": 0.0
+    },
+    {
+      "name": "vllm:prompt_tokens_cached_created",
+      "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+      "first": 1792273043.619832,
+      "last": 1792273043.619832,
+      "counter_resets": 0,
+      "observed_counter_increase": null
+    },
+    {
+      "name": "vllm:prompt_tokens_recomputed_total",
+      "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+      "first": 5.0,
+      "last": 5.0,
+      "counter_resets": 0,
+      "observed_counter_increase": 0.0
+    },
+    {
+      "name": "vllm:prompt_tokens_recomputed_created",
+      "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+      "first": 1792273043.6199086,
+      "last": 1792273043.6199086,
+      "counter_resets": 0,
+      "observed_counter_increase": null
+    },
+    {
+      "name": "vllm:generation_tokens_total",
+      "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+      "first": 606495.0,
+      "last": 612680.0,
+      "counter_resets": 0,
+      "observed_counter_increase": 6185.0
+    },
+    {
+      "name": "vllm:generation_tokens_created",
+      "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+      "first": 1792273043.6199553,
+      "last": 1792273043.6199553,
+      "counter_resets": 0,
+      "observed_counter_increase": null
+    },
+    {
+      "name": "vllm:request_success_total",
+      "labels": "{engine=\"0\",finished_reason=\"stop\",model_name=\"mineru2.5-pro\"}",
+      "first": 2232.0,
+      "last": 2242.0,
+      "counter_resets": 0,
+      "observed_counter_increase": 10.0
+    },
+    {
+      "name": "vllm:request_success_total",
+      "labels": "{engine=\"0\",finished_reason=\"length\",model_name=\"mineru2.5-pro\"}",
+      "first": 0.0,
+      "last": 0.0,
+      "counter_resets": 0,
+      "observed_counter_increase": 0.0
+    },
+    {
+      "name": "vllm:request_success_total",
+      "labels": "{engine=\"0\",finished_reason=\"abort\",model_name=\"mineru2.5-pro\"}",
+      "first": 0.0,
+      "last": 0.0,
+      "counter_resets": 0,
+      "observed_counter_increase": 0.0
+    },
+    {
+      "name": "vllm:request_success_total",
+      "labels": "{engine=\"0\",finished_reason=\"error\",model_name=\"mineru2.5-pro\"}",
+      "first": 0.0,
+      "last": 0.0,
+      "counter_resets": 0,
+      "observed_counter_increase": 0.0
+    },
+    {
+      "name": "vllm:request_success_total",
+      "labels": "{engine=\"0\",finished_reason=\"repetition\",model_name=\"mineru2.5-pro\"}",
+      "first": 0.0,
+      "last": 0.0,
+      "counter_resets": 0,
+      "observed_counter_increase": 0.0
+    },
+    {
+      "name": "vllm:request_success_created",
+      "labels": "{engine=\"0\",finished_reason=\"stop\",model_name=\"mineru2.5-pro\"}",
+      "first": 1792273043.6200194,
+      "last": 1792273043.6200194,
+      "counter_resets": 0,
+      "observed_counter_increase": null
+    },
+    {
+      "name": "vllm:request_success_created",
+      "labels": "{engine=\"0\",finished_reason=\"length\",model_name=\"mineru2.5-pro\"}",
+      "first": 1792273043.6200445,
+      "last": 1792273043.6200445,
+      "counter_resets": 0,
+      "observed_counter_increase": null
+    },
+    {
+      "name": "vllm:request_success_created",
+      "labels": "{engine=\"0\",finished_reason=\"abort\",model_name=\"mineru2.5-pro\"}",
+      "first": 1792273043.6200652,
+      "last": 1792273043.6200652,
+      "counter_resets": 0,
+      "observed_counter_increase": null
+    },
+    {
+      "name": "vllm:request_success_created",
+      "labels": "{engine=\"0\",finished_reason=\"error\",model_name=\"mineru2.5-pro\"}",
+      "first": 1792273043.6200848,
+      "last": 1792273043.6200848,
+      "counter_resets": 0,
+      "observed_counter_increase": null
+    },
+    {
+      "name": "vllm:request_success_created",
+      "labels": "{engine=\"0\",finished_reason=\"repetition\",model_name=\"mineru2.5-pro\"}",
+      "first": 1792273043.6201036,
+      "last": 1792273043.6201036,
+      "counter_resets": 0,
+      "observed_counter_increase": null
+    },
+    {
+      "name": "vllm:request_prompt_tokens_count",
+      "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+      "first": 2232.0,
+      "last": 2242.0,
+      "counter_resets": 0,
+      "observed_counter_increase": null
+    },
+    {
+      "name": "vllm:request_prompt_tokens_sum",
+      "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+      "first": 2238138.0,
+      "last": 2248030.0,
+      "counter_resets": 0,
+      "observed_counter_increase": null
+    },
+    {
+      "name": "vllm:request_generation_tokens_count",
+      "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+      "first": 2232.0,
+      "last": 2242.0,
+      "counter_resets": 0,
+      "observed_counter_increase": null
+    },
+    {
+      "name": "vllm:request_generation_tokens_sum",
+      "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+      "first": 606495.0,
+      "last": 612680.0,
+      "counter_resets": 0,
+      "observed_counter_increase": null
+    }
+  ],
+  "resource_window": {
+    "path": "benchmark/evidence/artifacts/9c8b09fb7ccbd913150080dda88331bbee610fb9efb4eeaefabb84c5dde03342.json",
+    "sha256": "9c8b09fb7ccbd913150080dda88331bbee610fb9efb4eeaefabb84c5dde03342",
+    "bytes": 12894,
+    "original_path": "benchmark/runs/source-v6-http-20261018/fresh7-resource-window.json",
+    "snapshot_bytes_unchanged": true
+  },
+  "http_performance": {
+    "scope": "Full HTTP upload through exact received/persisted Markdown, events and all public assets; API quality states separate",
+    "documents": 3,
+    "total_seconds": 102.34804924100172,
+    "median_document_seconds": 28.780793512938544,
+    "p95_document_seconds": 61.50486919218674,
+    "per_page_time_limit": "Document duration/page count is not measured per-page latency"
+  },
+  "model_forward_observation_limit": "Shared endpoint counters and PID samples do not identify every individual HTTP request",
+  "independent_header_verification_stage": {
+    "observed_wall_clock_seconds": 0,
+    "full_cohort_wall_clock_seconds": null,
+    "recorded_documents": 0,
+    "expected_documents": 3,
+    "completed_HTTP_documents": 3,
+    "observed_unique_document_pages": 0,
+    "observed_candidate_pairs": 0,
+    "observed_accepted_pairs": 0,
+    "scope": "Sum of recorded independent header-verification elapsed wall clocks only; coverage k/n explicit; absent records remain unknown; do not substitute for upload-through-Markdown latency",
+    "GPU_inference_time": false,
+    "absent_warning_is_zero": false
+  },
+  "header_stage_observation": {
+    "path": "benchmark/evidence/artifacts/1329ee85d017fb8d2fcdb0b02e0464f584c289fa03fd97a354993f65e4a4a3e1.json",
+    "sha256": "1329ee85d017fb8d2fcdb0b02e0464f584c289fa03fd97a354993f65e4a4a3e1",
+    "bytes": 3750,
+    "original_path": "benchmark/runs/source-v6-http-20261018/fresh7-header-stage-final.json",
+    "snapshot_bytes_unchanged": true
+  },
+  "independent_source_verification_stage": {
+    "observed_wall_clock_seconds": 1.12,
+    "full_cohort_wall_clock_seconds": null,
+    "recorded_documents": 1,
+    "expected_documents": 3,
+    "observed_unique_document_pages": 1,
+    "observed_review_candidates": 1,
+    "observed_preserved_regions": 1,
+    "absent_warning_is_zero": false,
+    "GPU_forward_time": false,
+    "scope": "Source candidate check and independent CPU verification/glyph preservation elapsed wallclock only; no claim to entire GPU inference time"
+  },
+  "source_stage_observation": {
+    "path": "benchmark/evidence/artifacts/5c84ab06e26ca77a3518fc6c3077bdb95b26c25f82a65e200f312a2f12890bc7.json",
+    "sha256": "5c84ab06e26ca77a3518fc6c3077bdb95b26c25f82a65e200f312a2f12890bc7",
+    "bytes": 3777,
+    "original_path": "benchmark/runs/source-v6-http-20261018/fresh7-source-stage-final.json",
+    "snapshot_bytes_unchanged": true
+  }
+}

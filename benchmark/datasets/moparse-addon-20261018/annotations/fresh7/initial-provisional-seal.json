@@ -1,0 +1,33 @@
+{
+  "schema": "moparse-source-gold-seal/1",
+  "sealed_at": "2026-10-17T19:29:43.881613+00:00",
+  "gold_path": "benchmark/runs/fresh-sealed-after-repair-20261018/assertions.json",
+  "gold_sha256": "cb50c0efcb413806b13bdf79a25273383fbb3dd29957e95634c88a83e0f05d29",
+  "documents_sha256": "4109f0c7d02c587191f4ca02a30c7fd775da4f52b24a1277f2b4fbab0ef9da20",
+  "source_records_sha256": "d9c686e006ae4346a71fed15ac26fb9b2de83b73cb94c452b23221ae74c8ee24",
+  "dataset_draft_sha256": "d775fb30189f4d258e416b978a0365a4858fe240fa328107145672bc991026f1",
+  "image_manifest_sha256": "d89fe645a4a8ba0d4098ac08eb702d533acbfc77b3596403d2045c87a9efa83b",
+  "assertion_count": 28,
+  "assertion_kinds": {
+    "text": 14,
+    "ordered_text": 11,
+    "table_grid": 1,
+    "table_span": 2
+  },
+  "document_count": 3,
+  "physical_pages": 7,
+  "full_page_images_visually_reviewed": 7,
+  "model_outputs_seen": false,
+  "inference_calls": 0,
+  "main_dataset_modified": false,
+  "builder_sha256": "1a7efd6fcb66f6ac127b4469d8f6c248320adfd7773a674ef18f69c481247878",
+  "source_sha256": {
+    "nasa-maax-factsheet": "79ab8e7686605ece7144aaa7d1d95e0c43dc4066ad35db9629f7b10075369411",
+    "gsa-sf95-2007": "7c58078520934a0dc2c28ec9e59064548a38df3ac26f63c6a7d83a3280c9afe4",
+    "nara-telegram-32171186": "adbe2f9e5428734c3ab259353afac28a971d2d89bfa871ac21c7858b7c317fc4"
+  },
+  "extra_detail_image": {
+    "path": "benchmark/runs/fresh-sealed-after-repair-20261018/source-images/nasa-maax-cost-grid-detail.png",
+    "sha256": "a8f9d9741f7fe02c8487b65a22534af49d61141fa903a80d8f92847500ca8017"
+  }
+}

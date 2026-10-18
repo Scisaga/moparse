@@ -1,0 +1,20 @@
+{
+  "id": "holdout-irs-form1040-2025",
+  "source": "benchmark/datasets/moparse-v1/sources/holdout-20261018/irs-form1040-2025.pdf",
+  "source_sha256": "3d31c226df0d189ced80e039d01cf0f8820c1019681a0f0ca6264de277b7e982",
+  "page_count": 2,
+  "submit_http_status": 200,
+  "http_status": 200,
+  "status": "completed",
+  "submit_to_saved_MD_seconds": 75.06722635996994,
+  "job": "job_01M55V9VV0CYA8P7FG66Q0GH9T",
+  "submit_to_terminal_seconds": 75.07372814207338,
+  "poll_count": 1,
+  "final_http_status": 200,
+  "MD_SHA256": "14c0f67fd56e8283ed158a834a1842eb1a8083f0733690c1e01808d921856d72",
+  "persisted_MD_SHA256": "14c0f67fd56e8283ed158a834a1842eb1a8083f0733690c1e01808d921856d72",
+  "response_and_persisted_MD_equal": true,
+  "assets": [],
+  "full_capture_seconds": 75.10286743601318,
+  "duration_seconds": 75.10286743601318
+}

@@ -1,24 +1,22 @@
 <p align="center">
-  <img src="logo.png" alt="MosaicParse logo" width="112" />
+  <img src="logo.png" alt="moparse logo" width="112" />
 </p>
 
-# MosaicParse
+# moparse
 
-MosaicParse 是一个自托管的多模态内容解析服务，用在 PDF、Office 文档、图片或视频与
+moparse 是一个自托管的多模态内容解析服务，用在 PDF、Office 文档、图片或视频与
 RAG 等下游系统之间。
 
 它解决的问题很直接：不同文件格式需要不同的处理工具，而把详细坐标和解析器内部对象
-直接交给业务 LLM 又慢又难用。MosaicParse 在内部利用版面、坐标和多模型证据完成解析，
+直接交给业务 LLM 又慢又难用。moparse 在内部利用版面、坐标和多模型证据完成解析，
 最终只输出一份普通 GFM Markdown：保留标题、段落、列表、表格和页间连续关系，不再把
 表格二次改写为专用 XML 或文档 JSON。图片和视频以标准 Markdown 列表及下载链接保留。
 
 服务按文本层和图像证据选择处理方式。Office 嵌图直接提取；原生 PDF 保留模型识别到
-的图片；扫描、混合页保留整页来源图。原生 PDF 图像检测和裁边仍有[已知边界](benchmark-results/clean-model-comparison-20261015/report.md#已知识别与图像边界)。
+的图片；扫描、混合页保留整页来源图。模型识别与图像边界在[比较报告](benchmark/report.md)中记录。
 `describe_images=true` 可按需识别已提取图片中的可见文字；独立视频通过 FFmpeg 采样
 关键帧，输出带时间戳的帧文字摘要，不生成无文字证据的场景描述。
 任务状态、错误和无坐标资产清单仍使用 JSON 控制协议；文档内容只有 Markdown。
-
-![alt text](img/README-1789414313262.png)
 
 ## 项目边界
 
@@ -31,7 +29,7 @@ RAG 等下游系统之间。
 - Office 嵌图提取、原生 PDF 模型图片和扫描整页图保留；按需识字、资产去重与下载；
 - 独立视频关键帧和带时间戳的帧文字摘要；
 - 单一自动解析策略；可显式跳过扫描 PDF 页并只保留页面图像；
-- 唯一的 GFM Markdown 文档结果；坐标和候选证据只在单次解析内部使用；
+- 唯一的 GFM Markdown 文档结果；坐标和候选用于内部验证，原生 worker 证据随任务私有保存；
 - 表格保留为 GFM；跨页合并与重复表头删除要求完整表头和列义一致，不同表头保持各自
   作用范围；多级表头、合并单元格、单位和来源页关联按原件保留；
 - 无坐标 `table-structure` 注释保留原模型表头角色及合并跨度，未知结构明确标记；
@@ -47,7 +45,8 @@ RAG 等下游系统之间。
 
 ```bash
 cp .env.example .env
-docker compose up -d --build mosaicparse
+docker network create moparse_backend
+docker compose up -d --build moparse
 docker compose ps
 ```
 
@@ -60,7 +59,7 @@ docker compose ps
 - MCP: <http://localhost:12303/mcp>
 
 首次转换会下载 Docling 布局/表格模型，`/ready` 在初始化期间可能暂时返回
-非 2xx。MosaicParse 健康检查为首次下载/初始化保留 10 分钟 `start_period`。
+非 2xx。moparse 健康检查为首次下载/初始化保留 10 分钟 `start_period`。
 模型保存在 Compose 命名卷中，重启不会重复下载。
 
 容器使用 `DOCLING_LOCAL_ARTIFACTS_PATH` 作为本服务的离线目录配置。不要在
@@ -79,136 +78,184 @@ curl --fail-with-body http://localhost:12303/v1/content/parse \
 
 ## 模型配置与选择依据
 
-默认 PDF 管线为：**Docling 2.139.0／TableFormer V1 Accurate／matching=False／PyPdfium
-处理原生页，GLM-OCR＋官方 SDK 以 200 DPI 处理扫描、混合页，方向预处理开启。** 主服务使用
-CPU，GLM 在独立 GPU 服务运行；原生页无需经过 GPU，也不会根据指标名称生成期间。
+**V7 已部署，完成 550 页真实 HTTP 评测及正式地址的 159 页复验。
+原表头、筹资合并格、正常续表的功能检查及公开 GFM 格式检查通过。
+NASA 时间轴保持 partial／unknown，保留原图和原字层。
+完整评分、已知识别错误和实际部署收据见[比较报告](benchmark/report.md)。**
+
+本轮选定的组合为 **MinerU 4.0.12 Advanced＋TXT／MinerU2.5-Pro-2605-1.2B／vLLM，
+GPU 请求并发 2；扫描、混合页使用 GLM-OCR＋官方 SDK／200 DPI／方向预处理开启。**
+原生页的正文从 PDF 文本层获取文字；Advanced 的视觉版面、表格结构和单元格文字由 GPU 模型识别。
+预布局、公式、字符匹配、文档组装和主 API 在 CPU 上运行。CPU worker 使用 8 页处理窗口、
+公式微批量 1，并在每份文档结束后回收空闲堆内存；全部页面和公式依次处理。
+Office 原生文字继续直接提取，图片及扫描页由 GLM 处理。
+
+本轮组合开启 `MINERU_HEADER_VERIFIER=docling`：只对跨页候选用 Docling V1
+核对完整头带、跨度、列几何、标题和单位。两端全部一致才合并和删重复头；验证器不替换
+Advanced 的正文或表格值。官方 OTSL 不编码表头角色，单靠 Advanced 会保守拆开续表。
+同时开启 `MINERU_SOURCE_VERIFIER=docling`：原生表格与 PDF 字层出现来源矛盾时，再核验
+独立解析的区域类型。只有原件位置唯一、独立结果判为图片且没有重叠表格候选等证据同时满足时，
+才在原位保留原图与 PDF 字面文字，明确标记 `unknown`；其他不确定情况保留原候选与告警。
+来源保全后的任务状态仍为 `partial`，Markdown 和原图可正常下载。原始模型表格及验证证据
+留在私有日志中。字符次数核验只能发现部分矛盾，不能证明内容完整或数值正确。
+最终配置、质量与实际耗时以[完整接口比较报告](benchmark/report.md)为准。
 
 ```mermaid
 flowchart TD
-    source["PDF 来源页证据判定"]
-    source -->|原生页| native["Docling 2.139 · TableFormer V1 Accurate<br/>matching=False · PyPdfium · CPU"]
-    source -->|扫描／混合页| raster["200 DPI 渲染"]
-    raster --> orientation["方向预处理 · CPU"]
-    orientation --> layout["GLM SDK 布局 · CPU"]
-    layout --> ocr["GLM-OCR 区域识别 · GPU"]
-    native --> assemble["保留源表结构、期间与来源页<br/>严格核对跨页表头后组装"]
-    ocr --> assemble
-    assemble --> markdown["GFM Markdown＋公开结构注释"]
-    native --> pictures["原生页模型识别图片资产"]
-    source -->|扫描／混合页| pages["整页来源图资产"]
-    pictures --> markdown
-    pages --> markdown
+    source["PDF 原件：文字层、图像覆盖与方向证据"]
+    source -->|原生页| native["Advanced＋TXT · CPU<br/>源字符／预布局／公式<br/>8 页窗口 · 公式微批 1"]
+    native --> visual["MinerU2.5-Pro 1.2B · FP16<br/>GPU：视觉版面／表格／格内文字 · 并发 2"]
+    visual --> native
+    source -->|扫描／混合页| raster["200 DPI 渲染＋CPU 方向预处理"]
+    raster --> sdk["GLM SDK 布局 · CPU"]
+    sdk --> glm["GLM-OCR 区域识别 · GPU"]
+    native --> sourcecheck["原件证据核验 · CPU<br/>有来源矛盾时用 Docling 独立核验类型"]
+    sourcecheck -->|确认类型冲突且满足来源条件| preserved["原图＋PDF 字面文字<br/>结构 unknown · 任务 partial"]
+    sourcecheck -->|其余表格／跨页候选| verifier["Docling V1 · CPU<br/>核验完整表头与来源上下文"]
+    preserved --> assemble
+    verifier --> assemble
+    assemble["正文与表格组装<br/>完整表头作用域、跨度、单位与来源页"]
+    glm --> assemble
+    assemble --> output["GFM Markdown＋无坐标结构／来源注释"]
 ```
 
-### 正文保留与复杂表格
+仅有相同列数、相似排版或部分相同文字，不足以删除跨页表头。只有原件完整表头及列义
+一致才允许去重；无法证明时保留表头并拆开。`table-source` 保留来源关联，不按指标名补期间。
+[原始错误判断、删头代码和原件复验](docs/cross-page-header-fix-20261015.md)保留了修复依据。
 
-**2026-10-17 21:51 的服务修订保留所有可见原生页眉／页脚及表后业务附注。**
-两页真实转换 PDF 的证券代码、证券简称、原标题与记录日期已通过新 job 复验；
-跨页不同期间表头、筹资合并格和正常续表的实际接口验收继续通过；上线后另重跑 203 页完整输入。新建完整 10 份 PDF／502 页
-加该两页输入，共 504 页，固定质量集合与 05:15 发布版相同；本次 502 页取得 Markdown 为
-**22.50 分钟**。镜像内 352 项后端测试通过，旧结果与资产 314 个文件 SHA 未变。
+### 完整文档的质量与时间
 
-修复恢复原模型中已有、但出口遗漏的源节点；433 原生页同源回放恢复 979 个节点，
-其中 3 个是业务附注，其余是页眉页脚。134 页文件的六类问题目前恢复第 74 页政策一类，
-其余长格截断、金额与上标串接、说明行错位和六列续表缺格，以及 119 页第 87 页侧向表仍存在。
-另有一组续表因页码分类不一致而保守拆开，内容保留。这些问题与替代管线逐项实测统一见
-[完整报告](benchmark-results/clean-model-comparison-20261015/report.md#正文遗漏与替代管线实测2026-10-17)。
+![完整 PDF 的质量、处理时间和资源对比](benchmark/assets/full-http-comparison.svg)
 
-### 原生页替代管线：同 14 页的实际比较
+图中对照了本轮原件核验 V7 与既有组合的完整接口结果。
+同一批 10 份完整 PDF／502 页，Advanced＋TXT＋Docling 原件核验 V7 的正文／结构条件为
+**40/40**，旧 Docling＋GLM 为 **16/40**；核心原值与期间两组均为 **209/209**。
+补充财务的原值及唯一行为 **351/402**、完整列义 **297/402**，低于旧组合的
+**372/402、326/402**。这些分母对应指定标注，不能视为整份文档准确率。
 
-![原生页难例的质量与分入口组件耗时](docs/assets/native-model-component-comparison.svg)
+原件核验 V7 上传至 Markdown 合计 **75.56 分钟**；纯 Advanced＋TXT 为 **61.94 分钟**，
+旧 Docling 历史请求为 **22.50 分钟**。旧记录为 180W，本轮为 220W，缓存和共享负载也有差异。
+正文完整性、续表与来源关联是本次选择依据。两处财务数字分隔符误读、扫描印章识别错误、
+手签姓名重复、Census 扫描表年龄行折叠及错误数字仍未解决。
+119 页原件第 14 页已恢复 GFM，但源件 16 列与模型 17 列的差异仍在，完整表头作用域保持 unknown；
+全半角差异也保留严格失分。
+[逐项比较报告](benchmark/report.md)记录原件与实际输出，不将这些问题计为通过。
 
-固定内容／结构 46 项：当前 Docling 22、纯视觉 TF／vLLM 各 45、Standard＋TXT 40、
-**Advanced＋TXT 45**；额外四类源字符／状态检查依次为 4、0、1、4、**4**。
-图中 PDF 转换与图片 SDK 调用分别计时；原生私用字形的普通字体显示另列，不按“已出现”算显示修复。
+### 为什么选择 Advanced＋TXT
 
-**下一步首选候选组合：原生页 MinerU 4.0.12 Advanced＋TXT＋MinerU2.5-Pro-2605-1.2B／vLLM，
-扫描、混合页继续 GLM-OCR＋SDK／200 DPI／方向开启。** Standard 虽快，却让已正确的正常筹资表
-丢跨度、旋转表转置；Advanced 保住这些结构及额外四类源内容。它仍在第 87 页官方 TXT
-回填环节把完整 22 字脚注截为 15 字，默认导出还会过滤证券标识，因此实验使用官方 FULL 视图。
-新管线须修复该遗漏、适配既有逐格来源后再跑全量 HTTP；**当前线上仍为上文的 Docling＋GLM**。
-[五组逐项证据、资源和推荐依据](benchmark-results/clean-model-comparison-20261015/report.md#同一模型不同调用路径的完整比较)。
+固定 14 个难页的五种调用方式已分别比较：Docling 通过 22／46，Standard＋TXT 通过
+40／46，Advanced＋TXT 及两种纯视觉方式通过 45／46。额外四项源字符／状态检查中，
+Advanced＋TXT 为 4／4，纯视觉 TF、vLLM 分别为 0／4、1／4。Standard 在这些输入上更快，
+但有合并跨度和旋转表结构退化。这些是历史组件结果，完整 HTTP 验收另列。
 
-### 历史组合的固定标注集与完整 HTTP 成本
+![难页组件的内容、结构与耗时比较](docs/assets/native-model-component-comparison.svg)
 
-以下图表对应 **05:15 发布版**的组合选择；其 21.52 分钟保留原批次归属。
-21:51 出口修订已用相同 502 页重新实跑，固定集合的分数相同、耗时为上文的 22.50 分钟。
+原先剩余的脚注截断定位到 MinerU 原生字符匹配的坐标方向判断：旋转字符仍按水平轴
+筛选，导致行首尾字符被丢弃。修复在依赖源代码的字符归属层统一书写方向；不增加句子、
+财务关键词或文件页码规则。上游文件版本与修复前后 SHA 均锁定，版本不符时构建会失败。
+应用使用官方完整 typed-block 渲染，保留页眉、页脚、列表、公式与业务附注。
 
-10 份原件共 502 页。原值、期间和唯一行使用冻结内容评分；完整列义统一读取结果自己携带
-的公开结构注释，兼容历史 `clean-table` 和现行 `table-structure`，不使用私有坐标选表。
-列义通过要求数值对应的完整表头及作用范围得到确认。选定配置已重新调用真实接口处理完整
-10 份 PDF，并下载最终 Markdown 和全部资产。
+### 双并发的时间和资源
 
-![模型组合的质量与完整 502 页耗时对比](docs/assets/model-comparison-quality.svg)
+![同条件三轮：并发数、耗时和共享 GPU 能耗](benchmark/assets/concurrency.svg)
 
-上半为质量分组柱，柱顶标通过项数、横轴标总项数；下半为同批完整 PDF 的实际接口耗时。
-两部分颜色对应同一组合；全 GLM 缺少同口径整批 HTTP 计时，图中明确标为未测。
+同一批 14 个难页、相同权重和 FP16、同一 GPU 220W，三轮耗时中位数为：并发 1
+**203.531 秒**、并发 2 **137.267 秒**、并发 3 **110.288 秒**、并发 4 **100.190 秒**。
+四档结果一致，模型自身显存峰值均为 **3426 MiB**。并发 2 为本项目选定的共享资源预算；
+并发 4 在该实验中更快、整卡能耗也更低，可作为批处理选项。图中能耗包含同卡常驻服务。
 
-| 组合 | 核心原值 / 209 | 完整期间 / 209 | 原值及唯一行 / 402 | 完整列义：读取公开结构注释 / 402 | 筹资独立源格 / 31 |
-|---|---:|---:|---:|---:|---:|
-| 升级前线上：Docling 2.119／V1／True／默认后端及完整应用处理 | 206 | 206 | 373 | 178 | 31 |
-| **本次发布前完整 HTTP 回归：Docling 2.139／V1／False／PyPdfium＋GLM SDK（200 DPI）** | **209** | **209** | **372** | **326** | **31** |
-| Paddle 1.6 原生方向 OFF＋GLM SDK 方向 ON | 209 | 209 | 370 | 324 | 15 |
-| 全 GLM＋方向预处理 ON | 209 | 209 | 312 | 275 | 31 |
+### 正式数据集与比较报告
 
-这张表的新旧管线均来自 10 月 17 日的完整 HTTP 请求；Paddle 1.6 来自 10 月 16 日完整
-HTTP 结果；全 GLM 来自已生成的实验 Markdown 重评分。请求、最终结果、评分及实际部署
-版本统一保存在[完整报告](benchmark-results/clean-model-comparison-20261015/report.md)。
-这些是指定标注集成绩，各集合存在重叠。对同一份历史 Docling 输出，仅忽略／读取公开
-跨度注释，完整列义确认就从 180 变为 326（+146）；正文、原值和行关系均不变。这个差值
-来自结构读出，不是识字精度提高。原冻结读者的原始成绩与只读消融保留在完整报告中。
+[benchmark/](benchmark/README.md) 是方法、数据、评分和报告的正式入口，当前报告统一维护在
+[benchmark/report.md](benchmark/report.md)。已登记 29 个方法、消融配置及修订版本，历史结果保留来源、
+权重、输出阶段、计时边界及文件 SHA；不把离线组件耗时当作完整接口耗时。
+登记表包含已淘汰和未完成的修订，具体完成范围与失败原因均见对应证据。
 
-已知局限：仍存在股东数末位截断，以及个别金额负号／小数点丢失、邻行数字混入等错误。
-独立逐格核对还发现“稀释每股收益（元／股）”缺右括号，财务 30／30 不代表行标签逐字完整。
-这包含相对旧线上确认的回退，不能只看汇总净分；[逐格失败与图像边界](benchmark-results/clean-model-comparison-20261015/report.md#已知识别与图像边界)完整保留。
+`moparse-v1` 当前含 **14 份输入、543 页**：原有 10 份 PDF／502 页及 Office 转换件 2 页
+作为已使用的回归集，首次封存的表单、技术报告、历史扫描统计表共 39 页。
+这些原件先于首次模型输出完成 36 项标注（含 3 个完整小表、2 个跨格）；首轮暴露 IRS 适配错误后，
+后续结果单列为开发复测。另封存 NASA、GSA、NARA 三份完整原件／7 页及 28 条来源条件，
+用于新原件比较。识别组合在两组输出前冻结；最终适配及资源修订在基线输出后，依据旧回归件调整
+来源注释顺序、公式微批量和处理窗口。两种时间边界在报告中分别记录。主集与附加集保留各自版本及 SHA，标注只覆盖明确列出的内容。
+本轮原件证据保全修订是在看到 NASA 失败后开发，550 页均作为已暴露的开发回归；
+首次封存记录与固定 28 条条件保持原样，后补的时间轴与物理格检查单独登记。
+209 项原值／期间、402 项补充财务行、46 项正文／结构检查等集合分别计分，重叠分母不相加。
+原件、HTTP 大响应及模型留在本地，提交清单、源件标注、冻结评分器与汇总证据。
 
-| 原生 4 页组件对照 | 预热后耗时中位数 | 推理资源 |
-|---|---:|---|
-| **Docling V1／False／PyPdfium** | **12.94 秒** | **4 线程 CPU，不占 GPU** |
-| Paddle 1.6／方向 OFF | 32.78 秒 | GPU 显存约 2.82 GiB |
-| 全 GLM／方向 ON | 10.74 秒 | GLM 服务常驻显存约 11.34 GiB |
-
-组件耗时为三轮中位数，Paddle 和 GLM 从已渲染图片开始，未包含 PDF 渲染。完整 502 页
-实际接口累计耗时为：**本次选定配置 21.52 分钟取得 Markdown，含全部资产下载 21.54 分钟**；
-旧线上 39.49 分钟，Paddle 组合 103.22 分钟。这些是各次实际运行，预热和共享主机负载并未
-完全控制，不能当作重复测量后的固定加速比。
-
-本批 433 个原生来源页由 CPU 处理，69 个扫描／混合页实际调用 SDK。约每 2 秒采样，
-API／SDK 的 CPU 平均占用为 535.69%／150.60%（100% 为一个核），进程树 RSS 峰值为
-6.172／5.148 GiB；GLM 进程显存约 11.34 GiB，SDK 请求窗口内其 GPU SM 利用率平均
-68.65%、峰值 99%。时间及资源的完整统计口径见报告。
-
-浙江出版的两组期间表头、原值和每股收益单位通过 30／30；相同表头续表通过 33／33，
-10 个表头叶项和 7 个筹资行绑定均通过。69 张整页来源图的 RGB／来源页，以及全部
-79 个资产的 HTTP 下载／SHA 核验通过。线上于 **2026-10-17 05:15（北京时间）**更新为
-本次验收镜像；部署后又通过 3 份／59 页接口复测，覆盖浙江出版、正常续表和扫描件。
-原有 10 份结果及 195 个资产核验不变。
-
-上述 502 页图表及 21.52 分钟属于 05:15 发布版。**17:46 的 r3 API** 已补强标题、完整单位
-声明和表间上下文检查，模型、200 DPI 与方向配置未变；r3 部署后重新完成 31 页异步及 4 页同步
-接口复验，原问题验收通过，详见[独立逐格再验证](benchmark-results/clean-model-comparison-20261015/report.md#独立逐格再验证2026-10-17)。
-
-**扫描输入的 DPI 是组合配置的一部分。** `1225475375.pdf` 第 8 页、同一 SDK／GLM 和 90° 方向下，
-144 DPI 输入（1684×1191）遗漏上期短期借款 `142,000,000.00`；200 DPI 输入
-（2338×1653）正确保留同一行的 `100,000,000.00`／`142,000,000.00`，无损旋转与旧仿射
-两种 200 DPI 输入均通过。69 个扫描／混合页的新 200 DPI 未旋转 RGB 像素与冻结实验
-输入全部一致。该问题来自首次接入遗漏 DPI，不能归因于模型权重退化；这个对照也不证明
-任何 PDF 都是 200 DPI 更好，完整语料结果见报告。
+完整文档验收通过真实 `/v1/content/parse`，`scan_policy=auto`，不设置 `unit_range`；
+大文件按既有 202 异步协议等待原任务完成，再下载最终 Markdown、来源图和资产。
+同时记录客户端端到端耗时、服务 CPU／RAM、GPU 利用率、自身显存及共享整卡能耗。
 
 ## 部署模式
 
 | 模式 | 主服务 | OCR 服务 | 启动方式 |
 |---|---|---|---|
-| CPU-only | 本项目 CPU 镜像 | 关闭，适合数字 PDF/Office | `docker compose up -d --build mosaicparse` |
+| CPU-only | 本项目 CPU 镜像 | 关闭，适合数字 PDF/Office | `docker compose up -d --build moparse` |
 | 本机 GLM | CPU 主服务 | 独立 vLLM，默认 GPU 1 | `docker compose --profile glm up -d --build` |
-| **完整 GLM SDK** | CPU 主服务＋CPU 布局 sidecar | 复用 GPU 1 的 GLM-OCR | `docker compose --profile glm-sdk up -d --build` |
-| 远程 GLM | CPU 主服务 | 已部署的 GLM-OCR 和 SDK | 配置 URL 后只启动 `mosaicparse` |
+| 完整 Docling＋GLM SDK | CPU Docling＋SDK | GPU 1 GLM-OCR | `docker compose --profile glm-sdk up -d --build` |
+| **Advanced＋TXT＋GLM SDK** | CPU API＋原生文档 worker＋SDK | GPU MinerU（并发 2）及 GLM-OCR | `docker compose --profile mineru --profile glm-sdk up -d --build` |
+| 远程 GLM | CPU 主服务 | 已部署的 GLM-OCR 和 SDK | 配置 URL 后只启动 `moparse` |
 
-### 完整 GLM-OCR＋SDK（推荐）
+### Advanced＋TXT＋GLM SDK
+
+先构建并准备锁定模型，再启动 GPU 服务（支持离线转移模型卷）：
+
+```bash
+docker network create moparse_backend  # 已存在时直接使用
+docker compose --profile mineru build mineru-vllm mineru-native
+docker volume create moparse-mineru-models
+docker volume create moparse-mineru-small-models
+docker run --rm --entrypoint python \
+  -v moparse-mineru-models:/models/mineru \
+  -v moparse-mineru-small-models:/models/mineru-native \
+  ghcr.io/scisaga/moparse-native-worker:0.5.0 \
+  scripts/download_mineru_models.py \
+  --vlm-dir /models/mineru --native-home /models/mineru-native
+```
+
+本地构建时将上面的镜像名换成 `.env` 中的 `MINERU_NATIVE_IMAGE`。脚本核对
+[native_worker/models.lock.json](native_worker/models.lock.json) 中的固定 revision、大小及 SHA；
+加 `--verify-only` 可完全离线核验，不加载模型。
+
+`.env` 设置：
+
+```dotenv
+NATIVE_PARSER_BACKEND=mineru
+MINERU_NATIVE_BASE_URL=http://mineru-native:8010
+MINERU_NATIVE_TIMEOUT_SECONDS=7200
+# 启用严格的独立表头验证；仅在新组合验收通过后选择。
+MINERU_HEADER_VERIFIER=docling
+MINERU_SOURCE_VERIFIER=docling
+CONTENT_TIMEOUT_SECONDS=7200
+MINERU_PROCESSING_WINDOW_SIZE=8
+MINERU_MALLOC_TRIM=1
+MOPARSE_CPU_MFR_BATCH_SIZE=1
+GLM_OCR_ENABLED=1
+GLM_SDK_ENABLED=1
+GLM_SDK_ORIENTATION_ENABLED=1
+GLM_SDK_RENDER_SCALE=2.7777777777777777
+```
+
+```bash
+docker compose --profile mineru --profile glm-sdk up -d --build
+curl --fail http://localhost:12303/ready
+```
+
+网页高级设置中的超时 `0` 表示采用服务端时限，新请求默认采用这个值。
+已有浏览器保存的超时会保留；若仍为 `300` 秒，处理长文档前可将其改为 `0`。
+
+GPU 权重固定为 `08aaea840498d49ce16247b6263196cf02814885`，FP16；vLLM 的请求并发和
+`max_num_seqs` 均为 2，KV 缓存预算 128 MiB。主 API 与原生文档 worker 不挂载 GPU。
+切换前核对显存余量与已有模型服务，已有 GLM／SDK 无须重启；迁移操作见[部署文档](docs/deployment.md)。
+
+### Docling＋GLM-OCR＋SDK 基线
 
 编辑 `.env`：
 
 ```dotenv
+NATIVE_PARSER_BACKEND=docling
+MINERU_HEADER_VERIFIER=off
+MINERU_SOURCE_VERIFIER=off
 DOCLING_PDF_BACKEND=pypdfium
 DOCLING_TABLE_MODE=accurate
 DOCLING_DO_CELL_MATCHING=0
@@ -252,7 +299,7 @@ GLM_SDK_MAX_IMAGE_PIXELS=8000000
 ```
 
 ```bash
-docker compose up -d --build mosaicparse
+docker compose up -d --build moparse
 curl --fail http://localhost:12303/v1/backends
 ```
 
@@ -271,7 +318,7 @@ curl --fail http://localhost:12303/v1/backends
 | `GET` | `/v1/content/jobs/{job_id}/assets` | 列出图片、视频与关键帧资产 |
 | `GET` | `/v1/content/jobs/{job_id}/assets/{asset_id}` | 鉴权下载资产；视频支持 Range |
 | `GET` | `/v1/content/jobs/{job_id}/bundle` | 按需生成 manifest 与资产 ZIP |
-| `POST` | `/v1/content/jobs/{job_id}/retry` | 重试失败任务 |
+| `POST` | `/v1/content/jobs/{job_id}/retry` | 重试失败、部分完成或已取消的任务 |
 | `DELETE` | `/v1/content/jobs/{job_id}` | 取消或删除任务 |
 | `GET` | `/v1/backends` | 后端真实能力状态 |
 | `GET` | `/health`, `/ready` | 存活与就绪检查 |
@@ -304,7 +351,7 @@ MCP v2 会校验 Host 和 Origin 防止 DNS rebinding。通过公网域名/反�
 暴露时，必须把精确 `host[:port]` 和 Origin 添加到：
 
 ```dotenv
-MCP_ALLOWED_HOSTS=localhost,127.0.0.1,[::1],mosaicparse,docs.example.com
+MCP_ALLOWED_HOSTS=localhost,127.0.0.1,[::1],moparse,mosaicparse,docs.example.com
 MCP_ALLOWED_ORIGINS=http://localhost,http://127.0.0.1,https://docs.example.com
 ```
 
@@ -344,7 +391,7 @@ CPU 基线使用 `DOCLING_COMPILE_MODELS=0`，避免首次文档触发耗时很�
 `torch.compile`；只应在固定硬件上完成预热与基准验证后开启。扫描 OCR 的超时、重试和
 并发由 `GLM_OCR_*`、`GLM_SDK_*` 控制。
 
-服务先逐页分流：原生页交给 Docling，扫描／混合来源页交给 SDK。Docling 所选原生页
+Docling 基线模式下，服务逐页分流：原生页交给 Docling，扫描／混合来源页交给 SDK。所选原生页
 恰为一个连续段、达到 `DOCLING_PAGE_PARALLEL_MIN_PAGES` 且逐页原生文字充足时，
 可用 `DOCLING_PAGE_WORKERS` 做页级并行；不连续原生段顺序转换，SDK 也逐页请求。
 每个 worker 持有启动期加载、请求间复用的转换器，线程数由 `DOCLING_NUM_THREADS`
@@ -369,12 +416,13 @@ npm --prefix frontend run test
 npm --prefix frontend run build
 
 docker compose config --quiet
-docker build -t mosaic-parse:local .
+docker build -t moparse:local .
 ```
 
 CI 不下载或运行大模型；GLM 与 SDK 错误路径由 mock 服务覆盖。真实 GPU
-回归应在专用环境执行。夹具全部由本项目脚本生成，不包含第三方文档原文，
-详见 [tests/fixtures/README.md](tests/fixtures/README.md)。
+回归应在专用环境执行。文档、图片和视频夹具由本项目脚本生成；另保留一份固定版本
+的 MinerU 源码用于无推理的批处理测试，来源及许可见
+[tests/fixtures/README.md](tests/fixtures/README.md)。
 
 ## 设计与许可证
 
@@ -382,8 +430,8 @@ CI 不下载或运行大模型；GLM 与 SDK 错误路径由 mock 服务覆盖�
 - [API](docs/api.md)
 - [部署](docs/deployment.md)
 - [基准测试](docs/benchmark.md)
-- [完整模型比较与真实接口验证报告](benchmark-results/clean-model-comparison-20261015/report.md)
+- [完整模型比较与真实接口验证报告](benchmark/report.md)
 - [项目 0.4.0 设计规格](docs/project-spec.md)
 
-本项目代码使用 [Apache License 2.0](LICENSE)。Docling、GLM-OCR、模型权重
+本项目原创代码使用 [Apache License 2.0](LICENSE)；MinerU 源码夹具保留其[上游许可](tests/fixtures/LICENSE.MinerU.md)。Docling、MinerU、GLM-OCR、模型权重
 和容器镜像拥有各自许可证；部署者需要分别核查并遵守其版本对应条款。

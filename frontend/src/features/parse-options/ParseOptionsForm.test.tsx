@@ -1,9 +1,39 @@
+import { useState } from 'react'
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { DEFAULT_OPTIONS } from '../../hooks/usePersistedOptions'
 import { ParseOptionsForm } from './ParseOptionsForm'
 
 describe('ParseOptionsForm advanced settings', () => {
+  it('offers the server default and the full supported timeout range', async () => {
+    const user = userEvent.setup()
+    const onChange = vi.fn()
+    function Form() {
+      const [options, setOptions] = useState(DEFAULT_OPTIONS)
+      return <ParseOptionsForm options={options} onChange={(value) => { onChange(value); setOptions(value) }} onSubmit={vi.fn()} sourceReady busy={false} />
+    }
+    render(<Form />)
+
+    await user.click(screen.getByRole('button', { name: '高级设置' }))
+    const input = screen.getByRole('spinbutton') as HTMLInputElement
+    expect(input).toHaveValue(0)
+    expect(input).toHaveAttribute('min', '0')
+    expect(input).toHaveAttribute('max', '86400')
+    expect(input).toHaveAccessibleDescription('0 使用服务端默认超时；可指定 1–86400 秒。')
+    expect(input.checkValidity()).toBe(true)
+    for (const seconds of [1, 300, 7200, 86400]) {
+      fireEvent.change(input, { target: { value: String(seconds) } })
+      expect(input.checkValidity()).toBe(true)
+      expect(onChange).toHaveBeenLastCalledWith({ ...DEFAULT_OPTIONS, timeoutSeconds: seconds })
+    }
+    fireEvent.change(input, { target: { value: '0' } })
+    expect(onChange).toHaveBeenLastCalledWith({ ...DEFAULT_OPTIONS, timeoutSeconds: 0 })
+    fireEvent.change(input, { target: { value: '-1' } })
+    expect(input.checkValidity()).toBe(false)
+    fireEvent.change(input, { target: { value: '86401' } })
+    expect(input.checkValidity()).toBe(false)
+  })
+
   it('keeps execution strategy out of the workspace and uses one clear action', () => {
     render(
       <ParseOptionsForm

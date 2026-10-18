@@ -1,0 +1,14 @@
+{
+  "schema": "moparse-dataset-validation/1",
+  "dataset": "moparse-addon-20261018",
+  "dataset_sha256": "00ec68415354e156d8b3f0a1a2b541e42c47e5c22dcab281e2f9ac2060f66fa1",
+  "valid": true,
+  "errors": [],
+  "documents": 3,
+  "pages": 7,
+  "splits": {
+    "holdout": 3
+  },
+  "unavailable_local_sources": [],
+  "independent_holdout_documents": 3
+}

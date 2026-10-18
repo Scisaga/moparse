@@ -1,4 +1,4 @@
-"""Content-based validation for MosaicParse inputs."""
+"""Content-based validation for moparse inputs."""
 
 from __future__ import annotations
 

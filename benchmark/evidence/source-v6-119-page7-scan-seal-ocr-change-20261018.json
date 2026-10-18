@@ -1,0 +1,27 @@
+{
+  "schema": "moparse-evidence/1",
+  "id": "source-v6-119-page7-scan-seal-ocr-change-20261018",
+  "method_id": "mineru-advanced-txt-vllm-c2-docling-source-glm-v6",
+  "cohort_id": "regression-504",
+  "origin": "fresh_component",
+  "fresh_model_inference": false,
+  "output_stage": "diagnostic-only",
+  "quality": {},
+  "performance": {},
+  "provenance": [
+    {
+      "path": "benchmark/evidence/artifacts/f74d64c59ebd58440fb0e7a650ba2d64c1b7c0c4f4c515d2e17f74c815299e90.json",
+      "sha256": "f74d64c59ebd58440fb0e7a650ba2d64c1b7c0c4f4c515d2e17f74c815299e90",
+      "bytes": 1779,
+      "original_path": "benchmark/runs/source-v6-http-20261018/partial372/119-page7-seal-change-safe-summary.json",
+      "snapshot_bytes_unchanged": true
+    }
+  ],
+  "qualification": {
+    "observation_only": true,
+    "deployment_acceptance": false,
+    "fixed_gold_scores_or_model_outputs_changed": false,
+    "private_original_proof_not_bundled": true,
+    "both_runs_source_unfaithful_seal_OCR_not_counted_as_correct": true
+  }
+}

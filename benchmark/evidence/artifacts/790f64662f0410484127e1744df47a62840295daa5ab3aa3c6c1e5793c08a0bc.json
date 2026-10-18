@@ -1,0 +1,376 @@
+{
+  "seconds": 1.9026190610602498,
+  "scope": "full HTTP upload through saved Markdown and public assets",
+  "power_limit_W": 220,
+  "hardware_fingerprint": "RTX2080Ti22GiB-dual-shared-host",
+  "warmup": "Existing production Docling/GLM service resident; Office2 then newholdout39; no service restart",
+  "own_GPU_peak_MiB": null,
+  "shared_GPU_energy_Wh": null,
+  "shared_GPU_energy_scope": "GPU1 entire device over observed adjacent samples inside this cohort; includes other services; boundary intervals not extrapolated",
+  "all_shared_devices": {
+    "GPU-95b5895b-c5f3-440b-4bd2-7160ec4da0d1": {
+      "index": 0,
+      "name": "NVIDIA GeForce RTX 2080 Ti",
+      "energy_joules_shared_device": null,
+      "energy_intervals_observed": 0,
+      "energy_gaps": 0,
+      "gpu_utilization_samples": 1,
+      "gpu_utilization_sum": 62.0,
+      "memory_used_peak_MiB_shared_device": 19910.0,
+      "gpu_utilization_mean_pct_shared_device": 62.0
+    },
+    "GPU-87a92d2a-6521-1e36-1ca9-21fd8085b365": {
+      "index": 1,
+      "name": "NVIDIA GeForce RTX 2080 Ti",
+      "energy_joules_shared_device": null,
+      "energy_intervals_observed": 0,
+      "energy_gaps": 0,
+      "gpu_utilization_samples": 1,
+      "gpu_utilization_sum": 0.0,
+      "memory_used_peak_MiB_shared_device": 20422.0,
+      "gpu_utilization_mean_pct_shared_device": 0.0
+    }
+  },
+  "owned_containers": {
+    "mosaicparse": {
+      "gpu_memory_peak_MiB_by_uuid": {},
+      "sm_observed_sum": 0.0,
+      "sm_samples": 0,
+      "cpu_pct_peak_one_core_100": 365.9,
+      "memory_peak_bytes": 4015794421,
+      "sm_mean_observed_process_sum_pct": null
+    },
+    "docling_glm_ocr": {
+      "gpu_memory_peak_MiB_by_uuid": {
+        "GPU-87a92d2a-6521-1e36-1ca9-21fd8085b365": 11612.0
+      },
+      "sm_observed_sum": 0.0,
+      "sm_samples": 0,
+      "cpu_pct_peak_one_core_100": 2.05,
+      "memory_peak_bytes": 7965016850,
+      "sm_mean_observed_process_sum_pct": null
+    },
+    "docling_glm_ocr_sdk": {
+      "gpu_memory_peak_MiB_by_uuid": {},
+      "sm_observed_sum": 0.0,
+      "sm_samples": 0,
+      "cpu_pct_peak_one_core_100": 0.01,
+      "memory_peak_bytes": 6381247660,
+      "sm_mean_observed_process_sum_pct": null
+    }
+  },
+  "observation_errors_by_source": {},
+  "vllm_metrics": [
+    {
+      "name": "vllm:num_requests_running",
+      "labels": "{engine=\"0\",model_name=\"zai-org/GLM-OCR\"}",
+      "first": 0.0,
+      "last": 0.0,
+      "counter_resets": 0,
+      "observed_counter_increase": null
+    },
+    {
+      "name": "vllm:num_requests_waiting",
+      "labels": "{engine=\"0\",model_name=\"zai-org/GLM-OCR\"}",
+      "first": 0.0,
+      "last": 0.0,
+      "counter_resets": 0,
+      "observed_counter_increase": null
+    },
+    {
+      "name": "vllm:kv_cache_usage_perc",
+      "labels": "{engine=\"0\",model_name=\"zai-org/GLM-OCR\"}",
+      "first": 0.0,
+      "last": 0.0,
+      "counter_resets": 0,
+      "observed_counter_increase": null
+    },
+    {
+      "name": "vllm:prefix_cache_queries_total",
+      "labels": "{engine=\"0\",model_name=\"zai-org/GLM-OCR\"}",
+      "first": 5892729.0,
+      "last": 5892729.0,
+      "counter_resets": 0,
+      "observed_counter_increase": 0.0
+    },
+    {
+      "name": "vllm:prefix_cache_queries_created",
+      "labels": "{engine=\"0\",model_name=\"zai-org/GLM-OCR\"}",
+      "first": 1791658356.6221452,
+      "last": 1791658356.6221452,
+      "counter_resets": 0,
+      "observed_counter_increase": null
+    },
+    {
+      "name": "vllm:prefix_cache_hits_total",
+      "labels": "{engine=\"0\",model_name=\"zai-org/GLM-OCR\"}",
+      "first": 416096.0,
+      "last": 416096.0,
+      "counter_resets": 0,
+      "observed_counter_increase": 0.0
+    },
+    {
+      "name": "vllm:prefix_cache_hits_created",
+      "labels": "{engine=\"0\",model_name=\"zai-org/GLM-OCR\"}",
+      "first": 1791658356.622202,
+      "last": 1791658356.622202,
+      "counter_resets": 0,
+      "observed_counter_increase": null
+    },
+    {
+      "name": "vllm:num_preemptions_total",
+      "labels": "{engine=\"0\",model_name=\"zai-org/GLM-OCR\"}",
+      "first": 0.0,
+      "last": 0.0,
+      "counter_resets": 0,
+      "observed_counter_increase": 0.0
+    },
+    {
+      "name": "vllm:num_preemptions_created",
+      "labels": "{engine=\"0\",model_name=\"zai-org/GLM-OCR\"}",
+      "first": 1791658356.622471,
+      "last": 1791658356.622471,
+      "counter_resets": 0,
+      "observed_counter_increase": null
+    },
+    {
+      "name": "vllm:prompt_tokens_total",
+      "labels": "{engine=\"0\",model_name=\"zai-org/GLM-OCR\"}",
+      "first": 5892729.0,
+      "last": 5892729.0,
+      "counter_resets": 0,
+      "observed_counter_increase": 0.0
+    },
+    {
+      "name": "vllm:prompt_tokens_created",
+      "labels": "{engine=\"0\",model_name=\"zai-org/GLM-OCR\"}",
+      "first": 1791658356.6225123,
+      "last": 1791658356.6225123,
+      "counter_resets": 0,
+      "observed_counter_increase": null
+    },
+    {
+      "name": "vllm:prompt_tokens_by_source_total",
+      "labels": "{engine=\"0\",model_name=\"zai-org/GLM-OCR\",source=\"local_compute\"}",
+      "first": 5476633.0,
+      "last": 5476633.0,
+      "counter_resets": 0,
+      "observed_counter_increase": 0.0
+    },
+    {
+      "name": "vllm:prompt_tokens_by_source_total",
+      "labels": "{engine=\"0\",model_name=\"zai-org/GLM-OCR\",source=\"local_cache_hit\"}",
+      "first": 416215.0,
+      "last": 416215.0,
+      "counter_resets": 0,
+      "observed_counter_increase": 0.0
+    },
+    {
+      "name": "vllm:prompt_tokens_by_source_total",
+      "labels": "{engine=\"0\",model_name=\"zai-org/GLM-OCR\",source=\"external_kv_transfer\"}",
+      "first": 0.0,
+      "last": 0.0,
+      "counter_resets": 0,
+      "observed_counter_increase": 0.0
+    },
+    {
+      "name": "vllm:prompt_tokens_by_source_created",
+      "labels": "{engine=\"0\",model_name=\"zai-org/GLM-OCR\",source=\"local_compute\"}",
+      "first": 1791658356.6225781,
+      "last": 1791658356.6225781,
+      "counter_resets": 0,
+      "observed_counter_increase": null
+    },
+    {
+      "name": "vllm:prompt_tokens_by_source_created",
+      "labels": "{engine=\"0\",model_name=\"zai-org/GLM-OCR\",source=\"local_cache_hit\"}",
+      "first": 1791658356.622598,
+      "last": 1791658356.622598,
+      "counter_resets": 0,
+      "observed_counter_increase": null
+    },
+    {
+      "name": "vllm:prompt_tokens_by_source_created",
+      "labels": "{engine=\"0\",model_name=\"zai-org/GLM-OCR\",source=\"external_kv_transfer\"}",
+      "first": 1791658356.6226168,
+      "last": 1791658356.6226168,
+      "counter_resets": 0,
+      "observed_counter_increase": null
+    },
+    {
+      "name": "vllm:prompt_tokens_cached_total",
+      "labels": "{engine=\"0\",model_name=\"zai-org/GLM-OCR\"}",
+      "first": 416096.0,
+      "last": 416096.0,
+      "counter_resets": 0,
+      "observed_counter_increase": 0.0
+    },
+    {
+      "name": "vllm:prompt_tokens_cached_created",
+      "labels": "{engine=\"0\",model_name=\"zai-org/GLM-OCR\"}",
+      "first": 1791658356.6226578,
+      "last": 1791658356.6226578,
+      "counter_resets": 0,
+      "observed_counter_increase": null
+    },
+    {
+      "name": "vllm:prompt_tokens_recomputed_total",
+      "labels": "{engine=\"0\",model_name=\"zai-org/GLM-OCR\"}",
+      "first": 119.0,
+      "last": 119.0,
+      "counter_resets": 0,
+      "observed_counter_increase": 0.0
+    },
+    {
+      "name": "vllm:prompt_tokens_recomputed_created",
+      "labels": "{engine=\"0\",model_name=\"zai-org/GLM-OCR\"}",
+      "first": 1791658356.6226952,
+      "last": 1791658356.6226952,
+      "counter_resets": 0,
+      "observed_counter_increase": null
+    },
+    {
+      "name": "vllm:generation_tokens_total",
+      "labels": "{engine=\"0\",model_name=\"zai-org/GLM-OCR\"}",
+      "first": 2504414.0,
+      "last": 2504414.0,
+      "counter_resets": 0,
+      "observed_counter_increase": 0.0
+    },
+    {
+      "name": "vllm:generation_tokens_created",
+      "labels": "{engine=\"0\",model_name=\"zai-org/GLM-OCR\"}",
+      "first": 1791658356.6227489,
+      "last": 1791658356.6227489,
+      "counter_resets": 0,
+      "observed_counter_increase": null
+    },
+    {
+      "name": "vllm:request_success_total",
+      "labels": "{engine=\"0\",finished_reason=\"stop\",model_name=\"zai-org/GLM-OCR\"}",
+      "first": 21935.0,
+      "last": 21935.0,
+      "counter_resets": 0,
+      "observed_counter_increase": 0.0
+    },
+    {
+      "name": "vllm:request_success_total",
+      "labels": "{engine=\"0\",finished_reason=\"length\",model_name=\"zai-org/GLM-OCR\"}",
+      "first": 40.0,
+      "last": 40.0,
+      "counter_resets": 0,
+      "observed_counter_increase": 0.0
+    },
+    {
+      "name": "vllm:request_success_total",
+      "labels": "{engine=\"0\",finished_reason=\"abort\",model_name=\"zai-org/GLM-OCR\"}",
+      "first": 0.0,
+      "last": 0.0,
+      "counter_resets": 0,
+      "observed_counter_increase": 0.0
+    },
+    {
+      "name": "vllm:request_success_total",
+      "labels": "{engine=\"0\",finished_reason=\"error\",model_name=\"zai-org/GLM-OCR\"}",
+      "first": 0.0,
+      "last": 0.0,
+      "counter_resets": 0,
+      "observed_counter_increase": 0.0
+    },
+    {
+      "name": "vllm:request_success_total",
+      "labels": "{engine=\"0\",finished_reason=\"repetition\",model_name=\"zai-org/GLM-OCR\"}",
+      "first": 0.0,
+      "last": 0.0,
+      "counter_resets": 0,
+      "observed_counter_increase": 0.0
+    },
+    {
+      "name": "vllm:request_success_created",
+      "labels": "{engine=\"0\",finished_reason=\"stop\",model_name=\"zai-org/GLM-OCR\"}",
+      "first": 1791658356.6229055,
+      "last": 1791658356.6229055,
+      "counter_resets": 0,
+      "observed_counter_increase": null
+    },
+    {
+      "name": "vllm:request_success_created",
+      "labels": "{engine=\"0\",finished_reason=\"length\",model_name=\"zai-org/GLM-OCR\"}",
+      "first": 1791658356.622947,
+      "last": 1791658356.622947,
+      "counter_resets": 0,
+      "observed_counter_increase": null
+    },
+    {
+      "name": "vllm:request_success_created",
+      "labels": "{engine=\"0\",finished_reason=\"abort\",model_name=\"zai-org/GLM-OCR\"}",
+      "first": 1791658356.6237273,
+      "last": 1791658356.6237273,
+      "counter_resets": 0,
+      "observed_counter_increase": null
+    },
+    {
+      "name": "vllm:request_success_created",
+      "labels": "{engine=\"0\",finished_reason=\"error\",model_name=\"zai-org/GLM-OCR\"}",
+      "first": 1791658356.6237586,
+      "last": 1791658356.6237586,
+      "counter_resets": 0,
+      "observed_counter_increase": null
+    },
+    {
+      "name": "vllm:request_success_created",
+      "labels": "{engine=\"0\",finished_reason=\"repetition\",model_name=\"zai-org/GLM-OCR\"}",
+      "first": 1791658356.6237829,
+      "last": 1791658356.6237829,
+      "counter_resets": 0,
+      "observed_counter_increase": null
+    },
+    {
+      "name": "vllm:request_prompt_tokens_count",
+      "labels": "{engine=\"0\",model_name=\"zai-org/GLM-OCR\"}",
+      "first": 21975.0,
+      "last": 21975.0,
+      "counter_resets": 0,
+      "observed_counter_increase": null
+    },
+    {
+      "name": "vllm:request_prompt_tokens_sum",
+      "labels": "{engine=\"0\",model_name=\"zai-org/GLM-OCR\"}",
+      "first": 5892729.0,
+      "last": 5892729.0,
+      "counter_resets": 0,
+      "observed_counter_increase": null
+    },
+    {
+      "name": "vllm:request_generation_tokens_count",
+      "labels": "{engine=\"0\",model_name=\"zai-org/GLM-OCR\"}",
+      "first": 21975.0,
+      "last": 21975.0,
+      "counter_resets": 0,
+      "observed_counter_increase": null
+    },
+    {
+      "name": "vllm:request_generation_tokens_sum",
+      "labels": "{engine=\"0\",model_name=\"zai-org/GLM-OCR\"}",
+      "first": 2504414.0,
+      "last": 2504414.0,
+      "counter_resets": 0,
+      "observed_counter_increase": null
+    }
+  ],
+  "resource_window": {
+    "path": "benchmark/runs/production-baseline-20261018/office2-resource-window.json",
+    "sha256": "73cb5d190f85ca0a6d2e0d1dfd33b65592b907b7b0eb331a1fce330e41c3cb9c",
+    "bytes": 12547
+  },
+  "http_performance": {
+    "scope": "full HTTP upload through saved Markdown and public assets",
+    "documents": 1,
+    "total_seconds": 1.9026190610602498,
+    "median_document_seconds": 1.9026190610602498,
+    "p95_document_seconds": 1.9026190610602498,
+    "per_page_time_limit": "document duration/page count is not measured per-page latency"
+  },
+  "model_forward_observation_limit": "Runtime endpoint is shared GLM service; native Docling CPU inference has no vLLM request counter.",
+  "native_GPU_attribution": "Docling native parser is configured CPU. Common GLM/SDK process observations remain separately named; not relabeled as new native model memory."
+}

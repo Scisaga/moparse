@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Irreversibly purge MosaicParse Job data while preserving the current schema."""
+"""Irreversibly purge moparse Job data while preserving the current schema."""
 
 from __future__ import annotations
 
@@ -34,7 +34,7 @@ def service_is_active(health_url: str, *, timeout: float = 0.75) -> bool:
     request = Request(
         health_url,
         method="GET",
-        headers={"User-Agent": "mosaicparse-purge/0.4.0"},
+        headers={"User-Agent": "moparse-purge/0.4.0"},
     )
     try:
         opener = build_opener(ProxyHandler({}))
@@ -151,7 +151,7 @@ def main(argv: list[str] | None = None) -> int:
         if args.confirm != CONFIRMATION:
             raise PurgeSafetyError(f"confirmation must exactly equal {CONFIRMATION}")
         if service_is_active(args.health_url):
-            raise PurgeSafetyError("MosaicParse is still reachable; stop the main service first")
+            raise PurgeSafetyError("moparse is still reachable; stop the main service first")
         reports = [purge_data_dir(value) for value in args.data_dir]
     except (OSError, sqlite3.Error, PurgeSafetyError) as exc:
         print(json.dumps({"status": "failed", "error": str(exc)}, ensure_ascii=False), file=sys.stderr)

@@ -1,0 +1,55 @@
+{
+  "schema": "moparse-captured-public-format-observation/1",
+  "created_at": "2026-10-18T03:34:26.820875+00:00",
+  "run": {
+    "path": "benchmark/runs/table-syntax-v7-http-20261018/fresh7/run.json",
+    "sha256": "1f75d961720a4a1e410b696cca2151536cc5179cde36ca5395aef788a0c09fb5",
+    "bytes": 112531
+  },
+  "documents": [
+    {
+      "id": "nasa-maax-factsheet",
+      "actual_API_status": "partial",
+      "capture_status": "completed",
+      "Markdown": {
+        "path": "benchmark/runs/table-syntax-v7-http-20261018/fresh7/cases/nasa-maax-factsheet/result.md",
+        "sha256": "c8ac03175b6715831f3a63ab656bb3eed65c2aa6a29f67a49f55a3d92db0bce3",
+        "bytes": 9920
+      },
+      "pass": true,
+      "visible_HTML_leaks": [],
+      "original_strict_table_substring_absent": true
+    },
+    {
+      "id": "gsa-sf95-2007",
+      "actual_API_status": "completed",
+      "capture_status": "completed",
+      "Markdown": {
+        "path": "benchmark/runs/table-syntax-v7-http-20261018/fresh7/cases/gsa-sf95-2007/result.md",
+        "sha256": "692f7671ca0e0eea8ce5951ca7aec7c9be036cc3a0d1257df6a181d47d25a39c",
+        "bytes": 10803
+      },
+      "pass": true,
+      "visible_HTML_leaks": [],
+      "original_strict_table_substring_absent": true
+    },
+    {
+      "id": "nara-telegram-32171186",
+      "actual_API_status": "completed",
+      "capture_status": "completed",
+      "Markdown": {
+        "path": "benchmark/runs/table-syntax-v7-http-20261018/fresh7/cases/nara-telegram-32171186/result.md",
+        "sha256": "26858e39916422d7ee6b8b8f2aeb54038860d0e5749423b418e33ae4074127b9",
+        "bytes": 4153
+      },
+      "pass": true,
+      "visible_HTML_leaks": [],
+      "original_strict_table_substring_absent": true
+    }
+  ],
+  "pass": true,
+  "scope": "Rendered HTML table leakage only, not source cell accuracy or semantic completeness",
+  "frozen_gold_reader_or_production_checker_changed": false,
+  "new_inference_API_or_service_operations": false,
+  "source_literal_code_fences_and_comments_not_rendered_as_HTML": true
+}

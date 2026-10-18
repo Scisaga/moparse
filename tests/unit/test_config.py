@@ -49,6 +49,19 @@ def test_docling_cached_converter_pool_is_bounded() -> None:
         make_settings(parser_workers=5, docling_page_workers=8)
 
 
+def test_native_source_verifier_requires_the_independent_native_header_parser() -> None:
+    with pytest.raises(ValidationError, match="MINERU_SOURCE_VERIFIER requires"):
+        make_settings(mineru_source_verifier="docling")
+    with pytest.raises(ValidationError, match="MINERU_SOURCE_VERIFIER requires"):
+        make_settings(native_parser_backend="mineru", mineru_source_verifier="docling")
+    settings = make_settings(
+        native_parser_backend="mineru",
+        mineru_header_verifier="docling",
+        mineru_source_verifier="docling",
+    )
+    assert settings.public_config()["mineru_source_verifier"] == "docling"
+
+
 def test_mcp_host_allowlist_adds_port_patterns() -> None:
     settings = make_settings(mcp_allowed_hosts="localhost,parser:12303")
     assert settings.mcp_allowed_host_list == ["localhost", "localhost:*", "parser:12303"]

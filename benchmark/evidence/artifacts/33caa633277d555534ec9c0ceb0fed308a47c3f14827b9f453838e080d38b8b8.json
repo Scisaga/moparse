@@ -1,0 +1,58 @@
+{
+  "schema": "moparse-independent-original-source-safe-summary/1",
+  "created_at": "2026-10-18T01:18:49.780276+00:00",
+  "scope": "130page completed whole HTTP; page11 seal plus separate page12 signature review and page127/128 whitespace or print-width changes. Not original accuracy of unreviewed content.",
+  "private_original_proofs": [
+    {
+      "path": "benchmark/runs/release-readonly-review-20261018/130-source-check/original-final-acceptance-proof.json",
+      "sha256": "5e3834e29782da787771ad06dfcd79141cdea522e00cd66e39e19ad3638b011e",
+      "bytes": 12075
+    },
+    {
+      "path": "benchmark/runs/release-readonly-review-20261018/130-source-check/p012-followup/independent-source-review-proof.json",
+      "sha256": "39364657b21dbd1f4ac1319e96d26a55962241dd8292aeb0c98f13ca13d1ddc9",
+      "bytes": 4771
+    }
+  ],
+  "source_sha256": "e2a184bb017930ca6306a56391a7248c2954a5ae212c2966104fad2104c4a24d",
+  "job_id": "job_01M567PQ78F2DENSVV8AWPT835",
+  "actual_status": "completed",
+  "final_MD": {
+    "path": "benchmark/runs/source-v6-http-20261018/regression504/cases/1225475642/result.md",
+    "sha256": "34b3377685c6833c64a9ecea439be6578a0318b0a7853849a15c106a0464edf9",
+    "bytes": 410522
+  },
+  "page11": {
+    "source_seal_number": "35010510007235",
+    "V4": "510101510007235",
+    "V6": "51010510007235",
+    "both_source_inaccurate": true
+  },
+  "page12": {
+    "source_is_scanned": true,
+    "source_native_character_count": 0,
+    "ordinary_printed_role_label": "主管会计工作负责人：",
+    "source_name_is_signature_and_seal": true,
+    "ordinary_printed_name_omission_supported": false,
+    "V4_visible_name_occurrences": 3,
+    "V6_visible_name_occurrences": 2,
+    "V6_name_missing_from_page": false,
+    "change": "Extra inline name at role label no longer appears; same name remains in two immediately following standalone lines",
+    "exact_detection_to_name_ownership": "unknown_no_private_GLM_response_retained"
+  },
+  "page127": {
+    "change": "one whitespace",
+    "source_semantic_change_observed": false
+  },
+  "page128": {
+    "change": "company-name ASCII-parentheses width only",
+    "source_company_name_or_scope_change_observed": false
+  },
+  "qualification": {
+    "gold_or_score_changed": false,
+    "new_model_requests": false,
+    "full_original_proofs_images_or_coordinates_not_bundled": true,
+    "all130_ordinary_body_accuracy_claim": false,
+    "source_pdf_and_final_MD_bytes_unchanged": true
+  }
+}

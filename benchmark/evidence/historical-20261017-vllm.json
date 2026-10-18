@@ -1,0 +1,64 @@
+{
+  "schema": "moparse-evidence/1",
+  "id": "historical-20261017-vllm",
+  "method_id": "mineru-visual-vllm-glm",
+  "cohort_id": "content14",
+  "origin": "historical_reuse",
+  "fresh_model_inference": false,
+  "output_stage": "component-official-visual",
+  "provenance": [
+    {
+      "path": "benchmark/evidence/artifacts/87ae6f7c276b5aa7cf4a456f2527ec345688b6a20066c4f06e02eaa6529013b2.json",
+      "sha256": "87ae6f7c276b5aa7cf4a456f2527ec345688b6a20066c4f06e02eaa6529013b2",
+      "bytes": 4900,
+      "original_path": "benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/component-comparison.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/55e787cf6b90ec519f316b001c683ed42d352820673e90d6beb35c16a59942df.json",
+      "sha256": "55e787cf6b90ec519f316b001c683ed42d352820673e90d6beb35c16a59942df",
+      "bytes": 348229,
+      "original_path": "benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/model-evaluation/vllm-source-evaluation.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/9c7863cebe11c786963b745bc57e9351c8d3940d250f93ad898ede4fde6deb1b.json",
+      "sha256": "9c7863cebe11c786963b745bc57e9351c8d3940d250f93ad898ede4fde6deb1b",
+      "bytes": 1005799,
+      "original_path": "benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/source-reference.json",
+      "snapshot_bytes_unchanged": true
+    }
+  ],
+  "quality": {
+    "fixed46": {
+      "pass": 45,
+      "total": 46,
+      "gold_fingerprint": "9c7863cebe11c786963b745bc57e9351c8d3940d250f93ad898ede4fde6deb1b",
+      "reader_fingerprint": "a862a062c7efa273ed7485b4e1b4c2a382cd8ebb24190308b00bf70f1ae62be4"
+    },
+    "additional4": {
+      "pass": 1,
+      "total": 4,
+      "gold_fingerprint": "9c7863cebe11c786963b745bc57e9351c8d3940d250f93ad898ede4fde6deb1b",
+      "reader_fingerprint": "a862a062c7efa273ed7485b4e1b4c2a382cd8ebb24190308b00bf70f1ae62be4"
+    }
+  },
+  "performance": {
+    "seconds": 236.18429279793054,
+    "scope": "Official two_step_extract only; PDF render, JSON-to-Markdown and persistence not timed",
+    "power_limit_W": 180,
+    "hardware_fingerprint": "RTX2080Ti22GiB/shared-GPU1/CPU4",
+    "warmup": "initialization_excluded",
+    "own_GPU_peak_MiB": null,
+    "shared_GPU_energy_Wh": null
+  },
+  "qualification": {
+    "source_artifacts_hashed": true,
+    "deployment_acceptance": false,
+    "source_exposed": true,
+    "full_HTTP": false,
+    "routing_GLM_not_measured_in_component": true
+  },
+  "observed_recipe_fingerprint": null,
+  "recipe_limit": "Historical component settings/export stage are preserved; this is not a run of the newly registered whole pipeline"
+}

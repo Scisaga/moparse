@@ -1,0 +1,230 @@
+{
+  "schema": "moparse-source-review/1",
+  "id": "holdout-20261018",
+  "reviewed_at": "2026-10-17T18:05:23.475323+00:00",
+  "method": "original PDF visual transcription",
+  "model_outputs_seen": false,
+  "source_documents": [
+    {
+      "id": "holdout-irs-form1040-2025",
+      "sha256": "3d31c226df0d189ced80e039d01cf0f8820c1019681a0f0ca6264de277b7e982",
+      "source_path": "benchmark/datasets/moparse-v1/sources/holdout-20261018/irs-form1040-2025.pdf"
+    },
+    {
+      "id": "holdout-census-samoa-1930",
+      "sha256": "4ebad09d258f11e8d4e04c3f5f0af1493d0622672209a71bb175f7f0fc4ac77d",
+      "source_path": "benchmark/datasets/moparse-v1/sources/holdout-20261018/census-samoa-1930.pdf"
+    },
+    {
+      "id": "holdout-nist-tn2354",
+      "sha256": "171dec979423da69147527794a29d056e8e0751fe7d20d32484e402d39b4dcff",
+      "source_path": "benchmark/datasets/moparse-v1/sources/holdout-20261018/nist-tn2354.pdf"
+    }
+  ],
+  "coverage": "partial",
+  "checks": 36,
+  "by_kind": {
+    "text": 17,
+    "ordered_text": 10,
+    "regex": 4,
+    "table_grid": 3,
+    "table_span": 2
+  },
+  "by_document": {
+    "holdout-irs-form1040-2025": 18,
+    "holdout-nist-tn2354": 8,
+    "holdout-census-samoa-1930": 10
+  },
+  "complete_tables": 3,
+  "merged_span_checks": 2,
+  "paragraph_regions": [
+    {
+      "document_id": "holdout-nist-tn2354",
+      "physical_page": 3,
+      "bbox_pdf_points": [
+        89,
+        102,
+        526,
+        150
+      ],
+      "label": "publication-disclaimer",
+      "render_path": "benchmark/datasets/moparse-v1/annotations/holdout-20261018/local-evidence/paragraph-region-publication-disclaimer.png",
+      "raster_sha256": "99a603f558d5f041e2348cc818ca686a308f20505377d194766d6a2229a6dee5",
+      "status": "deferred",
+      "scored": false,
+      "reason": "Long-paragraph completeness is outside the sealed short-anchor assertion scope.",
+      "native_text_sha256": "12f2def49de7a70efff0799a6c2d2804acb0be208bf5214c01eda9397a27228d",
+      "native_word_count": 55,
+      "native_text_stored": false
+    },
+    {
+      "document_id": "holdout-irs-form1040-2025",
+      "physical_page": 2,
+      "bbox_pdf_points": [
+        92,
+        613,
+        570,
+        633
+      ],
+      "label": "perjury-declaration",
+      "render_path": "benchmark/datasets/moparse-v1/annotations/holdout-20261018/local-evidence/paragraph-region-perjury-declaration.png",
+      "raster_sha256": "5012f11509407d326a33b98d3ac9b00a43dc466ebb8150f7744ccc59fe2ecbdd",
+      "status": "deferred",
+      "scored": false,
+      "reason": "Long-paragraph completeness is outside the sealed short-anchor assertion scope.",
+      "native_text_sha256": "c1226d4db1dfce17c2f2662433ecc37b23dff8cc028aca1383093c6da1721cda",
+      "native_word_count": 49,
+      "native_text_stored": false
+    },
+    {
+      "document_id": "holdout-census-samoa-1930",
+      "physical_page": 10,
+      "bbox_pdf_points": [
+        57,
+        252,
+        323,
+        341
+      ],
+      "label": "farm-definition",
+      "render_path": "benchmark/datasets/moparse-v1/annotations/holdout-20261018/local-evidence/paragraph-region-farm-definition.png",
+      "raster_sha256": "6f27584352c29c8719136b5aee2c422825b52eafcb44b3b846ed1a2835c98031",
+      "status": "deferred",
+      "scored": false,
+      "reason": "Long-paragraph completeness is outside the sealed short-anchor assertion scope.",
+      "native_text_fingerprint_omitted": "Scan OCR is not a reliable source transcript."
+    }
+  ],
+  "evidence_files": [
+    {
+      "path": "benchmark/datasets/moparse-v1/annotations/holdout-20261018/local-evidence/census-samoa-1930-p001.png",
+      "sha256": "8fb5b2a8bf87e0dd288f817bfeda21c787f64d34855690f3c367e652d4b63c81",
+      "bytes": 285712
+    },
+    {
+      "path": "benchmark/datasets/moparse-v1/annotations/holdout-20261018/local-evidence/census-samoa-1930-p003-illiteracy-paragraph.png",
+      "sha256": "dcdfc062d5c25ab80ff526f988d67ec59133e738f11142f466e04b29c394da72",
+      "bytes": 185556
+    },
+    {
+      "path": "benchmark/datasets/moparse-v1/annotations/holdout-20261018/local-evidence/census-samoa-1930-p003.png",
+      "sha256": "a37621b89bb2fffd26fe1d81765033e011c92e0692ed455aab3e05c4aa23a00d",
+      "bytes": 583051
+    },
+    {
+      "path": "benchmark/datasets/moparse-v1/annotations/holdout-20261018/local-evidence/census-samoa-1930-p004-table1.png",
+      "sha256": "debf109505f3ecae4b8f29a69d422cbdd53fd013dd9cafe6d5e3243f36869cb9",
+      "bytes": 102414
+    },
+    {
+      "path": "benchmark/datasets/moparse-v1/annotations/holdout-20261018/local-evidence/census-samoa-1930-p004.png",
+      "sha256": "1a48ba2a5bc30e18978ecab842786341ce4a044b2fdf227f77e8c3fccc644209",
+      "bytes": 489031
+    },
+    {
+      "path": "benchmark/datasets/moparse-v1/annotations/holdout-20261018/local-evidence/census-samoa-1930-p006.png",
+      "sha256": "43ac6966ea12cfba588f489e80800eba117179c82eb89c7be18597fc28fda24e",
+      "bytes": 371869
+    },
+    {
+      "path": "benchmark/datasets/moparse-v1/annotations/holdout-20261018/local-evidence/census-samoa-1930-p010-farm-definition.png",
+      "sha256": "c5bdf0a0d8eb281c35d21ed6affdce9926453518509f7830365576fb7af9b88e",
+      "bytes": 112526
+    },
+    {
+      "path": "benchmark/datasets/moparse-v1/annotations/holdout-20261018/local-evidence/census-samoa-1930-p010-table10.png",
+      "sha256": "31493eb2c2fc55775c08b5f883845c44eec156a27e113c8e33564c67159ee794",
+      "bytes": 74095
+    },
+    {
+      "path": "benchmark/datasets/moparse-v1/annotations/holdout-20261018/local-evidence/census-samoa-1930-p010.png",
+      "sha256": "65f7bb8bcf45557b89f0228708803d8cfe69777068df351555cbea9f99a028b1",
+      "bytes": 439045
+    },
+    {
+      "path": "benchmark/datasets/moparse-v1/annotations/holdout-20261018/local-evidence/irs-form1040-2025-p001.png",
+      "sha256": "772fd097f624fe1ba1b63c2470f61ebc117490fddb0c1806b5f4652268a12796",
+      "bytes": 251866
+    },
+    {
+      "path": "benchmark/datasets/moparse-v1/annotations/holdout-20261018/local-evidence/irs-form1040-2025-p002-full.png",
+      "sha256": "7da892eae6edebccfe84d6f04c9645d1e0afb6e73df2b740420298ded9353e1b",
+      "bytes": 269772
+    },
+    {
+      "path": "benchmark/datasets/moparse-v1/annotations/holdout-20261018/local-evidence/irs-form1040-2025-p002.png",
+      "sha256": "40b73bab274285baeb09d38fe5ea88798d7d1c602f8fcb00e3c7df9e28a6d1e2",
+      "bytes": 247791
+    },
+    {
+      "path": "benchmark/datasets/moparse-v1/annotations/holdout-20261018/local-evidence/nist-tn2354-p001.png",
+      "sha256": "6be3638101b790c64a63c0faa2d41708616c22f25b07bebc3e976e8e47953407",
+      "bytes": 72716
+    },
+    {
+      "path": "benchmark/datasets/moparse-v1/annotations/holdout-20261018/local-evidence/nist-tn2354-p003-full.png",
+      "sha256": "b67655d1f30155c88166c8040892a2e4c08221717a93b1282a7605488cb24aa1",
+      "bytes": 88392
+    },
+    {
+      "path": "benchmark/datasets/moparse-v1/annotations/holdout-20261018/local-evidence/nist-tn2354-p003.png",
+      "sha256": "b67655d1f30155c88166c8040892a2e4c08221717a93b1282a7605488cb24aa1",
+      "bytes": 88392
+    },
+    {
+      "path": "benchmark/datasets/moparse-v1/annotations/holdout-20261018/local-evidence/nist-tn2354-p006.png",
+      "sha256": "dcb15e1f131d81a66760ecb08dd62dc145f4d4aa2b5e9e7438a561b5de9e073a",
+      "bytes": 98306
+    },
+    {
+      "path": "benchmark/datasets/moparse-v1/annotations/holdout-20261018/local-evidence/nist-tn2354-p011.png",
+      "sha256": "4f7f33a7c50c881bda5f53c60798ebacbdbee864c90b9f53cad3f3157f558224",
+      "bytes": 392097
+    },
+    {
+      "path": "benchmark/datasets/moparse-v1/annotations/holdout-20261018/local-evidence/nist-tn2354-p012.png",
+      "sha256": "f5ab0436a1df0aa0104076340bd32492a4c2c782ff843f9a01f4d6ce80e22ae0",
+      "bytes": 200188
+    },
+    {
+      "path": "benchmark/datasets/moparse-v1/annotations/holdout-20261018/local-evidence/nist-tn2354-p025.png",
+      "sha256": "3d00514fa41cf044f55b5a6ff6cd8800729cdd47541574e5e8c1dd11cdd6326c",
+      "bytes": 137397
+    },
+    {
+      "path": "benchmark/datasets/moparse-v1/annotations/holdout-20261018/local-evidence/paragraph-region-farm-definition.png",
+      "sha256": "6f27584352c29c8719136b5aee2c422825b52eafcb44b3b846ed1a2835c98031",
+      "bytes": 51558
+    },
+    {
+      "path": "benchmark/datasets/moparse-v1/annotations/holdout-20261018/local-evidence/paragraph-region-perjury-declaration.png",
+      "sha256": "5012f11509407d326a33b98d3ac9b00a43dc466ebb8150f7744ccc59fe2ecbdd",
+      "bytes": 13620
+    },
+    {
+      "path": "benchmark/datasets/moparse-v1/annotations/holdout-20261018/local-evidence/paragraph-region-publication-disclaimer.png",
+      "sha256": "99a603f558d5f041e2348cc818ca686a308f20505377d194766d6a2229a6dee5",
+      "bytes": 27197
+    }
+  ],
+  "evidence_visibility": "private ignored local renders; no public redistribution",
+  "exclusions": [
+    {
+      "document_id": "holdout-census-samoa-1930",
+      "physical_page": 10,
+      "bbox_pdf_points": [
+        60,
+        474,
+        325,
+        575
+      ],
+      "status": "excluded_unverified",
+      "reason": "Source scan has damaged/occluded prose; unknown glyphs were not guessed."
+    }
+  ],
+  "limitations": [
+    "These are sampled source assertions, not whole-PDF transcription accuracy.",
+    "Whole-paragraph coverage is deferred and is not counted as a passed check.",
+    "Empty form checkboxes are checked for labels only; no filled state is inferred.",
+    "Source-image fingerprints preserve review evidence but do not score semantic text completeness."
+  ]
+}

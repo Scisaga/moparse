@@ -1,0 +1,104 @@
+{
+  "schema": "wide-grid-adapter-source-preservation/1",
+  "phase": "after_exposure_IRS_diagnostic_repeat",
+  "scope": "CPU-only replay of complete captured IRS2 response and original14 cached outputs; no fresh inference, HTTP or score mutation",
+  "worker_response_sha256": "913db9283dab81a0f1069991e896305397d2419e7c14ec4357323a0881f3712a",
+  "original_failed_public_result_retained": true,
+  "IRS_pages_rendered": 2,
+  "IRS_tables_rendered": 4,
+  "IRS_table_source_markers": 4,
+  "IRS_raw_HTML_tables_in_public_GFM": false,
+  "IRS_cases": [
+    {
+      "page": 1,
+      "block_index": 6,
+      "html_sha256": "c3edac27975d85772dff8f983ca1ec49f7f6071ee399581796648f86b48790c9",
+      "rows": 9,
+      "columns": 8,
+      "grid_positions": 72,
+      "original_HTML_cells": 25,
+      "parsed_cells": 25,
+      "all_original_literals_and_spans_retained_in_order": true,
+      "cell_text_and_spans_sha256": "f6d9ddd219f70c6920d9b2270c8deb71cf6121fcc1d42636b5049344e2ab3208"
+    },
+    {
+      "page": 1,
+      "block_index": 7,
+      "html_sha256": "14f07a83a6c34a73ff38255d47938bde3c9ffbb2b79a708d693711d264a1d8f2",
+      "rows": 8,
+      "columns": 10,
+      "grid_positions": 80,
+      "original_HTML_cells": 53,
+      "parsed_cells": 53,
+      "all_original_literals_and_spans_retained_in_order": true,
+      "cell_text_and_spans_sha256": "891e3dfe3a1f183bf3cfd592a16728992735f422aba19b3fbb72b707e1cf4aec"
+    },
+    {
+      "page": 1,
+      "block_index": 8,
+      "html_sha256": "1423da29976087967e56bdb079364cbeef0f79c3d51eced47c877f9d8f57b15d",
+      "rows": 13,
+      "columns": 202,
+      "grid_positions": 2626,
+      "original_HTML_cells": 1513,
+      "parsed_cells": 1513,
+      "all_original_literals_and_spans_retained_in_order": true,
+      "cell_text_and_spans_sha256": "4649957c7bc9bacc23683dd6c50651a70bd71e0d04c2ae6c7747e301c7052788"
+    },
+    {
+      "page": 2,
+      "block_index": 2,
+      "html_sha256": "a2941cff1d7a5d71c75a391bbf1c448e3d650c2d91cd729e12ee00eeb55f0743",
+      "rows": 51,
+      "columns": 10,
+      "grid_positions": 510,
+      "original_HTML_cells": 197,
+      "parsed_cells": 197,
+      "all_original_literals_and_spans_retained_in_order": true,
+      "cell_text_and_spans_sha256": "6f063e010418dac56d10f4c232c2753f4169a096931d9c30b0f54045814dbd0d"
+    }
+  ],
+  "existing14_pages": 14,
+  "existing25_tables": 25,
+  "existing_documents": [
+    {
+      "id": "1206337604",
+      "markdown_bytes_unchanged": true,
+      "sha256": "fee24dbd5af0f66acf51b59c87be12ce8b3b3de1da2c235fd12cec60201b7656"
+    },
+    {
+      "id": "1225474739",
+      "markdown_bytes_unchanged": true,
+      "sha256": "e5e0cecc55a011b92490c2d50ac226ec8bd383f0bf5a480049ac9f48b46dbd7a"
+    },
+    {
+      "id": "1225475375",
+      "markdown_bytes_unchanged": true,
+      "sha256": "1276f69321fd45ab0c62b9d0d0e71d26a0dbb37310aa6ff39ddaacf304fb8f63"
+    },
+    {
+      "id": "1225474139",
+      "markdown_bytes_unchanged": true,
+      "sha256": "1451ffbf54b6f19c20451d07e871bb53cfe1578798622de92e91dab96a489345"
+    },
+    {
+      "id": "1225474693",
+      "markdown_bytes_unchanged": true,
+      "sha256": "327d333d088e7b44859a78711a8294f94d4859e36da51d1f1f9347cd4a575798"
+    },
+    {
+      "id": "1225473526",
+      "markdown_bytes_unchanged": true,
+      "sha256": "559b6b53833b49394e71380a2cc47c52ee97ee59bb2dcd0ada35d7facc9106a0"
+    }
+  ],
+  "all_existing_document_Markdown_bytes_unchanged": true,
+  "boundary": {
+    "old_max_columns": 100,
+    "max_rows_and_columns_now": 2000,
+    "maximum_grid_positions": 200000,
+    "rowspan_colspan_not_clamped": true,
+    "overlap_rejection_retained": true,
+    "matrix_allocated_only_after_complete_shape_preflight": true
+  }
+}

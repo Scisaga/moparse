@@ -1,0 +1,32 @@
+{
+  "schema": "moparse-scanned-seal-change-safe-summary/1",
+  "created_at": "2026-10-18T00:52:17.214641+00:00",
+  "document_id": "1225475375",
+  "source_sha256": "5eef30b5c544d76df917d56df76a665ed13b5e6ffebdc54ab0eea0a47b7589d6",
+  "source_page": 7,
+  "route": "GLM SDK scanned page, native embedded text empty",
+  "V4_ocr_line": "實體經驗",
+  "V6_ocr_line": "博經學生",
+  "source_observation": "Red seal script and black handwritten signature overlap; neither OCR phrase is supported as ordinary original-source prose. Complete literal transcription of overlapped seal remains unresolved.",
+  "assessment": "Both are OCR errors in the existing seal/signature region; this line change alone does not establish new loss of genuine ordinary body text. It is not scored as source-correct for either result.",
+  "formal_audit_body_exact_equal_between_runs": true,
+  "formal_audit_body_paragraph_count": 4,
+  "formal_audit_body_sha256": "5b2f8d6e9a88e43788410168f55691a8afd1118e286f36cb2414eb412bd479d9",
+  "run_MD_SHA256": {
+    "header-v4-http-20261018": "46b94f2789cfe1696a83492f8322f8ad7a843ec457f4361293555ca01952ee8f",
+    "source-v6-http-20261018": "f29c082c058043237d12dcd299b76d7acdf3d24f5c76c1089ee1aec5663fa744"
+  },
+  "private_original_proof_locator": {
+    "path": "benchmark/runs/release-readonly-review-20261018/119-source-check/p007-seal-ocr-independent-proof.json",
+    "sha256": "b19f22637cf42e2c2f5940109f166608820bd5340bb888e91c16cb63bc2f8d38",
+    "bytes": 2026,
+    "crop_pixels_coordinates_and_complete_private_proof_not_bundled": true
+  },
+  "not_claimed": [
+    "V4 source-correct",
+    "V6 new ordinary body omission",
+    "entire372pages original-codepoint consistency",
+    "fixedgold changed"
+  ],
+  "model_calls_or_output_modifications": false
+}

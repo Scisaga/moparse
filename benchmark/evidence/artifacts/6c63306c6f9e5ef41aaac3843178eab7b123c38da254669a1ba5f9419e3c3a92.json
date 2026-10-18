@@ -1,0 +1,103 @@
+{
+  "schema": "moparse-header-stage-case-observation/1",
+  "observed_at": "2026-10-17T22:56:32.311668+00:00",
+  "document_id": "1225475642",
+  "source_sha256": "e2a184bb017930ca6306a56391a7248c2954a5ae212c2966104fad2104c4a24d",
+  "page_count": 130,
+  "captured_summary": {
+    "path": "benchmark/runs/header-v4-http-20261018/regression504/cases/1225475642/summary.json",
+    "sha256": "bd9cee44d113986b15b6a05afadc2bea2042710c4a6e83d935e7555c75c6d898",
+    "bytes": 8942
+  },
+  "received_MD_sha256": "63a36848cde270974cf292e38ada6d16ebf18233ad41c6c30f140625ad2c20b7",
+  "job_id": "job_01M5600Z35EDXF5PSQGC026EMR",
+  "actual_storage_identity": {
+    "container": "moparse-candidate-header-v4",
+    "container_id": "0e8ca85a3f0337abce45491fd690c2a02965c050e36ce6c26e007b13a9d2fdcb",
+    "deployed_image_id": "sha256:427a7cdd741b69845fcf8c6c1f4db6f9f5db92897cb2ce40af99747300bcff7a",
+    "data_volume": {
+      "Type": "volume",
+      "Name": "moparse-candidate-header-v4-data",
+      "Source": "/var/lib/docker/volumes/moparse-candidate-header-v4-data/_data",
+      "Destination": "/data",
+      "RW": true
+    },
+    "deployment": {
+      "path": "benchmark/runs/header-v4-http-20261018/deployment-before.json",
+      "sha256": "2ceae920c4cc46bd65360b85e6b0fae347138b34e97cb08a204523b349d48ff6",
+      "bytes": 99755
+    },
+    "container_environment_read": false
+  },
+  "selected_warning_code": "independent_header_verification_used",
+  "projected_detail_fields": [
+    "duration_ms",
+    "pages",
+    "candidate_pairs",
+    "accepted_pairs"
+  ],
+  "selected_records": [
+    {
+      "duration_ms": 234624,
+      "pages": [
+        68,
+        69,
+        70,
+        72,
+        73,
+        74,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        87,
+        88,
+        92,
+        93,
+        95,
+        96,
+        97,
+        98,
+        99,
+        100,
+        101,
+        102,
+        103,
+        104,
+        106,
+        107,
+        111,
+        112,
+        113,
+        114,
+        115,
+        116,
+        117,
+        121,
+        122,
+        123,
+        124,
+        125
+      ],
+      "candidate_pairs": 27,
+      "accepted_pairs": 1
+    }
+  ],
+  "stage_wall_clock_seconds": 234.624,
+  "warning_file": {
+    "container_path": "/data/jobs/job_01M5600Z35EDXF5PSQGC026EMR/logs/warnings.json",
+    "host_path": "/var/lib/docker/volumes/moparse-candidate-header-v4-data/_data/jobs/job_01M5600Z35EDXF5PSQGC026EMR/logs/warnings.json",
+    "exists": true,
+    "sha256": "943b077ba49217c519f4e4ab440b8250d342b4a93acc286f673eb80cf5e73a68",
+    "bytes": 12165
+  },
+  "other_warnings_exported": false,
+  "model_or_API_requests": false,
+  "timing_scope": "HeaderService independent CPU parser plus cached-header verification elapsed wall clock; not GPU-forward time, CPU-seconds or entire request latency",
+  "observation_status": "observed"
+}

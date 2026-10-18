@@ -1,0 +1,67 @@
+{
+  "schema": "moparse-evidence/1",
+  "id": "NASA-posthoc-original-source-tables-reviewed-v2-20261018",
+  "method_id": "mineru-advanced-txt-vllm-c2-docling-source-glm-v6",
+  "cohort_id": "posthoc-NASA-original-physical-cells-spans-development",
+  "origin": "fresh_component",
+  "fresh_model_inference": false,
+  "new_HTTP_requests": false,
+  "output_stage": "posthoc-source-only-reference-errata-and-frozen-scorer-observation",
+  "quality": {},
+  "performance": {},
+  "provenance": [
+    {
+      "path": "benchmark/evidence/artifacts/0bf6e6c7fd3c9f50463c9f1642a026822299bfc5c3b0890a871e810756301d5e.json",
+      "sha256": "0bf6e6c7fd3c9f50463c9f1642a026822299bfc5c3b0890a871e810756301d5e",
+      "bytes": 2211,
+      "original_path": "benchmark/regressions/nasa-maax-20261018/v2/source-gold-errata-and-seal.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/31e169e57cdc282f9fe323723dfacd0e6a3f07b136852c2548bd9e80bc3c7c5e.json",
+      "sha256": "31e169e57cdc282f9fe323723dfacd0e6a3f07b136852c2548bd9e80bc3c7c5e",
+      "bytes": 22507,
+      "original_path": "benchmark/regressions/nasa-maax-20261018/v2/original-cells.assertions.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/e7f4d361dd2d9e50617f2aed001c3be83119f2d288cf77ed7a1d95a23f5805bd.json",
+      "sha256": "e7f4d361dd2d9e50617f2aed001c3be83119f2d288cf77ed7a1d95a23f5805bd",
+      "bytes": 24622,
+      "original_path": "benchmark/regressions/nasa-maax-20261018/v2/source-tables.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/d92314907d365099f9f53f3ceca1d342e20bea36f8acf9aa34eeab0fd5b30197.json",
+      "sha256": "d92314907d365099f9f53f3ceca1d342e20bea36f8acf9aa34eeab0fd5b30197",
+      "bytes": 5350,
+      "original_path": "benchmark/runs/source-v6-http-20261018/preflight-A-original-v1/evaluation.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/1f0599a9c82a282ea7c8816452071dd4498a18de640bbfbb5abef0d23ea3c8ea.json",
+      "sha256": "1f0599a9c82a282ea7c8816452071dd4498a18de640bbfbb5abef0d23ea3c8ea",
+      "bytes": 5353,
+      "original_path": "benchmark/runs/source-v6-http-20261018/preflight-A-source-reviewed-v2/evaluation.json",
+      "snapshot_bytes_unchanged": true
+    }
+  ],
+  "source_A19_counts_v1": {
+    "fail": 11,
+    "pass": 8
+  },
+  "source_A19_counts_v2": {
+    "fail": 11,
+    "pass": 8
+  },
+  "source_table_grid_truth_not_replaced_by_V4_output": true,
+  "qualification": {
+    "observation_only": true,
+    "original_fixed28_or_any_reader_changed": false,
+    "original_posthoc_v1_gold_or_results_rewritten": false,
+    "new_independent_holdout": false,
+    "deployment_acceptance": false,
+    "source_preservation_B_does_not_claim_original_table_truth_A_pass": true,
+    "limitation": "Independent original pixels/vector-line review corrected a source transcription error; both19-check results retained8pass11fail. V6 intentionally preserves existing four table outputs and does not claim their printed merged titles/physical cells repaired."
+  }
+}

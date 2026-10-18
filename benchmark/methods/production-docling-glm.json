@@ -1,0 +1,43 @@
+{
+  "schema": "moparse-method/1",
+  "id": "production-docling-glm",
+  "label": "Current deployed Docling + GLM",
+  "status": "baseline",
+  "recipe": {
+    "routing": {
+      "policy": "native text and embedded-image coverage, independent of model answers",
+      "native": {
+        "package": "docling",
+        "version": "2.139.0",
+        "table_model": "TableFormer V1 Accurate",
+        "matching": false,
+        "pdf_backend": "PyPdfium",
+        "OCR": false,
+        "device": "CPU"
+      },
+      "scan_mixed": {
+        "model": "GLM-OCR",
+        "model_revision": "recorded per deployed image; not inferred from model name",
+        "SDK_version": "0.1.5",
+        "orientation_preprocess": true,
+        "DPI": 200,
+        "precision": "FP16",
+        "device": "GPU1"
+      }
+    },
+    "public_output": {
+      "format": "faithful logical-table GFM",
+      "table_source": true,
+      "coordinates": false,
+      "semantic_XML": false,
+      "header_merge": "only complete source-backed header and column-meaning equivalence"
+    },
+    "adapter_version": "record actual Git SHA per run; component FULL output is a different stage"
+  },
+  "fingerprint": "8dc6373e874f702d2bee8ba4bd4fbfb0af53a00b2a7c857cdc308b99a915e594",
+  "deployment_gate": "Full HTTP/public GFM and source annotations must pass; component runs alone do not qualify",
+  "reuse": {
+    "functional": "exact source/input/weights/settings and output-stage hashes required",
+    "timing": "same cohort/hardware/power/time scope/warmup; never sum component work as end-to-end latency"
+  }
+}

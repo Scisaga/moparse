@@ -17,7 +17,9 @@ from app.models import (
     ContentParseOptions,
     StoredSource,
 )
-from app.parsers.glm_sdk_remote import GlmSdkRemoteParser, _html_table_rows
+from app.models.parse_result import PageParseResult
+from app.parsers.glm_sdk_remote import GlmSdkRemoteParser, _html_table_layout, _html_table_rows
+from app.services.export_service import ExportService
 from app.services.ir_service import DocumentIRService
 from app.services.table_service import TableFragment
 
@@ -126,6 +128,87 @@ def _html_fragment(content: str) -> TableFragment | None:
     )
 
 
+@pytest.mark.parametrize("opening,closing", [("th", "td"), ("td", "th")])
+def test_explicit_cell_end_marker_preserves_opening_role_and_multilevel_spans(
+    opening: str, closing: str
+) -> None:
+    content = (
+        f"<table><tr><{opening} rowspan='2' scope='row'>Group</{closing}>"
+        "<th colspan='2'>Band (kg)</th></tr>"
+        "<tr><th>Prior</th><th>Current</th></tr>"
+        "<tr><td>Alpha</td><td>-2.50</td><td>0.2907</td></tr></table>"
+    )
+    paired = content.replace(f"Group</{closing}>", f"Group</{opening}>")
+    rows, has_header, cells = _html_table_layout(content)
+
+    assert (rows, has_header, cells) == _html_table_layout(paired)
+    assert rows == [
+        ["Group", "Band (kg)", ""],
+        ["", "Prior", "Current"],
+        ["Alpha", "-2.50", "0.2907"],
+    ]
+    assert has_header is True
+    assert len(cells) == 7
+    assert (cells[0].row_span, cells[0].column_span) == (2, 1)
+    assert cells[0].is_column_header is False
+    assert cells[0].is_row_header is (opening == "th")
+    assert (cells[1].row, cells[1].column, cells[1].column_span) == (0, 1, 2)
+    assert cells[1].is_column_header is True
+
+
+def test_mismatched_explicit_header_end_exports_complete_gfm_and_source_rows() -> None:
+    content = (
+        "<table><tr><th rowspan='2'>Label</td><th colspan='2'>Values (kg)</th></tr>"
+        "<tr><th>Prior</th><th>Current</th></tr>"
+        "<tr><td>Alpha</th><td>-2.50</td><td>0.2907</td></tr></table>"
+    )
+    markup, fragments = GlmSdkRemoteParser._render_regions(
+        [{"label": "table", "content": content, "bbox_2d": [50, 100, 950, 800]}], 1
+    )
+
+    assert len(fragments) == 1
+    fragment = fragments[0]
+    assert fragment.header_row_indices == (0, 1)
+    assert fragment.markdown == (
+        "| Label | Values (kg) |  |\n"
+        "| --- | --- | --- |\n"
+        "|  | Prior | Current |\n"
+        "| Alpha | -2.50 | 0.2907 |"
+    )
+    internal = DocumentIRService._table(fragment)
+    assert internal.header_rows == [0, 1]
+    assert len(internal.cells) == 7
+    assert internal.source_units == [1]
+    assert internal.cells[0].is_column_header is True
+    assert internal.cells[-3].is_column_header is False
+    joined, _plain = ExportService().join_document(
+        [PageParseResult(page_number=1, content=markup)],
+        preserve_page_breaks=True,
+        table_fragments=fragments,
+    )
+    assert "<table" not in joined.casefold()
+    assert fragment.markdown in joined
+    assert (
+        "<!-- table-source: sdk_p1_t1; source-page: 1; source-rows: 1-3; "
+        "logical-rows: 1-3; repeated-header-rows: 0 -->"
+    ) in joined
+
+
+@pytest.mark.parametrize(
+    "content",
+    [
+        "<table><tr><th>Outer<td>Inner</th></td></tr></table>",
+        "<table><tr><td>Outer<tr><th>Inner</td></tr></td></tr></table>",
+        "<table><tr><th>Outer<table><tr><td>Inner</th></tr></table></td></tr></table>",
+        "<table><tr><th>A</td><td rowspan='2'>B</td></tr>"
+        "<tr><td colspan='2'>Collision</th></tr></table>",
+        "<table><tr><th colspan='2001'>Too wide</td></tr></table>",
+    ],
+)
+def test_explicit_end_marker_recovery_does_not_relax_topology_rejection(content: str) -> None:
+    assert _html_table_layout(content) == ([], False, [])
+
+
 def test_html_spans_survive_in_ir_with_units_and_signed_values() -> None:
     fragment = _html_fragment(
         "<table><tr><th colspan='2'>筹资方式（万元）</th><th>金额</th></tr>"
@@ -207,25 +290,67 @@ def test_html_explicit_row_header_scope_does_not_expand_column_header_band() -> 
     ]
 
 
-def test_html_colspan_collision_with_prior_rowspan_keeps_raw_source() -> None:
+def test_html_colspan_collision_with_prior_rowspan_cannot_leak_raw_html() -> None:
     content = (
         "<table><tr><td>甲</td><td rowspan='2'>乙</td></tr><tr><td colspan='2'>丙</td></tr></table>"
     )
 
     assert _html_table_rows(content) == ([], False)
     assert _html_fragment(content) is None
-    markdown, fragments = GlmSdkRemoteParser._render_regions(
-        [{"label": "table", "content": content, "bbox_2d": [50, 100, 950, 800]}], 7
+    with pytest.raises(ValueError, match="^glm_sdk_unusable_table_structure$"):
+        GlmSdkRemoteParser._render_regions(
+            [{"label": "table", "content": content, "bbox_2d": [50, 100, 950, 800]}], 7
+        )
+
+
+async def test_unusable_sdk_html_marks_page_failed_without_publishing_raw_table(
+    native_pdf: Path,
+) -> None:
+    from app.models.parse_result import PageStatus, WarningSeverity
+
+    content = (
+        "<table><tr><td>First</td><td rowspan='2'>Owner</td></tr>"
+        "<tr><td colspan='2'>Conflicting anchor</td></tr></table>"
     )
-    assert not fragments
-    assert markdown == content
+
+    async def handler(_request: httpx.Request) -> httpx.Response:
+        return httpx.Response(
+            200,
+            json={
+                "layout_details": [[{
+                    "label": "table", "native_label": "table", "content": content,
+                    "bbox_2d": [50, 100, 950, 800],
+                }]],
+                "md_results": content,
+            },
+        )
+
+    async with httpx.AsyncClient(transport=httpx.MockTransport(handler)) as client:
+        parser = GlmSdkRemoteParser(
+            SimpleNamespace(
+                glm_ocr_enabled=True, glm_sdk_enabled=True, glm_sdk_orientation_enabled=False,
+                glm_sdk_url="http://sdk:5002/glmocr/parse", glm_sdk_max_retries=0,
+            ),
+            http_client=client,
+        )
+        result = await parser.parse(
+            _source(native_pdf), ContentParseOptions(), document_id="doc_bad_structure"
+        )
+
+    page = result.pages[0]
+    assert page.status == PageStatus.FAILED
+    assert page.content is None
+    assert result._table_fragments == []
+    assert [warning.code for warning in page.warnings] == ["glm_sdk_unusable_table_structure"]
+    assert page.warnings[0].severity == WarningSeverity.ERROR
+    assert "<table" not in (result.markdown or "").casefold()
 
 
 @pytest.mark.parametrize(
     "content",
     [
         "<table><tr><td rowspan='2001'>甲</td></tr></table>",
-        "<table><tr><td colspan='101'>甲</td></tr></table>",
+        "<table><tr><td colspan='2001'>甲</td></tr></table>",
         "<table><tr><td>甲</td></tr><tr><td rowspan='2000'>乙</td></tr></table>",
         "<table><tr><td rowspan='0'>甲</td></tr></table>",
         "<table><tr><td colspan='-1'>甲</td></tr></table>",
@@ -236,6 +361,60 @@ def test_html_colspan_collision_with_prior_rowspan_keeps_raw_source() -> None:
 def test_html_unproved_or_oversized_spans_are_not_clamped_into_false_topology(content: str) -> None:
     assert _html_table_rows(content) == ([], False)
     assert _html_fragment(content) is None
+
+
+def test_wide_source_grid_retains_every_anchor_and_span_without_column_clamping() -> None:
+    content = (
+        "<table><tr><th colspan='101'>Complete source header</th><th>Last</th></tr>"
+        "<tr><td colspan='101'>Original source value</td><td>9.25</td></tr></table>"
+    )
+    rows, has_header, cells = _html_table_layout(content)
+    assert has_header and len(rows) == 2 and len(rows[0]) == 102
+    assert rows[0][0] == "Complete source header" and rows[0][101] == "Last"
+    assert rows[1][0] == "Original source value" and rows[1][101] == "9.25"
+    assert [(c.row, c.column, c.column_span, c.text) for c in cells] == [
+        (0, 0, 101, "Complete source header"),
+        (0, 101, 1, "Last"),
+        (1, 0, 101, "Original source value"),
+        (1, 101, 1, "9.25"),
+    ]
+
+
+@pytest.mark.parametrize("rows,columns", [(1, 2000), (2000, 1), (100, 2000)])
+def test_source_grid_axis_and_area_boundary_is_accepted(rows: int, columns: int) -> None:
+    source = f"<table><tr><td rowspan='{rows}' colspan='{columns}'>All source</td></tr></table>"
+    matrix, _, cells = _html_table_layout(source)
+    assert len(matrix) == rows and len(matrix[0]) == columns
+    assert len(cells) == 1 and cells[0].text == "All source"
+    assert (cells[0].row_span, cells[0].column_span) == (rows, columns)
+
+
+def test_large_sparse_grid_is_rejected_by_full_projected_area_without_clamping() -> None:
+    # Each individual axis/span is legal, but the implied grid exceeds the
+    # former 100*2000 allocation budget even though only one cell is nonempty.
+    source = "<table><tr><td rowspan='101' colspan='2000'>Original</td></tr></table>"
+    assert _html_table_layout(source) == ([], False, [])
+    with pytest.raises(ValueError, match="^glm_sdk_unusable_table_structure$"):
+        GlmSdkRemoteParser._render_regions(
+            [{"label": "table", "content": source, "bbox_2d": [50, 100, 950, 800]}], 7
+        )
+
+
+def test_wide_colspan_still_cannot_cross_an_active_rowspan() -> None:
+    source = (
+        "<table><tr><td colspan='101'>First</td><td rowspan='2'>Owner</td></tr>"
+        "<tr><td colspan='102'>Conflicting source cell</td></tr></table>"
+    )
+    assert _html_table_layout(source) == ([], False, [])
+
+
+def test_wide_markdown_grid_uses_the_same_total_allocation_budget() -> None:
+    from app.parsers.glm_sdk_remote import _markdown_table_rows
+
+    wide = "|" + "|".join(["source"] * 101) + "|"
+    separator = "|" + "|".join(["---"] * 101) + "|"
+    assert _markdown_table_rows(wide + "\n" + separator) == [["source"] * 101]
+    assert _markdown_table_rows("\n".join([wide, separator] + [wide] * 1980)) == []
 
 
 async def test_pdf_page_is_physically_rotated_before_glm_submission(native_pdf: Path) -> None:

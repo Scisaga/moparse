@@ -1,0 +1,21 @@
+{
+  "schema": "moparse-V7-full550-private-archive-receipt/1",
+  "pass": true,
+  "manifest_sha256": "2c3be73fde93e658da04c457d78ab0a2a61151a0e114eb3a30eb21055a156d95",
+  "copied_files": 5391,
+  "copied_bytes": 241104387,
+  "all_source_archive_SHA_equal": true,
+  "benchmark_inputs": 17,
+  "benchmark_pages": 550,
+  "actual_job_status_counts": {
+    "completed": 16,
+    "partial": 1
+  },
+  "quality_fully_resolved": false,
+  "quality_reassessed": false,
+  "source_SQLite_connections": 0,
+  "source_database_writes": 0,
+  "HTTP_or_model_requests": 0,
+  "service_operations": 0,
+  "TTL_changes": 0
+}

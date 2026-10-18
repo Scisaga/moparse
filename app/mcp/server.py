@@ -39,7 +39,7 @@ def create_mcp(runtime: Callable[[], Runtime], settings: Settings) -> McpBundle:
     """Build the MCP server once so its session manager shares app lifespan."""
 
     server: MCPServer[Any] = MCPServer(
-        "MosaicParse",
+        settings.app_name,
         version=settings.version,
         instructions=(
             "Parse PDF, DOCX, PPTX, images, and standalone videos into GFM Markdown. "
@@ -188,6 +188,7 @@ def create_mcp(runtime: Callable[[], Runtime], settings: Settings) -> McpBundle:
         except ServiceError as exc:
             return _service_error(exc)
 
+    @server.resource("moparse://health", mime_type="application/json")
     @server.resource("mosaicparse://health", mime_type="application/json")
     async def health_resource() -> dict[str, object]:
         """Return process and queue health without secrets."""
@@ -201,6 +202,7 @@ def create_mcp(runtime: Callable[[], Runtime], settings: Settings) -> McpBundle:
             "queue_capacity": service.settings.max_queued_jobs,
         }
 
+    @server.resource("moparse://backends", mime_type="application/json")
     @server.resource("mosaicparse://backends", mime_type="application/json")
     async def backends_resource() -> dict[str, object]:
         """Return actual Docling, GLM-OCR, and SDK probes."""
@@ -208,12 +210,13 @@ def create_mcp(runtime: Callable[[], Runtime], settings: Settings) -> McpBundle:
         items = await runtime().parser_service.probe_backends()
         return {"backends": [item.model_dump(mode="json", exclude_none=True) for item in items]}
 
+    @server.resource("moparse://usage", mime_type="text/markdown")
     @server.resource("mosaicparse://usage", mime_type="text/markdown")
     def usage_resource() -> str:
         """Describe safe routing and the service boundary."""
 
         return (
-            "# MosaicParse usage\n\n"
+            "# moparse usage\n\n"
             "- Scanned PDF pages are processed adaptively by default (`scan_policy=auto`).\n"
             "- Use `scan_policy=skip` only to retain scanned pages as assets without OCR or table extraction.\n"
             "- Inputs are HTTP(S) URLs or base64 data; local filesystem paths are rejected.\n"
@@ -228,7 +231,7 @@ def create_mcp(runtime: Callable[[], Runtime], settings: Settings) -> McpBundle:
         """Parse content with automatic scanned-page routing."""
 
         return (
-            f"Parse the {content_kind} with MosaicParse using scan_policy=auto. Return GFM "
+            f"Parse the {content_kind} with moparse using scan_policy=auto. Return GFM "
             "Markdown while preserving headings, lists, paragraphs, units, and logical tables. "
             "Use scan_policy=skip only when scanned PDF pages must remain unprocessed assets."
         )

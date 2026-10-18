@@ -1,0 +1,40 @@
+{
+  "schema": "moparse-method/1",
+  "id": "archive-paddle15-glm",
+  "label": "Archived PaddleOCR-VL 1.5 + GLM",
+  "status": "archived",
+  "recipe": {
+    "routing": {
+      "policy": "native text and embedded-image coverage, independent of model answers",
+      "native": {
+        "model": "PaddleOCR-VL",
+        "version": "1.5",
+        "orientation_preprocess": true,
+        "DPI": 200
+      },
+      "scan_mixed": {
+        "model": "GLM-OCR",
+        "model_revision": "recorded per deployed image; not inferred from model name",
+        "SDK_version": "0.1.5",
+        "orientation_preprocess": true,
+        "DPI": 200,
+        "precision": "FP16",
+        "device": "GPU1"
+      }
+    },
+    "public_output": {
+      "format": "faithful logical-table GFM",
+      "table_source": true,
+      "coordinates": false,
+      "semantic_XML": false,
+      "header_merge": "only complete source-backed header and column-meaning equivalence"
+    },
+    "adapter_version": "record actual Git SHA per run; component FULL output is a different stage"
+  },
+  "fingerprint": "6586965f62d8303ebb559881b9532c26011c4cdba949b228273bfe0da8cc67aa",
+  "deployment_gate": "Full HTTP/public GFM and source annotations must pass; component runs alone do not qualify",
+  "reuse": {
+    "functional": "exact source/input/weights/settings and output-stage hashes required",
+    "timing": "same cohort/hardware/power/time scope/warmup; never sum component work as end-to-end latency"
+  }
+}

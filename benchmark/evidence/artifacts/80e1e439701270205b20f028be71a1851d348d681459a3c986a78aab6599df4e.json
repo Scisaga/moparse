@@ -1,0 +1,377 @@
+{
+  "seconds": 3730.631305691786,
+  "scope": "full HTTP upload through saved Markdown and public assets",
+  "power_limit_W": 220,
+  "hardware_fingerprint": "RTX2080Ti22GiB-dual-shared-host",
+  "warmup": "vLLM cold multimodal/prefix cache at cohort504 start; worker ONNX resident; holdout39 follows without restart",
+  "own_GPU_peak_MiB": 3528.0,
+  "shared_GPU_energy_Wh": 114.97296818811512,
+  "shared_GPU_energy_scope": "GPU1 entire device over observed adjacent samples inside this cohort; includes other services; boundary intervals not extrapolated",
+  "all_shared_devices": {
+    "GPU-95b5895b-c5f3-440b-4bd2-7160ec4da0d1": {
+      "index": 0,
+      "name": "NVIDIA GeForce RTX 2080 Ti",
+      "energy_joules_shared_device": 655017.1844820927,
+      "energy_intervals_observed": 1848,
+      "energy_gaps": 0,
+      "gpu_utilization_samples": 1849,
+      "gpu_utilization_sum": 103586.0,
+      "memory_used_peak_MiB_shared_device": 19920.0,
+      "gpu_utilization_mean_pct_shared_device": 56.02271498107085
+    },
+    "GPU-87a92d2a-6521-1e36-1ca9-21fd8085b365": {
+      "index": 1,
+      "name": "NVIDIA GeForce RTX 2080 Ti",
+      "energy_joules_shared_device": 413902.6854772144,
+      "energy_intervals_observed": 1848,
+      "energy_gaps": 0,
+      "gpu_utilization_samples": 1849,
+      "gpu_utilization_sum": 54268.0,
+      "memory_used_peak_MiB_shared_device": 20422.0,
+      "gpu_utilization_mean_pct_shared_device": 29.349918875067605
+    }
+  },
+  "owned_containers": {
+    "moparse-candidate": {
+      "gpu_memory_peak_MiB_by_uuid": {},
+      "sm_observed_sum": 0.0,
+      "sm_samples": 0,
+      "cpu_pct_peak_one_core_100": 555.64,
+      "memory_peak_bytes": 1075889307,
+      "sm_mean_observed_process_sum_pct": null
+    },
+    "moparse-native-worker": {
+      "gpu_memory_peak_MiB_by_uuid": {},
+      "sm_observed_sum": 0.0,
+      "sm_samples": 0,
+      "cpu_pct_peak_one_core_100": 431.28,
+      "memory_peak_bytes": 7174742867,
+      "sm_mean_observed_process_sum_pct": null
+    },
+    "moparse-mineru-vllm": {
+      "gpu_memory_peak_MiB_by_uuid": {
+        "GPU-87a92d2a-6521-1e36-1ca9-21fd8085b365": 3528.0
+      },
+      "sm_observed_sum": 40405.0,
+      "sm_samples": 1443,
+      "cpu_pct_peak_one_core_100": 148.84,
+      "memory_peak_bytes": 7506529091,
+      "sm_mean_observed_process_sum_pct": 28.000693000693
+    }
+  },
+  "observation_errors_by_source": {
+    "vllm_metrics": 20
+  },
+  "vllm_metrics": [
+    {
+      "name": "vllm:num_requests_running",
+      "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+      "first": 2.0,
+      "last": 2.0,
+      "counter_resets": 0,
+      "observed_counter_increase": null
+    },
+    {
+      "name": "vllm:num_requests_waiting",
+      "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+      "first": 0.0,
+      "last": 0.0,
+      "counter_resets": 0,
+      "observed_counter_increase": null
+    },
+    {
+      "name": "vllm:kv_cache_usage_perc",
+      "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+      "first": 0.4008810572687225,
+      "last": 0.4243759177679882,
+      "counter_resets": 0,
+      "observed_counter_increase": null
+    },
+    {
+      "name": "vllm:prefix_cache_queries_total",
+      "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+      "first": 15549.0,
+      "last": 1072044.0,
+      "counter_resets": 0,
+      "observed_counter_increase": 1056495.0
+    },
+    {
+      "name": "vllm:prefix_cache_queries_created",
+      "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+      "first": 1792260425.86529,
+      "last": 1792260425.86529,
+      "counter_resets": 0,
+      "observed_counter_increase": null
+    },
+    {
+      "name": "vllm:prefix_cache_hits_total",
+      "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+      "first": 0.0,
+      "last": 0.0,
+      "counter_resets": 0,
+      "observed_counter_increase": 0.0
+    },
+    {
+      "name": "vllm:prefix_cache_hits_created",
+      "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+      "first": 1792260425.86534,
+      "last": 1792260425.86534,
+      "counter_resets": 0,
+      "observed_counter_increase": null
+    },
+    {
+      "name": "vllm:num_preemptions_total",
+      "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+      "first": 0.0,
+      "last": 0.0,
+      "counter_resets": 0,
+      "observed_counter_increase": 0.0
+    },
+    {
+      "name": "vllm:num_preemptions_created",
+      "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+      "first": 1792260425.865541,
+      "last": 1792260425.865541,
+      "counter_resets": 0,
+      "observed_counter_increase": null
+    },
+    {
+      "name": "vllm:prompt_tokens_total",
+      "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+      "first": 15549.0,
+      "last": 1072044.0,
+      "counter_resets": 0,
+      "observed_counter_increase": 1056495.0
+    },
+    {
+      "name": "vllm:prompt_tokens_created",
+      "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+      "first": 1792260425.8655777,
+      "last": 1792260425.8655777,
+      "counter_resets": 0,
+      "observed_counter_increase": null
+    },
+    {
+      "name": "vllm:prompt_tokens_by_source_total",
+      "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\",source=\"local_compute\"}",
+      "first": 15549.0,
+      "last": 1072044.0,
+      "counter_resets": 0,
+      "observed_counter_increase": 1056495.0
+    },
+    {
+      "name": "vllm:prompt_tokens_by_source_total",
+      "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\",source=\"local_cache_hit\"}",
+      "first": 0.0,
+      "last": 0.0,
+      "counter_resets": 0,
+      "observed_counter_increase": 0.0
+    },
+    {
+      "name": "vllm:prompt_tokens_by_source_total",
+      "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\",source=\"external_kv_transfer\"}",
+      "first": 0.0,
+      "last": 0.0,
+      "counter_resets": 0,
+      "observed_counter_increase": 0.0
+    },
+    {
+      "name": "vllm:prompt_tokens_by_source_created",
+      "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\",source=\"local_compute\"}",
+      "first": 1792260425.8656247,
+      "last": 1792260425.8656247,
+      "counter_resets": 0,
+      "observed_counter_increase": null
+    },
+    {
+      "name": "vllm:prompt_tokens_by_source_created",
+      "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\",source=\"local_cache_hit\"}",
+      "first": 1792260425.8656447,
+      "last": 1792260425.8656447,
+      "counter_resets": 0,
+      "observed_counter_increase": null
+    },
+    {
+      "name": "vllm:prompt_tokens_by_source_created",
+      "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\",source=\"external_kv_transfer\"}",
+      "first": 1792260425.8656619,
+      "last": 1792260425.8656619,
+      "counter_resets": 0,
+      "observed_counter_increase": null
+    },
+    {
+      "name": "vllm:prompt_tokens_cached_total",
+      "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+      "first": 0.0,
+      "last": 0.0,
+      "counter_resets": 0,
+      "observed_counter_increase": 0.0
+    },
+    {
+      "name": "vllm:prompt_tokens_cached_created",
+      "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+      "first": 1792260425.8657007,
+      "last": 1792260425.8657007,
+      "counter_resets": 0,
+      "observed_counter_increase": null
+    },
+    {
+      "name": "vllm:prompt_tokens_recomputed_total",
+      "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+      "first": 0.0,
+      "last": 0.0,
+      "counter_resets": 0,
+      "observed_counter_increase": 0.0
+    },
+    {
+      "name": "vllm:prompt_tokens_recomputed_created",
+      "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+      "first": 1792260425.8657389,
+      "last": 1792260425.8657389,
+      "counter_resets": 0,
+      "observed_counter_increase": null
+    },
+    {
+      "name": "vllm:generation_tokens_total",
+      "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+      "first": 3053.0,
+      "last": 277593.0,
+      "counter_resets": 0,
+      "observed_counter_increase": 274540.0
+    },
+    {
+      "name": "vllm:generation_tokens_created",
+      "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+      "first": 1792260425.865782,
+      "last": 1792260425.865782,
+      "counter_resets": 0,
+      "observed_counter_increase": null
+    },
+    {
+      "name": "vllm:request_success_total",
+      "labels": "{engine=\"0\",finished_reason=\"stop\",model_name=\"mineru2.5-pro\"}",
+      "first": 10.0,
+      "last": 1069.0,
+      "counter_resets": 0,
+      "observed_counter_increase": 1059.0
+    },
+    {
+      "name": "vllm:request_success_total",
+      "labels": "{engine=\"0\",finished_reason=\"length\",model_name=\"mineru2.5-pro\"}",
+      "first": 0.0,
+      "last": 0.0,
+      "counter_resets": 0,
+      "observed_counter_increase": 0.0
+    },
+    {
+      "name": "vllm:request_success_total",
+      "labels": "{engine=\"0\",finished_reason=\"abort\",model_name=\"mineru2.5-pro\"}",
+      "first": 0.0,
+      "last": 0.0,
+      "counter_resets": 0,
+      "observed_counter_increase": 0.0
+    },
+    {
+      "name": "vllm:request_success_total",
+      "labels": "{engine=\"0\",finished_reason=\"error\",model_name=\"mineru2.5-pro\"}",
+      "first": 0.0,
+      "last": 0.0,
+      "counter_resets": 0,
+      "observed_counter_increase": 0.0
+    },
+    {
+      "name": "vllm:request_success_total",
+      "labels": "{engine=\"0\",finished_reason=\"repetition\",model_name=\"mineru2.5-pro\"}",
+      "first": 0.0,
+      "last": 0.0,
+      "counter_resets": 0,
+      "observed_counter_increase": 0.0
+    },
+    {
+      "name": "vllm:request_success_created",
+      "labels": "{engine=\"0\",finished_reason=\"stop\",model_name=\"mineru2.5-pro\"}",
+      "first": 1792260425.8658462,
+      "last": 1792260425.8658462,
+      "counter_resets": 0,
+      "observed_counter_increase": null
+    },
+    {
+      "name": "vllm:request_success_created",
+      "labels": "{engine=\"0\",finished_reason=\"length\",model_name=\"mineru2.5-pro\"}",
+      "first": 1792260425.86588,
+      "last": 1792260425.86588,
+      "counter_resets": 0,
+      "observed_counter_increase": null
+    },
+    {
+      "name": "vllm:request_success_created",
+      "labels": "{engine=\"0\",finished_reason=\"abort\",model_name=\"mineru2.5-pro\"}",
+      "first": 1792260425.865901,
+      "last": 1792260425.865901,
+      "counter_resets": 0,
+      "observed_counter_increase": null
+    },
+    {
+      "name": "vllm:request_success_created",
+      "labels": "{engine=\"0\",finished_reason=\"error\",model_name=\"mineru2.5-pro\"}",
+      "first": 1792260425.86592,
+      "last": 1792260425.86592,
+      "counter_resets": 0,
+      "observed_counter_increase": null
+    },
+    {
+      "name": "vllm:request_success_created",
+      "labels": "{engine=\"0\",finished_reason=\"repetition\",model_name=\"mineru2.5-pro\"}",
+      "first": 1792260425.8659387,
+      "last": 1792260425.8659387,
+      "counter_resets": 0,
+      "observed_counter_increase": null
+    },
+    {
+      "name": "vllm:request_prompt_tokens_count",
+      "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+      "first": 10.0,
+      "last": 1069.0,
+      "counter_resets": 0,
+      "observed_counter_increase": null
+    },
+    {
+      "name": "vllm:request_prompt_tokens_sum",
+      "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+      "first": 11872.0,
+      "last": 1068033.0,
+      "counter_resets": 0,
+      "observed_counter_increase": null
+    },
+    {
+      "name": "vllm:request_generation_tokens_count",
+      "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+      "first": 10.0,
+      "last": 1069.0,
+      "counter_resets": 0,
+      "observed_counter_increase": null
+    },
+    {
+      "name": "vllm:request_generation_tokens_sum",
+      "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+      "first": 2378.0,
+      "last": 276992.0,
+      "counter_resets": 0,
+      "observed_counter_increase": null
+    }
+  ],
+  "resource_window": {
+    "path": "benchmark/runs/candidate-http-20261018/regression504-resource-window.json",
+    "sha256": "0b496019461719df8e41fea80b3b1eb37493e8361dfa1efbb48611bee8272a9c",
+    "bytes": 12578
+  },
+  "http_performance": {
+    "scope": "full HTTP upload through saved Markdown and public assets",
+    "documents": 11,
+    "total_seconds": 3730.631305691786,
+    "median_document_seconds": 100.66305633401498,
+    "p95_document_seconds": 1150.1736741670175,
+    "per_page_time_limit": "document duration/page count is not measured per-page latency"
+  },
+  "model_forward_observation_limit": "Observed vLLM counter increases in this cohort do not identify every individual HTTP request"
+}

@@ -5,7 +5,7 @@ from __future__ import annotations
 import asyncio
 import logging
 import time
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from pathlib import Path
 
 from app.models.backend import BackendStatus
@@ -26,6 +26,7 @@ from app.models.parse_result import (
     WarningSeverity,
 )
 from app.models.source import StoredSource
+from app.models.source_evidence import SourceRegionEvidence
 from app.parsers import (
     DoclingStandardParser,
     GlmOcrRemoteAdapter,
@@ -35,6 +36,7 @@ from app.parsers import (
     ParserUnavailableError,
     ProgressCallback,
 )
+from app.parsers.mineru_native_remote import MinerUNativeRemoteParser
 from app.security.file_validation import (
     DOCX_MIME,
     IMAGE_MIME_TYPES,
@@ -46,9 +48,11 @@ from app.security.file_validation import (
 from app.services.evidence_service import PageEvidence, PageEvidenceService
 from app.services.export_service import ExportService
 from app.services.glm_table_service import GlmTableService
+from app.services.header_verification_service import DoclingHeaderVerificationService
 from app.services.ir_service import DocumentIRService
 from app.services.multimodal_service import MultimodalService
 from app.services.quality_service import QualityService
+from app.services.source_verification_service import SourceVerificationService
 from app.services.storage_service import StorageService
 from app.services.table_service import TableFragment
 from app.utils.ids import new_content_id
@@ -91,7 +95,28 @@ class ParserService:
     def _build_adapters(self) -> None:
         self.glm_adapter = GlmOcrRemoteAdapter(self.settings)
         self.glm_sdk_parser = GlmSdkRemoteParser(self.settings)
-        self.standard_parser = DoclingStandardParser(self.settings, self.glm_adapter)
+        self.standard_parser = (
+            MinerUNativeRemoteParser(self.settings, storage_service=StorageService(self.settings))
+            if setting(self.settings, "native_parser_backend", "docling") == "mineru"
+            else DoclingStandardParser(self.settings, self.glm_adapter)
+        )
+        self.image_parser = (
+            self.glm_sdk_parser
+            if isinstance(self.standard_parser, MinerUNativeRemoteParser)
+            else self.standard_parser
+        )
+        self.header_verifier = (
+            DoclingHeaderVerificationService(self.settings, self.glm_adapter)
+            if isinstance(self.standard_parser, MinerUNativeRemoteParser)
+            and setting(self.settings, "mineru_header_verifier", "off") == "docling"
+            else None
+        )
+        self.source_verifier = (
+            SourceVerificationService(self.header_verifier.parser)
+            if self.header_verifier is not None
+            and setting(self.settings, "mineru_source_verifier", "off") == "docling"
+            else None
+        )
         self.glm_table_service = GlmTableService()
         self.multimodal_service = MultimodalService(
             self.settings, StorageService(self.settings), self.glm_adapter
@@ -100,10 +125,10 @@ class ParserService:
     async def initialize(self) -> None:
         if self._initialized:
             return
-        await asyncio.gather(
-            self.standard_parser.initialize(),
-            self.glm_sdk_parser.initialize(),
-        )
+        adapters = [self.standard_parser.initialize(), self.glm_sdk_parser.initialize()]
+        if self.header_verifier is not None:
+            adapters.append(self.header_verifier.initialize())
+        await asyncio.gather(*adapters)
         # A missing optional backend must not prevent CPU/native-text startup.
         self._initialized = True
 
@@ -124,12 +149,14 @@ class ParserService:
             await self._end_exclusive_lifecycle()
 
     async def _close_adapters(self) -> None:
-        await asyncio.gather(
+        adapters = [
             self.standard_parser.close(),
             self.glm_adapter.close(),
             self.glm_sdk_parser.close(),
-            return_exceptions=True,
-        )
+        ]
+        if self.header_verifier is not None:
+            adapters.append(self.header_verifier.close())
+        await asyncio.gather(*adapters, return_exceptions=True)
         self._initialized = False
 
     async def _begin_exclusive_lifecycle(self) -> None:
@@ -172,7 +199,10 @@ class ParserService:
             self.glm_adapter.probe(),
             self.glm_sdk_parser.probe(),
         )
-        return [docling, glm, glm_sdk]
+        backends = [docling, glm, glm_sdk]
+        if self.header_verifier is not None:
+            backends.append(await self.header_verifier.probe())
+        return backends
 
     def _coerce_source(self, source: StoredSource | str | Path) -> StoredSource:
         if isinstance(source, StoredSource):
@@ -201,11 +231,15 @@ class ParserService:
 
     def _finalize_exports(self, result: DocumentParseResult, options: ContentParseOptions) -> None:
         for page in result.pages:
-            page.plain_text = self.export_service.markdown_to_text(page.content or "")
+            page.plain_text = self.export_service.markdown_to_text(
+                page.content or "", source_regions=result._source_regions
+            )
         markdown, plain_text = self.export_service.join_document(
             result.pages,
             preserve_page_breaks=True,
             table_fragments=result._table_fragments,
+            page_furniture=result._page_furniture,
+            source_regions=result._source_regions,
             merge_cross_page_tables=bool(
                 setting(self.settings, "cross_page_table_merge_enabled", True)
             ),
@@ -289,12 +323,16 @@ class ParserService:
             )
             returned = [page.page_number for page in native.pages]
             if set(returned) != native_pages or len(returned) != len(native_pages):
-                raise ParserError("Docling returned an incomplete or duplicate native page set")
+                raise ParserError("the native parser returned an incomplete or duplicate page set")
             seeded_pages = {page.page_number: page for page in result.pages}
             for page in native.pages:
                 seeded = seeded_pages.get(page.page_number)
                 if seeded is not None:
                     page.diagnostics = seeded.diagnostics
+                    if page.diagnostics is not None and isinstance(
+                        self.standard_parser, MinerUNativeRemoteParser
+                    ):
+                        page.diagnostics.selected_strategy = SelectionStrategy.MINERU
             native_numbers = {page.page_number for page in native.pages}
             native.pages.extend(
                 page for number, page in seeded_pages.items() if number not in native_numbers
@@ -524,6 +562,8 @@ class ParserService:
                 try:
                     if not self._initialized:
                         await self.initialize()
+                    if stored.mime_type == "application/pdf" and self.header_verifier is not None:
+                        await self.header_verifier.require_ready()
                     if stored.mime_type in VIDEO_MIME_TYPES:
                         return await self.multimodal_service.parse_video(
                             stored,
@@ -540,7 +580,7 @@ class ParserService:
                                 content_id=identifier,
                                 progress_callback=progress_callback,
                                 cancel_event=cancel_event,
-                                image_parser=self.standard_parser,
+                                image_parser=self.image_parser,
                             )
                     # Resolve after the reload gate: a waiter must never retain a
                     # parser instance that reload has just closed and replaced.
@@ -574,6 +614,59 @@ class ParserService:
                                 cancel_event=cancel_event,
                                 progress_callback=progress_callback,
                             )
+                        if stored.mime_type == "application/pdf" and self.source_verifier is not None:
+                            if progress_callback is not None:
+                                value = progress_callback(
+                                    len(result.pages), len(result.pages), "postprocess.sources.started"
+                                )
+                                if asyncio.iscoroutine(value):
+                                    await value
+                            await self.source_verifier.apply(
+                                result, stored, parsed_options, cancel_event=cancel_event
+                            )
+                            await StorageService(self.settings).write_source_verification_evidence(
+                                result.document_id,
+                                {
+                                    "schema": "native-source-verification/1",
+                                    "observations": result._source_verification,
+                                    "source_regions": [
+                                        asdict(region)
+                                        for region in result._source_regions
+                                        if isinstance(region, SourceRegionEvidence)
+                                    ],
+                                },
+                            )
+                            if progress_callback is not None:
+                                value = progress_callback(
+                                    len(result.pages), len(result.pages), "postprocess.sources.completed"
+                                )
+                                if asyncio.iscoroutine(value):
+                                    await value
+                        if (
+                            stored.mime_type == "application/pdf"
+                            and self.header_verifier is not None
+                        ):
+                            if progress_callback is not None:
+                                value = progress_callback(
+                                    len(result.pages),
+                                    len(result.pages),
+                                    "postprocess.headers.started",
+                                )
+                                if asyncio.iscoroutine(value):
+                                    await value
+                            await self.header_verifier.apply(
+                                result, stored, parsed_options, cancel_event=cancel_event
+                            )
+                            if progress_callback is not None:
+                                value = progress_callback(
+                                    len(result.pages),
+                                    len(result.pages),
+                                    "postprocess.headers.completed",
+                                )
+                                if asyncio.iscoroutine(value):
+                                    await value
+                        if self.source_verifier is not None:
+                            result.pipeline.primary += "+docling-source-verifier"
                         self._finalize_exports(result, parsed_options)
                         self.quality_service.assess(result)
                         result.usage.duration_ms = max(
@@ -590,7 +683,7 @@ class ParserService:
                             stored,
                             evidence_by_page,
                             parsed_options,
-                            image_parser=self.standard_parser,
+                            image_parser=self.image_parser,
                             cancel_event=cancel_event,
                         )
                         result.markdown = result.parse_result.renderings.markdown

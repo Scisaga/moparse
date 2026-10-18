@@ -1,0 +1,52 @@
+{
+  "schema": "moparse-header-stage-case-observation/1",
+  "observed_at": "2026-10-17T23:00:32.769907+00:00",
+  "document_id": "holdout-census-samoa-1930",
+  "source_sha256": "4ebad09d258f11e8d4e04c3f5f0af1493d0622672209a71bb175f7f0fc4ac77d",
+  "page_count": 12,
+  "captured_summary": {
+    "path": "benchmark/runs/header-v4-http-20261018/holdout39/cases/holdout-census-samoa-1930/summary.json",
+    "sha256": "73db92edcd187df57bb848ae86cecc059cdd7e850c4faa97a41fc8ad652e49ef",
+    "bytes": 5228
+  },
+  "received_MD_sha256": "02ef7c08b820aa554acb51438f653ce78fa1733aea28875572fb5ca93ec79f31",
+  "job_id": "job_01M561BZS9326R0KTV95JRBBF1",
+  "actual_storage_identity": {
+    "container": "moparse-candidate-header-v4",
+    "container_id": "0e8ca85a3f0337abce45491fd690c2a02965c050e36ce6c26e007b13a9d2fdcb",
+    "deployed_image_id": "sha256:427a7cdd741b69845fcf8c6c1f4db6f9f5db92897cb2ce40af99747300bcff7a",
+    "data_volume": {
+      "Type": "volume",
+      "Name": "moparse-candidate-header-v4-data",
+      "Source": "/var/lib/docker/volumes/moparse-candidate-header-v4-data/_data",
+      "Destination": "/data",
+      "RW": true
+    },
+    "deployment": {
+      "path": "benchmark/runs/header-v4-http-20261018/deployment-before.json",
+      "sha256": "2ceae920c4cc46bd65360b85e6b0fae347138b34e97cb08a204523b349d48ff6",
+      "bytes": 99755
+    },
+    "container_environment_read": false
+  },
+  "selected_warning_code": "independent_header_verification_used",
+  "projected_detail_fields": [
+    "duration_ms",
+    "pages",
+    "candidate_pairs",
+    "accepted_pairs"
+  ],
+  "selected_records": [],
+  "stage_wall_clock_seconds": null,
+  "warning_file": {
+    "container_path": "/data/jobs/job_01M561BZS9326R0KTV95JRBBF1/logs/warnings.json",
+    "host_path": "/var/lib/docker/volumes/moparse-candidate-header-v4-data/_data/jobs/job_01M561BZS9326R0KTV95JRBBF1/logs/warnings.json",
+    "exists": true,
+    "sha256": "6e3c7cc2b4cd9ef80287a560d9eb3870653ee0a03be304828bf2e42d32ad5f8c",
+    "bytes": 2989
+  },
+  "other_warnings_exported": false,
+  "model_or_API_requests": false,
+  "timing_scope": "HeaderService independent CPU parser plus cached-header verification elapsed wall clock; not GPU-forward time, CPU-seconds or entire request latency",
+  "observation_status": "unknown_no_selected_code; absence_not_zero"
+}

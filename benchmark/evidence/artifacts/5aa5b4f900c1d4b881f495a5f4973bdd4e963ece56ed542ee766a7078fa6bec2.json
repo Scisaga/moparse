@@ -1,0 +1,295 @@
+{
+  "schema": "moparse-original31-independent-source-safe-summary/1",
+  "created_at": "2026-10-18T02:45:33.084815+00:00",
+  "scope": "V7 fresh actual whole4page and27page HTTP originals only, originalcells/spans/periods and continuation; not complete504/550 or production159 acceptance",
+  "private_original_proof": {
+    "path": "benchmark/runs/v7-original-issues-independent-20261018/v7-two-original-issues-proof.json",
+    "sha256": "3ccf879dc27f2adbc9b91680e08dc59ae79c2c7670e5bc1dc172dba12ed9ec55",
+    "bytes": 20804
+  },
+  "private_source_context_proof": {
+    "path": "benchmark/runs/v7-original-issues-independent-20261018/source-context-and-acceptance-proof.json",
+    "sha256": "ca112328936165a5dbbaac927d09091bf36803acc6e464803294de60632428f7",
+    "bytes": 7336
+  },
+  "method_id": "mineru-advanced-txt-vllm-c2-docling-source-glm-v7",
+  "fingerprint": "e760367d7fb88f11a7bc0bb5388db12ebe7f4fc54983b1ac8559d266736c11c7",
+  "documents": [
+    {
+      "document_id": "1225473526",
+      "MD_SHA256": "b9f573367c9fa9ac9dc0d2ce179506c53782cfc2bd1006473b622ebb28ee0ad1",
+      "MD_bytes": 52978,
+      "source_SHA256": "787297535ba74a4170cc859ae68f15f946f6dfd0bfc14a1e1fa0e6d068ba2b19",
+      "request_SHA256": "b46d2cbb22167573db5b4b925bddd89241c40dcbdc51cd0cbfd2ef826987ab15",
+      "capture_summary_SHA256": "2842ed76d84b698a6f1f8fb1b12316400b2be27d686f3705123ba75f7b394f19",
+      "job": "job_01M56CJ1M6DNZJWNZARW570ZJ9",
+      "status": "completed",
+      "whole_original_auto_omits_unit_range": true,
+      "downloaded_and_persisted_HTTP_bytes_identical": true,
+      "actual_candidate_disk_SHA256": "b9f573367c9fa9ac9dc0d2ce179506c53782cfc2bd1006473b622ebb28ee0ad1",
+      "actual_candidate_disk_bytes_equal_HTTP": true
+    },
+    {
+      "document_id": "1225474693",
+      "MD_SHA256": "b021b0375af7ced8a02975afa6bec641974986885338308afc58ff00e1a73681",
+      "MD_bytes": 8399,
+      "source_SHA256": "dc7f5b3bfdc5a5c69b9cf4b2a9e0d28e2f9ee0b2464770fb8a910fea688ee775",
+      "request_SHA256": "858e01445d0324f03bc079323d5bf91dcb2bf38a6e820f4cb1a04a7aa45c9db6",
+      "capture_summary_SHA256": "c1b0506e290ea9210311630c29e46164ef3cf11f0c749b492f4f8368566aaf6b",
+      "job": "job_01M56CW5R7156EZRAD2Q2Z5SJ6",
+      "status": "completed",
+      "whole_original_auto_omits_unit_range": true,
+      "downloaded_and_persisted_HTTP_bytes_identical": true,
+      "actual_candidate_disk_SHA256": "b021b0375af7ced8a02975afa6bec641974986885338308afc58ff00e1a73681",
+      "actual_candidate_disk_bytes_equal_HTTP": true
+    }
+  ],
+  "all_two_source_functional_checks_pass": true,
+  "strict_original_surface_all_pass": false,
+  "financial": {
+    "distinct_original_period_scope_and_table_ids": true,
+    "full_original_positions": 48,
+    "tables": [
+      {
+        "source_page": 2,
+        "source_ordinal": 3,
+        "table_id": "mineru_p2_t3",
+        "positions": 12,
+        "nonempty_source_cells": 11,
+        "raw_surface_exact": true,
+        "width_equivalent": true,
+        "pass": true,
+        "complete_original_header_width_equivalent": true,
+        "actual_complete_header_literal": [
+          "",
+          "本报告期末",
+          "上年度末",
+          "本报告期末比上年度末增减(%)"
+        ],
+        "source_rows": [
+          {
+            "fragment": "mineru_p2_t3",
+            "page": 2,
+            "source_rows": "1-3",
+            "logical_rows": "1-3",
+            "repeated_header_rows": 0
+          }
+        ],
+        "spans_match": true
+      },
+      {
+        "source_page": 3,
+        "source_ordinal": 1,
+        "table_id": "mineru_p3_t1",
+        "positions": 36,
+        "nonempty_source_cells": 35,
+        "raw_surface_exact": false,
+        "width_equivalent": true,
+        "pass": true,
+        "complete_original_header_width_equivalent": true,
+        "actual_complete_header_literal": [
+          "",
+          "本报告期",
+          "上年同期",
+          "本报告期比上年同期增减(%)"
+        ],
+        "source_rows": [
+          {
+            "fragment": "mineru_p3_t1",
+            "page": 3,
+            "source_rows": "1-9",
+            "logical_rows": "1-9",
+            "repeated_header_rows": 0
+          }
+        ],
+        "spans_match": true
+      }
+    ],
+    "acceptance_original_facts": {
+      "asset_source_scope": [
+        "",
+        "本报告期末",
+        "上年度末",
+        "本报告期末比上年度末增减(%)"
+      ],
+      "flow_source_scope": [
+        "",
+        "本报告期",
+        "上年同期",
+        "本报告期比上年同期增减(%)"
+      ],
+      "total_assets": [
+        "21,467,154,275.58",
+        "21,158,183,575.04"
+      ],
+      "revenue": [
+        "4,607,261,132.46",
+        "5,093,234,252.91"
+      ],
+      "attributable_net_profit": [
+        "645,981,172.66",
+        "676,061,297.92"
+      ],
+      "basic_EPS_label": "基本每股收益(元/股)",
+      "basic_EPS_values": [
+        "0.2907",
+        "0.3042"
+      ]
+    },
+    "source_period_inference": false,
+    "width_only_mismatch_cells": 3
+  },
+  "funding": {
+    "table_id": "mineru_p7_t2",
+    "source_page": 7,
+    "positions": 44,
+    "nonempty_source_cells": 31,
+    "spans_match": true,
+    "actual_spans": [
+      [
+        0,
+        0,
+        1,
+        2
+      ],
+      [
+        0,
+        2,
+        1,
+        2
+      ],
+      [
+        1,
+        0,
+        8,
+        1
+      ],
+      [
+        9,
+        0,
+        1,
+        2
+      ],
+      [
+        9,
+        2,
+        1,
+        2
+      ],
+      [
+        10,
+        0,
+        1,
+        2
+      ],
+      [
+        10,
+        2,
+        1,
+        2
+      ]
+    ],
+    "expected_spans": [
+      [
+        0,
+        0,
+        1,
+        2
+      ],
+      [
+        0,
+        2,
+        1,
+        2
+      ],
+      [
+        1,
+        0,
+        8,
+        1
+      ],
+      [
+        9,
+        0,
+        1,
+        2
+      ],
+      [
+        9,
+        2,
+        1,
+        2
+      ],
+      [
+        10,
+        0,
+        1,
+        2
+      ],
+      [
+        10,
+        2,
+        1,
+        2
+      ]
+    ],
+    "source_rows": [
+      {
+        "fragment": "mineru_p7_t2",
+        "page": 7,
+        "source_rows": "1-11",
+        "logical_rows": "1-11",
+        "repeated_header_rows": 0
+      }
+    ],
+    "unit_preserved": true,
+    "six_character_anchor_preserved": true,
+    "anchor_spans_eight_rows": true,
+    "unit": "万元"
+  },
+  "normal_continuation": {
+    "functional_pass": true,
+    "unchanged_original_strict_pass": false,
+    "ASCII_width_equivalent_grid": true,
+    "complete_header_occurrences": 1,
+    "source_rows": [
+      {
+        "fragment": "mineru_p6_t2",
+        "page": 6,
+        "source_rows": "1-7",
+        "logical_rows": "1-7",
+        "repeated_header_rows": 0
+      },
+      {
+        "fragment": "mineru_p7_t1",
+        "page": 7,
+        "source_rows": "2-6",
+        "logical_rows": "8-12",
+        "repeated_header_rows": 1
+      }
+    ],
+    "spans_match": true,
+    "no_separate_duplicate_fragment": true,
+    "width_only_mismatch_cells": 2,
+    "unit": "股"
+  },
+  "strict_width_diagnostics": {
+    "funding_mismatch_cells": 4,
+    "non_width_content_mismatch_cells": 0,
+    "gold_reader_score_or_output_changed": false,
+    "normalization": "Independent diagnostic only: U+FF01..FF5E mapped to ASCII, U+3000 to space; all raw strict failures retained"
+  },
+  "header_semantics": {
+    "funding_production_header_rows": null,
+    "funding_production_header_scope_complete": false,
+    "manual_physical_source_review_not_model_semantic_claim": true
+  },
+  "frozen_gold_and_readers": {
+    "benchmark/datasets/moparse-v1/annotations/full-selected-source-tables.json": "e6a8392a359341a3dac0de1afd362fdf5c2416d3d9fd9f4dc799aa5c5716d177",
+    "benchmark/datasets/moparse-v1/annotations/same-header-source-gold.json": "029edb1809e1b1b4263d083fb410bfd6bab0e7c395560eb22713d0dcc4766d5c",
+    "benchmark/scorers/frozen/followup/20261017/content-preservation-mineru/verify-content-source.py": "f2fd1d7e5dbb1a6b85c7e2621b660f00ab77e0bee1d2e2d073dfdefa5cca1906",
+    "benchmark/tools/check_release.py": "7a064547eae3d3ea3b1fbd96a24093d21d8d61838b0935f796ec6b775d9f1c60"
+  },
+  "proof_is_CPU_readonly_actual_existing_HTTP": true,
+  "new_model_calls": 0
+}

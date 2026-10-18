@@ -1,0 +1,17 @@
+{
+  "scope": "CPU-only replacement of saved raw table with independently replayed GFM; not an SDK/HTTP rerun. Original surrounding page material retained literally.",
+  "source_page": 14,
+  "original_page_MD_sha256": "9f04950c6e1ae923537e6047692c0bb397ea6ab027305883cdc7ca1947712f39",
+  "original_prefix_bytes": 177,
+  "original_prefix_SHA256": "2254d5bd539e0dc554e33e8b9261758e6b206314c35dac53f03dbcbb08e49476",
+  "original_suffix_bytes": 134,
+  "original_suffix_SHA256": "52f9f0dcf15454832c20ae42154bd153a6e3dc06b3ce8908ae4933ed5e1f06a2",
+  "prefix_and_suffix_untouched": true,
+  "unit_literal": "单位：元 币种：人民币",
+  "unit_in_original_prefix": true,
+  "unit_preserved_in_candidate": true,
+  "original_period_literal": "2026年1-6月",
+  "period_preserved_without_inference": true,
+  "model_structure_error_not_corrected": "Header16/source16 vs model_body17 retained; no new source semantic accuracy claim.",
+  "offline_candidate_sha256": "ef9a81672a9af087ebf6cc26f92419f888c8246713e6011d53a023faef740e2a"
+}

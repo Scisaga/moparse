@@ -1,0 +1,445 @@
+{
+  "schema": "moparse-full-http-chart-source/1",
+  "rows": [
+    {
+      "id": "docling",
+      "label": "旧线上 Docling",
+      "short_label": "Docling",
+      "method_id": "production-docling-glm",
+      "evidence_id": "historical-20261017-docling-full-http",
+      "origin": "historical_reuse",
+      "power_limit_W": 180.0,
+      "quality": {
+        "core209": {
+          "pass": 209,
+          "total": 209,
+          "gold_fingerprint": "fdcc0bb53c378d83b0cbb23757976d9606adc572bac34eaa41362b3a922374de",
+          "reader_fingerprint": "73d1d922de3072aaa15ca14c223dbfcc6e39d2188f3fdd212a447c30aa763817",
+          "unknown": 0
+        },
+        "period209": {
+          "pass": 209,
+          "total": 209,
+          "gold_fingerprint": "fdcc0bb53c378d83b0cbb23757976d9606adc572bac34eaa41362b3a922374de",
+          "reader_fingerprint": "73d1d922de3072aaa15ca14c223dbfcc6e39d2188f3fdd212a447c30aa763817",
+          "unknown": 0
+        },
+        "unique_row402": {
+          "pass": 372,
+          "total": 402,
+          "gold_fingerprint": "7305349ae8ef88da6ee7260d220f62aa3ef1750de3a8cb0bda3d856cfec000ca",
+          "reader_fingerprint": "73d1d922de3072aaa15ca14c223dbfcc6e39d2188f3fdd212a447c30aa763817",
+          "unknown": 0
+        },
+        "column_meaning402": {
+          "pass": 326,
+          "total": 402,
+          "gold_fingerprint": "7305349ae8ef88da6ee7260d220f62aa3ef1750de3a8cb0bda3d856cfec000ca",
+          "reader_fingerprint": "73d1d922de3072aaa15ca14c223dbfcc6e39d2188f3fdd212a447c30aa763817",
+          "unknown": 0
+        },
+        "funding31": {
+          "pass": 31,
+          "total": 31,
+          "gold_fingerprint": "e6a8392a359341a3dac0de1afd362fdf5c2416d3d9fd9f4dc799aa5c5716d177",
+          "reader_fingerprint": "73d1d922de3072aaa15ca14c223dbfcc6e39d2188f3fdd212a447c30aa763817",
+          "unknown": 0
+        },
+        "content40": {
+          "pass": 16,
+          "total": 40,
+          "unknown": 0,
+          "gold_fingerprint": "9c7863cebe11c786963b745bc57e9351c8d3940d250f93ad898ede4fde6deb1b",
+          "reader_fingerprint": "e016990f1b8b8cfc0cd31f29bc2c32abe14d000cb80655953a40dd419c95341d",
+          "scope_cohort_id": "content14"
+        },
+        "office6": {
+          "pass": 6,
+          "total": 6,
+          "unknown": 0,
+          "gold_fingerprint": "9c7863cebe11c786963b745bc57e9351c8d3940d250f93ad898ede4fde6deb1b",
+          "reader_fingerprint": "e016990f1b8b8cfc0cd31f29bc2c32abe14d000cb80655953a40dd419c95341d",
+          "source_origin": "fresh_HTTP",
+          "source_evidence_id": "baseline-office2-20261018",
+          "source_power_limit_W": 220.0
+        }
+      },
+      "timing": {
+        "seconds": 1349.7541745780036,
+        "minutes": 22.495902909633394,
+        "scope_pages": 502,
+        "document_ids": [
+          "1210860446",
+          "1211290753",
+          "1219858186",
+          "1225473526",
+          "1225474139",
+          "1225474693",
+          "1225474739",
+          "1225475333",
+          "1225475375",
+          "1225475642"
+        ],
+        "excluded_case_ids": [],
+        "proof": {
+          "path": "benchmark/evidence/artifacts/6140171f2822aeb692d5307137e2950a1e816209dab2e30767bab9bc5f0ab616.json",
+          "sha256": "6140171f2822aeb692d5307137e2950a1e816209dab2e30767bab9bc5f0ab616",
+          "bytes": 394407,
+          "original_path": "benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/candidate-full10-http/performance-summary.json",
+          "snapshot_bytes_unchanged": true
+        },
+        "boundary": "sum of per-document HTTP upload start → saved final Markdown; assets excluded"
+      },
+      "resources": {
+        "own_GPU_peak_MiB": null,
+        "shared_GPU_energy_Wh": null
+      },
+      "resource_scope": "Original evidence window; shared card energy is not exclusive model or PDF502-only energy",
+      "provenance": [
+        {
+          "path": "benchmark/evidence/historical-20261017-docling-full-http.json",
+          "sha256": "631f61bfd9be750765901082df2f7523428ed63a3a19febfe5a77e22ce1ce286",
+          "bytes": 3214
+        },
+        {
+          "path": "benchmark/evidence/historical-docling502-content40-20261018.json",
+          "sha256": "97eb01724610d108a5e16acd7f50ecb835dce946775aa368b65fbdc0f1014b72",
+          "bytes": 2055
+        },
+        {
+          "path": "benchmark/evidence/baseline-office2-20261018.json",
+          "sha256": "269a78619fde680ed87b2f28851a3a58b5781ec0624dfea44d03c6ab045bbcd4",
+          "bytes": 26410
+        }
+      ]
+    },
+    {
+      "id": "primary",
+      "label": "Advanced＋TXT",
+      "short_label": "TXT",
+      "method_id": "mineru-advanced-txt-vllm-c2-glm",
+      "evidence_id": "primary-regression504-20261018",
+      "origin": "fresh_HTTP",
+      "power_limit_W": 220.0,
+      "quality": {
+        "core209": {
+          "pass": 209,
+          "total": 209,
+          "gold_fingerprint": "fdcc0bb53c378d83b0cbb23757976d9606adc572bac34eaa41362b3a922374de",
+          "reader_fingerprint": "73d1d922de3072aaa15ca14c223dbfcc6e39d2188f3fdd212a447c30aa763817",
+          "scope_cohort_id": "regression-502",
+          "unknown": 0
+        },
+        "period209": {
+          "pass": 209,
+          "total": 209,
+          "gold_fingerprint": "fdcc0bb53c378d83b0cbb23757976d9606adc572bac34eaa41362b3a922374de",
+          "reader_fingerprint": "73d1d922de3072aaa15ca14c223dbfcc6e39d2188f3fdd212a447c30aa763817",
+          "scope_cohort_id": "regression-502",
+          "unknown": 0
+        },
+        "unique_row402": {
+          "pass": 351,
+          "total": 402,
+          "gold_fingerprint": "7305349ae8ef88da6ee7260d220f62aa3ef1750de3a8cb0bda3d856cfec000ca",
+          "reader_fingerprint": "73d1d922de3072aaa15ca14c223dbfcc6e39d2188f3fdd212a447c30aa763817",
+          "scope_cohort_id": "regression-502",
+          "unknown": 0
+        },
+        "column_meaning402": {
+          "pass": 297,
+          "total": 402,
+          "gold_fingerprint": "7305349ae8ef88da6ee7260d220f62aa3ef1750de3a8cb0bda3d856cfec000ca",
+          "reader_fingerprint": "73d1d922de3072aaa15ca14c223dbfcc6e39d2188f3fdd212a447c30aa763817",
+          "scope_cohort_id": "regression-502",
+          "unknown": 0
+        },
+        "funding31": {
+          "pass": 31,
+          "total": 31,
+          "gold_fingerprint": "e6a8392a359341a3dac0de1afd362fdf5c2416d3d9fd9f4dc799aa5c5716d177",
+          "reader_fingerprint": "73d1d922de3072aaa15ca14c223dbfcc6e39d2188f3fdd212a447c30aa763817",
+          "scope_cohort_id": "regression-502",
+          "unknown": 0
+        },
+        "content40": {
+          "pass": 40,
+          "total": 40,
+          "unknown": 0,
+          "gold_fingerprint": "9c7863cebe11c786963b745bc57e9351c8d3940d250f93ad898ede4fde6deb1b",
+          "reader_fingerprint": "e016990f1b8b8cfc0cd31f29bc2c32abe14d000cb80655953a40dd419c95341d",
+          "scope_cohort_id": "content14",
+          "source_evaluation": {
+            "path": "benchmark/evidence/artifacts/f4bb42741e74a01a5f2636423b12c5f0cd8e1dfa6e926205fa4e77da0fd1f198.json",
+            "sha256": "f4bb42741e74a01a5f2636423b12c5f0cd8e1dfa6e926205fa4e77da0fd1f198",
+            "bytes": 76174,
+            "original_path": "benchmark/runs/candidate-http-20261018/regression504-final-content/evaluation.json",
+            "snapshot_bytes_unchanged": true
+          },
+          "document_ids": [
+            "1210860446",
+            "1211290753",
+            "1219858186",
+            "1225473526",
+            "1225474139",
+            "1225474693",
+            "1225474739",
+            "1225475333",
+            "1225475375",
+            "1225475642"
+          ]
+        },
+        "office6": {
+          "pass": 6,
+          "total": 6,
+          "unknown": 0,
+          "gold_fingerprint": "9c7863cebe11c786963b745bc57e9351c8d3940d250f93ad898ede4fde6deb1b",
+          "reader_fingerprint": "e016990f1b8b8cfc0cd31f29bc2c32abe14d000cb80655953a40dd419c95341d",
+          "scope_cohort_id": "content14",
+          "source_evaluation": {
+            "path": "benchmark/evidence/artifacts/f4bb42741e74a01a5f2636423b12c5f0cd8e1dfa6e926205fa4e77da0fd1f198.json",
+            "sha256": "f4bb42741e74a01a5f2636423b12c5f0cd8e1dfa6e926205fa4e77da0fd1f198",
+            "bytes": 76174,
+            "original_path": "benchmark/runs/candidate-http-20261018/regression504-final-content/evaluation.json",
+            "snapshot_bytes_unchanged": true
+          },
+          "document_ids": [
+            "1206337604"
+          ],
+          "source_origin": "fresh_HTTP",
+          "source_evidence_id": "primary-regression504-20261018",
+          "source_power_limit_W": 220.0
+        }
+      },
+      "timing": {
+        "seconds": 3716.576046317816,
+        "minutes": 61.94293410529693,
+        "scope_pages": 502,
+        "document_ids": [
+          "1210860446",
+          "1211290753",
+          "1219858186",
+          "1225473526",
+          "1225474139",
+          "1225474693",
+          "1225474739",
+          "1225475333",
+          "1225475375",
+          "1225475642"
+        ],
+        "excluded_case_ids": [
+          "1206337604"
+        ],
+        "per_case_saved_MD_seconds": {
+          "1210860446": 62.21208027296234,
+          "1211290753": 15.63117215805687,
+          "1219858186": 100.63404894806445,
+          "1225473526": 135.14666174002923,
+          "1225474139": 156.75755964696873,
+          "1225474693": 25.4546740319347,
+          "1225474739": 1259.5990505740047,
+          "1225475333": 92.73610783892218,
+          "1225475375": 828.3882637219504,
+          "1225475642": 1040.0164273849223
+        },
+        "proof": {
+          "path": "benchmark/evidence/artifacts/827b5f472dbf8c3fca72e00971359ceac86fc85a39415a4593aa4e11a3feda87.json",
+          "sha256": "827b5f472dbf8c3fca72e00971359ceac86fc85a39415a4593aa4e11a3feda87",
+          "bytes": 55788,
+          "original_path": "benchmark/runs/candidate-http-20261018/regression504/run.json",
+          "snapshot_bytes_unchanged": true
+        },
+        "boundary": "sum of per-document HTTP upload start → saved final Markdown; Office/assets excluded"
+      },
+      "resources": {
+        "own_GPU_peak_MiB": 3528.0,
+        "shared_GPU_energy_Wh": 114.97296818811512
+      },
+      "resource_scope": "Original evidence window; shared card energy is not exclusive model or PDF502-only energy",
+      "provenance": [
+        {
+          "path": "benchmark/evidence/primary-regression504-20261018.json",
+          "sha256": "a2b41ebe19f0fa2c19efa3ef2ab31c94a20bc89ea0db1ac91c41f5d8411bb5eb",
+          "bytes": 35945
+        }
+      ]
+    },
+    {
+      "id": "header",
+      "label": "Advanced＋TXT＋原件核验 V7",
+      "short_label": "TXT+核验",
+      "method_id": "mineru-advanced-txt-vllm-c2-docling-source-glm-v7",
+      "evidence_id": "table-v7-regression504-20261018",
+      "origin": "fresh_HTTP",
+      "power_limit_W": 220.0,
+      "quality": {
+        "core209": {
+          "pass": 209,
+          "total": 209,
+          "gold_fingerprint": "fdcc0bb53c378d83b0cbb23757976d9606adc572bac34eaa41362b3a922374de",
+          "reader_fingerprint": "73d1d922de3072aaa15ca14c223dbfcc6e39d2188f3fdd212a447c30aa763817",
+          "scope_cohort_id": "regression-502",
+          "unknown": 0
+        },
+        "period209": {
+          "pass": 209,
+          "total": 209,
+          "gold_fingerprint": "fdcc0bb53c378d83b0cbb23757976d9606adc572bac34eaa41362b3a922374de",
+          "reader_fingerprint": "73d1d922de3072aaa15ca14c223dbfcc6e39d2188f3fdd212a447c30aa763817",
+          "scope_cohort_id": "regression-502",
+          "unknown": 0
+        },
+        "unique_row402": {
+          "pass": 351,
+          "total": 402,
+          "gold_fingerprint": "7305349ae8ef88da6ee7260d220f62aa3ef1750de3a8cb0bda3d856cfec000ca",
+          "reader_fingerprint": "73d1d922de3072aaa15ca14c223dbfcc6e39d2188f3fdd212a447c30aa763817",
+          "scope_cohort_id": "regression-502",
+          "unknown": 0
+        },
+        "column_meaning402": {
+          "pass": 297,
+          "total": 402,
+          "gold_fingerprint": "7305349ae8ef88da6ee7260d220f62aa3ef1750de3a8cb0bda3d856cfec000ca",
+          "reader_fingerprint": "73d1d922de3072aaa15ca14c223dbfcc6e39d2188f3fdd212a447c30aa763817",
+          "scope_cohort_id": "regression-502",
+          "unknown": 0
+        },
+        "funding31": {
+          "pass": 31,
+          "total": 31,
+          "gold_fingerprint": "e6a8392a359341a3dac0de1afd362fdf5c2416d3d9fd9f4dc799aa5c5716d177",
+          "reader_fingerprint": "73d1d922de3072aaa15ca14c223dbfcc6e39d2188f3fdd212a447c30aa763817",
+          "scope_cohort_id": "regression-502",
+          "unknown": 0
+        },
+        "content40": {
+          "pass": 40,
+          "total": 40,
+          "unknown": 0,
+          "gold_fingerprint": "9c7863cebe11c786963b745bc57e9351c8d3940d250f93ad898ede4fde6deb1b",
+          "reader_fingerprint": "e016990f1b8b8cfc0cd31f29bc2c32abe14d000cb80655953a40dd419c95341d",
+          "scope_cohort_id": "content14",
+          "source_evaluation": {
+            "path": "benchmark/evidence/artifacts/096ad4dcd0c43af9c9d6c8c480a462e957b006ce43b7c829686705ff5dbfbdd3.json",
+            "sha256": "096ad4dcd0c43af9c9d6c8c480a462e957b006ce43b7c829686705ff5dbfbdd3",
+            "bytes": 76259,
+            "original_path": "benchmark/runs/table-syntax-v7-http-20261018/regression504-final-content/evaluation.json",
+            "snapshot_bytes_unchanged": true
+          },
+          "document_ids": [
+            "1210860446",
+            "1211290753",
+            "1219858186",
+            "1225473526",
+            "1225474139",
+            "1225474693",
+            "1225474739",
+            "1225475333",
+            "1225475375",
+            "1225475642"
+          ]
+        },
+        "office6": {
+          "pass": 6,
+          "total": 6,
+          "unknown": 0,
+          "gold_fingerprint": "9c7863cebe11c786963b745bc57e9351c8d3940d250f93ad898ede4fde6deb1b",
+          "reader_fingerprint": "e016990f1b8b8cfc0cd31f29bc2c32abe14d000cb80655953a40dd419c95341d",
+          "scope_cohort_id": "content14",
+          "source_evaluation": {
+            "path": "benchmark/evidence/artifacts/096ad4dcd0c43af9c9d6c8c480a462e957b006ce43b7c829686705ff5dbfbdd3.json",
+            "sha256": "096ad4dcd0c43af9c9d6c8c480a462e957b006ce43b7c829686705ff5dbfbdd3",
+            "bytes": 76259,
+            "original_path": "benchmark/runs/table-syntax-v7-http-20261018/regression504-final-content/evaluation.json",
+            "snapshot_bytes_unchanged": true
+          },
+          "document_ids": [
+            "1206337604"
+          ],
+          "source_origin": "fresh_HTTP",
+          "source_evidence_id": "table-v7-regression504-20261018",
+          "source_power_limit_W": 220.0
+        }
+      },
+      "timing": {
+        "seconds": 4533.361356745008,
+        "minutes": 75.55602261241681,
+        "scope_pages": 502,
+        "document_ids": [
+          "1210860446",
+          "1211290753",
+          "1219858186",
+          "1225473526",
+          "1225474139",
+          "1225474693",
+          "1225474739",
+          "1225475333",
+          "1225475375",
+          "1225475642"
+        ],
+        "excluded_case_ids": [
+          "1206337604"
+        ],
+        "per_case_saved_MD_seconds": {
+          "1210860446": 62.747261813958175,
+          "1211290753": 15.15596879797522,
+          "1219858186": 114.63561216404196,
+          "1225473526": 154.93649833498057,
+          "1225474139": 176.84539951197803,
+          "1225474693": 34.27018565905746,
+          "1225474739": 1649.286714382004,
+          "1225475333": 95.23658703197725,
+          "1225475375": 965.3878365230048,
+          "1225475642": 1264.859292526031
+        },
+        "proof": {
+          "path": "benchmark/evidence/artifacts/0b63b1215bdfb6b136b18c216c6252e53da115133b1b868e4b1e09c6cbe105e0.json",
+          "sha256": "0b63b1215bdfb6b136b18c216c6252e53da115133b1b868e4b1e09c6cbe105e0",
+          "bytes": 143380,
+          "original_path": "benchmark/runs/table-syntax-v7-http-20261018/regression504/run.json",
+          "snapshot_bytes_unchanged": true
+        },
+        "boundary": "sum of per-document HTTP upload start → saved final Markdown; Office/assets excluded"
+      },
+      "resources": {
+        "own_GPU_peak_MiB": 3528.0,
+        "shared_GPU_energy_Wh": 127.6661420759805
+      },
+      "resource_scope": "Original evidence window; shared card energy is not exclusive model or PDF502-only energy",
+      "provenance": [
+        {
+          "path": "benchmark/evidence/table-v7-regression504-20261018.json",
+          "sha256": "6cdcb89450ee633b45cc71f04ceca9a2831794b899a052903ddbf3386f673ae1",
+          "bytes": 58538
+        }
+      ]
+    }
+  ],
+  "dataset": {
+    "path": "benchmark/datasets/moparse-v1/dataset.json",
+    "sha256": "ef79743aaa25fcb8a63805b89a43445cb28521359df32b0927a428fc07746453",
+    "bytes": 5879
+  },
+  "document_manifest": {
+    "path": "benchmark/datasets/moparse-v1/documents.jsonl",
+    "sha256": "66a22325436ffa4f18aa5e25843ef34cbe13cf5614d4a0706ff1de34cf344d9a",
+    "bytes": 11104
+  },
+  "overlapping_denominators_never_summed": true,
+  "no_model_inference": true,
+  "quality_scope": "Fixed exposed source judgments, not whole-document accuracy or an aggregate score",
+  "timing_scope": "Same 10 complete PDFs/502 pages: upload→saved Markdown, excluding Office and asset download",
+  "resource_limit": "Observed power limits and shared loads differ; not a controlled speedup or exclusive-energy experiment",
+  "SVG_sha256": "f3c0a1b5abd1d704d181668efa04816b203958167bd5c7014e9f69c4de056003",
+  "chart_tool": {
+    "path": "benchmark/tools/plot_full_http.py",
+    "sha256": "c8a2f351e46f4332000e004290a80bda5521b50648acd9b9b51f5844391850a1",
+    "bytes": 23125
+  },
+  "chart_plan": {
+    "path": "benchmark/assets/full-http-comparison.template.json",
+    "sha256": "3de3aaa3482353bc300c1fdc7559b4b7447e4c62b1879e35ddb1e109268e5827",
+    "bytes": 1063
+  }
+}

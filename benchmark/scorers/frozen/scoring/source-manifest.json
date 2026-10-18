@@ -1,0 +1,77 @@
+{
+  "schema_version": "clean-source-manifest/1",
+  "source_manifest_origin": "benchmark-results/table-completeness-general-20261015/corpus-source-manifest.json",
+  "source_manifest_sha256": "90d210896ac57c1f9dfa0616752076de0277e7c42b0ef286d6f82779b87fe741",
+  "file_count": 10,
+  "page_count": 502,
+  "documents": [
+    {
+      "path": "pdf_sample/1210860446.pdf",
+      "sha256": "3abc446078329a684f22da643ae578a32f1f68a4509c5449936e9be80673f667",
+      "bytes": 185670,
+      "page_count": 6
+    },
+    {
+      "path": "pdf_sample/1211290753.pdf",
+      "sha256": "84401aa91f072bd934b12c1742c6d92fbfee19018269f32c9b7f6faa5198cef4",
+      "bytes": 165571,
+      "page_count": 3
+    },
+    {
+      "path": "pdf_sample/1219858186.pdf",
+      "sha256": "1c21b0402e57812823bfe4b28feac6fc0517c828a18f8c862e8dccdc3543de89",
+      "bytes": 534642,
+      "page_count": 15
+    },
+    {
+      "path": "pdf_sample/1225473526.pdf",
+      "sha256": "787297535ba74a4170cc859ae68f15f946f6dfd0bfc14a1e1fa0e6d068ba2b19",
+      "bytes": 1175574,
+      "page_count": 27
+    },
+    {
+      "path": "pdf_sample/1225474139.pdf",
+      "sha256": "dc69826976c576302ee4156642039b790693202a611922dda647eb006e6d5c18",
+      "bytes": 326997,
+      "page_count": 36
+    },
+    {
+      "path": "pdf_sample/1225474693.pdf",
+      "sha256": "dc7f5b3bfdc5a5c69b9cf4b2a9e0d28e2f9ee0b2464770fb8a910fea688ee775",
+      "bytes": 144506,
+      "page_count": 4
+    },
+    {
+      "path": "pdf_sample/1225474739.pdf",
+      "sha256": "1c99c450a8efefe77c9ca02a6f670c958298f661e5ad8d30d6ba01aa0742cda9",
+      "bytes": 3648670,
+      "page_count": 134
+    },
+    {
+      "path": "pdf_sample/1225475333.pdf",
+      "sha256": "bdb4210e0cd5dc000e8278d2438937b61ae9042969f100289c0d4cab4537e62b",
+      "bytes": 9116156,
+      "page_count": 28
+    },
+    {
+      "path": "pdf_sample/1225475375.pdf",
+      "sha256": "5eef30b5c544d76df917d56df76a665ed13b5e6ffebdc54ab0eea0a47b7589d6",
+      "bytes": 16377758,
+      "page_count": 119
+    },
+    {
+      "path": "pdf_sample/1225475642.pdf",
+      "sha256": "e2a184bb017930ca6306a56391a7248c2954a5ae212c2966104fad2104c4a24d",
+      "bytes": 9185730,
+      "page_count": 130
+    }
+  ],
+  "gold": {
+    "path": "pdf_sample/gold/table_fact_gold_v1.json",
+    "sha256": "fdcc0bb53c378d83b0cbb23757976d9606adc572bac34eaa41362b3a922374de",
+    "scope": "All rows carrying at least one value in the selected financial tables; empty template rows are excluded.",
+    "labeling_method": "Assistant visual transcription from 3x rendered source pages. All numeric rows were checked against the page image; model disagreements were resolved visually. This is a provisional single-reviewer gold set, not a production double-annotated benchmark.",
+    "numeric_bindings": 209,
+    "case_count": 3
+  }
+}

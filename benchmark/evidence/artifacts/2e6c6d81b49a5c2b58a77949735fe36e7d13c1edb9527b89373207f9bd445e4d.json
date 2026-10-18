@@ -1,0 +1,56 @@
+{
+  "id": "nasa-maax-factsheet",
+  "source": "benchmark/datasets/moparse-addon-20261018/sources/nasa-maax-factsheet.pdf",
+  "source_sha256": "79ab8e7686605ece7144aaa7d1d95e0c43dc4066ad35db9629f7b10075369411",
+  "page_count": 2,
+  "submit_http_status": 200,
+  "http_status": 200,
+  "status": "partial",
+  "submit_to_saved_MD_seconds": 65.16522417101078,
+  "job": "job_01M56459YMEN2YHS9W5QCRK8AF",
+  "submit_to_terminal_seconds": 65.17879768193234,
+  "poll_count": 1,
+  "final_http_status": 200,
+  "MD_SHA256": "3419f5d493126069cd05660b1df8164454eafcb527f7c273e280fc25b7c4d14c",
+  "persisted_MD_SHA256": "3419f5d493126069cd05660b1df8164454eafcb527f7c273e280fc25b7c4d14c",
+  "response_and_persisted_MD_equal": true,
+  "assets": [
+    {
+      "public_path": "/v1/content/jobs/job_01M56459YMEN2YHS9W5QCRK8AF/assets/asset_1a4d0c9f2b7394853871b4df25",
+      "status": 200,
+      "path": "benchmark/runs/source-v6-http-20261018/preflight2/cases/nasa-maax-factsheet/assets/0000.bin",
+      "sha256": "1a4d0c9f2b7394853871b4df25fe79ee45d2abef9604273bc20aceaef81c7585",
+      "bytes": 161955
+    },
+    {
+      "public_path": "/v1/content/jobs/job_01M56459YMEN2YHS9W5QCRK8AF/assets/asset_3f03822e20ce7c957ae6483b67",
+      "status": 200,
+      "path": "benchmark/runs/source-v6-http-20261018/preflight2/cases/nasa-maax-factsheet/assets/0001.bin",
+      "sha256": "3f03822e20ce7c957ae6483b671c32a4a55b9a4991621005ec985847faefbd78",
+      "bytes": 1272695
+    },
+    {
+      "public_path": "/v1/content/jobs/job_01M56459YMEN2YHS9W5QCRK8AF/assets/asset_da53b4412263a32521f5124f17",
+      "status": 200,
+      "path": "benchmark/runs/source-v6-http-20261018/preflight2/cases/nasa-maax-factsheet/assets/0002.bin",
+      "sha256": "da53b4412263a32521f5124f17482cbd571116b374c23212c1fb43565d94da76",
+      "bytes": 32751
+    },
+    {
+      "public_path": "/v1/content/jobs/job_01M56459YMEN2YHS9W5QCRK8AF/assets/asset_ea5b1fbae026d041ead92cb525",
+      "status": 200,
+      "path": "benchmark/runs/source-v6-http-20261018/preflight2/cases/nasa-maax-factsheet/assets/0003.bin",
+      "sha256": "ea5b1fbae026d041ead92cb525f329a7e88ef02286007287c6123a17c6b901d2",
+      "bytes": 29311
+    },
+    {
+      "public_path": "/v1/content/jobs/job_01M56459YMEN2YHS9W5QCRK8AF/assets/asset_f2e66253fac79a706d5d12df2d",
+      "status": 200,
+      "path": "benchmark/runs/source-v6-http-20261018/preflight2/cases/nasa-maax-factsheet/assets/0004.bin",
+      "sha256": "f2e66253fac79a706d5d12df2d94f57ac1fd7e129136fed2f89a5893c30bb565",
+      "bytes": 77093
+    }
+  ],
+  "full_capture_seconds": 65.2809027149342,
+  "duration_seconds": 65.2809027149342
+}

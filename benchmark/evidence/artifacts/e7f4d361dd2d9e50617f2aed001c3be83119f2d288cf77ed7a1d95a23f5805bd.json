@@ -1,0 +1,1077 @@
+{
+  "schema": "moparse-posthoc-source-tables/1",
+  "id": "nasa-page2-complete-original-physical-cells-20261018-v2",
+  "source_document": {
+    "id": "nasa-maax-factsheet",
+    "sha256": "79ab8e7686605ece7144aaa7d1d95e0c43dc4066ad35db9629f7b10075369411",
+    "source_path": "benchmark/datasets/moparse-addon-20261018/sources/nasa-maax-factsheet.pdf"
+  },
+  "source_image": {
+    "path": "benchmark/datasets/moparse-addon-20261018/source-images/nasa-maax-factsheet-p02.png",
+    "sha256": "782d3a4d0adb4ce6cb5213083949275f2826152e3ca992ebf2db931be4686609",
+    "bytes": 1741567
+  },
+  "source_geometry_proof_private": {
+    "path": "benchmark/runs/nasa-source-posthoc-20261018/source-geometry-transcription-proof.json",
+    "sha256": "c9b34d13d59a9bfa0d1ce2cfdd90457f8bb24f6679343bf6773f56b03bf25113",
+    "bytes": 12011
+  },
+  "review": {
+    "created_at": "2026-10-17T23:33:40.675826+00:00",
+    "method": "Manual original-pixel review plus original PDF line/cell geometry; explicitly posthoc development regression.",
+    "model_outputs_seen": true,
+    "unseen_holdout": false,
+    "original28_gold_changed": false,
+    "rows_follow_printed_ruling_not_inferred_metric_or_line_names": true,
+    "version": 2,
+    "independent_source_only_review": "native_text_gpu_check reviewed original pixels and vector rules, did not read candidate grids; only bottom t1 physical-row grouping and fullpage/region Launch scope required correction."
+  },
+  "tables": [
+    {
+      "source_ordinal": 1,
+      "source_page": 2,
+      "rows": [
+        [
+          "Key Instrument Characteristics",
+          ""
+        ],
+        [
+          "Instrument Parameter",
+          "Value"
+        ],
+        [
+          "Passband (short)",
+          "144nm peak / 8nm FWHM"
+        ],
+        [
+          "Passband (long)",
+          "173nm peak / 8nm FWHM"
+        ],
+        [
+          "Entrance aperture",
+          "30 x 12 mm"
+        ],
+        [
+          "Field of View",
+          "15°"
+        ],
+        [
+          "Detector area",
+          "28 mm (active area) / 512 x 512 pixels"
+        ],
+        [
+          "Effective resolution element size (RSS detector, PSF, pixel size)",
+          "66 μm (short) 72 μm (long)"
+        ],
+        [
+          "Effective nadir ground element size",
+          "13 km (short), 14 km (long)"
+        ],
+        [
+          "Mass (MUVI + PIU) Power (MUVI + PIU) Data Rate (MUVI to PIU)",
+          "26.11 kg 39.8 w 280 kbps"
+        ]
+      ],
+      "cells": [
+        {
+          "row": 0,
+          "column": 0,
+          "text": "Key Instrument Characteristics",
+          "row_span": 1,
+          "column_span": 2
+        },
+        {
+          "row": 1,
+          "column": 0,
+          "text": "Instrument Parameter",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 1,
+          "column": 1,
+          "text": "Value",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 2,
+          "column": 0,
+          "text": "Passband (short)",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 2,
+          "column": 1,
+          "text": "144nm peak / 8nm FWHM",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 3,
+          "column": 0,
+          "text": "Passband (long)",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 3,
+          "column": 1,
+          "text": "173nm peak / 8nm FWHM",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 4,
+          "column": 0,
+          "text": "Entrance aperture",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 4,
+          "column": 1,
+          "text": "30 x 12 mm",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 5,
+          "column": 0,
+          "text": "Field of View",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 5,
+          "column": 1,
+          "text": "15°",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 6,
+          "column": 0,
+          "text": "Detector area",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 6,
+          "column": 1,
+          "text": "28 mm (active area) / 512 x 512 pixels",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 7,
+          "column": 0,
+          "text": "Effective resolution element size (RSS detector, PSF, pixel size)",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 7,
+          "column": 1,
+          "text": "66 μm (short) 72 μm (long)",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 8,
+          "column": 0,
+          "text": "Effective nadir ground element size",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 8,
+          "column": 1,
+          "text": "13 km (short), 14 km (long)",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 9,
+          "column": 0,
+          "text": "Mass (MUVI + PIU) Power (MUVI + PIU) Data Rate (MUVI to PIU)",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 9,
+          "column": 1,
+          "text": "26.11 kg 39.8 w 280 kbps",
+          "row_span": 1,
+          "column_span": 1
+        }
+      ],
+      "spans": [
+        [
+          0,
+          0,
+          1,
+          2
+        ]
+      ],
+      "num_rows": 10,
+      "num_cols": 2,
+      "selector": {
+        "text": "Instrument Parameter"
+      },
+      "source_evidence": {
+        "physical_page": 2,
+        "bbox_pdf_points": [
+          38,
+          219,
+          231,
+          406
+        ],
+        "image_path": "benchmark/datasets/moparse-addon-20261018/source-images/nasa-maax-factsheet-p02.png",
+        "image_sha256": "782d3a4d0adb4ce6cb5213083949275f2826152e3ca992ebf2db931be4686609",
+        "note": "Closed physical cells; line wraps remain in the same original cell. Top title spans two columns. Independent source-only review correction: Mass/Power/Data Rate occupy one bottom ruled band y369.909–404.325, with three text lines in each original cell; no separating horizontal rules."
+      }
+    },
+    {
+      "source_ordinal": 2,
+      "source_page": 2,
+      "rows": [
+        [
+          "Key Observatory Characteristics",
+          "",
+          "",
+          ""
+        ],
+        [
+          "Resource",
+          "Characteristics",
+          "Value",
+          ""
+        ],
+        [
+          "Mass (MEV)",
+          "Dry Mass",
+          "173.5 kg",
+          ""
+        ],
+        [
+          "Power (MEV)",
+          "Science Mode Thrust Mode Safe Mode",
+          "103.8 w 902.4 w 89 w",
+          ""
+        ],
+        [
+          "Science Data",
+          "Total Data Volume",
+          "7.2 Gb/d",
+          ""
+        ],
+        [
+          "Point. Cnt.",
+          "Science, Thrust",
+          "0.3°, 1.0° (3 σ)",
+          ""
+        ],
+        [
+          "Propulsion",
+          "Solar Electric Nitrogen Cold Gas",
+          "ΔV = 3858 m/s ΔV = 7.33 m/s",
+          ""
+        ],
+        [
+          "Telecom",
+          "Ka-Band (Science Data) S-Band (Engineering TLM)",
+          "",
+          "300 Mbps 4.9 Mbps"
+        ],
+        [
+          "Attitude",
+          "3 Axis Stabilized, Inertially Pointed",
+          "",
+          ""
+        ],
+        [
+          "Deployments",
+          "LV Separation, Solar Array, MUVI Door",
+          "",
+          ""
+        ]
+      ],
+      "cells": [
+        {
+          "row": 0,
+          "column": 0,
+          "text": "Key Observatory Characteristics",
+          "row_span": 1,
+          "column_span": 4
+        },
+        {
+          "row": 1,
+          "column": 0,
+          "text": "Resource",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 1,
+          "column": 1,
+          "text": "Characteristics",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 1,
+          "column": 2,
+          "text": "Value",
+          "row_span": 1,
+          "column_span": 2
+        },
+        {
+          "row": 2,
+          "column": 0,
+          "text": "Mass (MEV)",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 2,
+          "column": 1,
+          "text": "Dry Mass",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 2,
+          "column": 2,
+          "text": "173.5 kg",
+          "row_span": 1,
+          "column_span": 2
+        },
+        {
+          "row": 3,
+          "column": 0,
+          "text": "Power (MEV)",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 3,
+          "column": 1,
+          "text": "Science Mode Thrust Mode Safe Mode",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 3,
+          "column": 2,
+          "text": "103.8 w 902.4 w 89 w",
+          "row_span": 1,
+          "column_span": 2
+        },
+        {
+          "row": 4,
+          "column": 0,
+          "text": "Science Data",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 4,
+          "column": 1,
+          "text": "Total Data Volume",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 4,
+          "column": 2,
+          "text": "7.2 Gb/d",
+          "row_span": 1,
+          "column_span": 2
+        },
+        {
+          "row": 5,
+          "column": 0,
+          "text": "Point. Cnt.",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 5,
+          "column": 1,
+          "text": "Science, Thrust",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 5,
+          "column": 2,
+          "text": "0.3°, 1.0° (3 σ)",
+          "row_span": 1,
+          "column_span": 2
+        },
+        {
+          "row": 6,
+          "column": 0,
+          "text": "Propulsion",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 6,
+          "column": 1,
+          "text": "Solar Electric Nitrogen Cold Gas",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 6,
+          "column": 2,
+          "text": "ΔV = 3858 m/s ΔV = 7.33 m/s",
+          "row_span": 1,
+          "column_span": 2
+        },
+        {
+          "row": 7,
+          "column": 0,
+          "text": "Telecom",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 7,
+          "column": 1,
+          "text": "Ka-Band (Science Data) S-Band (Engineering TLM)",
+          "row_span": 1,
+          "column_span": 2
+        },
+        {
+          "row": 7,
+          "column": 3,
+          "text": "300 Mbps 4.9 Mbps",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 8,
+          "column": 0,
+          "text": "Attitude",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 8,
+          "column": 1,
+          "text": "3 Axis Stabilized, Inertially Pointed",
+          "row_span": 1,
+          "column_span": 3
+        },
+        {
+          "row": 9,
+          "column": 0,
+          "text": "Deployments",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 9,
+          "column": 1,
+          "text": "LV Separation, Solar Array, MUVI Door",
+          "row_span": 1,
+          "column_span": 3
+        }
+      ],
+      "spans": [
+        [
+          0,
+          0,
+          1,
+          4
+        ],
+        [
+          1,
+          2,
+          1,
+          2
+        ],
+        [
+          2,
+          2,
+          1,
+          2
+        ],
+        [
+          3,
+          2,
+          1,
+          2
+        ],
+        [
+          4,
+          2,
+          1,
+          2
+        ],
+        [
+          5,
+          2,
+          1,
+          2
+        ],
+        [
+          6,
+          2,
+          1,
+          2
+        ],
+        [
+          7,
+          1,
+          1,
+          2
+        ],
+        [
+          8,
+          1,
+          1,
+          3
+        ],
+        [
+          9,
+          1,
+          1,
+          3
+        ]
+      ],
+      "num_rows": 10,
+      "num_cols": 4,
+      "selector": {
+        "text": "Dry Mass"
+      },
+      "source_evidence": {
+        "physical_page": 2,
+        "bbox_pdf_points": [
+          236,
+          219,
+          411,
+          406
+        ],
+        "image_path": "benchmark/datasets/moparse-addon-20261018/source-images/nasa-maax-factsheet-p02.png",
+        "image_sha256": "782d3a4d0adb4ce6cb5213083949275f2826152e3ca992ebf2db931be4686609",
+        "note": "Physical ruled rows, not one artificial row per visual line: Power, Propulsion and Telecom have multiple printed lines inside one cell. Value boundary shifts from x349.63 to x368.78 for Telecom; union of source vertical rules defines four grid columns and explicit colspans. Degree and sigma come from visible glyphs, not the imperfect text font map."
+      }
+    },
+    {
+      "source_ordinal": 3,
+      "source_page": 2,
+      "rows": [
+        [
+          "Key Mission Characteristics",
+          "",
+          ""
+        ],
+        [
+          "Resource",
+          "Characteristics",
+          "Value"
+        ],
+        [
+          "LV",
+          "Option B",
+          "1 LV"
+        ],
+        [
+          "Orbit",
+          "Inclination Altitude Eccentricity",
+          "90° 20,850 km 0"
+        ],
+        [
+          "Launch Mass",
+          "2 Observatories + Custom LV Adaptor",
+          "542 kg"
+        ],
+        [
+          "Constellation",
+          "2 Observatories",
+          "Seperated by 90° (1yr) 180° (1yr)"
+        ]
+      ],
+      "cells": [
+        {
+          "row": 0,
+          "column": 0,
+          "text": "Key Mission Characteristics",
+          "row_span": 1,
+          "column_span": 3
+        },
+        {
+          "row": 1,
+          "column": 0,
+          "text": "Resource",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 1,
+          "column": 1,
+          "text": "Characteristics",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 1,
+          "column": 2,
+          "text": "Value",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 2,
+          "column": 0,
+          "text": "LV",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 2,
+          "column": 1,
+          "text": "Option B",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 2,
+          "column": 2,
+          "text": "1 LV",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 3,
+          "column": 0,
+          "text": "Orbit",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 3,
+          "column": 1,
+          "text": "Inclination Altitude Eccentricity",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 3,
+          "column": 2,
+          "text": "90° 20,850 km 0",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 4,
+          "column": 0,
+          "text": "Launch Mass",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 4,
+          "column": 1,
+          "text": "2 Observatories + Custom LV Adaptor",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 4,
+          "column": 2,
+          "text": "542 kg",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 5,
+          "column": 0,
+          "text": "Constellation",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 5,
+          "column": 1,
+          "text": "2 Observatories",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 5,
+          "column": 2,
+          "text": "Seperated by 90° (1yr) 180° (1yr)",
+          "row_span": 1,
+          "column_span": 1
+        }
+      ],
+      "spans": [
+        [
+          0,
+          0,
+          1,
+          3
+        ]
+      ],
+      "num_rows": 6,
+      "num_cols": 3,
+      "selector": {
+        "text": "Seperated by"
+      },
+      "source_evidence": {
+        "physical_page": 2,
+        "bbox_pdf_points": [
+          416,
+          219,
+          574,
+          406
+        ],
+        "image_path": "benchmark/datasets/moparse-addon-20261018/source-images/nasa-maax-factsheet-p02.png",
+        "image_sha256": "782d3a4d0adb4ce6cb5213083949275f2826152e3ca992ebf2db931be4686609",
+        "note": "Orbit has three aligned lines inside one ruled cell, with no internal horizontal rules. Source spelling Seperated is retained."
+      }
+    },
+    {
+      "source_ordinal": 4,
+      "source_page": 2,
+      "rows": [
+        [
+          "Cost Summary",
+          "",
+          "",
+          ""
+        ],
+        [
+          "Mission Phase",
+          "Cost $M",
+          "Reserves $M",
+          "Total $M"
+        ],
+        [
+          "Phase A",
+          "2.0",
+          "-",
+          "2.0"
+        ],
+        [
+          "Phase B/C/D1",
+          "106.09",
+          "29.81",
+          "135.90"
+        ],
+        [
+          "Phase E/F",
+          "15.42",
+          "2.67",
+          "18.10"
+        ],
+        [
+          "Total PIMMC",
+          "123.51",
+          "32.49",
+          "156.00"
+        ],
+        [
+          "Contributions2",
+          "",
+          "",
+          "0.31"
+        ],
+        [
+          "Total Mission Cost",
+          "132.82",
+          "32.49",
+          "156.31"
+        ],
+        [
+          "1Includes $1.1M to cover cost of Items deferred to Step-2",
+          "",
+          "",
+          ""
+        ],
+        [
+          "2Not required to meet mission / science objectives",
+          "",
+          "",
+          ""
+        ]
+      ],
+      "cells": [
+        {
+          "row": 0,
+          "column": 0,
+          "text": "Cost Summary",
+          "row_span": 1,
+          "column_span": 4
+        },
+        {
+          "row": 1,
+          "column": 0,
+          "text": "Mission Phase",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 1,
+          "column": 1,
+          "text": "Cost $M",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 1,
+          "column": 2,
+          "text": "Reserves $M",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 1,
+          "column": 3,
+          "text": "Total $M",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 2,
+          "column": 0,
+          "text": "Phase A",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 2,
+          "column": 1,
+          "text": "2.0",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 2,
+          "column": 2,
+          "text": "-",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 2,
+          "column": 3,
+          "text": "2.0",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 3,
+          "column": 0,
+          "text": "Phase B/C/D1",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 3,
+          "column": 1,
+          "text": "106.09",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 3,
+          "column": 2,
+          "text": "29.81",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 3,
+          "column": 3,
+          "text": "135.90",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 4,
+          "column": 0,
+          "text": "Phase E/F",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 4,
+          "column": 1,
+          "text": "15.42",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 4,
+          "column": 2,
+          "text": "2.67",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 4,
+          "column": 3,
+          "text": "18.10",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 5,
+          "column": 0,
+          "text": "Total PIMMC",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 5,
+          "column": 1,
+          "text": "123.51",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 5,
+          "column": 2,
+          "text": "32.49",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 5,
+          "column": 3,
+          "text": "156.00",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 6,
+          "column": 0,
+          "text": "Contributions2",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 6,
+          "column": 1,
+          "text": "",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 6,
+          "column": 2,
+          "text": "",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 6,
+          "column": 3,
+          "text": "0.31",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 7,
+          "column": 0,
+          "text": "Total Mission Cost",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 7,
+          "column": 1,
+          "text": "132.82",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 7,
+          "column": 2,
+          "text": "32.49",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 7,
+          "column": 3,
+          "text": "156.31",
+          "row_span": 1,
+          "column_span": 1
+        },
+        {
+          "row": 8,
+          "column": 0,
+          "text": "1Includes $1.1M to cover cost of Items deferred to Step-2",
+          "row_span": 1,
+          "column_span": 4
+        },
+        {
+          "row": 9,
+          "column": 0,
+          "text": "2Not required to meet mission / science objectives",
+          "row_span": 1,
+          "column_span": 4
+        }
+      ],
+      "spans": [
+        [
+          0,
+          0,
+          1,
+          4
+        ],
+        [
+          8,
+          0,
+          1,
+          4
+        ],
+        [
+          9,
+          0,
+          1,
+          4
+        ]
+      ],
+      "num_rows": 10,
+      "num_cols": 4,
+      "selector": {
+        "text": "Total PIMMC"
+      },
+      "source_evidence": {
+        "physical_page": 2,
+        "bbox_pdf_points": [
+          400,
+          529,
+          573,
+          663
+        ],
+        "image_path": "benchmark/datasets/moparse-addon-20261018/source-images/nasa-maax-factsheet-p02.png",
+        "image_sha256": "782d3a4d0adb4ce6cb5213083949275f2826152e3ca992ebf2db931be4686609",
+        "note": "Exact existing source-only cost grid, unchanged bytes of its expected row data; complete title and both full-width footnotes retained."
+      }
+    }
+  ],
+  "source_region5": {
+    "source_page": 2,
+    "bbox_pdf_points": [
+      38,
+      682,
+      573,
+      762
+    ],
+    "printed_role": "Schedule Summary monthly Gantt; semantic table interpretation unknown in V5",
+    "source_full_page_Launch_exact_occurrences": 2,
+    "preservation_contract": "Original crop plus exact original PDF region glyph text, private rejected generated table, typed/public structure unknown. No Gantt semantic reconstruction claim.",
+    "source_region_Launch_exact_occurrences": 1,
+    "scope_note": "Whole page also contains Launch Mass in the mission table; standalone Launch=1 is a Gantt-region observation, never the wholepage word budget."
+  }
+}

@@ -1,0 +1,153 @@
+{
+  "schema": "moparse-dataset/1",
+  "id": "moparse-v1",
+  "version": "1.0.0",
+  "documents": "documents.jsonl",
+  "artifacts": [
+    {
+      "path": "documents.jsonl",
+      "sha256": "9994077e8a6081484b252a3d2ccae570fece9355db5b2f79c0fcedfa9514ecb8"
+    },
+    {
+      "path": "annotations/content14-source-reference.json",
+      "sha256": "9c7863cebe11c786963b745bc57e9351c8d3940d250f93ad898ede4fde6deb1b"
+    },
+    {
+      "path": "annotations/core209-source-gold.json",
+      "sha256": "fdcc0bb53c378d83b0cbb23757976d9606adc572bac34eaa41362b3a922374de"
+    },
+    {
+      "path": "annotations/extra-p62-source-reference.json",
+      "sha256": "a16aca8fa1fea13982c2b832581b5c2ac84fa6622aa32e5df5658f3cadfea493"
+    },
+    {
+      "path": "annotations/full-selected-source-tables.json",
+      "sha256": "e6a8392a359341a3dac0de1afd362fdf5c2416d3d9fd9f4dc799aa5c5716d177"
+    },
+    {
+      "path": "annotations/provenance.json",
+      "sha256": "a1e7bf020bae133f2797608b01b4cbb60ac3b27edd913b4b9f5b88648c344f04"
+    },
+    {
+      "path": "annotations/same-header-source-gold.json",
+      "sha256": "029edb1809e1b1b4263d083fb410bfd6bab0e7c395560eb22713d0dcc4766d5c"
+    },
+    {
+      "path": "annotations/shareholder-source-gold.json",
+      "sha256": "b650679de000f16913f54a0f26406456e157937c711e2af41b37847d632d5f05"
+    },
+    {
+      "path": "annotations/suites.json",
+      "sha256": "8a30502643b483f234473364f6928b0567dddc6e6f872258dce07d8dffdc8f20"
+    },
+    {
+      "path": "annotations/supplement402-source-gold.json",
+      "sha256": "7305349ae8ef88da6ee7260d220f62aa3ef1750de3a8cb0bda3d856cfec000ca"
+    }
+  ],
+  "policy": {
+    "originals": "Private local source paths; do not commit raw documents",
+    "exposure": "All current sources previously used; no independent holdout claim",
+    "split_unit": "original document and template family, including all derivatives",
+    "gold": "Source-backed provisional single-reviewer annotations; frozen imported bytes",
+    "routing": "Independent source properties; no gold/page-ID performance branching"
+  },
+  "cohorts": [
+    {
+      "id": "regression-502",
+      "document_ids": [
+        "1210860446",
+        "1211290753",
+        "1219858186",
+        "1225473526",
+        "1225474139",
+        "1225474693",
+        "1225474739",
+        "1225475333",
+        "1225475375",
+        "1225475642"
+      ],
+      "pages": 502,
+      "whole_documents": true,
+      "source_manifest": {
+        "path": "benchmark-results/clean-model-comparison-20261015/input-manifest.json",
+        "sha256": "c98c5835b19d543f8a0d2d37a9df896f7cd00f3f0c98952709be5bb5f650da93",
+        "bytes": 269825
+      }
+    },
+    {
+      "id": "regression-office2",
+      "document_ids": [
+        "1206337604"
+      ],
+      "pages": 2,
+      "whole_documents": true
+    },
+    {
+      "id": "content14",
+      "document_ids": [
+        "1206337604",
+        "1225474739",
+        "1225475375",
+        "1225474139",
+        "1225474693",
+        "1225473526"
+      ],
+      "source_pages": {
+        "1206337604": [
+          1,
+          2
+        ],
+        "1225474739": [
+          19,
+          40,
+          74,
+          131
+        ],
+        "1225475375": [
+          74,
+          87
+        ],
+        "1225474139": [
+          28,
+          30
+        ],
+        "1225474693": [
+          2,
+          3
+        ],
+        "1225473526": [
+          6,
+          7
+        ]
+      },
+      "pages": 14,
+      "whole_documents": false,
+      "contained_in": [
+        "regression-502",
+        "regression-office2"
+      ]
+    },
+    {
+      "id": "extra-p62",
+      "document_ids": [
+        "1225475375"
+      ],
+      "source_pages": {
+        "1225475375": [
+          62
+        ]
+      },
+      "pages": 1,
+      "whole_documents": false,
+      "contained_in": [
+        "regression-502"
+      ]
+    }
+  ],
+  "holdout": {
+    "status": "not_yet_acquired",
+    "document_ids": [],
+    "requirement": "New unseen documents with source review; never relabel exposed files"
+  }
+}

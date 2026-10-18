@@ -1,0 +1,44 @@
+{
+  "schema": "moparse-evidence/1",
+  "id": "historical-docling-source-surface-20261018",
+  "method_id": "production-docling-glm",
+  "cohort_id": "regression-502",
+  "origin": "historical_reuse",
+  "fresh_model_inference": false,
+  "new_HTTP_requests": false,
+  "output_stage": "public-HTTP-GFM-source-surface-diagnostic",
+  "quality": {},
+  "performance": {},
+  "provenance": [
+    {
+      "path": "benchmark/evidence/artifacts/37b84f041da2e3e0e4962dc5c24f3817eb1f4497a53eac7789b48ee32aad5d7e.json",
+      "sha256": "37b84f041da2e3e0e4962dc5c24f3817eb1f4497a53eac7789b48ee32aad5d7e",
+      "bytes": 9587,
+      "original_path": "benchmark/runs/production-baseline-20261018/historical502-source-surface.json",
+      "snapshot_bytes_unchanged": true
+    }
+  ],
+  "qualification": {
+    "observation_only": true,
+    "no_unchanged_frozen_score_or_release_result_overwritten": true,
+    "release_verdict": false,
+    "numerical_or_unit_repair": false,
+    "external_unit_captions": "unknown_no_separate_source_annotation"
+  },
+  "source_surface": {
+    "logical_merge_observed": true,
+    "functional_merge_and_source_maps": true,
+    "ASCII_width_equivalent_complete_continuation": true,
+    "strict_continuation_pass": true,
+    "separate_fragment_surfaces": [
+      {
+        "source_page": 6,
+        "matching_fragments": 0
+      },
+      {
+        "source_page": 7,
+        "matching_fragments": 0
+      }
+    ]
+  }
+}

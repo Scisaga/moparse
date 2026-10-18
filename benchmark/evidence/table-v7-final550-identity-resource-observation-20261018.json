@@ -1,0 +1,26 @@
+{
+  "schema": "moparse-evidence/1",
+  "id": "table-v7-final550-identity-resource-observation-20261018",
+  "method_id": "mineru-advanced-txt-vllm-c2-docling-source-glm-v7",
+  "cohort_id": "regression-504",
+  "origin": "fresh_component",
+  "fresh_model_inference": false,
+  "output_stage": "diagnostic-only",
+  "quality": {},
+  "performance": {},
+  "provenance": [
+    {
+      "path": "benchmark/evidence/artifacts/4093d3e37b7b1637bcb2f713971a8120104eb19468cbae97b80343a053a11161.json",
+      "sha256": "4093d3e37b7b1637bcb2f713971a8120104eb19468cbae97b80343a053a11161",
+      "bytes": 15634,
+      "original_path": "benchmark/runs/table-syntax-v7-http-20261018/V7-final550-resource-safe-summary.json",
+      "snapshot_bytes_unchanged": true
+    }
+  ],
+  "qualification": {
+    "observation_only": true,
+    "deployment_acceptance": false,
+    "gold_reader_and_original_outputs_changed": false
+  },
+  "scope": "Actual full550 final identity/resource closure, all5 roles, correct V4→V7 lifecycle peak, service RUNNING phase metrics separately scoped"
+}

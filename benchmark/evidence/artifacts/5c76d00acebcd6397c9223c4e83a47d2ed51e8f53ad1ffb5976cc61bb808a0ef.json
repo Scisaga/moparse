@@ -1,0 +1,69 @@
+{
+  "schema": "moparse-header-stage-cohort-observation/1",
+  "observed_at": "2026-10-17T21:35:13.169976+00:00",
+  "cohort_id": "resource-stress-nist25",
+  "capture_directory": "benchmark/runs/header-v4-http-20261018/nist25",
+  "dataset": {
+    "path": "benchmark/runs/header-v4-http-20261018/nist25-dataset/dataset.json",
+    "sha256": "0a9c738bb61f42331a1ec4615d8bd39f738d2649b69f40df97c9a0e8ee29c123",
+    "bytes": 3430
+  },
+  "actual_storage_identity": {
+    "container": "moparse-candidate-header-v4",
+    "container_id": "0e8ca85a3f0337abce45491fd690c2a02965c050e36ce6c26e007b13a9d2fdcb",
+    "deployed_image_id": "sha256:427a7cdd741b69845fcf8c6c1f4db6f9f5db92897cb2ce40af99747300bcff7a",
+    "data_volume": {
+      "Type": "volume",
+      "Name": "moparse-candidate-header-v4-data",
+      "Source": "/var/lib/docker/volumes/moparse-candidate-header-v4-data/_data",
+      "Destination": "/data",
+      "RW": true
+    },
+    "deployment": {
+      "path": "benchmark/runs/header-v4-http-20261018/deployment-before-nist.json",
+      "sha256": "3249fda6fb291e0ad95062605f7991202c3448e1986dcdb4aebdd0b9ba78636d",
+      "bytes": 99756
+    },
+    "container_environment_read": false
+  },
+  "expected_documents": 1,
+  "completed_HTTP_documents": 1,
+  "timing_recorded_documents": 0,
+  "completed_documents_without_measured_stage": 1,
+  "not_yet_completed_documents": 0,
+  "observed_stage_wall_clock_seconds": 0,
+  "full_cohort_stage_wall_clock_seconds": null,
+  "observed_unique_document_pages": 0,
+  "observed_candidate_pairs": 0,
+  "observed_accepted_pairs": 0,
+  "observation_status_counts": {
+    "unknown_no_selected_code; absence_not_zero": 1
+  },
+  "percase_observations": [
+    {
+      "path": "benchmark/evidence/artifacts/3a287b84d93f5a033408177b9c8246a2605c0ef094f99bb50648cfadd9698dee.json",
+      "sha256": "3a287b84d93f5a033408177b9c8246a2605c0ef094f99bb50648cfadd9698dee",
+      "bytes": 2303,
+      "original_path": "benchmark/runs/header-v4-http-20261018/header-stage/nist25/holdout-nist-tn2354.json",
+      "snapshot_bytes_unchanged": true
+    }
+  ],
+  "source_producer_sha256": {
+    "app/services/header_verification_service.py": "25e8e71bc74332b48abad42fa5445b2bf5c12eb245ebc2cd1cd9dc591326fe71",
+    "app/services/storage_service.py": "c82e366429cb9cb669a202533b0da424b16186db5aa457d1ea3ea9c3aea00b6e"
+  },
+  "policy": {
+    "missing_code_is_zero": false,
+    "other_warning_content_exported": false,
+    "additional_inference_or_API_requests": false,
+    "whole_pipeline_or_GPU_inference_time": false,
+    "full_cohort_total_requires_all_documents_observed": true,
+    "scope": "Sum of recorded independent header-verification elapsed wall clocks only; coverage k/n explicit; absent records remain unknown; do not substitute for upload-through-Markdown latency"
+  },
+  "finalized": true,
+  "extractor": {
+    "path": "benchmark/runs/header-v4-http-20261018/extract_header_stage.py",
+    "sha256": "26789700b3efca8d430614b7ece8fcddd4497a1f5cf237c4d79b97e126f64946",
+    "bytes": 11260
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "schema": "moparse-method/1",
+  "id": "mineru-visual-transformers-glm",
+  "label": "MinerU pure visual Transformers + GLM",
+  "status": "diagnostic",
+  "recipe": {
+    "routing": {
+      "policy": "native text and embedded-image coverage, independent of model answers",
+      "native": {
+        "package": "mineru",
+        "version": "4.0.12",
+        "text_mode": "visual",
+        "model": "opendatalab/MinerU2.5-Pro-2605-1.2B",
+        "revision": "08aaea840498d49ce16247b6263196cf02814885",
+        "engine": "transformers",
+        "vllm_version": "0.19.1",
+        "precision": "FP16",
+        "max_model_len": 8192,
+        "KV_bytes": 134217728,
+        "max_num_batched_tokens": 2048,
+        "enforce_eager": true,
+        "logits_processor": "mineru_vl_utils:MinerULogitsProcessor",
+        "client_max_concurrency": 1,
+        "max_num_seqs": 1,
+        "sampling": "pinned official SDK defaults; temperature0/top_p0.01/top_k1; task-specific penalties"
+      },
+      "scan_mixed": {
+        "model": "GLM-OCR",
+        "model_revision": "recorded per deployed image; not inferred from model name",
+        "SDK_version": "0.1.5",
+        "orientation_preprocess": true,
+        "DPI": 200,
+        "precision": "FP16",
+        "device": "GPU1"
+      }
+    },
+    "public_output": {
+      "format": "faithful logical-table GFM",
+      "table_source": true,
+      "coordinates": false,
+      "semantic_XML": false,
+      "header_merge": "only complete source-backed header and column-meaning equivalence"
+    },
+    "adapter_version": "record actual Git SHA per run; component FULL output is a different stage"
+  },
+  "fingerprint": "bc01572539dd66fc15058e11959391a2ff5a2964537467271f728e4f0ec4c098",
+  "deployment_gate": "Full HTTP/public GFM and source annotations must pass; component runs alone do not qualify",
+  "reuse": {
+    "functional": "exact source/input/weights/settings and output-stage hashes required",
+    "timing": "same cohort/hardware/power/time scope/warmup; never sum component work as end-to-end latency"
+  }
+}

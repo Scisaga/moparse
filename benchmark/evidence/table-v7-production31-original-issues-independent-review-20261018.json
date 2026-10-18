@@ -1,0 +1,29 @@
+{
+  "schema": "moparse-evidence/1",
+  "id": "table-v7-production31-original-issues-independent-review-20261018",
+  "method_id": "mineru-advanced-txt-vllm-c2-docling-source-glm-v7",
+  "cohort_id": "production-smoke-159",
+  "origin": "fresh_component",
+  "fresh_model_inference": false,
+  "output_stage": "diagnostic-only",
+  "quality": {},
+  "performance": {},
+  "provenance": [
+    {
+      "path": "benchmark/evidence/artifacts/ab4920832cd5c6c69afef7dc0c9da7eaa5c8c49faaa4accda7fa860c5dcef690.json",
+      "sha256": "ab4920832cd5c6c69afef7dc0c9da7eaa5c8c49faaa4accda7fa860c5dcef690",
+      "bytes": 8387,
+      "original_path": "benchmark/runs/production-release-v7-20261018/independent-original31/safe-summary.json",
+      "snapshot_bytes_unchanged": true
+    }
+  ],
+  "qualification": {
+    "actual_NEW_V7_production31_source_functional_pass": true,
+    "strict_original_all_pass": false,
+    "all9_width_failures_retained": true,
+    "complete159_acceptance": false,
+    "full550_accuracy_claim": false,
+    "private_process_APIkey_file_path_or_source_pixels_exported": false,
+    "gold_reader_and_original_outputs_changed": false
+  }
+}

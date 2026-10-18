@@ -1,0 +1,28 @@
+{
+  "schema": "moparse-evidence/1",
+  "id": "source-v6-Census-page6-source-and-baseline-review-20261018",
+  "method_id": "mineru-advanced-txt-vllm-c2-docling-source-glm-v6",
+  "cohort_id": "holdout-20261018",
+  "origin": "fresh_component",
+  "fresh_model_inference": false,
+  "output_stage": "diagnostic-only",
+  "quality": {},
+  "performance": {},
+  "provenance": [
+    {
+      "path": "benchmark/evidence/artifacts/ffa7da9005a7b16091efd95d619ee313c39044f76094747d890d90063afacc71.json",
+      "sha256": "ffa7da9005a7b16091efd95d619ee313c39044f76094747d890d90063afacc71",
+      "bytes": 12503,
+      "original_path": "benchmark/runs/source-v6-http-20261018/Census-p6-independent-source-and-four-way-safe-summary.json",
+      "snapshot_bytes_unchanged": true
+    }
+  ],
+  "qualification": {
+    "observation_only": true,
+    "deployment_acceptance": false,
+    "fixed_gold_or_scores_changed": false,
+    "source_error_already_present_in_old_baseline": true,
+    "V6_additional_repetition_kept_visible": true,
+    "error_layer_not_asserted_without_raw_response": true
+  }
+}

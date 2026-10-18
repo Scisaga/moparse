@@ -1,0 +1,57 @@
+{
+  "schema_version": "additional-source-contract-lock/1",
+  "frozen_at": "2026-10-15T17:30:10.855533+00:00",
+  "separate_denominators": {
+    "targeted130": 73,
+    "shareholder_scalar": 1
+  },
+  "deduplicated_original_source_fields": true,
+  "primary209_and_supplement402_unchanged": true,
+  "files": [
+    {
+      "path": "benchmark-results/clean-model-comparison-20261015/scoring/supplemental/130-four-page-source-only.json",
+      "sha256": "ec9be1c66861a0fa3f11687043d34fb7e210722c82edda0f63a5d93e17aa9087"
+    },
+    {
+      "path": "benchmark-results/clean-model-comparison-20261015/scoring/targeted-130-source.json",
+      "sha256": "94c8961327a2cd6a03c86ab385cb16f2cca47b70a7654bdfc5b4ce4aa2fb7c95"
+    },
+    {
+      "path": "benchmark-results/clean-model-comparison-20261015/scoring/supplemental/130-merged-source-only.json",
+      "sha256": "38585b913e5d32724e61241e4e9d9ac53408f03a74219cf328c1159d8d3bf6b7"
+    },
+    {
+      "path": "benchmark-results/clean-model-comparison-20261015/scoring/supplemental/score-source130.py",
+      "sha256": "60d6649d485006b8804daa39082bf353d83558ec0d6565fb847465df7f09880d"
+    },
+    {
+      "path": "benchmark-results/clean-model-comparison-20261015/scoring/supplemental/test-source130.py",
+      "sha256": "024ce0dd69274ac7c1d321aa46c9dffcb5efcae5bc86fd8d2a763d5c3fe59c48"
+    },
+    {
+      "path": "benchmark-results/clean-model-comparison-20261015/scoring/supplemental/source130-tests.json",
+      "sha256": "79fddb0da1e7712ba8dfe7db141c6e90fd81a8a8283539cbce3263253574f88c"
+    },
+    {
+      "path": "benchmark-results/clean-model-comparison-20261015/scoring/critical-shareholder-source.json",
+      "sha256": "b650679de000f16913f54a0f26406456e157937c711e2af41b37847d632d5f05"
+    },
+    {
+      "path": "benchmark-results/clean-model-comparison-20261015/scoring/score-critical-keyvalue.py",
+      "sha256": "9c885401203594825254b2656912e9242250af42d17607c47933f9c852abc31b"
+    },
+    {
+      "path": "benchmark-results/clean-model-comparison-20261015/scoring/test-critical-keyvalue.py",
+      "sha256": "91a8b5a5c811b8ea03af242c8b3e37b460254f809154f03c8d3bf2fc08d24e79"
+    },
+    {
+      "path": "benchmark-results/clean-model-comparison-20261015/scoring/critical-keyvalue-tests.json",
+      "sha256": "3e9f70bea4f409f68e2b523105f852e497cddf848cd7bc1c883241eaaabfe8ef"
+    }
+  ],
+  "version": "1.2.0",
+  "changes": [
+    "Stock wrapper supplies source_page and source_cells to frozen core selector; complete source metadata makes PyMuPDF and fallback environments equivalent; no scoring contract or source answers changed.",
+    "Interpret explicit key-cell colspan before selecting its adjacent scalar; keep exact own-key suffix or adjacent anchor only. Correct digits under another key cannot rescue the field."
+  ]
+}

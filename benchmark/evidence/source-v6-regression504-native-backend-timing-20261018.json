@@ -1,0 +1,41 @@
+{
+  "schema": "moparse-evidence/1",
+  "id": "source-v6-regression504-native-backend-timing-20261018",
+  "method_id": "mineru-advanced-txt-vllm-c2-docling-source-glm-v6",
+  "cohort_id": "regression-504",
+  "origin": "fresh_component",
+  "fresh_model_inference": false,
+  "output_stage": "diagnostic-only",
+  "quality": {},
+  "performance": {},
+  "provenance": [
+    {
+      "path": "benchmark/evidence/artifacts/f4b97bd88be86f9e66f6895c6731c6103b8667f8938b9639d643629bb31d4a2d.json",
+      "sha256": "f4b97bd88be86f9e66f6895c6731c6103b8667f8938b9639d643629bb31d4a2d",
+      "bytes": 33210,
+      "original_path": "benchmark/runs/source-v6-http-20261018/regression504-native-backend-stage-final.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/e1a093847f563a7c90b8518fae63ce4867a38ac1a888f18aaa84158db2875049.py",
+      "sha256": "e1a093847f563a7c90b8518fae63ce4867a38ac1a888f18aaa84158db2875049",
+      "bytes": 6932,
+      "original_path": "benchmark/runs/source-v6-http-20261018/extract_worker_stage.py",
+      "snapshot_bytes_unchanged": true
+    }
+  ],
+  "native_backend_stage_observation": {
+    "expected_documents": 11,
+    "recorded_documents": 10,
+    "observed_native_backend_wall_seconds": 3320.434,
+    "full_cohort_native_backend_wall_seconds": null,
+    "returned_native_source_pages": 435,
+    "scope": "Sum of worker parse CPU prelayout/formula + GPU calls + typed source assembly elapsed durations; excludes upload/worker queue before parse, GLM/header/source verification; not GPU forward time or CPU core-seconds",
+    "GPU_forward_time_seconds": null
+  },
+  "qualification": {
+    "observation_only": true,
+    "gold_or_scores_changed": false,
+    "deployment_acceptance": false
+  }
+}

@@ -1,0 +1,39 @@
+[
+  {
+    "id": "uscis-i9-2025",
+    "download_url": "https://www.uscis.gov/sites/default/files/document/forms/i-9.pdf",
+    "error": "HTTP Error 403: Forbidden"
+  },
+  {
+    "id": "nasa-maax-factsheet",
+    "download_url": "https://science.nasa.gov/wp-content/uploads/2023/11/maax-submitted-dec7-2022-factsheet.pdf",
+    "resolved_url": "https://science.nasa.gov/wp-content/uploads/2023/11/maax-submitted-dec7-2022-factsheet.pdf",
+    "downloaded_at": "2026-10-17T19:26:16.022646+00:00",
+    "status": 200,
+    "content_type": "application/pdf",
+    "bytes": 1405078,
+    "sha256": "79ab8e7686605ece7144aaa7d1d95e0c43dc4066ad35db9629f7b10075369411",
+    "path": "benchmark/runs/fresh-sealed-after-repair-20261018/sources/nasa-maax-factsheet.pdf"
+  },
+  {
+    "id": "nara-telegram-32171186",
+    "download_url": "https://www.archives.gov/files/research/jfk/releases/2021/docid-32171186.pdf",
+    "resolved_url": "https://www.archives.gov/files/research/jfk/releases/2021/docid-32171186.pdf",
+    "downloaded_at": "2026-10-17T19:26:21.439033+00:00",
+    "status": 200,
+    "content_type": "application/pdf",
+    "bytes": 519021,
+    "sha256": "adbe2f9e5428734c3ab259353afac28a971d2d89bfa871ac21c7858b7c317fc4",
+    "path": "benchmark/runs/fresh-sealed-after-repair-20261018/sources/nara-telegram-32171186.pdf"
+  },
+  {
+    "id": "gsa-sf95-2007",
+    "download_url": "https://www.gsa.gov/system/files/SF95-07a.pdf",
+    "resolved_url": "https://www.gsa.gov/system/files/SF95-07a.pdf",
+    "downloaded_at": "2026-10-17T19:27:07.482992+00:00",
+    "status": 200,
+    "bytes": 591001,
+    "sha256": "7c58078520934a0dc2c28ec9e59064548a38df3ac26f63c6a7d83a3280c9afe4",
+    "path": "benchmark/runs/fresh-sealed-after-repair-20261018/sources/gsa-sf95-2007.pdf"
+  }
+]

@@ -1,0 +1,52 @@
+{
+  "schema": "moparse-header-stage-case-observation/1",
+  "observed_at": "2026-10-17T23:03:33.075536+00:00",
+  "document_id": "nasa-maax-factsheet",
+  "source_sha256": "79ab8e7686605ece7144aaa7d1d95e0c43dc4066ad35db9629f7b10075369411",
+  "page_count": 2,
+  "captured_summary": {
+    "path": "benchmark/runs/header-v4-http-20261018/fresh7/cases/nasa-maax-factsheet/summary.json",
+    "sha256": "d125f3f1d0110ebba004e658f3593952d7f08bd069f7121a15635dd21296bdfd",
+    "bytes": 2247
+  },
+  "received_MD_sha256": "e15faf335064e209f0075cad4ef41279148d6af54cef6292b07338830a4d3bc5",
+  "job_id": "job_01M561M6R2RCYRY2QEQ7YR760Q",
+  "actual_storage_identity": {
+    "container": "moparse-candidate-header-v4",
+    "container_id": "0e8ca85a3f0337abce45491fd690c2a02965c050e36ce6c26e007b13a9d2fdcb",
+    "deployed_image_id": "sha256:427a7cdd741b69845fcf8c6c1f4db6f9f5db92897cb2ce40af99747300bcff7a",
+    "data_volume": {
+      "Type": "volume",
+      "Name": "moparse-candidate-header-v4-data",
+      "Source": "/var/lib/docker/volumes/moparse-candidate-header-v4-data/_data",
+      "Destination": "/data",
+      "RW": true
+    },
+    "deployment": {
+      "path": "benchmark/runs/header-v4-http-20261018/deployment-before.json",
+      "sha256": "2ceae920c4cc46bd65360b85e6b0fae347138b34e97cb08a204523b349d48ff6",
+      "bytes": 99755
+    },
+    "container_environment_read": false
+  },
+  "selected_warning_code": "independent_header_verification_used",
+  "projected_detail_fields": [
+    "duration_ms",
+    "pages",
+    "candidate_pairs",
+    "accepted_pairs"
+  ],
+  "selected_records": [],
+  "stage_wall_clock_seconds": null,
+  "warning_file": {
+    "container_path": "/data/jobs/job_01M561M6R2RCYRY2QEQ7YR760Q/logs/warnings.json",
+    "host_path": "/var/lib/docker/volumes/moparse-candidate-header-v4-data/_data/jobs/job_01M561M6R2RCYRY2QEQ7YR760Q/logs/warnings.json",
+    "exists": true,
+    "sha256": "d8f0c69b0bae159872e958a941669cfa2254aba13d74b5775c950a9d18ae67a1",
+    "bytes": 1494
+  },
+  "other_warnings_exported": false,
+  "model_or_API_requests": false,
+  "timing_scope": "HeaderService independent CPU parser plus cached-header verification elapsed wall clock; not GPU-forward time, CPU-seconds or entire request latency",
+  "observation_status": "unknown_no_selected_code; absence_not_zero"
+}

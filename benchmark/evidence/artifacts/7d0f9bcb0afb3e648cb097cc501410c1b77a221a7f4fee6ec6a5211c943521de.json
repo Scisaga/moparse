@@ -1,0 +1,12 @@
+{
+  "source": {
+    "path": "pdf_sample/1225475333.pdf",
+    "sha256": "bdb4210e0cd5dc000e8278d2438937b61ae9042969f100289c0d4cab4537e62b",
+    "bytes": 9116156
+  },
+  "endpoint": "/v1/content/parse",
+  "form": {
+    "scan_policy": "auto"
+  },
+  "unit_range_omitted": true
+}

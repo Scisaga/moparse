@@ -1,0 +1,618 @@
+{
+  "schema": "moparse-evidence/1",
+  "id": "header-v4-fresh7-20261018",
+  "method_id": "mineru-advanced-txt-vllm-c2-docling-header-glm-v4",
+  "cohort_id": "fresh7-20261018",
+  "origin": "fresh_HTTP",
+  "fresh_model_inference": null,
+  "new_HTTP_requests": true,
+  "output_stage": "public-HTTP-GFM",
+  "quality": {
+    "source_text": {
+      "pass": 13,
+      "total": 14,
+      "unknown": 0,
+      "gold_fingerprint": "8da34499ea3ed33cadcb044a352671010207c4fd30819bdafe2201303168b40c",
+      "reader_fingerprint": "b901a3a17185739f107b3e65af827c7540e76e876a054948ca30501e5913e4ef"
+    },
+    "source_ordered_text": {
+      "pass": 10,
+      "total": 11,
+      "unknown": 0,
+      "gold_fingerprint": "8da34499ea3ed33cadcb044a352671010207c4fd30819bdafe2201303168b40c",
+      "reader_fingerprint": "b901a3a17185739f107b3e65af827c7540e76e876a054948ca30501e5913e4ef"
+    },
+    "source_table_grid": {
+      "pass": 0,
+      "total": 1,
+      "unknown": 0,
+      "gold_fingerprint": "8da34499ea3ed33cadcb044a352671010207c4fd30819bdafe2201303168b40c",
+      "reader_fingerprint": "b901a3a17185739f107b3e65af827c7540e76e876a054948ca30501e5913e4ef"
+    },
+    "source_table_span": {
+      "pass": 1,
+      "total": 2,
+      "unknown": 0,
+      "gold_fingerprint": "8da34499ea3ed33cadcb044a352671010207c4fd30819bdafe2201303168b40c",
+      "reader_fingerprint": "b901a3a17185739f107b3e65af827c7540e76e876a054948ca30501e5913e4ef"
+    }
+  },
+  "performance": {
+    "seconds": 107.26183263701387,
+    "scope": "full HTTP upload through saved Markdown and public assets",
+    "power_limit_W": 220,
+    "hardware_fingerprint": "RTX2080Ti22GiB-dual-shared-host",
+    "warmup": "NIST25 warmed nativeworker; nativeworker not restarted throughout subsequent504+39+7; provider coldreset once before504; commonGLM unchanged; percohort windows separate",
+    "own_GPU_peak_MiB": 3528.0,
+    "shared_GPU_energy_Wh": 2.8652846441144173,
+    "native_provider_identity": [
+      {
+        "name": "moparse-mineru-vllm",
+        "id": "5d54174333dba8bab3fdde4852049e71a65c9097a2f6b2c5d1d16bf719bd9492",
+        "image_id": "sha256:ea407324215fa2393585447521828b34d1ffc6474fd04b24865fb9476ff5ccfe",
+        "identity_source": {
+          "path": "benchmark/runs/header-v4-http-20261018/deployment-before.json",
+          "sha256": "2ceae920c4cc46bd65360b85e6b0fae347138b34e97cb08a204523b349d48ff6",
+          "bytes": 99755
+        }
+      }
+    ],
+    "native_GPU_attribution": "Only PID-owned MinerU vLLM containers matched to deployed identity; common GLM and TTS never assigned to native model",
+    "shared_GPU_energy_scope": "GPU1 whole device across adjacent valid samples within cohort; includes other services; no boundary extrapolation",
+    "all_shared_devices": {
+      "GPU-95b5895b-c5f3-440b-4bd2-7160ec4da0d1": {
+        "index": 0,
+        "name": "NVIDIA GeForce RTX 2080 Ti",
+        "energy_joules_shared_device": 19775.355441826512,
+        "energy_intervals_observed": 52,
+        "energy_gaps": 0,
+        "gpu_utilization_samples": 53,
+        "gpu_utilization_sum": 3082.0,
+        "memory_used_peak_MiB_shared_device": 19914.0,
+        "gpu_utilization_mean_pct_shared_device": 58.15094339622642
+      },
+      "GPU-87a92d2a-6521-1e36-1ca9-21fd8085b365": {
+        "index": 1,
+        "name": "NVIDIA GeForce RTX 2080 Ti",
+        "energy_joules_shared_device": 10315.024718811903,
+        "energy_intervals_observed": 52,
+        "energy_gaps": 0,
+        "gpu_utilization_samples": 53,
+        "gpu_utilization_sum": 1094.0,
+        "memory_used_peak_MiB_shared_device": 20422.0,
+        "gpu_utilization_mean_pct_shared_device": 20.641509433962263
+      }
+    },
+    "owned_containers": {
+      "moparse-candidate-header-v4": {
+        "gpu_memory_peak_MiB_by_uuid": {},
+        "sm_observed_sum": 0.0,
+        "sm_samples": 0,
+        "cpu_pct_peak_one_core_100": 76.42,
+        "memory_peak_bytes": 1889785610,
+        "sm_mean_observed_process_sum_pct": null
+      },
+      "moparse-native-worker": {
+        "gpu_memory_peak_MiB_by_uuid": {},
+        "sm_observed_sum": 0.0,
+        "sm_samples": 0,
+        "cpu_pct_peak_one_core_100": 174.52,
+        "memory_peak_bytes": 3689376907,
+        "sm_mean_observed_process_sum_pct": null
+      },
+      "moparse-mineru-vllm": {
+        "gpu_memory_peak_MiB_by_uuid": {
+          "GPU-87a92d2a-6521-1e36-1ca9-21fd8085b365": 3528.0
+        },
+        "sm_observed_sum": 993.0,
+        "sm_samples": 46,
+        "cpu_pct_peak_one_core_100": 140.13,
+        "memory_peak_bytes": 7423850971,
+        "sm_mean_observed_process_sum_pct": 21.58695652173913
+      },
+      "docling_glm_ocr": {
+        "gpu_memory_peak_MiB_by_uuid": {
+          "GPU-87a92d2a-6521-1e36-1ca9-21fd8085b365": 11612.0
+        },
+        "sm_observed_sum": 85.0,
+        "sm_samples": 7,
+        "cpu_pct_peak_one_core_100": 369.86,
+        "memory_peak_bytes": 7150046806,
+        "sm_mean_observed_process_sum_pct": 12.142857142857142
+      },
+      "docling_glm_ocr_sdk": {
+        "gpu_memory_peak_MiB_by_uuid": {},
+        "sm_observed_sum": 0.0,
+        "sm_samples": 0,
+        "cpu_pct_peak_one_core_100": 1959.14,
+        "memory_peak_bytes": 7022271528,
+        "sm_mean_observed_process_sum_pct": null
+      }
+    },
+    "observation_errors_by_source": {},
+    "vllm_metrics": [
+      {
+        "name": "vllm:num_requests_running",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+        "first": 0.0,
+        "last": 0.0,
+        "counter_resets": 0,
+        "observed_counter_increase": null
+      },
+      {
+        "name": "vllm:num_requests_waiting",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+        "first": 0.0,
+        "last": 0.0,
+        "counter_resets": 0,
+        "observed_counter_increase": null
+      },
+      {
+        "name": "vllm:kv_cache_usage_perc",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+        "first": 0.0,
+        "last": 0.0,
+        "counter_resets": 0,
+        "observed_counter_increase": null
+      },
+      {
+        "name": "vllm:prefix_cache_queries_total",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+        "first": 1107646.0,
+        "last": 1117538.0,
+        "counter_resets": 0,
+        "observed_counter_increase": 9892.0
+      },
+      {
+        "name": "vllm:prefix_cache_queries_created",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+        "first": 1792273043.6193871,
+        "last": 1792273043.6193871,
+        "counter_resets": 0,
+        "observed_counter_increase": null
+      },
+      {
+        "name": "vllm:prefix_cache_hits_total",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+        "first": 0.0,
+        "last": 0.0,
+        "counter_resets": 0,
+        "observed_counter_increase": 0.0
+      },
+      {
+        "name": "vllm:prefix_cache_hits_created",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+        "first": 1792273043.6194363,
+        "last": 1792273043.6194363,
+        "counter_resets": 0,
+        "observed_counter_increase": null
+      },
+      {
+        "name": "vllm:num_preemptions_total",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+        "first": 0.0,
+        "last": 0.0,
+        "counter_resets": 0,
+        "observed_counter_increase": 0.0
+      },
+      {
+        "name": "vllm:num_preemptions_created",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+        "first": 1792273043.619658,
+        "last": 1792273043.619658,
+        "counter_resets": 0,
+        "observed_counter_increase": null
+      },
+      {
+        "name": "vllm:prompt_tokens_total",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+        "first": 1107646.0,
+        "last": 1117538.0,
+        "counter_resets": 0,
+        "observed_counter_increase": 9892.0
+      },
+      {
+        "name": "vllm:prompt_tokens_created",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+        "first": 1792273043.619697,
+        "last": 1792273043.619697,
+        "counter_resets": 0,
+        "observed_counter_increase": null
+      },
+      {
+        "name": "vllm:prompt_tokens_by_source_total",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\",source=\"local_compute\"}",
+        "first": 1107646.0,
+        "last": 1117538.0,
+        "counter_resets": 0,
+        "observed_counter_increase": 9892.0
+      },
+      {
+        "name": "vllm:prompt_tokens_by_source_total",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\",source=\"local_cache_hit\"}",
+        "first": 0.0,
+        "last": 0.0,
+        "counter_resets": 0,
+        "observed_counter_increase": 0.0
+      },
+      {
+        "name": "vllm:prompt_tokens_by_source_total",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\",source=\"external_kv_transfer\"}",
+        "first": 0.0,
+        "last": 0.0,
+        "counter_resets": 0,
+        "observed_counter_increase": 0.0
+      },
+      {
+        "name": "vllm:prompt_tokens_by_source_created",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\",source=\"local_compute\"}",
+        "first": 1792273043.6197474,
+        "last": 1792273043.6197474,
+        "counter_resets": 0,
+        "observed_counter_increase": null
+      },
+      {
+        "name": "vllm:prompt_tokens_by_source_created",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\",source=\"local_cache_hit\"}",
+        "first": 1792273043.6197696,
+        "last": 1792273043.6197696,
+        "counter_resets": 0,
+        "observed_counter_increase": null
+      },
+      {
+        "name": "vllm:prompt_tokens_by_source_created",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\",source=\"external_kv_transfer\"}",
+        "first": 1792273043.619789,
+        "last": 1792273043.619789,
+        "counter_resets": 0,
+        "observed_counter_increase": null
+      },
+      {
+        "name": "vllm:prompt_tokens_cached_total",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+        "first": 0.0,
+        "last": 0.0,
+        "counter_resets": 0,
+        "observed_counter_increase": 0.0
+      },
+      {
+        "name": "vllm:prompt_tokens_cached_created",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+        "first": 1792273043.619832,
+        "last": 1792273043.619832,
+        "counter_resets": 0,
+        "observed_counter_increase": null
+      },
+      {
+        "name": "vllm:prompt_tokens_recomputed_total",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+        "first": 0.0,
+        "last": 0.0,
+        "counter_resets": 0,
+        "observed_counter_increase": 0.0
+      },
+      {
+        "name": "vllm:prompt_tokens_recomputed_created",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+        "first": 1792273043.6199086,
+        "last": 1792273043.6199086,
+        "counter_resets": 0,
+        "observed_counter_increase": null
+      },
+      {
+        "name": "vllm:generation_tokens_total",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+        "first": 289775.0,
+        "last": 295960.0,
+        "counter_resets": 0,
+        "observed_counter_increase": 6185.0
+      },
+      {
+        "name": "vllm:generation_tokens_created",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+        "first": 1792273043.6199553,
+        "last": 1792273043.6199553,
+        "counter_resets": 0,
+        "observed_counter_increase": null
+      },
+      {
+        "name": "vllm:request_success_total",
+        "labels": "{engine=\"0\",finished_reason=\"stop\",model_name=\"mineru2.5-pro\"}",
+        "first": 1098.0,
+        "last": 1108.0,
+        "counter_resets": 0,
+        "observed_counter_increase": 10.0
+      },
+      {
+        "name": "vllm:request_success_total",
+        "labels": "{engine=\"0\",finished_reason=\"length\",model_name=\"mineru2.5-pro\"}",
+        "first": 0.0,
+        "last": 0.0,
+        "counter_resets": 0,
+        "observed_counter_increase": 0.0
+      },
+      {
+        "name": "vllm:request_success_total",
+        "labels": "{engine=\"0\",finished_reason=\"abort\",model_name=\"mineru2.5-pro\"}",
+        "first": 0.0,
+        "last": 0.0,
+        "counter_resets": 0,
+        "observed_counter_increase": 0.0
+      },
+      {
+        "name": "vllm:request_success_total",
+        "labels": "{engine=\"0\",finished_reason=\"error\",model_name=\"mineru2.5-pro\"}",
+        "first": 0.0,
+        "last": 0.0,
+        "counter_resets": 0,
+        "observed_counter_increase": 0.0
+      },
+      {
+        "name": "vllm:request_success_total",
+        "labels": "{engine=\"0\",finished_reason=\"repetition\",model_name=\"mineru2.5-pro\"}",
+        "first": 0.0,
+        "last": 0.0,
+        "counter_resets": 0,
+        "observed_counter_increase": 0.0
+      },
+      {
+        "name": "vllm:request_success_created",
+        "labels": "{engine=\"0\",finished_reason=\"stop\",model_name=\"mineru2.5-pro\"}",
+        "first": 1792273043.6200194,
+        "last": 1792273043.6200194,
+        "counter_resets": 0,
+        "observed_counter_increase": null
+      },
+      {
+        "name": "vllm:request_success_created",
+        "labels": "{engine=\"0\",finished_reason=\"length\",model_name=\"mineru2.5-pro\"}",
+        "first": 1792273043.6200445,
+        "last": 1792273043.6200445,
+        "counter_resets": 0,
+        "observed_counter_increase": null
+      },
+      {
+        "name": "vllm:request_success_created",
+        "labels": "{engine=\"0\",finished_reason=\"abort\",model_name=\"mineru2.5-pro\"}",
+        "first": 1792273043.6200652,
+        "last": 1792273043.6200652,
+        "counter_resets": 0,
+        "observed_counter_increase": null
+      },
+      {
+        "name": "vllm:request_success_created",
+        "labels": "{engine=\"0\",finished_reason=\"error\",model_name=\"mineru2.5-pro\"}",
+        "first": 1792273043.6200848,
+        "last": 1792273043.6200848,
+        "counter_resets": 0,
+        "observed_counter_increase": null
+      },
+      {
+        "name": "vllm:request_success_created",
+        "labels": "{engine=\"0\",finished_reason=\"repetition\",model_name=\"mineru2.5-pro\"}",
+        "first": 1792273043.6201036,
+        "last": 1792273043.6201036,
+        "counter_resets": 0,
+        "observed_counter_increase": null
+      },
+      {
+        "name": "vllm:request_prompt_tokens_count",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+        "first": 1098.0,
+        "last": 1108.0,
+        "counter_resets": 0,
+        "observed_counter_increase": null
+      },
+      {
+        "name": "vllm:request_prompt_tokens_sum",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+        "first": 1107646.0,
+        "last": 1117538.0,
+        "counter_resets": 0,
+        "observed_counter_increase": null
+      },
+      {
+        "name": "vllm:request_generation_tokens_count",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+        "first": 1098.0,
+        "last": 1108.0,
+        "counter_resets": 0,
+        "observed_counter_increase": null
+      },
+      {
+        "name": "vllm:request_generation_tokens_sum",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+        "first": 289775.0,
+        "last": 295960.0,
+        "counter_resets": 0,
+        "observed_counter_increase": null
+      }
+    ],
+    "resource_window": {
+      "path": "benchmark/evidence/artifacts/18e9bd57f9773c724952efce68a34349da3c65fbf2f3d7706f0ce4bd500a1678.json",
+      "sha256": "18e9bd57f9773c724952efce68a34349da3c65fbf2f3d7706f0ce4bd500a1678",
+      "bytes": 12904,
+      "original_path": "benchmark/runs/header-v4-http-20261018/fresh7-resource-window.json",
+      "snapshot_bytes_unchanged": true
+    },
+    "http_performance": {
+      "scope": "full HTTP upload through saved Markdown and public assets",
+      "documents": 3,
+      "total_seconds": 107.26183263701387,
+      "median_document_seconds": 30.728186094085686,
+      "p95_document_seconds": 64.34538838862208,
+      "per_page_time_limit": "document duration/page count is not measured per-page latency"
+    },
+    "model_forward_observation_limit": "Shared endpoint counters and PID samples do not identify every individual HTTP request",
+    "independent_header_verification_stage": {
+      "observed_wall_clock_seconds": 0,
+      "full_cohort_wall_clock_seconds": null,
+      "recorded_documents": 0,
+      "expected_documents": 3,
+      "completed_HTTP_documents": 3,
+      "observed_unique_document_pages": 0,
+      "observed_candidate_pairs": 0,
+      "observed_accepted_pairs": 0,
+      "scope": "Sum of recorded independent header-verification elapsed wall clocks only; coverage k/n explicit; absent records remain unknown; do not substitute for upload-through-Markdown latency",
+      "GPU_inference_time": false,
+      "absent_warning_is_zero": false
+    },
+    "header_stage_observation": {
+      "path": "benchmark/evidence/artifacts/58fe24e53194c537ad1284051daa9ac5391f00c72928edd0d5d07f2187c74219.json",
+      "sha256": "58fe24e53194c537ad1284051daa9ac5391f00c72928edd0d5d07f2187c74219",
+      "bytes": 3749,
+      "original_path": "benchmark/runs/header-v4-http-20261018/fresh7-header-stage-final.json",
+      "snapshot_bytes_unchanged": true
+    }
+  },
+  "provenance": [
+    {
+      "path": "benchmark/evidence/artifacts/00ec68415354e156d8b3f0a1a2b541e42c47e5c22dcab281e2f9ac2060f66fa1.json",
+      "sha256": "00ec68415354e156d8b3f0a1a2b541e42c47e5c22dcab281e2f9ac2060f66fa1",
+      "bytes": 2652,
+      "original_path": "benchmark/datasets/moparse-addon-20261018/dataset.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/994c89e756ecb0b6c38fa9deef956aafecf550acd3928a03cd2e0a011b0eefd2.json",
+      "sha256": "994c89e756ecb0b6c38fa9deef956aafecf550acd3928a03cd2e0a011b0eefd2",
+      "bytes": 7525,
+      "original_path": "benchmark/runs/header-v4-http-20261018/fresh7-final-assertions/evaluation.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/66eb40b9f81a6b6771ccdf1efc767f3e729489379f3854fb4b4ca6b6b4ce333f.json",
+      "sha256": "66eb40b9f81a6b6771ccdf1efc767f3e729489379f3854fb4b4ca6b6b4ce333f",
+      "bytes": 315,
+      "original_path": "benchmark/runs/header-v4-http-20261018/fresh7/cases/gsa-sf95-2007/request.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/fecb287ad25ca4d9cb1f4936af9a749417d700a24425b09e55282faa09126a8b.json",
+      "sha256": "fecb287ad25ca4d9cb1f4936af9a749417d700a24425b09e55282faa09126a8b",
+      "bytes": 453,
+      "original_path": "benchmark/runs/header-v4-http-20261018/fresh7/cases/gsa-sf95-2007/response.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/0653333fb87f3d089cf60c8223d6e725ca9ddb351c7679083459f26b9d1de9ac.json",
+      "sha256": "0653333fb87f3d089cf60c8223d6e725ca9ddb351c7679083459f26b9d1de9ac",
+      "bytes": 324,
+      "original_path": "benchmark/runs/header-v4-http-20261018/fresh7/cases/nara-telegram-32171186/request.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/761267b5268f4fdf1f68f30b56759eacd314ed040c37329301179f66f03401c6.json",
+      "sha256": "761267b5268f4fdf1f68f30b56759eacd314ed040c37329301179f66f03401c6",
+      "bytes": 452,
+      "original_path": "benchmark/runs/header-v4-http-20261018/fresh7/cases/nara-telegram-32171186/response.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/d219cbca7cc5a91946bb97f6ee28d66b81f3bf1e1f472583f4471d7ed39fab95.json",
+      "sha256": "d219cbca7cc5a91946bb97f6ee28d66b81f3bf1e1f472583f4471d7ed39fab95",
+      "bytes": 322,
+      "original_path": "benchmark/runs/header-v4-http-20261018/fresh7/cases/nasa-maax-factsheet/request.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/80771ff4f84ee81f72b7572d9b25d1fb738adcf3818fbb6237e1b367ba514fb9.json",
+      "sha256": "80771ff4f84ee81f72b7572d9b25d1fb738adcf3818fbb6237e1b367ba514fb9",
+      "bytes": 453,
+      "original_path": "benchmark/runs/header-v4-http-20261018/fresh7/cases/nasa-maax-factsheet/response.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/0bee17927ccb9f0727b35373da17cfbb747defb5826d9d0779f5b81f6a7e7383.json",
+      "sha256": "0bee17927ccb9f0727b35373da17cfbb747defb5826d9d0779f5b81f6a7e7383",
+      "bytes": 110387,
+      "original_path": "benchmark/runs/header-v4-http-20261018/fresh7/run.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/a2825cf4c0f9084bcfe86a45531a4c406824fd59c06fa417809cebbad587a138.json",
+      "sha256": "a2825cf4c0f9084bcfe86a45531a4c406824fd59c06fa417809cebbad587a138",
+      "bytes": 14989,
+      "original_path": "benchmark/runs/header-v4-http-20261018/fresh7-performance.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/2ceae920c4cc46bd65360b85e6b0fae347138b34e97cb08a204523b349d48ff6.json",
+      "sha256": "2ceae920c4cc46bd65360b85e6b0fae347138b34e97cb08a204523b349d48ff6",
+      "bytes": 99755,
+      "original_path": "benchmark/runs/header-v4-http-20261018/deployment-before.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/dedd9fafc31d3a66e53eadbd900e9545e3a6c903fc3b9aba500cd839bc353624.json",
+      "sha256": "dedd9fafc31d3a66e53eadbd900e9545e3a6c903fc3b9aba500cd839bc353624",
+      "bytes": 22955,
+      "original_path": "benchmark/runs/header-v4-http-20261018/header-v4-fresh7-20261018-registration.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/2ceae920c4cc46bd65360b85e6b0fae347138b34e97cb08a204523b349d48ff6.json",
+      "sha256": "2ceae920c4cc46bd65360b85e6b0fae347138b34e97cb08a204523b349d48ff6",
+      "bytes": 99755,
+      "original_path": "benchmark/runs/header-v4-http-20261018/deployment-before.json",
+      "snapshot_bytes_unchanged": true
+    }
+  ],
+  "received_MD_proofs": [
+    {
+      "document_id": "gsa-sf95-2007",
+      "source_sha256": "7c58078520934a0dc2c28ec9e59064548a38df3ac26f63c6a7d83a3280c9afe4",
+      "path": "benchmark/runs/header-v4-http-20261018/fresh7/cases/gsa-sf95-2007/result.md",
+      "sha256": "692f7671ca0e0eea8ce5951ca7aec7c9be036cc3a0d1257df6a181d47d25a39c",
+      "bytes": 10803
+    },
+    {
+      "document_id": "nara-telegram-32171186",
+      "source_sha256": "adbe2f9e5428734c3ab259353afac28a971d2d89bfa871ac21c7858b7c317fc4",
+      "path": "benchmark/runs/header-v4-http-20261018/fresh7/cases/nara-telegram-32171186/result.md",
+      "sha256": "3ddc2d51479e25d947f65993e5dfd4abb3cc539a8efd06df01ab60f14b4c1ecf",
+      "bytes": 4153
+    },
+    {
+      "document_id": "nasa-maax-factsheet",
+      "source_sha256": "79ab8e7686605ece7144aaa7d1d95e0c43dc4066ad35db9629f7b10075369411",
+      "path": "benchmark/runs/header-v4-http-20261018/fresh7/cases/nasa-maax-factsheet/result.md",
+      "sha256": "e15faf335064e209f0075cad4ef41279148d6af54cef6292b07338830a4d3bc5",
+      "bytes": 17508
+    }
+  ],
+  "registered_method_fingerprint": "1f887e92650f852df0c8bf7de7ad3dee7ceaf9fe802f7f670c1c2d395c7b5af5",
+  "observed_recipe_fingerprint": null,
+  "qualification": {
+    "full_HTTP": true,
+    "complete_document_capture": true,
+    "deployment_identity_observation_supplied": true,
+    "deployment_acceptance": false,
+    "note": "Registration records observed evidence; release acceptance additionally requires source, coverage and regression gates",
+    "external_source_identity_verified": true,
+    "external_identity_proof": {
+      "path": "benchmark/evidence/artifacts/2ceae920c4cc46bd65360b85e6b0fae347138b34e97cb08a204523b349d48ff6.json",
+      "sha256": "2ceae920c4cc46bd65360b85e6b0fae347138b34e97cb08a204523b349d48ff6",
+      "bytes": 99755,
+      "original_path": "benchmark/runs/header-v4-http-20261018/deployment-before.json",
+      "snapshot_bytes_unchanged": true
+    }
+  },
+  "report_enrichment": {
+    "created_at": "2026-10-17T23:04:17.826736+00:00",
+    "original_evidence": {
+      "path": "benchmark/evidence/artifacts/dedd9fafc31d3a66e53eadbd900e9545e3a6c903fc3b9aba500cd839bc353624.json",
+      "sha256": "dedd9fafc31d3a66e53eadbd900e9545e3a6c903fc3b9aba500cd839bc353624",
+      "bytes": 22955,
+      "original_path": "benchmark/runs/header-v4-http-20261018/header-v4-fresh7-20261018-registration.json",
+      "snapshot_bytes_unchanged": true
+    },
+    "tool": {
+      "path": "benchmark/tools/enrich_evidence.py",
+      "sha256": "1a08773d4a87c72ee20ecf0d84a4643171248244e0a4a5ecd4165f1866f421a1",
+      "bytes": 7717
+    },
+    "gold_or_scoring_predicates_changed": false,
+    "Markdown_changed": false
+  }
+}

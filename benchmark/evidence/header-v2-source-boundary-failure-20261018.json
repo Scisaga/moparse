@@ -1,0 +1,44 @@
+{
+  "schema": "moparse-evidence/1",
+  "id": "header-v2-source-boundary-failure-20261018",
+  "method_id": "mineru-advanced-txt-vllm-c2-docling-header-glm-v2",
+  "cohort_id": "partial-regression27",
+  "origin": "fresh_component",
+  "fresh_model_inference": false,
+  "new_HTTP_requests": false,
+  "output_stage": "public-HTTP-GFM-source-boundary-diagnostic",
+  "quality": {},
+  "performance": {},
+  "provenance": [
+    {
+      "path": "benchmark/evidence/artifacts/e41e8d4c318826f80c6511fbf8ee1f1c486cb65815930a093792352f85a1b6b3.json",
+      "sha256": "e41e8d4c318826f80c6511fbf8ee1f1c486cb65815930a093792352f85a1b6b3",
+      "bytes": 8735,
+      "original_path": "benchmark/runs/header-v2-http-20261018/partial-normal-source-observation.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/2a431465d03a15281a5137d1f5e5b8ab6ddb0b47a64a66508a5b344c6d524018.json",
+      "sha256": "2a431465d03a15281a5137d1f5e5b8ab6ddb0b47a64a66508a5b344c6d524018",
+      "bytes": 625,
+      "original_path": "benchmark/runs/header-v2-http-20261018/interruption.json",
+      "snapshot_bytes_unchanged": true
+    }
+  ],
+  "qualification": {
+    "observation_only": true,
+    "deployment_acceptance": false,
+    "original_strict_failures_preserved": true,
+    "full_HTTP_cohort_success_claim": false
+  },
+  "observation": {
+    "completed_originals": 4,
+    "completed_pages": 51,
+    "owned_capture_interrupted": true,
+    "accepted_service_jobs_canceled": false,
+    "logical_merge_observed": true,
+    "frozen_reader_source_scope_pass": false,
+    "cause": "Standalone table-source precedes its table-fragment marker, so existing segment readers collect the next table source into the previous logical table. Source literals, IDs, row ranges and spans retained; public serialization boundary is incompatible.",
+    "next_method": "New v3 corrects production marker order; frozen reader/gold and v2 outputs unchanged"
+  }
+}

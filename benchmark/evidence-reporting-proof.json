@@ -1,0 +1,35 @@
+{
+  "schema": "moparse-reporting-tool-proof/1",
+  "created_at": "2026-10-17T18:45:25.507451+00:00",
+  "scope": "Extract already-frozen source gate results and bind external readback evidence; no inference/scoring predicate/capture/model changes",
+  "tool": {
+    "path": "benchmark/tools/enrich_evidence.py",
+    "sha256": "1a08773d4a87c72ee20ecf0d84a4643171248244e0a4a5ecd4165f1866f421a1",
+    "bytes": 7717
+  },
+  "tests": {
+    "path": "tests/test_benchmark_evidence_reporting.py",
+    "sha256": "94ad8190b7ebcb25910d60c933b325d8c37ad5e1cefed93273517725191dcd51",
+    "bytes": 4780
+  },
+  "main_CLI_SHA256": "b901a3a17185739f107b3e65af827c7540e76e876a054948ca30501e5913e4ef",
+  "verification": {
+    "command": ".venv/bin/pytest tests/test_benchmark_evidence_reporting.py tests/test_benchmark_cli.py -q",
+    "passed": 36,
+    "failed": 0,
+    "ruff": "pass",
+    "git_diff_check": "pass"
+  },
+  "identities": {
+    "external_schema": "moparse-observed-deployment/1",
+    "release_schema": "moparse-source-release-acceptance/1",
+    "MD_proof_must_match": true,
+    "existing_input_record_immutable": true,
+    "release_or_fresh_inference_not_automatically_accepted": true
+  },
+  "evidence_schema": {
+    "path": "benchmark/schemas/evidence.schema.json",
+    "sha256": "85b8a3600dd295367f062edab8f9aa96fb03a23d6d82da2bbfb4a16e7d4459b4",
+    "bytes": 1052
+  }
+}

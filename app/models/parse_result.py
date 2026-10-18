@@ -42,6 +42,7 @@ class QualityVerdict(StrEnum):
 
 class SelectionStrategy(StrEnum):
     DOCLING = "docling"
+    MINERU = "mineru"
     NATIVE_REPAIR = "native_repair"
     SCAN_SKIPPED = "scan_skipped"
     GLM_TABLE = "glm_table"
@@ -167,3 +168,7 @@ class DocumentParseResult(BaseModel):
     # stable API/storage boundary and deliberately stay out of the JSON schema.
     _picture_candidates: list[object] = PrivateAttr(default_factory=list)
     _table_fragments: list[object] = PrivateAttr(default_factory=list)
+    _page_furniture: list[object] = PrivateAttr(default_factory=list)
+    _source_regions: list[object] = PrivateAttr(default_factory=list)
+    _native_page_blocks: dict[int, list[dict[str, object]]] = PrivateAttr(default_factory=dict)
+    _source_verification: dict[str, object] = PrivateAttr(default_factory=dict)

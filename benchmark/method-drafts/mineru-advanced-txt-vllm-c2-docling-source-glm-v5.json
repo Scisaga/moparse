@@ -1,0 +1,188 @@
+{
+  "schema": "moparse-method-draft/1",
+  "id": "mineru-advanced-txt-vllm-c2-docling-source-glm-v5",
+  "status": "superseded-by-frozen-registered-method",
+  "label": "Advanced TXT C2 + Docling source-conflict verification/header verification + GLM, V5",
+  "derives_from_method": "mineru-advanced-txt-vllm-c2-docling-header-glm-v4",
+  "parent_fingerprint": "1f887e92650f852df0c8bf7de7ad3dee7ceaf9fe802f7f670c1c2d395c7b5af5",
+  "recipe_proposal": {
+    "routing": {
+      "policy": "native text and embedded-image coverage, independent of model answers",
+      "native": {
+        "package": "mineru",
+        "version": "4.0.12",
+        "text_mode": "TXT",
+        "model": "opendatalab/MinerU2.5-Pro-2605-1.2B",
+        "revision": "08aaea840498d49ce16247b6263196cf02814885",
+        "engine": "vllm",
+        "vllm_version": "0.19.1",
+        "precision": "FP16",
+        "max_model_len": 8192,
+        "KV_bytes": 134217728,
+        "max_num_batched_tokens": 2048,
+        "enforce_eager": true,
+        "logits_processor": "mineru_vl_utils:MinerULogitsProcessor",
+        "client_max_concurrency": 2,
+        "max_num_seqs": 2,
+        "sampling": "pinned official SDK defaults; temperature0/top_p0.01/top_k1; task-specific penalties",
+        "tier": "advanced",
+        "source_text_recovery": {
+          "algorithm": "native writing-axis matching: apply original PDF text direction to normalized source coordinates",
+          "original_native_py_sha256": "02a4e5bd0564acce4e18ce9b8a9e459c43bc3342ab93bd952db16dabee726fec",
+          "patched_native_py_sha256": "616f44e2a1749f4b82074df36c3da852694a9401828c6c36aad62553b2a182cf",
+          "patch_path": "native_worker/patches/mineru-4.0.12-text-axis.patch",
+          "patch_sha256": "a8d2c14a6cfa94061f813b8cf1ed9554360ffc986646520d543f1c100d0d18bd"
+        },
+        "header_verifier": {
+          "setting": "MINERU_HEADER_VERIFIER=docling",
+          "scope": "cross-page candidate table fragments only",
+          "package": "docling",
+          "version": "2.139.0",
+          "table_model": "TableFormer V1 Accurate",
+          "matching": false,
+          "pdf_backend": "PyPdfium",
+          "device": "CPU",
+          "acceptance": "Both complete header bands, explicit source spans, source geometry and caption/unit context must agree; conflict remains unknown",
+          "body_text_or_values_replaced": false,
+          "cpu_page_workers": 1,
+          "cpu_threads": 4,
+          "converter_lifecycle": "one cached independent converter; no legacy multi-worker model preloading",
+          "source_freeze": null,
+          "source_file_sha256": {},
+          "require_ready": true,
+          "parser_workers": 1,
+          "source_verification_boundary": "Only last-bottom/first-top adjacent native candidate pages receive independent inference. Unique same-physical-page geometry match, whole header text/anchor/span agreement on both ends, observed source-cell-supported boundaries, title/unit/native typed furniture and complete native body context are required. Transfers header-role/geometry/scope metadata only; rejects preserve every native value and header. Per-edge allowlist prevents permission leakage. Docling-only footer roles never hide native business text. All single tables emit table-source. Whole-document native typed furniture provides hierarchical pagination evidence even on pages without tables."
+        },
+        "CPU_resource_policy": {
+          "native_worker_memory_limit_bytes": 8589934592,
+          "controls": {
+            "MOPARSE_CPU_MFR_BATCH_SIZE": {
+              "kind": "explicit_moparse_extension_in_pinned_SDK",
+              "read_path": "mineru/model/mfr/pp_formulanet_plus_m_onnx.py:_cpu_batch_limit->_infer_batch",
+              "library_unset_default": 8,
+              "allowed_integer_range": [
+                1,
+                8
+              ],
+              "image_and_compose_explicit": 1
+            },
+            "MINERU_PROCESSING_WINDOW_SIZE": {
+              "kind": "official_SDK_control",
+              "read_path": "mineru/backend/analysis/pdf/window.py:_configured_window_size",
+              "library_unset_default": 64,
+              "image_and_compose_explicit": 8
+            },
+            "MINERU_MALLOC_TRIM": {
+              "kind": "official_SDK_control",
+              "read_path": "mineru/model/runtime/memory.py:trim_process_heap; called at window/document finally",
+              "library_unset_default": false,
+              "image_and_compose_explicit": true
+            }
+          },
+          "CPU_formula_microbatch_patch": {
+            "file": "native_worker/patches/mineru-4.0.12-mfr-cpu-batch.patch",
+            "name": "cpu-mfr-microbatch-limit-v1",
+            "SDK": "mineru4.0.12",
+            "original_sha256": "06f787c9414b99388a89b75a9c8a6c752058146d4538725e4afb2451829f1c1f",
+            "patched_sha256": "e2b45491bea11a6af82fef90ec1d4d6beb72373b2aaaa611b7228c309947c5e2",
+            "unset_cap": 8,
+            "explicit_cap": 1,
+            "preserves_all_formula_items_and_original_mapping": true,
+            "patch_file_sha256": "c391f40659e649bcc858d181cde64182bb542a62d0638c2f8d5f582610310970",
+            "scope": "Clamp pinned CPU ONNX session.run batch only; preserve384x384 per-item preprocessing, modelweights, decoding and original item order. Full realHTTP quality still requires testing."
+          },
+          "unchanged_source_text_axis_sha256": "616f44e2a1749f4b82074df36c3da852694a9401828c6c36aad62553b2a182cf",
+          "resource_effect_not_inferred_from_synthetic_tests": true,
+          "official_processing_window": 8,
+          "official_malloc_trim": true,
+          "explicit_CPU_MFR_max_batch": 1,
+          "native_worker_lifecycle_for_validation": "NIST25 fail-fast then resident across504+39+7; do not restart worker between cohorts",
+          "GPU_provider_cache_boundary": "Reset ownprovider once before504 after reviewed NIST; not worker/app; perphase deployment readbacks retained"
+        },
+        "source_verifier": {
+          "setting": "MINERU_SOURCE_VERIFIER=docling",
+          "scope": "native-route generated table regions with independently witnessed source-letter/number occurrence conflict only",
+          "detector": "Whole source-page PDF glyph budget; whitespace and fullwidthASCII mapping only; exact Unicode L/N model_count > source_count > 0; no file/word/column/domain-specific condition",
+          "independent_verifier": "Docling2.139/TableFormerV1/Accurate/matchingFalse/PyPdfium CPU; concrete acceptance/source coverage/boundary logic pending implementation freeze",
+          "on_unverified_structure": "typed unknown source region with original region raster and literal original PDF glyph text; generated conflicting table is private evidence, never silently cleaned or published as source data",
+          "periods_values_or_gantt_semantics_fabricated": false,
+          "scan_or_mixed_route_filter": "Do not use old PDF hidden OCR layer to replace GLM/SDK scanned outputs; route must be actual native",
+          "effective_CPU_workers_threads": "pending deployed constructor readback; no unmeasured stage cost assumed",
+          "full_recipe_frozen": false
+        }
+      },
+      "scan_mixed": {
+        "model": "GLM-OCR",
+        "model_revision": "recorded per deployed image; not inferred from model name",
+        "SDK_version": "0.1.5",
+        "orientation_preprocess": true,
+        "DPI": 200,
+        "precision": "FP16",
+        "device": "GPU1"
+      }
+    },
+    "public_output": {
+      "format": "faithful logical-table GFM",
+      "table_source": true,
+      "coordinates": false,
+      "semantic_XML": false,
+      "header_merge": "Independent complete header evidence on both source pages, exact full header/column semantics/spans/context agreement; preserve all content and source mapping otherwise",
+      "single_fragment_table_source": true,
+      "HTML_span_adapter": {
+        "source_file": "app/parsers/glm_sdk_remote.py",
+        "source_sha256": "f9d3941f1255b90df297b5eed11c3a02b1d62f588955f1c58ec3fbabf3dc78dd",
+        "max_axis": 2000,
+        "max_grid_positions": 200000,
+        "algorithm": "Preflight explicit source cells using one exclusive span-end row per column; verify full projected rows/columns/product and overlap before allocating output matrix. Never clamp source spans, shift conflicting anchors, fabricate periods or change model input. HTML and Markdown share limits.",
+        "scope": "Generic shared HTML and Markdown span decoder; same budgets apply to all documents/routes; no source text, spans, periods or values changed",
+        "invalid_or_over_budget_behavior": "Not implemented in this minimal v2; truly invalid or over-budget native tables retain existing ParserError behavior. No claim to have solved that broader issue."
+      },
+      "standalone_source_scope": {
+        "source_file": "app/services/table_service.py",
+        "source_sha256": "2655ee975b321990670cc503b91e8f99f3e2df0f7ce5e75dd4635f25b39f6be1",
+        "order": "existing table-fragment opener, own table-source, unchanged table-structure and GFM",
+        "existing_consumer_compatible": true,
+        "full_grid_literals_and_spans_changed": false,
+        "algorithm": "Within standalone export only, emit existing table-fragment opener before its table-source, followed by unchanged structure and GFM. Logical assembly order and header/merge predicates remain unchanged. No source literal, span, unit or period repair."
+      },
+      "source_region_preservation": {
+        "proposed_marker": "<!-- source-region: ID; source-page: N; structure: unknown -->",
+        "format": "original raster asset plus literal fenced source text, final contract pending implementation",
+        "public_coordinates": false,
+        "generated_structure_recovery_claim": false
+      }
+    },
+    "adapter_version": "moparse public GFM/table-source adapter; actual application source/image hashes recorded per run",
+    "application_source_freeze": null
+  },
+  "fingerprint": null,
+  "source_freeze": null,
+  "actual_inference_performed": false,
+  "live_selected": false,
+  "parent135_source_freeze": {
+    "path": "benchmark/evidence/artifacts/17da7b4e561f0ec449643f3b0b86442c0c035371beb67b009ab6a5ce9141026a.json",
+    "sha256": "17da7b4e561f0ec449643f3b0b86442c0c035371beb67b009ab6a5ce9141026a",
+    "bytes": 19757,
+    "original_path": "benchmark/runs/header-verifier-v4-20261018/source-freeze.json",
+    "snapshot_bytes_unchanged": true
+  },
+  "must_preserve_worker_and_GPU_images": {
+    "native_worker": "sha256:f84c8dd3e4251df6cf3e79b388c9c770975b7de759167717bd6ceb67df020e9a",
+    "native_GPU": "sha256:ea407324215fa2393585447521828b34d1ffc6474fd04b24865fb9476ff5ccfe"
+  },
+  "source_validation_requirements": [
+    "All actual V5 app/runtime source SHA plus inherited135 and newly added files archived before execution.",
+    "Only new app image may change; actual worker/GPU image identities and lock hashes must match V4.",
+    "Current550 source outputs exposed; posthoc NASA source regressions are development tests, never new independent holdout.",
+    "Fixed209/402/46/36/28 gold and reader SHA unchanged; honest existing full-source title/span failures retained.",
+    "Raw typed-stage replay is component evidence, never labeled a fresh full-PDF/public-HTTP run."
+  ],
+  "deployment_gate": "Not tested or eligible. Root decides full550 freshHTTP; must preserve values/spans/source, GFM and unknown-region assets, disclose remaining errors.",
+  "registered_method": {
+    "path": "benchmark/methods/mineru-advanced-txt-vllm-c2-docling-source-glm-v5.json",
+    "sha256": "f573791f3b6da3af2fd640859a3513b0d7ad7d08c0b4d6c433aa43b30b3e4ff6",
+    "bytes": 35951,
+    "fingerprint": "2e63abac2d227b6b60a51331d569e999c94267f9a502a3cf3fb2326d6b8b4acd"
+  },
+  "draft_is_deployable_or_current_recipe": false
+}

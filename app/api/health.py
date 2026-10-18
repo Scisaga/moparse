@@ -14,9 +14,18 @@ router = APIRouter(tags=["health"])
 async def health(request: Request) -> HealthResponse:
     runtime = get_runtime(request)
     backends = await runtime.parser_service.probe_backends()
-    docling_ready = any(item.name == "docling-standard" and item.ready for item in backends)
+    native_name = (
+        "mineru-advanced-txt"
+        if getattr(runtime.settings, "native_parser_backend", "docling") == "mineru"
+        else "docling-standard"
+    )
+    native_ready = any(item.name == native_name and item.ready for item in backends)
+    if getattr(runtime.settings, "mineru_header_verifier", "off") == "docling":
+        native_ready = native_ready and any(
+            item.name == "docling-header-verifier" and item.ready for item in backends
+        )
     return HealthResponse(
-        status="ok" if docling_ready else "degraded",
+        status="ok" if native_ready else "degraded",
         service=runtime.settings.app_id,
         version=runtime.settings.version,
         uptime_seconds=runtime.uptime_seconds,

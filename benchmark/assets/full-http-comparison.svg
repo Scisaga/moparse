@@ -1,0 +1,179 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 1320" role="img" aria-labelledby="title desc">
+<title id="title">完整 HTTP：502 页质量与耗时对比</title>
+<desc id="desc">独立固定分母、通过与未知分列；Office单独展示。耗时为上传至保存Markdown，不含Office及资产下载。历史与本轮功率不同。</desc>
+<defs><pattern id="unknown" width="6" height="6" patternUnits="userSpaceOnUse"><rect width="6" height="6" fill="#fef3c7"/><path d="M0 6L6 0" stroke="#d97706" stroke-width="1"/></pattern></defs>
+<rect width="1440" height="1320" fill="#fff"/>
+<g font-family="Noto Sans CJK SC,Noto Sans CJK,sans-serif" fill="#172033">
+<text x="36" y="48" font-size="30" fill="#172033" font-weight="700" text-anchor="start">完整 HTTP：质量与 502 页实际耗时</text>
+<text x="36" y="82" font-size="18" fill="#556177" font-weight="400" text-anchor="start">10 份完整 PDF · 各标注集分别比较 · Office 两页的 6 项另列</text>
+<rect x="36" y="110" width="14" height="14" rx="2" fill="#64748b"/>
+<text x="60" y="123" font-size="17" fill="#172033" font-weight="400" text-anchor="start">旧线上 Docling</text>
+<text x="60" y="146" font-size="14" fill="#64748b" font-weight="400" text-anchor="start">历史 · 180 W</text>
+<rect x="504" y="110" width="14" height="14" rx="2" fill="#a08bbd"/>
+<text x="528" y="123" font-size="17" fill="#172033" font-weight="400" text-anchor="start">Advanced＋TXT</text>
+<text x="528" y="146" font-size="14" fill="#64748b" font-weight="400" text-anchor="start">本轮 · 220 W</text>
+<rect x="972" y="110" width="14" height="14" rx="2" fill="#2563eb"/>
+<text x="996" y="123" font-size="17" fill="#172033" font-weight="400" text-anchor="start">Advanced＋TXT＋原件核验 V7</text>
+<text x="996" y="146" font-size="14" fill="#64748b" font-weight="400" text-anchor="start">本轮 · 220 W</text>
+<rect x="36" y="166" width="666" height="236" rx="10" fill="#fff" stroke="#e2e8f0"/>
+<text x="54" y="196" font-size="21" fill="#172033" font-weight="700" text-anchor="start">正文及结构 / 40</text>
+<text x="54" y="222" font-size="14" fill="#64748b" font-weight="400" text-anchor="start">仅 PDF 原件的既有检查，不含 Office 6 项</text>
+<path d="M156 235V365" stroke="#edf1f6"/>
+<text x="156" y="388" font-size="13" fill="#64748b" font-weight="400" text-anchor="middle">0%</text>
+<path d="M361.0 235V365" stroke="#edf1f6"/>
+<text x="361.0" y="388" font-size="13" fill="#64748b" font-weight="400" text-anchor="middle">50%</text>
+<path d="M566 235V365" stroke="#edf1f6"/>
+<text x="566" y="388" font-size="13" fill="#64748b" font-weight="400" text-anchor="middle">100%</text>
+<text x="142" y="259" font-size="16" fill="#172033" font-weight="400" text-anchor="end">Docling</text>
+<rect x="156" y="241" width="410" height="23" fill="#f1f5f9"/>
+<rect x="156" y="241" width="164.00" height="23" fill="#64748b"/>
+<text x="684" y="259" font-size="17" fill="#64748b" font-weight="700" text-anchor="end">16/40</text>
+<text x="142" y="302" font-size="16" fill="#172033" font-weight="400" text-anchor="end">TXT</text>
+<rect x="156" y="284" width="410" height="23" fill="#f1f5f9"/>
+<rect x="156" y="284" width="410.00" height="23" fill="#a08bbd"/>
+<text x="684" y="302" font-size="17" fill="#a08bbd" font-weight="700" text-anchor="end">40/40</text>
+<text x="142" y="345" font-size="16" fill="#172033" font-weight="400" text-anchor="end">TXT+核验</text>
+<rect x="156" y="327" width="410" height="23" fill="#f1f5f9"/>
+<rect x="156" y="327" width="410.00" height="23" fill="#2563eb"/>
+<text x="684" y="345" font-size="17" fill="#2563eb" font-weight="700" text-anchor="end">40/40</text>
+<rect x="738" y="166" width="666" height="236" rx="10" fill="#fff" stroke="#e2e8f0"/>
+<text x="756" y="196" font-size="21" fill="#172033" font-weight="700" text-anchor="start">核心原值 / 209</text>
+<text x="756" y="222" font-size="14" fill="#64748b" font-weight="400" text-anchor="start">条长为原值；完整期间分数在方法名下单列</text>
+<path d="M858 235V365" stroke="#edf1f6"/>
+<text x="858" y="388" font-size="13" fill="#64748b" font-weight="400" text-anchor="middle">0%</text>
+<path d="M1063.0 235V365" stroke="#edf1f6"/>
+<text x="1063.0" y="388" font-size="13" fill="#64748b" font-weight="400" text-anchor="middle">50%</text>
+<path d="M1268 235V365" stroke="#edf1f6"/>
+<text x="1268" y="388" font-size="13" fill="#64748b" font-weight="400" text-anchor="middle">100%</text>
+<text x="844" y="259" font-size="16" fill="#172033" font-weight="400" text-anchor="end">Docling</text>
+<text x="844" y="275" font-size="11" fill="#64748b" font-weight="400" text-anchor="end">期间 209/209</text>
+<rect x="858" y="241" width="410" height="23" fill="#f1f5f9"/>
+<rect x="858" y="241" width="410.00" height="23" fill="#64748b"/>
+<text x="1386" y="259" font-size="17" fill="#64748b" font-weight="700" text-anchor="end">209/209</text>
+<text x="844" y="302" font-size="16" fill="#172033" font-weight="400" text-anchor="end">TXT</text>
+<text x="844" y="318" font-size="11" fill="#64748b" font-weight="400" text-anchor="end">期间 209/209</text>
+<rect x="858" y="284" width="410" height="23" fill="#f1f5f9"/>
+<rect x="858" y="284" width="410.00" height="23" fill="#a08bbd"/>
+<text x="1386" y="302" font-size="17" fill="#a08bbd" font-weight="700" text-anchor="end">209/209</text>
+<text x="844" y="345" font-size="16" fill="#172033" font-weight="400" text-anchor="end">TXT+核验</text>
+<text x="844" y="361" font-size="11" fill="#64748b" font-weight="400" text-anchor="end">期间 209/209</text>
+<rect x="858" y="327" width="410" height="23" fill="#f1f5f9"/>
+<rect x="858" y="327" width="410.00" height="23" fill="#2563eb"/>
+<text x="1386" y="345" font-size="17" fill="#2563eb" font-weight="700" text-anchor="end">209/209</text>
+<rect x="36" y="428" width="666" height="236" rx="10" fill="#fff" stroke="#e2e8f0"/>
+<text x="54" y="458" font-size="21" fill="#172033" font-weight="700" text-anchor="start">原值及唯一行 / 402 · 严格原字</text>
+<text x="54" y="484" font-size="14" fill="#64748b" font-weight="400" text-anchor="start">标签全半角也会失分；保留冻结判分</text>
+<path d="M156 497V627" stroke="#edf1f6"/>
+<text x="156" y="650" font-size="13" fill="#64748b" font-weight="400" text-anchor="middle">0%</text>
+<path d="M361.0 497V627" stroke="#edf1f6"/>
+<text x="361.0" y="650" font-size="13" fill="#64748b" font-weight="400" text-anchor="middle">50%</text>
+<path d="M566 497V627" stroke="#edf1f6"/>
+<text x="566" y="650" font-size="13" fill="#64748b" font-weight="400" text-anchor="middle">100%</text>
+<text x="142" y="521" font-size="16" fill="#172033" font-weight="400" text-anchor="end">Docling</text>
+<rect x="156" y="503" width="410" height="23" fill="#f1f5f9"/>
+<rect x="156" y="503" width="379.40" height="23" fill="#64748b"/>
+<text x="684" y="521" font-size="17" fill="#64748b" font-weight="700" text-anchor="end">372/402</text>
+<text x="142" y="564" font-size="16" fill="#172033" font-weight="400" text-anchor="end">TXT</text>
+<rect x="156" y="546" width="410" height="23" fill="#f1f5f9"/>
+<rect x="156" y="546" width="357.99" height="23" fill="#a08bbd"/>
+<text x="684" y="564" font-size="17" fill="#a08bbd" font-weight="700" text-anchor="end">351/402</text>
+<text x="142" y="607" font-size="16" fill="#172033" font-weight="400" text-anchor="end">TXT+核验</text>
+<rect x="156" y="589" width="410" height="23" fill="#f1f5f9"/>
+<rect x="156" y="589" width="357.99" height="23" fill="#2563eb"/>
+<text x="684" y="607" font-size="17" fill="#2563eb" font-weight="700" text-anchor="end">351/402</text>
+<rect x="738" y="428" width="666" height="236" rx="10" fill="#fff" stroke="#e2e8f0"/>
+<text x="756" y="458" font-size="21" fill="#172033" font-weight="700" text-anchor="start">完整列义 / 402 · 严格原字</text>
+<text x="756" y="484" font-size="14" fill="#64748b" font-weight="400" text-anchor="start">核对公开表头、跨度与列义；保留字宽差异失分</text>
+<path d="M858 497V627" stroke="#edf1f6"/>
+<text x="858" y="650" font-size="13" fill="#64748b" font-weight="400" text-anchor="middle">0%</text>
+<path d="M1063.0 497V627" stroke="#edf1f6"/>
+<text x="1063.0" y="650" font-size="13" fill="#64748b" font-weight="400" text-anchor="middle">50%</text>
+<path d="M1268 497V627" stroke="#edf1f6"/>
+<text x="1268" y="650" font-size="13" fill="#64748b" font-weight="400" text-anchor="middle">100%</text>
+<text x="844" y="521" font-size="16" fill="#172033" font-weight="400" text-anchor="end">Docling</text>
+<rect x="858" y="503" width="410" height="23" fill="#f1f5f9"/>
+<rect x="858" y="503" width="332.49" height="23" fill="#64748b"/>
+<text x="1386" y="521" font-size="17" fill="#64748b" font-weight="700" text-anchor="end">326/402</text>
+<text x="844" y="564" font-size="16" fill="#172033" font-weight="400" text-anchor="end">TXT</text>
+<rect x="858" y="546" width="410" height="23" fill="#f1f5f9"/>
+<rect x="858" y="546" width="302.91" height="23" fill="#a08bbd"/>
+<text x="1386" y="564" font-size="17" fill="#a08bbd" font-weight="700" text-anchor="end">297/402</text>
+<text x="844" y="607" font-size="16" fill="#172033" font-weight="400" text-anchor="end">TXT+核验</text>
+<rect x="858" y="589" width="410" height="23" fill="#f1f5f9"/>
+<rect x="858" y="589" width="302.91" height="23" fill="#2563eb"/>
+<text x="1386" y="607" font-size="17" fill="#2563eb" font-weight="700" text-anchor="end">297/402</text>
+<rect x="36" y="690" width="666" height="236" rx="10" fill="#fff" stroke="#e2e8f0"/>
+<text x="54" y="720" font-size="21" fill="#172033" font-weight="700" text-anchor="start">筹资独立源格 / 31</text>
+<text x="54" y="746" font-size="14" fill="#64748b" font-weight="400" text-anchor="start">合并单元格内容及其绑定</text>
+<path d="M156 759V889" stroke="#edf1f6"/>
+<text x="156" y="912" font-size="13" fill="#64748b" font-weight="400" text-anchor="middle">0%</text>
+<path d="M361.0 759V889" stroke="#edf1f6"/>
+<text x="361.0" y="912" font-size="13" fill="#64748b" font-weight="400" text-anchor="middle">50%</text>
+<path d="M566 759V889" stroke="#edf1f6"/>
+<text x="566" y="912" font-size="13" fill="#64748b" font-weight="400" text-anchor="middle">100%</text>
+<text x="142" y="783" font-size="16" fill="#172033" font-weight="400" text-anchor="end">Docling</text>
+<rect x="156" y="765" width="410" height="23" fill="#f1f5f9"/>
+<rect x="156" y="765" width="410.00" height="23" fill="#64748b"/>
+<text x="684" y="783" font-size="17" fill="#64748b" font-weight="700" text-anchor="end">31/31</text>
+<text x="142" y="826" font-size="16" fill="#172033" font-weight="400" text-anchor="end">TXT</text>
+<rect x="156" y="808" width="410" height="23" fill="#f1f5f9"/>
+<rect x="156" y="808" width="410.00" height="23" fill="#a08bbd"/>
+<text x="684" y="826" font-size="17" fill="#a08bbd" font-weight="700" text-anchor="end">31/31</text>
+<text x="142" y="869" font-size="16" fill="#172033" font-weight="400" text-anchor="end">TXT+核验</text>
+<rect x="156" y="851" width="410" height="23" fill="#f1f5f9"/>
+<rect x="156" y="851" width="410.00" height="23" fill="#2563eb"/>
+<text x="684" y="869" font-size="17" fill="#2563eb" font-weight="700" text-anchor="end">31/31</text>
+<rect x="738" y="690" width="666" height="236" rx="10" fill="#fff" stroke="#e2e8f0"/>
+<text x="756" y="720" font-size="21" fill="#172033" font-weight="700" text-anchor="start">502 页上传 → Markdown · 分钟</text>
+<text x="756" y="746" font-size="14" fill="#64748b" font-weight="400" text-anchor="start">越短越快；排除 Office、资产下载</text>
+<path d="M858 759V889" stroke="#edf1f6"/>
+<text x="858" y="912" font-size="13" fill="#64748b" font-weight="400" text-anchor="middle">0</text>
+<path d="M1063.0 759V889" stroke="#edf1f6"/>
+<text x="1063.0" y="912" font-size="13" fill="#64748b" font-weight="400" text-anchor="middle">40</text>
+<path d="M1268 759V889" stroke="#edf1f6"/>
+<text x="1268" y="912" font-size="13" fill="#64748b" font-weight="400" text-anchor="middle">80</text>
+<text x="844" y="783" font-size="16" fill="#172033" font-weight="400" text-anchor="end">Docling</text>
+<rect x="858" y="765" width="410" height="23" fill="#f1f5f9"/>
+<rect x="858" y="765" width="115.29" height="23" fill="#64748b"/>
+<text x="1386" y="783" font-size="17" fill="#64748b" font-weight="700" text-anchor="end">22.50 分</text>
+<text x="844" y="826" font-size="16" fill="#172033" font-weight="400" text-anchor="end">TXT</text>
+<rect x="858" y="808" width="410" height="23" fill="#f1f5f9"/>
+<rect x="858" y="808" width="317.46" height="23" fill="#a08bbd"/>
+<text x="1386" y="826" font-size="17" fill="#a08bbd" font-weight="700" text-anchor="end">61.94 分</text>
+<text x="844" y="869" font-size="16" fill="#172033" font-weight="400" text-anchor="end">TXT+核验</text>
+<rect x="858" y="851" width="410" height="23" fill="#f1f5f9"/>
+<rect x="858" y="851" width="387.22" height="23" fill="#2563eb"/>
+<text x="1386" y="869" font-size="17" fill="#2563eb" font-weight="700" text-anchor="end">75.56 分</text>
+<rect x="36" y="952" width="666" height="236" rx="10" fill="#fff" stroke="#e2e8f0"/>
+<text x="54" y="982" font-size="21" fill="#172033" font-weight="700" text-anchor="start">Office 衍生两页 / 6 · 单列</text>
+<text x="54" y="1008" font-size="14" fill="#64748b" font-weight="400" text-anchor="start">来源分别标注；与 PDF 40 项互不合并</text>
+<path d="M156 1021V1151" stroke="#edf1f6"/>
+<text x="156" y="1174" font-size="13" fill="#64748b" font-weight="400" text-anchor="middle">0%</text>
+<path d="M361.0 1021V1151" stroke="#edf1f6"/>
+<text x="361.0" y="1174" font-size="13" fill="#64748b" font-weight="400" text-anchor="middle">50%</text>
+<path d="M566 1021V1151" stroke="#edf1f6"/>
+<text x="566" y="1174" font-size="13" fill="#64748b" font-weight="400" text-anchor="middle">100%</text>
+<text x="142" y="1045" font-size="16" fill="#172033" font-weight="400" text-anchor="end">Docling</text>
+<text x="142" y="1061" font-size="11" fill="#64748b" font-weight="400" text-anchor="end">本轮 · 220 W</text>
+<rect x="156" y="1027" width="410" height="23" fill="#f1f5f9"/>
+<rect x="156" y="1027" width="410.00" height="23" fill="#64748b"/>
+<text x="684" y="1045" font-size="17" fill="#64748b" font-weight="700" text-anchor="end">6/6</text>
+<text x="142" y="1088" font-size="16" fill="#172033" font-weight="400" text-anchor="end">TXT</text>
+<text x="142" y="1104" font-size="11" fill="#64748b" font-weight="400" text-anchor="end">本轮 · 220 W</text>
+<rect x="156" y="1070" width="410" height="23" fill="#f1f5f9"/>
+<rect x="156" y="1070" width="410.00" height="23" fill="#a08bbd"/>
+<text x="684" y="1088" font-size="17" fill="#a08bbd" font-weight="700" text-anchor="end">6/6</text>
+<text x="142" y="1131" font-size="16" fill="#172033" font-weight="400" text-anchor="end">TXT+核验</text>
+<text x="142" y="1147" font-size="11" fill="#64748b" font-weight="400" text-anchor="end">本轮 · 220 W</text>
+<rect x="156" y="1113" width="410" height="23" fill="#f1f5f9"/>
+<rect x="156" y="1113" width="410.00" height="23" fill="#2563eb"/>
+<text x="684" y="1131" font-size="17" fill="#2563eb" font-weight="700" text-anchor="end">6/6</text>
+<text x="756" y="982" font-size="21" fill="#172033" font-weight="700" text-anchor="start">资源观测 · 原记录窗口</text>
+<text x="756" y="1010" font-size="14" fill="#64748b" font-weight="400" text-anchor="start">缺测保留“未测”；共享整卡能耗不归因给单模型</text>
+<text x="756" y="1042" font-size="16" fill="#64748b" font-weight="400" text-anchor="start">Docling：专属峰值 未测；整卡能耗 未测</text>
+<text x="756" y="1084" font-size="16" fill="#a08bbd" font-weight="400" text-anchor="start">TXT：专属峰值 3528 MiB；整卡能耗 114.97 Wh（共享）</text>
+<text x="756" y="1126" font-size="16" fill="#2563eb" font-weight="400" text-anchor="start">TXT+核验：专属峰值 3528 MiB；整卡能耗 127.67 Wh（共享）</text>
+<text x="36" y="1234" font-size="16" fill="#556177" font-weight="400" text-anchor="start">质量：各固定分母分别展示；条长为通过比例，斜线为未知；指定标注集不等于整份文档准确率。</text>
+<text x="36" y="1265" font-size="16" fill="#556177" font-weight="400" text-anchor="start">耗时：Docling 180 W／TXT 220 W／TXT+核验 220 W，预热及共享负载不同；展示实际服务成本，不推算受控加速倍数。</text>
+<text x="36" y="1296" font-size="15" fill="#64748b" font-weight="400" text-anchor="start">资源：按原记录窗口披露，可能含 Office 与其他任务；不是 PDF 502 页的独享显存或能耗。</text>
+</g></svg>

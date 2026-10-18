@@ -1,0 +1,27 @@
+{
+  "schema": "moparse-evidence/1",
+  "id": "table-v7-402-source-differences-20261018",
+  "method_id": "mineru-advanced-txt-vllm-c2-docling-source-glm-v7",
+  "cohort_id": "regression-504",
+  "origin": "fresh_component",
+  "fresh_model_inference": false,
+  "output_stage": "diagnostic-only",
+  "quality": {},
+  "performance": {},
+  "provenance": [
+    {
+      "path": "benchmark/evidence/artifacts/cba606009b7b622eb3be4999b2e59141eb9a53d2b8c19699fa13553399d3ecb2.json",
+      "sha256": "cba606009b7b622eb3be4999b2e59141eb9a53d2b8c19699fa13553399d3ecb2",
+      "bytes": 4659747,
+      "original_path": "benchmark/runs/table-syntax-v7-http-20261018/three-way-402-source-diff.json",
+      "snapshot_bytes_unchanged": true
+    }
+  ],
+  "qualification": {
+    "observation_only": true,
+    "gold_or_scoring_predicates_changed": false,
+    "deployment_acceptance": false,
+    "full_HTTP_inference_repeated": false
+  },
+  "comparison_scope": "OldDocling vs primary AdvancedTXT vs V7, all402 target statuses read verbatim"
+}

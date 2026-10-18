@@ -34,9 +34,9 @@ class Settings(BaseSettings):
         extra="ignore",
     )
 
-    app_name: str = "MosaicParse"
-    app_id: str = "mosaicparse"
-    version: str = "0.4.0"
+    app_name: str = "moparse"
+    app_id: str = "moparse"
+    version: str = "0.5.0"
     host: str = "0.0.0.0"
     port: int = Field(default=12303, ge=1, le=65535)
     tz: str = "Asia/Shanghai"
@@ -72,6 +72,14 @@ class Settings(BaseSettings):
     max_asset_bytes: int = Field(default=50 * 1024 * 1024, gt=0)
     max_extracted_asset_bytes: int = Field(default=400 * 1024 * 1024, gt=0)
     max_asset_image_pixels: int = Field(default=100_000_000, gt=0)
+
+    # Preserve the existing Docling deployment unless the native worker is
+    # explicitly selected. Public parsing options and persisted jobs are stable.
+    native_parser_backend: Literal["docling", "mineru"] = "docling"
+    mineru_native_base_url: str = "http://mineru-native:8010"
+    mineru_native_timeout_seconds: float = Field(default=3600.0, gt=0)
+    mineru_header_verifier: Literal["off", "docling"] = "off"
+    mineru_source_verifier: Literal["off", "docling"] = "off"
 
     docling_device: str = "cpu"
     # Prefer the application-specific name: upstream Docling also consumes
@@ -131,12 +139,12 @@ class Settings(BaseSettings):
     allow_private_source_urls: bool = False
     source_url_max_redirects: int = Field(default=3, ge=0, le=20)
     source_url_timeout_seconds: float = Field(default=30.0, gt=0)
-    source_url_user_agent: str = "mosaicparse/0.3"
+    source_url_user_agent: str = "moparse/0.5.0"
 
     mcp_enabled: bool = True
     mcp_max_inline_bytes: int = Field(default=2 * 1024 * 1024, gt=0)
     mcp_max_result_chars: int = Field(default=200_000, gt=0)
-    mcp_allowed_hosts: str = "localhost,127.0.0.1,[::1],mosaicparse"
+    mcp_allowed_hosts: str = "localhost,127.0.0.1,[::1],moparse,mosaicparse"
     mcp_allowed_origins: str = ""
 
     @field_validator("docling_device")
@@ -163,6 +171,15 @@ class Settings(BaseSettings):
 
     @model_validator(mode="after")
     def validate_limits(self) -> Settings:
+        if self.mineru_header_verifier != "off" and self.native_parser_backend != "mineru":
+            raise ValueError("MINERU_HEADER_VERIFIER requires NATIVE_PARSER_BACKEND=mineru")
+        if self.mineru_source_verifier != "off" and (
+            self.native_parser_backend != "mineru" or self.mineru_header_verifier != "docling"
+        ):
+            raise ValueError(
+                "MINERU_SOURCE_VERIFIER requires NATIVE_PARSER_BACKEND=mineru "
+                "and MINERU_HEADER_VERIFIER=docling"
+            )
         if self.sync_max_bytes > self.max_upload_bytes:
             raise ValueError("SYNC_MAX_BYTES cannot exceed MAX_UPLOAD_BYTES")
         if self.sync_max_units > self.max_content_units:
@@ -220,6 +237,9 @@ class Settings(BaseSettings):
             "video_max_frame_pixels": self.video_max_frame_pixels,
             "ffmpeg_max_concurrency": self.ffmpeg_max_concurrency,
             "ffmpeg_threads": self.ffmpeg_threads,
+            "native_parser_backend": self.native_parser_backend,
+            "mineru_header_verifier": self.mineru_header_verifier,
+            "mineru_source_verifier": self.mineru_source_verifier,
             "docling_device": self.docling_device,
             "docling_pdf_backend": self.docling_pdf_backend,
             "docling_do_cell_matching": self.docling_do_cell_matching,

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import html
 import json
+import math
 import re
 from dataclasses import dataclass, field
 from typing import Any
@@ -94,6 +95,9 @@ class TableFragment:
     header_scope_complete: bool = True
     caption_scope_complete: bool = True
     page_furniture: list[PageFurnitureFragment] = field(default_factory=list)
+    header_role_source: str | None = None
+    header_verification_required: bool = False
+    verified_next_fragments: list[str] = field(default_factory=list)
     _structure_marker: str = field(default="", init=False, repr=False)
 
     def __post_init__(self) -> None:
@@ -299,6 +303,11 @@ def _table_structure_marker(group: list[TableFragment], table_id: str) -> str:
         "header_scope_complete": bool(complete_header),
         "spans": sorted(spans) if geometry_known else None,
     }
+    role_sources = {
+        fragment.header_role_source for fragment in group if fragment.header_role_source
+    }
+    if role_sources:
+        metadata["header_role_sources"] = sorted(role_sources)
     return (
         "<!-- table-structure: "
         + json.dumps(metadata, ensure_ascii=False, separators=(",", ":"))
@@ -658,18 +667,42 @@ def _headers_match(left: TableFragment, right: TableFragment) -> bool:
     return not continuation[-1] or signature[-1] == continuation[-1]
 
 
+def _has_column_boundaries(fragment: TableFragment) -> bool:
+    values = fragment.column_boundaries
+    return (
+        fragment.num_cols > 0
+        and len(values) == fragment.num_cols + 1
+        and all(
+            isinstance(value, (int, float))
+            and not isinstance(value, bool)
+            and math.isfinite(value)
+            and 0 <= value <= 1
+            for value in values
+        )
+        and all(left < right for left, right in zip(values, values[1:], strict=False))
+    )
+
+
 def _columns_match(left: TableFragment, right: TableFragment) -> bool:
-    if left.num_cols != right.num_cols or len(left.column_boundaries) != len(
-        right.column_boundaries
+    if (
+        left.num_cols != right.num_cols
+        or not _has_column_boundaries(left)
+        or not _has_column_boundaries(right)
     ):
         return False
     return (
         sum(
             abs(a - b) for a, b in zip(left.column_boundaries, right.column_boundaries, strict=True)
         )
-        / max(1, len(left.column_boundaries))
+        / len(left.column_boundaries)
         <= 0.02
     )
+
+
+def _verified_link_allowed(left: TableFragment, right: TableFragment) -> bool:
+    return (
+        not left.header_verification_required and not right.header_verification_required
+    ) or right.fragment_id in left.verified_next_fragments
 
 
 def link_cross_page_tables(fragments: list[TableFragment]) -> list[list[TableFragment]]:
@@ -694,6 +727,7 @@ def link_cross_page_tables(fragments: list[TableFragment]) -> list[list[TableFra
             and following.valid
             and previous.normalized_bbox[3] >= 0.85
             and following.normalized_bbox[1] <= 0.15
+            and _verified_link_allowed(previous, following)
             and _columns_match(previous, following)
             and _headers_match(group[0] if group else previous, following)
         ):
@@ -801,6 +835,7 @@ def _table_context_pages(
     group: list[TableFragment],
     content_by_page: dict[int, str],
     fragments: list[TableFragment],
+    page_furniture: list[PageFurnitureFragment] | None = None,
 ) -> dict[int, str]:
     """Ignore only source-proven repeated furniture for continuity checks.
 
@@ -810,7 +845,25 @@ def _table_context_pages(
     """
     context = content_by_page.copy()
     first = group[0]
-    for candidate in first.page_furniture:
+    # Keep document furniture independently of whether a physical page has a
+    # table. Identical objects referenced by fragments are counted only once.
+    sources = list(page_furniture or [])
+    sources.extend(source for fragment in fragments for source in fragment.page_furniture)
+    distinct = {
+        (
+            source.source_ref,
+            source.page_number,
+            source.label,
+            source.text,
+            source.rendered,
+            source.normalized_bbox,
+        ): source
+        for source in sources
+    }
+    all_furniture = list(distinct.values())
+    for candidate in (
+        source for source in all_furniture if source.page_number == first.page_number
+    ):
         candidate_units, _ = _context_evidence(candidate.text)
         # A repeated source classification does not remove an explicit unit
         # declaration from the table's scope or hide conflicting declarations.
@@ -820,7 +873,7 @@ def _table_context_pages(
         for fragment in group:
             matches = [
                 source
-                for source in fragment.page_furniture
+                for source in all_furniture
                 if source.page_number == fragment.page_number
                 and source.label == candidate.label
                 and source.normalized_bbox is not None
@@ -860,8 +913,7 @@ def _table_context_pages(
             # alone do not establish a document pagination scheme.
             evidence_pages = {
                 source.page_number
-                for fragment in fragments
-                for source in fragment.page_furniture
+                for source in all_furniture
                 if source.label == candidate.label
                 and source.normalized_bbox is not None
                 and max(
@@ -887,8 +939,9 @@ def _continuous_table_context(
     group: list[TableFragment],
     content_by_page: dict[int, str],
     fragments: list[TableFragment],
+    page_furniture: list[PageFurnitureFragment] | None = None,
 ) -> bool:
-    content_by_page = _table_context_pages(group, content_by_page, fragments)
+    content_by_page = _table_context_pages(group, content_by_page, fragments, page_furniture)
     first = group[0]
     known_units, known_context = _context_evidence(
         _preceding_content(content_by_page[first.page_number], first, fragments)
@@ -899,7 +952,7 @@ def _continuous_table_context(
     for left, right in zip(group, group[1:], strict=False):
         # Recheck the first fragment's complete scope immediately before any
         # repeated header is removed, including captions omitted on middle pages.
-        if not _headers_match(first, right):
+        if not _verified_link_allowed(left, right) or not _headers_match(first, right):
             return False
         right_units, right_context = _context_evidence(
             _preceding_content(content_by_page[right.page_number], right, fragments)
@@ -943,6 +996,7 @@ def assemble_logical_tables(
     fragments: list[TableFragment],
     *,
     enabled: bool,
+    page_furniture: list[PageFurnitureFragment] | None = None,
 ) -> dict[int, str]:
     content_by_page = {page.page_number: page.content or "" for page in pages}
     page_models = {page.page_number: page for page in pages}
@@ -954,9 +1008,8 @@ def assemble_logical_tables(
             page.diagnostics = page.diagnostics or PageDiagnostics(source_kind=PageSourceKind.MIXED)
             if fragment.fragment_id not in page.diagnostics.logical_table_ids:
                 page.diagnostics.logical_table_ids.append(fragment.fragment_id)
-    if not enabled:
-        return content_by_page
-    for group in link_cross_page_tables(fragments):
+    merged_fragments: set[str] = set()
+    for group in link_cross_page_tables(fragments) if enabled else []:
         # Never remove a continuation unless every original rendering can be
         # replaced exactly once and all non-table material remains in scope.
         if any(
@@ -970,7 +1023,7 @@ def assemble_logical_tables(
             _table_surroundings(fragment) != surroundings for fragment in group[1:]
         ):
             continue
-        if not _continuous_table_context(group, content_by_page, fragments):
+        if not _continuous_table_context(group, content_by_page, fragments, page_furniture):
             continue
         logical_id = f"table_{group[0].fragment_id}_{group[-1].fragment_id}"
         source_pages = sorted({fragment.page_number for fragment in group})
@@ -998,6 +1051,7 @@ def assemble_logical_tables(
             first.rendered, logical, 1
         )
         for fragment in group:
+            merged_fragments.add(fragment.fragment_id)
             fragment.logical_table_id = logical_id
             page = page_models.get(fragment.page_number)
             if page and page.diagnostics:
@@ -1008,5 +1062,25 @@ def assemble_logical_tables(
         for fragment in group[1:]:
             content_by_page[fragment.page_number] = content_by_page[fragment.page_number].replace(
                 fragment.rendered, "", 1
+            )
+    # Every standalone physical table has a complete row-to-source map too.
+    # Header uncertainty or disabled merging must not remove provenance.
+    for fragment in fragments:
+        if fragment.fragment_id in merged_fragments:
+            continue
+        content = content_by_page.get(fragment.page_number, "")
+        marker = _source_row_marker(fragment, logical_start=1, skip=0)
+        if marker not in content and content.count(fragment.rendered) == 1:
+            # The fragment marker opens the public metadata scope. Its source
+            # map must follow it, or a streaming reader binds this map to the
+            # preceding table instead of this physical fragment.
+            fragment_marker = f"<!-- table-fragment: {fragment.fragment_id} -->"
+            standalone = fragment.rendered.replace(
+                fragment_marker, f"{fragment_marker}\n\n{marker}", 1
+            )
+            if standalone == fragment.rendered:
+                standalone = f"{fragment_marker}\n\n{marker}\n\n{fragment.rendered}"
+            content_by_page[fragment.page_number] = content.replace(
+                fragment.rendered, standalone, 1
             )
     return content_by_page

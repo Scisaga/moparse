@@ -1,0 +1,64 @@
+{
+  "schema": "moparse-header-stage-case-observation/1",
+  "observed_at": "2026-10-18T03:26:34.315256+00:00",
+  "document_id": "1206337604",
+  "source_sha256": "ccff40771d75e9412b65f364a1c72c1733c37b4d8f232f49cf639621f0ba165f",
+  "page_count": 2,
+  "captured_summary": {
+    "path": "benchmark/runs/table-syntax-v7-http-20261018/regression504/cases/1206337604/summary.json",
+    "sha256": "fef49d7237cc964e82a55155a2677531438e9350942a05473f78cf6c46478505",
+    "bytes": 874
+  },
+  "received_MD_sha256": "05d0210f8d15634586b75c0f7332a0d6007a76198606c3d33ae0cdb5ac9e52a7",
+  "job_id": "job_01M56GPJP54GG5K2VMFPHGPCVR",
+  "actual_job_status": "completed",
+  "capture_status": "completed",
+  "actual_storage_identity": {
+    "container": "moparse-candidate-table-v7",
+    "container_id": "0e96848093a39b8def0a1684890a284bef53a7607bd50834c75faba937ebedf0",
+    "deployed_image_id": "sha256:3a2c30f2b67172232aabd24c636e425a2333f3b127dde386c513bb0e3198da19",
+    "data_volume": {
+      "Type": "volume",
+      "Name": "moparse-candidate-table-v7-data",
+      "Source": "/var/lib/docker/volumes/moparse-candidate-table-v7-data/_data",
+      "Destination": "/data",
+      "RW": true
+    },
+    "deployment": {
+      "path": "benchmark/runs/table-syntax-v7-http-20261018/deployment-before.json",
+      "sha256": "8f9cec00bcb078b9080c949bcf7402e9a772eb3d08a64f4b16263519f6c37b14",
+      "bytes": 100289
+    },
+    "container_environment_read": false
+  },
+  "selected_warning_code": "independent_header_verification_used",
+  "projected_detail_fields": [
+    "duration_ms",
+    "pages",
+    "candidate_pairs",
+    "accepted_pairs"
+  ],
+  "selected_records": [
+    {
+      "duration_ms": 1723,
+      "pages": [
+        1,
+        2
+      ],
+      "candidate_pairs": 1,
+      "accepted_pairs": 0
+    }
+  ],
+  "stage_wall_clock_seconds": 1.723,
+  "warning_file": {
+    "container_path": "/data/jobs/job_01M56GPJP54GG5K2VMFPHGPCVR/logs/warnings.json",
+    "host_path": "/var/lib/docker/volumes/moparse-candidate-table-v7-data/_data/jobs/job_01M56GPJP54GG5K2VMFPHGPCVR/logs/warnings.json",
+    "exists": true,
+    "sha256": "73e0e880f65cb8395fbe0d72306c11a967d704c0f891863e13a19166560df06a",
+    "bytes": 735
+  },
+  "other_warnings_exported": false,
+  "model_or_API_requests": false,
+  "timing_scope": "HeaderService independent CPU parser plus cached-header verification elapsed wall clock; not GPU-forward time, CPU-seconds or entire request latency",
+  "observation_status": "observed"
+}

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Export MosaicParse raster assets from the SVG composition master."""
+"""Export moparse raster assets from the SVG composition master."""
 
 from __future__ import annotations
 
@@ -10,7 +10,7 @@ import cairosvg
 from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[1]
-MASTER = ROOT / "assets" / "mosaicparse-logo.svg"
+MASTER = ROOT / "assets" / "moparse-logo.svg"
 
 
 def png(size: int) -> bytes:
@@ -33,8 +33,8 @@ def main() -> int:
     image_256 = png(256)
     image_180 = png(180)
     image_64 = png(64)
-    write(ROOT / "assets" / "mosaicparse-logo-1024.png", image_1024)
-    write(ROOT / "assets" / "mosaicparse-logo-256.png", image_256)
+    write(ROOT / "assets" / "moparse-logo-1024.png", image_1024)
+    write(ROOT / "assets" / "moparse-logo-256.png", image_256)
     write(ROOT / "logo.png", image_1024)
     write(ROOT / "favicon.png", image_64)
     write(ROOT / "frontend" / "public" / "logo.png", image_256)

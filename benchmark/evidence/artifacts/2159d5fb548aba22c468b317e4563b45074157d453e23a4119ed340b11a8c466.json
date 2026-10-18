@@ -1,0 +1,16 @@
+{
+  "settings": {
+    "docling_device": "cpu",
+    "docling_pdf_backend": "pypdfium",
+    "docling_table_mode": "accurate",
+    "docling_do_cell_matching": false,
+    "docling_page_workers": 1,
+    "docling_num_threads": 4,
+    "parser_workers": 1
+  },
+  "source_sha256": "25e8e71bc74332b48abad42fa5445b2bf5c12eb245ebc2cd1cd9dc591326fe71",
+  "schema": "moparse-effective-header-settings-probe/1",
+  "observed_at": "2026-10-17T20:05:32.171930+00:00",
+  "probe_source": "import hashlib,json,pathlib\nfrom app.config import get_settings\nfrom app.services.header_verification_service import DoclingHeaderVerificationService\ns=DoclingHeaderVerificationService(get_settings(), None).parser.settings\nkeys=('docling_device','docling_pdf_backend','docling_table_mode','docling_do_cell_matching','docling_page_workers','docling_num_threads','parser_workers')\nprint(json.dumps({'settings':{k:getattr(s,k,None) for k in keys},'source_sha256':hashlib.sha256(pathlib.Path('/app/app/services/header_verification_service.py').read_bytes()).hexdigest()}))\n",
+  "scope": "Reconstruct nested settings with the deployed constructor and environment; never initialize models or call inference; base Settings page-workers is overridden here"
+}

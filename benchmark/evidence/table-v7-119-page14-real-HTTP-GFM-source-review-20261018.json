@@ -1,0 +1,28 @@
+{
+  "schema": "moparse-evidence/1",
+  "id": "table-v7-119-page14-real-HTTP-GFM-source-review-20261018",
+  "method_id": "mineru-advanced-txt-vllm-c2-docling-source-glm-v7",
+  "cohort_id": "regression-504",
+  "origin": "fresh_component",
+  "fresh_model_inference": false,
+  "output_stage": "diagnostic-only",
+  "quality": {},
+  "performance": {},
+  "provenance": [
+    {
+      "path": "benchmark/evidence/artifacts/c2585741cfc903f21a714c9e96fdc2ac3ee9ae5cfec3f29a84da35550b0561c2.json",
+      "sha256": "c2585741cfc903f21a714c9e96fdc2ac3ee9ae5cfec3f29a84da35550b0561c2",
+      "bytes": 5695,
+      "original_path": "benchmark/runs/v7-original-issues-independent-20261018/V7-p14-source-safe-summary.json",
+      "snapshot_bytes_unchanged": true
+    }
+  ],
+  "qualification": {
+    "actual_complete119_V7_HTTP_received": true,
+    "GFM_and_saved_model_conservation_pass": true,
+    "original_pdf_full_table_structure_accuracy_pass": false,
+    "source16_model17_error_retained": true,
+    "new_HTTP550_or_production159_acceptance": false,
+    "gold_reader_and_original_outputs_changed": false
+  }
+}

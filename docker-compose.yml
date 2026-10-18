@@ -1,12 +1,12 @@
-name: mosaicparse
+name: moparse
 
 services:
-  mosaicparse:
+  moparse:
     build:
       context: .
       dockerfile: Dockerfile
-    image: ${MOSAICPARSE_IMAGE:-ghcr.io/scisaga/mosaic-parse:0.4.0}
-    container_name: mosaicparse
+    image: ${MOPARSE_IMAGE:-${MOSAICPARSE_IMAGE:-ghcr.io/scisaga/moparse:0.5.0}}
+    container_name: moparse
     restart: unless-stopped
     init: true
     depends_on:
@@ -14,6 +14,9 @@ services:
         condition: service_healthy
         required: false
       glm-ocr-sdk:
+        condition: service_healthy
+        required: false
+      mineru-native:
         condition: service_healthy
         required: false
     env_file:
@@ -25,7 +28,7 @@ services:
       PORT: ${PORT:-12303}
       HTTP_PROXY: ${HTTP_PROXY:-}
       HTTPS_PROXY: ${HTTPS_PROXY:-}
-      NO_PROXY: ${NO_PROXY:-localhost,127.0.0.1,::1,glm-ocr,glm-ocr-sdk,mosaicparse}
+      NO_PROXY: ${NO_PROXY:-localhost,127.0.0.1,::1,glm-ocr,glm-ocr-sdk,moparse,mosaicparse}
       DOCLING_DEVICE: cpu
       DOCLING_DO_CELL_MATCHING: "0"
       DOCLING_PDF_BACKEND: pypdfium
@@ -34,6 +37,10 @@ services:
       GLM_OCR_ENABLED: ${GLM_OCR_ENABLED:-0}
       GLM_SDK_ENABLED: ${GLM_SDK_ENABLED:-1}
       GLM_SDK_ORIENTATION_ENABLED: ${GLM_SDK_ORIENTATION_ENABLED:-1}
+      NATIVE_PARSER_BACKEND: ${NATIVE_PARSER_BACKEND:-docling}
+      MINERU_NATIVE_BASE_URL: ${MINERU_NATIVE_BASE_URL:-http://mineru-native:8010}
+      MINERU_HEADER_VERIFIER: ${MINERU_HEADER_VERIFIER:-off}
+      MINERU_SOURCE_VERIFIER: ${MINERU_SOURCE_VERIFIER:-off}
     ports:
       - "${PORT:-12303}:${PORT:-12303}"
     volumes:
@@ -58,7 +65,7 @@ services:
       HF_TOKEN: ${HF_TOKEN:-}
       HTTP_PROXY: ${HTTP_PROXY:-}
       HTTPS_PROXY: ${HTTPS_PROXY:-}
-      NO_PROXY: ${NO_PROXY:-localhost,127.0.0.1,::1,glm-ocr,glm-ocr-sdk,mosaicparse}
+      NO_PROXY: ${NO_PROXY:-localhost,127.0.0.1,::1,glm-ocr,glm-ocr-sdk,moparse,mosaicparse}
     ports:
       - "${GLM_OCR_BIND_ADDRESS:-127.0.0.1}:${GLM_OCR_HOST_PORT:-8001}:8000"
     volumes:
@@ -102,7 +109,7 @@ services:
       context: .
       dockerfile: Dockerfile.glm-sdk
       args:
-        PARSER_IMAGE: ${MOSAICPARSE_IMAGE:-ghcr.io/scisaga/mosaic-parse:0.4.0}
+        PARSER_IMAGE: ${MOPARSE_IMAGE:-${MOSAICPARSE_IMAGE:-ghcr.io/scisaga/moparse:0.5.0}}
     image: ${GLM_SDK_IMAGE:-docling-glm-ocr-sdk:0.1.5}
     container_name: docling_glm_ocr_sdk
     restart: unless-stopped
@@ -117,7 +124,7 @@ services:
       HF_TOKEN: ${HF_TOKEN:-}
       HTTP_PROXY: ${HTTP_PROXY:-}
       HTTPS_PROXY: ${HTTPS_PROXY:-}
-      NO_PROXY: ${NO_PROXY:-localhost,127.0.0.1,::1,glm-ocr,glm-ocr-sdk,mosaicparse}
+      NO_PROXY: ${NO_PROXY:-localhost,127.0.0.1,::1,glm-ocr,glm-ocr-sdk,moparse,mosaicparse}
       GLMOCR_MODE: selfhosted
       GLMOCR_OCR_API_URL: http://glm-ocr:8000/v1/chat/completions
       GLMOCR_OCR_MODEL: zai-org/GLM-OCR
@@ -136,6 +143,116 @@ services:
       retries: 10
     stop_grace_period: 1m
 
+  mineru-vllm:
+    profiles: ["mineru"]
+    build:
+      context: .
+      dockerfile: Dockerfile.mineru-vllm
+    image: ${MINERU_VLLM_IMAGE:-ghcr.io/scisaga/moparse-mineru-vllm:0.5.0}
+    container_name: moparse-mineru-vllm
+    restart: unless-stopped
+    init: true
+    cpus: 4
+    mem_limit: 20g
+    shm_size: 2g
+    environment:
+      HF_HUB_OFFLINE: "1"
+      TRANSFORMERS_OFFLINE: "1"
+      VLLM_NO_USAGE_STATS: "1"
+      OMP_NUM_THREADS: "4"
+      TOKENIZERS_PARALLELISM: "false"
+    ports:
+      - "127.0.0.1:${MINERU_VLLM_HOST_PORT:-12431}:8000"
+    volumes:
+      - mineru-models:/models/mineru:ro
+    command:
+      - /models/mineru/snapshots/08aaea840498d49ce16247b6263196cf02814885
+      - --served-model-name
+      - mineru2.5-pro
+      - --host
+      - 0.0.0.0
+      - --port
+      - "8000"
+      - --dtype
+      - half
+      # Explicit KV budget overrides utilization-based KV allocation. The
+      # utilization value is not a hard limit on all model GPU memory.
+      - --gpu-memory-utilization
+      - "0.16"
+      - --kv-cache-memory-bytes
+      - "134217728"
+      - --max-model-len
+      - "8192"
+      - --max-num-seqs
+      - "2"
+      - --max-num-batched-tokens
+      - "2048"
+      - --limit-mm-per-prompt
+      - '{"image":1,"video":0}'
+      - --enforce-eager
+      - --logits-processors
+      - mineru_vl_utils:MinerULogitsProcessor
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ["${MINERU_GPU_DEVICE_ID:-1}"]
+              capabilities: [gpu]
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health',timeout=5)"]
+      interval: 20s
+      timeout: 8s
+      start_period: 5m
+      retries: 10
+    stop_grace_period: 1m
+
+  mineru-native:
+    profiles: ["mineru"]
+    build:
+      context: .
+      dockerfile: Dockerfile.native-worker
+    image: ${MINERU_NATIVE_IMAGE:-ghcr.io/scisaga/moparse-native-worker:0.5.0}
+    container_name: moparse-native-worker
+    restart: unless-stopped
+    init: true
+    cpus: 4
+    mem_limit: 8g
+    depends_on:
+      mineru-vllm:
+        condition: service_healthy
+    environment:
+      MINERU_HOME: /models/mineru-native
+      MINERU_MODEL_SOURCE: local
+      MINERU_MODEL_SMALL_BACKEND: onnx
+      MINERU_VLM_BASE_URL: http://mineru-vllm:8000
+      MINERU_VLM_MODEL: mineru2.5-pro
+      MINERU_VLM_CONCURRENCY: "2"
+      MINERU_PROCESSING_WINDOW_SIZE: ${MINERU_PROCESSING_WINDOW_SIZE:-8}
+      MINERU_MALLOC_TRIM: ${MINERU_MALLOC_TRIM:-1}
+      MOPARSE_CPU_MFR_BATCH_SIZE: ${MOPARSE_CPU_MFR_BATCH_SIZE:-1}
+      NO_PROXY: localhost,127.0.0.1,mineru-vllm
+    ports:
+      - "127.0.0.1:${MINERU_NATIVE_HOST_PORT:-12432}:8010"
+    volumes:
+      - mineru-small-models:/models/mineru-native:ro
+    # Upstream locks local model reads; keep only its lock directory writable.
+    tmpfs:
+      - /models/mineru-native/models/.locks:size=4m
+    healthcheck:
+      test: ["CMD", "python", "-c", "import json,urllib.request; assert json.load(urllib.request.urlopen('http://127.0.0.1:8010/ready',timeout=8))['ready']"]
+      interval: 20s
+      timeout: 12s
+      start_period: 5m
+      retries: 10
+    stop_grace_period: 1m
+
+networks:
+  default:
+    name: moparse_backend
+    external: true
+
+# Physical volume names intentionally survive the project rename.
 volumes:
   mosaicparse-data:
     name: mosaicparse-data
@@ -143,3 +260,7 @@ volumes:
     name: ${DOCLING_MODELS_VOLUME:-mosaicparse-docling-models}
   huggingface-cache:
     name: mosaicparse-huggingface-cache
+  mineru-models:
+    name: moparse-mineru-models
+  mineru-small-models:
+    name: moparse-mineru-small-models

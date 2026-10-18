@@ -1,0 +1,12 @@
+{
+  "id": "holdout-irs-form1040-2025",
+  "source": "benchmark/datasets/moparse-v1/sources/holdout-20261018/irs-form1040-2025.pdf",
+  "source_sha256": "3d31c226df0d189ced80e039d01cf0f8820c1019681a0f0ca6264de277b7e982",
+  "page_count": 2,
+  "submit_http_status": 502,
+  "http_status": 502,
+  "status": "failed",
+  "error": "Parse submission failed HTTP 502",
+  "full_capture_seconds": 131.00639978295658,
+  "duration_seconds": 131.00639978295658
+}

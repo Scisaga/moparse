@@ -1,0 +1,17 @@
+{
+  "schema": "moparse-private-smoke-evidence-archive-receipt/1",
+  "pass": true,
+  "archive_manifest_sha256": "252b6640ed3b04c454ea3de13ce07daf37b8506c6cc8d236be3729ce4510a4b8",
+  "copied_files": 85,
+  "copied_bytes": 45969454,
+  "source_and_archive_all_SHA_equal": true,
+  "actual_job_status_counts": {
+    "completed": 6,
+    "partial": 1
+  },
+  "quality_fully_resolved": false,
+  "quality_reassessed": false,
+  "source_writes": 0,
+  "database_writes": 0,
+  "API_requests": 0
+}

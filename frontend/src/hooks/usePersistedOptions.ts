@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import type { ParseOptions } from '../types/api'
 
-const STORAGE_KEY = 'mosaicparse.parse-options.v6'
-const LEGACY_STORAGE_KEY = 'mosaicparse.parse-options.v5'
+const STORAGE_KEY = 'moparse.parse-options.v6'
+const LEGACY_STORAGE_KEYS = ['mosaicparse.parse-options.v6', 'mosaicparse.parse-options.v5']
 
 export const DEFAULT_OPTIONS: ParseOptions = {
   scanPolicy: 'auto',
@@ -10,12 +10,13 @@ export const DEFAULT_OPTIONS: ParseOptions = {
   language: 'zh,en',
   describeImages: false,
   descriptionLanguage: 'zh-CN',
-  timeoutSeconds: 300,
+  timeoutSeconds: 0,
 }
 
 export function readOptions(): ParseOptions {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY) ?? localStorage.getItem(LEGACY_STORAGE_KEY)
+    const raw = localStorage.getItem(STORAGE_KEY)
+      ?? LEGACY_STORAGE_KEYS.map((key) => localStorage.getItem(key)).find((value) => value !== null)
     if (!raw) return DEFAULT_OPTIONS
     const saved = JSON.parse(raw) as Partial<ParseOptions>
     return {

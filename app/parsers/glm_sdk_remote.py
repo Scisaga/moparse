@@ -46,6 +46,19 @@ from app.utils.settings import setting
 
 logger = logging.getLogger(__name__)
 
+# The public grid has a bounded total size. A legitimate wide table must not
+# fail merely because its span encoding uses more than 100 logical columns.
+MAX_TABLE_DIMENSION = 2_000
+MAX_TABLE_GRID_CELLS = 200_000
+
+
+def _bounded_table_shape(rows: int, columns: int) -> bool:
+    return (
+        0 < rows <= MAX_TABLE_DIMENSION
+        and 0 < columns <= MAX_TABLE_DIMENSION
+        and rows * columns <= MAX_TABLE_GRID_CELLS
+    )
+
 
 @dataclass(frozen=True, slots=True)
 class _HtmlCell:
@@ -72,7 +85,7 @@ class _TableHtmlParser(HTMLParser):
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
         tag = tag.casefold()
         if tag == "tr":
-            if self._row is not None or len(self.rows) >= 2_000:
+            if self._row is not None or len(self.rows) >= MAX_TABLE_DIMENSION:
                 raise ValueError("invalid HTML table rows")
             self._row = []
         elif tag in {"td", "th"} and self._row is not None:
@@ -96,13 +109,15 @@ class _TableHtmlParser(HTMLParser):
 
     def handle_endtag(self, tag: str) -> None:
         tag = tag.casefold()
-        if tag in {"td", "th"} and tag == self._cell_tag and self._row is not None:
+        # Close only the one open cell at an explicit td/th end; never infer
+        # cell/row ends. Its opening tag owns the text, spans and header role.
+        if tag in {"td", "th"} and self._cell_tag is not None and self._row is not None:
             self._row.append(
                 _HtmlCell(
                     text=re.sub(r"\s+", " ", "".join(self._cell_parts)).strip(),
                     row_span=self._row_span,
                     col_span=self._col_span,
-                    header=tag == "th",
+                    header=self._cell_tag == "th",
                     row_header=self._row_header,
                 )
             )
@@ -119,7 +134,7 @@ class _TableHtmlParser(HTMLParser):
 
 def _positive_span(value: str | None) -> int:
     parsed = int(value or "1")
-    if not 1 <= parsed <= 2_000:
+    if not 1 <= parsed <= MAX_TABLE_DIMENSION:
         raise ValueError("HTML table span out of bounds")
     return parsed
 
@@ -134,34 +149,40 @@ def _html_table_layout(
         parser.close()
     except (ValueError, TypeError):
         return [], False, []
-    if not parser.rows or parser._row is not None or len(parser.rows) > 2_000:
+    if not parser.rows or parser._row is not None or len(parser.rows) > MAX_TABLE_DIMENSION:
         return [], False, []
     anchors: dict[tuple[int, int], str] = {}
-    occupied: set[tuple[int, int]] = set()
+    # Track only each column's exclusive span end during the shape preflight.
+    # No rectangular occupancy set or output matrix exists until the complete
+    # source grid satisfies both axis limits and the total cell budget.
+    occupied_until = [0] * MAX_TABLE_DIMENSION
+    total_rows = len(parser.rows)
     columns = 0
     has_header = False
     layout: list[TableCellFragment] = []
     for row_index, cells in enumerate(parser.rows):
         column_index = 0
         for cell in cells:
-            while (row_index, column_index) in occupied:
+            while column_index < MAX_TABLE_DIMENSION and occupied_until[column_index] > row_index:
                 column_index += 1
-            if column_index + cell.col_span > 100 or row_index + cell.row_span > 2_000:
+            end_column = column_index + cell.col_span
+            end_row = row_index + cell.row_span
+            projected_rows = max(total_rows, end_row)
+            projected_columns = max(columns, end_column)
+            if not _bounded_table_shape(projected_rows, projected_columns):
                 return [], False, []
-            positions = {
-                (target_row, target_column)
-                for target_row in range(row_index, row_index + cell.row_span)
-                for target_column in range(column_index, column_index + cell.col_span)
-            }
             # The anchor can be free while a later column of its colspan is
             # covered by a preceding rowspan. Checking only the anchor loses
             # the association between both source cells.
-            if occupied & positions:
+            if any(
+                occupied_until[column] > row_index for column in range(column_index, end_column)
+            ):
                 return [], False, []
             anchors[(row_index, column_index)] = cell.text
             column_header = cell.header and not cell.row_header
             has_header = has_header or (row_index == 0 and column_header)
-            occupied.update(positions)
+            for column in range(column_index, end_column):
+                occupied_until[column] = end_row
             layout.append(
                 TableCellFragment(
                     row=row_index,
@@ -173,10 +194,9 @@ def _html_table_layout(
                     is_row_header=cell.row_header,
                 )
             )
-            columns = max(columns, column_index + cell.col_span)
-            column_index += cell.col_span
-    total_rows = max(len(parser.rows), max((position[0] for position in occupied), default=-1) + 1)
-    if total_rows <= 0 or columns <= 0:
+            total_rows, columns = projected_rows, projected_columns
+            column_index = end_column
+    if not _bounded_table_shape(total_rows, columns):
         return [], False, []
     rows = [
         [anchors.get((row_index, column_index), "") for column_index in range(columns)]
@@ -205,7 +225,7 @@ def _markdown_table_rows(content: str) -> list[list[str]]:
             continue
         rows.append(cells)
     columns = max((len(row) for row in rows), default=0)
-    if not rows or columns <= 0 or columns > 100 or len(rows) > 2_000:
+    if not _bounded_table_shape(len(rows), columns):
         return []
     return [row + [""] * (columns - len(row)) for row in rows]
 
@@ -497,6 +517,8 @@ class GlmSdkRemoteParser(DocumentParser):
                 if fragment is not None:
                     fragments.append(fragment)
                     output.append(fragment.rendered)
+                elif re.search(r"<table\b", content, re.IGNORECASE):
+                    raise ValueError("glm_sdk_unusable_table_structure")
                 elif content:
                     output.append(content)
                 continue

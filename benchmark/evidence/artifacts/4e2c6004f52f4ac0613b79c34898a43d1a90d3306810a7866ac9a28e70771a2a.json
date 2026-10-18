@@ -1,0 +1,75 @@
+{
+  "schema": "moparse-V7-scan-signature-seal-source-safe-summary/1",
+  "created_at": "2026-10-18T03:29:46.021330+00:00",
+  "scope": "Only p11sealcode and p12signature-role changes; bind current V7 complete130-page actualHTTP/GET/volume bytes to independently re-viewed original source pixels. No new inference/API or edits to source/runtime/reader/gold/output.",
+  "method_id": "mineru-advanced-txt-vllm-c2-docling-source-glm-v7",
+  "fingerprint": "e760367d7fb88f11a7bc0bb5388db12ebe7f4fc54983b1ac8559d266736c11c7",
+  "private_original_proof": {
+    "path": "benchmark/runs/v7-original-issues-independent-20261018/130page-p11-p12-followup/independent-V7-source-review-proof.json",
+    "sha256": "cbc2a404c4d59555f0811aef43245462d97d4b4e01c16b44c848a6faf42810f2",
+    "bytes": 6597
+  },
+  "actual_V7_HTTP": {
+    "document_id": "1225475642",
+    "MD_SHA256": "429b330cce8c07aeac546fca261f42f0d20f339e72560927ec6e9ccaf41e33a7",
+    "MD_bytes": 410529,
+    "source_SHA256": "e2a184bb017930ca6306a56391a7248c2954a5ae212c2966104fad2104c4a24d",
+    "request_SHA256": "8b3bb5b59853bd72694ad248f0d5afb2dcaadbe02a3ddd64d569687cf7dbf98f",
+    "capture_summary_SHA256": "7ca9ccce2dd43940337845559ed1d908623169782c7461faab4b2baaae9e1471",
+    "pass": true,
+    "job": "job_01M56FFYXGBVHBDZM36T947Q86",
+    "actual_API_status": "completed",
+    "persisted_GET_equals_HTTP": true,
+    "candidate_volume_MD_sha256": "429b330cce8c07aeac546fca261f42f0d20f339e72560927ec6e9ccaf41e33a7",
+    "candidate_volume_equals_HTTP": true
+  },
+  "actual_MD_comparison": {
+    "V6": {
+      "p11_stamp_from_actual_final_MD": "51010510007235",
+      "p11_stamp_matches_original": false,
+      "p11_MD_sha256": "19e631253e95dc0454fb7dd4d9024b1294e8ec23183d5ba6bafd7a84fccaf950",
+      "p12_visible_王炜_occurrences": 2,
+      "p12_role_line": "主管会计工作负责人：",
+      "p12_MD_sha256": "aec4c0241d6b6aa6063208e626cef0d0ee38a4cd5490074c1491f1cb8dc6df1d"
+    },
+    "V7": {
+      "p11_stamp_from_actual_final_MD": "510101510007235",
+      "p11_stamp_matches_original": false,
+      "p11_MD_sha256": "17b863ffdfa7fb1344608602d8c099fb38742f8381a6f0e12e75430c37067ce1",
+      "p12_visible_王炜_occurrences": 3,
+      "p12_role_line": "主管会计工作负责人：王炜",
+      "p12_MD_sha256": "02d90750a434def70551e7de0a3d964f7e4038ef643067c61c0a9be269034db4"
+    }
+  },
+  "source_observation": {
+    "sha256": "e2a184bb017930ca6306a56391a7248c2954a5ae212c2966104fad2104c4a24d",
+    "p11_stamp_from_original_bottom_arc": "35010510007235",
+    "p11_stamp_is_red_circular_company_seal_not_ordinary_printed_narrative": true,
+    "p12_ordinary_printed_王炜_after_label": false,
+    "p12_name_visual_depictions_in_source_region": 2,
+    "native_text_length_on_original_p12": 0
+  },
+  "actual_route_observation": {
+    "p11_in_native_worker": false,
+    "p12_in_native_worker": false,
+    "confirmed_actual_p12_backend": "glm-sdk-remote",
+    "private_log_SHA256": {
+      "mineru-native-worker.json": "a6588b24a0db5040a11371ff348c7c799a2bc7c26fca32049b71b33fabc22c8e",
+      "warnings.json": "02219ee09403b8c759ef54b4459f0ba04611789189a4b44def2b6678b84cd3ba"
+    }
+  },
+  "assessment": {
+    "both_V6_V7_p11_stamp_wrong": true,
+    "V7_p11_same_as_previous_V4_variant": "510101510007235",
+    "ordinary_printed_body_name_omission_or_recovery_proven": false,
+    "p12_name_missing_from_either_final_MD": false,
+    "p12_V7_extra_inline_name_and2standalone_names": true,
+    "p12_V6_2standalone_names": true,
+    "p12_source_has2_depictions_not3": "Source has one black handwritten 王炜 and one red seal 王炜; there is no additional normal printed 王炜. V7 extra inline instance alongside two standalone instances is a repetition/ownership discrepancy, not demonstrated ordinary-body recovery.",
+    "ownership_limit": "Current per-region GLM raw typed output was not captured, so exact source-glyph-to-detection ownership cannot be reconstructed from final MD counts. V6 count2 alone also does not prove every seal/signature character correct.",
+    "scope_limit": "Only these2places are source-audited here. Do not claim all130page source accuracy or whole550correctness."
+  },
+  "new_model_or_API_calls": 0,
+  "gold_reader_scores_and_output_changed": false,
+  "source_pixels_full_MD_or_glyph_coordinates_exported": false
+}

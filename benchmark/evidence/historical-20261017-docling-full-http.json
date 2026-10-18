@@ -1,0 +1,76 @@
+{
+  "schema": "moparse-evidence/1",
+  "id": "historical-20261017-docling-full-http",
+  "method_id": "production-docling-glm",
+  "cohort_id": "regression-502",
+  "origin": "historical_reuse",
+  "fresh_model_inference": false,
+  "output_stage": "public-HTTP-GFM",
+  "provenance": [
+    {
+      "path": "benchmark/evidence/artifacts/e893cc4d07d3fa9b725293904273f5c821f1f7f8b0f860fad297b4457e2a6d54.json",
+      "sha256": "e893cc4d07d3fa9b725293904273f5c821f1f7f8b0f860fad297b4457e2a6d54",
+      "bytes": 303875,
+      "original_path": "benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/candidate-full10-http/scoring/score-summary.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/6140171f2822aeb692d5307137e2950a1e816209dab2e30767bab9bc5f0ab616.json",
+      "sha256": "6140171f2822aeb692d5307137e2950a1e816209dab2e30767bab9bc5f0ab616",
+      "bytes": 394407,
+      "original_path": "benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/candidate-full10-http/performance-summary.json",
+      "snapshot_bytes_unchanged": true
+    }
+  ],
+  "quality": {
+    "core209": {
+      "pass": 209,
+      "total": 209,
+      "gold_fingerprint": "fdcc0bb53c378d83b0cbb23757976d9606adc572bac34eaa41362b3a922374de",
+      "reader_fingerprint": "73d1d922de3072aaa15ca14c223dbfcc6e39d2188f3fdd212a447c30aa763817"
+    },
+    "period209": {
+      "pass": 209,
+      "total": 209,
+      "gold_fingerprint": "fdcc0bb53c378d83b0cbb23757976d9606adc572bac34eaa41362b3a922374de",
+      "reader_fingerprint": "73d1d922de3072aaa15ca14c223dbfcc6e39d2188f3fdd212a447c30aa763817"
+    },
+    "unique_row402": {
+      "pass": 372,
+      "total": 402,
+      "gold_fingerprint": "7305349ae8ef88da6ee7260d220f62aa3ef1750de3a8cb0bda3d856cfec000ca",
+      "reader_fingerprint": "73d1d922de3072aaa15ca14c223dbfcc6e39d2188f3fdd212a447c30aa763817"
+    },
+    "column_meaning402": {
+      "pass": 326,
+      "total": 402,
+      "gold_fingerprint": "7305349ae8ef88da6ee7260d220f62aa3ef1750de3a8cb0bda3d856cfec000ca",
+      "reader_fingerprint": "73d1d922de3072aaa15ca14c223dbfcc6e39d2188f3fdd212a447c30aa763817"
+    },
+    "funding31": {
+      "pass": 31,
+      "total": 31,
+      "gold_fingerprint": "e6a8392a359341a3dac0de1afd362fdf5c2416d3d9fd9f4dc799aa5c5716d177",
+      "reader_fingerprint": "73d1d922de3072aaa15ca14c223dbfcc6e39d2188f3fdd212a447c30aa763817"
+    }
+  },
+  "performance": {
+    "seconds": 1349.7541745780036,
+    "scope": "full HTTP upload through saved Markdown; assets timed separately",
+    "power_limit_W": 180,
+    "hardware_fingerprint": "historical-shared-host-20261017",
+    "warmup": "actual_complete_HTTP_capture",
+    "own_GPU_peak_MiB": null,
+    "shared_GPU_energy_Wh": null
+  },
+  "qualification": {
+    "source_artifacts_hashed": true,
+    "deployment_acceptance": true,
+    "source_exposed": true,
+    "full_HTTP": true,
+    "imported_result_preserved": true,
+    "reader_bundle_relocated_only": true
+  },
+  "observed_recipe_fingerprint": null,
+  "recipe_limit": "Historical component settings/export stage are preserved; this is not a run of the newly registered whole pipeline"
+}

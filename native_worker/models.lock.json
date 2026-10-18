@@ -1,0 +1,253 @@
+{
+  "schema": "moparse-mineru-model-lock/1",
+  "created_at": "2026-10-17T18:16:43.105667+00:00",
+  "provenance": {
+    "method": "SHA-256 of installed artifacts; revision/size/blob identifiers verified against cached Hugging Face trees and native per-file download metadata. Native component provenance verified against the pinned upstream manifest.",
+    "model_inference_used": false,
+    "gpu_used": false
+  },
+  "models": [
+    {
+      "id": "vlm",
+      "repo_id": "opendatalab/MinerU2.5-Pro-2605-1.2B",
+      "revision": "08aaea840498d49ce16247b6263196cf02814885",
+      "target": {
+        "root": "vlm_dir",
+        "path": "snapshots/08aaea840498d49ce16247b6263196cf02814885"
+      },
+      "license": {
+        "identifier": "apache-2.0",
+        "source_url": "https://huggingface.co/opendatalab/MinerU2.5-Pro-2605-1.2B/blob/08aaea840498d49ce16247b6263196cf02814885/README.md",
+        "source_sha256": "8f829b69be518375b02023f795b3898adec98f5ac37208239884ad88e9a21cb7",
+        "evidence": "README YAML frontmatter declares license: apache-2.0"
+      },
+      "files": [
+        {
+          "path": "README.md",
+          "bytes": 15571,
+          "sha256": "8f829b69be518375b02023f795b3898adec98f5ac37208239884ad88e9a21cb7"
+        },
+        {
+          "path": "added_tokens.json",
+          "bytes": 800,
+          "sha256": "14155f41a9e51bee8ee7e5ff1b458418928d9ea86822ea5e98ae7bbdf1912ec8"
+        },
+        {
+          "path": "chat_template.jinja",
+          "bytes": 1017,
+          "sha256": "a0bc6f6fc7a29a80017a433e8f03a1cc1236e838a944a2d034295a60c4f2fddb"
+        },
+        {
+          "path": "config.json",
+          "bytes": 2871,
+          "sha256": "f91cad3c52a3d8f1d420b51459455b27d792db28bf5d1d08097ae96bf1c44730"
+        },
+        {
+          "path": "generation_config.json",
+          "bytes": 215,
+          "sha256": "405a603af8aed51b82ef71a5e16e7c053d11576fdc2db3c168d32bac2fd75f0d"
+        },
+        {
+          "path": "merges.txt",
+          "bytes": 1671853,
+          "sha256": "8831e4f1a044471340f7c0a83d7bd71306a5b867e95fd870f74d0c5308a904d5"
+        },
+        {
+          "path": "model.safetensors",
+          "bytes": 2312126640,
+          "sha256": "abf8681ca63b8dec7b67de257af47b821f179442f72998d0696ae2ed9232a5f0"
+        },
+        {
+          "path": "preprocessor_config.json",
+          "bytes": 316,
+          "sha256": "7070ae84a684ce2eb8d239c2cb38ff848085075784b213ea28a5ef5b3cdb445f"
+        },
+        {
+          "path": "special_tokens_map.json",
+          "bytes": 919,
+          "sha256": "badbadb9452d98337219d280879a65eafe224d661a0216114c7cbd3e40ff4984"
+        },
+        {
+          "path": "tokenizer.json",
+          "bytes": 11423550,
+          "sha256": "dceac5fc54a795ee7570d17902b47bd05412dc2afa62bdf325c3f97fcb5b87fe"
+        },
+        {
+          "path": "tokenizer_config.json",
+          "bytes": 6596,
+          "sha256": "d762430b9c668b5c3ad95e26626e3982d5b2a59c18ff214d621d1de4318ff376"
+        },
+        {
+          "path": "vocab.json",
+          "bytes": 2776833,
+          "sha256": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+        }
+      ]
+    },
+    {
+      "id": "native",
+      "repo_id": "opendatalab/MinerU-4_models_onnx",
+      "revision": "358310b4f64b95f9fefc372ad899356e4111f376",
+      "target": {
+        "root": "native_home",
+        "path": "models/MinerU-4_models_onnx"
+      },
+      "license": {
+        "identifier": null,
+        "source_url": "https://huggingface.co/opendatalab/MinerU-4_models_onnx/blob/358310b4f64b95f9fefc372ad899356e4111f376/README.md",
+        "source_sha256": "bb03afa9a76c3ccec9ecf0c92e99129eca3e0049f0c9269e8ec63446768e2449",
+        "evidence": "Original model licenses and attribution remain applicable.",
+        "component_manifest_url": "https://huggingface.co/opendatalab/MinerU-4_models_onnx/blob/358310b4f64b95f9fefc372ad899356e4111f376/manifest.json",
+        "component_manifest_sha256": "d1610c0de099706ad09a41121e3e495cb0c5acb220609963d53905b4e40623d0",
+        "note": "The pinned bundle README does not declare one consolidated license identifier; consult the original component repositories linked by the manifest."
+      },
+      "files": [
+        {
+          "path": "Layout/PP-DocLayoutV2/inference.onnx",
+          "bytes": 213963712,
+          "sha256": "cd540dc296ff3115fe78efa65b68501e6a8dc74b198acc9834a725ffaa095aac",
+          "upstream_source": {
+            "repo": "PaddlePaddle/PP-DocLayoutV2_onnx",
+            "revision": "7d44592493df02e28110d99de8ca4b1fbc7309bd",
+            "file": "inference.onnx",
+            "sha256": "cd540dc296ff3115fe78efa65b68501e6a8dc74b198acc9834a725ffaa095aac"
+          }
+        },
+        {
+          "path": "Layout/PP-DocLayoutV2/inference.yml",
+          "bytes": 1482,
+          "sha256": "93100e0fb2cd76b9d246a853deea85e191d8333b2cfca7be76e82e4c4ebfa819",
+          "upstream_source": {
+            "repo": "PaddlePaddle/PP-DocLayoutV2_onnx",
+            "revision": "7d44592493df02e28110d99de8ca4b1fbc7309bd",
+            "file": "inference.yml",
+            "sha256": "93100e0fb2cd76b9d246a853deea85e191d8333b2cfca7be76e82e4c4ebfa819"
+          }
+        },
+        {
+          "path": "MFR/pp_formulanet_plus_m/PP-FormulaNet_plus-M.onnx",
+          "bytes": 591263297,
+          "sha256": "20a32595c2b30282dcd069e6295e9fad96115697beb66acb9b681b814006d193",
+          "upstream_source": {
+            "repo": "opendatalab/MinerU-4_models_torch",
+            "revision": "2b3afb86f4d23fa623f6b2f4b2279ed4ef93a89d",
+            "file": "MFR/pp_formulanet_plus_m/PP-FormulaNet_plus-M.pth",
+            "source_sha256": "bd9d40fd9c7759805e93cb54f14f5e91448a80b14aadc2bfb25c4c948b2974e8",
+            "conversion": "scripts/export_formula_onnx.py"
+          }
+        },
+        {
+          "path": "MFR/pp_formulanet_plus_m/PP-FormulaNet_plus-M_inference.yml",
+          "bytes": 2244564,
+          "sha256": "87b5f3d7f2b2fe553627d77b37f496608ca150ebd0ef62d362591edca47b5538",
+          "upstream_source": {
+            "repo": "jinzhenj/PP-FormulaNet_plus-M_onnx",
+            "revision": "9eb491f62e52f45571fbf88f4d0335e4eb36f9b9",
+            "file": "inference.yml",
+            "sha256": "87b5f3d7f2b2fe553627d77b37f496608ca150ebd0ef62d362591edca47b5538"
+          }
+        },
+        {
+          "path": "OCR/paddleocr/ch_PP-OCRv6_small_rec_infer.onnx",
+          "bytes": 21159378,
+          "sha256": "5435fd747c9e0efe15a96d0b378d5bd157e9492ed8fd80edf08f30d02fa24634",
+          "upstream_source": {
+            "repo": "PaddlePaddle/PP-OCRv6_small_rec_onnx",
+            "revision": "b8f84f0b80c529de40b4fbb3544b84fa7233a513",
+            "file": "inference.onnx",
+            "sha256": "5435fd747c9e0efe15a96d0b378d5bd157e9492ed8fd80edf08f30d02fa24634"
+          }
+        },
+        {
+          "path": "OCR/paddleocr/ch_PP-OCRv6_small_rec_inference.yml",
+          "bytes": 150752,
+          "sha256": "c0541b06832948d7d3052e9ac6b572c6063d79ecd800493f4ec14d1b901c16d7",
+          "upstream_source": {
+            "repo": "PaddlePaddle/PP-OCRv6_small_rec_onnx",
+            "revision": "b8f84f0b80c529de40b4fbb3544b84fa7233a513",
+            "file": "inference.yml",
+            "sha256": "ab078671bb49f06228eadccd34f1bb501e157f7a047095ffb943ba81512c77d1",
+            "adaptation": "append MinerU runtime profile"
+          }
+        },
+        {
+          "path": "OCR/paddleocr/ch_PP-OCRv6_tiny_det_infer.onnx",
+          "bytes": 1780590,
+          "sha256": "193bab7a04fca699a6c82e6abb5b81bdb28177f0abd4062552b04908dafb19f8",
+          "upstream_source": {
+            "repo": "PaddlePaddle/PP-OCRv6_tiny_det_onnx",
+            "revision": "2ba1506c0380b8f0b03dd142459aac66d4421f6c",
+            "file": "inference.onnx",
+            "sha256": "193bab7a04fca699a6c82e6abb5b81bdb28177f0abd4062552b04908dafb19f8"
+          }
+        },
+        {
+          "path": "OCR/paddleocr/ch_PP-OCRv6_tiny_det_inference.yml",
+          "bytes": 1068,
+          "sha256": "a1fa68ab31e29252936328e728633180908f997023d9eacb81f175e326676554",
+          "upstream_source": {
+            "repo": "PaddlePaddle/PP-OCRv6_tiny_det_onnx",
+            "revision": "2ba1506c0380b8f0b03dd142459aac66d4421f6c",
+            "file": "inference.yml",
+            "sha256": "3ac018be6f97499a08faa3bbdeb33640968d9307f6736d152902747a9f259593",
+            "adaptation": "append MinerU runtime profile"
+          }
+        },
+        {
+          "path": "OCR/paddleocr/seal_PP-OCRv4_det_infer.onnx",
+          "bytes": 4769171,
+          "sha256": "3e190df84542c2756975febe8f73603b587a23c7f7badfdd3fc8a986540d5bc0",
+          "upstream_source": {
+            "repo": "opendatalab/MinerU-4_models_torch",
+            "revision": "2b3afb86f4d23fa623f6b2f4b2279ed4ef93a89d",
+            "file": "OCR/paddleocr/seal_PP-OCRv4_det_infer.pth",
+            "source_sha256": "a7777ca66448ab90948ce5a3257e4c959d6eacf0489fbadd5133dbe8f89662ae",
+            "conversion": "scripts/prepare_onnx_models.py"
+          }
+        },
+        {
+          "path": "OCR/paddleocr/seal_PP-OCRv4_det_inference.yml",
+          "bytes": 711,
+          "sha256": "e5b8dd5a727602bdd526d9db152cc767bc761198c453460df7c8f7ae59d2ea3c",
+          "upstream_source": {
+            "repo": "opendatalab/MinerU-4_models_torch",
+            "revision": "2b3afb86f4d23fa623f6b2f4b2279ed4ef93a89d",
+            "file": "OCR/paddleocr/seal_PP-OCRv4_det_infer.pth",
+            "source_sha256": "a7777ca66448ab90948ce5a3257e4c959d6eacf0489fbadd5133dbe8f89662ae",
+            "conversion": "scripts/prepare_onnx_models.py"
+          }
+        },
+        {
+          "path": "Table/PP-LCNet_x1_0_table_cls.onnx",
+          "bytes": 6776877,
+          "sha256": "c84bf1d79c1c74d534b5b12adb14dd12151c42f7ae3e4be4f1042b830f80b949",
+          "upstream_source": {
+            "repo": "opendatalab/MinerU-4_models_torch",
+            "revision": "2b3afb86f4d23fa623f6b2f4b2279ed4ef93a89d",
+            "file": "Table/PP-LCNet_x1_0_table_cls.onnx"
+          }
+        },
+        {
+          "path": "Table/slanet-plus.onnx",
+          "bytes": 7758305,
+          "sha256": "d57a942af6a2f57d6a4a0372573c696a2379bf5857c45e2ac69993f3b334514b",
+          "upstream_source": {
+            "repo": "opendatalab/MinerU-4_models_torch",
+            "revision": "2b3afb86f4d23fa623f6b2f4b2279ed4ef93a89d",
+            "file": "Table/slanet-plus.onnx"
+          }
+        },
+        {
+          "path": "Table/unet.onnx",
+          "bytes": 8335007,
+          "sha256": "0ea48d3a17e35ef5c2e498a5e799566073234d39b1079ca21d9f4fafe73c6d20",
+          "upstream_source": {
+            "repo": "opendatalab/MinerU-4_models_torch",
+            "revision": "2b3afb86f4d23fa623f6b2f4b2279ed4ef93a89d",
+            "file": "Table/unet.onnx"
+          }
+        }
+      ]
+    }
+  ]
+}

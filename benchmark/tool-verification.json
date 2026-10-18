@@ -1,0 +1,39 @@
+{
+  "portable_core23": "pass",
+  "portable_financial30": "pass",
+  "old_tree_access": "blocked",
+  "frozen_files": 39,
+  "coverage": {
+    "expected_documents": 10,
+    "scored_documents": 1,
+    "missing_document_ids": [
+      "1210860446",
+      "1211290753",
+      "1219858186",
+      "1225473526",
+      "1225474139",
+      "1225474739",
+      "1225475333",
+      "1225475375",
+      "1225475642"
+    ],
+    "complete": false
+  },
+  "schema": "moparse-benchmark-tool-verification/1",
+  "CLI": {
+    "path": "benchmark/moparse_benchmark.py",
+    "sha256": "322ba074b74fe0e58281c6176d7d4adc98682e46d0fa0b1e50e7b308260bb42c",
+    "bytes": 73006
+  },
+  "tests": {
+    "passed": 13
+  },
+  "source_original_tree_untouched": true,
+  "real_saved_full502_rescore": {
+    "core209": 209,
+    "period209": 209,
+    "unique_row402": 372,
+    "complete_column402": 326
+  },
+  "holdout_gold_sha256": "cef9ea7229d722e66ae4403fa8f337295534f89e6e6c5ac983e8c77523dccafc"
+}

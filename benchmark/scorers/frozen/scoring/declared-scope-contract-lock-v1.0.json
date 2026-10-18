@@ -1,0 +1,30 @@
+{
+  "schema_version": "declared-cell-scope-contract/1",
+  "version": "1.0.0",
+  "frozen_utc": "2026-10-15T17:59:35.448915+00:00",
+  "no_source_answers_used_to_expand_scope": true,
+  "raw_cell_text_spans_flags_and_public_markdown_unchanged": true,
+  "only_explicit_valid_nonconflicting_span_ownership": true,
+  "literal_and_scope_scores_separate": true,
+  "invalid_or_conflicting_scope_unknown": true,
+  "core209_and_all_source_answers_unchanged": true,
+  "files": [
+    {
+      "path": "benchmark-results/clean-model-comparison-20261015/scoring/declared-scope-view.py",
+      "sha256": "fbf698910439cc728568501d93a4ab2ff3e8bee12300d5ccc87a755649c9e5e8"
+    },
+    {
+      "path": "benchmark-results/clean-model-comparison-20261015/scoring/test-declared-scope-view.py",
+      "sha256": "64c5d029111ebe5f430410763725d981bd7bc44d232989411ea50463a7f81686"
+    },
+    {
+      "path": "benchmark-results/clean-model-comparison-20261015/scoring/declared-scope-tests.json",
+      "sha256": "68a6efa85ac4fb50b6c05c060fc952e87b2fa64fb7a0cdc5634318e82e15c30b"
+    },
+    {
+      "path": "benchmark-results/clean-model-comparison-20261015/scoring/refresh-declared-scope-scores.py",
+      "sha256": "608a2644879260ce270266a734bf7918ab331d3e4c8bb461db0249fef66b73a3"
+    }
+  ],
+  "passed_adversarial_and_positive_checks": 9
+}

@@ -1,0 +1,103 @@
+{
+  "scope": "CPU export-only replay. Old real HTTP bytes stay unchanged. Diagnostic Markdown only reorders standalone source/fragment comments; not a fresh HTTP result or model quality claim.",
+  "frozen_reader_sha256": "f2fd1d7e5dbb1a6b85c7e2621b660f00ab77e0bee1d2e2d073dfdefa5cca1906",
+  "old_frozen_table_service_sha256": "2c4452f17e54eaed6fde7e862013a8a220013e0afb92e37bcf1283e175c70065",
+  "old_source_sha_matches_v2_freeze": true,
+  "regression_tests": [
+    {
+      "case": "adjacent_standalone_merge_off",
+      "v2_fails_exact_source_ownership": true
+    },
+    {
+      "case": "adjacent_standalone_merge_on",
+      "v2_fails_exact_source_ownership": true
+    },
+    {
+      "case": "logical_followed_by_standalone",
+      "v2_fails_exact_source_ownership": true
+    }
+  ],
+  "v3_passes_all_three_same_tests": true,
+  "original_full27_http_sha256": "3934cbc3faa119599dd6ffa25e277e23b96109334b1c8ead51e8117089113003",
+  "standalone_comment_pairs_reordered": [
+    "mineru_p6_t1",
+    "mineru_p7_t2",
+    "mineru_p7_t3",
+    "mineru_p8_t1",
+    "mineru_p8_t2",
+    "mineru_p8_t3",
+    "mineru_p9_t1",
+    "mineru_p9_t2"
+  ],
+  "all_visible_bytes_after_removing_actual_comments_equal": true,
+  "all_table_grid_and_structure_objects_equal": true,
+  "all_standalone_source_maps_uniquely_owned": true,
+  "normal_continuation_sources_after": [
+    {
+      "fragment": "mineru_p6_t2",
+      "page": 6,
+      "source_rows": "1-7",
+      "logical_rows": "1-7",
+      "repeated_header_rows": 0
+    },
+    {
+      "fragment": "mineru_p7_t1",
+      "page": 7,
+      "source_rows": "2-6",
+      "logical_rows": "8-12",
+      "repeated_header_rows": 1
+    }
+  ],
+  "funding_sources_after": [
+    {
+      "fragment": "mineru_p7_t2",
+      "page": 7,
+      "source_rows": "1-11",
+      "logical_rows": "1-11",
+      "repeated_header_rows": 0
+    }
+  ],
+  "old_map_ownership": {
+    "table_mineru_p6_t2_mineru_p7_t1": [
+      {
+        "fragment": "mineru_p6_t2",
+        "page": 6,
+        "source_rows": "1-7",
+        "logical_rows": "1-7",
+        "repeated_header_rows": 0
+      },
+      {
+        "fragment": "mineru_p7_t1",
+        "page": 7,
+        "source_rows": "2-6",
+        "logical_rows": "8-12",
+        "repeated_header_rows": 1
+      },
+      {
+        "fragment": "mineru_p7_t2",
+        "page": 7,
+        "source_rows": "1-11",
+        "logical_rows": "1-11",
+        "repeated_header_rows": 0
+      }
+    ],
+    "mineru_p7_t2": [
+      {
+        "fragment": "mineru_p7_t3",
+        "page": 7,
+        "source_rows": "1-8",
+        "logical_rows": "1-8",
+        "repeated_header_rows": 0
+      }
+    ],
+    "mineru_p7_t3": [
+      {
+        "fragment": "mineru_p8_t1",
+        "page": 8,
+        "source_rows": "1-6",
+        "logical_rows": "1-6",
+        "repeated_header_rows": 0
+      }
+    ]
+  }
+}

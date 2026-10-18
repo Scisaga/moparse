@@ -1,0 +1,23 @@
+# syntax=docker/dockerfile:1.7
+FROM python:3.12.12-slim-bookworm@sha256:593bd06efe90efa80dc4eee3948be7c0fde4134606dd40d8dd8dbcade98e669c
+ENV PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1 \
+    CUDA_VISIBLE_DEVICES="" MINERU_DEVICE_MODE=cpu MINERU_TABLE_DEVICE=cpu \
+    MINERU_MODEL_SMALL_BACKEND=onnx MINERU_MODEL_SOURCE=local \
+    MINERU_HOME=/models/mineru-native MINERU_PROCESSING_WINDOW_SIZE=8 \
+    MINERU_MALLOC_TRIM=1 MOPARSE_CPU_MFR_BATCH_SIZE=1 \
+    OMP_NUM_THREADS=4 OPENBLAS_NUM_THREADS=4 MKL_NUM_THREADS=4 \
+    MINERU_VLM_CONCURRENCY=2
+WORKDIR /worker
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates patch curl libgl1 libglib2.0-0 libgomp1 fonts-noto-cjk \
+    && rm -rf /var/lib/apt/lists/*
+COPY native_worker/requirements.txt native_worker/requirements.lock.txt ./native_worker/
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install --no-deps -r native_worker/requirements.lock.txt && pip check
+COPY native_worker/ ./native_worker/
+COPY scripts/download_mineru_models.py ./scripts/download_mineru_models.py
+RUN python -m native_worker.patch_dependency
+EXPOSE 8010
+HEALTHCHECK --interval=30s --timeout=10s --start-period=3m --retries=5 \
+    CMD curl -fsS http://127.0.0.1:8010/health || exit 1
+CMD ["uvicorn", "native_worker.server:app", "--host", "0.0.0.0", "--port", "8010", "--workers", "1"]

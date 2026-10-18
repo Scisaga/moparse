@@ -1,0 +1,60 @@
+{
+  "schema": "moparse-method/1",
+  "id": "mineru-advanced-txt-vllm-c2-glm",
+  "label": "Advanced + TXT + vLLM, concurrency 2 + GLM",
+  "status": "candidate",
+  "recipe": {
+    "routing": {
+      "policy": "native text and embedded-image coverage, independent of model answers",
+      "native": {
+        "package": "mineru",
+        "version": "4.0.12",
+        "text_mode": "TXT",
+        "model": "opendatalab/MinerU2.5-Pro-2605-1.2B",
+        "revision": "08aaea840498d49ce16247b6263196cf02814885",
+        "engine": "vllm",
+        "vllm_version": "0.19.1",
+        "precision": "FP16",
+        "max_model_len": 8192,
+        "KV_bytes": 134217728,
+        "max_num_batched_tokens": 2048,
+        "enforce_eager": true,
+        "logits_processor": "mineru_vl_utils:MinerULogitsProcessor",
+        "client_max_concurrency": 2,
+        "max_num_seqs": 2,
+        "sampling": "pinned official SDK defaults; temperature0/top_p0.01/top_k1; task-specific penalties",
+        "tier": "advanced",
+        "source_text_recovery": {
+          "algorithm": "native writing-axis matching: apply original PDF text direction to normalized source coordinates",
+          "original_native_py_sha256": "02a4e5bd0564acce4e18ce9b8a9e459c43bc3342ab93bd952db16dabee726fec",
+          "patched_native_py_sha256": "616f44e2a1749f4b82074df36c3da852694a9401828c6c36aad62553b2a182cf",
+          "patch_path": "native_worker/patches/mineru-4.0.12-text-axis.patch",
+          "patch_sha256": "a8d2c14a6cfa94061f813b8cf1ed9554360ffc986646520d543f1c100d0d18bd"
+        }
+      },
+      "scan_mixed": {
+        "model": "GLM-OCR",
+        "model_revision": "recorded per deployed image; not inferred from model name",
+        "SDK_version": "0.1.5",
+        "orientation_preprocess": true,
+        "DPI": 200,
+        "precision": "FP16",
+        "device": "GPU1"
+      }
+    },
+    "public_output": {
+      "format": "faithful logical-table GFM",
+      "table_source": true,
+      "coordinates": false,
+      "semantic_XML": false,
+      "header_merge": "only complete source-backed header and column-meaning equivalence"
+    },
+    "adapter_version": "moparse public GFM/table-source adapter; actual application source/image hashes recorded per run"
+  },
+  "fingerprint": "6223381c1ce9bc9d6855ba93bd2a44d51bcddd0156937f2f4508fb936a17a796",
+  "deployment_gate": "Full HTTP/public GFM and source annotations must pass; component runs alone do not qualify",
+  "reuse": {
+    "functional": "exact source/input/weights/settings and output-stage hashes required",
+    "timing": "same cohort/hardware/power/time scope/warmup; never sum component work as end-to-end latency"
+  }
+}

@@ -1,0 +1,40 @@
+--- a/mineru/model/mfr/pp_formulanet_plus_m_onnx.py
++++ b/mineru/model/mfr/pp_formulanet_plus_m_onnx.py
+@@ -13,6 +13,7 @@
+ from __future__ import annotations
+ 
+ import math
++import os
+ from pathlib import Path
+ from typing import Any, List, Optional, Tuple
+ 
+@@ -27,6 +28,20 @@
+ __all__ = ["PPFormulaNetPlusMONNX", "CPU_BATCH_SIZE"]
+ 
+ CPU_BATCH_SIZE = 8
++
++
++def _cpu_batch_limit() -> int:
++    """Allow a deployment to lower CPU microbatches without dropping formulas."""
++    raw = os.getenv("MOPARSE_CPU_MFR_BATCH_SIZE")
++    if raw is None:
++        return CPU_BATCH_SIZE
++    try:
++        limit = int(raw)
++    except ValueError as exc:
++        raise ValueError("MOPARSE_CPU_MFR_BATCH_SIZE must be an integer from 1 to 8") from exc
++    if not 1 <= limit <= CPU_BATCH_SIZE:
++        raise ValueError("MOPARSE_CPU_MFR_BATCH_SIZE must be an integer from 1 to 8")
++    return limit
+ 
+ _EOS_TOKEN_ID = 2
+ 
+@@ -174,7 +189,7 @@
+             return results
+ 
+         with tqdm(total=len(valid_inputs), desc="MFR Predict") as pbar:
+-            step = min(CPU_BATCH_SIZE, max(1, batch_size))
++            step = min(_cpu_batch_limit(), max(1, batch_size))
+             for start in range(0, len(valid_inputs), step):
+                 inputs = np.concatenate(valid_inputs[start : start + step], axis=0).astype(np.float32)
+                 preds = self.session.run(None, {self.input_name: inputs})[0]

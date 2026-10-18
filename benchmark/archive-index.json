@@ -1,0 +1,25 @@
+{
+  "schema": "moparse-archived-experiments/1",
+  "functional_configurations": 147,
+  "source_documents": 10,
+  "source_pages": 502,
+  "scope": "16 native,7 vision,112 fixed combinations/ablations,12 posthoc registered combinations; not147 full-HTTP requests",
+  "frozen_manifests": [
+    {
+      "path": "benchmark-results/clean-model-comparison-20261015/experiment-manifest.json",
+      "sha256": "b52662f1b81d85123268df46dd009579f781d771e21468260c87011bcc64d6a9",
+      "bytes": 7123
+    },
+    {
+      "path": "benchmark-results/clean-model-comparison-20261015/input-manifest.json",
+      "sha256": "c98c5835b19d543f8a0d2d37a9df896f7cd00f3f0c98952709be5bb5f650da93",
+      "bytes": 269825
+    },
+    {
+      "path": "benchmark-results/clean-model-comparison-20261015/followup/20261017/production-baseline/public-output-comparison/summary.json",
+      "sha256": "6bad974d6724a4377c5f9ad71b219698e40631b221b86de4272b53a053af9a4c",
+      "bytes": 92558
+    }
+  ],
+  "policy": "Core recipes are in methods/. Old component/composition evidence is immutable; timing reuse requires a matching protocol."
+}

@@ -1,0 +1,8 @@
+# Original documents, credentials, HTTP payloads and telemetry stay local.
+sources/
+runs/
+*.local.json
+!evidence/
+
+# Rendered original pages are private annotation evidence.
+local-evidence/

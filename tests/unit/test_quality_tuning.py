@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 from collections import Counter
 from pathlib import Path
 from types import SimpleNamespace
@@ -74,8 +75,6 @@ def test_sparse_evidence_is_measured_and_not_guessed(tmp_path: Path) -> None:
     assert evidence.visual_ink_ratio < 0.015
 
 
-
-
 def test_wingdings_mapping_requires_font_evidence() -> None:
     mapped = PageEvidenceService._block_text(
         {"lines": [{"spans": [{"text": "\uf052", "font": "Wingdings 2", "size": 10}]}]}
@@ -85,10 +84,6 @@ def test_wingdings_mapping_requires_font_evidence() -> None:
     )
     assert mapped[3] == {"\uf052": "☑"}
     assert unmapped[3] == {}
-
-
-
-
 
 
 def test_span_export_anchors_merged_value_and_rejects_overlap() -> None:
@@ -157,8 +152,6 @@ def _fragment(
     )
 
 
-
-
 def test_cross_page_table_merges_only_canonical_content() -> None:
     header = ["项目", "金额"]
     first = _fragment("p1_t1", 1, (0.1, 0.7, 0.9, 0.96), [header, ["甲", "1"]])
@@ -204,17 +197,10 @@ def test_cross_page_continuation_keeps_unproven_blank_column_shape() -> None:
     canonical = assemble_logical_tables(pages, [first, second], enabled=True)
 
     assert "logical-table" not in canonical[1]
-    assert canonical[2] == second.rendered
+    assert re.sub(r"<!-- table-source: [^\n]* -->\n\n", "", canonical[2]) == second.rendered
+    assert "source-rows: 1-2; logical-rows: 1-2; repeated-header-rows: 0" in canonical[2]
     assert second.num_cols == 3
     assert "| 差异 | G=E-F | 30,000.00 |" in (pages[1].content or "")
-
-
-
-
-
-
-
-
 
 
 def test_repeated_url_prefix_is_not_repeated_text_corruption() -> None:

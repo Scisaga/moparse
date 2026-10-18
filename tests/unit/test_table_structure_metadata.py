@@ -202,7 +202,10 @@ def test_different_period_headers_keep_separate_structure_and_original_visible_v
     content = assemble_logical_tables(pages, fragments, enabled=True)
 
     for fragment in fragments:
-        assert content[fragment.page_number] == fragment.rendered
+        assert re.sub(
+            r"<!-- table-source: [^\n]* -->\n\n", "", content[fragment.page_number]
+        ) == fragment.rendered
+        assert "repeated-header-rows: 0" in content[fragment.page_number]
         assert _visible_table(content[fragment.page_number]) == fragment.markdown
         assert _metadata(content[fragment.page_number])[0]["source_pages"] == [fragment.page_number]
     assert "logical-table:" not in "\n".join(content.values())
@@ -217,6 +220,11 @@ def test_unknown_structure_comment_is_not_removed_as_if_owned_by_the_fragment() 
 
     content = assemble_logical_tables(pages, [first, second], enabled=True)
 
-    assert content == {page.page_number: page.content for page in pages}
+    assert all(
+        re.sub(r"<!-- table-source: [^\n]* -->\n\n", "", content[page.page_number]) == page.content
+        for page in pages
+    )
+    assert "<!-- table-structure: external source note -->" in content[2]
+    assert "logical-table:" not in "\n".join(content.values())
     assert first.logical_table_id is second.logical_table_id is None
     assert "external source note" in content[2]

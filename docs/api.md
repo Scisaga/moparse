@@ -1,9 +1,9 @@
-# MosaicParse HTTP 与 MCP 契约
+# moparse HTTP 与 MCP 契约
 
 默认 Base URL 为 `http://localhost:12303`，在线定义以 `/openapi.json`、`/docs`
 和 `/redoc` 为准。
 
-MosaicParse 的文档结果只有一种：普通 GFM Markdown。任务状态、错误和资产清单仍使用
+moparse 的文档结果只有一种：普通 GFM Markdown。任务状态、错误和资产清单仍使用
 JSON 作为控制协议，但它们不是第二份文档解析结果。详细坐标、候选文本和单元格证据只在
 请求内部使用，不通过结果 API 返回；资产清单也不包含页位置或 bbox。
 
@@ -39,6 +39,10 @@ Authorization: Bearer <API_KEY>
 整页图像资产并输出明确的跳过状态。旧 `profile`、`mode`、`output_format`、`vlm_policy`、
 `enable_vlm_fallback`、`preserve_page_breaks`、`include_pages`、
 `include_diagnostics` 和 `include_renderings` 均返回 422。
+
+`NATIVE_PARSER_BACKEND` 和 `MINERU_HEADER_VERIFIER` 是服务端方法配置，不是新增的
+公共请求参数。切换 Docling 基线、Advanced＋TXT primary 或 Docling 表头核验候选，
+均保持同一 HTTP／MCP 输入、状态、Job ID、资产 URL 与 GFM 结果契约。
 
 ## 同步与异步
 
@@ -86,9 +90,21 @@ Accept: text/markdown
 
 表格还携带无坐标的 `<!-- table-structure: ... -->` 注释，保留原模型给出的表头行、
 单元格跨度及来源页。行列索引从 0 开始；`spans` 项为 `[行, 列, 行跨度, 列跨度]`。
-`header_rows` 是原模型标记，不代表原件真值；完整表头范围未知时
+`header_rows` 保留来源模型或经独立核验的角色，不代表原件真值；完整表头范围未知时
 `header_scope_complete=false`。缺少源结构或无法与 GFM 网格对齐时编码为 `unknown`，
 不补造表头、期间或单位。注释不含坐标、单元格正文或完整内部 IR。
+
+可选 Docling 核验器仅检查跨页候选两端的完整表头带、跨度、唯一源几何、列边界及
+标题／单位上下文；通过后只转移已核实角色，不替换 Advanced＋TXT 的文字或值。
+证据不足时保留未知角色和独立片段，不以列数、布局相似或部分文字相同授权删头。
+该候选的实际发布状态以 [正式评测报告](../benchmark/report.md) 及其 release proof 为准。
+
+`logical-table`、`source-pages` 和 `table-source` 保留跨页来源关系；`table-source` 的
+`source-rows`／`logical-rows` 是一基行范围，`repeated-header-rows` 记录真实去重行数。
+每张表先以 `table-fragment` 或 `logical-table` 标记建立作用域，再列出属于该表的
+`table-source`、`table-structure` 和可见表格；来源标记不能放在下一张表的作用域之前。
+独立表也携带自身来源行映射。读取器可按表格作用域及来源片段 ID 校验关联。
+来源注释不替代可见正文；页眉页脚、页码、公式和业务附注按 typed-block 内容保留。已保存的旧结果不会因模型配置或项目改名被重写。
 
 ```markdown
 ## 截至报告期末的财务指标
@@ -132,7 +148,8 @@ POST   /v1/content/jobs/{id}/retry
 DELETE /v1/content/jobs/{id}
 ```
 
-SSE 是增量体验层，断线后以 Job JSON 为准。资产元数据含 MIME、SHA256、尺寸、角色、
+SSE 是增量体验层，断线后以 Job JSON 为准。原生文档 worker 按整件返回结果，
+中间阶段的页进度可能保持 0，Job 仍处于 `running`；它不提供逐页实时百分比。资产元数据含 MIME、SHA256、尺寸、角色、
 状态和下载 URL，不含页位置或 bbox；视频支持单个 HTTP byte range。bundle 包含内部
 `manifest.json` 与资产文件，不包含另一份详细解析结果。
 
@@ -166,3 +183,9 @@ SSE 是增量体验层，断线后以 Job JSON 为准。资产元数据含 MIME�
 常见状态：400（输入冲突/范围/URL）、401（认证）、404（Job/资产）、409（状态或旧
 契约）、413（大小）、415（真实格式）、422（参数）、429（容量）、502（解析后端）、
 504（超时）。
+
+## Project name compatibility
+
+The service name is `moparse`. HTTP routes, job IDs, result media types and asset URLs
+are unchanged by the rename. MCP uses `moparse://health`, `moparse://backends` and
+`moparse://usage`; existing `mosaicparse://` URIs continue to resolve to the same resources.

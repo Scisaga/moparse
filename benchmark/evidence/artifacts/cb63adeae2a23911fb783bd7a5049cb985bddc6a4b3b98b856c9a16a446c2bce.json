@@ -1,0 +1,523 @@
+{
+  "schema": "moparse-public-math-fragment-observation/1",
+  "created_at": "2026-10-17T21:35:13.239025+00:00",
+  "scope": "Same-source full25page NIST publicMarkdown, explicit dollar/LaTex delimiters only; compare recognized public fragments, not original-source equation correctness",
+  "source_SHA256": "171dec979423da69147527794a29d056e8e0751fe7d20d32484e402d39b4dcff",
+  "primary_MD": {
+    "path": "benchmark/runs/candidate-http-20261018/holdout39/cases/holdout-nist-tn2354/result.md",
+    "sha256": "f0c9729592d2c8194cef6081939308c8e7a76da19123efcdb19356a88b2f2a48",
+    "bytes": 39264
+  },
+  "current_MD": {
+    "path": "benchmark/runs/header-v4-http-20261018/nist25/cases/holdout-nist-tn2354/result.md",
+    "sha256": "4cabc0a71c502be955c56c4a6a2b997c10d6e24cf087c2f11a2cb25a6ddd85c7",
+    "bytes": 44559
+  },
+  "primary_fragments": [
+    {
+      "ordinal": 1,
+      "page": 6,
+      "opening": "$",
+      "raw": "$\\mathsf { P O } _ { 4 }$",
+      "body": "\\mathsf { P O } _ { 4 }",
+      "context_before": "endix B. 11\nFig. 7. Yields of F, Cl, Br, and P as ",
+      "context_after": " in vehicles, trees, and cribs studied. Note y-axi"
+    },
+    {
+      "ordinal": 2,
+      "page": 8,
+      "opening": "$",
+      "raw": "$k g \\pm 4 k g )$",
+      "body": "k g \\pm 4 k g )",
+      "context_before": "vehicles: one minivan (2004 model, weighting 1854 ",
+      "context_after": " and one hybrid sedan (2010 model, weighting 1328 "
+    },
+    {
+      "ordinal": 3,
+      "page": 8,
+      "opening": "$",
+      "raw": "$\\mathsf { k g } \\pm 0 . 0 6$",
+      "body": "\\mathsf { k g } \\pm 0 . 0 6",
+      "context_before": "e sticks and 6 sticks per layer. One weighed 7.92 ",
+      "context_after": " kg, and the other was slightly lower at 7.86 kg ±"
+    },
+    {
+      "ordinal": 4,
+      "page": 8,
+      "opening": "$",
+      "raw": "$\\mathsf { C O } _ { 2 }$",
+      "body": "\\mathsf { C O } _ { 2 }",
+      "context_before": "cy (MCE) was established from the net increase of ",
+      "context_after": " divided by the net increase of CO and $\\mathsf { "
+    },
+    {
+      "ordinal": 5,
+      "page": 8,
+      "opening": "$",
+      "raw": "$\\mathsf { C O } _ { 2 } ,$",
+      "body": "\\mathsf { C O } _ { 2 } ,",
+      "context_before": " } _ { 2 }$ divided by the net increase of CO and ",
+      "context_after": " or $\\mathsf { C O } _ { 2 }$ yield over the sum o"
+    },
+    {
+      "ordinal": 6,
+      "page": 8,
+      "opening": "$",
+      "raw": "$\\mathsf { C O } _ { 2 }$",
+      "body": "\\mathsf { C O } _ { 2 }",
+      "context_before": "increase of CO and $\\mathsf { C O } _ { 2 } ,$ or ",
+      "context_after": " yield over the sum of CO and $\\mathsf { C O } _ {"
+    },
+    {
+      "ordinal": 7,
+      "page": 8,
+      "opening": "$",
+      "raw": "$\\mathsf { C O } _ { 2 }$",
+      "body": "\\mathsf { C O } _ { 2 }",
+      "context_before": "hsf { C O } _ { 2 }$ yield over the sum of CO and ",
+      "context_after": " yields.\n\nTime-integrated particulate phase smoke "
+    },
+    {
+      "ordinal": 8,
+      "page": 9,
+      "opening": "$",
+      "raw": "$1 5 0   ^ { \\circ } \\mathbf { C }$",
+      "body": "1 5 0   ^ { \\circ } \\mathbf { C }",
+      "context_before": "ilter with PM was rolled into a vessel, heated to ",
+      "context_after": " for 7 min, remained static for 5 min, rinsed at 1"
+    },
+    {
+      "ordinal": 9,
+      "page": 9,
+      "opening": "$",
+      "raw": "$9 0   s ,$",
+      "body": "9 0   s ,",
+      "context_before": "min, rinsed at 100 % rinse volume, and purged for ",
+      "context_after": " repeating the cycle six times. The extracts were "
+    },
+    {
+      "ordinal": 10,
+      "page": 10,
+      "opening": "$",
+      "raw": "$5 0   ^ { \\circ } \\mathbb { C }$",
+      "body": "5 0   ^ { \\circ } \\mathbb { C }",
+      "context_before": "t 1.7 mL/min. The oven temperature ramped up from ",
+      "context_after": " at $5 ^ { \\circ } C /$ min until it reached ${ \\m"
+    },
+    {
+      "ordinal": 11,
+      "page": 10,
+      "opening": "$",
+      "raw": "$5 ^ { \\circ } C /$",
+      "body": "5 ^ { \\circ } C /",
+      "context_before": "mped up from $5 0   ^ { \\circ } \\mathbb { C }$ at ",
+      "context_after": " min until it reached ${ \\mathfrak { Z } } 1 0   ^"
+    },
+    {
+      "ordinal": 12,
+      "page": 10,
+      "opening": "$",
+      "raw": "${ \\mathfrak { Z } } 1 0   ^ { \\circ } \\mathbb { C } .$",
+      "body": "{ \\mathfrak { Z } } 1 0   ^ { \\circ } \\mathbb { C } .",
+      "context_before": " C }$ at $5 ^ { \\circ } C /$ min until it reached ",
+      "context_after": " PAH analysis, calibration, and yield calculations"
+    },
+    {
+      "ordinal": 13,
+      "page": 10,
+      "opening": "$",
+      "raw": "$k = 2 . 0$",
+      "body": "k = 2 . 0",
+      "context_before": "y is reported for a 95 % confidence interval with ",
+      "context_after": " . The measurement uncertainty applied here is the"
+    },
+    {
+      "ordinal": 14,
+      "page": 10,
+      "opening": "$",
+      "raw": "$1 0 5 0   ^ { \\circ } \\mathsf { C }$",
+      "body": "1 0 5 0   ^ { \\circ } \\mathsf { C }",
+      "context_before": "ven (Metrohm Combustion Module P/N 2.136.0700) at ",
+      "context_after": " in a 1:3 argon: oxygen environment. Prior to anal"
+    },
+    {
+      "ordinal": 15,
+      "page": 10,
+      "opening": "$",
+      "raw": "$1 0 5 0   ^ { \\circ } \\mathsf { C }$",
+      "body": "1 0 5 0   ^ { \\circ } \\mathsf { C }",
+      "context_before": "dry and combusted within the combustion module at ",
+      "context_after": " . The combusted ions were retained in approximate"
+    },
+    {
+      "ordinal": 16,
+      "page": 10,
+      "opening": "$",
+      "raw": "$\\mathsf { H } _ { 2 } \\mathsf { O } _ { 2 }$",
+      "body": "\\mathsf { H } _ { 2 } \\mathsf { O } _ { 2 }",
+      "context_before": "y 5 mL of an absorber solution containing 500 ppm ",
+      "context_after": " in deionized water, and then 10 µL of the absorbe"
+    },
+    {
+      "ordinal": 17,
+      "page": 10,
+      "opening": "$",
+      "raw": "$\\mathsf { N a } _ { 2 } \\mathsf { C O } _ { 2 }$",
+      "body": "\\mathsf { N a } _ { 2 } \\mathsf { C O } _ { 2 }",
+      "context_before": "4.0 mm) with an eluent solution containing 3.2 mM ",
+      "context_after": " and 1.0 mM $\\mathsf { N a H C O } _ { 3 }$ The co"
+    },
+    {
+      "ordinal": 18,
+      "page": 10,
+      "opening": "$",
+      "raw": "$\\mathsf { N a H C O } _ { 3 }$",
+      "body": "\\mathsf { N a H C O } _ { 3 }",
+      "context_before": "N a } _ { 2 } \\mathsf { C O } _ { 2 }$ and 1.0 mM ",
+      "context_after": " The column was kept at $3 5 \\; ^ { \\circ } \\mathb"
+    },
+    {
+      "ordinal": 19,
+      "page": 10,
+      "opening": "$",
+      "raw": "$3 5 \\; ^ { \\circ } \\mathbf { C } ,$",
+      "body": "3 5 \\; ^ { \\circ } \\mathbf { C } ,",
+      "context_before": "hsf { N a H C O } _ { 3 }$ The column was kept at ",
+      "context_after": " and the eluent was delivered with a constant flow"
+    },
+    {
+      "ordinal": 20,
+      "page": 10,
+      "opening": "$",
+      "raw": "$\\mathsf { H } _ { 2 } \\mathsf { S O } _ { 4 }$",
+      "body": "\\mathsf { H } _ { 2 } \\mathsf { S O } _ { 4 }",
+      "context_before": "er, which was previously regenerated with 500 ppm ",
+      "context_after": " . Within this cation exchanger, cations in soluti"
+    },
+    {
+      "ordinal": 21,
+      "page": 10,
+      "opening": "$",
+      "raw": "$\\mathsf { C O } _ { 2 }$",
+      "body": "\\mathsf { C O } _ { 2 }",
+      "context_before": "arbonic acid, which was subsequently removed in a ",
+      "context_after": " suppressor. Anion detection was performed with a "
+    },
+    {
+      "ordinal": 22,
+      "page": 11,
+      "opening": "$",
+      "raw": "$\\mathsf { P O } _ { 2 } ^ { 3 - }$",
+      "body": "\\mathsf { P O } _ { 2 } ^ { 3 - }",
+      "context_before": "tember 2025\n\nPAHs in WUI Fire Fuels\n\ncombusted to ",
+      "context_after": " . The results from the CIC should be treated as s"
+    },
+    {
+      "ordinal": 23,
+      "page": 11,
+      "opening": "$",
+      "raw": "$\\mathsf { C O } _ { 2 } ,$",
+      "body": "\\mathsf { C O } _ { 2 } ,",
+      "context_before": "7.858 ± 0.001 | 2.29 ± 0.14 | 30.00 ± 4.95 |\n\nThe ",
+      "context_after": " CO, and smoke PM yields are presented in Table 2."
+    },
+    {
+      "ordinal": 24,
+      "page": 11,
+      "opening": "$",
+      "raw": "$\\mathsf { C O } _ { 2 }$",
+      "body": "\\mathsf { C O } _ { 2 }",
+      "context_before": ". When normalized by the combusted mass loss, the ",
+      "context_after": " yields are comparable for vehicles and cribs. The"
+    },
+    {
+      "ordinal": 25,
+      "page": 11,
+      "opening": "$",
+      "raw": "$CO_{2}$",
+      "body": "CO_{2}",
+      "context_before": "yields are comparable for vehicles and cribs. The ",
+      "context_after": "\n\n5\n\n\f\n\n"
+    },
+    {
+      "ordinal": 26,
+      "page": 12,
+      "opening": "$",
+      "raw": "$\\mathsf { C O } _ { 2 } ,$",
+      "body": "\\mathsf { C O } _ { 2 } ,",
+      "context_before": "g the lowest values.\n\nTable 2. Emission yields of ",
+      "context_after": " CO, PM (gravimetric), and modified combustion eff"
+    },
+    {
+      "ordinal": 27,
+      "page": 18,
+      "opening": "$",
+      "raw": "$\\mathrm{P O_{4}}$",
+      "body": "\\mathrm{P O_{4}}",
+      "context_before": "eatures.\n\n\n\nFig. 7. Yields of F, Cl, Br, and P as ",
+      "context_after": " in vehicles, trees, and cribs studied. Note y-axi"
+    }
+  ],
+  "current_fragments": [
+    {
+      "ordinal": 1,
+      "page": 6,
+      "opening": "$",
+      "raw": "$\\mathsf { P O } _ { 4 }$",
+      "body": "\\mathsf { P O } _ { 4 }",
+      "context_before": "endix B. 11\nFig. 7. Yields of F, Cl, Br, and P as ",
+      "context_after": " in vehicles, trees, and cribs studied. Note y-axi"
+    },
+    {
+      "ordinal": 2,
+      "page": 8,
+      "opening": "$",
+      "raw": "$k g \\pm 4 k g )$",
+      "body": "k g \\pm 4 k g )",
+      "context_before": "vehicles: one minivan (2004 model, weighting 1854 ",
+      "context_after": " and one hybrid sedan (2010 model, weighting 1328 "
+    },
+    {
+      "ordinal": 3,
+      "page": 8,
+      "opening": "$",
+      "raw": "$\\mathsf { k g } \\pm 0 . 0 6$",
+      "body": "\\mathsf { k g } \\pm 0 . 0 6",
+      "context_before": "e sticks and 6 sticks per layer. One weighed 7.92 ",
+      "context_after": " kg, and the other was slightly lower at 7.86 kg ±"
+    },
+    {
+      "ordinal": 4,
+      "page": 8,
+      "opening": "$",
+      "raw": "$\\mathsf { C O } _ { 2 }$",
+      "body": "\\mathsf { C O } _ { 2 }",
+      "context_before": "cy (MCE) was established from the net increase of ",
+      "context_after": " divided by the net increase of CO and $\\mathsf { "
+    },
+    {
+      "ordinal": 5,
+      "page": 8,
+      "opening": "$",
+      "raw": "$\\mathsf { C O } _ { 2 } ,$",
+      "body": "\\mathsf { C O } _ { 2 } ,",
+      "context_before": " } _ { 2 }$ divided by the net increase of CO and ",
+      "context_after": " or $\\mathsf { C O } _ { 2 }$ yield over the sum o"
+    },
+    {
+      "ordinal": 6,
+      "page": 8,
+      "opening": "$",
+      "raw": "$\\mathsf { C O } _ { 2 }$",
+      "body": "\\mathsf { C O } _ { 2 }",
+      "context_before": "increase of CO and $\\mathsf { C O } _ { 2 } ,$ or ",
+      "context_after": " yield over the sum of CO and $\\mathsf { C O } _ {"
+    },
+    {
+      "ordinal": 7,
+      "page": 8,
+      "opening": "$",
+      "raw": "$\\mathsf { C O } _ { 2 }$",
+      "body": "\\mathsf { C O } _ { 2 }",
+      "context_before": "hsf { C O } _ { 2 }$ yield over the sum of CO and ",
+      "context_after": " yields.\n\nTime-integrated particulate phase smoke "
+    },
+    {
+      "ordinal": 8,
+      "page": 9,
+      "opening": "$",
+      "raw": "$1 5 0   ^ { \\circ } \\mathbf { C }$",
+      "body": "1 5 0   ^ { \\circ } \\mathbf { C }",
+      "context_before": "ilter with PM was rolled into a vessel, heated to ",
+      "context_after": " for 7 min, remained static for 5 min, rinsed at 1"
+    },
+    {
+      "ordinal": 9,
+      "page": 9,
+      "opening": "$",
+      "raw": "$9 0   s ,$",
+      "body": "9 0   s ,",
+      "context_before": "min, rinsed at 100 % rinse volume, and purged for ",
+      "context_after": " repeating the cycle six times. The extracts were "
+    },
+    {
+      "ordinal": 10,
+      "page": 10,
+      "opening": "$",
+      "raw": "$5 0   ^ { \\circ } \\mathbb { C }$",
+      "body": "5 0   ^ { \\circ } \\mathbb { C }",
+      "context_before": "t 1.7 mL/min. The oven temperature ramped up from ",
+      "context_after": " at $5 ^ { \\circ } C /$ min until it reached ${ \\m"
+    },
+    {
+      "ordinal": 11,
+      "page": 10,
+      "opening": "$",
+      "raw": "$5 ^ { \\circ } C /$",
+      "body": "5 ^ { \\circ } C /",
+      "context_before": "mped up from $5 0   ^ { \\circ } \\mathbb { C }$ at ",
+      "context_after": " min until it reached ${ \\mathfrak { Z } } 1 0   ^"
+    },
+    {
+      "ordinal": 12,
+      "page": 10,
+      "opening": "$",
+      "raw": "${ \\mathfrak { Z } } 1 0   ^ { \\circ } \\mathbb { C } .$",
+      "body": "{ \\mathfrak { Z } } 1 0   ^ { \\circ } \\mathbb { C } .",
+      "context_before": " C }$ at $5 ^ { \\circ } C /$ min until it reached ",
+      "context_after": " PAH analysis, calibration, and yield calculations"
+    },
+    {
+      "ordinal": 13,
+      "page": 10,
+      "opening": "$",
+      "raw": "$k = 2 . 0$",
+      "body": "k = 2 . 0",
+      "context_before": "y is reported for a 95 % confidence interval with ",
+      "context_after": " . The measurement uncertainty applied here is the"
+    },
+    {
+      "ordinal": 14,
+      "page": 10,
+      "opening": "$",
+      "raw": "$1 0 5 0   ^ { \\circ } \\mathsf { C }$",
+      "body": "1 0 5 0   ^ { \\circ } \\mathsf { C }",
+      "context_before": "ven (Metrohm Combustion Module P/N 2.136.0700) at ",
+      "context_after": " in a 1:3 argon: oxygen environment. Prior to anal"
+    },
+    {
+      "ordinal": 15,
+      "page": 10,
+      "opening": "$",
+      "raw": "$1 0 5 0   ^ { \\circ } \\mathsf { C }$",
+      "body": "1 0 5 0   ^ { \\circ } \\mathsf { C }",
+      "context_before": "dry and combusted within the combustion module at ",
+      "context_after": " . The combusted ions were retained in approximate"
+    },
+    {
+      "ordinal": 16,
+      "page": 10,
+      "opening": "$",
+      "raw": "$\\mathsf { H } _ { 2 } \\mathsf { O } _ { 2 }$",
+      "body": "\\mathsf { H } _ { 2 } \\mathsf { O } _ { 2 }",
+      "context_before": "y 5 mL of an absorber solution containing 500 ppm ",
+      "context_after": " in deionized water, and then 10 µL of the absorbe"
+    },
+    {
+      "ordinal": 17,
+      "page": 10,
+      "opening": "$",
+      "raw": "$\\mathsf { N a } _ { 2 } \\mathsf { C O } _ { 2 }$",
+      "body": "\\mathsf { N a } _ { 2 } \\mathsf { C O } _ { 2 }",
+      "context_before": "4.0 mm) with an eluent solution containing 3.2 mM ",
+      "context_after": " and 1.0 mM $\\mathsf { N a H C O } _ { 3 }$ The co"
+    },
+    {
+      "ordinal": 18,
+      "page": 10,
+      "opening": "$",
+      "raw": "$\\mathsf { N a H C O } _ { 3 }$",
+      "body": "\\mathsf { N a H C O } _ { 3 }",
+      "context_before": "N a } _ { 2 } \\mathsf { C O } _ { 2 }$ and 1.0 mM ",
+      "context_after": " The column was kept at $3 5 \\; ^ { \\circ } \\mathb"
+    },
+    {
+      "ordinal": 19,
+      "page": 10,
+      "opening": "$",
+      "raw": "$3 5 \\; ^ { \\circ } \\mathbf { C } ,$",
+      "body": "3 5 \\; ^ { \\circ } \\mathbf { C } ,",
+      "context_before": "hsf { N a H C O } _ { 3 }$ The column was kept at ",
+      "context_after": " and the eluent was delivered with a constant flow"
+    },
+    {
+      "ordinal": 20,
+      "page": 10,
+      "opening": "$",
+      "raw": "$\\mathsf { H } _ { 2 } \\mathsf { S O } _ { 4 }$",
+      "body": "\\mathsf { H } _ { 2 } \\mathsf { S O } _ { 4 }",
+      "context_before": "er, which was previously regenerated with 500 ppm ",
+      "context_after": " . Within this cation exchanger, cations in soluti"
+    },
+    {
+      "ordinal": 21,
+      "page": 10,
+      "opening": "$",
+      "raw": "$\\mathsf { C O } _ { 2 }$",
+      "body": "\\mathsf { C O } _ { 2 }",
+      "context_before": "arbonic acid, which was subsequently removed in a ",
+      "context_after": " suppressor. Anion detection was performed with a "
+    },
+    {
+      "ordinal": 22,
+      "page": 11,
+      "opening": "$",
+      "raw": "$\\mathsf { P O } _ { 2 } ^ { 3 - }$",
+      "body": "\\mathsf { P O } _ { 2 } ^ { 3 - }",
+      "context_before": "mber 2025\n\n\n\nPAHs in WUI Fire Fuels\n\ncombusted to ",
+      "context_after": " . The results from the CIC should be treated as s"
+    },
+    {
+      "ordinal": 23,
+      "page": 11,
+      "opening": "$",
+      "raw": "$\\mathsf { C O } _ { 2 } ,$",
+      "body": "\\mathsf { C O } _ { 2 } ,",
+      "context_before": "7.858 ± 0.001 | 2.29 ± 0.14 | 30.00 ± 4.95 |\n\nThe ",
+      "context_after": " CO, and smoke PM yields are presented in Table 2."
+    },
+    {
+      "ordinal": 24,
+      "page": 11,
+      "opening": "$",
+      "raw": "$\\mathsf { C O } _ { 2 }$",
+      "body": "\\mathsf { C O } _ { 2 }",
+      "context_before": ". When normalized by the combusted mass loss, the ",
+      "context_after": " yields are comparable for vehicles and cribs. The"
+    },
+    {
+      "ordinal": 25,
+      "page": 11,
+      "opening": "$",
+      "raw": "$CO_{2}$",
+      "body": "CO_{2}",
+      "context_before": "yields are comparable for vehicles and cribs. The ",
+      "context_after": "\n\n\n\n5\n\n\f\n\n"
+    },
+    {
+      "ordinal": 26,
+      "page": 12,
+      "opening": "$",
+      "raw": "$\\mathsf { C O } _ { 2 } ,$",
+      "body": "\\mathsf { C O } _ { 2 } ,",
+      "context_before": "g the lowest values.\n\nTable 2. Emission yields of ",
+      "context_after": " CO, PM (gravimetric), and modified combustion eff"
+    },
+    {
+      "ordinal": 27,
+      "page": 18,
+      "opening": "$",
+      "raw": "$\\mathrm{P O_{4}}$",
+      "body": "\\mathrm{P O_{4}}",
+      "context_before": "eatures.\n\n\n\nFig. 7. Yields of F, Cl, Br, and P as ",
+      "context_after": " in vehicles, trees, and cribs studied. Note y-axi"
+    }
+  ],
+  "primary_count": 27,
+  "current_count": 27,
+  "ordered_raw_fragments_exact": true,
+  "ordered_whitespace_only_equivalent": true,
+  "explicit_delimiter_boundary_uncertainties": {
+    "primary": [],
+    "current": []
+  },
+  "changed_sequences": [],
+  "internal_MFR26_regions_correspondence": "unknown_private_region_to_public_fragment_mapping_not_available",
+  "all_original_equations_correct_or_complete_claim": false,
+  "output_model_gold_reader_or_formula_changed": false,
+  "extractor": {
+    "path": "benchmark/runs/header-v4-http-20261018/compare_math_fragments.py",
+    "sha256": "4b4364985334c0f604100c82eaba50a40bb8238c4f30013f91337ab8806a7cb2",
+    "bytes": 4085
+  }
+}

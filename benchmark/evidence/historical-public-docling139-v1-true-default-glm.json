@@ -1,0 +1,81 @@
+{
+  "schema": "moparse-evidence/1",
+  "id": "historical-public-docling139-v1-true-default-glm",
+  "method_id": "archive-docling2139-v1-true-default-glm",
+  "cohort_id": "regression-502",
+  "origin": "historical_reuse",
+  "fresh_model_inference": false,
+  "output_stage": "public-final-GFM",
+  "provenance": [
+    {
+      "path": "benchmark/evidence/artifacts/6bad974d6724a4377c5f9ad71b219698e40631b221b86de4272b53a053af9a4c.json",
+      "sha256": "6bad974d6724a4377c5f9ad71b219698e40631b221b86de4272b53a053af9a4c",
+      "bytes": 92558,
+      "original_path": "benchmark-results/clean-model-comparison-20261015/followup/20261017/production-baseline/public-output-comparison/summary.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/2de637d7a30a8a2307088767eee2debfefea1350e8d9f90a182d69bda34ad4a3.json",
+      "sha256": "2de637d7a30a8a2307088767eee2debfefea1350e8d9f90a182d69bda34ad4a3",
+      "bytes": 1700,
+      "original_path": "benchmark-results/clean-model-comparison-20261015/followup/20261017/production-baseline/public-output-comparison/plan.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/adfc3f63ddf690cfc8d5429313027a0cb8afc60eb1099408c7b549e6b86fdfe2.json",
+      "sha256": "adfc3f63ddf690cfc8d5429313027a0cb8afc60eb1099408c7b549e6b86fdfe2",
+      "bytes": 178,
+      "original_path": "benchmark-results/clean-model-comparison-20261015/followup/20261017/production-baseline/public-output-comparison/completed.json",
+      "snapshot_bytes_unchanged": true
+    }
+  ],
+  "quality": {
+    "core209": {
+      "pass": 209,
+      "total": 209,
+      "gold_fingerprint": "fdcc0bb53c378d83b0cbb23757976d9606adc572bac34eaa41362b3a922374de",
+      "reader_fingerprint": "frozen-public-reader-v1"
+    },
+    "period209": {
+      "pass": 209,
+      "total": 209,
+      "gold_fingerprint": "fdcc0bb53c378d83b0cbb23757976d9606adc572bac34eaa41362b3a922374de",
+      "reader_fingerprint": "frozen-public-reader-v1"
+    },
+    "unique_row402": {
+      "pass": 359,
+      "total": 402,
+      "gold_fingerprint": "7305349ae8ef88da6ee7260d220f62aa3ef1750de3a8cb0bda3d856cfec000ca",
+      "reader_fingerprint": "frozen-public-reader-v1"
+    },
+    "column_meaning402": {
+      "pass": 293,
+      "total": 402,
+      "gold_fingerprint": "7305349ae8ef88da6ee7260d220f62aa3ef1750de3a8cb0bda3d856cfec000ca",
+      "reader_fingerprint": "frozen-public-reader-v1"
+    },
+    "funding31": {
+      "pass": 31,
+      "total": 31,
+      "gold_fingerprint": "e6a8392a359341a3dac0de1afd362fdf5c2416d3d9fd9f4dc799aa5c5716d177",
+      "reader_fingerprint": "frozen-public-reader-v1"
+    }
+  },
+  "performance": {
+    "seconds": null,
+    "scope": "saved public final Markdown rescored; no fresh inference timing",
+    "power_limit_W": null,
+    "hardware_fingerprint": null,
+    "warmup": null
+  },
+  "qualification": {
+    "source_artifacts_hashed": true,
+    "deployment_acceptance": false,
+    "source_exposed": true,
+    "full_HTTP": false,
+    "original_output_unchanged": true,
+    "original_result_acquisition": "saved component-composed final Markdown"
+  },
+  "observed_recipe_fingerprint": null,
+  "recipe_limit": "Historical component settings/export stage are preserved; this is not a run of the newly registered whole pipeline"
+}

@@ -14,11 +14,14 @@ import type {
 
 const configuredBase = (import.meta.env.VITE_API_BASE_URL as string | undefined)?.trim() ?? ''
 export const API_BASE = configuredBase.replace(/\/$/, '')
-const API_KEY_STORAGE = 'mosaicparse.api-key'
+const API_KEY_STORAGE = 'moparse.api-key'
+const LEGACY_API_KEY_STORAGE = 'mosaicparse.api-key'
 
 export function getApiKey(): string {
   if (typeof sessionStorage === 'undefined') return ''
-  return sessionStorage.getItem(API_KEY_STORAGE) ?? ''
+  return sessionStorage.getItem(API_KEY_STORAGE)
+    ?? sessionStorage.getItem(LEGACY_API_KEY_STORAGE)
+    ?? ''
 }
 
 export function setApiKey(value: string): void {
@@ -26,6 +29,7 @@ export function setApiKey(value: string): void {
   const normalized = value.trim()
   if (normalized) sessionStorage.setItem(API_KEY_STORAGE, normalized)
   else sessionStorage.removeItem(API_KEY_STORAGE)
+  sessionStorage.removeItem(LEGACY_API_KEY_STORAGE)
 }
 
 export class ApiError extends Error {
@@ -236,8 +240,8 @@ export async function cancelContentJob(jobId: string): Promise<'cancelled' | 'de
 function backendStatus(raw: unknown): BackendCapability['status'] {
   const value = asRecord(raw)
   const status = String(value.status ?? value.state ?? '').toLowerCase()
-  if (status === 'ready' || status === 'healthy' || status === 'ok' || status === 'available') return 'ready'
   if (status === 'disabled' || value.enabled === false) return 'disabled'
+  if (status === 'ready' || status === 'healthy' || status === 'ok' || status === 'available') return 'ready'
   if (status === 'unavailable' || status === 'degraded' || status === 'error' || status === 'failed' || value.available === false) return 'unavailable'
   if (value.available === true || value.ready === true) return 'ready'
   return 'unknown'
@@ -262,6 +266,9 @@ function normalizeBackends(raw: unknown): { backends: BackendCapability[]; queue
   const aliases: Record<string, { id: string; label: string }> = {
     docling: { id: 'docling', label: 'Docling' },
     'docling-standard': { id: 'docling', label: 'Docling' },
+    mineru: { id: 'mineru', label: 'MinerU Advanced＋TXT' },
+    'mineru-advanced-txt': { id: 'mineru', label: 'MinerU Advanced＋TXT' },
+    'docling-header-verifier': { id: 'docling-header-verifier', label: 'Docling 表头核验' },
     glm: { id: 'glm', label: 'GLM' },
     glm_ocr: { id: 'glm', label: 'GLM' },
     'glm-ocr-remote': { id: 'glm', label: 'GLM' },
@@ -274,23 +281,13 @@ function normalizeBackends(raw: unknown): { backends: BackendCapability[]; queue
       const record = asRecord(item)
       const rawId = String(record.id ?? record.name ?? record.backend ?? '').toLowerCase()
       const alias = aliases[rawId]
-        ?? (rawId.includes('docling') ? aliases.docling
-          : rawId.includes('sdk') ? aliases.glm_sdk
-            : rawId.includes('glm') ? aliases.glm
-              : { id: rawId || 'unknown', label: String(record.label ?? (rawId || 'Backend')) })
+        ?? { id: rawId || 'unknown', label: String(record.label ?? (rawId || 'Backend')) }
       byId.set(alias.id, backendFromValue(alias.id, alias.label, item))
     }
   } else {
     for (const [key, alias] of Object.entries(aliases)) {
       if (root[key] !== undefined && !byId.has(alias.id)) byId.set(alias.id, backendFromValue(alias.id, alias.label, root[key]))
     }
-  }
-  for (const expected of [
-    { id: 'docling', label: 'Docling' },
-    { id: 'glm', label: 'GLM' },
-    { id: 'glm-sdk', label: 'GLM SDK' },
-  ]) {
-    if (!byId.has(expected.id)) byId.set(expected.id, { ...expected, status: 'unknown' })
   }
   const queueRaw = asRecord(root.queue)
   const activeRaw = queueRaw.active ?? queueRaw.running ?? root.active_jobs ?? root.queue_active

@@ -1,0 +1,125 @@
+{
+  "schema": "moparse-evidence/1",
+  "id": "header-v4-final550-identity-resource-and-source-block-20261018",
+  "method_id": "mineru-advanced-txt-vllm-c2-docling-header-glm-v4",
+  "cohort_id": "formal550-complete-service-but-blocked-source-quality",
+  "origin": "fresh_component",
+  "fresh_model_inference": false,
+  "new_HTTP_requests": false,
+  "output_stage": "final-identity-resource-and-posthoc-source-review",
+  "quality": {},
+  "performance": {},
+  "provenance": [
+    {
+      "path": "benchmark/evidence/artifacts/5f908454e8c15370b3dd29729209432825d17023862a6b142766527e6d99d775.json",
+      "sha256": "5f908454e8c15370b3dd29729209432825d17023862a6b142766527e6d99d775",
+      "bytes": 99755,
+      "original_path": "benchmark/runs/header-v4-http-20261018/deployment-after.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/c5a0f0b2bab4ba80a3ab3ed4f31fb3e12f4265f903f7a2a64a781080000a673a.json",
+      "sha256": "c5a0f0b2bab4ba80a3ab3ed4f31fb3e12f4265f903f7a2a64a781080000a673a",
+      "bytes": 1839,
+      "original_path": "benchmark/runs/header-v4-http-20261018/worker-final550-resources-root.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/07fe71b95869d0f7f2f03f2baa9917103f4d0894ebaa3cb0abce197fef9100bb.json",
+      "sha256": "07fe71b95869d0f7f2f03f2baa9917103f4d0894ebaa3cb0abce197fef9100bb",
+      "bytes": 978,
+      "original_path": "benchmark/runs/header-v4-http-20261018/frozen-source-archive.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/835d7de34797c2642d32cdc91d43a6aa10ad05ce7f7843da40caf8c57ceae7bd.gz",
+      "sha256": "835d7de34797c2642d32cdc91d43a6aa10ad05ce7f7843da40caf8c57ceae7bd",
+      "bytes": 384110,
+      "original_path": "benchmark/runs/header-v4-http-20261018/frozen-reviewed-source.tar.gz",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/0ea53a623851e0bf96f41e1ae9f27eac7df899b4240ef3c56bb5aab0514f6f7b.json",
+      "sha256": "0ea53a623851e0bf96f41e1ae9f27eac7df899b4240ef3c56bb5aab0514f6f7b",
+      "bytes": 4665,
+      "original_path": "benchmark/runs/header-v4-http-20261018/fresh7-NASA-posthoc-source-failure.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/09adbbfb988c9ba63dba635ef9537999c17dcef82feeb2b860c413fc92684597.json",
+      "sha256": "09adbbfb988c9ba63dba635ef9537999c17dcef82feeb2b860c413fc92684597",
+      "bytes": 5922,
+      "original_path": "benchmark/runs/header-v4-http-20261018/holdout39-baseline-V4-per-assertion-diff.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/c769e17a5af70d50bd39966b1e3273af894265cde059d6f452d9bf1986ef4e96.json",
+      "sha256": "c769e17a5af70d50bd39966b1e3273af894265cde059d6f452d9bf1986ef4e96",
+      "bytes": 5348,
+      "original_path": "benchmark/runs/header-v4-http-20261018/fresh7-baseline-V4-per-assertion-diff.json",
+      "snapshot_bytes_unchanged": true
+    }
+  ],
+  "final_identity": {
+    "source135_files_match": true,
+    "same_app_worker_provider_and_shared_container_IDs_as_formal_start": true,
+    "ready_and_source_matched": true,
+    "worker_ID": "412d69fdaf2a076732af0a381e4e14a617b6b3f08f427be5ca8515ae27bb2ad2",
+    "worker_restart_count": 0
+  },
+  "resource_observation": {
+    "scope": "Sameworker lifetime NISTpreflight then continuous550; no workerrestart",
+    "cgroup_peak_bytes": 4697849856,
+    "cgroup_memory_max_bytes": 8589934592,
+    "cgroup_memory_events_max_oom_kill": 0,
+    "swap_current_bytes": 0,
+    "native_worker_memory_limit_is_entire_pipeline_budget": false,
+    "GPU_power_limit_W_by_index": {
+      "0": 220,
+      "1": 220
+    },
+    "source": {
+      "path": "benchmark/evidence/artifacts/c5a0f0b2bab4ba80a3ab3ed4f31fb3e12f4265f903f7a2a64a781080000a673a.json",
+      "sha256": "c5a0f0b2bab4ba80a3ab3ed4f31fb3e12f4265f903f7a2a64a781080000a673a",
+      "bytes": 1839,
+      "original_path": "benchmark/runs/header-v4-http-20261018/worker-final550-resources-root.json",
+      "snapshot_bytes_unchanged": true
+    }
+  },
+  "service_completion": {
+    "whole_PDF_documents": 17,
+    "pages": 550,
+    "successful_documents": 17,
+    "successful_pages": 550,
+    "preflight25_separate_not_added_to_dataset": true
+  },
+  "release_decision": {
+    "status": "blocked-new-source-schedule-hallucination",
+    "deployment_acceptance": false,
+    "live_selected": false,
+    "frozen36_counts": {
+      "pass": 31,
+      "fail": 5,
+      "unknown": 0
+    },
+    "frozen28_counts": {
+      "pass": 24,
+      "fail": 4,
+      "unknown": 0
+    },
+    "baseline_pass_to_nonpass_36_and28": 0,
+    "posthoc_unannotated_severe_output_failure": true,
+    "existing_denominators_gold_or_outputs_changed": false
+  },
+  "CPU_watchers": {
+    "finalization_session38610_exit_code": 0,
+    "stage_session77576_exit_code": 0,
+    "all_four_stage_cohorts_finalized": true
+  },
+  "qualification": {
+    "observation_only": true,
+    "deployment_acceptance": false,
+    "service_resource_success_is_source_quality_pass": false,
+    "no_upstream_or_runtime_mutations": true
+  }
+}

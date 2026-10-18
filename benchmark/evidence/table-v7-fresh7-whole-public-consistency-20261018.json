@@ -1,0 +1,26 @@
+{
+  "schema": "moparse-evidence/1",
+  "id": "table-v7-fresh7-whole-public-consistency-20261018",
+  "method_id": "mineru-advanced-txt-vllm-c2-docling-source-glm-v7",
+  "cohort_id": "fresh7-20261018",
+  "origin": "fresh_component",
+  "fresh_model_inference": false,
+  "output_stage": "diagnostic-only",
+  "quality": {},
+  "performance": {},
+  "provenance": [
+    {
+      "path": "benchmark/evidence/artifacts/16b54fa024448076bd0982da703a8ad8e76d314062ac207dfbdda03074f82220.json",
+      "sha256": "16b54fa024448076bd0982da703a8ad8e76d314062ac207dfbdda03074f82220",
+      "bytes": 7163,
+      "original_path": "benchmark/runs/table-syntax-v7-http-20261018/fresh7-V6-V7-whole-public-consistency.json",
+      "snapshot_bytes_unchanged": true
+    }
+  ],
+  "qualification": {
+    "observation_only": true,
+    "deployment_acceptance": false,
+    "gold_reader_and_original_outputs_changed": false
+  },
+  "comparison_scope": "All6 public tables and7 visible body sequences V6 versus V7; exact consistency not independent source accuracy"
+}

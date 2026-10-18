@@ -1,0 +1,717 @@
+{
+  "schema": "moparse-source-assertions/1",
+  "id": "nasa-posthoc-original-cells-spans-20261018",
+  "source_documents": [
+    {
+      "id": "nasa-maax-factsheet",
+      "sha256": "79ab8e7686605ece7144aaa7d1d95e0c43dc4066ad35db9629f7b10075369411",
+      "source_path": "benchmark/datasets/moparse-addon-20261018/sources/nasa-maax-factsheet.pdf"
+    }
+  ],
+  "review": {
+    "created_at": "2026-10-17T23:33:40.675826+00:00",
+    "method": "Manual original-pixel review plus original PDF line/cell geometry; explicitly posthoc development regression.",
+    "model_outputs_seen": true,
+    "unseen_holdout": false,
+    "original28_gold_changed": false,
+    "rows_follow_printed_ruling_not_inferred_metric_or_line_names": true
+  },
+  "checks": [
+    {
+      "document_id": "nasa-maax-factsheet",
+      "page": 2,
+      "selector": {
+        "text": "Instrument Parameter"
+      },
+      "source_evidence": {
+        "physical_page": 2,
+        "bbox_pdf_points": [
+          38,
+          219,
+          231,
+          406
+        ],
+        "image_path": "benchmark/datasets/moparse-addon-20261018/source-images/nasa-maax-factsheet-p02.png",
+        "image_sha256": "782d3a4d0adb4ce6cb5213083949275f2826152e3ca992ebf2db931be4686609",
+        "note": "Closed physical cells; line wraps remain in the same original cell. Top title spans two columns."
+      },
+      "id": "nasa-source-table1-complete-original-grid",
+      "kind": "table_grid",
+      "expected": [
+        [
+          "Key Instrument Characteristics",
+          ""
+        ],
+        [
+          "Instrument Parameter",
+          "Value"
+        ],
+        [
+          "Passband (short)",
+          "144nm peak / 8nm FWHM"
+        ],
+        [
+          "Passband (long)",
+          "173nm peak / 8nm FWHM"
+        ],
+        [
+          "Entrance aperture",
+          "30 x 12 mm"
+        ],
+        [
+          "Field of View",
+          "15°"
+        ],
+        [
+          "Detector area",
+          "28 mm (active area) / 512 x 512 pixels"
+        ],
+        [
+          "Effective resolution element size (RSS detector, PSF, pixel size)",
+          "66 μm (short) 72 μm (long)"
+        ],
+        [
+          "Effective nadir ground element size",
+          "13 km (short), 14 km (long)"
+        ],
+        [
+          "Mass (MUVI + PIU)",
+          "26.11 kg"
+        ],
+        [
+          "Power (MUVI + PIU)",
+          "39.8 w"
+        ],
+        [
+          "Data Rate (MUVI to PIU)",
+          "280 kbps"
+        ]
+      ]
+    },
+    {
+      "document_id": "nasa-maax-factsheet",
+      "page": 2,
+      "selector": {
+        "text": "Instrument Parameter"
+      },
+      "source_evidence": {
+        "physical_page": 2,
+        "bbox_pdf_points": [
+          38,
+          219,
+          231,
+          406
+        ],
+        "image_path": "benchmark/datasets/moparse-addon-20261018/source-images/nasa-maax-factsheet-p02.png",
+        "image_sha256": "782d3a4d0adb4ce6cb5213083949275f2826152e3ca992ebf2db931be4686609",
+        "note": "Closed physical cells; line wraps remain in the same original cell. Top title spans two columns."
+      },
+      "id": "nasa-source-table1-original-span1",
+      "kind": "table_span",
+      "expected": [
+        0,
+        0,
+        1,
+        2
+      ]
+    },
+    {
+      "document_id": "nasa-maax-factsheet",
+      "page": 2,
+      "selector": {
+        "text": "Dry Mass"
+      },
+      "source_evidence": {
+        "physical_page": 2,
+        "bbox_pdf_points": [
+          236,
+          219,
+          411,
+          406
+        ],
+        "image_path": "benchmark/datasets/moparse-addon-20261018/source-images/nasa-maax-factsheet-p02.png",
+        "image_sha256": "782d3a4d0adb4ce6cb5213083949275f2826152e3ca992ebf2db931be4686609",
+        "note": "Physical ruled rows, not one artificial row per visual line: Power, Propulsion and Telecom have multiple printed lines inside one cell. Value boundary shifts from x349.63 to x368.78 for Telecom; union of source vertical rules defines four grid columns and explicit colspans. Degree and sigma come from visible glyphs, not the imperfect text font map."
+      },
+      "id": "nasa-source-table2-complete-original-grid",
+      "kind": "table_grid",
+      "expected": [
+        [
+          "Key Observatory Characteristics",
+          "",
+          "",
+          ""
+        ],
+        [
+          "Resource",
+          "Characteristics",
+          "Value",
+          ""
+        ],
+        [
+          "Mass (MEV)",
+          "Dry Mass",
+          "173.5 kg",
+          ""
+        ],
+        [
+          "Power (MEV)",
+          "Science Mode Thrust Mode Safe Mode",
+          "103.8 w 902.4 w 89 w",
+          ""
+        ],
+        [
+          "Science Data",
+          "Total Data Volume",
+          "7.2 Gb/d",
+          ""
+        ],
+        [
+          "Point. Cnt.",
+          "Science, Thrust",
+          "0.3°, 1.0° (3 σ)",
+          ""
+        ],
+        [
+          "Propulsion",
+          "Solar Electric Nitrogen Cold Gas",
+          "ΔV = 3858 m/s ΔV = 7.33 m/s",
+          ""
+        ],
+        [
+          "Telecom",
+          "Ka-Band (Science Data) S-Band (Engineering TLM)",
+          "",
+          "300 Mbps 4.9 Mbps"
+        ],
+        [
+          "Attitude",
+          "3 Axis Stabilized, Inertially Pointed",
+          "",
+          ""
+        ],
+        [
+          "Deployments",
+          "LV Separation, Solar Array, MUVI Door",
+          "",
+          ""
+        ]
+      ]
+    },
+    {
+      "document_id": "nasa-maax-factsheet",
+      "page": 2,
+      "selector": {
+        "text": "Dry Mass"
+      },
+      "source_evidence": {
+        "physical_page": 2,
+        "bbox_pdf_points": [
+          236,
+          219,
+          411,
+          406
+        ],
+        "image_path": "benchmark/datasets/moparse-addon-20261018/source-images/nasa-maax-factsheet-p02.png",
+        "image_sha256": "782d3a4d0adb4ce6cb5213083949275f2826152e3ca992ebf2db931be4686609",
+        "note": "Physical ruled rows, not one artificial row per visual line: Power, Propulsion and Telecom have multiple printed lines inside one cell. Value boundary shifts from x349.63 to x368.78 for Telecom; union of source vertical rules defines four grid columns and explicit colspans. Degree and sigma come from visible glyphs, not the imperfect text font map."
+      },
+      "id": "nasa-source-table2-original-span1",
+      "kind": "table_span",
+      "expected": [
+        0,
+        0,
+        1,
+        4
+      ]
+    },
+    {
+      "document_id": "nasa-maax-factsheet",
+      "page": 2,
+      "selector": {
+        "text": "Dry Mass"
+      },
+      "source_evidence": {
+        "physical_page": 2,
+        "bbox_pdf_points": [
+          236,
+          219,
+          411,
+          406
+        ],
+        "image_path": "benchmark/datasets/moparse-addon-20261018/source-images/nasa-maax-factsheet-p02.png",
+        "image_sha256": "782d3a4d0adb4ce6cb5213083949275f2826152e3ca992ebf2db931be4686609",
+        "note": "Physical ruled rows, not one artificial row per visual line: Power, Propulsion and Telecom have multiple printed lines inside one cell. Value boundary shifts from x349.63 to x368.78 for Telecom; union of source vertical rules defines four grid columns and explicit colspans. Degree and sigma come from visible glyphs, not the imperfect text font map."
+      },
+      "id": "nasa-source-table2-original-span2",
+      "kind": "table_span",
+      "expected": [
+        1,
+        2,
+        1,
+        2
+      ]
+    },
+    {
+      "document_id": "nasa-maax-factsheet",
+      "page": 2,
+      "selector": {
+        "text": "Dry Mass"
+      },
+      "source_evidence": {
+        "physical_page": 2,
+        "bbox_pdf_points": [
+          236,
+          219,
+          411,
+          406
+        ],
+        "image_path": "benchmark/datasets/moparse-addon-20261018/source-images/nasa-maax-factsheet-p02.png",
+        "image_sha256": "782d3a4d0adb4ce6cb5213083949275f2826152e3ca992ebf2db931be4686609",
+        "note": "Physical ruled rows, not one artificial row per visual line: Power, Propulsion and Telecom have multiple printed lines inside one cell. Value boundary shifts from x349.63 to x368.78 for Telecom; union of source vertical rules defines four grid columns and explicit colspans. Degree and sigma come from visible glyphs, not the imperfect text font map."
+      },
+      "id": "nasa-source-table2-original-span3",
+      "kind": "table_span",
+      "expected": [
+        2,
+        2,
+        1,
+        2
+      ]
+    },
+    {
+      "document_id": "nasa-maax-factsheet",
+      "page": 2,
+      "selector": {
+        "text": "Dry Mass"
+      },
+      "source_evidence": {
+        "physical_page": 2,
+        "bbox_pdf_points": [
+          236,
+          219,
+          411,
+          406
+        ],
+        "image_path": "benchmark/datasets/moparse-addon-20261018/source-images/nasa-maax-factsheet-p02.png",
+        "image_sha256": "782d3a4d0adb4ce6cb5213083949275f2826152e3ca992ebf2db931be4686609",
+        "note": "Physical ruled rows, not one artificial row per visual line: Power, Propulsion and Telecom have multiple printed lines inside one cell. Value boundary shifts from x349.63 to x368.78 for Telecom; union of source vertical rules defines four grid columns and explicit colspans. Degree and sigma come from visible glyphs, not the imperfect text font map."
+      },
+      "id": "nasa-source-table2-original-span4",
+      "kind": "table_span",
+      "expected": [
+        3,
+        2,
+        1,
+        2
+      ]
+    },
+    {
+      "document_id": "nasa-maax-factsheet",
+      "page": 2,
+      "selector": {
+        "text": "Dry Mass"
+      },
+      "source_evidence": {
+        "physical_page": 2,
+        "bbox_pdf_points": [
+          236,
+          219,
+          411,
+          406
+        ],
+        "image_path": "benchmark/datasets/moparse-addon-20261018/source-images/nasa-maax-factsheet-p02.png",
+        "image_sha256": "782d3a4d0adb4ce6cb5213083949275f2826152e3ca992ebf2db931be4686609",
+        "note": "Physical ruled rows, not one artificial row per visual line: Power, Propulsion and Telecom have multiple printed lines inside one cell. Value boundary shifts from x349.63 to x368.78 for Telecom; union of source vertical rules defines four grid columns and explicit colspans. Degree and sigma come from visible glyphs, not the imperfect text font map."
+      },
+      "id": "nasa-source-table2-original-span5",
+      "kind": "table_span",
+      "expected": [
+        4,
+        2,
+        1,
+        2
+      ]
+    },
+    {
+      "document_id": "nasa-maax-factsheet",
+      "page": 2,
+      "selector": {
+        "text": "Dry Mass"
+      },
+      "source_evidence": {
+        "physical_page": 2,
+        "bbox_pdf_points": [
+          236,
+          219,
+          411,
+          406
+        ],
+        "image_path": "benchmark/datasets/moparse-addon-20261018/source-images/nasa-maax-factsheet-p02.png",
+        "image_sha256": "782d3a4d0adb4ce6cb5213083949275f2826152e3ca992ebf2db931be4686609",
+        "note": "Physical ruled rows, not one artificial row per visual line: Power, Propulsion and Telecom have multiple printed lines inside one cell. Value boundary shifts from x349.63 to x368.78 for Telecom; union of source vertical rules defines four grid columns and explicit colspans. Degree and sigma come from visible glyphs, not the imperfect text font map."
+      },
+      "id": "nasa-source-table2-original-span6",
+      "kind": "table_span",
+      "expected": [
+        5,
+        2,
+        1,
+        2
+      ]
+    },
+    {
+      "document_id": "nasa-maax-factsheet",
+      "page": 2,
+      "selector": {
+        "text": "Dry Mass"
+      },
+      "source_evidence": {
+        "physical_page": 2,
+        "bbox_pdf_points": [
+          236,
+          219,
+          411,
+          406
+        ],
+        "image_path": "benchmark/datasets/moparse-addon-20261018/source-images/nasa-maax-factsheet-p02.png",
+        "image_sha256": "782d3a4d0adb4ce6cb5213083949275f2826152e3ca992ebf2db931be4686609",
+        "note": "Physical ruled rows, not one artificial row per visual line: Power, Propulsion and Telecom have multiple printed lines inside one cell. Value boundary shifts from x349.63 to x368.78 for Telecom; union of source vertical rules defines four grid columns and explicit colspans. Degree and sigma come from visible glyphs, not the imperfect text font map."
+      },
+      "id": "nasa-source-table2-original-span7",
+      "kind": "table_span",
+      "expected": [
+        6,
+        2,
+        1,
+        2
+      ]
+    },
+    {
+      "document_id": "nasa-maax-factsheet",
+      "page": 2,
+      "selector": {
+        "text": "Dry Mass"
+      },
+      "source_evidence": {
+        "physical_page": 2,
+        "bbox_pdf_points": [
+          236,
+          219,
+          411,
+          406
+        ],
+        "image_path": "benchmark/datasets/moparse-addon-20261018/source-images/nasa-maax-factsheet-p02.png",
+        "image_sha256": "782d3a4d0adb4ce6cb5213083949275f2826152e3ca992ebf2db931be4686609",
+        "note": "Physical ruled rows, not one artificial row per visual line: Power, Propulsion and Telecom have multiple printed lines inside one cell. Value boundary shifts from x349.63 to x368.78 for Telecom; union of source vertical rules defines four grid columns and explicit colspans. Degree and sigma come from visible glyphs, not the imperfect text font map."
+      },
+      "id": "nasa-source-table2-original-span8",
+      "kind": "table_span",
+      "expected": [
+        7,
+        1,
+        1,
+        2
+      ]
+    },
+    {
+      "document_id": "nasa-maax-factsheet",
+      "page": 2,
+      "selector": {
+        "text": "Dry Mass"
+      },
+      "source_evidence": {
+        "physical_page": 2,
+        "bbox_pdf_points": [
+          236,
+          219,
+          411,
+          406
+        ],
+        "image_path": "benchmark/datasets/moparse-addon-20261018/source-images/nasa-maax-factsheet-p02.png",
+        "image_sha256": "782d3a4d0adb4ce6cb5213083949275f2826152e3ca992ebf2db931be4686609",
+        "note": "Physical ruled rows, not one artificial row per visual line: Power, Propulsion and Telecom have multiple printed lines inside one cell. Value boundary shifts from x349.63 to x368.78 for Telecom; union of source vertical rules defines four grid columns and explicit colspans. Degree and sigma come from visible glyphs, not the imperfect text font map."
+      },
+      "id": "nasa-source-table2-original-span9",
+      "kind": "table_span",
+      "expected": [
+        8,
+        1,
+        1,
+        3
+      ]
+    },
+    {
+      "document_id": "nasa-maax-factsheet",
+      "page": 2,
+      "selector": {
+        "text": "Dry Mass"
+      },
+      "source_evidence": {
+        "physical_page": 2,
+        "bbox_pdf_points": [
+          236,
+          219,
+          411,
+          406
+        ],
+        "image_path": "benchmark/datasets/moparse-addon-20261018/source-images/nasa-maax-factsheet-p02.png",
+        "image_sha256": "782d3a4d0adb4ce6cb5213083949275f2826152e3ca992ebf2db931be4686609",
+        "note": "Physical ruled rows, not one artificial row per visual line: Power, Propulsion and Telecom have multiple printed lines inside one cell. Value boundary shifts from x349.63 to x368.78 for Telecom; union of source vertical rules defines four grid columns and explicit colspans. Degree and sigma come from visible glyphs, not the imperfect text font map."
+      },
+      "id": "nasa-source-table2-original-span10",
+      "kind": "table_span",
+      "expected": [
+        9,
+        1,
+        1,
+        3
+      ]
+    },
+    {
+      "document_id": "nasa-maax-factsheet",
+      "page": 2,
+      "selector": {
+        "text": "Seperated by"
+      },
+      "source_evidence": {
+        "physical_page": 2,
+        "bbox_pdf_points": [
+          416,
+          219,
+          574,
+          406
+        ],
+        "image_path": "benchmark/datasets/moparse-addon-20261018/source-images/nasa-maax-factsheet-p02.png",
+        "image_sha256": "782d3a4d0adb4ce6cb5213083949275f2826152e3ca992ebf2db931be4686609",
+        "note": "Orbit has three aligned lines inside one ruled cell, with no internal horizontal rules. Source spelling Seperated is retained."
+      },
+      "id": "nasa-source-table3-complete-original-grid",
+      "kind": "table_grid",
+      "expected": [
+        [
+          "Key Mission Characteristics",
+          "",
+          ""
+        ],
+        [
+          "Resource",
+          "Characteristics",
+          "Value"
+        ],
+        [
+          "LV",
+          "Option B",
+          "1 LV"
+        ],
+        [
+          "Orbit",
+          "Inclination Altitude Eccentricity",
+          "90° 20,850 km 0"
+        ],
+        [
+          "Launch Mass",
+          "2 Observatories + Custom LV Adaptor",
+          "542 kg"
+        ],
+        [
+          "Constellation",
+          "2 Observatories",
+          "Seperated by 90° (1yr) 180° (1yr)"
+        ]
+      ]
+    },
+    {
+      "document_id": "nasa-maax-factsheet",
+      "page": 2,
+      "selector": {
+        "text": "Seperated by"
+      },
+      "source_evidence": {
+        "physical_page": 2,
+        "bbox_pdf_points": [
+          416,
+          219,
+          574,
+          406
+        ],
+        "image_path": "benchmark/datasets/moparse-addon-20261018/source-images/nasa-maax-factsheet-p02.png",
+        "image_sha256": "782d3a4d0adb4ce6cb5213083949275f2826152e3ca992ebf2db931be4686609",
+        "note": "Orbit has three aligned lines inside one ruled cell, with no internal horizontal rules. Source spelling Seperated is retained."
+      },
+      "id": "nasa-source-table3-original-span1",
+      "kind": "table_span",
+      "expected": [
+        0,
+        0,
+        1,
+        3
+      ]
+    },
+    {
+      "document_id": "nasa-maax-factsheet",
+      "page": 2,
+      "selector": {
+        "text": "Total PIMMC"
+      },
+      "source_evidence": {
+        "physical_page": 2,
+        "bbox_pdf_points": [
+          400,
+          529,
+          573,
+          663
+        ],
+        "image_path": "benchmark/datasets/moparse-addon-20261018/source-images/nasa-maax-factsheet-p02.png",
+        "image_sha256": "782d3a4d0adb4ce6cb5213083949275f2826152e3ca992ebf2db931be4686609",
+        "note": "Exact existing source-only cost grid, unchanged bytes of its expected row data; complete title and both full-width footnotes retained."
+      },
+      "id": "nasa-source-table4-complete-original-grid",
+      "kind": "table_grid",
+      "expected": [
+        [
+          "Cost Summary",
+          "",
+          "",
+          ""
+        ],
+        [
+          "Mission Phase",
+          "Cost $M",
+          "Reserves $M",
+          "Total $M"
+        ],
+        [
+          "Phase A",
+          "2.0",
+          "-",
+          "2.0"
+        ],
+        [
+          "Phase B/C/D1",
+          "106.09",
+          "29.81",
+          "135.90"
+        ],
+        [
+          "Phase E/F",
+          "15.42",
+          "2.67",
+          "18.10"
+        ],
+        [
+          "Total PIMMC",
+          "123.51",
+          "32.49",
+          "156.00"
+        ],
+        [
+          "Contributions2",
+          "",
+          "",
+          "0.31"
+        ],
+        [
+          "Total Mission Cost",
+          "132.82",
+          "32.49",
+          "156.31"
+        ],
+        [
+          "1Includes $1.1M to cover cost of Items deferred to Step-2",
+          "",
+          "",
+          ""
+        ],
+        [
+          "2Not required to meet mission / science objectives",
+          "",
+          "",
+          ""
+        ]
+      ]
+    },
+    {
+      "document_id": "nasa-maax-factsheet",
+      "page": 2,
+      "selector": {
+        "text": "Total PIMMC"
+      },
+      "source_evidence": {
+        "physical_page": 2,
+        "bbox_pdf_points": [
+          400,
+          529,
+          573,
+          663
+        ],
+        "image_path": "benchmark/datasets/moparse-addon-20261018/source-images/nasa-maax-factsheet-p02.png",
+        "image_sha256": "782d3a4d0adb4ce6cb5213083949275f2826152e3ca992ebf2db931be4686609",
+        "note": "Exact existing source-only cost grid, unchanged bytes of its expected row data; complete title and both full-width footnotes retained."
+      },
+      "id": "nasa-source-table4-original-span1",
+      "kind": "table_span",
+      "expected": [
+        0,
+        0,
+        1,
+        4
+      ]
+    },
+    {
+      "document_id": "nasa-maax-factsheet",
+      "page": 2,
+      "selector": {
+        "text": "Total PIMMC"
+      },
+      "source_evidence": {
+        "physical_page": 2,
+        "bbox_pdf_points": [
+          400,
+          529,
+          573,
+          663
+        ],
+        "image_path": "benchmark/datasets/moparse-addon-20261018/source-images/nasa-maax-factsheet-p02.png",
+        "image_sha256": "782d3a4d0adb4ce6cb5213083949275f2826152e3ca992ebf2db931be4686609",
+        "note": "Exact existing source-only cost grid, unchanged bytes of its expected row data; complete title and both full-width footnotes retained."
+      },
+      "id": "nasa-source-table4-original-span2",
+      "kind": "table_span",
+      "expected": [
+        8,
+        0,
+        1,
+        4
+      ]
+    },
+    {
+      "document_id": "nasa-maax-factsheet",
+      "page": 2,
+      "selector": {
+        "text": "Total PIMMC"
+      },
+      "source_evidence": {
+        "physical_page": 2,
+        "bbox_pdf_points": [
+          400,
+          529,
+          573,
+          663
+        ],
+        "image_path": "benchmark/datasets/moparse-addon-20261018/source-images/nasa-maax-factsheet-p02.png",
+        "image_sha256": "782d3a4d0adb4ce6cb5213083949275f2826152e3ca992ebf2db931be4686609",
+        "note": "Exact existing source-only cost grid, unchanged bytes of its expected row data; complete title and both full-width footnotes retained."
+      },
+      "id": "nasa-source-table4-original-span3",
+      "kind": "table_span",
+      "expected": [
+        9,
+        0,
+        1,
+        4
+      ]
+    }
+  ],
+  "scope": "A: original printed source physical cells/spans; expected existing V4/V5 misses remain failures. Separate from B preservation relative to V4 and from immutable fresh7 fixed28."
+}

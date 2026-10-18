@@ -1,0 +1,16 @@
+{
+  "schema": "moparse-owned-native-worker-oom-diagnosis/1",
+  "utc": "2026-10-17T21:20:20.215309+00:00",
+  "container_id": "4c69ff8108982e5e83b0127640483836bd4ed09e3bcdcd01ed6f9b4e05a779e1",
+  "image_id": "sha256:461a98ee245b28244177e8f0bfe35241fff3b9f6620cb232407f78a88dfa822d",
+  "restart_count_after_failure": 1,
+  "state_OOMKilled_after_automatic_restart": false,
+  "OOM_cause": "kernel CONSTRAINT_MEMCG owned8GiB memory cgroup; uvicorn2195661 killed21:17:05UTC",
+  "kernel_observation": "Oct 18 05:17:05 jm22 kernel: uvicorn invoked oom-killer: gfp_mask=0xcc0(GFP_KERNEL), order=0, oom_score_adj=0\nOct 18 05:17:05 jm22 kernel:  oom_kill_process+0x118/0x280\nOct 18 05:17:05 jm22 kernel: [  pid  ]   uid  tgid total_vm      rss rss_anon rss_file rss_shmem pgtables_bytes swapents oom_score_adj name\nOct 18 05:17:05 jm22 kernel: oom-kill:constraint=CONSTRAINT_MEMCG,nodemask=(null),cpuset=docker-4c69ff8108982e5e83b0127640483836bd4ed09e3bcdcd01ed6f9b4e05a779e1.scope,mems_allowed=0-1,oom_memcg=/system.slice/docker-4c69ff8108982e5e83b0127640483836bd4ed09e3bcdcd01ed6f9b4e05a779e1.scope,task_memcg=/system.slice/docker-4c69ff8108982e5e83b0127640483836bd4ed09e3bcdcd01ed6f9b4e05a779e1.scope,task=uvicorn,pid=2195661,uid=0\nOct 18 05:17:05 jm22 kernel: Memory cgroup out of memory: Killed process 2195661 (uvicorn) total-vm:12974408kB, anon-rss:8229672kB, file-rss:67968kB, shmem-rss:0kB, UID:0 pgtables:18128kB oom_score_adj:0\n",
+  "docker_events": {
+    "path": "benchmark/runs/header-v3-http-20261018/native-worker-failure-events.json",
+    "sha256": "48d320344bbc00fb480f9c299c8c3e5587aca93207f839954c98dc1d462b1fcc"
+  },
+  "interpretation": "Current State.OOMKilled=false and new memory.events=0 after automatic restart do not negate historical OOM event and exit137.",
+  "new_inference": false
+}

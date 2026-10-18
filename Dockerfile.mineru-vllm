@@ -1,0 +1,9 @@
+# Same vLLM base and SDK wheels used in the accepted GPU1 FP16 experiments.
+FROM vllm/vllm-openai@sha256:2622f38a0aa646c15ccc27bd5033911a58fd94ac69fd8f86aba0692d77cfe5b9
+COPY docker/mineru-vllm/requirements.txt /tmp/mineru-vllm-requirements.txt
+RUN python3 -m pip install --no-deps --require-hashes -r /tmp/mineru-vllm-requirements.txt \
+    && python3 -c "import importlib.metadata; \
+from mineru_vl_utils import MinerULogitsProcessor; \
+assert importlib.metadata.version('mineru-vl-utils') == '2.0.7'; \
+assert callable(MinerULogitsProcessor); \
+print('Pinned SDK and logits processor import passed; GPU inference is not exercised')"

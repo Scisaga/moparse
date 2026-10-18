@@ -1,0 +1,49 @@
+{
+  "schema": "moparse-evidence/1",
+  "id": "historical-docling502-content40-20261018",
+  "method_id": "production-docling-glm",
+  "cohort_id": "regression-502",
+  "origin": "historical_reuse",
+  "fresh_model_inference": false,
+  "new_HTTP_requests": false,
+  "output_stage": "public-HTTP-GFM",
+  "quality": {
+    "content14_pdf40": {
+      "pass": 16,
+      "total": 40,
+      "unknown": 0,
+      "gold_fingerprint": "9c7863cebe11c786963b745bc57e9351c8d3940d250f93ad898ede4fde6deb1b",
+      "reader_fingerprint": "e016990f1b8b8cfc0cd31f29bc2c32abe14d000cb80655953a40dd419c95341d",
+      "scope_cohort_id": "content14"
+    }
+  },
+  "performance": {},
+  "provenance": [
+    {
+      "path": "benchmark/evidence/artifacts/31282ee6b13e10726e5fc0cb7fa9d5b7046979821d6d94ed85eb9c1db5eda272.json",
+      "sha256": "31282ee6b13e10726e5fc0cb7fa9d5b7046979821d6d94ed85eb9c1db5eda272",
+      "bytes": 60163,
+      "original_path": "benchmark/runs/candidate-http-20261018/baseline-historical502-content14/evaluation.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/072634225189581a3eabe21d556541ac9883f1276c3f66d2bfe4c905016bad05.json",
+      "sha256": "072634225189581a3eabe21d556541ac9883f1276c3f66d2bfe4c905016bad05",
+      "bytes": 15259,
+      "original_path": "benchmark/runs/production-baseline-20261018/historical-source-closure.json",
+      "snapshot_bytes_unchanged": true
+    }
+  ],
+  "qualification": {
+    "historical_final_public_HTTP_Markdown": true,
+    "new_source_or_model_calls": false,
+    "full502_documents_already_captured": true,
+    "Office6_not_in_this_denominator": true,
+    "source_confirmed_p62_status": "fail",
+    "additional4": {
+      "pass": 4
+    },
+    "deployment_acceptance": false,
+    "note": "Frozen existing40 non-Office conditions scored from actual historical502 HTTP Markdown. Missing Office6 remainunknown in the full46 evaluation, not included in this explicitly named40 subset. No componentFULL or hidden source cells substitute for received public output."
+  }
+}

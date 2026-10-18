@@ -1,0 +1,94 @@
+{
+  "schema": "moparse-evidence/1",
+  "id": "header-v3-deployed-source-20261018",
+  "method_id": "mineru-advanced-txt-vllm-c2-docling-header-glm-v3",
+  "cohort_id": "deployed-candidate-source-identity",
+  "origin": "fresh_component",
+  "fresh_model_inference": false,
+  "new_HTTP_requests": false,
+  "output_stage": "source-archive-and-observed-identity",
+  "quality": {},
+  "performance": {},
+  "provenance": [
+    {
+      "path": "benchmark/evidence/artifacts/2f9b79d35d038c3106af3f3fac8c10a5a52174bfc6d973e30525cecdd77b62f8.json",
+      "sha256": "2f9b79d35d038c3106af3f3fac8c10a5a52174bfc6d973e30525cecdd77b62f8",
+      "bytes": 506,
+      "original_path": "benchmark/runs/header-v3-http-20261018/frozen-source-archive.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/c3229def9e3e80640d0f273dc84774d46d2945f1deca1e09f02d8ad07bb29b90.gz",
+      "sha256": "c3229def9e3e80640d0f273dc84774d46d2945f1deca1e09f02d8ad07bb29b90",
+      "bytes": 381421,
+      "original_path": "benchmark/runs/header-v3-http-20261018/frozen-reviewed-source.tar.gz",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/98959df66107e08c53a3151bf5b0f04dac6f4ddde25adc32b1c51fe062761631.json",
+      "sha256": "98959df66107e08c53a3151bf5b0f04dac6f4ddde25adc32b1c51fe062761631",
+      "bytes": 99509,
+      "original_path": "benchmark/runs/header-v3-http-20261018/deployment-before.json",
+      "snapshot_bytes_unchanged": true
+    }
+  ],
+  "registered_method_fingerprint": "14632f190c963705507f657cf1624787fcdb96b6d4539f507ffb78be27367087",
+  "source_archive": {
+    "schema": "moparse-frozen-source-archive/1",
+    "path": "benchmark/runs/header-v3-http-20261018/frozen-reviewed-source.tar.gz",
+    "sha256": "c3229def9e3e80640d0f273dc84774d46d2945f1deca1e09f02d8ad07bb29b90",
+    "bytes": 381421,
+    "files": 131,
+    "freeze_sha256": "fcf437d3163b932d5e318d7a05da20fae011c479a3e0c13cec73801387646b45",
+    "includes_final_frontend_timeout_and_generic_source_scope_order": true,
+    "candidate_new7_not_inferred_at_archive": true,
+    "runtime_identity": "deployment-before.json"
+  },
+  "observed_deployment": {
+    "ready_and_source_matched": true,
+    "containers": [
+      {
+        "container": "moparse-candidate-header-v3",
+        "id": "ca36b35b7072e376e4601b2dd8a518fcfd6388ff54fb4bd42c502dcb340c021f",
+        "image_id": "sha256:efde0f1563e14cd4fb0df20e1107ce4c2246b348741724fb4defebd59bc65d01",
+        "image_tag": "moparse:0.5.0-header-v3-20261018",
+        "source_revision_label": null
+      },
+      {
+        "container": "moparse-native-worker",
+        "id": "4c69ff8108982e5e83b0127640483836bd4ed09e3bcdcd01ed6f9b4e05a779e1",
+        "image_id": "sha256:461a98ee245b28244177e8f0bfe35241fff3b9f6620cb232407f78a88dfa822d",
+        "image_tag": "moparse-native-worker:0.5.0-header-v3-20261018",
+        "source_revision_label": null
+      },
+      {
+        "container": "moparse-mineru-vllm",
+        "id": "0ea8156e6bf2ff3e9e59f1a2e06544b7dcdb9c66608b2311d585c1ffcc69d0c9",
+        "image_id": "sha256:ec829f310dea61ba263ab9a0df0dec72a10ff3fa1584ab93b9c24d7828213db9",
+        "image_tag": "moparse-mineru-vllm:0.5.0-header-v3-20261018",
+        "source_revision_label": null
+      },
+      {
+        "container": "docling_glm_ocr",
+        "id": "a803d464218327072544e69c70513d17e1604a864a86ca556ec3ca87d0275035",
+        "image_id": "sha256:df7be4c4d818e250a8c80f78d110571e92e72a1fefec06fed82a2e37e473cd48",
+        "image_tag": "vllm/vllm-openai:v0.19.1",
+        "source_revision_label": null
+      },
+      {
+        "container": "docling_glm_ocr_sdk",
+        "id": "b0b2f735fb491fdb39b6b23e95d70848a15f1cebc67297c2f7d82c6b7fcd0a75",
+        "image_id": "sha256:abe353926afba82931744bac4533f895c9e6ad6f768da4103a4ec40410c2e6cb",
+        "image_tag": "docling-glm-ocr-sdk:0.1.5-selected-20261017",
+        "source_revision_label": null
+      }
+    ]
+  },
+  "qualification": {
+    "source_identity_only": true,
+    "observation_only": true,
+    "deployment_acceptance": false,
+    "source_and_model_observation_is_quality_verdict": false,
+    "source_snapshot_scope": "Exact131 reviewed v3 candidate source files including generic source-marker order fix and authorized frontend timeout0 default. Current source, static bundle, models and settings externally read back and matched; HTTP quality/performance acceptance remains separate."
+  }
+}

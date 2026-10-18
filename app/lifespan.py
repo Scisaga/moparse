@@ -86,12 +86,23 @@ class Runtime:
             self.repository.ping(),
             self.parser_service.probe_backends(),
         )
-        docling = any(item.name == "docling-standard" and item.ready for item in backends)
+        native_name = (
+            "mineru-advanced-txt"
+            if getattr(self.settings, "native_parser_backend", "docling") == "mineru"
+            else "docling-standard"
+        )
+        native_ready = any(item.name == native_name and item.ready for item in backends)
+        if getattr(self.settings, "mineru_header_verifier", "off") == "docling":
+            native_ready = native_ready and any(
+                item.name == "docling-header-verifier" and item.ready for item in backends
+            )
         return (
             {
                 "writable_data_dir": writable_data,
                 "writable_database": writable_database,
-                "docling": docling,
+                # Keep the existing readiness JSON key for clients; it now
+                # follows the selected primary native parser.
+                "docling": native_ready,
             },
             backends,
         )

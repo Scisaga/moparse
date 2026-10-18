@@ -1,6 +1,6 @@
 # MosaicParse 完整模型比较与真实接口验证
 
-实验日期：2026-10-15 至 2026-10-17。最后整理：2026-10-17。
+实验日期：2026-10-15 至 2026-10-18。最后整理：2026-10-18。
 
 ## 本次选定管线与已实施内容
 
@@ -14,6 +14,9 @@ GLM-OCR＋官方 SDK 以 200 DPI 处理扫描、混合页，并开启 SDK 前方
 [正文遗漏与替代管线实测](#正文遗漏与替代管线实测2026-10-17)。
 05:15 版本的 502 页质量、21.52 分钟和原发布清单仍保留原归属；17:46 r3 的独立核对见
 [独立逐格再验证](#独立逐格再验证2026-10-17)，没有将历史批次改标为当前镜像。
+
+Advanced＋TXT 候选已完成 10 月 18 日的 1／2／3／4 并发三轮对照；
+[并发耗时、质量与 GPU 实测](#advanced-txt-并发实测2026-10-18)见下文，线上配置未因此更换。
 
 应用代码已删除 Qwen／Ollama 客户端、探测、局部／整表复核路由、配置及前端计数；
 删除旧原生文字／网格恢复和按财务模式改写 OCR 表的补偿。当前没有额外通用视觉模型
@@ -650,6 +653,64 @@ Standard／Advanced 的默认 Markdown 会另过滤证券标识，分别为 37�
 [官方模型说明](https://huggingface.co/opendatalab/MinerU2.5-Pro-2605-1.2B)、
 [4.0.12 发布说明](https://github.com/opendatalab/MinerU/releases/tag/mineru-4.0.12-released)、
 [官方原生表路径](https://github.com/opendatalab/MinerU/blob/mineru-4.0.12-released/mineru/backend/analysis/pdf/tables.py)。
+
+### Advanced TXT 并发实测（2026-10-18）
+
+**本批推荐 4 并发：14 个难页的三轮中位数为 100.19 秒，较同条件单并发减少
+50.8%，吞吐约为 2.03 倍；较 3 并发再减少 9.2%。14 个来源页的 FULL Markdown
+跨 12 轮逐字节一致，未出现并发引入的质量变化。**
+
+采用上一轮同一组 6 份输入 PDF 的 14 个难页（Office 沿用原先转换后的 PDF），
+另将第 62 页复杂表格独立测试。原 PDF 字节直接传入官方 `parse()`，各文档依次处理，
+文档内使用官方多页窗口；每档客户端 `max_concurrency` 与 vLLM `max_num_seqs`
+同时设为 1／2／3／4，每档独立启动服务、连续三轮。本次功率上限均为实际读回的
+**220W**，重新测得单并发基线，不使用此前 180W 下的 212.75 秒计算加速比。
+
+固定 MinerU 4.0.12 Advanced＋TXT、MinerU2.5-Pro-2605-1.2B
+`08aaea840498d49ce16247b6263196cf02814885`、vLLM 0.19.1、FP16、GPU 1 RTX 2080 Ti，
+保持 8192 上下文、128 MiB KV、2048 批 token 预算及 eager 执行；权重、输入图像、提示词、
+采样和输出预算不变。CPU 客户端限制在同样的 4 个逻辑 CPU。下表计时包含选页、渲染、
+官方解析及 FULL Markdown 导出，排除服务启动、CPU 模型初始化、验收副本和解析完成后的
+证据导出；解析内部的只读观察 hook 写盘仍计入。它是组件实测，不是整个 MosaicParse
+HTTP 请求耗时或完整 502 页测试。
+
+| 请求并发 | 三轮耗时（秒） | 中位数（秒） | 较单并发省时 | 自身显存峰值（MiB） | 自身 SM 均值的三轮中位数 | GPU1 整卡能耗中位数（Wh） |
+| --- | --- | ---: | ---: | ---: | ---: | ---: |
+| 1 | 203.53／211.62／199.55 | 203.53 | — | 3426 | 23.31% | 5.790 |
+| 2 | 137.27／140.17／133.29 | 137.27 | 32.6% | 3426 | 25.41% | 4.035 |
+| 3 | 113.35／110.29／101.92 | 110.29 | 45.8% | 3426 | 28.10% | 3.469 |
+| **4** | **102.35／100.19／99.30** | **100.19** | **50.8%** | **3426** | **28.42%** | **3.168** |
+
+![Advanced TXT 并发耗时三轮对照](followup/20261018/advanced-txt-concurrency/concurrency-time-comparison.svg)
+
+SM 与显存只统计实验容器 PID，并按原 14 页组件时间窗取样；能耗为同一时间窗内
+GPU 1 整卡功率积分，含 GLM／TTS 驻留及设备基线，不是 MinerU 独占能耗。
+各档最低空闲显存均为 1681 MiB，12 轮抢占／重算计数均为 0；日志采样 KV 峰值分别
+31／46／64.5／70.5%。每轮实际 HTTP 在途峰值均达到设置的 1／2／3／4，
+服务端 Running 峰值也分别达到 1／2／3／4。每档首轮多模态缓存命中为 0／39，
+后两轮均为 39／39；所有轮次 prefix-cache 命中均为 0。
+
+质量由固定原件验收和逐字比较分别确认：12 轮均为 **45／46 项、额外 4／4 项**，
+唯一失败仍是第 87 页既有 TXT 回填脚注遗漏。额外第 62 页每轮均逐格通过全部
+99 个位置和 9 个合并跨度；该页两次模型调用存在先后依赖，耗时独立列图，不计入
+14 页加速比。相对首轮，154／154 份其余页输出的 FULL Markdown 逐字节一致；
+含首轮共 168 份页输出也全部与此前 Advanced 结果一致。
+
+492 次模型调用（原 14 页 468 次、额外第 62 页 24 次）全部 HTTP 200、正常 stop；
+180 次布局和 312 次表格调用的完整实际输入与模型响应均与参考结果一致，
+84 次输入 PDF SHA 和 180 次整页像素核对全部通过，没有布局、裁图或内容删减差异。
+
+因此后续 Advanced 候选采用 **客户端 4 并发＋vLLM `max_num_seqs=4`**。
+本次未把候选部署到线上；既有 TXT 回填问题和公共表头／来源接口接入仍按上一节处理。
+所有实验容器已停止删除，生产 API、GLM、SDK 的容器身份及启动时间未变，
+线上 ready 为 200、队列为 0；两张 GPU 的有效功率上限仍为 220W。
+
+证据：[实验配置、部署身份与清理读回](followup/20261018/advanced-txt-concurrency/experiment-manifest.json)、
+[三轮计时与 GPU／CPU／能耗／缓存](followup/20261018/advanced-txt-concurrency/resource-summary.json)、
+[独立原件验收与逐字断言](followup/20261018/advanced-txt-concurrency/quality-final-proof.json)、
+[完整质量结果](followup/20261018/advanced-txt-concurrency/quality-summary-final.json)、
+[真实模型输入与响应核对](followup/20261018/advanced-txt-concurrency/request-input-comparison.json)、
+[图表输入及 SHA](followup/20261018/advanced-txt-concurrency/concurrency-time-comparison.sources.json)。
 
 ## 历史质量比较
 

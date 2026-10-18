@@ -126,7 +126,8 @@ export function ParseOptionsForm({ options, onChange, onSubmit, sourceReady, bus
               </label>
               <label>
                 <span>超时（秒）</span>
-                <input type="number" min={10} max={3600} value={options.timeoutSeconds} onChange={(event) => update('timeoutSeconds', Number(event.target.value))} disabled={busy} />
+                <input type="number" min={0} max={86400} step={1} value={options.timeoutSeconds} onChange={(event) => update('timeoutSeconds', Number(event.target.value))} disabled={busy} aria-describedby="parse-timeout-help" />
+                <small id="parse-timeout-help">0 使用服务端默认超时；可指定 1–86400 秒。</small>
               </label>
             </div>
             <div className="advanced-popover-footer">

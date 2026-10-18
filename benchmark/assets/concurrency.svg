@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 550" role="img" aria-labelledby="title desc">
+<title id="title">Advanced TXT concurrency: time and shared GPU energy</title>
+<desc id="desc">Same fourteen difficult pages, 220 watt limit, three rounds. Concurrency2 is the chosen shared-resource default.</desc>
+<rect width="1200" height="550" fill="#fff"/>
+<g font-family="Noto Sans CJK SC,Noto Sans CJK,sans-serif" fill="#172033">
+<text x="35" y="45" font-size="28" font-weight="700">历史组件实验：Advanced＋TXT 并发、时间与整卡能耗</text>
+<text x="35" y="78" font-size="17" fill="#556177">14 个既有难页 · 220W · 每档三轮中位数 · 蓝色为选定的双并发预算</text>
+<text x="45" y="125" font-size="20" font-weight="700">原 PDF → FULL Markdown · 秒</text>
+<path d="M135 155V425" stroke="#e5eaf1"/>
+<text x="135" y="452" text-anchor="middle" font-size="15" fill="#64748b">0</text>
+<path d="M332.5 155V425" stroke="#e5eaf1"/>
+<text x="332.5" y="452" text-anchor="middle" font-size="15" fill="#64748b">122.5</text>
+<path d="M530 155V425" stroke="#e5eaf1"/>
+<text x="530" y="452" text-anchor="middle" font-size="15" fill="#64748b">245</text>
+<text x="120" y="194" text-anchor="end" font-size="18">1 并发</text>
+<rect x="135" y="170" width="328.14" height="35" rx="3" fill="#718096"/>
+<text x="473.14" y="194" font-size="18" fill="#718096">203.53</text>
+<text x="120" y="260" text-anchor="end" font-size="18">2 并发</text>
+<rect x="135" y="236" width="221.31" height="35" rx="3" fill="#2563eb"/>
+<text x="366.31" y="260" font-size="18" fill="#2563eb">137.27</text>
+<text x="120" y="326" text-anchor="end" font-size="18">3 并发</text>
+<rect x="135" y="302" width="177.81" height="35" rx="3" fill="#718096"/>
+<text x="322.81" y="326" font-size="18" fill="#718096">110.29</text>
+<text x="120" y="392" text-anchor="end" font-size="18">4 并发</text>
+<rect x="135" y="368" width="161.53" height="35" rx="3" fill="#718096"/>
+<text x="306.53" y="392" font-size="18" fill="#718096">100.19</text>
+<text x="650" y="125" font-size="20" font-weight="700">同时间窗 GPU 1 整卡能耗 · Wh</text>
+<path d="M740 155V425" stroke="#e5eaf1"/>
+<text x="740" y="452" text-anchor="middle" font-size="15" fill="#64748b">0</text>
+<path d="M937.5 155V425" stroke="#e5eaf1"/>
+<text x="937.5" y="452" text-anchor="middle" font-size="15" fill="#64748b">3.5</text>
+<path d="M1135 155V425" stroke="#e5eaf1"/>
+<text x="1135" y="452" text-anchor="middle" font-size="15" fill="#64748b">7</text>
+<text x="725" y="194" text-anchor="end" font-size="18">1 并发</text>
+<rect x="740" y="170" width="326.70" height="35" rx="3" fill="#718096"/>
+<text x="1076.70" y="194" font-size="18" fill="#718096">5.79</text>
+<text x="725" y="260" text-anchor="end" font-size="18">2 并发</text>
+<rect x="740" y="236" width="227.71" height="35" rx="3" fill="#2563eb"/>
+<text x="977.71" y="260" font-size="18" fill="#2563eb">4.04</text>
+<text x="725" y="326" text-anchor="end" font-size="18">3 并发</text>
+<rect x="740" y="302" width="195.76" height="35" rx="3" fill="#718096"/>
+<text x="945.76" y="326" font-size="18" fill="#718096">3.47</text>
+<text x="725" y="392" text-anchor="end" font-size="18">4 并发</text>
+<rect x="740" y="368" width="178.75" height="35" rx="3" fill="#718096"/>
+<text x="928.75" y="392" font-size="18" fill="#718096">3.17</text>
+<text x="35" y="495" font-size="16" fill="#556177">各档自身显存峰值均 3426 MiB；固定验收均 45/46，额外四项均通过。该历史输出仍有 TXT 脚注遗漏。</text>
+<text x="35" y="524" font-size="15" fill="#64748b">能耗包含 GLM／TTS 等共享服务及设备基线；这不是模型独占能耗。组件计时不等于完整 HTTP 延迟。</text>
+</g></svg>

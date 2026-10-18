@@ -1,0 +1,239 @@
+{
+  "schema": "moparse-other-cohort-public-consistency/1",
+  "created_at": "2026-10-18T03:35:08.250133+00:00",
+  "cohort_id": "fresh7-20261018",
+  "scope": "Same exposed original sources, V6 versus V7 allpublictables and visible non-table body; changes require source review; no new originalsource accuracy score",
+  "dataset": {
+    "path": "benchmark/datasets/moparse-addon-20261018/dataset.json",
+    "sha256": "00ec68415354e156d8b3f0a1a2b541e42c47e5c22dcab281e2f9ac2060f66fa1",
+    "bytes": 2652
+  },
+  "documents": [
+    {
+      "document_id": "gsa-sf95-2007",
+      "source_sha256": "7c58078520934a0dc2c28ec9e59064548a38df3ac26f63c6a7d83a3280c9afe4",
+      "MDs": [
+        {
+          "path": "benchmark/runs/source-v6-http-20261018/fresh7/cases/gsa-sf95-2007/result.md",
+          "sha256": "692f7671ca0e0eea8ce5951ca7aec7c9be036cc3a0d1257df6a181d47d25a39c",
+          "bytes": 10803
+        },
+        {
+          "path": "benchmark/runs/table-syntax-v7-http-20261018/fresh7/cases/gsa-sf95-2007/result.md",
+          "sha256": "692f7671ca0e0eea8ce5951ca7aec7c9be036cc3a0d1257df6a181d47d25a39c",
+          "bytes": 10803
+        }
+      ],
+      "pages": 2,
+      "table_counts": [
+        2,
+        2
+      ],
+      "equal_tables": [
+        {
+          "id": "mineru_p1_t1",
+          "rendered_page": 1,
+          "shape": [
+            17,
+            6
+          ],
+          "source_maps": [
+            {
+              "fragment": "mineru_p1_t1",
+              "page": 1,
+              "source_rows": "1-17",
+              "logical_rows": "1-17",
+              "repeated_header_rows": 0
+            }
+          ],
+          "public_table_SHA256": "10cec595826f5e7bd5e929d1a6f76ddd44a7858e2a6adec5fbc0686027bb3266"
+        },
+        {
+          "id": "mineru_p2_t1",
+          "rendered_page": 2,
+          "shape": [
+            9,
+            3
+          ],
+          "source_maps": [
+            {
+              "fragment": "mineru_p2_t1",
+              "page": 2,
+              "source_rows": "1-9",
+              "logical_rows": "1-9",
+              "repeated_header_rows": 0
+            }
+          ],
+          "public_table_SHA256": "2d3e27124a97ad8732a72313f9dfc1e0a8f520134bbc44f85c22abcc59d0c93f"
+        }
+      ],
+      "changed_tables": [],
+      "removed_tables": [],
+      "added_tables": [],
+      "raw_visible_equal_pages": [
+        1,
+        2
+      ],
+      "body_changes": [],
+      "actual_V7_job_status": "completed"
+    },
+    {
+      "document_id": "nara-telegram-32171186",
+      "source_sha256": "adbe2f9e5428734c3ab259353afac28a971d2d89bfa871ac21c7858b7c317fc4",
+      "MDs": [
+        {
+          "path": "benchmark/runs/source-v6-http-20261018/fresh7/cases/nara-telegram-32171186/result.md",
+          "sha256": "fbd7d2a446d4799ab838e74d3a89404c009cc7e4d9acfdbf114be291429b10eb",
+          "bytes": 4153
+        },
+        {
+          "path": "benchmark/runs/table-syntax-v7-http-20261018/fresh7/cases/nara-telegram-32171186/result.md",
+          "sha256": "26858e39916422d7ee6b8b8f2aeb54038860d0e5749423b418e33ae4074127b9",
+          "bytes": 4153
+        }
+      ],
+      "pages": 3,
+      "table_counts": [
+        0,
+        0
+      ],
+      "equal_tables": [],
+      "changed_tables": [],
+      "removed_tables": [],
+      "added_tables": [],
+      "raw_visible_equal_pages": [
+        1,
+        2,
+        3
+      ],
+      "body_changes": [],
+      "actual_V7_job_status": "completed"
+    },
+    {
+      "document_id": "nasa-maax-factsheet",
+      "source_sha256": "79ab8e7686605ece7144aaa7d1d95e0c43dc4066ad35db9629f7b10075369411",
+      "MDs": [
+        {
+          "path": "benchmark/runs/source-v6-http-20261018/fresh7/cases/nasa-maax-factsheet/result.md",
+          "sha256": "29aa3afc06ae057a088e88eb3cad3b063592c5f4fdeb1282e23e8e7613228390",
+          "bytes": 9920
+        },
+        {
+          "path": "benchmark/runs/table-syntax-v7-http-20261018/fresh7/cases/nasa-maax-factsheet/result.md",
+          "sha256": "c8ac03175b6715831f3a63ab656bb3eed65c2aa6a29f67a49f55a3d92db0bce3",
+          "bytes": 9920
+        }
+      ],
+      "pages": 2,
+      "table_counts": [
+        4,
+        4
+      ],
+      "equal_tables": [
+        {
+          "id": "mineru_p2_t1",
+          "rendered_page": 2,
+          "shape": [
+            11,
+            2
+          ],
+          "source_maps": [
+            {
+              "fragment": "mineru_p2_t1",
+              "page": 2,
+              "source_rows": "1-11",
+              "logical_rows": "1-11",
+              "repeated_header_rows": 0
+            }
+          ],
+          "public_table_SHA256": "c9f53f3803ad1e07da8a97d4b6746e0bc21c0c0ddee06dc30d93ebe3031728fb"
+        },
+        {
+          "id": "mineru_p2_t2",
+          "rendered_page": 2,
+          "shape": [
+            11,
+            4
+          ],
+          "source_maps": [
+            {
+              "fragment": "mineru_p2_t2",
+              "page": 2,
+              "source_rows": "1-11",
+              "logical_rows": "1-11",
+              "repeated_header_rows": 0
+            }
+          ],
+          "public_table_SHA256": "d1d7e7ebeb8502e6bec922d05cbfb67385abeff6018656822df94e70a5bed753"
+        },
+        {
+          "id": "mineru_p2_t3",
+          "rendered_page": 2,
+          "shape": [
+            5,
+            3
+          ],
+          "source_maps": [
+            {
+              "fragment": "mineru_p2_t3",
+              "page": 2,
+              "source_rows": "1-5",
+              "logical_rows": "1-5",
+              "repeated_header_rows": 0
+            }
+          ],
+          "public_table_SHA256": "ed7fb4fc2e7ce20370cb83a071bd0149b09500a91389a9fd83ddb8cad7fa8b0c"
+        },
+        {
+          "id": "mineru_p2_t4",
+          "rendered_page": 2,
+          "shape": [
+            9,
+            4
+          ],
+          "source_maps": [
+            {
+              "fragment": "mineru_p2_t4",
+              "page": 2,
+              "source_rows": "1-9",
+              "logical_rows": "1-9",
+              "repeated_header_rows": 0
+            }
+          ],
+          "public_table_SHA256": "853eb8936f5273dbbc7342fdbbe0ff2f85b86021b701f29ff3c19d37049f3c94"
+        }
+      ],
+      "changed_tables": [],
+      "removed_tables": [],
+      "added_tables": [],
+      "raw_visible_equal_pages": [
+        1,
+        2
+      ],
+      "body_changes": [],
+      "actual_V7_job_status": "partial"
+    }
+  ],
+  "frozen_visible_reader": {
+    "path": "benchmark/scorers/frozen/followup/20261017/content-preservation-mineru/verify-content-source.py",
+    "sha256": "f2fd1d7e5dbb1a6b85c7e2621b660f00ab77e0bee1d2e2d073dfdefa5cca1906",
+    "bytes": 24000
+  },
+  "summary": {
+    "documents": 3,
+    "pages": 7,
+    "equal_tables": 6,
+    "changed_tables": 0,
+    "removed_tables": 0,
+    "added_tables": 0,
+    "raw_visible_equal_pages": 7,
+    "body_changed_pages": 0
+  },
+  "policy": {
+    "gold_or_scoring_predicates_changed": false,
+    "unknown_source_preservation_not_recognition_accuracy": true,
+    "removed_model_table_rows_or_private_HTML_republished": false,
+    "API_partial_preserved": true,
+    "original_source_accuracy_outside_reviewed_gold_unknown": true
+  }
+}

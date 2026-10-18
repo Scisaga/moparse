@@ -1,0 +1,26 @@
+{
+  "schema": "moparse-evidence/1",
+  "id": "source-v6-source-surface-20261018",
+  "method_id": "mineru-advanced-txt-vllm-c2-docling-source-glm-v6",
+  "cohort_id": "regression-504",
+  "origin": "fresh_component",
+  "fresh_model_inference": false,
+  "output_stage": "diagnostic-only",
+  "quality": {},
+  "performance": {},
+  "provenance": [
+    {
+      "path": "benchmark/evidence/artifacts/2d88a7eb57507a4061f7465b88de607876a053c6f773be7e0de764b71f51a3b4.json",
+      "sha256": "2d88a7eb57507a4061f7465b88de607876a053c6f773be7e0de764b71f51a3b4",
+      "bytes": 13073,
+      "original_path": "benchmark/runs/source-v6-http-20261018/source-surface.json",
+      "snapshot_bytes_unchanged": true
+    }
+  ],
+  "qualification": {
+    "observation_only": true,
+    "deployment_acceptance": false,
+    "strict_checker_or_gold_changed": false,
+    "diagnostic_makes_no_release_verdict": true
+  }
+}

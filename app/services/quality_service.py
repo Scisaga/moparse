@@ -190,7 +190,7 @@ class QualityService:
         if (
             diagnostics
             and diagnostics.source_kind == PageSourceKind.NATIVE
-            and diagnostics.selected_strategy.value == "docling"
+            and diagnostics.selected_strategy.value in {"docling", "mineru"}
             and diagnostics.native_text_characters
             and len(re.sub(r"\s+", "", content)) < diagnostics.native_text_characters * 0.20
         ):
@@ -333,7 +333,7 @@ class QualityService:
                 summary.degraded_pages += 1
             else:
                 summary.untrusted_pages += 1
-            if diagnostics and diagnostics.selected_strategy.value != "docling":
+            if diagnostics and diagnostics.selected_strategy.value not in {"docling", "mineru"}:
                 summary.repaired_pages += 1
             if diagnostics:
                 visual = diagnostics.glm

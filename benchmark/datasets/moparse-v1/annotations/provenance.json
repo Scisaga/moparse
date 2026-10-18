@@ -1,0 +1,84 @@
+{
+  "schema": "moparse-annotation-provenance/1",
+  "imports": [
+    {
+      "copy": "core209-source-gold.json",
+      "source": {
+        "path": "pdf_sample/gold/table_fact_gold_v1.json",
+        "sha256": "fdcc0bb53c378d83b0cbb23757976d9606adc572bac34eaa41362b3a922374de",
+        "bytes": 10907
+      },
+      "copy_sha256": "fdcc0bb53c378d83b0cbb23757976d9606adc572bac34eaa41362b3a922374de",
+      "source_only": true,
+      "unchanged": true
+    },
+    {
+      "copy": "supplement402-source-gold.json",
+      "source": {
+        "path": "benchmark-results/clean-model-comparison-20261015/scoring/supplemental/source-only-tables.json",
+        "sha256": "7305349ae8ef88da6ee7260d220f62aa3ef1750de3a8cb0bda3d856cfec000ca",
+        "bytes": 911452
+      },
+      "copy_sha256": "7305349ae8ef88da6ee7260d220f62aa3ef1750de3a8cb0bda3d856cfec000ca",
+      "source_only": true,
+      "unchanged": true
+    },
+    {
+      "copy": "full-selected-source-tables.json",
+      "source": {
+        "path": "benchmark-results/clean-model-comparison-20261015/scoring/full-source-tables.json",
+        "sha256": "e6a8392a359341a3dac0de1afd362fdf5c2416d3d9fd9f4dc799aa5c5716d177",
+        "bytes": 113613
+      },
+      "copy_sha256": "e6a8392a359341a3dac0de1afd362fdf5c2416d3d9fd9f4dc799aa5c5716d177",
+      "source_only": true,
+      "unchanged": true
+    },
+    {
+      "copy": "same-header-source-gold.json",
+      "source": {
+        "path": "benchmark-results/clean-model-comparison-20261015/scoring/same-header-continuation-source.json",
+        "sha256": "029edb1809e1b1b4263d083fb410bfd6bab0e7c395560eb22713d0dcc4766d5c",
+        "bytes": 46974
+      },
+      "copy_sha256": "029edb1809e1b1b4263d083fb410bfd6bab0e7c395560eb22713d0dcc4766d5c",
+      "source_only": true,
+      "unchanged": true
+    },
+    {
+      "copy": "shareholder-source-gold.json",
+      "source": {
+        "path": "benchmark-results/clean-model-comparison-20261015/scoring/critical-shareholder-source.json",
+        "sha256": "b650679de000f16913f54a0f26406456e157937c711e2af41b37847d632d5f05",
+        "bytes": 6645
+      },
+      "copy_sha256": "b650679de000f16913f54a0f26406456e157937c711e2af41b37847d632d5f05",
+      "source_only": true,
+      "unchanged": true
+    },
+    {
+      "copy": "content14-source-reference.json",
+      "source": {
+        "path": "benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/source-reference.json",
+        "sha256": "9c7863cebe11c786963b745bc57e9351c8d3940d250f93ad898ede4fde6deb1b",
+        "bytes": 1005799
+      },
+      "copy_sha256": "9c7863cebe11c786963b745bc57e9351c8d3940d250f93ad898ede4fde6deb1b",
+      "source_only": true,
+      "unchanged": true
+    },
+    {
+      "copy": "extra-p62-source-reference.json",
+      "source": {
+        "path": "benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/source-reference-p62.json",
+        "sha256": "a16aca8fa1fea13982c2b832581b5c2ac84fa6622aa32e5df5658f3cadfea493",
+        "bytes": 27743
+      },
+      "copy_sha256": "a16aca8fa1fea13982c2b832581b5c2ac84fa6622aa32e5df5658f3cadfea493",
+      "source_only": true,
+      "unchanged": true
+    }
+  ],
+  "review": "Existing original-PDF visual/character references; provisional single reviewer, not double-annotated",
+  "model_outputs_are_not_gold": true
+}

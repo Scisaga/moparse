@@ -1,0 +1,27 @@
+{
+  "schema": "moparse-evidence/1",
+  "id": "table-v7-Census-place-and-IRS-blank-topology-source-review-20261018",
+  "method_id": "mineru-advanced-txt-vllm-c2-docling-source-glm-v7",
+  "cohort_id": "holdout-20261018",
+  "origin": "fresh_component",
+  "fresh_model_inference": false,
+  "output_stage": "diagnostic-only",
+  "quality": {},
+  "performance": {},
+  "provenance": [
+    {
+      "path": "benchmark/evidence/artifacts/44849a1b48ab79178214e492bce222f83fb92948452935fc422c2f1dfe61bc22.json",
+      "sha256": "44849a1b48ab79178214e492bce222f83fb92948452935fc422c2f1dfe61bc22",
+      "bytes": 4461,
+      "original_path": "benchmark/runs/v7-original-issues-independent-20261018/census-p4-place-followup/safe-summary.json",
+      "snapshot_bytes_unchanged": true
+    }
+  ],
+  "qualification": {
+    "both_Census_place_names_misread": true,
+    "IRS_blank_source_topology_unknown": true,
+    "observation_only": true,
+    "deployment_acceptance": false,
+    "frozen_gold_reader_and_original_outputs_changed": false
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "status": 200,
+  "headers": {
+    "date": "Sat, 17 Oct 2026 21:46:57 GMT",
+    "server": "uvicorn",
+    "x-content-id": "job_01M55XA58M3X3ZJVSGXXV1FHT9",
+    "location": "/v1/content/jobs/job_01M55XA58M3X3ZJVSGXXV1FHT9/result",
+    "content-length": "8399",
+    "content-type": "text/markdown; charset=utf-8",
+    "x-request-id": "req_01M55XA58FBWK8ND27B3Z8D5ZE",
+    "x-content-type-options": "nosniff",
+    "referrer-policy": "no-referrer"
+  }
+}

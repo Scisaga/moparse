@@ -1,0 +1,27 @@
+{
+  "schema": "moparse-evidence/1",
+  "id": "source-v6-production159-GFM-contract-failure-20261018",
+  "method_id": "mineru-advanced-txt-vllm-c2-docling-source-glm-v6",
+  "cohort_id": "production-smoke-159",
+  "origin": "fresh_component",
+  "fresh_model_inference": false,
+  "output_stage": "diagnostic-only",
+  "quality": {},
+  "performance": {},
+  "provenance": [
+    {
+      "path": "benchmark/evidence/artifacts/bb43684e9152b902b0675e822e569311c6fbda08bcf49eb8c134a95508a8bf04.json",
+      "sha256": "bb43684e9152b902b0675e822e569311c6fbda08bcf49eb8c134a95508a8bf04",
+      "bytes": 4214,
+      "original_path": "benchmark/runs/production-release-20261018/GFM-contract-failure-safe-summary.json",
+      "snapshot_bytes_unchanged": true
+    }
+  ],
+  "qualification": {
+    "production_acceptance": false,
+    "public_GFM_contract_fail": true,
+    "same_issue_was_present_in_candidate550": true,
+    "do_not_bypass_unchanged_original_CPU_gate": true,
+    "full550_private_IR_not_claimed": true
+  }
+}

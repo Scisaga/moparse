@@ -44,16 +44,16 @@ jobs:
         env:
           GLM_OCR_ENABLED: "0"
           DOCLING_MODEL_DOWNLOAD: "0"
-          DATA_DIR: ${{ runner.temp }}/mosaicparse-data
-          STATIC_DIR: ${{ runner.temp }}/mosaicparse-static
+          DATA_DIR: ${{ runner.temp }}/moparse-data
+          STATIC_DIR: ${{ runner.temp }}/moparse-static
         run: uv run pytest -m "not gpu" --cov=app --cov-report=term-missing --cov-report=xml
 
       - name: Validate OpenAPI contract
         env:
           GLM_OCR_ENABLED: "0"
           DOCLING_MODEL_DOWNLOAD: "0"
-          DATA_DIR: ${{ runner.temp }}/mosaicparse-data
-          STATIC_DIR: ${{ runner.temp }}/mosaicparse-static
+          DATA_DIR: ${{ runner.temp }}/moparse-data
+          STATIC_DIR: ${{ runner.temp }}/moparse-static
         run: uv run python scripts/export_openapi.py --check
 
       - name: Validate original fixtures
@@ -94,19 +94,19 @@ jobs:
       - uses: actions/checkout@v6
 
       - name: Build without pushing
-        run: docker build --tag mosaic-parse:ci .
+        run: docker build --tag moparse:ci .
 
       - name: Smoke test image startup
         run: |
-          docker run --detach --name mosaicparse-smoke \
+          docker run --detach --name moparse-smoke \
             --env DOCLING_MODEL_DOWNLOAD=0 \
             --env GLM_OCR_ENABLED=0 \
             --publish 127.0.0.1:12303:12303 \
-            mosaic-parse:ci
+            moparse:ci
           for attempt in $(seq 1 60); do
             if curl --fail --silent http://127.0.0.1:12303/health >/dev/null; then
-              docker exec mosaicparse-smoke ffmpeg -version >/dev/null
-              docker exec mosaicparse-smoke ffprobe -version >/dev/null
+              docker exec moparse-smoke ffmpeg -version >/dev/null
+              docker exec moparse-smoke ffprobe -version >/dev/null
               exit 0
             fi
             echo "health check attempt ${attempt}/60 did not succeed yet"
@@ -117,5 +117,5 @@ jobs:
       - name: Remove smoke-test container
         if: always()
         run: |
-          docker logs mosaicparse-smoke || true
-          docker rm --force mosaicparse-smoke || true
+          docker logs moparse-smoke || true
+          docker rm --force moparse-smoke || true

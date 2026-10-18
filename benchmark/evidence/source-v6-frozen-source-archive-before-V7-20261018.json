@@ -1,0 +1,31 @@
+{
+  "schema": "moparse-evidence/1",
+  "id": "source-v6-frozen-source-archive-before-V7-20261018",
+  "method_id": "mineru-advanced-txt-vllm-c2-docling-source-glm-v6",
+  "cohort_id": "regression-504",
+  "origin": "fresh_component",
+  "fresh_model_inference": false,
+  "output_stage": "diagnostic-only",
+  "quality": {},
+  "performance": {},
+  "provenance": [
+    {
+      "path": "benchmark/evidence/artifacts/56504eba695fccd9d67858c42092e8fbbf6f982f6259b9423859e959f8bd789f.gz",
+      "sha256": "56504eba695fccd9d67858c42092e8fbbf6f982f6259b9423859e959f8bd789f",
+      "bytes": 469586,
+      "original_path": "benchmark/runs/glm-table-syntax-v7-20261018/v6-frozen-source-before-v7.tar.gz",
+      "snapshot_bytes_unchanged": true
+    }
+  ],
+  "qualification": {
+    "source_archive_only": true,
+    "files": 173,
+    "metadata_members": 1,
+    "archive_members": 174,
+    "member_source_bytes": 1833894,
+    "archive_preserves_old_deployed_source_not_current_runtime_selection": true,
+    "private_env_original_PDF_glyphs_or_weights_included": false,
+    "not_new_inference_quality_or_time": true,
+    "V6_source_freeze_and_image_tags_unchanged": true
+  }
+}

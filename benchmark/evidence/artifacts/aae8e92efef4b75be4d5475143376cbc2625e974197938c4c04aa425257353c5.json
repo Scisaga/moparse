@@ -1,0 +1,22 @@
+{
+  "schema": "moparse-CPU-watcher-stop/1",
+  "at": "2026-10-17T21:18:34.170102+00:00",
+  "stopped": [
+    {
+      "pid": 2507385,
+      "script": "finalize-v3-with-stage.py",
+      "signal": "SIGTERM",
+      "scope": "Own CPU-only waiting watcher, no HTTP jobs/inference/container stopped"
+    },
+    {
+      "pid": 2497809,
+      "script": "extract_header_stage.py",
+      "signal": "SIGTERM",
+      "scope": "Own CPU-only waiting watcher, no HTTP jobs/inference/container stopped"
+    }
+  ],
+  "reason": "Parent instructed stop pending fresh7 after failed39; no fresh7 result fabricated",
+  "regression504_evidence": "benchmark/evidence/header-v3-regression504-20261018.json",
+  "holdout39_evidence": "benchmark/evidence/header-v3-holdout39-20261018.json",
+  "source_outputs_scores_gold_unchanged": true
+}

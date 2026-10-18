@@ -1,0 +1,366 @@
+{
+  "schema": "moparse-source-surface-diagnostic/1",
+  "created_at": "2026-10-17T19:19:12.693286+00:00",
+  "input": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/candidate-full10-http",
+  "tool_SHA256": "e702909be76abdc6fa42013a8eae29da6bb7a0ac80edcd972668cb9678dd6dec",
+  "original_checker_SHA256": "7a064547eae3d3ea3b1fbd96a24093d21d8d61838b0935f796ec6b775d9f1c60",
+  "gold": {
+    "tables": {
+      "path": "benchmark/datasets/moparse-v1/annotations/full-selected-source-tables.json",
+      "sha256": "e6a8392a359341a3dac0de1afd362fdf5c2416d3d9fd9f4dc799aa5c5716d177"
+    },
+    "continuation": {
+      "path": "benchmark/datasets/moparse-v1/annotations/same-header-source-gold.json",
+      "sha256": "029edb1809e1b1b4263d083fb410bfd6bab0e7c395560eb22713d0dcc4766d5c"
+    },
+    "content": {
+      "path": "benchmark/datasets/moparse-v1/annotations/content14-source-reference.json",
+      "sha256": "9c7863cebe11c786963b745bc57e9351c8d3940d250f93ad898ede4fde6deb1b"
+    }
+  },
+  "policy": {
+    "ASCII_width_mapping": "U+FF01..U+FF5E to ASCII; U+3000 to space only",
+    "NFKC": false,
+    "digits_signs_separators_or_symbols_deleted": false,
+    "strict_scores_or_release_conclusion_changed": false,
+    "output_or_gold_changed": false,
+    "release_verdict": false
+  },
+  "captures": [
+    {
+      "document_id": "1225474693",
+      "markdown": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/candidate-full10-http/cases/1225474693/result.md",
+      "MD_SHA256": "9a68e8c74cf32bb87fbd4891d394a5da2f1a6b63eea38c9b427addb15966482c",
+      "MD_bytes": 7779,
+      "source_SHA256": "dc7f5b3bfdc5a5c69b9cf4b2a9e0d28e2f9ee0b2464770fb8a910fea688ee775",
+      "request_SHA256": "7633d64daa803848d5784510bcc03be117e902eef44664b95ef94db930a0febd",
+      "capture_summary_SHA256": "cce439d2655f19413c69f2b77cac8062974d7e4ed852b6d2afc4a5d6f6bbd5e1",
+      "output_stage": "received-public-HTTP-GFM",
+      "checks": {
+        "completed": true,
+        "captured_sha_matches": true,
+        "complete_page_markers": true,
+        "source_sha_matches": true,
+        "scan_policy_auto": true,
+        "unit_range_omitted": true,
+        "original_source_sha_matches": true
+      },
+      "pass": true
+    },
+    {
+      "document_id": "1225473526",
+      "markdown": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/followup/20261017/content-preservation-mineru/candidate-full10-http/cases/1225473526/result.md",
+      "MD_SHA256": "a9083dafc4f1b48d60526c7350c0805fcff112a245c4b784bba6c69bf8fa5914",
+      "MD_bytes": 51972,
+      "source_SHA256": "787297535ba74a4170cc859ae68f15f946f6dfd0bfc14a1e1fa0e6d068ba2b19",
+      "request_SHA256": "e88944c492044829697be2521b14e14ed54535dc6511ccaf3fef2d6cd9a8250d",
+      "capture_summary_SHA256": "20a8a7f086f788fcee7ad39a7ff7991494720ca05b78d81e92429d12f8a814be",
+      "output_stage": "received-public-HTTP-GFM",
+      "checks": {
+        "completed": true,
+        "captured_sha_matches": true,
+        "complete_page_markers": true,
+        "source_sha_matches": true,
+        "scan_policy_auto": true,
+        "unit_range_omitted": true,
+        "original_source_sha_matches": true
+      },
+      "pass": true
+    }
+  ],
+  "financial": [
+    {
+      "source_page": 2,
+      "source_ordinal": 3,
+      "matching_tables": 1,
+      "raw_surface_exact": true,
+      "width_equivalent": true,
+      "pass": true,
+      "table_id": "p2_t3",
+      "positions": 12,
+      "nonempty_source_cells": 11,
+      "mismatches": [],
+      "width_differences": [],
+      "content_mismatches": [],
+      "source_page_binding": true,
+      "actual_spans": [],
+      "expected_spans": [],
+      "spans_match": true,
+      "source_rows_valid": true,
+      "source_rows": [],
+      "source_binding_kind": "table-structure.source_pages",
+      "complete_first_header": true,
+      "width_equivalent_first_header": true,
+      "declared_complete_first_header": true
+    },
+    {
+      "source_page": 3,
+      "source_ordinal": 1,
+      "matching_tables": 1,
+      "raw_surface_exact": false,
+      "width_equivalent": false,
+      "pass": false,
+      "table_id": "p3_t1",
+      "positions": 36,
+      "nonempty_source_cells": 35,
+      "mismatches": [
+        {
+          "row": 8,
+          "column": 0,
+          "expected": "稀释每股收益（元／股）",
+          "actual": "稀释每股收益（元／股"
+        }
+      ],
+      "width_differences": [],
+      "content_mismatches": [
+        {
+          "row": 8,
+          "column": 0,
+          "expected": "稀释每股收益（元／股）",
+          "actual": "稀释每股收益（元／股"
+        }
+      ],
+      "source_page_binding": true,
+      "actual_spans": [],
+      "expected_spans": [],
+      "spans_match": true,
+      "source_rows_valid": true,
+      "source_rows": [],
+      "source_binding_kind": "table-structure.source_pages",
+      "complete_first_header": true,
+      "width_equivalent_first_header": true,
+      "declared_complete_first_header": true
+    }
+  ],
+  "funding": {
+    "source_page": 7,
+    "source_ordinal": 2,
+    "matching_tables": 1,
+    "raw_surface_exact": true,
+    "width_equivalent": true,
+    "pass": true,
+    "table_id": "p7_t2",
+    "positions": 44,
+    "nonempty_source_cells": 31,
+    "mismatches": [],
+    "width_differences": [],
+    "content_mismatches": [],
+    "source_page_binding": true,
+    "actual_spans": [
+      [
+        0,
+        0,
+        1,
+        2
+      ],
+      [
+        0,
+        2,
+        1,
+        2
+      ],
+      [
+        1,
+        0,
+        8,
+        1
+      ],
+      [
+        9,
+        0,
+        1,
+        2
+      ],
+      [
+        9,
+        2,
+        1,
+        2
+      ],
+      [
+        10,
+        0,
+        1,
+        2
+      ],
+      [
+        10,
+        2,
+        1,
+        2
+      ]
+    ],
+    "expected_spans": [
+      [
+        0,
+        0,
+        1,
+        2
+      ],
+      [
+        0,
+        2,
+        1,
+        2
+      ],
+      [
+        1,
+        0,
+        8,
+        1
+      ],
+      [
+        9,
+        0,
+        1,
+        2
+      ],
+      [
+        9,
+        2,
+        1,
+        2
+      ],
+      [
+        10,
+        0,
+        1,
+        2
+      ],
+      [
+        10,
+        2,
+        1,
+        2
+      ]
+    ],
+    "spans_match": true,
+    "source_rows_valid": true,
+    "source_rows": [],
+    "source_binding_kind": "table-structure.source_pages",
+    "complete_first_header": true,
+    "width_equivalent_first_header": true,
+    "declared_complete_first_header": true
+  },
+  "continuation": {
+    "source_pages": [
+      6,
+      7
+    ],
+    "source_complete_headers_exactly_equal": true,
+    "separate_fragments": [
+      {
+        "source_page": 6,
+        "matching_fragments": 0
+      },
+      {
+        "source_page": 7,
+        "matching_fragments": 0
+      }
+    ],
+    "matching_logical_tables": 1,
+    "logical_merge_observed": true,
+    "functional_merge_and_source_maps": true,
+    "ASCII_width_equivalent_complete_continuation": true,
+    "strict_original_checker": {
+      "source_pages": [
+        6,
+        7
+      ],
+      "matching_tables": 1,
+      "pass": true,
+      "table_id": "table_p6_t2_p7_t1",
+      "exact_grid": true,
+      "body_positions": 55,
+      "source_rows": [
+        {
+          "fragment": "p6_t2",
+          "page": 6,
+          "source_rows": "1-7",
+          "logical_rows": "1-7",
+          "repeated_header_rows": 0
+        },
+        {
+          "fragment": "p7_t1",
+          "page": 7,
+          "source_rows": "2-6",
+          "logical_rows": "8-12",
+          "repeated_header_rows": 1
+        }
+      ],
+      "source_rows_match": true,
+      "complete_header_scope": true,
+      "spans_match": true,
+      "expected_spans": [
+        [
+          11,
+          0,
+          1,
+          2
+        ]
+      ],
+      "source_page_binding": true,
+      "structure_valid": true,
+      "no_separate_duplicate_fragment": true
+    },
+    "units": {
+      "in_grid_units_and_all_other_text": "Included in every full-grid cell comparison",
+      "external_unit_caption": "unknown_no_separate_source_annotation",
+      "period_or_unit_inferred_from_row_names": false
+    },
+    "table_id": "table_p6_t2_p7_t1",
+    "complete_grid_surface": {
+      "same_shape": true,
+      "raw_exact": true,
+      "ASCII_width_equivalent": true,
+      "raw_differences": [],
+      "non_width_differences": []
+    },
+    "complete_header_surface": {
+      "same_shape": true,
+      "raw_exact": true,
+      "ASCII_width_equivalent": true,
+      "raw_differences": [],
+      "non_width_differences": []
+    },
+    "source_and_logical_row_maps": [
+      {
+        "fragment": "p6_t2",
+        "page": 6,
+        "source_rows": "1-7",
+        "logical_rows": "1-7",
+        "repeated_header_rows": 0
+      },
+      {
+        "fragment": "p7_t1",
+        "page": 7,
+        "source_rows": "2-6",
+        "logical_rows": "8-12",
+        "repeated_header_rows": 1
+      }
+    ],
+    "expected_source_and_logical_row_maps": [
+      [
+        6,
+        "1-7",
+        "1-7",
+        0
+      ],
+      [
+        7,
+        "2-6",
+        "8-12",
+        1
+      ]
+    ],
+    "structural_checks": {
+      "structure_valid": true,
+      "complete_header_scope": true,
+      "source_and_logical_rows_match": true,
+      "repeated_header_skip_matches": true,
+      "merged_spans_match": true,
+      "rendered_on_first_source_page": true,
+      "no_separate_duplicate_fragment": true
+    }
+  }
+}

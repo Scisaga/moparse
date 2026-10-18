@@ -1,0 +1,27 @@
+{
+  "schema": "moparse-evidence/1",
+  "id": "table-v7-HTML-syntax-surrounding-source-conservation-20261018",
+  "method_id": "mineru-advanced-txt-vllm-c2-docling-source-glm-v7",
+  "cohort_id": "regression-504",
+  "origin": "fresh_component",
+  "fresh_model_inference": false,
+  "output_stage": "diagnostic-only",
+  "quality": {},
+  "performance": {},
+  "provenance": [
+    {
+      "path": "benchmark/evidence/artifacts/7b0dd1c53bed435dee4973b5649318513c1c5f91231e26245722f94810c528a2.json",
+      "sha256": "7b0dd1c53bed435dee4973b5649318513c1c5f91231e26245722f94810c528a2",
+      "bytes": 1025,
+      "original_path": "benchmark/runs/raw-html-release-blocker-20261018/outside-table-preservation-proof.json",
+      "snapshot_bytes_unchanged": true
+    }
+  ],
+  "qualification": {
+    "CPU_replay_not_new_HTTP": true,
+    "outside_table_prefix_suffix_period_units_byte_preserved": true,
+    "source16_model17_error_not_fixed": true,
+    "private_raw_HTML_offline_full_MD_or_source_images_bundled": false,
+    "frozen_gold_or_reader_or_score_changed": false
+  }
+}

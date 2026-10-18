@@ -1,0 +1,23 @@
+{
+  "schema": "moparse-frozen-source-archive/1",
+  "at": "2026-10-17T23:08:35.891671+00:00",
+  "archive": {
+    "path": "benchmark/runs/header-v4-http-20261018/frozen-reviewed-source.tar.gz",
+    "sha256": "835d7de34797c2642d32cdc91d43a6aa10ad05ce7f7843da40caf8c57ceae7bd",
+    "bytes": 384110
+  },
+  "source_files": 135,
+  "source_freeze": {
+    "path": "benchmark/runs/header-verifier-v4-20261018/source-freeze.json",
+    "sha256": "17da7b4e561f0ec449643f3b0b86442c0c035371beb67b009ab6a5ce9141026a",
+    "bytes": 19757
+  },
+  "actual_after_identity": {
+    "path": "benchmark/runs/header-v4-http-20261018/deployment-after.json",
+    "sha256": "5f908454e8c15370b3dd29729209432825d17023862a6b142766527e6d99d775",
+    "bytes": 99755
+  },
+  "capture_scope": "Host frozen source bytes eachverifiedSHA equal freeze and currentcontainer sourceclosure; archive is not a rawimagefilesystem dump",
+  "source_files_changed_during_test": false,
+  "no_inference_or_runtime_change": true
+}

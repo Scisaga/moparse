@@ -3,13 +3,13 @@ requires = ["hatchling==1.28.0"]
 build-backend = "hatchling.build"
 
 [project]
-name = "mosaicparse"
-version = "0.4.0"
+name = "moparse"
+version = "0.5.0"
 description = "Self-hosted multimodal content parser for external RAG systems"
 readme = "README.md"
 requires-python = ">=3.13,<3.14"
 license = "Apache-2.0"
-authors = [{ name = "MosaicParse contributors" }]
+authors = [{ name = "moparse contributors" }]
 keywords = ["multimodal", "rag", "docling", "ocr", "pdf", "video"]
 classifiers = [
   "Development Status :: 3 - Alpha",
@@ -42,9 +42,9 @@ dependencies = [
 ]
 
 [project.urls]
-Documentation = "https://github.com/Scisaga/mosaic-parse#readme"
-Issues = "https://github.com/Scisaga/mosaic-parse/issues"
-Repository = "https://github.com/Scisaga/mosaic-parse"
+Documentation = "https://github.com/Scisaga/moparse#readme"
+Issues = "https://github.com/Scisaga/moparse/issues"
+Repository = "https://github.com/Scisaga/moparse"
 
 [dependency-groups]
 dev = [

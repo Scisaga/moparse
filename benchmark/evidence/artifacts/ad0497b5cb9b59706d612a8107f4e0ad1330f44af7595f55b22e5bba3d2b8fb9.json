@@ -1,0 +1,54 @@
+{
+  "schema": "moparse-source-stage-case-observation/1",
+  "observed_at": "2026-10-18T00:17:48.544390+00:00",
+  "document_id": "1225474693",
+  "source_sha256": "dc7f5b3bfdc5a5c69b9cf4b2a9e0d28e2f9ee0b2464770fb8a910fea688ee775",
+  "page_count": 4,
+  "captured_summary": {
+    "path": "benchmark/runs/source-v6-http-20261018/regression504/cases/1225474693/summary.json",
+    "sha256": "772801d33c71e4dc414e0dde5cf5ac9d1e206860533dfebce5a6a51be6e3846b",
+    "bytes": 760
+  },
+  "received_MD_sha256": "b021b0375af7ced8a02975afa6bec641974986885338308afc58ff00e1a73681",
+  "job_id": "job_01M565249RZ2EA9WKT0YET7K36",
+  "actual_job_status": "completed",
+  "capture_status": "completed",
+  "actual_storage_identity": {
+    "container": "moparse-candidate-source-v6",
+    "container_id": "5ea0e03bf49d10e261d8cb4f0435c05e8232aa3d3e75552a8de43ee00dbfaef6",
+    "deployed_image_id": "sha256:7c887e795ecd42039fee0327059ae0b755372dd2cda9f9ae17b07187077b3905",
+    "data_volume": {
+      "Type": "volume",
+      "Name": "moparse-candidate-source-v6-data",
+      "Source": "/var/lib/docker/volumes/moparse-candidate-source-v6-data/_data",
+      "Destination": "/data",
+      "RW": true
+    },
+    "deployment": {
+      "path": "benchmark/runs/source-v6-http-20261018/deployment-before.json",
+      "sha256": "b6c8bfb6495aff88ed40dc327a632cb005c70a847eba61fbc29503d3c7965f49",
+      "bytes": 100288
+    },
+    "container_environment_read": false
+  },
+  "selected_warning_code": "independent_source_verification_used",
+  "projected_detail_fields": [
+    "duration_ms",
+    "pages",
+    "review_candidates",
+    "preserved_regions"
+  ],
+  "selected_records": [],
+  "stage_wall_clock_seconds": null,
+  "warning_file": {
+    "container_path": "/data/jobs/job_01M565249RZ2EA9WKT0YET7K36/logs/warnings.json",
+    "host_path": "/var/lib/docker/volumes/moparse-candidate-source-v6-data/_data/jobs/job_01M565249RZ2EA9WKT0YET7K36/logs/warnings.json",
+    "exists": true,
+    "sha256": "03b6aba7a87de596648afc11fcfb9b28244908931806bfc4daf4f1f79aa3da48",
+    "bytes": 729
+  },
+  "other_warnings_exported": false,
+  "model_or_API_requests": false,
+  "timing_scope": "SourceVerifier independent CPU candidate check plus region-type verification and glyph preservation elapsed wall clock; not GPU-forward time, CPU-seconds or entire request latency",
+  "observation_status": "unknown_no_selected_code; absence_not_zero"
+}

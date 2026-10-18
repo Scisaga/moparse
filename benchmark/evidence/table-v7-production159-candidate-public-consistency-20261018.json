@@ -1,0 +1,29 @@
+{
+  "schema": "moparse-evidence/1",
+  "id": "table-v7-production159-candidate-public-consistency-20261018",
+  "method_id": "mineru-advanced-txt-vllm-c2-docling-source-glm-v7",
+  "cohort_id": "production-smoke-159",
+  "origin": "fresh_component",
+  "fresh_model_inference": false,
+  "output_stage": "diagnostic-only",
+  "quality": {},
+  "performance": {},
+  "provenance": [
+    {
+      "path": "benchmark/evidence/artifacts/06450f01110ff606801726f62d28d3578e2e6e73555e0f381ccef154ca848cb4.json",
+      "sha256": "06450f01110ff606801726f62d28d3578e2e6e73555e0f381ccef154ca848cb4",
+      "bytes": 9097,
+      "original_path": "benchmark/runs/production-release-v7-20261018/V7-production159-candidate-public-safe-summary.json",
+      "snapshot_bytes_unchanged": true
+    }
+  ],
+  "qualification": {
+    "all159_visible_body_pages_equal": true,
+    "all_tables_spans_and_source_maps_equal": true,
+    "one_raw_ASCII_width_cell_difference_retained": true,
+    "old_model_output_not_source_gold": true,
+    "observation_only": true,
+    "final_release_acceptance": false,
+    "new_HTTP_model_requests": 0
+  }
+}

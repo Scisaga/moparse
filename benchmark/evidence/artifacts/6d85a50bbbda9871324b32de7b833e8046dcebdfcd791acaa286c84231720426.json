@@ -1,0 +1,447 @@
+{
+  "schema": "moparse-source-release-acceptance/1",
+  "created_UTC": "2026-10-17T21:12:14.076191+00:00",
+  "input": "/opt/mosaic-parse/benchmark/runs/header-v3-http-20261018/regression504",
+  "gold": {
+    "tables": {
+      "path": "benchmark/datasets/moparse-v1/annotations/full-selected-source-tables.json",
+      "sha256": "e6a8392a359341a3dac0de1afd362fdf5c2416d3d9fd9f4dc799aa5c5716d177"
+    },
+    "continuation": {
+      "path": "benchmark/datasets/moparse-v1/annotations/same-header-source-gold.json",
+      "sha256": "029edb1809e1b1b4263d083fb410bfd6bab0e7c395560eb22713d0dcc4766d5c"
+    },
+    "content": {
+      "path": "benchmark/datasets/moparse-v1/annotations/content14-source-reference.json",
+      "sha256": "9c7863cebe11c786963b745bc57e9351c8d3940d250f93ad898ede4fde6deb1b"
+    }
+  },
+  "reader_SHA256": "f2fd1d7e5dbb1a6b85c7e2621b660f00ab77e0bee1d2e2d073dfdefa5cca1906",
+  "checker_SHA256": "7a064547eae3d3ea3b1fbd96a24093d21d8d61838b0935f796ec6b775d9f1c60",
+  "documents": [
+    {
+      "document_id": "1225474693",
+      "markdown": "/opt/mosaic-parse/benchmark/runs/header-v3-http-20261018/regression504/cases/1225474693/result.md",
+      "MD_SHA256": "b021b0375af7ced8a02975afa6bec641974986885338308afc58ff00e1a73681",
+      "MD_bytes": 8399,
+      "source_SHA256": "dc7f5b3bfdc5a5c69b9cf4b2a9e0d28e2f9ee0b2464770fb8a910fea688ee775",
+      "request_SHA256": "858e01445d0324f03bc079323d5bf91dcb2bf38a6e820f4cb1a04a7aa45c9db6",
+      "capture_summary_SHA256": "238e99cf94f5aca7c8245927d9cfb4530e02f1e24722ed32a7bbd810732cc162",
+      "output_stage": "received-public-HTTP-GFM",
+      "checks": {
+        "completed": true,
+        "captured_sha_matches": true,
+        "complete_page_markers": true,
+        "source_sha_matches": true,
+        "scan_policy_auto": true,
+        "unit_range_omitted": true,
+        "original_source_sha_matches": true
+      },
+      "pass": true
+    },
+    {
+      "document_id": "1225473526",
+      "markdown": "/opt/mosaic-parse/benchmark/runs/header-v3-http-20261018/regression504/cases/1225473526/result.md",
+      "MD_SHA256": "fedffce855f6514ef97d8ab53de09026a717c6d7237425a5dede155bf62c02b9",
+      "MD_bytes": 52978,
+      "source_SHA256": "787297535ba74a4170cc859ae68f15f946f6dfd0bfc14a1e1fa0e6d068ba2b19",
+      "request_SHA256": "b46d2cbb22167573db5b4b925bddd89241c40dcbdc51cd0cbfd2ef826987ab15",
+      "capture_summary_SHA256": "68317dce044b74feda7b3b3ccb341f33c839364e6221639d59f34828a35b8177",
+      "output_stage": "received-public-HTTP-GFM",
+      "checks": {
+        "completed": true,
+        "captured_sha_matches": true,
+        "complete_page_markers": true,
+        "source_sha_matches": true,
+        "scan_policy_auto": true,
+        "unit_range_omitted": true,
+        "original_source_sha_matches": true
+      },
+      "pass": true
+    },
+    {
+      "document_id": "1225475375",
+      "markdown": "/opt/mosaic-parse/benchmark/runs/header-v3-http-20261018/regression504/cases/1225475375/result.md",
+      "MD_SHA256": "045c84e54feba623960ff36e3fceeeb6380e25c0cb6d8b107e4960f35180d3c8",
+      "MD_bytes": 316808,
+      "source_SHA256": "5eef30b5c544d76df917d56df76a665ed13b5e6ffebdc54ab0eea0a47b7589d6",
+      "request_SHA256": "a3890ca73adaadc3b61ff7d7966ad37ff1a4c20866b47b809a693cf17f1bf8bc",
+      "capture_summary_SHA256": "ddfd473c80780680f15f4af309acff67cdb42e76e626ceba2febf113b5166c26",
+      "output_stage": "received-public-HTTP-GFM",
+      "checks": {
+        "completed": true,
+        "captured_sha_matches": true,
+        "complete_page_markers": true,
+        "source_sha_matches": true,
+        "scan_policy_auto": true,
+        "unit_range_omitted": true,
+        "original_source_sha_matches": true
+      },
+      "pass": true
+    }
+  ],
+  "checks": {
+    "different_financial_headers_and_values": {
+      "tables": [
+        {
+          "source_page": 2,
+          "source_ordinal": 3,
+          "matching_tables": 1,
+          "raw_surface_exact": true,
+          "width_equivalent": true,
+          "pass": true,
+          "table_id": "mineru_p2_t3",
+          "positions": 12,
+          "nonempty_source_cells": 11,
+          "mismatches": [],
+          "width_differences": [],
+          "content_mismatches": [],
+          "source_page_binding": true,
+          "actual_spans": [],
+          "expected_spans": [],
+          "spans_match": true,
+          "source_rows_valid": true,
+          "source_rows": [
+            {
+              "fragment": "mineru_p2_t3",
+              "page": 2,
+              "source_rows": "1-3",
+              "logical_rows": "1-3",
+              "repeated_header_rows": 0
+            }
+          ],
+          "source_binding_kind": "table-structure.source_pages",
+          "complete_first_header": true,
+          "width_equivalent_first_header": true,
+          "declared_complete_first_header": false
+        },
+        {
+          "source_page": 3,
+          "source_ordinal": 1,
+          "matching_tables": 1,
+          "raw_surface_exact": false,
+          "width_equivalent": true,
+          "pass": true,
+          "table_id": "mineru_p3_t1",
+          "positions": 36,
+          "nonempty_source_cells": 35,
+          "mismatches": [
+            {
+              "row": 6,
+              "column": 0,
+              "expected": "加权平均净资产收益率（%）",
+              "actual": "加权平均净资产收益率(%)"
+            },
+            {
+              "row": 7,
+              "column": 0,
+              "expected": "基本每股收益（元／股）",
+              "actual": "基本每股收益(元/股)"
+            },
+            {
+              "row": 8,
+              "column": 0,
+              "expected": "稀释每股收益（元／股）",
+              "actual": "稀释每股收益(元/股)"
+            }
+          ],
+          "width_differences": [
+            {
+              "row": 6,
+              "column": 0,
+              "expected": "加权平均净资产收益率（%）",
+              "actual": "加权平均净资产收益率(%)"
+            },
+            {
+              "row": 7,
+              "column": 0,
+              "expected": "基本每股收益（元／股）",
+              "actual": "基本每股收益(元/股)"
+            },
+            {
+              "row": 8,
+              "column": 0,
+              "expected": "稀释每股收益（元／股）",
+              "actual": "稀释每股收益(元/股)"
+            }
+          ],
+          "content_mismatches": [],
+          "source_page_binding": true,
+          "actual_spans": [],
+          "expected_spans": [],
+          "spans_match": true,
+          "source_rows_valid": true,
+          "source_rows": [
+            {
+              "fragment": "mineru_p3_t1",
+              "page": 3,
+              "source_rows": "1-9",
+              "logical_rows": "1-9",
+              "repeated_header_rows": 0
+            }
+          ],
+          "source_binding_kind": "table-structure.source_pages",
+          "complete_first_header": true,
+          "width_equivalent_first_header": true,
+          "declared_complete_first_header": false
+        }
+      ],
+      "pass": true,
+      "raw_surface_exact": false,
+      "width_equivalent": true,
+      "period_source": "complete original-PDF header rows; no metric-name inference",
+      "EPS_unit": "compared as part of original row label, including 元／股",
+      "status": "pass"
+    },
+    "funding_31_source_cells_and_spans": {
+      "source_page": 7,
+      "source_ordinal": 2,
+      "matching_tables": 1,
+      "raw_surface_exact": false,
+      "width_equivalent": true,
+      "pass": true,
+      "table_id": "mineru_p7_t2",
+      "positions": 44,
+      "nonempty_source_cells": 31,
+      "mismatches": [
+        {
+          "row": 0,
+          "column": 0,
+          "expected": "首发前期末净资产（截至2010.12.31）",
+          "actual": "首发前期末净资产(截至2010.12.31)"
+        },
+        {
+          "row": 5,
+          "column": 2,
+          "expected": "第一期限制性股票（已回购注销）",
+          "actual": "第一期限制性股票(已回购注销)"
+        },
+        {
+          "row": 9,
+          "column": 0,
+          "expected": "首发后累计派现金额（含税）（截至2026年6月30日）",
+          "actual": "首发后累计派现金额(含税)(截至2026年6月30日)"
+        },
+        {
+          "row": 10,
+          "column": 0,
+          "expected": "本次发行前最近一期末（2026年6月30日）归属母公司股东的净资产额",
+          "actual": "本次发行前最近一期末(2026年6月30日)归属母公司股东的净资产额"
+        }
+      ],
+      "width_differences": [
+        {
+          "row": 0,
+          "column": 0,
+          "expected": "首发前期末净资产（截至2010.12.31）",
+          "actual": "首发前期末净资产(截至2010.12.31)"
+        },
+        {
+          "row": 5,
+          "column": 2,
+          "expected": "第一期限制性股票（已回购注销）",
+          "actual": "第一期限制性股票(已回购注销)"
+        },
+        {
+          "row": 9,
+          "column": 0,
+          "expected": "首发后累计派现金额（含税）（截至2026年6月30日）",
+          "actual": "首发后累计派现金额(含税)(截至2026年6月30日)"
+        },
+        {
+          "row": 10,
+          "column": 0,
+          "expected": "本次发行前最近一期末（2026年6月30日）归属母公司股东的净资产额",
+          "actual": "本次发行前最近一期末(2026年6月30日)归属母公司股东的净资产额"
+        }
+      ],
+      "content_mismatches": [],
+      "source_page_binding": true,
+      "actual_spans": [
+        [
+          0,
+          0,
+          1,
+          2
+        ],
+        [
+          0,
+          2,
+          1,
+          2
+        ],
+        [
+          1,
+          0,
+          8,
+          1
+        ],
+        [
+          9,
+          0,
+          1,
+          2
+        ],
+        [
+          9,
+          2,
+          1,
+          2
+        ],
+        [
+          10,
+          0,
+          1,
+          2
+        ],
+        [
+          10,
+          2,
+          1,
+          2
+        ]
+      ],
+      "expected_spans": [
+        [
+          0,
+          0,
+          1,
+          2
+        ],
+        [
+          0,
+          2,
+          1,
+          2
+        ],
+        [
+          1,
+          0,
+          8,
+          1
+        ],
+        [
+          9,
+          0,
+          1,
+          2
+        ],
+        [
+          9,
+          2,
+          1,
+          2
+        ],
+        [
+          10,
+          0,
+          1,
+          2
+        ],
+        [
+          10,
+          2,
+          1,
+          2
+        ]
+      ],
+      "spans_match": true,
+      "source_rows_valid": true,
+      "source_rows": [
+        {
+          "fragment": "mineru_p7_t2",
+          "page": 7,
+          "source_rows": "1-11",
+          "logical_rows": "1-11",
+          "repeated_header_rows": 0
+        }
+      ],
+      "source_binding_kind": "table-structure.source_pages",
+      "complete_first_header": false,
+      "width_equivalent_first_header": true,
+      "declared_complete_first_header": false,
+      "status": "pass"
+    },
+    "same_header_continuation_and_table_sources": {
+      "source_pages": [
+        6,
+        7
+      ],
+      "matching_tables": 1,
+      "pass": false,
+      "table_id": "table_mineru_p6_t2_mineru_p7_t1",
+      "exact_grid": false,
+      "body_positions": 55,
+      "source_rows": [
+        {
+          "fragment": "mineru_p6_t2",
+          "page": 6,
+          "source_rows": "1-7",
+          "logical_rows": "1-7",
+          "repeated_header_rows": 0
+        },
+        {
+          "fragment": "mineru_p7_t1",
+          "page": 7,
+          "source_rows": "2-6",
+          "logical_rows": "8-12",
+          "repeated_header_rows": 1
+        }
+      ],
+      "source_rows_match": true,
+      "complete_header_scope": true,
+      "spans_match": true,
+      "expected_spans": [
+        [
+          11,
+          0,
+          1,
+          2
+        ]
+      ],
+      "source_page_binding": true,
+      "structure_valid": true,
+      "no_separate_duplicate_fragment": true,
+      "status": "fail"
+    },
+    "p87_visible_full_note_and_source_table": {
+      "source_page": 87,
+      "note_visible": true,
+      "expected_note": "—其他债权投资公允价值变动源于应收款项融资。",
+      "matching_tables": 1,
+      "grid_exact": false,
+      "spans_match": true,
+      "raw_surface_exact": false,
+      "width_equivalent": true,
+      "source_page_binding": true,
+      "source_rows_valid": true,
+      "note_in_paragraph": true,
+      "source_rows": [
+        {
+          "fragment": "mineru_p87_t1",
+          "page": 87,
+          "source_rows": "1-10",
+          "logical_rows": "1-10",
+          "repeated_header_rows": 0
+        }
+      ],
+      "pass": true,
+      "status": "pass"
+    }
+  },
+  "errors": [
+    {
+      "check": "same_header_continuation_and_table_sources",
+      "error": "Original-source assertion failed; see check detail"
+    }
+  ],
+  "unavailable_documents": [],
+  "comparison_policy": {
+    "raw_surface_exact": "Visible cell text with whitespace removed; original expected/actual mismatches retained",
+    "width_equivalent": "Only U+FF01-U+FF5E to ASCII and U+3000 to space; no NFKC or symbol/number deletion",
+    "continuation_gate": "Unchanged complete-header, grid, span and table-source assertions"
+  },
+  "scope": "Three complete HTTP inputs; source-confirmed financial headers, funding and continuation grids, and p87 note/table; not whole-document semantic accuracy",
+  "pass": false,
+  "status": "fail"
+}

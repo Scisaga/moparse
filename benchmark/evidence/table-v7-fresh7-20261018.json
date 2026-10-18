@@ -1,0 +1,870 @@
+{
+  "schema": "moparse-evidence/1",
+  "id": "table-v7-fresh7-20261018",
+  "method_id": "mineru-advanced-txt-vllm-c2-docling-source-glm-v7",
+  "cohort_id": "fresh7-20261018",
+  "origin": "fresh_HTTP",
+  "fresh_model_inference": null,
+  "new_HTTP_requests": true,
+  "output_stage": "public-HTTP-GFM",
+  "quality": {
+    "source_text": {
+      "pass": 13,
+      "total": 14,
+      "unknown": 0,
+      "gold_fingerprint": "8da34499ea3ed33cadcb044a352671010207c4fd30819bdafe2201303168b40c",
+      "reader_fingerprint": "b901a3a17185739f107b3e65af827c7540e76e876a054948ca30501e5913e4ef"
+    },
+    "source_ordered_text": {
+      "pass": 10,
+      "total": 11,
+      "unknown": 0,
+      "gold_fingerprint": "8da34499ea3ed33cadcb044a352671010207c4fd30819bdafe2201303168b40c",
+      "reader_fingerprint": "b901a3a17185739f107b3e65af827c7540e76e876a054948ca30501e5913e4ef"
+    },
+    "source_table_grid": {
+      "pass": 0,
+      "total": 1,
+      "unknown": 0,
+      "gold_fingerprint": "8da34499ea3ed33cadcb044a352671010207c4fd30819bdafe2201303168b40c",
+      "reader_fingerprint": "b901a3a17185739f107b3e65af827c7540e76e876a054948ca30501e5913e4ef"
+    },
+    "source_table_span": {
+      "pass": 1,
+      "total": 2,
+      "unknown": 0,
+      "gold_fingerprint": "8da34499ea3ed33cadcb044a352671010207c4fd30819bdafe2201303168b40c",
+      "reader_fingerprint": "b901a3a17185739f107b3e65af827c7540e76e876a054948ca30501e5913e4ef"
+    }
+  },
+  "performance": {
+    "seconds": 100.40742194396444,
+    "scope": "Full HTTP upload through exact received/persisted Markdown, events and all public assets; API quality states separate",
+    "power_limit_W": 220,
+    "hardware_fingerprint": "RTX2080Ti22GiB-dual-shared-host",
+    "warmup": "Resident unchanged V4/V6 worker and GPU containers/cache reused for V7; actual warmup and shared load are not a controlled speedup comparison; commonGLM unchanged; actual percohort windows separate",
+    "own_GPU_peak_MiB": 3528.0,
+    "shared_GPU_energy_Wh": 2.536733981292068,
+    "native_provider_identity": [
+      {
+        "name": "moparse-mineru-vllm",
+        "id": "5d54174333dba8bab3fdde4852049e71a65c9097a2f6b2c5d1d16bf719bd9492",
+        "image_id": "sha256:ea407324215fa2393585447521828b34d1ffc6474fd04b24865fb9476ff5ccfe",
+        "identity_source": {
+          "path": "benchmark/runs/table-syntax-v7-http-20261018/deployment-before.json",
+          "sha256": "8f9cec00bcb078b9080c949bcf7402e9a772eb3d08a64f4b16263519f6c37b14",
+          "bytes": 100289
+        }
+      }
+    ],
+    "native_GPU_attribution": "Only PID-owned MinerU vLLM containers matched to deployed identity; common GLM and TTS never assigned to native model",
+    "shared_GPU_energy_scope": "GPU1 whole device across adjacent valid samples within cohort; includes other services; no boundary extrapolation",
+    "all_shared_devices": {
+      "GPU-95b5895b-c5f3-440b-4bd2-7160ec4da0d1": {
+        "index": 0,
+        "name": "NVIDIA GeForce RTX 2080 Ti",
+        "energy_joules_shared_device": 18094.42080552532,
+        "energy_intervals_observed": 49,
+        "energy_gaps": 0,
+        "gpu_utilization_samples": 50,
+        "gpu_utilization_sum": 2870.0,
+        "memory_used_peak_MiB_shared_device": 19930.0,
+        "gpu_utilization_mean_pct_shared_device": 57.4
+      },
+      "GPU-87a92d2a-6521-1e36-1ca9-21fd8085b365": {
+        "index": 1,
+        "name": "NVIDIA GeForce RTX 2080 Ti",
+        "energy_joules_shared_device": 9132.242332651445,
+        "energy_intervals_observed": 49,
+        "energy_gaps": 0,
+        "gpu_utilization_samples": 50,
+        "gpu_utilization_sum": 1167.0,
+        "memory_used_peak_MiB_shared_device": 20422.0,
+        "gpu_utilization_mean_pct_shared_device": 23.34
+      }
+    },
+    "owned_containers": {
+      "moparse-candidate-table-v7": {
+        "gpu_memory_peak_MiB_by_uuid": {},
+        "sm_observed_sum": 0.0,
+        "sm_samples": 0,
+        "cpu_pct_peak_one_core_100": 211.86,
+        "memory_peak_bytes": 1915555414,
+        "sm_mean_observed_process_sum_pct": null
+      },
+      "moparse-native-worker": {
+        "gpu_memory_peak_MiB_by_uuid": {},
+        "sm_observed_sum": 0.0,
+        "sm_samples": 0,
+        "cpu_pct_peak_one_core_100": 400.84,
+        "memory_peak_bytes": 4108136218,
+        "sm_mean_observed_process_sum_pct": null
+      },
+      "moparse-mineru-vllm": {
+        "gpu_memory_peak_MiB_by_uuid": {
+          "GPU-87a92d2a-6521-1e36-1ca9-21fd8085b365": 3528.0
+        },
+        "sm_observed_sum": 1019.0,
+        "sm_samples": 43,
+        "cpu_pct_peak_one_core_100": 136.11,
+        "memory_peak_bytes": 7614977015,
+        "sm_mean_observed_process_sum_pct": 23.697674418604652
+      },
+      "docling_glm_ocr": {
+        "gpu_memory_peak_MiB_by_uuid": {
+          "GPU-87a92d2a-6521-1e36-1ca9-21fd8085b365": 11612.0
+        },
+        "sm_observed_sum": 174.0,
+        "sm_samples": 8,
+        "cpu_pct_peak_one_core_100": 54.37,
+        "memory_peak_bytes": 7246683570,
+        "sm_mean_observed_process_sum_pct": 21.75
+      },
+      "docling_glm_ocr_sdk": {
+        "gpu_memory_peak_MiB_by_uuid": {},
+        "sm_observed_sum": 0.0,
+        "sm_samples": 0,
+        "cpu_pct_peak_one_core_100": 2356.88,
+        "memory_peak_bytes": 7506529091,
+        "sm_mean_observed_process_sum_pct": null
+      }
+    },
+    "observation_errors_by_source": {},
+    "vllm_metrics": [
+      {
+        "name": "vllm:num_requests_running",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+        "first": 0.0,
+        "last": 0.0,
+        "counter_resets": 0,
+        "observed_counter_increase": null
+      },
+      {
+        "name": "vllm:num_requests_waiting",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+        "first": 0.0,
+        "last": 0.0,
+        "counter_resets": 0,
+        "observed_counter_increase": null
+      },
+      {
+        "name": "vllm:kv_cache_usage_perc",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+        "first": 0.0,
+        "last": 0.0,
+        "counter_resets": 0,
+        "observed_counter_increase": null
+      },
+      {
+        "name": "vllm:prefix_cache_queries_total",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+        "first": 3679079.0,
+        "last": 3688971.0,
+        "counter_resets": 0,
+        "observed_counter_increase": 9892.0
+      },
+      {
+        "name": "vllm:prefix_cache_queries_created",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+        "first": 1792273043.6193871,
+        "last": 1792273043.6193871,
+        "counter_resets": 0,
+        "observed_counter_increase": null
+      },
+      {
+        "name": "vllm:prefix_cache_hits_total",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+        "first": 7680.0,
+        "last": 7680.0,
+        "counter_resets": 0,
+        "observed_counter_increase": 0.0
+      },
+      {
+        "name": "vllm:prefix_cache_hits_created",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+        "first": 1792273043.6194363,
+        "last": 1792273043.6194363,
+        "counter_resets": 0,
+        "observed_counter_increase": null
+      },
+      {
+        "name": "vllm:num_preemptions_total",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+        "first": 0.0,
+        "last": 0.0,
+        "counter_resets": 0,
+        "observed_counter_increase": 0.0
+      },
+      {
+        "name": "vllm:num_preemptions_created",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+        "first": 1792273043.619658,
+        "last": 1792273043.619658,
+        "counter_resets": 0,
+        "observed_counter_increase": null
+      },
+      {
+        "name": "vllm:prompt_tokens_total",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+        "first": 3679079.0,
+        "last": 3688971.0,
+        "counter_resets": 0,
+        "observed_counter_increase": 9892.0
+      },
+      {
+        "name": "vllm:prompt_tokens_created",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+        "first": 1792273043.619697,
+        "last": 1792273043.619697,
+        "counter_resets": 0,
+        "observed_counter_increase": null
+      },
+      {
+        "name": "vllm:prompt_tokens_by_source_total",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\",source=\"local_compute\"}",
+        "first": 3671399.0,
+        "last": 3681291.0,
+        "counter_resets": 0,
+        "observed_counter_increase": 9892.0
+      },
+      {
+        "name": "vllm:prompt_tokens_by_source_total",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\",source=\"local_cache_hit\"}",
+        "first": 7685.0,
+        "last": 7685.0,
+        "counter_resets": 0,
+        "observed_counter_increase": 0.0
+      },
+      {
+        "name": "vllm:prompt_tokens_by_source_total",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\",source=\"external_kv_transfer\"}",
+        "first": 0.0,
+        "last": 0.0,
+        "counter_resets": 0,
+        "observed_counter_increase": 0.0
+      },
+      {
+        "name": "vllm:prompt_tokens_by_source_created",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\",source=\"local_compute\"}",
+        "first": 1792273043.6197474,
+        "last": 1792273043.6197474,
+        "counter_resets": 0,
+        "observed_counter_increase": null
+      },
+      {
+        "name": "vllm:prompt_tokens_by_source_created",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\",source=\"local_cache_hit\"}",
+        "first": 1792273043.6197696,
+        "last": 1792273043.6197696,
+        "counter_resets": 0,
+        "observed_counter_increase": null
+      },
+      {
+        "name": "vllm:prompt_tokens_by_source_created",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\",source=\"external_kv_transfer\"}",
+        "first": 1792273043.619789,
+        "last": 1792273043.619789,
+        "counter_resets": 0,
+        "observed_counter_increase": null
+      },
+      {
+        "name": "vllm:prompt_tokens_cached_total",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+        "first": 7680.0,
+        "last": 7680.0,
+        "counter_resets": 0,
+        "observed_counter_increase": 0.0
+      },
+      {
+        "name": "vllm:prompt_tokens_cached_created",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+        "first": 1792273043.619832,
+        "last": 1792273043.619832,
+        "counter_resets": 0,
+        "observed_counter_increase": null
+      },
+      {
+        "name": "vllm:prompt_tokens_recomputed_total",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+        "first": 5.0,
+        "last": 5.0,
+        "counter_resets": 0,
+        "observed_counter_increase": 0.0
+      },
+      {
+        "name": "vllm:prompt_tokens_recomputed_created",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+        "first": 1792273043.6199086,
+        "last": 1792273043.6199086,
+        "counter_resets": 0,
+        "observed_counter_increase": null
+      },
+      {
+        "name": "vllm:generation_tokens_total",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+        "first": 977272.0,
+        "last": 983457.0,
+        "counter_resets": 0,
+        "observed_counter_increase": 6185.0
+      },
+      {
+        "name": "vllm:generation_tokens_created",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+        "first": 1792273043.6199553,
+        "last": 1792273043.6199553,
+        "counter_resets": 0,
+        "observed_counter_increase": null
+      },
+      {
+        "name": "vllm:request_success_total",
+        "labels": "{engine=\"0\",finished_reason=\"stop\",model_name=\"mineru2.5-pro\"}",
+        "first": 3647.0,
+        "last": 3657.0,
+        "counter_resets": 0,
+        "observed_counter_increase": 10.0
+      },
+      {
+        "name": "vllm:request_success_total",
+        "labels": "{engine=\"0\",finished_reason=\"length\",model_name=\"mineru2.5-pro\"}",
+        "first": 1.0,
+        "last": 1.0,
+        "counter_resets": 0,
+        "observed_counter_increase": 0.0
+      },
+      {
+        "name": "vllm:request_success_total",
+        "labels": "{engine=\"0\",finished_reason=\"abort\",model_name=\"mineru2.5-pro\"}",
+        "first": 0.0,
+        "last": 0.0,
+        "counter_resets": 0,
+        "observed_counter_increase": 0.0
+      },
+      {
+        "name": "vllm:request_success_total",
+        "labels": "{engine=\"0\",finished_reason=\"error\",model_name=\"mineru2.5-pro\"}",
+        "first": 0.0,
+        "last": 0.0,
+        "counter_resets": 0,
+        "observed_counter_increase": 0.0
+      },
+      {
+        "name": "vllm:request_success_total",
+        "labels": "{engine=\"0\",finished_reason=\"repetition\",model_name=\"mineru2.5-pro\"}",
+        "first": 0.0,
+        "last": 0.0,
+        "counter_resets": 0,
+        "observed_counter_increase": 0.0
+      },
+      {
+        "name": "vllm:request_success_created",
+        "labels": "{engine=\"0\",finished_reason=\"stop\",model_name=\"mineru2.5-pro\"}",
+        "first": 1792273043.6200194,
+        "last": 1792273043.6200194,
+        "counter_resets": 0,
+        "observed_counter_increase": null
+      },
+      {
+        "name": "vllm:request_success_created",
+        "labels": "{engine=\"0\",finished_reason=\"length\",model_name=\"mineru2.5-pro\"}",
+        "first": 1792273043.6200445,
+        "last": 1792273043.6200445,
+        "counter_resets": 0,
+        "observed_counter_increase": null
+      },
+      {
+        "name": "vllm:request_success_created",
+        "labels": "{engine=\"0\",finished_reason=\"abort\",model_name=\"mineru2.5-pro\"}",
+        "first": 1792273043.6200652,
+        "last": 1792273043.6200652,
+        "counter_resets": 0,
+        "observed_counter_increase": null
+      },
+      {
+        "name": "vllm:request_success_created",
+        "labels": "{engine=\"0\",finished_reason=\"error\",model_name=\"mineru2.5-pro\"}",
+        "first": 1792273043.6200848,
+        "last": 1792273043.6200848,
+        "counter_resets": 0,
+        "observed_counter_increase": null
+      },
+      {
+        "name": "vllm:request_success_created",
+        "labels": "{engine=\"0\",finished_reason=\"repetition\",model_name=\"mineru2.5-pro\"}",
+        "first": 1792273043.6201036,
+        "last": 1792273043.6201036,
+        "counter_resets": 0,
+        "observed_counter_increase": null
+      },
+      {
+        "name": "vllm:request_prompt_tokens_count",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+        "first": 3648.0,
+        "last": 3658.0,
+        "counter_resets": 0,
+        "observed_counter_increase": null
+      },
+      {
+        "name": "vllm:request_prompt_tokens_sum",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+        "first": 3679079.0,
+        "last": 3688971.0,
+        "counter_resets": 0,
+        "observed_counter_increase": null
+      },
+      {
+        "name": "vllm:request_generation_tokens_count",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+        "first": 3648.0,
+        "last": 3658.0,
+        "counter_resets": 0,
+        "observed_counter_increase": null
+      },
+      {
+        "name": "vllm:request_generation_tokens_sum",
+        "labels": "{engine=\"0\",model_name=\"mineru2.5-pro\"}",
+        "first": 977272.0,
+        "last": 983457.0,
+        "counter_resets": 0,
+        "observed_counter_increase": null
+      }
+    ],
+    "resource_window": {
+      "path": "benchmark/evidence/artifacts/25c518e9f6810b1bff7d5dab371aaedc7642e1cceec5f31eb6bb07e457c00723.json",
+      "sha256": "25c518e9f6810b1bff7d5dab371aaedc7642e1cceec5f31eb6bb07e457c00723",
+      "bytes": 12889,
+      "original_path": "benchmark/runs/table-syntax-v7-http-20261018/fresh7-resource-window.json",
+      "snapshot_bytes_unchanged": true
+    },
+    "http_performance": {
+      "scope": "Full HTTP upload through exact received/persisted Markdown, events and all public assets; API quality states separate",
+      "documents": 3,
+      "total_seconds": 100.40742194396444,
+      "median_document_seconds": 28.585895641939715,
+      "p95_document_seconds": 60.12708884454332,
+      "per_page_time_limit": "Document duration/page count is not measured per-page latency"
+    },
+    "model_forward_observation_limit": "Shared endpoint counters and PID samples do not identify every individual HTTP request",
+    "independent_header_verification_stage": {
+      "observed_wall_clock_seconds": 0,
+      "full_cohort_wall_clock_seconds": null,
+      "recorded_documents": 0,
+      "expected_documents": 3,
+      "completed_HTTP_documents": 3,
+      "observed_unique_document_pages": 0,
+      "observed_candidate_pairs": 0,
+      "observed_accepted_pairs": 0,
+      "scope": "Sum of recorded independent header-verification elapsed wall clocks only; coverage k/n explicit; absent records remain unknown; do not substitute for upload-through-Markdown latency",
+      "GPU_inference_time": false,
+      "absent_warning_is_zero": false
+    },
+    "header_stage_observation": {
+      "path": "benchmark/evidence/artifacts/01b1f1e2addc2b112081c5fc12f9d1ca53a9aaf10a426d8a49e181850170580d.json",
+      "sha256": "01b1f1e2addc2b112081c5fc12f9d1ca53a9aaf10a426d8a49e181850170580d",
+      "bytes": 3783,
+      "original_path": "benchmark/runs/table-syntax-v7-http-20261018/fresh7-header-stage-final.json",
+      "snapshot_bytes_unchanged": true
+    },
+    "independent_source_verification_stage": {
+      "observed_wall_clock_seconds": 1.115,
+      "full_cohort_wall_clock_seconds": null,
+      "recorded_documents": 1,
+      "expected_documents": 3,
+      "observed_unique_document_pages": 1,
+      "observed_review_candidates": 1,
+      "observed_preserved_regions": 1,
+      "absent_warning_is_zero": false,
+      "GPU_forward_time": false,
+      "scope": "Source candidate check and independent CPU verification/glyph preservation elapsed wallclock only; no claim to entire GPU inference time"
+    },
+    "source_stage_observation": {
+      "path": "benchmark/evidence/artifacts/aae7b475ad1e7acc6c54042d07eb7a62f6e2458a19c86dd6454db7df2d7a0b6f.json",
+      "sha256": "aae7b475ad1e7acc6c54042d07eb7a62f6e2458a19c86dd6454db7df2d7a0b6f",
+      "bytes": 3811,
+      "original_path": "benchmark/runs/table-syntax-v7-http-20261018/fresh7-source-stage-final.json",
+      "snapshot_bytes_unchanged": true
+    }
+  },
+  "provenance": [
+    {
+      "path": "benchmark/evidence/artifacts/00ec68415354e156d8b3f0a1a2b541e42c47e5c22dcab281e2f9ac2060f66fa1.json",
+      "sha256": "00ec68415354e156d8b3f0a1a2b541e42c47e5c22dcab281e2f9ac2060f66fa1",
+      "bytes": 2652,
+      "original_path": "benchmark/datasets/moparse-addon-20261018/dataset.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/266df074575bc61103624a6190e73470d4da939f20303baece67b8e073e20173.json",
+      "sha256": "266df074575bc61103624a6190e73470d4da939f20303baece67b8e073e20173",
+      "bytes": 7525,
+      "original_path": "benchmark/runs/table-syntax-v7-http-20261018/fresh7-final-assertions/evaluation.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/66eb40b9f81a6b6771ccdf1efc767f3e729489379f3854fb4b4ca6b6b4ce333f.json",
+      "sha256": "66eb40b9f81a6b6771ccdf1efc767f3e729489379f3854fb4b4ca6b6b4ce333f",
+      "bytes": 315,
+      "original_path": "benchmark/runs/table-syntax-v7-http-20261018/fresh7/cases/gsa-sf95-2007/request.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/b5d318b716863a0eb8bd6e049623a05873eec17aa8ece2bf7c445629ac5a15c8.json",
+      "sha256": "b5d318b716863a0eb8bd6e049623a05873eec17aa8ece2bf7c445629ac5a15c8",
+      "bytes": 453,
+      "original_path": "benchmark/runs/table-syntax-v7-http-20261018/fresh7/cases/gsa-sf95-2007/response.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/0653333fb87f3d089cf60c8223d6e725ca9ddb351c7679083459f26b9d1de9ac.json",
+      "sha256": "0653333fb87f3d089cf60c8223d6e725ca9ddb351c7679083459f26b9d1de9ac",
+      "bytes": 324,
+      "original_path": "benchmark/runs/table-syntax-v7-http-20261018/fresh7/cases/nara-telegram-32171186/request.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/9c575ac5a323f2b22634631c5cc7685c9b7a04dcf8abff9891255d8a1b69d603.json",
+      "sha256": "9c575ac5a323f2b22634631c5cc7685c9b7a04dcf8abff9891255d8a1b69d603",
+      "bytes": 452,
+      "original_path": "benchmark/runs/table-syntax-v7-http-20261018/fresh7/cases/nara-telegram-32171186/response.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/d219cbca7cc5a91946bb97f6ee28d66b81f3bf1e1f472583f4471d7ed39fab95.json",
+      "sha256": "d219cbca7cc5a91946bb97f6ee28d66b81f3bf1e1f472583f4471d7ed39fab95",
+      "bytes": 322,
+      "original_path": "benchmark/runs/table-syntax-v7-http-20261018/fresh7/cases/nasa-maax-factsheet/request.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/4af0b84c92b916a5e461d6d772eb32f97c393dcb3653788f6699919024e9fea4.json",
+      "sha256": "4af0b84c92b916a5e461d6d772eb32f97c393dcb3653788f6699919024e9fea4",
+      "bytes": 452,
+      "original_path": "benchmark/runs/table-syntax-v7-http-20261018/fresh7/cases/nasa-maax-factsheet/response.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/1f75d961720a4a1e410b696cca2151536cc5179cde36ca5395aef788a0c09fb5.json",
+      "sha256": "1f75d961720a4a1e410b696cca2151536cc5179cde36ca5395aef788a0c09fb5",
+      "bytes": 112531,
+      "original_path": "benchmark/runs/table-syntax-v7-http-20261018/fresh7/run.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/847bcb40bdbaab664f0d94db859c4b8a91be96ebc9b117bb70ec88f02756f938.json",
+      "sha256": "847bcb40bdbaab664f0d94db859c4b8a91be96ebc9b117bb70ec88f02756f938",
+      "bytes": 16053,
+      "original_path": "benchmark/runs/table-syntax-v7-http-20261018/fresh7-performance-with-source.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/8f9cec00bcb078b9080c949bcf7402e9a772eb3d08a64f4b16263519f6c37b14.json",
+      "sha256": "8f9cec00bcb078b9080c949bcf7402e9a772eb3d08a64f4b16263519f6c37b14",
+      "bytes": 100289,
+      "original_path": "benchmark/runs/table-syntax-v7-http-20261018/deployment-before.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/2ed92730b55d4fb638cf09001ec29e99aa1859fa389833f88debf9b788dac397.json",
+      "sha256": "2ed92730b55d4fb638cf09001ec29e99aa1859fa389833f88debf9b788dac397",
+      "bytes": 26556,
+      "original_path": "benchmark/runs/table-syntax-v7-http-20261018/table-v7-fresh7-20261018-registration.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/8f9cec00bcb078b9080c949bcf7402e9a772eb3d08a64f4b16263519f6c37b14.json",
+      "sha256": "8f9cec00bcb078b9080c949bcf7402e9a772eb3d08a64f4b16263519f6c37b14",
+      "bytes": 100289,
+      "original_path": "benchmark/runs/table-syntax-v7-http-20261018/deployment-before.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/ad4df4ef8de9fcf6858dbeb50c5aaa525ac46a8598a736d93b9e8a092f6208a7.json",
+      "sha256": "ad4df4ef8de9fcf6858dbeb50c5aaa525ac46a8598a736d93b9e8a092f6208a7",
+      "bytes": 28505,
+      "original_path": "benchmark/runs/table-syntax-v7-http-20261018/table-v7-fresh7-20261018-enriched.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/01b1f1e2addc2b112081c5fc12f9d1ca53a9aaf10a426d8a49e181850170580d.json",
+      "sha256": "01b1f1e2addc2b112081c5fc12f9d1ca53a9aaf10a426d8a49e181850170580d",
+      "bytes": 3783,
+      "original_path": "benchmark/runs/table-syntax-v7-http-20261018/fresh7-header-stage-final.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/998a9d9527f1ddea8fafe9a1670a0910dff1f220e75d9709e6fc987e953cbd7d.json",
+      "sha256": "998a9d9527f1ddea8fafe9a1670a0910dff1f220e75d9709e6fc987e953cbd7d",
+      "bytes": 2362,
+      "original_path": "benchmark/runs/table-syntax-v7-http-20261018/header-stage/fresh7/gsa-sf95-2007.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/56277b4de3fcc28c2cfd1f921b77553130d512fdc75dd510370a553e740373ef.json",
+      "sha256": "56277b4de3fcc28c2cfd1f921b77553130d512fdc75dd510370a553e740373ef",
+      "bytes": 2381,
+      "original_path": "benchmark/runs/table-syntax-v7-http-20261018/header-stage/fresh7/nara-telegram-32171186.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/a96473434b6b46e450f69501bcfcb5ba6adbf252da930a55b7d49f8bdbc1e50d.json",
+      "sha256": "a96473434b6b46e450f69501bcfcb5ba6adbf252da930a55b7d49f8bdbc1e50d",
+      "bytes": 2374,
+      "original_path": "benchmark/runs/table-syntax-v7-http-20261018/header-stage/fresh7/nasa-maax-factsheet.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/aae7b475ad1e7acc6c54042d07eb7a62f6e2458a19c86dd6454db7df2d7a0b6f.json",
+      "sha256": "aae7b475ad1e7acc6c54042d07eb7a62f6e2458a19c86dd6454db7df2d7a0b6f",
+      "bytes": 3811,
+      "original_path": "benchmark/runs/table-syntax-v7-http-20261018/fresh7-source-stage-final.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/f342746840038764d3277a5b15b134b7ba1238ed572443e499f33d6677196790.json",
+      "sha256": "f342746840038764d3277a5b15b134b7ba1238ed572443e499f33d6677196790",
+      "bytes": 2398,
+      "original_path": "benchmark/runs/table-syntax-v7-http-20261018/source-stage/fresh7/gsa-sf95-2007.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/ddc381edab6a01dacf3774410ab72c42248b9c974150d4301869abd293b0b790.json",
+      "sha256": "ddc381edab6a01dacf3774410ab72c42248b9c974150d4301869abd293b0b790",
+      "bytes": 2417,
+      "original_path": "benchmark/runs/table-syntax-v7-http-20261018/source-stage/fresh7/nara-telegram-32171186.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/c7dbc78ebe405b86999cbdba2e3436ed5cbee347388ce32cdc140a0911c37730.json",
+      "sha256": "c7dbc78ebe405b86999cbdba2e3436ed5cbee347388ce32cdc140a0911c37730",
+      "bytes": 2514,
+      "original_path": "benchmark/runs/table-syntax-v7-http-20261018/source-stage/fresh7/nasa-maax-factsheet.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/20fd7cbf7bbe406b387c7f2811cdb23776b03bfa0866cb38a09ec08c8a934c71.json",
+      "sha256": "20fd7cbf7bbe406b387c7f2811cdb23776b03bfa0866cb38a09ec08c8a934c71",
+      "bytes": 2044,
+      "original_path": "benchmark/runs/table-syntax-v7-http-20261018/fresh7-public-format.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/fa3b5a2a074998a82d7ce5a7c27bca85b758c2513f2d6c9d87932127652e9b68.json",
+      "sha256": "fa3b5a2a074998a82d7ce5a7c27bca85b758c2513f2d6c9d87932127652e9b68",
+      "bytes": 1393,
+      "original_path": "benchmark/datasets/moparse-addon-20261018/annotations/fresh7/gold-seal.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/2ac8f348bacacdf46c34ef2683f639ed080c5771bc85adde65938b505c56c8df.json",
+      "sha256": "2ac8f348bacacdf46c34ef2683f639ed080c5771bc85adde65938b505c56c8df",
+      "bytes": 5353,
+      "original_path": "benchmark/runs/table-syntax-v7-http-20261018/NASA-original-posthoc-A/evaluation.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/31e169e57cdc282f9fe323723dfacd0e6a3f07b136852c2548bd9e80bc3c7c5e.json",
+      "sha256": "31e169e57cdc282f9fe323723dfacd0e6a3f07b136852c2548bd9e80bc3c7c5e",
+      "bytes": 22507,
+      "original_path": "benchmark/regressions/nasa-maax-20261018/v2/original-cells.assertions.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/57a48bb0f62cefc2d09e8742c059cd837d6e15fb5f25f099a803dc5179d50466.json",
+      "sha256": "57a48bb0f62cefc2d09e8742c059cd837d6e15fb5f25f099a803dc5179d50466",
+      "bytes": 5892,
+      "original_path": "benchmark/runs/table-syntax-v7-http-20261018/NASA-source-preservation-B.json",
+      "snapshot_bytes_unchanged": true
+    }
+  ],
+  "received_MD_proofs": [
+    {
+      "document_id": "gsa-sf95-2007",
+      "source_sha256": "7c58078520934a0dc2c28ec9e59064548a38df3ac26f63c6a7d83a3280c9afe4",
+      "path": "benchmark/runs/table-syntax-v7-http-20261018/fresh7/cases/gsa-sf95-2007/result.md",
+      "sha256": "692f7671ca0e0eea8ce5951ca7aec7c9be036cc3a0d1257df6a181d47d25a39c",
+      "bytes": 10803,
+      "actual_job_status": "completed",
+      "capture_status": "completed",
+      "quality_fully_resolved": true
+    },
+    {
+      "document_id": "nara-telegram-32171186",
+      "source_sha256": "adbe2f9e5428734c3ab259353afac28a971d2d89bfa871ac21c7858b7c317fc4",
+      "path": "benchmark/runs/table-syntax-v7-http-20261018/fresh7/cases/nara-telegram-32171186/result.md",
+      "sha256": "26858e39916422d7ee6b8b8f2aeb54038860d0e5749423b418e33ae4074127b9",
+      "bytes": 4153,
+      "actual_job_status": "completed",
+      "capture_status": "completed",
+      "quality_fully_resolved": true
+    },
+    {
+      "document_id": "nasa-maax-factsheet",
+      "source_sha256": "79ab8e7686605ece7144aaa7d1d95e0c43dc4066ad35db9629f7b10075369411",
+      "path": "benchmark/runs/table-syntax-v7-http-20261018/fresh7/cases/nasa-maax-factsheet/result.md",
+      "sha256": "c8ac03175b6715831f3a63ab656bb3eed65c2aa6a29f67a49f55a3d92db0bce3",
+      "bytes": 9920,
+      "actual_job_status": "partial",
+      "capture_status": "completed",
+      "quality_fully_resolved": false
+    }
+  ],
+  "registered_method_fingerprint": "e760367d7fb88f11a7bc0bb5388db12ebe7f4fc54983b1ac8559d266736c11c7",
+  "observed_recipe_fingerprint": null,
+  "qualification": {
+    "full_HTTP": true,
+    "complete_document_capture": true,
+    "deployment_identity_observation_supplied": true,
+    "deployment_acceptance": false,
+    "note": "Registration records observed evidence; release acceptance additionally requires source, coverage and regression gates",
+    "capture_completion_is_quality_completion": false,
+    "API_partial_preserved_explicitly": true,
+    "partial_document_source_acceptance_requires_separate_proof": true,
+    "external_source_identity_verified": true,
+    "external_identity_proof": {
+      "path": "benchmark/evidence/artifacts/8f9cec00bcb078b9080c949bcf7402e9a772eb3d08a64f4b16263519f6c37b14.json",
+      "sha256": "8f9cec00bcb078b9080c949bcf7402e9a772eb3d08a64f4b16263519f6c37b14",
+      "bytes": 100289,
+      "original_path": "benchmark/runs/table-syntax-v7-http-20261018/deployment-before.json",
+      "snapshot_bytes_unchanged": true
+    }
+  },
+  "completion_scope": "transport_capture",
+  "actual_job_status_counts": {
+    "partial": 1,
+    "completed": 2
+  },
+  "partial_document_ids": [
+    "nasa-maax-factsheet"
+  ],
+  "transport_complete": true,
+  "quality_fully_resolved": false,
+  "transport_receipts": [
+    {
+      "document_id": "nasa-maax-factsheet",
+      "transport_complete": true,
+      "capture_status": "completed",
+      "actual_job_status": "partial",
+      "quality_fully_resolved": false,
+      "quality_status_scope": "API completed/partial state, never an original-source accuracy claim",
+      "errors": [],
+      "assets_checked": 5,
+      "declared_assets": 5,
+      "event_response_bytes": 0,
+      "event_scope": "Exact successful GET response; terminal SSE may be empty. No complete historical event timeline claim."
+    },
+    {
+      "document_id": "gsa-sf95-2007",
+      "transport_complete": true,
+      "capture_status": "completed",
+      "actual_job_status": "completed",
+      "quality_fully_resolved": true,
+      "quality_status_scope": "API completed/partial state, never an original-source accuracy claim",
+      "errors": [],
+      "assets_checked": 0,
+      "declared_assets": 0,
+      "event_response_bytes": 0,
+      "event_scope": "Exact successful GET response; terminal SSE may be empty. No complete historical event timeline claim."
+    },
+    {
+      "document_id": "nara-telegram-32171186",
+      "transport_complete": true,
+      "capture_status": "completed",
+      "actual_job_status": "completed",
+      "quality_fully_resolved": true,
+      "quality_status_scope": "API completed/partial state, never an original-source accuracy claim",
+      "errors": [],
+      "assets_checked": 3,
+      "declared_assets": 3,
+      "event_response_bytes": 0,
+      "event_scope": "Exact successful GET response; terminal SSE may be empty. No complete historical event timeline claim."
+    }
+  ],
+  "report_enrichment": {
+    "created_at": "2026-10-18T03:34:26.729430+00:00",
+    "original_evidence": {
+      "path": "benchmark/evidence/artifacts/2ed92730b55d4fb638cf09001ec29e99aa1859fa389833f88debf9b788dac397.json",
+      "sha256": "2ed92730b55d4fb638cf09001ec29e99aa1859fa389833f88debf9b788dac397",
+      "bytes": 26556,
+      "original_path": "benchmark/runs/table-syntax-v7-http-20261018/table-v7-fresh7-20261018-registration.json",
+      "snapshot_bytes_unchanged": true
+    },
+    "tool": {
+      "path": "benchmark/tools/enrich_evidence.py",
+      "sha256": "1a08773d4a87c72ee20ecf0d84a4643171248244e0a4a5ecd4165f1866f421a1",
+      "bytes": 7717
+    },
+    "gold_or_scoring_predicates_changed": false,
+    "Markdown_changed": false
+  },
+  "public_format_contract": {
+    "pass": true,
+    "observation": {
+      "path": "benchmark/evidence/artifacts/20fd7cbf7bbe406b387c7f2811cdb23776b03bfa0866cb38a09ec08c8a934c71.json",
+      "sha256": "20fd7cbf7bbe406b387c7f2811cdb23776b03bfa0866cb38a09ec08c8a934c71",
+      "bytes": 2044,
+      "original_path": "benchmark/runs/table-syntax-v7-http-20261018/fresh7-public-format.json",
+      "snapshot_bytes_unchanged": true
+    },
+    "scope": "Visible rendered HTML table leakage; original strict substring observation retained. No source accuracy inference.",
+    "checker_SHA256": "ca66e5122d26c174dbaa2741fa48c58841555b8a7d5a77f18e7f06923ba4bc27"
+  },
+  "status": "completed",
+  "evaluation_role": "development_after_exposed_NASA_source_failure",
+  "source_freeze": {
+    "path": "benchmark/evidence/artifacts/7f11e68b6ab2588adfc0d49b54ff8e529ef6b52e3adcf49b525410beff2ee844.json",
+    "sha256": "7f11e68b6ab2588adfc0d49b54ff8e529ef6b52e3adcf49b525410beff2ee844",
+    "bytes": 20638,
+    "original_path": "benchmark/runs/glm-table-syntax-v7-20261018/source-freeze.json",
+    "snapshot_bytes_unchanged": true
+  },
+  "independent_first_test": false,
+  "recognition_recipe_frozen_before_baseline_output": false,
+  "weights_input_text_sampling_and_header_predicates_frozen_before_baseline_output": true,
+  "CPU_MFR_batch_window_trim_frozen_before_baseline_output": false,
+  "entire_pipeline_frozen_before_any_fresh7_output": false,
+  "prior550_source_outputs_exposed_before_V7_freeze": true,
+  "exposure_note": "V7 exposed development retest after V6 full550 and failed production159 rawHTML contract. Generic HTML syntax only; same worker/GPU models/calls and inherited unknown source preservation. Original28 gold/reader and posthoc19 development truth remain separate.",
+  "assertion_counts": {
+    "pass": 24,
+    "fail": 4
+  },
+  "posthoc_NASA_original_truth_A": {
+    "counts": {
+      "fail": 11,
+      "pass": 8
+    },
+    "checks": 19,
+    "role": "posthoc development source cells/spans; existing title/shape errors remain failures",
+    "original28_changed": false,
+    "new_independent_holdout": false,
+    "v1_source_annotation_preserved_with_independent_source_errata": "benchmark/regressions/nasa-maax-20261018/v2/source-gold-errata-and-seal.json",
+    "evaluation": {
+      "path": "benchmark/evidence/artifacts/2ac8f348bacacdf46c34ef2683f639ed080c5771bc85adde65938b505c56c8df.json",
+      "sha256": "2ac8f348bacacdf46c34ef2683f639ed080c5771bc85adde65938b505c56c8df",
+      "bytes": 5353,
+      "original_path": "benchmark/runs/table-syntax-v7-http-20261018/NASA-original-posthoc-A/evaluation.json",
+      "snapshot_bytes_unchanged": true
+    },
+    "source_gold": {
+      "path": "benchmark/evidence/artifacts/31e169e57cdc282f9fe323723dfacd0e6a3f07b136852c2548bd9e80bc3c7c5e.json",
+      "sha256": "31e169e57cdc282f9fe323723dfacd0e6a3f07b136852c2548bd9e80bc3c7c5e",
+      "bytes": 22507,
+      "original_path": "benchmark/regressions/nasa-maax-20261018/v2/original-cells.assertions.json",
+      "snapshot_bytes_unchanged": true
+    }
+  },
+  "posthoc_NASA_preservation_B": {
+    "pass": true,
+    "role": "B: source preservation and no new regression relative to exposed V4. Separate A checks retain original physical table truth failures.",
+    "checks": 11,
+    "evaluation": {
+      "path": "benchmark/evidence/artifacts/57a48bb0f62cefc2d09e8742c059cd837d6e15fb5f25f099a803dc5179d50466.json",
+      "sha256": "57a48bb0f62cefc2d09e8742c059cd837d6e15fb5f25f099a803dc5179d50466",
+      "bytes": 5892,
+      "original_path": "benchmark/runs/table-syntax-v7-http-20261018/NASA-source-preservation-B.json",
+      "snapshot_bytes_unchanged": true
+    },
+    "reconstructed_Gantt_semantics": false,
+    "new_independent_holdout": false,
+    "original28_changed": false
+  }
+}

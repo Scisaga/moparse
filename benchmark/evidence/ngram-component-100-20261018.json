@@ -1,0 +1,129 @@
+{
+  "schema": "moparse-evidence/1",
+  "id": "ngram-component-100-20261018",
+  "method_id": "mineru-nasa-table-crop-fp16-ngram100-component",
+  "cohort_id": "exposed-nasa-schedule-single-crop-component",
+  "origin": "fresh_component",
+  "fresh_model_inference": true,
+  "new_HTTP_requests": true,
+  "output_stage": "raw-provider-OTSL-and-official-HTML-component",
+  "quality": {},
+  "performance": {
+    "seconds": 43.987326889066026,
+    "scope": "Single exposed saved crop provider completion only; control100 first/treatment0 second on same warm provider",
+    "power_limit_W": null,
+    "own_GPU_peak_MiB": null,
+    "shared_GPU_energy_Wh": null,
+    "warmup": "same warm provider; ordered control/treatment, no cache randomization",
+    "GPU_or_energy_per_request_measured": false
+  },
+  "provenance": [
+    {
+      "path": "benchmark/evidence/artifacts/4ce53ac1bcc794d36a36ae115aa5093abe55d2359c1fa650e4012cf2a1222401.json",
+      "sha256": "4ce53ac1bcc794d36a36ae115aa5093abe55d2359c1fa650e4012cf2a1222401",
+      "bytes": 12981,
+      "original_path": "benchmark/runs/ngram-component-ablation-20261018/component-proof.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/b4e58d94d64bd2adebece2433dd30c0c48393f0849bb68934937cd8dde29f818.md",
+      "sha256": "b4e58d94d64bd2adebece2433dd30c0c48393f0849bb68934937cd8dde29f818",
+      "bytes": 2808,
+      "original_path": "benchmark/runs/ngram-component-ablation-20261018/report.md",
+      "snapshot_bytes_unchanged": true
+    }
+  ],
+  "registered_method_fingerprint": "82bf86517bbd237c2722e9a67403c2a167fad44f069889c85af77bf77b08da3f",
+  "observed_recipe_fingerprint": "82bf86517bbd237c2722e9a67403c2a167fad44f069889c85af77bf77b08da3f",
+  "observed_source_failure": {
+    "arm": "control100",
+    "no_repeat_ngram_size": 100,
+    "HTTP_status": 200,
+    "duration_seconds": 43.987326889066026,
+    "finish_reasons": [
+      "stop"
+    ],
+    "usage": {
+      "prompt_tokens": 449,
+      "total_tokens": 3044,
+      "completion_tokens": 2595,
+      "prompt_tokens_details": null
+    },
+    "raw_output_sha256": "f04f9c857d021aafd772745416272c96c5670bd10e3c15c5e1142b024e9b8203",
+    "raw_characters": 6688,
+    "row_widths_before_official_empty_padding": [
+      107,
+      201,
+      313
+    ],
+    "official_html_projected_shape": [
+      3,
+      313
+    ],
+    "official_conversion_error": null,
+    "official_html_sha256": "c1910e9ed4b04765e873fb5c21f0306b06d0249e81a03f1e97c32d1674f449fa",
+    "OTSL_token_counts": {
+      "<ecel>": 101,
+      "<fcel>": 315,
+      "<lcel>": 203,
+      "<nl>": 3,
+      "<ucel>": 2
+    },
+    "longest_consecutive_lcel": 100,
+    "literal_occurrences": {
+      "Launch": 122,
+      "Masseset": 34,
+      "FY23": 1,
+      "FY24": 1,
+      "FY25": 0,
+      "FY26": 0,
+      "FY27": 0,
+      "FY28": 0,
+      "FY29": 0,
+      "CY23": 1,
+      "CY24": 0,
+      "CY25": 0,
+      "CY26": 0,
+      "CY27": 0,
+      "CY28": 0,
+      "CY29": 0,
+      "Ph A": 0,
+      "Ph B": 0,
+      "Ph C": 0,
+      "Ph D": 0,
+      "Ph E": 0,
+      "Milestones": 0
+    },
+    "source_character_budget": {
+      "normalization": "Exact nonwhitespace characters; fullwidthASCII folded only; wholephysicalpage2 budget; HTML text counted once at anchors, no span duplication; no NFKC/casefold/punctuation deletion",
+      "source_text_complete_or_font_map_fidelity_proven": false,
+      "source_page_text_sha256": "c40ab4eba3b0ec1b0d3c747f2a1498c63f6ac2d1e6757e62018cbcb1e95a9b91",
+      "all_excess_distinct_characters": 19,
+      "all_excess_occurrences": 1475,
+      "witnessed_LN_excess_distinct_characters": 18,
+      "witnessed_LN_excess_occurrences": 1307,
+      "not_a_correctness_or_completeness_proof": true
+    },
+    "visible_source_agreement": {
+      "FY25_to_FY29_missing": true,
+      "CY24_to_CY29_missing": true,
+      "phase_labels_Ph_A_to_Ph_E_missing": true,
+      "Milestones_missing": true,
+      "source_periods_or_values_not_rewritten": true
+    }
+  },
+  "response_completed": true,
+  "source_correctness_pass": false,
+  "qualification": {
+    "component_only": true,
+    "full_HTTP": false,
+    "complete_document_capture": false,
+    "deployment_acceptance": false,
+    "independent_holdout": false,
+    "original550_or28gold_changed": false,
+    "component_model_inference_not_metadata_only": true,
+    "wholePDF_quality_or_latency_claim": false,
+    "source_incomplete_even_when_character_budget_passes": false,
+    "samecrop_and_prompt_with_only_one_numeric_literal_changed": true
+  }
+}

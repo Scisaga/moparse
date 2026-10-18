@@ -1,0 +1,256 @@
+{
+  "schema": "moparse-posthoc-source-surface-review/1",
+  "created_at": "2026-10-17T23:00:49.616375+00:00",
+  "scope": "Post-hoc exposed development observation, not newgold or changes to frozen denominators",
+  "source": {
+    "path": "pdf_sample/1225475642.pdf",
+    "sha256": "e2a184bb017930ca6306a56391a7248c2954a5ae212c2966104fad2104c4a24d",
+    "bytes": 9185730
+  },
+  "source_images_private_preserved": [
+    {
+      "path": "benchmark/runs/header-v4-http-20261018/source130-page11.png",
+      "sha256": "81d15d2cdf7fcafef31020c83f90ec2f4d570d580c377bbd637bcd228dc4369b",
+      "bytes": 1835924
+    },
+    {
+      "path": "benchmark/runs/header-v4-http-20261018/source130/page11-stamp-source.png",
+      "sha256": "d519aa8e68994db555d54dfa4fa774adc32b79add83f07d22173a6939c680af5",
+      "bytes": 1116915
+    },
+    {
+      "path": "benchmark/runs/header-v4-http-20261018/source130/page11-stamp-code.png",
+      "sha256": "a24a0bcd0042e28a58d81391a15f07140fed597cb0f0d56a48020b4918e5440d",
+      "bytes": 820793
+    },
+    {
+      "path": "benchmark/runs/header-v4-http-20261018/source130/page127-source.png",
+      "sha256": "33520fc5a0e8a37851ea162ef2c10644dfdd3c6c9f1c55bb27e311bdbe87d3fc",
+      "bytes": 2435377
+    },
+    {
+      "path": "benchmark/runs/header-v4-http-20261018/source130/page128-source.png",
+      "sha256": "967a69df97ec8b21221ec3442de1f49745ba3331e2acc678a10d36ac9275591e",
+      "bytes": 3029740
+    }
+  ],
+  "source_text_extraction_metadata": {
+    "path": "benchmark/runs/header-v4-http-20261018/source130/source-extraction.json",
+    "sha256": "2e63291f5d5e529a61e2518fb65edfbae71f56fbf7903232be59cf74f76dd105",
+    "bytes": 1050
+  },
+  "pages": [
+    {
+      "page": 11,
+      "source_character_extraction": {
+        "character_count": 0,
+        "source_text_available": false,
+        "fabricated_bbox_or_OCR_result": false
+      },
+      "public_page_MDs": {
+        "v3": {
+          "path": "benchmark/runs/header-v4-http-20261018/source130/v3-page11-public-MD.txt",
+          "sha256": "1b1358f17e82e4b3564a361a4f9380411cc8f72133710c28b2cec706d732a9b1",
+          "bytes": 3879
+        },
+        "v4": {
+          "path": "benchmark/runs/header-v4-http-20261018/source130/v4-page11-public-MD.txt",
+          "sha256": "5adbbe70f31275db75297161f80c1c64979f9c7c18c8612ef19173105fed4b36",
+          "bytes": 3880
+        }
+      }
+    },
+    {
+      "page": 127,
+      "source_character_extraction": {
+        "character_count": 0,
+        "source_text_available": false,
+        "fabricated_bbox_or_OCR_result": false
+      },
+      "public_page_MDs": {
+        "v3": {
+          "path": "benchmark/runs/header-v4-http-20261018/source130/v3-page127-public-MD.txt",
+          "sha256": "097b7abf0e469ccf0d2fcc96788a50fafa2002affba70e1fec4a7a0be7f07f60",
+          "bytes": 1213
+        },
+        "v4": {
+          "path": "benchmark/runs/header-v4-http-20261018/source130/v4-page127-public-MD.txt",
+          "sha256": "bd6e56ba4cface2a9d21a9c58b2ee6f1e494a87ef62b99eda1c8a3086f983cd7",
+          "bytes": 1214
+        }
+      }
+    },
+    {
+      "page": 128,
+      "source_character_extraction": {
+        "character_count": 0,
+        "source_text_available": false,
+        "fabricated_bbox_or_OCR_result": false
+      },
+      "public_page_MDs": {
+        "v3": {
+          "path": "benchmark/runs/header-v4-http-20261018/source130/v3-page128-public-MD.txt",
+          "sha256": "4f204c5c1a578d200897b7b3db986e6f49584532a3ec0fba7287e0d817fd90c1",
+          "bytes": 1210
+        },
+        "v4": {
+          "path": "benchmark/runs/header-v4-http-20261018/source130/v4-page128-public-MD.txt",
+          "sha256": "dbbe39878af953cc9e8748c6687cfe96c543a442c6de5712c4caa4cbced2c4b3",
+          "bytes": 1206
+        }
+      }
+    }
+  ],
+  "persisted_private_job_file_lists": [
+    {
+      "path": "benchmark/runs/header-v4-http-20261018/source130/v3-persisted-job-files.json",
+      "sha256": "4dd37b8a2b08040fb83496ff3f5b0fc0360b2c8e312b0c831742e3d4aeffec61",
+      "bytes": 3231
+    },
+    {
+      "path": "benchmark/runs/header-v4-http-20261018/source130/v4-persisted-job-files.json",
+      "sha256": "7bcb7560bc0cf8e6f12e574b9979a6f6e6041d945e0031aa38b87acaca391910",
+      "bytes": 3231
+    }
+  ],
+  "typed_raw_blocks_available": false,
+  "new_inference_to_recover_blocks": false,
+  "page11": {
+    "surface_role": "Red company seal registration number over cashflow table, not a certificate/body/table amount",
+    "manual_source_transcription": "35010510007235",
+    "V3": "51010510007235",
+    "V4": "510101510007235",
+    "source_reviewers": [
+      "benchmark subagent independently from source crop",
+      "root independently from same originalpixel crops"
+    ],
+    "root_review_confirmed": true,
+    "both_outputs_misread_source": true,
+    "V4_additional_inserted_digit": "1",
+    "V4_vs_V3_additional_numeric_character_error": true,
+    "part_of_frozen209_or402_gold": false
+  },
+  "page127": {
+    "difference": "One additional visible space before(5-1)",
+    "characters_lost_or_added_beyond_whitespace": false
+  },
+  "page128": {
+    "source_institution": "容诚会计师事务所（特殊普通合伙）",
+    "V3": "容诚会计师事务所（特殊普通合伙）",
+    "V4": "容诚会计师事务所(特殊普通合伙)",
+    "wording_complete": true,
+    "ASCII_width_only": true
+  },
+  "actual_scan_routing": [
+    {
+      "version": "v3",
+      "job_id": "job_01M55T2WECCPR57SWCWZRK5STS",
+      "actual_storage_identity": {
+        "container": "moparse-candidate-header-v3",
+        "container_id": "ca36b35b7072e376e4601b2dd8a518fcfd6388ff54fb4bd42c502dcb340c021f",
+        "deployed_image_id": "sha256:efde0f1563e14cd4fb0df20e1107ce4c2246b348741724fb4defebd59bc65d01",
+        "data_volume": {
+          "Type": "volume",
+          "Name": "moparse-candidate-header-v3-data",
+          "Source": "/var/lib/docker/volumes/moparse-candidate-header-v3-data/_data",
+          "Destination": "/data",
+          "RW": true
+        },
+        "deployment": {
+          "path": "benchmark/runs/header-v3-http-20261018/deployment-before.json",
+          "sha256": "98959df66107e08c53a3151bf5b0f04dac6f4ddde25adc32b1c51fe062761631",
+          "bytes": 99509
+        },
+        "container_environment_read": false
+      },
+      "warning_file_SHA256": "f8b1b998e25302fd70129fba33ce0be39fbc308a32c902a28cf0ea9bf2982643",
+      "selected_routing_observations": [
+        {
+          "code": "glm_sdk_scan_routing_used",
+          "backend": "glm-sdk-remote",
+          "pages": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            126,
+            127,
+            128,
+            129,
+            130
+          ]
+        }
+      ]
+    },
+    {
+      "version": "v4",
+      "job_id": "job_01M5600Z35EDXF5PSQGC026EMR",
+      "actual_storage_identity": {
+        "container": "moparse-candidate-header-v4",
+        "container_id": "0e8ca85a3f0337abce45491fd690c2a02965c050e36ce6c26e007b13a9d2fdcb",
+        "deployed_image_id": "sha256:427a7cdd741b69845fcf8c6c1f4db6f9f5db92897cb2ce40af99747300bcff7a",
+        "data_volume": {
+          "Type": "volume",
+          "Name": "moparse-candidate-header-v4-data",
+          "Source": "/var/lib/docker/volumes/moparse-candidate-header-v4-data/_data",
+          "Destination": "/data",
+          "RW": true
+        },
+        "deployment": {
+          "path": "benchmark/runs/header-v4-http-20261018/deployment-before.json",
+          "sha256": "2ceae920c4cc46bd65360b85e6b0fae347138b34e97cb08a204523b349d48ff6",
+          "bytes": 99755
+        },
+        "container_environment_read": false
+      },
+      "warning_file_SHA256": "943b077ba49217c519f4e4ab440b8250d342b4a93acc286f673eb80cf5e73a68",
+      "selected_routing_observations": [
+        {
+          "code": "glm_sdk_scan_routing_used",
+          "backend": "glm-sdk-remote",
+          "pages": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16,
+            17,
+            18,
+            126,
+            127,
+            128,
+            129,
+            130
+          ]
+        }
+      ]
+    }
+  ],
+  "causal_limit": "Same observed GLM scanroute/weights/callsettings; difference happened in the scanroute, not attributable to CPU MFR/window/trim changes from this observation. Do not claim fulloutput no-regression.",
+  "model_output_source_gold_209402_denominator_or_reader_changed": false
+}

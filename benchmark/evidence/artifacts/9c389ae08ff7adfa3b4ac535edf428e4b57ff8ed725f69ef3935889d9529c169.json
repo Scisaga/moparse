@@ -1,0 +1,61 @@
+{
+  "schema": "moparse-V7-production-switch-pending159-safe-summary/1",
+  "created_at": "2026-10-18T03:41:25.249589+00:00",
+  "method_id": "mineru-advanced-txt-vllm-c2-docling-source-glm-v7",
+  "fingerprint": "e760367d7fb88f11a7bc0bb5388db12ebe7f4fc54983b1ac8559d266736c11c7",
+  "scope": "Actual API-only switch completed, candidate exact app image preserved; complete159 production HTTP is running, not accepted yet.",
+  "private_promotion_proof": {
+    "path": "benchmark/runs/production-release-v7-20261018/deployment/proof.json",
+    "sha256": "75450c511e7d280e48350b91bb09f32e4d77ac5598dcc318056c9e21ed96ef5d",
+    "bytes": 60519
+  },
+  "status": "promoted_GET_verified_full_PDF_smoke_pending",
+  "started_at": "2026-10-18T03:39:10.354925+00:00",
+  "finished_at": "2026-10-18T03:39:49.451884+00:00",
+  "new_API": {
+    "id": "e6132b9083758b8656cbed647c81b9058d4a9c81258e01f09bd33112597b9b78",
+    "image_id": "sha256:3a2c30f2b67172232aabd24c636e425a2333f3b127dde386c513bb0e3198da19",
+    "name": "moparse",
+    "running": true,
+    "started_at": "2026-10-18T03:39:27.236179216Z"
+  },
+  "retained_old_API": {
+    "id": "8f838dc7867f8be5c5ce77a626df0aba514e70d4fcfc1f5800f85340362d477a",
+    "image_id": "sha256:7c887e795ecd42039fee0327059ae0b755372dd2cda9f9ae17b07187077b3905",
+    "name": "moparse-pre-v7",
+    "running": false,
+    "started_at": "2026-10-18T01:32:03.201007111Z"
+  },
+  "compose_project": "moparse-v7",
+  "original_external_volumes_retained": true,
+  "existing_database_rows_preserved": 37,
+  "old_job_file_SHA_verified": 250,
+  "new_job_ids_after_startup": [],
+  "native_backend": "mineru",
+  "header_verifier": "docling",
+  "source_verifier": "docling",
+  "actual_timeout_settings": {
+    "CONTENT_TIMEOUT_SECONDS": 7200,
+    "MINERU_NATIVE_TIMEOUT_SECONDS": 7200
+  },
+  "worker_resource_policy_before": {
+    "name": "cpu-mfr-microbatch-limit-v1",
+    "source_sha256": "e2b45491bea11a6af82fef90ec1d4d6beb72373b2aaaa611b7228c309947c5e2",
+    "cpu_mfr_batch_size": 1,
+    "processing_window_size": 8,
+    "malloc_trim": true
+  },
+  "worker_resource_policy_after": {
+    "name": "cpu-mfr-microbatch-limit-v1",
+    "source_sha256": "e2b45491bea11a6af82fef90ec1d4d6beb72373b2aaaa611b7228c309947c5e2",
+    "cpu_mfr_batch_size": 1,
+    "processing_window_size": 8,
+    "malloc_trim": true
+  },
+  "protected_model_containers_unchanged": true,
+  "production159_started_at": "2026-10-18T03:40:07Z",
+  "production159_final_receipt_pass": false,
+  "live_selected": false,
+  "full550_does_not_substitute_production159": true,
+  "credentials_private_Env_full_DB_or_document_content_exported": false
+}

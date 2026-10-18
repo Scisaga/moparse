@@ -1,0 +1,31 @@
+{
+  "schema_version": "declared-cell-scope-contract/1",
+  "version": "1.2.0",
+  "frozen_utc": "2026-10-15T18:14:10.724484+00:00",
+  "no_source_answers_used_to_expand_scope": true,
+  "raw_cell_text_spans_flags_and_public_markdown_unchanged": true,
+  "only_explicit_valid_nonconflicting_span_ownership": true,
+  "literal_and_scope_scores_separate": true,
+  "invalid_or_conflicting_scope_unknown": true,
+  "core209_and_all_source_answers_unchanged": true,
+  "files": [
+    {
+      "path": "benchmark-results/clean-model-comparison-20261015/scoring/declared-scope-view.py",
+      "sha256": "a05ce8073864ddf67017402ba040c45eadb764f28e8344e0f0ef82002a7afa20"
+    },
+    {
+      "path": "benchmark-results/clean-model-comparison-20261015/scoring/test-declared-scope-view.py",
+      "sha256": "4c21db36052908d9a4941bda55a3f882f5d8423db312f20d8650eddbf7f4280e"
+    },
+    {
+      "path": "benchmark-results/clean-model-comparison-20261015/scoring/declared-scope-tests.json",
+      "sha256": "526f88a1ac095eec41b2999dc97294a170c24b305397699628717814300bd6ba"
+    },
+    {
+      "path": "benchmark-results/clean-model-comparison-20261015/scoring/refresh-declared-scope-scores.py",
+      "sha256": "1c12361dc2edbb87268e51f2f1c0532ce3301dc54f7e05792d78d88e0b7205dd"
+    }
+  ],
+  "passed_adversarial_and_positive_checks": 14,
+  "change_from_1_0_0": "Invalid scope masks value, row identity and observed header ownership separately. Final view reads declared spans from public Markdown comments, including invalid spans rejected by the literal GFM reader; never imports raw text. Top-level counts consistent and loaded module SHA fixed."
+}

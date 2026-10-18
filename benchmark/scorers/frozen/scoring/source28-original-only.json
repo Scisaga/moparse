@@ -1,0 +1,1065 @@
+{
+  "schema_version": "clean-source28-supplement/1",
+  "tables": [
+    {
+      "document": "pdf_sample/1225475333.pdf",
+      "source_sha256": "bdb4210e0cd5dc000e8278d2438937b61ae9042969f100289c0d4cab4537e62b",
+      "source_page": 7,
+      "source_ordinal": 1,
+      "source_bbox": [
+        90,
+        213,
+        506,
+        441
+      ],
+      "source_page_size": [
+        595.3200073242188,
+        841.9200439453125
+      ],
+      "rows": [
+        [
+          "序号",
+          "开户银行",
+          "银行账号",
+          "截至2026年6月30日募集资金余额（人民币元）",
+          "账户状态"
+        ],
+        [
+          "1",
+          "招商银行股份有限公司惠州分行",
+          "752900141510666",
+          "-",
+          "已注销"
+        ],
+        [
+          "2",
+          "中国建设银行股份有限公司惠州江城支行",
+          "44050171873700001153",
+          "-",
+          "已注销"
+        ],
+        [
+          "3",
+          "中国工商银行股份有限公司惠州惠城支行",
+          "2008020829200227770",
+          "-",
+          "已注销"
+        ],
+        [
+          "4",
+          "华夏银行股份有限公司深圳龙岗支行",
+          "10864000001091757",
+          "-",
+          "已注销"
+        ],
+        [
+          "5",
+          "惠州农村商业银行股份有限公司麦地南支行",
+          "80020000016463724",
+          "-",
+          "已注销"
+        ],
+        [
+          "合计",
+          "",
+          "",
+          "-",
+          ""
+        ]
+      ],
+      "cells": [
+        {
+          "row": 0,
+          "column": 0,
+          "row_span": 1,
+          "column_span": 1,
+          "text": "序号"
+        },
+        {
+          "row": 0,
+          "column": 1,
+          "row_span": 1,
+          "column_span": 1,
+          "text": "开户银行"
+        },
+        {
+          "row": 0,
+          "column": 2,
+          "row_span": 1,
+          "column_span": 1,
+          "text": "银行账号"
+        },
+        {
+          "row": 0,
+          "column": 3,
+          "row_span": 1,
+          "column_span": 1,
+          "text": "截至2026年6月30日募集资金余额（人民币元）"
+        },
+        {
+          "row": 0,
+          "column": 4,
+          "row_span": 1,
+          "column_span": 1,
+          "text": "账户状态"
+        },
+        {
+          "row": 1,
+          "column": 0,
+          "row_span": 1,
+          "column_span": 1,
+          "text": "1"
+        },
+        {
+          "row": 1,
+          "column": 1,
+          "row_span": 1,
+          "column_span": 1,
+          "text": "招商银行股份有限公司惠州分行"
+        },
+        {
+          "row": 1,
+          "column": 2,
+          "row_span": 1,
+          "column_span": 1,
+          "text": "752900141510666"
+        },
+        {
+          "row": 1,
+          "column": 3,
+          "row_span": 1,
+          "column_span": 1,
+          "text": "-"
+        },
+        {
+          "row": 1,
+          "column": 4,
+          "row_span": 1,
+          "column_span": 1,
+          "text": "已注销"
+        },
+        {
+          "row": 2,
+          "column": 0,
+          "row_span": 1,
+          "column_span": 1,
+          "text": "2"
+        },
+        {
+          "row": 2,
+          "column": 1,
+          "row_span": 1,
+          "column_span": 1,
+          "text": "中国建设银行股份有限公司惠州江城支行"
+        },
+        {
+          "row": 2,
+          "column": 2,
+          "row_span": 1,
+          "column_span": 1,
+          "text": "44050171873700001153"
+        },
+        {
+          "row": 2,
+          "column": 3,
+          "row_span": 1,
+          "column_span": 1,
+          "text": "-"
+        },
+        {
+          "row": 2,
+          "column": 4,
+          "row_span": 1,
+          "column_span": 1,
+          "text": "已注销"
+        },
+        {
+          "row": 3,
+          "column": 0,
+          "row_span": 1,
+          "column_span": 1,
+          "text": "3"
+        },
+        {
+          "row": 3,
+          "column": 1,
+          "row_span": 1,
+          "column_span": 1,
+          "text": "中国工商银行股份有限公司惠州惠城支行"
+        },
+        {
+          "row": 3,
+          "column": 2,
+          "row_span": 1,
+          "column_span": 1,
+          "text": "2008020829200227770"
+        },
+        {
+          "row": 3,
+          "column": 3,
+          "row_span": 1,
+          "column_span": 1,
+          "text": "-"
+        },
+        {
+          "row": 3,
+          "column": 4,
+          "row_span": 1,
+          "column_span": 1,
+          "text": "已注销"
+        },
+        {
+          "row": 4,
+          "column": 0,
+          "row_span": 1,
+          "column_span": 1,
+          "text": "4"
+        },
+        {
+          "row": 4,
+          "column": 1,
+          "row_span": 1,
+          "column_span": 1,
+          "text": "华夏银行股份有限公司深圳龙岗支行"
+        },
+        {
+          "row": 4,
+          "column": 2,
+          "row_span": 1,
+          "column_span": 1,
+          "text": "10864000001091757"
+        },
+        {
+          "row": 4,
+          "column": 3,
+          "row_span": 1,
+          "column_span": 1,
+          "text": "-"
+        },
+        {
+          "row": 4,
+          "column": 4,
+          "row_span": 1,
+          "column_span": 1,
+          "text": "已注销"
+        },
+        {
+          "row": 5,
+          "column": 0,
+          "row_span": 1,
+          "column_span": 1,
+          "text": "5"
+        },
+        {
+          "row": 5,
+          "column": 1,
+          "row_span": 1,
+          "column_span": 1,
+          "text": "惠州农村商业银行股份有限公司麦地南支行"
+        },
+        {
+          "row": 5,
+          "column": 2,
+          "row_span": 1,
+          "column_span": 1,
+          "text": "80020000016463724"
+        },
+        {
+          "row": 5,
+          "column": 3,
+          "row_span": 1,
+          "column_span": 1,
+          "text": "-"
+        },
+        {
+          "row": 5,
+          "column": 4,
+          "row_span": 1,
+          "column_span": 1,
+          "text": "已注销"
+        },
+        {
+          "row": 6,
+          "column": 0,
+          "row_span": 1,
+          "column_span": 3,
+          "text": "合计"
+        },
+        {
+          "row": 6,
+          "column": 3,
+          "row_span": 1,
+          "column_span": 1,
+          "text": "-"
+        },
+        {
+          "row": 6,
+          "column": 4,
+          "row_span": 1,
+          "column_span": 1,
+          "text": ""
+        }
+      ],
+      "source_header_paths": {
+        "2": [
+          "银行账号"
+        ],
+        "4": [
+          "账户状态"
+        ]
+      },
+      "values": [
+        {
+          "source_cell": {
+            "row": 1,
+            "column": 2,
+            "row_span": 1,
+            "column_span": 1,
+            "text": "752900141510666"
+          },
+          "source_row_labels": [
+            "招商银行股份有限公司惠州分行"
+          ],
+          "source_header_path": [
+            "银行账号"
+          ],
+          "source_numeric_is_complete_atomic_value": true,
+          "source_broken_crosspage_fragment_evidence": null,
+          "external_original_header": null
+        },
+        {
+          "source_cell": {
+            "row": 1,
+            "column": 4,
+            "row_span": 1,
+            "column_span": 1,
+            "text": "已注销"
+          },
+          "source_row_labels": [
+            "招商银行股份有限公司惠州分行"
+          ],
+          "source_header_path": [
+            "账户状态"
+          ],
+          "source_numeric_is_complete_atomic_value": true,
+          "source_broken_crosspage_fragment_evidence": null,
+          "external_original_header": null
+        },
+        {
+          "source_cell": {
+            "row": 2,
+            "column": 2,
+            "row_span": 1,
+            "column_span": 1,
+            "text": "44050171873700001153"
+          },
+          "source_row_labels": [
+            "中国建设银行股份有限公司惠州江城支行"
+          ],
+          "source_header_path": [
+            "银行账号"
+          ],
+          "source_numeric_is_complete_atomic_value": true,
+          "source_broken_crosspage_fragment_evidence": null,
+          "external_original_header": null
+        },
+        {
+          "source_cell": {
+            "row": 2,
+            "column": 4,
+            "row_span": 1,
+            "column_span": 1,
+            "text": "已注销"
+          },
+          "source_row_labels": [
+            "中国建设银行股份有限公司惠州江城支行"
+          ],
+          "source_header_path": [
+            "账户状态"
+          ],
+          "source_numeric_is_complete_atomic_value": true,
+          "source_broken_crosspage_fragment_evidence": null,
+          "external_original_header": null
+        },
+        {
+          "source_cell": {
+            "row": 3,
+            "column": 2,
+            "row_span": 1,
+            "column_span": 1,
+            "text": "2008020829200227770"
+          },
+          "source_row_labels": [
+            "中国工商银行股份有限公司惠州惠城支行"
+          ],
+          "source_header_path": [
+            "银行账号"
+          ],
+          "source_numeric_is_complete_atomic_value": true,
+          "source_broken_crosspage_fragment_evidence": null,
+          "external_original_header": null
+        },
+        {
+          "source_cell": {
+            "row": 3,
+            "column": 4,
+            "row_span": 1,
+            "column_span": 1,
+            "text": "已注销"
+          },
+          "source_row_labels": [
+            "中国工商银行股份有限公司惠州惠城支行"
+          ],
+          "source_header_path": [
+            "账户状态"
+          ],
+          "source_numeric_is_complete_atomic_value": true,
+          "source_broken_crosspage_fragment_evidence": null,
+          "external_original_header": null
+        },
+        {
+          "source_cell": {
+            "row": 4,
+            "column": 2,
+            "row_span": 1,
+            "column_span": 1,
+            "text": "10864000001091757"
+          },
+          "source_row_labels": [
+            "华夏银行股份有限公司深圳龙岗支行"
+          ],
+          "source_header_path": [
+            "银行账号"
+          ],
+          "source_numeric_is_complete_atomic_value": true,
+          "source_broken_crosspage_fragment_evidence": null,
+          "external_original_header": null
+        },
+        {
+          "source_cell": {
+            "row": 4,
+            "column": 4,
+            "row_span": 1,
+            "column_span": 1,
+            "text": "已注销"
+          },
+          "source_row_labels": [
+            "华夏银行股份有限公司深圳龙岗支行"
+          ],
+          "source_header_path": [
+            "账户状态"
+          ],
+          "source_numeric_is_complete_atomic_value": true,
+          "source_broken_crosspage_fragment_evidence": null,
+          "external_original_header": null
+        },
+        {
+          "source_cell": {
+            "row": 5,
+            "column": 2,
+            "row_span": 1,
+            "column_span": 1,
+            "text": "80020000016463724"
+          },
+          "source_row_labels": [
+            "惠州农村商业银行股份有限公司麦地南支行"
+          ],
+          "source_header_path": [
+            "银行账号"
+          ],
+          "source_numeric_is_complete_atomic_value": true,
+          "source_broken_crosspage_fragment_evidence": null,
+          "external_original_header": null
+        },
+        {
+          "source_cell": {
+            "row": 5,
+            "column": 4,
+            "row_span": 1,
+            "column_span": 1,
+            "text": "已注销"
+          },
+          "source_row_labels": [
+            "惠州农村商业银行股份有限公司麦地南支行"
+          ],
+          "source_header_path": [
+            "账户状态"
+          ],
+          "source_numeric_is_complete_atomic_value": true,
+          "source_broken_crosspage_fragment_evidence": null,
+          "external_original_header": null
+        }
+      ],
+      "source_review": {
+        "method": "Manual transcription directly from original 200 dpi RGB page image",
+        "image_path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/inputs/1225475333/page-0007.png",
+        "image_sha256": "5f7543b142417fd2d6cc93763844d8c2f94fc14181de7d2cb9dbaad763bb835e",
+        "bbox_precision": "Approximate original display points for table identity, not cell geometry gold",
+        "model_output_consulted": false
+      }
+    },
+    {
+      "document": "pdf_sample/1225475333.pdf",
+      "source_sha256": "bdb4210e0cd5dc000e8278d2438937b61ae9042969f100289c0d4cab4537e62b",
+      "source_page": 21,
+      "source_ordinal": 1,
+      "source_bbox": [
+        64,
+        197,
+        796,
+        339
+      ],
+      "source_page_size": [
+        841.9200439453125,
+        595.3200073242188
+      ],
+      "rows": [
+        [
+          "实际投资项目",
+          "",
+          "截止日投资项目累计产能利用率",
+          "承诺效益",
+          "最近三年实际效益",
+          "",
+          "",
+          "截止日累计实现效益",
+          "是否达到预计效益"
+        ],
+        [
+          "序号",
+          "项目名称",
+          "",
+          "",
+          "2023年",
+          "2024年",
+          "2025年",
+          "",
+          ""
+        ],
+        [
+          "1",
+          "工业机器人智能装备生产项目",
+          "97.99%",
+          "首次完全达产可增加税后利润人民币20,788.01万元",
+          "2,325.11万元",
+          "-2,627.58万元",
+          "13,953.82万元",
+          "25,674.63万元",
+          "否（注1）"
+        ],
+        [
+          "2",
+          "工业机器人智能装备研发中心项目",
+          "不适用",
+          "不适用",
+          "不适用",
+          "不适用",
+          "不适用",
+          "不适用",
+          "不适用（未承诺）"
+        ]
+      ],
+      "cells": [
+        {
+          "row": 0,
+          "column": 0,
+          "row_span": 1,
+          "column_span": 2,
+          "text": "实际投资项目"
+        },
+        {
+          "row": 0,
+          "column": 2,
+          "row_span": 2,
+          "column_span": 1,
+          "text": "截止日投资项目累计产能利用率"
+        },
+        {
+          "row": 0,
+          "column": 3,
+          "row_span": 2,
+          "column_span": 1,
+          "text": "承诺效益"
+        },
+        {
+          "row": 0,
+          "column": 4,
+          "row_span": 1,
+          "column_span": 3,
+          "text": "最近三年实际效益"
+        },
+        {
+          "row": 0,
+          "column": 7,
+          "row_span": 2,
+          "column_span": 1,
+          "text": "截止日累计实现效益"
+        },
+        {
+          "row": 0,
+          "column": 8,
+          "row_span": 2,
+          "column_span": 1,
+          "text": "是否达到预计效益"
+        },
+        {
+          "row": 1,
+          "column": 0,
+          "row_span": 1,
+          "column_span": 1,
+          "text": "序号"
+        },
+        {
+          "row": 1,
+          "column": 1,
+          "row_span": 1,
+          "column_span": 1,
+          "text": "项目名称"
+        },
+        {
+          "row": 1,
+          "column": 4,
+          "row_span": 1,
+          "column_span": 1,
+          "text": "2023年"
+        },
+        {
+          "row": 1,
+          "column": 5,
+          "row_span": 1,
+          "column_span": 1,
+          "text": "2024年"
+        },
+        {
+          "row": 1,
+          "column": 6,
+          "row_span": 1,
+          "column_span": 1,
+          "text": "2025年"
+        },
+        {
+          "row": 2,
+          "column": 0,
+          "row_span": 1,
+          "column_span": 1,
+          "text": "1"
+        },
+        {
+          "row": 2,
+          "column": 1,
+          "row_span": 1,
+          "column_span": 1,
+          "text": "工业机器人智能装备生产项目"
+        },
+        {
+          "row": 2,
+          "column": 2,
+          "row_span": 1,
+          "column_span": 1,
+          "text": "97.99%"
+        },
+        {
+          "row": 2,
+          "column": 3,
+          "row_span": 1,
+          "column_span": 1,
+          "text": "首次完全达产可增加税后利润人民币20,788.01万元"
+        },
+        {
+          "row": 2,
+          "column": 4,
+          "row_span": 1,
+          "column_span": 1,
+          "text": "2,325.11万元"
+        },
+        {
+          "row": 2,
+          "column": 5,
+          "row_span": 1,
+          "column_span": 1,
+          "text": "-2,627.58万元"
+        },
+        {
+          "row": 2,
+          "column": 6,
+          "row_span": 1,
+          "column_span": 1,
+          "text": "13,953.82万元"
+        },
+        {
+          "row": 2,
+          "column": 7,
+          "row_span": 1,
+          "column_span": 1,
+          "text": "25,674.63万元"
+        },
+        {
+          "row": 2,
+          "column": 8,
+          "row_span": 1,
+          "column_span": 1,
+          "text": "否（注1）"
+        },
+        {
+          "row": 3,
+          "column": 0,
+          "row_span": 1,
+          "column_span": 1,
+          "text": "2"
+        },
+        {
+          "row": 3,
+          "column": 1,
+          "row_span": 1,
+          "column_span": 1,
+          "text": "工业机器人智能装备研发中心项目"
+        },
+        {
+          "row": 3,
+          "column": 2,
+          "row_span": 1,
+          "column_span": 1,
+          "text": "不适用"
+        },
+        {
+          "row": 3,
+          "column": 3,
+          "row_span": 1,
+          "column_span": 1,
+          "text": "不适用"
+        },
+        {
+          "row": 3,
+          "column": 4,
+          "row_span": 1,
+          "column_span": 1,
+          "text": "不适用"
+        },
+        {
+          "row": 3,
+          "column": 5,
+          "row_span": 1,
+          "column_span": 1,
+          "text": "不适用"
+        },
+        {
+          "row": 3,
+          "column": 6,
+          "row_span": 1,
+          "column_span": 1,
+          "text": "不适用"
+        },
+        {
+          "row": 3,
+          "column": 7,
+          "row_span": 1,
+          "column_span": 1,
+          "text": "不适用"
+        },
+        {
+          "row": 3,
+          "column": 8,
+          "row_span": 1,
+          "column_span": 1,
+          "text": "不适用（未承诺）"
+        }
+      ],
+      "source_header_paths": {
+        "2": [
+          "截止日投资项目累计产能利用率"
+        ],
+        "3": [
+          "承诺效益"
+        ],
+        "4": [
+          "最近三年实际效益",
+          "2023年"
+        ],
+        "5": [
+          "最近三年实际效益",
+          "2024年"
+        ],
+        "6": [
+          "最近三年实际效益",
+          "2025年"
+        ],
+        "7": [
+          "截止日累计实现效益"
+        ],
+        "8": [
+          "是否达到预计效益"
+        ]
+      },
+      "values": [
+        {
+          "source_cell": {
+            "row": 2,
+            "column": 2,
+            "row_span": 1,
+            "column_span": 1,
+            "text": "97.99%"
+          },
+          "source_row_labels": [
+            "工业机器人智能装备生产项目"
+          ],
+          "source_header_path": [
+            "截止日投资项目累计产能利用率"
+          ],
+          "source_numeric_is_complete_atomic_value": true,
+          "source_broken_crosspage_fragment_evidence": null,
+          "external_original_header": null
+        },
+        {
+          "source_cell": {
+            "row": 2,
+            "column": 3,
+            "row_span": 1,
+            "column_span": 1,
+            "text": "首次完全达产可增加税后利润人民币20,788.01万元"
+          },
+          "source_row_labels": [
+            "工业机器人智能装备生产项目"
+          ],
+          "source_header_path": [
+            "承诺效益"
+          ],
+          "source_numeric_is_complete_atomic_value": true,
+          "source_broken_crosspage_fragment_evidence": null,
+          "external_original_header": null
+        },
+        {
+          "source_cell": {
+            "row": 2,
+            "column": 4,
+            "row_span": 1,
+            "column_span": 1,
+            "text": "2,325.11万元"
+          },
+          "source_row_labels": [
+            "工业机器人智能装备生产项目"
+          ],
+          "source_header_path": [
+            "最近三年实际效益",
+            "2023年"
+          ],
+          "source_numeric_is_complete_atomic_value": true,
+          "source_broken_crosspage_fragment_evidence": null,
+          "external_original_header": null
+        },
+        {
+          "source_cell": {
+            "row": 2,
+            "column": 5,
+            "row_span": 1,
+            "column_span": 1,
+            "text": "-2,627.58万元"
+          },
+          "source_row_labels": [
+            "工业机器人智能装备生产项目"
+          ],
+          "source_header_path": [
+            "最近三年实际效益",
+            "2024年"
+          ],
+          "source_numeric_is_complete_atomic_value": true,
+          "source_broken_crosspage_fragment_evidence": null,
+          "external_original_header": null
+        },
+        {
+          "source_cell": {
+            "row": 2,
+            "column": 6,
+            "row_span": 1,
+            "column_span": 1,
+            "text": "13,953.82万元"
+          },
+          "source_row_labels": [
+            "工业机器人智能装备生产项目"
+          ],
+          "source_header_path": [
+            "最近三年实际效益",
+            "2025年"
+          ],
+          "source_numeric_is_complete_atomic_value": true,
+          "source_broken_crosspage_fragment_evidence": null,
+          "external_original_header": null
+        },
+        {
+          "source_cell": {
+            "row": 2,
+            "column": 7,
+            "row_span": 1,
+            "column_span": 1,
+            "text": "25,674.63万元"
+          },
+          "source_row_labels": [
+            "工业机器人智能装备生产项目"
+          ],
+          "source_header_path": [
+            "截止日累计实现效益"
+          ],
+          "source_numeric_is_complete_atomic_value": true,
+          "source_broken_crosspage_fragment_evidence": null,
+          "external_original_header": null
+        },
+        {
+          "source_cell": {
+            "row": 2,
+            "column": 8,
+            "row_span": 1,
+            "column_span": 1,
+            "text": "否（注1）"
+          },
+          "source_row_labels": [
+            "工业机器人智能装备生产项目"
+          ],
+          "source_header_path": [
+            "是否达到预计效益"
+          ],
+          "source_numeric_is_complete_atomic_value": true,
+          "source_broken_crosspage_fragment_evidence": null,
+          "external_original_header": null
+        },
+        {
+          "source_cell": {
+            "row": 3,
+            "column": 2,
+            "row_span": 1,
+            "column_span": 1,
+            "text": "不适用"
+          },
+          "source_row_labels": [
+            "工业机器人智能装备研发中心项目"
+          ],
+          "source_header_path": [
+            "截止日投资项目累计产能利用率"
+          ],
+          "source_numeric_is_complete_atomic_value": true,
+          "source_broken_crosspage_fragment_evidence": null,
+          "external_original_header": null
+        },
+        {
+          "source_cell": {
+            "row": 3,
+            "column": 3,
+            "row_span": 1,
+            "column_span": 1,
+            "text": "不适用"
+          },
+          "source_row_labels": [
+            "工业机器人智能装备研发中心项目"
+          ],
+          "source_header_path": [
+            "承诺效益"
+          ],
+          "source_numeric_is_complete_atomic_value": true,
+          "source_broken_crosspage_fragment_evidence": null,
+          "external_original_header": null
+        },
+        {
+          "source_cell": {
+            "row": 3,
+            "column": 4,
+            "row_span": 1,
+            "column_span": 1,
+            "text": "不适用"
+          },
+          "source_row_labels": [
+            "工业机器人智能装备研发中心项目"
+          ],
+          "source_header_path": [
+            "最近三年实际效益",
+            "2023年"
+          ],
+          "source_numeric_is_complete_atomic_value": true,
+          "source_broken_crosspage_fragment_evidence": null,
+          "external_original_header": null
+        },
+        {
+          "source_cell": {
+            "row": 3,
+            "column": 5,
+            "row_span": 1,
+            "column_span": 1,
+            "text": "不适用"
+          },
+          "source_row_labels": [
+            "工业机器人智能装备研发中心项目"
+          ],
+          "source_header_path": [
+            "最近三年实际效益",
+            "2024年"
+          ],
+          "source_numeric_is_complete_atomic_value": true,
+          "source_broken_crosspage_fragment_evidence": null,
+          "external_original_header": null
+        },
+        {
+          "source_cell": {
+            "row": 3,
+            "column": 6,
+            "row_span": 1,
+            "column_span": 1,
+            "text": "不适用"
+          },
+          "source_row_labels": [
+            "工业机器人智能装备研发中心项目"
+          ],
+          "source_header_path": [
+            "最近三年实际效益",
+            "2025年"
+          ],
+          "source_numeric_is_complete_atomic_value": true,
+          "source_broken_crosspage_fragment_evidence": null,
+          "external_original_header": null
+        },
+        {
+          "source_cell": {
+            "row": 3,
+            "column": 7,
+            "row_span": 1,
+            "column_span": 1,
+            "text": "不适用"
+          },
+          "source_row_labels": [
+            "工业机器人智能装备研发中心项目"
+          ],
+          "source_header_path": [
+            "截止日累计实现效益"
+          ],
+          "source_numeric_is_complete_atomic_value": true,
+          "source_broken_crosspage_fragment_evidence": null,
+          "external_original_header": null
+        },
+        {
+          "source_cell": {
+            "row": 3,
+            "column": 8,
+            "row_span": 1,
+            "column_span": 1,
+            "text": "不适用（未承诺）"
+          },
+          "source_row_labels": [
+            "工业机器人智能装备研发中心项目"
+          ],
+          "source_header_path": [
+            "是否达到预计效益"
+          ],
+          "source_numeric_is_complete_atomic_value": true,
+          "source_broken_crosspage_fragment_evidence": null,
+          "external_original_header": null
+        }
+      ],
+      "source_review": {
+        "method": "Manual transcription directly from original 200 dpi RGB page image",
+        "image_path": "/opt/mosaic-parse/benchmark-results/clean-model-comparison-20261015/inputs/1225475333/page-0021.png",
+        "image_sha256": "a0deb483cff845ab51444be8e5ac021009fb8b8e85d0b792b6aec5280b5ecc31",
+        "bbox_precision": "Approximate original display points for table identity, not cell geometry gold",
+        "model_output_consulted": false
+      }
+    }
+  ],
+  "complete_atomic_fields": 24,
+  "scope": "24 original-image-reviewed bank account/status and multi-level investment-benefit fields. Separate from209/402/73, not24monetary values. Native OCR-off is not applicable.",
+  "script_sha256": "ee88dc553fd962dfe0abca122b78dcbf3f9d426528b98c7d66ac4f6e336bccdd"
+}

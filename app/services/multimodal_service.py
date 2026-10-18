@@ -616,6 +616,31 @@ class MultimodalService:
                 current_asset = self._merge_asset(parse_result.assets, asset)
                 if current_asset.asset_id not in unit.asset_ids:
                     unit.asset_ids.append(current_asset.asset_id)
+                source_region_ref = getattr(picture, "source_region_ref", None)
+                if source_region_ref is not None:
+                    marker = f"<!-- source-region-image: {source_region_ref} -->"
+                    image = f"![原件区域（结构未知）]({current_asset.download_url})"
+                    page = next(
+                        item for item in result.pages if item.page_number == page_number
+                    )
+                    if (
+                        (page.content or "").count(marker) != 1
+                        or unit.renderings.markdown.count(marker) != 1
+                        or parse_result.renderings.markdown.count(marker) != 1
+                    ):
+                        raise ParserError("source-region image lost its unique original position")
+                    page.content = (page.content or "").replace(marker, image, 1)
+                    unit.renderings.markdown = unit.renderings.markdown.replace(marker, image, 1)
+                    parse_result.renderings.markdown = parse_result.renderings.markdown.replace(
+                        marker, image, 1
+                    )
+                    region = next(
+                        item
+                        for item in unit.regions
+                        if item.region_id == f"p{page_number}-source-{source_region_ref}"
+                    )
+                    if current_asset.asset_id not in region.asset_ids:
+                        region.asset_ids.append(current_asset.asset_id)
                 if (
                     options.describe_images
                     and bool(getattr(picture, "allow_description", True))
@@ -675,10 +700,14 @@ class MultimodalService:
                     details={"limit": self.max_assets, "omitted_candidates": omitted_candidates},
                 )
             )
-        self._project_asset_descriptions(parse_result)
+        self._project_asset_descriptions(
+            parse_result, preserve_literal_text=bool(result._source_regions)
+        )
 
     @staticmethod
-    def _project_asset_descriptions(parse_result: ContentParseResult) -> None:
+    def _project_asset_descriptions(
+        parse_result: ContentParseResult, *, preserve_literal_text: bool = False
+    ) -> None:
         projected = [
             asset
             for asset in parse_result.assets
@@ -691,7 +720,15 @@ class MultimodalService:
             "",
             "## 图片资产",
         ]
-        plain = [parse_result.renderings.plain_text.rstrip(), "", "图片资产："]
+        plain = [
+            (
+                parse_result.renderings.plain_text
+                if preserve_literal_text
+                else parse_result.renderings.plain_text.rstrip()
+            ),
+            "",
+            "图片资产：",
+        ]
         for asset in projected:
             analysis = asset.visual_analysis
             page_number = next(
@@ -940,7 +977,7 @@ class MultimodalService:
             runtime=ParseRuntime(
                 profile=options.profile.value,
                 primary_backend="docling-office",
-                parser_version=str(setting(self.settings, "version", "0.4.0")),
+                parser_version=str(setting(self.settings, "version", "0.5.0")),
                 input_bytes=source.size_bytes,
                 duration_ms=duration_ms,
             ),
@@ -1409,7 +1446,7 @@ class MultimodalService:
                 profile=options.profile.value,
                 primary_backend="ffmpeg+glm-ocr",
                 visual_backend=self.glm.model,
-                parser_version=str(setting(self.settings, "version", "0.4.0")),
+                parser_version=str(setting(self.settings, "version", "0.5.0")),
                 input_bytes=source.size_bytes,
                 duration_ms=duration_ms,
                 glm_calls=glm_calls,

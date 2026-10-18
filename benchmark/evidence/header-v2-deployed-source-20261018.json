@@ -1,0 +1,93 @@
+{
+  "schema": "moparse-evidence/1",
+  "id": "header-v2-deployed-source-20261018",
+  "method_id": "mineru-advanced-txt-vllm-c2-docling-header-glm-v2",
+  "cohort_id": "deployed-candidate-source-identity",
+  "origin": "fresh_component",
+  "fresh_model_inference": false,
+  "new_HTTP_requests": false,
+  "output_stage": "source-archive-and-observed-identity",
+  "quality": {},
+  "performance": {},
+  "provenance": [
+    {
+      "path": "benchmark/evidence/artifacts/9b66944140fa6028818e95ec499087c32d9ececd89a8fae264d5409b5791b050.json",
+      "sha256": "9b66944140fa6028818e95ec499087c32d9ececd89a8fae264d5409b5791b050",
+      "bytes": 446,
+      "original_path": "benchmark/runs/header-v2-http-20261018/frozen-source-archive.json",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/992b0a81a995c17aff92bb8bc618c0147268becf350ad1e0ad254eff775e8173.gz",
+      "sha256": "992b0a81a995c17aff92bb8bc618c0147268becf350ad1e0ad254eff775e8173",
+      "bytes": 379282,
+      "original_path": "benchmark/runs/header-v2-http-20261018/frozen-reviewed-source.tar.gz",
+      "snapshot_bytes_unchanged": true
+    },
+    {
+      "path": "benchmark/evidence/artifacts/97194fafe47a816fb69f82b9f159068c0465af34138ca2d0e03cc0471d693574.json",
+      "sha256": "97194fafe47a816fb69f82b9f159068c0465af34138ca2d0e03cc0471d693574",
+      "bytes": 99514,
+      "original_path": "benchmark/runs/header-v2-http-20261018/deployment-before.json",
+      "snapshot_bytes_unchanged": true
+    }
+  ],
+  "registered_method_fingerprint": "5f17067b3ee402cca6ae11d78d045c0c9d069a3d37fbd106777bc1c185a0cbe9",
+  "source_archive": {
+    "schema": "moparse-frozen-source-archive/1",
+    "path": "benchmark/runs/header-v2-http-20261018/frozen-reviewed-source.tar.gz",
+    "sha256": "992b0a81a995c17aff92bb8bc618c0147268becf350ad1e0ad254eff775e8173",
+    "bytes": 379282,
+    "files": 130,
+    "freeze_sha256": "6057817f34ca85b816e6b2c7153a835b683a9842034d8b7a49cf2422a1c2fe4e",
+    "captured_before_frontend_only_release_timeout_change": true,
+    "runtime_identity": "deployment-before.json"
+  },
+  "observed_deployment": {
+    "ready_and_source_matched": true,
+    "containers": [
+      {
+        "container": "moparse-candidate-header-v2",
+        "id": "6fc2adfb6eeb2e79000ebccb740ed4148d20966f1fbeb430f705bdded9eb5a4f",
+        "image_id": "sha256:a63734143f400f26d968ad6b54c7204f5caf0f9dae08e3e0a61bc5eeb207f17b",
+        "image_tag": "moparse:0.5.0-header-v2-20261018",
+        "source_revision_label": null
+      },
+      {
+        "container": "moparse-native-worker",
+        "id": "42700c171c41488f7bcd3d573db09489f686bde9056858fc3b0dff0bb67e2efd",
+        "image_id": "sha256:38a6eb3b23662eb6347ce12476af0b99388beb38a44aaf6f3631be95dbb5e2d8",
+        "image_tag": "moparse-native-worker:0.5.0-header-v2-20261018",
+        "source_revision_label": null
+      },
+      {
+        "container": "moparse-mineru-vllm",
+        "id": "1a951c3a304169ba7b8b43993dcf16387ef746298a4bebd3431e26f988b69a8f",
+        "image_id": "sha256:ae2fb3ca8b1c5c6eabaa1e5d776441705453bafc28fc6cb007a181183919033c",
+        "image_tag": "moparse-mineru-vllm:0.5.0-header-v2-20261018",
+        "source_revision_label": null
+      },
+      {
+        "container": "docling_glm_ocr",
+        "id": "a803d464218327072544e69c70513d17e1604a864a86ca556ec3ca87d0275035",
+        "image_id": "sha256:df7be4c4d818e250a8c80f78d110571e92e72a1fefec06fed82a2e37e473cd48",
+        "image_tag": "vllm/vllm-openai:v0.19.1",
+        "source_revision_label": null
+      },
+      {
+        "container": "docling_glm_ocr_sdk",
+        "id": "b0b2f735fb491fdb39b6b23e95d70848a15f1cebc67297c2f7d82c6b7fcd0a75",
+        "image_id": "sha256:abe353926afba82931744bac4533f895c9e6ad6f768da4103a4ec40410c2e6cb",
+        "image_tag": "docling-glm-ocr-sdk:0.1.5-selected-20261017",
+        "source_revision_label": null
+      }
+    ]
+  },
+  "qualification": {
+    "source_identity_only": true,
+    "observation_only": true,
+    "deployment_acceptance": false,
+    "source_and_model_observation_is_quality_verdict": false,
+    "source_snapshot_scope": "Exact130 reviewed candidate source files captured before subsequent frontend-only timeout change. Finalrelease identity and parser-source closure are separate; never rewrite candidate identity as matching laterhostfrontend."
+  }
+}

@@ -1,0 +1,286 @@
+{
+  "schema": "moparse-assertion-evaluation/1",
+  "annotation": {
+    "path": "benchmark/datasets/moparse-v1/annotations/holdout-20261018.assertions.json",
+    "sha256": "cef9ea7229d722e66ae4403fa8f337295534f89e6e6c5ac983e8c77523dccafc",
+    "bytes": 23321
+  },
+  "checks": [
+    {
+      "id": "irs-title",
+      "document_id": "holdout-irs-form1040-2025",
+      "kind": "text",
+      "status": "unknown",
+      "reason": "missing public Markdown"
+    },
+    {
+      "id": "irs-filing-checkbox-single",
+      "document_id": "holdout-irs-form1040-2025",
+      "kind": "text",
+      "status": "unknown",
+      "reason": "missing public Markdown"
+    },
+    {
+      "id": "irs-filing-checkbox-joint",
+      "document_id": "holdout-irs-form1040-2025",
+      "kind": "text",
+      "status": "unknown",
+      "reason": "missing public Markdown"
+    },
+    {
+      "id": "irs-filing-checkbox-separate",
+      "document_id": "holdout-irs-form1040-2025",
+      "kind": "text",
+      "status": "unknown",
+      "reason": "missing public Markdown"
+    },
+    {
+      "id": "irs-filing-checkbox-head",
+      "document_id": "holdout-irs-form1040-2025",
+      "kind": "text",
+      "status": "unknown",
+      "reason": "missing public Markdown"
+    },
+    {
+      "id": "irs-filing-checkbox-surviving",
+      "document_id": "holdout-irs-form1040-2025",
+      "kind": "text",
+      "status": "unknown",
+      "reason": "missing public Markdown"
+    },
+    {
+      "id": "irs-dependent-column-order",
+      "document_id": "holdout-irs-form1040-2025",
+      "kind": "ordered_text",
+      "status": "unknown",
+      "reason": "missing public Markdown"
+    },
+    {
+      "id": "irs-dependent-field-order",
+      "document_id": "holdout-irs-form1040-2025",
+      "kind": "ordered_text",
+      "status": "unknown",
+      "reason": "missing public Markdown"
+    },
+    {
+      "id": "irs-student-checkbox-label",
+      "document_id": "holdout-irs-form1040-2025",
+      "kind": "regex",
+      "status": "unknown",
+      "reason": "missing public Markdown"
+    },
+    {
+      "id": "irs-disability-checkbox-label",
+      "document_id": "holdout-irs-form1040-2025",
+      "kind": "regex",
+      "status": "unknown",
+      "reason": "missing public Markdown"
+    },
+    {
+      "id": "irs-dependent-claim-checkbox-order",
+      "document_id": "holdout-irs-form1040-2025",
+      "kind": "ordered_text",
+      "status": "unknown",
+      "reason": "missing public Markdown"
+    },
+    {
+      "id": "irs-standard-deduction-single-amount",
+      "document_id": "holdout-irs-form1040-2025",
+      "kind": "text",
+      "status": "unknown",
+      "reason": "missing public Markdown"
+    },
+    {
+      "id": "irs-standard-deduction-joint-amount",
+      "document_id": "holdout-irs-form1040-2025",
+      "kind": "text",
+      "status": "unknown",
+      "reason": "missing public Markdown"
+    },
+    {
+      "id": "irs-standard-deduction-head-amount",
+      "document_id": "holdout-irs-form1040-2025",
+      "kind": "text",
+      "status": "unknown",
+      "reason": "missing public Markdown"
+    },
+    {
+      "id": "irs-direct-deposit-label-order",
+      "document_id": "holdout-irs-form1040-2025",
+      "kind": "ordered_text",
+      "status": "unknown",
+      "reason": "missing public Markdown"
+    },
+    {
+      "id": "irs-third-party-checkbox-order",
+      "document_id": "holdout-irs-form1040-2025",
+      "kind": "ordered_text",
+      "status": "unknown",
+      "reason": "missing public Markdown"
+    },
+    {
+      "id": "irs-signature-field-order",
+      "document_id": "holdout-irs-form1040-2025",
+      "kind": "ordered_text",
+      "status": "unknown",
+      "reason": "missing public Markdown"
+    },
+    {
+      "id": "irs-footer-instruction",
+      "document_id": "holdout-irs-form1040-2025",
+      "kind": "text",
+      "status": "unknown",
+      "reason": "missing public Markdown"
+    },
+    {
+      "id": "nist-publication-approval-date",
+      "document_id": "holdout-nist-tn2354",
+      "kind": "text",
+      "status": "pass",
+      "MD_sha256": "f0c9729592d2c8194cef6081939308c8e7a76da19123efcdb19356a88b2f2a48"
+    },
+    {
+      "id": "nist-doi",
+      "document_id": "holdout-nist-tn2354",
+      "kind": "text",
+      "status": "pass",
+      "MD_sha256": "f0c9729592d2c8194cef6081939308c8e7a76da19123efcdb19356a88b2f2a48"
+    },
+    {
+      "id": "nist-author-orcid-order",
+      "document_id": "holdout-nist-tn2354",
+      "kind": "ordered_text",
+      "status": "pass",
+      "MD_sha256": "f0c9729592d2c8194cef6081939308c8e7a76da19123efcdb19356a88b2f2a48"
+    },
+    {
+      "id": "nist-results-section-order",
+      "document_id": "holdout-nist-tn2354",
+      "kind": "ordered_text",
+      "status": "pass",
+      "MD_sha256": "f0c9729592d2c8194cef6081939308c8e7a76da19123efcdb19356a88b2f2a48"
+    },
+    {
+      "id": "nist-combustion-properties-grid",
+      "document_id": "holdout-nist-tn2354",
+      "kind": "table_grid",
+      "status": "pass",
+      "MD_sha256": "f0c9729592d2c8194cef6081939308c8e7a76da19123efcdb19356a88b2f2a48"
+    },
+    {
+      "id": "nist-emission-yields-grid",
+      "document_id": "holdout-nist-tn2354",
+      "kind": "table_grid",
+      "status": "fail",
+      "MD_sha256": "f0c9729592d2c8194cef6081939308c8e7a76da19123efcdb19356a88b2f2a48"
+    },
+    {
+      "id": "nist-pah-subsection",
+      "document_id": "holdout-nist-tn2354",
+      "kind": "text",
+      "status": "pass",
+      "MD_sha256": "f0c9729592d2c8194cef6081939308c8e7a76da19123efcdb19356a88b2f2a48"
+    },
+    {
+      "id": "nist-pah-yield-range-units",
+      "document_id": "holdout-nist-tn2354",
+      "kind": "regex",
+      "status": "pass",
+      "MD_sha256": "f0c9729592d2c8194cef6081939308c8e7a76da19123efcdb19356a88b2f2a48"
+    },
+    {
+      "id": "census-population-section-heading",
+      "document_id": "holdout-census-samoa-1930",
+      "kind": "text",
+      "status": "pass",
+      "MD_sha256": "6b1cffde4e97081bae35ef8e63781a3412b2366e5125b78901506a291a13f14e"
+    },
+    {
+      "id": "census-population-column-order",
+      "document_id": "holdout-census-samoa-1930",
+      "kind": "ordered_text",
+      "status": "pass",
+      "MD_sha256": "6b1cffde4e97081bae35ef8e63781a3412b2366e5125b78901506a291a13f14e"
+    },
+    {
+      "id": "census-naval-governor-footnote",
+      "document_id": "holdout-census-samoa-1930",
+      "kind": "text",
+      "status": "fail",
+      "MD_sha256": "6b1cffde4e97081bae35ef8e63781a3412b2366e5125b78901506a291a13f14e"
+    },
+    {
+      "id": "census-annexation-footnote",
+      "document_id": "holdout-census-samoa-1930",
+      "kind": "text",
+      "status": "fail",
+      "MD_sha256": "6b1cffde4e97081bae35ef8e63781a3412b2366e5125b78901506a291a13f14e"
+    },
+    {
+      "id": "census-agriculture-heading",
+      "document_id": "holdout-census-samoa-1930",
+      "kind": "text",
+      "status": "pass",
+      "MD_sha256": "6b1cffde4e97081bae35ef8e63781a3412b2366e5125b78901506a291a13f14e"
+    },
+    {
+      "id": "census-reference-dates-order",
+      "document_id": "holdout-census-samoa-1930",
+      "kind": "regex",
+      "status": "pass",
+      "MD_sha256": "6b1cffde4e97081bae35ef8e63781a3412b2366e5125b78901506a291a13f14e"
+    },
+    {
+      "id": "census-agriculture-column-order",
+      "document_id": "holdout-census-samoa-1930",
+      "kind": "ordered_text",
+      "status": "pass",
+      "MD_sha256": "6b1cffde4e97081bae35ef8e63781a3412b2366e5125b78901506a291a13f14e"
+    },
+    {
+      "id": "census-copra-produced-grid",
+      "document_id": "holdout-census-samoa-1930",
+      "kind": "table_grid",
+      "status": "fail",
+      "MD_sha256": "6b1cffde4e97081bae35ef8e63781a3412b2366e5125b78901506a291a13f14e"
+    },
+    {
+      "id": "census-copra-district-header-span",
+      "document_id": "holdout-census-samoa-1930",
+      "kind": "table_span",
+      "status": "pass",
+      "MD_sha256": "6b1cffde4e97081bae35ef8e63781a3412b2366e5125b78901506a291a13f14e"
+    },
+    {
+      "id": "census-copra-produced-header-span",
+      "document_id": "holdout-census-samoa-1930",
+      "kind": "table_span",
+      "status": "pass",
+      "MD_sha256": "6b1cffde4e97081bae35ef8e63781a3412b2366e5125b78901506a291a13f14e"
+    }
+  ],
+  "counts": {
+    "unknown": 18,
+    "pass": 14,
+    "fail": 4
+  },
+  "passed": false,
+  "source_proofs": [
+    {
+      "path": "benchmark/datasets/moparse-v1/sources/holdout-20261018/irs-form1040-2025.pdf",
+      "sha256": "3d31c226df0d189ced80e039d01cf0f8820c1019681a0f0ca6264de277b7e982",
+      "bytes": 220237
+    },
+    {
+      "path": "benchmark/datasets/moparse-v1/sources/holdout-20261018/census-samoa-1930.pdf",
+      "sha256": "4ebad09d258f11e8d4e04c3f5f0af1493d0622672209a71bb175f7f0fc4ac77d",
+      "bytes": 965148
+    },
+    {
+      "path": "benchmark/datasets/moparse-v1/sources/holdout-20261018/nist-tn2354.pdf",
+      "sha256": "171dec979423da69147527794a29d056e8e0751fe7d20d32484e402d39b4dcff",
+      "bytes": 6122830
+    }
+  ],
+  "scope": "Only explicitly source-reviewed assertions; table topology uses public-209-402 suite"
+}

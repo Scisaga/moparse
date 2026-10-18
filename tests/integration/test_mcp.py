@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import base64
+import json
 from pathlib import Path
 
 from fastapi.testclient import TestClient
@@ -66,12 +67,29 @@ async def test_mcp_tools_resources_and_prompt(tmp_path: Path, native_pdf: Path) 
 
             resources = await client.list_resources()
             assert {str(item.uri) for item in resources.resources} == {
+                "moparse://health",
+                "moparse://backends",
+                "moparse://usage",
                 "mosaicparse://health",
                 "mosaicparse://backends",
                 "mosaicparse://usage",
             }
             health = await client.read_resource("mosaicparse://health")
             assert "queue_capacity" in health.contents[0].text
+            renamed_health = await client.read_resource("moparse://health")
+            assert "queue_capacity" in renamed_health.contents[0].text
+            for name in ("backends", "usage"):
+                renamed = await client.read_resource(f"moparse://{name}")
+                legacy = await client.read_resource(f"mosaicparse://{name}")
+                if name == "usage":
+                    assert renamed.contents[0].text == legacy.contents[0].text
+                else:
+                    def backend_states(result):
+                        return [
+                            (item["name"], item["state"], item["enabled"])
+                            for item in json.loads(result.contents[0].text)["backends"]
+                        ]
+                    assert backend_states(renamed) == backend_states(legacy)
 
             prompts = await client.list_prompts()
             assert [prompt.name for prompt in prompts.prompts] == ["content_parse_workflow"]
@@ -141,4 +159,4 @@ def test_streamable_http_is_exactly_mounted_at_mcp_and_uses_api_key(tmp_path: Pa
             headers={"Accept": accept, "X-API-Key": "mcp-secret"},
         )
         assert response.status_code == 200
-        assert response.json()["result"]["serverInfo"]["name"] == "MosaicParse"
+        assert response.json()["result"]["serverInfo"]["name"] == "moparse"

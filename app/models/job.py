@@ -1,4 +1,4 @@
-"""Persistent MosaicParse content-job models."""
+"""Persistent moparse content-job models."""
 
 from __future__ import annotations
 

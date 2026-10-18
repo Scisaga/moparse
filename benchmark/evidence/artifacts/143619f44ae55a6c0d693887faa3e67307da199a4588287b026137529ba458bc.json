@@ -1,0 +1,64 @@
+{
+  "schema": "moparse-header-stage-case-observation/1",
+  "observed_at": "2026-10-17T21:41:24.656512+00:00",
+  "document_id": "1219858186",
+  "source_sha256": "1c21b0402e57812823bfe4b28feac6fc0517c828a18f8c862e8dccdc3543de89",
+  "page_count": 15,
+  "captured_summary": {
+    "path": "benchmark/runs/header-v4-http-20261018/regression504/cases/1219858186/summary.json",
+    "sha256": "466ab3a1e47018af2731e3e1b58802dfbecc35e1ac83678bfab2d67ca8e2fc71",
+    "bytes": 767
+  },
+  "received_MD_sha256": "ff75d5d3d90d99708c7e7cf57fb82cd7f72474e1e28c1a86293c1ec7c8238bac",
+  "job_id": "job_01M55WVXM84THZ8VM2PJCW3S7D",
+  "actual_storage_identity": {
+    "container": "moparse-candidate-header-v4",
+    "container_id": "0e8ca85a3f0337abce45491fd690c2a02965c050e36ce6c26e007b13a9d2fdcb",
+    "deployed_image_id": "sha256:427a7cdd741b69845fcf8c6c1f4db6f9f5db92897cb2ce40af99747300bcff7a",
+    "data_volume": {
+      "Type": "volume",
+      "Name": "moparse-candidate-header-v4-data",
+      "Source": "/var/lib/docker/volumes/moparse-candidate-header-v4-data/_data",
+      "Destination": "/data",
+      "RW": true
+    },
+    "deployment": {
+      "path": "benchmark/runs/header-v4-http-20261018/deployment-before.json",
+      "sha256": "2ceae920c4cc46bd65360b85e6b0fae347138b34e97cb08a204523b349d48ff6",
+      "bytes": 99755
+    },
+    "container_environment_read": false
+  },
+  "selected_warning_code": "independent_header_verification_used",
+  "projected_detail_fields": [
+    "duration_ms",
+    "pages",
+    "candidate_pairs",
+    "accepted_pairs"
+  ],
+  "selected_records": [
+    {
+      "duration_ms": 9878,
+      "pages": [
+        5,
+        6,
+        12,
+        13
+      ],
+      "candidate_pairs": 2,
+      "accepted_pairs": 0
+    }
+  ],
+  "stage_wall_clock_seconds": 9.878,
+  "warning_file": {
+    "container_path": "/data/jobs/job_01M55WVXM84THZ8VM2PJCW3S7D/logs/warnings.json",
+    "host_path": "/var/lib/docker/volumes/moparse-candidate-header-v4-data/_data/jobs/job_01M55WVXM84THZ8VM2PJCW3S7D/logs/warnings.json",
+    "exists": true,
+    "sha256": "91947104faecfaaa1c5cd3e0443ca0362fe6cf484b4df9502751c685c0c7e974",
+    "bytes": 954
+  },
+  "other_warnings_exported": false,
+  "model_or_API_requests": false,
+  "timing_scope": "HeaderService independent CPU parser plus cached-header verification elapsed wall clock; not GPU-forward time, CPU-seconds or entire request latency",
+  "observation_status": "observed"
+}
