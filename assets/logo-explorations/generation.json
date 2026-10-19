@@ -1,0 +1,72 @@
+{
+  "tool": "imagegen (built-in)",
+  "client_date": "2026-10-18",
+  "timezone": "Asia/Shanghai",
+  "scope": "Open mascot exploration varying color, material, shape and character expression",
+  "generation_mode": "Fresh generation without reference images",
+  "active_brand_assets_replaced": false,
+  "actual_physical_objects": false,
+  "backup_candidate": {
+    "path": "assets/logo-variants/a-balanced-blue-cyan.png",
+    "sha256": "6211f279fbf5e8ce5bfb490b5b53b8685fa004b8daf4d59b94b25a8fa4717755",
+    "role": "Retained backup, not a generation input"
+  },
+  "concepts": [
+    {
+      "id": "E1",
+      "label": "奶油红·复古小家电",
+      "brief": "A tiny original desktop companion with 1970s household-appliance charm. A chubby asymmetrical D-shaped ivory body, one broad curve and one firmer side, sits on two very short burgundy feet. A small dark cherry rotary knob is tucked into one side. Two tiny ink-black eyes and a slightly off-center smile sit directly on the cream shell, with plenty of blank space; no display panel. A subtle forward lean makes it seem curious and earnest. Color: warm ivory, deep cherry-red, one very small honey-yellow detail. Material: satin injection-molded plastic and a little brushed-metal trim, with soft polished bevels. Simplify boldly; this should be a character one wants on a desk, not a detailed product render.",
+      "prompt": "Use case: logo-brand / stylized-concept.\nCreate ONE fresh original mascot icon exploration for MO-Parse.\nCreative direction: 奶油红·复古小家电.\nA tiny original desktop companion with 1970s household-appliance charm. A chubby asymmetrical D-shaped ivory body, one broad curve and one firmer side, sits on two very short burgundy feet. A small dark cherry rotary knob is tucked into one side. Two tiny ink-black eyes and a slightly off-center smile sit directly on the cream shell, with plenty of blank space; no display panel. A subtle forward lean makes it seem curious and earnest. Color: warm ivory, deep cherry-red, one very small honey-yellow detail. Material: satin injection-molded plastic and a little brushed-metal trim, with soft polished bevels. Simplify boldly; this should be a character one wants on a desk, not a detailed product render.\n\nArt direction: prioritize a memorable simple silhouette, delightful proportions and a specific quiet personality. Interpret the brief with professional character-design judgment; do not merely put a stock smile on an appliance. Keep only one strong visual idea. No literal printer, filing cabinet, scanner or document diagram is required. Do not copy an existing fictional character. Avoid elaborate mechanical anatomy, large eyes, anime styling, infant proportions and excessive surface details.\nRender as a convincing premium small physical 3D object with carefully judged material, soft studio light and clean sculptural volume. Use the palette specified in the brief, not a default cyan robot palette.\nComposition: one complete object in its most flattering near-front three-quarter view, centered on a square transparent RGBA canvas, generous clean margins, no cropping. Genuine transparency. No floor, pedestal, cast shadow, surrounding scene, particles, labels, lettering, logo text or watermark. One concept only.",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "path": "assets/logo-explorations/e1-retro-cream.png",
+      "sha256": "04ed6446088f59073d42e34d597b6d82363b47caa95aa6707c13f00d591f29ac",
+      "generated_bytes_preserved": true
+    },
+    {
+      "id": "E2",
+      "label": "烟紫·透明树脂",
+      "brief": "An original small translucent desk creature, a compact softly irregular pebble/capsule with a distinct tilted silhouette and two tiny low dark-violet supports. The lavender-tinted resin shell reveals just ONE simple pearly curved ribbon inside, as if quietly collecting and organizing light. Tiny restrained dark facial marks sit directly on the front shell, slightly off center; no screen, glowing face or machine controls. Color: smoky lilac translucent resin, pearl-white inner form, one quiet icy-aqua accent. Convincing refraction, frosted edges and softly polished surfaces, restrained softbox highlights. The personality is curious and a little awkward. Keep the visible inner form very simple so the silhouette stays legible and the object feels like a tasteful collectible, not a neon fantasy blob.",
+      "prompt": "Use case: logo-brand / stylized-concept.\nCreate ONE fresh original mascot icon exploration for MO-Parse.\nCreative direction: 烟紫·透明树脂.\nAn original small translucent desk creature, a compact softly irregular pebble/capsule with a distinct tilted silhouette and two tiny low dark-violet supports. The lavender-tinted resin shell reveals just ONE simple pearly curved ribbon inside, as if quietly collecting and organizing light. Tiny restrained dark facial marks sit directly on the front shell, slightly off center; no screen, glowing face or machine controls. Color: smoky lilac translucent resin, pearl-white inner form, one quiet icy-aqua accent. Convincing refraction, frosted edges and softly polished surfaces, restrained softbox highlights. The personality is curious and a little awkward. Keep the visible inner form very simple so the silhouette stays legible and the object feels like a tasteful collectible, not a neon fantasy blob.\n\nArt direction: prioritize a memorable simple silhouette, delightful proportions and a specific quiet personality. Interpret the brief with professional character-design judgment; do not merely put a stock smile on an appliance. Keep only one strong visual idea. No literal printer, filing cabinet, scanner or document diagram is required. Do not copy an existing fictional character. Avoid elaborate mechanical anatomy, large eyes, anime styling, infant proportions and excessive surface details.\nRender as a convincing premium small physical 3D object with carefully judged material, soft studio light and clean sculptural volume. Use the palette specified in the brief, not a default cyan robot palette.\nComposition: one complete object in its most flattering near-front three-quarter view, centered on a square transparent RGBA canvas, generous clean margins, no cropping. Genuine transparency. No floor, pedestal, cast shadow, surrounding scene, particles, labels, lettering, logo text or watermark. One concept only.",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "path": "assets/logo-explorations/e2-translucent-lilac.png",
+      "sha256": "8d76ce70a4ef3d16c912fe2ff33f5caa71c12ce76caaa52f71f6e5f81517e441",
+      "generated_bytes_preserved": true
+    },
+    {
+      "id": "E3",
+      "label": "柿子橙·软陶折叠",
+      "brief": "An original warm little folded character sculpted from one thick soft ribbon of clay. A broad peach/terracotta strip bends into a slightly asymmetrical arch, with one upper end softly folding over like a little hood; its broad lower ends naturally become two small standing supports. Two tiny dark eyes and one short gently curved mouth on the taller outer plane, a shy lean and very generous empty surfaces. No screen, paper prop, buttons or mechanical parts. Color: burnt persimmon orange exterior with a pale powder-pink inner fold. Material: beautiful smooth handmade matte ceramic/soft clay with a little tactile imperfection, gently rounded edges, sophisticated restrained shading. A distinctive, simple sculptural silhouette with sweet oddball personality. Think designer collectible rather than baby cartoon.",
+      "prompt": "Use case: logo-brand / stylized-concept.\nCreate ONE fresh original mascot icon exploration for MO-Parse.\nCreative direction: 柿子橙·软陶折叠.\nAn original warm little folded character sculpted from one thick soft ribbon of clay. A broad peach/terracotta strip bends into a slightly asymmetrical arch, with one upper end softly folding over like a little hood; its broad lower ends naturally become two small standing supports. Two tiny dark eyes and one short gently curved mouth on the taller outer plane, a shy lean and very generous empty surfaces. No screen, paper prop, buttons or mechanical parts. Color: burnt persimmon orange exterior with a pale powder-pink inner fold. Material: beautiful smooth handmade matte ceramic/soft clay with a little tactile imperfection, gently rounded edges, sophisticated restrained shading. A distinctive, simple sculptural silhouette with sweet oddball personality. Think designer collectible rather than baby cartoon.\n\nArt direction: prioritize a memorable simple silhouette, delightful proportions and a specific quiet personality. Interpret the brief with professional character-design judgment; do not merely put a stock smile on an appliance. Keep only one strong visual idea. No literal printer, filing cabinet, scanner or document diagram is required. Do not copy an existing fictional character. Avoid elaborate mechanical anatomy, large eyes, anime styling, infant proportions and excessive surface details.\nRender as a convincing premium small physical 3D object with carefully judged material, soft studio light and clean sculptural volume. Use the palette specified in the brief, not a default cyan robot palette.\nComposition: one complete object in its most flattering near-front three-quarter view, centered on a square transparent RGBA canvas, generous clean margins, no cropping. Genuine transparency. No floor, pedestal, cast shadow, surrounding scene, particles, labels, lettering, logo text or watermark. One concept only.",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "path": "assets/logo-explorations/e3-terracotta-fold.png",
+      "sha256": "608d1bb9213891ecfda6698adb52a608d23254e9cb40b4500adbce56ef67f4d4",
+      "generated_bytes_preserved": true
+    },
+    {
+      "id": "E4",
+      "label": "石墨绿·括号搭档",
+      "brief": "Invent an original character from TWO thick rounded bracket-like curved forms leaning toward each other around one clear central gap. One graphite-grey bracket is a little taller and carries the whole tiny face: two small ivory dots and an understated short smile directly on its outer surface. The second shorter bracket has a vivid acid-lime inner face; no second face. The lower ends naturally form two short stable supports, no separate feet or limbs. The silhouette should feel like a little helper gently gathering scattered things into a coherent whole, with graphic charm and a bit of asymmetry. No paper, screen, robot anatomy or accessories. Material: premium finely textured dark rubberized polymer, with one crisp lime enamel-like inner plane. Strong simple negative space, readable as a tiny brand mark and as a physical collectible.",
+      "prompt": "Use case: logo-brand / stylized-concept.\nCreate ONE fresh original mascot icon exploration for MO-Parse.\nCreative direction: 石墨绿·括号搭档.\nInvent an original character from TWO thick rounded bracket-like curved forms leaning toward each other around one clear central gap. One graphite-grey bracket is a little taller and carries the whole tiny face: two small ivory dots and an understated short smile directly on its outer surface. The second shorter bracket has a vivid acid-lime inner face; no second face. The lower ends naturally form two short stable supports, no separate feet or limbs. The silhouette should feel like a little helper gently gathering scattered things into a coherent whole, with graphic charm and a bit of asymmetry. No paper, screen, robot anatomy or accessories. Material: premium finely textured dark rubberized polymer, with one crisp lime enamel-like inner plane. Strong simple negative space, readable as a tiny brand mark and as a physical collectible.\n\nArt direction: prioritize a memorable simple silhouette, delightful proportions and a specific quiet personality. Interpret the brief with professional character-design judgment; do not merely put a stock smile on an appliance. Keep only one strong visual idea. No literal printer, filing cabinet, scanner or document diagram is required. Do not copy an existing fictional character. Avoid elaborate mechanical anatomy, large eyes, anime styling, infant proportions and excessive surface details.\nRender as a convincing premium small physical 3D object with carefully judged material, soft studio light and clean sculptural volume. Use the palette specified in the brief, not a default cyan robot palette.\nComposition: one complete object in its most flattering near-front three-quarter view, centered on a square transparent RGBA canvas, generous clean margins, no cropping. Genuine transparency. No floor, pedestal, cast shadow, surrounding scene, particles, labels, lettering, logo text or watermark. One concept only.",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "path": "assets/logo-explorations/e4-graphite-brackets.png",
+      "sha256": "b948160f656453ccb9ea8d3f5b4e413e8bc19131a1e7c24233a1c01a28a5988f",
+      "generated_bytes_preserved": true
+    }
+  ]
+}

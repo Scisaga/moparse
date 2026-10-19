@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "moparse"
-version = "0.5.0"
+version = "0.5.1"
 description = "Self-hosted multimodal content parser for external RAG systems"
 readme = "README.md"
 requires-python = ">=3.13,<3.14"

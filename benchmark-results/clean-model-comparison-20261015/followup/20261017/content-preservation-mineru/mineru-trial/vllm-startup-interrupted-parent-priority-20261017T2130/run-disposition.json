@@ -1,8 +1,0 @@
-{
-  "at": "2026-10-17T21:30:44.432161+08:00",
-  "disposition": "interrupted_on_parent_request_before_model_requests",
-  "reason": "Reserve GPU1 for complete production HTTP corpus; experiment resumed only after parent confirms completion",
-  "model_accuracy_judgment": "not_evaluated",
-  "own_container_stopped_and_removed": true,
-  "GPU_readback": "index, memory.free [MiB], utilization.gpu [%]\n0, 4459 MiB, 54 %\n1, 5107 MiB, 0 %\n"
-}

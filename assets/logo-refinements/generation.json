@@ -1,0 +1,63 @@
+{
+  "tool": "imagegen (built-in)",
+  "client_date": "2026-10-18",
+  "timezone": "Asia/Shanghai",
+  "scope": "Three source-based MO-Parse document-terminal logo refinements",
+  "generation_mode": "Two local reference images",
+  "active_brand_assets_replaced": false,
+  "actual_physical_objects": false,
+  "references": [
+    {
+      "path": "assets/moparse-logo-base.png",
+      "sha256": "76cb038031eb124540fc1ff342e76131ca794a4651431241abfb8228dcffe8b4"
+    },
+    {
+      "path": "assets/logo-variants/a-balanced-blue-cyan.png",
+      "sha256": "6211f279fbf5e8ce5bfb490b5b53b8685fa004b8daf4d59b94b25a8fa4717755"
+    }
+  ],
+  "designs": [
+    {
+      "id": "G1",
+      "label": "原版结构升级",
+      "brief": "Use the ORIGINAL DARK-BLUE PRINTER as the structural anchor: one solid compact dark-blue main body, a clearly separate overhanging blue-cyan lid with a thin recessed gap, one white input page at the top, and one SHORT off-white output page naturally emerging from the front slot and gently curling forward. Keep the overall broad grounded silhouette of the original. Refine its corners into controlled soft bevels and improve the physical finish with the pleasing volume of A. Inset a modest dark navy glass face panel on the front, using A's SAME pale glowing vertical eyes and gentle curved smile, scaled to leave real enclosure around the face. One discreet small yellow functional button can sit beside the output slot. No extra creature features. Front three-quarter view showing the right side. Whole silhouette, both paper paths and all paper fully visible.",
+      "prompt": "Use case: compositing / precise-object-edit / logo-brand.\nDesign ONE polished MO-Parse PRODUCT LOGO based on the two actual supplied reference icons.\nReference roles: the angular dark-blue printer with cyan lid and front output paper is the ORIGINAL STRUCTURAL REFERENCE; the rounded blue-cyan printer with a dark glass smiling face is approved BACKUP A and the FACE / PALETTE / RENDERING reference.\nThis is a faithful refinement of these document-terminal icons, not an invitation to invent a different mascot or species.\n\nVariant G1: 原版结构升级.\nUse the ORIGINAL DARK-BLUE PRINTER as the structural anchor: one solid compact dark-blue main body, a clearly separate overhanging blue-cyan lid with a thin recessed gap, one white input page at the top, and one SHORT off-white output page naturally emerging from the front slot and gently curling forward. Keep the overall broad grounded silhouette of the original. Refine its corners into controlled soft bevels and improve the physical finish with the pleasing volume of A. Inset a modest dark navy glass face panel on the front, using A's SAME pale glowing vertical eyes and gentle curved smile, scaled to leave real enclosure around the face. One discreet small yellow functional button can sit beside the output slot. No extra creature features. Front three-quarter view showing the right side. Whole silhouette, both paper paths and all paper fully visible.\n\nShared art direction: a compact friendly device that reads documents. Clear paper-to-terminal relationship, a simple coherent enclosure and restrained welcoming expression. Preserve A's face design rather than changing it to dot eyes, a single eye or a pale panel. Use a balanced BLUE-CYAN / DEEP NAVY palette, off-white paper and only a small yellow accent. Professional simple logo silhouette, carefully judged proportions, clear physical 3D depth, soft studio lighting and restrained satin highlights. Avoid heavy surface grain, candy gloss, exaggerated eyes or busy mechanical realism.\nNo separate head, neck, arms, tall legs, wheels, creature anatomy, resin blob, folded-clay character or abstract sculpture. No text, letters, labels, watermark or unrelated props.\nOne complete icon centered on a square transparent RGBA canvas, around 80 percent occupancy, ample clean margin, no cropping. Genuine clean alpha transparency, no floor, pedestal, cast shadow, scene or floating edge fragments.",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "path": "assets/logo-refinements/g1-original-refined.png",
+      "sha256": "a5fd5516237d6b4bed3792f264ab69541c8b1feecf72dbac042106920e3e3bfa",
+      "generated_bytes_preserved": true
+    },
+    {
+      "id": "G2",
+      "label": "矮宽文档终端",
+      "brief": "Create a lower, wider, simpler edition of A: a compact rounded desktop DOCUMENT TERMINAL, main body width roughly 1.3 times body height, modest depth and two very low dark rubber feet. Retain A's balanced blue-cyan shell and the SAME deep navy glass face with pale softly glowing vertical eyes and curved smile. Make the face panel wide but keep the eyes and mouth their natural proportions, surrounded by calm empty screen space. A single short white page with a small folded corner and two restrained grey content bars enters a centered top slot. A thin functional output slot and one small yellow button occupy the lower front. Keep details few and large enough to read in a small logo. No arms, legs or added hardware. Near-front three-quarter view with a little of the right side visible.",
+      "prompt": "Use case: compositing / precise-object-edit / logo-brand.\nDesign ONE polished MO-Parse PRODUCT LOGO based on the two actual supplied reference icons.\nReference roles: the angular dark-blue printer with cyan lid and front output paper is the ORIGINAL STRUCTURAL REFERENCE; the rounded blue-cyan printer with a dark glass smiling face is approved BACKUP A and the FACE / PALETTE / RENDERING reference.\nThis is a faithful refinement of these document-terminal icons, not an invitation to invent a different mascot or species.\n\nVariant G2: 矮宽文档终端.\nCreate a lower, wider, simpler edition of A: a compact rounded desktop DOCUMENT TERMINAL, main body width roughly 1.3 times body height, modest depth and two very low dark rubber feet. Retain A's balanced blue-cyan shell and the SAME deep navy glass face with pale softly glowing vertical eyes and curved smile. Make the face panel wide but keep the eyes and mouth their natural proportions, surrounded by calm empty screen space. A single short white page with a small folded corner and two restrained grey content bars enters a centered top slot. A thin functional output slot and one small yellow button occupy the lower front. Keep details few and large enough to read in a small logo. No arms, legs or added hardware. Near-front three-quarter view with a little of the right side visible.\n\nShared art direction: a compact friendly device that reads documents. Clear paper-to-terminal relationship, a simple coherent enclosure and restrained welcoming expression. Preserve A's face design rather than changing it to dot eyes, a single eye or a pale panel. Use a balanced BLUE-CYAN / DEEP NAVY palette, off-white paper and only a small yellow accent. Professional simple logo silhouette, carefully judged proportions, clear physical 3D depth, soft studio lighting and restrained satin highlights. Avoid heavy surface grain, candy gloss, exaggerated eyes or busy mechanical realism.\nNo separate head, neck, arms, tall legs, wheels, creature anatomy, resin blob, folded-clay character or abstract sculpture. No text, letters, labels, watermark or unrelated props.\nOne complete icon centered on a square transparent RGBA canvas, around 80 percent occupancy, ample clean margin, no cropping. Genuine clean alpha transparency, no floor, pedestal, cast shadow, scene or floating edge fragments.",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "path": "assets/logo-refinements/g2-wide-terminal.png",
+      "sha256": "57a81620b3b059220ca0bd568472938f7800b1ff12c0988969168e524f465387",
+      "generated_bytes_preserved": true
+    },
+    {
+      "id": "G3",
+      "label": "正面居中图标",
+      "brief": "Make a professional STRAIGHT-ON FRONT-VIEW logo edition of A, with a centered stable composition and a simple almost-square rounded blue-cyan enclosure. No visible left or right side plane and no tilted camera. Keep the SAME dark navy face, softly glowing pale vertical eyes and gently curved smiling mouth from A. A short white document with a folded blue-cyan corner and two grey bars rises from a clear top input opening, centered above the face. Keep the paper short and broad so the total icon stays compact. Beneath the face keep one clean narrow paper slot, one little yellow button and two low dark feet. Simplify tiny seams and overly bright reflections. The facial expression, blue-cyan palette and overall identity must still clearly be A, now organized as a crisp small app icon. No wordmark or extra decoration.",
+      "prompt": "Use case: compositing / precise-object-edit / logo-brand.\nDesign ONE polished MO-Parse PRODUCT LOGO based on the two actual supplied reference icons.\nReference roles: the angular dark-blue printer with cyan lid and front output paper is the ORIGINAL STRUCTURAL REFERENCE; the rounded blue-cyan printer with a dark glass smiling face is approved BACKUP A and the FACE / PALETTE / RENDERING reference.\nThis is a faithful refinement of these document-terminal icons, not an invitation to invent a different mascot or species.\n\nVariant G3: 正面居中图标.\nMake a professional STRAIGHT-ON FRONT-VIEW logo edition of A, with a centered stable composition and a simple almost-square rounded blue-cyan enclosure. No visible left or right side plane and no tilted camera. Keep the SAME dark navy face, softly glowing pale vertical eyes and gently curved smiling mouth from A. A short white document with a folded blue-cyan corner and two grey bars rises from a clear top input opening, centered above the face. Keep the paper short and broad so the total icon stays compact. Beneath the face keep one clean narrow paper slot, one little yellow button and two low dark feet. Simplify tiny seams and overly bright reflections. The facial expression, blue-cyan palette and overall identity must still clearly be A, now organized as a crisp small app icon. No wordmark or extra decoration.\n\nShared art direction: a compact friendly device that reads documents. Clear paper-to-terminal relationship, a simple coherent enclosure and restrained welcoming expression. Preserve A's face design rather than changing it to dot eyes, a single eye or a pale panel. Use a balanced BLUE-CYAN / DEEP NAVY palette, off-white paper and only a small yellow accent. Professional simple logo silhouette, carefully judged proportions, clear physical 3D depth, soft studio lighting and restrained satin highlights. Avoid heavy surface grain, candy gloss, exaggerated eyes or busy mechanical realism.\nNo separate head, neck, arms, tall legs, wheels, creature anatomy, resin blob, folded-clay character or abstract sculpture. No text, letters, labels, watermark or unrelated props.\nOne complete icon centered on a square transparent RGBA canvas, around 80 percent occupancy, ample clean margin, no cropping. Genuine clean alpha transparency, no floor, pedestal, cast shadow, scene or floating edge fragments.",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "path": "assets/logo-refinements/g3-front-icon.png",
+      "sha256": "92efe50e9858929db7663a2f03ba48a0970f3c232bdf0369448f442b9984c33e",
+      "generated_bytes_preserved": true
+    }
+  ]
+}

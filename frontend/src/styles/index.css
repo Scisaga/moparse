@@ -62,16 +62,17 @@ a { color: inherit; }
   gap: 24px;
   padding: 7px clamp(18px, 2.5vw, 42px);
   color: #f5f8f8;
-  background: #071a2c;
-  border-bottom: 1px solid rgba(44, 203, 234, .34);
+  background: linear-gradient(105deg, #142d41, #173b4b 62%, #142d41);
+  border-bottom: 1px solid rgba(128, 216, 189, .3);
   box-shadow: 0 3px 14px rgba(12, 33, 56, .18);
 }
-.header-mosaic { width: 100%; height: 100%; position: absolute; z-index: 0; inset: 0; display: block; opacity: .88; }
-.app-header::after { content: ""; position: absolute; z-index: 0; inset: 0; pointer-events: none; background: rgba(5, 18, 31, .34); }
+.header-document { width: 100%; height: 100%; position: absolute; z-index: 0; inset: 0; display: block; color: #80d8bd; opacity: .17; pointer-events: none; }
+.header-document .document-connection { stroke-dasharray: 3 5; }
+.app-header::after { content: ""; position: absolute; z-index: 0; inset: 0; pointer-events: none; background: linear-gradient(90deg, #142d41 15%, transparent 36%, transparent 61%, #142d41 86%); }
 .brand-lockup { min-width: max-content; position: relative; z-index: 1; display: flex; align-items: center; gap: 10px; flex: none; }
-.brand-logo { width: 42px; height: 42px; display: block; object-fit: contain; filter: drop-shadow(0 2px 5px rgba(0, 13, 21, .22)); }
-.brand-copy h1 { margin: 0 0 3px; color: #fff; font-size: 18px; font-weight: 720; line-height: 1; letter-spacing: -.01em; }
-.brand-copy p { margin: 0; color: #b9dbe5; font-size: 12px; font-weight: 550; line-height: 1; letter-spacing: .06em; }
+.brand-logo { width: 50px; height: 50px; display: block; object-fit: contain; filter: drop-shadow(0 2px 5px rgba(0, 13, 21, .22)); }
+.brand-copy h1 { margin: 0 0 5px; color: #fff; font-size: 21px; font-weight: 720; line-height: 1; letter-spacing: .01em; }
+.brand-copy p { margin: 0; color: #b9d9d2; font-size: 11px; font-weight: 550; line-height: 1; letter-spacing: .06em; }
 .header-operations { min-width: 0; position: relative; z-index: 1; display: flex; align-items: center; justify-content: flex-end; gap: 12px; }
 .service-statuses { min-width: 0; position: relative; display: flex; align-items: center; justify-content: flex-end; gap: 6px; }
 .service-summary {
@@ -257,9 +258,6 @@ label.invalid small { position: absolute; z-index: 2; top: calc(100% + 4px); lef
 .preview-stage img { max-width: 88%; max-height: calc(100% - 36px); align-self: center; object-fit: contain; transform-origin: center; transition: transform .18s; background: #fff; box-shadow: 0 8px 28px rgba(25, 42, 47, .16); }
 .workspace-state { width: 100%; min-height: 100%; align-self: stretch; justify-self: stretch; display: grid; place-content: center; justify-items: center; padding: 24px; color: var(--muted); text-align: center; }
 .workspace-state-art-frame { width: clamp(204px, 45%, 232px); position: relative; display: block; margin-bottom: 12px; }
-.workspace-state-art-frame::before, .workspace-state-art-frame::after { content: ""; width: 7px; height: 7px; position: absolute; z-index: 1; pointer-events: none; }
-.workspace-state-art-frame::before { top: 9%; right: 5%; background: var(--cyan); box-shadow: 9px 0 0 var(--mosaic-yellow); }
-.workspace-state-art-frame::after { bottom: 12%; left: 4%; background: var(--mosaic-coral); box-shadow: 0 -9px 0 var(--navy); }
 .workspace-state .workspace-state-art { width: 100%; height: auto; max-width: none; max-height: none; align-self: auto; display: block; object-fit: contain; overflow: hidden; background: transparent; box-shadow: none; transform-origin: center; transition: none; pointer-events: none; user-select: none; }
 .workspace-state strong { margin-bottom: 6px; color: var(--ink-soft); font-size: 15px; }
 .workspace-state p { max-width: 380px; margin: 0; font-size: 13px; line-height: 1.6; }
@@ -515,11 +513,12 @@ label.invalid small { position: absolute; z-index: 2; top: calc(100% + 4px); lef
 }
 
 @media (max-width: 600px) {
+  .header-document { display: none; }
   .brand-copy p { display: none; }
-  .header-operations { align-items: flex-start; }
+  .header-operations { align-items: center; }
   .service-statuses { flex-wrap: wrap; }
   .service-status-popover { position: fixed; top: 70px; right: 12px; left: 12px; width: auto; }
-  .header-actions { flex-direction: column; }
+  .header-actions { flex-direction: row; }
   .header-action { width: 44px; height: 44px; padding: 0; }
   .header-action span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); }
   .section-heading-row { align-items: center; }

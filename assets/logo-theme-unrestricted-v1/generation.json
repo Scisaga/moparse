@@ -1,0 +1,88 @@
+{
+  "tool": "imagegen (built-in)",
+  "client_date": "2026-10-19",
+  "timezone": "Asia/Shanghai",
+  "purpose": "MO-Parse document-themed icon exploration with palette, finish and rendering-medium freedom",
+  "status": "Candidate",
+  "active_brand_assets_replaced": false,
+  "actual_physical_objects": false,
+  "generated_bytes_preserved": true,
+  "removed_brand_constraints": [
+    "blue palette",
+    "matte 3D-printed appearance"
+  ],
+  "variants": [
+    {
+      "id": "K1",
+      "label": "折纸拼贴",
+      "path": "assets/logo-theme-unrestricted-v1/k1-paper-cut-page.png",
+      "source": "/root/.codex/generated_images/01a150ea-cb0a-71e1-80af-ec0c1c6b7557/exec-fe9215a2-34c5-4a91-b2a5-f93e056e13cd.png",
+      "prompt": "Use case: logo-brand.\nAsset type: one original app icon and document-object mascot for MO-Parse, a local document-parsing and research project focused on faithful text, tables, and document structure.\nPrimary request: newly design this icon with creative freedom in color, medium, and materials. There is no brand requirement for a blue palette, a matte surface, or a 3D-printed appearance. Each candidate explores its own visual language.\nCharacter: a familiar everyday document object is itself the main body. A very small restrained face is integrated directly into the object, with two modest eyes and a quiet small mouth. Two loose slender arms and two relaxed slender legs, simple hands and feet. Preserve a strong compact silhouette and an approachable, thoughtful personality. Original independent design.\nComposition: one whole character only, centered square canvas, all limbs visible, about 80 percent canvas occupancy, clean transparent margins and readable large forms for a software icon.\nBackground: genuinely transparent RGBA, including all gaps. No background scene, floor, ground shadow, pedestal, app tile, border, fake checkerboard, extra objects or floating decoration.\nAvoid: separate robot head or torso, screen or television face panel, console buttons, antennas, giant facial features, busy ornament, existing character imitation, letters, numbers, caption, wordmark, watermark.\n\nSubject: a single folded-corner document page mascot with a distinctive curled upper-right fold, two simple text strokes and a small clear table motif integrated as page content. The page is the body, not a prop held by a separate figure.\nVisual direction: contemporary editorial PAPER-CUT collage and clean graphic illustration, warm ivory paper, burnt orange or ochre accent, deep ink-colored face and relaxed thin limbs. Broad carefully composed shapes, a little tactile cut-paper edge, slight layer separation only. The large fold gives the silhouette individuality. Quiet, sophisticated and friendly. Treat this as an intentionally graphic mostly flat logo, not a plastic toy render. No decorative background shape.",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "sha256": "4e5e24a7b1ed49f769ffda1c5b00cbda6dc5cb495e068f2de52b653f811b1424",
+      "bytes": 1404530,
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    },
+    {
+      "id": "K2",
+      "label": "珐琅长尾夹",
+      "path": "assets/logo-theme-unrestricted-v1/k2-enamel-clip.png",
+      "source": "/root/.codex/generated_images/01a150ea-cb0a-71e1-80af-ec0c1c6b7557/exec-e7250214-f91c-42d2-8dca-d474c1f0072b.png",
+      "prompt": "Use case: logo-brand.\nAsset type: one original app icon and document-object mascot for MO-Parse, a local document-parsing and research project focused on faithful text, tables, and document structure.\nPrimary request: newly design this icon with creative freedom in color, medium, and materials. There is no brand requirement for a blue palette, a matte surface, or a 3D-printed appearance. Each candidate explores its own visual language.\nCharacter: a familiar everyday document object is itself the main body. A very small restrained face is integrated directly into the object, with two modest eyes and a quiet small mouth. Two loose slender arms and two relaxed slender legs, simple hands and feet. Preserve a strong compact silhouette and an approachable, thoughtful personality. Original independent design.\nComposition: one whole character only, centered square canvas, all limbs visible, about 80 percent canvas occupancy, clean transparent margins and readable large forms for a software icon.\nBackground: genuinely transparent RGBA, including all gaps. No background scene, floor, ground shadow, pedestal, app tile, border, fake checkerboard, extra objects or floating decoration.\nAvoid: separate robot head or torso, screen or television face panel, console buttons, antennas, giant facial features, busy ornament, existing character imitation, letters, numbers, caption, wordmark, watermark.\n\nSubject: a real everyday binder-clip mascot holding a single ivory document with two broad content strokes. Recognizable folded trapezoid clip body and simplified wire handles with open transparent interiors. Two tiny eyes and a short quiet smile are placed directly on the broad clip front. Slender arms hang loosely beside it, two easy relaxed legs below.\nVisual direction: a charismatic small polished ENAMEL AND METAL design object. Explore rich warm vermilion or coral enamel, dark gunmetal wire loops, ivory paper, clean controlled specular highlights. Make the clip feel like attractive timeless stationery, with convincing compact construction and a memorable graphic outline. Gloss and reflections are welcome, but not blown-out lighting. A premium object-inspired logo, with no robot machinery or display screen.",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "sha256": "d3599783a5c3f132c494316784eaddbe55fdc04ade742562542cce491b9473a6",
+      "bytes": 1096418,
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    },
+    {
+      "id": "K3",
+      "label": "通透文件夹",
+      "path": "assets/logo-theme-unrestricted-v1/k3-translucent-folder.png",
+      "source": "/root/.codex/generated_images/01a150ea-cb0a-71e1-80af-ec0c1c6b7557/exec-3459192e-f8b2-4633-bed8-5da24320f0f7.png",
+      "prompt": "Use case: logo-brand.\nAsset type: one original app icon and document-object mascot for MO-Parse, a local document-parsing and research project focused on faithful text, tables, and document structure.\nPrimary request: newly design this icon with creative freedom in color, medium, and materials. There is no brand requirement for a blue palette, a matte surface, or a 3D-printed appearance. Each candidate explores its own visual language.\nCharacter: a familiar everyday document object is itself the main body. A very small restrained face is integrated directly into the object, with two modest eyes and a quiet small mouth. Two loose slender arms and two relaxed slender legs, simple hands and feet. Preserve a strong compact silhouette and an approachable, thoughtful personality. Original independent design.\nComposition: one whole character only, centered square canvas, all limbs visible, about 80 percent canvas occupancy, clean transparent margins and readable large forms for a software icon.\nBackground: genuinely transparent RGBA, including all gaps. No background scene, floor, ground shadow, pedestal, app tile, border, fake checkerboard, extra objects or floating decoration.\nAvoid: separate robot head or torso, screen or television face panel, console buttons, antennas, giant facial features, busy ornament, existing character imitation, letters, numbers, caption, wordmark, watermark.\n\nSubject: an everyday tab file-folder mascot, with a raised indexing tab, slightly open layered covers and two neatly aligned paper edges visible inside. Small calm face printed directly on the front cover. Two slender relaxed arms and legs remain attached naturally to the folder.\nVisual direction: playful TRANSLUCENT TINTED ACRYLIC or GLASS with a jewel-toned lavender, plum or honey family chosen coherently. Clear cover edges, delicate internal refraction and visible ivory document layers communicate transparent structure and careful organization. Use a substantial simple silhouette with an elegant softly rounded tab and subtle light catching the edges. This is one sculptural icon object, not a scene. Retain true background alpha rather than adding a studio gradient.",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "sha256": "4744d778890d128854e02af472b41cad46f69270668fd216340267f66b686861",
+      "bytes": 1439096,
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    },
+    {
+      "id": "K4",
+      "label": "平面文档托盘",
+      "path": "assets/logo-theme-unrestricted-v1/k4-graphic-document-tray.png",
+      "source": "/root/.codex/generated_images/01a150ea-cb0a-71e1-80af-ec0c1c6b7557/exec-785f6ff1-7c15-4416-9652-8a53cea58ded.png",
+      "prompt": "Use case: logo-brand.\nAsset type: one original app icon and document-object mascot for MO-Parse, a local document-parsing and research project focused on faithful text, tables, and document structure.\nPrimary request: newly design this icon with creative freedom in color, medium, and materials. There is no brand requirement for a blue palette, a matte surface, or a 3D-printed appearance. Each candidate explores its own visual language.\nCharacter: a familiar everyday document object is itself the main body. A very small restrained face is integrated directly into the object, with two modest eyes and a quiet small mouth. Two loose slender arms and two relaxed slender legs, simple hands and feet. Preserve a strong compact silhouette and an approachable, thoughtful personality. Original independent design.\nComposition: one whole character only, centered square canvas, all limbs visible, about 80 percent canvas occupancy, clean transparent margins and readable large forms for a software icon.\nBackground: genuinely transparent RGBA, including all gaps. No background scene, floor, ground shadow, pedestal, app tile, border, fake checkerboard, extra objects or floating decoration.\nAvoid: separate robot head or torso, screen or television face panel, console buttons, antennas, giant facial features, busy ornament, existing character imitation, letters, numbers, caption, wordmark, watermark.\n\nSubject: an everyday desktop paper in-tray mascot containing two neatly aligned documents. The upper page has two broad content strokes and one simple 2-by-2 table mark, making the relationship to document parsing instantly legible. A tiny restrained face sits on the tray's front lip; slender loose arms at its sides and relaxed legs below.\nVisual direction: confident FLAT GRAPHIC character illustration with bold clean dark outline, a lively leaf-green or warm yellow tray, creamy paper and an economical dark-ink accent. Only a few solid color areas, crisp shapes, no gradient, no faux material rendering, no 3D-print texture. Near-front slightly elevated view so the tray opening and structured page content are clear. Strong visual rhythm and a compact app-icon silhouette. Sophisticated friendly stationery icon rather than a children's cartoon.",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "sha256": "398d1ebd0eb652f95e53f4fcde1059e3041344f5710437f522085a71f8b517b9",
+      "bytes": 964847,
+      "alpha_extrema": [
+        0,
+        255
+      ]
+    }
+  ]
+}

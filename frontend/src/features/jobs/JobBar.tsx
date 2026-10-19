@@ -23,6 +23,10 @@ const STATUS_LABEL: Record<ContentJob['status'], string> = {
 function progressPhaseLabel(phase?: string | null): string {
   if (phase === 'postprocess.glm_ocr') return '识别扫描页文字'
   if (phase === 'page_pipeline') return '页面流水线'
+  if (phase?.startsWith('window.')) return '已处理页面'
+  if (phase === 'document.exporting') return '生成文档'
+  if (phase === 'cancellation.cleanup') return '正在取消并释放资源'
+  if (phase?.startsWith('postprocess.')) return '整理结果'
   if (phase?.startsWith('page.')) return '生成结果'
   return '页面'
 }
@@ -31,8 +35,8 @@ export function JobBar({ job, sseState = 'idle', actionBusy = false, onCancel, o
   if (!job) {
     return <footer className="job-bar job-idle" aria-live="polite"><span className="job-status-dot" /><strong>工作台就绪</strong><span>文档仅在提交后发送到服务端</span></footer>
   }
-  const percent = percentOf(job.progress.current, job.progress.total, job.progress.percent)
   const active = job.status === 'queued' || job.status === 'running'
+  const percent = Math.min(active ? 99 : 100, percentOf(job.progress.current, job.progress.total, job.progress.percent))
   const retryable = job.status === 'failed' || job.status === 'partial' || job.status === 'cancelled'
   const progressLabel = progressPhaseLabel(job.progress.phase)
   const transportLabel = sseState === 'fallback' ? '轮询更新' : sseState === 'live' ? null : '连接中'
@@ -40,7 +44,7 @@ export function JobBar({ job, sseState = 'idle', actionBusy = false, onCancel, o
     <footer className="job-bar" aria-live="polite">
       <div className="job-progress-block">
         <div className="job-progress-meta">
-          <strong><span className={`job-status-dot job-${job.status}`} />{STATUS_LABEL[job.status]}</strong>
+          <strong><span className={`job-status-dot job-${job.status}`} />{job.progress.phase === 'cancellation.cleanup' ? '取消中' : STATUS_LABEL[job.status]}</strong>
           <span>{job.progress.current}/{job.progress.total ?? '—'} {progressLabel}</span>
           {active && transportLabel && <span className={`transport-state transport-${sseState}`}>{transportLabel}</span>}
         </div>

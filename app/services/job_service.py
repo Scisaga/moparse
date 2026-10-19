@@ -517,7 +517,7 @@ class JobService:
                     # regressing the live page counter or overwriting durable
                     # progress with a secondary adapter's local range.
                     live_progress_current = max(live_progress_current, total)
-                elif state == "page.processed":
+                elif state == "page.processed" or state.startswith("window."):
                     live_progress_current = max(live_progress_current, current)
                 elif terminal_page or unit_processed:
                     live_progress_current = max(live_progress_current, current)
@@ -528,12 +528,15 @@ class JobService:
                     current=live_progress_current,
                     total=display_total,
                     unit=self._progress_unit(record.mime_type),
+                    phase=state,
+                    phase_current=current,
+                    phase_total=total,
                 )
                 event_data: dict[str, object] = {
                     "current": live_progress_current,
                     "total": display_total,
                     "percent": (
-                        round(live_progress_current * 100 / display_total, 1)
+                        min(99.0, round(live_progress_current * 100 / display_total, 1))
                         if display_total
                         else 0.0
                     ),
@@ -557,6 +560,10 @@ class JobService:
                 await self._emit(job_id, "job.cancelled")
                 return
             paths = await self.storage.write_result(job_id, result)
+            if cancel_event.is_set():
+                await self.repository.cancel(job_id)
+                await self._emit(job_id, "job.cancelled")
+                return
             await self.repository.update_progress(
                 job_id,
                 final_progress_total,
@@ -584,14 +591,19 @@ class JobService:
             raise
         except ServiceError as exc:
             current = await self.repository.get(job_id)
-            if current and current.status == JobStatus.CANCELLED:
+            if current and (current.status == JobStatus.CANCELLED or cancel_event.is_set()):
+                if not current.is_terminal:
+                    await self.repository.cancel(job_id)
                 await self._emit(job_id, "job.cancelled")
             elif current and not current.is_terminal:
                 await self.repository.fail(job_id, exc.code, exc.message, exc.details)
                 await self._emit(job_id, "job.failed", code=exc.code, message=exc.message)
         except Exception as exc:
             current = await self.repository.get(job_id)
-            if current and not current.is_terminal:
+            if current and not current.is_terminal and cancel_event.is_set():
+                await self.repository.cancel(job_id)
+                await self._emit(job_id, "job.cancelled")
+            elif current and not current.is_terminal:
                 await self.repository.fail(job_id, "parse_failed", "content parsing failed")
                 await self._emit(
                     job_id, "job.failed", code="parse_failed", message=type(exc).__name__
@@ -660,6 +672,15 @@ class JobService:
                 "job_not_cancellable", "completed jobs cannot be cancelled", status_code=409
             )
         self._cancel_events.setdefault(job_id, asyncio.Event()).set()
+        if record.status == JobStatus.RUNNING or job_id in self._running_jobs:
+            live = self._live_progress.get(job_id, record.progress).model_copy(
+                update={"phase": "cancellation.cleanup"}
+            )
+            self._live_progress[job_id] = live
+            await self._emit(job_id, "job.cancel_requested", phase="cancellation.cleanup")
+            # Cancellation is a request until owned compute has returned. A
+            # running job must not become deletable while it still uses files.
+            return await self.get_job(job_id)
         try:
             cancelled = await self.repository.cancel(job_id)
         except ValueError as exc:
@@ -674,7 +695,7 @@ class JobService:
 
     async def delete_job(self, job_id: str) -> bool:
         record = await self.get_job(job_id)
-        if not record.is_terminal:
+        if not record.is_terminal or job_id in self._running_jobs:
             raise ServiceError(
                 "job_active", "cancel an active job before deleting it", status_code=409
             )

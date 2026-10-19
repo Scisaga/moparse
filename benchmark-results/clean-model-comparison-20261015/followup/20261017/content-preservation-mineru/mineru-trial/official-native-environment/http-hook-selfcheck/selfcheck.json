@@ -1,8 +1,0 @@
-{
-  "status": "pass",
-  "transport": "httpx.MockTransport only",
-  "real_HTTP_calls": 0,
-  "GPU_calls": 0,
-  "captured_mock_calls": 2,
-  "response_payloads_unchanged": true
-}

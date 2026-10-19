@@ -94,42 +94,40 @@ describe('API request helpers', () => {
     expect(snapshot.ready).toBe(false)
   })
 
-  it('shows the selected MinerU and separate Docling verifier without inventing a Docling primary', async () => {
+  it('shows the selected MinerU without inventing a Docling backend', async () => {
     vi.spyOn(globalThis, 'fetch').mockImplementation(async (input) => {
       const url = String(input)
       const data = url.endsWith('/health') ? { status: 'ok' }
         : url.endsWith('/ready') ? { ready: true }
           : { backends: [
             { name: 'mineru-advanced-txt', state: 'ready', detail: 'FP16 GPU VLM, concurrency=2' },
-            { name: 'docling-header-verifier', state: 'ready', detail: 'header roles only' },
             { name: 'glm-ocr-remote', state: 'ready' },
             { name: 'glm-sdk-remote', state: 'disabled', enabled: false },
           ] }
       return new Response(JSON.stringify(data), { status: 200 })
     })
     const snapshot = await fetchServiceSnapshot()
-    expect(snapshot.backends.map((backend) => backend.id)).toEqual(['mineru', 'docling-header-verifier', 'glm', 'glm-sdk'])
+    expect(snapshot.backends.map((backend) => backend.id)).toEqual(['mineru', 'glm', 'glm-sdk'])
     expect(snapshot.backends.find((backend) => backend.id === 'mineru')).toMatchObject({ label: 'MinerU Advanced＋TXT', status: 'ready' })
-    expect(snapshot.backends.find((backend) => backend.id === 'docling-header-verifier')).toMatchObject({ label: 'Docling 表头核验', status: 'ready', message: 'header roles only' })
     expect(snapshot.backends.find((backend) => backend.id === 'glm-sdk')?.status).toBe('disabled')
     expect(snapshot.backends.some((backend) => backend.id === 'docling')).toBe(false)
   })
 
-  it('keeps disabled verifiers disabled and preserves unknown backend identities', async () => {
+  it('keeps disabled backends disabled and preserves unknown backend identities', async () => {
     vi.spyOn(globalThis, 'fetch').mockImplementation(async (input) => {
       const url = String(input)
       const data = url.endsWith('/health') ? { status: 'ok' }
         : url.endsWith('/ready') ? { ready: true }
           : { backends: [
             { name: 'mineru-advanced-txt', state: 'ready' },
-            { name: 'docling-header-verifier', state: 'ready', enabled: false },
-            { name: 'docling-custom-evidence', label: '独立证据后端', state: 'unavailable' },
+            { name: 'custom-parser', state: 'ready', enabled: false },
+            { name: 'custom-evidence', label: '独立证据后端', state: 'unavailable' },
           ] }
       return new Response(JSON.stringify(data), { status: 200 })
     })
     const snapshot = await fetchServiceSnapshot()
-    expect(snapshot.backends.find((backend) => backend.id === 'docling-header-verifier')?.status).toBe('disabled')
-    expect(snapshot.backends.find((backend) => backend.id === 'docling-custom-evidence')).toMatchObject({ label: '独立证据后端', status: 'unavailable' })
+    expect(snapshot.backends.find((backend) => backend.id === 'custom-parser')?.status).toBe('disabled')
+    expect(snapshot.backends.find((backend) => backend.id === 'custom-evidence')).toMatchObject({ label: '独立证据后端', status: 'unavailable' })
     expect(snapshot.backends.some((backend) => backend.id === 'docling')).toBe(false)
   })
 

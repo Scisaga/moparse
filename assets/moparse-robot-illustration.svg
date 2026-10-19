@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256" role="img" aria-labelledby="title description">
+  <title id="title">MO-Parse document companion</title>
+  <desc id="description">A blue robot with a separate rounded head, low triangular body, three short supports and grippers holding a paper document.</desc>
+  <g id="three-supports" fill="#386b9e" stroke="#294e75" stroke-width="4" stroke-linejoin="round">
+    <path d="m64 192-13 25q-4 9 5 11h22q7 0 7-7l-1-29z"/>
+    <path d="m172 192-1 29q0 7 7 7h22q9-2 5-11l-13-25z"/>
+    <path d="m117 197-3 29q0 7 7 7h14q7 0 7-7l-3-29z"/>
+  </g>
+  <g id="neck" fill="#527697" stroke="#294e75" stroke-width="4">
+    <rect x="114" y="86" width="28" height="30" rx="7"/>
+  </g>
+  <g id="low-triangular-body" stroke="#294e75" stroke-width="5" stroke-linejoin="round">
+    <path d="M105 103h46q13 0 22 14l37 64q11 20-10 23H56q-21-3-10-23l37-64q9-14 22-14z" fill="#5c97cf"/>
+    <path d="m156 110 40 72q5 10-8 10h-35l-12 12h59q21-3 10-23l-37-64q-7-11-17-14z" fill="#386b9e" stroke="none"/>
+  </g>
+  <g id="separate-head" stroke="#294e75" stroke-width="5" stroke-linejoin="round">
+    <path d="M82 28h92q30 0 30 31t-30 31H82q-30 0-30-31t30-31z" fill="#5c97cf"/>
+    <path d="M174 28h-9q27 0 27 31t-27 31h9q30 0 30-31t-30-31z" fill="#386b9e" stroke="none"/>
+    <circle cx="103" cy="56" r="4" fill="#294e75" stroke="none"/>
+    <circle cx="153" cy="56" r="4" fill="#294e75" stroke="none"/>
+    <path d="M120 69q8 6 16 0" fill="none" stroke-width="3" stroke-linecap="round"/>
+  </g>
+  <g id="held-document" stroke="#294e75" stroke-width="4" stroke-linejoin="round">
+    <path d="M100 128h40l17 17v52h-57z" fill="#f4f8fb"/>
+    <path d="M140 128v17h17" fill="#cbdfee"/>
+    <path d="M111 157h33m-33 12h33m-33 12h22" fill="none" stroke="#7a95af" stroke-width="3" stroke-linecap="round"/>
+  </g>
+  <g id="short-grippers" fill="none" stroke="#294e75" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M76 144q-13 18 8 31l14-1m-6-10 6 10-8 8"/>
+    <path d="M180 144q13 18-8 31l-14-1m6-10-6 10 8 8"/>
+  </g>
+</svg>

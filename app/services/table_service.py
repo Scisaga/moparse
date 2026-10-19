@@ -69,6 +69,17 @@ class PageFurnitureFragment:
 
 
 @dataclass(slots=True)
+class TableSourceView:
+    """The exact owned export span, kept separate from source cell coordinates."""
+
+    view_id: str
+    fragments: tuple[TableFragment, ...]
+    rendered: str
+    prefix: str = ""
+    suffix: str = ""
+
+
+@dataclass(slots=True)
 class TableFragment:
     fragment_id: str
     page_number: int
@@ -98,15 +109,20 @@ class TableFragment:
     header_role_source: str | None = None
     header_verification_required: bool = False
     verified_next_fragments: list[str] = field(default_factory=list)
+    # Roles and scopes use immutable source row coordinates, including bands
+    # inside one physical table.  Rendering never inserts rows into this grid.
+    source_header_scopes: list[dict[str, Any]] = field(default_factory=list)
+    pdf_evidence: dict[str, Any] = field(default_factory=dict)
+    source_continues_prev: bool | None = None
     _structure_marker: str = field(default="", init=False, repr=False)
+    _table_rendering: str = field(default="", init=False, repr=False)
 
     def __post_init__(self) -> None:
-        # The matrix remains ordinary GFM. Only source-owned structural
-        # information is attached as a comment, without coordinates or text.
+        # Display syntax and inserted header rows never change the source grid.
         if self.markdown and self.rendered.count(self.markdown) == 1:
-            self._structure_marker = _table_structure_marker([self], self.fragment_id)
+            self._structure_marker, self._table_rendering = table_view(self)
             self.rendered = self.rendered.replace(
-                self.markdown, f"{self._structure_marker}\n\n{self.markdown}", 1
+                self.markdown, f"{self._structure_marker}\n\n{self._table_rendering}", 1
             )
 
     @property
@@ -136,8 +152,18 @@ class TableFragment:
         if len(self.rows) != self.num_rows or any(len(row) != self.num_cols for row in self.rows):
             return ()
         header_rows: set[int] = set()
+        scoped_leading = next(
+            (
+                scope.get("header_rows", [])
+                for scope in self.source_header_scopes
+                if scope.get("complete") and scope.get("header_rows", [None])[0] == 0
+            ),
+            None,
+        )
         for cell in self.cells:
             if cell.is_column_header:
+                if scoped_leading is not None and cell.row not in scoped_leading:
+                    continue
                 if cell.row < 0 or cell.row_span < 1 or cell.row + cell.row_span > self.num_rows:
                     return ()
                 header_rows.update(range(cell.row, cell.row + cell.row_span))
@@ -268,8 +294,8 @@ def _structure_geometry_known(fragment: TableFragment) -> bool:
     return True
 
 
-def _table_structure_marker(group: list[TableFragment], table_id: str) -> str:
-    """Describe observed cell roles/spans in final GFM indices, never infer them."""
+def _table_structure(group: list[TableFragment], table_id: str) -> dict[str, Any]:
+    """Describe source logical rows independently of any display syntax."""
     geometry_known = all(_structure_geometry_known(fragment) for fragment in group)
     source_header_rows: set[int] = set()
     spans: list[list[int]] = []
@@ -291,8 +317,8 @@ def _table_structure_marker(group: list[TableFragment], table_id: str) -> str:
         else ()
     )
     metadata = {
-        "version": 1,
         "table_id": table_id,
+        "row_coordinate_space": "source_logical_rows",
         "source_pages": sorted({fragment.page_number for fragment in group}),
         "num_rows": output_rows,
         "num_cols": group[0].num_cols,
@@ -308,11 +334,102 @@ def _table_structure_marker(group: list[TableFragment], table_id: str) -> str:
     }
     if role_sources:
         metadata["header_role_sources"] = sorted(role_sources)
-    return (
+    if len(group) == 1 and group[0].source_header_scopes:
+        metadata["source_header_scopes"] = group[0].source_header_scopes
+    if len(group) == 1 and group[0].pdf_evidence.get("inherited_header_scope"):
+        metadata["inherited_header_scope"] = group[0].pdf_evidence["inherited_header_scope"]
+    return metadata
+
+
+def _render_table_view(group: list[TableFragment], table_id: str) -> tuple[str, str]:
+    """Render owned source rows with one mapping for single and grouped tables."""
+    metadata = _table_structure(group, table_id)
+    source_rows = _merged_rows(group)
+    scoped_headers: dict[int, list[int]] = {}
+    logical_start = 0
+    for index, fragment in enumerate(group):
+        skip = len(fragment.header_row_indices) if index else 0
+        for scope in fragment.source_header_scopes:
+            headers = scope.get("header_rows", [])
+            if not scope.get("complete") or not headers:
+                continue
+            start = headers[0]
+            if (
+                headers != list(range(start, start + len(headers)))
+                or start < skip
+                or headers[-1] >= len(fragment.rows)
+            ):
+                continue
+            # Splitting across a source rowspan would lose its binding.
+            if any(cell.row < start < cell.row + cell.row_span for cell in fragment.cells):
+                continue
+            scoped_headers[logical_start + start - skip] = [
+                logical_start + row - skip for row in headers
+            ]
+        if not index and fragment.header_row_indices:
+            scoped_headers[0] = list(fragment.header_row_indices)
+        logical_start += len(fragment.rows) - skip
+    boundaries = sorted({0, *scoped_headers}) + [len(source_rows)] if source_rows else []
+    segments: list[dict[str, Any]] = []
+    views = []
+    for index, (start, end) in enumerate(zip(boundaries, boundaries[1:], strict=False)):
+        headers = scoped_headers.get(start, [])
+        synthetic = not headers
+        rows = source_rows[start:end]
+        if synthetic:
+            rows = [[""] * metadata["num_cols"], *rows]
+        segments.append(
+            {
+                "index": index,
+                "source_rows": list(range(start, end)),
+                "header_rows": headers,
+                "synthetic_header_rows": [0] if synthetic else [],
+                "rendered_num_rows": len(rows),
+                "source_to_rendered_row_offset": int(synthetic) - start,
+                "source_header_scope_complete": bool(headers),
+            }
+        )
+        segment_marker = (
+            "<!-- table-view-segment: "
+            + json.dumps({"table_id": table_id, "index": index}, separators=(",", ":"))
+            + " -->"
+        )
+        views.append(segment_marker + "\n\n" + render_gfm_rows(rows))
+    metadata["gfm"] = {
+        "segments": segments,
+        "rendered_num_rows_total": sum(segment["rendered_num_rows"] for segment in segments),
+    }
+    marker = (
         "<!-- table-structure: "
         + json.dumps(metadata, ensure_ascii=False, separators=(",", ":"))
         + " -->"
     )
+    return marker, "\n\n".join(views) if source_rows else group[0].markdown
+
+
+def table_view(fragment: TableFragment) -> tuple[str, str]:
+    """Project a physical table without changing its source cells or roles."""
+    return _render_table_view([fragment], fragment.fragment_id)
+
+
+def refresh_table_views(pages: list[PageParseResult], fragments: list[TableFragment]) -> None:
+    """Refresh owned views once roles are final; source matrices stay untouched."""
+    by_page = {page.page_number: page for page in pages}
+    for fragment in fragments:
+        page = by_page.get(fragment.page_number)
+        if page is None or (page.content or "").count(fragment.rendered) != 1:
+            continue
+        marker, view = table_view(fragment)
+        rendered = fragment.rendered
+        old_marker = fragment._structure_marker
+        old_view = fragment._table_rendering
+        if not old_view or rendered.count(old_view) != 1 or rendered.count(old_marker) != 1:
+            continue
+        rendered = rendered.replace(old_marker, marker, 1).replace(old_view, view, 1)
+        page.content = (page.content or "").replace(fragment.rendered, rendered, 1)
+        fragment.rendered = rendered
+        fragment._structure_marker = marker
+        fragment._table_rendering = view
 
 
 def _anchored_rows(table_data: object) -> tuple[list[list[str]], list[str]]:
@@ -750,9 +867,9 @@ def _merged_rows(group: list[TableFragment]) -> list[list[str]]:
 
 
 def _table_surroundings(fragment: TableFragment) -> tuple[str, str] | None:
-    if not fragment.markdown or fragment.rendered.count(fragment.markdown) != 1:
+    if not fragment._table_rendering or fragment.rendered.count(fragment._table_rendering) != 1:
         return None
-    prefix, _, suffix = fragment.rendered.partition(fragment.markdown)
+    prefix, _, suffix = fragment.rendered.partition(fragment._table_rendering)
     prefix = prefix.replace(f"<!-- table-fragment: {fragment.fragment_id} -->", "", 1)
     if fragment._structure_marker:
         prefix = prefix.replace(fragment._structure_marker, "", 1)
@@ -997,6 +1114,7 @@ def assemble_logical_tables(
     *,
     enabled: bool,
     page_furniture: list[PageFurnitureFragment] | None = None,
+    public_views: list[TableSourceView] | None = None,
 ) -> dict[int, str]:
     content_by_page = {page.page_number: page.content or "" for page in pages}
     page_models = {page.page_number: page for page in pages}
@@ -1027,7 +1145,7 @@ def assemble_logical_tables(
             continue
         logical_id = f"table_{group[0].fragment_id}_{group[-1].fragment_id}"
         source_pages = sorted({fragment.page_number for fragment in group})
-        merged = render_gfm_rows(_merged_rows(group))
+        structure_marker, merged = _render_table_view(group, logical_id)
         source_markers: list[str] = []
         logical_start = 1
         for index, fragment in enumerate(group):
@@ -1040,13 +1158,17 @@ def assemble_logical_tables(
                 f"<!-- logical-table: {logical_id}; source-pages: {','.join(map(str, source_pages))} -->",
                 "\n".join(source_markers),
                 surroundings[0],
-                _table_structure_marker(group, logical_id),
+                structure_marker,
                 merged,
                 surroundings[1],
             ]
             if part
         )
         first = group[0]
+        if public_views is not None:
+            public_views.append(
+                TableSourceView(logical_id, tuple(group), logical, *surroundings)
+            )
         content_by_page[first.page_number] = content_by_page[first.page_number].replace(
             first.rendered, logical, 1
         )
@@ -1083,4 +1205,11 @@ def assemble_logical_tables(
             content_by_page[fragment.page_number] = content.replace(
                 fragment.rendered, standalone, 1
             )
+            if public_views is not None:
+                surroundings = _table_surroundings(fragment) or ("", "")
+                # Multi-band GFM contains multiple pipe tables, but no prose
+                # may be swallowed by a derived semantic replacement.
+                public_views.append(
+                    TableSourceView(fragment.fragment_id, (fragment,), standalone, *surroundings)
+                )
     return content_by_page

@@ -1,0 +1,16 @@
+{
+  "tool": "imagegen (built-in)",
+  "client_date": "2026-10-19",
+  "timezone": "Asia/Shanghai",
+  "asset": "assets/moparse-logo-3d-master.png",
+  "favicon_asset": "assets/moparse-favicon-master.png",
+  "style": "Blue-cyan upright document terminal with pale screen, restrained face, slender arms and short legs; dedicated frontal no-limb favicon",
+  "transparent_background": true,
+  "generation_manifest": "assets/brand-selected-terminal-20261019/generation.json",
+  "logo_sha256": "5af9836547cfbfe2e81a65122263fe9ba9052a50d39853ee0f9cadf23711a89e",
+  "favicon_sha256": "978c42a5e1ce55d82db41250001ae7448982f43fd420fcd5e050cbd93b00dfd9",
+  "previous_active": {
+    "asset": "assets/moparse-logo-robot-master-v1.png",
+    "metadata": "assets/moparse-logo-robot-master-v1.json"
+  }
+}

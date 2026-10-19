@@ -3,7 +3,8 @@
 from __future__ import annotations
 
 import asyncio
-import logging
+import hashlib
+import json
 import time
 from dataclasses import asdict, dataclass
 from pathlib import Path
@@ -33,6 +34,7 @@ from app.parsers import (
     GlmSdkRemoteParser,
     ParserCancelledError,
     ParserError,
+    ParserTimeoutError,
     ParserUnavailableError,
     ProgressCallback,
 )
@@ -48,18 +50,17 @@ from app.security.file_validation import (
 from app.services.evidence_service import PageEvidence, PageEvidenceService
 from app.services.export_service import ExportService
 from app.services.glm_table_service import GlmTableService
-from app.services.header_verification_service import DoclingHeaderVerificationService
 from app.services.ir_service import DocumentIRService
 from app.services.multimodal_service import MultimodalService
+from app.services.pdf_table_evidence_service import PDFTableEvidenceService
 from app.services.quality_service import QualityService
-from app.services.source_verification_service import SourceVerificationService
 from app.services.storage_service import StorageService
-from app.services.table_service import TableFragment
+from app.services.table_semantics_service import TableSemanticsService
+from app.services.table_service import TableFragment, TableSourceView
+from app.utils.deadline import attach_deadline, remaining_timeout
 from app.utils.ids import new_content_id
 from app.utils.page_range import PageRangeError, format_page_range, parse_page_range
 from app.utils.settings import setting
-
-logger = logging.getLogger(__name__)
 
 
 @dataclass(frozen=True, slots=True)
@@ -71,6 +72,7 @@ class _SourcePageImage:
     caption: str = "扫描页原图"
     normalized_bbox: tuple[float, float, float, float] = (0.0, 0.0, 1.0, 1.0)
     allow_description: bool = False
+    source_page_ref: str | None = None
 
 
 class ParserService:
@@ -85,6 +87,8 @@ class ParserService:
         self.export_service = export_service or ExportService()
         self.evidence_service = PageEvidenceService(settings)
         self.ir_service = DocumentIRService(settings)
+        self.pdf_table_evidence_service = PDFTableEvidenceService(settings)
+        self.table_semantics_service = TableSemanticsService()
         self._semaphore = asyncio.Semaphore(int(setting(settings, "parser_workers", 1)))
         self._lifecycle_condition = asyncio.Condition()
         self._reloading = False
@@ -105,18 +109,6 @@ class ParserService:
             if isinstance(self.standard_parser, MinerUNativeRemoteParser)
             else self.standard_parser
         )
-        self.header_verifier = (
-            DoclingHeaderVerificationService(self.settings, self.glm_adapter)
-            if isinstance(self.standard_parser, MinerUNativeRemoteParser)
-            and setting(self.settings, "mineru_header_verifier", "off") == "docling"
-            else None
-        )
-        self.source_verifier = (
-            SourceVerificationService(self.header_verifier.parser)
-            if self.header_verifier is not None
-            and setting(self.settings, "mineru_source_verifier", "off") == "docling"
-            else None
-        )
         self.glm_table_service = GlmTableService()
         self.multimodal_service = MultimodalService(
             self.settings, StorageService(self.settings), self.glm_adapter
@@ -126,8 +118,6 @@ class ParserService:
         if self._initialized:
             return
         adapters = [self.standard_parser.initialize(), self.glm_sdk_parser.initialize()]
-        if self.header_verifier is not None:
-            adapters.append(self.header_verifier.initialize())
         await asyncio.gather(*adapters)
         # A missing optional backend must not prevent CPU/native-text startup.
         self._initialized = True
@@ -154,8 +144,6 @@ class ParserService:
             self.glm_adapter.close(),
             self.glm_sdk_parser.close(),
         ]
-        if self.header_verifier is not None:
-            adapters.append(self.header_verifier.close())
         await asyncio.gather(*adapters, return_exceptions=True)
         self._initialized = False
 
@@ -191,6 +179,31 @@ class ParserService:
             if self._active_parses == 0:
                 self._lifecycle_condition.notify_all()
 
+    async def wait_for_idle(self, timeout: float) -> bool:
+        """Observe request and owned backend cleanup completion for deployment gates.
+
+        Backend availability is separate from idleness. An SDK transport timeout
+        cannot prove that an external inference server has stopped computing.
+        """
+        if timeout <= 0:
+            return False
+        deadline = time.monotonic() + timeout
+        try:
+            async with asyncio.timeout(timeout):
+                async with self._lifecycle_condition:
+                    await self._lifecycle_condition.wait_for(
+                        lambda: self._active_parses == 0 and not self._reloading
+                    )
+                sdk_idle = getattr(self.glm_sdk_parser, "wait_for_idle", None)
+                if callable(sdk_idle) and not await sdk_idle(max(0.0, deadline - time.monotonic())):
+                    return False
+                wait_idle = getattr(self.standard_parser, "wait_idle", None)
+                if callable(wait_idle):
+                    await wait_idle()
+                return self._active_parses == 0 and not self._reloading
+        except TimeoutError:
+            return False
+
     async def probe_backends(self) -> list[BackendStatus]:
         if not self._initialized:
             await self.initialize()
@@ -199,10 +212,7 @@ class ParserService:
             self.glm_adapter.probe(),
             self.glm_sdk_parser.probe(),
         )
-        backends = [docling, glm, glm_sdk]
-        if self.header_verifier is not None:
-            backends.append(await self.header_verifier.probe())
-        return backends
+        return [docling, glm, glm_sdk]
 
     def _coerce_source(self, source: StoredSource | str | Path) -> StoredSource:
         if isinstance(source, StoredSource):
@@ -230,6 +240,7 @@ class ParserService:
         )
 
     def _finalize_exports(self, result: DocumentParseResult, options: ContentParseOptions) -> None:
+        public_views: list[TableSourceView] = []
         for page in result.pages:
             page.plain_text = self.export_service.markdown_to_text(
                 page.content or "", source_regions=result._source_regions
@@ -243,7 +254,9 @@ class ParserService:
             merge_cross_page_tables=bool(
                 setting(self.settings, "cross_page_table_merge_enabled", True)
             ),
+            public_views=public_views,
         )
+        result._table_views = [*public_views]
         result.markdown = markdown
         result.plain_text = plain_text
         result.processed_pages = sum(page.status.value != "failed" for page in result.pages)
@@ -437,7 +450,7 @@ class ParserService:
             return
         if not self.glm_adapter.enabled or not self.glm_sdk_parser.enabled:
             raise ParserUnavailableError("GLM-OCR and its SDK are required for scan_policy=auto")
-        status = await self.glm_sdk_parser.probe()
+        status = await self.glm_sdk_parser.probe(refresh_unavailable=True)
         if not status.ready:
             raise ParserUnavailableError(
                 "the GLM-OCR SDK is unavailable for scanned or mixed pages"
@@ -496,9 +509,22 @@ class ParserService:
             # OCR text does not preserve seals, handwriting, figures or their
             # position on a scanned/mixed page. Keep the original full-page
             # view through the same asset path used by scan_policy=skip.
-            result._picture_candidates.extend(
-                _SourcePageImage(page_number=page_number) for page_number in sorted(targets)
-            )
+            for page_number in sorted(targets):
+                page = sdk_pages[page_number]
+                source_page_ref = None
+                if page.status == PageStatus.FAILED:
+                    source_page_ref = f"sdk_p{page_number}_failed"
+                    marker = f"<!-- source-page-image: {source_page_ref} -->"
+                    fallback = (
+                        f"<!-- source-page: {page_number}; structure: unknown -->\n\n"
+                        f"原件第 {page_number} 页（结构未知）。\n\n{marker}"
+                    )
+                    page.content = "\n\n".join(
+                        part for part in ((page.content or "").strip(), fallback) if part
+                    )
+                result._picture_candidates.append(
+                    _SourcePageImage(page_number=page_number, source_page_ref=source_page_ref)
+                )
         result.warnings = [
             warning for warning in result.warnings if warning.page_number not in targets
         ]
@@ -557,13 +583,12 @@ class ParserService:
         identifier = document_id or new_content_id()
         started = time.perf_counter()
         try:
-            async with asyncio.timeout(timeout):
+            parsed_options = attach_deadline(parsed_options, timeout)
+            async with asyncio.timeout(remaining_timeout(parsed_options)):
                 await self._enter_parse()
                 try:
                     if not self._initialized:
                         await self.initialize()
-                    if stored.mime_type == "application/pdf" and self.header_verifier is not None:
-                        await self.header_verifier.require_ready()
                     if stored.mime_type in VIDEO_MIME_TYPES:
                         return await self.multimodal_service.parse_video(
                             stored,
@@ -599,8 +624,6 @@ class ParserService:
                         )
                         if skip_scans:
                             self._skip_scanned_pdf_pages(result, evidence_by_page)
-                            self._finalize_exports(result, parsed_options)
-                            self.quality_service.assess(result)
                         elif (
                             parsed_options.scan_policy == ScanPolicy.AUTO
                             or stored.mime_type in IMAGE_MIME_TYPES
@@ -614,20 +637,15 @@ class ParserService:
                                 cancel_event=cancel_event,
                                 progress_callback=progress_callback,
                             )
-                        if stored.mime_type == "application/pdf" and self.source_verifier is not None:
-                            if progress_callback is not None:
-                                value = progress_callback(
-                                    len(result.pages), len(result.pages), "postprocess.sources.started"
-                                )
-                                if asyncio.iscoroutine(value):
-                                    await value
-                            await self.source_verifier.apply(
-                                result, stored, parsed_options, cancel_event=cancel_event
-                            )
-                            await StorageService(self.settings).write_source_verification_evidence(
+                        await self.pdf_table_evidence_service.apply(
+                            result, stored, parsed_options, cancel_event=cancel_event
+                        )
+                        if stored.mime_type == "application/pdf" and result._source_verification:
+                            storage = StorageService(self.settings)
+                            await storage.write_source_verification_evidence(
                                 result.document_id,
                                 {
-                                    "schema": "native-source-verification/1",
+                                    "schema": "native-source-verification",
                                     "observations": result._source_verification,
                                     "source_regions": [
                                         asdict(region)
@@ -636,37 +654,15 @@ class ParserService:
                                     ],
                                 },
                             )
-                            if progress_callback is not None:
-                                value = progress_callback(
-                                    len(result.pages), len(result.pages), "postprocess.sources.completed"
+                            pdf_evidence = result._source_verification.get("pdf_table_evidence")
+                            if pdf_evidence is not None:
+                                receipt = json.dumps(pdf_evidence, separators=(",", ":"))
+                                await asyncio.to_thread(
+                                    StorageService._atomic_write,
+                                    storage.logs_dir(result.document_id)
+                                    / "pdf-table-evidence.json",
+                                    receipt.encode(),
                                 )
-                                if asyncio.iscoroutine(value):
-                                    await value
-                        if (
-                            stored.mime_type == "application/pdf"
-                            and self.header_verifier is not None
-                        ):
-                            if progress_callback is not None:
-                                value = progress_callback(
-                                    len(result.pages),
-                                    len(result.pages),
-                                    "postprocess.headers.started",
-                                )
-                                if asyncio.iscoroutine(value):
-                                    await value
-                            await self.header_verifier.apply(
-                                result, stored, parsed_options, cancel_event=cancel_event
-                            )
-                            if progress_callback is not None:
-                                value = progress_callback(
-                                    len(result.pages),
-                                    len(result.pages),
-                                    "postprocess.headers.completed",
-                                )
-                                if asyncio.iscoroutine(value):
-                                    await value
-                        if self.source_verifier is not None:
-                            result.pipeline.primary += "+docling-source-verifier"
                         self._finalize_exports(result, parsed_options)
                         self.quality_service.assess(result)
                         result.usage.duration_ms = max(
@@ -686,8 +682,37 @@ class ParserService:
                             image_parser=self.image_parser,
                             cancel_event=cancel_event,
                         )
+                        if stored.mime_type == "application/pdf" and bool(
+                            setting(self.settings, "semantic_table_output_enabled", True)
+                        ):
+                            semantic_started = time.perf_counter()
+                            await self.table_semantics_service.apply(
+                                result, parsed_options, cancel_event=cancel_event
+                            )
+                            result._semantic_duration_ms = (
+                                time.perf_counter() - semantic_started
+                            ) * 1000
                         result.markdown = result.parse_result.renderings.markdown
                         result.plain_text = result.parse_result.renderings.plain_text
+                        result.usage.duration_ms = max(
+                            0, round((time.perf_counter() - started) * 1000)
+                        )
+                        result.parse_result.runtime.duration_ms = result.usage.duration_ms
+                        if result._semantic_tables:
+                            storage = StorageService(self.settings)
+                            payload = {
+                                "schema": "mo-parse-table-semantics",
+                                "source_sha256": result.parse_result.source.source_sha256,
+                                "markdown_sha256": hashlib.sha256(result.markdown.encode()).hexdigest(),
+                                "source_view_sha256": hashlib.sha256(result._source_markdown.encode()).hexdigest(),
+                                "semantic_duration_ms": result._semantic_duration_ms,
+                                "views": [asdict(view) for view in result._semantic_tables],
+                            }
+                            await asyncio.to_thread(
+                                storage._atomic_write,
+                                storage.logs_dir(result.document_id) / "table-semantics.json",
+                                json.dumps(payload,ensure_ascii=False,separators=(",", ":")).encode(),
+                            )
                         return result
                 finally:
                     await self._leave_parse()
@@ -697,6 +722,10 @@ class ParserService:
             ) from exc
         except ParserCancelledError as exc:
             raise ServiceError("job_cancelled", str(exc), status_code=409) from exc
+        except ParserTimeoutError as exc:
+            raise ServiceError(
+                "parse_timeout", str(exc), status_code=504, details=exc.details
+            ) from exc
         except ParserUnavailableError as exc:
             details: dict[str, object] = {"scan_policy": parsed_options.scan_policy.value}
             if exc.details:

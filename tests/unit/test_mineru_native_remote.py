@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -11,7 +12,7 @@ import pytest
 from app.models.parse_options import ContentParseOptions
 from app.models.parse_result import PageParseResult
 from app.models.source import StoredSource
-from app.parsers.base import ParserError
+from app.parsers.base import ParserCancelledError, ParserError, ParserUnavailableError
 from app.parsers.mineru_native_remote import MinerUNativeRemoteParser, render_mineru_page
 from app.services.export_service import ExportService
 
@@ -209,6 +210,244 @@ def test_partial_th_header_is_unknown_and_does_not_enable_dedup():
     assert fragments[0].header_row_indices == ()
 
 
+@pytest.fixture
+def one_page_source(tmp_path: Path) -> StoredSource:
+    path = tmp_path / "source.pdf"
+    path.write_bytes(b"%PDF-test")
+    return StoredSource(
+        path=path,
+        filename=path.name,
+        mime_type="application/pdf",
+        size_bytes=path.stat().st_size,
+        page_count=1,
+    )
+
+
+def ready_response(ready: bool) -> httpx.Response:
+    return httpx.Response(
+        200, json={"ready": ready, "text_matching": {"name": "native-text-matching-axis-v1"}}
+    )
+
+
+def parsed_response() -> httpx.Response:
+    return httpx.Response(
+        200,
+        json={
+            "schema": "mineru-native/1",
+            "page_count": 1,
+            "pages": [{"page_number": 1, "blocks": [{"type": "text", "markdown": "原件正文"}]}],
+        },
+    )
+
+
+async def test_parse_refreshes_cached_failure_after_worker_recovers_and_posts_once(
+    one_page_source: StoredSource,
+):
+    worker_ready = False
+    requests = []
+
+    def handle(request):
+        requests.append((request.method, request.url.path))
+        return ready_response(worker_ready) if request.method == "GET" else parsed_response()
+
+    parser = MinerUNativeRemoteParser(SimpleNamespace(backend_health_ttl_seconds=3600))
+    parser._client = httpx.AsyncClient(transport=httpx.MockTransport(handle))
+    try:
+        unavailable = await parser.probe()
+        assert not unavailable.ready
+        worker_ready = True
+        assert await parser.probe() is unavailable  # Monitoring still uses its unexpired cache.
+        result = await parser.parse(one_page_source, ContentParseOptions(), document_id="recovered")
+        assert result.processed_pages == 1 and result.pages[0].content == "原件正文"
+        assert requests == [("GET", "/ready"), ("GET", "/ready"), ("POST", "/parse")]
+        assert (await parser.probe()).ready
+        assert len(requests) == 3  # The recovered ready status remains cached.
+    finally:
+        await parser.close()
+
+
+@pytest.mark.parametrize("prime_failure_cache", [False, True])
+async def test_parse_still_rejects_current_unavailable_worker_without_posting(
+    one_page_source: StoredSource,
+    prime_failure_cache: bool,
+):
+    requests = []
+
+    def handle(request):
+        requests.append((request.method, request.url.path))
+        return ready_response(False)
+
+    parser = MinerUNativeRemoteParser(SimpleNamespace(backend_health_ttl_seconds=3600))
+    parser._client = httpx.AsyncClient(transport=httpx.MockTransport(handle))
+    try:
+        if prime_failure_cache:
+            assert not (await parser.probe()).ready
+        with pytest.raises(ParserUnavailableError):
+            await parser.parse(one_page_source, ContentParseOptions(), document_id="unavailable")
+        assert requests == [("GET", "/ready")] * (1 + int(prime_failure_cache))
+    finally:
+        await parser.close()
+
+
+async def test_parse_keeps_successful_readiness_cache_and_does_not_retry_failed_post(
+    one_page_source: StoredSource,
+):
+    requests = []
+
+    def handle(request):
+        requests.append((request.method, request.url.path))
+        return ready_response(True) if request.method == "GET" else httpx.Response(503)
+
+    parser = MinerUNativeRemoteParser(SimpleNamespace(backend_health_ttl_seconds=3600))
+    parser._client = httpx.AsyncClient(transport=httpx.MockTransport(handle))
+    try:
+        assert (await parser.probe()).ready
+        with pytest.raises(ParserError, match="native MinerU worker failed"):
+            await parser.parse(one_page_source, ContentParseOptions(), document_id="failed_post")
+        assert requests == [("GET", "/ready"), ("POST", "/parse")]
+    finally:
+        await parser.close()
+
+
+@pytest.mark.parametrize("reason", ["cancel", "deadline"])
+async def test_managed_request_stops_only_its_attempt_and_waits_for_ack(one_page_source, reason):
+    from app.parsers.base import ParserTimeoutError
+    from app.utils.deadline import attach_deadline
+
+    entered, stop_received, cleanup_release = asyncio.Event(), asyncio.Event(), asyncio.Event()
+    cancel = asyncio.Event()
+    requests = []
+    phases = []
+
+    async def handle(request):
+        requests.append((request.method, request.url.path))
+        if request.url.path == "/ready":
+            return httpx.Response(
+                200,
+                json={
+                    "ready": True,
+                    "text_matching": {"name": "native-text-matching-axis-v1"},
+                    "request_control": {"protocol": "native-request/1"},
+                },
+            )
+        if request.url.path == "/parse":
+            entered.set()
+            await stop_received.wait()
+            await cleanup_release.wait()
+            return httpx.Response(409)
+        if request.url.path.endswith("/cancel"):
+            stop_received.set()
+            return httpx.Response(200, json={"state": "stopping"})
+        return httpx.Response(
+            200,
+            json={
+                "state": "cancelled" if cleanup_release.is_set() else "running",
+                "current": 1,
+                "total": 1,
+                "phase": "window.processed",
+            },
+        )
+
+    parser = MinerUNativeRemoteParser(SimpleNamespace())
+    parser._client = httpx.AsyncClient(transport=httpx.MockTransport(handle))
+    options = ContentParseOptions()
+    if reason == "deadline":
+        options = attach_deadline(options, 0.05)
+    expected = ParserCancelledError if reason == "cancel" else ParserTimeoutError
+    work = asyncio.create_task(
+        parser.parse(
+            one_page_source,
+            options,
+            document_id="owned",
+            cancel_event=cancel,
+            progress_callback=lambda *args: phases.append(args),
+        )
+    )
+    try:
+        await entered.wait()
+        if reason == "cancel":
+            cancel.set()
+        await stop_received.wait()
+        assert not work.done()
+        assert sum(method == "POST" and path == "/parse" for method, path in requests) == 1
+        stops = [path for method, path in requests if path.endswith("/cancel")]
+        assert len(stops) == 1 and len(stops[0].split("/")[2]) == 32
+        cleanup_release.set()
+        with pytest.raises(expected):
+            await work
+    finally:
+        cleanup_release.set()
+        await parser.close()
+
+
+@pytest.mark.parametrize("cancel_at", ["before_parse", "fresh_probe", "parse_post"])
+async def test_cached_failure_refresh_preserves_cancellation(
+    one_page_source: StoredSource,
+    cancel_at: str,
+):
+    cancel_event = asyncio.Event()
+    worker_ready = False
+    requests = []
+
+    def handle(request):
+        requests.append((request.method, request.url.path))
+        if request.method == "GET":
+            if worker_ready and cancel_at == "fresh_probe":
+                cancel_event.set()
+            return ready_response(worker_ready)
+        if cancel_at == "parse_post":
+            cancel_event.set()
+        return parsed_response()
+
+    parser = MinerUNativeRemoteParser(SimpleNamespace(backend_health_ttl_seconds=3600))
+    parser._client = httpx.AsyncClient(transport=httpx.MockTransport(handle))
+    try:
+        assert not (await parser.probe()).ready
+        worker_ready = True
+        if cancel_at == "before_parse":
+            cancel_event.set()
+        with pytest.raises(ParserCancelledError):
+            await parser.parse(
+                one_page_source,
+                ContentParseOptions(),
+                document_id="cancelled",
+                cancel_event=cancel_event,
+            )
+        assert requests.count(("GET", "/ready")) == (1 if cancel_at == "before_parse" else 2)
+        assert requests.count(("POST", "/parse")) == int(cancel_at == "parse_post")
+    finally:
+        await parser.close()
+
+
+async def test_http_read_timeout_is_not_worker_cleanup_ack():
+    stop_received, release = asyncio.Event(), asyncio.Event()
+
+    async def handle(request):
+        if request.method == "POST":
+            stop_received.set()
+            return httpx.Response(200, json={"state": "stopping"})
+        return httpx.Response(200, json={"state": "cancelled" if release.is_set() else "stopping"})
+
+    async def lost_response():
+        raise httpx.ReadTimeout("HTTP ended before worker thread cleanup")
+
+    parser = MinerUNativeRemoteParser(SimpleNamespace())
+    parser._client = httpx.AsyncClient(transport=httpx.MockTransport(handle))
+    parser._request_protocol = True
+    work = asyncio.create_task(lost_response())
+    await asyncio.sleep(0)
+    cleanup = asyncio.create_task(parser._stop_request("owned-attempt", work))
+    try:
+        await stop_received.wait()
+        await asyncio.sleep(0.01)
+        assert work.done() and not cleanup.done()
+        release.set()
+        await asyncio.wait_for(cleanup, timeout=2)
+    finally:
+        release.set()
+        await parser.close()
+
+
 @pytest.mark.asyncio
 async def test_readiness_follows_selected_mineru_and_keeps_legacy_check_key(tmp_path: Path):
     from unittest.mock import AsyncMock
@@ -220,7 +459,11 @@ async def test_readiness_follows_selected_mineru_and_keeps_legacy_check_key(tmp_
     from app.lifespan import Runtime
     from app.models.backend import BackendState, BackendStatus
 
-    settings = Settings(data_dir=tmp_path, native_parser_backend="mineru")
+    settings = Settings(
+        _env_file=None,
+        data_dir=tmp_path,
+        native_parser_backend="mineru",
+    )
     statuses = [BackendStatus(name="mineru-advanced-txt", state=BackendState.READY)]
     parser = SimpleNamespace(probe_backends=AsyncMock(return_value=statuses))
     runtime = Runtime(

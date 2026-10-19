@@ -286,11 +286,12 @@ def test_ir_retains_all_header_levels_spans_units_and_page_relation() -> None:
     assert all(cell.cell_id.startswith("p2_t1-") for cell in table.cells)
 
 
-def test_ir_no_cell_header_keeps_legacy_metadata_but_cannot_authorize_merge() -> None:
+def test_ir_no_cell_header_stays_unknown_and_cannot_authorize_merge() -> None:
     fragment = _multilevel(2)
     fragment.cells = []
 
-    assert DocumentIRService._table(fragment).header_rows == [0]
+    assert DocumentIRService._table(fragment).header_rows == []
+    assert not any(cell.is_column_header for cell in DocumentIRService._table(fragment).cells)
     assert not _headers_match(_multilevel(1), fragment)
 
 
@@ -326,7 +327,7 @@ def test_equal_source_preludes_preserve_title_and_unit_during_merge() -> None:
     for fragment in [first, second]:
         fragment.rendered = (
             f"<!-- table-fragment: {fragment.fragment_id} -->\n\n"
-            f"销售统计\n\n单位：万元\n\n{fragment.markdown}"
+            f"销售统计\n\n单位：万元\n\n{fragment._structure_marker}\n\n{fragment._table_rendering}"
         )
     pages = [
         PageParseResult(page_number=f.page_number, content=f.rendered) for f in [first, second]

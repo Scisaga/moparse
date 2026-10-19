@@ -214,12 +214,50 @@ async def test_postprocess_phase_does_not_regress_whole_document_progress(tmp_pa
         if item.data.get("phase") == "postprocess.glm_ocr"
     )
     assert event.data["current"] == event.data["total"] == record.page_count
+    assert event.data["percent"] == 99.0
+    assert live.progress.phase == "postprocess.glm_ocr"
 
     parser.release.set()
     while not (await repository.require(record.id)).is_terminal:
         await asyncio.sleep(0)
     await jobs.shutdown()
     await source.close()
+
+
+async def test_running_cancel_is_requested_until_owned_parse_stops_and_cannot_be_deleted(
+    tmp_path: Path,
+):
+    settings = async_job_settings(tmp_path)
+    storage, repository = StorageService(settings), JobRepository(settings)
+    source = SourceService(settings, storage)
+    parser = BlockingParserService()
+    jobs = JobService(settings, repository, storage, source, parser)
+    await jobs.start()
+    try:
+        record = await jobs.create_job(
+            filename="cancel.pdf", content=Path("tests/fixtures/native-report.pdf").read_bytes()
+        )
+        await parser.entered.wait()
+        requested = await jobs.cancel_job(record.id)
+        assert requested.status == JobStatus.RUNNING
+        assert requested.progress.phase == "cancellation.cleanup"
+        assert not (await repository.require(record.id)).is_terminal
+        with pytest.raises(ServiceError, match="cancel an active job"):
+            await jobs.delete_job(record.id)
+        assert Path(record.source_path).is_file()
+        assert any(
+            event.event == "job.cancel_requested" for event in jobs._event_history[record.id]
+        )
+        assert not any(event.event == "job.cancelled" for event in jobs._event_history[record.id])
+        parser.release.set()
+        while record.id in jobs._running_jobs:
+            await asyncio.sleep(0)
+        assert (await repository.require(record.id)).status == JobStatus.CANCELLED
+        assert await jobs.delete_job(record.id)
+    finally:
+        parser.release.set()
+        await jobs.shutdown()
+        await source.close()
 
 
 async def test_async_create_admission_precedes_prepare_and_reuses_after_dequeue(

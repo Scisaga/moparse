@@ -11,22 +11,22 @@ import { getDocument } from 'pdfjs-dist'
 import { DocumentPreview } from './DocumentPreview'
 
 describe('DocumentPreview empty states', () => {
-  it('renders the branded input Copybot while waiting for a source', () => {
+  it('renders the document terminal while waiting for a source', () => {
     const { container } = render(
       <DocumentPreview source={{ kind: 'file', file: null, url: '' }} />,
     )
     expect(screen.getByText('预览区等待内容')).toBeInTheDocument()
-    expect(container.querySelector('.workspace-state-input-empty img')).toHaveAttribute('src', '/illustrations/workspace-input.png')
+    expect(container.querySelector('.workspace-state-input-empty img')).toHaveAttribute('src', '/illustrations/workspace-input.svg?v=mo-parse-terminal-20261019-2')
     expect(screen.queryByRole('img')).not.toBeInTheDocument()
   })
 
-  it('uses an informational Copybot for TIFF without reporting an error', () => {
+  it('uses an informational document terminal for TIFF without reporting an error', () => {
     const file = new File(['tiff'], 'scan.tiff', { type: 'image/tiff' })
     const { container } = render(
       <DocumentPreview source={{ kind: 'file', file, url: '' }} />,
     )
     expect(screen.getByText('TIFF 已选择')).toBeInTheDocument()
-    expect(container.querySelector('.workspace-state-info img')).toHaveAttribute('src', '/illustrations/workspace-info.png')
+    expect(container.querySelector('.workspace-state-info img')).toHaveAttribute('src', '/illustrations/workspace-info.svg?v=mo-parse-terminal-20261019-2')
     expect(screen.queryByRole('alert')).not.toBeInTheDocument()
   })
 })

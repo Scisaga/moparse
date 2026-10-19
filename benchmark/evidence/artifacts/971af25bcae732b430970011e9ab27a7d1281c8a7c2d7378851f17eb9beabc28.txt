@@ -1,5 +1,0 @@
-native_worker/server.py:122: error: Need type annotation for "images" (hint:
-"images: list[<type>] = ...")  [var-annotated]
-            images = []
-            ^~~~~~
-Found 1 error in 1 file (checked 57 source files)

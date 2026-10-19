@@ -1,9 +1,0 @@
-{
-  "at": "2026-10-17T22:07:11.103472+08:00",
-  "status": "ready_for_official_native",
-  "server_url": "http://127.0.0.1:12431",
-  "model": "mineru-trial",
-  "original14_complete": true,
-  "extra_p62_exit_code": null,
-  "container_id": "3dcd543c71902b0ebfe335c0ab0e97cfc3ae715cd309605afee027775e15a871"
-}

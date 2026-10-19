@@ -1,0 +1,104 @@
+{
+  "tool": "imagegen (built-in)",
+  "client_date": "2026-10-18",
+  "timezone": "Asia/Shanghai",
+  "requested_change": "Enclosure color variants; retain original dark glass screen and glowing facial expression",
+  "active_brand_assets_replaced": false,
+  "actual_printed_object": false,
+  "reference": {
+    "path": "assets/logo-variants/source-turquoise.png",
+    "origin": "Earlier generated printer icon, visually matching the user's supplied dark-screen reference",
+    "sha256": "7391a3019445bc12b26b1275f4004d7b731d461b739fe39c7dd9e771570c9e4b"
+  },
+  "visual_review": {
+    "status": "pass",
+    "face": "Dark navy glass screen, glowing vertical eyes and curved smile retained",
+    "controls": "Left slot, right yellow button, white light to its right, and two dark feet retained",
+    "scope": "Visual review only, not a claim of pixel identity"
+  },
+  "variants": [
+    {
+      "id": "A",
+      "label": "均衡蓝青",
+      "front": "#42B8D5",
+      "side": "#278EB1",
+      "prompt": "Use case: precise-object-edit, COLOR CHANGE ONLY.\nSelect as the edit target the earlier supplied printer with the DARK NAVY GLASS SCREEN, TWO GLOWING PALE VERTICAL EYES AND GLOWING CURVED SMILE. The other image with a pale face panel and black dot eyes is a rejected edit: IGNORE it completely.\n\nMake ONE change only: shift the printer's mint/turquoise OUTER ENCLOSURE to BLUE-CYAN, around #42B8D5 on the front and #278EB1 on the shaded right side. Preserve the existing illumination, highlights, gradients and material. The hue should be a little bluer and less green, still clearly cyan-blue rather than deep cobalt. Recolor the folded paper corner accent consistently.\n\nLOCK THE ENTIRE FACE: keep the original dark navy glass screen, its reflections, both glowing pale vertical rounded-rectangle eyes, and the glowing curved smiling mouth exactly as in the dark-screen source. Do not change the face panel color, eye shape, eye size, spacing, glow, mouth or facial expression. Do not use dot eyes, black facial features or a pale display. Face changes are forbidden.\nAlso preserve the exact rounded printer silhouette, camera angle, proportions, top paper and three grey bars, top input opening, front narrow output slot, yellow button, white indicator, two dark low feet, framing, glossy 3D appearance and transparent background. Do not add any part or redesign anything. No new paper sheet, arms, text, backdrop, floor, cast shadow or watermark.\nReturn one color-edited version of the original DARK-SCREEN icon on transparent RGBA.",
+      "input_mode": "conversation reference images; original dark-screen image selected",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "path": "assets/logo-variants/a-balanced-blue-cyan.png",
+      "sha256": "6211f279fbf5e8ce5bfb490b5b53b8685fa004b8daf4d59b94b25a8fa4717755",
+      "generated_bytes_preserved": true
+    },
+    {
+      "id": "B",
+      "label": "偏蓝",
+      "front": "#399FD1",
+      "side": "#217CB0",
+      "description": "A distinctly bluer azure-cyan, cheerful and clear; blue dominates cyan, without becoming dark cobalt.",
+      "prompt": "Use case: precise-object-edit, COLOR CHANGE ONLY.\nEdit the supplied original printer icon. Produce ONE 偏蓝 palette variant.\nOnly recolor the turquoise OUTER ENCLOSURE to #399FD1 on front lit surfaces and #217CB0 on shaded side surfaces, adapted naturally to the existing light. A distinctly bluer azure-cyan, cheerful and clear; blue dominates cyan, without becoming dark cobalt. Match the folded paper corner accent to the enclosure palette.\n\nPreserve the ENTIRE ORIGINAL FACE: the same dark navy glass screen and reflections, same pale glowing vertical rounded-rectangle eyes, same pale glowing curved smile, exact facial proportions, placement and expression. Do not repaint the screen pale, use dot eyes, shrink the eyes or change the mouth. Face and screen colors must remain as in the original.\nPreserve the same silhouette, dimensions, rounded corners, camera angle, highlights, glossy 3D material, paper sheet with three grey bars, input opening, narrow front output slot on the left, yellow button on right, white indicator to its right, and both dark navy low feet. No added output paper, body parts or details.\nOnly the outer blue-cyan palette changes. One icon on genuine transparent RGBA, all of it visible, no scene, text, floor, pedestal, cast shadow, watermark or added decoration.",
+      "input_mode": "original dark-screen PNG reference",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "path": "assets/logo-variants/b-blue.png",
+      "sha256": "a5ad8c3f1a4468bc347ee5f562d7a5ceae04fbb4cc3669c5c3a67df6c7dcc69a",
+      "generated_bytes_preserved": true
+    },
+    {
+      "id": "C",
+      "label": "偏青",
+      "front": "#42C5CF",
+      "side": "#249EAF",
+      "description": "A distinctly more cyan blue-cyan, bright and fresh, keeping a blue component and avoiding green/mint.",
+      "prompt": "Use case: precise-object-edit, COLOR CHANGE ONLY.\nEdit the supplied original printer icon. Produce ONE 偏青 palette variant.\nOnly recolor the turquoise OUTER ENCLOSURE to #42C5CF on front lit surfaces and #249EAF on shaded side surfaces, adapted naturally to the existing light. A distinctly more cyan blue-cyan, bright and fresh, keeping a blue component and avoiding green/mint. Match the folded paper corner accent to the enclosure palette.\n\nPreserve the ENTIRE ORIGINAL FACE: the same dark navy glass screen and reflections, same pale glowing vertical rounded-rectangle eyes, same pale glowing curved smile, exact facial proportions, placement and expression. Do not repaint the screen pale, use dot eyes, shrink the eyes or change the mouth. Face and screen colors must remain as in the original.\nPreserve the same silhouette, dimensions, rounded corners, camera angle, highlights, glossy 3D material, paper sheet with three grey bars, input opening, narrow front output slot on the left, yellow button on right, white indicator to its right, and both dark navy low feet. No added output paper, body parts or details.\nOnly the outer blue-cyan palette changes. One icon on genuine transparent RGBA, all of it visible, no scene, text, floor, pedestal, cast shadow, watermark or added decoration.",
+      "input_mode": "original dark-screen PNG reference",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "path": "assets/logo-variants/c-cyan.png",
+      "sha256": "07cead28ff32ce7f2345c9b5c6376264532de9a9aa4932a7f241172a8f3703bf",
+      "generated_bytes_preserved": true
+    },
+    {
+      "id": "D",
+      "label": "低饱和蓝青",
+      "front": "#76AEBE",
+      "side": "#4C859D",
+      "description": "A muted softly desaturated blue-cyan, calm and understated; saturation changes only, retain the existing glossy material.",
+      "prompt": "Use case: precise-object-edit, COLOR CHANGE ONLY.\nEdit the supplied original printer icon. Produce ONE 低饱和蓝青 palette variant.\nOnly recolor the turquoise OUTER ENCLOSURE to #76AEBE on front lit surfaces and #4C859D on shaded side surfaces, adapted naturally to the existing light. A muted softly desaturated blue-cyan, calm and understated; saturation changes only, retain the existing glossy material. Match the folded paper corner accent to the enclosure palette.\n\nPreserve the ENTIRE ORIGINAL FACE: the same dark navy glass screen and reflections, same pale glowing vertical rounded-rectangle eyes, same pale glowing curved smile, exact facial proportions, placement and expression. Do not repaint the screen pale, use dot eyes, shrink the eyes or change the mouth. Face and screen colors must remain as in the original.\nPreserve the same silhouette, dimensions, rounded corners, camera angle, highlights, glossy 3D material, paper sheet with three grey bars, input opening, narrow front output slot on the left, yellow button on right, white indicator to its right, and both dark navy low feet. No added output paper, body parts or details.\nOnly the outer blue-cyan palette changes. One icon on genuine transparent RGBA, all of it visible, no scene, text, floor, pedestal, cast shadow, watermark or added decoration.",
+      "input_mode": "original dark-screen PNG reference",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "path": "assets/logo-variants/d-muted-blue-cyan.png",
+      "sha256": "989bce433fcff1bc0e875cec9311c09bc775a34bacd21bb64355e84c3f7d0334",
+      "generated_bytes_preserved": true
+    }
+  ]
+}

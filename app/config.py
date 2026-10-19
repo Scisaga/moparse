@@ -10,6 +10,8 @@ from urllib.parse import urlparse
 from pydantic import AliasChoices, BeforeValidator, Field, field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+from app import __version__
+
 
 def _empty_to_none(value: object) -> object:
     if value == "":
@@ -36,7 +38,7 @@ class Settings(BaseSettings):
 
     app_name: str = "moparse"
     app_id: str = "moparse"
-    version: str = "0.5.0"
+    version: str = __version__
     host: str = "0.0.0.0"
     port: int = Field(default=12303, ge=1, le=65535)
     tz: str = "Asia/Shanghai"
@@ -78,8 +80,6 @@ class Settings(BaseSettings):
     native_parser_backend: Literal["docling", "mineru"] = "docling"
     mineru_native_base_url: str = "http://mineru-native:8010"
     mineru_native_timeout_seconds: float = Field(default=3600.0, gt=0)
-    mineru_header_verifier: Literal["off", "docling"] = "off"
-    mineru_source_verifier: Literal["off", "docling"] = "off"
 
     docling_device: str = "cpu"
     # Prefer the application-specific name: upstream Docling also consumes
@@ -109,6 +109,7 @@ class Settings(BaseSettings):
     quality_scanned_min_image_coverage: float = Field(default=0.80, ge=0, le=1)
     quality_scanned_min_ink_ratio: float = Field(default=0.03, ge=0, le=1)
     cross_page_table_merge_enabled: bool = True
+    semantic_table_output_enabled: bool = True
 
     glm_ocr_enabled: bool = False
     glm_ocr_api_url: str = "http://glm-ocr:8000/v1/chat/completions"
@@ -171,15 +172,6 @@ class Settings(BaseSettings):
 
     @model_validator(mode="after")
     def validate_limits(self) -> Settings:
-        if self.mineru_header_verifier != "off" and self.native_parser_backend != "mineru":
-            raise ValueError("MINERU_HEADER_VERIFIER requires NATIVE_PARSER_BACKEND=mineru")
-        if self.mineru_source_verifier != "off" and (
-            self.native_parser_backend != "mineru" or self.mineru_header_verifier != "docling"
-        ):
-            raise ValueError(
-                "MINERU_SOURCE_VERIFIER requires NATIVE_PARSER_BACKEND=mineru "
-                "and MINERU_HEADER_VERIFIER=docling"
-            )
         if self.sync_max_bytes > self.max_upload_bytes:
             raise ValueError("SYNC_MAX_BYTES cannot exceed MAX_UPLOAD_BYTES")
         if self.sync_max_units > self.max_content_units:
@@ -238,8 +230,7 @@ class Settings(BaseSettings):
             "ffmpeg_max_concurrency": self.ffmpeg_max_concurrency,
             "ffmpeg_threads": self.ffmpeg_threads,
             "native_parser_backend": self.native_parser_backend,
-            "mineru_header_verifier": self.mineru_header_verifier,
-            "mineru_source_verifier": self.mineru_source_verifier,
+            "semantic_table_output_enabled": self.semantic_table_output_enabled,
             "docling_device": self.docling_device,
             "docling_pdf_backend": self.docling_pdf_backend,
             "docling_do_cell_matching": self.docling_do_cell_matching,

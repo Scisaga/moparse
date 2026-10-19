@@ -92,10 +92,6 @@ class Runtime:
             else "docling-standard"
         )
         native_ready = any(item.name == native_name and item.ready for item in backends)
-        if getattr(self.settings, "mineru_header_verifier", "off") == "docling":
-            native_ready = native_ready and any(
-                item.name == "docling-header-verifier" and item.ready for item in backends
-            )
         return (
             {
                 "writable_data_dir": writable_data,

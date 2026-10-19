@@ -33,11 +33,11 @@ describe('result rendering contract', () => {
   })
 })
 
-describe('Mosaic header contract', () => {
-  it('uses CSS mosaic tiles, keeps stage labels unadorned, and does not clip status popovers', () => {
+describe('document terminal header contract', () => {
+  it('keeps static decoration behind controls and does not clip status popovers', () => {
     expect(styles).toContain('.stage-eyebrow::before { display: none; }')
-    expect(styles).toContain('.header-mosaic')
-    expect(styles).toContain('background: rgba(5, 18, 31, .34)')
+    expect(styles).toContain('.header-document')
+    expect(styles).toContain('opacity: .17; pointer-events: none;')
     expect(styles).toContain('position: relative;\n  z-index: 20;\n  isolation: isolate;\n  overflow: visible;')
   })
 })

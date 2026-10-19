@@ -1,5 +1,0 @@
-{
-  "captured_at": "2026-10-17T21:09:45.495642+08:00",
-  "gpus": "index, name, compute_cap, memory.total [MiB], memory.used [MiB], utilization.gpu [%], temperature.gpu, power.draw [W]\n0, NVIDIA GeForce RTX 2080 Ti, 7.5, 22528 MiB, 19822 MiB, 58 %, 77, 177.07 W\n1, NVIDIA GeForce RTX 2080 Ti, 7.5, 22528 MiB, 16894 MiB, 0 %, 34, 26.35 W\n",
-  "processes": "gpu_uuid, pid, process_name, used_gpu_memory [MiB]\nGPU-95b5895b-c5f3-440b-4bd2-7160ec4da0d1, 3128, python, 8150 MiB\nGPU-95b5895b-c5f3-440b-4bd2-7160ec4da0d1, 10617, VLLM::EngineCore, 9798 MiB\nGPU-95b5895b-c5f3-440b-4bd2-7160ec4da0d1, 11623, VLLM::EngineCore, 1870 MiB\nGPU-87a92d2a-6521-1e36-1ca9-21fd8085b365, 6977, VLLM::EngineCore, 11612 MiB\nGPU-87a92d2a-6521-1e36-1ca9-21fd8085b365, 1037778, /opt/qwen3-tts-openai/.tools/venv-gpu/bin/python, 5278 MiB\n"
-}

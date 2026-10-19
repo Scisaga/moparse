@@ -1,0 +1,74 @@
+{
+  "schema": "moparse-brand-generation/2",
+  "tool": "imagegen (built-in)",
+  "client_date": "2026-10-19",
+  "timezone": "Asia/Shanghai",
+  "selected_design": "L3 standing companion, explicitly identified by the user with an attached image",
+  "palette_reference": "assets/logo-terminal-refinements-v2/l1-classic-terminal.png",
+  "previous_active": {
+    "asset": "assets/moparse-logo-robot-master-v1.png",
+    "metadata": "assets/moparse-logo-robot-master-v1.json"
+  },
+  "logo": {
+    "asset": "assets/moparse-logo-3d-master.png",
+    "frozen_asset": "assets/brand-selected-terminal-20261019/logo-blue-cyan.png",
+    "source": "/root/.codex/generated_images/01a150ea-cb0a-71e1-80af-ec0c1c6b7557/exec-730927b2-2188-4b1d-a4dd-8b8011e5e14d.png",
+    "reference": "assets/logo-terminal-refinements-v2/l3-standing-companion.png",
+    "prompt": "Use case: precise-object-edit.\nAsset type: final selected MO-Parse project logo, transparent PNG.\nInput image 1 is the EDIT TARGET: the upright mint-green document-terminal character WITH TWO ARMS AND TWO LEGS.\nInput image 2 is a COLOR REFERENCE ONLY: use its balanced blue-cyan / turquoise casing palette. Do NOT borrow its body shape, screen proportions, base or lack of limbs.\nPrimary request: recolor ONLY the green outer casing of image 1 into the blue-cyan color family of image 2. Change the folded paper corner accent to this same blue-cyan family. Keep dark navy-gray limbs and screen rim, warm pale ivory screen and paper, the amber button and restrained little face.\nStrict invariants: preserve image 1's tall upright rounded-rectangle terminal silhouette, exact front-right three-quarter camera angle, original screen size and rounded outline, tiny dark round eyes, short thin smile, top paper-reading slot, one paper sheet with two text bars and table motif, lower narrow slot, single yellow-amber button, both hanging slender arms and hands, two short legs and flat rounded feet, posture and perspective. No cream wedge body, no continuous pedestal base, no missing limbs, no added parts, no enlarged facial features, no redesign.\nPolish: remove all stray white flecks and background debris above the document and beside the body. Maintain the object itself, preserve clean antialiased edges and actual transparent gaps between limbs and body. Clean genuine alpha background, not a checkerboard or flat white backdrop. Keep the whole figure comfortably inside a square canvas with a little clean transparent margin on all sides.\nNo text, lettering, wordmark, watermark, scenery, floor, cast shadow or extra objects. One complete recolored version of IMAGE 1 only.",
+    "cleanup_prompt": "Use case: precise-object-edit.\nAsset type: production logo transparency cleanup.\nEdit the supplied BLUE-CYAN standing document-terminal mascot. KEEP its exact entire design, blue-cyan palette, warm pale screen, tiny dot eyes and thin smile, document motif, amber button, body proportions, camera angle, arms and legs. Do not redesign or recolor anything.\nThe only corrections are: remove EVERY floating white fragment, colored fleck and transparent-edge debris outside the physical character; especially completely clear the irregular WHITE BLOTS ABOVE THE PAPER, restoring ONE smooth clean continuous top paper edge. Keep all object interior details intact. Fit the same full character slightly smaller and centrally within the square with at least 5 percent clean genuinely TRANSPARENT margin above the paper and below feet and beside hands. Reconstruct clean anti-aliased alpha edges, no fringes. The paper must be a single intact sheet with a clean top boundary, not a ripped page. Background has zero visible material, no checkerboard, no floor, no cast shadow. One complete standing terminal, all four limbs retained.",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "sha256": "5af9836547cfbfe2e81a65122263fe9ba9052a50d39853ee0f9cadf23711a89e",
+    "reference_sha256": "bee1ec5b1809286c4c806b32793e2812e500c82d093f78f5ed86603c84ed51b2"
+  },
+  "favicon": {
+    "asset": "assets/moparse-favicon-master.png",
+    "frozen_asset": "assets/brand-selected-terminal-20261019/favicon-front.png",
+    "source": "/root/.codex/generated_images/01a150ea-cb0a-71e1-80af-ec0c1c6b7557/exec-c564a24e-8abf-4899-bbe0-5f69a8b6ebc1.png",
+    "reference": "/root/.codex/generated_images/01a150ea-cb0a-71e1-80af-ec0c1c6b7557/exec-ded2bde8-4804-44b9-9cee-b437c3e2117f.png",
+    "prompt": "Use case: precise-object-edit.\nAsset type: dedicated low-resolution favicon master for MO-Parse, derived from the supplied selected blue-cyan terminal mascot.\nPrimary request: redesign ONLY the view and level of detail for a tiny browser-tab icon. Make a DIRECT STRAIGHT-ON FRONT VIEW of this same upright blue-cyan document terminal, and REMOVE ALL ARMS, HANDS, LEGS AND FEET. No side face, no perspective turn, no three-quarter view, no floor or base pedestal.\nPreserve identifying features: rounded blue-cyan casing, one large warm pale ivory screen with dark navy rim, two small dark round eyes and a short quiet smile, one compact white document protruding from a centered top slot, and one small amber button at bottom right. A single short navy paper slot may appear at bottom left.\nSmall-size adaptation: design to remain distinct at 16x16 and 32x32 pixels. Use big clean shapes, high contrast, sturdy contours, no thin technical details. The document is short and broad, with a clearly folded corner and at most ONE broad dark content stroke; remove its tiny table grid and fine text. Make the face slightly bolder so two separated dots and a short smile survive downsampling. Flatten the lighting into simple calm color areas with only a restrained broad highlight. Avoid glass reflections, noisy gradients, printed textures, decorative seams, tiny indicators and dangling parts.\nComposition: exactly one complete near-square icon centered in square transparent canvas, tight but clean framing with about 6 percent transparent margin. Body takes most of the square, the short top paper doesn't overwhelm it. Crisp clean antialiased silhouette, genuine RGBA alpha, entirely clean empty margin, no specks or floating fragments. No extra app-tile background, text, watermark, shadow or scenery. This is the selected terminal's dedicated small-size emblem, not its full three-quarter portrait reduced.",
+    "adaptation": "Dedicated frontal no-limb terminal with simplified document and stronger face marks for small-size display",
+    "dimensions": [
+      1254,
+      1254
+    ],
+    "mode": "RGBA",
+    "sha256": "978c42a5e1ce55d82db41250001ae7448982f43fd420fcd5e050cbd93b00dfd9"
+  },
+  "transparent_background": true,
+  "generated_bytes_preserved": true,
+  "export": {
+    "logo_sizes": [
+      1024,
+      256
+    ],
+    "favicon_sizes": [
+      16,
+      32,
+      48,
+      64
+    ],
+    "ico_frames": [
+      16,
+      32,
+      48,
+      64
+    ],
+    "apple_touch_icon_size": 180,
+    "favicon_trim": "Alpha >= 128 content bounds with 4 source-pixel antialiasing guard, tight 16px framing and approximately 3 percent margins for larger sizes",
+    "cache_version": "mo-parse-terminal-20261019-2",
+    "workspace_scenes": [
+      "input",
+      "markdown",
+      "text",
+      "pages",
+      "loading",
+      "info",
+      "error"
+    ],
+    "workspace_scene_source": "assets/moparse-logo-3d-master.png"
+  }
+}

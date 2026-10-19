@@ -1,0 +1,67 @@
+{
+  "tool": "imagegen (built-in)",
+  "client_date": "2026-10-19",
+  "timezone": "Asia/Shanghai",
+  "scope": "Concept-led redesigns of the MO-Parse document-reading terminal",
+  "concept_identity": "A compact approachable local terminal that reads and organizes document content",
+  "redesign_factors": [
+    "Enclosure architecture",
+    "Relationship between page and reading mechanism",
+    "Integrated face/interface",
+    "Proportions"
+  ],
+  "reference": {
+    "path": "assets/logo-variants/a-balanced-blue-cyan.png",
+    "sha256": "6211f279fbf5e8ce5bfb490b5b53b8685fa004b8daf4d59b94b25a8fa4717755",
+    "role": "Concept, personality and physical-rendering reference; not a fixed geometry template"
+  },
+  "active_brand_assets_replaced": false,
+  "actual_physical_objects": false,
+  "variants": [
+    {
+      "id": "H1",
+      "label": "夹页式阅读终端",
+      "idea": "A compact reader whose body gently grips a page, making the reading action part of its silhouette.",
+      "brief": "Reinvent the device as a SMALL SOLID PAGE-GRIPPING READER. A compact rounded asymmetric wedge body gently holds the lower third of ONE off-white document in a shallow diagonal gripping jaw at the upper-right shoulder. The document leans slightly back; the chunky machine has real enclosed volume and a stable broad bottom, not an open C sculpture. The outer cover sweeps around the jaw as one continuous softly curved blue-cyan shell. An understated narrow dark reading band is integrated into the front curve, and its two tiny optical marks plus a modest smile give the machine a friendly attentive expression. Recompose that face for this design rather than pasting the old screen onto it. The page, gripping lip and body should feel designed together. Favor a gently sloped body and asymmetry over a square box. One small amber functional accent if useful; no extra controls.",
+      "prompt": "Use case: logo-brand / identity-based redesign.\nTask: create ONE genuine redesigned variant of the MO-Parse logo, not a recolor, different camera angle or geometric stretch of the reference.\nThe supplied A icon is a CONCEPT AND BRAND-PERSONALITY REFERENCE: a friendly compact local terminal that reads documents. Retain that purpose, approachable character and convincing 3D product quality. The box outline, display shape, facial graphics and button arrangement are NOT fixed templates.\n\nVariant H1: 夹页式阅读终端.\nCore design idea: A compact reader whose body gently grips a page, making the reading action part of its silhouette.\nReinvent the device as a SMALL SOLID PAGE-GRIPPING READER. A compact rounded asymmetric wedge body gently holds the lower third of ONE off-white document in a shallow diagonal gripping jaw at the upper-right shoulder. The document leans slightly back; the chunky machine has real enclosed volume and a stable broad bottom, not an open C sculpture. The outer cover sweeps around the jaw as one continuous softly curved blue-cyan shell. An understated narrow dark reading band is integrated into the front curve, and its two tiny optical marks plus a modest smile give the machine a friendly attentive expression. Recompose that face for this design rather than pasting the old screen onto it. The page, gripping lip and body should feel designed together. Favor a gently sloped body and asymmetry over a square box. One small amber functional accent if useful; no extra controls.\n\nJudge the result as a product logo: one memorable silhouette, one complete compact little device, a clear relationship to a document, and a restrained welcoming personality. Redesign the proportions, enclosure, paper support and face/interface as an integrated whole. Be expressive through design judgment rather than adding many parts or giant eyes.\nUse a coherent blue / blue-cyan / navy / ivory family, with soft satin-matte physical materials, very subtle fabrication texture, clean bevels and carefully judged studio light. Allow the design to differ from A while remaining recognizably a document-reading helper.\nOne whole icon in a flattering near-front three-quarter view, centered on square transparent RGBA with generous clean margin. No text, captions, wordmark, diagram arrows, floor, pedestal, cast shadow, scene, watermark or extra props. Keep alpha edges clean.",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "path": "assets/logo-concept-variants/h1-page-grip.png",
+      "sha256": "df53d26c89ea512af9dc7a5203366d88a5c57c61b66a94a22e72e2c7e6f5f903",
+      "generated_bytes_preserved": true
+    },
+    {
+      "id": "H2",
+      "label": "侧读式解析终端",
+      "idea": "A complete low reader with a diagonal side-to-front paper route, where the paper path organizes the enclosure.",
+      "brief": "Reinvent the device as a LOW, COMPLETE DESKTOP READER with a calm asymmetric capsule/wedge body and a distinct diagonal cover seam. A small source document enters a sloping opening on the rear-left shoulder; a short orderly off-white content card emerges from the front-right side. Both belong to the same compact machine, without arrows or a process diagram. Keep the main shell closed and substantial with a stable center of gravity; no open arch, doorway or abstract bracket form. The sloped cover and diagonal paper route organize the volume. Place a restrained friendly expression naturally on the small curved front interface, using quiet facial marks designed for this shell rather than the original giant rectangular glass face. Use a pale powder-blue upper shell, deeper navy lower volume and warm ivory papers. Keep only a few large, readable forms and a purposeful little forward lean.",
+      "prompt": "Use case: logo-brand / identity-based redesign.\nTask: create ONE genuine redesigned variant of the MO-Parse logo, not a recolor, different camera angle or geometric stretch of the reference.\nThe supplied A icon is a CONCEPT AND BRAND-PERSONALITY REFERENCE: a friendly compact local terminal that reads documents. Retain that purpose, approachable character and convincing 3D product quality. The box outline, display shape, facial graphics and button arrangement are NOT fixed templates.\n\nVariant H2: 侧读式解析终端.\nCore design idea: A complete low reader with a diagonal side-to-front paper route, where the paper path organizes the enclosure.\nReinvent the device as a LOW, COMPLETE DESKTOP READER with a calm asymmetric capsule/wedge body and a distinct diagonal cover seam. A small source document enters a sloping opening on the rear-left shoulder; a short orderly off-white content card emerges from the front-right side. Both belong to the same compact machine, without arrows or a process diagram. Keep the main shell closed and substantial with a stable center of gravity; no open arch, doorway or abstract bracket form. The sloped cover and diagonal paper route organize the volume. Place a restrained friendly expression naturally on the small curved front interface, using quiet facial marks designed for this shell rather than the original giant rectangular glass face. Use a pale powder-blue upper shell, deeper navy lower volume and warm ivory papers. Keep only a few large, readable forms and a purposeful little forward lean.\n\nJudge the result as a product logo: one memorable silhouette, one complete compact little device, a clear relationship to a document, and a restrained welcoming personality. Redesign the proportions, enclosure, paper support and face/interface as an integrated whole. Be expressive through design judgment rather than adding many parts or giant eyes.\nUse a coherent blue / blue-cyan / navy / ivory family, with soft satin-matte physical materials, very subtle fabrication texture, clean bevels and carefully judged studio light. Allow the design to differ from A while remaining recognizably a document-reading helper.\nOne whole icon in a flattering near-front three-quarter view, centered on square transparent RGBA with generous clean margin. No text, captions, wordmark, diagram arrows, floor, pedestal, cast shadow, scene, watermark or extra props. Keep alpha edges clean.",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "path": "assets/logo-concept-variants/h2-side-path.png",
+      "sha256": "82668a981dc824595c34211c7f8f7b6f8561654a6fe7d24179b78e40dcc5d8d7",
+      "generated_bytes_preserved": true
+    },
+    {
+      "id": "H3",
+      "label": "折壳式文档终端",
+      "idea": "A page-like fold becomes the machine's outer-shell architecture, rather than a separate paper accessory.",
+      "brief": "Reinvent the device as a COMPACT SOLID DOCUMENT READER whose outer-shell architecture borrows the folded corner of a page. Give it a thick, gently rounded upright body, slightly wider at the base, with one broad top corner folded/beveled over to form a protective reading lip. This fold is part of the blue-cyan physical casing, with a dark underside, not a floppy paper creature or flat file icon. A single short ivory page sits naturally within that lip. Use the pale front reading surface as the place for a small, calm, inquisitive face with generous empty space, integrated into the product design; a separate black television panel is unnecessary. Preserve substantial device thickness and a stable one-piece base, with no arms or character legs. The page-inspired outline, reading lip and gently tilted face should form one coherent new character. Deep blue side planes and a subtle warm status accent can balance the ivory/blue palette.",
+      "prompt": "Use case: logo-brand / identity-based redesign.\nTask: create ONE genuine redesigned variant of the MO-Parse logo, not a recolor, different camera angle or geometric stretch of the reference.\nThe supplied A icon is a CONCEPT AND BRAND-PERSONALITY REFERENCE: a friendly compact local terminal that reads documents. Retain that purpose, approachable character and convincing 3D product quality. The box outline, display shape, facial graphics and button arrangement are NOT fixed templates.\n\nVariant H3: 折壳式文档终端.\nCore design idea: A page-like fold becomes the machine's outer-shell architecture, rather than a separate paper accessory.\nReinvent the device as a COMPACT SOLID DOCUMENT READER whose outer-shell architecture borrows the folded corner of a page. Give it a thick, gently rounded upright body, slightly wider at the base, with one broad top corner folded/beveled over to form a protective reading lip. This fold is part of the blue-cyan physical casing, with a dark underside, not a floppy paper creature or flat file icon. A single short ivory page sits naturally within that lip. Use the pale front reading surface as the place for a small, calm, inquisitive face with generous empty space, integrated into the product design; a separate black television panel is unnecessary. Preserve substantial device thickness and a stable one-piece base, with no arms or character legs. The page-inspired outline, reading lip and gently tilted face should form one coherent new character. Deep blue side planes and a subtle warm status accent can balance the ivory/blue palette.\n\nJudge the result as a product logo: one memorable silhouette, one complete compact little device, a clear relationship to a document, and a restrained welcoming personality. Redesign the proportions, enclosure, paper support and face/interface as an integrated whole. Be expressive through design judgment rather than adding many parts or giant eyes.\nUse a coherent blue / blue-cyan / navy / ivory family, with soft satin-matte physical materials, very subtle fabrication texture, clean bevels and carefully judged studio light. Allow the design to differ from A while remaining recognizably a document-reading helper.\nOne whole icon in a flattering near-front three-quarter view, centered on square transparent RGBA with generous clean margin. No text, captions, wordmark, diagram arrows, floor, pedestal, cast shadow, scene, watermark or extra props. Keep alpha edges clean.",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "path": "assets/logo-concept-variants/h3-fold-shell.png",
+      "sha256": "ccab495dacf3b47ca418978e13286f26ed0ea40a17814c7d478ac8cfa1fa3a5d",
+      "generated_bytes_preserved": true
+    }
+  ]
+}

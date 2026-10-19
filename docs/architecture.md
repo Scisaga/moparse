@@ -1,101 +1,66 @@
-# Architecture
+# MO-Parse 架构与调整目标
 
-moparse 是 PDF/Office/图片/视频到 GFM Markdown 的解析层。详细坐标证据是
-请求内的解析中间表示，不是交给业务 LLM 的输出；EventRail 等下游直接消费可读正文、
-列表和表格，再完成实体、关系、事件与财务指标抽取。
+最终输出面向下游信息抽取：所有表格、PDF 流程图和组织结构图转换为语义描述，优先使用多层列表，正文去掉页码、页眉和页脚。规范见[最终输出契约](output-contract.md)，决策背景见[ADR-0001](adr/0001-faithful-gfm-for-downstream-extraction.md)。
 
-这一输出边界见
-[ADR-0001：以忠实的逻辑表 GFM 作为文档内容与下游抽取边界](adr/0001-faithful-gfm-for-downstream-extraction.md)。
+本文描述 MO-Parse 服务架构；这些最终格式职责不属于候选解析管线，原始解析可以保留表格、源图及页面家具。状态：2026-10-20 统一表格来源与语义表示，以下区分目标架构与当前有限实现。当前实现仍可能输出原表和页面家具，图形识字也不等于流程与组织关系恢复；本次整理不执行推理或部署。
 
-```mermaid
-flowchart TD
-    entry["HTTP／MCP／Web UI"] --> control["格式校验、Job、页范围、超时"]
-    control --> classify["PDF 原件文字层与图像证据"]
-    classify -->|原生页，MinerU 配置| native["CPU worker：Advanced＋TXT<br/>PDF 正文字符／几何、ONNX 小模型"]
-    native <--> visual["GPU：MinerU2.5-Pro 1.2B／FP16<br/>版面、表格结构及表格文字；并发 2"]
-    classify -->|原生页，Docling 对照配置| baseline["CPU：Docling 2.139／TableFormer V1<br/>matching=False／PyPdfium"]
-    classify -->|扫描／混合页| scan["CPU：200 DPI 渲染、方向预处理、GLM SDK 布局"]
-    scan --> glm["GPU：GLM-OCR 区域识别"]
-    native -.->|可选跨页表头核验| verifier["CPU：Docling 表头角色证据<br/>待最终验收的 ensemble"]
-    native --> ir["请求内 Evidence IR／表格网格"]
-    verifier -.->|仅核验通过的角色，不替换文字和值| ir
-    baseline --> ir
-    glm --> ir
-    control --> office["Office：原生结构与嵌图"]
-    control --> media["图片／视频：资产、关键帧与 GLM 识字"]
-    office --> ir
-    media --> ir
-    ir --> result["严格跨页表关系与 GFM 组装<br/>结构／来源注释、鉴权资产"]
-```
+![MO-Parse 服务：调用解析后端后，接入、转换清理、组装、验收与返回保存](assets/workspace-pdf-pipeline.svg)
 
-## PDF 路由与候选组合
+图中的第 2 步只取得所选后端的原始解析；第 3 至 7 步属于 MO-Parse 工程。解析研究按[研究框架](research-framework.md#2-管线研究的顺序)比较原始结果与费用，服务转换按[技术路线](technical-route.md)开发与验收，两者不能共用最终格式门槛或混合计时。
 
-原生页保留 PDF 文字证据，不做无条件全页 OCR。服务端的 `NATIVE_PARSER_BACKEND`
-选择原生管线；公共 HTTP／MCP 请求不增加模型选择参数。
+## 目标职责划分
 
-- **Primary 候选**：MinerU 4.0.12 Advanced＋TXT，官方视觉 SDK `mineru-vl-utils==2.0.7`；
-  正文的 PDF 源文字提取、字符方向匹配、ONNX 小模型及文档处理在 CPU worker 中执行；
-  版面、表格结构及单元格文字仍由独立 FP16 vLLM 服务识别，请求并发及
-  `max_num_seqs` 均为 2。TXT 不保证表格内文字来自 PDF 文字层。
-- **Docling 表头核验 ensemble 候选**：在同一 primary 上开启
-  `MINERU_HEADER_VERIFIER=docling`。Docling 只核验跨页候选的结构角色；该组合仍需独立的
-  完整 HTTP 验收，不能把 primary 的结果直接记为 ensemble 的结果。
-- **Docling 基线**：`NATIVE_PARSER_BACKEND=docling`，Docling 2.139.0、TableFormer V1
-  Accurate、`do_cell_matching=False`、PyPdfium，推理在 CPU 上执行，可独立部署。
+| 部分 | 职责 | 已有实现与缺口 |
+| --- | --- | --- |
+| 解析后端 | 产生本方法的文字、布局、表格、图像及已有结构 | 后端能力各异；不要求直接生成语义列表或共同内部模型 |
+| MO-Parse 接入 | 读取已有结果，保全原文、结构、来源和媒体 | 不能丢已有内容；原方法缺失与接入丢失分开 |
+| MO-Parse 语义转换 | 表格完整标题与限定关系、流程方向条件回路、组织层级和交叉关系 | 当前仅部分来源矢量表格；复杂表格及两类图形待补 |
+| MO-Parse 内容清理 | 区分物理页码、重复页眉页脚和业务标题、附注、签章日期 | 当前保留页面角色与原文，可靠最终清理待补 |
+| MO-Parse 组装与返回 | 生成段落和多层列表，统一正文、资产、状态及持久结果 | 当前仍有 GFM 和分页信息，完整内容与接口验收待完成 |
 
-MinerU 的原生文字匹配修复位于依赖字符归属层：使用原 PDF 书写方向检查字符位置，
-不包含文档 ID、页码、财务名称或固定语句补丁。依赖版本及修复后的文件 SHA256
-`616f44e2a1749f4b82074df36c3da852694a9401828c6c36aad62553b2a182cf`
-由构建和 worker 就绪检查验证。使用官方 typed-block 完整渲染，正文、页眉、页脚、
-页码、公式及业务附注保留可见内容，不把辅助角色自动等同于可删除内容。
+后端可以输出 Markdown、HTML、XML、JSON 或 SDK 结构，服务按本后端已有信息接入，不要求候选先实现共同语义接口。内部转换所需信息由 MO-Parse 整理；若还需从原件恢复缺失关系，应单独验证服务方法及费用，不把这些答案算成后端原生能力。内部服务表示见[产品规格](project-spec.md#21-mo-parse-转换所需的内部信息)。
 
-表头核验只针对跨页候选。两端的完整表头带、合并跨度、唯一可匹配的源几何、列边界，
-以及标题和单位上下文必须共同一致，才允许把已证实的表头角色转移到 MinerU 表格。
-Docling 不替换 MinerU 的正文、单元格文字或值。证据有缺失、冲突或歧义时保持角色未知，
-保留两个片段及各自表头；相同列数、近似排版或部分文字相同不能授权删头。
-后续跨页组装仍执行完整表头及列义、跨度、标题、单位和上下文一致性检查，并保留
-`table-source` 逐行来源；不能只凭核验器名称决定合并。
+处理流程为管线原始结果 → MO-Parse 结果转换 → 目标文档。服务直接读取已有结构，GFM 只是某些后端或显示代码使用的格式，不是统一中间模型，也不是语义转换的必经出口。表格来源、语义关系及本链路审计数据只维护当前定义，随代码直接修改。
 
-`scan_policy=auto` 下，扫描、混合页由 GLM-OCR＋官方 SDK 0.1.5 处理：200 DPI 渲染，
-先在 CPU 旋正，再执行 CPU PP-DocLayoutV3 布局和 GPU GLM-OCR 区域识别。原始来源页关联
-保留，结构验证不依据指标名补期间或用另一模型重写冲突数值。
-`scan_policy=skip` 关闭 PDF 扫描 OCR，只保留可信原生文字、明确跳过提示和整页图像资产。
+研究侧忠实导出可保留原表和页面信息；服务最终正文则必须遵守[输出契约](output-contract.md)。原生或纯视觉输入限制适用于各声明解析配置，不能用服务后来的原件恢复修改候选解析成绩。
 
-主 API、原生文档 worker 和 GLM SDK sidecar 均不挂载 GPU；两个视觉模型服务分别管理
-GPU 资源。图片及视频关键帧识字复用 GLM-OCR，`describe_images` 仍只生成可见文字。
-视频摘要按采样时间列出识别文字，不推断未采样片段或无文字场景。
+## 当前 PDF 路由与来源能力
 
-## 评测、选择和实际部署身份
+服务端 `NATIVE_PARSER_BACKEND` 选择原生后端，公共 HTTP/MCP 不增加模型选择参数。原生页可以保留 PDF 文字证据；扫描、混合页经现有 GLM SDK 处理。现有来源规则和解析分工属于待评价的实现起点，八个主比较配置仍须在统一协议下重新测量。
 
-[benchmark/report.md](../benchmark/report.md) 是唯一维护中的当前比较报告。
-数据集包含 14 个完整输入／543 页：既有 504 页回归输入，以及新增 39 页封存输入。
-新增封存集目前只有 36 项原件确认断言，属于部分标注；未标注页面或内容不能算正确。
-已有难页与 209／402 等验收集存在来源重叠，分母分别报告。
+- MinerU 路径使用 MinerU 4.0.12 Advanced + TXT，CPU native worker 执行 PDF 与 ONNX 工作，FP16 vLLM 执行视觉布局和表格任务。TXT 不保证表内字值全部来自 PDF 字层。
+- Docling 仍是独立可选原生后端，使用 TableFormer、`do_cell_matching=False` 与 PyPdfium；MinerU 后不调用第二个 Docling 解析器。
+- 扫描与混合页的现有 GLM SDK 先在 CPU 旋正，再做布局与区域识别。`scan_policy=skip` 保留原图和未处理状态，不能算完成目标语义转换。
 
-方法登记的 `candidate` 仅表示待评测组合。`live_selected` 必须有同一配方的完整 HTTP
-最终 GFM 验收、模型／代码／镜像实际读回及部署后复验记录支持。当前线上身份以该报告
-关联的 release proof 为准；本架构文档不把候选、历史组件成绩或旧部署快照当成当前上线事实。
-详细部署和离线权重步骤见 [deployment.md](deployment.md)。
+MinerU 原生匹配层使用 PDF 书写方向检查字符归属，不包含文档身份或固定业务词补丁。完整 typed-block 渲染保留正文和页面家具，供后续区分与清理；这属于来源层要求，最终正文必须清理页面家具。公式、业务附注与页边签章日期继续保全。
 
-## 内部证据与公共输出
+直接 PDF 证据可在全部格线、字形和跨度对应时建立来源绑定；样式和角色规则不构成普适语义真值。跨页关系仍须核对完整标题、跨度、单位及延续范围；未确认时内部保留完整物理片段，不能靠最终排版需要强行合并。
 
-内部 `ContentParseResult`/Evidence IR 保存页、区域、候选来源、bbox、表格单元格和质量，
-仅用于同一次解析中的融合、质量判断、跨页关系和资产裁剪。它不进入 OpenAPI，不作为
-结果文件持久化，也不发给下游 LLM。
+当前 CPU 方法从原 PDF 深色矢量格线重建闭合矩形单元格，全部字形、文字和跨度与原生网格逐格对应后才补充来源框和列边界。角色规则限于完整、居中、非数值的来源行与后续数据行具有着色或数值列对齐对比的窄模式，证据来源记为 `pdf_vector_glyph_style`；单独的居中、粗体、着色或相似内容不够。跨物理网格的继承证据记为 `pdf_vector_glyph_style_and_native_continuation`，还须满足[来源约定](table-source.md#跨页来源与继承)中的各项条件，不增加第二个推理模型。
 
-公共 GFM Markdown 包含：
+模型、配额、CUDA Graphs、依赖修复身份和实际发布记录统一见[运行配方](runtime-recipes.md)。主 API、native worker 与 GLM SDK 无 GPU 挂载，模型服务分离；架构文档不凭软件版本断言部署或内容验收。
 
-- 标准 Markdown 正文、标题和列表；
-- 解析器识别出的 GFM 表格，包括多级/分段表头；
-- 合并后的跨页逻辑表，续页重复表头仅在完整表头及列义一致时去重；
-- 无坐标结构注释，携带来源模型或经核验的表头角色、合并跨度和来源页；未确认的结构明确标记未知；
-- 图片/视频资产的普通 Markdown 列表、描述和下载链接。
+## 表格与图形关系层
 
-解析层不判断某张表应变成财务事实、公司字段或股东关系，也不依据固定首行生成字段名。
-公司实体消歧、关系/事件 ontology、财务指标归一化、事件去重和修订由 EventRail 或其他
-下游负责。需要审计时使用任务 ID 回到原 PDF 和资产，而不是把全页坐标送入抽取提示词。
+当前 `TableCell`、`ParsedTable`、`TableFragment` 保留来源网格与角色观测，`CellRef`、`ValueRelation`、`SemanticRecord`、`SemanticTableView` 保存有界表格关系和状态。来源视图登记精确拥有的范围，语义服务在资产处理后替换，避免覆盖有效邻接内容或重复输出。
 
-## 持久化
+目标需支持表格内字段区、记录区、比较区及说明区的关联，分别核对已确认和未解决范围；不能因一条说明行不支持而把整表标为语义不明确。单位、期间和附注的作用域独立建模，不能只保存文字出现位置。
+
+流程与组织图的目标关系层应保留来源节点、连线端点、方向、条件、层级、分组及明确的关系类型，表达合流、回路与多重归属。这些是 MO-Parse 转换的服务要求，具体实现需有原件标注和功能验证，不要求候选管线先输出此模型，也不预先增加新模型。
+
+现有 `describe_images` 只识别图片可见文字，尚未恢复这些关系。目标中的图形转换属于必需内容阶段，不能以一个可选图片说明开关或仅有资产链接替代。
+
+## 最终转换与状态
+
+最终转换从文档语义层统一生成业务标题、段落和多层列表，去掉物理页标记、页眉页脚、分页控制符、表格显示语法和内部调试块。原文值与标签从来源复制；源图明确的关系照实表达，业务推断保持下游边界。
+
+公开结果可使用简短来源引用，详细原页、坐标、网格和图形证据按需解析。一般图通过节点引用表达非树关系，不为适配列表而扭曲拓扑。页面清理保护真实章节、单位、脚注、法律声明、签章和日期，不能只按边缘位置删内容。
+
+来源保全、处理终态和最终语义完成分别检查。未解决内容在内部保留原表、原图和候选，在部分结果中明确列出范围与原因；这类结果不能算满足最终契约。现有 Job 与语义状态的联动仍待实现及接口验证，不能将任务的 `completed` 直接解释为全部内容已语义化。
+
+## 内部证据与持久化
+
+当前转换登记精确拥有的显示片段，并在资产处理后替换，保护有效邻接内容；目标最终渲染不以匹配 GFM 字符串作为普遍前提。[表格来源与证据约定](table-source.md)规定来源保全和关系使用，[表格关系与来源引用](api.md#表格关系与来源引用)说明当前引用及有限转换状态。历史证据保持原字节与校验值，不因此维护旧格式兼容代码。
 
 ```text
 /data
@@ -103,22 +68,59 @@ GPU 资源。图片及视频关键帧识字复用 GLM-OCR，`describe_images` �
 └── jobs/<job_id>
     ├── input/original.<ext>
     ├── output/result.md
-    ├── output/asset-index.json   # 仅资产下载元数据，不含坐标、正文或表格 IR
-    ├── output/assets.zip         # 按需生成
+    ├── output/asset-index.json
+    ├── output/assets.zip
     ├── assets/original/*
-    ├── assets/derived/keyframes/*
-    ├── assets/derived/previews/*
-    └── logs/warnings.json        # 无正文诊断
+    ├── assets/derived/*
+    └── logs/*
 ```
 
-`result.md` 是唯一文档结果。SQLite 是 Job 状态真值，SSE 只是增量体验层。资产索引、
-告警和 ZIP manifest 是运维/下载控制数据，不是替代的解析 JSON。
+`result.md` 是唯一公开文档结果；资产索引和任务 JSON 是控制数据。内部 Evidence IR、网格、页位置、原图与审计记录用于可追溯处理，不作为普通下游上下文。取消清理继续持有本次 CPU 或远程工作直至返回或获得清理确认，最终转换扩展不能破坏现有请求所有权。
 
-## 安全与边界
+## 表格显示映射
 
-上传与 URL 均不可信：校验 magic、OOXML 关系、ZIP 展开边界、FFprobe、大小、单元数、
-协议、解析 IP 与每次重定向。模型 URL、模型名和 prompt 只能由服务端配置。
-图像字节、内部候选正文和模型请求不进入诊断日志；公开正文只包含采用的解析结果。
+本节只说明现有 GFM 显示代码，不规定候选解析管线或最终文档的通用表示。来源结构与显示映射分别生成，单表、内部表头分段和已确认的跨页逻辑表使用同一套无版本定义。显示所需的新增语法行不进入源格、来源行数、原始跨度或语义引用。
 
-本项目不负责 Embedding、索引、问答、公司/人物消歧、领域关系与事件编排；它负责把
-下游真正需要的可见内容和结构恢复为可高效消费的一份 Markdown 文档。
+`table-fragment` 或 `logical-table` 打开表格显示作用域，其后的 `table-source`、`table-structure` 和 `table-view-segment` 绑定到该表。`table-source` 的来源页、来源行和逻辑行范围从 1 起算，记录各物理片段和已删除的确认重复头；结构、跨度及分段来源行从 0 起算。合表后的逻辑坐标不能代替 PDF 来源坐标，物理位置须结合 `table-source` 读取。
+
+`table-structure` 声明 `row_coordinate_space="source_logical_rows"`。`num_rows`、`num_cols`、`header_rows` 和 `spans` 描述不含新增语法行的来源逻辑网格；`encoding="anchor_and_blanks"` 表示只在跨度锚点存文字，覆盖位置为空。`structure_valid` 只说明已有网格与跨度证据可用，不证明角色、内容或覆盖完整。
+
+所有显示映射统一保存在 `gfm.segments`，单段也使用列表；`gfm.rendered_num_rows_total` 为各段显示行数之和，不额外生成单段别名。每段之前的 `table-view-segment` 声明同一表身份与连续片段编号，不创建新的物理表。
+
+| 字段 | 含义 |
+| --- | --- |
+| `index` | 从 0 起算的连续片段编号 |
+| `source_rows` | 本段连续来源逻辑行；全部片段按序恰好覆盖 `0..num_rows-1` |
+| `header_rows` | 本段已确认的来源表头行，未知时为 `[]` |
+| `synthetic_header_rows` | 本段显示坐标中的新增语法行，只允许 `[]` 或 `[0]` |
+| `rendered_num_rows` | 本段全部显示行数，含新增语法行，不含 GFM 分隔线 |
+| `source_to_rendered_row_offset` | `本段显示行号 = 来源逻辑行号 + offset` |
+| `source_header_scope_complete` | 本段是否有完整来源前置表头证据 |
+
+GFM 语法要求分隔线之前有一行表头。来源首行角色未知时，显示增加一行全空语法头并声明 `[0]`，原首行仍作为数据；来源真实空白首行也继续保留。角色未知的一行来源 `Alpha, 12` 对应以下显示与映射，新增行不代表原件内容：
+
+```markdown
+<!-- table-view-segment: {"table_id":"example_t1","index":0} -->
+
+|  |  |
+| --- | --- |
+| Alpha | 12 |
+```
+
+```json
+{"index":0,"source_rows":[0],"header_rows":[],"synthetic_header_rows":[0],"rendered_num_rows":2,"source_to_rendered_row_offset":1,"source_header_scope_complete":false}
+```
+
+完整内部表头开始新显示片段，前面的未知段使用空语法头。例如五行来源的表头位于行 1 和行 3，分段来源行为 `[0]`、`[1,2]`、`[3,4]`，offset 为 `1`、`-1`、`-3`。切分点穿过 rowspan 时不切断源格；多层表头的完整角色结合来源表头、跨度与作用域读取，不能仅凭 HTML 渲染后的 `<th>` 数量判断。
+
+重建来源行前，核对表身份、连续片段编号、段标记数量、列数、分隔线、声明与实际显示行数、offset、完整来源分区及显示总行数。只有明确声明、实际全空且不绑定来源表头的新增语法行才可剥离；错位、漏段、重段和未声明空行不能静默投影。不满足当前定义时记录无法重建，不回退到假定首行表头或旧格式解码。
+
+显示刷新只替换当前表精确拥有的结构标记与显示片段，并同步更新归属记录；重复刷新不重复插入分段标记或语法头。来源网格保持原样，前后正文、未知邻接结构和资产引用不被吞入。投影成功只证明行映射可重建，不证明语义或最终输出合格；显示行映射不用于语义段落。
+
+## 研究、验收与边界
+
+研究框架定义解析问题、类别与方法证据；[评测任务](../benchmark/evaluation-tasks.md)核对原始解析质量与直接处理成本；[八条配置](../benchmark/pipelines-to-test.md)共享忠实导出和比较条件，MinerU 调优独立维护。MO-Parse 的表格/图形转换、清理、组装和最终接口另作功能验收与费用测量，不是八组管线的共同出口或前置条件。
+
+当前 `ParserService.parse()` 仍在一次调用里执行后端、来源补充、资产、IR 和表格语义转换，目标职责图不表示它已经被拆成研究与服务的独立入口。`SEMANTIC_TABLE_OUTPUT_ENABLED=0` 只关闭其中的表格转换，不能得到去掉服务处理的完整解析基线；实际源码位置与各耗时字段见[技术路线](technical-route.md#61-现有调用与计时字段)。
+
+接入端消费最终语义内容，不负责补表头、恢复图关系或隐藏失败。实体消歧、指标归一、事实去重、事件编排、Embedding、索引和问答仍由下游负责。上传、URL、资产及模型配置继续遵守既有校验与认证边界，本次不增加公开 XML 或详细坐标接口。

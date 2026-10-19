@@ -1,0 +1,22 @@
+{
+  "schema": "captured-sdk-page-failure-state/1",
+  "description": "Self-contained regression fixture for a failed SDK page: retained PDF and PNG bytes plus a failed PageParseResult. This is not a raw model response replay.",
+  "source_sha256": "4ebad09d258f11e8d4e04c3f5f0af1493d0622672209a71bb175f7f0fc4ac77d",
+  "page": 6,
+  "unit": {
+    "unit_index": 6,
+    "status": "failed",
+    "warnings": [
+      {
+        "code": "glm_sdk_unusable_table_structure",
+        "message": "the official GLM-OCR SDK page candidate could not be produced",
+        "severity": "error",
+        "page_number": 6,
+        "backend": "glm-sdk-remote",
+        "details": null
+      }
+    ]
+  },
+  "png_sha256": "798af7ea47c65c59647a092198fc99acdfa4a1a3077d4762f20c4796ed7a8f9c",
+  "png_bytes": 656809
+}

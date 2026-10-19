@@ -68,6 +68,11 @@ def test_sync_parse_health_backends_and_ready(tmp_path: Path, native_pdf: Path) 
         assert response.headers["x-content-id"].startswith("job_")
         assert response.text == "# Page 1\n\nValue: 12,345.67"
         assert response.headers["x-request-id"].startswith("req_")
+        job_id = response.headers["x-content-id"]
+        persisted = tmp_path / "jobs" / job_id / "output" / "result.md"
+        assert response.content == persisted.read_bytes()
+        assert client.get(response.headers["location"]).content == response.content
+        assert client.get(f"{response.headers['location']}?download=true").content == response.content
 
 
 def test_scan_policy_is_the_only_public_visual_routing_control(
@@ -193,8 +198,8 @@ def test_failure_retry_and_cancel(tmp_path: Path, native_pdf: Path) -> None:
         ).json()
         cancelled = client.delete(f"/v1/content/jobs/{slow['id']}")
         assert cancelled.status_code == 200
-        assert cancelled.json()["status"] == "cancelled"
-        state = client.get(f"/v1/content/jobs/{slow['id']}").json()
+        assert cancelled.json()["status"] in {"running", "cancelled"}
+        state = wait_for_status(client, slow["id"], {"cancelled"})
         assert state["status"] == "cancelled"
 
 

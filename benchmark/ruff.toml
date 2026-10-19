@@ -1,3 +1,0 @@
-# Imported scorer bytes and hashes must remain unchanged.
-extend = "../pyproject.toml"
-extend-exclude = ["scorers/frozen", "datasets/**/build-source-gold.py"]

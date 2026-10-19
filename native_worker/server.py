@@ -12,6 +12,7 @@ import importlib.metadata
 import os
 import tempfile
 import time
+import uuid
 from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Annotated, Any
@@ -27,6 +28,7 @@ import httpx
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 
 from native_worker.patch_dependency import verify_patch, verify_resource_patch
+from native_worker.request_control import NativeRequest, active_request, install_window_progress
 
 MAX_UPLOAD_BYTES = int(os.environ.get("MAX_UPLOAD_BYTES", 200 * 1024 * 1024))
 MAX_PAGES = int(os.environ.get("MAX_CONTENT_UNITS", "1000"))
@@ -39,12 +41,16 @@ _versions: dict[str, str] = {}
 _patch: dict[str, str] = {}
 _resource_policy: dict[str, str | int | bool] = {}
 _document_lock = asyncio.Lock()
+_requests: dict[str, NativeRequest] = {}
+_tasks: dict[str, asyncio.Task] = {}
+_request_control: dict[str, str] = {}
 
 
 def _initialize() -> None:
-    global _versions, _patch, _resource_policy
+    global _versions, _patch, _resource_policy, _request_control
     _patch = verify_patch()
     _resource_policy = verify_resource_patch()
+    _request_control = install_window_progress()
     _versions = {
         name: importlib.metadata.version(name)
         for name in ("mineru", "docvortex", "mineru-vl-utils", "onnxruntime", "pypdfium2")
@@ -98,6 +104,10 @@ async def ready() -> dict[str, Any]:
         "max_concurrency": VLM_CONCURRENCY,
         "text_matching": _patch,
         "resource_policy": _resource_policy,
+        "request_control": _request_control,
+        "active_requests": sum(
+            r.state in {"queued", "running", "stopping"} for r in _requests.values()
+        ),
         "detail": detail,
     }
 
@@ -149,10 +159,10 @@ def export_source_blocks(page: Any) -> list[dict[str, Any]]:
     return exported
 
 
-def _parse(path: Path, page_range: str | None) -> dict[str, Any]:
+async def _parse(path: Path, page_range: str | None) -> dict[str, Any]:
     from docvortex.document.pdf import PDFDocument
     from mineru.config import VlmConfig
-    from mineru.parser import parse
+    from mineru.parser import parse_async
 
     with PDFDocument(str(path)) as source:
         count = len(source)
@@ -160,7 +170,7 @@ def _parse(path: Path, page_range: str | None) -> dict[str, Any]:
             raise ValueError("PDF page count exceeds worker limits")
         dimensions = {index: source.page_size(index) for index in range(count)}
     started = time.perf_counter()
-    result = parse(
+    result = await parse_async(
         str(path),
         tier="advanced",
         ocr_mode="txt",
@@ -174,6 +184,9 @@ def _parse(path: Path, page_range: str | None) -> dict[str, Any]:
         ),
     )
     pages = []
+    request = active_request.get()
+    if request is not None:
+        request.update(phase="document.exporting")
     for page in result.pages:
         index = page.page_idx
         if not isinstance(index, int) or not 0 <= index < count:
@@ -198,36 +211,125 @@ def _parse(path: Path, page_range: str | None) -> dict[str, Any]:
     }
 
 
+def _register(request_id: str) -> NativeRequest:
+    if request_id in _requests:
+        request = _requests[request_id]
+        if request.state == "cancelled" and request.cancel_requested:
+            raise HTTPException(409, "request was cancelled before upload completed")
+        raise HTTPException(409, "request ID already exists; parse POST is not replayable")
+    # Keep a bounded terminal history; never evict queued/running ownership.
+    for key, value in list(_requests.items()):
+        if len(_requests) < 512:
+            break
+        if value.state in {"completed", "cancelled", "failed", "timed_out"}:
+            del _requests[key]
+    if len(_requests) >= 512:
+        raise HTTPException(503, "native request capacity exceeded")
+    request = NativeRequest(request_id)
+    _requests[request_id] = request
+    return request
+
+
+@app.get("/requests/{request_id}")
+async def request_status(request_id: str) -> dict[str, Any]:
+    request = _requests.get(request_id)
+    if request is None:
+        raise HTTPException(404, "request is not registered")
+    return request.snapshot()
+
+
+@app.post("/requests/{request_id}/cancel")
+async def cancel_request(request_id: str) -> dict[str, Any]:
+    # A cancel may arrive while multipart upload is still being received. Its
+    # tombstone prevents the later POST from starting unowned computation.
+    if not 1 <= len(request_id) <= 128:
+        raise HTTPException(422, "invalid request ID")
+    request = _requests.get(request_id)
+    if request is None:
+        request = _register(request_id)
+        request.update(cancel_requested=True, state="cancelled", phase="cancelled.before_start")
+    elif request.state in {"queued", "running", "stopping"}:
+        request.update(cancel_requested=True, state="stopping", phase="cancellation.cleanup")
+        task = _tasks.get(request_id)
+        if task is not None and not task.cancelling():
+            task.cancel()
+    return request.snapshot()
+
+
 @app.post("/parse")
 async def parse_pdf(
     file: Annotated[UploadFile, File()],
     page_range: Annotated[str | None, Form(max_length=2048)] = None,
+    request_id: Annotated[str | None, Form(min_length=1, max_length=128)] = None,
+    timeout_seconds: Annotated[float, Form(gt=0, le=86400)] = 7200,
 ) -> dict[str, Any]:
     if not _ready:
         raise HTTPException(503, "native worker is not initialized")
-    async with _document_lock:
-        with tempfile.TemporaryDirectory(prefix="moparse-native-") as directory:
-            path = Path(directory) / "source.pdf"
-            total = 0
-            with path.open("wb") as output:
-                while chunk := await file.read(1024 * 1024):
-                    total += len(chunk)
-                    if total > MAX_UPLOAD_BYTES:
-                        raise HTTPException(413, "PDF exceeds worker upload limit")
-                    output.write(chunk)
-            await file.close()
-            with path.open("rb") as source:
-                if source.read(5) != b"%PDF-":
-                    raise HTTPException(415, "the native worker only accepts PDF bytes")
-            # Shield the blocking dependency call: a disconnected caller must not
-            # release the single-document lock while a parse still uses models.
-            task = asyncio.create_task(asyncio.to_thread(_parse, path, page_range))
+    request_id = request_id or uuid.uuid4().hex
+    request = _register(request_id)
+    task = asyncio.create_task(_run_request(file, page_range, request, timeout_seconds))
+    _tasks[request_id] = task
+    try:
+        return await asyncio.shield(task)
+    except asyncio.CancelledError:
+        request.update(cancel_requested=True, state="stopping", phase="cancellation.cleanup")
+        if not task.done() and not task.cancelling():
+            task.cancel()
+        # The lock/temp PDF remain owned until MinerU's cancellation cleanup
+        # has drained its threads and closed its own outstanding VLM calls.
+        while not task.done():
             try:
-                return await asyncio.shield(task)
-            except asyncio.CancelledError:
-                try:
-                    await asyncio.shield(task)
-                finally:
-                    raise
-            except ValueError as exc:
-                raise HTTPException(422, str(exc)) from exc
+                await asyncio.shield(task)
+            except (asyncio.CancelledError, HTTPException):
+                pass
+        request.update(state="cancelled", phase="cancelled")
+        raise HTTPException(409, "native request cancelled after cleanup") from None
+    finally:
+        _tasks.pop(request_id, None)
+
+
+async def _run_request(
+    file: UploadFile, page_range: str | None, request: NativeRequest, timeout_seconds: float
+) -> dict[str, Any]:
+    token = active_request.set(request)
+    try:
+        async with asyncio.timeout(timeout_seconds):
+            async with _document_lock:
+                request.update(state="running", phase="document.preparing")
+                return await _parse_upload(file, page_range, request)
+    except asyncio.CancelledError as exc:
+        request.update(state="cancelled", phase="cancelled")
+        raise HTTPException(409, "native request cancelled after cleanup") from exc
+    except TimeoutError as exc:
+        request.update(state="timed_out", phase="timed_out")
+        raise HTTPException(408, "native request deadline exceeded; cleanup completed") from exc
+    except Exception:
+        request.update(state="failed", phase="failed")
+        raise
+    finally:
+        await file.close()
+        active_request.reset(token)
+
+
+async def _parse_upload(
+    file: UploadFile, page_range: str | None, request: NativeRequest
+) -> dict[str, Any]:
+    with tempfile.TemporaryDirectory(prefix="moparse-native-") as directory:
+        path = Path(directory) / "source.pdf"
+        total = 0
+        with path.open("wb") as output:
+            while chunk := await file.read(1024 * 1024):
+                total += len(chunk)
+                if total > MAX_UPLOAD_BYTES:
+                    raise HTTPException(413, "PDF exceeds worker upload limit")
+                output.write(chunk)
+        await file.close()
+        with path.open("rb") as source:
+            if source.read(5) != b"%PDF-":
+                raise HTTPException(415, "the native worker only accepts PDF bytes")
+        try:
+            result = await _parse(path, page_range)
+            request.update(state="completed", phase="completed")
+            return result
+        except ValueError as exc:
+            raise HTTPException(422, str(exc)) from exc

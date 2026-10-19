@@ -10,12 +10,14 @@ from __future__ import annotations
 
 import asyncio
 import base64
+import hashlib
 import io
 import json
 import logging
 import math
 import re
 import time
+import uuid
 from dataclasses import dataclass
 from html.parser import HTMLParser
 from pathlib import Path
@@ -38,9 +40,16 @@ from app.models.parse_result import (
     WarningSeverity,
 )
 from app.models.source import StoredSource
-from app.parsers.base import DocumentParser, ParserCancelledError, ProgressCallback
+from app.parsers.base import (
+    DocumentParser,
+    ParserCancelledError,
+    ParserTimeoutError,
+    ProgressCallback,
+)
 from app.services.orientation_service import DocumentOrientationService
+from app.services.storage_service import StorageService
 from app.services.table_service import TableCellFragment, TableFragment, render_gfm_rows
+from app.utils.deadline import attach_deadline, remaining_timeout
 from app.utils.page_range import parse_page_range
 from app.utils.settings import setting
 
@@ -130,6 +139,45 @@ class _TableHtmlParser(HTMLParser):
             # no cells. It still consumes a row index in the source table.
             self.rows.append(self._row)
             self._row = None
+
+
+class _CandidateTextParser(HTMLParser):
+    """Keep candidate words without treating malformed HTML as public markup."""
+
+    def __init__(self) -> None:
+        super().__init__(convert_charrefs=True)
+        self.parts: list[str] = []
+
+    def handle_data(self, data: str) -> None:
+        self.parts.append(data)
+
+    def handle_starttag(self, tag: str, _attrs: list[tuple[str, str | None]]) -> None:
+        if tag.casefold() == "br":
+            self.parts.append("\n")
+
+    def handle_endtag(self, tag: str) -> None:
+        if tag.casefold() in {"td", "th"}:
+            self.parts.append("\t")
+        elif tag.casefold() == "tr":
+            self.parts.append("\n")
+
+
+def _unknown_table_candidate(content: str, page_number: int, region_index: int) -> str:
+    """Expose retained candidate text as unverified, never a guessed table."""
+    parser = _CandidateTextParser()
+    parser.feed(content)
+    parser.close()
+    text = "".join(parser.parts).strip()
+    # Candidate text may itself contain Markdown fences. Keep the entire text
+    # inside one literal block, including instruction-looking strings.
+    longest = max((len(match[0]) for match in re.finditer(r"`+", text)), default=0)
+    fence = "`" * max(3, longest + 1)
+    ref = f"sdk_p{page_number}_r{region_index}_failed_table"
+    return (
+        f"<!-- source-region: {ref}; source-page: {page_number}; structure: unknown -->\n\n"
+        f"SDK候选文字（结构未知，非原件核验结果）。\n\n{fence}text\n{text}\n{fence}\n\n"
+        f"<!-- /source-region: {ref} -->"
+    )
 
 
 def _positive_span(value: str | None) -> int:
@@ -270,6 +318,34 @@ class GlmSdkRemoteParser(DocumentParser):
         )
         self._last_status: BackendStatus | None = None
         self._last_probe_monotonic = 0.0
+        self._inflight_requests: set[asyncio.Task] = set()
+
+    @property
+    def inflight_count(self) -> int:
+        """Owned page tasks, including cleanup after cancellation/deadline."""
+        return sum(not task.done() for task in self._inflight_requests)
+
+    async def wait_for_idle(self, timeout: float | None = None) -> bool:
+        pending = {task for task in self._inflight_requests if not task.done()}
+        if not pending:
+            return True
+        _done, pending = await asyncio.wait(pending, timeout=timeout)
+        return not pending
+
+    @staticmethod
+    async def _drain_request(request: asyncio.Task) -> None:
+        # Cancelling an HTTP client does not acknowledge remote inference
+        # cancellation. Keep ownership until the original HTTP task returns.
+        # Cleanup may outlive the execution budget; no new request is issued.
+        while not request.done():
+            try:
+                await asyncio.shield(request)
+            except asyncio.CancelledError:
+                continue
+            except Exception:
+                break
+        if not request.cancelled():
+            request.exception()  # retrieve an exception without replacing the caller's failure
 
     def _health_url(self) -> str:
         parsed = urlsplit(self.api_url)
@@ -284,7 +360,9 @@ class GlmSdkRemoteParser(DocumentParser):
         if self.enabled and self.orientation_enabled:
             await asyncio.to_thread(self.orientation_service.initialize)
 
-    async def probe(self, *, force: bool = False) -> BackendStatus:
+    async def probe(
+        self, *, force: bool = False, refresh_unavailable: bool = False
+    ) -> BackendStatus:
         if not self.enabled:
             return BackendStatus(
                 name=self.name,
@@ -293,6 +371,8 @@ class GlmSdkRemoteParser(DocumentParser):
                 detail="official GLM-OCR SDK routing is disabled",
                 model="glmocr",
             )
+        if refresh_unavailable and self._last_status is not None and not self._last_status.ready:
+            force = True
         now = time.monotonic()
         if (
             not force
@@ -502,7 +582,8 @@ class GlmSdkRemoteParser(DocumentParser):
 
     @classmethod
     def _render_regions(
-        cls, regions: list[dict[str, object]], page_number: int
+        cls, regions: list[dict[str, object]], page_number: int,
+        *, warnings: list[PipelineWarning] | None = None,
     ) -> tuple[str, list[TableFragment]]:
         output: list[str] = []
         fragments: list[TableFragment] = []
@@ -518,7 +599,18 @@ class GlmSdkRemoteParser(DocumentParser):
                     fragments.append(fragment)
                     output.append(fragment.rendered)
                 elif re.search(r"<table\b", content, re.IGNORECASE):
-                    raise ValueError("glm_sdk_unusable_table_structure")
+                    index = region.get("index", table_ordinal - 1)
+                    region_index = index if isinstance(index, int) and index >= 0 else table_ordinal - 1
+                    output.append(_unknown_table_candidate(content, page_number, region_index))
+                    if warnings is not None:
+                        warnings.append(PipelineWarning(
+                            code="glm_sdk_unusable_table_structure",
+                            message="an SDK table candidate has unknown structure; other page regions were retained",
+                            severity=WarningSeverity.ERROR, page_number=page_number, backend=cls.name,
+                            details={"source_ref": f"sdk_p{page_number}_r{region_index}_failed_table",
+                                     "region_index": region_index,
+                                     "candidate_text_is_original_source_truth": False},
+                        ))
                 elif content:
                     output.append(content)
                 continue
@@ -567,16 +659,97 @@ class GlmSdkRemoteParser(DocumentParser):
             ]
         return "\n\n".join(output).strip(), fragments
 
+    def _record_response(
+        self,
+        response: httpx.Response,
+        *,
+        document_id: str,
+        request_id: str,
+        page_number: int,
+        attempt: int,
+        source_sha256: str | None,
+        rotation_degrees: int,
+    ) -> None:
+        """Keep received bytes private before decoding, without affecting parsing."""
+        try:
+            directory = (
+                StorageService(self.settings).logs_dir(document_id)
+                / "glm-sdk"
+                / request_id
+                / f"page-{page_number:06d}"
+            )
+            body = response.content
+            body_file = f"attempt-{attempt:03d}.body"
+            metadata = {
+                "schema": "glm-sdk-http-response/1",
+                "document_id": document_id,
+                "request_id": request_id,
+                "source_sha256": source_sha256,
+                "physical_page": page_number,
+                "attempt": attempt,
+                "applied_rotation_degrees": rotation_degrees,
+                "http_status": response.status_code,
+                "body_file": body_file,
+                "body_bytes": len(body),
+                "body_sha256": hashlib.sha256(body).hexdigest(),
+                "body_complete": True,
+                "phase": "received_before_validation",
+            }
+            StorageService._atomic_write(directory / body_file, body)
+            StorageService._atomic_write(
+                directory / f"attempt-{attempt:03d}.json",
+                json.dumps(metadata, separators=(",", ":")).encode(),
+            )
+        except Exception as exc:
+            # Never log response content, request URLs, headers or exception text.
+            logger.warning(
+                "GLM SDK private response recording failed page=%d error_type=%s",
+                page_number,
+                type(exc).__name__,
+            )
+
+    def _record_transport_failure(
+        self, *, document_id: str, request_id: str, page_number: int, attempt: int,
+        source_sha256: str | None, details: dict[str, object],
+    ) -> None:
+        """Record unknown remote execution without inventing a received body."""
+        try:
+            target = (StorageService(self.settings).logs_dir(document_id) / "glm-sdk" / request_id
+                      / f"page-{page_number:06d}" / f"attempt-{attempt:03d}.transport")
+            StorageService._atomic_write(target, json.dumps({
+                "schema": "glm-sdk-http-transport-failure/1", "document_id": document_id,
+                "request_id": request_id, "physical_page": page_number, "attempt": attempt,
+                "source_sha256": source_sha256, "response_received": False,
+                "server_model_calls": None, **details,
+            }, separators=(",", ":")).encode())
+        except Exception as exc:
+            logger.warning("GLM SDK transport receipt failed page=%d error_type=%s",
+                           page_number, type(exc).__name__)
+
+    @staticmethod
+    def _source_digest(source: StoredSource) -> str | None:
+        try:
+            with source.path.open("rb") as stream:
+                return hashlib.file_digest(stream, "sha256").hexdigest()
+        except OSError:
+            return None
+
     async def _request_page(
         self,
         source: StoredSource,
         page_number: int,
         cancel_event: object | None,
         rotation_degrees: int = 0,
+        *,
+        document_id: str,
+        request_id: str,
+        source_sha256: str | None,
+        options: ContentParseOptions,
     ) -> tuple[PageParseResult, list[TableFragment], int]:
         started = time.perf_counter()
         request_count = 0
         http_duration_ms = 0
+        failure_details: dict[str, object] = {}
         source_id = (
             source.path.parent.parent.name
             if source.path.parent.name == "input"
@@ -627,6 +800,7 @@ class GlmSdkRemoteParser(DocumentParser):
                     if self._cancelled(cancel_event):
                         raise ParserCancelledError("job was cancelled")
                     try:
+                        request_timeout = remaining_timeout(options, cap=min(self.timeout, 120.0))
                         request_count += 1
                         http_started = time.perf_counter()
                         try:
@@ -634,11 +808,25 @@ class GlmSdkRemoteParser(DocumentParser):
                                 self.api_url,
                                 json={"images": [image_uri]},
                                 headers={"Content-Type": "application/json"},
+                                timeout=request_timeout,
                             )
                         finally:
                             http_duration_ms += max(
                                 0, round((time.perf_counter() - http_started) * 1_000)
                             )
+                        await asyncio.to_thread(
+                            self._record_response,
+                            response,
+                            document_id=document_id,
+                            request_id=request_id,
+                            page_number=page_number,
+                            attempt=request_count,
+                            source_sha256=source_sha256,
+                            rotation_degrees=applied_rotation,
+                        )
+                        if self._cancelled(cancel_event):
+                            raise ParserCancelledError("job was cancelled")
+                        remaining_timeout(options, cap=min(self.timeout, 120.0))
                         response.raise_for_status()
                         value = response.json()
                         if not isinstance(value, dict):
@@ -647,28 +835,60 @@ class GlmSdkRemoteParser(DocumentParser):
                             raise ValueError("SDK response contains an error")
                         payload = value
                         break
+                    except (httpx.ConnectError, httpx.ConnectTimeout, httpx.PoolTimeout):
+                        # Only a failure before an HTTP request can reach the
+                        # server may be retried. There is no SDK idempotency or
+                        # remote cancellation contract for an accepted request.
+                        last_error_code = "glm_sdk_connection_unavailable"
+                        failure_details = {"retry_classification": "before_http_send",
+                                           "server_model_calls": None, "remote_execution_unknown": False}
+                        await asyncio.to_thread(self._record_transport_failure,
+                            document_id=document_id, request_id=request_id, page_number=page_number,
+                            attempt=request_count, source_sha256=source_sha256, details=failure_details)
                     except httpx.TimeoutException:
                         last_error_code = "glm_sdk_timeout"
+                        failure_details = {"retry_classification": "execution_unknown_no_retry",
+                                           "server_model_calls": None, "remote_execution_unknown": True}
+                        await asyncio.to_thread(self._record_transport_failure,
+                            document_id=document_id, request_id=request_id, page_number=page_number,
+                            attempt=request_count, source_sha256=source_sha256, details=failure_details)
+                        break
+                    except httpx.HTTPStatusError as exc:
+                        last_error_code = "glm_sdk_http_error"
+                        failure_details = {"http_status": exc.response.status_code,
+                                           "retry_classification": "response_received_no_idempotency_no_retry",
+                                           "server_model_calls": None, "remote_execution_unknown": True}
+                        break
                     except httpx.HTTPError:
                         last_error_code = "glm_sdk_http_error"
+                        failure_details = {"retry_classification": "execution_unknown_no_retry",
+                                           "server_model_calls": None, "remote_execution_unknown": True}
+                        await asyncio.to_thread(self._record_transport_failure,
+                            document_id=document_id, request_id=request_id, page_number=page_number,
+                            attempt=request_count, source_sha256=source_sha256, details=failure_details)
+                        break
                     except (ValueError, TypeError):
                         last_error_code = "glm_sdk_invalid_response"
+                        failure_details = {"retry_classification": "invalid_response_no_retry",
+                                           "server_model_calls": None}
+                        break
                     if attempt < self.max_retries:
-                        await asyncio.sleep(min(2.0, 0.25 * (2**attempt)))
+                        await asyncio.sleep(min(2.0, 0.25 * (2**attempt),
+                                                remaining_timeout(options, cap=min(self.timeout, 120.0))))
             if payload is None:
                 raise RuntimeError(last_error_code)
             layout = payload.get("layout_details", payload.get("json_result"))
             regions = self._page_regions(layout)
             regions = self._map_regions_to_source(regions, applied_rotation)
-            markdown, fragments = self._render_regions(regions, page_number)
+            warnings: list[PipelineWarning] = []
+            markdown, fragments = self._render_regions(regions, page_number, warnings=warnings)
             if not markdown:
                 markdown_result = payload.get("md_results", payload.get("markdown_result", ""))
                 if isinstance(markdown_result, str):
                     markdown = re.sub(
                         r"!\[[^\]]*\]\([^)]*\)", "<!-- image -->", markdown_result
                     ).strip()
-            warnings: list[PipelineWarning] = []
-            status = PageStatus.COMPLETED
+            status = PageStatus.FAILED if warnings else PageStatus.COMPLETED
             if not markdown:
                 status = PageStatus.FAILED
                 warnings.append(
@@ -692,7 +912,7 @@ class GlmSdkRemoteParser(DocumentParser):
                 fragments,
                 len(regions),
             )
-        except ParserCancelledError:
+        except (ParserCancelledError, ParserTimeoutError):
             raise
         except Exception as exc:
             code = str(exc) if str(exc).startswith("glm_sdk_") else "glm_sdk_invalid_response"
@@ -709,6 +929,7 @@ class GlmSdkRemoteParser(DocumentParser):
                             severity=WarningSeverity.ERROR,
                             page_number=page_number,
                             backend=self.name,
+                            details=failure_details or None,
                         )
                     ],
                 ),
@@ -732,6 +953,8 @@ class GlmSdkRemoteParser(DocumentParser):
             raise ParserUnavailableError("official GLM-OCR SDK routing is disabled")
         pages = parse_page_range(options.page_range, source.page_count)
         started = time.perf_counter()
+        request_id = uuid.uuid4().hex
+        source_sha256 = await asyncio.to_thread(self._source_digest, source)
 
         async def notify(completed: int, event: str) -> None:
             if progress_callback is None:
@@ -746,14 +969,30 @@ class GlmSdkRemoteParser(DocumentParser):
         async def run(page_number: int) -> tuple[PageParseResult, list[TableFragment], int]:
             nonlocal completed
             page_started = time.perf_counter()
+            budget = remaining_timeout(options, cap=min(self.timeout, 120.0))
+            page_options = attach_deadline(options, budget)
             try:
-                async with asyncio.timeout(self.timeout):
-                    value = await self._request_page(
+                async with asyncio.timeout(budget):
+                    request = asyncio.create_task(self._request_page(
                         source,
                         page_number,
                         cancel_event,
                         (rotation_by_page or {}).get(page_number, 0),
-                    )
+                        document_id=document_id,
+                        request_id=request_id,
+                        source_sha256=source_sha256,
+                        options=page_options,
+                    ))
+                    self._inflight_requests.add(request)
+                    try:
+                        while not request.done():
+                            if self._cancelled(cancel_event):
+                                raise ParserCancelledError("job was cancelled")
+                            await asyncio.wait({request}, timeout=0.05)
+                        value = await request
+                    finally:
+                        await self._drain_request(request)
+                        self._inflight_requests.discard(request)
             except TimeoutError:
                 value = (
                     PageParseResult(
@@ -762,7 +1001,7 @@ class GlmSdkRemoteParser(DocumentParser):
                         backend=self.name,
                         duration_ms=min(
                             max(0, round((time.perf_counter() - page_started) * 1_000)),
-                            max(0, round(self.timeout * 1_000)),
+                            max(0, round(budget * 1_000)),
                         ),
                         warnings=[
                             PipelineWarning(
@@ -774,7 +1013,8 @@ class GlmSdkRemoteParser(DocumentParser):
                                 severity=WarningSeverity.ERROR,
                                 page_number=page_number,
                                 backend=self.name,
-                                details={"budget_seconds": self.timeout},
+                                details={"budget_seconds": budget, "server_model_calls": None,
+                                         "remote_execution_stopped": None},
                             )
                         ],
                     ),
@@ -861,5 +1101,6 @@ class GlmSdkRemoteParser(DocumentParser):
         return result
 
     async def close(self) -> None:
+        await self.wait_for_idle()
         if self._owns_client:
             await self._client.aclose()

@@ -9,7 +9,7 @@ from __future__ import annotations
 from enum import StrEnum
 from typing import Annotated, Literal
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
+from pydantic import BaseModel, ConfigDict, Field, PrivateAttr, field_validator, model_validator
 
 
 class ParseProfile(StrEnum):
@@ -34,6 +34,10 @@ class ContentParseOptions(BaseModel):
     """User-facing options shared by synchronous and asynchronous content parsing."""
 
     model_config = ConfigDict(extra="forbid", use_enum_values=False)
+
+    # Request-local monotonic budget shared by every internal phase and copy.
+    # Never serialize a host clock into public options or persisted job records.
+    _deadline_monotonic: float | None = PrivateAttr(default=None)
 
     # Retained only to decode old database records and tune internal adapters.
     # It is deliberately absent from public request/response contracts.

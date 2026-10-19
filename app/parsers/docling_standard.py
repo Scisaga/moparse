@@ -32,11 +32,13 @@ from app.parsers.base import (
     DocumentParser,
     ParserCancelledError,
     ParserError,
+    ParserTimeoutError,
     ParserUnavailableError,
     ProgressCallback,
 )
 from app.parsers.glm_ocr_remote import GlmOcrRemoteAdapter
 from app.services.table_service import export_page_markdown, extract_table_fragments
+from app.utils.deadline import remaining_timeout
 from app.utils.page_range import group_consecutive_pages, parse_page_range
 from app.utils.settings import setting
 
@@ -80,6 +82,23 @@ class _ObservableStandardPdfPipelineMixin:
             sink = self._mosaicparse_progress_sink
         if sink is not None and isinstance(page_number, int) and page_number > 0:
             sink.put(page_number)
+
+    def _return_model_threads(self, model_threads: object, stages: list) -> None:
+        # Upstream permits abandoning a timed-out model thread. Our public job
+        # owns its source/converter until actual completion; drain before the
+        # converter slot or PDF resources can be reused/deleted.
+        for stage in stages:
+            call = getattr(stage, "_model_call", None)
+            if call is not None:
+                try:
+                    call.result()
+                except Exception:
+                    pass
+        for stage in stages:
+            thread = getattr(stage, "_thread", None)
+            if thread is not None and thread is not threading.current_thread():
+                thread.join()
+        super()._return_model_threads(model_threads, stages)  # type: ignore[misc]
 
 
 def _observable_standard_pipeline_class() -> type:
@@ -486,11 +505,17 @@ class DoclingStandardParser(DocumentParser):
             glm_ready,
         )
         pipeline = self._converter_pipeline(converter, source.mime_type)
+        pipeline_options = getattr(pipeline, "pipeline_options", None)
+        previous_timeout = getattr(pipeline_options, "document_timeout", None)
+        if pipeline_options is not None:
+            pipeline_options.document_timeout = remaining_timeout(options)
         if progress_sink is not None:
             self._set_pipeline_progress_sink(pipeline, progress_sink)
         try:
             return self._convert(converter, source, page_group)
         finally:
+            if pipeline_options is not None:
+                pipeline_options.document_timeout = previous_timeout
             if progress_sink is not None:
                 self._set_pipeline_progress_sink(pipeline, None)
 
@@ -652,6 +677,7 @@ class DoclingStandardParser(DocumentParser):
         announced_pages: set[int],
         progress_lock: asyncio.Lock,
         deferred_release_slots: set[int],
+        cancel_event: object | None = None,
     ) -> list[tuple[tuple[int, int], object]]:
         """Run independent converter slots concurrently and preserve chunk order."""
 
@@ -697,6 +723,24 @@ class DoclingStandardParser(DocumentParser):
             return_exceptions=True,
         )
         try:
+            stop_reason: ParserError | None = None
+            while not aggregate.done():
+                await asyncio.wait({aggregate}, timeout=0.05)
+                if self._cancelled(cancel_event):
+                    stop_reason = ParserCancelledError("job was cancelled; draining Docling")
+                elif stop_reason is None:
+                    try:
+                        remaining_timeout(options)
+                    except ParserTimeoutError as exc:
+                        stop_reason = exc
+                if stop_reason is not None:
+                    for worker_slot, *_ in entries:
+                        for key, converter in list(self._converters.items()):
+                            if key[0] == worker_slot:
+                                pipeline = self._converter_pipeline(converter, source.mime_type)
+                                pipeline_options = getattr(pipeline, "pipeline_options", None)
+                                if pipeline_options is not None:
+                                    pipeline_options.document_timeout = 1e-9
             conversion_results = await asyncio.shield(aggregate)
         except asyncio.CancelledError:
             # Python threads cannot be cancelled. Each active converter remains
@@ -730,6 +774,8 @@ class DoclingStandardParser(DocumentParser):
         for conversion_result in conversion_results:
             if isinstance(conversion_result, BaseException):
                 raise conversion_result
+        if stop_reason is not None:
+            raise stop_reason
         return [
             (page_group, conversion_result)
             for (_, page_group, _, _), conversion_result in zip(
@@ -769,8 +815,10 @@ class DoclingStandardParser(DocumentParser):
                 announced_pages,
                 progress_lock,
                 deferred_release_slots,
+                cancel_event,
             )
             for conversion in converted:
+                remaining_timeout(options)
                 yield conversion
 
     async def _export_conversion(
@@ -1045,4 +1093,7 @@ class DoclingStandardParser(DocumentParser):
 
     async def wait_idle(self) -> None:
         while self._inflight_conversions:
-            await asyncio.gather(*tuple(self._inflight_conversions), return_exceptions=True)
+            await asyncio.gather(
+                *(asyncio.shield(task) for task in tuple(self._inflight_conversions)),
+                return_exceptions=True,
+            )

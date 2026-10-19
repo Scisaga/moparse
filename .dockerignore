@@ -23,9 +23,9 @@ static
 data
 tmp
 models
-benchmark-results
 benchmark
 pdf_sample
+pdf_sample_extra
 tests
 docs
 scripts/*

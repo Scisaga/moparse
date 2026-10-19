@@ -268,7 +268,6 @@ function normalizeBackends(raw: unknown): { backends: BackendCapability[]; queue
     'docling-standard': { id: 'docling', label: 'Docling' },
     mineru: { id: 'mineru', label: 'MinerU Advanced＋TXT' },
     'mineru-advanced-txt': { id: 'mineru', label: 'MinerU Advanced＋TXT' },
-    'docling-header-verifier': { id: 'docling-header-verifier', label: 'Docling 表头核验' },
     glm: { id: 'glm', label: 'GLM' },
     glm_ocr: { id: 'glm', label: 'GLM' },
     'glm-ocr-remote': { id: 'glm', label: 'GLM' },

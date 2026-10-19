@@ -142,6 +142,8 @@ class BackendsResponse(BaseModel):
 class HealthResponse(BaseModel):
     status: Literal["ok", "degraded"]
     service: str
+    display_name: str = "MO-Parse"
+    aliases: list[str] = Field(default_factory=list)
     version: str
     uptime_seconds: float = Field(ge=0)
     queue: QueueStatus

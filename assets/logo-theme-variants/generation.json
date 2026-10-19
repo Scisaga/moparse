@@ -1,0 +1,108 @@
+{
+  "tool": "imagegen (built-in)",
+  "client_date": "2026-10-19",
+  "timezone": "Asia/Shanghai",
+  "purpose": "MO-Parse document-themed icon candidates",
+  "status": "Candidate",
+  "active_brand_assets_replaced": false,
+  "actual_physical_objects": false,
+  "generated_bytes_preserved": true,
+  "variants": [
+    {
+      "id": "J1",
+      "label": "折角纸页",
+      "path": "assets/logo-theme-variants/j1-folded-page.png",
+      "source": "/root/.codex/generated_images/01a150ea-cb0a-71e1-80af-ec0c1c6b7557/exec-c0e49fd0-d832-40b5-873a-cd15ea201ea8.png",
+      "prompt": "Use case: logo-brand.\nAsset type: original MO-Parse app-icon and project-mascot candidate, one isolated character.\nPrimary request: design a new mascot grounded in an everyday document object, expressing careful document reading, faithful text and table structure recovery, and approachable local software.\nStyle/medium: polished stylized 3D product render, matte 3D-printed PLA appearance, subtly visible fine printing layers, soft bevels, restrained elegant industrial character design.\nColor palette: medium cornflower blue #5C97CF, deeper blue #386B9E, light powder blue #80B3E2, dark navy #294E75, tiny ivory document accents if needed. Blue remains the dominant color.\nCharacter treatment: the everyday object IS the whole body, with two tiny dark inset dot eyes and one very small quiet curved smile directly on the object surface. Exactly two loose slender curved arms and two relaxed slender legs, simple tiny rounded hands and feet in navy, integrated naturally into the object. Calm attentive posture. Main object dominates the composition and limbs stay compact enough for an app icon.\nComposition: one complete character only, near frontal view with a slight three-quarter turn showing modest depth, centered on a square canvas, all limbs fully visible, silhouette fills about 80 percent, clean generous transparent margins. Soft studio lighting, clear readable big forms.\nBackground: genuine alpha transparency including the gaps between limbs and body. No ground, cast floor shadow, backdrop, pedestal, tile, border or checkerboard.\nConstraints: completely original visual identity. No separate robot head, no robot torso, no TV face panel, no screen, no buttons, no control console, no antennas, no machinery, no glowing eyes, no letters, no numbers, no wordmark, no watermark. No extra characters, objects, arrows or decorative particles. No giant grin, no glossy plastic, no miniature scene.\n\nSubject: an anthropomorphic SINGLE BLUE DOCUMENT SHEET. Its main body is a solid gently rounded upright paper-sheet rectangle with a distinctive upper-right folded corner, slightly softened paper curvature and believable thin but substantial 3D-printed thickness. The folded triangle is paler blue, readable at thumbnail size. The face is small and placed high in the upper-middle; below it, two broad shallow ivory-blue text strokes and one very simple shallow 2-by-2 table grid are integrated as low-relief page-content marks. Leave generous negative space between the face and content. The document itself is the character, not a character holding a sheet. Two slender arms droop naturally beside the sheet; two relaxed thin legs under it. Quiet, minimal, appealing silhouette.",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "sha256": "66c47b2e16f5ab4f0caeb4e19db4eb58ce8e4960fd11c1b3d0af378a5a348ce3",
+      "bytes": 1367079,
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "alpha_bbox": [
+        0,
+        6,
+        1242,
+        1254
+      ]
+    },
+    {
+      "id": "J2",
+      "label": "长尾夹",
+      "path": "assets/logo-theme-variants/j2-binder-clip.png",
+      "source": "/root/.codex/generated_images/01a150ea-cb0a-71e1-80af-ec0c1c6b7557/exec-d0689232-73b7-4063-8ee4-5fab2e70bba9.png",
+      "prompt": "Use case: logo-brand.\nAsset type: original MO-Parse app-icon and project-mascot candidate, one isolated character.\nPrimary request: design a new mascot grounded in an everyday document object, expressing careful document reading, faithful text and table structure recovery, and approachable local software.\nStyle/medium: polished stylized 3D product render, matte 3D-printed PLA appearance, subtly visible fine printing layers, soft bevels, restrained elegant industrial character design.\nColor palette: medium cornflower blue #5C97CF, deeper blue #386B9E, light powder blue #80B3E2, dark navy #294E75, tiny ivory document accents if needed. Blue remains the dominant color.\nCharacter treatment: the everyday object IS the whole body, with two tiny dark inset dot eyes and one very small quiet curved smile directly on the object surface. Exactly two loose slender curved arms and two relaxed slender legs, simple tiny rounded hands and feet in navy, integrated naturally into the object. Calm attentive posture. Main object dominates the composition and limbs stay compact enough for an app icon.\nComposition: one complete character only, near frontal view with a slight three-quarter turn showing modest depth, centered on a square canvas, all limbs fully visible, silhouette fills about 80 percent, clean generous transparent margins. Soft studio lighting, clear readable big forms.\nBackground: genuine alpha transparency including the gaps between limbs and body. No ground, cast floor shadow, backdrop, pedestal, tile, border or checkerboard.\nConstraints: completely original visual identity. No separate robot head, no robot torso, no TV face panel, no screen, no buttons, no control console, no antennas, no machinery, no glowing eyes, no letters, no numbers, no wordmark, no watermark. No extra characters, objects, arrows or decorative particles. No giant grin, no glossy plastic, no miniature scene.\n\nSubject: an anthropomorphic BLUE BINDER CLIP GRIPPING A DOCUMENT. A real everyday large binder clip silhouette, blue folded trapezoid spring-steel-like body rendered in matte printed polymer, with two familiar slender tall rounded wire handles rising upward. Handles must read as the functional binder-clip mechanism rather than ears or an antenna; keep them simple, dark blue, with clean open transparent interiors. A single short ivory page held behind the clip shows its folded corner and two broad blue document strokes above the clip. Two tiny eyes and a restrained short smile sit directly on the blue clip's front face, with no face panel. Exactly two additional slender curved arms descend loosely at the sides, and two relaxed thin legs emerge below the clip. The clip body and document remain a compact cohesive emblem. Recognizable stationery, understated personality, an original sculpture.",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "sha256": "28c7c23882ee5f9003f72838b4cbe362ca380611507691f412b27e2e7ff2774a",
+      "bytes": 1196981,
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "alpha_bbox": [
+        0,
+        21,
+        1224,
+        1254
+      ]
+    },
+    {
+      "id": "J3",
+      "label": "标签文件夹",
+      "path": "assets/logo-theme-variants/j3-tab-folder.png",
+      "source": "/root/.codex/generated_images/01a150ea-cb0a-71e1-80af-ec0c1c6b7557/exec-d6df7275-4ef2-4782-81cd-5fa2b9230e5b.png",
+      "prompt": "Use case: logo-brand.\nAsset type: original MO-Parse app-icon and project-mascot candidate, one isolated character.\nPrimary request: design a new mascot grounded in an everyday document object, expressing careful document reading, faithful text and table structure recovery, and approachable local software.\nStyle/medium: polished stylized 3D product render, matte 3D-printed PLA appearance, subtly visible fine printing layers, soft bevels, restrained elegant industrial character design.\nColor palette: medium cornflower blue #5C97CF, deeper blue #386B9E, light powder blue #80B3E2, dark navy #294E75, tiny ivory document accents if needed. Blue remains the dominant color.\nCharacter treatment: the everyday object IS the whole body, with two tiny dark inset dot eyes and one very small quiet curved smile directly on the object surface. Exactly two loose slender curved arms and two relaxed slender legs, simple tiny rounded hands and feet in navy, integrated naturally into the object. Calm attentive posture. Main object dominates the composition and limbs stay compact enough for an app icon.\nComposition: one complete character only, near frontal view with a slight three-quarter turn showing modest depth, centered on a square canvas, all limbs fully visible, silhouette fills about 80 percent, clean generous transparent margins. Soft studio lighting, clear readable big forms.\nBackground: genuine alpha transparency including the gaps between limbs and body. No ground, cast floor shadow, backdrop, pedestal, tile, border or checkerboard.\nConstraints: completely original visual identity. No separate robot head, no robot torso, no TV face panel, no screen, no buttons, no control console, no antennas, no machinery, no glowing eyes, no letters, no numbers, no wordmark, no watermark. No extra characters, objects, arrows or decorative particles. No giant grin, no glossy plastic, no miniature scene.\n\nSubject: an anthropomorphic BLUE TAB FILE FOLDER. A single familiar wide document folder with a distinctive raised rounded tab on its upper-left edge, a pale blue inner layer, and two neat ivory document top edges peeking just above the opening. Main folder is medium blue with softly rounded lower corners and a slight open V depth visible on the right, still compact and simple. Place two small inset eyes and a tiny quiet smile directly on the upper half of the broad front cover. In the lower-right of the cover, a very small subtle embossed page-outline with two broad content strokes suggests organized document structure. Two slender curved arms hang casually beside the folder and two relaxed slender legs below. File-folder shape and raised tab carry the identity at small icon sizes, with restrained details.",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "sha256": "8c6a0cf4c7f3e718d41dcbe1643cd230e69ebbe7479b32aa80e79fa673ca5387",
+      "bytes": 1360232,
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "alpha_bbox": [
+        0,
+        15,
+        1238,
+        1254
+      ]
+    },
+    {
+      "id": "J4",
+      "label": "文档托盘",
+      "path": "assets/logo-theme-variants/j4-document-tray.png",
+      "source": "/root/.codex/generated_images/01a150ea-cb0a-71e1-80af-ec0c1c6b7557/exec-96b8c912-4147-4317-803e-266cebe2ba4e.png",
+      "prompt": "Use case: logo-brand.\nAsset type: original MO-Parse app-icon and project-mascot candidate, one isolated character.\nPrimary request: design a new mascot grounded in an everyday document object, expressing careful document reading, faithful text and table structure recovery, and approachable local software.\nStyle/medium: polished stylized 3D product render, matte 3D-printed PLA appearance, subtly visible fine printing layers, soft bevels, restrained elegant industrial character design.\nColor palette: medium cornflower blue #5C97CF, deeper blue #386B9E, light powder blue #80B3E2, dark navy #294E75, tiny ivory document accents if needed. Blue remains the dominant color.\nCharacter treatment: the everyday object IS the whole body, with two tiny dark inset dot eyes and one very small quiet curved smile directly on the object surface. Exactly two loose slender curved arms and two relaxed slender legs, simple tiny rounded hands and feet in navy, integrated naturally into the object. Calm attentive posture. Main object dominates the composition and limbs stay compact enough for an app icon.\nComposition: one complete character only, near frontal view with a slight three-quarter turn showing modest depth, centered on a square canvas, all limbs fully visible, silhouette fills about 80 percent, clean generous transparent margins. Soft studio lighting, clear readable big forms.\nBackground: genuine alpha transparency including the gaps between limbs and body. No ground, cast floor shadow, backdrop, pedestal, tile, border or checkerboard.\nConstraints: completely original visual identity. No separate robot head, no robot torso, no TV face panel, no screen, no buttons, no control console, no antennas, no machinery, no glowing eyes, no letters, no numbers, no wordmark, no watermark. No extra characters, objects, arrows or decorative particles. No giant grin, no glossy plastic, no miniature scene.\n\nSubject: an anthropomorphic BLUE DESKTOP DOCUMENT IN-TRAY. The main body is one compact low broad U-shaped stationery paper tray with rounded front lip, visibly open top and gently raised back edge. Two neatly aligned pale ivory document sheets lie in it at a modest slope; the upper sheet is visible as a document with just two broad blue text strokes and a tiny clear 2-by-2 table grid. The blue front lip has two small dark inset dot eyes and one tiny restrained smile directly on its surface. The tray, papers and raised rear form one cohesive low horizontal silhouette, with substantial blue sides and no face screen. Exactly two slender arms hang loosely outside the tray and two relaxed slender legs extend below, navy hands and feet. Everyday office stationery rather than a printer or machine, expressing carefully organized document output. Keep the papers compact so the tray remains the dominant object.",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "sha256": "17b9e005e82bdacae023fa7fdd4b8e86f436f776affbfd540ffc40ee5132eb5f",
+      "bytes": 1212825,
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "alpha_bbox": [
+        0,
+        19,
+        1242,
+        1254
+      ]
+    }
+  ]
+}

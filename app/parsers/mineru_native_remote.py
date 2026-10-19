@@ -11,6 +11,7 @@ import asyncio
 import logging
 import math
 import time
+import uuid
 from dataclasses import dataclass
 from typing import Any
 
@@ -33,12 +34,14 @@ from app.parsers.base import (
     DocumentParser,
     ParserCancelledError,
     ParserError,
+    ParserTimeoutError,
     ParserUnavailableError,
     ProgressCallback,
 )
 from app.parsers.glm_sdk_remote import _html_table_layout
 from app.services.storage_service import StorageService
 from app.services.table_service import PageFurnitureFragment, TableFragment, render_gfm_rows
+from app.utils.deadline import attach_deadline, remaining_timeout
 from app.utils.page_range import parse_page_range
 from app.utils.settings import setting
 
@@ -156,6 +159,11 @@ class _PageRenderer:
                 caption=caption,
                 caption_scope_complete=False,
                 source_kind="mineru",
+                source_continues_prev=(
+                    block["continues_prev"]
+                    if isinstance(block.get("continues_prev"), bool)
+                    else None
+                ),
                 cells=cells,
             )
             self.fragments.append(fragment)
@@ -249,6 +257,7 @@ class MinerUNativeRemoteParser(DocumentParser):
         self._client: httpx.AsyncClient | None = None
         self._last_status: BackendStatus | None = None
         self._last_probe = 0.0
+        self._request_protocol = False
 
     async def initialize(self) -> None:
         if self._client is None:
@@ -259,7 +268,13 @@ class MinerUNativeRemoteParser(DocumentParser):
             await self._client.aclose()
             self._client = None
 
-    async def probe(self, *, force: bool = False) -> BackendStatus:
+    async def probe(
+        self, *, force: bool = False, refresh_unavailable: bool = False
+    ) -> BackendStatus:
+        # Admission must observe recovery without waiting for a cached failure's
+        # TTL. A ready cache still avoids extra probes on the successful path.
+        if refresh_unavailable and self._last_status is not None and not self._last_status.ready:
+            force = True
         ttl = float(setting(self.settings, "backend_health_ttl_seconds", 15))
         if not force and self._last_status and time.monotonic() - self._last_probe < ttl:
             return self._last_status
@@ -269,6 +284,9 @@ class MinerUNativeRemoteParser(DocumentParser):
             response = await self._client.get(f"{self.base_url}/ready", timeout=10)
             response.raise_for_status()
             payload = response.json()
+            self._request_protocol = (
+                payload.get("request_control", {}).get("protocol") == "native-request/1"
+            )
             if payload.get("ready") is not True:
                 raise ValueError("worker or configured VLM is not ready")
             if payload.get("text_matching", {}).get("name") != "native-text-matching-axis-v1":
@@ -299,6 +317,7 @@ class MinerUNativeRemoteParser(DocumentParser):
     ) -> DocumentParseResult:
         if source.mime_type != "application/pdf":
             raise ParserError("the native MinerU adapter only accepts PDF sources")
+        options = attach_deadline(options, float(options.timeout_seconds or self.timeout))
 
         def cancelled() -> bool:
             return bool(
@@ -307,7 +326,10 @@ class MinerUNativeRemoteParser(DocumentParser):
 
         if cancelled():
             raise ParserCancelledError("content parsing was cancelled")
-        status = await self.probe()
+        async with asyncio.timeout(remaining_timeout(options)):
+            status = await self.probe(refresh_unavailable=True)
+        if cancelled():
+            raise ParserCancelledError("content parsing was cancelled")
         if not status.ready:
             raise ParserUnavailableError(status.detail or "the native MinerU worker is unavailable")
         selected = set(parse_page_range(options.page_range, source.page_count))
@@ -316,17 +338,82 @@ class MinerUNativeRemoteParser(DocumentParser):
             if asyncio.iscoroutine(value):
                 await value
         started = time.perf_counter()
+        request_id = uuid.uuid4().hex
+        if self.storage_service is not None:
+            await self.storage_service.write_native_control_evidence(
+                document_id,
+                {
+                    "schema": "native-request-control/1",
+                    "document_id": document_id,
+                    "request_id": request_id,
+                    "protocol_supported": self._request_protocol,
+                    "state": "submitting",
+                    "remaining_seconds": remaining_timeout(options),
+                },
+            )
         try:
             assert self._client is not None
             with source.path.open("rb") as stream:
-                response = await self._client.post(
-                    f"{self.base_url}/parse",
-                    files={"file": (source.filename, stream, "application/pdf")},
-                    data={"page_range": options.page_range or ""},
-                    timeout=float(options.timeout_seconds or self.timeout),
+                work = asyncio.create_task(
+                    self._client.post(
+                        f"{self.base_url}/parse",
+                        files={"file": (source.filename, stream, "application/pdf")},
+                        data={
+                            "page_range": options.page_range or "",
+                            "request_id": request_id,
+                            "timeout_seconds": str(remaining_timeout(options)),
+                        },
+                        # Request deadline belongs to the worker; the small extra
+                        # transport interval allows it to report drained cleanup.
+                        timeout=remaining_timeout(options) + 30,
+                    )
                 )
+                last_progress: tuple[int, int, str] | None = None
+                try:
+                    while not work.done():
+                        await asyncio.wait({work}, timeout=0.25)
+                        if cancelled():
+                            raise ParserCancelledError("content parsing was cancelled")
+                        remaining_timeout(options)
+                        if self._request_protocol and not work.done():
+                            state = await self._client.get(
+                                f"{self.base_url}/requests/{request_id}",
+                                timeout=remaining_timeout(options, cap=3),
+                            )
+                            if state.status_code == 404:
+                                continue  # Upload has not registered yet.
+                            state.raise_for_status()
+                            data = state.json()
+                            current, total = data.get("current"), data.get("total")
+                            phase = str(data.get("phase", "window.processing"))
+                            if isinstance(current, int) and isinstance(total, int) and total > 0:
+                                progress = (min(current, len(selected)), len(selected), phase)
+                                if progress != last_progress and progress_callback is not None:
+                                    value = progress_callback(*progress)
+                                    if asyncio.iscoroutine(value):
+                                        await value
+                                last_progress = progress
+                    response = await work
+                except BaseException:
+                    await self._stop_request(request_id, work, document_id=document_id)
+                    raise
+            if response.is_error:
+                await self._stop_request(request_id, work, document_id=document_id)
+            if response.status_code == 408:
+                raise ParserTimeoutError("native MinerU worker exceeded the shared deadline")
             response.raise_for_status()
             if self.storage_service is not None:
+                await self.storage_service.write_native_control_evidence(
+                    document_id,
+                    {
+                        "schema": "native-request-control/1",
+                        "document_id": document_id,
+                        "request_id": request_id,
+                        "protocol_supported": self._request_protocol,
+                        "state": "completed",
+                        "native_http_status": response.status_code,
+                    },
+                )
                 await self.storage_service.write_native_evidence(document_id, response.content)
             payload = response.json()
         except (httpx.HTTPError, ValueError) as exc:
@@ -383,3 +470,79 @@ class MinerUNativeRemoteParser(DocumentParser):
                 if asyncio.iscoroutine(value):
                     await value
         return result
+
+    async def _stop_request(
+        self, request_id: str, work: asyncio.Task, *, document_id: str | None = None
+    ) -> None:
+        """Request cancellation and retain ownership until real worker cleanup.
+
+        Never retry parse POST. Cancel/status requests carry the unique attempt
+        ID and cannot affect another document or the shared GPU service.
+        """
+        acknowledgement = None
+        if self._request_protocol:
+            assert self._client is not None
+            cleanup = asyncio.create_task(
+                self._client.post(
+                    f"{self.base_url}/requests/{request_id}/cancel",
+                    timeout=10,
+                )
+            )
+            while not cleanup.done():
+                try:
+                    await asyncio.shield(cleanup)
+                except asyncio.CancelledError:
+                    continue
+                except httpx.HTTPError:
+                    break
+            if not cleanup.cancelled():
+                cleanup.exception()
+            terminal = {"completed", "cancelled", "failed", "timed_out"}
+            # HTTP completion alone is not a cleanup acknowledgement. A read
+            # timeout can precede the worker draining a blocking CPU stage.
+            while True:
+                try:
+                    status = await self._client.get(
+                        f"{self.base_url}/requests/{request_id}",
+                        timeout=10,
+                    )
+                    if status.status_code == 404:
+                        # The upload may not yet be registered. This scoped,
+                        # idempotent control POST creates a cancellation tombstone.
+                        await self._client.post(
+                            f"{self.base_url}/requests/{request_id}/cancel",
+                            timeout=10,
+                        )
+                    else:
+                        status.raise_for_status()
+                        if status.json().get("state") in terminal:
+                            acknowledgement = status.json()
+                            break
+                except (httpx.HTTPError, ValueError, asyncio.CancelledError):
+                    pass  # Keep cancellation pending until a real acknowledgement.
+                try:
+                    await asyncio.sleep(0.25)
+                except asyncio.CancelledError:
+                    pass
+        while not work.done():
+            try:
+                await asyncio.shield(work)
+            except asyncio.CancelledError:
+                continue
+            except (httpx.HTTPError, ValueError):
+                break
+        if work.done() and not work.cancelled():
+            work.exception()  # Retrieve an error without hiding the original reason.
+        if self.storage_service is not None and document_id is not None:
+            await self.storage_service.write_native_control_evidence(
+                document_id,
+                {
+                    "schema": "native-request-control/1",
+                    "document_id": document_id,
+                    "request_id": request_id,
+                    "protocol_supported": self._request_protocol,
+                    "state": acknowledgement.get("state") if acknowledgement else "remote_unknown",
+                    "cleanup_acknowledgement": acknowledgement,
+                    "remote_cleanup_confirmed": acknowledgement is not None,
+                },
+            )

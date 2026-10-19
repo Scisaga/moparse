@@ -1,0 +1,119 @@
+{
+  "tool": "imagegen (built-in)",
+  "client_date": "2026-10-19",
+  "timezone": "Asia/Shanghai",
+  "purpose": "MO-Parse retro document-terminal variants based on the earlier pale-screen mascot preferred by the user",
+  "status": "Candidate",
+  "active_brand_assets_replaced": false,
+  "actual_physical_objects": false,
+  "generated_bytes_preserved": true,
+  "reference": {
+    "path": "assets/moparse-logo-face-v2.png",
+    "role": "Earlier MO-Parse icon; shape family and understated face reference",
+    "sha256": "731fa29f862bd35e32beebd3cf02e15eeeaf544320761069323ccb0d2dbaae98"
+  },
+  "known_limitations": [
+    "Raw generated alpha edges contain fragments; these are design candidates rather than cleaned production masters."
+  ],
+  "variants": [
+    {
+      "id": "L1",
+      "label": "方正经典款",
+      "path": "assets/logo-terminal-refinements-v2/l1-classic-terminal.png",
+      "source": "/root/.codex/generated_images/01a150ea-cb0a-71e1-80af-ec0c1c6b7557/exec-ebb9db1f-2320-45a5-926e-8dbab635060d.png",
+      "prompt": "Use case: precise-object-edit.\nAsset type: a new MO-Parse document-terminal mascot icon variant, evolving the supplied earlier icon.\nInput image role: the supplied image is the ORIGINAL MO-Parse design reference and family identity to develop further. Preserve the appealing retro little document-reading appliance character. The user prefers this earlier electronic companion direction.\nCore visual identity: a softly rounded solid retro terminal enclosure, large calm PALE display with generous empty space, two TINY dark round dot eyes and a THIN short understated smile; one small amber functional button; one modest document emerging from a top reading slot. The document has two broad quiet content strokes and a small simple table motif, no lettering. Character comes from proportions, gently softened geometry and the restrained little expression.\nRequired family resemblance: it must look like a revised member of this same reference design family, with a paper-reading function, not a new stationery-object creature. Keep the face markings small, calm and graphically precise. Do not replace them with giant pill eyes, shiny pupils or a thick glowing grin. Give the case coherent physical construction, enough visible side depth, and stable support beneath its full rear as well as front.\nMedium: polished stylized product-icon rendering with attractive soft highlights and carefully modeled rounded edges. Surface finish and colors may vary between concepts; no blue-only or matte-3D-print requirement, no printed-layer texture needed. Avoid excessive reflections that obscure the calm face.\nComposition: one complete device only, square canvas, near-front three-quarter view, visible front and right side, about 80 percent canvas occupancy, all body supports visible, clean generous transparent margins. Genuine alpha transparency. Remove and do not reproduce ANY stray white specks, colored edge fragments, floating pixels or paper-edge debris from the reference. No floor, ground shadow, backdrop, pedestal, app tile, labels or watermark.\nAvoid: separate robot head, personified paper sheet or folder, many decorative controls, clutter, disconnected machine parts, giant eyes, loud grin, floating bottom support, extra characters, wordmark. Maintain an independently designed document-appliance character rather than a literal copy of an existing fictional console character.\n\nVariant: CLASSIC COMPACT SQUARE.\nMake the referenced terminal slightly more compact and nearly square in its main front face: a broad rounded cube with controlled corner radii, a large pale mint display filling about two thirds of its front height, and a shallower lower chin than the source. Use a warm desaturated turquoise / deep teal casing with ivory screen and paper. Screen has tiny wide-set dark dot eyes and one thin small smile, ample blank space.\nOne amber button at bottom right and a single narrow dark reading slot across the lower left; REMOVE the extra round white indicator. Show one short folded-corner source page in the top slot, with exposed paper height about one quarter of case height. Replace separate bulbous feet with a low continuous inset dark bottom rim supporting full depth, subtle enough not to look like a pedestal. NO arms or character legs. Keep it close to the source but more resolved, compact and elegant.",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "sha256": "d72ed454380470f4d0e805129e622f6b3709999579ad79bb25a66f2f15c940a3",
+      "bytes": 1267081,
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "subject_bbox_alpha_128": [
+        124,
+        74,
+        1173,
+        1197
+      ]
+    },
+    {
+      "id": "L2",
+      "label": "矮宽桌面款",
+      "path": "assets/logo-terminal-refinements-v2/l2-wide-desktop-terminal.png",
+      "source": "/root/.codex/generated_images/01a150ea-cb0a-71e1-80af-ec0c1c6b7557/exec-26851894-7542-4cf0-84e3-a666c8d908e0.png",
+      "prompt": "Use case: precise-object-edit.\nAsset type: a new MO-Parse document-terminal mascot icon variant, evolving the supplied earlier icon.\nInput image role: the supplied image is the ORIGINAL MO-Parse design reference and family identity to develop further. Preserve the appealing retro little document-reading appliance character. The user prefers this earlier electronic companion direction.\nCore visual identity: a softly rounded solid retro terminal enclosure, large calm PALE display with generous empty space, two TINY dark round dot eyes and a THIN short understated smile; one small amber functional button; one modest document emerging from a top reading slot. The document has two broad quiet content strokes and a small simple table motif, no lettering. Character comes from proportions, gently softened geometry and the restrained little expression.\nRequired family resemblance: it must look like a revised member of this same reference design family, with a paper-reading function, not a new stationery-object creature. Keep the face markings small, calm and graphically precise. Do not replace them with giant pill eyes, shiny pupils or a thick glowing grin. Give the case coherent physical construction, enough visible side depth, and stable support beneath its full rear as well as front.\nMedium: polished stylized product-icon rendering with attractive soft highlights and carefully modeled rounded edges. Surface finish and colors may vary between concepts; no blue-only or matte-3D-print requirement, no printed-layer texture needed. Avoid excessive reflections that obscure the calm face.\nComposition: one complete device only, square canvas, near-front three-quarter view, visible front and right side, about 80 percent canvas occupancy, all body supports visible, clean generous transparent margins. Genuine alpha transparency. Remove and do not reproduce ANY stray white specks, colored edge fragments, floating pixels or paper-edge debris from the reference. No floor, ground shadow, backdrop, pedestal, app tile, labels or watermark.\nAvoid: separate robot head, personified paper sheet or folder, many decorative controls, clutter, disconnected machine parts, giant eyes, loud grin, floating bottom support, extra characters, wordmark. Maintain an independently designed document-appliance character rather than a literal copy of an existing fictional console character.\n\nVariant: LOW WIDE DESKTOP READER.\nEvolve the reference into a friendly low horizontal document terminal: front width about 1.35 times case height, reduced enclosure depth, softly rounded rectangular shell and one broad pale display. Face retains tiny dark dots and a thin small smile with lots of quiet empty display. Keep a blue-cyan outer case and deep petrol-blue lower inset; subtle two-tone construction, not multiple stacked parts.\nA short paper peeks out from the rear top slot, tilting back gently. The lower-left front has one understated slim paper-reading opening; one small amber button is near the lower-right edge. No white light. The full case rests on a shallow inset dark lower chassis supporting its whole front-to-back depth. NO arms, NO tall legs and no floating rear. More welcoming small desktop companion than generic printer; retain a strong screen-led identity.",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "sha256": "11aecd54c7814004862210cf35d30abf67fe861e8520179b88678a718b562e03",
+      "bytes": 1242070,
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "subject_bbox_alpha_128": [
+        35,
+        127,
+        1241,
+        1160
+      ],
+      "known_limitations": [
+        "Narrow right subject margin of approximately 13 pixels at alpha >= 128."
+      ]
+    },
+    {
+      "id": "L3",
+      "label": "立式伙伴款",
+      "path": "assets/logo-terminal-refinements-v2/l3-standing-companion.png",
+      "source": "/root/.codex/generated_images/01a150ea-cb0a-71e1-80af-ec0c1c6b7557/exec-1d03191f-844c-4985-a749-cdb72a7efb97.png",
+      "prompt": "Use case: precise-object-edit.\nAsset type: a new MO-Parse document-terminal mascot icon variant, evolving the supplied earlier icon.\nInput image role: the supplied image is the ORIGINAL MO-Parse design reference and family identity to develop further. Preserve the appealing retro little document-reading appliance character. The user prefers this earlier electronic companion direction.\nCore visual identity: a softly rounded solid retro terminal enclosure, large calm PALE display with generous empty space, two TINY dark round dot eyes and a THIN short understated smile; one small amber functional button; one modest document emerging from a top reading slot. The document has two broad quiet content strokes and a small simple table motif, no lettering. Character comes from proportions, gently softened geometry and the restrained little expression.\nRequired family resemblance: it must look like a revised member of this same reference design family, with a paper-reading function, not a new stationery-object creature. Keep the face markings small, calm and graphically precise. Do not replace them with giant pill eyes, shiny pupils or a thick glowing grin. Give the case coherent physical construction, enough visible side depth, and stable support beneath its full rear as well as front.\nMedium: polished stylized product-icon rendering with attractive soft highlights and carefully modeled rounded edges. Surface finish and colors may vary between concepts; no blue-only or matte-3D-print requirement, no printed-layer texture needed. Avoid excessive reflections that obscure the calm face.\nComposition: one complete device only, square canvas, near-front three-quarter view, visible front and right side, about 80 percent canvas occupancy, all body supports visible, clean generous transparent margins. Genuine alpha transparency. Remove and do not reproduce ANY stray white specks, colored edge fragments, floating pixels or paper-edge debris from the reference. No floor, ground shadow, backdrop, pedestal, app tile, labels or watermark.\nAvoid: separate robot head, personified paper sheet or folder, many decorative controls, clutter, disconnected machine parts, giant eyes, loud grin, floating bottom support, extra characters, wordmark. Maintain an independently designed document-appliance character rather than a literal copy of an existing fictional console character.\n\nVariant: UPRIGHT LITTLE COMPANION.\nDevelop the supplied terminal into a slightly taller compact upright device, front width about 0.85 times height, with a softly rounded sage / muted sea-green shell and a large pale warm ivory display occupying the upper two thirds. Face remains two tiny dark round dots and one thin short smile, calm and understated.\nOne narrow paper-reading slot and one small ochre button sit in a simple purposeful lower front strip; no other controls, no gamepad layout. One short folded-corner document emerges at the rear top.\nThis variant has exactly two relaxed slender dark arms close to the sides, ending in very simple tiny rounded hands, and two short slim dark legs with small flattened feet. Limbs are modest and support the body, not long rubber-hose cartoon limbs or bulky mechanical joints. Slightly relaxed stance, one hand hanging in a gentle curve. The original rounded document terminal remains the entire body and identity. No separate head, antennas, branded markings or copied console controls.",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "sha256": "bee1ec5b1809286c4c806b32793e2812e500c82d093f78f5ed86603c84ed51b2",
+      "bytes": 1169307,
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "subject_bbox_alpha_128": [
+        110,
+        41,
+        1122,
+        1232
+      ]
+    },
+    {
+      "id": "L4",
+      "label": "轻楔形复古款",
+      "path": "assets/logo-terminal-refinements-v2/l4-retro-wedge-terminal.png",
+      "source": "/root/.codex/generated_images/01a150ea-cb0a-71e1-80af-ec0c1c6b7557/exec-298b9b66-9656-417a-8012-a7b79c3eec29.png",
+      "prompt": "Use case: precise-object-edit.\nAsset type: a new MO-Parse document-terminal mascot icon variant, evolving the supplied earlier icon.\nInput image role: the supplied image is the ORIGINAL MO-Parse design reference and family identity to develop further. Preserve the appealing retro little document-reading appliance character. The user prefers this earlier electronic companion direction.\nCore visual identity: a softly rounded solid retro terminal enclosure, large calm PALE display with generous empty space, two TINY dark round dot eyes and a THIN short understated smile; one small amber functional button; one modest document emerging from a top reading slot. The document has two broad quiet content strokes and a small simple table motif, no lettering. Character comes from proportions, gently softened geometry and the restrained little expression.\nRequired family resemblance: it must look like a revised member of this same reference design family, with a paper-reading function, not a new stationery-object creature. Keep the face markings small, calm and graphically precise. Do not replace them with giant pill eyes, shiny pupils or a thick glowing grin. Give the case coherent physical construction, enough visible side depth, and stable support beneath its full rear as well as front.\nMedium: polished stylized product-icon rendering with attractive soft highlights and carefully modeled rounded edges. Surface finish and colors may vary between concepts; no blue-only or matte-3D-print requirement, no printed-layer texture needed. Avoid excessive reflections that obscure the calm face.\nComposition: one complete device only, square canvas, near-front three-quarter view, visible front and right side, about 80 percent canvas occupancy, all body supports visible, clean generous transparent margins. Genuine alpha transparency. Remove and do not reproduce ANY stray white specks, colored edge fragments, floating pixels or paper-edge debris from the reference. No floor, ground shadow, backdrop, pedestal, app tile, labels or watermark.\nAvoid: separate robot head, personified paper sheet or folder, many decorative controls, clutter, disconnected machine parts, giant eyes, loud grin, floating bottom support, extra characters, wordmark. Maintain an independently designed document-appliance character rather than a literal copy of an existing fictional console character.\n\nVariant: GENTLE WEDGE RETRO WORKSTATION.\nRetain the source's retro companion personality but reshape the enclosure as a small softly rounded desktop workstation, gently narrower at the top, slightly wider at its stable bottom, and a front display leaning back about 8 degrees. The wedge should be subtle and inviting, not an aggressive angular gaming device. Use an elegant warm cream main case with a muted teal upper reading lip and dark petrol inset base, plus one tiny amber button.\nA large pale mint-green screen is integrated into the sloping front; tiny dark round dot eyes and a thin modest smile create the whole expression. Place a short document in the back top slot, with two broad quiet content strokes and a small table mark. Lower face has one very slim reading slot and only the one amber button, with ample breathing space. NO arms or legs; a continuous inset full-depth base provides realistic stable support. One cohesive memorable terminal shape, carefully resolved case seams and soft highlights, no sprawling keyboard, no cables, no scenery.",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "sha256": "2a51e62bfa1a3e5df9cd3be05d8879684568e9a3cc1a0e6923c9d9d6cf581b9d",
+      "bytes": 1330342,
+      "alpha_extrema": [
+        0,
+        255
+      ],
+      "subject_bbox_alpha_128": [
+        75,
+        54,
+        1204,
+        1215
+      ]
+    }
+  ]
+}

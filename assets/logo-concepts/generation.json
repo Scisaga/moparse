@@ -1,0 +1,72 @@
+{
+  "tool": "imagegen (built-in)",
+  "client_date": "2026-10-18",
+  "timezone": "Asia/Shanghai",
+  "scope": "Four fresh document-object mascot concepts",
+  "generation_mode": "New generation without reference images",
+  "active_brand_assets_replaced": false,
+  "actual_printed_object": false,
+  "backup_candidate": {
+    "path": "assets/logo-variants/a-balanced-blue-cyan.png",
+    "sha256": "6211f279fbf5e8ce5bfb490b5b53b8685fa004b8daf4d59b94b25a8fa4717755",
+    "role": "Retained as backup; not used as a generation input"
+  },
+  "concepts": [
+    {
+      "id": "01",
+      "label": "卷纸阅读器",
+      "design": "A low HORIZONTAL CYLINDER document-reading machine. The rounded blue-cyan cylinder has two darker circular end caps; one end cap subtly reveals a paper-roll spindle. One short ivory paper ribbon with three small grey content bars comes out of a narrow top opening and curves loosely along the back, clearly connected to the machine. A modest dark capsule-shaped face window follows the curved front of the cylinder, with two small pale softly lit oval eyes and a short simple smile. Two tiny low support nubs keep it standing. The cylinder and visible spool define the silhouette, not a square screen box. Make it feel like a little thermal-document reader that quietly came alive.",
+      "prompt": "Use case: logo-brand / stylized-concept.\nAsset type: ONE original mascot icon concept for MO-Parse, a document parsing research project.\nThis is a fresh concept exploration, not a recolor or reshaping of an existing logo.\nCONCEPT 01: 卷纸阅读器.\nA low HORIZONTAL CYLINDER document-reading machine. The rounded blue-cyan cylinder has two darker circular end caps; one end cap subtly reveals a paper-roll spindle. One short ivory paper ribbon with three small grey content bars comes out of a narrow top opening and curves loosely along the back, clearly connected to the machine. A modest dark capsule-shaped face window follows the curved front of the cylinder, with two small pale softly lit oval eyes and a short simple smile. Two tiny low support nubs keep it standing. The cylinder and visible spool define the silhouette, not a square screen box. Make it feel like a little thermal-document reader that quietly came alive.\n\nVisual language: an everyday document-related object that has quietly come alive. Spare, endearing, a little odd and relaxed. A few confident simple geometric forms, restrained small facial marks with generous empty space, no elaborate science-fiction anatomy. Avoid anime cuteness, baby proportions, huge eyes or exaggerated expressions. Do not imitate an existing fictional character.\nPalette: predominantly BLUE-CYAN, balanced azure/cyan around #42B8D5, with deeper navy details and off-white paper. Tiny functional accents only where specified. No dominant mint green or pink.\nMaterial and rendering: a convincing small physical 3D-printed object with a satin-matte PLA surface, fine subtle filament layers and soft bevels, soft neutral studio lighting. Clean legible volume, not glossy candy plastic or rough distressed material.\nFraming: ONE entire object centered in a square transparent RGBA canvas, front three-quarter view, about 78 percent occupancy with generous clean margin, all paper and feet visible. Simple silhouette that remains recognizable as an app icon.\nNo branding, words, letters, watermark, extra scene objects, floor, pedestal or cast shadow. No floating particles or stray edge fragments. Genuine alpha transparency. Do not make a concept sheet or multiple variants in the same image.",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "path": "assets/logo-concepts/01-roll-reader.png",
+      "sha256": "abba96ce0e9fd9cf7c33f2d52cf720fae48afc0e0d0e6b3e9614d910db19fa37",
+      "generated_bytes_preserved": true
+    },
+    {
+      "id": "02",
+      "label": "折角文档盒",
+      "design": "A small UPRIGHT THIN DOCUMENT-READER BOX, like a thick physical sheet of paper with one conspicuously CHAMFERED / FOLDED top-right corner. Its asymmetrical blue-cyan shell has real visible depth and a dark narrow paper intake along the sloping upper edge, holding just the edge of one off-white page. A few restrained shallow horizontal document grooves below the face link it to parsed content. A small deep-blue face panel sits on the broad front, with tiny softly lit oval eyes and a simple short smile. Two very short plain feet and one loose tiny curved side arm give a slightly awkward object-character personality. No separate head, no articulated joints. The cut corner and upright thin wedge profile must be unmistakable; it should read as a little physical document-processing device, not a flat folder icon or generic handheld game console.",
+      "prompt": "Use case: logo-brand / stylized-concept.\nAsset type: ONE original mascot icon concept for MO-Parse, a document parsing research project.\nThis is a fresh concept exploration, not a recolor or reshaping of an existing logo.\nCONCEPT 02: 折角文档盒.\nA small UPRIGHT THIN DOCUMENT-READER BOX, like a thick physical sheet of paper with one conspicuously CHAMFERED / FOLDED top-right corner. Its asymmetrical blue-cyan shell has real visible depth and a dark narrow paper intake along the sloping upper edge, holding just the edge of one off-white page. A few restrained shallow horizontal document grooves below the face link it to parsed content. A small deep-blue face panel sits on the broad front, with tiny softly lit oval eyes and a simple short smile. Two very short plain feet and one loose tiny curved side arm give a slightly awkward object-character personality. No separate head, no articulated joints. The cut corner and upright thin wedge profile must be unmistakable; it should read as a little physical document-processing device, not a flat folder icon or generic handheld game console.\n\nVisual language: an everyday document-related object that has quietly come alive. Spare, endearing, a little odd and relaxed. A few confident simple geometric forms, restrained small facial marks with generous empty space, no elaborate science-fiction anatomy. Avoid anime cuteness, baby proportions, huge eyes or exaggerated expressions. Do not imitate an existing fictional character.\nPalette: predominantly BLUE-CYAN, balanced azure/cyan around #42B8D5, with deeper navy details and off-white paper. Tiny functional accents only where specified. No dominant mint green or pink.\nMaterial and rendering: a convincing small physical 3D-printed object with a satin-matte PLA surface, fine subtle filament layers and soft bevels, soft neutral studio lighting. Clean legible volume, not glossy candy plastic or rough distressed material.\nFraming: ONE entire object centered in a square transparent RGBA canvas, front three-quarter view, about 78 percent occupancy with generous clean margin, all paper and feet visible. Simple silhouette that remains recognizable as an app icon.\nNo branding, words, letters, watermark, extra scene objects, floor, pedestal or cast shadow. No floating particles or stray edge fragments. Genuine alpha transparency. Do not make a concept sheet or multiple variants in the same image.",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "path": "assets/logo-concepts/02-folded-document-box.png",
+      "sha256": "895485a245b77362dc1374c3bbf371da8eb20716a7a28a0e95342976001e2f89",
+      "generated_bytes_preserved": true
+    },
+    {
+      "id": "03",
+      "label": "翻盖桌面扫描器",
+      "design": "A miniature FLATBED DOCUMENT SCANNER with a LOW wide blue-cyan base and a slightly open hinged lid at about 35 degrees, creating an OPEN clamshell silhouette. The dark scanner platen holds a clean off-white document with a few grey content bars, visible below the lid. The lid's inside is a simple light surface, with no face or display, so it reads as scanner hardware rather than a laptop or separate robot head. A small friendly dark-blue face window with two subtle pale oval eyes and a tiny curved smile sits in the FRONT EDGE OF THE LOW BASE. One tiny warm amber status indicator is enough. No game controls. The scanner is the whole character, supported by low rubber feet, no arms or legs. Soft geometric cartoon simplicity makes this practical everyday tool feel quietly alive.",
+      "prompt": "Use case: logo-brand / stylized-concept.\nAsset type: ONE original mascot icon concept for MO-Parse, a document parsing research project.\nThis is a fresh concept exploration, not a recolor or reshaping of an existing logo.\nCONCEPT 03: 翻盖桌面扫描器.\nA miniature FLATBED DOCUMENT SCANNER with a LOW wide blue-cyan base and a slightly open hinged lid at about 35 degrees, creating an OPEN clamshell silhouette. The dark scanner platen holds a clean off-white document with a few grey content bars, visible below the lid. The lid's inside is a simple light surface, with no face or display, so it reads as scanner hardware rather than a laptop or separate robot head. A small friendly dark-blue face window with two subtle pale oval eyes and a tiny curved smile sits in the FRONT EDGE OF THE LOW BASE. One tiny warm amber status indicator is enough. No game controls. The scanner is the whole character, supported by low rubber feet, no arms or legs. Soft geometric cartoon simplicity makes this practical everyday tool feel quietly alive.\n\nVisual language: an everyday document-related object that has quietly come alive. Spare, endearing, a little odd and relaxed. A few confident simple geometric forms, restrained small facial marks with generous empty space, no elaborate science-fiction anatomy. Avoid anime cuteness, baby proportions, huge eyes or exaggerated expressions. Do not imitate an existing fictional character.\nPalette: predominantly BLUE-CYAN, balanced azure/cyan around #42B8D5, with deeper navy details and off-white paper. Tiny functional accents only where specified. No dominant mint green or pink.\nMaterial and rendering: a convincing small physical 3D-printed object with a satin-matte PLA surface, fine subtle filament layers and soft bevels, soft neutral studio lighting. Clean legible volume, not glossy candy plastic or rough distressed material.\nFraming: ONE entire object centered in a square transparent RGBA canvas, front three-quarter view, about 78 percent occupancy with generous clean margin, all paper and feet visible. Simple silhouette that remains recognizable as an app icon.\nNo branding, words, letters, watermark, extra scene objects, floor, pedestal or cast shadow. No floating particles or stray edge fragments. Genuine alpha transparency. Do not make a concept sheet or multiple variants in the same image.",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "path": "assets/logo-concepts/03-clamshell-scanner.png",
+      "sha256": "b4847310b9f5230c1e97a88f728f2121a72131722e4f2be9866cab5e5e70cacb",
+      "generated_bytes_preserved": true
+    },
+    {
+      "id": "04",
+      "label": "双层档案抽屉",
+      "design": "A compact LOW WIDE TWO-DRAWER DOCUMENT ARCHIVE with a cohesive rounded blue-cyan shell and a strong horizontal separation between two drawers. The upper drawer has ONE small deep-navy face window with two short softly lit oval eyes and an understated curved smile. The lower drawer is slightly pulled forward, revealing the edges of a few ivory document cards and one tiny blue index tab; no lettering. Small recessed drawer pulls integrate naturally into the form. Four nearly hidden low rubber pads, no character limbs. Keep the entire object squat and organized, a friendly desktop filing appliance. Only ONE face for the whole archive, no stacked faces or independent heads. The drawer seam and visible papers should distinguish it immediately from a printer, television, or a simple featureless box.",
+      "prompt": "Use case: logo-brand / stylized-concept.\nAsset type: ONE original mascot icon concept for MO-Parse, a document parsing research project.\nThis is a fresh concept exploration, not a recolor or reshaping of an existing logo.\nCONCEPT 04: 双层档案抽屉.\nA compact LOW WIDE TWO-DRAWER DOCUMENT ARCHIVE with a cohesive rounded blue-cyan shell and a strong horizontal separation between two drawers. The upper drawer has ONE small deep-navy face window with two short softly lit oval eyes and an understated curved smile. The lower drawer is slightly pulled forward, revealing the edges of a few ivory document cards and one tiny blue index tab; no lettering. Small recessed drawer pulls integrate naturally into the form. Four nearly hidden low rubber pads, no character limbs. Keep the entire object squat and organized, a friendly desktop filing appliance. Only ONE face for the whole archive, no stacked faces or independent heads. The drawer seam and visible papers should distinguish it immediately from a printer, television, or a simple featureless box.\n\nVisual language: an everyday document-related object that has quietly come alive. Spare, endearing, a little odd and relaxed. A few confident simple geometric forms, restrained small facial marks with generous empty space, no elaborate science-fiction anatomy. Avoid anime cuteness, baby proportions, huge eyes or exaggerated expressions. Do not imitate an existing fictional character.\nPalette: predominantly BLUE-CYAN, balanced azure/cyan around #42B8D5, with deeper navy details and off-white paper. Tiny functional accents only where specified. No dominant mint green or pink.\nMaterial and rendering: a convincing small physical 3D-printed object with a satin-matte PLA surface, fine subtle filament layers and soft bevels, soft neutral studio lighting. Clean legible volume, not glossy candy plastic or rough distressed material.\nFraming: ONE entire object centered in a square transparent RGBA canvas, front three-quarter view, about 78 percent occupancy with generous clean margin, all paper and feet visible. Simple silhouette that remains recognizable as an app icon.\nNo branding, words, letters, watermark, extra scene objects, floor, pedestal or cast shadow. No floating particles or stray edge fragments. Genuine alpha transparency. Do not make a concept sheet or multiple variants in the same image.",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "mode": "RGBA",
+      "path": "assets/logo-concepts/04-archive-drawers.png",
+      "sha256": "18971df6e4ae6285c732e15bb2ba19d0f5b9508a85b894ae3c2ae3dcada68393",
+      "generated_bytes_preserved": true
+    }
+  ]
+}

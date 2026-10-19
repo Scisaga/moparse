@@ -1,0 +1,36 @@
+{
+  "tool": "imagegen (built-in)",
+  "asset": "assets/moparse-logo-fusion-v1.png",
+  "client_date": "2026-10-18",
+  "timezone": "Asia/Shanghai",
+  "prompt": "Use case: compositing / logo-brand.\nTask: fuse the TWO supplied reference icons into ONE new MO-Parse printer mascot icon. Use the references as actual design anchors, not a starting point for an unrelated robot.\nReference roles: the angular dark-blue printer with the cyan lid and paper coming out of the front is the PRIMARY structural reference. The round turquoise printer with the smiling face, yellow button and little white indicator is the SECONDARY reference for rounded edges, friendly proportions and polished physical volume.\n\nPreserve from the original: a compact low one-piece desktop printer body, a visibly separate overhanging top lid with a modest recessed gap, one paper input on top, and a wide FRONT OUTPUT SLOT with a white sheet actually emerging and gently curling forward. The input and output paper must both be visible, so the printer/document-parser identity is unmistakable.\nBlend from the rounded reference: soften the main silhouette with generous but controlled corner radii and gently rounded side planes; use two small dark low base feet rather than character legs. A modest inset rounded face panel occupies only the upper-middle portion of the front, leaving real enclosure around it. Use a pale icy-blue face panel with two small dark navy rounded-square eyes and one simple curved smile, taking the spare expression of the original. No giant black-glass television face, giant glowing eyes or exaggerated baby proportions. Add just one small yellow physical button and one tiny white indicator at the lower right, above and beside the output slot, keeping the controls subordinate.\n\nPalette: predominantly BLUE, a muted deep-blue main body, brighter sky/cyan-BLUE top lid and front edge, dark navy side shading, off-white paper. Shift the turquoise toward blue; do not use mint green.\nPaper: the top sheet has one small folded corner and three simple light-grey bars, borrowed from the rounded reference. The lower sheet is clean off-white, fully attached to and emerging naturally from the output slot.\nMaterial: a believable small 3D-printed physical object, matte PLA with very fine understated horizontal layer lines, soft satin edge highlights and clean fabrication seams. Keep the solid volume and pleasing studio lighting of the rounded reference without a highly glossy toy finish.\nComposition: one complete printer centered in a square transparent RGBA canvas, front three-quarter view showing the right side, all paper and base visible, clean 10 percent margins. No floor, pedestal, cast shadow or background; genuine alpha transparency and clean edges.\nConstraints: NO arms, separate head, neck, mechanical joints, tall legs, folder character, text, lettering, brand name, watermark, extra props, multiple variants, or scattered particles. Stay close to the two printer references and unify them into one coherent design.",
+  "transparent_background": true,
+  "references": [
+    {
+      "role": "primary structural reference",
+      "path": "assets/moparse-logo-base.png",
+      "sha256": "76cb038031eb124540fc1ff342e76131ca794a4651431241abfb8228dcffe8b4"
+    },
+    {
+      "role": "secondary rounding and expression reference",
+      "source": "User-provided rounded turquoise printer icon in this conversation"
+    }
+  ],
+  "integrated_into_active_brand": false,
+  "actual_printed_object": false,
+  "purpose": "New printer-logo fusion candidate",
+  "size": [
+    1254,
+    1254
+  ],
+  "mode": "RGBA",
+  "transparency_validation": {
+    "alpha_extrema": [
+      0,
+      255
+    ],
+    "maximum_edge_alpha_8bit": 1,
+    "pixels_modified": false
+  },
+  "sha256": "d86f1236e2741e9325b97b0e4e8e3320c693fbabb5f0ae64fac2f7da291cd474"
+}

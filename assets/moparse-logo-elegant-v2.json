@@ -1,0 +1,25 @@
+{
+  "tool": "imagegen (built-in)",
+  "client_date": "2026-10-19",
+  "timezone": "Asia/Shanghai",
+  "asset": "assets/moparse-logo-elegant-v2.png",
+  "source": {
+    "path": "assets/moparse-logo-elegant-v1.png",
+    "sha256": "0f71161ad0eb0f068828160f804c314608ccce183c08e73d230897c38313a96e"
+  },
+  "prompt": "Use case: precise-object-edit / product-logo refinement.\nEdit the supplied refined MO-Parse icon. Correct ONLY its bottom support structure.\n\nReplace the TWO BULBOUS FRONT FEET with ONE LOW CONTINUOUS RECESSED BOTTOM CHASSIS supporting the FULL front-to-back depth of the machine. The body must rest on a stable base beneath both its front and rear, rather than appearing cantilevered behind two front feet.\nThe bottom chassis is part of the device itself: a shallow dark navy rounded-rectangular bottom rim, about 5 percent of the main body height, slightly inset from the blue shell on all sides. It runs continuously under the front, along the right side, and beneath the REAR RIGHT CORNER. In this front-right three-quarter view, the visible front edge and right-side edge must join coherently; show the right rear support corner clearly under the rear of the enclosure. Correct perspective: the back of the base recedes upward in the image while all contact edges belong to one consistent three-dimensional support plane.\nA modest balanced shell overhang is fine. The full rear volume has real support. No separate feet, legs, floating rear, detached stand, display platform or decorative pedestal. This should look like the elegant inset lower chassis of a real desktop appliance.\n\nKeep EVERYTHING ABOVE THE BASE: same overall printer identity, three-quarter camera angle, soft blue-cyan satin material, pale face panel with two small dark dot eyes and thin smile, top document, grey content bars and folded corner, lower paper slot, yellow button and white indicator. Do not change the face, add parts or redesign the upper body.\nRender one complete refined icon with clean silhouette and ample margins, genuine transparent RGBA background. No floor, cast shadow, text, watermark or other objects.",
+  "scope": "Replace isolated front feet with a continuous recessed full-depth bottom chassis",
+  "status": "Candidate",
+  "active_brand_assets_replaced": false,
+  "actual_physical_object": false,
+  "known_limitations": [
+    "Residual alpha-edge fragments remain above the paper; not a cleaned production master"
+  ],
+  "dimensions": [
+    1254,
+    1254
+  ],
+  "mode": "RGBA",
+  "sha256": "00ad43f97d14a8ecdf676629f432f90f460c18b1a504b02d3f6a4f07c2651305",
+  "generated_bytes_preserved": true
+}

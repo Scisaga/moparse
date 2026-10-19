@@ -43,9 +43,7 @@ class StorageService:
         self.max_upload_bytes = int(setting(settings, "max_upload_bytes", 200 * 1024 * 1024))
         self.max_content_units = int(setting(settings, "max_content_units", 1_000))
         self.max_video_seconds = int(setting(settings, "max_video_seconds", 30 * 60))
-        self.max_video_frame_pixels = int(
-            setting(settings, "video_max_frame_pixels", 7680 * 4320)
-        )
+        self.max_video_frame_pixels = int(setting(settings, "video_max_frame_pixels", 7680 * 4320))
 
     async def initialize(self) -> None:
         await asyncio.to_thread(self.jobs_dir.mkdir, parents=True, exist_ok=True)
@@ -230,6 +228,14 @@ class StorageService:
         """Retain source/model observations without publishing private geometry."""
         await self.create_job_layout(job_id)
         target = self.logs_dir(job_id) / "native-source-verification.json"
+        content = json.dumps(evidence, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
+        await asyncio.to_thread(self._atomic_write, target, content)
+        return target
+
+    async def write_native_control_evidence(self, job_id: str, evidence: dict[str, object]) -> Path:
+        """Bind the private worker attempt and cleanup acknowledgement to its job."""
+        await self.create_job_layout(job_id)
+        target = self.logs_dir(job_id) / "mineru-native-request-control.json"
         content = json.dumps(evidence, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
         await asyncio.to_thread(self._atomic_write, target, content)
         return target

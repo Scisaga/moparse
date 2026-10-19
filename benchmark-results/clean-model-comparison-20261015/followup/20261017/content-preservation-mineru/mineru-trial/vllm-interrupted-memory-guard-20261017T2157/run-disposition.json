@@ -1,7 +1,0 @@
-{
-  "at": "2026-10-17T21:58:37.622996+08:00",
-  "disposition": "interrupted_by_own_GPU_safety_guard",
-  "reason": "Less than512MiB free during p19 large table; controller stopped only own server, response abort",
-  "accuracy_judgment": "incomplete_not_evaluated",
-  "optimization": "Reduce overallocated0.98GiB KV cache to128MiB sufficient for1x8192token context; same model,pixels,prompts,sampling"
-}

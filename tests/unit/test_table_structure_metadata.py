@@ -1,10 +1,11 @@
-"""Public GFM retains only source-owned table structure, without text rewriting."""
+"""Table displays preserve source grids and carry explicit row mappings."""
 
 from __future__ import annotations
 
 import json
 import re
 from copy import deepcopy
+from html import unescape
 
 import pytest
 
@@ -25,6 +26,35 @@ def _metadata(markdown: str) -> list[dict[str, object]]:
 
 def _visible_table(markdown: str) -> str:
     return "\n".join(line for line in markdown.splitlines() if line.startswith("|"))
+
+
+def _read_source_rows(markdown: str) -> list[list[str]]:
+    metadata = _metadata(markdown)[0]
+    assert "version" not in metadata
+    assert metadata["row_coordinate_space"] == "source_logical_rows"
+    display = metadata["gfm"]
+    assert set(display) == {"segments", "rendered_num_rows_total"}
+    pieces = re.split(r"<!-- table-view-segment: .*? -->", markdown)[1:]
+    assert len(pieces) == len(display["segments"])
+    source, total = [], 0
+    for index, (segment, piece) in enumerate(zip(display["segments"], pieces, strict=True)):
+        rows = [
+            [unescape(cell.strip()) for cell in line.strip()[1:-1].split("|")]
+            for line in piece.splitlines()
+            if line.startswith("|") and not re.fullmatch(r"\|(?:\s*:?-+:?\s*\|)+", line)
+        ]
+        assert segment["index"] == index
+        assert len(rows) == segment["rendered_num_rows"]
+        assert all(len(row) == metadata["num_cols"] for row in rows)
+        for row in segment["synthetic_header_rows"]:
+            assert rows[row] == [""] * metadata["num_cols"]
+        for row in segment["source_rows"]:
+            assert row == len(source)
+            source.append(rows[row + segment["source_to_rendered_row_offset"]])
+        total += len(rows)
+    assert len(source) == metadata["num_rows"]
+    assert total == display["rendered_num_rows_total"]
+    return source
 
 
 def _fragment(
@@ -80,8 +110,8 @@ def test_source_multilevel_headers_and_spans_are_visible_without_coordinates() -
     metadata = _metadata(fragment.rendered)[0]
 
     assert metadata == {
-        "version": 1,
         "table_id": "p3_t1",
+        "row_coordinate_space": "source_logical_rows",
         "source_pages": [3],
         "num_rows": 4,
         "num_cols": 3,
@@ -91,6 +121,18 @@ def test_source_multilevel_headers_and_spans_are_visible_without_coordinates() -
         "header_scope_rows": [0, 1],
         "header_scope_complete": True,
         "spans": [[0, 0, 2, 1], [0, 1, 1, 2], [2, 0, 2, 1]],
+        "gfm": {
+            "segments": [{
+                "index": 0,
+                "source_rows": [0, 1, 2, 3],
+                "header_rows": [0, 1],
+                "synthetic_header_rows": [],
+                "rendered_num_rows": 4,
+                "source_to_rendered_row_offset": 0,
+                "source_header_scope_complete": True,
+            }],
+            "rendered_num_rows_total": 4,
+        },
     }
     assert _visible_table(fragment.rendered) == fragment.markdown == render_gfm_rows(fragment.rows)
     assert not {"bbox", "cells", "text", "unit_text", "period"} & metadata.keys()
@@ -107,7 +149,8 @@ def test_first_row_hint_without_source_cells_never_invents_a_header_or_spans() -
     assert metadata["header_scope_rows"] is None
     assert metadata["header_scope_complete"] is False
     assert metadata["spans"] is None
-    assert _visible_table(fragment.rendered) == fragment.markdown
+    assert _read_source_rows(fragment.rendered) == fragment.rows
+    assert metadata["gfm"]["segments"][0]["synthetic_header_rows"] == [0]
 
 
 def test_nonleading_source_header_flag_is_preserved_as_observed_with_unknown_scope() -> None:
@@ -144,7 +187,7 @@ def test_invalid_source_geometry_is_unknown_and_never_claims_aligned_spans(damag
     assert metadata["encoding"] == "unknown"
     assert metadata["spans"] is None
     assert metadata["header_scope_complete"] is False
-    assert _visible_table(fragment.rendered) == render_gfm_rows(rows)
+    assert _read_source_rows(fragment.rendered) == rows
 
 
 def test_matching_continuation_translates_source_spans_after_complete_header_removal() -> None:
@@ -175,6 +218,7 @@ def test_matching_continuation_translates_source_spans_after_complete_header_rem
     )
     assert content[7] == ""
     assert _visible_table(content[6]) == render_gfm_rows(first.rows + second.rows[2:])
+    assert _read_source_rows(content[6]) == first.rows + second.rows[2:]
     assert [first.cells, second.cells] == originals
     assert first.markdown == render_gfm_rows(first.rows)
     assert second.markdown == render_gfm_rows(second.rows)

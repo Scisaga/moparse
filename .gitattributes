@@ -1,5 +1,0 @@
-# Unified diff context lines intentionally include a single space.
-native_worker/patches/*.patch -whitespace
-
-# Preserve the pinned upstream license, including Markdown hard line breaks.
-tests/fixtures/LICENSE.MinerU.md -whitespace

@@ -39,8 +39,6 @@ services:
       GLM_SDK_ORIENTATION_ENABLED: ${GLM_SDK_ORIENTATION_ENABLED:-1}
       NATIVE_PARSER_BACKEND: ${NATIVE_PARSER_BACKEND:-docling}
       MINERU_NATIVE_BASE_URL: ${MINERU_NATIVE_BASE_URL:-http://mineru-native:8010}
-      MINERU_HEADER_VERIFIER: ${MINERU_HEADER_VERIFIER:-off}
-      MINERU_SOURCE_VERIFIER: ${MINERU_SOURCE_VERIFIER:-off}
     ports:
       - "${PORT:-12303}:${PORT:-12303}"
     volumes:
@@ -184,12 +182,16 @@ services:
       - --max-model-len
       - "8192"
       - --max-num-seqs
-      - "2"
+      - "4"
       - --max-num-batched-tokens
       - "2048"
       - --limit-mm-per-prompt
       - '{"image":1,"video":0}'
-      - --enforce-eager
+      # CUDA Graphs are required; keep torch.compile as a separate factor.
+      # Capture sizes must cover the configured model-request concurrency.
+      - --compilation-config
+      - '{"mode":0,"cudagraph_mode":"FULL_DECODE_ONLY","cudagraph_capture_sizes":[1,2,3,4],"max_cudagraph_capture_size":4}'
+      - --cudagraph-metrics
       - --logits-processors
       - mineru_vl_utils:MinerULogitsProcessor
     deploy:
@@ -216,7 +218,7 @@ services:
     container_name: moparse-native-worker
     restart: unless-stopped
     init: true
-    cpus: 4
+    cpus: 8
     mem_limit: 8g
     depends_on:
       mineru-vllm:
@@ -227,7 +229,9 @@ services:
       MINERU_MODEL_SMALL_BACKEND: onnx
       MINERU_VLM_BASE_URL: http://mineru-vllm:8000
       MINERU_VLM_MODEL: mineru2.5-pro
-      MINERU_VLM_CONCURRENCY: "2"
+      MINERU_VLM_CONCURRENCY: "4"
+      MINERU_INTER_OP_NUM_THREADS: "1"
+      MINERU_INTRA_OP_NUM_THREADS: "8"
       MINERU_PROCESSING_WINDOW_SIZE: ${MINERU_PROCESSING_WINDOW_SIZE:-8}
       MINERU_MALLOC_TRIM: ${MINERU_MALLOC_TRIM:-1}
       MOPARSE_CPU_MFR_BATCH_SIZE: ${MOPARSE_CPU_MFR_BATCH_SIZE:-1}

@@ -9,7 +9,12 @@ from collections.abc import Sequence
 
 from app.models.parse_result import PageParseResult
 from app.models.source_evidence import SourceRegionEvidence
-from app.services.table_service import PageFurnitureFragment, TableFragment, assemble_logical_tables
+from app.services.table_service import (
+    PageFurnitureFragment,
+    TableFragment,
+    TableSourceView,
+    assemble_logical_tables,
+)
 
 _HTML_TAG_RE = re.compile(r"<[^>]+>")
 _LINK_RE = re.compile(r"!?\[([^\]]*)\]\([^)]*\)")
@@ -107,6 +112,7 @@ class ExportService:
         merge_cross_page_tables: bool = True,
         page_furniture: list[object] | None = None,
         source_regions: list[object] | None = None,
+        public_views: list[TableSourceView] | None = None,
     ) -> tuple[str, str]:
         fragments = [item for item in table_fragments or [] if isinstance(item, TableFragment)]
         content_by_page = assemble_logical_tables(
@@ -116,6 +122,7 @@ class ExportService:
             page_furniture=[
                 item for item in page_furniture or [] if isinstance(item, PageFurnitureFragment)
             ],
+            public_views=public_views,
         )
         canonical = [
             page.model_copy(

@@ -1,0 +1,15 @@
+# Optional bridge for installations migrating from the historical Compose name.
+# It carries network compatibility only; images and parser settings stay in the
+# base recipe and environment. New installations use docker-compose.yml alone.
+services:
+  moparse:
+    networks:
+      default:
+        aliases: [moparse, mosaicparse]
+      legacy-backend:
+        aliases: [moparse, mosaicparse]
+
+networks:
+  legacy-backend:
+    external: true
+    name: mosaicparse_default

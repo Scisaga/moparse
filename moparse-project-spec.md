@@ -1,9 +1,7 @@
-# moparse 项目规格
+# MO-Parse 项目规格入口
 
-唯一维护中的项目规格见 [docs/project-spec.md](docs/project-spec.md)。
+产品与工程规格统一维护于 [docs/project-spec.md](docs/project-spec.md)，最终交付格式统一维护于[最终语义输出契约](docs/output-contract.md)。
 
-当前架构结论：本项目只发布 GFM Markdown 文档结果；坐标与候选证据仅用于请求内解析，
-不作为结果持久化或返回。实体、关系、财务指标和事件抽取由 EventRail 等下游系统负责。
+最终 `result.md` 面向下游信息抽取：全部表格、PDF 流程图和组织结构图转换为语义描述，优先使用多层列表，去掉页码、页眉和页脚。中间解析可以使用 Markdown、XML 区域定义或其他结构；原表和原图留在内部证据层。该要求属于 MO-Parse 服务返回的结果，解析管线研究比较原始内容和结构，不要求候选管线直接输出最终语义格式。
 
-PDF 管线保留原生文字，扫描、混合页使用 GLM-OCR＋官方 SDK，并开启方向预处理。
-当前模型组合见 [README](README.md)，正式数据集、方法登记和评测见 [benchmark](benchmark/README.md)。
+当前表格语义实现尚未满足完整目标，实现差距见[最终语义输出契约](docs/output-contract.md#9-当前实现差距与迁移)，研究方法见[研究框架](docs/research-framework.md)，处理层和实现顺序见[技术路线](docs/technical-route.md)，实际发布记录见[运行配方](docs/runtime-recipes.md)。

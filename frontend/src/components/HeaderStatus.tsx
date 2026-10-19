@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type { ServiceSnapshot } from '../types/api'
 import { CloseIcon, ExternalLinkIcon, RefreshIcon, SettingsIcon } from './Icons'
-import { MosaicBackdrop } from './MosaicBackdrop'
+import { DocumentBackdrop } from './DocumentBackdrop'
 
 interface HeaderStatusProps {
   snapshot?: ServiceSnapshot
@@ -75,12 +75,12 @@ export function HeaderStatus({ snapshot, loading, onRefresh, apiKey, onApiKeyCha
   const aggregateStatus = loading ? 'checking' : readyCount === services.length ? 'ready' : 'unavailable'
   return (
     <header className="app-header">
-      <MosaicBackdrop />
+      <DocumentBackdrop />
       <div className="brand-lockup">
-        <img className="brand-logo" src="/logo.png?v=4" alt="" aria-hidden="true" />
+        <img className="brand-logo" src="/logo.png?v=mo-parse-terminal-20261019-2" alt="" aria-hidden="true" />
         <div className="brand-copy">
-          <h1>moparse</h1>
-          <p>多模态内容解析</p>
+          <h1>MO-Parse</h1>
+          <p>本地多模态内容解析</p>
         </div>
       </div>
       <div className="header-operations">

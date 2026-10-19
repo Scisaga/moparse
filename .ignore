@@ -1,0 +1,2 @@
+# Private source PDFs are opened explicitly when needed.
+/pdf_sample/

@@ -1,7 +1,0 @@
-4. 按坏账计提方法分类披露
-
-<table><tr><td rowspan="3">类别</td><td colspan="5">期末余额</td><td colspan="5">期初余额</td></tr><tr><td colspan="2">账面余额</td><td colspan="2">坏账准备</td><td rowspan="2">账面价值</td><td colspan="2">账面余额</td><td colspan="2">坏账准备</td><td rowspan="2">账面价值</td></tr><tr><td>金额</td><td>比例(%)</td><td>金额</td><td>计提比例(%)</td><td>金额</td><td>比例(%)</td><td>金额</td><td>计提比例(%)</td></tr><tr><td>按单项计提坏账准备</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>按组合计提坏账准备</td><td>1,350,072.47</td><td>100.00</td><td>6,750.36</td><td>0.50</td><td>1,343,322.11</td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>其中:</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>银行承兑票据</td><td>1,350,072.47</td><td>100.00</td><td>6,750.36</td><td>0.50</td><td>1,343,322.11</td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>商业承兑票据</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td>合计</td><td>1,350,072.47</td><td>100.00</td><td>6,750.36</td><td>0.50</td><td>1,343,322.11</td><td></td><td></td><td></td><td></td><td></td></tr></table>
-
-55
-
-验证码

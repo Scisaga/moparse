@@ -1,8 +1,0 @@
-{
-  "dataset_sha256": "00ec68415354e156d8b3f0a1a2b541e42c47e5c22dcab281e2f9ac2060f66fa1",
-  "assertions_sha256": "8da34499ea3ed33cadcb044a352671010207c4fd30819bdafe2201303168b40c",
-  "seal_sha256": "fa3b5a2a074998a82d7ce5a7c27bca85b758c2513f2d6c9d87932127652e9b68",
-  "sealed_at": "2026-10-17T19:31:24.906106+00:00",
-  "model_outputs_seen": false,
-  "inference_calls": 0
-}

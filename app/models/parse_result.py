@@ -9,6 +9,7 @@ from typing import Literal
 from pydantic import BaseModel, ConfigDict, Field, PrivateAttr
 
 from app.models.content_result import ContentParseResult
+from app.models.table_semantics import SemanticTableView
 
 
 def utc_now() -> datetime:
@@ -172,3 +173,7 @@ class DocumentParseResult(BaseModel):
     _source_regions: list[object] = PrivateAttr(default_factory=list)
     _native_page_blocks: dict[int, list[dict[str, object]]] = PrivateAttr(default_factory=dict)
     _source_verification: dict[str, object] = PrivateAttr(default_factory=dict)
+    _table_views: list[object] = PrivateAttr(default_factory=list)
+    _semantic_tables: list[SemanticTableView] = PrivateAttr(default_factory=list)
+    _semantic_duration_ms: float = PrivateAttr(default=0.0)
+    _source_markdown: str = PrivateAttr(default="")

@@ -1,8 +1,0 @@
-{
-  "schema": "mosaicparse-independent-additional-p62-source-review/1",
-  "created_UTC": "2026-10-17T14:03:56.879311+00:00",
-  "source_reference_SHA256": "a16aca8fa1fea13982c2b832581b5c2ac84fa6622aa32e5df5658f3cadfea493",
-  "visual_review": "Original table crop independently inspected: eleven columns, three header rows, six body rows, nine spans, original source PDF untouched. All three repeated 1,343,322.11 values are visible; source bank-label initial character is 银.",
-  "source_evidence_SHA_unchanged": true,
-  "not_part_of_fourteen_page_cohort": true
-}

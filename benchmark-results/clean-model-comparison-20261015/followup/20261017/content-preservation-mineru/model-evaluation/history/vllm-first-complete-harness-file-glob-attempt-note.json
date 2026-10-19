@@ -1,4 +1,0 @@
-{
-  "reason": "The *-p* glob also found ordinary script/proof files; all 14 actual page judgments were valid, but unfinished-page metadata was false. Fixed directory filtering and rerun, raw model outputs unchanged.",
-  "attempt_SHA256": "417bfbbaa8d9ed94c683e21ca136521282042ad0f2a3e1fb1ca906cd0dedde6e"
-}

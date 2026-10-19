@@ -10,6 +10,13 @@ def make_settings(**values: object) -> Settings:
     return Settings(_env_file=None, **values)
 
 
+def test_health_settings_use_the_package_release_version(monkeypatch):
+    from app import __version__
+
+    monkeypatch.delenv("VERSION", raising=False)
+    assert make_settings().version == __version__
+
+
 def test_public_config_never_contains_secrets(tmp_path: Path) -> None:
     settings = make_settings(
         data_dir=tmp_path,
@@ -47,19 +54,6 @@ def test_docling_cached_converter_pool_is_bounded() -> None:
 
     with pytest.raises(ValidationError, match="cached converters"):
         make_settings(parser_workers=5, docling_page_workers=8)
-
-
-def test_native_source_verifier_requires_the_independent_native_header_parser() -> None:
-    with pytest.raises(ValidationError, match="MINERU_SOURCE_VERIFIER requires"):
-        make_settings(mineru_source_verifier="docling")
-    with pytest.raises(ValidationError, match="MINERU_SOURCE_VERIFIER requires"):
-        make_settings(native_parser_backend="mineru", mineru_source_verifier="docling")
-    settings = make_settings(
-        native_parser_backend="mineru",
-        mineru_header_verifier="docling",
-        mineru_source_verifier="docling",
-    )
-    assert settings.public_config()["mineru_source_verifier"] == "docling"
 
 
 def test_mcp_host_allowlist_adds_port_patterns() -> None:

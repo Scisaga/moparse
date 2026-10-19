@@ -297,10 +297,14 @@ def test_html_colspan_collision_with_prior_rowspan_cannot_leak_raw_html() -> Non
 
     assert _html_table_rows(content) == ([], False)
     assert _html_fragment(content) is None
-    with pytest.raises(ValueError, match="^glm_sdk_unusable_table_structure$"):
-        GlmSdkRemoteParser._render_regions(
-            [{"label": "table", "content": content, "bbox_2d": [50, 100, 950, 800]}], 7
-        )
+    warnings = []
+    markdown, fragments = GlmSdkRemoteParser._render_regions(
+        [{"label": "table", "content": content, "bbox_2d": [50, 100, 950, 800]}], 7,
+        warnings=warnings,
+    )
+    assert not fragments and "structure: unknown" in markdown and "<table" not in markdown
+    assert all(value in markdown for value in ("甲", "乙", "丙"))
+    assert [warning.code for warning in warnings] == ["glm_sdk_unusable_table_structure"]
 
 
 async def test_unusable_sdk_html_marks_page_failed_without_publishing_raw_table(
@@ -339,7 +343,8 @@ async def test_unusable_sdk_html_marks_page_failed_without_publishing_raw_table(
 
     page = result.pages[0]
     assert page.status == PageStatus.FAILED
-    assert page.content is None
+    assert page.content and "structure: unknown" in page.content
+    assert all(value in page.content for value in ("First", "Owner", "Conflicting anchor"))
     assert result._table_fragments == []
     assert [warning.code for warning in page.warnings] == ["glm_sdk_unusable_table_structure"]
     assert page.warnings[0].severity == WarningSeverity.ERROR
@@ -394,10 +399,13 @@ def test_large_sparse_grid_is_rejected_by_full_projected_area_without_clamping()
     # former 100*2000 allocation budget even though only one cell is nonempty.
     source = "<table><tr><td rowspan='101' colspan='2000'>Original</td></tr></table>"
     assert _html_table_layout(source) == ([], False, [])
-    with pytest.raises(ValueError, match="^glm_sdk_unusable_table_structure$"):
-        GlmSdkRemoteParser._render_regions(
-            [{"label": "table", "content": source, "bbox_2d": [50, 100, 950, 800]}], 7
-        )
+    warnings = []
+    markdown, fragments = GlmSdkRemoteParser._render_regions(
+        [{"label": "table", "content": source, "bbox_2d": [50, 100, 950, 800]}], 7,
+        warnings=warnings,
+    )
+    assert not fragments and "structure: unknown" in markdown and "Original" in markdown
+    assert [warning.code for warning in warnings] == ["glm_sdk_unusable_table_structure"]
 
 
 def test_wide_colspan_still_cannot_cross_an_active_rowspan() -> None:
@@ -631,7 +639,7 @@ async def test_sdk_request_count_measures_actual_retry_posts(native_pdf: Path) -
         assert request.method == "POST"
         posts += 1
         if posts == 1:
-            return httpx.Response(503, json={"error": "temporarily unavailable"})
+            raise httpx.ConnectError("connection not established", request=request)
         return httpx.Response(
             200,
             json={

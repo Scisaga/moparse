@@ -1,0 +1,22 @@
+{
+  "tool": "imagegen (built-in)",
+  "client_date": "2026-10-19",
+  "timezone": "Asia/Shanghai",
+  "asset": "assets/moparse-logo-elegant-v1.png",
+  "source": {
+    "path": "assets/moparse-logo-face-v2.png",
+    "sha256": "731fa29f862bd35e32beebd3cf02e15eeeaf544320761069323ccb0d2dbaae98"
+  },
+  "prompt": "Use case: precise-object-edit / logo-brand.\nEdit the supplied MO-Parse printer icon into ONE more elegant, refined version. This is careful design refinement of this exact icon, not a new character or concept.\n\nPRESERVE its recognizable rounded printer body, three-quarter camera angle, top document and folded corner, front slot, yellow button, white status light, two low navy feet, and the entire calm facial identity: pale face panel with TWO SMALL DARK DOT EYES and the SAME THIN SHORT CURVED SMILE. Keep the face area, eye spacing and generous blank space. No glowing eyes, dark TV screen, new facial features, arms or additional parts.\n\nREFINE:\n- Preserve the overall friendly proportions; make the shell only a little less inflated, with consistent controlled corner radii and fine bevels. Do not drastically reshape or flatten it.\n- Use a restrained sophisticated BLUE-CYAN satin-matte enclosure, gently muted compared with the source, with soft readable tonal shading. Replace the strong shiny edge glow with broad diffuse studio light. Remove the sharp triangular glass reflection on the face; the pale icy face should be calm and nearly matte, not a reflective display. A fine dark navy inset frame, slightly thinner than the source.\n- Refine the lower details as a disciplined group: slightly smaller lower-profile warm yellow button and smaller white indicator aligned neatly with the slot. No neon glow or chrome. Keep their source positions and identity. Feet stay small, unobtrusive and grounded.\n- Refine the off-white paper with a clean smaller fold and three thinner light-grey bars, orderly spacing and slightly softer contrast. Preserve a clearly visible document.\n- Clean smooth contours, no heavy grain, unnecessary seams or new decorative details.\n\nKeep a believable delicate physical 3D material with very subtle fabrication texture; prioritize clear elegant volume and warmth. Same entire icon centered with generous transparent margins. Genuine transparent RGBA background, no floor, cast shadow, pedestal, scenery, text, wordmark or watermark. Remove ALL stray white/cyan fragments and matte fringes outside the true silhouette, especially above the paper; clean alpha edges.",
+  "scope": "Single icon refinement preserving the selected pale-panel dot-eye design",
+  "status": "Candidate",
+  "active_brand_assets_replaced": false,
+  "actual_physical_object": false,
+  "dimensions": [
+    1254,
+    1254
+  ],
+  "mode": "RGBA",
+  "sha256": "0f71161ad0eb0f068828160f804c314608ccce183c08e73d230897c38313a96e",
+  "generated_bytes_preserved": true
+}

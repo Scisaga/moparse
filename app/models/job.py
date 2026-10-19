@@ -51,6 +51,9 @@ class JobProgress(BaseModel):
     current: int = Field(default=0, ge=0)
     total: int = Field(default=0, ge=0)
     unit: str = "unit"
+    phase: str | None = None
+    phase_current: int | None = Field(default=None, ge=0)
+    phase_total: int | None = Field(default=None, ge=0)
 
     @property
     def percent(self) -> float:

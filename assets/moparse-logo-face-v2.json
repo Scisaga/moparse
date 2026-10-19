@@ -1,0 +1,25 @@
+{
+  "tool": "imagegen (built-in)",
+  "asset": "assets/moparse-logo-face-v2.png",
+  "operation": "Face and blue-cyan palette edit of the latest user-provided printer icon",
+  "client_date": "2026-10-18",
+  "timezone": "Asia/Shanghai",
+  "prompt": "Use case: precise-object-edit.\nEdit target: the single supplied turquoise 3D printer mascot image. Edit THIS image in place conceptually, preserving its design and composition; do not redesign the printer.\n\nRequested changes only:\n1. Adjust the face toward BMO's restrained, simple facial expression: replace the dark glass face interior with a pale icy blue-green panel, two TINY dark navy round dot eyes set widely apart, and one thin, short, gently curved black smile. Lots of quiet empty space around the facial marks. Eyes must be little dots, with no highlights, glow, pupils or large capsule shapes. The mouth must be a fine understated line, not a broad glowing U. Preserve the current face-panel outer outline and navy rim.\n2. Recolor the printer enclosure to BLUE-CYAN, a balanced azure/cyan around #42B8D5, with darker blue-cyan shaded right side around #278EB1. It should read blue-cyan rather than mint green. Retain the deep navy trim and low feet, the yellow button and the small white indicator. Match the folded paper corner accent to the new enclosure color.\n\nInvariants: keep the same single rounded one-piece printer enclosure, exact three-quarter camera angle, proportions, rounded corners, top input slot, one white top paper with its folded corner and three grey bars, front narrow slot, yellow button, white light, two low dark feet, physical 3D material and studio lighting. Do not add arms, legs, a separate head, new controls, text, letters or a lower output sheet. Do not change the silhouette or enlarge the facial marks. Only the face treatment and blue-cyan body palette change.\nBackground: preserve genuine transparent RGBA background. Keep all of the object fully visible with clean transparent margins, removing floating edge specks outside the object. No scene, floor, pedestal, shadow, checkerboard or watermark.",
+  "reference": {
+    "source": "Latest user-provided rounded 3D printer image",
+    "face_reference": "BMO's restrained expression, as explicitly requested by the user"
+  },
+  "transparent_background": true,
+  "integrated_into_active_brand": false,
+  "actual_printed_object": false,
+  "size": [
+    1254,
+    1254
+  ],
+  "mode": "RGBA",
+  "alpha_extrema": [
+    0,
+    255
+  ],
+  "sha256": "731fa29f862bd35e32beebd3cf02e15eeeaf544320761069323ccb0d2dbaae98"
+}

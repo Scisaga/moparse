@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="1430" viewBox="0 0 1280 1430" role="img" aria-labelledby="title description" xml:space="preserve">
+  <title id="title">MO-Parse 八步解析管线研究</title>
+  <desc id="description">比较原始解析质量与实际解析成本。先固定问题、独立来源分类和比较条件，再执行八条完整解析配置，分类别分析后决定固定方法或研究路由，路线内调优后形成结论。MO-Parse 的语义转换和接口最终格式不属于候选管线的输出要求或研究前置条件。</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 1 1 L 9 5 L 1 9 Z" fill="#7394af"/></marker>
+    <marker id="return-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M 1 1 L 9 5 L 1 9 Z" fill="#9aaab8"/></marker>
+  </defs>
+  <style>
+    text { font-family: 'DejaVu Sans', 'Noto Sans CJK SC', 'Noto Sans CJK', sans-serif; }
+    .connector { fill: none; stroke: #7394af; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+  </style>
+  <rect width="1280" height="1430" rx="20" fill="#ffffff"/>
+  <text x="64.00" y="70" font-size="34" font-weight="700" fill="#17324d"><tspan font-family="Noto Sans CJK SC, sans-serif">解析管线研究路线</tspan></text>
+  <text x="64.00" y="108" font-size="18" font-weight="400" fill="#52677b"><tspan font-family="Noto Sans CJK SC, sans-serif">原件类别</tspan><tspan font-family="DejaVu Sans, sans-serif"> </tspan><tspan font-family="Noto Sans CJK SC, sans-serif">→</tspan><tspan font-family="DejaVu Sans, sans-serif"> </tspan><tspan font-family="Noto Sans CJK SC, sans-serif">固定对照</tspan><tspan font-family="DejaVu Sans, sans-serif"> </tspan><tspan font-family="Noto Sans CJK SC, sans-serif">→</tspan><tspan font-family="DejaVu Sans, sans-serif"> </tspan><tspan font-family="Noto Sans CJK SC, sans-serif">解析质量与成本</tspan><tspan font-family="DejaVu Sans, sans-serif"> </tspan><tspan font-family="Noto Sans CJK SC, sans-serif">→</tspan><tspan font-family="DejaVu Sans, sans-serif"> </tspan><tspan font-family="Noto Sans CJK SC, sans-serif">有证据的方法选择</tspan></text>
+  <rect x="900" y="38" width="316" height="40" rx="20" fill="#eef5fb" stroke="#d6e6f2" stroke-width="1"/>
+  <text x="961.38" y="64" font-size="16" font-weight="600" fill="#176da5"><tspan font-family="Noto Sans CJK SC, sans-serif">研究计划</tspan><tspan font-family="DejaVu Sans, sans-serif"> </tspan><tspan font-family="Noto Sans CJK SC, sans-serif">·</tspan><tspan font-family="DejaVu Sans, sans-serif"> </tspan><tspan font-family="Noto Sans CJK SC, sans-serif">尚无新对照结果</tspan></text>
+  <text x="829.00" y="137" font-size="14" font-weight="400" fill="#52677b"><tspan font-family="Noto Sans CJK SC, sans-serif">证据不足：补原件标注与比较条件</tspan></text>
+  <path class="connector" d="M 430 237 H 454" marker-end="url(#arrow)"/>
+  <path class="connector" d="M 826 237 H 850" marker-end="url(#arrow)"/>
+  <path class="connector" d="M 1036 312 V 336 H 640 V 358" marker-end="url(#arrow)"/>
+  <path class="connector" d="M 640 486 V 522" marker-end="url(#arrow)"/>
+  <path class="connector" d="M 640 650 V 690" marker-end="url(#arrow)"/>
+  <path class="connector" d="M 640 804 V 832"/>
+  <path class="connector" d="M 244 832 H 1036"/>
+  <path class="connector" d="M 244 832 V 858" marker-end="url(#arrow)"/>
+  <path class="connector" d="M 640 832 V 858" marker-end="url(#arrow)"/>
+  <path class="connector" d="M 1036 832 V 858" marker-end="url(#arrow)"/>
+  <path class="connector" d="M 1216 940 H 1242 V 145 H 640 V 156" stroke-dasharray="6 6" stroke="#9aaab8" marker-end="url(#return-arrow)"/>
+  <path class="connector" d="M 244 1016 V 1050 H 340"/>
+  <path class="connector" d="M 640 1016 V 1050 H 340"/>
+  <path class="connector" d="M 340 1050 V 1084" marker-end="url(#arrow)"/>
+  <path class="connector" d="M 622 1166 H 658" marker-end="url(#arrow)"/>
+  <rect x="64" y="162" width="360" height="150" rx="16" fill="#f7fafc" stroke="#dce6ef" stroke-width="1.4"/>
+  <rect x="88" y="182" width="36" height="36" rx="10" fill="#176da5" stroke="#176da5" stroke-width="0"/>
+  <text x="99.73" y="206.0" font-size="18" font-weight="700" fill="#ffffff"><tspan font-family="DejaVu Sans, sans-serif">1</tspan></text>
+  <text x="138.00" y="208" font-size="22" font-weight="700" fill="#17324d"><tspan font-family="Noto Sans CJK SC, sans-serif">问题与研究范围</tspan></text>
+  <text x="88.00" y="253" font-size="18" font-weight="400" fill="#52677b"><tspan font-family="Noto Sans CJK SC, sans-serif">交接原件</tspan><tspan font-family="DejaVu Sans, sans-serif"> </tspan><tspan font-family="Noto Sans CJK SC, sans-serif">·</tspan><tspan font-family="DejaVu Sans, sans-serif"> </tspan><tspan font-family="Noto Sans CJK SC, sans-serif">解析任务与关键错误</tspan></text>
+  <text x="88.00" y="281" font-size="18" font-weight="400" fill="#52677b"><tspan font-family="Noto Sans CJK SC, sans-serif">资源、输入与处理计时边界</tspan></text>
+  <rect x="460" y="162" width="360" height="150" rx="16" fill="#f7fafc" stroke="#dce6ef" stroke-width="1.4"/>
+  <rect x="484" y="182" width="36" height="36" rx="10" fill="#176da5" stroke="#176da5" stroke-width="0"/>
+  <text x="495.73" y="206.0" font-size="18" font-weight="700" fill="#ffffff"><tspan font-family="DejaVu Sans, sans-serif">2</tspan></text>
+  <text x="534.00" y="208" font-size="22" font-weight="700" fill="#17324d"><tspan font-family="Noto Sans CJK SC, sans-serif">原件分层与观测</tspan></text>
+  <text x="484.00" y="253" font-size="18" font-weight="400" fill="#52677b"><tspan font-family="Noto Sans CJK SC, sans-serif">来源、版式、独立标注与家族</tspan></text>
+  <text x="484.00" y="281" font-size="18" font-weight="400" fill="#52677b"><tspan font-family="Noto Sans CJK SC, sans-serif">廉价特征及费用</tspan><tspan font-family="DejaVu Sans, sans-serif"> </tspan><tspan font-family="Noto Sans CJK SC, sans-serif">·</tspan><tspan font-family="DejaVu Sans, sans-serif"> </tspan><tspan font-family="Noto Sans CJK SC, sans-serif">不预选方法</tspan></text>
+  <rect x="856" y="162" width="360" height="150" rx="16" fill="#f7fafc" stroke="#dce6ef" stroke-width="1.4"/>
+  <rect x="880" y="182" width="36" height="36" rx="10" fill="#176da5" stroke="#176da5" stroke-width="0"/>
+  <text x="891.73" y="206.0" font-size="18" font-weight="700" fill="#ffffff"><tspan font-family="DejaVu Sans, sans-serif">3</tspan></text>
+  <text x="930.00" y="208" font-size="22" font-weight="700" fill="#17324d"><tspan font-family="Noto Sans CJK SC, sans-serif">固定对照条件</tspan></text>
+  <text x="880.00" y="253" font-size="18" font-weight="400" fill="#52677b"><tspan font-family="DejaVu Sans, sans-serif">P01</tspan><tspan font-family="Noto Sans CJK SC, sans-serif">–</tspan><tspan font-family="DejaVu Sans, sans-serif">P08 </tspan><tspan font-family="Noto Sans CJK SC, sans-serif">·</tspan><tspan font-family="DejaVu Sans, sans-serif"> </tspan><tspan font-family="Noto Sans CJK SC, sans-serif">身份、许可与预算</tspan></text>
+  <text x="880.00" y="281" font-size="18" font-weight="400" fill="#52677b"><tspan font-family="Noto Sans CJK SC, sans-serif">忠实导出</tspan><tspan font-family="DejaVu Sans, sans-serif"> </tspan><tspan font-family="Noto Sans CJK SC, sans-serif">·</tspan><tspan font-family="DejaVu Sans, sans-serif"> </tspan><tspan font-family="Noto Sans CJK SC, sans-serif">指标与失败规则</tspan></text>
+  <rect x="64" y="364" width="1152" height="122" rx="16" fill="#eef6fc" stroke="#c9ddeb" stroke-width="1.4"/>
+  <rect x="88" y="388" width="36" height="36" rx="10" fill="#176da5" stroke="#176da5" stroke-width="0"/>
+  <text x="99.73" y="412.0" font-size="18" font-weight="700" fill="#ffffff"><tspan font-family="DejaVu Sans, sans-serif">4</tspan></text>
+  <text x="140.00" y="411" font-size="24" font-weight="700" fill="#17324d"><tspan font-family="Noto Sans CJK SC, sans-serif">执行固定完整解析管线</tspan></text>
+  <text x="140.00" y="450" font-size="18" font-weight="400" fill="#52677b"><tspan font-family="Noto Sans CJK SC, sans-serif">同字节完整</tspan><tspan font-family="DejaVu Sans, sans-serif"> PDF </tspan><tspan font-family="Noto Sans CJK SC, sans-serif">→</tspan><tspan font-family="DejaVu Sans, sans-serif"> </tspan><tspan font-family="Noto Sans CJK SC, sans-serif">各方法原始结果、忠实</tspan><tspan font-family="DejaVu Sans, sans-serif"> Markdown</tspan><tspan font-family="Noto Sans CJK SC, sans-serif">、必要资产及运行记录。</tspan></text>
+  <text x="140.00" y="477" font-size="16" font-weight="400" fill="#52677b"><tspan font-family="Noto Sans CJK SC, sans-serif">允许原表、源图与页面信息；读取和导出不补字、不补表头、不修正模型答案。</tspan></text>
+  <rect x="64" y="528" width="1152" height="122" rx="16" fill="#eef6fc" stroke="#a9cce3" stroke-width="1.4"/>
+  <rect x="88" y="552" width="36" height="36" rx="10" fill="#176da5" stroke="#176da5" stroke-width="0"/>
+  <text x="99.73" y="576.0" font-size="18" font-weight="700" fill="#ffffff"><tspan font-family="DejaVu Sans, sans-serif">5</tspan></text>
+  <text x="140.00" y="575" font-size="24" font-weight="700" fill="#17324d"><tspan font-family="Noto Sans CJK SC, sans-serif">分类别比较原始解析质量与实际成本</tspan></text>
+  <text x="140.00" y="614" font-size="18" font-weight="400" fill="#52677b"><tspan font-family="Noto Sans CJK SC, sans-serif">文字、顺序、表格内容与结构、跨页及图形保全；覆盖、未知、失败与直接处理计时。</tspan></text>
+  <text x="140.00" y="641" font-size="16" font-weight="400" fill="#52677b"><tspan font-family="Noto Sans CJK SC, sans-serif">不把</tspan><tspan font-family="DejaVu Sans, sans-serif"> MO-Parse </tspan><tspan font-family="Noto Sans CJK SC, sans-serif">的语义列表、页面清理或接口格式计作候选解析能力。</tspan></text>
+  <rect x="352" y="696" width="576" height="108" rx="16" fill="#f1f7fc" stroke="#8eb9d5" stroke-width="1.8"/>
+  <rect x="376" y="720" width="36" height="36" rx="10" fill="#176da5" stroke="#176da5" stroke-width="0"/>
+  <text x="387.73" y="744.0" font-size="18" font-weight="700" fill="#ffffff"><tspan font-family="DejaVu Sans, sans-serif">6</tspan></text>
+  <text x="426.00" y="745" font-size="24" font-weight="700" fill="#17324d"><tspan font-family="Noto Sans CJK SC, sans-serif">是否值得按类别选择方法？</tspan></text>
+  <text x="426.00" y="780" font-size="17" font-weight="400" fill="#52677b"><tspan font-family="Noto Sans CJK SC, sans-serif">先有质量与成本差异，再验证运行前选择</tspan></text>
+  <rect x="64" y="864" width="360" height="152" rx="16" fill="#edf8f7" stroke="#c4e3df" stroke-width="1.4"/>
+  <text x="88.00" y="905" font-size="21" font-weight="700" fill="#17324d"><tspan font-family="Noto Sans CJK SC, sans-serif">固定方法已经足够</tspan></text>
+  <text x="88.00" y="946" font-size="17" font-weight="400" fill="#52677b"><tspan font-family="Noto Sans CJK SC, sans-serif">保留固定基线</tspan></text>
+  <text x="88.00" y="974" font-size="17" font-weight="400" fill="#52677b"><tspan font-family="Noto Sans CJK SC, sans-serif">无需先开发路由器</tspan></text>
+  <rect x="460" y="864" width="360" height="152" rx="16" fill="#eef6fc" stroke="#bfd9ec" stroke-width="1.4"/>
+  <text x="484.00" y="905" font-size="21" font-weight="700" fill="#17324d"><tspan font-family="Noto Sans CJK SC, sans-serif">差异可能产生净收益</tspan></text>
+  <text x="484.00" y="946" font-size="17" font-weight="400" fill="#52677b"><tspan font-family="Noto Sans CJK SC, sans-serif">廉价特征</tspan><tspan font-family="DejaVu Sans, sans-serif"> </tspan><tspan font-family="Noto Sans CJK SC, sans-serif">→</tspan><tspan font-family="DejaVu Sans, sans-serif"> </tspan><tspan font-family="Noto Sans CJK SC, sans-serif">文档留组预测</tspan></text>
+  <text x="484.00" y="974" font-size="17" font-weight="400" fill="#52677b"><tspan font-family="Noto Sans CJK SC, sans-serif">实测误判、切换与上下文代价</tspan></text>
+  <rect x="856" y="864" width="360" height="152" rx="16" fill="#f4f6f8" stroke="#d6dfe6" stroke-width="1.4"/>
+  <text x="880.00" y="905" font-size="21" font-weight="700" fill="#17324d"><tspan font-family="Noto Sans CJK SC, sans-serif">无合格方法或证据不足</tspan></text>
+  <text x="880.00" y="946" font-size="17" font-weight="400" fill="#52677b"><tspan font-family="Noto Sans CJK SC, sans-serif">调查解析瓶颈并补证据</tspan></text>
+  <text x="880.00" y="974" font-size="17" font-weight="400" fill="#52677b"><tspan font-family="Noto Sans CJK SC, sans-serif">不靠增加路由解决能力缺口</tspan></text>
+  <rect x="64" y="1090" width="552" height="152" rx="16" fill="#f7fafc" stroke="#dce6ef" stroke-width="1.4"/>
+  <rect x="88" y="1110" width="36" height="36" rx="10" fill="#176da5" stroke="#176da5" stroke-width="0"/>
+  <text x="99.73" y="1134.0" font-size="18" font-weight="700" fill="#ffffff"><tspan font-family="DejaVu Sans, sans-serif">7</tspan></text>
+  <text x="138.00" y="1136" font-size="24" font-weight="700" fill="#17324d"><tspan font-family="Noto Sans CJK SC, sans-serif">路线内调优与复验</tspan></text>
+  <text x="88.00" y="1181" font-size="18" font-weight="400" fill="#52677b"><tspan font-family="Noto Sans CJK SC, sans-serif">同输入</tspan><tspan font-family="DejaVu Sans, sans-serif"> </tspan><tspan font-family="Noto Sans CJK SC, sans-serif">·</tspan><tspan font-family="DejaVu Sans, sans-serif"> </tspan><tspan font-family="Noto Sans CJK SC, sans-serif">同质量</tspan><tspan font-family="DejaVu Sans, sans-serif"> </tspan><tspan font-family="Noto Sans CJK SC, sans-serif">·</tspan><tspan font-family="DejaVu Sans, sans-serif"> </tspan><tspan font-family="Noto Sans CJK SC, sans-serif">同资源预算</tspan></text>
+  <text x="88.00" y="1209" font-size="18" font-weight="400" fill="#52677b"><tspan font-family="Noto Sans CJK SC, sans-serif">初始化和预热单列；至少三轮正式测量</tspan></text>
+  <rect x="664" y="1090" width="552" height="152" rx="16" fill="#f7fafc" stroke="#dce6ef" stroke-width="1.4"/>
+  <rect x="688" y="1110" width="36" height="36" rx="10" fill="#176da5" stroke="#176da5" stroke-width="0"/>
+  <text x="699.73" y="1134.0" font-size="18" font-weight="700" fill="#ffffff"><tspan font-family="DejaVu Sans, sans-serif">8</tspan></text>
+  <text x="738.00" y="1136" font-size="24" font-weight="700" fill="#17324d"><tspan font-family="Noto Sans CJK SC, sans-serif">研究结论与接入建议</tspan></text>
+  <text x="688.00" y="1181" font-size="18" font-weight="400" fill="#52677b"><tspan font-family="Noto Sans CJK SC, sans-serif">适用类别、质量代价、成本和资源条件</tspan></text>
+  <text x="688.00" y="1209" font-size="18" font-weight="400" fill="#52677b"><tspan font-family="Noto Sans CJK SC, sans-serif">明确失败、未覆盖范围与证据边界</tspan></text>
+  <rect x="64" y="1282" width="1152" height="68" rx="12" fill="#f7fafc" stroke="#dce6ef" stroke-width="1.4"/>
+  <text x="88.00" y="1311" font-size="18" font-weight="600" fill="#17324d"><tspan font-family="DejaVu Sans, sans-serif">MO-Parse </tspan><tspan font-family="Noto Sans CJK SC, sans-serif">服务转换独立开发与验收，不是管线研究的前置条件或共同出口。</tspan></text>
+  <text x="88.00" y="1337" font-size="16" font-weight="400" fill="#52677b"><tspan font-family="Noto Sans CJK SC, sans-serif">研究结论可供后端选择；服务最终格式及完整服务费用另外验证。</tspan></text>
+  <text x="64.00" y="1390" font-size="15" font-weight="400" fill="#52677b"><tspan font-family="Noto Sans CJK SC, sans-serif">语料与预期结果由外部项目生成，范围以交接清单为准；额外六份暂不处理。本图不启动实验或部署。</tspan></text>
+</svg>

@@ -641,6 +641,28 @@ class MultimodalService:
                     )
                     if current_asset.asset_id not in region.asset_ids:
                         region.asset_ids.append(current_asset.asset_id)
+                source_page_ref = getattr(picture, "source_page_ref", None)
+                if source_page_ref is not None:
+                    marker = f"<!-- source-page-image: {source_page_ref} -->"
+                    image = f"![原件第 {page_number} 页（结构未知）]({current_asset.download_url})"
+                    page = next(item for item in result.pages if item.page_number == page_number)
+                    if (
+                        (page.content or "").count(marker) != 1
+                        or unit.renderings.markdown.count(marker) != 1
+                        or parse_result.renderings.markdown.count(marker) != 1
+                    ):
+                        raise ParserError("source-page image lost its unique original position")
+                    page.content = (page.content or "").replace(marker, image, 1)
+                    unit.renderings.markdown = unit.renderings.markdown.replace(marker, image, 1)
+                    parse_result.renderings.markdown = parse_result.renderings.markdown.replace(
+                        marker, image, 1
+                    )
+                    region = next(
+                        item for item in unit.regions
+                        if item.region_id == f"p{page_number}-source-page-{source_page_ref}"
+                    )
+                    if current_asset.asset_id not in region.asset_ids:
+                        region.asset_ids.append(current_asset.asset_id)
                 if (
                     options.describe_images
                     and bool(getattr(picture, "allow_description", True))

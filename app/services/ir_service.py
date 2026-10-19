@@ -160,7 +160,7 @@ def _fragment_cells(fragment: TableFragment) -> list[TableCell]:
                     column_span=column_span,
                     bbox=_bbox(source.normalized_bbox if source else None),
                     text=text,
-                    is_column_header=(source.is_column_header if source else row == 0),
+                    is_column_header=(source.is_column_header if source else False),
                     is_row_header=source.is_row_header if source else False,
                     quality=quality,
                     provenance=evidence,
@@ -330,8 +330,7 @@ class DocumentIRService:
             unit_text=fragment.unit_text,
             row_count=fragment.num_rows,
             column_count=fragment.num_cols,
-            header_rows=list(fragment.header_row_indices)
-            or ([0] if fragment.has_column_header and fragment.num_rows else []),
+            header_rows=sorted({cell.row for cell in fragment.cells if cell.is_column_header}),
             cells=_fragment_cells(fragment),
             logical_table_id=fragment.logical_table_id,
             quality=quality,
@@ -395,7 +394,15 @@ class DocumentIRService:
                     )
                 )
         else:
-            text = _plain_non_table_text(str(getattr(page, "content", "") or ""))
+            has_source_page_fallback = any(
+                getattr(picture, "source_page_ref", None) is not None
+                for picture in picture_candidates
+            )
+            text = (
+                ""
+                if has_source_page_fallback
+                else _plain_non_table_text(str(getattr(page, "content", "") or ""))
+            )
             if text:
                 block_id = f"{page_id}-b1"
                 region_id = f"{page_id}-r1"
@@ -476,14 +483,25 @@ class DocumentIRService:
             for index, picture in enumerate(picture_candidates, 1):
                 if getattr(picture, "source_region_ref", None) is not None:
                     continue
+                source_page_ref = getattr(picture, "source_page_ref", None)
                 regions.append(
                     ContentRegion(
-                        region_id=f"{page_id}-image-{index}",
+                        region_id=(
+                            f"{page_id}-source-page-{source_page_ref}"
+                            if source_page_ref is not None
+                            else f"{page_id}-image-{index}"
+                        ),
                         unit_id=page_id,
-                        region_type=RegionType.IMAGE,
+                        region_type=(
+                            RegionType.UNKNOWN if source_page_ref is not None else RegionType.IMAGE
+                        ),
                         bbox=_bbox(getattr(picture, "normalized_bbox", None)),
                         reading_order=len(regions) + 1,
-                        quality=ElementQuality.COMPLETE,
+                        quality=(
+                            ElementQuality.CONFLICTED
+                            if source_page_ref is not None
+                            else ElementQuality.COMPLETE
+                        ),
                     )
                 )
         elif "<!-- image -->" in str(getattr(page, "content", "") or ""):

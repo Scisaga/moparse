@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="1550" viewBox="0 0 1280 1550" role="img" aria-labelledby="title description" xml:space="preserve">
+  <title id="title">MO-Parse 服务处理与解析研究边界</title>
+  <desc id="description">接收任务并调用所选后端。解析研究止于原始解析、忠实导出和必要资产就绪；后续结果读取、表格与图形语义转换、页面清理、文档组装、验收和返回保存属于 MO-Parse 服务。候选解析管线不承担服务最终格式要求。</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 1 1 L 9 5 L 1 9 Z" fill="#7394af"/></marker>
+    <marker id="return-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M 1 1 L 9 5 L 1 9 Z" fill="#9aaab8"/></marker>
+  </defs>
+  <style>
+    text { font-family: 'DejaVu Sans', 'Noto Sans CJK SC', 'Noto Sans CJK', sans-serif; }
+    .connector { fill: none; stroke: #7394af; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+  </style>
+  <rect width="1280" height="1550" rx="20" fill="#ffffff"/>
+  <text x="64.00" y="70" font-size="34" font-weight="700" fill="#17324d"><tspan font-family="DejaVu Sans, sans-serif">MO-Parse </tspan><tspan font-family="Noto Sans CJK SC, sans-serif">服务处理目标</tspan></text>
+  <text x="64.00" y="108" font-size="18" font-weight="400" fill="#52677b"><tspan font-family="Noto Sans CJK SC, sans-serif">解析后端提供原始结果；</tspan><tspan font-family="DejaVu Sans, sans-serif">MO-Parse </tspan><tspan font-family="Noto Sans CJK SC, sans-serif">完成转换、清理与公开交付</tspan></text>
+  <rect x="900" y="38" width="316" height="40" rx="20" fill="#eef5fb" stroke="#d6e6f2" stroke-width="1"/>
+  <text x="953.02" y="64" font-size="16" font-weight="600" fill="#176da5"><tspan font-family="Noto Sans CJK SC, sans-serif">服务目标</tspan><tspan font-family="DejaVu Sans, sans-serif"> </tspan><tspan font-family="Noto Sans CJK SC, sans-serif">·</tspan><tspan font-family="DejaVu Sans, sans-serif"> </tspan><tspan font-family="Noto Sans CJK SC, sans-serif">现有</tspan><tspan font-family="Noto Sans CJK SC, sans-serif">实现</tspan><tspan font-family="Noto Sans CJK SC, sans-serif">尚未完成</tspan></text>
+  <path class="connector" d="M 622 230 H 658" marker-end="url(#arrow)"/>
+  <path class="connector" d="M 940 296 V 316 H 640 V 334" marker-end="url(#arrow)"/>
+  <path class="connector" d="M 640 436 V 480" marker-end="url(#arrow)"/>
+  <path class="connector" d="M 640 594 V 622"/>
+  <path class="connector" d="M 244 622 H 1036"/>
+  <path class="connector" d="M 244 622 V 654" marker-end="url(#arrow)"/>
+  <path class="connector" d="M 244 870 V 908"/>
+  <path class="connector" d="M 640 622 V 654" marker-end="url(#arrow)"/>
+  <path class="connector" d="M 640 870 V 908"/>
+  <path class="connector" d="M 1036 622 V 654" marker-end="url(#arrow)"/>
+  <path class="connector" d="M 1036 870 V 908"/>
+  <path class="connector" d="M 244 908 H 1036"/>
+  <path class="connector" d="M 640 908 V 938" marker-end="url(#arrow)"/>
+  <path class="connector" d="M 640 1068 V 1102" marker-end="url(#arrow)"/>
+  <path class="connector" d="M 640 1234 V 1268" marker-end="url(#arrow)"/>
+  <rect x="64" y="164" width="552" height="132" rx="16" fill="#f7fafc" stroke="#dce6ef" stroke-width="1.4"/>
+  <rect x="88" y="184" width="36" height="36" rx="10" fill="#176da5" stroke="#176da5" stroke-width="0"/>
+  <text x="99.73" y="208.0" font-size="18" font-weight="700" fill="#ffffff"><tspan font-family="DejaVu Sans, sans-serif">1</tspan></text>
+  <text x="138.00" y="210" font-size="24" font-weight="700" fill="#17324d"><tspan font-family="Noto Sans CJK SC, sans-serif">接收原文件与任务</tspan></text>
+  <text x="88.00" y="255" font-size="18" font-weight="400" fill="#52677b"><tspan font-family="Noto Sans CJK SC, sans-serif">输入身份、范围、任务选项与原件保留</tspan></text>
+  <rect x="664" y="164" width="552" height="132" rx="16" fill="#f7fafc" stroke="#dce6ef" stroke-width="1.4"/>
+  <rect x="688" y="184" width="36" height="36" rx="10" fill="#176da5" stroke="#176da5" stroke-width="0"/>
+  <text x="699.73" y="208.0" font-size="18" font-weight="700" fill="#ffffff"><tspan font-family="DejaVu Sans, sans-serif">2</tspan></text>
+  <text x="738.00" y="210" font-size="24" font-weight="700" fill="#17324d"><tspan font-family="Noto Sans CJK SC, sans-serif">调用选定解析后端</tspan></text>
+  <text x="688.00" y="255" font-size="18" font-weight="400" fill="#52677b"><tspan font-family="Noto Sans CJK SC, sans-serif">执行本方法解析，保留原始响应及资产</tspan></text>
+  <rect x="64" y="340" width="1152" height="96" rx="16" fill="#edf8f7" stroke="#b5dcd7" stroke-width="1.4"/>
+  <text x="88.00" y="376" font-size="22" font-weight="700" fill="#17324d"><tspan font-family="Noto Sans CJK SC, sans-serif">解析结果就绪：表格、源图、页码与页眉页脚均可保留</tspan></text>
+  <text x="88.00" y="413" font-size="17" font-weight="400" fill="#52677b"><tspan font-family="Noto Sans CJK SC, sans-serif">研究计时止点：原始解析、忠实</tspan><tspan font-family="DejaVu Sans, sans-serif"> Markdown </tspan><tspan font-family="Noto Sans CJK SC, sans-serif">导出及必要资产；不要求直接输出服务最终格式。</tspan></text>
+  <line x1="64" y1="452" x2="1216" y2="452" stroke="#9aaab8" stroke-dasharray="7 6"/>
+  <text x="64.00" y="474" font-size="16" font-weight="600" fill="#52677b"><tspan font-family="Noto Sans CJK SC, sans-serif">以下为</tspan><tspan font-family="DejaVu Sans, sans-serif"> MO-Parse </tspan><tspan font-family="Noto Sans CJK SC, sans-serif">接入与转换：单独测试及计时</tspan></text>
+  <rect x="64" y="486" width="1152" height="108" rx="16" fill="#f7fafc" stroke="#dce6ef" stroke-width="1.4"/>
+  <rect x="88" y="510" width="36" height="36" rx="10" fill="#176da5" stroke="#176da5" stroke-width="0"/>
+  <text x="99.73" y="534.0" font-size="18" font-weight="700" fill="#ffffff"><tspan font-family="DejaVu Sans, sans-serif">3</tspan></text>
+  <text x="140.00" y="533" font-size="24" font-weight="700" fill="#17324d"><tspan font-family="Noto Sans CJK SC, sans-serif">读取本后端已有结果</tspan></text>
+  <text x="140.00" y="572" font-size="18" font-weight="400" fill="#52677b"><tspan font-family="Noto Sans CJK SC, sans-serif">读取文字、结构、媒体及来源，保留缺失与失败；不要求候选实现统一语义接口。</tspan></text>
+  <rect x="64" y="660" width="360" height="210" rx="16" fill="#eef6fc" stroke="#bfd9ec" stroke-width="1.4"/>
+  <text x="88.00" y="692" font-size="16" font-weight="600" fill="#52677b"><tspan font-family="DejaVu Sans, sans-serif">MO-Parse </tspan><tspan font-family="Noto Sans CJK SC, sans-serif">的服务功能</tspan></text>
+  <rect x="88" y="710" width="44" height="44" rx="10" fill="#176da5" stroke="#176da5" stroke-width="0"/>
+  <text x="97.66" y="738.0" font-size="18" font-weight="700" fill="#ffffff"><tspan font-family="DejaVu Sans, sans-serif">4a</tspan></text>
+  <text x="152.00" y="739" font-size="22" font-weight="700" fill="#17324d"><tspan font-family="Noto Sans CJK SC, sans-serif">表格语义转换</tspan></text>
+  <text x="88.00" y="789" font-size="17" font-weight="400" fill="#52677b"><tspan font-family="Noto Sans CJK SC, sans-serif">字段、记录与完整标题路径</tspan></text>
+  <text x="88.00" y="818" font-size="17" font-weight="400" fill="#52677b"><tspan font-family="Noto Sans CJK SC, sans-serif">单位期间、附注、跨度与空白</tspan></text>
+  <text x="88.00" y="847" font-size="17" font-weight="400" fill="#52677b"><tspan font-family="Noto Sans CJK SC, sans-serif">全部表格转为来源支持的描述</tspan></text>
+  <rect x="460" y="660" width="360" height="210" rx="16" fill="#edf8f7" stroke="#c4e3df" stroke-width="1.4"/>
+  <text x="484.00" y="692" font-size="16" font-weight="600" fill="#52677b"><tspan font-family="DejaVu Sans, sans-serif">MO-Parse </tspan><tspan font-family="Noto Sans CJK SC, sans-serif">的服务功能</tspan></text>
+  <rect x="484" y="710" width="44" height="44" rx="10" fill="#176da5" stroke="#176da5" stroke-width="0"/>
+  <text x="493.29" y="738.0" font-size="18" font-weight="700" fill="#ffffff"><tspan font-family="DejaVu Sans, sans-serif">4b</tspan></text>
+  <text x="548.00" y="739" font-size="22" font-weight="700" fill="#17324d"><tspan font-family="Noto Sans CJK SC, sans-serif">图形语义转换</tspan></text>
+  <text x="484.00" y="789" font-size="17" font-weight="400" fill="#52677b"><tspan font-family="Noto Sans CJK SC, sans-serif">流程节点、方向、条件与回路</tspan></text>
+  <text x="484.00" y="818" font-size="17" font-weight="400" fill="#52677b"><tspan font-family="Noto Sans CJK SC, sans-serif">组织层级、分组及交叉联系</tspan></text>
+  <text x="484.00" y="847" font-size="17" font-weight="400" fill="#52677b"><tspan font-family="Noto Sans CJK SC, sans-serif">文字或源图不等于语义完成</tspan></text>
+  <rect x="856" y="660" width="360" height="210" rx="16" fill="#f7fafc" stroke="#dce6ef" stroke-width="1.4"/>
+  <text x="880.00" y="692" font-size="16" font-weight="600" fill="#52677b"><tspan font-family="DejaVu Sans, sans-serif">MO-Parse </tspan><tspan font-family="Noto Sans CJK SC, sans-serif">的服务功能</tspan></text>
+  <rect x="880" y="710" width="44" height="44" rx="10" fill="#176da5" stroke="#176da5" stroke-width="0"/>
+  <text x="890.40" y="738.0" font-size="18" font-weight="700" fill="#ffffff"><tspan font-family="DejaVu Sans, sans-serif">4c</tspan></text>
+  <text x="944.00" y="739" font-size="22" font-weight="700" fill="#17324d"><tspan font-family="Noto Sans CJK SC, sans-serif">页面内容清理</tspan></text>
+  <text x="880.00" y="789" font-size="17" font-weight="400" fill="#52677b"><tspan font-family="Noto Sans CJK SC, sans-serif">识别页码与重复页眉页脚</tspan></text>
+  <text x="880.00" y="818" font-size="17" font-weight="400" fill="#52677b"><tspan font-family="Noto Sans CJK SC, sans-serif">保护标题、附注、签章和日期</tspan></text>
+  <text x="880.00" y="847" font-size="17" font-weight="400" fill="#52677b"><tspan font-family="Noto Sans CJK SC, sans-serif">清理页面信息，保全业务内容</tspan></text>
+  <rect x="64" y="944" width="1152" height="124" rx="16" fill="#f7fafc" stroke="#dce6ef" stroke-width="1.4"/>
+  <rect x="88" y="968" width="36" height="36" rx="10" fill="#176da5" stroke="#176da5" stroke-width="0"/>
+  <text x="99.73" y="992.0" font-size="18" font-weight="700" fill="#ffffff"><tspan font-family="DejaVu Sans, sans-serif">5</tspan></text>
+  <text x="140.00" y="991" font-size="24" font-weight="700" fill="#17324d"><tspan font-family="Noto Sans CJK SC, sans-serif">组装同一份语义</tspan><tspan font-family="DejaVu Sans, sans-serif"> Markdown </tspan><tspan font-family="Noto Sans CJK SC, sans-serif">正文</tspan></text>
+  <text x="140.00" y="1030" font-size="18" font-weight="400" fill="#52677b"><tspan font-family="Noto Sans CJK SC, sans-serif">按业务顺序组织段落与多层列表，核对跨页范围、限定语、图关系和全部内容去向。</tspan></text>
+  <text x="140.00" y="1058" font-size="16" font-weight="400" fill="#52677b"><tspan font-family="Noto Sans CJK SC, sans-serif">最终正文无原表、物理页码、页眉页脚与调试信息；详细定位内部保留。</tspan></text>
+  <rect x="64" y="1108" width="1152" height="126" rx="16" fill="#eef6fc" stroke="#8eb9d5" stroke-width="1.8"/>
+  <rect x="88" y="1132" width="36" height="36" rx="10" fill="#176da5" stroke="#176da5" stroke-width="0"/>
+  <text x="99.73" y="1156.0" font-size="18" font-weight="700" fill="#ffffff"><tspan font-family="DejaVu Sans, sans-serif">6</tspan></text>
+  <text x="140.00" y="1155" font-size="24" font-weight="700" fill="#17324d"><tspan font-family="Noto Sans CJK SC, sans-serif">验收</tspan><tspan font-family="DejaVu Sans, sans-serif"> MO-Parse </tspan><tspan font-family="Noto Sans CJK SC, sans-serif">接口结果</tspan></text>
+  <text x="140.00" y="1194" font-size="18" font-weight="400" fill="#52677b"><tspan font-family="Noto Sans CJK SC, sans-serif">分开检查格式、语义正确性、内容覆盖、来源与状态；未知和未完成不能算完整成功。</tspan></text>
+  <text x="140.00" y="1222" font-size="16" font-weight="400" fill="#52677b"><tspan font-family="Noto Sans CJK SC, sans-serif">转换功能失败需定位，不能直接归因于解析器；不靠删除失败内容通过。</tspan></text>
+  <rect x="64" y="1274" width="1152" height="124" rx="16" fill="#f7fafc" stroke="#dce6ef" stroke-width="1.4"/>
+  <rect x="88" y="1298" width="36" height="36" rx="10" fill="#176da5" stroke="#176da5" stroke-width="0"/>
+  <text x="99.73" y="1322.0" font-size="18" font-weight="700" fill="#ffffff"><tspan font-family="DejaVu Sans, sans-serif">7</tspan></text>
+  <text x="140.00" y="1321" font-size="24" font-weight="700" fill="#17324d"><tspan font-family="Noto Sans CJK SC, sans-serif">返回并保存同一份</tspan><tspan font-family="DejaVu Sans, sans-serif"> result.md</tspan></text>
+  <text x="140.00" y="1360" font-size="18" font-weight="400" fill="#52677b"><tspan font-family="Noto Sans CJK SC, sans-serif">同步响应、异步结果、持久文件、下载与资产引用一致；完成状态真实。</tspan></text>
+  <text x="140.00" y="1388" font-size="16" font-weight="400" fill="#52677b"><tspan font-family="Noto Sans CJK SC, sans-serif">原始解析与来源证据保留供审计，旧结果不被文档修订重写。</tspan></text>
+  <line x1="64" y1="1440" x2="1216" y2="1440" stroke="#e1e9f0"/>
+  <text x="64.00" y="1473" font-size="15" font-weight="400" fill="#52677b"><tspan font-family="Noto Sans CJK SC, sans-serif">解析研究与服务开发可以并行；前者不以语义转换、页面清理或接口验收为准入条件。</tspan></text>
+  <text x="64.00" y="1504" font-size="15" font-weight="400" fill="#52677b"><tspan font-family="Noto Sans CJK SC, sans-serif">若测完整服务</tspan><tspan font-family="DejaVu Sans, sans-serif"> worker</tspan><tspan font-family="Noto Sans CJK SC, sans-serif">，另立计时口径；不能与八组解析处理成本混排。</tspan></text>
+</svg>

@@ -35,16 +35,15 @@ static/
 *.db-shm
 *.db-wal
 
-# Benchmark and test output
-benchmark-results/
+# Test output
 playwright-report/
 test-results/
 /tmp/
 
 # Private PDF quality corpus and local evaluation records
 /pdf_sample/
+/pdf_sample_extra/*.pdf
 
-# Locally governed acceptance corpus (not part of the original fixtures)
 /tests/fixtures/progress-pages/
 
 # Editors / operating systems

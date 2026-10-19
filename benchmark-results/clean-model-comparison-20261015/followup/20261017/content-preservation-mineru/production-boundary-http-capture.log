@@ -1,4 +1,0 @@
-{"event": "submitted", "source": "1225474693", "job": "job_01M5523CESCQ9ZQDA0AAX69Z29"}
-{"event": "terminal", "source": "1225474693", "job": "job_01M5523CESCQ9ZQDA0AAX69Z29", "status": "completed", "full_capture_s": 9.262385839014314, "error": null}
-{"event": "submitted", "source": "1225473526", "job": "job_01M5523NGH51ZHS677219YPS60"}
-{"event": "terminal", "source": "1225473526", "job": "job_01M5523NGH51ZHS677219YPS60", "status": "completed", "full_capture_s": 37.285836894996464, "error": null}
