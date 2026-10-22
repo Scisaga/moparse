@@ -1,7 +1,7 @@
 #!/usr/bin/env node
-/** Capture the deployed homepage without API stubs or parsing requests. */
+/** Capture a real local or deployed homepage without API stubs or parsing requests. */
 import { createHash } from 'node:crypto'
-import { mkdir, readFile } from 'node:fs/promises'
+import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { dirname, isAbsolute, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 
@@ -84,7 +84,9 @@ try {
       await context.close()
     }
   }
-  process.stdout.write(`${JSON.stringify(report, null, 2)}\n`)
+  const reportText = `${JSON.stringify(report, null, 2)}\n`
+  await writeFile(resolve(options.outputDir, 'capture-report.json'), reportText)
+  process.stdout.write(reportText)
 } finally {
   await browser.close()
 }

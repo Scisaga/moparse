@@ -1,0 +1,13 @@
+{
+  "tool": "imagegen (built-in)",
+  "client_date": "2026-10-21",
+  "timezone": "Asia/Shanghai",
+  "asset": "assets/illustrations/document-terminal-flat.png",
+  "reference_asset": "assets/moparse-logo-3d-master.png",
+  "purpose": "Frontal flat 2D document-terminal mascot for all seven workspace state scenes; main logo and favicon use their own masters.",
+  "transparent_background": true,
+  "prompt": "Use case: style-transfer\nAsset type: transparent mascot master for MO-Parse UI empty-state illustrations.\nInput image: existing cyan document-terminal mascot, reference for its document-related identity and colors only.\nPrimary request: redraw this independent paper-document terminal character as a beautiful flat 2D editorial illustration, in an exact straight-on frontal view. Body is a single upright rounded rectangular cyan paper terminal with no separate head. White paper emerging vertically from top with 3 short blue-gray document lines and a small folded corner. Cream face panel, two tiny charcoal dot eyes, a restrained small smile. One small amber circular status button at lower right and a short dark paper slot below the face. Long loose slender charcoal arms hanging naturally, slender legs and small flat oval feet. Perfectly level, symmetrical front view, no visible side or top face of the body. Keep face sweet and understated.\nStyle/medium: crisp flat gouache-like editorial illustration with uniform solid color areas and delicate dark blue outlines, clean readable silhouette. Cyan and soft teal, cream, charcoal and amber. All shapes truly flat.\nComposition: one whole character centered on a genuinely transparent background, portrait silhouette filling about 80 percent of square canvas; ample padding for hands and feet.\nConstraints: no scene, no text, no additional objects, no floor shadow, no gradient, no highlights, no 3D rendering, no glossy plastic, no volume, no bevels, no perspective, no photographic lighting, no recognizable named fictional character. Preserve transparency.",
+  "selection_status": "Rejected color candidate; active workspace artwork is the unfilled SVG outline.",
+  "active_asset": "assets/illustrations/document-terminal-outline.svg",
+  "active_asset_method": "Editable SVG paths; no raster generation or filled areas."
+}

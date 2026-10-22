@@ -16,7 +16,7 @@ describe('WorkspaceState', () => {
       <WorkspaceState variant={variant} contentKind={contentKind} title="状态标题" description="状态说明" />,
     )
     const art = container.querySelector('img.workspace-state-art')
-    expect(art).toHaveAttribute('src', `/illustrations/workspace-${scene}.svg?v=mo-parse-terminal-20261019-2`)
+    expect(art).toHaveAttribute('src', `/illustrations/workspace-${scene}.svg?v=mo-parse-outline-20261022-2`)
     expect(art).toHaveAttribute('data-scene', scene)
     expect(art).toHaveAttribute('alt', '')
     expect(art).toHaveAttribute('aria-hidden', 'true')
@@ -29,16 +29,16 @@ describe('WorkspaceState', () => {
 
   it('uses distinct assets for all four core empty-state compositions', () => {
     const { container, rerender } = render(<WorkspaceState variant="input-empty" description="Input" />)
-    expect(container.querySelector('img')).toHaveAttribute('src', '/illustrations/workspace-input.svg?v=mo-parse-terminal-20261019-2')
+    expect(container.querySelector('img')).toHaveAttribute('src', '/illustrations/workspace-input.svg?v=mo-parse-outline-20261022-2')
 
     rerender(<WorkspaceState variant="output-empty" contentKind="markdown" description="Markdown" />)
-    expect(container.querySelector('img')).toHaveAttribute('src', '/illustrations/workspace-markdown.svg?v=mo-parse-terminal-20261019-2')
+    expect(container.querySelector('img')).toHaveAttribute('src', '/illustrations/workspace-markdown.svg?v=mo-parse-outline-20261022-2')
 
     rerender(<WorkspaceState variant="output-empty" contentKind="text" description="Text" />)
-    expect(container.querySelector('img')).toHaveAttribute('src', '/illustrations/workspace-text.svg?v=mo-parse-terminal-20261019-2')
+    expect(container.querySelector('img')).toHaveAttribute('src', '/illustrations/workspace-text.svg?v=mo-parse-outline-20261022-2')
 
     rerender(<WorkspaceState variant="pages-empty" description="Pages" />)
-    expect(container.querySelector('img')).toHaveAttribute('src', '/illustrations/workspace-pages.svg?v=mo-parse-terminal-20261019-2')
+    expect(container.querySelector('img')).toHaveAttribute('src', '/illustrations/workspace-pages.svg?v=mo-parse-outline-20261022-2')
   })
 
   it('keeps live loading and error attributes on the wrapper only', () => {
@@ -46,13 +46,13 @@ describe('WorkspaceState', () => {
     const status = screen.getByRole('status')
     expect(status).toHaveAttribute('aria-live', 'polite')
     expect(status).toHaveAttribute('aria-busy', 'true')
-    expect(status.querySelector('img')).toHaveAttribute('src', '/illustrations/workspace-loading.svg?v=mo-parse-terminal-20261019-2')
+    expect(status.querySelector('img')).toHaveAttribute('src', '/illustrations/workspace-loading.svg?v=mo-parse-outline-20261022-2')
     expect(status.querySelector('img')).toHaveAttribute('aria-hidden', 'true')
 
     rerender(<WorkspaceState variant="error" title="失败" description="错误详情" role="alert" live="assertive" />)
     const alert = screen.getByRole('alert')
     expect(alert).toHaveAttribute('aria-live', 'assertive')
-    expect(alert.querySelector('img')).toHaveAttribute('src', '/illustrations/workspace-error.svg?v=mo-parse-terminal-20261019-2')
+    expect(alert.querySelector('img')).toHaveAttribute('src', '/illustrations/workspace-error.svg?v=mo-parse-outline-20261022-2')
     expect(screen.queryByRole('img')).not.toBeInTheDocument()
   })
 })

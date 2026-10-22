@@ -1,0 +1,58 @@
+{
+  "baseUrl": "http://127.0.0.1:5179/",
+  "capturedAt": "2026-10-21T16:40:41.310Z",
+  "browser": "139.0.7258.5",
+  "captures": [
+    {
+      "name": "desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 1060
+      },
+      "path": "/opt/moparse/docs/assets/workspace-preview/mo-parse-web-desktop.png",
+      "sha256": "d2e19e67abad1e8d4bfa1ff6442d870a26637f7a15c9c894b4989a0f10d0506d",
+      "serviceStatus": "服务 4/4 就绪",
+      "images": [
+        {
+          "source": "http://127.0.0.1:5179/logo.png?v=mo-parse-terminal-20261019-2",
+          "width": 256,
+          "height": 256
+        },
+        {
+          "source": "http://127.0.0.1:5179/illustrations/workspace-input.svg?v=mo-parse-outline-20261022-2",
+          "width": 640,
+          "height": 512
+        },
+        {
+          "source": "http://127.0.0.1:5179/illustrations/workspace-markdown.svg?v=mo-parse-outline-20261022-2",
+          "width": 640,
+          "height": 512
+        }
+      ],
+      "horizontalOverflow": false
+    },
+    {
+      "name": "mobile",
+      "viewport": {
+        "width": 390,
+        "height": 1285
+      },
+      "path": "/opt/moparse/docs/assets/workspace-preview/mo-parse-web-mobile.png",
+      "sha256": "31ea0e9fe5a1298ccff0aa5576cfeca338971a0acfe0fbef5ead8baff9c3d71a",
+      "serviceStatus": "服务 4/4 就绪",
+      "images": [
+        {
+          "source": "http://127.0.0.1:5179/logo.png?v=mo-parse-terminal-20261019-2",
+          "width": 256,
+          "height": 256
+        },
+        {
+          "source": "http://127.0.0.1:5179/illustrations/workspace-input.svg?v=mo-parse-outline-20261022-2",
+          "width": 640,
+          "height": 512
+        }
+      ],
+      "horizontalOverflow": false
+    }
+  ]
+}

@@ -2,9 +2,9 @@
 
 默认 Base URL 为 `http://localhost:12303`，在线定义以 `/openapi.json`、`/docs` 和 `/redoc` 为准。
 
-MO-Parse 的唯一文档结果为普通 Markdown（`result.md`、`text/markdown`）。[目标最终契约](output-contract.md)要求全部表格、PDF 流程图和组织结构图转为语义描述，优先使用多层列表，去掉页码、页眉和页脚。当前表格语义实现仍混合描述、GFM 与页面家具，尚未符合完整目标；本文分别说明目标与当前有限实现。任务状态、错误和资产索引继续使用 JSON 控制协议，不构成第二份文档内容。
+本文说明当前 HTTP 与 MCP 行为；目标交付及实现差距统一见[输出规范](moparse-output-spec.md)，八组原生格式与适配设计见[逐管线说明](../pipelines/README.md)。文档正文使用 `result.md`、`text/markdown`，图片经资产接口交付；任务状态、错误和资产索引使用 JSON 控制协议。现有 bundle 尚未包含 Markdown 正文。
 
-公开接口的最终要求由 MO-Parse 在接入解析结果后履行，不要求底层后端直接生成该格式。候选管线的原始结果和研究侧 Markdown 可以含表格及页面信息；其解析质量与成本按[研究框架](research-framework.md)评价，不按本文最终格式评分。
+公开接口的最终要求由 MO-Parse 在接入解析结果后履行，不要求底层后端直接生成该格式。候选管线的原始结果和研究侧 Markdown 可以含表格及页面信息；其解析质量与成本按[研究框架](../research/research-framework.md)评价，不按本文最终格式评分。逐管线服务适配应先核对原生输出，现有公共接口不因此增加八组或模型选择参数，当前接入也不代表全部研究配置已实现。
 
 ## 认证
 
@@ -34,7 +34,7 @@ Authorization: Bearer <API_KEY>
 
 `scan_policy=auto` 按页面自动处理扫描件；`skip` 不执行 PDF 扫描 OCR/表格抽取，保留 整页图像资产并输出明确的跳过状态。旧 `profile`、`mode`、`output_format`、`vlm_policy`、 `enable_vlm_fallback`、`preserve_page_breaks`、`include_pages`、 `include_diagnostics` 和 `include_renderings` 均返回 422。
 
-`NATIVE_PARSER_BACKEND` 是服务端原生解析后端配置，不是公共请求参数。切换独立 Docling 后端与 Advanced＋TXT 后端保持相同 HTTP/MCP 输入、状态、Job ID、资产 URL 和 Markdown 媒体类型。MinerU 后的独立 Docling 二次复核已从实现中移除，实际部署身份见[运行配方](runtime-recipes.md#实现与部署状态)。
+`NATIVE_PARSER_BACKEND` 是服务端原生解析后端配置，不是公共请求参数。切换独立 Docling 后端与 Advanced＋TXT 后端保持相同 HTTP/MCP 输入、状态、Job ID、资产 URL 和 Markdown 媒体类型。MinerU 后的独立 Docling 二次复核已从实现中移除，运行配置和现场身份核验见[运行手册](../operations/runtime-recipes.md#5-检查升级与故障定位)。
 
 `SEMANTIC_TABLE_OUTPUT_ENABLED` 是已有服务端开关，默认 `1`。当前仅转换部分完整来源网格及作用域，设为 `0` 会保留 GFM 显示，用于内部对照；两个值均不能证明满足完整最终契约。目标最终转换是正常交付步骤，不提供通过关闭语义转换获得合格最终结果的模式；本轮未新增参数或修改开关行为。
 
@@ -74,36 +74,17 @@ Accept: text/markdown
 
 ## Markdown 输出
 
-### 目标最终格式
+### 目标与当前实现
 
-最终正文使用业务标题、段落与多层列表，全部表格及两类图形均有正确语义去向。字段、记录和比较矩阵按完整标题、单位、期间与附注展开；流程保留方向、条件、分支、汇合和回路，组织图保留层级和明确的交叉关系。详细示例与状态要求见[最终契约](output-contract.md)。
+目标正文、数据表与网格排版的区分、图片交付、状态及完整输出包的要求统一见[输出契约](moparse-output-spec.md)，本文件不重复格式示例。图片语义化不在当前范围。
 
-前序模块可采用 Markdown、HTML、XML 区域定义和内部 IR；最终转换统一清理原表语法、物理页号、页眉页脚、分页标记与调试块，保留业务标题、附注、签章和日期。短来源引用用于按需追溯，详细页、坐标、网格和节点连线证据不展开到普通抽取正文。
+当前结果仍可能混合列表、GFM、物理页标记、页面家具和资产说明。具体缺口见[契约第 9 节](moparse-output-spec.md#9-当前实现差距与迁移)；HTTP 200、Job 终态或资产可下载不能单独证明契约通过。
 
-以下是假设来源关系完整的格式示意，不是当前表格语义实现已实现全部要求的证明：
-
-```markdown
-## 营业收入
-
-- 营业收入
-  - 单位：万元
-  - 2025 年度：1,234.50
-  - 2024 年度：1,100.00
-```
-
-内容比较允许声明过的受限 ASCII 全半角等价，仍保存严格字符诊断；宽度政策不能修正数字、符号、单位或来源绑定。全部表格与图形覆盖、最终格式和正确性分别评价，不能用纯格式过滤掩盖内容缺失。
-
-### 现有实现与目标差距
-
-现有结果可以混合列表、GFM、物理页标记、页面家具和资产说明，说明目标转换仍未完整实现。图像可见文字识别尚未恢复流程或组织关系；`describe_images=false` 也不意味着目标可以略过这些必需内容。内部来源和语义表示只维护当前定义，随代码直接修改。
-
-来源保全与作用域见[表格来源与证据约定](table-source.md)，GFM 的语法头、分段及行映射见[表格显示映射](architecture.md#表格显示映射)。GFM 只用于实际显示，不是统一中间模型；其显示行映射不套用到最终多层列表。历史证据保持原字节与 SHA，不为此维护旧格式兼容分支。
-
-未完成内容在目标中必须按范围与原因明确报告，内部保留原表与原图。任务 `completed`、HTTP 200 或资产可下载不能证明最终契约完成；将语义未完成与 `partial` 等状态联动仍需实现与接口验收。本轮不宣称已有代码已执行新的最终清理或图形转换。
+来源作用域见[表格来源约定](table-source.md)，实际 GFM 显示语法和行映射见[架构说明](../engineering/architecture.md#表格显示映射)。显示行号不用于正文语义引用；历史结果保持原字节，不增加旧格式兼容分支。
 
 ### 表格关系与来源引用
 
-本节描述当前表格关系引用与审计标记，不划分内部协议版本。它不定义另一份最终格式，也不支持凭 `converted` 或 `retained` 断言所有图形与页面清理已完成。
+本节描述当前表格关系引用与审计标记，不划分内部协议版本。它不定义另一份最终格式，也不支持凭 `converted` 或 `retained` 断言原件覆盖、图片交付或页面清理已完成。
 
 `semantic-view` 开启描述作用域，声明视图身份、物理来源表身份和 `converted` 或 `retained` 状态。`semantic-source` 紧邻一条描述，引用其原始单元格及标题单元格；`table_id.rNcM` 的行列均从 0 起算，来自未插入语法表头的原始网格。跨页引用使用原页所属的表身份，不能按描述行号解释。
 
@@ -123,7 +104,7 @@ Accept: text/markdown
 
 内部 `logs/table-semantics.json` 使用用途标识 `mo-parse-table-semantics`，关系策略名为 `source-scoped-relations`；来源证据日志使用 `native-source-verification`，PDF 网格绑定策略名为 `vector-grid-glyph-binding`。这些名称不含协议版本，日志保存来源 SHA、显示与最终 Markdown SHA、关系引用、保留原因及阶段耗时，不作为公开结果或资产返回，也不替代原件内容正确性检查。
 
-以下资产与识字说明属于当前实现；示例中的物理页展示不适用于目标最终正文。流程图与组织结构图的关系转换尚待实现，不能用可见文字或下载链接充当完成。Office 嵌图直接提取，原生 PDF 保留模型识别出的图片区域，扫描/混合页保留整页来源图；视频保留采样关键帧。已提取内容作为鉴权资产下载，原生 PDF 未检出的图片不会因此补齐。 `describe_images=true` 时，可见文字使用普通 Markdown 列表追加，不生成额外场景推断：
+以下资产与识字说明属于当前实现；示例中的物理页展示不适用于目标最终正文。图片语义化明确不在当前范围，流程图和组织结构图按图片交付。Office 嵌图直接提取，原生 PDF 保留模型识别出的图片区域，扫描/混合页保留整页来源图；视频保留采样关键帧。已提取内容作为鉴权资产下载，原生 PDF 未检出的图片不会因此补齐。 `describe_images=true` 时，可见文字使用普通 Markdown 列表追加，不生成额外场景推断：
 
 ```markdown
 ## 图片资产
@@ -148,7 +129,7 @@ POST   /v1/content/jobs/{id}/retry
 DELETE /v1/content/jobs/{id}
 ```
 
-SSE 是增量体验层，断线后以 Job JSON 为准。原生文档 worker 按整件返回结果， 中间阶段的页进度可能保持 0，Job 仍处于 `running`；它不提供逐页实时百分比。资产元数据含 MIME、SHA256、尺寸、角色、 状态和下载 URL，不含页位置或 bbox；视频支持单个 HTTP byte range。bundle 包含内部 `manifest.json` 与资产文件，不包含另一份详细解析结果。
+SSE 是增量体验层，断线后以 Job JSON 为准。原生文档 worker 按整件返回结果， 中间阶段的页进度可能保持 0，Job 仍处于 `running`；它不提供逐页实时百分比。资产元数据含 MIME、SHA256、尺寸、角色、 状态和下载 URL，不含页位置或 bbox；视频支持单个 HTTP byte range。当前 bundle 仅包含 `manifest.json` 与资产文件，**不包含 `result.md`**，也没有可离线使用的 Markdown 图片引用。这是现有资产包行为；[目标输出包](moparse-output-spec.md#12-markdown-与图片的输出包)要求将同一正文与图片一起打包，尚待代码实现。
 
 ## MCP
 

@@ -1,78 +1,57 @@
 <p align="center">
-  <img src="assets/moparse-logo-1024.png?v=mo-parse-terminal-20261019-2" alt="MO-Parse 蓝青色立式文档终端标志" width="132" />
+  <img src="assets/moparse-logo-1024.png?v=mo-parse-terminal-20261019-2" alt="MO-Parse 蓝青色立式文档终端标志" width="112" />
 </p>
 
-# MO-Parse
+<h1 align="center">MO-Parse</h1>
 
-**探索如何在消费级 GPU 和 CPU 上实现高质量文档内容解析。**
+<p align="center">
+  <a href="https://github.com/Scisaga/moparse/actions/workflows/ci.yml"><img src="https://github.com/Scisaga/moparse/actions/workflows/ci.yml/badge.svg?branch=main" alt="CI" /></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-Apache_2.0-54798d.svg" alt="License: Apache 2.0" /></a>
+  <a href="pyproject.toml"><img src="https://img.shields.io/badge/Python-3.13-3776ab.svg?logo=python&amp;logoColor=white" alt="Python 3.13" /></a>
+  <a href="https://github.com/Scisaga/moparse/stargazers"><img src="https://img.shields.io/github/stars/Scisaga/moparse?style=flat&amp;logo=github" alt="GitHub Stars" /></a>
+  <a href="https://github.com/Scisaga/moparse/issues"><img src="https://img.shields.io/github/issues/Scisaga/moparse?style=flat&amp;logo=github" alt="GitHub Issues" /></a>
+</p>
 
-MO-Parse 提供可自托管的内容解析服务，最终目标是生成便于下游信息抽取的语义 Markdown：所有表格、PDF 流程图和组织结构图转换为描述，优先使用多层列表；去掉页码、页眉和页脚。这由 MO-Parse 在接入解析结果后完成；底层管线可以输出含表格的 Markdown、XML 区域定义或其他结构，不负责服务的最终格式。完整要求见[最终语义输出契约](docs/output-contract.md)。
+<p align="center"><strong>在消费级 GPU 和 CPU 上探索高质量文档解析，让大模型更好地理解文档、提取信息。</strong></p>
 
-当前表格语义实现仅转换部分来源表格，仍有原表、页面家具和未恢复的图形关系，尚未满足完整目标。2026-10-20 已统一表格来源、显示映射和语义标记的当前定义，取消内部协议版本；GFM 仅作为具体显示格式，来源规则见[表格来源与证据约定](docs/table-source.md)。本次整理没有启动推理或部署。
+MO-Parse 是可自托管的内容解析项目，提供 Web 工作台、HTTP API 和 MCP 接口。项目一方面研究不同解析方法的质量与实际成本，另一方面将解析结果整理为面向大模型的 Markdown 正文和关联图片。
 
-| 项目组成 | 内容 | 入口 |
-| --- | --- | --- |
-| 最终输出契约 | 全部表格和两类图形的语义描述、页面家具清理、中间表示与最终结果边界 | [最终契约](docs/output-contract.md) |
-| 研究与技术路线 | 解析质量与成本研究、方法选择及 MO-Parse 工程边界 | [研究框架](docs/research-framework.md) · [技术路线](docs/technical-route.md) |
-| 评测任务 | 外部语料与独立标注的交接要求、解析内容和结构指标 | [评测任务](benchmark/evaluation-tasks.md) |
-| 待测试管线 | 八个固定解析组合、忠实导出及资源条件 | [待测试管线](benchmark/pipelines-to-test.md) |
-| MinerU 调优 | 路线内性能实验与质量验收 | [MinerU 调优](benchmark/mineru-tuning.md) |
-| 自托管服务 | API、Web UI、MCP 与运行配置 | [快速开始](#快速开始) · [部署](docs/deployment.md) |
+[快速开始](#快速开始) · [输出格式](#为什么生成-mo-parse-格式) · [研究与进展](#研究与当前进展) · [文档导航](docs/README.md)
 
-## 数据与研究
+## 项目全貌
 
-Benchmark 仅保留评测任务、待测试管线、MinerU 调优三份规划文档。八条解析管线按相同原件、独立标注、忠实导出规则和资源预算比较原始解析质量与处理成本，不沿用旧成绩。计时包含必要渲染、声明的解析工作、忠实导出和必要资产；MO-Parse 的语义转换与页面清理另行测试和计时，HTTP、排队、轮询、下载及纯持久化也不计入解析耗时。
+![MO-Parse 整体架构：接入与任务控制、解析分支、内容处理、来源证据、持久化与公开交付](docs/assets/mo-parse-overview-poster.png)
 
-解析预期结果与语料的生成已在其他项目开展，本仓库不再维护原本地样本目录，也不重复生成语料与金标。后续评测接收外部项目交接的完整原件、独立标注和版本清单，实际范围需另行明确；没有样本或未标注的类别记录为未覆盖。额外六份公开原件位于 [pdf_sample_extra/](pdf_sample_extra/README.md)，**暂不处理**，不用于解析、评测、调优、预热或上线判断。
+架构图展示请求与任务控制、原生内容及扫描分支、按内容类别处理的服务目标，以及任务状态、原生产物和来源证据的保存关系。实线模块表示已有组件，虚线模块表示仍需补齐的目标；完整职责与当前差距见[架构说明](docs/engineering/architecture.md)，各管线的原生格式与接入状态见[逐管线说明](docs/pipelines/README.md)。可[打开矢量原图](docs/assets/mo-parse-overview-poster.svg)查看细节。
 
-## 研究框架与技术路线
+## 内容工作台
 
-解析研究回答各方法在不同来源和版式上恢复了什么、哪里出错、花费多少，再据证据决定方法选择。MO-Parse 将解析结果转成下游所需格式，是另外的服务开发工作；不能要求候选管线直接完成它。具体方法见[研究框架](docs/research-framework.md)，交接与工程顺序见[技术路线](docs/technical-route.md)。
+![MO-Parse 内容工作台：选择内容、解析设置、原件预览与 Markdown 结果](docs/assets/workspace-preview/mo-parse-web-desktop.png)
 
-![八步解析研究：问题、来源、条件、执行、质量成本、选择、调优和结论](docs/assets/research-decision-flow.svg)
+工作台按选择内容、解析设置、原件预览和结果查看组织操作。上图为本地前端的实际空状态截图；桌面、手机预览和采集方式见[品牌与界面](docs/brand.md)。
 
-1. **明确问题与范围。** 确认外部交接的原件与标注版本，固定解析任务、关键错误、资源和计时边界。
-2. **原件分层与低成本观测。** 独立标注来源和版式，研究可在解析前取得的廉价特征及其费用。
-3. **固定对照条件。** 确定八组身份、允许输入、前处理、忠实导出、指标、资源和失败规则。
-4. **执行固定完整管线。** 同字节完整 PDF 输入，保存各方法原始结果、研究侧 Markdown 和处理记录。
-5. **分类别分析质量与成本。** 在相同原件上配对比较内容、结构、覆盖、失败和费用；分报文档与类别，先核对关键质量与资源，再比较成本。
-6. **决定固定方法或研究选择策略。** 来源类别不直接等于方法优劣；有稳定差异才验证运行前选择、误判、切换和跨页上下文的净收益。
-7. **路线内调优与复验。** 保持解析质量与预算，分别研究线程、并发和执行方式，分开预热并至少三次正式性能测量。
-8. **形成研究结论。** 说明方法适用类别、质量代价、资源条件、未覆盖范围和接入建议。
+## 为什么生成 MO-Parse 格式
 
-原始解析和研究侧导出可以保留表格、源图、页码及页眉页脚，不要求统一语义接口或多层列表。服务转换完成与否不作为八组研究准入条件，服务发布也不作为解析研究的第八步。现有服务入口还混有来源补充、资产和语义处理，现有耗时字段也不满足统一研究边界；实际调用与计时缺口见[技术路线](docs/technical-route.md#61-现有调用与计时字段)。
+文档版面通过位置、合并单元格和跨页表头表达关系。只提取文字，容易把数值与标题、单位、期间拆开；保留原始表格时，下游模型仍需还原这些关系。MO-Parse 希望在来源证据支持下，把这些关系写进连续、清楚的正文，减少大模型理解和抽取信息时需要自行猜测的部分。
 
-## MO-Parse 服务处理目标
+这里的 **MO-Parse 格式**指[输出规范](docs/specs/moparse-output-spec.md)约定的 Markdown 正文与图片交付方式，正文文件为 `result.md`。它用常见的标题、段落、多层列表和图片引用组织内容，便于阅读，也便于直接交给大模型。
 
-下图是服务工程流程。第 2 步得到后端解析结果，后续的语义转换、清理、组装与接口交付由 MO-Parse 完成。该边界不预选 MinerU、Docling 或其他方法，也不把整段服务耗时当作解析管线耗时。
+- **让关系随内容一起出现。** 确认的数据表以语义描述表达，将数值与完整标题、单位、期间及附注放在同一上下文中，帮助模型识别“谁、什么指标、何时、多少”。
+- **让正文更连贯。** 按阅读顺序组织章节与网格中的正文，清理页码、重复页眉页脚，减少版面噪声对分段和理解的干扰。
+- **保留图片与核对依据。** 图片随正文引用交付；内部保留来源证据和未解决状态，便于核对抽取结果。图片本身按原图交付，不生成图意描述。
 
-![七步服务流程：接收任务、调用解析、读取结果、转换清理、组装、验收和返回保存](docs/assets/workspace-pdf-pipeline.svg)
+例如，来源已经明确指标、单位和期间时，可表达为以下内容；这是格式示意，并非实测输出：
 
-1. **接收原文件与任务。** 保留原件身份、范围及内部来源。
-2. **调用选定解析后端。** 获得本方法原始文字、结构与资产，输出可为含表格的 Markdown、HTML、XML 或其他结构。
-3. **读取已有解析结果。** 接入代码读取已有信息，保留缺失与失败，不在读字段时制造事实。
-4. **转换内容并清理。** MO-Parse 处理表格完整标题和限定关系、流程方向与条件、组织层级及交叉联系，区分页面家具和业务内容。
-5. **组装文档正文。** 核对顺序、跨页范围、标题单位附注与内容去向，生成语义 Markdown；无原表、页码页眉页脚及调试信息。
-6. **验收接口结果。** 分报格式、内容覆盖、语义正确性、未解决范围与完成状态，核对资产和来源。
-7. **返回并保存同一结果。** 同步响应、异步结果、落盘与下载使用同一份 `result.md`。
+```markdown
+## 主要财务指标
 
-原表与原图可以是合格解析产物，内部保全却不等于服务已完成最终语义描述。表格/图形转换和页眉页脚清理单独测试及计时，最终契约仅约束 MO-Parse 对外文档。
+- 营业收入
+  - 单位：万元
+  - 2025 年度：1,234.50
+  - 2024 年度：1,100.00
+```
 
-## 现有实现与缺口
-
-| 能力 | 已有情况 | 距离最终契约的工作 |
-| --- | --- | --- |
-| 来源解析、任务与资产 | 已有 API、Web UI、MCP 及多种解析后端 | 保真读取已有结果，补齐服务区域清点与覆盖 |
-| 表格语义转换 | 部分完整矢量网格、标题作用域与字段模式可展开为列表 | 所有表格类型、混合区、跨度、限定语和跨页关系 |
-| 流程图与组织图 | 当前图片能力主要是可见文字识别 | 节点、边、方向、条件、层级与最终多层列表 |
-| 页面家具清理 | 当前来源结果仍带页码、页眉和页脚 | 区分页面家具与业务内容，在最终转换中清理 |
-| 最终格式与状态 | 仍混合描述、GFM 和保全提示 | 无原表和分页信息的最终正文，完整覆盖及状态联动 |
-
-已有表格语义实现的有界实验与发布记录见[历史实验记录](docs/research-framework.md#101-2026-10-19-表格语义有界实验与实现)和[运行配方](docs/runtime-recipes.md)。这些记录不证明新的完整最终契约通过，八条主管线仍无本轮正式比较结果。
-
-![MO-Parse Web界面](docs/assets/mo-parse-web-desktop.png?v=mo-parse-terminal-20261019-2)
-
-当前服务还支持 Office 嵌图、独立图片和视频关键帧识字，本轮不自动扩大其研究范围。实体消歧、指标归一、业务事件抽取、Embedding、索引与问答由下游负责；来源明确的字段、流程和组织关系由 MO-Parse 表达。
+这种组织方式旨在帮助模型理解和抽取，实际收益仍需配对验证。转换只表达来源支持的内容；实体消歧、指标归一、事实去重、业务事件抽取、索引与问答由下游负责。详细规则及当前实现差距以[输出规范](docs/specs/moparse-output-spec.md)为准。
 
 ## 快速开始
 
@@ -86,7 +65,7 @@ docker compose up -d --build moparse
 
 打开Web UI：<http://localhost:12303/>；API文档：<http://localhost:12303/docs>；MCP：<http://localhost:12303/mcp>。
 
-首次解析可能下载Docling模型，初始化期间`/ready`可能暂未就绪。模型保存在命名卷中。离线模型、扫描OCR、MinerU/GLM模型服务、显卡配置与远程模型地址见[部署文档](docs/deployment.md)和[运行配方](docs/runtime-recipes.md)。
+首次解析可能下载Docling模型，初始化期间`/ready`可能暂未就绪。模型保存在命名卷中。离线模型、扫描OCR、MinerU/GLM模型服务、显卡配置与远程模型地址见[部署文档](docs/operations/deployment.md)和[运行配方](docs/operations/runtime-recipes.md)。
 
 ```bash
 curl --fail-with-body http://localhost:12303/v1/content/parse \
@@ -98,24 +77,28 @@ curl --fail-with-body http://localhost:12303/v1/content/parse \
 
 大输入和视频返回202及Job身份，按Job查询并下载最终结果。网页超时`0`表示采用服务端时限。正式展示名为MO-Parse；仓库、Python包、Compose服务和既有配置标识继续使用`moparse`。
 
-## API
+## 接口接入
 
-| 方法 | 路径 | 用途 |
+| 接入方式 | 入口 | 适用场景 |
 | --- | --- | --- |
-| `POST` | `/v1/content/parse` | 同步解析或返回异步Job |
-| `POST` | `/v1/content/jobs` | 创建异步任务 |
-| `GET` | `/v1/content/jobs/{job_id}` | 查询状态 |
-| `GET` | `/v1/content/jobs/{job_id}/events` | SSE进度 |
-| `GET` | `/v1/content/jobs/{job_id}/result` | 下载Markdown |
-| `GET` | `/v1/content/jobs/{job_id}/assets` | 列出图片、视频和帧资产 |
-| `GET` | `/v1/content/jobs/{job_id}/bundle` | 下载结果与资产包 |
-| `POST` | `/v1/content/jobs/{job_id}/retry` | 重试任务 |
-| `DELETE` | `/v1/content/jobs/{job_id}` | 取消或删除任务 |
-| `GET` | `/v1/backends` | 后端能力状态 |
-| `GET` | `/health`, `/ready` | 健康与就绪检查 |
-| `GET/POST` | `/mcp` | MCP Streamable HTTP |
+| Web 工作台 | `http://localhost:12303/` | 上传或输入 URL、预览原件、查看正文与媒体 |
+| HTTP API | `/v1/content/parse`、`/v1/content/jobs` | 同步解析、异步任务、进度与下载 |
+| MCP | `/mcp` | 通过 MCP 工具调用内容解析 |
 
-参数、鉴权、状态机和完整路由见[API文档](docs/api.md)，在线Schema以`/openapi.json`为准。API Key与独立Admin Token分别配置；MCP经反向代理访问时显式配置允许的Host和Origin，见[部署说明](docs/deployment.md)。
+请求参数、鉴权、任务状态、资产和完整路由统一见[API 文档](docs/specs/api.md)，在线 Schema 以 `/openapi.json` 为准。当前 `bundle` 仅含资产与清单，包含 `result.md` 的完整输出包仍待实现。API Key、Admin Token 及 MCP 反向代理配置见[部署说明](docs/operations/deployment.md)。
+
+## 研究与当前进展
+
+项目沿两条工作线推进，具体顺序见[技术路线](docs/engineering/technical-route.md)：
+
+| 工作线 | 要回答的问题 | 当前进展与入口 |
+| --- | --- | --- |
+| 解析研究 | 各方法在什么来源和版式上解析得更好，实际处理成本是多少 | 已声明八组比较配置，本轮尚无新比较结果；见[研究框架](docs/research/research-framework.md)与[待测试管线](benchmark/pipelines-to-test.md) |
+| 服务开发 | 如何保真读取原生结果，并交付适合下游消费的正文和图片 | 已有 API、Web UI、MCP、任务与资产能力；表格转换、正文清理及完整打包仍有缺口；见[架构](docs/engineering/architecture.md)与[输出规范当前差距](docs/specs/moparse-output-spec.md#9-当前实现差距与迁移) |
+
+解析研究比较完整管线的原始质量与实际成本，候选可以保留自身的表格和页面信息；MO-Parse 最终格式转换另行开发、验证和计时。候选方法、资源与统一条件见[待测试管线](benchmark/pipelines-to-test.md)，任务与外部原件、独立标注交接见[评测任务](benchmark/evaluation-tasks.md)，路线内性能实验见[MinerU 调优](benchmark/mineru-tuning.md)。不沿用已移除的旧成绩。
+
+解析预期结果与语料生成在其他项目开展，本仓库不重复建设语料或金标；后续工作负载需明确外部交接范围与版本。[pdf_sample_extra/](pdf_sample_extra/README.md) 的六份公开 PDF 暂不处理，不用于解析、评测、调优、预热或上线判断。已有服务也支持 Office 嵌图、独立图片和视频关键帧识字，这些能力不自动扩大本轮研究范围。
 
 ## 开发与验证
 
@@ -146,10 +129,11 @@ CI 使用生成夹具和模拟后端验证接口与错误处理，不能代替�
 
 ## 文档与许可证
 
-- [最终语义输出契约](docs/output-contract.md)
-- [研究框架与方法](docs/research-framework.md) · [技术路线与实现依赖](docs/technical-route.md)
-- [评测任务](benchmark/evaluation-tasks.md) · [待测试管线设置](benchmark/pipelines-to-test.md) · [MinerU 调优](benchmark/mineru-tuning.md)
-- [架构](docs/architecture.md) · [API](docs/api.md) · [部署](docs/deployment.md) · [运行配方](docs/runtime-recipes.md)
-- [品牌与图标](docs/brand.md) · [夹具与来源许可](tests/fixtures/README.md)
+按使用目的查阅[文档导航](docs/README.md)：
 
-本项目原创代码使用[Apache License 2.0](LICENSE)。文档原件、模型权重、上游框架、容器和源码夹具分别遵循其许可证；评测任务说明原件来源与使用范围。
+- 使用与接入：[部署](docs/operations/deployment.md) · [运行配方](docs/operations/runtime-recipes.md) · [API](docs/specs/api.md)。
+- 格式与实现：[输出规范](docs/specs/moparse-output-spec.md) · [表格来源](docs/specs/table-source.md) · [管线适配](docs/pipelines/README.md) · [架构](docs/engineering/architecture.md)。
+- 研究与计划：[研究框架](docs/research/research-framework.md) · [技术路线](docs/engineering/technical-route.md) · [评测任务](benchmark/evaluation-tasks.md) · [待测试管线](benchmark/pipelines-to-test.md) · [MinerU 调优](benchmark/mineru-tuning.md)。
+- 维护约定：[AGENTS.md](AGENTS.md) · [品牌与图标](docs/brand.md) · [夹具与来源许可](tests/fixtures/README.md)。
+
+本项目原创代码使用 [Apache License 2.0](LICENSE)。文档原件、模型权重、上游框架、容器和源码夹具分别遵循其许可证。

@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1280" height="1430" viewBox="0 0 1280 1430" role="img" aria-labelledby="title description" xml:space="preserve">
   <title id="title">MO-Parse 八步解析管线研究</title>
-  <desc id="description">比较原始解析质量与实际解析成本。先固定问题、独立来源分类和比较条件，再执行八条完整解析配置，分类别分析后决定固定方法或研究路由，路线内调优后形成结论。MO-Parse 的语义转换和接口最终格式不属于候选管线的输出要求或研究前置条件。</desc>
+  <desc id="description">比较原始解析质量与实际解析成本。固定比较条件时先逐组明确原生输出和忠实读回，再按授权执行八条完整配置。分类别分析后决定固定方法或研究路由，调优后形成结论；服务适配、语义转换及最终格式不作为解析比较的前置条件。</desc>
   <defs>
     <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 1 1 L 9 5 L 1 9 Z" fill="#7394af"/></marker>
     <marker id="return-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M 1 1 L 9 5 L 1 9 Z" fill="#9aaab8"/></marker>
@@ -47,7 +47,7 @@
   <text x="891.73" y="206.0" font-size="18" font-weight="700" fill="#ffffff"><tspan font-family="DejaVu Sans, sans-serif">3</tspan></text>
   <text x="930.00" y="208" font-size="22" font-weight="700" fill="#17324d"><tspan font-family="Noto Sans CJK SC, sans-serif">固定对照条件</tspan></text>
   <text x="880.00" y="253" font-size="18" font-weight="400" fill="#52677b"><tspan font-family="DejaVu Sans, sans-serif">P01</tspan><tspan font-family="Noto Sans CJK SC, sans-serif">–</tspan><tspan font-family="DejaVu Sans, sans-serif">P08 </tspan><tspan font-family="Noto Sans CJK SC, sans-serif">·</tspan><tspan font-family="DejaVu Sans, sans-serif"> </tspan><tspan font-family="Noto Sans CJK SC, sans-serif">身份、许可与预算</tspan></text>
-  <text x="880.00" y="281" font-size="18" font-weight="400" fill="#52677b"><tspan font-family="Noto Sans CJK SC, sans-serif">忠实导出</tspan><tspan font-family="DejaVu Sans, sans-serif"> </tspan><tspan font-family="Noto Sans CJK SC, sans-serif">·</tspan><tspan font-family="DejaVu Sans, sans-serif"> </tspan><tspan font-family="Noto Sans CJK SC, sans-serif">指标与失败规则</tspan></text>
+  <text x="880.00" y="281" font-size="18" font-weight="400" fill="#52677b"><tspan font-family="Noto Sans CJK SC, sans-serif">原生输出</tspan><tspan font-family="DejaVu Sans, sans-serif"> </tspan><tspan font-family="Noto Sans CJK SC, sans-serif">·</tspan><tspan font-family="DejaVu Sans, sans-serif"> </tspan><tspan font-family="Noto Sans CJK SC, sans-serif">忠实读回与评分</tspan></text>
   <rect x="64" y="364" width="1152" height="122" rx="16" fill="#eef6fc" stroke="#c9ddeb" stroke-width="1.4"/>
   <rect x="88" y="388" width="36" height="36" rx="10" fill="#176da5" stroke="#176da5" stroke-width="0"/>
   <text x="99.73" y="412.0" font-size="18" font-weight="700" fill="#ffffff"><tspan font-family="DejaVu Sans, sans-serif">4</tspan></text>

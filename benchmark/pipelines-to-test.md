@@ -2,20 +2,20 @@
 
 本文件定义下一轮主对比的8个固定配置，不记录历史成绩，不预先选择优胜方法。数据集、测试任务和评分要求见[评估任务](evaluation-tasks.md)；MinerU内部参数研究见[MinerU调优](mineru-tuning.md)，不增加本表的主比较组数。
 
-本表定义[研究顺序](../docs/research-framework.md#2-管线研究的顺序)第 3 步的固定配置，用于第 4 步执行和第 5 步分析。比较对象是各管线本身的解析结果与处理成本，不要求直接满足 MO-Parse 接口最终语义格式。服务接入与转换另见[技术路线](../docs/technical-route.md)；新增路由由比较后的类别差异决定。
+本表定义[研究顺序](../docs/research/research-framework.md#2-管线研究的顺序)第 3 步的固定配置，用于第 4 步执行和第 5 步分析。比较对象是各管线本身的解析结果与处理成本，不要求直接满足 MO-Parse 接口最终语义格式。逐组原生输出、格式依据与适配逻辑统一见[管线输出与适配](../docs/pipelines/README.md)；服务集成按[技术路线](../docs/engineering/technical-route.md)先确认本组输出再设计适配和共同组装，新增路由仍由比较证据决定。
 
 ## 主比较配置
 
 | 编号 | 完整管线 | 原生PDF页 | 扫描页与混合页 | 必须固定的区别 |
 | --- | --- | --- | --- | --- |
-| P01 | Docling 2.139.0 TableFormer V1 + GLM-OCR SDK | CPU Docling；V1；accurate；matching=False；PyPdfium；原生OCR关闭 | GLM-OCR SDK | 与P02只改变TableFormer模型版本 |
-| P02 | Docling 2.139.0 TableFormer V2 + GLM-OCR SDK | CPU Docling；V2；accurate；matching=False；PyPdfium；原生OCR关闭 | 与P01相同的GLM-OCR SDK | 与P01保持相同Docling包、布局模型、后端、线程及其他参数 |
-| P03 | 全页PaddleOCR-VL 1.5 | PaddleOCR-VL 1.5自身完整解析 | 同一PaddleOCR-VL 1.5自身完整解析 | 所有页均由本模型完成，不调用GLM替代扫描页 |
-| P04 | 全页PaddleOCR-VL 1.6 | PaddleOCR-VL 1.6自身完整解析 | 同一PaddleOCR-VL 1.6自身完整解析 | 与P03使用同一方向前处理、渲染、输出适配和资源预算 |
-| P05 | 全页GLM-OCR SDK | GLM-OCR SDK自身布局与识别 | 同一GLM-OCR SDK | 所有页走SDK，不保留原生解析器旁路 |
-| P06 | MinerU 4.0.12 Standard + TXT + GLM-OCR SDK | `tier=standard`、`ocr_mode=txt`、`image_analysis=False` | 与P01、P02、P07相同的GLM-OCR SDK | 与P07只改变MinerU的tier |
-| P07 | MinerU 4.0.12 Advanced + TXT + GLM-OCR SDK | `tier=advanced`、`ocr_mode=txt`、`image_analysis=False` | 与P01、P02、P06相同的GLM-OCR SDK | 保留PDF原文字层，不能静默改成纯视觉 |
-| P08 | MinerU纯视觉全页vLLM | PDF渲染为页面图像，再由官方纯视觉SDK完成提取与Markdown转换 | 同一纯视觉路径 | 所有页使用图像输入；不读取PDF原字层补字，不调用GLM |
+| [P01](../docs/pipelines/p01-docling-v1-glm.md) | Docling 2.139.0 TableFormer V1 + GLM-OCR SDK | CPU Docling；V1；accurate；matching=False；PyPdfium；原生OCR关闭 | GLM-OCR SDK | 与P02只改变TableFormer模型版本 |
+| [P02](../docs/pipelines/p02-docling-v2-glm.md) | Docling 2.139.0 TableFormer V2 + GLM-OCR SDK | CPU Docling；V2；accurate；matching=False；PyPdfium；原生OCR关闭 | 与P01相同的GLM-OCR SDK | 与P01保持相同Docling包、布局模型、后端、线程及其他参数 |
+| [P03](../docs/pipelines/p03-paddleocr-vl-1.5.md) | 全页PaddleOCR-VL 1.5 | PaddleOCR-VL 1.5自身完整解析 | 同一PaddleOCR-VL 1.5自身完整解析 | 所有页均由本模型完成，不调用GLM替代扫描页 |
+| [P04](../docs/pipelines/p04-paddleocr-vl-1.6.md) | 全页PaddleOCR-VL 1.6 | PaddleOCR-VL 1.6自身完整解析 | 同一PaddleOCR-VL 1.6自身完整解析 | 与P03使用同一方向前处理、渲染、输出适配和资源预算 |
+| [P05](../docs/pipelines/p05-glm-sdk.md) | 全页GLM-OCR SDK | GLM-OCR SDK自身布局与识别 | 同一GLM-OCR SDK | 所有页走SDK，不保留原生解析器旁路 |
+| [P06](../docs/pipelines/p06-mineru-standard-glm.md) | MinerU 4.0.12 Standard + TXT + GLM-OCR SDK | `tier=standard`、`ocr_mode=txt`、`image_analysis=False` | 与P01、P02、P07相同的GLM-OCR SDK | 与P07只改变MinerU的tier |
+| [P07](../docs/pipelines/p07-mineru-advanced-glm.md) | MinerU 4.0.12 Advanced + TXT + GLM-OCR SDK | `tier=advanced`、`ocr_mode=txt`、`image_analysis=False` | 与P01、P02、P06相同的GLM-OCR SDK | 保留PDF原文字层，不能静默改成纯视觉 |
+| [P08](../docs/pipelines/p08-mineru-visual.md) | MinerU纯视觉全页vLLM | PDF渲染为页面图像，再由官方纯视觉SDK完成提取与Markdown转换 | 同一纯视觉路径 | 所有页使用图像输入；不读取PDF原字层补字，不调用GLM |
 
 P03与P04的1.5和1.6指PaddleOCR-VL模型版本，不是PaddleOCR Python包版本。P06与P07的4.0.12是MinerU解析软件版本；下面的MinerU2.5-Pro是其调用的视觉模型身份。P08只比较vLLM执行器，不额外引入Transformers组。
 
@@ -67,11 +67,11 @@ MinerU VLM固定FP16、上下文8192、`max_num_batched_tokens=2048`、KV cache 
 
 所有支持CUDA Graphs且能在资源预算内运行的GPU后端必须启用，并用真实捕获及推理日志核实。MinerU使用compile mode=0、`FULL_DECODE_ONLY`、capture sizes `[1,2,3,4]`、maximum capture size=4；torch.compile与CUDA Graphs分别记录。GLM及Paddle先核实实际后端支持和捕获配置，不能因为尚未测试就默认eager；确有失败或超预算时保留原始错误、例外原因与恢复条件。
 
-预热与正式测量分开记录，8组使用相同预热原件、次数和冷热缓存定义。主耗时在 worker 内部用单调时钟直接测量，从开始处理完整 PDF 到原始解析、研究侧忠实 Markdown 和必要资产就绪；包含公共前处理、路由、PDF 渲染、全部解析推理、必要模型切换和声明的结果导出。不包含 MO-Parse 的表格语义化、图形关系补充、页面家具清理、服务正文组装，也不包含 HTTP、接口排队、轮询、下载及纯持久化。不能减常数估算或累加重叠阶段；P08 不能从已渲染图像开始计时。共同超时、取消清理与重试规则预先固定。
+预热与正式测量分开记录，8组使用相同预热原件、次数和冷热缓存定义。主耗时在 worker 内部用单调时钟直接测量，从开始处理完整 PDF 到原始解析、研究侧忠实 Markdown 和必要资产就绪；包含公共前处理、路由、PDF 渲染、全部解析推理、必要模型切换和声明的结果导出。不包含 MO-Parse 的数据表语义化、布局正文还原、页面家具清理、服务正文组装，也不包含 HTTP、接口排队、轮询、下载及纯持久化。不能减常数估算或累加重叠阶段；P08 不能从已渲染图像开始计时。共同超时、取消清理与重试规则预先固定。
 
 ## 研究侧结果与忠实导出
 
-每组保留其原始 Markdown、HTML、XML、JSON、SDK 结构及媒体引用，按共同规则导出便于保存和比较的 Markdown。研究侧 Markdown 允许 GFM/HTML 表格、图像、页码及页眉页脚；它不是 MO-Parse 公开接口的 `result.md`，不适用服务的无表格、多层语义列表和页面清理要求。
+每组保存自己实际提供的原生对象或回包、Markdown、真实媒体和状态，逐项格式见[八组输出说明](../docs/pipelines/README.md#管线索引)。允许 HTML/XML/JSON/SDK 等不同载体，不代表八组均返回其中每一种；按共同规则忠实导出研究 Markdown。研究侧 Markdown 允许 GFM/HTML 表格、图像、页码及页眉页脚；它不是 MO-Parse 公开接口的 `result.md`，不适用服务的无表格、多层语义列表和页面清理要求。
 
 读取或导出只转译本方法已有文字、格位、跨度、角色及来源，不补标题、改数字、推断节点连线或修复模型结果。复杂结构不能由 Markdown 完整表达时，保留原始结构供独立评分，不能把导出能力限制误报成原方法不提供，也不能为追求相同语法先把所有结果语义化。
 
@@ -81,14 +81,16 @@ MinerU VLM固定FP16、上下文8192、`max_num_batched_tokens=2048`、KV cache 
 
 当前[表格来源服务](../app/services/table_service.py)、[PDF 表格证据补充](../app/services/pdf_table_evidence_service.py)与[表格语义转换](../app/services/table_semantics_service.py)属于 MO-Parse 已有工程实现，不能作为八组共同出口或准入门槛。后端既有结构与导出后由服务补出的标题、关系分开保存，后者不能覆盖原始解析成绩。MinerU 后不运行独立 Docling 复核，也不按解析器分歧修正结果；跨页缺证时保留完整物理表及未知关系。
 
-运行前按[研究框架](../docs/research-framework.md#6-实验执行质量与计时)检查配置、读回及计时能力即可。预先声明的子集可用于执行预检，不能当正式排名；正式对照保留失败、未知和资源不足，不要求八组先达到相同质量。
+运行前按[研究框架](../docs/research/research-framework.md#6-实验执行质量与计时)检查配置、读回及计时能力即可。预先声明的子集可用于执行预检，不能当正式排名；正式对照保留失败、未知和资源不足，不要求八组先达到相同质量。
 
 ## 执行前的适配准备
 
+先核实本组完整原生输出及各分支的交接，记录页序、坐标、源格、媒体、页面角色、异常和未提供字段，再确定无损读回与研究导出。下面是代码复用位置，不是已经完成的八组输出或八个服务适配器；MO-Parse 适配逻辑在独立说明中维护，不以最终组装完成作为主比较门槛。
+
 P01可从[现有Docling适配器](../app/parsers/docling_standard.py)和[解析路由](../app/services/parser_service.py)建立实验入口；P02需要增加明确的TableFormer V2选择，并证明除模型版本外其他参数一致。P06/P07可复用[原生worker](../native_worker/server.py)的`parse_async`与`VlmConfig`接法，但当前worker把tier写为advanced，P06仍需显式Standard选择，不能只改显示名称。
 
-正式研究需要准备直接执行声明解析工作的入口，目前尚不能把现有 `ParserService.parse()` 当作该入口：它还包括来源补充、文档导出、IR、资产与表格语义转换。仅关闭语义开关仍不等于原始解析对照。原生 worker 的 `_parse` 又只覆盖一个分支，现有 `duration_ms` 也有漏项；具体调用与计时位置见[技术路线](../docs/technical-route.md#61-现有调用与计时字段)。不增加公开模型选择路由，也不以服务最终契约验收作为研究入口准备。
+正式研究需要准备直接执行声明解析工作的入口，目前尚不能把现有 `ParserService.parse()` 当作该入口：它还包括来源补充、文档导出、IR、资产与表格语义转换。仅关闭语义开关仍不等于原始解析对照。原生 worker 的 `_parse` 又只覆盖一个分支，现有 `duration_ms` 也有漏项；具体调用与计时位置见[调用与计时边界](../docs/engineering/architecture.md#现有调用与计时字段)。不增加公开模型选择路由，也不以服务最终契约验收作为研究入口准备。
 
-P03/P04需要完整的Paddle页面执行器、统一方向控制、原始输出留存和忠实导出；P05需要让[现有GLM SDK客户端](../app/parsers/glm_sdk_remote.py)覆盖全部页；P08需要完整PDF渲染、官方纯视觉SDK的vLLM入口和结果读取。8组正式对照前检查输入许可、原始结果保存、读取保真和处理计时，不要求完成 MO-Parse 表格/图形转换及页面清理。实际解析质量、覆盖与失败由正式比较测量，不能先剔除尚未达标的组。
+P03/P04需要完整的Paddle页面执行器、统一方向控制、原始输出留存和忠实导出；P05需要让[现有GLM SDK客户端](../app/parsers/glm_sdk_remote.py)覆盖全部页；P08需要完整PDF渲染、官方纯视觉SDK的vLLM入口和结果读取。8组正式对照前检查输入许可、原始结果保存、读取保真和处理计时，不要求完成 MO-Parse 数据表转换、网格排版还原及页面清理。实际解析质量、覆盖与失败由正式比较测量，不能先剔除尚未达标的组。
 
 现有[Compose配置](../docker-compose.yml)可作为模型服务参数参考，但不能直接当作这8个实验配置已经部署。应先补齐上述模型锁、资源隔离、统一前处理和适配器，再按[评估任务](evaluation-tasks.md)执行；本文件只定义待跑配置，不启动推理或修改线上管线。

@@ -16,7 +16,7 @@ describe('DocumentPreview empty states', () => {
       <DocumentPreview source={{ kind: 'file', file: null, url: '' }} />,
     )
     expect(screen.getByText('预览区等待内容')).toBeInTheDocument()
-    expect(container.querySelector('.workspace-state-input-empty img')).toHaveAttribute('src', '/illustrations/workspace-input.svg?v=mo-parse-terminal-20261019-2')
+    expect(container.querySelector('.workspace-state-input-empty img')).toHaveAttribute('src', '/illustrations/workspace-input.svg?v=mo-parse-outline-20261022-2')
     expect(screen.queryByRole('img')).not.toBeInTheDocument()
   })
 
@@ -26,7 +26,7 @@ describe('DocumentPreview empty states', () => {
       <DocumentPreview source={{ kind: 'file', file, url: '' }} />,
     )
     expect(screen.getByText('TIFF 已选择')).toBeInTheDocument()
-    expect(container.querySelector('.workspace-state-info img')).toHaveAttribute('src', '/illustrations/workspace-info.svg?v=mo-parse-terminal-20261019-2')
+    expect(container.querySelector('.workspace-state-info img')).toHaveAttribute('src', '/illustrations/workspace-info.svg?v=mo-parse-outline-20261022-2')
     expect(screen.queryByRole('alert')).not.toBeInTheDocument()
   })
 })

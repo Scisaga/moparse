@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="320" height="360" viewBox="0 0 320 360" fill="none" stroke="#8b9fa9" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round">
+  <title>MO-Parse frontal document terminal in outline</title>
+  <g id="terminal-frame">
+    <path d="M108 96H90c-14 0-26 12-26 26v158c0 14 12 26 26 26h140c14 0 26-12 26-26V122c0-14-12-26-26-26h-18"/>
+    <path d="M100 106h120"/>
+    <rect x="86" y="132" width="148" height="122" rx="19"/>
+    <rect x="91" y="276" width="78" height="9" rx="4.5"/>
+    <circle cx="213" cy="281" r="10"/>
+  </g>
+  <g id="terminal-paper">
+    <path d="M108 96V30c0-5 3-8 8-8h74l22 22v52zM190 22v22h22"/>
+    <path d="M126 44h42m-42 16h68m-68 16h52"/>
+  </g>
+  <g id="terminal-face">
+    <circle cx="126" cy="190" r="3"/>
+    <circle cx="194" cy="190" r="3"/>
+    <path d="M148 207q12 10 24 0"/>
+  </g>
+  <g id="terminal-arms">
+    <path d="M64 205c-13 11-21 28-25 48m217-48c13 11 21 28 25 48"/>
+    <path d="M41 253c-8-3-15 3-16 10s4 14 10 14c4 0 7-3 7-7m237-17c8-3 15 3 16 10s-4 14-10 14c-4 0-7-3-7-7"/>
+  </g>
+  <g id="terminal-legs">
+    <path d="M111 306v22m18-22v22m62-22v22m18-22v22"/>
+    <path d="M129 328c-11-5-34-1-34 7 0 5 8 8 19 8h15c9 0 12-5 10-9-1-3-4-5-10-6zm62 0c11-5 34-1 34 7 0 5-8 8-19 8h-15c-9 0-12-5-10-9 1-3 4-5 10-6z"/>
+  </g>
+</svg>

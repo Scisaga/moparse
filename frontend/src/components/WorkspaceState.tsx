@@ -34,7 +34,7 @@ export function WorkspaceState({ variant, contentKind, title, description, role,
       <span className="workspace-state-art-frame" aria-hidden="true">
         <img
           className={`workspace-state-art workspace-state-art-${scene}`}
-          src={`/illustrations/workspace-${scene}.svg?v=mo-parse-terminal-20261019-2`}
+          src={`/illustrations/workspace-${scene}.svg?v=mo-parse-outline-20261022-2`}
           width="640"
           height="512"
           alt=""
