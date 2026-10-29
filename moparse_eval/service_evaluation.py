@@ -296,6 +296,17 @@ def freeze_scoring(run: Path, validation: Path) -> None:
     })
 
 
+def paired_native_index(baseline_run: Path, identity: dict[str, Any]) -> dict[str, Any]:
+    """Use the current unified rescore, never depend on withdrawn score files."""
+    session = read_json(baseline_run / "run.json")
+    index = read_json(inside(baseline_run, session["latest_scores"]))
+    if index["software"]["software_id"] != identity["software_id"]:
+        raise ValueError("paired native rescoring requires the same current unified software")
+    if index.get("unscored"):
+        raise ValueError("finish unified native rescoring before paired final scoring")
+    return index
+
+
 def oriented_source(path: Path, native: dict[str, Any], destination: Path) -> Path:
     """Apply saved runtime orientation; no orientation prediction or reference lookup."""
     processing = native.get("page_processing", [])
@@ -573,9 +584,13 @@ def score_run(run: Path) -> Path:
         "reference_freeze": record["reference_freeze"], "created_at": now(), "results": [],
     }
     baseline_run = Path(record["baseline_run"])
-    native_index = read_json(baseline_run / "artifacts" / "scores" / record["baseline_score_id"] / "index.json")
+    native_index = (paired_native_index(baseline_run, identity) if paired_native_rescore else
+                    read_json(baseline_run / "artifacts" / "scores" / record["baseline_score_id"] / "index.json"))
     native_observations = {item["source_observation"]: item["observation"]
                            for item in native_index["native_readback"]["observations"]}
+    native_score_sources = {tuple(Path(path).parts[-3:]): path for path in native_index["results"]}
+    if len(native_score_sources) != len(native_index["results"]):
+        raise ValueError("ambiguous native score identities")
     quality_cases = [case for case in record["cases"]
                      if case["phase"] == "measured" and case["suite"] == "quality800"]
     contexts: list[tuple[dict[str, Any], dict[str, Any], dict[str, Any]]] = []
@@ -604,7 +619,7 @@ def score_run(run: Path) -> Path:
         reference = {**reference, **{key: observation.get(key) for key in (
             "suite", "phase", "repetition", "input_page_count", "dataset", "run_id",
         )}}
-        native_path = Path(record["baseline_run"]) / case["baseline_score_source"]
+        native_path = inside(baseline_run, native_score_sources[tuple(Path(case["baseline_score_source"]).parts[-3:])])
         baseline = read_json(native_path)
         for key in ("document_id", "family_id", "tags", "source_category", "development_exposure"):
             reference.setdefault(key, baseline.get(key))

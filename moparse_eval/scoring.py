@@ -7,6 +7,7 @@ rewrite references, or certify that visual review actually took place.
 
 from __future__ import annotations
 
+import re
 from collections import Counter
 from pathlib import Path
 from typing import Any
@@ -49,6 +50,26 @@ _RELATION_STATES = (
 def _native_value_and_notes(cell: dict[str, Any], field: dict[str, Any]) -> tuple[str, Any]:
     """Project only explicitly represented native formatting, never a Gold suffix."""
     return scalar_notes(cell)
+
+
+def _information_value_equal(expected: str, actual: str, field: dict[str, Any],
+                             evidence: dict[str, dict[str, Any]]) -> bool:
+    """Only a percentage token/Latin-label boundary may vary in spacing.
+
+    Values, signs, labels, and all other word boundaries remain literal; raw
+    transcription and strict comparison retain the original strings.
+    """
+    def boundaries(text: str) -> str:
+        return re.sub(r"(?<=\d)%\s*(?=[A-Za-z])", "% ", text)
+    return information_value_equal(boundaries(expected), boundaries(actual), field, evidence)
+
+
+def _record_path_locates(row_path: list[str], item: dict[str, Any], collapse_whitespace: bool) -> bool:
+    cell = item["cell"]
+    paths = [cell.get("row_header_path")]
+    if cell.get("service_evidence_state") == "converted":
+        paths += cell.get("printed_record_row_paths", [])
+    return any(_declared_path_locates(row_path, path, collapse_whitespace) for path in paths)
 
 
 def _candidate_table_identity(candidate: dict[str, Any]) -> str | None:
@@ -302,8 +323,7 @@ def _locate_record_field(
     solutions: list[dict[str, Any]] = []
     failures: list[dict[str, Any]] = []
     for body, group in bodies.items():
-        explicit_rows = [item for item in group if _declared_path_locates(
-            row_path, item["cell"].get("row_header_path"), collapse_whitespace)]
+        explicit_rows = [item for item in group if _record_path_locates(row_path, item, collapse_whitespace)]
         if explicit_rows:
             found = [item for item in explicit_rows if column_path_locates(
                 column_path, item["cell"].get("column_header_path"), collapse_whitespace,
@@ -519,7 +539,7 @@ def _score_records(
             if linked and not error:
                 endpoint_texts += [item["text"] for item in resolution["group"] if item["id"] in linked]
             evidence = qualifier_evidence(qualifiers, native_cell, endpoint_texts)
-            content_correct = information_value_equal(value, actual, {**field, **qualifiers}, evidence)
+            content_correct = _information_value_equal(value, actual, {**field, **qualifiers}, evidence)
             field_row["content_exact"] = content_correct
             qualifier_observable = all(item["status"] != "unresolved" for item in evidence.values())
             qualifier_correct = all(item["status"] == "correct" for item in evidence.values())

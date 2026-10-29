@@ -38,8 +38,20 @@ from .representations import visible_text
 
 SERVICE_OBSERVATION_VERSION = "mo-parse-final-output-observation-v7"
 FINAL_PAGE_PROVENANCE_VERSION = "mo-parse-final-page-provenance-v1"
-FINAL_OBSERVATION_READBACK_VERSION = "mo-parse-final-output-readback-v6"
+FINAL_OBSERVATION_READBACK_VERSION = "mo-parse-final-output-readback-v7"
 _METADATA_KEYS = {"run_id", "suite", "phase", "repetition", "timing", "resources", "runtime"}
+_IDENTITY_HEADER = re.compile(
+    r"(?:名称|名稱|姓名|项目|項目|认购方|認購方|认购对象|認購對象|"
+    r"Name|Item|Project|Subscriber|Investor)", re.I,
+)
+
+
+def _printed_unit_scope(text: str) -> bool:
+    """An explicit currency-unit caption is a unit, not a business title."""
+    return unit_scope_literal(text) or bool(re.fullmatch(
+        r"\s*[（(]?\s*(?:货币|貨幣)(?:单位|單位)\s*[:：]\s*[^()（）:：；;]+\s*[)）]?\s*",
+        text,
+    ))
 
 
 def _physical_lines(text: str) -> list[str]:
@@ -256,6 +268,18 @@ def _semantic_blocks(
         block_id = f"service:semantic:{view.view_id}:record:{index}"
         cells = []
         emitted_by_ref = {item["ref"]: item["text"] for item in emitted}
+        # Alternate identity fields are named properties printed in this same
+        # record. Never use an arbitrary note, an expected label or a hidden IR
+        # value as an alias, and preserve every printed business parent.
+        groups = [emitted_by_ref[ref] for ref in record.row_groups if ref in emitted_by_ref]
+        aliases = []
+        if len(groups) == len(record.row_groups):
+            for value in record.values:
+                if (value.value in emitted_by_ref and len(value.column_headers) == 1
+                        and value.column_headers[0] in emitted_by_ref
+                        and _IDENTITY_HEADER.fullmatch(emitted_by_ref[value.column_headers[0]].strip())
+                        and emitted_by_ref[value.value].strip()):
+                    aliases.append([*groups, emitted_by_ref[value.value]])
         for cell_index, item in enumerate(emitted):
             ref = item["ref"]
             a, b = item["span"]
@@ -274,6 +298,11 @@ def _semantic_blocks(
             }
             if item["role"] == "row_header":
                 cell["is_row_header"] = True
+                if (aliases and ref == record.subject and record.subject_headers
+                        and all(header in emitted_by_ref for header in record.subject_headers)
+                        and len(groups) == len(record.row_groups)):
+                    cell["column_header_path"] = [emitted_by_ref[header] for header in record.subject_headers]
+                    cell["row_header_path"] = [*groups, item["text"]]
             elif item["role"] == "column_header":
                 cell["is_column_header"] = True
             if item["field_index"] is not None:
@@ -307,9 +336,11 @@ def _semantic_blocks(
                 # including source legends rendered as a record title. They
                 # are context, never new unit strings inferred from a value.
                 printed_scope = [emitted_by_ref[ref] for ref in (*record.subject_headers, *record.scope_refs)
-                                 if ref in emitted_by_ref and unit_scope_literal(emitted_by_ref[ref])]
+                                 if ref in emitted_by_ref and _printed_unit_scope(emitted_by_ref[ref])]
                 if printed_scope:
                     cell["units"] = list(dict.fromkeys([*cell.get("units", []), *printed_scope]))
+            if aliases and (item["field_index"] is not None or ref == record.subject):
+                cell["printed_record_row_paths"] = aliases
             cells.append(cell)
         pages = sorted(
             {source_pages[ref.table_id] for ref in emitted_by_ref if ref.table_id in source_pages}

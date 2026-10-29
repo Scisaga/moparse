@@ -178,6 +178,72 @@ def test_an_actual_record_title_unit_is_read_but_a_hidden_title_is_not():
     assert all(title not in c.get("units", []) for c in _cells(build_service_observation(result, sample_id="invented")))
 
 
+@pytest.mark.parametrize("caption,found", [
+    ("(货币单位：人民币百万元)", True), ("（貨幣單位：港幣百萬元）", True),
+    ("人民币百万元项目业务", False), ("货币政策：人民币百万元", False),
+])
+def test_currency_unit_scope_requires_an_actual_printed_unit_caption(caption, found):
+    result, fragment, view = _converted()
+    scope = TextRef("t1", 1, "title", caption, "title", 0, len(caption), (1,), (1,))
+    fragment.context_refs = (scope,)
+    relation = replace(view.records[0].values[0], unit_refs=())
+    view = replace(view, records=(replace(view.records[0], values=(relation,), scope_refs=(scope,)),))
+    result._semantic_tables = [view]
+    result.markdown = render_semantic_view(view, [fragment])
+    observed = build_service_observation(result, sample_id="invented")
+    value = next(c for c in _cells(observed) if c["text"] == "100")
+    assert (caption in value.get("units", [])) is found
+    result.markdown = result.markdown.replace(caption, "")
+    assert not _cells(build_service_observation(result, sample_id="invented"))
+
+
+def _named_record(*, identity_header="Name", group=None, duplicate=False):
+    fragment = _fragment([["No.", identity_header, "Amount"], ["1", "Acme", "17"]])
+    def ref(row, col):
+        return CellRef("t1", row, col)
+
+    relations = tuple(ValueRelation(ref(1, col), (ref(1, 0),), (ref(0, col),)) for col in (1, 2))
+    groups = ()
+    if group:
+        fragment.cells.append(TableCellFragment(2, 0, 1, 1, group))
+        groups = (ref(2, 0),)
+    record = SemanticRecord("t1", 1, relations, ref(1, 0), (ref(0, 0),), groups)
+    records = (record, record) if duplicate else (record,)
+    view = SemanticTableView("named-record", ("t1",), "converted", "records", records)
+    result = _result(render_semantic_view(view, [fragment]))
+    result._table_fragments, result._semantic_tables = [fragment], [view]
+    return result
+
+
+@pytest.mark.parametrize("header", ["Name", "认购方", "項目"])
+@pytest.mark.parametrize("column,value", [("Amount", "17"), ("No.", "1")])
+def test_printed_named_identity_locates_the_same_record_including_its_ordinal(header, column, value):
+    result = _named_record(identity_header=header)
+    observed = build_service_observation(result, sample_id="invented")
+    unit = {"id": "r", "kind": "table_record", "reference_text": "Acme", "pages": [1],
+            "table": {"row_header_path": ["Acme"], "fields": [{"column_header_path": [column], "value": value}]}}
+    rows, metrics = _score_records([unit], observed, True, match_units([unit], observed))
+    assert metrics["information_correct_fields"] == 1
+    cell = next(c for c in _cells(observed) if c["id"] == rows[0]["fields"][0]["native_id"])
+    start, end = cell["final_markdown_span"]
+    assert result.markdown[start:end] == value
+    result.markdown = result.markdown.replace("Acme", "Hidden")
+    assert not _cells(build_service_observation(result, sample_id="invented"))
+
+
+@pytest.mark.parametrize("options,row", [
+    ({"identity_header": "Note"}, ["Acme"]),
+    ({"group": "South"}, ["North", "Acme"]),
+    ({"duplicate": True}, ["Acme"]),
+])
+def test_record_alias_cannot_borrow_a_note_wrong_parent_or_choose_a_duplicate(options, row):
+    observed = build_service_observation(_named_record(**options), sample_id="invented")
+    unit = {"id": "r", "kind": "table_record", "reference_text": "Acme", "pages": [1],
+            "table": {"row_header_path": row, "fields": [{"column_header_path": ["Amount"], "value": "17"}]}}
+    _rows, metrics = _score_records([unit], observed, True, match_units([unit], observed))
+    assert metrics["information_correct_fields"] == 0
+
+
 def _partial_result():
     fragment = _fragment([["项目", "金额"], ["收入", "100"], ["", "20"]])
     fragment.pdf_evidence = {"bound": True, "source_cells": [

@@ -50,6 +50,21 @@ def test_scalar_display_spacing_does_not_normalize_numbers_or_change_units(expec
     assert (field_value_text(expected) == field_value_text(actual)) is correct
 
 
+@pytest.mark.parametrize("actual,correct", [
+    ("CEO 150%Other NEOs 200%", True), ("CEO 150% Other NEOs 200%", True),
+    ("CEO 150%Other NEOs 201%", False), ("CEO -150%Other NEOs 200%", False),
+    ("CEO 150Other NEOs 200%", False), ("CEO 150%OtherNEOs 200%", False),
+    ("CEO 150%Other NEOs 200‰", False),
+])
+def test_percent_label_boundary_spacing_preserves_signs_values_units_and_words(actual, correct):
+    expected = "CEO 150% Other NEOs 200%"
+    field, metrics = evaluate([{"id": "v", "text": actual, "row_header_path": ["Revenue"],
+                                "column_header_path": ["Plan"]}], column=["Plan"], value=expected)
+    assert (metrics["information_correct_fields"] == 1) is correct
+    assert field["strict_exact"] is (actual == expected)
+    assert field["raw_transcription"]["strict"]["distance"] > 0 if actual != expected else True
+
+
 @pytest.mark.parametrize("reference,native,found", [
     (["2025", "$m"], ["2025$m"], True),
     (["Q1 2025"], ["Q1", "2025"], True),
