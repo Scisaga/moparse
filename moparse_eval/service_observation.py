@@ -38,12 +38,14 @@ from .representations import visible_text
 
 SERVICE_OBSERVATION_VERSION = "mo-parse-final-output-observation-v7"
 FINAL_PAGE_PROVENANCE_VERSION = "mo-parse-final-page-provenance-v1"
-FINAL_OBSERVATION_READBACK_VERSION = "mo-parse-final-output-readback-v7"
+FINAL_OBSERVATION_READBACK_VERSION = "mo-parse-final-output-readback-v8"
 _METADATA_KEYS = {"run_id", "suite", "phase", "repetition", "timing", "resources", "runtime"}
 _IDENTITY_HEADER = re.compile(
-    r"(?:名称|名稱|姓名|项目|項目|认购方|認購方|认购对象|認購對象|"
-    r"Name|Item|Project|Subscriber|Investor)", re.I,
+    r"(?:[\u3400-\u9fff]{0,12}(?:名称|名稱|姓名)|项目|項目|认购方|認購方|认购对象|認購對象|"
+    r"(?:[A-Za-z][A-Za-z -]{0,30} )?Name|Item|Project|Subscriber|Investor)", re.I,
 )
+_NOTE_HEADER = re.compile(r"备注|備註|注释|註釋|说明|說明|Note|Remark|Comment", re.I)
+_ORDINAL_HEADER = re.compile(r"序号|序號|No\.?|Number", re.I)
 
 
 def _printed_unit_scope(text: str) -> bool:
@@ -278,8 +280,17 @@ def _semantic_blocks(
                 if (value.value in emitted_by_ref and len(value.column_headers) == 1
                         and value.column_headers[0] in emitted_by_ref
                         and _IDENTITY_HEADER.fullmatch(emitted_by_ref[value.column_headers[0]].strip())
+                        and not _NOTE_HEADER.search(emitted_by_ref[value.column_headers[0]])
                         and emitted_by_ref[value.value].strip()):
                     aliases.append([*groups, emitted_by_ref[value.value]])
+                    # A printed ordinal and a named property can jointly locate
+                    # this record. This is a conjunction of actual identifiers,
+                    # not an assertion that the ordinal is a business parent.
+                    if (record.subject in emitted_by_ref and len(record.subject_headers) == 1
+                            and record.subject_headers[0] in emitted_by_ref
+                            and _ORDINAL_HEADER.fullmatch(emitted_by_ref[record.subject_headers[0]].strip())
+                            and re.fullmatch(r"\d+", emitted_by_ref[record.subject])):
+                        aliases.append([*groups, emitted_by_ref[record.subject], emitted_by_ref[value.value]])
         for cell_index, item in enumerate(emitted):
             ref = item["ref"]
             a, b = item["span"]

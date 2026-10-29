@@ -215,7 +215,7 @@ def _named_record(*, identity_header="Name", group=None, duplicate=False):
     return result
 
 
-@pytest.mark.parametrize("header", ["Name", "认购方", "項目"])
+@pytest.mark.parametrize("header", ["Name", "认购方", "項目", "股东名称", "Shareholder Name"])
 @pytest.mark.parametrize("column,value", [("Amount", "17"), ("No.", "1")])
 def test_printed_named_identity_locates_the_same_record_including_its_ordinal(header, column, value):
     result = _named_record(identity_header=header)
@@ -242,6 +242,19 @@ def test_record_alias_cannot_borrow_a_note_wrong_parent_or_choose_a_duplicate(op
             "table": {"row_header_path": row, "fields": [{"column_header_path": ["Amount"], "value": "17"}]}}
     _rows, metrics = _score_records([unit], observed, True, match_units([unit], observed))
     assert metrics["information_correct_fields"] == 0
+
+
+@pytest.mark.parametrize("header,row,correct", [
+    ("股东名称", ["1", "Acme"], True), ("Shareholder Name", ["1", "Acme"], True),
+    ("股东名称", ["2", "Acme"], False), ("Note Name", ["Acme"], False),
+    ("备注名称", ["Acme"], False), ("说明姓名", ["Acme"], False),
+])
+def test_named_property_and_ordinal_are_read_as_printed_identifiers_not_inferred_parents(header, row, correct):
+    observed = build_service_observation(_named_record(identity_header=header), sample_id="invented")
+    unit = {"id": "r", "kind": "table_record", "reference_text": "Acme", "pages": [1],
+            "table": {"row_header_path": row, "fields": [{"column_header_path": ["Amount"], "value": "17"}]}}
+    _rows, metrics = _score_records([unit], observed, True, match_units([unit], observed))
+    assert (metrics["information_correct_fields"] == 1) is correct
 
 
 def _partial_result():
