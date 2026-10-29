@@ -49,9 +49,11 @@ from app.security.file_validation import (
 )
 from app.services.evidence_service import PageEvidence, PageEvidenceService
 from app.services.export_service import ExportService
+from app.services.final_content_service import FinalContentService
 from app.services.glm_table_service import GlmTableService
 from app.services.ir_service import DocumentIRService
 from app.services.multimodal_service import MultimodalService
+from app.services.native_text_service import NativeTextService
 from app.services.pdf_table_evidence_service import PDFTableEvidenceService
 from app.services.quality_service import QualityService
 from app.services.storage_service import StorageService
@@ -640,6 +642,9 @@ class ParserService:
                         await self.pdf_table_evidence_service.apply(
                             result, stored, parsed_options, cancel_event=cancel_event
                         )
+                        await NativeTextService().apply_async(
+                            result, evidence_by_page, parsed_options, cancel_event=cancel_event
+                        )
                         if stored.mime_type == "application/pdf" and result._source_verification:
                             storage = StorageService(self.settings)
                             await storage.write_source_verification_evidence(
@@ -692,12 +697,17 @@ class ParserService:
                             result._semantic_duration_ms = (
                                 time.perf_counter() - semantic_started
                             ) * 1000
-                        result.markdown = result.parse_result.renderings.markdown
-                        result.plain_text = result.parse_result.renderings.plain_text
+                        FinalContentService().apply(result)
                         result.usage.duration_ms = max(
                             0, round((time.perf_counter() - started) * 1000)
                         )
                         result.parse_result.runtime.duration_ms = result.usage.duration_ms
+                        storage = StorageService(self.settings)
+                        await asyncio.to_thread(
+                            storage._atomic_write,
+                            storage.logs_dir(result.document_id) / "final-text-evidence.json",
+                            json.dumps(result._final_text_evidence, ensure_ascii=False).encode(),
+                        )
                         if result._semantic_tables:
                             storage = StorageService(self.settings)
                             payload = {

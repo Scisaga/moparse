@@ -159,7 +159,7 @@ async def test_mineru_does_not_construct_docling_or_rewrite_from_character_count
     assert source_log["schema"] == "native-source-verification"
     table_evidence = source_log["observations"]["pdf_table_evidence"]
     assert "version" not in table_evidence
-    assert table_evidence["policy"] == "vector-grid-glyph-binding"
+    assert table_evidence["policy"] == "source-structure-glyph-binding"
     semantics = json.loads((logs / "table-semantics.json").read_text())
     assert semantics["schema"] == "mo-parse-table-semantics"
     assert semantics["views"][0]["policy"] == "source-scoped-relations"

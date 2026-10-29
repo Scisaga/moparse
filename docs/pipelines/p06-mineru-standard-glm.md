@@ -34,6 +34,7 @@ save(writer) -> 物化可用素材并保存多种原生表示与图片
 | 页面与块 | `PageInfo.page_idx` 从 0 起算；`blocks` 保留块顺序、`index`、`type` 和嵌套内容；文本可为行内 span，不能假设所有 `content` 都是字符串 |
 | 表格与图像 | 表格容器含 body、caption、footnote 等子块，表体可为 HTML；图片、图表和其他视觉容器保留媒体或来源区域；附注不能随表体替换而丢弃 |
 | 位置与角色 | 块 bbox 是 0–1 归一化框；已有 header、footer、page_number 等角色及延续观测应保留，不由显示位置直接推定语义 |
+| 表格续接 | 顶层 `TableBlock.continues_prev` 为布尔值或空值，`cell_merge` 为0/1列表或空值；前者声明续接，不等于完整表头、期间、单位或值绑定，空值不证明合并完成 |
 | 输出方式 | `to_dict()`/`to_json()`、`markdown()`、`structured_content()` 和 `save(writer)` 含义不同；后者可物化媒体并保存多种结果 |
 | 媒体边界 | PDF 的普通 JSON 序列化会省略 `image_base64`，因此仅保存 JSON 不是完整媒体包；必须检查素材及真实引用是否就绪 |
 
@@ -67,11 +68,21 @@ HTTP response
 
 这是 SDK 后处理后的产物，格式器本身会清理内容、合并部分块并跳过部分空或失败内容；这些行为属于声明的 SDK，不能将 MO-Parse 再次清理计作同一能力。原始阶段数据若未从所用入口提供，明确记不可得，不根据最终文本推造。现有客户端以均分区域宽度构造的列边界只是显示几何，不能充当 SDK 识别出的真实单元格坐标或表头证据。
 
+### 2.3 标题角色与级别来源
+
+2026-10-27追踪正式worker内MinerU 4.0.12和DocVortex 0.5.16：Standard/high路径把本地布局的doc_title和paragraph_title交给视觉SDK识别内容，DocVortex再将前者级别设为1、后者缺省设为2，renderer按已有level添加Markdown井号。这是完整PDF管线的布局角色与规则赋值，P08的单页视觉SDK不包含这些额外步骤。GLM分支见[P05标题来源](p05-glm-sdk.md#22-标题角色与级别来源)。
+
+完整MinerU另有默认关闭的LLM title_leveling后处理，仅在该特性开启且输入标为is_full_document时执行，需要独立模型、连接和调用成本；当前执行器未显式开启。它与视觉SDK采样或导出开关不同，不能为既有测量追补为免费能力。固定版处理边界见[文档后处理](https://github.com/opendatalab/MinerU/blob/b7f3dd0c5f6e6d66a298239ffd02b328b873918e/mineru/backend/postprocess/llm_aided.py#L18-L27)。本轮heading_of只评价既有级别和原生顺序支持的作用域，不证明真实多级树恢复。
+
 ## 3. 研究侧读取与导出
 
 按 [MinerU PDF 格式](#21-mineru-pdf-解析结果)读取 Standard 的嵌套 typed blocks、行内 span、表体、caption、footnote、媒体和元数据，保留 GLM 分支原始结果。没有保存媒体的 JSON 或当前 worker 的 Advanced 回包都不能冒充本组完整产物。
 
+GLM 固定以 `json_result` 为主要评分视图，`raw_json_result` 为独立审计视图，不按答案或样本择优。完整 raw 阶段按原生区域顺序保存至 `views/pNNNN-glm-raw.md`，并在 `faithful.md` 明示独立阶段；formatter 的重编号与合并没有稳定跨视图身份，跨视图阅读顺序未知，不按几何或内容近似删重。官方完整 YAML 的 `skip` 与 `abandon` 行为照实记录，已有原生文字和媒体保全，识别前被放弃的内容不补认。
+
 ## 4. MO-Parse 适配逻辑
+
+DocVortex 0.5.16的官方`render._internal.common.planner._merge_continued_table_blocks`把显式continues_prev=true解释为同一原生文档内最近前序表的跨页续接。研究评分只读取这一已有声明及明确文档、page_idx、顶层index身份，保留原物理片段，不执行渲染器的HTML合并。没有唯一前件或身份冲突时保持未知，不从相似文字、列数或位置选择前件。表对连接和先后方向按[统一标准](../../benchmark/evaluation-tasks.md)分开评价；这些字段不能用于替候选补出业务语义。
 
 1. 显式验证 Standard 的实际入口与配置；复用字段读取代码时保留本组 producer、tier、页号和来源身份。
 2. 使用原生 renderer 或明确的 typed-block 读取保存富文本、公式、列表和附注，不能把嵌套 `content` 一律转字符串。
@@ -80,7 +91,11 @@ HTTP response
 
 ## 5. 实现状态与验证项
 
-当前 worker 的 tier 固定为 Advanced，P06 入口与真实输出待准备。需验证 Standard 的类型和媒体、与 P07 共享读取代码的边界、完整页组合及缺失状态，不能通过改组名或借用 P07 样本证明实现。
+P06研究执行路径已修复，[P06工程预检02](../../benchmark/reports/20261026-repaired-preflight-02/)独立完成同一清单的11个任务并提供本次冻结依据。本组已完成quality800一次和perf80三轮，八组统一评分、首版报告及原MO服务恢复完成；结果只见[本轮v3报告](../../benchmark/reports/20261026-lite-v3/report.md)，状态与限制由[评测索引](../../benchmark/reports/README.md)维护。TTS只观测不控制，先前撤回测量不恢复；执行和自动评分完成不构成内容、Gold或图片内容验收。
+
+研究执行器显式使用 tier=standard，实际映射为 high，与 P07 的 Advanced/xhigh 不同。共享 GLM 研究分支已采用 native rotary，避开 vLLM 0.19.1 的 GPT-J MRoPE 配对错误；MinerU 主模型的 NeoX 配对不具有同一冲突，不对其套用 GLM 修复。研究路径的旋转坐标交接、分支结果先行保全及局部图片导出隔离已修复；机制证据见[执行层诊断](../../benchmark/diagnostics/README.md)。
+
+完整 middle_json、页级读取、忠实导出与媒体状态分别保留，后续异常不得抹掉已有有效页。SDK 恢复物理页号和连续页续接保护的源码依据不证明具体表头或跨页关系正确。本组工程预检使用自身 Standard 配置及只读权重、可写锁目录，保留 typed blocks、原页序、方向、GLM交接和清理记录，不借用 P07 的产物；内容、媒体和服务转换仍不因工程任务完成而被认定已验收，生产服务配置保持原样。
 
 ## 6. 格式核对依据
 

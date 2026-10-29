@@ -43,7 +43,6 @@ from app.services.evidence_service import PageEvidence, compact_text
 from app.services.table_service import TableCellFragment, TableFragment
 from app.utils.settings import setting
 
-_MARKDOWN_TABLE_LINE = re.compile(r"^\s*\|.*\|\s*$")
 _MARKER_LINE = re.compile(r"^\s*<!--.*-->\s*$")
 
 
@@ -169,11 +168,15 @@ def _fragment_cells(fragment: TableFragment) -> list[TableCell]:
     return output
 
 
-def _plain_non_table_text(markdown: str) -> str:
+def _plain_non_table_text(markdown: str, *, owned_table_renderings: list[str] | None = None) -> str:
+    """Remove only unique renderings already owned by explicit table objects."""
+    for rendered in owned_table_renderings or []:
+        if rendered and markdown.count(rendered) == 1:
+            markdown = markdown.replace(rendered, "", 1)
     return "\n".join(
         line
         for line in markdown.splitlines()
-        if not _MARKDOWN_TABLE_LINE.match(line) and not _MARKER_LINE.match(line)
+        if not _MARKER_LINE.match(line)
     ).strip()
 
 
@@ -214,6 +217,9 @@ class DocumentIRService:
         tables_by_page: dict[int, list[ParsedTable]] = {}
         for table in tables:
             tables_by_page.setdefault(table.source_units[0], []).append(table)
+        fragments_by_page: dict[int, list[TableFragment]] = {}
+        for fragment in fragments:
+            fragments_by_page.setdefault(fragment.page_number, []).append(fragment)
         pictures_by_page: dict[int, list[object]] = {}
         for picture in result._picture_candidates:
             page_number = getattr(picture, "page_number", None)
@@ -232,6 +238,7 @@ class DocumentIRService:
                 tables_by_page,
                 pictures_by_page.get(page.page_number, []),
                 source_regions_by_page.get(page.page_number, []),
+                table_fragments=fragments_by_page.get(page.page_number, []),
             )
             for page in sorted(result.pages, key=lambda item: item.page_number)
         ]
@@ -344,6 +351,7 @@ class DocumentIRService:
         tables_by_page: dict[int, list[ParsedTable]],
         picture_candidates: list[object],
         source_regions: list[SourceRegionEvidence] | None = None,
+        table_fragments: list[TableFragment] | None = None,
     ) -> ContentUnit:
         page_number = int(page.page_number)
         page_id = f"p{page_number}"
@@ -394,14 +402,17 @@ class DocumentIRService:
                     )
                 )
         else:
-            has_source_page_fallback = any(
-                getattr(picture, "source_page_ref", None) is not None
-                for picture in picture_candidates
-            )
-            text = (
-                ""
-                if has_source_page_fallback
-                else _plain_non_table_text(str(getattr(page, "content", "") or ""))
+            # A source-page image may preserve one unreadable region while
+            # neighboring native text remains usable. Placeholder comments
+            # already disappear from this view; their presence cannot suppress
+            # real text or a retained unknown candidate elsewhere on the page.
+            text = _plain_non_table_text(
+                str(getattr(page, "content", "") or ""),
+                owned_table_renderings=[
+                    fragment.rendered for fragment in table_fragments or []
+                    if fragment.page_number == page_number
+                    and any(table.table_id == fragment.fragment_id for table in page_tables)
+                ],
             )
             if text:
                 block_id = f"{page_id}-b1"

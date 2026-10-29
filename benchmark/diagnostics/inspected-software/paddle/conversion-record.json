@@ -1,0 +1,14 @@
+{
+  "scope": "software_package_only",
+  "actual_resolved_source": "/var/lib/docker/overlay2/qarzzf8vfwuj07bxzlz3thfbp/diff/usr/local/lib/python3.12/dist-packages/transformers/conversion_mapping.py",
+  "wheel_record_file": "/var/lib/docker/overlay2/qarzzf8vfwuj07bxzlz3thfbp/diff/usr/local/lib/python3.12/dist-packages/transformers-5.10.2.dist-info/RECORD",
+  "wheel_record_entry": [
+    "transformers/conversion_mapping.py",
+    "sha256=7HfKRKxS4eLKC0m_-gT6bsU0DlON9RnL4rC4cWKk5FU",
+    "76937"
+  ],
+  "actual_software_record_digest": "sha256=7HfKRKxS4eLKC0m_-gT6bsU0DlON9RnL4rC4cWKk5FU",
+  "matches_wheel_record": true,
+  "matches_official_tag": true,
+  "correction": "Earlier provisional diff inspected shadowed kgdis8gl lower layer; it is not effective image source. Withdraw that mismatch."
+}

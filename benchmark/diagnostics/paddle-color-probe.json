@@ -1,0 +1,268 @@
+{
+  "scope": "synthetic CPU pixel probe, no model/corpus/reference access",
+  "sources": {
+    "executor": "/opt/moparse/benchmark/diagnostics/inspected-software/paddle/moparse_eval/executors.py",
+    "pipeline": "/opt/moparse/benchmark/diagnostics/inspected-software/paddle/paddlex/inference/pipelines/paddleocr_vl/pipeline.py",
+    "fetch_image": "/opt/moparse/benchmark/diagnostics/inspected-software/paddle/paddlex/inference/models/doc_vlm/processors/common.py",
+    "predictor": "/opt/moparse/benchmark/diagnostics/inspected-software/paddle/paddlex/inference/models/doc_vlm/predictor.py",
+    "reader": "/opt/moparse/benchmark/diagnostics/inspected-software/paddle/paddlex/inference/common/reader/image_reader.py",
+    "crop": "/opt/moparse/benchmark/diagnostics/inspected-software/paddle/paddlex/inference/pipelines/components/common/crop_image_regions.py"
+  },
+  "executor_input_expression": "np.array(page['image'])[:, :, ::-1]",
+  "records": [
+    {
+      "model_name": "PaddleOCR-VL-1.5-0.9B",
+      "synthetic_rgb_input": [
+        [
+          [
+            255,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            255
+          ]
+        ],
+        [
+          [
+            0,
+            255,
+            0
+          ],
+          [
+            127,
+            127,
+            127
+          ]
+        ]
+      ],
+      "research_worker_bgr": [
+        [
+          [
+            0,
+            0,
+            255
+          ],
+          [
+            255,
+            0,
+            0
+          ]
+        ],
+        [
+          [
+            0,
+            255,
+            0
+          ],
+          [
+            127,
+            127,
+            127
+          ]
+        ]
+      ],
+      "sdk_crop_bgr": [
+        [
+          [
+            0,
+            0,
+            255
+          ],
+          [
+            255,
+            0,
+            0
+          ]
+        ],
+        [
+          [
+            0,
+            255,
+            0
+          ],
+          [
+            127,
+            127,
+            127
+          ]
+        ]
+      ],
+      "vlm_kwargs": {
+        "skip_special_tokens": true,
+        "use_cache": true,
+        "min_pixels": 112896,
+        "max_pixels": 1003520,
+        "max_new_tokens": 4096,
+        "repetition_penalty": null,
+        "temperature": null,
+        "top_p": null
+      },
+      "image_processor_input_rgb": [
+        [
+          [
+            0,
+            0,
+            255
+          ],
+          [
+            255,
+            0,
+            0
+          ]
+        ],
+        [
+          [
+            0,
+            255,
+            0
+          ],
+          [
+            127,
+            127,
+            127
+          ]
+        ]
+      ],
+      "image_processor_input_mode": "RGB",
+      "processor_image_kwargs": {
+        "size": {
+          "shortest_edge": 112896,
+          "longest_edge": 1003520
+        }
+      },
+      "red_blue_swapped_at_image_processor_input": true,
+      "grayscale_control_unchanged": true,
+      "scope": "software transport only; no model or token generation"
+    },
+    {
+      "model_name": "PaddleOCR-VL-1.6-0.9B",
+      "synthetic_rgb_input": [
+        [
+          [
+            255,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            255
+          ]
+        ],
+        [
+          [
+            0,
+            255,
+            0
+          ],
+          [
+            127,
+            127,
+            127
+          ]
+        ]
+      ],
+      "research_worker_bgr": [
+        [
+          [
+            0,
+            0,
+            255
+          ],
+          [
+            255,
+            0,
+            0
+          ]
+        ],
+        [
+          [
+            0,
+            255,
+            0
+          ],
+          [
+            127,
+            127,
+            127
+          ]
+        ]
+      ],
+      "sdk_crop_bgr": [
+        [
+          [
+            0,
+            0,
+            255
+          ],
+          [
+            255,
+            0,
+            0
+          ]
+        ],
+        [
+          [
+            0,
+            255,
+            0
+          ],
+          [
+            127,
+            127,
+            127
+          ]
+        ]
+      ],
+      "vlm_kwargs": {
+        "skip_special_tokens": true,
+        "use_cache": true,
+        "min_pixels": 112896,
+        "max_pixels": 1003520,
+        "max_new_tokens": 4096,
+        "repetition_penalty": null,
+        "temperature": null,
+        "top_p": null
+      },
+      "image_processor_input_rgb": [
+        [
+          [
+            0,
+            0,
+            255
+          ],
+          [
+            255,
+            0,
+            0
+          ]
+        ],
+        [
+          [
+            0,
+            255,
+            0
+          ],
+          [
+            127,
+            127,
+            127
+          ]
+        ]
+      ],
+      "image_processor_input_mode": "RGB",
+      "processor_image_kwargs": {
+        "size": {
+          "shortest_edge": 112896,
+          "longest_edge": 1003520
+        }
+      },
+      "red_blue_swapped_at_image_processor_input": true,
+      "grayscale_control_unchanged": true,
+      "scope": "software transport only; no model or token generation"
+    }
+  ]
+}

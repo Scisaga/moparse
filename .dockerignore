@@ -26,6 +26,8 @@ models
 benchmark
 pdf_sample
 pdf_sample_extra
+datasets
+moparse_eval
 tests
 docs
 scripts/*

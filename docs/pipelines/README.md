@@ -6,16 +6,18 @@
 
 ## 管线索引
 
-| 编号与说明 | 已有依据或代码 | 当前待完成项 |
+| 编号与说明 | 已有依据或代码 | 研究侧现状 |
 | --- | --- | --- |
-| [P01：Docling TableFormer V1 + GLM SDK](p01-docling-v1-glm.md) | Docling + GLM 的读取代码 | 完整组合、原生保存及适配验收待确认 |
-| [P02：Docling TableFormer V2 + GLM SDK](p02-docling-v2-glm.md) | 与 P01 同族格式 | V2 显式选择、模型锁和实际产物待准备 |
-| [P03：全页 PaddleOCR-VL 1.5](p03-paddleocr-vl-1.5.md) | 官方页面结果接口 | 1.5 的包、模型、执行器和样本待准备 |
-| [P04：全页 PaddleOCR-VL 1.6](p04-paddleocr-vl-1.6.md) | 同系列候选接口 | 1.6 的包、模型、执行器及与 P03 的差异待确认 |
-| [P05：全页 GLM-OCR SDK](p05-glm-sdk.md) | GLM SDK 对象及 HTTP 接入 | 全页执行、媒体传输和完整状态待落实 |
-| [P06：MinerU Standard + TXT + GLM SDK](p06-mineru-standard-glm.md) | MinerU PDF + GLM 格式 | Standard 入口及完整组合待准备 |
-| [P07：MinerU Advanced + TXT + GLM SDK](p07-mineru-advanced-glm.md) | Advanced worker 与客户端 | 原生结构和媒体保全、完整组合待确认 |
-| [P08：MinerU 全页纯视觉 SDK + vLLM](p08-mineru-visual.md) | 官方纯视觉 SDK 源码 | 执行锁、全页执行器、媒体及适配待落实 |
+| [P01：Docling TableFormer V1 + GLM SDK](p01-docling-v1-glm.md) | 完整原生对象及GLM分支 | V1显式选择，阅读树、表格及媒体保存 |
+| [P02：Docling TableFormer V2 + GLM SDK](p02-docling-v2-glm.md) | 与P01共享原生读取 | V2显式选择，独立配置身份 |
+| [P03：全页 PaddleOCR-VL 1.5](p03-paddleocr-vl-1.5.md) | 官方完整页面执行器 | 研究侧颜色与线程交接已修复，P03独立工程预检完成 |
+| [P04：全页 PaddleOCR-VL 1.6](p04-paddleocr-vl-1.6.md) | 同系列执行器及媒体读取 | 研究侧颜色与线程交接已修复，P04独立工程预检完成 |
+| [P05：全页 GLM-OCR SDK](p05-glm-sdk.md) | SDK对象、媒体及局部失败 | 全页执行；主json_result与独立审计视图分开 |
+| [P06：MinerU Standard + TXT + GLM SDK](p06-mineru-standard-glm.md) | 完整typed原生文档及GLM分支 | Standard显式入口、原物理片段及已有关系保存 |
+| [P07：MinerU Advanced + TXT + GLM SDK](p07-mineru-advanced-glm.md) | 与P06共享格式读取 | Advanced显式入口，独立运行及分支记录 |
+| [P08：MinerU 全页纯视觉 SDK + vLLM](p08-mineru-visual.md) | 完整PDF渲染及官方纯视觉SDK | 原生块先行保全、局部导出隔离已修复，独立工程预检完成 |
+
+研究入口及共享读取代码位于[评测模块](../../moparse_eval/README.md)。本轮八组已按冻结身份各完成quality800一次和perf80三轮，统一评分、首版报告及原MO服务恢复完成。结果只见[本轮v3报告](../../benchmark/reports/20261026-lite-v3/report.md)，状态与限制由[评测索引](../../benchmark/reports/README.md)维护。TTS只观测不控制，先前撤回测量不恢复；执行和自动评分完成不表示内容、Gold、图片内容或生产部署已验收，机制证据由[执行层诊断](../../benchmark/diagnostics/README.md)维护。
 
 ## 共用规则
 
@@ -25,6 +27,10 @@
 
 ## 核实状态
 
-本轮完成静态格式核对与适配逻辑说明，未生成或冻结八组完整输出样本，也未验收八组服务适配。格式样本应覆盖本组实际会返回的正文、表格或网格、图片、页面角色、空白及失败状态；未提供字段保留缺失。格式和适配验证不能代替完整原件上的解析质量比较。
+已修复的研究执行问题包括共享 GLM 的 MRoPE 配对错误、Paddle 颜色交接错误、旋转坐标混用的来源路由，以及局部异常影响已有原生结果与导出的问题。源码审计和受控探针支持限定的机制结论；八组各自完成当前[工程预检02](../../benchmark/reports/20261026-repaired-preflight-02/)同一清单的11个输入任务，实际配置与直接单页标定记录作为本次冻结依据。这些工程证据不能生成解析质量成绩或排名，生产路径也不能据此被认定已修复或验收；各组边界见对应专文和[执行层诊断](../../benchmark/diagnostics/README.md)。
+
+本轮[执行锁](../../benchmark/execution-lock.json)已据当前工程预检02冻结，八组的工程预检互不替代，不能沿用失效执行锁。完整页面执行、分支页序、方向、媒体、原生读回、失败隔离及资源约束的具体证据按组保存，质量与成本按[统一标准](../../benchmark/evaluation-tasks.md)测量。未提供字段、未读资源和未标注结构保持缺失或未知，执行完成不能替代来源内容验收。
+
+研究执行器与评分读取已经独立实现，八组MO-Parse服务适配及最终转换没有因本轮评测获得新的验收结论。格式样本仍须区分正文、表格或网格、图片、页面角色、空白及失败；格式和读取验证不能代替完整原件上的解析质量比较。
 
 最终 Markdown、图片和输出包由[输出规范](../specs/moparse-output-spec.md)定义；适配完成后仍需分别验证内容转换及组装。

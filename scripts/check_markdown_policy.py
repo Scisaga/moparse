@@ -1,7 +1,7 @@
 """Reject U+FF0F in maintained Markdown and documentation generator source.
 
-Git's tracked and non-ignored new files define maintained inputs. Explicit paths
-can also check ignored generated documents.
+Git's tracked and non-ignored new files define maintained inputs. Corpus
+materials are permanently excluded, including when explicitly requested.
 """
 
 from __future__ import annotations
@@ -14,6 +14,18 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 FORBIDDEN = "\uff0f"
+CORPUS_DIRECTORIES = frozenset({"pdf_sample", "pdf_sample_extra", "pdf_page_images", "datasets"})
+
+
+def corpus_path(path: Path) -> bool:
+    """Corpus review is visual only; never inspect these files mechanically."""
+    parts = path.parts
+    return any(part in CORPUS_DIRECTORIES for part in parts) or any(
+        parts[index : index + 2] in {
+            ("benchmark", "reports"), ("benchmark", "reference-decisions"),
+        }
+        for index in range(len(parts) - 1)
+    )
 
 
 @dataclass(frozen=True)
@@ -58,7 +70,8 @@ def maintained_paths(root: Path) -> list[Path]:
     return sorted(
         path
         for path in paths
-        if (root / path).is_file()
+        if not corpus_path(path)
+        and (root / path).is_file()
         and (path.suffix.lower() in {".md", ".markdown"} or generator_source(path))
     )
 
@@ -71,17 +84,19 @@ def check_paths(paths: list[Path], root: Path) -> list[Violation]:
             relative = absolute.relative_to(root.resolve()).as_posix()
         except ValueError as exc:
             raise ValueError(f"checked path escapes repository: {path}") from exc
+        if corpus_path(Path(relative)):
+            continue
         violations.extend(text_violations(absolute.read_text(encoding="utf-8"), relative))
     return violations
 
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("paths", nargs="*", type=Path, help="explicit files, including ignored outputs")
+    parser.add_argument("paths", nargs="*", type=Path, help="explicit non-corpus files, including ignored outputs")
     parser.add_argument("--root", type=Path, default=ROOT)
     args = parser.parse_args(argv)
     root = args.root.resolve()
-    paths = args.paths or maintained_paths(root)
+    paths = [path for path in (args.paths or maintained_paths(root)) if not corpus_path(path)]
     violations = check_paths(paths, root)
     for violation in violations:
         print(violation)

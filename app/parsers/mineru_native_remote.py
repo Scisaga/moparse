@@ -10,6 +10,7 @@ from __future__ import annotations
 import asyncio
 import logging
 import math
+import re
 import time
 import uuid
 from dataclasses import dataclass
@@ -24,10 +25,13 @@ from app.models.parse_result import (
     PageDiagnostics,
     PageParseResult,
     PageSourceKind,
+    PageStatus,
     ParsePipeline,
     ParseUsage,
+    PipelineWarning,
     RouteSummary,
     SelectionStrategy,
+    WarningSeverity,
 )
 from app.models.source import StoredSource
 from app.parsers.base import (
@@ -38,7 +42,7 @@ from app.parsers.base import (
     ParserUnavailableError,
     ProgressCallback,
 )
-from app.parsers.glm_sdk_remote import _html_table_layout
+from app.parsers.glm_sdk_remote import _html_table_layout, _unknown_table_candidate
 from app.services.storage_service import StorageService
 from app.services.table_service import PageFurnitureFragment, TableFragment, render_gfm_rows
 from app.utils.deadline import attach_deadline, remaining_timeout
@@ -54,6 +58,19 @@ class MinerUPictureCandidate:
     placeholder_index: int
     caption: str
     normalized_bbox: tuple[float, float, float, float]
+    source_page_ref: str | None = None
+    allow_description: bool = True
+
+
+class _NativeContentError(ParserError):
+    """A received local region cannot be faithfully read in this adapter."""
+
+
+def _literal_native_candidate(text: str, page: int, position: int) -> str:
+    fence = "`" * max(3, 1 + max((len(match[0]) for match in re.finditer(r"`+", text)), default=0))
+    ref = f"mineru_p{page}_b{position}_unreadable"
+    return (f"<!-- source-region: {ref}; source-page: {page}; structure: unknown -->\n\n"
+            f"{fence}text\n{text}\n{fence}\n\n<!-- /source-region: {ref} -->")
 
 
 def _bbox(value: object) -> tuple[float, float, float, float] | None:
@@ -82,21 +99,65 @@ def _source_text(value: object) -> str:
 
 
 class _PageRenderer:
-    def __init__(self, page_number: int) -> None:
+    def __init__(self, page_number: int, warnings: list[PipelineWarning] | None = None) -> None:
         self.page_number = page_number
         self.fragments: list[TableFragment] = []
         self.pictures: list[MinerUPictureCandidate] = []
         self.furniture: list[PageFurnitureFragment] = []
+        self.warnings = warnings if warnings is not None else []
 
     def render(self, blocks: list[dict[str, Any]]) -> str:
-        return "\n\n".join(
-            value for position, block in enumerate(blocks) if (value := self.block(block, position))
-        ).strip()
+        output = []
+        for position, block in enumerate(blocks):
+            sizes = (len(self.fragments), len(self.pictures), len(self.furniture))
+            try:
+                value = self.block(block, position)
+            except _NativeContentError as exc:
+                # Roll back only this region's partial export side effects.
+                del self.fragments[sizes[0]:]
+                del self.pictures[sizes[1]:]
+                del self.furniture[sizes[2]:]
+                self.warnings.append(PipelineWarning(
+                    code="mineru_native_local_region_unreadable",
+                    message="a native region could not be fully read; valid neighboring regions were retained",
+                    severity=WarningSeverity.ERROR, page_number=self.page_number,
+                    backend="mineru-advanced-txt",
+                    details={"region_index": position, "stage": "native_region_readback",
+                             "reason": str(exc), "raw_response_modified": False},
+                ))
+                candidates = []
+                if isinstance(block, dict):
+                    children = block.get("content")
+                    if block.get("type") == "table" and isinstance(children, list):
+                        candidates = [child["content"] for child in children if isinstance(child, dict)
+                                      and child.get("type") == "table_body" and isinstance(child.get("content"), str)]
+                    if not candidates:
+                        literal = block.get("markdown")
+                        if isinstance(literal, str):
+                            candidates = [literal]
+                        elif text := _source_text(block.get("content")):
+                            candidates = [text]
+                is_table = isinstance(block, dict) and block.get("type") == "table"
+                value = "\n\n".join(
+                    _unknown_table_candidate(text, self.page_number, position) if is_table
+                    else _literal_native_candidate(text, self.page_number, position)
+                    for text in candidates
+                )
+            if value:
+                output.append(value)
+        if self.warnings:
+            ref = f"mineru_p{self.page_number}_failed"
+            self.pictures.append(MinerUPictureCandidate(
+                self.page_number, len(self.pictures), "原页（局部结构未知）", (0.0, 0.0, 1.0, 1.0),
+                source_page_ref=ref, allow_description=False,
+            ))
+            output.append(f"<!-- source-page-image: {ref} -->")
+        return "\n\n".join(output).strip()
 
     def table(self, block: dict[str, Any], rendered: str) -> str:
         children = block.get("content")
         if not isinstance(children, list):
-            raise ParserError("MinerU table has no structured source content")
+            raise _NativeContentError("MinerU table has no structured source content")
         bodies = [
             child
             for child in children
@@ -115,23 +176,23 @@ class _PageRenderer:
         for child in bodies:
             body_markdown = child.get("markdown")
             if not isinstance(body_markdown, str) or not body_markdown.strip():
-                raise ParserError("MinerU table body is missing its official rendering")
+                raise _NativeContentError("MinerU table body is missing its official rendering")
             position = rendered.find(body_markdown, cursor)
             if position < 0:
-                raise ParserError(
+                raise _NativeContentError(
                     "MinerU source table body is absent from its official block rendering"
                 )
             end = position + len(body_markdown)
             cursor = end
             source_html = child.get("content")
             if not isinstance(source_html, str):
-                raise ParserError("MinerU table is missing source HTML")
+                raise _NativeContentError("MinerU table is missing source HTML")
             rows, has_header, cells = _html_table_layout(source_html)
             if not rows or not cells:
-                raise ParserError("MinerU returned invalid table HTML/spans")
+                raise _NativeContentError("MinerU returned invalid table HTML/spans")
             box = _bbox(child.get("bbox")) or _bbox(block.get("bbox"))
             if box is None:
-                raise ParserError("MinerU table is missing valid source geometry")
+                raise _NativeContentError("MinerU table is missing valid source geometry")
             ordinal = len(self.fragments) + 1
             fragment_id = f"mineru_p{self.page_number}_t{ordinal}"
             markdown = render_gfm_rows(rows)
@@ -174,17 +235,19 @@ class _PageRenderer:
 
     def block(self, block: dict[str, Any], position: int = 0) -> str:
         if not isinstance(block, dict):
-            raise ParserError("MinerU returned a non-object content block")
+            raise _NativeContentError("MinerU returned a non-object content block")
+        if block.get("export_error") is not None:
+            raise _NativeContentError("MinerU reported a local native export failure")
         rendered = block.get("markdown")
         if not isinstance(rendered, str):
-            raise ParserError("MinerU block is missing its official typed Markdown rendering")
+            raise _NativeContentError("MinerU block is missing its official typed Markdown rendering")
         image_refs = block.get("source_images", [])
         if not isinstance(image_refs, list):
-            raise ParserError("MinerU image references are invalid")
+            raise _NativeContentError("MinerU image references are invalid")
         for image in image_refs:
             box = _bbox(image.get("bbox")) if isinstance(image, dict) else None
             if box is None:
-                raise ParserError("MinerU image reference is missing source geometry")
+                raise _NativeContentError("MinerU image reference is missing source geometry")
             self.pictures.append(
                 MinerUPictureCandidate(
                     self.page_number,
@@ -220,15 +283,15 @@ class _PageRenderer:
 
 
 def render_mineru_page_evidence(
-    page: dict[str, Any],
+    page: dict[str, Any], *, warnings: list[PipelineWarning] | None = None,
 ) -> tuple[str, list[TableFragment], list[MinerUPictureCandidate], list[PageFurnitureFragment]]:
     number = page.get("page_number")
     blocks = page.get("blocks")
     if isinstance(number, bool) or not isinstance(number, int) or number < 1:
         raise ParserError("MinerU returned an invalid source page number")
     if not isinstance(blocks, list):
-        raise ParserError("MinerU returned a page without content blocks")
-    renderer = _PageRenderer(number)
+        raise _NativeContentError("MinerU returned a page without content blocks")
+    renderer = _PageRenderer(number, warnings)
     markdown = renderer.render(blocks)
     for fragment in renderer.fragments:
         fragment.page_furniture = renderer.furniture[:]
@@ -449,13 +512,31 @@ class MinerUNativeRemoteParser(DocumentParser):
             ),
         )
         for raw in sorted(raw_pages, key=lambda page: page["page_number"]):
-            markdown, fragments, pictures, furniture = render_mineru_page_evidence(raw)
-            result._native_page_blocks[raw["page_number"]] = raw["blocks"]
+            page_warnings: list[PipelineWarning] = []
+            try:
+                markdown, fragments, pictures, furniture = render_mineru_page_evidence(raw, warnings=page_warnings)
+            except _NativeContentError as exc:
+                number = raw["page_number"]
+                ref = f"mineru_p{number}_failed"
+                markdown, fragments, furniture = f"<!-- source-page-image: {ref} -->", [], []
+                pictures = [MinerUPictureCandidate(number, 0, "原页（结构未知）", (0.0, 0.0, 1.0, 1.0),
+                                                   source_page_ref=ref, allow_description=False)]
+                page_warnings.append(PipelineWarning(
+                    code="mineru_native_page_unreadable",
+                    message="the native page envelope could not be read; its original page view was retained",
+                    severity=WarningSeverity.ERROR, page_number=number, backend=self.name,
+                    details={"stage": "native_page_readback", "reason": str(exc),
+                             "raw_response_modified": False},
+                ))
+            if isinstance(raw.get("blocks"), list):
+                result._native_page_blocks[raw["page_number"]] = raw["blocks"]
             result.pages.append(
                 PageParseResult(
                     page_number=raw["page_number"],
                     backend=self.name,
                     content=markdown,
+                    status=PageStatus.FAILED if page_warnings else PageStatus.COMPLETED,
+                    warnings=page_warnings,
                     diagnostics=PageDiagnostics(
                         source_kind=PageSourceKind.NATIVE,
                         selected_strategy=SelectionStrategy.MINERU,
@@ -465,10 +546,15 @@ class MinerUNativeRemoteParser(DocumentParser):
             result._table_fragments.extend(fragments)
             result._picture_candidates.extend(pictures)
             result._page_furniture.extend(furniture)
+            result.warnings.extend(page_warnings)
             if progress_callback is not None:
-                value = progress_callback(len(result.pages), len(selected), "page.completed")
+                event = "page.failed" if page_warnings else "page.completed"
+                value = progress_callback(len(result.pages), len(selected), event)
                 if asyncio.iscoroutine(value):
                     await value
+        failed = sum(page.status == PageStatus.FAILED for page in result.pages)
+        result.processed_pages = len(result.pages) - failed
+        result.route_summary.failed_pages = failed
         return result
 
     async def _stop_request(

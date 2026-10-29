@@ -27,7 +27,7 @@ CPU 模式用于原生 PDF 和 Office。遇到扫描、混合页且未配置 SDK
 | `glm-ocr-sdk` | CPU 布局与区域编排 → `glm-ocr` | `5002`，默认不映射宿主端口 | CPU；未声明 CPU/内存硬上限；无 GPU |
 | `glm-ocr` | GLM-OCR vLLM | `8000` → `127.0.0.1:8001` | GPU；未声明宿主 CPU/内存硬上限 |
 | `mineru-native` | PDF 与 ONNX → `mineru-vllm` | `8010` → `127.0.0.1:12432` | 8 CPU、8 GiB；无 GPU |
-| `mineru-vllm` | MinerU 视觉模型 vLLM | `8000` → `127.0.0.1:12431` | 4 CPU、20 GiB、2 GiB shm；GPU |
+| `mineru-vllm` | MinerU 视觉模型 vLLM | `8000` → `127.0.0.1:12431` | 4 CPU、20 GiB 宿主内存、2 GiB shm；GPU |
 
 两种模型服务的 GPU 编号默认均为 `1`，由 `GLM_GPU_DEVICE_ID` 和 `MINERU_GPU_DEVICE_ID` 分别选择；单卡机器需要改为实际设备编号。配额不是独占核心，显存需合计考虑两个模型及其他驻留进程；主 API、native worker 和 SDK 不挂 GPU。GLM 默认 FP16、显存利用率 `0.40`、上下文 `16384`；MinerU 默认 FP16、上下文 `8192`、并发 `4`、batch tokens `2048`、显式 KV cache `128 MiB`。显存利用率参数不是总显存硬上限。
 
@@ -124,7 +124,7 @@ docker compose run --rm --no-deps --entrypoint python \
   --output-dir /models/huggingface/PP-LCNet_x1_0_doc_ori_safetensors
 ```
 
-GLM 权重和 SDK 布局模型可在首次启动联网下载。当前 Compose 的 GLM 模型名没有固定权重 revision，SDK 布局缓存也没有与 MinerU 同等的完整文件锁；离线交接与研究执行前须保存实际模型 revision、文件哈希及 SDK 有效配置，不能据浮动模型名宣称已冻结。SDK 的 `GLM_SDK_OFFLINE=1` 只切换 SDK 的离线读取；GLM 模型服务的离线环境及缓存路径需在其覆盖配置中单独设置。
+GLM 权重和 SDK 布局模型可在首次启动联网下载。当前生产 Compose 的 GLM 模型名没有固定权重 revision，SDK 布局缓存也没有与 MinerU 同等的完整文件锁；离线交接须保存实际模型 revision、文件哈希及 SDK 有效配置，不能据浮动模型名宣称已冻结。研究执行身份须依最新TTS观测策略重新预检冻结，不改变上述生产配置现状。SDK 的 `GLM_SDK_OFFLINE=1` 只切换 SDK 的离线读取；GLM 模型服务的离线环境及缓存路径需在其覆盖配置中单独设置。
 
 ### MinerU 模型
 
@@ -279,3 +279,35 @@ docker compose up -d --no-deps --no-build moparse
 | ZIP 缺 Markdown 或离线图片引用不可用 | 当前已知交付缺口，按输出规范落实打包与组装；重启或切换模型不能补齐 |
 
 清理过期任务使用受保护的管理接口，操作方式见 [API](../specs/api.md)。应用停止用 `docker compose stop moparse`；需要保留任务和模型时不执行 `docker compose down -v`。
+
+## Paddle 研究执行器的线程生命周期
+
+本节适用于 `moparse_eval.paddle_server` 私有研究服务。2026-10-25 的执行修复默认使用 `paddle_execution_mode: "persistent-owner-v1"`，原生模型初始化、SDK推理和关闭均由一条长期非daemon线程执行。HTTP处理线程只提交和等待；状态查询保持可用。提交锁限制为一个已提交原生工作，关闭等待已发调用返回，再关闭SDK并join线程，不取消、重试或提前解除GPU所有权。
+
+逐页SDK调用默认 `paddle_use_queues: false`，映射官方 `predict(..., use_queues=False)`。已渲染的一张图片在同一调用中依次完成布局和VLM，避免SDK每次创建内部输入、CV及VLM线程。显式 `true` 只保留为受控诊断开关，不能据此宣称采用了内存修复。预处理、原生区域、Markdown和资产导出的职责仍由[管线专文](../pipelines/README.md)维护。
+
+线程修复保持声明的镜像、模型revision、FP16、解码参数和4 CPU/20 GiB宿主内存限制，不依赖增加内存上限、逐页重启服务或通过GC清缓存。CUDA Graphs须按实际捕获与使用范围记录，不能把局部捕获作为全部生成计算使用Graphs的证明。缺陷、受控验证与未验证范围见[工程诊断](../../benchmark/diagnostics/README.md)。
+
+线程生命周期配置只处理对应的研究执行问题，不构成P03/P04质量或效率验收。研究修复与工程预检02之后，本轮八组各完成quality800一次和perf80三轮，统一评分、首版报告及原MO服务恢复完成；结果只见[本轮v3报告](../../benchmark/reports/20261026-lite-v3/report.md)，状态与限制由[评测索引](../../benchmark/reports/README.md)维护。TTS仅观测不控制，先前撤回测量不恢复，生产Compose、部署环境和现有服务配置不因研究配置而改变。
+
+受测进程合计16 GiB自有显存预算及TTS共驻观测口径以[评测标准](../../benchmark/evaluation-tasks.md)为准；20 GiB仍是GPU推理侧宿主内存预算。按2026-10-26最新授权，TTS不由评测启动、停止、重启或改配置，身份和活动只观测，不控制负载，也不因变化或unknown阻断执行、评分或报告，无需等待TTS维护确认。维护窗口只暂停授权的原MO-Parse模型容器，退出时按原配置和身份恢复，不能用研究配置覆盖原生产GLM或MinerU服务；工程预检不构成部署验收。
+
+## GLM MRoPE 运行配置
+
+GLM-OCR采用GPT-J相邻配对；固定版vLLM 0.19.1的融合rotary算子使用另一种配对，需为GLM选择native rotary。2026-10-28更新的[生产Compose](../../docker-compose.yml)显式传入 `--compilation-config '{"custom_ops":["all","-rotary_embedding"]}'`，只切换该算子，保留其他custom ops、CUDA Graphs策略、FP16及既有资源和解码参数，不把这个修复应用到MinerU模型。缺陷依据及受控验证边界见[工程诊断](../../benchmark/diagnostics/README.md)。
+
+这次配置修改完成了合成命令检查和Compose静态检查，没有重建容器、执行模型请求或改变TTS。检查时运行中的GLM镜像身份为 `sha256:df7be4c4d818e250a8c80f78d110571e92e72a1fefec06fed82a2e37e473cd48`，其启动命令尚未包含上述修复；源码配置通过检查不代表线上已经生效或完成部署验收。
+
+P05及P01/P02/P06/P07共享GLM研究分支通过冻结配置的 `inference_services` 字段 `rotary_embedding: "native"` 选择同一修复；下例只示意字段位置，其余镜像、模型、资源与端点字段沿用声明。研究启动器据此增加上述 `custom_ops`，继续使用 compile mode 0、`FULL_DECODE_ONLY` 和 capture sizes `[1,2,3,4]`，保留 `glmocr 0.1.5`、`--dtype half`、重复惩罚1.1以及声明的token、KV、并发和资源预算。研究执行身份、结果及资源条件由[评测索引](../../benchmark/reports/README.md)维护，不能将这些记录当作服务客户端或生产GLM部署验收。
+
+```json
+{
+  "inference_services": [
+    {
+      "role": "glm",
+      "family": "glm",
+      "rotary_embedding": "native"
+    }
+  ]
+}
+```

@@ -13,6 +13,7 @@ from markdown_it import MarkdownIt
 from markdown_it.token import Token
 
 from app.models.parse_result import PageDiagnostics, PageParseResult, PageSourceKind
+from app.models.table_semantics import TextRef
 
 _MARKDOWN = MarkdownIt("commonmark")
 _BLOCK_WRAPPERS = {
@@ -113,6 +114,8 @@ class TableFragment:
     # inside one physical table.  Rendering never inserts rows into this grid.
     source_header_scopes: list[dict[str, Any]] = field(default_factory=list)
     pdf_evidence: dict[str, Any] = field(default_factory=dict)
+    native_evidence: dict[str, Any] = field(default_factory=dict)
+    context_refs: tuple[TextRef, ...] = ()
     source_continues_prev: bool | None = None
     _structure_marker: str = field(default="", init=False, repr=False)
     _table_rendering: str = field(default="", init=False, repr=False)

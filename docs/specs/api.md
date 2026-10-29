@@ -100,7 +100,9 @@ Accept: text/markdown
 
 尚未转换的表格带 `table-fragment` 或 `logical-table`、`table-source` 和 `table-structure`，另给出 `status=retained` 以及“表格语义关系尚未确定，保留原表”的提示；这是未完成状态，不能按完整最终契约验收。成功转换的描述移除表格显示映射，段落只使用源格引用。
 
-`semantic-summary` 声明已转换与保留的来源表片段数量，跨页逻辑组按各来源片段身份去重计数；结尾有可见的转换汇总。这是本次恢复出的表格片段计数，不证明原件真实表格均已检测，也不包含无法确定类型的隔离区域。Job 的 `completed` 或 `partial` 仍描述任务执行与来源处理状态，不能据此推定所有表格已完成语义转换。消费者必须分别读取语义覆盖。
+部分转换使用`status=partial`：可确定记录按源格引用表达，未解决行保留为`semantic-retained`片段，声明源表身份、来源行、显示行、语法空表头及跨度。已转换数据值不在剩余网格中重复；共享合并格不能独立拆分时作为整体保留。行分组引用保存为`row_groups`，与主体构成完整行标题路径，不把编号列误当主体。这些是当前服务转换与来源记录，不新增公开路由或通用IR字段。
+
+`semantic-summary`声明完整转换、部分转换与保留的来源表片段数量，跨页逻辑组按各来源片段身份去重计数；结尾有可见的转换汇总。这是本次恢复出的表格片段计数，不证明原件真实表格均已检测，也不包含无法确定类型的隔离区域。Job的`completed`或`partial`仍描述任务执行与来源处理状态，不能据此推定所有表格已完成语义转换。消费者必须分别读取语义覆盖。
 
 内部 `logs/table-semantics.json` 使用用途标识 `mo-parse-table-semantics`，关系策略名为 `source-scoped-relations`；来源证据日志使用 `native-source-verification`，PDF 网格绑定策略名为 `vector-grid-glyph-binding`。这些名称不含协议版本，日志保存来源 SHA、显示与最终 Markdown SHA、关系引用、保留原因及阶段耗时，不作为公开结果或资产返回，也不替代原件内容正确性检查。
 

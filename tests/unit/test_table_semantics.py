@@ -86,10 +86,11 @@ def test_internal_header_switch_uses_its_own_period_and_preserves_literals():
     a, b = view.records
     assert a.values[0].period_refs == (CellRef("t1", 0, 1),)
     assert b.values[0].column_headers == (CellRef("t1", 2, 1),)
-    assert b.values[1].value_state == "source_blank"
+    assert b.values[1].value_state == "literal"
     md = render_semantic_view(view, [f])
     assert "本报告期末：0" in md and "上年末：—" in md
-    assert "B；本报告期：-1.20%" in md and "上年同期：（原表留空）" in md
+    assert "B；本报告期：-1.20%" in md and "上年同期：。" in md
+    assert "原表留空" not in md
     assert f.rows == before and "| ---" not in md
     assert "table-structure" not in md and "version=" not in md
     assert view.policy == "source-scoped-relations"
@@ -107,12 +108,19 @@ def test_mixed_field_rows_and_record_band_cover_every_source_cell():
     for c in f.pdf_evidence["source_cells"]:
         if c["row"] == 0:
             c["shaded"] = c["column"] in {0, 2}
+    f.pdf_evidence["field_scopes"] = [{
+        "body_rows": [0], "pairs": [{"label": [0, 0], "value": [0, 1]},
+                                    {"label": [0, 2], "value": [0, 3]}],
+        "complete": True, "evidence_source": "authored_field_scope",
+        "evidence": {"source_style_contrast": True, "numeric_value_evidence": True},
+    }]
     view = bind_table_view("t1", [f], [f])
     assert view.status == "converted" and view.kind == "mixed"
     assert view.covered_source_cells == len(f.cells)
     md = render_semantic_view(view, [f])
     assert "名称：甲；代码：001" in md
-    assert "字段：联系人；角色甲：张三；角色乙：（原表留空）；角色丙：李四" in md
+    assert "字段：联系人；角色甲：张三；角色乙：；角色丙：李四" in md
+    assert "原表留空" not in md
 
 
 def test_source_bound_flag_and_numeric_cells_do_not_create_headers():
@@ -146,14 +154,21 @@ def test_group_header_without_distinct_leaf_roles_cannot_assign_two_values():
 
 def test_actual_blank_row_is_not_an_invented_header_or_dropped_content():
     f = table([["项目", "值"], ["", ""], ["A", "10"]], [(0, 3)])
-    assert bind_table_view("t1", [f], [f]).status == "retained"
+    view = bind_table_view("t1", [f], [f])
+    assert view.status == "partial" and ("t1", 1) in view.retained_rows
+    rendered = render_semantic_view(view, [f])
+    assert "semantic-retained:" in rendered and rendered.count("10") == 1
+    assert "原表留空" not in rendered
 
 
 def test_unreferenced_nonempty_header_cannot_disappear_behind_coverage_metadata():
     f = table([["项目", "值"], ["A", "10"], ["另一个期间", "另一个单位"]], [(0, 2)])
     f.source_header_scopes.append({"header_rows": [2], "body_rows": [], "complete": True})
     view = bind_table_view("t1", [f], [f])
-    assert view.status == "retained" and view.reason_codes == ("incomplete_source_cell_coverage",)
+    assert view.status == "partial" and view.reason_codes == ("incomplete_source_cell_coverage",)
+    rendered = render_semantic_view(view, [f])
+    assert "另一个期间" in rendered and "另一个单位" in rendered
+    assert rendered.count("10") == 1
 
 
 def test_rendering_escapes_source_markup_and_uses_references_only():
@@ -167,6 +182,130 @@ def test_rendering_escapes_source_markup_and_uses_references_only():
     assert r"\*\*42\*\*" in md and r"\[甲\]" in md
     f.cells[1].text = "43"
     assert "字段：43" in render_semantic_view(view, [f])
+
+
+def _explicit_view(*values: ValueRelation, subject=None, subject_headers=()) -> SemanticTableView:
+    return SemanticTableView(
+        "t1", ("t1",), "converted", "fields",
+        (SemanticRecord("t1", values[0].value.row, tuple(values), subject, tuple(subject_headers)),),
+    )
+
+
+def test_explicit_units_periods_and_notes_are_rendered_and_traced_without_rebinding():
+    f = table([
+        ["字段", "收入"], ["值", "100"], ["单位一", "万元"], ["单位二", "人民币"],
+        ["期间", "2025年度"], ["附注一", "含税"], ["附注二", "已审计"],
+    ])
+    relation = ValueRelation(
+        CellRef("t1", 1, 1), (CellRef("t1", 0, 1),),
+        unit_refs=(CellRef("t1", 2, 1), CellRef("t1", 3, 1), CellRef("t1", 2, 1)),
+        period_refs=(CellRef("t1", 4, 1),),
+        note_refs=(CellRef("t1", 5, 1), CellRef("t1", 6, 1), CellRef("t1", 5, 1)),
+    )
+    before = deepcopy(f)
+    md = render_semantic_view(_explicit_view(relation), [f])
+    assert "收入：100（单位：万元 / 人民币；期间：2025年度；附注：含税 / 已审计）" in md
+    assert md.count("万元") == 1 and md.count("含税") == 1
+    source = next(line for line in md.splitlines() if "semantic-source:" in line)
+    assert all(CellRef("t1", row, 1).token in source for row in range(7))
+    assert f == before
+
+
+@pytest.mark.parametrize("role", ["unit_refs", "period_refs", "note_refs"])
+def test_every_explicit_qualifier_reference_must_exist(role):
+    f = table([["字段", "收入"], ["值", "100"]])
+    relation = ValueRelation(
+        CellRef("t1", 1, 1), (CellRef("t1", 0, 1),),
+        **{role: (CellRef("absent", 0, 0),)},
+    )
+    with pytest.raises(ValueError, match="source reference is absent"):
+        render_semantic_view(_explicit_view(relation), [f])
+
+
+def test_referenced_ambiguous_cell_is_rejected_but_unrelated_duplicate_does_not_hide_neighbors():
+    f = table([["字段", "收入"], ["值", "100"], ["单位", "万元"]])
+    relation = ValueRelation(CellRef("t1", 1, 1), (CellRef("t1", 0, 1),),
+                             unit_refs=(CellRef("t1", 2, 1),))
+    duplicate = deepcopy(f.cells[-1])
+    duplicate.text = "元"
+    f.cells.append(duplicate)
+    with pytest.raises(ValueError, match="source reference is ambiguous"):
+        render_semantic_view(_explicit_view(relation), [f])
+    f.cells.pop()
+    unrelated = table([["其他", "文字"]], name="unrelated")
+    unrelated.cells.append(deepcopy(unrelated.cells[0]))
+    assert "单位：万元" in render_semantic_view(_explicit_view(relation), [f, unrelated])
+
+
+def test_qualifier_cell_already_emitted_in_heading_is_not_repeated_or_guessed():
+    f = table([["项目", "2025年度金额（万元）"], ["收入", "100"]])
+    heading = CellRef("t1", 0, 1)
+    relation = ValueRelation(
+        CellRef("t1", 1, 1), (CellRef("t1", 1, 0),), (heading, heading),
+        unit_refs=(heading,), period_refs=(heading,), note_refs=(heading,),
+    )
+    view = _explicit_view(relation, subject=CellRef("t1", 1, 0))
+    md = render_semantic_view(view, [f])
+    assert md.count("2025年度金额（万元）") == 1
+    assert "单位：" not in md and "期间：" not in md and "附注：" not in md
+
+
+def test_qualifiers_are_scoped_per_value_and_deduplicated_by_cell_not_by_text():
+    f = table([["项目", "金额甲", "金额乙"], ["收入", "100", "200"],
+               ["单位", "元", "元"], ["期间", "2025年度", "2024年度"]])
+    first = ValueRelation(CellRef("t1", 1, 1), (), (CellRef("t1", 0, 1),),
+                          unit_refs=(CellRef("t1", 2, 1), CellRef("t1", 2, 2)),
+                          period_refs=(CellRef("t1", 3, 1),))
+    second = ValueRelation(CellRef("t1", 1, 2), (), (CellRef("t1", 0, 2),),
+                           period_refs=(CellRef("t1", 3, 2),))
+    md = render_semantic_view(_explicit_view(first, second, subject=CellRef("t1", 1, 0)), [f])
+    assert "金额甲：100（单位：元 / 元；期间：2025年度）" in md
+    assert "金额乙：200（期间：2024年度）" in md
+    assert md.count("单位：") == 1
+
+
+def test_qualifier_markup_is_escaped_and_unbound_qualifiers_are_not_discovered():
+    f = table([["字段", "收入"], ["值", "100"], ["附注", "<b>**含税**</b>"],
+               ["未绑定单位", "亿元"]])
+    relation = ValueRelation(CellRef("t1", 1, 1), (CellRef("t1", 0, 1),),
+                             note_refs=(CellRef("t1", 2, 1),))
+    md = render_semantic_view(_explicit_view(relation), [f])
+    assert r"附注：&lt;b&gt;\*\*含税\*\*&lt;/b&gt;" in md
+    assert "亿元" not in md and "单位：" not in md
+
+
+@pytest.mark.parametrize("state,expected", [("literal", "字段：。"),
+                                            ("source_blank", "字段：（原表留空）。")])
+def test_only_explicit_source_blank_may_describe_an_empty_literal_as_source_blank(state, expected):
+    f = table([["字段", " \n "]])
+    relation = ValueRelation(CellRef("t1", 0, 1), (CellRef("t1", 0, 0),), value_state=state)
+    md = render_semantic_view(_explicit_view(relation), [f])
+    assert md.splitlines()[-1] == "- " + expected
+    if state == "literal":
+        assert "原表留空" not in md
+
+
+def test_contradictory_blank_state_cannot_delete_existing_literal():
+    f = table([["字段", "0"]])
+    relation = ValueRelation(CellRef("t1", 0, 1), (CellRef("t1", 0, 0),), value_state="source_blank")
+    with pytest.raises(ValueError, match="conflicts with a nonempty literal"):
+        render_semantic_view(_explicit_view(relation), [f])
+
+
+@pytest.mark.asyncio
+async def test_bound_empty_value_keeps_literal_state_and_valid_neighbors_in_public_output():
+    f = table([["项目", "值"], ["A", ""], ["B", "0"], ["C", "—"]], [(0, 4)])
+    result = document(f)
+    before = deepcopy(f)
+    await TableSemanticsService().apply(result, ContentParseOptions())
+    view = result._semantic_tables[0]
+    assert view.status == "converted"
+    assert all(value.value_state == "literal" for record in view.records for value in record.values)
+    md = result.parse_result.renderings.markdown
+    assert "项目：A；值：。" in md
+    assert "项目：B；值：0。" in md and "项目：C；值：—。" in md
+    assert "原表留空" not in md
+    assert f == before
 
 
 def test_malformed_source_grid_is_retained_and_duplicate_identity_is_rejected():
@@ -235,7 +374,8 @@ async def test_unresolved_owned_view_keeps_exact_source_grid_and_explicit_status
     md = r.parse_result.renderings.markdown
     assert r._table_views[0].rendered in md
     assert r._source_markdown == old
-    assert "status=retained" in md and "保留原表" in md and "[图](/asset/test)" in md
+    assert "status=retained" in md and "[图](/asset/test)" in md
+    assert "表格语义转换：" not in md and "表格语义关系尚未确定" not in md
     assert "version=" not in md
     assert "table-structure:" in old and "table-structure:" in md
 

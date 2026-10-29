@@ -90,10 +90,18 @@ class _TableHtmlParser(HTMLParser):
         self._row_span = 1
         self._col_span = 1
         self._row_header = False
+        self._table_count = 0
+        self._table_depth = 0
+        self._inline_stack: list[str] = []
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
         tag = tag.casefold()
-        if tag == "tr":
+        if tag == "table":
+            self._table_count += 1
+            self._table_depth += 1
+            if self._table_count != 1 or self._table_depth != 1:
+                raise ValueError("multiple or nested HTML tables have no single grid")
+        elif tag == "tr":
             if self._row is not None or len(self.rows) >= MAX_TABLE_DIMENSION:
                 raise ValueError("invalid HTML table rows")
             self._row = []
@@ -103,6 +111,7 @@ class _TableHtmlParser(HTMLParser):
             values = {key.casefold(): value for key, value in attrs}
             self._cell_tag = tag
             self._cell_parts = []
+            self._inline_stack = []
             self._row_span = _positive_span(values.get("rowspan"))
             self._col_span = _positive_span(values.get("colspan"))
             self._row_header = tag == "th" and (values.get("scope") or "").casefold() in {
@@ -111,6 +120,11 @@ class _TableHtmlParser(HTMLParser):
             }
         elif tag == "br" and self._cell_tag is not None:
             self._cell_parts.append("\n")
+        elif tag in {"sup", "sub"} and self._cell_tag is not None:
+            # Keep the producer's explicit boundary. Its meaning may be a
+            # note, exponent, or something else; never concatenate its digits.
+            self._cell_parts.append(f"<{tag}>")
+            self._inline_stack.append(tag)
 
     def handle_data(self, data: str) -> None:
         if self._cell_tag is not None:
@@ -120,7 +134,13 @@ class _TableHtmlParser(HTMLParser):
         tag = tag.casefold()
         # Close only the one open cell at an explicit td/th end; never infer
         # cell/row ends. Its opening tag owns the text, spans and header role.
-        if tag in {"td", "th"} and self._cell_tag is not None and self._row is not None:
+        if tag in {"sup", "sub"} and self._cell_tag is not None:
+            if not self._inline_stack or self._inline_stack.pop() != tag:
+                raise ValueError("unbalanced HTML superscript or subscript")
+            self._cell_parts.append(f"</{tag}>")
+        elif tag in {"td", "th"} and self._cell_tag is not None and self._row is not None:
+            if self._inline_stack:
+                raise ValueError("unclosed HTML superscript or subscript")
             self._row.append(
                 _HtmlCell(
                     text=re.sub(r"\s+", " ", "".join(self._cell_parts)).strip(),
@@ -139,6 +159,10 @@ class _TableHtmlParser(HTMLParser):
             # no cells. It still consumes a row index in the source table.
             self.rows.append(self._row)
             self._row = None
+        elif tag == "table":
+            if self._table_depth != 1 or self._row is not None:
+                raise ValueError("unclosed HTML table structure")
+            self._table_depth = 0
 
 
 class _CandidateTextParser(HTMLParser):
@@ -154,9 +178,13 @@ class _CandidateTextParser(HTMLParser):
     def handle_starttag(self, tag: str, _attrs: list[tuple[str, str | None]]) -> None:
         if tag.casefold() == "br":
             self.parts.append("\n")
+        elif tag.casefold() in {"sup", "sub"}:
+            self.parts.append(f"<{tag.casefold()}>")
 
     def handle_endtag(self, tag: str) -> None:
-        if tag.casefold() in {"td", "th"}:
+        if tag.casefold() in {"sup", "sub"}:
+            self.parts.append(f"</{tag.casefold()}>")
+        elif tag.casefold() in {"td", "th"}:
             self.parts.append("\t")
         elif tag.casefold() == "tr":
             self.parts.append("\n")
@@ -197,7 +225,8 @@ def _html_table_layout(
         parser.close()
     except (ValueError, TypeError):
         return [], False, []
-    if not parser.rows or parser._row is not None or len(parser.rows) > MAX_TABLE_DIMENSION:
+    if (not parser.rows or parser._row is not None or len(parser.rows) > MAX_TABLE_DIMENSION
+            or parser._table_count != 1 or parser._table_depth != 0):
         return [], False, []
     anchors: dict[tuple[int, int], str] = {}
     # Track only each column's exclusive span end during the shape preflight.
@@ -480,7 +509,9 @@ class GlmSdkRemoteParser(DocumentParser):
         return output
 
     @staticmethod
-    def _page_regions(payload: object) -> list[dict[str, object]]:
+    def _page_regions(
+        payload: object, *, warnings: list[PipelineWarning] | None = None, page_number: int | None = None,
+    ) -> list[dict[str, object]]:
         if isinstance(payload, str):
             try:
                 payload = json.loads(payload)
@@ -490,49 +521,50 @@ class GlmSdkRemoteParser(DocumentParser):
             raise ValueError("SDK layout is not a list")
         if len(payload) == 1 and isinstance(payload[0], list):
             payload = payload[0]
-        if not all(isinstance(item, dict) for item in payload):
-            raise ValueError("SDK page contains a non-object region")
         regions: list[dict[str, object]] = []
         for fallback_index, raw in enumerate(payload):
-            label = raw.get("label")
-            native_label = raw.get("native_label")
-            content = raw.get("content")
-            bbox = raw.get("bbox_2d")
-            if not isinstance(label, str) or not label.strip():
-                raise ValueError("SDK region has no label")
-            if content is not None and not isinstance(content, str):
-                raise ValueError("SDK region content is not text")
-            normalized_bbox: list[float] | None = None
-            if bbox is not None:
-                if (
-                    not isinstance(bbox, list)
-                    or len(bbox) != 4
-                    or not all(isinstance(value, (int, float)) for value in bbox)
-                ):
-                    raise ValueError("SDK region bbox is invalid")
-                normalized_bbox = [float(value) for value in bbox]
-                if not all(
-                    math.isfinite(value) and 0 <= value <= 1_000 for value in normalized_bbox
-                ):
-                    raise ValueError("SDK region bbox is out of range")
-                if (
-                    normalized_bbox[0] > normalized_bbox[2]
-                    or normalized_bbox[1] > normalized_bbox[3]
-                ):
-                    raise ValueError("SDK region bbox is inverted")
-            raw_index = raw.get("index", fallback_index)
-            index = raw_index if isinstance(raw_index, int) and raw_index >= 0 else fallback_index
-            regions.append(
-                {
-                    "index": index,
-                    "label": label.strip().casefold(),
-                    "native_label": native_label.casefold()
-                    if isinstance(native_label, str)
-                    else "",
-                    "content": content or "",
-                    "bbox_2d": normalized_bbox,
-                }
-            )
+            try:
+                if not isinstance(raw, dict):
+                    raise ValueError("SDK region is not an object")
+                label = raw.get("label")
+                native_label = raw.get("native_label")
+                content = raw.get("content")
+                bbox = raw.get("bbox_2d")
+                if not isinstance(label, str) or not label.strip():
+                    raise ValueError("SDK region has no label")
+                if content is not None and not isinstance(content, str):
+                    raise ValueError("SDK region content is not text")
+                normalized_bbox: list[float] | None = None
+                if bbox is not None:
+                    if (not isinstance(bbox, list) or len(bbox) != 4
+                            or not all(type(value) in {int, float} for value in bbox)):
+                        raise ValueError("SDK region bbox is invalid")
+                    normalized_bbox = [float(value) for value in bbox]
+                    if not all(math.isfinite(value) and 0 <= value <= 1_000 for value in normalized_bbox):
+                        raise ValueError("SDK region bbox is out of range")
+                    if normalized_bbox[0] > normalized_bbox[2] or normalized_bbox[1] > normalized_bbox[3]:
+                        raise ValueError("SDK region bbox is inverted")
+                raw_index = raw.get("index", fallback_index)
+                index = raw_index if type(raw_index) is int and raw_index >= 0 else fallback_index
+                regions.append({"index": index, "label": label.strip().casefold(),
+                                "native_label": native_label.casefold() if isinstance(native_label, str) else "",
+                                "content": content or "", "bbox_2d": normalized_bbox})
+            except ValueError as exc:
+                if warnings is not None:
+                    warnings.append(PipelineWarning(
+                        code="glm_sdk_local_region_unreadable",
+                        message="an SDK region could not be fully read; valid neighboring regions were retained",
+                        severity=WarningSeverity.ERROR, page_number=page_number, backend=GlmSdkRemoteParser.name,
+                        details={"region_index": fallback_index, "stage": "native_region_readback",
+                                 "reason": str(exc), "raw_response_modified": False},
+                    ))
+                # Literal content remains useful even if its envelope is bad.
+                # Unknown geometry and roles stay unknown; no answer is added.
+                if isinstance(raw, dict) and isinstance(raw.get("content"), str):
+                    label = raw.get("label")
+                    regions.append({"index": fallback_index,
+                                    "label": label.strip().casefold() if isinstance(label, str) and label.strip() else "unknown",
+                                    "native_label": "", "content": raw["content"], "bbox_2d": None})
 
         def region_index(item: dict[str, object]) -> int:
             value = item.get("index")
@@ -876,11 +908,11 @@ class GlmSdkRemoteParser(DocumentParser):
                         await asyncio.sleep(min(2.0, 0.25 * (2**attempt),
                                                 remaining_timeout(options, cap=min(self.timeout, 120.0))))
             if payload is None:
-                raise RuntimeError(last_error_code)
+                raise ValueError(last_error_code)
             layout = payload.get("layout_details", payload.get("json_result"))
-            regions = self._page_regions(layout)
-            regions = self._map_regions_to_source(regions, applied_rotation)
             warnings: list[PipelineWarning] = []
+            regions = self._page_regions(layout, warnings=warnings, page_number=page_number)
+            regions = self._map_regions_to_source(regions, applied_rotation)
             markdown, fragments = self._render_regions(regions, page_number, warnings=warnings)
             if not markdown:
                 markdown_result = payload.get("md_results", payload.get("markdown_result", ""))
@@ -912,9 +944,9 @@ class GlmSdkRemoteParser(DocumentParser):
                 fragments,
                 len(regions),
             )
-        except (ParserCancelledError, ParserTimeoutError):
+        except (ParserCancelledError, ParserTimeoutError, TimeoutError, MemoryError):
             raise
-        except Exception as exc:
+        except (ValueError, TypeError, OSError, httpx.HTTPError) as exc:
             code = str(exc) if str(exc).startswith("glm_sdk_") else "glm_sdk_invalid_response"
             return (
                 _page_result(

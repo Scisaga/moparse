@@ -1,0 +1,23 @@
+{
+  "schema": "moparse-service-period-boundary-diagnostic",
+  "withdrawn_run": "20261028-p07-service-04",
+  "execution_software_id": "cf0a74d069d54049b7e06d151a50ea5936b72147a3a892f956400ce8310eae0a",
+  "reason": "Independent synthetic probe found amount-like numeric strings accepted as period headers before scoring.",
+  "controlled_counterexamples": [
+    "20240",
+    "12024",
+    "2024.50",
+    "2024%",
+    "-2024",
+    "20240年",
+    "12024年度"
+  ],
+  "candidate_scores": "none generated",
+  "gpu_inference": "none",
+  "service_actions": "only the owned isolated CPU worker stopped; production and TTS untouched",
+  "cleanup": "withdrawn candidate outputs, code snapshot and run records removed; dataset and frozen native baseline untouched",
+  "source_synthetic_tests_passed": 84,
+  "source_fix_validation": "84 synthetic source tests; full candidate rerun will use a later identity.",
+  "replacement_run": "20261028-p07-service-08",
+  "replacement_execution_software_id": "0d3eebb621f367a323a9d75e733eee580966a5d007328c25e594381b99dafd2b"
+}

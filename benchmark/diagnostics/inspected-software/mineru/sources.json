@@ -1,0 +1,105 @@
+{
+  "scope": "software source snapshots only; not corpus review, mapping validation, or model numerical acceptance",
+  "sha256_scope": "explicit software source files only; no originals, expected results, annotations, mappings, images, assets or probe outputs were hashed",
+  "files": [
+    {
+      "path": "vllm/model_executor/models/qwen2.py",
+      "sha256": "ae3ae71fd94d32cc8a1da80eeaab5bcfdeb2418adbade798989451c681099a43",
+      "kind": "software_source",
+      "project": "vLLM",
+      "version": "v0.19.1",
+      "source_url": "https://raw.githubusercontent.com/vllm-project/vllm/v0.19.1/vllm/model_executor/models/qwen2.py",
+      "acquisition": "previously inspected official fixed-tag source; copied without editing"
+    },
+    {
+      "path": "vllm/model_executor/models/qwen2_vl.py",
+      "sha256": "6833e2c75bdc22f8ce00678520c7029d55c3c40970aaabf3942f5e06981ef7bb",
+      "kind": "software_source",
+      "project": "vLLM",
+      "version": "v0.19.1",
+      "source_url": "https://raw.githubusercontent.com/vllm-project/vllm/v0.19.1/vllm/model_executor/models/qwen2_vl.py",
+      "acquisition": "previously inspected official fixed-tag source; copied without editing"
+    },
+    {
+      "path": "vllm/model_executor/layers/rotary_embedding/__init__.py",
+      "sha256": "f7e29823064ae41835c52e65d40034e7b3c151d3db667f1b937f857c3745a164",
+      "kind": "software_source",
+      "project": "vLLM",
+      "version": "v0.19.1",
+      "source_url": "https://raw.githubusercontent.com/vllm-project/vllm/v0.19.1/vllm/model_executor/layers/rotary_embedding/__init__.py",
+      "acquisition": "previously inspected official fixed-tag source; copied without editing"
+    },
+    {
+      "path": "vllm/model_executor/layers/rotary_embedding/mrope.py",
+      "sha256": "d5fc5ca640bf47fdfc27447bcc6b67b2294c9ac840bbc736fe75cc6098e2a51c",
+      "kind": "software_source",
+      "project": "vLLM",
+      "version": "v0.19.1",
+      "source_url": "https://raw.githubusercontent.com/vllm-project/vllm/v0.19.1/vllm/model_executor/layers/rotary_embedding/mrope.py",
+      "acquisition": "previously inspected official fixed-tag source; copied without editing"
+    },
+    {
+      "path": "csrc/pos_encoding_kernels.cu",
+      "sha256": "b7a02ce44a8dbf52f22c0a2f9d6774de482961ad7f37893a85d983b320932145",
+      "kind": "software_source",
+      "project": "vLLM",
+      "version": "v0.19.1",
+      "source_url": "https://raw.githubusercontent.com/vllm-project/vllm/v0.19.1/csrc/pos_encoding_kernels.cu",
+      "acquisition": "previously inspected official fixed-tag source; copied without editing"
+    },
+    {
+      "path": "mineru_vl_utils/vlm_client/http_client.py",
+      "sha256": "df419fae77809d0f316c0dca2d4375ed73fd0763ae41684dbc333eb3a7280508",
+      "kind": "software_source",
+      "project": "mineru-vl-utils",
+      "distribution_version": "2.0.7",
+      "distribution_source": "local installed-distribution cache with METADATA Version 2.0.7",
+      "upstream_navigation_url": "https://github.com/opendatalab/mineru-vl-utils/blob/main/mineru_vl_utils/vlm_client/http_client.py",
+      "navigation_scope": "upstream main is navigation only, not a claim that main equals the saved 2.0.7 bytes",
+      "acquisition": "previously inspected fixed distribution source; copied without editing"
+    },
+    {
+      "path": "mineru_vl_utils/structs.py",
+      "sha256": "61163066b9084e25f7ef24d55bda2bbcd5d823aabc7c909d7c513284acd59fcf",
+      "kind": "software_source",
+      "project": "mineru-vl-utils",
+      "distribution_version": "2.0.7",
+      "distribution_source": "local installed-distribution cache with METADATA Version 2.0.7",
+      "upstream_navigation_url": "https://github.com/opendatalab/mineru-vl-utils/blob/main/mineru_vl_utils/structs.py",
+      "navigation_scope": "upstream main is navigation only, not a claim that main equals the saved 2.0.7 bytes",
+      "acquisition": "previously inspected fixed distribution source; copied without editing"
+    },
+    {
+      "path": "mineru_vl_utils/mineru_client.py",
+      "sha256": "5917be2cedc5e16ba815e2562345abfd7888e6765c87dfc27125c6e24e064f24",
+      "kind": "software_source",
+      "project": "mineru-vl-utils",
+      "distribution_version": "2.0.7",
+      "distribution_source": "local installed-distribution cache with METADATA Version 2.0.7",
+      "upstream_navigation_url": "https://github.com/opendatalab/mineru-vl-utils/blob/main/mineru_vl_utils/mineru_client.py",
+      "navigation_scope": "upstream main is navigation only, not a claim that main equals the saved 2.0.7 bytes",
+      "acquisition": "previously inspected fixed distribution source; copied without editing"
+    },
+    {
+      "path": "mineru_vl_utils/logits_processor/vllm_v1_no_repeat_ngram.py",
+      "sha256": "4f715af2bb3a17230a509ab95bff8c8a5fe796c6f5d8961303ee360f5021b55a",
+      "kind": "software_source",
+      "project": "mineru-vl-utils",
+      "distribution_version": "2.0.7",
+      "distribution_source": "local installed-distribution cache with METADATA Version 2.0.7",
+      "upstream_navigation_url": "https://github.com/opendatalab/mineru-vl-utils/blob/main/mineru_vl_utils/logits_processor/vllm_v1_no_repeat_ngram.py",
+      "navigation_scope": "upstream main is navigation only, not a claim that main equals the saved 2.0.7 bytes",
+      "acquisition": "previously inspected fixed distribution source; copied without editing"
+    },
+    {
+      "path": "mineru_vl_utils/post_process/json2markdown.py",
+      "sha256": "1b16b29f789a3b3d8e7bf638a573ecb52623be6304a289fc80c0f6ce97188bd2",
+      "kind": "software_source",
+      "project": "mineru-vl-utils",
+      "distribution_version": "2.0.7",
+      "distribution_source": "fixed formal worker image sha256:61ec8c75a6162ffda94cf42d24430d17c2b4ca276f5411d47342a92f43891a5b",
+      "upstream_navigation_url": "https://github.com/opendatalab/mineru-vl-utils/blob/2a673e786a4acc286e4e245507ea3b7ccd96273d/mineru_vl_utils/post_process/json2markdown.py",
+      "acquisition": "2026-10-27 read-only copy from installed formal worker distribution, without starting or changing containers"
+    }
+  ]
+}

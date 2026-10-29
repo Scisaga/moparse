@@ -1,0 +1,10 @@
+{
+  "scope": "Software defect only. No quality, timing, ranking or withdrawn candidate retained.",
+  "withdrawn_run": "20261028-p07-service-06",
+  "reason": "Native source line/span overprint was concatenated into repeated literal prose. A selected native region must reject source geometry with repeated overlay rather than overwrite a received parser answer with duplicated text.",
+  "reproduction": "Controlled synthetic PDF draws the same prose at the same coordinates twice; ordinary consecutive repeated words or separate lines must remain eligible.",
+  "required_repair": "Retain source evidence unchanged, carry overlap risk to native prose selection, preserve the original candidate region and block unsafe insertion.",
+  "state": "repaired_synthetic_tests_passed",
+  "replacement_run": "20261028-p07-service-08",
+  "replacement_execution_software_id": "0d3eebb621f367a323a9d75e733eee580966a5d007328c25e594381b99dafd2b"
+}

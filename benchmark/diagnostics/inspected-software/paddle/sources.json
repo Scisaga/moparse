@@ -1,0 +1,109 @@
+{
+  "scope": "software_source_snapshot_only_no_corpus_hashes_or_acceptance",
+  "image_id": "sha256:36216a3928ac120fc6cb02f438f7d3e5cf4836de7f4e22e424e8372b6f08637c",
+  "resolution": "first effective file from image UpperDir then ordered LowerDir; no container started",
+  "records": [
+    {
+      "snapshot": "inspected-software/paddle/paddlex/inference/pipelines/paddleocr_vl/pipeline.py",
+      "effective_image_source": "/var/lib/docker/overlay2/kgdis8gl6472gtoy573zdazqe/diff/usr/local/lib/python3.12/dist-packages/paddlex/inference/pipelines/paddleocr_vl/pipeline.py",
+      "sha256_software_only": "32966d14aad6ac1bc043737c96352a4f0b4efcbead96f9354254dd4b9d1c6675",
+      "official_fixed_source": "https://github.com/PaddlePaddle/PaddleX/blob/v3.7.2/paddlex/inference/pipelines/paddleocr_vl/pipeline.py"
+    },
+    {
+      "snapshot": "inspected-software/paddle/paddlex/inference/models/doc_vlm/processors/common.py",
+      "effective_image_source": "/var/lib/docker/overlay2/kgdis8gl6472gtoy573zdazqe/diff/usr/local/lib/python3.12/dist-packages/paddlex/inference/models/doc_vlm/processors/common.py",
+      "sha256_software_only": "0315d3358dc1605ee3989249d770e9f1069778d5214bcffcb3351350227e9274",
+      "official_fixed_source": "https://github.com/PaddlePaddle/PaddleX/blob/v3.7.2/paddlex/inference/models/doc_vlm/processors/common.py"
+    },
+    {
+      "snapshot": "inspected-software/paddle/paddlex/inference/models/doc_vlm/predictor.py",
+      "effective_image_source": "/var/lib/docker/overlay2/kgdis8gl6472gtoy573zdazqe/diff/usr/local/lib/python3.12/dist-packages/paddlex/inference/models/doc_vlm/predictor.py",
+      "sha256_software_only": "9353a5fa81c1bd57a1e5f2e6bdad0e24c4ed1caccd765f4b5bb127e906e1c45c",
+      "official_fixed_source": "https://github.com/PaddlePaddle/PaddleX/blob/v3.7.2/paddlex/inference/models/doc_vlm/predictor.py"
+    },
+    {
+      "snapshot": "inspected-software/paddle/paddlex/inference/common/reader/image_reader.py",
+      "effective_image_source": "/var/lib/docker/overlay2/kgdis8gl6472gtoy573zdazqe/diff/usr/local/lib/python3.12/dist-packages/paddlex/inference/common/reader/image_reader.py",
+      "sha256_software_only": "12eb8df910314419dceed985298e128c848326329ed019ef188cd326e9e0e6e5",
+      "official_fixed_source": "https://github.com/PaddlePaddle/PaddleX/blob/v3.7.2/paddlex/inference/common/reader/image_reader.py"
+    },
+    {
+      "snapshot": "inspected-software/paddle/paddlex/inference/pipelines/components/common/crop_image_regions.py",
+      "effective_image_source": "/var/lib/docker/overlay2/kgdis8gl6472gtoy573zdazqe/diff/usr/local/lib/python3.12/dist-packages/paddlex/inference/pipelines/components/common/crop_image_regions.py",
+      "sha256_software_only": "46610b50f06b2d5e0969a9c0f3f71bbbddcc53e4e43eaa1d49811ef94cf0d0a5",
+      "official_fixed_source": "https://github.com/PaddlePaddle/PaddleX/blob/v3.7.2/paddlex/inference/pipelines/components/common/crop_image_regions.py"
+    },
+    {
+      "snapshot": "inspected-software/paddle/paddlex/inference/models/predictors/base_predictor.py",
+      "effective_image_source": "/var/lib/docker/overlay2/kgdis8gl6472gtoy573zdazqe/diff/usr/local/lib/python3.12/dist-packages/paddlex/inference/models/predictors/base_predictor.py",
+      "sha256_software_only": "cda03a6aa84705d2ecfb6776cfe4bf28c78d64bfc5b3a5dadbadc5d6f7e495a8",
+      "official_fixed_source": "https://github.com/PaddlePaddle/PaddleX/blob/v3.7.2/paddlex/inference/models/predictors/base_predictor.py"
+    },
+    {
+      "snapshot": "inspected-software/paddle/paddlex/inference/common/batch_sampler/doc_vlm_batch_sampler.py",
+      "effective_image_source": "/var/lib/docker/overlay2/kgdis8gl6472gtoy573zdazqe/diff/usr/local/lib/python3.12/dist-packages/paddlex/inference/common/batch_sampler/doc_vlm_batch_sampler.py",
+      "sha256_software_only": "cbcc27b083e59f8daad3c2eefdd699b9721b93faa1dc1760d2a69a64b10b76a3",
+      "official_fixed_source": "https://github.com/PaddlePaddle/PaddleX/blob/v3.7.2/paddlex/inference/common/batch_sampler/doc_vlm_batch_sampler.py"
+    },
+    {
+      "snapshot": "inspected-software/paddle/paddlex/inference/models/predictors/transformers_predictor.py",
+      "effective_image_source": "/var/lib/docker/overlay2/kgdis8gl6472gtoy573zdazqe/diff/usr/local/lib/python3.12/dist-packages/paddlex/inference/models/predictors/transformers_predictor.py",
+      "sha256_software_only": "b32a19c58d4724f8e457818eb75aada756629ed53e4dd9387c72717db115e0eb",
+      "official_fixed_source": "https://github.com/PaddlePaddle/PaddleX/blob/v3.7.2/paddlex/inference/models/predictors/transformers_predictor.py"
+    },
+    {
+      "snapshot": "inspected-software/paddle/transformers/models/paddleocr_vl/configuration_paddleocr_vl.py",
+      "effective_image_source": "/var/lib/docker/overlay2/qarzzf8vfwuj07bxzlz3thfbp/diff/usr/local/lib/python3.12/dist-packages/transformers/models/paddleocr_vl/configuration_paddleocr_vl.py",
+      "sha256_software_only": "9dc55ea925791aea5a3e8ed6b512247d1d75c1b9ccf2c5f5fbe6c3dee0ed22fd",
+      "official_fixed_source": "https://github.com/huggingface/transformers/blob/v5.10.2/src/transformers/models/paddleocr_vl/configuration_paddleocr_vl.py"
+    },
+    {
+      "snapshot": "inspected-software/paddle/transformers/models/paddleocr_vl/modeling_paddleocr_vl.py",
+      "effective_image_source": "/var/lib/docker/overlay2/qarzzf8vfwuj07bxzlz3thfbp/diff/usr/local/lib/python3.12/dist-packages/transformers/models/paddleocr_vl/modeling_paddleocr_vl.py",
+      "sha256_software_only": "34decae9b91cc883a53542b59647fd11eeee1d37b56c77c4b09581119baf3c11",
+      "official_fixed_source": "https://github.com/huggingface/transformers/blob/v5.10.2/src/transformers/models/paddleocr_vl/modeling_paddleocr_vl.py"
+    },
+    {
+      "snapshot": "inspected-software/paddle/transformers/models/paddleocr_vl/image_processing_paddleocr_vl.py",
+      "effective_image_source": "/var/lib/docker/overlay2/qarzzf8vfwuj07bxzlz3thfbp/diff/usr/local/lib/python3.12/dist-packages/transformers/models/paddleocr_vl/image_processing_paddleocr_vl.py",
+      "sha256_software_only": "b8249ee85cc19a89328953059224a394ad1a22d8131747d8866a82f9cba4a669",
+      "official_fixed_source": "https://github.com/huggingface/transformers/blob/v5.10.2/src/transformers/models/paddleocr_vl/image_processing_paddleocr_vl.py"
+    },
+    {
+      "snapshot": "inspected-software/paddle/transformers/models/paddleocr_vl/processing_paddleocr_vl.py",
+      "effective_image_source": "/var/lib/docker/overlay2/qarzzf8vfwuj07bxzlz3thfbp/diff/usr/local/lib/python3.12/dist-packages/transformers/models/paddleocr_vl/processing_paddleocr_vl.py",
+      "sha256_software_only": "e0657e0684b51d50aca83b12636912acb41408c56e3d0016770f2fa82d3f4b12",
+      "official_fixed_source": "https://github.com/huggingface/transformers/blob/v5.10.2/src/transformers/models/paddleocr_vl/processing_paddleocr_vl.py"
+    },
+    {
+      "snapshot": "inspected-software/paddle/transformers/integrations/sdpa_attention.py",
+      "effective_image_source": "/var/lib/docker/overlay2/qarzzf8vfwuj07bxzlz3thfbp/diff/usr/local/lib/python3.12/dist-packages/transformers/integrations/sdpa_attention.py",
+      "sha256_software_only": "87f933d1a2d8508df572da5c0748c6b24c22ff2b625796949957dcd86cc57564",
+      "official_fixed_source": "https://github.com/huggingface/transformers/blob/v5.10.2/src/transformers/integrations/sdpa_attention.py"
+    },
+    {
+      "snapshot": "inspected-software/paddle/transformers/modeling_rope_utils.py",
+      "effective_image_source": "/var/lib/docker/overlay2/qarzzf8vfwuj07bxzlz3thfbp/diff/usr/local/lib/python3.12/dist-packages/transformers/modeling_rope_utils.py",
+      "sha256_software_only": "f370d8588169c07fc5245ddb83d9a29282f670f98d99a4d7fa814a777649f3d5",
+      "official_fixed_source": "https://github.com/huggingface/transformers/blob/v5.10.2/src/transformers/modeling_rope_utils.py"
+    },
+    {
+      "snapshot": "inspected-software/paddle/transformers/conversion_mapping.py",
+      "effective_image_source": "/var/lib/docker/overlay2/qarzzf8vfwuj07bxzlz3thfbp/diff/usr/local/lib/python3.12/dist-packages/transformers/conversion_mapping.py",
+      "sha256_software_only": "ec77ca44ac52e1e2ca0b49bffa04fa6ec5340e538df519cbe2b0b87162a4e455",
+      "official_fixed_source": "https://github.com/huggingface/transformers/blob/v5.10.2/src/transformers/conversion_mapping.py"
+    },
+    {
+      "snapshot": "inspected-software/paddle/transformers-5.10.2.dist-info/RECORD",
+      "effective_image_source": "/var/lib/docker/overlay2/qarzzf8vfwuj07bxzlz3thfbp/diff/usr/local/lib/python3.12/dist-packages/transformers-5.10.2.dist-info/RECORD",
+      "sha256_software_only": "8a2964f0e399d9b4356eee4e63d07b5bd4608029847c2fa368bdfa66993f7be1",
+      "official_fixed_source": null
+    },
+    {
+      "snapshot": "inspected-software/paddle/moparse_eval/executors.py",
+      "source": "/opt/moparse/benchmark/reports/20261025-paddle-rerun-01/artifacts/software/moparse_eval/executors.py",
+      "sha256_software_only": "68156b81a49e07577e53ee7a0af66c15c84510e545a2f6227b7b164bce32f384",
+      "basis": "original rerun source snapshot; not current working tree"
+    }
+  ]
+}

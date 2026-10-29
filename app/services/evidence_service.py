@@ -3,10 +3,11 @@
 from __future__ import annotations
 
 import io
+import math
 import re
 import statistics
 import unicodedata
-from collections import Counter
+from collections import Counter, defaultdict
 from dataclasses import dataclass, field
 from difflib import SequenceMatcher
 from typing import Any
@@ -27,6 +28,7 @@ class NativeBlock:
     bbox: tuple[float, float, float, float]
     max_font_size: float
     bold: bool
+    source_overlap_risk: bool = False
 
 
 @dataclass(slots=True)
@@ -48,6 +50,9 @@ class PageEvidence:
     page_width: float = 0.0
     page_height: float = 0.0
     grid_regions: list[tuple[float, float, float, float]] = field(default_factory=list)
+    # Keep the excluded source blocks observable to downstream region-ownership
+    # checks. They remain absent from native_body_text/native_blocks as before.
+    excluded_native_blocks: list[NativeBlock] = field(default_factory=list)
 
     @property
     def has_complex_grid(self) -> bool:
@@ -214,6 +219,69 @@ class PageEvidenceService:
             if parts:
                 lines.append("".join(parts).strip())
         return "\n".join(item for item in lines if item), max(sizes, default=0.0), bold, mappings
+
+    @staticmethod
+    def _block_overlap_risk(block: dict[str, Any]) -> bool:
+        """Flag distinct source depositions at the same physical text position.
+
+        Faux bold and shadow text may be emitted twice inside one MuPDF block.
+        Keep every original string; geometry only prevents treating this block
+        as a unique native transcription. Repeated wording alone is not used.
+        """
+        Geometry = tuple[tuple[float, float, float, float], tuple[float, float]]
+
+        def geometry(raw: dict[str, Any]) -> Geometry | None:
+            box, origin = raw.get("bbox"), raw.get("origin")
+            if (not isinstance(box, (list, tuple)) or len(box) != 4
+                    or not isinstance(origin, (list, tuple)) or len(origin) != 2):
+                return None
+            try:
+                a, b, c, d = (float(value) for value in box)
+                x, y = (float(value) for value in origin)
+            except (TypeError, ValueError):
+                return None
+            if not all(math.isfinite(value) for value in (a, b, c, d, x, y)) or a >= c or b >= d:
+                return None
+            return (a, b, c, d), (x, y)
+
+        def overlaps(records: list[Geometry]) -> bool:
+            # A bounded neighborhood avoids a quadratic scan for PDFs that
+            # encode every letter as a separate span.
+            buckets: dict[tuple[int, int], list[Geometry]] = defaultdict(list)
+            for box, origin in records:
+                bucket = (math.floor(origin[0] / 0.5), math.floor(origin[1] / 0.5))
+                for dx in (-1, 0, 1):
+                    for dy in (-1, 0, 1):
+                        for other, position in buckets.get((bucket[0] + dx, bucket[1] + dy), []):
+                            if abs(origin[0] - position[0]) > 0.5 or abs(origin[1] - position[1]) > 0.5:
+                                continue
+                            area = max(0.0, min(box[2], other[2]) - max(box[0], other[0])) * max(
+                                0.0, min(box[3], other[3]) - max(box[1], other[1])
+                            )
+                            if (area >= (box[2] - box[0]) * (box[3] - box[1]) * 0.9
+                                    and area >= (other[2] - other[0]) * (other[3] - other[1]) * 0.9):
+                                return True
+                buckets[bucket].append((box, origin))
+            return False
+
+        span_records: list[Geometry] = []
+        line_records: list[Geometry] = []
+        for line in block.get("lines", []) if isinstance(block.get("lines"), list) else []:
+            if not isinstance(line, dict):
+                continue
+            source_spans = []
+            for span in line.get("spans", []) if isinstance(line.get("spans"), list) else []:
+                if not isinstance(span, dict) or not isinstance(span.get("text"), str) or not span["text"].strip():
+                    continue
+                measured = geometry(span)
+                if measured is not None:
+                    source_spans.append(measured)
+            span_records.extend(source_spans)
+            if source_spans:
+                measured = geometry({"bbox": line.get("bbox"), "origin": source_spans[0][1]})
+                if measured is not None:
+                    line_records.append(measured)
+        return overlaps(span_records) or overlaps(line_records)
 
     @staticmethod
     def _render_metrics(
@@ -413,6 +481,7 @@ class PageEvidenceService:
                         source_kind = PageSourceKind.MIXED
 
                     body_blocks: list[NativeBlock] = []
+                    excluded_blocks: list[NativeBlock] = []
                     glyph_mappings: dict[str, str] = {}
                     for block in raw_blocks.get(page_number, []):
                         text, size, bold, mappings = self._block_text(block)
@@ -431,12 +500,15 @@ class PageEvidenceService:
                             signature in margin_signatures_by_page.get(adjacent, set())
                             for adjacent in (page_number - 1, page_number + 1)
                         )
+                        native_block = NativeBlock(
+                            text=text, bbox=bbox, max_font_size=size, bold=bold,
+                            source_overlap_risk=self._block_overlap_risk(block),
+                        )
                         if is_margin and repeated_on_adjacent_page:
+                            excluded_blocks.append(native_block)
                             continue
                         glyph_mappings.update(mappings)
-                        body_blocks.append(
-                            NativeBlock(text=text, bbox=bbox, max_font_size=size, bold=bold)
-                        )
+                        body_blocks.append(native_block)
                     body_text = "\n\n".join(block.text for block in body_blocks)
                     lines = [
                         line.strip()
@@ -462,6 +534,7 @@ class PageEvidenceService:
                         page_width=float(page.rect.width),
                         page_height=float(page.rect.height),
                         grid_regions=grid_regions,
+                        excluded_native_blocks=excluded_blocks,
                     )
         except (ImportError, OSError, RuntimeError, ValueError):
             return {}

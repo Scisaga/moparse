@@ -33,6 +33,7 @@ class PageSourceKind(StrEnum):
     SCANNED = "scanned"
     MIXED = "mixed"
     SPARSE = "sparse"
+    VISUAL = "visual"
 
 
 class QualityVerdict(StrEnum):
@@ -177,3 +178,4 @@ class DocumentParseResult(BaseModel):
     _semantic_tables: list[SemanticTableView] = PrivateAttr(default_factory=list)
     _semantic_duration_ms: float = PrivateAttr(default=0.0)
     _source_markdown: str = PrivateAttr(default="")
+    _final_text_evidence: dict[str, object] = PrivateAttr(default_factory=dict)

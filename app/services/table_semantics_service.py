@@ -1,16 +1,18 @@
 """Conservative source-scoped relations and literal Markdown verbalization.
 
-Only completely bound vector grids are currently eligible. Source styles and header
-scopes are a bounded, evaluated association policy, not semantic ground truth.
-Unresolved tables keep their existing GFM. No additional model is called.
+Source-bound grids and explicitly scoped relationships are handled independently.
+Unresolved rows retain their source text without erasing supported neighbors.
+No additional model is called.
 """
 
 from __future__ import annotations
 
 import asyncio
 import html
+import json
 import re
 from collections.abc import Sequence
+from dataclasses import dataclass, replace
 from typing import Any
 
 from app.models.parse_options import ContentParseOptions
@@ -24,11 +26,16 @@ from app.models.table_semantics import (
 )
 from app.parsers.base import ParserCancelledError
 from app.services.export_service import ExportService
-from app.services.table_service import TableCellFragment, TableFragment, TableSourceView
+from app.services.table_service import (
+    TableCellFragment,
+    TableFragment,
+    TableSourceView,
+    render_gfm_rows,
+)
 from app.utils.deadline import remaining_timeout
 
 _ID = re.compile(r"[A-Za-z0-9_.-]{1,240}\Z")
-_PERIOD = re.compile(r"报告期|同期|年度|期末|年末|月末|\d{4}\s*年")
+_PERIOD = re.compile(r"报告期|同期|年度|期末|年末|月末|\d{4}\s*年|(?<!\d)(?:19|20)\d{2}(?!\d)")
 _UNIT = re.compile(r"[（(][^()（）]*(?:元|股|%|％)[^()（）]*[）)]")
 _NUMBER = re.compile(r"[+\-−]?(?:\d[\d,.]*(?:%|％)?|[—–-])\Z")
 
@@ -45,16 +52,28 @@ def _literal(value: str) -> str:
     return re.sub(r"([\\`*_\[\]~|])", r"\\\1", text)
 
 
+def _label_separator(rendered_label: str) -> str:
+    return "" if rendered_label.rstrip().endswith((":", "：")) else "："
+
+
 def _ref(fragment: TableFragment, cell: TableCellFragment) -> CellRef:
     return CellRef(fragment.fragment_id, cell.row, cell.column)
 
 
-def _registry(fragments: Sequence[TableFragment]) -> dict[CellRef, TableCellFragment]:
-    return {_ref(f, c): c for f in fragments for c in f.cells}
+def _registry(fragments: Sequence[TableFragment]) -> dict[Any, Any]:
+    return {**{_ref(f, c): c for f in fragments for c in f.cells},
+            **{ref: ref for f in fragments for ref in f.context_refs}}
 
 
 def _source_cells(fragment: TableFragment) -> dict[tuple[int, int], dict[str, Any]]:
     grid = fragment.pdf_evidence
+    conflicts = {grid.get("reason"), grid.get("cell_box_attempt_reason")}
+    if any(reason and re.search(r"disagree|conflict|ownership_ambiguous", str(reason)) for reason in conflicts):
+        return {}
+    if not grid.get("bound") and fragment.native_evidence.get("structure_readable"):
+        grid = {"bound": True, "source_cells": [
+            {"row": c.row, "column": c.column, "row_span": c.row_span,
+             "column_span": c.column_span, "text": c.text} for c in fragment.cells]}
     if (
         not fragment.valid
         or not grid.get("bound")
@@ -128,84 +147,191 @@ def _relation(
         column_headers=columns,
         unit_refs=tuple(r for r in labels if _UNIT.search(registry[r].text)),
         period_refs=tuple(r for r in labels if _PERIOD.search(registry[r].text)),
-        value_state="literal" if registry[value].text.strip() else "source_blank",
+        # A bound grid and empty parser text do not independently declare a
+        # source blank. Preserve the literal, including an empty one.
+        value_state="literal",
     )
+
+
+@dataclass(slots=True)
+class _FragmentBinding:
+    records: list[SemanticRecord]
+    consumed: set[CellRef]
+    issues: list[tuple[int, str]]
+
+
+def _record_refs(record: SemanticRecord) -> set[CellRef]:
+    references: set[Any] = {*record.subject_headers, *record.row_groups}
+    if record.subject:
+        references.add(record.subject)
+    for value in record.values:
+        references.update((value.value, *value.row_headers, *value.column_headers,
+                           *value.unit_refs, *value.period_refs, *value.note_refs))
+    return {ref for ref in references if isinstance(ref, CellRef)}
+
+
+def _qualify_relation(fragment: TableFragment, relation: ValueRelation,
+                      registry: dict[Any, Any]) -> ValueRelation:
+    from app.services.table_context_service import scalar
+    cell = registry[relation.value]
+    labels = [registry[r].text for r in relation.column_headers]
+    unit_refs = list(relation.unit_refs)
+    period_refs = list(relation.period_refs)
+    notes = []
+    ratio = any(re.search(r"同比|佔|占|比例|比率|percent|change|ratio|rate", text, re.I) for text in labels)
+    own_unit = re.search(r"[%％‰$€£¥]", cell.text)
+    if scalar(cell.text) and not own_unit and not ratio and not unit_refs:
+        corner = next((c for c in fragment.cells if c.column == 0 and c.row < cell.row
+                       and re.fullmatch(r"[（(]?(?:人民币|人民幣)?(?:百万元|百萬元|千元|万元|萬元|元)[)）]?", c.text.strip())), None)
+        if corner:
+            unit_refs.append(_ref(fragment, corner))
+    for ref in fragment.context_refs:
+        if cell.row not in ref.body_rows or cell.column not in ref.columns:
+            continue
+        if ref.kind == "unit" and scalar(cell.text) and not own_unit and not unit_refs and not ratio:
+            unit_refs.append(ref)
+        elif ref.kind == "period" and not period_refs:
+            period_refs.append(ref)
+        elif ref.kind == "note":
+            notes.append(ref)
+    return replace(relation, unit_refs=tuple(unit_refs), period_refs=tuple(period_refs), note_refs=tuple(notes))
+
+
+def _field_record(
+    fragment: TableFragment,
+    row: int,
+    cells: Sequence[TableCellFragment],
+    registry: dict[CellRef, TableCellFragment],
+) -> SemanticRecord | None:
+    # A field relation may be declared by independently bound source evidence.
+    # Mere adjacency, a backend table label or equal glyphs never creates one.
+    explicit = [scope for scope in fragment.pdf_evidence.get("field_scopes", [])
+                if scope.get("complete") and row in scope.get("body_rows", [])]
+    if len(explicit) != 1:
+        return None
+    pairs = []
+    if explicit:
+        evidence = explicit[0].get("evidence", {})
+        if not (explicit[0].get("evidence_source") and (
+            evidence.get("explicit_label_delimiters") or
+            evidence.get("source_style_contrast") and (
+                evidence.get("numeric_value_evidence") or evidence.get("explicit_field_label_type")
+            )
+        )):
+            return None
+        by_position = {(c.row, c.column): c for c in cells}
+        claimed: set[tuple[int, int]] = set()
+        for pair in explicit[0].get("pairs", []):
+            label_pos, value_pos = tuple(pair.get("label", [])), tuple(pair.get("value", []))
+            if (len(label_pos) != 2 or len(value_pos) != 2 or label_pos in claimed
+                    or value_pos in claimed or label_pos == value_pos):
+                return None
+            label, value = by_position.get(label_pos), by_position.get(value_pos)
+            if label is None or value is None:
+                return None
+            pairs.append((label, value))
+            claimed.update((label_pos, value_pos))
+        if claimed != set(by_position):
+            return None
+    if not pairs or any(not label.text.strip() or _NUMBER.fullmatch(_compact(label.text))
+                        or label.row != row or value.row != row
+                        or label.row_span != 1 or value.row_span != 1 for label, value in pairs):
+        return None
+    return SemanticRecord(fragment.fragment_id, row, tuple(
+        _relation(_ref(fragment, value), (_ref(fragment, label),), (), registry)
+        for label, value in pairs
+    ))
 
 
 def _bind_fragment(
     fragment: TableFragment,
     fragments: dict[str, TableFragment],
     registry: dict[CellRef, TableCellFragment],
-) -> tuple[list[SemanticRecord], set[CellRef], str | None]:
+) -> _FragmentBinding:
     source = _source_cells(fragment)
     if not source:
-        return [], set(), "source_grid_not_completely_bound"
-    scopes = [s for s in fragment.source_header_scopes if s.get("complete")]
-    headers_by_row: dict[int, tuple[TableFragment, list[TableCellFragment]]] = {}
-    consumed: set[CellRef] = set()
+        return _FragmentBinding([], set(), [(r, "source_grid_not_completely_bound")
+                                           for r in range(fragment.num_rows)])
+    if fragment.pdf_evidence.get("content_kind") in {"layout", "layout_grid", "grid_prose"}:
+        return _FragmentBinding([], set(), [(r, "layout_grid_not_semantic_table")
+                                           for r in range(fragment.num_rows)])
+    # Each row keeps its own scope and failure. Invalid later scopes do not
+    # erase unrelated earlier records or authorize inherited headers.
+    headers_by_row: dict[int, tuple[TableFragment, list[TableCellFragment], dict[str, Any]]] = {}
+    blocked: dict[int, str] = {}
     header_rows: set[int] = set()
-    for scope in scopes:
-        rows = scope.get("header_rows", [])
-        body = scope.get("body_rows", [])
-        if not rows or rows != list(range(rows[0], rows[-1] + 1)):
-            return [], set(), "invalid_header_scope"
+    for scope in fragment.source_header_scopes:
+        if not scope.get("complete"):
+            continue
+        rows, body = scope.get("header_rows", []), scope.get("body_rows", [])
+        valid = (isinstance(rows, list) and bool(rows)
+                 and all(type(r) is int and 0 <= r < fragment.num_rows for r in rows)
+                 and rows == list(range(rows[0], rows[-1] + 1)))
+        if not valid:
+            for row in body:
+                if type(row) is int and 0 <= row < fragment.num_rows:
+                    blocked[row] = "invalid_header_scope"
+            continue
         headers = [c for c in fragment.cells if c.row in rows]
-        if any(c.row + c.row_span > rows[-1] + 1 for c in headers):
-            return [], set(), "header_span_crosses_body"
         header_rows.update(rows)
-        consumed.update(_ref(fragment, c) for c in headers if not c.text.strip())
+        if any(c.row + c.row_span > rows[-1] + 1 for c in headers):
+            blocked.update((r, "header_span_crosses_body") for r in body)
+            continue
         for row in body:
-            if row in headers_by_row or not rows[-1] < row < fragment.num_rows:
-                return [], set(), "overlapping_header_scopes"
-            headers_by_row[row] = fragment, headers
+            if type(row) is not int or not rows[-1] < row < fragment.num_rows:
+                if type(row) is int:
+                    blocked[row] = "overlapping_header_scopes"
+                continue
+            if row in headers_by_row:
+                blocked[row] = "overlapping_header_scopes"
+                continue
+            headers_by_row[row] = fragment, headers, scope
 
     inherited = fragment.pdf_evidence.get("inherited_header_scope", {})
     inherited_source = fragments.get(inherited.get("source_table_id"))
     inherited_groups = inherited.get("source_column_groups", [])
     if inherited.get("complete") and inherited_source is not None:
-        if not _source_cells(inherited_source):
-            return [], set(), "inherited_source_not_bound"
         rows = inherited.get("header_rows", [])
         headers = [c for c in inherited_source.cells if c.row in rows]
-        if len(inherited_groups) != fragment.num_cols or not rows or not headers:
-            return [], set(), "invalid_inherited_scope"
+        valid = (bool(_source_cells(inherited_source)) and bool(rows) and bool(headers)
+                 and len(inherited_groups) == fragment.num_cols)
         for row in inherited.get("body_rows", []):
-            if row in headers_by_row or not 0 <= row < fragment.num_rows:
-                return [], set(), "overlapping_inherited_scope"
-            headers_by_row[row] = inherited_source, headers
+            if type(row) is not int or not 0 <= row < fragment.num_rows:
+                continue
+            if not valid:
+                blocked[row] = "invalid_inherited_scope"
+            elif row in headers_by_row:
+                blocked[row] = "overlapping_inherited_scope"
+            else:
+                headers_by_row[row] = inherited_source, headers, inherited
 
     records: list[SemanticRecord] = []
+    issues: list[tuple[int, str]] = []
     for row in range(fragment.num_rows):
         if row in header_rows:
             continue
-        cells = sorted(
-            (c for c in fragment.cells if c.row <= row < c.row + c.row_span),
-            key=lambda c: c.column,
-        )
-        if not cells or cells[0].column != 0:
-            return [], set(), "row_not_completely_bound"
-        if row not in headers_by_row:
-            # A shaded label followed by an unshaded value is the current field
-            # pattern. An unlabelled extra column or a rowspan is not guessed.
-            if len(cells) % 2 or any(c.row_span != 1 for c in cells):
-                return [], set(), "unresolved_header_or_field_row"
-            values = []
-            for label, value in zip(cells[::2], cells[1::2], strict=True):
-                if (
-                    not label.text.strip()
-                    or _NUMBER.fullmatch(_compact(label.text))
-                    or not source[label.row, label.column].get("shaded")
-                    or source[value.row, value.column].get("shaded")
-                ):
-                    return [], set(), "unresolved_header_or_field_row"
-                values.append(
-                    _relation(_ref(fragment, value), (_ref(fragment, label),), (), registry)
-                )
-            records.append(SemanticRecord(fragment.fragment_id, row, tuple(values)))
-            consumed.update(_ref(fragment, c) for c in cells)
+        if row in blocked:
+            issues.append((row, blocked[row]))
             continue
-
-        origin, headers = headers_by_row[row]
+        cells = sorted((c for c in fragment.cells if c.row <= row < c.row + c.row_span),
+                       key=lambda c: c.column)
+        if not cells or cells[0].column != 0:
+            issues.append((row, "row_not_completely_bound"))
+            continue
+        if row not in headers_by_row:
+            field = _field_record(fragment, row, cells, registry)
+            if field:
+                records.append(field)
+            else:
+                issues.append((row, "unresolved_header_or_field_row"))
+            continue
+        origin, headers, scope = headers_by_row[row]
+        native_scope = str(scope.get("evidence_source", "")).startswith("native_literal_")
+        # Section headings with explicitly empty value bands are context, not
+        # blank-valued facts. Keep them in the retained source region.
+        if native_scope and all(not c.text.strip() for c in cells if c.column not in scope.get("row_header_columns", [0])):
+            issues.append((row, "native_section_heading_retained"))
+            continue
 
         def path_for(
             cell: TableCellFragment,
@@ -219,51 +345,96 @@ def _bind_fragment(
                 group = inherited_groups[col]
                 if not group or group != list(range(group[0], group[-1] + 1)):
                     return None
-                probe = TableCellFragment(0, group[0], 1, len(group), "")
-                path = _header_path(band, probe)
+                path = _header_path(band, TableCellFragment(0, group[0], 1, len(group), ""))
                 if path is None:
                     return None
                 paths.append(path)
             return paths[0] if paths and all(p == paths[0] for p in paths) else None
 
-        subject = cells[0]
-        if not subject.text.strip() or len(cells) < 2:
-            return [], set(), "unresolved_row_subject"
-        subject_path = path_for(subject)
-        if subject_path is None:
-            return [], set(), "subject_crosses_header_columns"
+        row_columns = scope.get("row_header_columns", [0])
+        if (not isinstance(row_columns, list) or not row_columns
+                or any(type(col) is not int or not 0 <= col < fragment.num_cols for col in row_columns)
+                or row_columns != sorted(set(row_columns))
+                or len(row_columns) >= fragment.num_cols):
+            issues.append((row, "invalid_row_header_scope"))
+            continue
+        labels = [c for c in cells if set(range(c.column, c.column + c.column_span)).intersection(row_columns)]
+        if (not labels or any(not c.text.strip() for c in labels)
+                or any(not set(range(c.column, c.column + c.column_span)).issubset(row_columns) for c in labels)
+                or {col for c in labels for col in range(c.column, c.column + c.column_span)} != set(row_columns)):
+            issues.append((row, "unresolved_row_subject"))
+            continue
+        subject, groups = labels[-1], labels[:-1]
+        label_paths = [path_for(label) for label in labels]
+        if any(path is None for path in label_paths):
+            issues.append((row, "subject_crosses_header_columns"))
+            continue
+        subject_path = tuple({(h.row, h.column): h for path in label_paths if path for h in path}.values())
+        if native_scope:
+            subject_path = tuple(h for h in subject_path if not re.fullmatch(
+                r"[（(]?(?:人民币|人民幣)?(?:百万元|百萬元|千元|万元|萬元|元)[)）]?", h.text.strip()))
         values = []
         paths_seen: set[tuple[CellRef, ...]] = set()
-        for cell in cells[1:]:
-            if cell.row != row or cell.row_span != 1:
-                return [], set(), "value_span_crosses_records"
+        reason = None
+        for cell in cells:
+            if cell in labels:
+                continue
+            if (cell.row != row or cell.row_span != 1) and not native_scope:
+                reason = "value_span_crosses_records"
+                break
             path = path_for(cell)
             if not path:
-                return [], set(), "incomplete_column_header_path"
+                reason = "incomplete_column_header_path"
+                break
             refs = tuple(_ref(origin, h) for h in path)
             if refs in paths_seen:
-                return [], set(), "ambiguous_duplicate_leaf_headers"
+                reason = "ambiguous_duplicate_leaf_headers"
+                break
             paths_seen.add(refs)
-            values.append(
-                _relation(_ref(fragment, cell), (_ref(fragment, subject),), refs, registry)
-            )
-        records.append(
-            SemanticRecord(
-                fragment.fragment_id,
-                row,
-                tuple(values),
-                _ref(fragment, subject),
-                tuple(_ref(origin, h) for h in subject_path),
-            )
-        )
-        consumed.update(_ref(fragment, c) for c in cells)
-    for record in records:
-        references = set(record.subject_headers)
-        for relation in record.values:
-            references.update(relation.row_headers)
-            references.update(relation.column_headers)
-        consumed.update(ref for ref in references if ref.table_id == fragment.fragment_id)
-    return records, consumed, None
+            relation = _relation(_ref(fragment, cell), tuple(_ref(fragment, label) for label in labels), refs, registry)
+            values.append(_qualify_relation(fragment, relation, registry))
+        if reason or not values:
+            issues.append((row, reason or "unresolved_row_subject"))
+            continue
+        extra_group = fragment.native_evidence.get("row_groups", {}).get(str(row))
+        row_groups = tuple(_ref(fragment, group) for group in groups)
+        if extra_group:
+            row_groups = (CellRef(fragment.fragment_id, *extra_group), *row_groups)
+            values = [replace(value, row_headers=(*row_groups, *value.row_headers)) for value in values]
+        records.append(SemanticRecord(
+            fragment.fragment_id, row, tuple(values), _ref(fragment, subject),
+            tuple(_ref(origin, h) for h in subject_path),
+            row_groups,
+            tuple(ref for ref in fragment.context_refs if ref.kind == "title"),
+        ))
+    # Do not cut a shared source cell across converted and retained rows. This
+    # includes shared labels: unresolved rows must retain their real context.
+    while True:
+        converted_rows = {record.source_row for record in records}
+        unsafe = set()
+        for cell in fragment.cells:
+            if cell.row_span > 1 and cell.row not in header_rows:
+                span = set(range(cell.row, cell.row + cell.row_span))
+                if span & converted_rows and span - converted_rows:
+                    unsafe.update(span & converted_rows)
+        if not unsafe:
+            break
+        records = [record for record in records if record.source_row not in unsafe]
+        issues.extend((r, "row_span_crosses_unresolved_region") for r in sorted(unsafe))
+    consumed = {ref for record in records for ref in _record_refs(record)
+                if ref.table_id == fragment.fragment_id}
+    group_rows = {ref.row for record in records for ref in record.row_groups
+                  if ref.table_id == fragment.fragment_id}
+    consumed.update(_ref(fragment, c) for c in fragment.cells if c.row in group_rows and not c.text.strip())
+    # Empty span/header anchors have no literal to drop, but remain structural
+    # coverage only when the entire header band is actually used by a record.
+    used_headers = {ref.row for ref in consumed if ref.row in header_rows}
+    for scope in fragment.source_header_scopes:
+        rows = scope.get("header_rows", [])
+        if scope.get("complete") and used_headers.intersection(rows):
+            consumed.update(_ref(fragment, c) for c in fragment.cells
+                            if c.row in rows and not c.text.strip())
+    return _FragmentBinding(records, consumed, issues)
 
 
 def bind_table_view(
@@ -271,96 +442,219 @@ def bind_table_view(
     group: Sequence[TableFragment],
     all_fragments: Sequence[TableFragment],
 ) -> SemanticTableView:
-    """Return a complete derived view or a retained source view with reasons."""
+    """Bind supported rows and retain every unresolved source region."""
     ids = tuple(f.fragment_id for f in group)
     count = sum(len(f.cells) for f in group)
-    registry = _registry(all_fragments)
     sources = {f.fragment_id: f for f in all_fragments}
+    if (not group or not _ID.fullmatch(view_id) or any(not _ID.fullmatch(i) for i in ids)
+            or len(sources) != len(all_fragments) or len(set(ids)) != len(ids)):
+        return SemanticTableView(view_id, ids, "retained", "unknown",
+                                 reason_codes=("invalid_table_identity",), source_cell_count=count)
+    registry = _registry(all_fragments)
     records: list[SemanticRecord] = []
     covered: set[CellRef] = set()
-    reason = None
-    if (
-        not group
-        or not _ID.fullmatch(view_id)
-        or any(not _ID.fullmatch(i) for i in ids)
-        or len(sources) != len(all_fragments)
-        or len(set(ids)) != len(ids)
-    ):
-        reason = "invalid_table_identity"
-    else:
-        for fragment in group:
-            rows, consumed, reason = _bind_fragment(fragment, sources, registry)
-            if reason:
-                break
-            records.extend(rows)
-            covered.update(consumed)
+    issues: list[tuple[str, int, str]] = []
+    for fragment in group:
+        bound = _bind_fragment(fragment, sources, registry)
+        records.extend(bound.records)
+        covered.update(bound.consumed)
+        issues.extend((fragment.fragment_id, row, reason) for row, reason in bound.issues)
     expected = {_ref(f, c) for f in group for c in f.cells}
-    if reason is None and (covered != expected or not records):
-        reason = "incomplete_source_cell_coverage"
-    if reason:
+    reasons = tuple(dict.fromkeys(reason for _, _, reason in issues))
+    header_positions = {
+        (fragment.fragment_id, row) for fragment in group
+        for scope in fragment.source_header_scopes if scope.get("complete")
+        for row in scope.get("header_rows", []) if type(row) is int
+    }
+    header_positions.update((f.fragment_id, int(position[0])) for f in group
+                            for position in f.native_evidence.get("row_groups", {}).values())
+    while True:
+        missing = expected - covered
+        retained_rows = {(ref.table_id, row) for ref in missing
+                         for row in range(ref.row, ref.row + registry[ref].row_span)}
+        # Labels from a source header may recur as context. No data, subject,
+        # group or qualifier cell can be rendered in both a record and grid.
+        unsafe = {
+            (record.source_table_id, record.source_row) for record in records
+            if any((ref.table_id, ref.row) not in header_positions
+                   and any((ref.table_id, row) in retained_rows for row in range(
+                       ref.row, ref.row + registry[ref].row_span))
+                   for ref in _record_refs(record) if ref in expected)
+        }
+        if not unsafe:
+            break
+        records = [record for record in records
+                   if (record.source_table_id, record.source_row) not in unsafe]
+        covered = {ref for record in records for ref in _record_refs(record)
+                   if ref in expected}
+        for fragment in group:
+            for scope in fragment.source_header_scopes:
+                rows = scope.get("header_rows", [])
+                if scope.get("complete") and any(
+                    ref.table_id == fragment.fragment_id and ref.row in rows for ref in covered
+                ):
+                    covered.update(_ref(fragment, c) for c in fragment.cells
+                                   if c.row in rows and not c.text.strip())
+        issues.extend((identity, row, "shared_reference_crosses_unresolved_region")
+                      for identity, row in sorted(unsafe))
+        reasons = tuple(dict.fromkeys((*reasons, "incomplete_source_cell_coverage")))
+    if missing and not reasons:
+        reasons = ("incomplete_source_cell_coverage",)
+    if not records:
         return SemanticTableView(
-            view_id, ids, "retained", "unknown", reason_codes=(reason,), source_cell_count=count
+            view_id, ids, "retained", "unknown", reason_codes=reasons,
+            source_cell_count=count, retained_cells=tuple(sorted(expected)),
+            retained_rows=tuple((f.fragment_id, r) for f in group for r in range(f.num_rows)),
+            row_issues=tuple(issues),
         )
     fields = any(r.subject is None for r in records)
     tabular = any(r.subject is not None for r in records)
-    numeric = any(
-        _NUMBER.fullmatch(_compact(registry[v.value].text)) for r in records for v in r.values
-    )
-    kind: SemanticKind = (
-        "mixed"
-        if fields and tabular
-        else "fields"
-        if fields
-        else "comparison"
-        if numeric
-        else "records"
-    )
+    numeric = any(_NUMBER.fullmatch(_compact(registry[v.value].text))
+                  for r in records for v in r.values)
+    kind: SemanticKind = ("mixed" if fields and tabular else "fields" if fields
+                          else "comparison" if numeric else "records")
     return SemanticTableView(
-        view_id,
-        ids,
-        "converted",
-        kind,
-        tuple(records),
-        source_cell_count=count,
-        covered_source_cells=len(covered),
+        view_id, ids, "partial" if missing else "converted", kind, tuple(records),
+        reason_codes=reasons, source_cell_count=count, covered_source_cells=len(covered),
+        retained_cells=tuple(sorted(missing)), retained_rows=tuple(sorted(retained_rows)),
+        row_issues=tuple(issues),
     )
+
+
+def retained_table_parts(
+    view: SemanticTableView, fragments: Sequence[TableFragment]
+) -> list[dict[str, Any]]:
+    """Render residual source rows with exact display-to-source coordinates.
+
+    A synthetic all-empty display header has no source identity. Existing
+    header labels may be repeated as context; converted data rows never are.
+    """
+    retained = set(view.retained_rows)
+    parts: list[dict[str, Any]] = []
+    for fragment in fragments:
+        if fragment.fragment_id not in view.source_tables:
+            continue
+        rows = sorted(row for identity, row in retained if identity == fragment.fragment_id)
+        if not rows:
+            continue
+        chunks: list[list[int]] = []
+        for row in rows:
+            if not chunks or row != chunks[-1][-1] + 1:
+                chunks.append([row])
+            else:
+                chunks[-1].append(row)
+        for index, chunk in enumerate(chunks):
+            context = set()
+            for scope in fragment.source_header_scopes:
+                headers = scope.get("header_rows", [])
+                if (scope.get("complete") and headers
+                        and all(type(row) is int and 0 <= row < len(fragment.rows) for row in headers)
+                        and headers == list(range(headers[0], headers[-1] + 1))
+                        and set(chunk).intersection(scope.get("body_rows", []))):
+                    context.update(headers)
+            selected = sorted(context | set(chunk))
+            if any(type(row) is not int or not 0 <= row < len(fragment.rows) for row in selected):
+                raise ValueError("retained source row is unavailable")
+            display = {row: i + 1 for i, row in enumerate(selected)}
+            spans = []
+            for cell in fragment.cells:
+                if cell.row not in display:
+                    continue
+                covered = list(range(cell.row, cell.row + cell.row_span))
+                if any(row not in display for row in covered):
+                    raise ValueError("retained table cuts a source rowspan")
+                if [display[r] for r in covered] != list(range(display[cell.row], display[cell.row] + cell.row_span)):
+                    raise ValueError("retained table compresses a source rowspan")
+                if cell.row_span > 1 or cell.column_span > 1:
+                    spans.append([display[cell.row], cell.column, cell.row_span, cell.column_span])
+            metadata = {
+                "table_id": fragment.fragment_id, "part_index": index,
+                "source_rows": selected, "header_rows": sorted(context),
+                "synthetic_header_rows": [0], "source_to_display_rows": display,
+                "spans": spans, "start_row": chunk[0],
+            }
+            marker = "<!-- semantic-retained: " + json.dumps(metadata, separators=(",", ":")) + " -->"
+            rendered = marker + "\n\n" + render_gfm_rows([
+                [""] * fragment.num_cols, *[fragment.rows[row] for row in selected]
+            ])
+            parts.append({**metadata, "rendered": rendered})
+    return parts
+
+
+def _render_record(record: SemanticRecord, registry: dict[Any, Any]) -> str:
+    references = _record_refs(record)
+    if any(ref not in registry for ref in references):
+        raise ValueError("semantic source reference is absent")
+    refs: set[Any] = {v.value for v in record.values}
+    header_refs: set[CellRef] = set(record.subject_headers)
+    if record.subject:
+        refs.add(record.subject)
+    refs.update(record.row_groups)
+    for value in record.values:
+        refs.update(value.row_headers)
+        refs.update((*value.unit_refs, *value.period_refs, *value.note_refs))
+        header_refs.update(value.column_headers)
+    source = ",".join(ref.token for ref in sorted(r for r in refs if isinstance(r, CellRef)))
+    headers = ",".join(ref.token for ref in sorted(header_refs))
+    marker = f"<!-- semantic-source: cells={source}; headers={headers} -->"
+    parts = ["范围：" + " / ".join(_literal(ref.text) for ref in record.scope_refs)] if record.scope_refs else []
+    if record.subject:
+        subject = " / ".join(_literal(registry[ref].text)
+                             for ref in (*record.row_groups, record.subject))
+        label = " / ".join(_literal(registry[r].text) for r in dict.fromkeys(record.subject_headers))
+        parts.append(f"{label}{_label_separator(label)}{subject}" if label else subject)
+    for value in record.values:
+        label_refs = value.column_headers if record.subject else value.row_headers
+        label_refs = tuple(dict.fromkeys(label_refs))
+        label = " / ".join(_literal(registry[r].text) for r in label_refs)
+        text = _literal(registry[value.value].text)
+        if value.value_state == "source_blank":
+            if text:
+                raise ValueError("source-blank relation conflicts with a nonempty literal")
+            text = "（原表留空）"
+        elif value.value_state != "literal":
+            raise ValueError("unsupported semantic value state")
+        part = f"{label}{_label_separator(label)}{text}"
+        emitted: set[Any] = {value.value, *label_refs, *record.subject_headers, *record.row_groups}
+        if record.subject:
+            emitted.add(record.subject)
+        qualifiers = []
+        for qualifier, qualifier_refs in (("单位", value.unit_refs), ("期间", value.period_refs),
+                                           ("附注", value.note_refs)):
+            pending = []
+            for reference in qualifier_refs:
+                if reference not in emitted:
+                    pending.append(_literal(registry[reference].text))
+                    emitted.add(reference)
+            if pending:
+                qualifiers.append(f"{qualifier}：" + " / ".join(pending))
+        if qualifiers:
+            part += "（" + "；".join(qualifiers) + "）"
+        parts.append(part)
+    return marker + "\n\n- " + "；".join(parts) + "。"
 
 
 def render_semantic_view(view: SemanticTableView, fragments: Sequence[TableFragment]) -> str:
-    """Read all emitted labels/values from source references; never from a model."""
+    """Render supported relations and exact remaining rows in source order."""
+    marker = (f"<!-- semantic-view: id={view.view_id}; "
+              f"source-tables={','.join(view.source_tables)}; status={view.status} -->")
+    if view.status == "retained":
+        return marker
     registry = _registry(fragments)
-    marker = (
-        f"<!-- semantic-view: id={view.view_id}; "
-        f"source-tables={','.join(view.source_tables)}; status={view.status} -->"
-    )
-    if view.status != "converted":
-        return marker + "\n\n> 表格语义关系尚未确定，保留原表。"
-    lines = [marker]
-    for record in view.records:
-        refs = {v.value for v in record.values}
-        header_refs: set[CellRef] = set(record.subject_headers)
-        if record.subject:
-            refs.add(record.subject)
-        for value in record.values:
-            refs.update(value.row_headers)
-            header_refs.update(value.column_headers)
-        if any(ref not in registry for ref in refs | header_refs):
-            raise ValueError("semantic source reference is absent")
-        source = ",".join(ref.token for ref in sorted(refs))
-        headers = ",".join(ref.token for ref in sorted(header_refs))
-        lines.append(f"<!-- semantic-source: cells={source}; headers={headers} -->")
-        parts = []
-        if record.subject:
-            subject = _literal(registry[record.subject].text)
-            label = " / ".join(_literal(registry[r].text) for r in record.subject_headers)
-            parts.append(f"{label}：{subject}" if label else subject)
-        for value in record.values:
-            label_refs = value.column_headers if record.subject else value.row_headers
-            label = " / ".join(_literal(registry[r].text) for r in label_refs)
-            text = _literal(registry[value.value].text) or "（原表留空）"
-            parts.append(f"{label}：{text}")
-        lines.append("- " + "；".join(parts) + "。")
-    return "\n\n".join(lines)
+    counts: dict[CellRef, int] = {}
+    for fragment in fragments:
+        for cell in fragment.cells:
+            ref = _ref(fragment, cell)
+            counts[ref] = counts.get(ref, 0) + 1
+    if any(counts.get(ref, 0) > 1 for record in view.records for ref in _record_refs(record)):
+        raise ValueError("semantic source reference is ambiguous")
+    sequence = {identity: index for index, identity in enumerate(view.source_tables)}
+    output = [((sequence[record.source_table_id], record.source_row, 1),
+               _render_record(record, registry)) for record in view.records]
+    if view.status == "partial":
+        output.extend(((sequence[part["table_id"]], part["start_row"], 0), part["rendered"])
+                      for part in retained_table_parts(view, fragments))
+    return "\n\n".join([marker, *[text for _, text in sorted(output, key=lambda item: item[0])]])
 
 
 class TableSemanticsService:
@@ -377,7 +671,15 @@ class TableSemanticsService:
         try:
             await asyncio.shield(worker)
         except asyncio.CancelledError:
-            await asyncio.gather(asyncio.shield(worker), return_exceptions=True)
+            while not worker.done():
+                try:
+                    await asyncio.shield(worker)
+                except asyncio.CancelledError:
+                    continue
+                except BaseException:
+                    break
+            if not worker.cancelled():
+                worker.exception()
             raise
 
     @staticmethod
@@ -392,6 +694,8 @@ class TableSemanticsService:
         if result.parse_result is None:
             raise ValueError("semantic rendering requires the preserved source IR")
         fragments = [f for f in result._table_fragments if isinstance(f, TableFragment)]
+        from app.services.table_context_service import prepare_native_table_scopes
+        prepare_native_table_scopes(result)
         markdown = result.parse_result.renderings.markdown
         result._source_markdown = markdown
         rendered_views = []
@@ -411,7 +715,7 @@ class TableSemanticsService:
             body = re.sub(r"<!--.*?-->", "", body, flags=re.DOTALL)
             body = "\n".join(line for line in body.splitlines() if not line.strip().startswith("|"))
             unique = markdown.count(source_view.rendered) == 1
-            if view.status == "converted" and (body.strip() or not unique):
+            if view.status in {"converted", "partial"} and (body.strip() or not unique):
                 view = SemanticTableView(
                     view.view_id,
                     view.source_tables,
@@ -420,11 +724,20 @@ class TableSemanticsService:
                     reason_codes=("public_view_not_uniquely_owned",),
                     source_cell_count=view.source_cell_count,
                 )
-            rendered_views.append(view)
             if not unique:
+                rendered_views.append(view)
                 continue
-            rendered = render_semantic_view(view, fragments)
-            if view.status == "converted":
+            try:
+                rendered = render_semantic_view(view, fragments)
+            except (KeyError, ValueError, IndexError, TypeError):
+                view = replace(
+                    view, status="retained", kind="unknown", records=(),
+                    reason_codes=tuple(dict.fromkeys((*view.reason_codes, "semantic_projection_unavailable"))),
+                    covered_source_cells=0,
+                )
+                rendered = render_semantic_view(view, fragments)
+            rendered_views.append(view)
+            if view.status in {"converted", "partial"}:
                 replacement = "\n\n".join(
                     p for p in (source_view.prefix, rendered, source_view.suffix) if p
                 )
@@ -451,11 +764,14 @@ class TableSemanticsService:
                 if view.status == "converted"
                 for source in view.source_tables
             }
-            retained = {f.fragment_id for f in fragments} - converted
+            partial = {
+                source for view in rendered_views if view.status == "partial"
+                for source in view.source_tables
+            }
+            retained = {f.fragment_id for f in fragments} - converted - partial
             markdown += (
                 f"\n\n<!-- semantic-summary: converted={len(converted)}; "
-                f"retained={len(retained)} -->\n\n"
-                f"> 表格语义转换：已转换 {len(converted)} 张，保留原表 {len(retained)} 张。"
+                f"partial={len(partial)}; retained={len(retained)} -->"
             )
         result._semantic_tables = rendered_views
         result.parse_result.renderings.markdown = markdown

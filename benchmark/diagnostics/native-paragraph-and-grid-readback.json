@@ -1,0 +1,19 @@
+{
+  "scope": "Software defects only; no withdrawn quality, timing or candidate artifacts retained.",
+  "withdrawn_run": "20261028-p07-service-07",
+  "defects": [
+    {
+      "component": "native_prose_assembly",
+      "reason": "Physical NativeBlock seams were promoted into paragraph boundaries inside one already declared parser paragraph; width-equivalent regions were rewritten without information gain.",
+      "repair": "Project only uniquely supported existing paragraph boundaries; preserve parser formatting when declared width/layout equivalent; keep raw source evidence unchanged."
+    },
+    {
+      "component": "partial_observation_readback",
+      "reason": "An exact isolated leading residual grid without semantic classification lost its actual row/col geometry.",
+      "repair": "Keep actual geometry for uniquely displayed residual ranges disjoint from all explicit semantic scopes; add no semantic roles; reject genuinely conflicting scopes."
+    }
+  ],
+  "reproduction": "Authored NativeBlock/font/softwrap fixtures and a separate residual grid preceding a later explicit header scope.",
+  "replacement_run": "20261028-p07-service-08",
+  "replacement_execution_software_id": "0d3eebb621f367a323a9d75e733eee580966a5d007328c25e594381b99dafd2b"
+}

@@ -673,7 +673,9 @@ async def test_sdk_request_count_measures_actual_retry_posts(native_pdf: Path) -
 async def test_orientation_failure_reports_zero_sdk_posts(native_pdf: Path) -> None:
     class FailedOrientation:
         def orient(self, _image: str):
-            raise RuntimeError("orientation unavailable")
+            # The real initializer reports missing local model files with an
+            # OSError subtype. Unexpected RuntimeError/OOM must propagate.
+            raise FileNotFoundError("orientation unavailable")
 
     posts = 0
 

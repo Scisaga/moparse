@@ -1,0 +1,950 @@
+{
+  "schema": "moparse-evaluation-execution-v1",
+  "prepared_date": "2026-10-26",
+  "frozen": false,
+  "status": "software_prepared_runtime_trials_pending",
+  "model_artifacts_prepared": true,
+  "pipelines": {
+    "P01": {
+      "pipeline": "P01",
+      "dpi": 200,
+      "timeout_seconds": 7200,
+      "runtime": {
+        "kind": "docker",
+        "image": "sha256:61ec8c75a6162ffda94cf42d24430d17c2b4ca276f5411d47342a92f43891a5b",
+        "container_python": "python",
+        "network": "host",
+        "mounts": {
+          "/opt/moparse/data/evaluation-models/orientation": "/models/orientation",
+          "/var/lib/docker/volumes/mosaicparse-huggingface-cache/_data/hub/models--PaddlePaddle--PP-DocLayoutV3_safetensors": "/models/glm-layout-cache",
+          "/var/lib/docker/volumes/mosaicparse-docling-models-selected-20261017/_data/docling-project--docling-models": "/models/docling/docling-project--docling-models",
+          "/var/lib/docker/volumes/mosaicparse-docling-models-selected-20261017/_data/docling-project--docling-layout-heron": "/models/docling/docling-project--docling-layout-heron"
+        }
+      },
+      "models": {
+        "orientation_path": "/models/orientation",
+        "glm_layout_path": "/models/glm-layout-cache/snapshots/e4f489dc536556fc1be02b973ba06756e0d4a2ac",
+        "docling_path": "/models/docling"
+      },
+      "revisions": {
+        "orientation": "b2716954d2e321dd4436400b37584fab641027ab",
+        "glm": "2e85a62840ccac27daa451df36c736c4636b8628",
+        "glm_layout": "e4f489dc536556fc1be02b973ba06756e0d4a2ac",
+        "tableformer_v1": "fc0f2d45e2218ea24bce5045f58a389aed16dc23",
+        "docling_layout": "8f39ad3c0b4c58e9c2d2c84a38465abf757272d8"
+      },
+      "inference_services": [
+        {
+          "role": "glm",
+          "family": "glm",
+          "inference_image": "sha256:df7be4c4d818e250a8c80f78d110571e92e72a1fefec06fed82a2e37e473cd48",
+          "host_model_path": "/var/lib/docker/volumes/mosaicparse-huggingface-cache/_data/hub/models--zai-org--GLM-OCR",
+          "model_subdir": "snapshots/2e85a62840ccac27daa451df36c736c4636b8628",
+          "model_name": "zai-org/GLM-OCR",
+          "port": 12541,
+          "cpus": 4,
+          "memory_gib": 20,
+          "gpu_memory_gib": 16,
+          "rotary_embedding": "native"
+        }
+      ],
+      "versions": {
+        "docling": "2.139.0",
+        "docling-core": "2.101.1",
+        "mineru": "4.0.12",
+        "mineru-vl-utils": "2.0.7",
+        "docvortex": "0.5.16",
+        "glmocr": "0.1.5",
+        "paddleocr": "3.7.0",
+        "paddlex": "3.7.2",
+        "transformers": "5.8.1"
+      },
+      "resources": {
+        "preprocessing_cpus": 8,
+        "preprocessing_memory_gib": 8,
+        "inference_cpus": 4,
+        "inference_memory_gib": 20,
+        "gpu_device": "1",
+        "gpu_memory_gib": 16,
+        "power_watts": 200,
+        "outer_concurrency": 1,
+        "client_concurrency": 4
+      },
+      "graphs": {
+        "status": "pending_bounded_capture_and_inference",
+        "torch_compile": false
+      },
+      "retry_max_attempts": 0,
+      "observe_request_metadata": true,
+      "co_resident_services": {
+        "qwen3-tts-openai.service": {
+          "policy": "keep_running",
+          "observation_policy": "observe_only",
+          "inference_during_benchmark": "uncontrolled_observed_only",
+          "instruction_date": "2026-10-26"
+        }
+      },
+      "execution_repairs": [
+        "rotation-coordinate-space",
+        "native-neighbor-retention",
+        "region-export-isolation",
+        "glm-gptj-native-rotary"
+      ],
+      "source_policy": {
+        "minimum_native_characters": 40,
+        "scan_image_coverage": 0.8,
+        "mixed_image_coverage": 0.2,
+        "unknown_action": "glm",
+        "role": "runtime_prediction_only_not_gold"
+      },
+      "glm_configuration": "bundled glmocr 0.1.5 YAML; self-hosted CPU layout; retry=0; workers=4",
+      "native_view_policy": {
+        "glm": {
+          "primary_scoring_view": "json_result",
+          "audit_view": "raw_json_result",
+          "cross_view_order": "unknown",
+          "selection": "fixed; no favorable stage selection by answer or sample"
+        }
+      },
+      "docling_export": "contiguous native group once; all ContentLayer; native tree order"
+    },
+    "P02": {
+      "pipeline": "P02",
+      "dpi": 200,
+      "timeout_seconds": 7200,
+      "runtime": {
+        "kind": "docker",
+        "image": "sha256:61ec8c75a6162ffda94cf42d24430d17c2b4ca276f5411d47342a92f43891a5b",
+        "container_python": "python",
+        "network": "host",
+        "mounts": {
+          "/opt/moparse/data/evaluation-models/orientation": "/models/orientation",
+          "/var/lib/docker/volumes/mosaicparse-huggingface-cache/_data/hub/models--PaddlePaddle--PP-DocLayoutV3_safetensors": "/models/glm-layout-cache",
+          "/var/lib/docker/volumes/mosaicparse-docling-models-selected-20261017/_data/docling-project--docling-models": "/models/docling/docling-project--docling-models",
+          "/var/lib/docker/volumes/mosaicparse-docling-models-selected-20261017/_data/docling-project--docling-layout-heron": "/models/docling/docling-project--docling-layout-heron",
+          "/opt/moparse/data/evaluation-models/docling/docling-project--TableFormerV2": "/models/docling/docling-project--TableFormerV2"
+        }
+      },
+      "models": {
+        "orientation_path": "/models/orientation",
+        "glm_layout_path": "/models/glm-layout-cache/snapshots/e4f489dc536556fc1be02b973ba06756e0d4a2ac",
+        "docling_path": "/models/docling"
+      },
+      "revisions": {
+        "orientation": "b2716954d2e321dd4436400b37584fab641027ab",
+        "glm": "2e85a62840ccac27daa451df36c736c4636b8628",
+        "glm_layout": "e4f489dc536556fc1be02b973ba06756e0d4a2ac",
+        "tableformer_v1": "fc0f2d45e2218ea24bce5045f58a389aed16dc23",
+        "docling_layout": "8f39ad3c0b4c58e9c2d2c84a38465abf757272d8",
+        "tableformer_v2": "e41ba5da7ef69004f4b329168791c2987abf917c"
+      },
+      "inference_services": [
+        {
+          "role": "glm",
+          "family": "glm",
+          "inference_image": "sha256:df7be4c4d818e250a8c80f78d110571e92e72a1fefec06fed82a2e37e473cd48",
+          "host_model_path": "/var/lib/docker/volumes/mosaicparse-huggingface-cache/_data/hub/models--zai-org--GLM-OCR",
+          "model_subdir": "snapshots/2e85a62840ccac27daa451df36c736c4636b8628",
+          "model_name": "zai-org/GLM-OCR",
+          "port": 12541,
+          "cpus": 4,
+          "memory_gib": 20,
+          "gpu_memory_gib": 16,
+          "rotary_embedding": "native"
+        }
+      ],
+      "versions": {
+        "docling": "2.139.0",
+        "docling-core": "2.101.1",
+        "mineru": "4.0.12",
+        "mineru-vl-utils": "2.0.7",
+        "docvortex": "0.5.16",
+        "glmocr": "0.1.5",
+        "paddleocr": "3.7.0",
+        "paddlex": "3.7.2",
+        "transformers": "5.8.1"
+      },
+      "resources": {
+        "preprocessing_cpus": 8,
+        "preprocessing_memory_gib": 8,
+        "inference_cpus": 4,
+        "inference_memory_gib": 20,
+        "gpu_device": "1",
+        "gpu_memory_gib": 16,
+        "power_watts": 200,
+        "outer_concurrency": 1,
+        "client_concurrency": 4
+      },
+      "graphs": {
+        "status": "pending_bounded_capture_and_inference",
+        "torch_compile": false
+      },
+      "retry_max_attempts": 0,
+      "observe_request_metadata": true,
+      "co_resident_services": {
+        "qwen3-tts-openai.service": {
+          "policy": "keep_running",
+          "observation_policy": "observe_only",
+          "inference_during_benchmark": "uncontrolled_observed_only",
+          "instruction_date": "2026-10-26"
+        }
+      },
+      "execution_repairs": [
+        "rotation-coordinate-space",
+        "native-neighbor-retention",
+        "region-export-isolation",
+        "glm-gptj-native-rotary"
+      ],
+      "source_policy": {
+        "minimum_native_characters": 40,
+        "scan_image_coverage": 0.8,
+        "mixed_image_coverage": 0.2,
+        "unknown_action": "glm",
+        "role": "runtime_prediction_only_not_gold"
+      },
+      "glm_configuration": "bundled glmocr 0.1.5 YAML; self-hosted CPU layout; retry=0; workers=4",
+      "native_view_policy": {
+        "glm": {
+          "primary_scoring_view": "json_result",
+          "audit_view": "raw_json_result",
+          "cross_view_order": "unknown",
+          "selection": "fixed; no favorable stage selection by answer or sample"
+        }
+      },
+      "docling_export": "contiguous native group once; all ContentLayer; native tree order"
+    },
+    "P03": {
+      "pipeline": "P03",
+      "dpi": 200,
+      "timeout_seconds": 7200,
+      "runtime": {
+        "kind": "docker",
+        "image": "sha256:61ec8c75a6162ffda94cf42d24430d17c2b4ca276f5411d47342a92f43891a5b",
+        "container_python": "python",
+        "network": "host",
+        "mounts": {
+          "/opt/moparse/data/evaluation-models/orientation": "/models/orientation",
+          "/opt/moparse/data/evaluation-models/paddle15": "/models/paddle-vlm",
+          "/opt/moparse/data/evaluation-models/paddle-layout-transformers": "/models/paddle-layout"
+        }
+      },
+      "models": {
+        "orientation_path": "/models/orientation",
+        "paddle_vlm_path": "/models/paddle-vlm",
+        "paddle_layout_path": "/models/paddle-layout"
+      },
+      "revisions": {
+        "orientation": "b2716954d2e321dd4436400b37584fab641027ab",
+        "paddle_vlm": "2a4195faa5e7914c12f2fc601d72c81caf8d2da5",
+        "paddle_layout": "e4f489dc536556fc1be02b973ba06756e0d4a2ac"
+      },
+      "inference_services": [
+        {
+          "role": "paddle",
+          "family": "paddle-native",
+          "inference_image": "sha256:36216a3928ac120fc6cb02f438f7d3e5cf4836de7f4e22e424e8372b6f08637c",
+          "model_name": "PaddleOCR-VL-1.5",
+          "port": 12543,
+          "cpus": 4,
+          "memory_gib": 20,
+          "gpu_memory_gib": 16,
+          "model_mounts": {
+            "/opt/moparse/data/evaluation-models/paddle15": "/models/paddle-vlm",
+            "/opt/moparse/data/evaluation-models/paddle-layout-transformers": "/models/paddle-layout"
+          },
+          "server_config": {
+            "pipeline": "P03",
+            "models": {
+              "orientation_path": "/models/orientation",
+              "paddle_vlm_path": "/models/paddle-vlm",
+              "paddle_layout_path": "/models/paddle-layout"
+            },
+            "versions": {
+              "docling": "2.139.0",
+              "docling-core": "2.101.1",
+              "mineru": "4.0.12",
+              "mineru-vl-utils": "2.0.7",
+              "docvortex": "0.5.16",
+              "glmocr": "0.1.5",
+              "paddleocr": "3.7.0",
+              "paddlex": "3.7.2",
+              "transformers": "5.8.1",
+              "paddle_transformers": "5.10.2"
+            },
+            "graphs": {
+              "status": "pending_bounded_capture_and_inference",
+              "torch_compile": false
+            },
+            "resources": {
+              "preprocessing_cpus": 8,
+              "preprocessing_memory_gib": 8,
+              "inference_cpus": 4,
+              "inference_memory_gib": 20,
+              "gpu_device": "1",
+              "gpu_memory_gib": 16,
+              "power_watts": 200,
+              "outer_concurrency": 1,
+              "client_concurrency": 4
+            },
+            "paddle_backend": "native-transformers",
+            "paddle_execution_mode": "persistent-owner-v1",
+            "paddle_use_queues": false,
+            "paddle_color_policy": "bgr-to-rgb-v1",
+            "paddle_max_new_tokens": 4096,
+            "paddle_generation_observation": true
+          }
+        }
+      ],
+      "versions": {
+        "docling": "2.139.0",
+        "docling-core": "2.101.1",
+        "mineru": "4.0.12",
+        "mineru-vl-utils": "2.0.7",
+        "docvortex": "0.5.16",
+        "glmocr": "0.1.5",
+        "paddleocr": "3.7.0",
+        "paddlex": "3.7.2",
+        "transformers": "5.8.1",
+        "paddle_transformers": "5.10.2"
+      },
+      "resources": {
+        "preprocessing_cpus": 8,
+        "preprocessing_memory_gib": 8,
+        "inference_cpus": 4,
+        "inference_memory_gib": 20,
+        "gpu_device": "1",
+        "gpu_memory_gib": 16,
+        "power_watts": 200,
+        "outer_concurrency": 1,
+        "client_concurrency": 4
+      },
+      "graphs": {
+        "status": "pending_bounded_capture_and_inference",
+        "torch_compile": false
+      },
+      "retry_max_attempts": 0,
+      "observe_request_metadata": true,
+      "co_resident_services": {
+        "qwen3-tts-openai.service": {
+          "policy": "keep_running",
+          "observation_policy": "observe_only",
+          "inference_during_benchmark": "uncontrolled_observed_only",
+          "instruction_date": "2026-10-26"
+        }
+      },
+      "execution_repairs": [
+        "rotation-coordinate-space",
+        "native-neighbor-retention",
+        "region-export-isolation",
+        "paddle-bgr-rgb",
+        "persistent-native-owner"
+      ],
+      "paddle_color_policy": "bgr-to-rgb-v1",
+      "paddle_max_new_tokens": 4096,
+      "paddle_generation_observation": true,
+      "native_attention": {
+        "vlm": "sdpa",
+        "layout": "official default; no unsupported global SDPA",
+        "cuda_graphs": "independent bounded capture/replay verification"
+      },
+      "paddle_backend": "native-rpc",
+      "resource_isolation": {
+        "preprocessing": "CPU worker cgroup: 8 CPU, 8 GiB",
+        "native_inference": "separate GPU1 container cgroup: 4 CPU, 20 GiB; includes official layout and VLM",
+        "internal_rpc_timing": "included inside direct worker processing clock; never subtracted"
+      }
+    },
+    "P04": {
+      "pipeline": "P04",
+      "dpi": 200,
+      "timeout_seconds": 7200,
+      "runtime": {
+        "kind": "docker",
+        "image": "sha256:61ec8c75a6162ffda94cf42d24430d17c2b4ca276f5411d47342a92f43891a5b",
+        "container_python": "python",
+        "network": "host",
+        "mounts": {
+          "/opt/moparse/data/evaluation-models/orientation": "/models/orientation",
+          "/opt/moparse/data/evaluation-models/paddle16": "/models/paddle-vlm",
+          "/opt/moparse/data/evaluation-models/paddle-layout-transformers": "/models/paddle-layout"
+        }
+      },
+      "models": {
+        "orientation_path": "/models/orientation",
+        "paddle_vlm_path": "/models/paddle-vlm",
+        "paddle_layout_path": "/models/paddle-layout"
+      },
+      "revisions": {
+        "orientation": "b2716954d2e321dd4436400b37584fab641027ab",
+        "paddle_vlm": "c5630abae1d940eafe0697512a0325494b02ab42",
+        "paddle_layout": "e4f489dc536556fc1be02b973ba06756e0d4a2ac"
+      },
+      "inference_services": [
+        {
+          "role": "paddle",
+          "family": "paddle-native",
+          "inference_image": "sha256:36216a3928ac120fc6cb02f438f7d3e5cf4836de7f4e22e424e8372b6f08637c",
+          "model_name": "PaddleOCR-VL-1.6",
+          "port": 12543,
+          "cpus": 4,
+          "memory_gib": 20,
+          "gpu_memory_gib": 16,
+          "model_mounts": {
+            "/opt/moparse/data/evaluation-models/paddle16": "/models/paddle-vlm",
+            "/opt/moparse/data/evaluation-models/paddle-layout-transformers": "/models/paddle-layout"
+          },
+          "server_config": {
+            "pipeline": "P04",
+            "models": {
+              "orientation_path": "/models/orientation",
+              "paddle_vlm_path": "/models/paddle-vlm",
+              "paddle_layout_path": "/models/paddle-layout"
+            },
+            "versions": {
+              "docling": "2.139.0",
+              "docling-core": "2.101.1",
+              "mineru": "4.0.12",
+              "mineru-vl-utils": "2.0.7",
+              "docvortex": "0.5.16",
+              "glmocr": "0.1.5",
+              "paddleocr": "3.7.0",
+              "paddlex": "3.7.2",
+              "transformers": "5.8.1",
+              "paddle_transformers": "5.10.2"
+            },
+            "graphs": {
+              "status": "pending_bounded_capture_and_inference",
+              "torch_compile": false
+            },
+            "resources": {
+              "preprocessing_cpus": 8,
+              "preprocessing_memory_gib": 8,
+              "inference_cpus": 4,
+              "inference_memory_gib": 20,
+              "gpu_device": "1",
+              "gpu_memory_gib": 16,
+              "power_watts": 200,
+              "outer_concurrency": 1,
+              "client_concurrency": 4
+            },
+            "paddle_backend": "native-transformers",
+            "paddle_execution_mode": "persistent-owner-v1",
+            "paddle_use_queues": false,
+            "paddle_color_policy": "bgr-to-rgb-v1",
+            "paddle_max_new_tokens": 4096,
+            "paddle_generation_observation": true
+          }
+        }
+      ],
+      "versions": {
+        "docling": "2.139.0",
+        "docling-core": "2.101.1",
+        "mineru": "4.0.12",
+        "mineru-vl-utils": "2.0.7",
+        "docvortex": "0.5.16",
+        "glmocr": "0.1.5",
+        "paddleocr": "3.7.0",
+        "paddlex": "3.7.2",
+        "transformers": "5.8.1",
+        "paddle_transformers": "5.10.2"
+      },
+      "resources": {
+        "preprocessing_cpus": 8,
+        "preprocessing_memory_gib": 8,
+        "inference_cpus": 4,
+        "inference_memory_gib": 20,
+        "gpu_device": "1",
+        "gpu_memory_gib": 16,
+        "power_watts": 200,
+        "outer_concurrency": 1,
+        "client_concurrency": 4
+      },
+      "graphs": {
+        "status": "pending_bounded_capture_and_inference",
+        "torch_compile": false
+      },
+      "retry_max_attempts": 0,
+      "observe_request_metadata": true,
+      "co_resident_services": {
+        "qwen3-tts-openai.service": {
+          "policy": "keep_running",
+          "observation_policy": "observe_only",
+          "inference_during_benchmark": "uncontrolled_observed_only",
+          "instruction_date": "2026-10-26"
+        }
+      },
+      "execution_repairs": [
+        "rotation-coordinate-space",
+        "native-neighbor-retention",
+        "region-export-isolation",
+        "paddle-bgr-rgb",
+        "persistent-native-owner"
+      ],
+      "paddle_color_policy": "bgr-to-rgb-v1",
+      "paddle_max_new_tokens": 4096,
+      "paddle_generation_observation": true,
+      "native_attention": {
+        "vlm": "sdpa",
+        "layout": "official default; no unsupported global SDPA",
+        "cuda_graphs": "independent bounded capture/replay verification"
+      },
+      "paddle_backend": "native-rpc",
+      "resource_isolation": {
+        "preprocessing": "CPU worker cgroup: 8 CPU, 8 GiB",
+        "native_inference": "separate GPU1 container cgroup: 4 CPU, 20 GiB; includes official layout and VLM",
+        "internal_rpc_timing": "included inside direct worker processing clock; never subtracted"
+      }
+    },
+    "P05": {
+      "pipeline": "P05",
+      "dpi": 200,
+      "timeout_seconds": 7200,
+      "runtime": {
+        "kind": "docker",
+        "image": "sha256:61ec8c75a6162ffda94cf42d24430d17c2b4ca276f5411d47342a92f43891a5b",
+        "container_python": "python",
+        "network": "host",
+        "mounts": {
+          "/opt/moparse/data/evaluation-models/orientation": "/models/orientation",
+          "/var/lib/docker/volumes/mosaicparse-huggingface-cache/_data/hub/models--PaddlePaddle--PP-DocLayoutV3_safetensors": "/models/glm-layout-cache"
+        }
+      },
+      "models": {
+        "orientation_path": "/models/orientation",
+        "glm_layout_path": "/models/glm-layout-cache/snapshots/e4f489dc536556fc1be02b973ba06756e0d4a2ac"
+      },
+      "revisions": {
+        "orientation": "b2716954d2e321dd4436400b37584fab641027ab",
+        "glm": "2e85a62840ccac27daa451df36c736c4636b8628",
+        "glm_layout": "e4f489dc536556fc1be02b973ba06756e0d4a2ac"
+      },
+      "inference_services": [
+        {
+          "role": "glm",
+          "family": "glm",
+          "inference_image": "sha256:df7be4c4d818e250a8c80f78d110571e92e72a1fefec06fed82a2e37e473cd48",
+          "host_model_path": "/var/lib/docker/volumes/mosaicparse-huggingface-cache/_data/hub/models--zai-org--GLM-OCR",
+          "model_subdir": "snapshots/2e85a62840ccac27daa451df36c736c4636b8628",
+          "model_name": "zai-org/GLM-OCR",
+          "port": 12541,
+          "cpus": 4,
+          "memory_gib": 20,
+          "gpu_memory_gib": 16,
+          "rotary_embedding": "native"
+        }
+      ],
+      "versions": {
+        "docling": "2.139.0",
+        "docling-core": "2.101.1",
+        "mineru": "4.0.12",
+        "mineru-vl-utils": "2.0.7",
+        "docvortex": "0.5.16",
+        "glmocr": "0.1.5",
+        "paddleocr": "3.7.0",
+        "paddlex": "3.7.2",
+        "transformers": "5.8.1"
+      },
+      "resources": {
+        "preprocessing_cpus": 8,
+        "preprocessing_memory_gib": 8,
+        "inference_cpus": 4,
+        "inference_memory_gib": 20,
+        "gpu_device": "1",
+        "gpu_memory_gib": 16,
+        "power_watts": 200,
+        "outer_concurrency": 1,
+        "client_concurrency": 4
+      },
+      "graphs": {
+        "status": "pending_bounded_capture_and_inference",
+        "torch_compile": false
+      },
+      "retry_max_attempts": 0,
+      "observe_request_metadata": true,
+      "co_resident_services": {
+        "qwen3-tts-openai.service": {
+          "policy": "keep_running",
+          "observation_policy": "observe_only",
+          "inference_during_benchmark": "uncontrolled_observed_only",
+          "instruction_date": "2026-10-26"
+        }
+      },
+      "execution_repairs": [
+        "rotation-coordinate-space",
+        "native-neighbor-retention",
+        "region-export-isolation",
+        "glm-gptj-native-rotary"
+      ],
+      "glm_configuration": "bundled glmocr 0.1.5 YAML; self-hosted CPU layout; retry=0; workers=4",
+      "native_view_policy": {
+        "glm": {
+          "primary_scoring_view": "json_result",
+          "audit_view": "raw_json_result",
+          "cross_view_order": "unknown",
+          "selection": "fixed; no favorable stage selection by answer or sample"
+        }
+      }
+    },
+    "P06": {
+      "pipeline": "P06",
+      "dpi": 200,
+      "timeout_seconds": 7200,
+      "runtime": {
+        "kind": "docker",
+        "image": "sha256:61ec8c75a6162ffda94cf42d24430d17c2b4ca276f5411d47342a92f43891a5b",
+        "container_python": "python",
+        "network": "host",
+        "mounts": {
+          "/opt/moparse/data/evaluation-models/orientation": "/models/orientation",
+          "/var/lib/docker/volumes/mosaicparse-huggingface-cache/_data/hub/models--PaddlePaddle--PP-DocLayoutV3_safetensors": "/models/glm-layout-cache",
+          "/var/lib/docker/volumes/moparse-mineru-small-models/_data": "/models/mineru-small"
+        },
+        "writable_runtime_paths": [
+          {
+            "path": "/models/mineru-small/models/.locks",
+            "kind": "tmpfs",
+            "size_mib": 16,
+            "scope": "advisory locks only; weights remain read-only"
+          }
+        ]
+      },
+      "models": {
+        "orientation_path": "/models/orientation",
+        "glm_layout_path": "/models/glm-layout-cache/snapshots/e4f489dc536556fc1be02b973ba06756e0d4a2ac",
+        "mineru_small_path": "/models/mineru-small"
+      },
+      "revisions": {
+        "orientation": "b2716954d2e321dd4436400b37584fab641027ab",
+        "glm": "2e85a62840ccac27daa451df36c736c4636b8628",
+        "glm_layout": "e4f489dc536556fc1be02b973ba06756e0d4a2ac",
+        "mineru": "08aaea840498d49ce16247b6263196cf02814885"
+      },
+      "inference_services": [
+        {
+          "role": "glm",
+          "family": "glm",
+          "inference_image": "sha256:df7be4c4d818e250a8c80f78d110571e92e72a1fefec06fed82a2e37e473cd48",
+          "host_model_path": "/var/lib/docker/volumes/mosaicparse-huggingface-cache/_data/hub/models--zai-org--GLM-OCR",
+          "model_subdir": "snapshots/2e85a62840ccac27daa451df36c736c4636b8628",
+          "model_name": "zai-org/GLM-OCR",
+          "port": 12541,
+          "cpus": 2,
+          "memory_gib": 10,
+          "gpu_memory_gib": 6,
+          "rotary_embedding": "native"
+        },
+        {
+          "role": "mineru",
+          "family": "mineru",
+          "inference_image": "sha256:ea407324215fa2393585447521828b34d1ffc6474fd04b24865fb9476ff5ccfe",
+          "host_model_path": "/var/lib/docker/volumes/moparse-mineru-models/_data",
+          "model_subdir": "snapshots/08aaea840498d49ce16247b6263196cf02814885",
+          "model_name": "mineru2.5-pro",
+          "port": 12542,
+          "cpus": 2,
+          "memory_gib": 10,
+          "gpu_memory_gib": 10
+        }
+      ],
+      "versions": {
+        "docling": "2.139.0",
+        "docling-core": "2.101.1",
+        "mineru": "4.0.12",
+        "mineru-vl-utils": "2.0.7",
+        "docvortex": "0.5.16",
+        "glmocr": "0.1.5",
+        "paddleocr": "3.7.0",
+        "paddlex": "3.7.2",
+        "transformers": "5.8.1"
+      },
+      "resources": {
+        "preprocessing_cpus": 8,
+        "preprocessing_memory_gib": 8,
+        "inference_cpus": 4,
+        "inference_memory_gib": 20,
+        "gpu_device": "1",
+        "gpu_memory_gib": 16,
+        "power_watts": 200,
+        "outer_concurrency": 1,
+        "client_concurrency": 4
+      },
+      "graphs": {
+        "status": "pending_bounded_capture_and_inference",
+        "torch_compile": false
+      },
+      "retry_max_attempts": 0,
+      "observe_request_metadata": true,
+      "co_resident_services": {
+        "qwen3-tts-openai.service": {
+          "policy": "keep_running",
+          "observation_policy": "observe_only",
+          "inference_during_benchmark": "uncontrolled_observed_only",
+          "instruction_date": "2026-10-26"
+        }
+      },
+      "execution_repairs": [
+        "rotation-coordinate-space",
+        "native-neighbor-retention",
+        "region-export-isolation",
+        "glm-gptj-native-rotary"
+      ],
+      "source_policy": {
+        "minimum_native_characters": 40,
+        "scan_image_coverage": 0.8,
+        "mixed_image_coverage": 0.2,
+        "unknown_action": "glm",
+        "role": "runtime_prediction_only_not_gold"
+      },
+      "glm_configuration": "bundled glmocr 0.1.5 YAML; self-hosted CPU layout; retry=0; workers=4",
+      "native_view_policy": {
+        "glm": {
+          "primary_scoring_view": "json_result",
+          "audit_view": "raw_json_result",
+          "cross_view_order": "unknown",
+          "selection": "fixed; no favorable stage selection by answer or sample"
+        }
+      }
+    },
+    "P07": {
+      "pipeline": "P07",
+      "dpi": 200,
+      "timeout_seconds": 7200,
+      "runtime": {
+        "kind": "docker",
+        "image": "sha256:61ec8c75a6162ffda94cf42d24430d17c2b4ca276f5411d47342a92f43891a5b",
+        "container_python": "python",
+        "network": "host",
+        "mounts": {
+          "/opt/moparse/data/evaluation-models/orientation": "/models/orientation",
+          "/var/lib/docker/volumes/mosaicparse-huggingface-cache/_data/hub/models--PaddlePaddle--PP-DocLayoutV3_safetensors": "/models/glm-layout-cache",
+          "/var/lib/docker/volumes/moparse-mineru-small-models/_data": "/models/mineru-small"
+        },
+        "writable_runtime_paths": [
+          {
+            "path": "/models/mineru-small/models/.locks",
+            "kind": "tmpfs",
+            "size_mib": 16,
+            "scope": "advisory locks only; weights remain read-only"
+          }
+        ]
+      },
+      "models": {
+        "orientation_path": "/models/orientation",
+        "glm_layout_path": "/models/glm-layout-cache/snapshots/e4f489dc536556fc1be02b973ba06756e0d4a2ac",
+        "mineru_small_path": "/models/mineru-small"
+      },
+      "revisions": {
+        "orientation": "b2716954d2e321dd4436400b37584fab641027ab",
+        "glm": "2e85a62840ccac27daa451df36c736c4636b8628",
+        "glm_layout": "e4f489dc536556fc1be02b973ba06756e0d4a2ac",
+        "mineru": "08aaea840498d49ce16247b6263196cf02814885"
+      },
+      "inference_services": [
+        {
+          "role": "glm",
+          "family": "glm",
+          "inference_image": "sha256:df7be4c4d818e250a8c80f78d110571e92e72a1fefec06fed82a2e37e473cd48",
+          "host_model_path": "/var/lib/docker/volumes/mosaicparse-huggingface-cache/_data/hub/models--zai-org--GLM-OCR",
+          "model_subdir": "snapshots/2e85a62840ccac27daa451df36c736c4636b8628",
+          "model_name": "zai-org/GLM-OCR",
+          "port": 12541,
+          "cpus": 2,
+          "memory_gib": 10,
+          "gpu_memory_gib": 6,
+          "rotary_embedding": "native"
+        },
+        {
+          "role": "mineru",
+          "family": "mineru",
+          "inference_image": "sha256:ea407324215fa2393585447521828b34d1ffc6474fd04b24865fb9476ff5ccfe",
+          "host_model_path": "/var/lib/docker/volumes/moparse-mineru-models/_data",
+          "model_subdir": "snapshots/08aaea840498d49ce16247b6263196cf02814885",
+          "model_name": "mineru2.5-pro",
+          "port": 12542,
+          "cpus": 2,
+          "memory_gib": 10,
+          "gpu_memory_gib": 10
+        }
+      ],
+      "versions": {
+        "docling": "2.139.0",
+        "docling-core": "2.101.1",
+        "mineru": "4.0.12",
+        "mineru-vl-utils": "2.0.7",
+        "docvortex": "0.5.16",
+        "glmocr": "0.1.5",
+        "paddleocr": "3.7.0",
+        "paddlex": "3.7.2",
+        "transformers": "5.8.1"
+      },
+      "resources": {
+        "preprocessing_cpus": 8,
+        "preprocessing_memory_gib": 8,
+        "inference_cpus": 4,
+        "inference_memory_gib": 20,
+        "gpu_device": "1",
+        "gpu_memory_gib": 16,
+        "power_watts": 200,
+        "outer_concurrency": 1,
+        "client_concurrency": 4
+      },
+      "graphs": {
+        "status": "pending_bounded_capture_and_inference",
+        "torch_compile": false
+      },
+      "retry_max_attempts": 0,
+      "observe_request_metadata": true,
+      "co_resident_services": {
+        "qwen3-tts-openai.service": {
+          "policy": "keep_running",
+          "observation_policy": "observe_only",
+          "inference_during_benchmark": "uncontrolled_observed_only",
+          "instruction_date": "2026-10-26"
+        }
+      },
+      "execution_repairs": [
+        "rotation-coordinate-space",
+        "native-neighbor-retention",
+        "region-export-isolation",
+        "glm-gptj-native-rotary"
+      ],
+      "source_policy": {
+        "minimum_native_characters": 40,
+        "scan_image_coverage": 0.8,
+        "mixed_image_coverage": 0.2,
+        "unknown_action": "glm",
+        "role": "runtime_prediction_only_not_gold"
+      },
+      "glm_configuration": "bundled glmocr 0.1.5 YAML; self-hosted CPU layout; retry=0; workers=4",
+      "native_view_policy": {
+        "glm": {
+          "primary_scoring_view": "json_result",
+          "audit_view": "raw_json_result",
+          "cross_view_order": "unknown",
+          "selection": "fixed; no favorable stage selection by answer or sample"
+        }
+      }
+    },
+    "P08": {
+      "pipeline": "P08",
+      "dpi": 200,
+      "timeout_seconds": 7200,
+      "runtime": {
+        "kind": "docker",
+        "image": "sha256:61ec8c75a6162ffda94cf42d24430d17c2b4ca276f5411d47342a92f43891a5b",
+        "container_python": "python",
+        "network": "host",
+        "mounts": {
+          "/opt/moparse/data/evaluation-models/orientation": "/models/orientation"
+        }
+      },
+      "models": {
+        "orientation_path": "/models/orientation"
+      },
+      "revisions": {
+        "orientation": "b2716954d2e321dd4436400b37584fab641027ab",
+        "mineru": "08aaea840498d49ce16247b6263196cf02814885"
+      },
+      "inference_services": [
+        {
+          "role": "mineru",
+          "family": "mineru",
+          "inference_image": "sha256:ea407324215fa2393585447521828b34d1ffc6474fd04b24865fb9476ff5ccfe",
+          "host_model_path": "/var/lib/docker/volumes/moparse-mineru-models/_data",
+          "model_subdir": "snapshots/08aaea840498d49ce16247b6263196cf02814885",
+          "model_name": "mineru2.5-pro",
+          "port": 12542,
+          "cpus": 4,
+          "memory_gib": 20,
+          "gpu_memory_gib": 16
+        }
+      ],
+      "versions": {
+        "docling": "2.139.0",
+        "docling-core": "2.101.1",
+        "mineru": "4.0.12",
+        "mineru-vl-utils": "2.0.7",
+        "docvortex": "0.5.16",
+        "glmocr": "0.1.5",
+        "paddleocr": "3.7.0",
+        "paddlex": "3.7.2",
+        "transformers": "5.8.1"
+      },
+      "resources": {
+        "preprocessing_cpus": 8,
+        "preprocessing_memory_gib": 8,
+        "inference_cpus": 4,
+        "inference_memory_gib": 20,
+        "gpu_device": "1",
+        "gpu_memory_gib": 16,
+        "power_watts": 200,
+        "outer_concurrency": 1,
+        "client_concurrency": 4
+      },
+      "graphs": {
+        "status": "pending_bounded_capture_and_inference",
+        "torch_compile": false
+      },
+      "retry_max_attempts": 0,
+      "observe_request_metadata": true,
+      "co_resident_services": {
+        "qwen3-tts-openai.service": {
+          "policy": "keep_running",
+          "observation_policy": "observe_only",
+          "inference_during_benchmark": "uncontrolled_observed_only",
+          "instruction_date": "2026-10-26"
+        }
+      },
+      "execution_repairs": [
+        "rotation-coordinate-space",
+        "native-neighbor-retention",
+        "region-export-isolation"
+      ]
+    }
+  },
+  "official_sources": {
+    "paddle15": {
+      "repository": "PaddlePaddle/PaddleOCR-VL-1.5",
+      "revision": "2a4195faa5e7914c12f2fc601d72c81caf8d2da5",
+      "url": "https://huggingface.co/PaddlePaddle/PaddleOCR-VL-1.5/tree/2a4195faa5e7914c12f2fc601d72c81caf8d2da5"
+    },
+    "paddle16": {
+      "repository": "PaddlePaddle/PaddleOCR-VL-1.6",
+      "revision": "c5630abae1d940eafe0697512a0325494b02ab42",
+      "url": "https://huggingface.co/PaddlePaddle/PaddleOCR-VL-1.6/tree/c5630abae1d940eafe0697512a0325494b02ab42"
+    },
+    "paddle_layout": {
+      "repository": "PaddlePaddle/PP-DocLayoutV3",
+      "revision": "241f8bdfc77a7c7bee915a5057aaee58c235a8d3",
+      "url": "https://huggingface.co/PaddlePaddle/PP-DocLayoutV3/tree/241f8bdfc77a7c7bee915a5057aaee58c235a8d3"
+    },
+    "glm": {
+      "repository": "zai-org/GLM-OCR",
+      "revision": "2e85a62840ccac27daa451df36c736c4636b8628",
+      "url": "https://huggingface.co/zai-org/GLM-OCR/tree/2e85a62840ccac27daa451df36c736c4636b8628"
+    },
+    "mineru": {
+      "repository": "opendatalab/MinerU2.5-Pro-2605-1.2B",
+      "revision": "08aaea840498d49ce16247b6263196cf02814885",
+      "url": "https://huggingface.co/opendatalab/MinerU2.5-Pro-2605-1.2B/tree/08aaea840498d49ce16247b6263196cf02814885"
+    },
+    "orientation": {
+      "repository": "PaddlePaddle/PP-LCNet_x1_0_doc_ori_safetensors",
+      "revision": "b2716954d2e321dd4436400b37584fab641027ab",
+      "url": "https://huggingface.co/PaddlePaddle/PP-LCNet_x1_0_doc_ori_safetensors/tree/b2716954d2e321dd4436400b37584fab641027ab"
+    },
+    "tableformer_v2": {
+      "repository": "docling-project/TableFormerV2",
+      "revision": "e41ba5da7ef69004f4b329168791c2987abf917c",
+      "url": "https://huggingface.co/docling-project/TableFormerV2/tree/e41ba5da7ef69004f4b329168791c2987abf917c"
+    }
+  },
+  "model_cache_policy": "existing GLM/MinerU/Docling caches are mounted read-only",
+  "formal_execution": "requires separately frozen references; this software lock is not a quality result",
+  "measurement_environment": {
+    "tts_policy": "keep_running",
+    "tts_observation_policy": "observe_only",
+    "user_instruction_date": "2026-10-26",
+    "performance_scope": "actual shared GPU conditions; TTS identity and activity observed but not controlled"
+  }
+}

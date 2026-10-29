@@ -134,26 +134,36 @@ def export_source_blocks(page: Any) -> list[dict[str, Any]]:
         def source_image(parent: Any, _images: list = images) -> str:
             box = getattr(parent, "bbox", None)
             if box is None:
-                raise RuntimeError("rendered source image is missing its original bbox")
+                raise ValueError("rendered source image is missing its original bbox")
             _images.append({"bbox": list(box)})
             return "<!-- image -->"
 
-        raw["markdown"] = render_single_block(
-            block,
-            delimiters=LatexDelimitersConfig(),
-            asset_base_url="",
-            image_renderer=source_image,
-        )
-        if str(getattr(block, "type", "")) == "table":
-            for child, raw_child in zip(block.content, raw["content"], strict=True):
-                if str(getattr(child, "type", "")) == "table_body":
-                    body_only = block.model_copy(update={"content": [child]})
-                    raw_child["markdown"] = render_single_block(
-                        body_only,
-                        delimiters=LatexDelimitersConfig(),
-                        asset_base_url="",
-                        image_renderer=lambda _parent: "<!-- image -->",
-                    )
+        try:
+            raw["markdown"] = render_single_block(
+                block,
+                delimiters=LatexDelimitersConfig(),
+                asset_base_url="",
+                image_renderer=source_image,
+            )
+            if str(getattr(block, "type", "")) == "table":
+                for child, raw_child in zip(block.content, raw["content"], strict=True):
+                    if str(getattr(child, "type", "")) == "table_body":
+                        body_only = block.model_copy(update={"content": [child]})
+                        raw_child["markdown"] = render_single_block(
+                            body_only,
+                            delimiters=LatexDelimitersConfig(),
+                            asset_base_url="",
+                            image_renderer=lambda _parent: "<!-- image -->",
+                        )
+        except (ValueError, TypeError, KeyError) as exc:
+            # This is a derived view failure, not a reason to discard the
+            # already returned native block or its valid neighbors. Keep the
+            # native fields and let the caller expose the unresolved region.
+            # Cancellation, deadlines and resource failures must propagate.
+            raw["export_error"] = {
+                "code": "native_block_export_invalid",
+                "exception_type": type(exc).__name__,
+            }
         raw["source_images"] = images
         exported.append(raw)
     return exported

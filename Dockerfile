@@ -16,7 +16,8 @@ ENV UV_COMPILE_BYTECODE=1 \
     UV_PYTHON_DOWNLOADS=never
 WORKDIR /app
 COPY --from=uv-bin /uv /uvx /usr/local/bin/
-COPY pyproject.toml uv.lock README.md LICENSE ./
+# The project is not installed here; documentation must not invalidate dependencies.
+COPY pyproject.toml uv.lock ./
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --frozen --no-dev --no-install-project
 

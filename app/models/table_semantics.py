@@ -20,13 +20,34 @@ class CellRef:
 
 
 @dataclass(frozen=True, slots=True)
+class TextRef:
+    """A literal native prose slice and its explicitly bounded table scope."""
+
+    table_id: str
+    page: int
+    block_id: str
+    text: str
+    kind: Literal["unit", "period", "note", "title"]
+    start: int
+    end: int
+    body_rows: tuple[int, ...]
+    columns: tuple[int, ...]
+
+    @property
+    def token(self) -> str:
+        return f"{self.table_id}.text.{self.block_id}.{self.start}:{self.end}"
+
+
+@dataclass(frozen=True, slots=True)
 class ValueRelation:
+    """Explicit cell bindings; an empty literal makes no source-blank claim."""
+
     value: CellRef
     row_headers: tuple[CellRef, ...] = ()
     column_headers: tuple[CellRef, ...] = ()
-    unit_refs: tuple[CellRef, ...] = ()
-    period_refs: tuple[CellRef, ...] = ()
-    note_refs: tuple[CellRef, ...] = ()
+    unit_refs: tuple[CellRef | TextRef, ...] = ()
+    period_refs: tuple[CellRef | TextRef, ...] = ()
+    note_refs: tuple[CellRef | TextRef, ...] = ()
     value_state: Literal["literal", "source_blank"] = "literal"
 
 
@@ -37,16 +58,21 @@ class SemanticRecord:
     values: tuple[ValueRelation, ...]
     subject: CellRef | None = None
     subject_headers: tuple[CellRef, ...] = ()
+    row_groups: tuple[CellRef, ...] = ()
+    scope_refs: tuple[TextRef, ...] = ()
 
 
 @dataclass(frozen=True, slots=True)
 class SemanticTableView:
     view_id: str
     source_tables: tuple[str, ...]
-    status: Literal["converted", "retained"]
+    status: Literal["converted", "partial", "retained"]
     kind: SemanticKind
     records: tuple[SemanticRecord, ...] = ()
     reason_codes: tuple[str, ...] = ()
     source_cell_count: int = 0
     covered_source_cells: int = 0
     policy: str = "source-scoped-relations"
+    retained_cells: tuple[CellRef, ...] = ()
+    retained_rows: tuple[tuple[str, int], ...] = ()
+    row_issues: tuple[tuple[str, int, str], ...] = ()

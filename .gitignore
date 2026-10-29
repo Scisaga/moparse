@@ -26,6 +26,7 @@ frontend/dist/
 frontend/.vite/
 frontend/coverage/
 frontend/.eslintcache
+*.tsbuildinfo
 static/
 
 # Runtime data and downloaded models
@@ -39,12 +40,29 @@ static/
 playwright-report/
 test-results/
 /tmp/
-
-# Private PDF quality corpus and local evaluation records
-/pdf_sample/
-/pdf_sample_extra/*.pdf
+*.log
 
 /tests/fixtures/progress-pages/
+
+# Private corpus, previews and authored scoring references stay local.
+/pdf_sample/
+/pdf_sample_extra/*.pdf
+/pdf_page_images/
+/datasets/authoring/
+/datasets/*/inputs/
+/datasets/*/references/
+/datasets/*/evaluation/
+
+# Keep report documents, summaries and figures in Git; keep raw runs local.
+/benchmark/reports/**/artifacts/
+/benchmark/reports/**/private/
+/benchmark/reports/**/calibration-inputs/
+/benchmark/reports/**/visual-review/
+/benchmark/reports/**/candidate/
+/benchmark/reports/**/scores-*/
+/benchmark/reports/**/software/
+/benchmark/reports/**/scoring-software/
+/benchmark/reference-decisions/evidence/
 
 # Editors / operating systems
 .idea/

@@ -1,0 +1,39 @@
+{
+  "schema": "moparse-service-entrypoints-probe-1",
+  "scope": "Authored in-memory structures; no PDFs, references, models or services.",
+  "native_rendering": {
+    "native_text_in_ir": true,
+    "before_native_text_in_rendering": false,
+    "after_native_text_in_rendering": true,
+    "replaced_regions": 1
+  },
+  "header_policy": {
+    "centered_numeric_period_scopes": 1,
+    "centered_word_period_scopes": 1,
+    "left_aligned_word_period_scopes": 1,
+    "amount_like_labels_are_periods": {
+      "20240": false,
+      "12024": false,
+      "2024.50": false,
+      "2024%": false,
+      "-2024": false,
+      "20240\u5e74": false,
+      "12024\u5e74\u5ea6": false
+    },
+    "amount_like_header_scopes": 0
+  },
+  "whole_view_fallback": {
+    "supported_row_only": {
+      "status": "converted",
+      "records": 1,
+      "reasons": []
+    },
+    "same_row_then_unresolved_subject": {
+      "status": "partial",
+      "records": 1,
+      "reasons": [
+        "unresolved_row_subject"
+      ]
+    }
+  }
+}

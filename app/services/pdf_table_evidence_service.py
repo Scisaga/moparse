@@ -1,7 +1,7 @@
-"""CPU-only source PDF table evidence and source-owned display updates.
+"""CPU-only PDF structure binding and independently evidenced field scopes.
 
-PDF evidence can add a role only after the entire native cell grid binds to
-original glyphs and vector boundaries. Missing evidence remains unknown.
+Cell geometry and glyph identity establish source structure, not table purpose.
+Header and field association policies must separately support each conversion.
 """
 
 from __future__ import annotations
@@ -53,10 +53,18 @@ class PDFTableEvidenceService:
             except asyncio.CancelledError:
                 # A cancelled coroutine cannot relinquish ownership while its
                 # CPU thread still owns source handles or mutable fragments.
-                await asyncio.gather(asyncio.shield(worker), return_exceptions=True)
+                while not worker.done():
+                    try:
+                        await asyncio.shield(worker)
+                    except asyncio.CancelledError:
+                        continue
+                    except BaseException:
+                        break
+                if not worker.cancelled():
+                    worker.exception()
                 raise
             result._source_verification["pdf_table_evidence"] = {
-                "policy": "vector-grid-glyph-binding",
+                "policy": "source-structure-glyph-binding",
                 "observations": observations,
             }
         if cancel_event is not None and cancel_event.is_set():
@@ -86,11 +94,19 @@ def inspect_pdf_tables(
                 raise ParserCancelledError("PDF table evidence cancelled at source-page boundary")
             if options is not None:
                 remaining_timeout(options)
-            if fragment.source_kind != "mineru" or not fragment.valid:
+            if not fragment.valid:
                 continue
             if not 1 <= fragment.page_number <= len(document):
                 continue
-            observation = _source_grid(document[fragment.page_number - 1], fragment)
+            page = document[fragment.page_number - 1]
+            observation = _source_grid(page, fragment)
+            if not observation["bound"]:
+                alternate = _cell_box_grid(page, fragment)
+                if alternate["bound"]:
+                    alternate["vector_attempt_reason"] = observation.get("reason")
+                    observation = alternate
+                else:
+                    observation["cell_box_attempt_reason"] = alternate.get("reason")
             observation.update(table_id=fragment.fragment_id, source_page=fragment.page_number)
             fragment.pdf_evidence = observation
             if observation["bound"]:
@@ -164,31 +180,48 @@ def _source_grid(page: Any, fragment: TableFragment) -> dict[str, Any]:
     horizontal: list[tuple[float, float, float]] = []
     fills: list[tuple[float, float, float, float]] = []
     rules: list[tuple[float, float, float, float]] = []
+
+    def add_line(ax: float, ay: float, bx: float, by: float) -> None:
+        # A PDF path may contain the entire page. Keep its actual intersecting
+        # segments; clipping never creates a new edge at the ROI boundary.
+        if abs(ax - bx) < 0.2 and roi[0] <= ax <= roi[2]:
+            top, bottom = max(min(ay, by), roi[1]), min(max(ay, by), roi[3])
+            if bottom - top > 2:
+                vertical.append(((ax + bx) / 2, top, bottom))
+        elif abs(ay - by) < 0.2 and roi[1] <= ay <= roi[3]:
+            left, right = max(min(ax, bx), roi[0]), min(max(ax, bx), roi[2])
+            if right - left > 2:
+                horizontal.append(((ay + by) / 2, left, right))
+
     for drawing in page.get_drawings():
         rect = drawing["rect"]
-        if rect.x0 < roi[0] or rect.y0 < roi[1] or rect.x1 > roi[2] or rect.y1 > roi[3]:
+        if rect.x1 < roi[0] or rect.y1 < roi[1] or rect.x0 > roi[2] or rect.y0 > roi[3]:
             continue
+        clipped = (max(rect.x0, roi[0]), max(rect.y0, roi[1]),
+                   min(rect.x1, roi[2]), min(rect.y1, roi[3]))
         fill = drawing.get("fill")
         if fill is not None and max(fill) - min(fill) < 0.03 and 0.1 < min(fill) < 0.95:
             if rect.width > 2 and rect.height > 2:
-                fills.append(tuple(rect))
+                fills.append(clipped)
         dark_fill = fill is not None and max(fill) < 0.15
         if dark_fill and min(rect.width, rect.height) < 2:
-            rules.append(tuple(rect))
+            rules.append(clipped)
         if dark_fill and rect.width < 2 and rect.height > 2:
-            vertical.append(((rect.x0 + rect.x1) / 2, rect.y0, rect.y1))
+            add_line((rect.x0 + rect.x1) / 2, rect.y0, (rect.x0 + rect.x1) / 2, rect.y1)
         elif dark_fill and rect.height < 2 and rect.width > 2:
-            horizontal.append(((rect.y0 + rect.y1) / 2, rect.x0, rect.x1))
+            add_line(rect.x0, (rect.y0 + rect.y1) / 2, rect.x1, (rect.y0 + rect.y1) / 2)
         color = drawing.get("color")
-        if color is not None and max(color) < 0.15 and drawing.get("width", 1) < 1:
+        if color is not None and max(color) < 0.85 and drawing.get("width", 1) <= 2:
             for item in drawing.get("items", []):
-                if item[0] != "l":
-                    continue
-                a, b = item[1:3]
-                if abs(a.x - b.x) < 0.2 and abs(a.y - b.y) > 2:
-                    vertical.append(((a.x + b.x) / 2, min(a.y, b.y), max(a.y, b.y)))
-                elif abs(a.y - b.y) < 0.2 and abs(a.x - b.x) > 2:
-                    horizontal.append(((a.y + b.y) / 2, min(a.x, b.x), max(a.x, b.x)))
+                if item[0] == "l":
+                    a, b = item[1:3]
+                    add_line(a.x, a.y, b.x, b.y)
+                elif item[0] == "re":
+                    box = item[1]
+                    add_line(box.x0, box.y0, box.x1, box.y0)
+                    add_line(box.x1, box.y0, box.x1, box.y1)
+                    add_line(box.x1, box.y1, box.x0, box.y1)
+                    add_line(box.x0, box.y1, box.x0, box.y0)
     xs = _cluster([line[0] for line in vertical])
     ys = _cluster([line[0] for line in horizontal])
     if len(xs) < 2 or len(ys) < 2 or len(xs) > 101 or len(ys) > 2001:
@@ -341,6 +374,8 @@ def _source_grid(page: Any, fragment: TableFragment) -> dict[str, Any]:
                 "glyphs": found,
                 "centered": centered,
                 "shaded": shaded,
+                "bold": bool(nonblank) and sum(bool(g["flags"] & 16) for g in nonblank) > len(nonblank) / 2,
+                "max_font_size": max((g["size"] for g in nonblank), default=0),
                 "fonts": sorted({g["font"] for g in nonblank}),
             }
         )
@@ -384,11 +419,117 @@ def _source_grid(page: Any, fragment: TableFragment) -> dict[str, Any]:
         "bound": True,
         "nearby_source_lines_above": nearby_lines,
         "reason": "complete_source_vector_grid_and_glyphs_match_native",
+        "binding_method": "vector_grid",
         "x_grid": xs,
         "y_grid": ys,
         "source_cells": cells,
         "page_size": [width, height],
     }
+
+
+def _cell_box_grid(page: Any, fragment: TableFragment) -> dict[str, Any]:
+    """Bind an explicit rectangular native cell partition to all PDF glyphs.
+
+    A successful partition is structural evidence only. The caller still needs
+    independent field/header association before any semantic conversion.
+    """
+    if not fragment.cells or not (0 < fragment.num_rows <= 2_000 and 0 < fragment.num_cols <= 100):
+        return {"bound": False, "reason": "native_cell_boxes_unavailable"}
+    width, height = page.rect.width, page.rect.height
+    columns: dict[int, list[float]] = {}
+    rows: dict[int, list[float]] = {}
+    occupied: set[tuple[int, int]] = set()
+    boxes: dict[tuple[int, int], tuple[float, float, float, float]] = {}
+    for cell in fragment.cells:
+        if cell.normalized_bbox is None:
+            return {"bound": False, "reason": "native_cell_boxes_unavailable"}
+        a, b, c, d = cell.normalized_bbox
+        if not (0 <= a < c <= 1 and 0 <= b < d <= 1):
+            return {"bound": False, "reason": "native_cell_box_invalid"}
+        if not (0 <= cell.row < cell.row + cell.row_span <= fragment.num_rows
+                and 0 <= cell.column < cell.column + cell.column_span <= fragment.num_cols):
+            return {"bound": False, "reason": "native_cell_span_invalid"}
+        slots = {(r, col) for r in range(cell.row, cell.row + cell.row_span)
+                 for col in range(cell.column, cell.column + cell.column_span)}
+        if occupied & slots:
+            return {"bound": False, "reason": "native_cell_boxes_overlap"}
+        occupied.update(slots)
+        box = (a * width, b * height, c * width, d * height)
+        boxes[cell.row, cell.column] = box
+        columns.setdefault(cell.column, []).append(box[0])
+        columns.setdefault(cell.column + cell.column_span, []).append(box[2])
+        rows.setdefault(cell.row, []).append(box[1])
+        rows.setdefault(cell.row + cell.row_span, []).append(box[3])
+    if occupied != {(r, c) for r in range(fragment.num_rows) for c in range(fragment.num_cols)}:
+        return {"bound": False, "reason": "native_cell_partition_incomplete"}
+    if set(columns) != set(range(fragment.num_cols + 1)) or set(rows) != set(range(fragment.num_rows + 1)):
+        return {"bound": False, "reason": "native_cell_boundaries_incomplete"}
+    if any(max(values) - min(values) > 2 for values in (*columns.values(), *rows.values())):
+        return {"bound": False, "reason": "native_cell_boundaries_disagree"}
+    xs = [sum(columns[i]) / len(columns[i]) for i in range(fragment.num_cols + 1)]
+    ys = [sum(rows[i]) / len(rows[i]) for i in range(fragment.num_rows + 1)]
+    if any(b <= a for a, b in zip(xs, xs[1:], strict=False)) or any(
+        b <= a for a, b in zip(ys, ys[1:], strict=False)
+    ):
+        return {"bound": False, "reason": "native_cell_boundaries_not_ordered"}
+    fx0, fy0, fx1, fy1 = fragment.normalized_bbox
+    if any(abs(a - b) > 4 for a, b in zip(
+        (xs[0], ys[0], xs[-1], ys[-1]), (fx0 * width, fy0 * height, fx1 * width, fy1 * height), strict=True
+    )):
+        return {"bound": False, "reason": "native_cell_partition_does_not_cover_table"}
+    glyphs = []
+    for block in page.get_text("rawdict", sort=True)["blocks"]:
+        for line in block.get("lines", []):
+            for span in line.get("spans", []):
+                for char in span.get("chars", []):
+                    glyphs.append({"c": char["c"], "bbox": list(char["bbox"]),
+                                   "font": span["font"], "size": span["size"], "flags": span["flags"]})
+    assignment: dict[tuple[int, int], list[dict[str, Any]]] = {key: [] for key in boxes}
+    for glyph in glyphs:
+        a, b, c, d = glyph["bbox"]
+        x, y = (a + c) / 2, (b + d) / 2
+        if not (xs[0] < x < xs[-1] and ys[0] < y < ys[-1]):
+            continue
+        owners = [key for key, box in boxes.items() if box[0] <= x < box[2] and box[1] <= y < box[3]]
+        if len(owners) != 1:
+            if glyph["c"].strip():
+                return {"bound": False, "reason": "source_glyph_cell_ownership_ambiguous"}
+            continue
+        assignment[owners[0]].append(glyph)
+    fills = [tuple(drawing["rect"]) for drawing in page.get_drawings()
+             if drawing.get("fill") is not None and max(drawing["fill"]) - min(drawing["fill"]) < 0.03
+             and 0.1 < min(drawing["fill"]) < 0.95]
+    source_cells = []
+    for cell in fragment.cells:
+        box = boxes[cell.row, cell.column]
+        found = assignment[cell.row, cell.column]
+        literal = "".join(g["c"] for g in found)
+        if _compact(literal) != _compact(cell.text):
+            return {"bound": False, "reason": "source_cell_box_text_disagrees"}
+        nonblank = [g for g in found if g["c"].strip()]
+        centered = bool(nonblank) and abs(
+            (min(g["bbox"][0] for g in nonblank) + max(g["bbox"][2] for g in nonblank)) / 2
+            - (box[0] + box[2]) / 2
+        ) <= max(2, (box[2] - box[0]) * 0.10)
+        shaded = any(a <= box[0] + 1 and b <= box[1] + 1 and c >= box[2] - 1 and d >= box[3] - 1
+                     for a, b, c, d in fills)
+        source_cells.append({"row": cell.row, "column": cell.column,
+                             "row_span": cell.row_span, "column_span": cell.column_span,
+                             "bbox": list(box), "text": literal, "glyphs": found,
+                             "centered": centered, "shaded": shaded,
+                             "bold": bool(nonblank) and sum(bool(g["flags"] & 16) for g in nonblank) > len(nonblank) / 2,
+                             "max_font_size": max((g["size"] for g in nonblank), default=0),
+                             "fonts": sorted({g["font"] for g in nonblank})})
+    nearby = []
+    for block in page.get_text("dict")["blocks"]:
+        for line in block.get("lines", []):
+            a, b, c, d = line["bbox"]
+            if xs[0] - 2 <= a and c <= xs[-1] + 2 and ys[0] - 36 <= b and d <= ys[0] + 1:
+                nearby.append({"text": "".join(span["text"] for span in line["spans"]), "bbox": list(line["bbox"])})
+    return {"bound": True, "reason": "explicit_native_cell_partition_and_glyphs_match",
+            "binding_method": "native_cell_boxes", "content_kind": "unknown",
+            "x_grid": xs, "y_grid": ys, "source_cells": source_cells,
+            "page_size": [width, height], "nearby_source_lines_above": nearby}
 
 
 _NUMERIC = re.compile(r"[+\-−]?(?:\d[\d,.]*(?:%|％)?|[—–-])\Z")
@@ -398,58 +539,293 @@ def _numeric(value: str) -> bool:
     return bool(_NUMERIC.fullmatch(_compact(value)))
 
 
-def _header_candidates(grid: dict[str, Any], num_rows: int, num_cols: int) -> list[dict[str, Any]]:
-    """Require source style contrast plus column value evidence, not a lexicon.
+_PERIOD_LABEL = re.compile(
+    r"本期|上期|本年|上年|报告期|同期|期末|年末|月末|年度|"
+    r"current|prior|previous|reporting\s+period|year\s+ended|as\s+(?:at|of)", re.I
+)
+_YEAR_TOKEN = re.compile(r"(?<![\d.,+\-−])(?:19|20)\d{2}(?![\d.,%％])")
+_PERIOD_LITERAL = re.compile(
+    r"(?:(?:FY|fiscalyear|截至|于))?(?:19|20)\d{2}"
+    r"(?:年度|年(?:\d{1,2}(?:[-–—至]\d{1,2})?月(?:\d{1,2}日)?)?(?:度|末|初)?|[-/]\d{1,2}(?:[-/]\d{1,2})?|Q[1-4])?\Z",
+    re.I,
+)
+_STUB_LABEL = re.compile(r"(?:项目|指标|科目|名称|类别|分类|分组|事项|item|metric|name|description|category|group)\Z", re.I)
+_SCALAR_LABEL = re.compile(r"金额|数量|比率|比例|数值|余额|amount|value|rate|quantity|balance|number", re.I)
+_MEASURE_LABEL = re.compile(
+    r"(?:[\u3400-\u9fff]{0,24}(?:金额|数量|余额|限额|数值|发生额|总额|净额|"
+    r"比率|比例|比重|占比|份额|增减|变动|变化|损益|利润|收入|成本|费用|排名|标准值)|"
+    r"(?:(?:current|prior|previous|total|net|gross|average|annual|relative|market|"
+    r"operating|financial|book|fair|percentage|percent|yearonyear))*"
+    r"(?:amount|value|rate|ratio|quantity|balance|number|count|share|rank|percentage|"
+    r"change|growth|increase|decrease|difference|revenue|income|profit|loss|cost|expense|"
+    r"assets|liabilities|equity|margin|total))\Z", re.I,
+)
+_FIELD_LABEL = re.compile(
+    r"(?:[\u3400-\u9fff]{0,8}(?:姓名|名称|联系人|职务|职位|电话|地址|邮箱|日期|期间|单位|代码|编号)|"
+    r"(?:(?:company|registered|office|postal|contact)\s*)?"
+    r"(?:name|contact|position|role|phone|telephone|address|email|date|period|unit|code|identifier))\Z", re.I
+)
+_GROUP_LABEL = re.compile(r"(?:分组|类别|分类|地区|区域|业务分部|group|category|region|segment)\Z", re.I)
+_ORDINAL_LABEL = re.compile(r"(?:序号|编号|index|no\.?|number|#)\Z", re.I)
+_SUBJECT_LABEL = re.compile(r"(?:主体|关联方|交易对方|公司名称|企业名称|机构名称|客户名称|供应商名称|"
+                            r"entity|counterparty|party|companyname|customername|suppliername)\Z", re.I)
 
-    Centering alone, equal text, boldness, shading and a native first-row flag
-    are each insufficient. A complete band must precede a different body style
-    within the same physically closed, exactly bound source grid.
+
+def _period_label(value: str) -> bool:
+    text = value.strip()
+    if len(text) > 64:
+        return False
+    compact = _compact(text)
+    if _numeric(compact):
+        # An amount containing a year-shaped substring is not a period.
+        return bool(re.fullmatch(r"(?:19|20)\d{2}", compact))
+    if not re.search(r"\d", text):
+        return bool(_PERIOD_LABEL.search(text))
+    if any(len(number) > 4 for number in re.findall(r"\d+", text)):
+        return False
+    if _PERIOD_LITERAL.fullmatch(compact):
+        return True
+    # Period wording may qualify a bounded year, but may not borrow four
+    # digits from a decimal, signed amount, percentage or longer identifier.
+    return bool(_PERIOD_LABEL.search(text) and _YEAR_TOKEN.search(text))
+
+
+def _measure_label(value: str) -> bool:
+    """Recognize a complete quantity/change label, not an amount-like value.
+
+    Parenthetical units and an explicit percentage suffix qualify a label;
+    their original text remains untouched. Digits outside unit annotations,
+    prose punctuation and arbitrary keyword substrings do not supply a role.
+    """
+    text = _compact(value)
+    if not text or len(text) > 64 or re.search(r"[。；;!?]", text):
+        return False
+    label = re.sub(r"\([^()]*\)|（[^（）]*）", "", text).rstrip("%％")
+    if re.search(r"[\d()（）]", label):
+        return False
+    return bool(_MEASURE_LABEL.fullmatch(label))
+
+
+def _bound_band(cells: list[dict[str, Any]], start: int, end: int, columns: int) -> list[dict[str, Any]]:
+    band = [cell for cell in cells if start <= cell["row"] < end]
+    occupied: set[tuple[int, int]] = set()
+    for cell in band:
+        if cell["row"] + cell["row_span"] > end:
+            return []
+        slots = {(r, c) for r in range(cell["row"], cell["row"] + cell["row_span"])
+                 for c in range(cell["column"], cell["column"] + cell["column_span"])}
+        if occupied & slots:
+            return []
+        occupied.update(slots)
+    return band if occupied == {(r, c) for r in range(start, end) for c in range(columns)} else []
+
+
+def _header_candidates(grid: dict[str, Any], num_rows: int, num_cols: int) -> list[dict[str, Any]]:
+    """Associate source header bands with actual numeric record columns.
+
+    A bound grid or backend header flag alone never supplies these relations.
+    Multirow source spans, style contrast, and explicit period/stub wording are
+    independent observations; numeric values remain body data unless a complete
+    header band and a distinct record row are both supported.
     """
     cells = grid["source_cells"]
     candidates: list[dict[str, Any]] = []
-    for row in range(num_rows - 1):
-        band = [cell for cell in cells if cell["row"] == row]
-        visible = [cell for cell in band if _compact(cell["text"])]
-        if len(visible) < 2 or any(cell["row_span"] != 1 for cell in band):
+    next_start = 0
+    for start in range(num_rows - 1):
+        if start < next_start:
             continue
-        if sum(cell["column_span"] for cell in band) != num_cols:
-            continue
-        if not all(cell["centered"] for cell in visible) or any(
-            _numeric(cell["text"]) for cell in visible
-        ):
-            continue
-        body = [cell for cell in cells if cell["row"] == row + 1 and _compact(cell["text"])]
-        if not body or all(cell["centered"] and not _numeric(cell["text"]) for cell in body):
-            continue
-        shaded_band = all(cell["shaded"] for cell in visible)
-        shade_contrast = shaded_band and any(not cell["shaded"] for cell in body)
-        numeric_columns = {cell["column"] for cell in body if _numeric(cell["text"])}
-        # Unshaded headers require at least two value-bearing columns with
-        # source alignment contrast, avoiding centered prose and key/value rows.
-        numeric_contrast = len(numeric_columns) >= 2 and any(
-            not cell["centered"] and _numeric(cell["text"]) for cell in body
-        )
-        if not shade_contrast and not numeric_contrast:
-            continue
-        candidates.append(
-            {
-                "header_rows": [row],
-                "body_rows": [],
-                "complete": True,
-                "evidence_source": "pdf_vector_glyph_style",
+        accepted: list[dict[str, Any]] = []
+        for end in range(start + 1, min(num_rows, start + 5)):
+            band = _bound_band(cells, start, end, num_cols)
+            visible = [cell for cell in band if _compact(cell["text"])]
+            if len(visible) < 2 or any(_numeric(cell["text"]) and not _period_label(cell["text"]) for cell in visible):
+                continue
+            if any(cell["column"] == 0 and _numeric(cell["text"]) for cell in visible):
+                continue
+            body = [cell for cell in cells if cell["row"] == end and _compact(cell["text"])]
+            if not body:
+                continue
+            numeric_columns = {cell["column"] for cell in body if _numeric(cell["text"])}
+            subjects = [cell for cell in body if cell["column"] == 0 and not _numeric(cell["text"])]
+            ordinal_labels = [cell for cell in visible if cell["column"] == 0 and cell["column_span"] == 1
+                              and _ORDINAL_LABEL.fullmatch(_compact(cell["text"]))]
+            ordinal_record = bool(ordinal_labels and any(
+                cell["column"] == 0 and re.fullmatch(r"\d+", _compact(cell["text"])) for cell in body
+            ) and any(cell["column"] == 1 and not _numeric(cell["text"]) for cell in body))
+            if ordinal_record:
+                numeric_columns.discard(0)
+            if (not subjects and not ordinal_record) or not numeric_columns or 0 in numeric_columns:
+                continue
+            if any(cell["column"] == 0 and cell["column_span"] > 1 for cell in visible):
+                # A full-width caption or row group is not a column header.
+                continue
+            if end - start > 1 and any(not any(
+                cell["row"] == row and cell["column"] > 0 for cell in visible
+            ) for row in range(start, end)):
+                continue
+            paths = []
+            for column in sorted(numeric_columns):
+                path = tuple(_compact(cell["text"]) for cell in sorted(visible, key=lambda c: (c["row"], c["column"]))
+                             if cell["column"] <= column < cell["column"] + cell["column_span"])
+                paths.append(path)
+            if any(not path for path in paths) or len(set(paths)) != len(paths):
+                continue
+            stub = [cell for cell in visible if cell["column"] == 0 and cell["column_span"] == 1]
+            explicit_stub = any(_STUB_LABEL.fullmatch(_compact(cell["text"]).rstrip(":：")) for cell in stub)
+            periods = [cell for cell in visible if cell["column"] > 0 and _period_label(cell["text"])]
+            period_columns = {column for cell in periods for column in range(cell["column"], cell["column"] + cell["column_span"])}
+            period_matrix = bool(explicit_stub and numeric_columns <= period_columns)
+            measures = [cell for cell in visible if cell["column"] > 0 and _measure_label(cell["text"])]
+            measure_columns = {column for cell in measures
+                               for column in range(cell["column"], cell["column"] + cell["column_span"])}
+            typed_measure_matrix = bool(
+                explicit_stub and numeric_columns & measure_columns
+                and numeric_columns <= period_columns | measure_columns
+                and (numeric_columns & period_columns or len(numeric_columns) >= 2)
+            )
+            shade_contrast = all(cell.get("shaded", False) for cell in visible) and any(not cell.get("shaded", False) for cell in body)
+            bold_contrast = all(cell.get("bold", False) for cell in visible) and any(not cell.get("bold", False) for cell in body)
+            centered = all(cell.get("centered", False) for cell in visible)
+            alignment_contrast = centered and any(not cell.get("centered", False) and _numeric(cell["text"]) for cell in body)
+            multirow_spans = end - start > 1 and any(cell["row_span"] > 1 or cell["column_span"] > 1 for cell in band)
+            same_band_style = len({(bool(cell.get("bold")), bool(cell.get("shaded"))) for cell in visible}) == 1
+            if end - start > 1 and not (
+                multirow_spans or shade_contrast or bold_contrast or (alignment_contrast and same_band_style)
+            ):
+                # Year-valued body data alone cannot deepen an existing band.
+                continue
+            if candidates and periods and not explicit_stub and not (
+                shade_contrast or bold_contrast or multirow_spans
+            ):
+                # A centered record whose values happen to be years is not an
+                # internal header switch without new independent role evidence.
+                continue
+            named_scalar = any(cell["column"] in numeric_columns and _SCALAR_LABEL.search(cell["text"])
+                               for cell in visible)
+            if len(numeric_columns) < 2 and not (
+                period_matrix or (explicit_stub and named_scalar and (shade_contrast or bold_contrast))
+                or (ordinal_record and named_scalar and (shade_contrast or bold_contrast or alignment_contrast))
+            ):
+                continue
+            if not (shade_contrast or bold_contrast or alignment_contrast or period_matrix
+                    or typed_measure_matrix or multirow_spans):
+                continue
+            accepted.append({
+                "header_rows": list(range(start, end)), "body_rows": [], "complete": True,
+                "evidence_source": "pdf_glyph_structure_association",
                 "evidence": {
                     "entire_grid_cell_text_and_spans_bound": True,
-                    "all_nonempty_header_cells_centered": True,
+                    "all_nonempty_header_cells_centered": centered,
                     "source_shading_contrast": shade_contrast,
-                    "source_numeric_column_alignment_contrast": numeric_contrast,
+                    "source_bold_contrast": bold_contrast,
+                    "source_numeric_column_alignment_contrast": alignment_contrast,
+                    "numeric_body_columns": sorted(numeric_columns),
+                    "source_period_and_stub_scope": period_matrix,
+                    "source_typed_measure_scope": typed_measure_matrix,
+                    "typed_measure_columns": sorted(numeric_columns & measure_columns),
+                    "source_multirow_span_scope": multirow_spans,
+                    "source_ordinal_record_role": ordinal_record,
                 },
-            }
-        )
+            })
+        if accepted:
+            # Prefer the complete deepest source band, never split a rowspan.
+            scope = accepted[-1]
+            candidates.append(scope)
+            next_start = scope["header_rows"][-1] + 1
     for index, scope in enumerate(candidates):
         start = scope["header_rows"][-1] + 1
         end = candidates[index + 1]["header_rows"][0] if index + 1 < len(candidates) else num_rows
         scope["body_rows"] = list(range(start, end))
     return candidates
+
+
+def _field_candidates(grid: dict[str, Any], num_rows: int) -> list[dict[str, Any]]:
+    """Read explicit label delimiters or styled scalar fields, not prose grids."""
+    fields = []
+    for row in range(num_rows):
+        cells = sorted((cell for cell in grid["source_cells"] if cell["row"] == row), key=lambda c: c["column"])
+        if not cells or len(cells) % 2 or any(cell["row_span"] != 1 for cell in cells):
+            continue
+        pairs = list(zip(cells[::2], cells[1::2], strict=True))
+        labels = [label["text"].strip() for label, _ in pairs]
+        if any(not label or len(label) > 40 or _numeric(label) or re.search(r"[。；;!?]", label) for label in labels):
+            continue
+        explicit = all(label.endswith((":", "：")) for label in labels)
+        styled = all((label.get("bold", False) and not value.get("bold", False))
+                     or (label.get("shaded", False) and not value.get("shaded", False)) for label, value in pairs)
+        scalar = any(_numeric(value["text"]) for _, value in pairs)
+        typed_labels = all(_FIELD_LABEL.fullmatch(label.rstrip(":：")) for label in labels)
+        prose_values = any(len(_compact(value["text"])) > 120 or len(value["text"].split()) >= 12
+                           or re.search(r"[。!?]", value["text"])
+                           for _, value in pairs)
+        if prose_values or (not explicit and not (styled and (scalar or typed_labels))):
+            continue
+        fields.append({
+            "body_rows": [row], "pairs": [
+                {"label": [label["row"], label["column"]], "value": [value["row"], value["column"]]}
+                for label, value in pairs
+            ], "complete": True, "evidence_source": "pdf_field_delimiter_or_style",
+            "evidence": {"explicit_label_delimiters": explicit, "source_style_contrast": styled,
+                         "numeric_value_evidence": scalar, "explicit_field_label_type": typed_labels},
+        })
+    return fields
+
+
+def _row_group_columns(grid: dict[str, Any], scope: dict[str, Any]) -> list[int]:
+    """Recognize source row groups only with typed column roles and rowspans."""
+    cells = grid["source_cells"]
+    headers = [cell for cell in cells if cell["row"] in scope["header_rows"] and cell["text"].strip()]
+    group_headers = [cell for cell in headers if cell["column"] == 0 and cell["column_span"] == 1]
+    leaf_headers = [cell for cell in headers if cell["column"] == 1 and cell["column_span"] == 1]
+    if not group_headers or not leaf_headers or not all(
+        _GROUP_LABEL.fullmatch(_compact(cell["text"]).rstrip(":：")) for cell in group_headers
+    ) or not any(_STUB_LABEL.fullmatch(_compact(cell["text"]).rstrip(":：")) for cell in leaf_headers):
+        return []
+    body_rows = scope["body_rows"]
+    if not any(cell["column"] == 0 and cell["column_span"] == 1 and cell["row_span"] > 1
+               and cell["row"] in body_rows for cell in cells):
+        return []
+    for row in body_rows:
+        group = [cell for cell in cells if cell["column"] == 0 and cell["column_span"] == 1
+                 and cell["row"] <= row < cell["row"] + cell["row_span"]]
+        leaf = [cell for cell in cells if cell["column"] == 1 and cell["column_span"] == 1
+                and cell["row"] == row and cell["row_span"] == 1]
+        values = [cell for cell in cells if cell["row"] == row and cell["column"] >= 2]
+        if len(group) != 1 or len(leaf) != 1 or not values or not any(_numeric(cell["text"]) for cell in values):
+            return []
+        labels = [group[0]["text"], leaf[0]["text"]]
+        if any(not label.strip() or _numeric(label) or len(_compact(label)) > 40
+               or re.search(r"[。；;!?]", label) for label in labels):
+            return []
+    return [0, 1]
+
+
+def _named_subject_column(grid: dict[str, Any], scope: dict[str, Any]) -> int | None:
+    """Use a uniquely named entity column within an already bound data scope.
+
+    This does not classify a grid. The metric/category and named entity jointly
+    identify a record; neither may disappear from the value's source context.
+    """
+    cells = grid["source_cells"]
+    headers = [cell for cell in cells if cell["row"] in scope["header_rows"] and cell["text"].strip()]
+    candidates = {cell["column"] for cell in headers if cell["column_span"] == 1
+                  and _SUBJECT_LABEL.fullmatch(_compact(cell["text"]).rstrip(":："))}
+    if len(candidates) != 1:
+        return None
+    column = next(iter(candidates))
+    if column == 0 or not any(cell["column"] == 0 and cell["column_span"] == 1
+                             and _STUB_LABEL.fullmatch(_compact(cell["text"]).rstrip(":："))
+                             for cell in headers):
+        return None
+    for row in scope["body_rows"]:
+        owned = [cell for cell in cells if cell["row"] == row and cell["column"] == column
+                 and cell["column_span"] == cell["row_span"] == 1]
+        if len(owned) != 1:
+            return None
+        label = _compact(owned[0]["text"])
+        if not label or _numeric(label) or len(label) > 100 or re.search(r"[。；;!?]", label):
+            return None
+    return column
 
 
 def _apply_bound_grid(fragment: TableFragment, grid: dict[str, Any]) -> None:
@@ -461,7 +837,29 @@ def _apply_bound_grid(fragment: TableFragment, grid: dict[str, Any]) -> None:
         cell.normalized_bbox = (a / width, b / height, c / width, d / height)
     fragment.column_boundaries = [coordinate / width for coordinate in grid["x_grid"]]
     scopes = _header_candidates(grid, fragment.num_rows, fragment.num_cols)
+    for scope in scopes:
+        row_columns = _row_group_columns(grid, scope)
+        if row_columns:
+            scope["row_header_columns"] = row_columns
+            scope["evidence"]["source_typed_row_group_span"] = True
+        elif (subject_column := _named_subject_column(grid, scope)) is not None:
+            scope["row_header_columns"] = [0, subject_column]
+            scope["evidence"]["source_named_subject_column"] = subject_column
+        elif scope["evidence"].get("source_ordinal_record_role") and any(
+            cell["row"] in scope["header_rows"] and cell["column"] == 1 and cell["column_span"] == 1
+            and _STUB_LABEL.fullmatch(_compact(cell["text"]).rstrip(":："))
+            for cell in grid["source_cells"]
+        ):
+            scope["row_header_columns"] = [1]
+            scope["evidence"]["source_named_subject_column"] = 1
     grid["source_header_scopes"] = scopes
+    fields = _field_candidates(grid, fragment.num_rows)
+    grid["field_scopes"] = fields
+    grid["content_kind"] = "data_table" if scopes else "mixed" if fields else "unknown"
+    grid["association_evidence"] = {
+        "header_scopes": len(scopes), "field_scopes": len(fields),
+        "structure_alone_does_not_establish_table_purpose": True,
+    }
     if not scopes:
         return
     fragment.source_header_scopes = scopes
@@ -471,7 +869,7 @@ def _apply_bound_grid(fragment: TableFragment, grid: dict[str, Any]) -> None:
                 cell.is_column_header = True
     fragment.has_column_header = True
     fragment.header_scope_complete = any(scope["header_rows"][0] == 0 for scope in scopes)
-    fragment.header_role_source = "pdf_vector_glyph_style"
+    fragment.header_role_source = "pdf_glyph_structure_association"
     # Inferred source roles do not themselves authorize a continuation. Every
     # merge must additionally consume an explicitly corroborated scope edge.
     fragment.header_verification_required = True
@@ -502,6 +900,9 @@ def _verify_numbered_continuations(
         if right.source_continues_prev is not True:
             continue
         if not left.pdf_evidence.get("bound") or not right.pdf_evidence.get("bound"):
+            continue
+        if any(f.pdf_evidence.get("binding_method") == "native_cell_boxes" for f in (left, right)):
+            # The new cell-partition route does not expand cross-page evidence.
             continue
         signature = _complete_header_signature(left)
         right_signature = _complete_header_signature(right)
@@ -607,6 +1008,8 @@ def _bind_header_scope_continuations(
         if right.page_number != left.page_number + 1 or right.source_continues_prev is not True:
             continue
         if not left.pdf_evidence.get("bound") or not right.pdf_evidence.get("bound"):
+            continue
+        if any(f.pdf_evidence.get("binding_method") == "native_cell_boxes" for f in (left, right)):
             continue
         if (
             right.header_row_indices

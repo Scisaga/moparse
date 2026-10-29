@@ -82,6 +82,10 @@ services:
       - ${GLM_MAX_MODEL_LEN:-16384}
       - --max-num-batched-tokens
       - "8192"
+      # GLM uses GPT-J MRoPE pairing; vLLM 0.19.1's fused op uses NeoX pairing.
+      # Select native rotary only. Keep CUDA Graphs and other custom ops enabled.
+      - --compilation-config
+      - '{"custom_ops":["all","-rotary_embedding"]}'
     deploy:
       resources:
         reservations:

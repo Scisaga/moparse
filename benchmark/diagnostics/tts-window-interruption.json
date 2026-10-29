@@ -1,0 +1,81 @@
+{
+  "scope": "execution-window interruption only; no quality scores or benchmark costs",
+  "recorded_at": "2026-10-26T01:44:31.351391+08:00",
+  "withdrawn_run_id": "20261026-lite-v2",
+  "reason": "resident TTS identity changed and new persistent jobs were observed during measurement",
+  "tts_policy": "keep_running",
+  "tts_before": {
+    "active": true,
+    "MainPID": "1196871",
+    "ControlGroup": "/system.slice/qwen3-tts-openai.service",
+    "ActiveState": "active",
+    "SubState": "running",
+    "InvocationID": "c6e4d4ed194140708aab9a614d13f461"
+  },
+  "tts_after": {
+    "MainPID": "1696293",
+    "ExecMainStartTimestamp": "Mon 2026-10-26 01:34:30 CST",
+    "ActiveState": "active",
+    "SubState": "running",
+    "InvocationID": "64077a7ecc7243b2872e573cf022b078"
+  },
+  "tts_no_calls_condition": {
+    "declaration": "user_declared_none",
+    "before": {
+      "active_job": false,
+      "persistent_active_jobs": [],
+      "job_count": 61
+    },
+    "after": {
+      "active_job": false,
+      "persistent_active_jobs": [],
+      "job_count": 69
+    },
+    "status": "violated",
+    "observed_new_jobs": 8,
+    "reason": "active_or_new_jobs",
+    "limitation": "start/end health and persistent-job counters are not atomic admission control; short calls without a persistent job may be unobserved"
+  },
+  "owned_systemd_stop_actions": [],
+  "research_owners": {
+    "moparse-eval-p01-glm-d5c7c426aa": "stopped",
+    "moparse-eval-worker-8b99dfcbf0d447f8921aa65df40ab5dc": "stopped",
+    "moparse-eval-p02-glm-0f1e7cff4a": "stopped",
+    "moparse-eval-worker-b442b3fbbd8c4ac58f8c9738dc55cb95": "stopped"
+  },
+  "original_restore_record": {
+    "phase": "restoration_failed",
+    "last_recovery_probe_error": "preserved TTS identity changed during maintenance: MainPID"
+  },
+  "independent_recovery_check": {
+    "original_mo_services": {
+      "moparse": {
+        "id": "bac1ad3a1d676070f1dbcdbdaa7791de7261632eb0a5cc69a891730692ddfe27",
+        "running": true,
+        "health": "healthy"
+      },
+      "moparse-native-worker": {
+        "id": "fdb6c4e3a279577c0c85645afcb6e5f1f081d64575cbb9c3c2043582f4455b7e",
+        "running": true,
+        "health": "healthy"
+      },
+      "moparse-mineru-vllm": {
+        "id": "8b579a8a8a018f747d473fd0ee86b013fbea53730826a2b88d8c697782cb4013",
+        "running": true,
+        "health": "healthy"
+      },
+      "docling_glm_ocr_sdk": {
+        "id": "b0b2f735fb491fdb39b6b23e95d70848a15f1cebc67297c2f7d82c6b7fcd0a75",
+        "running": true,
+        "health": "healthy"
+      },
+      "docling_glm_ocr": {
+        "id": "a803d464218327072544e69c70513d17e1604a864a86ca556ec3ca87d0275035",
+        "running": true,
+        "health": "healthy"
+      }
+    },
+    "tts_active": true
+  },
+  "disposition": "withdrawn outputs and obsolete canonical execution lock removed; fresh preflight and freeze required"
+}

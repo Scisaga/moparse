@@ -1,0 +1,18 @@
+{
+  "schema": "moparse-native-region-boundary-diagnostic",
+  "withdrawn_run": "20261028-p07-service-05",
+  "execution_software_id": "64915321b2d185ae7906a8cbd82e9f06e18497c2ff0214d030ac67d053483ef3",
+  "reason": "Pure synthetic reproduction showed eligible native subset replacing a larger parser region that crossed protected content.",
+  "controlled_failure": {
+    "replaced_regions": 1,
+    "protected_literal_retained": false
+  },
+  "required_fix": [
+    "Reject a whole parser region crossing any protected area.",
+    "Reject partial unhealthy or unowned native evidence inside the replacement region."
+  ],
+  "score_status": "incomplete scoring interrupted; all withdrawn scores and candidate outputs deleted before publication",
+  "scope": "Software preservation defect, not source-content acceptance or parsing-quality baseline.",
+  "replacement_run": "20261028-p07-service-08",
+  "replacement_execution_software_id": "0d3eebb621f367a323a9d75e733eee580966a5d007328c25e594381b99dafd2b"
+}

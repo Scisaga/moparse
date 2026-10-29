@@ -40,3 +40,29 @@ def test_generator_source_is_checked_before_markdown_is_written(tmp_path):
     paths = maintained_paths(tmp_path)
     assert paths == [Path("scripts/render_documentation.py")]
     assert len(check_paths(paths, tmp_path)) == 1
+
+
+@pytest.mark.parametrize(
+    "relative",
+    [
+        "pdf_sample/parsing/expected/synthetic/expected.md",
+        "datasets/synthetic/references/expected.md",
+        "benchmark/reports/synthetic/native/faithful.md",
+        "benchmark/reference-decisions/synthetic/decision.md",
+    ],
+)
+def test_corpus_paths_are_never_opened_even_when_explicit(tmp_path, relative, monkeypatch):
+    subprocess.run(["git", "init", "--quiet", str(tmp_path)], check=True)
+    path = tmp_path / relative
+    path.parent.mkdir(parents=True)
+    path.write_text("Synthetic fixture\uff0fglyph\n")
+    original = Path.read_text
+
+    def guarded_read(candidate, *args, **kwargs):
+        if candidate == path:
+            raise AssertionError("generic policy opened corpus material")
+        return original(candidate, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "read_text", guarded_read)
+    assert Path(relative) not in maintained_paths(tmp_path)
+    assert check_paths([path], tmp_path) == []

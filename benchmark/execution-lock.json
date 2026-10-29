@@ -1,0 +1,1213 @@
+{
+  "schema": "moparse-evaluation-execution-v1",
+  "prepared_date": "2026-10-26",
+  "frozen": true,
+  "status": "frozen_after_repaired_preflight",
+  "model_artifacts_prepared": true,
+  "pipelines": {
+    "P01": {
+      "pipeline": "P01",
+      "dpi": 200,
+      "timeout_seconds": 7200,
+      "runtime": {
+        "kind": "docker",
+        "image": "sha256:61ec8c75a6162ffda94cf42d24430d17c2b4ca276f5411d47342a92f43891a5b",
+        "container_python": "python",
+        "network": "host",
+        "mounts": {
+          "/opt/moparse/data/evaluation-models/orientation": "/models/orientation",
+          "/var/lib/docker/volumes/mosaicparse-huggingface-cache/_data/hub/models--PaddlePaddle--PP-DocLayoutV3_safetensors": "/models/glm-layout-cache",
+          "/var/lib/docker/volumes/mosaicparse-docling-models-selected-20261017/_data/docling-project--docling-models": "/models/docling/docling-project--docling-models",
+          "/var/lib/docker/volumes/mosaicparse-docling-models-selected-20261017/_data/docling-project--docling-layout-heron": "/models/docling/docling-project--docling-layout-heron"
+        }
+      },
+      "models": {
+        "orientation_path": "/models/orientation",
+        "glm_layout_path": "/models/glm-layout-cache/snapshots/e4f489dc536556fc1be02b973ba06756e0d4a2ac",
+        "docling_path": "/models/docling"
+      },
+      "revisions": {
+        "orientation": "b2716954d2e321dd4436400b37584fab641027ab",
+        "glm": "2e85a62840ccac27daa451df36c736c4636b8628",
+        "glm_layout": "e4f489dc536556fc1be02b973ba06756e0d4a2ac",
+        "tableformer_v1": "fc0f2d45e2218ea24bce5045f58a389aed16dc23",
+        "docling_layout": "8f39ad3c0b4c58e9c2d2c84a38465abf757272d8"
+      },
+      "inference_services": [
+        {
+          "role": "glm",
+          "family": "glm",
+          "inference_image": "sha256:df7be4c4d818e250a8c80f78d110571e92e72a1fefec06fed82a2e37e473cd48",
+          "host_model_path": "/var/lib/docker/volumes/mosaicparse-huggingface-cache/_data/hub/models--zai-org--GLM-OCR",
+          "model_subdir": "snapshots/2e85a62840ccac27daa451df36c736c4636b8628",
+          "model_name": "zai-org/GLM-OCR",
+          "port": 12541,
+          "cpus": 4,
+          "memory_gib": 20,
+          "gpu_memory_gib": 16,
+          "rotary_embedding": "native"
+        }
+      ],
+      "versions": {
+        "docling": "2.139.0",
+        "docling-core": "2.101.1",
+        "mineru": "4.0.12",
+        "mineru-vl-utils": "2.0.7",
+        "docvortex": "0.5.16",
+        "glmocr": "0.1.5",
+        "paddleocr": "3.7.0",
+        "paddlex": "3.7.2",
+        "transformers": "5.8.1"
+      },
+      "resources": {
+        "preprocessing_cpus": 8,
+        "preprocessing_memory_gib": 8,
+        "inference_cpus": 4,
+        "inference_memory_gib": 20,
+        "gpu_device": "1",
+        "gpu_memory_gib": 16,
+        "power_watts": 200,
+        "outer_concurrency": 1,
+        "client_concurrency": 4
+      },
+      "graphs": {
+        "status": "real_preflight_completed_with_recorded_component_exceptions",
+        "policy": "CUDA Graphs enabled where capture/inference succeeded; native component failures recorded",
+        "torch_compile": false,
+        "evidence": "benchmark/reports/20261026-repaired-preflight-02/execution-readiness.json#/pipelines/P01"
+      },
+      "retry_max_attempts": 0,
+      "observe_request_metadata": true,
+      "co_resident_services": {
+        "qwen3-tts-openai.service": {
+          "policy": "keep_running",
+          "observation_policy": "observe_only",
+          "inference_during_benchmark": "uncontrolled_observed_only",
+          "instruction_date": "2026-10-26"
+        }
+      },
+      "execution_repairs": [
+        "rotation-coordinate-space",
+        "native-neighbor-retention",
+        "region-export-isolation",
+        "glm-gptj-native-rotary"
+      ],
+      "source_policy": {
+        "minimum_native_characters": 40,
+        "scan_image_coverage": 0.8,
+        "mixed_image_coverage": 0.2,
+        "unknown_action": "glm",
+        "role": "runtime_prediction_only_not_gold"
+      },
+      "glm_configuration": "bundled glmocr 0.1.5 YAML; self-hosted CPU layout; retry=0; workers=4",
+      "native_view_policy": {
+        "glm": {
+          "primary_scoring_view": "json_result",
+          "audit_view": "raw_json_result",
+          "cross_view_order": "unknown",
+          "selection": "fixed; no favorable stage selection by answer or sample"
+        }
+      },
+      "docling_export": "contiguous native group once; all ContentLayer; native tree order",
+      "timeout_policy": {
+        "frozen": true,
+        "single_page_seconds": 23.546370132127777,
+        "minimum_seconds": 300,
+        "multiplier": 3,
+        "maximum_seconds": 3600,
+        "measurement": "direct isolated one-page inputs from the existing declared preflight selection",
+        "evidence": "benchmark/reports/20261026-repaired-preflight-02/execution-readiness.json"
+      }
+    },
+    "P02": {
+      "pipeline": "P02",
+      "dpi": 200,
+      "timeout_seconds": 7200,
+      "runtime": {
+        "kind": "docker",
+        "image": "sha256:61ec8c75a6162ffda94cf42d24430d17c2b4ca276f5411d47342a92f43891a5b",
+        "container_python": "python",
+        "network": "host",
+        "mounts": {
+          "/opt/moparse/data/evaluation-models/orientation": "/models/orientation",
+          "/var/lib/docker/volumes/mosaicparse-huggingface-cache/_data/hub/models--PaddlePaddle--PP-DocLayoutV3_safetensors": "/models/glm-layout-cache",
+          "/var/lib/docker/volumes/mosaicparse-docling-models-selected-20261017/_data/docling-project--docling-models": "/models/docling/docling-project--docling-models",
+          "/var/lib/docker/volumes/mosaicparse-docling-models-selected-20261017/_data/docling-project--docling-layout-heron": "/models/docling/docling-project--docling-layout-heron",
+          "/opt/moparse/data/evaluation-models/docling/docling-project--TableFormerV2": "/models/docling/docling-project--TableFormerV2"
+        }
+      },
+      "models": {
+        "orientation_path": "/models/orientation",
+        "glm_layout_path": "/models/glm-layout-cache/snapshots/e4f489dc536556fc1be02b973ba06756e0d4a2ac",
+        "docling_path": "/models/docling"
+      },
+      "revisions": {
+        "orientation": "b2716954d2e321dd4436400b37584fab641027ab",
+        "glm": "2e85a62840ccac27daa451df36c736c4636b8628",
+        "glm_layout": "e4f489dc536556fc1be02b973ba06756e0d4a2ac",
+        "tableformer_v1": "fc0f2d45e2218ea24bce5045f58a389aed16dc23",
+        "docling_layout": "8f39ad3c0b4c58e9c2d2c84a38465abf757272d8",
+        "tableformer_v2": "e41ba5da7ef69004f4b329168791c2987abf917c"
+      },
+      "inference_services": [
+        {
+          "role": "glm",
+          "family": "glm",
+          "inference_image": "sha256:df7be4c4d818e250a8c80f78d110571e92e72a1fefec06fed82a2e37e473cd48",
+          "host_model_path": "/var/lib/docker/volumes/mosaicparse-huggingface-cache/_data/hub/models--zai-org--GLM-OCR",
+          "model_subdir": "snapshots/2e85a62840ccac27daa451df36c736c4636b8628",
+          "model_name": "zai-org/GLM-OCR",
+          "port": 12541,
+          "cpus": 4,
+          "memory_gib": 20,
+          "gpu_memory_gib": 16,
+          "rotary_embedding": "native"
+        }
+      ],
+      "versions": {
+        "docling": "2.139.0",
+        "docling-core": "2.101.1",
+        "mineru": "4.0.12",
+        "mineru-vl-utils": "2.0.7",
+        "docvortex": "0.5.16",
+        "glmocr": "0.1.5",
+        "paddleocr": "3.7.0",
+        "paddlex": "3.7.2",
+        "transformers": "5.8.1"
+      },
+      "resources": {
+        "preprocessing_cpus": 8,
+        "preprocessing_memory_gib": 8,
+        "inference_cpus": 4,
+        "inference_memory_gib": 20,
+        "gpu_device": "1",
+        "gpu_memory_gib": 16,
+        "power_watts": 200,
+        "outer_concurrency": 1,
+        "client_concurrency": 4
+      },
+      "graphs": {
+        "status": "real_preflight_completed_with_recorded_component_exceptions",
+        "policy": "CUDA Graphs enabled where capture/inference succeeded; native component failures recorded",
+        "torch_compile": false,
+        "evidence": "benchmark/reports/20261026-repaired-preflight-02/execution-readiness.json#/pipelines/P02"
+      },
+      "retry_max_attempts": 0,
+      "observe_request_metadata": true,
+      "co_resident_services": {
+        "qwen3-tts-openai.service": {
+          "policy": "keep_running",
+          "observation_policy": "observe_only",
+          "inference_during_benchmark": "uncontrolled_observed_only",
+          "instruction_date": "2026-10-26"
+        }
+      },
+      "execution_repairs": [
+        "rotation-coordinate-space",
+        "native-neighbor-retention",
+        "region-export-isolation",
+        "glm-gptj-native-rotary"
+      ],
+      "source_policy": {
+        "minimum_native_characters": 40,
+        "scan_image_coverage": 0.8,
+        "mixed_image_coverage": 0.2,
+        "unknown_action": "glm",
+        "role": "runtime_prediction_only_not_gold"
+      },
+      "glm_configuration": "bundled glmocr 0.1.5 YAML; self-hosted CPU layout; retry=0; workers=4",
+      "native_view_policy": {
+        "glm": {
+          "primary_scoring_view": "json_result",
+          "audit_view": "raw_json_result",
+          "cross_view_order": "unknown",
+          "selection": "fixed; no favorable stage selection by answer or sample"
+        }
+      },
+      "docling_export": "contiguous native group once; all ContentLayer; native tree order",
+      "timeout_policy": {
+        "frozen": true,
+        "single_page_seconds": 23.546370132127777,
+        "minimum_seconds": 300,
+        "multiplier": 3,
+        "maximum_seconds": 3600,
+        "measurement": "direct isolated one-page inputs from the existing declared preflight selection",
+        "evidence": "benchmark/reports/20261026-repaired-preflight-02/execution-readiness.json"
+      }
+    },
+    "P03": {
+      "pipeline": "P03",
+      "dpi": 200,
+      "timeout_seconds": 7200,
+      "runtime": {
+        "kind": "docker",
+        "image": "sha256:61ec8c75a6162ffda94cf42d24430d17c2b4ca276f5411d47342a92f43891a5b",
+        "container_python": "python",
+        "network": "host",
+        "mounts": {
+          "/opt/moparse/data/evaluation-models/orientation": "/models/orientation",
+          "/opt/moparse/data/evaluation-models/paddle15": "/models/paddle-vlm",
+          "/opt/moparse/data/evaluation-models/paddle-layout-transformers": "/models/paddle-layout"
+        }
+      },
+      "models": {
+        "orientation_path": "/models/orientation",
+        "paddle_vlm_path": "/models/paddle-vlm",
+        "paddle_layout_path": "/models/paddle-layout"
+      },
+      "revisions": {
+        "orientation": "b2716954d2e321dd4436400b37584fab641027ab",
+        "paddle_vlm": "2a4195faa5e7914c12f2fc601d72c81caf8d2da5",
+        "paddle_layout": "e4f489dc536556fc1be02b973ba06756e0d4a2ac"
+      },
+      "inference_services": [
+        {
+          "role": "paddle",
+          "family": "paddle-native",
+          "inference_image": "sha256:36216a3928ac120fc6cb02f438f7d3e5cf4836de7f4e22e424e8372b6f08637c",
+          "model_name": "PaddleOCR-VL-1.5",
+          "port": 12543,
+          "cpus": 4,
+          "memory_gib": 20,
+          "gpu_memory_gib": 16,
+          "model_mounts": {
+            "/opt/moparse/data/evaluation-models/paddle15": "/models/paddle-vlm",
+            "/opt/moparse/data/evaluation-models/paddle-layout-transformers": "/models/paddle-layout"
+          },
+          "server_config": {
+            "pipeline": "P03",
+            "models": {
+              "orientation_path": "/models/orientation",
+              "paddle_vlm_path": "/models/paddle-vlm",
+              "paddle_layout_path": "/models/paddle-layout"
+            },
+            "versions": {
+              "docling": "2.139.0",
+              "docling-core": "2.101.1",
+              "mineru": "4.0.12",
+              "mineru-vl-utils": "2.0.7",
+              "docvortex": "0.5.16",
+              "glmocr": "0.1.5",
+              "paddleocr": "3.7.0",
+              "paddlex": "3.7.2",
+              "transformers": "5.8.1",
+              "paddle_transformers": "5.10.2"
+            },
+            "graphs": {
+              "status": "real_preflight_completed_with_recorded_component_exceptions",
+              "policy": "CUDA Graphs enabled where capture/inference succeeded; native component failures recorded",
+              "torch_compile": false,
+              "evidence": "benchmark/reports/20261026-repaired-preflight-02/execution-readiness.json#/pipelines/P03"
+            },
+            "resources": {
+              "preprocessing_cpus": 8,
+              "preprocessing_memory_gib": 8,
+              "inference_cpus": 4,
+              "inference_memory_gib": 20,
+              "gpu_device": "1",
+              "gpu_memory_gib": 16,
+              "power_watts": 200,
+              "outer_concurrency": 1,
+              "client_concurrency": 4
+            },
+            "paddle_backend": "native-transformers",
+            "paddle_execution_mode": "persistent-owner-v1",
+            "paddle_use_queues": false,
+            "paddle_color_policy": "bgr-to-rgb-v1",
+            "paddle_max_new_tokens": 4096,
+            "paddle_generation_observation": true
+          }
+        }
+      ],
+      "versions": {
+        "docling": "2.139.0",
+        "docling-core": "2.101.1",
+        "mineru": "4.0.12",
+        "mineru-vl-utils": "2.0.7",
+        "docvortex": "0.5.16",
+        "glmocr": "0.1.5",
+        "paddleocr": "3.7.0",
+        "paddlex": "3.7.2",
+        "transformers": "5.8.1",
+        "paddle_transformers": "5.10.2"
+      },
+      "resources": {
+        "preprocessing_cpus": 8,
+        "preprocessing_memory_gib": 8,
+        "inference_cpus": 4,
+        "inference_memory_gib": 20,
+        "gpu_device": "1",
+        "gpu_memory_gib": 16,
+        "power_watts": 200,
+        "outer_concurrency": 1,
+        "client_concurrency": 4
+      },
+      "graphs": {
+        "status": "real_preflight_completed_with_recorded_component_exceptions",
+        "policy": "CUDA Graphs enabled where capture/inference succeeded; native component failures recorded",
+        "torch_compile": false,
+        "evidence": "benchmark/reports/20261026-repaired-preflight-02/execution-readiness.json#/pipelines/P03"
+      },
+      "retry_max_attempts": 0,
+      "observe_request_metadata": true,
+      "co_resident_services": {
+        "qwen3-tts-openai.service": {
+          "policy": "keep_running",
+          "observation_policy": "observe_only",
+          "inference_during_benchmark": "uncontrolled_observed_only",
+          "instruction_date": "2026-10-26"
+        }
+      },
+      "execution_repairs": [
+        "rotation-coordinate-space",
+        "native-neighbor-retention",
+        "region-export-isolation",
+        "paddle-bgr-rgb",
+        "persistent-native-owner"
+      ],
+      "paddle_color_policy": "bgr-to-rgb-v1",
+      "paddle_max_new_tokens": 4096,
+      "paddle_generation_observation": true,
+      "native_attention": {
+        "vlm": "sdpa",
+        "layout": "official default; no unsupported global SDPA",
+        "cuda_graphs": "independent bounded capture/replay verification"
+      },
+      "paddle_backend": "native-rpc",
+      "resource_isolation": {
+        "preprocessing": "CPU worker cgroup: 8 CPU, 8 GiB",
+        "native_inference": "separate GPU1 container cgroup: 4 CPU, 20 GiB; includes official layout and VLM",
+        "internal_rpc_timing": "included inside direct worker processing clock; never subtracted"
+      },
+      "timeout_policy": {
+        "frozen": true,
+        "single_page_seconds": 23.546370132127777,
+        "minimum_seconds": 300,
+        "multiplier": 3,
+        "maximum_seconds": 3600,
+        "measurement": "direct isolated one-page inputs from the existing declared preflight selection",
+        "evidence": "benchmark/reports/20261026-repaired-preflight-02/execution-readiness.json"
+      }
+    },
+    "P04": {
+      "pipeline": "P04",
+      "dpi": 200,
+      "timeout_seconds": 7200,
+      "runtime": {
+        "kind": "docker",
+        "image": "sha256:61ec8c75a6162ffda94cf42d24430d17c2b4ca276f5411d47342a92f43891a5b",
+        "container_python": "python",
+        "network": "host",
+        "mounts": {
+          "/opt/moparse/data/evaluation-models/orientation": "/models/orientation",
+          "/opt/moparse/data/evaluation-models/paddle16": "/models/paddle-vlm",
+          "/opt/moparse/data/evaluation-models/paddle-layout-transformers": "/models/paddle-layout"
+        }
+      },
+      "models": {
+        "orientation_path": "/models/orientation",
+        "paddle_vlm_path": "/models/paddle-vlm",
+        "paddle_layout_path": "/models/paddle-layout"
+      },
+      "revisions": {
+        "orientation": "b2716954d2e321dd4436400b37584fab641027ab",
+        "paddle_vlm": "c5630abae1d940eafe0697512a0325494b02ab42",
+        "paddle_layout": "e4f489dc536556fc1be02b973ba06756e0d4a2ac"
+      },
+      "inference_services": [
+        {
+          "role": "paddle",
+          "family": "paddle-native",
+          "inference_image": "sha256:36216a3928ac120fc6cb02f438f7d3e5cf4836de7f4e22e424e8372b6f08637c",
+          "model_name": "PaddleOCR-VL-1.6",
+          "port": 12543,
+          "cpus": 4,
+          "memory_gib": 20,
+          "gpu_memory_gib": 16,
+          "model_mounts": {
+            "/opt/moparse/data/evaluation-models/paddle16": "/models/paddle-vlm",
+            "/opt/moparse/data/evaluation-models/paddle-layout-transformers": "/models/paddle-layout"
+          },
+          "server_config": {
+            "pipeline": "P04",
+            "models": {
+              "orientation_path": "/models/orientation",
+              "paddle_vlm_path": "/models/paddle-vlm",
+              "paddle_layout_path": "/models/paddle-layout"
+            },
+            "versions": {
+              "docling": "2.139.0",
+              "docling-core": "2.101.1",
+              "mineru": "4.0.12",
+              "mineru-vl-utils": "2.0.7",
+              "docvortex": "0.5.16",
+              "glmocr": "0.1.5",
+              "paddleocr": "3.7.0",
+              "paddlex": "3.7.2",
+              "transformers": "5.8.1",
+              "paddle_transformers": "5.10.2"
+            },
+            "graphs": {
+              "status": "real_preflight_completed_with_recorded_component_exceptions",
+              "policy": "CUDA Graphs enabled where capture/inference succeeded; native component failures recorded",
+              "torch_compile": false,
+              "evidence": "benchmark/reports/20261026-repaired-preflight-02/execution-readiness.json#/pipelines/P04"
+            },
+            "resources": {
+              "preprocessing_cpus": 8,
+              "preprocessing_memory_gib": 8,
+              "inference_cpus": 4,
+              "inference_memory_gib": 20,
+              "gpu_device": "1",
+              "gpu_memory_gib": 16,
+              "power_watts": 200,
+              "outer_concurrency": 1,
+              "client_concurrency": 4
+            },
+            "paddle_backend": "native-transformers",
+            "paddle_execution_mode": "persistent-owner-v1",
+            "paddle_use_queues": false,
+            "paddle_color_policy": "bgr-to-rgb-v1",
+            "paddle_max_new_tokens": 4096,
+            "paddle_generation_observation": true
+          }
+        }
+      ],
+      "versions": {
+        "docling": "2.139.0",
+        "docling-core": "2.101.1",
+        "mineru": "4.0.12",
+        "mineru-vl-utils": "2.0.7",
+        "docvortex": "0.5.16",
+        "glmocr": "0.1.5",
+        "paddleocr": "3.7.0",
+        "paddlex": "3.7.2",
+        "transformers": "5.8.1",
+        "paddle_transformers": "5.10.2"
+      },
+      "resources": {
+        "preprocessing_cpus": 8,
+        "preprocessing_memory_gib": 8,
+        "inference_cpus": 4,
+        "inference_memory_gib": 20,
+        "gpu_device": "1",
+        "gpu_memory_gib": 16,
+        "power_watts": 200,
+        "outer_concurrency": 1,
+        "client_concurrency": 4
+      },
+      "graphs": {
+        "status": "real_preflight_completed_with_recorded_component_exceptions",
+        "policy": "CUDA Graphs enabled where capture/inference succeeded; native component failures recorded",
+        "torch_compile": false,
+        "evidence": "benchmark/reports/20261026-repaired-preflight-02/execution-readiness.json#/pipelines/P04"
+      },
+      "retry_max_attempts": 0,
+      "observe_request_metadata": true,
+      "co_resident_services": {
+        "qwen3-tts-openai.service": {
+          "policy": "keep_running",
+          "observation_policy": "observe_only",
+          "inference_during_benchmark": "uncontrolled_observed_only",
+          "instruction_date": "2026-10-26"
+        }
+      },
+      "execution_repairs": [
+        "rotation-coordinate-space",
+        "native-neighbor-retention",
+        "region-export-isolation",
+        "paddle-bgr-rgb",
+        "persistent-native-owner"
+      ],
+      "paddle_color_policy": "bgr-to-rgb-v1",
+      "paddle_max_new_tokens": 4096,
+      "paddle_generation_observation": true,
+      "native_attention": {
+        "vlm": "sdpa",
+        "layout": "official default; no unsupported global SDPA",
+        "cuda_graphs": "independent bounded capture/replay verification"
+      },
+      "paddle_backend": "native-rpc",
+      "resource_isolation": {
+        "preprocessing": "CPU worker cgroup: 8 CPU, 8 GiB",
+        "native_inference": "separate GPU1 container cgroup: 4 CPU, 20 GiB; includes official layout and VLM",
+        "internal_rpc_timing": "included inside direct worker processing clock; never subtracted"
+      },
+      "timeout_policy": {
+        "frozen": true,
+        "single_page_seconds": 23.546370132127777,
+        "minimum_seconds": 300,
+        "multiplier": 3,
+        "maximum_seconds": 3600,
+        "measurement": "direct isolated one-page inputs from the existing declared preflight selection",
+        "evidence": "benchmark/reports/20261026-repaired-preflight-02/execution-readiness.json"
+      }
+    },
+    "P05": {
+      "pipeline": "P05",
+      "dpi": 200,
+      "timeout_seconds": 7200,
+      "runtime": {
+        "kind": "docker",
+        "image": "sha256:61ec8c75a6162ffda94cf42d24430d17c2b4ca276f5411d47342a92f43891a5b",
+        "container_python": "python",
+        "network": "host",
+        "mounts": {
+          "/opt/moparse/data/evaluation-models/orientation": "/models/orientation",
+          "/var/lib/docker/volumes/mosaicparse-huggingface-cache/_data/hub/models--PaddlePaddle--PP-DocLayoutV3_safetensors": "/models/glm-layout-cache"
+        }
+      },
+      "models": {
+        "orientation_path": "/models/orientation",
+        "glm_layout_path": "/models/glm-layout-cache/snapshots/e4f489dc536556fc1be02b973ba06756e0d4a2ac"
+      },
+      "revisions": {
+        "orientation": "b2716954d2e321dd4436400b37584fab641027ab",
+        "glm": "2e85a62840ccac27daa451df36c736c4636b8628",
+        "glm_layout": "e4f489dc536556fc1be02b973ba06756e0d4a2ac"
+      },
+      "inference_services": [
+        {
+          "role": "glm",
+          "family": "glm",
+          "inference_image": "sha256:df7be4c4d818e250a8c80f78d110571e92e72a1fefec06fed82a2e37e473cd48",
+          "host_model_path": "/var/lib/docker/volumes/mosaicparse-huggingface-cache/_data/hub/models--zai-org--GLM-OCR",
+          "model_subdir": "snapshots/2e85a62840ccac27daa451df36c736c4636b8628",
+          "model_name": "zai-org/GLM-OCR",
+          "port": 12541,
+          "cpus": 4,
+          "memory_gib": 20,
+          "gpu_memory_gib": 16,
+          "rotary_embedding": "native"
+        }
+      ],
+      "versions": {
+        "docling": "2.139.0",
+        "docling-core": "2.101.1",
+        "mineru": "4.0.12",
+        "mineru-vl-utils": "2.0.7",
+        "docvortex": "0.5.16",
+        "glmocr": "0.1.5",
+        "paddleocr": "3.7.0",
+        "paddlex": "3.7.2",
+        "transformers": "5.8.1"
+      },
+      "resources": {
+        "preprocessing_cpus": 8,
+        "preprocessing_memory_gib": 8,
+        "inference_cpus": 4,
+        "inference_memory_gib": 20,
+        "gpu_device": "1",
+        "gpu_memory_gib": 16,
+        "power_watts": 200,
+        "outer_concurrency": 1,
+        "client_concurrency": 4
+      },
+      "graphs": {
+        "status": "real_preflight_completed_with_recorded_component_exceptions",
+        "policy": "CUDA Graphs enabled where capture/inference succeeded; native component failures recorded",
+        "torch_compile": false,
+        "evidence": "benchmark/reports/20261026-repaired-preflight-02/execution-readiness.json#/pipelines/P05"
+      },
+      "retry_max_attempts": 0,
+      "observe_request_metadata": true,
+      "co_resident_services": {
+        "qwen3-tts-openai.service": {
+          "policy": "keep_running",
+          "observation_policy": "observe_only",
+          "inference_during_benchmark": "uncontrolled_observed_only",
+          "instruction_date": "2026-10-26"
+        }
+      },
+      "execution_repairs": [
+        "rotation-coordinate-space",
+        "native-neighbor-retention",
+        "region-export-isolation",
+        "glm-gptj-native-rotary"
+      ],
+      "glm_configuration": "bundled glmocr 0.1.5 YAML; self-hosted CPU layout; retry=0; workers=4",
+      "native_view_policy": {
+        "glm": {
+          "primary_scoring_view": "json_result",
+          "audit_view": "raw_json_result",
+          "cross_view_order": "unknown",
+          "selection": "fixed; no favorable stage selection by answer or sample"
+        }
+      },
+      "timeout_policy": {
+        "frozen": true,
+        "single_page_seconds": 23.546370132127777,
+        "minimum_seconds": 300,
+        "multiplier": 3,
+        "maximum_seconds": 3600,
+        "measurement": "direct isolated one-page inputs from the existing declared preflight selection",
+        "evidence": "benchmark/reports/20261026-repaired-preflight-02/execution-readiness.json"
+      }
+    },
+    "P06": {
+      "pipeline": "P06",
+      "dpi": 200,
+      "timeout_seconds": 7200,
+      "runtime": {
+        "kind": "docker",
+        "image": "sha256:61ec8c75a6162ffda94cf42d24430d17c2b4ca276f5411d47342a92f43891a5b",
+        "container_python": "python",
+        "network": "host",
+        "mounts": {
+          "/opt/moparse/data/evaluation-models/orientation": "/models/orientation",
+          "/var/lib/docker/volumes/mosaicparse-huggingface-cache/_data/hub/models--PaddlePaddle--PP-DocLayoutV3_safetensors": "/models/glm-layout-cache",
+          "/var/lib/docker/volumes/moparse-mineru-small-models/_data": "/models/mineru-small"
+        },
+        "writable_runtime_paths": [
+          {
+            "path": "/models/mineru-small/models/.locks",
+            "kind": "tmpfs",
+            "size_mib": 16,
+            "scope": "advisory locks only; weights remain read-only"
+          }
+        ]
+      },
+      "models": {
+        "orientation_path": "/models/orientation",
+        "glm_layout_path": "/models/glm-layout-cache/snapshots/e4f489dc536556fc1be02b973ba06756e0d4a2ac",
+        "mineru_small_path": "/models/mineru-small"
+      },
+      "revisions": {
+        "orientation": "b2716954d2e321dd4436400b37584fab641027ab",
+        "glm": "2e85a62840ccac27daa451df36c736c4636b8628",
+        "glm_layout": "e4f489dc536556fc1be02b973ba06756e0d4a2ac",
+        "mineru": "08aaea840498d49ce16247b6263196cf02814885"
+      },
+      "inference_services": [
+        {
+          "role": "glm",
+          "family": "glm",
+          "inference_image": "sha256:df7be4c4d818e250a8c80f78d110571e92e72a1fefec06fed82a2e37e473cd48",
+          "host_model_path": "/var/lib/docker/volumes/mosaicparse-huggingface-cache/_data/hub/models--zai-org--GLM-OCR",
+          "model_subdir": "snapshots/2e85a62840ccac27daa451df36c736c4636b8628",
+          "model_name": "zai-org/GLM-OCR",
+          "port": 12541,
+          "cpus": 2,
+          "memory_gib": 10,
+          "gpu_memory_gib": 6,
+          "rotary_embedding": "native"
+        },
+        {
+          "role": "mineru",
+          "family": "mineru",
+          "inference_image": "sha256:ea407324215fa2393585447521828b34d1ffc6474fd04b24865fb9476ff5ccfe",
+          "host_model_path": "/var/lib/docker/volumes/moparse-mineru-models/_data",
+          "model_subdir": "snapshots/08aaea840498d49ce16247b6263196cf02814885",
+          "model_name": "mineru2.5-pro",
+          "port": 12542,
+          "cpus": 2,
+          "memory_gib": 10,
+          "gpu_memory_gib": 10
+        }
+      ],
+      "versions": {
+        "docling": "2.139.0",
+        "docling-core": "2.101.1",
+        "mineru": "4.0.12",
+        "mineru-vl-utils": "2.0.7",
+        "docvortex": "0.5.16",
+        "glmocr": "0.1.5",
+        "paddleocr": "3.7.0",
+        "paddlex": "3.7.2",
+        "transformers": "5.8.1"
+      },
+      "resources": {
+        "preprocessing_cpus": 8,
+        "preprocessing_memory_gib": 8,
+        "inference_cpus": 4,
+        "inference_memory_gib": 20,
+        "gpu_device": "1",
+        "gpu_memory_gib": 16,
+        "power_watts": 200,
+        "outer_concurrency": 1,
+        "client_concurrency": 4
+      },
+      "graphs": {
+        "status": "real_preflight_completed_with_recorded_component_exceptions",
+        "policy": "CUDA Graphs enabled where capture/inference succeeded; native component failures recorded",
+        "torch_compile": false,
+        "evidence": "benchmark/reports/20261026-repaired-preflight-02/execution-readiness.json#/pipelines/P06"
+      },
+      "retry_max_attempts": 0,
+      "observe_request_metadata": true,
+      "co_resident_services": {
+        "qwen3-tts-openai.service": {
+          "policy": "keep_running",
+          "observation_policy": "observe_only",
+          "inference_during_benchmark": "uncontrolled_observed_only",
+          "instruction_date": "2026-10-26"
+        }
+      },
+      "execution_repairs": [
+        "rotation-coordinate-space",
+        "native-neighbor-retention",
+        "region-export-isolation",
+        "glm-gptj-native-rotary"
+      ],
+      "source_policy": {
+        "minimum_native_characters": 40,
+        "scan_image_coverage": 0.8,
+        "mixed_image_coverage": 0.2,
+        "unknown_action": "glm",
+        "role": "runtime_prediction_only_not_gold"
+      },
+      "glm_configuration": "bundled glmocr 0.1.5 YAML; self-hosted CPU layout; retry=0; workers=4",
+      "native_view_policy": {
+        "glm": {
+          "primary_scoring_view": "json_result",
+          "audit_view": "raw_json_result",
+          "cross_view_order": "unknown",
+          "selection": "fixed; no favorable stage selection by answer or sample"
+        }
+      },
+      "timeout_policy": {
+        "frozen": true,
+        "single_page_seconds": 23.546370132127777,
+        "minimum_seconds": 300,
+        "multiplier": 3,
+        "maximum_seconds": 3600,
+        "measurement": "direct isolated one-page inputs from the existing declared preflight selection",
+        "evidence": "benchmark/reports/20261026-repaired-preflight-02/execution-readiness.json"
+      }
+    },
+    "P07": {
+      "pipeline": "P07",
+      "dpi": 200,
+      "timeout_seconds": 7200,
+      "runtime": {
+        "kind": "docker",
+        "image": "sha256:61ec8c75a6162ffda94cf42d24430d17c2b4ca276f5411d47342a92f43891a5b",
+        "container_python": "python",
+        "network": "host",
+        "mounts": {
+          "/opt/moparse/data/evaluation-models/orientation": "/models/orientation",
+          "/var/lib/docker/volumes/mosaicparse-huggingface-cache/_data/hub/models--PaddlePaddle--PP-DocLayoutV3_safetensors": "/models/glm-layout-cache",
+          "/var/lib/docker/volumes/moparse-mineru-small-models/_data": "/models/mineru-small"
+        },
+        "writable_runtime_paths": [
+          {
+            "path": "/models/mineru-small/models/.locks",
+            "kind": "tmpfs",
+            "size_mib": 16,
+            "scope": "advisory locks only; weights remain read-only"
+          }
+        ]
+      },
+      "models": {
+        "orientation_path": "/models/orientation",
+        "glm_layout_path": "/models/glm-layout-cache/snapshots/e4f489dc536556fc1be02b973ba06756e0d4a2ac",
+        "mineru_small_path": "/models/mineru-small"
+      },
+      "revisions": {
+        "orientation": "b2716954d2e321dd4436400b37584fab641027ab",
+        "glm": "2e85a62840ccac27daa451df36c736c4636b8628",
+        "glm_layout": "e4f489dc536556fc1be02b973ba06756e0d4a2ac",
+        "mineru": "08aaea840498d49ce16247b6263196cf02814885"
+      },
+      "inference_services": [
+        {
+          "role": "glm",
+          "family": "glm",
+          "inference_image": "sha256:df7be4c4d818e250a8c80f78d110571e92e72a1fefec06fed82a2e37e473cd48",
+          "host_model_path": "/var/lib/docker/volumes/mosaicparse-huggingface-cache/_data/hub/models--zai-org--GLM-OCR",
+          "model_subdir": "snapshots/2e85a62840ccac27daa451df36c736c4636b8628",
+          "model_name": "zai-org/GLM-OCR",
+          "port": 12541,
+          "cpus": 2,
+          "memory_gib": 10,
+          "gpu_memory_gib": 6,
+          "rotary_embedding": "native"
+        },
+        {
+          "role": "mineru",
+          "family": "mineru",
+          "inference_image": "sha256:ea407324215fa2393585447521828b34d1ffc6474fd04b24865fb9476ff5ccfe",
+          "host_model_path": "/var/lib/docker/volumes/moparse-mineru-models/_data",
+          "model_subdir": "snapshots/08aaea840498d49ce16247b6263196cf02814885",
+          "model_name": "mineru2.5-pro",
+          "port": 12542,
+          "cpus": 2,
+          "memory_gib": 10,
+          "gpu_memory_gib": 10
+        }
+      ],
+      "versions": {
+        "docling": "2.139.0",
+        "docling-core": "2.101.1",
+        "mineru": "4.0.12",
+        "mineru-vl-utils": "2.0.7",
+        "docvortex": "0.5.16",
+        "glmocr": "0.1.5",
+        "paddleocr": "3.7.0",
+        "paddlex": "3.7.2",
+        "transformers": "5.8.1"
+      },
+      "resources": {
+        "preprocessing_cpus": 8,
+        "preprocessing_memory_gib": 8,
+        "inference_cpus": 4,
+        "inference_memory_gib": 20,
+        "gpu_device": "1",
+        "gpu_memory_gib": 16,
+        "power_watts": 200,
+        "outer_concurrency": 1,
+        "client_concurrency": 4
+      },
+      "graphs": {
+        "status": "real_preflight_completed_with_recorded_component_exceptions",
+        "policy": "CUDA Graphs enabled where capture/inference succeeded; native component failures recorded",
+        "torch_compile": false,
+        "evidence": "benchmark/reports/20261026-repaired-preflight-02/execution-readiness.json#/pipelines/P07"
+      },
+      "retry_max_attempts": 0,
+      "observe_request_metadata": true,
+      "co_resident_services": {
+        "qwen3-tts-openai.service": {
+          "policy": "keep_running",
+          "observation_policy": "observe_only",
+          "inference_during_benchmark": "uncontrolled_observed_only",
+          "instruction_date": "2026-10-26"
+        }
+      },
+      "execution_repairs": [
+        "rotation-coordinate-space",
+        "native-neighbor-retention",
+        "region-export-isolation",
+        "glm-gptj-native-rotary"
+      ],
+      "source_policy": {
+        "minimum_native_characters": 40,
+        "scan_image_coverage": 0.8,
+        "mixed_image_coverage": 0.2,
+        "unknown_action": "glm",
+        "role": "runtime_prediction_only_not_gold"
+      },
+      "glm_configuration": "bundled glmocr 0.1.5 YAML; self-hosted CPU layout; retry=0; workers=4",
+      "native_view_policy": {
+        "glm": {
+          "primary_scoring_view": "json_result",
+          "audit_view": "raw_json_result",
+          "cross_view_order": "unknown",
+          "selection": "fixed; no favorable stage selection by answer or sample"
+        }
+      },
+      "timeout_policy": {
+        "frozen": true,
+        "single_page_seconds": 23.546370132127777,
+        "minimum_seconds": 300,
+        "multiplier": 3,
+        "maximum_seconds": 3600,
+        "measurement": "direct isolated one-page inputs from the existing declared preflight selection",
+        "evidence": "benchmark/reports/20261026-repaired-preflight-02/execution-readiness.json"
+      }
+    },
+    "P08": {
+      "pipeline": "P08",
+      "dpi": 200,
+      "timeout_seconds": 7200,
+      "runtime": {
+        "kind": "docker",
+        "image": "sha256:61ec8c75a6162ffda94cf42d24430d17c2b4ca276f5411d47342a92f43891a5b",
+        "container_python": "python",
+        "network": "host",
+        "mounts": {
+          "/opt/moparse/data/evaluation-models/orientation": "/models/orientation"
+        }
+      },
+      "models": {
+        "orientation_path": "/models/orientation"
+      },
+      "revisions": {
+        "orientation": "b2716954d2e321dd4436400b37584fab641027ab",
+        "mineru": "08aaea840498d49ce16247b6263196cf02814885"
+      },
+      "inference_services": [
+        {
+          "role": "mineru",
+          "family": "mineru",
+          "inference_image": "sha256:ea407324215fa2393585447521828b34d1ffc6474fd04b24865fb9476ff5ccfe",
+          "host_model_path": "/var/lib/docker/volumes/moparse-mineru-models/_data",
+          "model_subdir": "snapshots/08aaea840498d49ce16247b6263196cf02814885",
+          "model_name": "mineru2.5-pro",
+          "port": 12542,
+          "cpus": 4,
+          "memory_gib": 20,
+          "gpu_memory_gib": 16
+        }
+      ],
+      "versions": {
+        "docling": "2.139.0",
+        "docling-core": "2.101.1",
+        "mineru": "4.0.12",
+        "mineru-vl-utils": "2.0.7",
+        "docvortex": "0.5.16",
+        "glmocr": "0.1.5",
+        "paddleocr": "3.7.0",
+        "paddlex": "3.7.2",
+        "transformers": "5.8.1"
+      },
+      "resources": {
+        "preprocessing_cpus": 8,
+        "preprocessing_memory_gib": 8,
+        "inference_cpus": 4,
+        "inference_memory_gib": 20,
+        "gpu_device": "1",
+        "gpu_memory_gib": 16,
+        "power_watts": 200,
+        "outer_concurrency": 1,
+        "client_concurrency": 4
+      },
+      "graphs": {
+        "status": "real_preflight_completed_with_recorded_component_exceptions",
+        "policy": "CUDA Graphs enabled where capture/inference succeeded; native component failures recorded",
+        "torch_compile": false,
+        "evidence": "benchmark/reports/20261026-repaired-preflight-02/execution-readiness.json#/pipelines/P08"
+      },
+      "retry_max_attempts": 0,
+      "observe_request_metadata": true,
+      "co_resident_services": {
+        "qwen3-tts-openai.service": {
+          "policy": "keep_running",
+          "observation_policy": "observe_only",
+          "inference_during_benchmark": "uncontrolled_observed_only",
+          "instruction_date": "2026-10-26"
+        }
+      },
+      "execution_repairs": [
+        "rotation-coordinate-space",
+        "native-neighbor-retention",
+        "region-export-isolation"
+      ],
+      "timeout_policy": {
+        "frozen": true,
+        "single_page_seconds": 23.546370132127777,
+        "minimum_seconds": 300,
+        "multiplier": 3,
+        "maximum_seconds": 3600,
+        "measurement": "direct isolated one-page inputs from the existing declared preflight selection",
+        "evidence": "benchmark/reports/20261026-repaired-preflight-02/execution-readiness.json"
+      }
+    }
+  },
+  "official_sources": {
+    "paddle15": {
+      "repository": "PaddlePaddle/PaddleOCR-VL-1.5",
+      "revision": "2a4195faa5e7914c12f2fc601d72c81caf8d2da5",
+      "url": "https://huggingface.co/PaddlePaddle/PaddleOCR-VL-1.5/tree/2a4195faa5e7914c12f2fc601d72c81caf8d2da5"
+    },
+    "paddle16": {
+      "repository": "PaddlePaddle/PaddleOCR-VL-1.6",
+      "revision": "c5630abae1d940eafe0697512a0325494b02ab42",
+      "url": "https://huggingface.co/PaddlePaddle/PaddleOCR-VL-1.6/tree/c5630abae1d940eafe0697512a0325494b02ab42"
+    },
+    "paddle_layout": {
+      "repository": "PaddlePaddle/PP-DocLayoutV3",
+      "revision": "241f8bdfc77a7c7bee915a5057aaee58c235a8d3",
+      "url": "https://huggingface.co/PaddlePaddle/PP-DocLayoutV3/tree/241f8bdfc77a7c7bee915a5057aaee58c235a8d3"
+    },
+    "glm": {
+      "repository": "zai-org/GLM-OCR",
+      "revision": "2e85a62840ccac27daa451df36c736c4636b8628",
+      "url": "https://huggingface.co/zai-org/GLM-OCR/tree/2e85a62840ccac27daa451df36c736c4636b8628"
+    },
+    "mineru": {
+      "repository": "opendatalab/MinerU2.5-Pro-2605-1.2B",
+      "revision": "08aaea840498d49ce16247b6263196cf02814885",
+      "url": "https://huggingface.co/opendatalab/MinerU2.5-Pro-2605-1.2B/tree/08aaea840498d49ce16247b6263196cf02814885"
+    },
+    "orientation": {
+      "repository": "PaddlePaddle/PP-LCNet_x1_0_doc_ori_safetensors",
+      "revision": "b2716954d2e321dd4436400b37584fab641027ab",
+      "url": "https://huggingface.co/PaddlePaddle/PP-LCNet_x1_0_doc_ori_safetensors/tree/b2716954d2e321dd4436400b37584fab641027ab"
+    },
+    "tableformer_v2": {
+      "repository": "docling-project/TableFormerV2",
+      "revision": "e41ba5da7ef69004f4b329168791c2987abf917c",
+      "url": "https://huggingface.co/docling-project/TableFormerV2/tree/e41ba5da7ef69004f4b329168791c2987abf917c"
+    }
+  },
+  "model_cache_policy": "existing GLM/MinerU/Docling caches are mounted read-only",
+  "formal_execution": "requires separately frozen references; this software lock is not a quality result",
+  "measurement_environment": {
+    "tts_policy": "keep_running",
+    "tts_observation_policy": "observe_only",
+    "user_instruction_date": "2026-10-26",
+    "performance_scope": "actual shared GPU conditions; TTS identity and activity observed but not controlled"
+  },
+  "frozen_at": "2026-10-26T02:30:15.546168+08:00",
+  "execution_revision": "20261026-repaired-v3",
+  "software_identity": {
+    "git_head": "e42ffe0db115af942a346a1428135c63d24150b8",
+    "module_sha256": {
+      "__init__.py": "bc8b7b20c651ddfd3eb71db86d0b406249a77d64449fc4fef23bcc4ab75adb62",
+      "__main__.py": "935a1c1166b0c1ea35a82256345000bf2c73ded718d77773bc27a71ecce28f7d",
+      "adapters.py": "cf5e42f5f1763413cfd2de20e4db9428ef0dab5c6de6780ce6688e1f2656068d",
+      "adjudications.py": "b27836915817f6bf9b6ea6d14ba9835eafe83153c868b7517206a5ddeeadcb94",
+      "cli.py": "3d45b905a6196cbe28c721c900062be5652cf33d76d8780db7bbf4cfc02ce919",
+      "compose_runs.py": "720a8e701fe6afb88660cb1e44f555ae4177b85ba8d15128e6dc3186823e9bce",
+      "cuda_graphs.py": "a26f40b5a24a287a05e4fb0775001ecbc915af9610485354b4c71d1546811653",
+      "executors.py": "0163210d018d45d692bf8516c5c02d9fc134d6ce1f2671dbdc5f869d1bb02139",
+      "glm_observation.py": "9a022885d3f1d50a9e0b0b31e821c176cb06cbfaf369ba909e4980729816471f",
+      "maintenance.py": "17a06685e33eb378a2cc7477b413edd2c0a26f8a40cf7d4c0a065bfb1ae36368",
+      "matching.py": "3580926b3518531b2f043d6792a50cac1ed0eaa04cb9f7d540622b40db323bda",
+      "metrics.py": "8a4c51015bba713a5118b641888fc38b5fb11b2555b93ca3eccc44b079398304",
+      "native_readback.py": "1a7ec795f4521894d9923cdc27aa90673049193c61c39c422aac700641d4d887",
+      "native_relations.py": "c21742e20d9cc7592496a54299797d63952b45e6cc0d98a768bc6e95472b2b32",
+      "p05_optimization.py": "ff982f210cfd95a4d3d5462d0e428013a760e5fdc5a44efe346bad3a0351c502",
+      "p05_optimization_report.py": "7dfd8342af8a7be5bf9bfe6a391e1934d42e7d3262d76f6892bd1f1fecbf5344",
+      "packaging.py": "976599ca86c7a4c38f021efd342203d1010c7c8abbf17560846ae133e8e3fc2c",
+      "paddle_compat.py": "14b499c8745fb7c4117506eeff7a8d3b740d212d2762fc7290df3e510c7d3ce2",
+      "paddle_server.py": "a1b57f269094f0fe3df513bb4a98a51cab017518417166bc592cfe82a05ad7d6",
+      "preparation.py": "435988dbec36daa89efb1c26045acb80d0d55ea7299f41249a376f65d1dbf803",
+      "rebenchmark.py": "45d4ffc2ca12f61459e1b0311c80cccd7e7b753960fbda047908287f765be4ed",
+      "report_figures.py": "e1aacd3398721af99ddd65326fc3a3212a1e90f6e375b239b241b39c78f55980",
+      "report_overview.py": "a908a88c090d1f82ea66d91a064a710fb248e8882c9f7e6ccbdd1d4194d37d67",
+      "reporting.py": "4dc3f363d87947548d4c739dd8a06dd5d98f3166b0ec59314895b6e19eb577f7",
+      "representations.py": "694ebf1615de650701e76c8a717fc0fd324b92fe1a1b5caf94982c9eacb07c93",
+      "request_control.py": "ac70b2a53421d3cf3faea4d0cb1e8dd72ddb477a450210580a50660965b2839f",
+      "runtime.py": "91a5f011f7fa59028ad6cfee33dd93faacd6724d8885a60a7957f6c25cfd1c23",
+      "scoring.py": "19db0f21c09dfe0551df2ccccc0ed73ec2ae2390baa45bd20b96f3033f425e5d"
+    },
+    "support_module_sha256": {
+      "app/__init__.py": "2bf493bcf3e107d4dbc6ae82158b66e50cc1548ff0d1aa4b57b88c88ab5279d1",
+      "app/api/__init__.py": "8e467096d4529dca195f82d6cbbbb1d28a1a904c8ac08f6cfc6639addf348262",
+      "app/api/admin.py": "ef9f0f79cb1d67e052ff6bfc133742dc78584501ec599d60e714bc99a2a8800e",
+      "app/api/backends.py": "ad2a047e1cd1924fb5af76f90ea852c41707237ecb97181e2a074b0eb966cab7",
+      "app/api/dependencies.py": "058b162ba2a041f5f0663ca34c676272e6937f5f64abd35e64819de8a835558f",
+      "app/api/documents.py": "3eede957c5c95b329edfd5073a5ee2da023816911fdfbaefa90bd89a71df5f7a",
+      "app/api/health.py": "cc295c6f99b567dbc8559e90781ad9e454abb637e4d8d0ccf46f8d2958354eb7",
+      "app/api/jobs.py": "e02845971a448303230a69ddd18707d12483525dc7efadbc1454e969f29a1dcf",
+      "app/api/schemas.py": "236985dc333c82d1824f43019846161b8b80ea10180825ed142c707e603eae2f",
+      "app/config.py": "9721c6f75be29424a2724d234a02b49c27a8ff490da83e4629387426f058e155",
+      "app/lifespan.py": "abc01e166a0ceb191df43594c5f38ba93de304d38f1a4fe405667142bc3a6f90",
+      "app/main.py": "c9e410c5c588547f41a1f1660cf454e0c4f67946b1bd80796b88c56d50e17be9",
+      "app/mcp/__init__.py": "dd32a696bd763877450cce38053a0e9995ab65a67ee23a13e53d3e344761d9be",
+      "app/mcp/server.py": "7958fcbae97c0d96d8f0b39f762a442a582fc691f0d6a878259e92a11be76810",
+      "app/models/__init__.py": "150d186250105640084fe5066a9aa9a86997ecb7c86aac6bfbcdc3c54ad63694",
+      "app/models/backend.py": "676aa7da762c431dde3fef473831259220e118a9da5ab0a573464652e7fc7acf",
+      "app/models/content_result.py": "a30593f700fecb00742020fe03df67751b5372a15249556f68f476f771b402ef",
+      "app/models/error.py": "6b3367be2103fd4c91d4202bfcf79e6e247a07fd1e0f7a1ffc59f1b079f7ec3e",
+      "app/models/job.py": "3d77cfcdb15f32845c5a7e240c53412a5c029850199baa84a56b254657c5a42e",
+      "app/models/parse_options.py": "6de7e2013dee55387f9b25abba5732c7babe7a0a5b164a9c114c4ca113b55000",
+      "app/models/parse_result.py": "618579807982777aff8c7b41bce39a76cbdfd530b796295092503968687bf7f8",
+      "app/models/source.py": "cfdbbab1a4c396a4b0f4cbcccaa5854bb63919ae393c9bd7124cbf8e3669aebc",
+      "app/models/source_evidence.py": "c9b7f353010f7fa254b048d63a62cb51e791785ad4aa0ebf3887cc55d73be232",
+      "app/models/table_semantics.py": "d0f0e6465fee34ed417946374afca4ce91f13f798517e7eb82daae9982e24ebc",
+      "app/parsers/__init__.py": "c00b99976f4da56bed817c194704391aef76e6e0d6111f662b6ea155bf9bc447",
+      "app/parsers/base.py": "f72d43bc43f8ba8a07f7c4fd338e0a81971627dbb65e26f29bee00c1f9aee2c8",
+      "app/parsers/docling_standard.py": "720564c627e7afb748a3abf588baee5eab98770654d2c1df71baa35a66f332e4",
+      "app/parsers/glm_ocr_remote.py": "a8794ceecb8f430e1d29c37a28da86d496c8f51404cfaa6c893a6bbe15f774c7",
+      "app/parsers/glm_sdk_remote.py": "b34c6025b98d9d1f2cb741397539a14901e6248bf3f8d11e46d6ef8effec8f18",
+      "app/parsers/mineru_native_remote.py": "bb21277380705648ddd4d69eb58afe48d1d1c7ac0170250ee89efff5e1976e94",
+      "app/repositories/__init__.py": "e2bde9f70f0fd49f3c8a3db28ffaf986c5d9ae5895773956588f74e5603ddd74",
+      "app/repositories/job_repository.py": "e41a4617fa964e57798eb7a94f5a1ce49e44089d4c2eaab48922e9fa3b12268f",
+      "app/security/__init__.py": "a5d09d5af510d0c3c8e10249bcf2b5af1d68f70719d4bfb455ba41ca803be310",
+      "app/security/auth.py": "dc9410d6812a213094807f937562ba5de29885c85cd85b7bbac4397f53089bb6",
+      "app/security/file_validation.py": "8c506c90e1cf6a4f706d385f61b66f68ed2acf5d8c48c43589528732a48f8e63",
+      "app/security/source_url.py": "1a9e46bb6e21256cf9b7ecc12cc76daf96515e7de6228b4017974f5cebf0ba8f",
+      "app/services/__init__.py": "0c79cdc82db98241505555a046cdddb7c97754086b2a362338a817d61c0e368d",
+      "app/services/cleanup_service.py": "5288d25a412f0772909cc8a3699837f22d6b898bd8cc8099de9c24e389e5f062",
+      "app/services/evidence_service.py": "59c42a7d47f2647bbffa92dab9c955373a232898d95d62755a64ac3058a44577",
+      "app/services/export_service.py": "75552e54d7f90a4328942ee32f19303f6f4287571fc28ac532aa5c878ae4e173",
+      "app/services/glm_table_service.py": "248eb9d126a126e44464fc87452dcc3c26ae6b74558e475563da9c1c1dd3a90f",
+      "app/services/ir_service.py": "8ef8746ddf5b13060ed700cc9a59b4f9fb6d0be615825f3592cbd31705a42bc9",
+      "app/services/job_service.py": "948f70ef43ad6edfde63ccc3a728446d30935cc58edfc589cae038b5e368582f",
+      "app/services/multimodal_service.py": "d8a51909bf41f13533c9d38b83810f5e8e864ad70ee7bca8b366b4b3738271ed",
+      "app/services/orientation_service.py": "62ee5cf3b622a27d35a9b9c7a8304e92f02ed81040b026338e0a71bddf510bb5",
+      "app/services/parser_service.py": "2550913afef5b73ddf2f474d9f29a5bbba507d4993ac0958c5969c6bbee12d14",
+      "app/services/pdf_table_evidence_service.py": "98ebd3537a18b82c38b3bef0dd2c33434c1cf0116f47b161066b29525fe7907a",
+      "app/services/quality_service.py": "4c17e914c2e364102110f3251c3f1548f78bbbc21f8f82ae0e48694955bf07d8",
+      "app/services/source_service.py": "6d9ad2cbb9631d5882aac678ae73349a6a9f7362c8d1f83faaf7c40e254fe25d",
+      "app/services/storage_service.py": "99a267e4897fe88090245d7b383b7dbbe971dc8be5f6ddef71d602d9a9dd223b",
+      "app/services/table_semantics_service.py": "26a7aec07572425f8a04c1ac150d8e00808e807b2f48ba45f143beba2cec9fa8",
+      "app/services/table_service.py": "71dfea36f483267a462e2dd839026fc918e602e08b2e4f6d46cb0d0345613f1d",
+      "app/utils/__init__.py": "f904ff3191d683fc9e9f7874e744e405e018d91c4c225116096512d2f2d445ba",
+      "app/utils/deadline.py": "44bf4f30e0e7630ca6d54c1ed2435ef0cf5d125606cc24432001f21dae8e3607",
+      "app/utils/ids.py": "f8bbb4a4dee12e1f9c7bc5f52cb8508dedef70ff3f0f1329ee5a0044cf66e39b",
+      "app/utils/logging.py": "8d99d715f0899d32ab876b3514bb650b07975662344dceeff6b839418ffda2d4",
+      "app/utils/page_range.py": "d1288939b4857784d2d3bcf4cbd27950864978811353cf0e37c308be78912e6c",
+      "app/utils/settings.py": "1769e4c7643fa2048a1e6152bcd07051dd7a12b3186e2a37d9a6bf50f01a96fb",
+      "app/utils/timing.py": "95fd88344596de0570b6a8a39f9b1aaafc2cbfa15a00763f553ecc9a95f7aa93",
+      "native_worker/__init__.py": "97115b6881d2da7a4344b7dcbf94aa56533847a138ab735c33e5fac0e1daaa63",
+      "native_worker/patch_dependency.py": "26a55117db7b0fbff90cec29c5bc901e22751c7dfe92a5e9b1dfa08e41403a39",
+      "native_worker/request_control.py": "0f336dc81dbee95de6b2d311d83b1779ca198a70a86591d4f54edd59dce40549",
+      "native_worker/server.py": "655ea4d1d3c5de5aa2a72235296334e3a4c1c7b3e36aa55072ac0d1b425ea824"
+    },
+    "software_id": "c6e7f5c0cdcbb8801d17595c515fcbe7794111c396bfe58a6d0ab71a199db28e",
+    "python": "3.13.5 | packaged by Anaconda, Inc. | (main, Jun 12 2025, 16:09:02) [GCC 11.2.0]",
+    "dependencies": {
+      "rapidfuzz": "3.14.6",
+      "edlib": "1.3.9.post1",
+      "markdown-it-py": "4.2.0",
+      "PyMuPDF": "1.28.2",
+      "psutil": "7.2.2"
+    }
+  },
+  "freeze_record": {
+    "preflight_run": "benchmark/reports/20261026-repaired-preflight-02",
+    "prepared_after_repairs": true,
+    "evidence": "benchmark/reports/20261026-repaired-preflight-02/execution-readiness.json",
+    "scoring_policy": "existing frozen standards unchanged; no formal output viewed before freeze",
+    "tts": "keep_running; observe_only; activity not controlled per user instruction 2026-10-26",
+    "runtime_conditions": {
+      "valid": true,
+      "status": "valid",
+      "observed": {
+        "maintenance.phase": "restored",
+        "tts_policy": "keep_running",
+        "tts_observation_policy": "observe_only",
+        "user_instruction_date": "2026-10-26",
+        "tts_identity_condition.status": "unchanged",
+        "tts_no_calls_condition.status": "no_observed_activity"
+      },
+      "problems": [],
+      "warnings": [],
+      "qualifications": [
+        "TTS is co-resident and uncontrolled; its activity, identity and query availability do not determine measurement admission. Performance reflects these actual shared-GPU conditions."
+      ],
+      "evidence": {
+        "tts_identity_condition": {
+          "status": "unchanged",
+          "before": {
+            "MainPID": "1696293",
+            "InvocationID": "64077a7ecc7243b2872e573cf022b078"
+          },
+          "after": {
+            "MainPID": "1696293",
+            "InvocationID": "64077a7ecc7243b2872e573cf022b078"
+          },
+          "changed_keys": [],
+          "scope": "measurement condition, independent of service health and MO-Parse restoration"
+        },
+        "tts_no_calls_condition": {
+          "declaration": "uncontrolled_observed_only",
+          "before": {
+            "active_job": false,
+            "persistent_active_jobs": [],
+            "job_count": 71
+          },
+          "after": {
+            "active_job": false,
+            "persistent_active_jobs": [],
+            "job_count": 71
+          },
+          "status": "no_observed_activity",
+          "observed_new_jobs": 0,
+          "reason": "equal_start_end_counters",
+          "limitation": "start/end health and persistent-job counters are not atomic admission control; short calls without a persistent job may be unobserved"
+        },
+        "tts_readiness_observation": {
+          "status": "observed",
+          "ready": true
+        }
+      },
+      "scope": "runtime measurement conditions only; not parser quality or corpus acceptance"
+    },
+    "driver_sha256": "f2b1f32bea260831bd188fc9399773dcf7723c7d813599bb30df4d851cd6edb1"
+  }
+}

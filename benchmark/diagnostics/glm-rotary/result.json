@@ -1,0 +1,695 @@
+{
+  "created_at": "2026-10-25T10:31:56.936405+00:00",
+  "scope": "controlled_random_tensors_only_no_model_no_corpus_no_inference",
+  "software": {
+    "vllm": "0.19.1",
+    "torch": "2.10.0+cu129",
+    "transformers": "5.5.4"
+  },
+  "device": {
+    "mapped_device": "cuda:0",
+    "visible_count": 1,
+    "name": "NVIDIA GeForce RTX 2080 Ti",
+    "compute_capability": [
+      7,
+      5
+    ]
+  },
+  "model_shape": {
+    "head_size": 128,
+    "rotary_dim": 128,
+    "num_attention_heads": 16,
+    "num_key_value_heads": 8,
+    "mrope_section": [
+      16,
+      24,
+      24
+    ],
+    "rope_theta": 10000.0,
+    "partial_rotary_factor": 1.0,
+    "max_position_embeddings": 16384,
+    "dtype": "torch.float16"
+  },
+  "comparisons": [
+    {
+      "is_neox_style": false,
+      "position_case": "multimodal_distinct_axes",
+      "custom_ops_requested": [
+        "all"
+      ],
+      "custom_ops_effective": [
+        "all"
+      ],
+      "configured_forward_method": "forward_cuda",
+      "methods": {
+        "direct_native": {
+          "query": {
+            "finite": true,
+            "max_abs_error": 0.001953125,
+            "rms_error": 0.00034250132739543915,
+            "cosine_similarity": 1.0,
+            "allclose": true
+          },
+          "key": {
+            "finite": true,
+            "max_abs_error": 0.001953125,
+            "rms_error": 0.00033614528365433216,
+            "cosine_similarity": 0.9999998807907104,
+            "allclose": true
+          },
+          "allclose": true
+        },
+        "direct_cuda": {
+          "query": {
+            "finite": true,
+            "max_abs_error": 6.390625,
+            "rms_error": 1.310156226158142,
+            "cosine_similarity": 0.11681696027517319,
+            "allclose": false
+          },
+          "key": {
+            "finite": true,
+            "max_abs_error": 6.716796875,
+            "rms_error": 1.3543301820755005,
+            "cosine_similarity": 0.09524183720350266,
+            "allclose": false
+          },
+          "allclose": false
+        },
+        "configured_dispatch": {
+          "query": {
+            "finite": true,
+            "max_abs_error": 6.390625,
+            "rms_error": 1.310156226158142,
+            "cosine_similarity": 0.11681696027517319,
+            "allclose": false
+          },
+          "key": {
+            "finite": true,
+            "max_abs_error": 6.716796875,
+            "rms_error": 1.3543301820755005,
+            "cosine_similarity": 0.09524183720350266,
+            "allclose": false
+          },
+          "allclose": false
+        }
+      }
+    },
+    {
+      "is_neox_style": false,
+      "position_case": "decode_equal_axes",
+      "custom_ops_requested": [
+        "all"
+      ],
+      "custom_ops_effective": [
+        "all"
+      ],
+      "configured_forward_method": "forward_cuda",
+      "methods": {
+        "direct_native": {
+          "query": {
+            "finite": true,
+            "max_abs_error": 0.001953125,
+            "rms_error": 0.00033833199995569885,
+            "cosine_similarity": 0.9999999403953552,
+            "allclose": true
+          },
+          "key": {
+            "finite": true,
+            "max_abs_error": 0.001953125,
+            "rms_error": 0.00036943572922609746,
+            "cosine_similarity": 0.9999998807907104,
+            "allclose": true
+          },
+          "allclose": true
+        },
+        "direct_cuda": {
+          "query": {
+            "finite": true,
+            "max_abs_error": 6.77734375,
+            "rms_error": 1.3406202793121338,
+            "cosine_similarity": 0.07526527345180511,
+            "allclose": false
+          },
+          "key": {
+            "finite": true,
+            "max_abs_error": 6.02734375,
+            "rms_error": 1.3660190105438232,
+            "cosine_similarity": 0.07954932749271393,
+            "allclose": false
+          },
+          "allclose": false
+        },
+        "configured_dispatch": {
+          "query": {
+            "finite": true,
+            "max_abs_error": 6.77734375,
+            "rms_error": 1.3406202793121338,
+            "cosine_similarity": 0.07526527345180511,
+            "allclose": false
+          },
+          "key": {
+            "finite": true,
+            "max_abs_error": 6.02734375,
+            "rms_error": 1.3660190105438232,
+            "cosine_similarity": 0.07954932749271393,
+            "allclose": false
+          },
+          "allclose": false
+        }
+      }
+    },
+    {
+      "is_neox_style": false,
+      "position_case": "multimodal_distinct_axes",
+      "custom_ops_requested": [
+        "all",
+        "-rotary_embedding"
+      ],
+      "custom_ops_effective": [
+        "all",
+        "-rotary_embedding"
+      ],
+      "configured_forward_method": "forward_native",
+      "methods": {
+        "direct_native": {
+          "query": {
+            "finite": true,
+            "max_abs_error": 0.001953125,
+            "rms_error": 0.00034250132739543915,
+            "cosine_similarity": 1.0,
+            "allclose": true
+          },
+          "key": {
+            "finite": true,
+            "max_abs_error": 0.001953125,
+            "rms_error": 0.00033614528365433216,
+            "cosine_similarity": 0.9999998807907104,
+            "allclose": true
+          },
+          "allclose": true
+        },
+        "direct_cuda": {
+          "query": {
+            "finite": true,
+            "max_abs_error": 6.390625,
+            "rms_error": 1.310156226158142,
+            "cosine_similarity": 0.11681696027517319,
+            "allclose": false
+          },
+          "key": {
+            "finite": true,
+            "max_abs_error": 6.716796875,
+            "rms_error": 1.3543301820755005,
+            "cosine_similarity": 0.09524183720350266,
+            "allclose": false
+          },
+          "allclose": false
+        },
+        "configured_dispatch": {
+          "query": {
+            "finite": true,
+            "max_abs_error": 0.001953125,
+            "rms_error": 0.00034250132739543915,
+            "cosine_similarity": 1.0,
+            "allclose": true
+          },
+          "key": {
+            "finite": true,
+            "max_abs_error": 0.001953125,
+            "rms_error": 0.00033614528365433216,
+            "cosine_similarity": 0.9999998807907104,
+            "allclose": true
+          },
+          "allclose": true
+        }
+      }
+    },
+    {
+      "is_neox_style": false,
+      "position_case": "decode_equal_axes",
+      "custom_ops_requested": [
+        "all",
+        "-rotary_embedding"
+      ],
+      "custom_ops_effective": [
+        "all",
+        "-rotary_embedding"
+      ],
+      "configured_forward_method": "forward_native",
+      "methods": {
+        "direct_native": {
+          "query": {
+            "finite": true,
+            "max_abs_error": 0.001953125,
+            "rms_error": 0.00033833199995569885,
+            "cosine_similarity": 0.9999999403953552,
+            "allclose": true
+          },
+          "key": {
+            "finite": true,
+            "max_abs_error": 0.001953125,
+            "rms_error": 0.00036943572922609746,
+            "cosine_similarity": 0.9999998807907104,
+            "allclose": true
+          },
+          "allclose": true
+        },
+        "direct_cuda": {
+          "query": {
+            "finite": true,
+            "max_abs_error": 6.77734375,
+            "rms_error": 1.3406202793121338,
+            "cosine_similarity": 0.07526527345180511,
+            "allclose": false
+          },
+          "key": {
+            "finite": true,
+            "max_abs_error": 6.02734375,
+            "rms_error": 1.3660190105438232,
+            "cosine_similarity": 0.07954932749271393,
+            "allclose": false
+          },
+          "allclose": false
+        },
+        "configured_dispatch": {
+          "query": {
+            "finite": true,
+            "max_abs_error": 0.001953125,
+            "rms_error": 0.00033833199995569885,
+            "cosine_similarity": 0.9999999403953552,
+            "allclose": true
+          },
+          "key": {
+            "finite": true,
+            "max_abs_error": 0.001953125,
+            "rms_error": 0.00036943572922609746,
+            "cosine_similarity": 0.9999998807907104,
+            "allclose": true
+          },
+          "allclose": true
+        }
+      }
+    },
+    {
+      "is_neox_style": true,
+      "position_case": "multimodal_distinct_axes",
+      "custom_ops_requested": [
+        "all"
+      ],
+      "custom_ops_effective": [
+        "all"
+      ],
+      "configured_forward_method": "forward_cuda",
+      "methods": {
+        "direct_native": {
+          "query": {
+            "finite": true,
+            "max_abs_error": 0.001953125,
+            "rms_error": 0.00033488753251731396,
+            "cosine_similarity": 0.9999998807907104,
+            "allclose": true
+          },
+          "key": {
+            "finite": true,
+            "max_abs_error": 0.001953125,
+            "rms_error": 0.0003511609393171966,
+            "cosine_similarity": 0.9999998807907104,
+            "allclose": true
+          },
+          "allclose": true
+        },
+        "direct_cuda": {
+          "query": {
+            "finite": true,
+            "max_abs_error": 0.001953125,
+            "rms_error": 0.0002553264785092324,
+            "cosine_similarity": 0.9999999403953552,
+            "allclose": true
+          },
+          "key": {
+            "finite": true,
+            "max_abs_error": 0.001953125,
+            "rms_error": 0.0002536525425966829,
+            "cosine_similarity": 0.9999999403953552,
+            "allclose": true
+          },
+          "allclose": true
+        },
+        "configured_dispatch": {
+          "query": {
+            "finite": true,
+            "max_abs_error": 0.001953125,
+            "rms_error": 0.0002553264785092324,
+            "cosine_similarity": 0.9999999403953552,
+            "allclose": true
+          },
+          "key": {
+            "finite": true,
+            "max_abs_error": 0.001953125,
+            "rms_error": 0.0002536525425966829,
+            "cosine_similarity": 0.9999999403953552,
+            "allclose": true
+          },
+          "allclose": true
+        }
+      }
+    },
+    {
+      "is_neox_style": true,
+      "position_case": "decode_equal_axes",
+      "custom_ops_requested": [
+        "all"
+      ],
+      "custom_ops_effective": [
+        "all"
+      ],
+      "configured_forward_method": "forward_cuda",
+      "methods": {
+        "direct_native": {
+          "query": {
+            "finite": true,
+            "max_abs_error": 0.001953125,
+            "rms_error": 0.00034716108348220587,
+            "cosine_similarity": 1.0,
+            "allclose": true
+          },
+          "key": {
+            "finite": true,
+            "max_abs_error": 0.001953125,
+            "rms_error": 0.00034413859248161316,
+            "cosine_similarity": 0.9999998807907104,
+            "allclose": true
+          },
+          "allclose": true
+        },
+        "direct_cuda": {
+          "query": {
+            "finite": true,
+            "max_abs_error": 0.001953125,
+            "rms_error": 0.0002504429721739143,
+            "cosine_similarity": 1.0,
+            "allclose": true
+          },
+          "key": {
+            "finite": true,
+            "max_abs_error": 0.001953125,
+            "rms_error": 0.00026077337679453194,
+            "cosine_similarity": 1.0,
+            "allclose": true
+          },
+          "allclose": true
+        },
+        "configured_dispatch": {
+          "query": {
+            "finite": true,
+            "max_abs_error": 0.001953125,
+            "rms_error": 0.0002504429721739143,
+            "cosine_similarity": 1.0,
+            "allclose": true
+          },
+          "key": {
+            "finite": true,
+            "max_abs_error": 0.001953125,
+            "rms_error": 0.00026077337679453194,
+            "cosine_similarity": 1.0,
+            "allclose": true
+          },
+          "allclose": true
+        }
+      }
+    },
+    {
+      "is_neox_style": true,
+      "position_case": "multimodal_distinct_axes",
+      "custom_ops_requested": [
+        "all",
+        "-rotary_embedding"
+      ],
+      "custom_ops_effective": [
+        "all",
+        "-rotary_embedding"
+      ],
+      "configured_forward_method": "forward_native",
+      "methods": {
+        "direct_native": {
+          "query": {
+            "finite": true,
+            "max_abs_error": 0.001953125,
+            "rms_error": 0.00033488753251731396,
+            "cosine_similarity": 0.9999998807907104,
+            "allclose": true
+          },
+          "key": {
+            "finite": true,
+            "max_abs_error": 0.001953125,
+            "rms_error": 0.0003511609393171966,
+            "cosine_similarity": 0.9999998807907104,
+            "allclose": true
+          },
+          "allclose": true
+        },
+        "direct_cuda": {
+          "query": {
+            "finite": true,
+            "max_abs_error": 0.001953125,
+            "rms_error": 0.0002553264785092324,
+            "cosine_similarity": 0.9999999403953552,
+            "allclose": true
+          },
+          "key": {
+            "finite": true,
+            "max_abs_error": 0.001953125,
+            "rms_error": 0.0002536525425966829,
+            "cosine_similarity": 0.9999999403953552,
+            "allclose": true
+          },
+          "allclose": true
+        },
+        "configured_dispatch": {
+          "query": {
+            "finite": true,
+            "max_abs_error": 0.001953125,
+            "rms_error": 0.00033488753251731396,
+            "cosine_similarity": 0.9999998807907104,
+            "allclose": true
+          },
+          "key": {
+            "finite": true,
+            "max_abs_error": 0.001953125,
+            "rms_error": 0.0003511609393171966,
+            "cosine_similarity": 0.9999998807907104,
+            "allclose": true
+          },
+          "allclose": true
+        }
+      }
+    },
+    {
+      "is_neox_style": true,
+      "position_case": "decode_equal_axes",
+      "custom_ops_requested": [
+        "all",
+        "-rotary_embedding"
+      ],
+      "custom_ops_effective": [
+        "all",
+        "-rotary_embedding"
+      ],
+      "configured_forward_method": "forward_native",
+      "methods": {
+        "direct_native": {
+          "query": {
+            "finite": true,
+            "max_abs_error": 0.001953125,
+            "rms_error": 0.00034716108348220587,
+            "cosine_similarity": 1.0,
+            "allclose": true
+          },
+          "key": {
+            "finite": true,
+            "max_abs_error": 0.001953125,
+            "rms_error": 0.00034413859248161316,
+            "cosine_similarity": 0.9999998807907104,
+            "allclose": true
+          },
+          "allclose": true
+        },
+        "direct_cuda": {
+          "query": {
+            "finite": true,
+            "max_abs_error": 0.001953125,
+            "rms_error": 0.0002504429721739143,
+            "cosine_similarity": 1.0,
+            "allclose": true
+          },
+          "key": {
+            "finite": true,
+            "max_abs_error": 0.001953125,
+            "rms_error": 0.00026077337679453194,
+            "cosine_similarity": 1.0,
+            "allclose": true
+          },
+          "allclose": true
+        },
+        "configured_dispatch": {
+          "query": {
+            "finite": true,
+            "max_abs_error": 0.001953125,
+            "rms_error": 0.00034716108348220587,
+            "cosine_similarity": 1.0,
+            "allclose": true
+          },
+          "key": {
+            "finite": true,
+            "max_abs_error": 0.001953125,
+            "rms_error": 0.00034413859248161316,
+            "cosine_similarity": 0.9999998807907104,
+            "allclose": true
+          },
+          "allclose": true
+        }
+      }
+    }
+  ],
+  "graph_trials": [
+    {
+      "position_case": "multimodal_distinct_axes",
+      "capture_succeeded": true,
+      "dispatch": "forward_native",
+      "replays": [
+        {
+          "replay": 0,
+          "comparison": {
+            "query": {
+              "finite": true,
+              "max_abs_error": 0.001953125,
+              "rms_error": 0.00034250132739543915,
+              "cosine_similarity": 1.0,
+              "allclose": true
+            },
+            "key": {
+              "finite": true,
+              "max_abs_error": 0.001953125,
+              "rms_error": 0.00033614528365433216,
+              "cosine_similarity": 0.9999998807907104,
+              "allclose": true
+            },
+            "allclose": true
+          }
+        },
+        {
+          "replay": 1,
+          "comparison": {
+            "query": {
+              "finite": true,
+              "max_abs_error": 0.001953125,
+              "rms_error": 0.0003336201480124146,
+              "cosine_similarity": 1.0,
+              "allclose": true
+            },
+            "key": {
+              "finite": true,
+              "max_abs_error": 0.001953125,
+              "rms_error": 0.00034558301558718085,
+              "cosine_similarity": 1.0000001192092896,
+              "allclose": true
+            },
+            "allclose": true
+          }
+        },
+        {
+          "replay": 2,
+          "comparison": {
+            "query": {
+              "finite": true,
+              "max_abs_error": 0.001953125,
+              "rms_error": 0.0003486232890281826,
+              "cosine_similarity": 1.0,
+              "allclose": true
+            },
+            "key": {
+              "finite": true,
+              "max_abs_error": 0.001953125,
+              "rms_error": 0.00034649716690182686,
+              "cosine_similarity": 0.9999998807907104,
+              "allclose": true
+            },
+            "allclose": true
+          }
+        }
+      ]
+    },
+    {
+      "position_case": "decode_equal_axes",
+      "capture_succeeded": true,
+      "dispatch": "forward_native",
+      "replays": [
+        {
+          "replay": 0,
+          "comparison": {
+            "query": {
+              "finite": true,
+              "max_abs_error": 0.001953125,
+              "rms_error": 0.00033833199995569885,
+              "cosine_similarity": 0.9999999403953552,
+              "allclose": true
+            },
+            "key": {
+              "finite": true,
+              "max_abs_error": 0.001953125,
+              "rms_error": 0.00036943572922609746,
+              "cosine_similarity": 0.9999998807907104,
+              "allclose": true
+            },
+            "allclose": true
+          }
+        },
+        {
+          "replay": 1,
+          "comparison": {
+            "query": {
+              "finite": true,
+              "max_abs_error": 0.001953125,
+              "rms_error": 0.00035486812703311443,
+              "cosine_similarity": 0.9999999403953552,
+              "allclose": true
+            },
+            "key": {
+              "finite": true,
+              "max_abs_error": 0.001953125,
+              "rms_error": 0.00036059762351214886,
+              "cosine_similarity": 0.9999998211860657,
+              "allclose": true
+            },
+            "allclose": true
+          }
+        },
+        {
+          "replay": 2,
+          "comparison": {
+            "query": {
+              "finite": true,
+              "max_abs_error": 0.001953125,
+              "rms_error": 0.00035677984124049544,
+              "cosine_similarity": 0.9999999403953552,
+              "allclose": true
+            },
+            "key": {
+              "finite": true,
+              "max_abs_error": 0.001953125,
+              "rms_error": 0.0003502107283566147,
+              "cosine_similarity": 0.9999998807907104,
+              "allclose": true
+            },
+            "allclose": true
+          }
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "cuda_peak_allocated_bytes": 67462656,
+  "cuda_peak_reserved_bytes": 73400320,
+  "diagnostic_completed_with_expected_signature": true
+}

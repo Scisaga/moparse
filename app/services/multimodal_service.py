@@ -74,6 +74,7 @@ from app.parsers.base import (
 from app.parsers.glm_ocr_remote import GlmOcrRemoteAdapter
 from app.security.file_validation import DOCX_MIME, PPTX_MIME, detect_mime_type
 from app.services.evidence_service import PageEvidence
+from app.services.export_service import ExportService
 from app.services.storage_service import StorageService
 from app.utils.settings import setting
 
@@ -619,7 +620,7 @@ class MultimodalService:
                 source_region_ref = getattr(picture, "source_region_ref", None)
                 if source_region_ref is not None:
                     marker = f"<!-- source-region-image: {source_region_ref} -->"
-                    image = f"![原件区域（结构未知）]({current_asset.download_url})"
+                    image = f"![原件区域]({current_asset.download_url})"
                     page = next(
                         item for item in result.pages if item.page_number == page_number
                     )
@@ -644,7 +645,7 @@ class MultimodalService:
                 source_page_ref = getattr(picture, "source_page_ref", None)
                 if source_page_ref is not None:
                     marker = f"<!-- source-page-image: {source_page_ref} -->"
-                    image = f"![原件第 {page_number} 页（结构未知）]({current_asset.download_url})"
+                    image = f"![原件影像]({current_asset.download_url})"
                     page = next(item for item in result.pages if item.page_number == page_number)
                     if (
                         (page.content or "").count(marker) != 1
@@ -722,9 +723,28 @@ class MultimodalService:
                     details={"limit": self.max_assets, "omitted_candidates": omitted_candidates},
                 )
             )
-        self._project_asset_descriptions(
-            parse_result, preserve_literal_text=bool(result._source_regions)
-        )
+        self._project_pdf_images(parse_result)
+
+    @staticmethod
+    def _project_pdf_images(parse_result: ContentParseResult) -> None:
+        """Keep usable image references, with operational metadata in the IR."""
+        markdown = parse_result.renderings.markdown
+        additions = []
+        for asset in parse_result.assets:
+            if asset.role in {AssetRole.SOURCE, AssetRole.PREVIEW}:
+                continue
+            # Existing source-region references keep their position. Assets
+            # without a placement remain visible at the end; do not invent a
+            # caption or associate a nearby entity with an image.
+            image_pattern = r"!\[[^\]]*\]\(" + re.escape(asset.download_url) + r"\)"
+            if not re.search(image_pattern, markdown):
+                additions.append(f"![图片]({asset.download_url})")
+            if asset.visual_analysis and asset.visual_analysis.visible_text.strip():
+                additions.append(asset.visual_analysis.visible_text.strip())
+        if additions:
+            markdown = markdown.rstrip() + "\n\n" + "\n\n".join(additions)
+        parse_result.renderings.markdown = markdown
+        parse_result.renderings.plain_text = ExportService.markdown_to_text(markdown)
 
     @staticmethod
     def _project_asset_descriptions(

@@ -68,9 +68,19 @@ HTTP response
 
 这是 SDK 后处理后的产物，格式器本身会清理内容、合并部分块并跳过部分空或失败内容；这些行为属于声明的 SDK，不能将 MO-Parse 再次清理计作同一能力。原始阶段数据若未从所用入口提供，明确记不可得，不根据最终文本推造。现有客户端以均分区域宽度构造的列边界只是显示几何，不能充当 SDK 识别出的真实单元格坐标或表头证据。
 
+### 2.3 表格字段补读
+
+2026-10-28评分读回补齐TableCell已有的起止offset、行列标题角色、row_section与fillable，并保存表的尺寸和方向；通过唯一原生路径及所属表关联，不覆盖冻结执行观察。RichTableCell.ref的明确引用保留节点、边、文字项及媒体证据，唯一纯文字叶子另存native_rich_text，不改原cell.text，也不自动拼合混合内容。本轮候选原生产物未出现含ref的格，当前字段匹配不消费该补充文字，因此不能用引用补读解释本轮成绩变化。修复与评分边界见[本轮评分说明](../../benchmark/reports/20261026-lite-v3/scoring-implementation-notes.md)。
+
+### 2.4 标题角色与级别来源
+
+2026-10-27追踪正式worker内Docling 2.139.0和docling-core 2.101.1：readingorder_model调用add_heading时未传level，原生SectionHeaderItem因此使用默认level=1；官方Markdown序列化将该级别显示为二级标题。HeadingHierarchyOptions.enabled默认关闭，本轮执行器未开启该额外阶段。此路径与P01共享，TableFormer V2不构成标题层级预测已开启的证据。GLM分支的固定类别格式化见[P05标题来源](p05-glm-sdk.md#22-标题角色与级别来源)。评分器只据已声明级别和原生顺序读取作用域，本轮heading_of成绩不单独证明模型具有多级树恢复能力。
+
 ## 3. 研究侧读取与导出
 
 按本页 Docling 阅读树和 GLM 区域列表读取文字、表格、图片与状态，可与 P01 共享无损读取函数；保存 V2 身份、原生输出及媒体；模型版本不能从结果长相推断，也不能把 P01 的真实样本改名作为 P02 样本。
+
+GLM 固定以 `json_result` 为主要评分视图，`raw_json_result` 是独立审计视图，不按答案或样本选择阶段。完整 raw 阶段按自身原生区域顺序保存至 `views/pNNNN-glm-raw.md`，并在 `faithful.md` 明示独立阶段；SDK formatter 重编号和合并后未提供稳定跨视图身份，跨视图阅读顺序未知，不按几何接近或文字相似删重。官方完整 YAML 的图片 `skip`、识别前 `abandon` 及其覆盖限制属于固定 SDK 配置；实际已有文字和媒体保留，未识别内容不补入。
 
 ## 4. MO-Parse 适配逻辑
 
@@ -80,7 +90,11 @@ HTTP response
 
 ## 5. 实现状态与验证项
 
-当前 Docling 接入没有 P02 的显式完整配置入口。需先确认真实 V2 对象和序列化形状，再测试共用读取代码及不规则跨度、异常区域；同族 SDK 不证明 V1/V2 的内容或质量相同。
+P02研究执行路径已修复，[P02工程预检02](../../benchmark/reports/20261026-repaired-preflight-02/)独立完成同一清单的11个任务并提供本次冻结依据。本组已完成quality800一次和perf80三轮，八组统一评分、首版报告及原MO服务恢复完成；结果只见[本轮v3报告](../../benchmark/reports/20261026-lite-v3/report.md)，状态与限制由[评测索引](../../benchmark/reports/README.md)维护。TTS只观测不控制，先前撤回测量不恢复；执行和自动评分完成不构成内容、Gold或图片内容验收。
+
+研究执行器显式使用 TableStructureV2Options 和独立 TableFormer V2 权重；该模型选择与 P01不同，原生结果不能借用 P01。共享 GLM 已显式采用 native rotary，避开 vLLM 0.19.1 的 GPT-J MRoPE CUDA 配对缺陷；研究路径的旋转坐标交接和原生结果先行保全、局部导出错误隔离已修复。机制证据与修复边界见[执行层诊断](../../benchmark/diagnostics/README.md)，不据工程修复推定具体语料影响或解析成绩。
+
+本组独立工程预检保存 V2 阅读树、原生格位和跨度、全 ContentLayer、图片、分支页序、方向及局部失败记录，任务完成不等于内容或结构已验收。共用读取函数不等于两组内容或结构相同；MO-Parse生产GLM路径、服务适配与最终转换仍需独立修复和验收。
 
 ## 6. 格式核对依据
 
