@@ -24,6 +24,7 @@ _OWNED_COMMENT = re.compile(
 _PAGE = re.compile(r"<!--\s*page:\s*([1-9][0-9]*)\s*-->")
 _CJK = re.compile(r"[\u3400-\u9fff\uf900-\ufaff]")
 _FURNITURE = {"header", "footer", "page_number"}
+_PRODUCTION = re.compile(r"^(PATH|DRAFT|USER|MODIFY|TRANSLATE|EDIT(?:\s+EDIT)*\s+TRACE|LAYOUT|PAGE)\s*:")
 
 
 def apply_text_edits(source: str, edits: list[dict[str, Any]]) -> str:
@@ -132,6 +133,13 @@ class FinalContentService:
         native_blocks = {number: [block if isinstance(block, dict) else {"type": "unknown"}
                                   for block in blocks]
                          for number, blocks in result._native_page_blocks.items()}
+        text_processing = result._source_verification.get("native_text_reconstruction", {})
+        if not isinstance(text_processing, dict):
+            text_processing = {}
+        replacements = {(page["page"], action["region"]): action["rendered_replacement"]
+                        for page in text_processing.get("pages", []) for action in page.get("actions", [])
+                        if action.get("action") == "selected_native_region"
+                        and isinstance(action.get("rendered_replacement"), str)}
 
         def add(a: int, b: int, replacement: str, reason: str) -> None:
             if not a < b or any(a < y and b > x for x, y in protected):
@@ -159,15 +167,20 @@ class FinalContentService:
         for number, blocks in native_blocks.items():
             if number not in pages:
                 continue
-            for block in blocks:
-                role, rendered = block.get("type"), block.get("markdown")
+            production = {m[1] for block in blocks if block.get("type") == "footer"
+                          and (m := _PRODUCTION.match(ExportService.markdown_to_text(str(block.get("markdown", ""))).strip()))}
+            for ordinal, block in enumerate(blocks):
+                role = block.get("type")
+                rendered = replacements.get((number, ordinal), block.get("markdown"))
                 if role not in _FURNITURE or not isinstance(rendered, str) or not rendered.strip():
                     continue
                 literal = ExportService.markdown_to_text(rendered).strip()
                 reason = None
                 if role == "page_number" and re.fullmatch(r"[ \t\-–—]*\d{1,5}(?:\s*/\s*\d{1,5})?[ \t\-–—]*", literal):
                     reason = "explicit_page_number"
-                elif role == "footer" and re.match(r"^(?:PATH|DRAFT|USER|MODIFY|TRANSLATE|EDIT TRACE|LAYOUT|PAGE)\s*:", literal):
+                elif role == "footer" and len(production) >= 2 and _PRODUCTION.match(
+                    ExportService.markdown_to_text(str(block.get("markdown", ""))).strip(),
+                ):
                     reason = "explicit_production_footer"
                 elif role == "header" and 0 < len(literal) <= 80 and not re.search(r"\d", literal):
                     if literal in header_seen:
@@ -195,13 +208,6 @@ class FinalContentService:
         previous: tuple[int, dict[str, Any]] | None = None
         joins = []
         pending = []
-        text_processing = result._source_verification.get("native_text_reconstruction", {})
-        if not isinstance(text_processing, dict):
-            text_processing = {}
-        replacements = {(page["page"], action["region"]): action["rendered_replacement"]
-                        for page in text_processing.get("pages", []) for action in page.get("actions", [])
-                        if action.get("action") == "selected_native_region"
-                        and isinstance(action.get("rendered_replacement"), str)}
         for number, blocks in native_blocks.items():
             for ordinal, original in enumerate(blocks):
                 block = dict(original)

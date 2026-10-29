@@ -146,6 +146,38 @@ def test_external_native_qualifier_requires_its_literal_in_the_real_final_body()
     assert all(period.text not in str(c.get("periods", [])) for c in _cells(hidden))
 
 
+def test_parenthesized_unit_is_read_as_visible_scoped_text_not_an_invented_atomic_unit():
+    result, fragment, view = _converted()
+    fragment.cells[7].text = "(万元)"
+    result.markdown = render_semantic_view(view, [fragment])
+    observed = build_service_observation(result, sample_id="invented")
+    cell = next(c for c in _cells(observed) if c["text"] == "100")
+    assert cell["units"] == ["(万元)"] and "unit" not in cell
+    units = [{"id": "r", "kind": "table_record", "reference_text": "收入", "pages": [1],
+              "table": {"row_header_path": ["收入"], "fields": [{"column_header_path": ["金额"],
+              "value": "100", "unit": "万元"}]}}]
+    rows, _metrics = _score_records(units, observed, True, match_units(units, observed))
+    assert rows[0]["fields"][0]["information"]["status"] == "correct"
+
+
+def test_an_actual_record_title_unit_is_read_but_a_hidden_title_is_not():
+    result, fragment, view = _converted()
+    title = "（单位:%）"
+    scope = TextRef("t1", 1, "title", title, "title", 0, len(title), (1,), (1,))
+    fragment.context_refs = (scope,)
+    relation = replace(view.records[0].values[0], unit_refs=())
+    view = replace(view, records=(replace(view.records[0], values=(relation,), scope_refs=(scope,)),))
+    result._semantic_tables = [view]
+    result.markdown = render_semantic_view(view, [fragment])
+    observed = build_service_observation(result, sample_id="invented")
+    value = next(c for c in _cells(observed) if c["text"] == "100")
+    assert value["units"] == [title]
+    from moparse_eval.information import qualifier_evidence
+    assert qualifier_evidence({"unit": "%"}, value, value["column_header_path"])["unit"]["status"] == "correct"
+    result.markdown = result.markdown.replace(title, "")
+    assert all(title not in c.get("units", []) for c in _cells(build_service_observation(result, sample_id="invented")))
+
+
 def _partial_result():
     fragment = _fragment([["项目", "金额"], ["收入", "100"], ["", "20"]])
     fragment.pdf_evidence = {"bound": True, "source_cells": [
@@ -469,6 +501,93 @@ def test_retained_grid_is_scored_by_existing_reader_without_semantic_conversion(
     assert summary["final_converted_views"] == 0 and summary["final_retained_views"] == 1
 
 
+def test_unknown_internal_classification_does_not_hide_an_actually_printed_gfm_grid():
+    fragment = _fragment([["项目", "金额"], ["收入", "100"]])
+    result = _result(fragment.rendered)
+    result._table_fragments = [fragment]
+    observation = build_service_observation(result, sample_id="sample")
+    for cell in _cells(observation):
+        for key in ("row", "col", "row_span", "col_span", "is_column_header", "is_row_header"):
+            cell.pop(key, None)
+        cell["service_grid_scope_state"] = "unknown"
+    before = deepcopy(observation)
+    derived, diagnostic = read_final_observation(observation)
+    assert observation == before
+    assert diagnostic["retained_gfm_geometry_blocks"] == 1
+    value = next(c for c in _cells(derived) if c["text"] == "100")
+    assert (value["row"], value["col"]) == (1, 1)
+    assert "row_header_path" not in value and not value.get("is_row_header")
+    unit = {"id": "record", "kind": "table_record", "reference_text": "收入", "pages": [1],
+            "table": {"row_header_path": ["收入"], "fields": [{"column_header_path": ["金额"], "value": "100"}]}}
+    _rows, metrics = _score_records([unit], derived, True, match_units([unit], derived))
+    assert metrics["correct_fields"] == 1
+
+
+def test_plain_text_or_headerless_fragment_cannot_acquire_geometry_from_hidden_metadata():
+    from moparse_eval.service_observation import _read_retained_gfm_geometry
+    for raw in ("Item 2024\nRevenue 17", "| Revenue | 17 |"):
+        observed = {"service_output": {"final_markdown": raw}, "pages": [{"blocks": [{"text": raw, "final_markdown_span": [0, len(raw)],
+                     "service_evidence_state": "retained", "cells": [{"text": "17", "final_markdown_span": [0, 2],
+                     "source_cell_ref": {"row": 1, "column": 1}}]}]}]}
+        assert _read_retained_gfm_geometry(observed) == 0
+        assert "row" not in observed["pages"][0]["blocks"][0]["cells"][0]
+
+
+def test_unprinted_source_header_span_cannot_credit_flat_gfm_but_explicit_prose_can():
+    from app.services.table_context_service import native_scopes
+    from moparse_eval.scoring import score_case
+    fragment = _fragment([["Item", "2024", ""], ["", "Amount", "Ratio"], ["Revenue", "17", "5%"]])
+    fragment.source_kind = "mineru"
+    next(c for c in fragment.cells if (c.row, c.column) == (0, 0)).row_span = 2
+    next(c for c in fragment.cells if (c.row, c.column) == (0, 1)).column_span = 2
+    fragment.cells = [c for c in fragment.cells if (c.row, c.column) not in {(0, 2), (1, 0)}]
+    for cell in fragment.cells:
+        cell.is_column_header = cell.row < 2
+    fragment.native_evidence = native_scopes(fragment)
+    fragment.source_header_scopes = fragment.native_evidence["header_scopes"]
+    reference = {"sample_id": "sample", "review_status": "confirmed", "units": [{
+        "id": "record", "kind": "table_record", "literal": "Revenue", "status": "confirmed", "pages": [1],
+        "table": {"row_header_path": ["Revenue"], "fields": [{"column_header_path": ["2024", "Ratio"],
+                    "value": "5%", "unit": "%"}]}}]}
+    result = _result(fragment.rendered)
+    result._table_fragments = [fragment]
+    observed = build_service_observation(result, sample_id="sample")
+    derived, _diagnostic = read_final_observation(observed)
+    year = next(c for c in _cells(derived) if c["text"] == "2024")
+    assert year["col_span"] == 1
+    assert score_case(reference, derived)["units"][0]["fields"][0]["status"] == "unresolved"
+    view = bind_table_view("view", [fragment], [fragment])
+    result.markdown = render_semantic_view(view, [fragment])
+    result._semantic_tables = [view]
+    final, _diagnostic = read_final_observation(build_service_observation(result, sample_id="sample"))
+    assert score_case(reference, final)["units"][0]["fields"][0]["information"]["status"] == "correct"
+
+
+@pytest.mark.parametrize("first,second,status", [("17", "99", "correct"), ("99", "17", "incorrect")])
+def test_actual_gfm_tables_do_not_share_totals_through_a_private_parent(first, second, status):
+    from moparse_eval.scoring import score_case
+    a = _fragment([["Item", "2024"], ["Alpha", "11"], ["Total", first]], name="a")
+    b = _fragment([["Item", "2024"], ["Beta", "22"], ["Total", second]], name="b")
+    result = _result(a.rendered + "\n\n" + b.rendered)
+    result._table_fragments = [a, b]
+    observation = build_service_observation(result, sample_id="sample")
+    for block in observation["pages"][0]["blocks"]:
+        if block.get("cells"):
+            block.update(native_table_container="hidden-shared-parent", parent_id="hidden-shared-parent")
+    observation.setdefault("native_containers", []).append({"id": "hidden-shared-parent", "label": "table"})
+    derived, _diagnostic = read_final_observation(observation)
+    reference = {"sample_id": "sample", "review_status": "confirmed", "units": [
+        {"id": label, "kind": "table_record", "literal": label, "status": "confirmed", "pages": [1],
+         "table": {"id": "authored-a", "row_header_path": [label],
+                   "fields": [{"column_header_path": ["2024"], "value": value}]}}
+        for label, value in (("Alpha", "11"), ("Total", "17"))]}
+    scored = score_case(reference, derived)
+    total = next(u for u in scored["units"] if u["id"] == "Total")["fields"][0]
+    assert total["native_text"] == first and total["information"]["status"] == status
+    repeated, _diagnostic = read_final_observation(derived)
+    assert score_case(reference, repeated)["metrics"] == scored["metrics"]
+
+
 def test_final_page_comments_resolve_repeated_text_without_mutating_raw_or_timing():
     final = "<!-- page: 1 -->\n\nRepeated sentence.\n\n<!-- page: 2 -->\n\nRepeated sentence."
     observation = build_service_observation(
@@ -644,7 +763,13 @@ def test_real_formfeed_pages_preserve_owned_retained_and_converted_cell_blocks(c
     observation = build_service_observation(result, sample_id="sample")
     raw_table = next(block for block in observation["pages"][0]["blocks"] if block.get("cells"))
     derived, diagnostic = read_final_observation(observation)
-    assert next(block for block in derived["pages"][0]["blocks"] if block.get("cells")) == raw_table
+    table = next(block for block in derived["pages"][0]["blocks"] if block.get("cells"))
+    assert table["text"] == raw_table["text"] and table["final_markdown_span"] == raw_table["final_markdown_span"]
+    if converted:
+        assert table == raw_table
+    else:
+        assert table["provenance_pages"] == [2]
+        assert next(cell for cell in table["cells"] if cell["text"] == "100")["page"] == 2
     assert "100" in [candidate["text"] for candidate in observation_candidates(derived)]
     assert "First." in [candidate["text"] for candidate in observation_candidates(derived)]
     assert diagnostic["status"] == "completed"

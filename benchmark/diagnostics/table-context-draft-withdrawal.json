@@ -1,0 +1,25 @@
+{
+  "status": "withdrawn_software_draft",
+  "version": "20261030-table-context-initial",
+  "reason": "Final prose readback treated formatted unit legends as atomic unit values and did not separate actual column qualifier text; native empty groups also crossed explicit sibling enumerations, and ordinal fields displaced explicit record names.",
+  "consequence": "The initial draft cannot be adopted or used as a parsing-quality baseline. All eight native outputs and both service replays will be replaced under one newly validated frozen revision.",
+  "controls": "Synthetic positive and negative cases preserve scales, currency, per-share exceptions, ratio columns, numeric years, business groups, signs, and exponent/footnote distinctions. No references were repaired.",
+  "replacement": "benchmark/reports/20261030-table-context-v3/report.md",
+  "preserved": "Valid original native outputs, historical execution records, old saved final candidate bytes, frozen references and original Codex visual probe remain unchanged.",
+  "additional_reader_defects": [
+    "Explicit row-path unit text was absent from scoped unit observations.",
+    "Single annual section introductions with attached business words lost their period token.",
+    "Separate unit and currency clauses must not be read as one unit token.",
+    "A multi-year period must not satisfy a single-year qualifier.",
+    "The complete annotated row path must match whole business labels, while unannotated leading context cannot become an extra answer requirement.",
+    "Final GFM cannot be credited with private, unprinted native header spans.",
+    "Actual GFM tables retain separate identities even if private parent metadata is shared."
+  ],
+  "interrupted_native_scoring": "Unpublished incomplete score directories are discarded after the valid full replacement; no mixed-revision index is used.",
+  "final_frozen_software_id": "6a47b6bdd205ce087a83cfbadaa3f89fa7d99cfcb655eb007b9e3db66ed664ef",
+  "additional_converter_defects": [
+    "Full-width section labels must reach the child records.",
+    "Same-year currency columns must keep their identity on ratio rows.",
+    "Arithmetic instructions are not entity parents; an unbounded adjustment region stays in source form."
+  ]
+}

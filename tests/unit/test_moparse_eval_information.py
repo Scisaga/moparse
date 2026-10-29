@@ -55,7 +55,9 @@ def test_scalar_display_spacing_does_not_normalize_numbers_or_change_units(expec
     (["Q1 2025"], ["Q1", "2025"], True),
     (["Group", "Revenue"], ["Group Revenue"], True),
     (["Group Revenue"], ["Group", "Revenue"], True),
-    (["Revenue"], ["Group", "Revenue"], False),
+    (["Revenue"], ["Group", "Revenue"], True),
+    (["North", "Revenue"], ["South", "Revenue"], False),
+    (["North", "Revenue"], ["North", "Intermediate", "Revenue"], False),
     (["2025", "Amount"], ["Amount", "2025"], False),
     (["Amount", "Amount"], ["Amount"], False),
 ])

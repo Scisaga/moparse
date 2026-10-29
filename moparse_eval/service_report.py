@@ -130,6 +130,7 @@ def _unit_projection(unit: Mapping[str, Any] | None) -> dict[str, Any] | None:
     return {key: unit[key] for key in (
         "id", "index", "kind", "status", "reason", "text", "strict_exact", "policy_exact", "content_exact",
         "native_id", "native_path", "match", "label_match", "grid_relation", "binding", "reference", "information",
+        "raw_transcription", "native_text",
     ) if key in unit}
 
 

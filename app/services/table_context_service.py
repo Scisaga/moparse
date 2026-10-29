@@ -14,7 +14,7 @@ from app.models.parse_result import DocumentParseResult
 from app.models.table_semantics import TextRef
 from app.services.table_service import TableFragment
 
-_SCALAR = re.compile(r"\(?\s*[$€£¥]?[+\-−]?(?:\d[\d,.]*|\.\d+)\s*[%％‰]?\s*\)?|[—–-]")
+_SCALAR = re.compile(r"\(?\s*[$€£¥]?\s*[+\-−]?(?:\d[\d,.]*|\.\d+)\s*[%％‰]?\s*\)?|[—–-]")
 _PERIOD = re.compile(r"(?:19|20)\d{2}(?:\s*年(?:度|末)?)?|Year Ended|截至.{1,24}(?:年度|年末)", re.I)
 _MEASURE = re.compile(r"金额|金額|收入|成本|比率|比例|占|佔|同比|单位|單位|浓度|濃度|排放|数量|數量|Amount|Revenue|Cost|Change|Rate|Ratio|Balance|Total", re.I)
 _FIELD = re.compile(r"^(?:召开日期|召開日期|会议内容|會議內容|重要意见和建议|重要意見和建議|会议决议|會議決議|姓名|名称|名稱|职务|職務|日期|Name|Date|Position)$", re.I)
@@ -26,11 +26,31 @@ def scalar(text: str) -> bool:
     return bool(_SCALAR.fullmatch(text.strip()))
 
 
+def unit_description(text: str) -> bool:
+    literal = re.fullmatch(r"[（(]\s*(.*?)\s*[)）]", text.strip())
+    if not literal:
+        return False
+    payload = re.sub(r"(?<=[\u3400-\u9fff])\s+(?=[\u3400-\u9fff])", "", literal[1])
+    amount = (r"(?:人民币|人民幣|美元|港元|港幣|港币|欧元|歐元)?"
+              r"(?:万亿元|萬億元|亿元|億元|百万元|百萬元|千元|万元|萬元|元)(?:/[^\s()（）]+)?")
+    currency = r"(?:[$€£¥]|USD|EUR|HKD|RMB|CNY)\s*(?:(?:in\s+)?(?:millions?|billions?)|bn|m)?(?:,\s*except\s+per\s+share\s+(?:data|amounts))?"
+    return bool(re.fullmatch(amount + "|" + currency + r"|[%％‰]", payload, re.I))
+
+
+def closes_group(group: str, label: str) -> bool:
+    total = re.fullmatch(r"Total\s+(.+)", label.strip(), re.I)
+    if total and total[1].casefold() == group.strip(" :：").casefold():
+        return True
+    sibling = re.compile(r"^([一二三四五六七八九十百]+)([、.])")
+    left, right = sibling.match(group.strip()), sibling.match(label.strip())
+    return bool(left and right and left[2] == right[2] and left[1] != right[1])
+
+
 def native_scopes(fragment: TableFragment) -> dict[str, Any]:
     """Classify local relationships from actual native fields, not grid shape."""
     cells = fragment.cells
     evidence: dict[str, Any] = {"source": "native_cells_and_literal_context", "content_kind": "unknown",
-                                "header_scopes": [], "row_groups": {}, "structure_readable": bool(fragment.valid and cells)}
+                                "header_scopes": [], "row_groups": {}, "structure_readable": False}
     if not fragment.valid or not cells or fragment.source_kind != "mineru":
         return evidence
     occupied: set[tuple[int, int]] = set()
@@ -46,13 +66,14 @@ def native_scopes(fragment: TableFragment) -> dict[str, Any]:
     if len(occupied) != fragment.num_rows * fragment.num_cols:
         evidence["structure_readable"] = False
         return evidence
+    evidence["structure_readable"] = True
     first_body = None
     header_start = 0
     for row in range(fragment.num_rows):
         band = [c for c in cells if c.row == row]
         if len(band) == 1 and band[0].column_span == fragment.num_cols:
             # A full-width title is context, not a column path.
-            if first_body is None:
+            if first_body is None and row == header_start:
                 header_start = row + band[0].row_span
             continue
         if row <= header_start:
@@ -75,6 +96,11 @@ def native_scopes(fragment: TableFragment) -> dict[str, Any]:
     headers = [c for c in cells if header_start <= c.row < first_body]
     if not headers or any(len(c.text) > 100 or c.row + c.row_span > first_body for c in headers):
         return evidence
+    # A leading key/value record is still data. A scalar can identify a
+    # column only when its literal is a complete period, never an amount
+    # borrowed from the first row to manufacture a measurement schema.
+    if any(c.column > 0 and scalar(c.text) and not _PERIOD.fullmatch(c.text.strip()) for c in headers):
+        return evidence
     labels = [c.text.strip() for c in headers if c.text.strip()]
     field_header = len(labels) >= 2 and all(_FIELD.fullmatch(t) for t in labels)
     if not field_header and not any(_PERIOD.search(t) or _MEASURE.search(t) or _UNIT.search(t) for t in labels):
@@ -82,26 +108,79 @@ def native_scopes(fragment: TableFragment) -> dict[str, Any]:
     # Row header columns may occupy a merged field label (group + record).
     first = next((c for c in headers if c.column == 0), None)
     row_cols = list(range(first.column_span)) if first else [0]
+    if field_header:
+        subjects = [c for c in headers if re.fullmatch(r"会议内容|會議內容|姓名|名称|名稱|Name", c.text.strip(), re.I)]
+        if len(subjects) == 1 and subjects[0].column_span == 1:
+            row_cols = [subjects[0].column]
+    if first and re.fullmatch(r"序号|序號|Index|No\.?", first.text.strip(), re.I):
+        subjects = [c for c in headers if re.fullmatch(r"项目|項目|项目名称|項目名稱|名称|名稱|姓名|Name|Item", c.text.strip(), re.I)]
+        if len(subjects) == 1 and subjects[0].column_span == 1:
+            row_cols = [subjects[0].column]
     if len(row_cols) >= fragment.num_cols:
         return evidence
-    scope = {"header_rows": list(range(header_start, first_body)),
+    scope: dict[str, Any] = {"header_rows": list(range(header_start, first_body)),
              "body_rows": list(range(first_body, fragment.num_rows)), "row_header_columns": row_cols,
              "complete": True, "evidence_source": "native_literal_record_schema" if field_header else "native_literal_measurement_headers",
              "evidence": {"explicit_record_fields": field_header, "scalar_body": not field_header}}
-    evidence.update(content_kind="data_table", header_scopes=[scope])
+    scopes = [scope]
+    for row in range(first_body + 1, fragment.num_rows):
+        band = [c for c in cells if c.row == row]
+        stub = next((c for c in band if c.column == 0), None)
+        if (stub and first and stub.text.strip() == first.text.strip()
+                and any(_PERIOD.search(c.text) or _MEASURE.search(c.text) for c in band if c.column > 0)
+                and all(not scalar(c.text) or _PERIOD.fullmatch(c.text.strip()) for c in band)
+                and all(c.row_span == 1 for c in band)):
+            scopes[-1]["body_rows"] = [r for r in scopes[-1]["body_rows"] if r < row]
+            scopes.append({**scope, "header_rows": [row], "body_rows": list(range(row + 1, fragment.num_rows))})
+    evidence.update(content_kind="data_table", header_scopes=scopes)
+    operation_rows: list[int] = []
+    for current in scopes:
+        body = current["body_rows"]
+        beginnings = []
+        for row in body:
+            band = [c for c in cells if c.row == row]
+            labels_in_row = [c for c in band if c.column in row_cols and c.text.strip()]
+            if (len(labels_in_row) == 1
+                    and re.fullmatch(r"(?:加|减|減|Add|Less)\s*[:：]?", labels_in_row[0].text.strip(), re.I)
+                    and all(not c.text.strip() for c in band if c.column not in row_cols)):
+                beginnings.append(row)
+        if beginnings:
+            # No arithmetic or typography-based inference supplies an end.
+            # Keep this region until the next independently declared header.
+            operation_rows.extend(row for row in body if row >= min(beginnings))
+    evidence["operation_rows"] = operation_rows
     # A blank value band explicitly introduces a group. Numeric parent rows
     # do not establish indentation that the producer did not preserve.
     group = None
     for row in range(first_body, fragment.num_rows):
+        if any(row in s["header_rows"] for s in scopes):
+            group = None
+            continue
         band = [c for c in cells if c.row == row]
         labels_in_row = [c for c in band if c.column in row_cols and c.text.strip()]
         nonlabels = [c for c in band if c.column not in row_cols]
-        if len(labels_in_row) == 1 and nonlabels and all(not c.text.strip() for c in nonlabels):
+        title = labels_in_row[0].text.strip() if len(labels_in_row) == 1 else ""
+        if (re.fullmatch(r"(?:加|减|減|Add|Less)\s*[:：]?", title, re.I)
+                or re.match(r"(?:注|Notes?)\s*[:：]", title, re.I)):
+            # Arithmetic instructions remain source text, never entity parents.
+            group = None
+            continue
+        full_width = (len(band) == 1 and band[0].column == 0
+                      and band[0].column_span == fragment.num_cols and band[0].row_span == 1)
+        if (len(labels_in_row) == 1 and (full_width or nonlabels and all(not c.text.strip() for c in nonlabels))
+                and len(title) <= 100 and not re.search(r"[。；;]", title)
+                and not re.match(r"(?:注|Notes?)\s*[:：]", title, re.I)):
             group = (labels_in_row[0].row, labels_in_row[0].column)
         elif not labels_in_row:
             group = None
         elif group:
-            evidence["row_groups"][str(row)] = list(group)
+            group_cell = next(c for c in cells if (c.row, c.column) == group)
+            closed = closes_group(group_cell.text, labels_in_row[-1].text)
+            sibling = bool(re.match(r"^[一二三四五六七八九十百]+[、.]", labels_in_row[-1].text.strip()))
+            if not closed or not sibling:
+                evidence["row_groups"][str(row)] = list(group)
+            if closed:
+                group = None
     return evidence
 
 

@@ -26,6 +26,7 @@ ROOT = Path(__file__).resolve().parent.parent
 SCORING_MODULES = (
     "scoring.py", "matching.py", "metrics.py", "representations.py", "adapters.py",
     "native_relations.py", "native_readback.py", "adjudications.py", "information.py",
+    "information_reading.py",
 )
 WORKER_CASE_FIELDS = (
     "case_id", "sample_id", "suite", "phase", "repetition", "input_pages", "input", "native", "job_id",
@@ -36,7 +37,8 @@ def now() -> str:
     return datetime.now(ZoneInfo("Asia/Shanghai")).isoformat()
 
 
-def prepare_run(baseline: Path, destination: Path, service_config: Path, *, pipeline: str = "P07") -> Path:
+def prepare_run(baseline: Path, destination: Path, service_config: Path, *, pipeline: str = "P07",
+                previous_run: Path | None = None) -> Path:
     """Use declared execution identities; do not validate dataset contents."""
     from .cli import code_identity, snapshot_software
 
@@ -121,6 +123,30 @@ def prepare_run(baseline: Path, destination: Path, service_config: Path, *, pipe
         ],
         "cases": cases,
     }
+    if previous_run is not None:
+        previous_run = previous_run.resolve()
+        previous = read_json(previous_run / "run.json")
+        previous_freeze = read_json(previous_run / "execution-freeze.json")
+        if (previous.get("state") != "completed"
+                or previous["software"]["software_id"] != previous_freeze["software"]["software_id"]
+                or previous.get("reference_freeze") != record["reference_freeze"]
+                or Path(previous["dataset"]).resolve() != dataset
+                or Path(previous["baseline_run"]).resolve() != baseline
+                or previous["native_pipeline"] != record["native_pipeline"]):
+            raise ValueError("previous candidate execution identity or reference scope differs")
+        previous_cases = {case["case_id"]: case for case in previous["cases"]}
+        for case in cases:
+            old = previous_cases.get(case["case_id"])
+            if old is None or any(old.get(key) != case.get(key) for key in (
+                "sample_id", "suite", "phase", "repetition", "input_pages", "input", "native", "baseline_observation_source",
+            )):
+                raise ValueError("previous candidate is not the same declared native input")
+            case["previous_observation"] = old["observation"]
+        record["previous_outputs"] = {
+            "run": str(previous_run), "software": previous["software"],
+            "execution_freeze": str(previous_run / "execution-freeze.json"),
+            "policy": "unchanged_saved_final_bytes_rescored_with_current_shared_frozen_rules",
+        }
     write_json(destination / "run.json", record)
     snapshot_software(destination / "software", identity)
     write_json(destination / "candidate" / "worker-plan.json", {
@@ -607,6 +633,25 @@ def score_run(run: Path) -> Path:
             "baseline_score": native_relative, "final_score": final_relative,
             "final_observation": observation_path, "stage_scores": [],
         }
+        if record.get("previous_outputs"):
+            previous_root = Path(record["previous_outputs"]["run"])
+            previous_path = inside(previous_root, case["previous_observation"])
+            previous_raw = read_json(previous_path)
+            previous_dir = previous_path.parent
+            previous_result = rebuild_final_result(
+                (previous_dir / "final.md").read_text(), read_json(previous_dir / "final.json"),
+                read_json(previous_dir / "service-evidence.json"), previous_raw)
+            previous_observation = build_service_observation(previous_result, sample_id=case["sample_id"],
+                metadata=metadata, pipeline=f"{record['native_pipeline']['pipeline']}+MO-Parse:previous")
+            previous_observation.update(input_page_count=case["input_pages"], dataset=record["dataset_name"])
+            previous_observation, previous_readback = read_final_observation(previous_observation)
+            previous_score = score_case(reference, previous_observation, dataset,
+                reference_exclusions=reference_exclusions(human, case["sample_id"]) if human else None)
+            entry["previous_score"] = f"{destination_name}/previous/{case['sample_id']}.json"
+            entry["previous_observation"] = f"{destination_name}/previous-observations/{case['sample_id']}.json"
+            write_json(run / entry["previous_score"], previous_score)
+            write_json(run / entry["previous_observation"], previous_observation)
+            write_json(run / f"{destination_name}/previous-observations/{case['sample_id']}.readback.json", previous_readback)
         index["results"].append(entry)
         contexts.append((case, reference, entry))
         print(json.dumps({"score_phase": "primary", "completed_samples": ordinal,
@@ -662,6 +707,7 @@ def main() -> int:
     prepare.add_argument("--output", required=True, type=Path)
     prepare.add_argument("--service-config", required=True, type=Path)
     prepare.add_argument("--pipeline", choices=["P07", "P08"], default="P07")
+    prepare.add_argument("--previous-run", type=Path)
     execute = commands.add_parser("run")
     execute.add_argument("--run", required=True, type=Path)
     execute.add_argument("--phase", choices=["warmup", "measured"], required=True)
@@ -677,7 +723,8 @@ def main() -> int:
     candidate.add_argument("--phase", required=True, choices=["warmup", "measured"])
     args = parser.parse_args()
     if args.command == "prepare":
-        print(prepare_run(args.baseline, args.output, args.service_config, pipeline=args.pipeline))
+        print(prepare_run(args.baseline, args.output, args.service_config, pipeline=args.pipeline,
+                          previous_run=args.previous_run))
     elif args.command == "run":
         return launch(args.run, args.phase)
     elif args.command == "freeze":

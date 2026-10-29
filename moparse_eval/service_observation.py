@@ -32,12 +32,13 @@ from app.services.table_service import (
 )
 
 from .adapters import markdown_cells
+from .information_reading import unit_scope_literal
 from .native_relations import native_relations
 from .representations import visible_text
 
 SERVICE_OBSERVATION_VERSION = "mo-parse-final-output-observation-v7"
 FINAL_PAGE_PROVENANCE_VERSION = "mo-parse-final-page-provenance-v1"
-FINAL_OBSERVATION_READBACK_VERSION = "mo-parse-final-output-readback-v5"
+FINAL_OBSERVATION_READBACK_VERSION = "mo-parse-final-output-readback-v6"
 _METADATA_KEYS = {"run_id", "suite", "phase", "repetition", "timing", "resources", "runtime"}
 
 
@@ -299,8 +300,16 @@ def _semantic_blocks(
                         # explicit field and cannot be rescued by another label.
                         header_refs = {*value.row_headers, *value.column_headers}
                         if (len(values) == 1 and name != "note" and not header_refs.intersection(refs)
-                                and all(isinstance(ref, CellRef) for ref in refs)):
+                                and all(isinstance(ref, CellRef) for ref in refs)
+                                and (name != "unit" or not re.search(r"[\s()（）:：]", values[0]))):
                             cell[name] = values[0]
+                # These literals are visibly printed in this very record,
+                # including source legends rendered as a record title. They
+                # are context, never new unit strings inferred from a value.
+                printed_scope = [emitted_by_ref[ref] for ref in (*record.subject_headers, *record.scope_refs)
+                                 if ref in emitted_by_ref and unit_scope_literal(emitted_by_ref[ref])]
+                if printed_scope:
+                    cell["units"] = list(dict.fromkeys([*cell.get("units", []), *printed_scope]))
             cells.append(cell)
         pages = sorted(
             {source_pages[ref.table_id] for ref in emitted_by_ref if ref.table_id in source_pages}
@@ -1099,6 +1108,110 @@ def read_final_page_provenance(
     return derived, diagnostic
 
 
+def _read_retained_gfm_geometry(observation: dict[str, Any]) -> int:
+    """Read retained GFM from printed markup, independently of private spans.
+
+    The same Markdown must not gain or lose business information because an
+    internal converter called its scope known or unknown. Native source cells
+    supply location provenance only, never hidden header spans or roles.
+    """
+    final = observation.get("service_output", {}).get("final_markdown")
+    if not isinstance(final, str):
+        return 0
+    pages = observation.get("pages", [])
+    restored = 0
+    removed_ids: set[str] = set()
+    for start, end, token in _spans(final):
+        if token.type != "table_open":
+            continue
+        raw = final[start:end].rstrip("\r\n")
+        stop = start + len(raw)
+        owned = []
+        for page in pages:
+            for block in page.get("blocks", []):
+                span = block.get("final_markdown_span", [])
+                if (block.get("service_evidence_state") == "retained" and block.get("cells")
+                        and len(span) == 2 and start <= span[0] < span[1] <= stop):
+                    owned.append((page, block))
+        if not owned:
+            continue
+        ranges = sorted(block["final_markdown_span"] for _page, block in owned)
+        if any(final[cursor_value:next_value].strip() for cursor_value, next_value in
+               [(start, ranges[0][0]), *[(left[1], right[0]) for left, right in zip(ranges, ranges[1:], strict=False)],
+                (ranges[-1][1], stop)]):
+            continue
+        parsed = markdown_cells(raw, f"#/markdown/{start}:{stop}")
+        lines = _physical_lines(raw)
+        offsets = [0]
+        for line in lines:
+            offsets.append(offsets[-1] + len(line))
+        old_by_span: dict[tuple[int, ...], list[dict[str, Any]]] = {}
+        for _page, block in owned:
+            for cell in block["cells"]:
+                old_by_span.setdefault(tuple(cell.get("final_markdown_span", [])), []).append(cell)
+        cells = []
+        for cell in parsed:
+            row, col = cell["row"], cell["col"]
+            index = row + int(row > 0)
+            if index >= len(lines):
+                break
+            line = lines[index]
+            delimiters = [m.start() for m in re.finditer(r"\|", line)]
+            if len(delimiters) <= col + 1:
+                break
+            left, right = delimiters[col] + 1, delimiters[col + 1]
+            left += len(line[left:right]) - len(line[left:right].lstrip())
+            right -= len(line[left:right]) - len(line[left:right].rstrip())
+            if _inline_text(line[left:right]) != cell["text"]:
+                break
+            span = [start + offsets[index] + left, start + offsets[index] + right]
+            prior = old_by_span.get(tuple(span), [])
+            if len(prior) == 1 and prior[0].get("text") == cell["text"]:
+                cell["id"] = prior[0]["id"]
+                for key in ("page", "provenance_pages", "source_cell_ref"):
+                    if key in prior[0]:
+                        cell[key] = copy.deepcopy(prior[0][key])
+            cell.update(final_markdown_span=span, service_evidence_state="retained",
+                        service_grid_scope_state="observed_gfm_geometry")
+            cells.append(cell)
+        if len(cells) != len(parsed) or not cells:
+            continue
+        if all(not c["text"] for c in cells if c["row"] == 0):
+            for cell in cells:
+                cell.pop("is_column_header", None)
+        parent_ids = {block.get("parent_id") or block.get("native_table_container") for _page, block in owned}
+        parent = next(iter(parent_ids)) if len(parent_ids) == 1 else None
+        block_id = owned[0][1]["id"]
+        table_id = f"service:observed-gfm:{start}:{stop}"
+        provenance = sorted({number for page, block in owned
+                             for number in block.get("provenance_pages", [page["page"]])})
+        fresh = {"id": block_id, "kind": "table_body", "text": raw, "text_format": "markdown",
+                 "cells": cells, "native_path": f"#/markdown/{start}:{stop}",
+                 "final_markdown_span": [start, stop], "provenance_pages": provenance,
+                 "parent_id": table_id, "native_table_container": table_id,
+                 "producer_parent_audit": parent,
+                 "service_evidence_state": "retained", "display_geometry_reader": "actual_gfm_only"}
+        sequences = [block["native_sequence"] for _page, block in owned if type(block.get("native_sequence")) is int]
+        if sequences:
+            fresh["native_sequence"] = min(sequences)
+        containers = observation.setdefault("native_containers", [])
+        if not any(container["id"] == table_id for container in containers):
+            containers.append({"id": table_id, "label": "table", "native_path": fresh["native_path"],
+                               "evidence": "explicit_final_gfm_syntax"})
+        host = owned[0][0]
+        for page, block in owned:
+            if block["id"] != block_id:
+                removed_ids.add(block["id"])
+            page["blocks"] = [item for item in page["blocks"] if item["id"] != block["id"]]
+        host["blocks"].append(fresh)
+        restored += 1
+    for page in pages:
+        page["blocks"].sort(key=lambda block: block.get("final_markdown_span", [0])[0])
+    observation["relations"] = [edge for edge in observation.get("relations", [])
+                                if edge.get("source") not in removed_ids and edge.get("target") not in removed_ids]
+    return restored
+
+
 def read_final_observation(
     observation: Mapping[str, Any],
 ) -> tuple[dict[str, Any], dict[str, Any]]:
@@ -1108,6 +1221,8 @@ def read_final_observation(
             or output.get("reader_version") != SERVICE_OBSERVATION_VERSION):
         raise ValueError("final readback requires the current repaired service observation build")
     derived, diagnostic = read_final_page_provenance(observation)
+    derived = copy.deepcopy(derived)
+    diagnostic["retained_gfm_geometry_blocks"] = _read_retained_gfm_geometry(derived)
     diagnostic.update(
         reader_version=FINAL_OBSERVATION_READBACK_VERSION,
         page_provenance_reader_version=FINAL_PAGE_PROVENANCE_VERSION,

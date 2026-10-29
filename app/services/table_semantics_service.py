@@ -179,9 +179,13 @@ def _qualify_relation(fragment: TableFragment, relation: ValueRelation,
     period_refs = list(relation.period_refs)
     notes = []
     ratio = any(re.search(r"同比|佔|占|比例|比率|percent|change|ratio|rate", text, re.I) for text in labels)
-    own_unit = re.search(r"[%％‰$€£¥]", cell.text)
+    own_unit = re.search(r"[%％‰]", cell.text)
+    if ratio or own_unit:
+        unit_refs = [ref for ref in unit_refs if re.search(r"[%％‰]", registry[ref].text)]
     if scalar(cell.text) and not own_unit and not ratio and not unit_refs:
-        corner = next((c for c in fragment.cells if c.column == 0 and c.row < cell.row
+        active_headers = {r for scope in fragment.source_header_scopes if cell.row in scope.get("body_rows", [])
+                          for r in scope.get("header_rows", [])}
+        corner = next((c for c in fragment.cells if c.column == 0 and c.row in active_headers
                        and re.fullmatch(r"[（(]?(?:人民币|人民幣)?(?:百万元|百萬元|千元|万元|萬元|元)[)）]?", c.text.strip())), None)
         if corner:
             unit_refs.append(_ref(fragment, corner))
@@ -193,7 +197,10 @@ def _qualify_relation(fragment: TableFragment, relation: ValueRelation,
         elif ref.kind == "period" and not period_refs:
             period_refs.append(ref)
         elif ref.kind == "note":
-            notes.append(ref)
+            marker = re.match(r"^\s*([0-9]{1,2}|[*†‡])(?:\s+|[.)、：:])", ref.text)
+            if marker and any(re.search(r"(?:\^\s*\{?|<sup>)" + re.escape(marker[1]) + r"(?:\}|</sup>|\b)", registry[r].text)
+                              for r in (relation.value, *relation.row_headers)):
+                notes.append(ref)
     return replace(relation, unit_refs=tuple(unit_refs), period_refs=tuple(period_refs), note_refs=tuple(notes))
 
 
@@ -313,6 +320,9 @@ def _bind_fragment(
         if row in blocked:
             issues.append((row, blocked[row]))
             continue
+        if row in fragment.native_evidence.get("operation_rows", []):
+            issues.append((row, "arithmetic_scope_boundary_unavailable"))
+            continue
         cells = sorted((c for c in fragment.cells if c.row <= row < c.row + c.row_span),
                        key=lambda c: c.column)
         if not cells or cells[0].column != 0:
@@ -332,6 +342,11 @@ def _bind_fragment(
         if native_scope and all(not c.text.strip() for c in cells if c.column not in scope.get("row_header_columns", [0])):
             issues.append((row, "native_section_heading_retained"))
             continue
+        if native_scope and not scope.get("evidence", {}).get("explicit_record_fields"):
+            from app.services.table_context_service import scalar
+            if not any(scalar(c.text) for c in cells if c.column not in scope.get("row_header_columns", [0])):
+                issues.append((row, "native_nonrecord_region_retained"))
+                continue
 
         def path_for(
             cell: TableCellFragment,
@@ -352,6 +367,11 @@ def _bind_fragment(
             return paths[0] if paths and all(p == paths[0] for p in paths) else None
 
         row_columns = scope.get("row_header_columns", [0])
+        if origin is fragment and any(h.column == 0 and re.fullmatch(r"序号|序號|Index|No\.?", h.text.strip(), re.I) for h in headers):
+            preferred = next((s.get("row_header_columns") for s in fragment.native_evidence.get("header_scopes", [])
+                              if row in s.get("body_rows", [])), None)
+            if isinstance(preferred, list) and len(preferred) == 1 and preferred != [0]:
+                row_columns = preferred
         if (not isinstance(row_columns, list) or not row_columns
                 or any(type(col) is not int or not 0 <= col < fragment.num_cols for col in row_columns)
                 or row_columns != sorted(set(row_columns))
@@ -376,22 +396,46 @@ def _bind_fragment(
         values = []
         paths_seen: set[tuple[CellRef, ...]] = set()
         reason = None
+        from app.services.table_context_service import unit_description
+        field_paths = {(c.row, c.column): path_for(c) for c in cells if c not in labels}
+        path_counts: dict[tuple[str, ...], int] = {}
+        for candidate_path in field_paths.values():
+            if candidate_path:
+                key = tuple(h.text.strip() for h in candidate_path if not unit_description(h.text))
+                path_counts[key] = path_counts.get(key, 0) + 1
         for cell in cells:
             if cell in labels:
                 continue
             if (cell.row != row or cell.row_span != 1) and not native_scope:
                 reason = "value_span_crosses_records"
                 break
-            path = path_for(cell)
+            path = field_paths[(cell.row, cell.column)]
             if not path:
                 reason = "incomplete_column_header_path"
                 break
-            refs = tuple(_ref(origin, h) for h in path)
+            from app.services.table_context_service import scalar, unit_description
+            unit_headers = tuple(_ref(origin, h) for h in path if unit_description(h.text))
+            header_labels = tuple(_ref(origin, h) for h in path if not unit_description(h.text))
+            refs = header_labels or tuple(_ref(origin, h) for h in path)
+            key = tuple(h.text.strip() for h in path if not unit_description(h.text))
+            if unit_headers and path_counts[key] > 1:
+                # A unit/currency band can distinguish columns sharing a year,
+                # even for ratio rows. Preserve that column identity without
+                # assigning an amount unit to the ratio itself.
+                refs = tuple(_ref(origin, h) for h in path)
             if refs in paths_seen:
                 reason = "ambiguous_duplicate_leaf_headers"
                 break
             paths_seen.add(refs)
             relation = _relation(_ref(fragment, cell), tuple(_ref(fragment, label) for label in labels), refs, registry)
+            ratio = bool(re.search(r"[%％‰]", cell.text) or any(re.search(
+                r"同比|佔|占|比例|比率|percent|change|ratio|rate", registry[r].text, re.I) for r in refs))
+            if ratio:
+                amount_units = {ref for ref in unit_headers if not re.search(r"[%％‰]", registry[ref].text)}
+                relation = replace(relation, unit_refs=tuple(ref for ref in relation.unit_refs if ref not in amount_units))
+            if (unit_headers and scalar(cell.text) and not re.search(r"[%％‰]", cell.text)
+                    and not any(re.search(r"同比|佔|占|比例|比率|percent|change|ratio|rate", registry[r].text, re.I) for r in refs)):
+                relation = replace(relation, unit_refs=tuple(dict.fromkeys((*relation.unit_refs, *unit_headers))))
             values.append(_qualify_relation(fragment, relation, registry))
         if reason or not values:
             issues.append((row, reason or "unresolved_row_subject"))
@@ -399,8 +443,9 @@ def _bind_fragment(
         extra_group = fragment.native_evidence.get("row_groups", {}).get(str(row))
         row_groups = tuple(_ref(fragment, group) for group in groups)
         if extra_group:
-            row_groups = (CellRef(fragment.fragment_id, *extra_group), *row_groups)
-            values = [replace(value, row_headers=(*row_groups, *value.row_headers)) for value in values]
+            extra_ref = CellRef(fragment.fragment_id, *extra_group)
+            row_groups = tuple(dict.fromkeys((extra_ref, *row_groups)))
+            values = [replace(value, row_headers=tuple(dict.fromkeys((extra_ref, *value.row_headers)))) for value in values]
         records.append(SemanticRecord(
             fragment.fragment_id, row, tuple(values), _ref(fragment, subject),
             tuple(_ref(origin, h) for h in subject_path),

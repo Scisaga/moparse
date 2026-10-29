@@ -46,3 +46,5 @@ Paddle原生服务使用单个长期owner线程统一初始化、推理与关闭
 `python -m moparse_eval.service_evaluation`独立处理有效P07保存的原生结果，按[服务配对协议](../benchmark/evaluation-tasks.md#7-p07与mo-parse最终输出的配对评测)执行实际MO-Parse后处理。它不启动模型，不调用公开HTTP解析接口，不操作线上服务或TTS；候选容器只挂输入、原生产物、软件及不含参考的工作目录。正式输出、原始观察、评分派生观察和耗时分别保存，来源材料与参考保持只读。
 
 新运行目录按`prepare` → `run --phase warmup` → `freeze` → `run --phase measured` → `freeze-scoring` → `score` → `report`执行；两个freeze命令都要求显式`--validation`工程验证记录，不能用文件存在或语料计数代替验证。`prepare`还需`--baseline`、`--output`和仅含公开处理参数的`--service-config`。服务执行与最终读回分别冻结身份，共享评分规则保持原样，旧运行目录不能覆盖。报告重生只读已有运行和评分JSON，不读取语料、重新推理或重新评分。
+
+2026-10-30读取修正采用`mo-parse-eval-information-v4`，完整标准见[评测任务](../benchmark/evaluation-tasks.md)。`service_evaluation prepare --previous-run <旧运行>`只接纳同一原生输入、参考声明和已冻结执行身份的旧候选，读取原样保存的最终正文；候选worker不挂载旧结果或参考。新评分仍须经过执行与评分冻结，旧正文重评不复用旧分数。`python -m moparse_eval.table_context_report`从冻结评分产物生成原生、旧正文和新正文的三方比较，逐项列出新增正确、原正确项损失和新增错误。

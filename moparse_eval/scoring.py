@@ -11,7 +11,12 @@ from collections import Counter
 from pathlib import Path
 from typing import Any
 
-from .information import endpoint_paths, information_value_equal, qualifier_evidence
+from .information import (
+    column_path_locates,
+    endpoint_paths,
+    information_value_equal,
+    qualifier_evidence,
+)
 from .information import (
     label_in_text as _label_in_native_cell,
 )
@@ -19,7 +24,7 @@ from .information import (
     native_range as _native_range,
 )
 from .information import (
-    path_locates as _declared_path_locates,
+    row_path_locates as _declared_path_locates,
 )
 from .information_reading import read_information_observation, scalar_notes
 from .matching import in_page_scope, match_units, observation_candidates, reference_parent_scope
@@ -43,29 +48,13 @@ _RELATION_STATES = (
 
 def _native_value_and_notes(cell: dict[str, Any], field: dict[str, Any]) -> tuple[str, Any]:
     """Project only explicitly represented native formatting, never a Gold suffix."""
-    text, read_notes = scalar_notes(cell)
-    if read_notes is not None:
-        return text, read_notes
-    notes = cell.get("note_markers")
-    if field.get("value_representation") != "number_and_note" or not cell.get("information_notes"):
-        return text, notes
-    superscripts = [item for item in cell.get("inline_annotations", []) if item.get("type") == "superscript"]
-    spans = [item.get("span", []) for item in superscripts]
-    if not spans or any(
-        len(span) != 2 or any(type(value) is not int for value in span)
-        or not 0 <= span[0] < span[1] <= len(text) for span in spans
-    ):
-        return text, notes
-    spans.sort()
-    if any(left[1] > right[0] for left, right in zip(spans, spans[1:], strict=False)):
-        return text, None
-    body: list[str] = []
-    cursor = 0
-    for start, end in spans:
-        body.append(text[cursor:start])
-        cursor = end
-    body.append(text[cursor:])
-    return "".join(body), [text[start:end] for start, end in spans]
+    return scalar_notes(cell)
+
+
+def _candidate_table_identity(candidate: dict[str, Any]) -> str | None:
+    block = candidate.get("block", {})
+    identity = block.get("native_table_container") or candidate.get("parent_id")
+    return identity if "cell" in candidate and isinstance(identity, str) else None
 
 
 def _record_candidate_pool(
@@ -82,7 +71,7 @@ def _record_candidate_pool(
     scope_key = (unit.get("table", {}).get("id"), tuple(unit.get("pages", [])))
     anchored = matching.get("information_table_bodies", {}).get(scope_key, set())
     if label_match is None and len(anchored) == 1:
-        pool = [item for item in pool if item.get("parent_id") in anchored]
+        pool = [item for item in pool if _candidate_table_identity(item) in anchored]
     row_path = unit.get("table", {}).get("row_header_path") or []
     locator = {**unit, "kind": "table_cell", "reference_text": row_path[-1] if row_path else ""}
     parent, needs_scope, _numeric = reference_parent_scope(locator, collapse_whitespace=collapse_whitespace)
@@ -220,6 +209,9 @@ def _grid_column_header_pool(
                 probes.append((item, references, error))
     declared = any(item["cell"].get("is_column_header") is True for item in group)
     if not declared and not probes:
+        scoped = [item for item in group if "information_header_body_rows" in item["cell"]]
+        if scoped and any(item["cell"].get("information_scope_switch") for item in scoped):
+            return [item for item in scoped if data_rows <= set(item["cell"]["information_header_body_rows"])]
         return group
     output = []
     active_by_column: dict[int, set[str] | None] = {}
@@ -313,8 +305,9 @@ def _locate_record_field(
         explicit_rows = [item for item in group if _declared_path_locates(
             row_path, item["cell"].get("row_header_path"), collapse_whitespace)]
         if explicit_rows:
-            found = [item for item in explicit_rows if _declared_path_locates(
-                column_path, item["cell"].get("column_header_path"), collapse_whitespace)]
+            found = [item for item in explicit_rows if column_path_locates(
+                column_path, item["cell"].get("column_header_path"), collapse_whitespace,
+                [*item["cell"].get("units", []), *([item["cell"]["unit"]] if isinstance(item["cell"].get("unit"), str) else [])])]
             for item in found:
                 solutions.append({"selected": [item], "rows": [], "columns": [],
                                   "group": group, "method": "explicit_native_paths"})
@@ -401,8 +394,9 @@ def _score_records(
     for unit in units:
         match = matching["matches"].get(unit["id"])
         if match and unit.get("table", {}).get("id"):
-            claims = match.get("claims") or [match]
-            bodies = {matching["candidate_map"].get(claim["candidate_id"], {}).get("parent_id") for claim in claims}
+            label_claims = match.get("claims") or [match]
+            bodies = {_candidate_table_identity(matching["candidate_map"].get(claim["candidate_id"], {}))
+                      for claim in label_claims}
             if len(bodies) == 1 and None not in bodies:
                 key = (unit["table"]["id"], tuple(unit.get("pages", [])))
                 matching["information_table_bodies"].setdefault(key, set()).update(bodies)
@@ -500,6 +494,7 @@ def _score_records(
                 native_id=candidate["native_id"], native_path=candidate["native_path"],
                 strict_exact=strict_correct, content_exact=content_correct, text=comparison,
                 native_text=candidate["text"], native_note_markers=actual_notes,
+                raw_transcription=text_metrics(value, candidate["text"], collapse_whitespace=collapse_whitespace),
             )
             qualifiers = {key: field.get(key, table.get(key)) for key in ("unit", "period")}
             qualifiers = {key: expected for key, expected in qualifiers.items() if expected is not None}

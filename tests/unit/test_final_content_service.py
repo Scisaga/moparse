@@ -82,6 +82,33 @@ def test_only_repeated_header_copy_is_removed_and_dates_are_not_furniture():
     assert '乙辰公司未签约。' in result.markdown
 
 
+def test_production_bundle_uses_the_actual_supplemented_footer_span():
+    result = _result([[_block('text', 'The agreement was not signed.'),
+                       _block('footer', 'DRAFT: First proof'), _block('footer', 'EDIT TRACE: None')]])
+    result.markdown = result.markdown.replace('EDIT TRACE: None', 'EDIT EDIT TRACE: None None')
+    result._source_verification['native_text_reconstruction'] = {'pages': [{'page': 1, 'actions': [
+        {'region': 2, 'action': 'selected_native_region', 'rendered_replacement': 'EDIT EDIT TRACE: None None'}]}]}
+    FinalContentService().apply(result)
+    assert 'DRAFT:' not in result.markdown and 'EDIT TRACE:' not in result.markdown
+    assert 'The agreement was not signed.' in result.markdown
+
+
+def test_a_lone_draft_legal_qualification_is_not_a_production_bundle():
+    result = _result([[_block('text', 'This document is subject to conditions.'),
+                       _block('footer', 'DRAFT: Contract not signed'), _block('page_number', '3 / 14')]])
+    FinalContentService().apply(result)
+    assert 'DRAFT: Contract not signed' in result.markdown
+    assert '3 / 14' not in result.markdown
+
+
+def test_repeated_production_key_is_removed_without_normalizing_business_text():
+    result = _result([[_block('text', 'Approved amount remains 17.50.'),
+                       _block('footer', 'DRAFT: First proof'), _block('footer', 'EDIT EDIT TRACE: None None')]])
+    FinalContentService().apply(result)
+    assert 'TRACE:' not in result.markdown
+    assert 'Approved amount remains 17.50.' in result.markdown
+
+
 def test_source_code_examples_of_internal_comments_survive_cleanup():
     result = _result([[_block('text', '正文示例 `<!-- page: 27 -->`。\n\n```html\n<!-- page: 29 -->\n```')]])
     FinalContentService().apply(result)

@@ -5,8 +5,16 @@ from __future__ import annotations
 import re
 from typing import Any
 
-from .information_reading import label_text, scoped_qualifiers, units
+from .information_reading import label_text, scoped_qualifiers, unit_scope_literal, units
 from .metrics import normalize_text
+
+
+def unit_text(text: str) -> str:
+    text = normalize_text(text, collapse_whitespace=True)
+    if text.startswith("(") and text.endswith(")"):
+        text = text[1:-1].strip()
+    text = re.sub(r"\s*/\s*", "/", text)
+    return re.sub(r"(?<=[\u3400-\u9fff])\s+(?=[\u3400-\u9fff])", "", text)
 
 
 def field_value_text(text: str) -> str:
@@ -50,8 +58,8 @@ def path_locates(labels: list[str], native: Any, collapse_whitespace: bool) -> b
         not isinstance(text, str) or not text.strip() for text in native
     ):
         return False
-    labels = [normalize_text(label, collapse_whitespace=collapse_whitespace) for label in labels]
-    parts = [normalize_text(text, collapse_whitespace=collapse_whitespace) for text in native]
+    labels = [label_text(normalize_text(label, collapse_whitespace=collapse_whitespace)) for label in labels]
+    parts = [label_text(normalize_text(text, collapse_whitespace=collapse_whitespace)) for text in native]
     if not all(labels):
         return False
     text = " ".join(parts)
@@ -64,6 +72,80 @@ def path_locates(labels: list[str], native: Any, collapse_whitespace: bool) -> b
         cursor += len(part) + 1
     return any(all(match.start() < end and start < match.end() for start, end in offsets)
                for match in re.finditer(pattern, text))
+
+
+def row_path_locates(labels: list[str], native: Any, collapse_whitespace: bool) -> bool:
+    """Keep the complete annotated path; additional leading context is allowed.
+
+    Uniqueness is resolved over all actual candidate records by the caller.
+    A missing parent, an intervening business level, or a conflicting parent
+    cannot be filled from the reference or from the expected value.
+    """
+    if (not isinstance(native, list) or not native or len(native) > 12
+            or any(not isinstance(part, str) or not part.strip() for part in native)):
+        return False
+    wanted = [label_text(normalize_text(label, collapse_whitespace=collapse_whitespace)) for label in labels]
+    if not wanted or not all(wanted):
+        return False
+    pattern = r"\s*".join(re.escape(label) for label in wanted)
+    views: list[list[str]] = [[]]
+    for raw in native:
+        part = label_text(normalize_text(raw, collapse_whitespace=collapse_whitespace))
+        variants = [part]
+        for token in units(part):
+            if part.endswith("(" + token + ")"):
+                prefix = part[:-len(token) - 2].rstrip()
+            elif part.endswith(token):
+                prefix = part[:-len(token)].rstrip(" (（")
+            else:
+                continue
+            if prefix:
+                variants.append(prefix)
+        views = [[*view, option] for view in views for option in dict.fromkeys(variants)]
+        if len(views) > 512:
+            return False
+    return any(re.fullmatch(pattern, " ".join(view[start:])) is not None
+               for view in views for start in range(len(view)))
+
+
+def column_path_locates(labels: list[str], native: Any, collapse_whitespace: bool,
+                        unit_literals: list[str] | None = None) -> bool:
+    """Read explicit column labels with independently visible qualifier text.
+
+    Unit legends and generic period descriptors may be expressed beside a
+    label. Numeric years and business/group labels remain mandatory. No value
+    or reference qualifier is used to construct these candidate-only views.
+    """
+    if path_locates(labels, native, collapse_whitespace):
+        return True
+    if not isinstance(native, list) or len(native) > 12 or any(not isinstance(p, str) for p in native):
+        return False
+    views: list[list[str]] = [[]]
+    for raw in native:
+        part = label_text(raw)
+        tokens = units(part)
+        unwrapped = part.strip(" ()（）")
+        optional = (unwrapped in tokens or unit_scope_literal(part) or bool(re.fullmatch(
+            r"Year Ended|截至[^。；;]{1,30}(?:年度|年末)|[于於]\s*\d{1,2}月\d{1,2}日", unwrapped, re.I))
+            and not re.search(r"(?:19|20)\d{2}", unwrapped))
+        variants: list[str | None] = [part]
+        if optional:
+            variants.append(None)
+        for token in tokens:
+            if part.endswith(token) and part != token:
+                prefix = part[:-len(token)].rstrip(" (（")
+                if prefix:
+                    variants.append(prefix)
+        views = [([*view, option] if option is not None else view)
+                 for view in views for option in dict.fromkeys(variants)]
+        if len(views) > 512:
+            return False
+    qualifiers = [text for text in dict.fromkeys(unit_literals or []) if unit_scope_literal(text)]
+    if len(qualifiers) > 12:
+        return False
+    return any(path_locates(labels, candidate, collapse_whitespace)
+               for view in views if view
+               for candidate in [view, *([*view, q] for q in qualifiers), *([q, *view] for q in qualifiers)])
 
 
 def native_range(cell: dict[str, Any], axis: str) -> set[int] | None:
@@ -150,16 +232,27 @@ def qualifier_evidence(expected: dict[str, Any], cell: dict[str, Any],
         if key in cell:
             actual = cell[key]
             if isinstance(value, str) and isinstance(actual, str):
-                correct = normalize_text(value, collapse_whitespace=True) == normalize_text(actual, collapse_whitespace=True)
+                wanted = normalize_text(value, collapse_whitespace=True)
+                found_literal = normalize_text(actual, collapse_whitespace=True)
+                if key == "unit":
+                    # Outer legend parentheses are presentation, not an
+                    # accounting sign or a change to the unit's multiplier.
+                    wanted = unit_text(wanted)
+                    found_literal = unit_text(found_literal)
+                correct = wanted == found_literal
             else:
                 correct = value == actual
             evidence[key] = {"status": "correct" if correct else "incorrect", "source": "native_field", "actual": actual}
         elif key in scoped and isinstance(value, str):
             found = scoped[key]
-            matching = [item for item in found if label_in_text(value, item["actual"], True)
+            matching = [item for item in found if not (
+                key == "period" and re.fullmatch(r"(?:19|20)\d{2}(?:年(?:度|末)?)?", value)
+                and len(set(re.findall(r"(?:19|20)\d{2}", item["actual"]))) > 1
+            ) and ((key != "unit" and label_in_text(value, item["actual"], True))
+                        or key == "unit" and unit_text(value) == unit_text(item["actual"])
                         or normalize_text(value, collapse_whitespace=True) == normalize_text(item["actual"], collapse_whitespace=True)
                         or key == "period" and re.fullmatch(r"(?:19|20)\d{2}年?", value)
-                        and re.search(r"(?<!\d)" + re.escape(value.rstrip("年")) + r"年(?:度|末)?(?!\d)", item["actual"])]
+                        and re.search(r"(?<!\d)" + re.escape(value.rstrip("年")) + r"年(?:度|末)?(?!\d)", item["actual"]))]
             evidence[key] = ({"status": "correct", "source": "candidate_scoped_qualifier", "actual": matching}
                              if matching else {"status": "incorrect", "source": "candidate_scoped_qualifier", "actual": found}
                              if key == "unit" and found else
