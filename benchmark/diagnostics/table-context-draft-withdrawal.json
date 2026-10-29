@@ -4,7 +4,7 @@
   "reason": "Final prose readback treated formatted unit legends as atomic unit values and did not separate actual column qualifier text; native empty groups also crossed explicit sibling enumerations, and ordinal fields displaced explicit record names.",
   "consequence": "The initial draft cannot be adopted or used as a parsing-quality baseline. All eight native outputs and both service replays will be replaced under one newly validated frozen revision.",
   "controls": "Synthetic positive and negative cases preserve scales, currency, per-share exceptions, ratio columns, numeric years, business groups, signs, and exponent/footnote distinctions. No references were repaired.",
-  "replacement": "benchmark/reports/20261030-table-context-v3/report.md",
+  "replacement": "benchmark/reports/20261030-table-context-v4/report.md",
   "preserved": "Valid original native outputs, historical execution records, old saved final candidate bytes, frozen references and original Codex visual probe remain unchanged.",
   "additional_reader_defects": [
     "Explicit row-path unit text was absent from scoped unit observations.",
@@ -16,10 +16,23 @@
     "Actual GFM tables retain separate identities even if private parent metadata is shared."
   ],
   "interrupted_native_scoring": "Unpublished incomplete score directories are discarded after the valid full replacement; no mixed-revision index is used.",
-  "final_frozen_software_id": "6a47b6bdd205ce087a83cfbadaa3f89fa7d99cfcb655eb007b9e3db66ed664ef",
+  "final_frozen_software_id": "9784cbe6a5551844741cbbd5c3729d7c267d736c45682a15dc43f18830a380a7",
   "additional_converter_defects": [
     "Full-width section labels must reach the child records.",
     "Same-year currency columns must keep their identity on ratio rows.",
     "Arithmetic instructions are not entity parents; an unbounded adjustment region stays in source form."
-  ]
+  ],
+  "interrupted_pre_final_reader_attempt": {
+    "software_id": "6a47b6bdd205ce087a83cfbadaa3f89fa7d99cfcb655eb007b9e3db66ed664ef",
+    "status": "CPU worker exited 0 but parent was interrupted before collecting completion; not a published comparison",
+    "owned_container_removed_after_confirmed_exit": true,
+    "replacement": "fresh P07/P08 replay and unified scores under final frozen software; no mixed identity reuse"
+  },
+  "final_reader_defects": [
+    "Per-share currency omitted its explicitly printed denominator.",
+    "Attached percentage-point scalars incorrectly inherited a percent column.",
+    "Thousand-tonne literals lost their multiplier.",
+    "Bare-caret ambiguity in printed GFM lost its bounded numbered definitions."
+  ],
+  "native_context_defect": "Nested SDK list paragraphs hid the final explicit annual introduction; a source-literal period slice now reaches the delivered records."
 }

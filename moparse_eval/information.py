@@ -17,6 +17,12 @@ def unit_text(text: str) -> str:
     return re.sub(r"(?<=[\u3400-\u9fff])\s+(?=[\u3400-\u9fff])", "", text)
 
 
+def period_text(text: str) -> str:
+    """Ignore display spacing before the existing Chinese year suffix only."""
+    text = normalize_text(text, collapse_whitespace=True)
+    return re.sub(r"(?<=\d)\s+(?=年)|(?<=年)\s+(?=[度末])", "", text)
+
+
 def field_value_text(text: str) -> str:
     """Ignore display spacing beside an existing currency or percent symbol.
 
@@ -239,6 +245,8 @@ def qualifier_evidence(expected: dict[str, Any], cell: dict[str, Any],
                     # accounting sign or a change to the unit's multiplier.
                     wanted = unit_text(wanted)
                     found_literal = unit_text(found_literal)
+                elif key == "period":
+                    wanted, found_literal = period_text(wanted), period_text(found_literal)
                 correct = wanted == found_literal
             else:
                 correct = value == actual
@@ -248,11 +256,12 @@ def qualifier_evidence(expected: dict[str, Any], cell: dict[str, Any],
             matching = [item for item in found if not (
                 key == "period" and re.fullmatch(r"(?:19|20)\d{2}(?:年(?:度|末)?)?", value)
                 and len(set(re.findall(r"(?:19|20)\d{2}", item["actual"]))) > 1
-            ) and ((key != "unit" and label_in_text(value, item["actual"], True))
+            ) and ((key not in {"unit", "period"} and label_in_text(value, item["actual"], True))
+                        or key == "period" and label_in_text(period_text(value), period_text(item["actual"]), True)
                         or key == "unit" and unit_text(value) == unit_text(item["actual"])
                         or normalize_text(value, collapse_whitespace=True) == normalize_text(item["actual"], collapse_whitespace=True)
                         or key == "period" and re.fullmatch(r"(?:19|20)\d{2}年?", value)
-                        and re.search(r"(?<!\d)" + re.escape(value.rstrip("年")) + r"年(?:度|末)?(?!\d)", item["actual"]))]
+                        and re.search(r"(?<!\d)" + re.escape(value.rstrip("年")) + r"年(?:度|末)?(?!\d)", period_text(item["actual"])))]
             evidence[key] = ({"status": "correct", "source": "candidate_scoped_qualifier", "actual": matching}
                              if matching else {"status": "incorrect", "source": "candidate_scoped_qualifier", "actual": found}
                              if key == "unit" and found else

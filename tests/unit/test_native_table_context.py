@@ -215,3 +215,26 @@ def test_currency_words_inside_business_labels_are_not_dropped_as_unit_legends()
     assert unit_description("($ in millions, except per share data)")
     assert not unit_description("(美元业务)")
     assert not unit_description("(USD business line)")
+
+
+def test_nested_native_list_period_is_printed_with_its_exact_literal_slice_and_closes():
+    from app.models.parse_result import DocumentParseResult, ParsePipeline
+    from app.services.table_context_service import prepare_native_table_scopes
+
+    first = table([["Item", "Amount"], ["Alpha", "17"]], "first")
+    second = table([["Item", "Amount"], ["Beta", "11"]], "second")
+    intro = {"type": "list", "content": [
+        {"type": "text", "content": [{"type": "text", "content": "（1）Other context。"}]},
+        {"type": "text", "content": [{"type": "text", "content": "（3）2024 年度测量数据:"}]},
+    ]}
+    result = DocumentParseResult(document_id="synthetic", filename="synthetic.pdf", mime_type="application/pdf",
+                                 page_count=1, processed_pages=1, pipeline=ParsePipeline(profile="balanced", primary="synthetic"))
+    result._table_fragments = [first, second]
+    result._native_page_blocks = {1: [intro, {"type": "title", "content": "① Measurements"}, {"type": "table"},
+                                        {"type": "title", "content": "（4）Other operations"}, {"type": "table"}]}
+    prepare_native_table_scopes(result)
+    period = next(ref for ref in first.context_refs if ref.kind == "period")
+    projection = "（1）Other context。\n（3）2024 年度测量数据:"
+    assert projection[period.start:period.end] == period.text == "（3）2024 年度测量数据:"
+    assert "期间：（3）2024 年度测量数据:" in render_semantic_view(bind_table_view("a", [first], [first]), [first])
+    assert not any(ref.kind == "period" for ref in second.context_refs)

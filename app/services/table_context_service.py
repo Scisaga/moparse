@@ -189,7 +189,8 @@ def _text(block: dict[str, Any]) -> str:
     if isinstance(value, str):
         return value
     if isinstance(value, list):
-        return "".join(str(item.get("content", "")) for item in value if isinstance(item, dict) and isinstance(item.get("content"), str))
+        parts = [_text(item) for item in value if isinstance(item, dict)]
+        return ("\n" if block.get("type") == "list" else "").join(parts)
     return ""
 
 
@@ -201,15 +202,18 @@ def prepare_native_table_scopes(result: DocumentParseResult) -> None:
         # do not assign outside context through a guessed ordinal mapping.
         if len(tables) != len(fragments):
             continue
-        section: tuple[int, str] | None = None
+        section: tuple[int, str, int] | None = None
         table_index = 0
         for position, block in enumerate(raw_blocks):
             if not isinstance(block, dict):
                 section = None
                 continue
             text = _text(block)
-            if _SECTION.fullmatch(text):
-                section = position, text
+            lines = [line for line in re.finditer(r"[^\r\n]+", text) if line[0].strip()]
+            tail = lines[-1] if lines else None
+            if tail and _SECTION.fullmatch(tail[0].strip()):
+                literal = tail[0].strip()
+                section = position, literal, tail.start() + len(tail[0]) - len(tail[0].lstrip())
             elif section and re.match(r"^\s*[（(]\d+[)）]", text):
                 section = None
             if block.get("type") != "table":
@@ -224,14 +228,14 @@ def prepare_native_table_scopes(result: DocumentParseResult) -> None:
             columns = tuple(range(fragment.num_cols))
             context: list[TextRef] = []
 
-            def add(index: str, value: str, kind: Any, *, refs: list[TextRef] = context,
+            def add(index: str, value: str, kind: Any, *, start: int = 0, refs: list[TextRef] = context,
                     owner: TableFragment = fragment, number: int = page,
                     rows: tuple[int, ...] = body, cols: tuple[int, ...] = columns) -> None:
                 if value.strip():
-                    refs.append(TextRef(owner.fragment_id, number, index, value, kind, 0, len(value), rows, cols))
+                    refs.append(TextRef(owner.fragment_id, number, index, value, kind, start, start + len(value), rows, cols))
 
             if section:
-                add(str(section[0]), section[1], "period")
+                add(str(section[0]), section[1], "period", start=section[2])
             children = block.get("content", [])
             if isinstance(children, list):
                 for child_index, child in enumerate(children):

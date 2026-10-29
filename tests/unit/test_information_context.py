@@ -8,10 +8,12 @@ from moparse_eval.adapters import html_cells
 from moparse_eval.scoring import score_case
 
 
-def evaluate(html, *, row="Revenue", column="2024", value="17", unit=None, before=(), after=(), extra=()):
+def evaluate(html, *, row="Revenue", column="2024", value="17", unit=None, period=None, before=(), after=(), extra=()):
     field = {"column_header_path": [column], "value": value}
     if unit is not None:
         field["unit"] = unit
+    if period is not None:
+        field["period"] = period
     ref = {"sample_id": "invented", "review_status": "confirmed", "units": [{
         "id": "r", "kind": "table_record", "literal": row, "status": "confirmed", "pages": [1],
         "table": {"row_header_path": row.split(" / "), "fields": [field]},
@@ -84,6 +86,31 @@ def test_superscript_needs_an_actual_scoped_note_definition(annotation):
     assert f["raw_transcription"]["strict"]["distance"] > 0
     barrier = {"id": "next", "kind": "title", "text": "Another business"}
     assert evaluate(table, after=[barrier, note])["information"]["status"] == "incorrect"
+
+
+@pytest.mark.parametrize("scalar", ["17^4", "17^{4}", "17 ^ 4"])
+def test_bare_caret_with_scoped_note_stays_unresolved_without_scalar_credit(scalar):
+    table = f'<table><tr><th>Metric</th><th>2024</th></tr><tr><td>Revenue</td><td>{scalar}</td></tr></table>'
+    note = {"id": "note", "kind": "table_footnote", "text": "4 Record high."}
+    f = evaluate(table, after=[note])
+    assert f["information"]["status"] == "unresolved"
+    assert f["information"]["reason"] == "ambiguous_note_or_exponent_format"
+    assert f["status"] == "compared" and f["content_exact"] is False
+    assert f["native_text"] == scalar and f["raw_transcription"]["strict"]["distance"] > 0
+    assert evaluate(table, value=scalar, after=[note])["information"]["status"] == "correct"
+    assert evaluate(table)["information"]["status"] == "incorrect"
+    wrong_note = {**note, "text": "3 Record high."}
+    assert evaluate(table, after=[wrong_note])["information"]["status"] == "incorrect"
+    barrier = {"id": "next", "kind": "title", "text": "Another business"}
+    assert evaluate(table, after=[barrier, note])["information"]["status"] == "incorrect"
+
+
+def test_ambiguous_note_does_not_hide_a_confirmed_wrong_currency():
+    table = '<table><tr><td>(人民币百万元)</td><td>2024</td></tr><tr><td>Revenue</td><td>17^4</td></tr></table>'
+    note = {"id": "note", "kind": "table_footnote", "text": "4 Record high."}
+    f = evaluate(table, unit="美元", after=[note])
+    assert f["information"]["status"] == "incorrect"
+    assert f["information"]["qualifiers"]["unit"]["status"] == "incorrect"
 
 
 def test_attached_chinese_currency_can_be_read_without_matching_other_business_words():
@@ -165,7 +192,8 @@ def test_shared_currency_scale_exception_for_explicit_per_share_records():
     html = '<table><tr><td>Item</td><td>2024</td></tr><tr><td colspan="2">($ in millions, except per share data)</td></tr><tr><td>Revenue</td><td>$ 17</td></tr><tr><td>Net income per diluted share</td><td>$ 0.17</td></tr></table>'
     assert evaluate(html, value="$17", unit="$ in millions")["information"]["status"] == "correct"
     assert evaluate(html, value="$17", unit="$")["information"]["status"] == "incorrect"
-    assert evaluate(html, row="Net income per diluted share", value="$0.17", unit="$")["information"]["status"] == "correct"
+    assert evaluate(html, row="Net income per diluted share", value="$0.17", unit="$ per share")["information"]["status"] == "correct"
+    assert evaluate(html, row="Net income per diluted share", value="$0.17", unit="$ in millions")["information"]["status"] == "incorrect"
 
 
 def test_explicit_enumerated_sibling_stops_the_previous_group_scope():
@@ -241,3 +269,45 @@ def test_extra_leading_context_still_requires_a_unique_full_target_and_never_sel
     assert score_case(ref, obs)["units"][0]["fields"][0]["information"]["status"] == "correct"
     obs["pages"][0]["blocks"] = [block("South", "17")]
     assert score_case(ref, obs)["units"][0]["fields"][0]["status"] == "unresolved"
+
+
+def test_percentage_points_attached_to_an_accounting_scalar_override_a_percent_column():
+    html = '<table><tr><td>Item</td><td>Change (%)</td></tr><tr><td>Revenue</td><td>(1.40)個百分點</td></tr></table>'
+    f = evaluate(html, column='Change', value='(1.40)個百分點', unit='個百分點')
+    assert f['information']['status'] == 'correct'
+    assert evaluate(html, column='Change', value='(1.40)個百分點', unit='%')['information']['status'] == 'incorrect'
+    wrong_sign = html.replace('(1.40)個百分點', '1.40個百分點')
+    assert evaluate(wrong_sign, column='Change', value='(1.40)個百分點', unit='個百分點')['information']['status'] == 'incorrect'
+
+
+def test_thousand_tonnes_keep_the_full_printed_scale():
+    html = '<table><tr><td>Item</td><td>2024年 銷售量(千噸)</td></tr><tr><td>Revenue</td><td>17</td></tr></table>'
+    assert evaluate(html, column='2024年', unit='千噸')['information']['status'] == 'correct'
+    for wrong in ('噸', '萬噸'):
+        assert evaluate(html, column='2024年', unit=wrong)['information']['status'] == 'incorrect'
+
+
+def test_numbered_plain_notes_only_establish_bare_caret_ambiguity_without_granting_credit():
+    html = '<table><tr><td>Item</td><td>2024</td></tr><tr><td>Revenue</td><td>17^4</td></tr></table>'
+    notes = [{'id': 'notes', 'kind': 'text', 'text': '1 Basis.\n2 Scope.\n3 Method.\n4 Record high.'}]
+    f = evaluate(html, after=notes)
+    assert f['information']['status'] == 'unresolved' and f['content_exact'] is False
+    assert f['native_text'] == '17^4'
+    barrier = {'id': 'next', 'kind': 'title', 'text': 'Other business'}
+    assert evaluate(html, after=[barrier, *notes])['information']['status'] == 'incorrect'
+    isolated = [{'id': 'notes', 'kind': 'text', 'text': '4 A separate agenda item.'}]
+    assert evaluate(html, after=isolated)['information']['status'] == 'incorrect'
+
+
+def test_multiple_explicit_note_definitions_in_one_block_keep_each_marker():
+    html = '<table><tr><td>Item</td><td>2024</td></tr><tr><td>Revenue</td><td>17<sup>4</sup></td></tr></table>'
+    note = {'id': 'notes', 'kind': 'table_footnote', 'text': '1 Basis.\n2 Scope.\n3 Method.\n4 Record high.'}
+    assert evaluate(html, after=[note])['information']['status'] == 'correct'
+
+
+def test_last_explicit_annual_introduction_in_a_multiline_block_has_a_bounded_scope():
+    html = '<table><tr><td>Item</td><td>Amount</td></tr><tr><td>Revenue</td><td>17</td></tr></table>'
+    intro = {'id': 'intro', 'kind': 'text', 'text': '（1）Some context。\n（2）Other context。\n（3）2024 年度测量数据:'}
+    assert evaluate(html, column='Amount', period='2024年度', before=[intro])['information']['status'] == 'correct'
+    end = {'id': 'end', 'kind': 'title', 'text': '（4）Other operations'}
+    assert evaluate(html, column='Amount', period='2024年度', before=[intro, end])['information']['status'] == 'unresolved'

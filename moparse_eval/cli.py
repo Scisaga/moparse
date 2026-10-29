@@ -34,7 +34,7 @@ SCORING_PROTOCOL = {
     "scope": "read_only_rescore_existing_native_outputs",
     "qualifier_reading": "candidate_only_table_header_introduction_section_and_note_scopes",
     "reference_unknown": "unscored_separate_from_missing_incorrect_and_reader_unresolved",
-    "reader_revision": "scoped_literal_formats_6",
+    "reader_revision": "scoped_literal_formats_8",
 }
 
 

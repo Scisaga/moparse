@@ -26,7 +26,7 @@ from .information import (
 from .information import (
     row_path_locates as _declared_path_locates,
 )
-from .information_reading import read_information_observation, scalar_notes
+from .information_reading import ambiguous_note_scalar, read_information_observation, scalar_notes
 from .matching import in_page_scope, match_units, observation_candidates, reference_parent_scope
 from .metrics import (
     aggregate_text_metrics,
@@ -528,6 +528,9 @@ def _score_records(
                 else "correct" if qualifier_correct else "unresolved"
             )
             field_row["information"] = {"status": information_status, "qualifiers": evidence}
+            if (not content_correct and ambiguous_note_scalar(native_cell)
+                    and not any(item["status"] == "incorrect" for item in evidence.values())):
+                field_row["information"].update(status="unresolved", reason="ambiguous_note_or_exponent_format")
             field_row["binding"] = {
                 "observable": qualifier_observable,
                 "correct": bool(strict_correct and qualifier_correct) if qualifier_observable else None,

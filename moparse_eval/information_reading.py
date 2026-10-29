@@ -14,7 +14,7 @@ from .metrics import normalize_text
 from .representations import visible_text
 
 VERSION = "candidate-information-scopes-1"
-_UNIT = re.compile(r"(?:(?:人民币|人民幣|美元|港元|港幣|港币|欧元|歐元)?(?:万亿元|萬億元|千亿元|千億元|百亿元|百億元|十亿元|十億元|亿元|億元|千万元|千萬元|百万元|百萬元|千元|万元|萬元|元)|RMBbn|USD|EUR|HKD|CNY|RMB|\$\s*(?:in\s+millions|bn|m)|百分点|百分點|percentage points?|basis points?|bps|(?:毫克|千克|公斤|吨|噸)|[%‰])(?:/[A-Za-z\u3400-\u9fff0-9³²]+)?")
+_UNIT = re.compile(r"(?:(?:人民币|人民幣|美元|港元|港幣|港币|欧元|歐元)?(?:万亿元|萬億元|千亿元|千億元|百亿元|百億元|十亿元|十億元|亿元|億元|千万元|千萬元|百万元|百萬元|千元|万元|萬元|元)|RMBbn|USD|EUR|HKD|CNY|RMB|\$\s*(?:in\s+millions|bn|m)|[个個]?百分点|[个個]?百分點|percentage points?|basis points?|bps|(?:毫克|千克|公斤|(?:千萬|千万|百萬|百万|萬|万|千)?(?:吨|噸))|[%‰])(?:/[A-Za-z\u3400-\u9fff0-9³²]+)?")
 _PERIOD = re.compile(r"(?:截至[^。；;]{1,30}(?:年度|年末)|(?:19|20)\d{2}\s*年(?:度|末)?|(?<!\d)(?:19|20)\d{2}(?!\d))")
 _INTRO = re.compile(r"(?:following\s+table|下表|本表|表中).*(?:percent(?:age)?|单位|單位)|(?:单位|單位)\s*[:：]", re.I)
 _SECTION_PERIOD = re.compile(r"^\s*(?:[（(]\d+[)）]\s*)?((?:19|20)\d{2}\s*年度)[^。；;]{0,32}(?:情况|情況|数据|數據)\s*[:：]$")
@@ -52,6 +52,16 @@ def label_text(text: str) -> str:
 
 def _is_scalar(text: str) -> bool:
     return bool(_SCALAR.fullmatch(normalize_text(text).strip()))
+
+
+def _scalar_units(text: str) -> list[str]:
+    text = normalize_text(text).strip()
+    if _is_scalar(text):
+        return units(text)
+    for match in _UNIT.finditer(text):
+        if match.end() == len(text) and _is_scalar(text[:match.start()]):
+            return [match.group()]
+    return []
 
 
 def _header_rows(cells: list[dict[str, Any]]) -> set[int]:
@@ -137,8 +147,10 @@ def read_information_observation(observation: dict[str, Any]) -> dict[str, Any]:
         section: dict[str, Any] | None = None
         for position, block in enumerate(blocks):
             text = visible_text(str(block.get("text", "")), block.get("text_format", "plain"))
-            if _SECTION_PERIOD.fullmatch(text):
-                section = {"text": text, "id": block.get("id"), "kind": "period"}
+            lines = [line for line in text.splitlines() if line.strip()]
+            tail = lines[-1].strip() if lines else ""
+            if _SECTION_PERIOD.fullmatch(tail):
+                section = {"text": tail, "id": block.get("id"), "kind": "period"}
             elif section is not None and re.match(r"^\s*[（(]\d+[)）]", text):
                 section = None
             cells = block.get("cells") or []
@@ -146,6 +158,7 @@ def read_information_observation(observation: dict[str, Any]) -> dict[str, Any]:
                 continue
             contexts: list[dict[str, Any]] = []
             notes: list[dict[str, Any]] = []
+            numbered_notes: list[dict[str, Any]] = []
             parent = block.get("native_table_container") or block.get("parent_id")
             if section:
                 contexts.append(section)
@@ -176,8 +189,17 @@ def read_information_observation(observation: dict[str, Any]) -> dict[str, Any]:
                     continue
                 if kind == "table_footnote" and not following.get("cells"):
                     notes.append({"id": following.get("id"), "text": value, "kind": kind})
+                elif kind in {"text", "paragraph", "list"} and not following.get("cells"):
+                    lines = [line.strip() for line in value.splitlines() if line.strip()]
+                    if not lines or not all(re.match(r"[0-9]{1,2}(?:\s+|[.)、：:])", line) for line in lines):
+                        break
+                    numbered_notes.extend({"id": following.get("id"), "text": line, "kind": kind} for line in lines)
                 else:
                     break
+            markers = [int(match[0]) for item in numbered_notes
+                       if (match := re.match(r"[0-9]{1,2}", item["text"]))]
+            if len(markers) < 2 or markers != list(range(1, len(markers) + 1)):
+                numbered_notes = []
             headers = _header_rows(cells)
             scopes = _header_scopes(cells, headers)
             all_headers = set().union(*(band for band, _body in scopes)) if scopes else headers
@@ -205,10 +227,26 @@ def read_information_observation(observation: dict[str, Any]) -> dict[str, Any]:
                                   and c["col"] <= col < c["col"] + c.get("col_span", 1)]
                 cell["information_context"] = contexts
                 cell["information_notes"] = notes
+                cell["information_ambiguous_notes"] = numbered_notes
                 cell["information_headers"] = [c["text"] for c in column_headers]
                 cell["information_row_labels"] = labels_by_row.get(row, [])
                 cell["information_table_units"] = table_units
     return derived
+
+
+def _note_definitions(cell: dict[str, Any], *, ambiguous: bool = False) -> set[str]:
+    note_texts = [*(item["text"] for item in cell.get("information_notes", [])), *cell.get("notes", [])]
+    if ambiguous:
+        note_texts += [item["text"] for item in cell.get("information_ambiguous_notes", [])]
+    return {match.group(1) for text in note_texts for line in text.splitlines()
+            if (match := re.match(r"\s*([0-9]{1,2}|[*†‡])(?:\s+|[.)、：:])", line))}
+
+
+def ambiguous_note_scalar(cell: dict[str, Any]) -> bool:
+    """A bare caret with a matching scoped note lacks explicit type evidence."""
+    match = re.fullmatch(r"\s*(.*?)\s*\^\s*(?:\{([0-9]{1,2}|[*†‡])\}|([0-9]{1,2}|[*†‡]))\s*",
+                         str(cell.get("text", "")))
+    return bool(match and _is_scalar(match[1]) and (match[2] or match[3]) in _note_definitions(cell, ambiguous=True))
 
 
 def scalar_notes(cell: dict[str, Any]) -> tuple[str, list[str] | None]:
@@ -218,9 +256,7 @@ def scalar_notes(cell: dict[str, Any]) -> tuple[str, list[str] | None]:
     """
     text = str(cell.get("text", ""))
     notes = cell.get("note_markers")
-    note_texts = [*(item["text"] for item in cell.get("information_notes", [])), *cell.get("notes", [])]
-    definitions = {match.group(1) for text in note_texts
-                   if (match := re.match(r"\s*([0-9]{1,2}|[*†‡])(?:\s+|[.)、：:])", text))}
+    definitions = _note_definitions(cell)
     annotations = [a for a in cell.get("inline_annotations", []) if a.get("type") == "superscript"]
     if annotations and all(a.get("text") in definitions for a in annotations):
         spans = sorted(a.get("span", []) for a in annotations)
@@ -246,12 +282,13 @@ def scoped_qualifiers(cell: dict[str, Any], endpoint_texts: list[str]) -> dict[s
         column_texts = endpoint_texts
     contexts = cell.get("information_context", [])
     numeric, _notes = scalar_notes(cell)
-    own_units = units(numeric) if _is_scalar(numeric) else []
+    own_units = _scalar_units(numeric)
     row_units = [u for text in [*cell.get("row_header_path", []), *cell.get("information_row_labels", [])] for u in units(text)]
     ratio = any(re.search(r"同比|佔|占|比例|比率|percent|change|rate|ratio", text, re.I) for text in column_texts)
     column_units = [u for text in [*column_texts, *cell.get("units", [])] for u in units(text)]
     if ratio:
-        column_units = [u for u in column_units if u in {"%", "‰"}]
+        column_units = [u for u in column_units if re.fullmatch(
+            r"[%‰]|[个個]?百分[点點]|percentage points?|basis points?|bps", u, re.I)]
         row_units = []
     if any(re.search(r"expressed\s+as\s+a\s+percentage", text, re.I) for text in cell.get("units", [])):
         column_units.append("%")
@@ -261,7 +298,7 @@ def scoped_qualifiers(cell: dict[str, Any], endpoint_texts: list[str]) -> dict[s
     currency = re.match(r"\(?\s*([$€£¥])", numeric) if _is_scalar(numeric) else None
     if (currency and any(re.search(r"per\s+(?:diluted\s+)?share|每股", label, re.I) for label in row_labels)
             and any(re.search(r"except\s+per\s+share\s+(?:data|amounts)|每股.{0,8}除外", text, re.I) for text in legends)):
-        actual_units = [currency[1]]
+        actual_units = [currency[1] + " per share"]
     if not actual_units:
         # A shared currency never qualifies an explicit ratio/change column.
         if not ratio:
