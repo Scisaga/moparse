@@ -109,6 +109,75 @@ def test_repeated_production_key_is_removed_without_normalizing_business_text():
     assert 'Approved amount remains 17.50.' in result.markdown
 
 
+def test_multiline_production_bundle_in_one_typed_footer_is_removed():
+    result = _result([[_block('text', 'The company did not sign the agreement.'),
+                       _block('footer', 'PATH: /author/report | PAGE: (4 / 8)\nDRAFT: First proof | USER: author | MODIFY: 2025-06-03 |')]])
+    before = deepcopy(result._native_page_blocks)
+    FinalContentService().apply(result)
+    assert 'PATH:' not in result.markdown and 'DRAFT:' not in result.markdown
+    assert 'The company did not sign the agreement.' in result.markdown
+    assert result._native_page_blocks == before
+
+
+def test_production_inline_span_fragments_must_belong_to_keys_in_the_same_bundle():
+    material = 'PATH: /author/report | TRANSLATE: N | EDIT TRACE: None | EDIT N | LAYOUT: Updated Layout | Layout |'
+    result = _result([[_block('text', 'The company did not sign the agreement.'), _block('footer', material)]])
+    FinalContentService().apply(result)
+    assert material not in result.markdown and 'PATH:' not in result.markdown
+    assert 'The company did not sign the agreement.' in result.markdown
+
+
+def test_production_field_fragments_do_not_authorize_removing_unknown_footer_words():
+    material = 'PATH: /author/report | TRANSLATE: N | EDIT TRACE: None | Layout | Signed on 3 June 2025'
+    result = _result([[_block('text', 'A business qualification follows.'), _block('footer', material)]])
+    FinalContentService().apply(result)
+    assert material in result.markdown
+
+
+@pytest.mark.parametrize('role,material', [
+    ('text', 'PATH: /author/report | USER: author'),
+    ('footer', 'DRAFT: Contract not signed'),
+    ('footer', 'DRAFT: First proof | USER: author\nSigned on 3 June 2025'),
+])
+def test_production_cleanup_preserves_business_text_and_mixed_footer_content(role, material):
+    result = _result([[_block('text', 'Retain all legal qualifications.'), _block(role, material)]])
+    FinalContentService().apply(result)
+    assert material in result.markdown
+
+
+@pytest.mark.parametrize('currency,scale', [('$', 'million,'), ('€', 'billion.'), ('£', 'thousand;')])
+def test_literal_split_currency_scale_joins_without_changing_printed_words(currency, scale):
+    result = _result([[_block('text', 'No agreement was signed; the amount was ' + currency + '1,731'),
+                       _block('text', scale + ' subject to the stated conditions.')]])
+    FinalContentService().apply(result)
+    assert currency + '1,731 ' + scale in result.markdown
+    assert result._final_text_evidence['operation_counts']['literal_currency_scale_continuation'] == 1
+    assert apply_text_edits(result._final_text_evidence['assembly_markdown'], result._final_text_evidence['edits']) == result.markdown
+
+
+@pytest.mark.parametrize('left,right', [
+    ('There were 17', 'million, according to the report.'),
+    ('The amount was $17.', 'million, according to the report.'),
+    ('The amount was $17', 'million readers discussed a different topic.'),
+    ('An example is `$17`', 'million, according to the report.'),
+    (r'An equation is \( x = $17', r'million, y = 2 \)'),
+])
+def test_currency_scale_join_does_not_join_unqualified_or_new_prose(left, right):
+    result = _result([[_block('text', left), _block('text', right)]])
+    FinalContentService().apply(result)
+    assert not result._final_text_evidence['joined_paragraphs']
+
+
+def test_literal_currency_scale_never_joins_across_pages_or_an_intervening_region():
+    result = _result([[_block('text', 'The amount was $17')], [_block('text', 'million, unchanged.')]])
+    FinalContentService().apply(result)
+    assert not result._final_text_evidence['joined_paragraphs']
+    result = _result([[_block('text', 'The amount was $17'), _block('title', 'Different business'),
+                       _block('text', 'million, unchanged.')]])
+    FinalContentService().apply(result)
+    assert not result._final_text_evidence['joined_paragraphs']
+
+
 def test_source_code_examples_of_internal_comments_survive_cleanup():
     result = _result([[_block('text', '正文示例 `<!-- page: 27 -->`。\n\n```html\n<!-- page: 29 -->\n```')]])
     FinalContentService().apply(result)

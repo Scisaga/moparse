@@ -227,12 +227,6 @@ def _source_grid(page: Any, fragment: TableFragment) -> dict[str, Any]:
     if len(xs) < 2 or len(ys) < 2 or len(xs) > 101 or len(ys) > 2001:
         return {"bound": False, "reason": "no_complete_source_vector_grid"}
     nx, ny = len(xs) - 1, len(ys) - 1
-    if (ny, nx) != (fragment.num_rows, fragment.num_cols):
-        return {
-            "bound": False,
-            "reason": "source_grid_dimensions_disagree",
-            "source_shape": [ny, nx],
-        }
 
     def vborder(x: float, top: float, bottom: float) -> bool:
         return _coverage(
@@ -269,6 +263,15 @@ def _source_grid(page: Any, fragment: TableFragment) -> dict[str, Any]:
                 hborder(ys[0], xs[0], xs[-1]),
                 hborder(ys[-1], xs[0], xs[-1]),
             ],
+        }
+    # Partial rules do not establish a source partition to disagree with the
+    # native structure. Preserve real size conflicts only after the detected
+    # partition has a complete outer boundary.
+    if (ny, nx) != (fragment.num_rows, fragment.num_cols):
+        return {
+            "bound": False,
+            "reason": "source_grid_dimensions_disagree",
+            "source_shape": [ny, nx],
         }
     parent = list(range(nx * ny))
 

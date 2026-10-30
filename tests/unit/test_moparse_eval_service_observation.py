@@ -315,7 +315,7 @@ def test_partial_html_period_paths_are_supported_by_printed_spans_after_publicat
     FinalContentService().apply(result)
     observation, diagnostic = read_final_observation(build_service_observation(result, sample_id="sample"))
     assert observation["errors"] == []
-    assert diagnostic["reader_version"] == "mo-parse-final-output-readback-v10"
+    assert diagnostic["reader_version"] == "mo-parse-final-output-readback-v11"
     unit = {"id": "beta", "kind": "table_record", "reference_text": "Beta", "pages": [1],
             "table": {"row_header_path": ["Beta"], "fields": [
                 {"column_header_path": ["Year ended", "2034"], "value": "13", "period": "2034"},
@@ -1091,3 +1091,36 @@ def test_span_display_keeps_source_literal_signs_and_embedded_images_on_the_exis
     assert '(17)' in rendered and '&lt; 11 &amp; 5%' in rendered and rows == original
     image = [['![source](assets/source.png)', ''], ['Label', '17']]
     assert render_source_rows(image, [[0, 0, 1, 2]]).startswith('| ')
+
+
+@pytest.mark.parametrize('legacy', [False, True])
+def test_embedded_column_unit_readback_uses_the_printed_current_or_saved_format(legacy):
+    fragment = _fragment([["Item", "2024$m"], ["Average pool ($bn)", "17.0"]])
+    value = ValueRelation(CellRef('t1', 1, 1), (CellRef('t1', 1, 0),),
+                          (CellRef('t1', 0, 1),), (CellRef('t1', 1, 0),))
+    record = SemanticRecord('t1', 1, (value,), CellRef('t1', 1, 0), (CellRef('t1', 0, 0),))
+    view = SemanticTableView('view-t1', ('t1',), 'converted', 'records', (record,))
+    markdown = render_semantic_view(view, [fragment])
+    if legacy:
+        markdown = markdown.replace('2024：', '2024$m：')
+    result = _result(markdown)
+    result._table_fragments, result._semantic_tables = [fragment], [view]
+    observation = build_service_observation(result, sample_id='invented')
+    cell = next(cell for cell in _cells(observation) if cell['text'] == '17.0')
+    assert cell['column_header_path'] == ['2024$m' if legacy else '2024']
+    assert cell['row_header_path'] == ['Average pool ($bn)']
+    for cell in _cells(observation):
+        a, b = cell['final_markdown_span']
+        assert cell['text'] == _inline_text(markdown[a:b])
+
+
+def test_an_unprinted_row_unit_cannot_be_restored_from_the_private_record():
+    fragment = _fragment([["Item", "2024$m"], ["Average pool ($bn)", "17.0"]])
+    value = ValueRelation(CellRef('t1', 1, 1), (CellRef('t1', 1, 0),),
+                          (CellRef('t1', 0, 1),), (CellRef('t1', 1, 0),))
+    record = SemanticRecord('t1', 1, (value,), CellRef('t1', 1, 0))
+    view = SemanticTableView('view-t1', ('t1',), 'converted', 'records', (record,))
+    result = _result(render_semantic_view(view, [fragment]).replace('($bn)', '($m)'))
+    result._table_fragments, result._semantic_tables = [fragment], [view]
+    observation = build_service_observation(result, sample_id='invented')
+    assert not any('$bn' in str(cell) for cell in _cells(observation))

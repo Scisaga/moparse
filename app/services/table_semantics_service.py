@@ -109,6 +109,38 @@ def _record_literal(record: SemanticRecord, reference: Any, registry: Mapping[An
     return "".join(_record_literal_parts(record, reference, registry))
 
 
+def _per_share_currency(labels: Sequence[str], value: str) -> bool:
+    return (any(re.search(r"per\s+share\b|每股", label, re.I) for label in labels)
+            and bool(re.fullmatch(r"\s*[$€£¥]\s*[+−-]?(?:\d[\d,.]*|\.\d+)\s*", value)))
+
+
+def _column_literal_parts(
+    record: SemanticRecord, value: ValueRelation, reference: Any, registry: Mapping[Any, Any],
+) -> tuple[str, str]:
+    """Keep a column's identity while a printed row/value overrides its unit.
+
+    An embedded amount suffix is redundant for an explicit row unit, a printed
+    percentage, or a currency value explicitly labelled per share. A currency
+    symbol alone does not override a column's million/billion scale.
+    """
+    from app.services.table_context_service import unit_description
+
+    rendered, note = _record_literal_parts(record, reference, registry)
+    match = re.fullmatch(r"(.+?)(\$\s*(?:bn|m))", registry[reference].text.strip(), re.I)
+    if match is None or not any(_PERIOD.search(registry[ref].text) for ref in value.column_headers):
+        return rendered, note
+    row_labels = [registry[ref].text for ref in value.row_headers]
+    explicit_unit = any(unit_description(part[0]) for label in row_labels
+                        for part in re.finditer(r"[（(][^()（）]+[)）]", label))
+    printed_value = registry[value.value].text
+    printed_ratio = bool(re.search(r"[%％‰]", printed_value))
+    per_share = _per_share_currency(row_labels, printed_value)
+    suffix = _literal(match[2])
+    if (explicit_unit or printed_ratio or per_share) and rendered.endswith(suffix):
+        return rendered[:-len(suffix)].rstrip(), note
+    return rendered, note
+
+
 def _ref(fragment: TableFragment, cell: TableCellFragment) -> CellRef:
     return CellRef(fragment.fragment_id, cell.row, cell.column)
 
@@ -193,12 +225,15 @@ def _relation(
     columns: tuple[CellRef, ...],
     registry: dict[CellRef, TableCellFragment],
 ) -> ValueRelation:
+    from app.services.table_context_service import unit_description
+
     labels = (*rows, *columns)
     return ValueRelation(
         value=value,
         row_headers=rows,
         column_headers=columns,
-        unit_refs=tuple(r for r in labels if _UNIT.search(registry[r].text)),
+        unit_refs=tuple(r for r in labels if _UNIT.search(registry[r].text) or any(
+            unit_description(part[0]) for part in re.finditer(r"[（(][^()（）]+[)）]", registry[r].text))),
         period_refs=tuple(r for r in labels if _PERIOD.search(registry[r].text)),
         # A bound grid and empty parser text do not independently declare a
         # source blank. Preserve the literal, including an empty one.
@@ -233,9 +268,10 @@ def _qualify_relation(fragment: TableFragment, relation: ValueRelation,
     notes = []
     ratio = any(re.search(r"同比|佔|占|比例|比率|percent|change|ratio|rate", text, re.I) for text in labels)
     own_unit = re.search(r"[%％‰]", cell.text)
+    own_per_share = _per_share_currency([registry[r].text for r in relation.row_headers], cell.text)
     if ratio or own_unit:
         unit_refs = [ref for ref in unit_refs if re.search(r"[%％‰]", registry[ref].text)]
-    if scalar(cell.text) and not own_unit and not ratio and not unit_refs:
+    if scalar(cell.text) and not own_unit and not own_per_share and not ratio and not unit_refs:
         active_headers = {r for scope in fragment.source_header_scopes if cell.row in scope.get("body_rows", [])
                           for r in scope.get("header_rows", [])}
         corner = next((c for c in fragment.cells if c.column == 0 and c.row in active_headers
@@ -245,7 +281,7 @@ def _qualify_relation(fragment: TableFragment, relation: ValueRelation,
     for ref in fragment.context_refs:
         if cell.row not in ref.body_rows or cell.column not in ref.columns:
             continue
-        if ref.kind == "unit" and scalar(cell.text) and not own_unit and not unit_refs and not ratio:
+        if ref.kind == "unit" and scalar(cell.text) and not own_unit and not own_per_share and not unit_refs and not ratio:
             unit_refs.append(ref)
         elif ref.kind == "period" and not period_refs:
             period_refs.append(ref)
@@ -650,7 +686,13 @@ def retained_table_parts(
                         and headers == list(range(headers[0], headers[-1] + 1))
                         and set(chunk).intersection(scope.get("body_rows", []))):
                     context.update(headers)
-            selected = sorted(context | set(chunk))
+            row_context = {
+                declaration[0]
+                for row in chunk
+                if (declaration := fragment.native_evidence.get("retained_row_context", {}).get(str(row)))
+                and len(declaration) == 2 and type(declaration[0]) is int
+            }
+            selected = sorted(context | row_context | set(chunk))
             if any(type(row) is not int or not 0 <= row < len(fragment.rows) for row in selected):
                 raise ValueError("retained source row is unavailable")
             display = {row: i + 1 for i, row in enumerate(selected)}
@@ -668,6 +710,7 @@ def retained_table_parts(
             metadata = {
                 "table_id": fragment.fragment_id, "part_index": index,
                 "source_rows": selected, "header_rows": sorted(context),
+                "context_rows": sorted(row_context),
                 "synthetic_header_rows": [0], "source_to_display_rows": display,
                 "spans": spans, "start_row": chunk[0],
             }
@@ -707,7 +750,8 @@ def _render_record(record: SemanticRecord, registry: dict[Any, Any]) -> str:
     for value in record.values:
         label_refs = value.column_headers if record.subject else value.row_headers
         label_refs = tuple(dict.fromkeys(label_refs))
-        label = " / ".join(literal(r) for r in label_refs)
+        label = " / ".join("".join(_column_literal_parts(record, value, r, registry))
+                           if record.subject else literal(r) for r in label_refs)
         text = _literal(registry[value.value].text)
         if value.value_state == "source_blank":
             if text:

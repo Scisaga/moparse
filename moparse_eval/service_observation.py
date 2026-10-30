@@ -19,6 +19,7 @@ from markdown_it import MarkdownIt
 from app.models.parse_result import DocumentParseResult
 from app.models.table_semantics import CellRef, SemanticRecord, SemanticTableView, TextRef
 from app.services.table_semantics_service import (
+    _column_literal_parts,
     _label_separator,
     _literal,
     _record_literal_parts,
@@ -39,7 +40,7 @@ from .representations import visible_text
 
 SERVICE_OBSERVATION_VERSION = "mo-parse-final-output-observation-v7"
 FINAL_PAGE_PROVENANCE_VERSION = "mo-parse-final-page-provenance-v1"
-FINAL_OBSERVATION_READBACK_VERSION = "mo-parse-final-output-readback-v10"
+FINAL_OBSERVATION_READBACK_VERSION = "mo-parse-final-output-readback-v11"
 _METADATA_KEYS = {"run_id", "suite", "phase", "repetition", "timing", "resources", "runtime"}
 _IDENTITY_HEADER = re.compile(
     r"(?:[\u3400-\u9fff]{0,12}(?:名称|名稱|姓名)|项目|項目|认购方|認購方|认购对象|認購對象|"
@@ -110,15 +111,19 @@ def _ref_dict(ref: CellRef | TextRef) -> dict[str, Any]:
 
 def _record_parts(
     record: SemanticRecord, registry: Mapping[Any, Any], *, literal_labels: bool = False,
+    embedded_units: bool = True,
 ) -> tuple[str, list[dict[str, Any]]]:
     """Describe the current renderer template, checked against its real output."""
     pieces = ["- "]
     cells: list[dict[str, Any]] = []
 
-    def literal(ref: CellRef | TextRef, role: str, field: int | None = None, blank: bool = False) -> None:
+    def literal(ref: CellRef | TextRef, role: str, field: int | None = None, blank: bool = False,
+                relation: Any = None) -> None:
         raw, suffix = (("（原表留空）", "") if blank else
                        (_literal(registry[ref].text), "") if literal_labels else
                        _record_literal_parts(record, ref, registry))
+        if embedded_units and relation is not None and role == "column_header":
+            raw, suffix = _column_literal_parts(record, relation, ref, registry)
         start = sum(map(len, pieces))
         pieces.extend((raw, suffix))
         cells.append(
@@ -132,12 +137,12 @@ def _record_parts(
             }
         )
 
-    def labels(refs: Sequence[Any], role: str) -> tuple[Any, ...]:
+    def labels(refs: Sequence[Any], role: str, relation: Any = None) -> tuple[Any, ...]:
         unique = tuple(dict.fromkeys(refs))
         for index, ref in enumerate(unique):
             if index:
                 pieces.append(" / ")
-            literal(ref, role)
+            literal(ref, role, relation=relation)
         return unique
 
     if record.scope_refs:
@@ -158,6 +163,7 @@ def _record_parts(
         refs = labels(
             value.column_headers if record.subject else value.row_headers,
             "column_header" if record.subject else "row_header",
+            relation=value,
         )
         pieces.append(_label_separator(" / ".join(_literal(registry[ref].text) for ref in refs)))
         literal(value.value, "value", index, value.value_state == "source_blank")
@@ -287,7 +293,8 @@ def _semantic_blocks(
     cursor = start
     for index, record in enumerate(view.records):
         try:
-            variants = [_record_parts(record, registry), _record_parts(record, registry, literal_labels=True)]
+            variants = [_record_parts(record, registry, literal_labels=raw, embedded_units=units)
+                        for raw in (False, True) for units in (False, True)]
         except KeyError:
             state["records"].append(
                 {

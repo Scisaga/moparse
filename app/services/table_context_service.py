@@ -37,6 +37,13 @@ def unit_description(text: str) -> bool:
     return bool(re.fullmatch(amount + "|" + currency + r"|[%％‰]", payload, re.I))
 
 
+def _unit_caption(text: str) -> tuple[str, int] | None:
+    match = re.fullmatch(r"\s*(?:单位|單位|Units?)\s*[:：]\s*(.+?)\s*", text, re.I | re.S)
+    if match and unit_description("(" + match[1] + ")"):
+        return match[1], match.start(1)
+    return (text, 0) if unit_description(text) else None
+
+
 def closes_group(group: str, label: str) -> bool:
     total = re.fullmatch(r"Total\s+(.+)", label.strip(), re.I)
     if total and total[1].casefold() == group.strip(" :：").casefold():
@@ -50,7 +57,8 @@ def native_scopes(fragment: TableFragment) -> dict[str, Any]:
     """Classify local relationships from actual native fields, not grid shape."""
     cells = fragment.cells
     evidence: dict[str, Any] = {"source": "native_cells_and_literal_context", "content_kind": "unknown",
-                                "header_scopes": [], "row_groups": {}, "structure_readable": False}
+                                "header_scopes": [], "row_groups": {}, "retained_row_context": {},
+                                "structure_readable": False}
     if not fragment.valid or not cells or fragment.source_kind != "mineru":
         return evidence
     occupied: set[tuple[int, int]] = set()
@@ -179,6 +187,10 @@ def native_scopes(fragment: TableFragment) -> dict[str, Any]:
                 and not re.match(r"(?:注|Notes?)\s*[:：]", title, re.I)):
             group = (labels_in_row[0].row, labels_in_row[0].column)
         elif not labels_in_row:
+            if group and nonlabels and any(scalar(c.text) for c in nonlabels):
+                # Retaining an unnamed row must not detach its already printed
+                # section heading. This does not declare a total or row name.
+                evidence["retained_row_context"][str(row)] = list(group)
             group = None
         elif group:
             group_cell = next(c for c in cells if (c.row, c.column) == group)
@@ -241,13 +253,23 @@ def prepare_native_table_scopes(result: DocumentParseResult) -> None:
                 if value.strip():
                     refs.append(TextRef(owner.fragment_id, number, index, value, kind, start, start + len(value), rows, cols))
 
+            def caption(index: str, value: str) -> None:
+                unit = _unit_caption(value)
+                if unit is not None:
+                    add(index, unit[0], "unit", start=unit[1])
+                else:
+                    add(index, value, "title")
+
             if section:
                 add(str(section[0]), section[1], "period", start=section[2])
             children = block.get("content", [])
             if isinstance(children, list):
                 for child_index, child in enumerate(children):
                     if isinstance(child, dict) and child.get("type") in {"table_caption", "table_footnote"}:
-                        add(f"{position}.{child_index}", _text(child), "title" if child["type"] == "table_caption" else "note")
+                        if child["type"] == "table_caption":
+                            caption(f"{position}.{child_index}", _text(child))
+                        else:
+                            add(f"{position}.{child_index}", _text(child), "note")
             previous = position - 1
             while previous >= 0:
                 prior = raw_blocks[previous]
@@ -258,7 +280,7 @@ def prepare_native_table_scopes(result: DocumentParseResult) -> None:
                     previous -= 1
                     continue
                 if prior.get("type") == "table_caption":
-                    add(str(previous), value, "title")
+                    caption(str(previous), value)
                 elif re.search(r"(?:following\s+table|下表|本表).*(?:percent(?:age)?|单位|單位)|^(?:单位|單位)\s*[:：]", value, re.I):
                     add(str(previous), value, "unit")
                 break
@@ -274,5 +296,5 @@ def prepare_native_table_scopes(result: DocumentParseResult) -> None:
                 add(str(next_index), value, "note")
             for cell in fragment.cells:
                 if cell.column == 0 and cell.column_span == fragment.num_cols and cell.row < min(body, default=0):
-                    add(f"cell.{cell.row}.0", cell.text, "title")
+                    caption(f"cell.{cell.row}.0", cell.text)
             fragment.context_refs = tuple(dict.fromkeys(context))

@@ -255,6 +255,89 @@ def test_currency_words_inside_business_labels_are_not_dropped_as_unit_legends()
     assert not unit_description("(USD business line)")
 
 
+def test_embedded_amount_column_unit_yields_to_printed_row_units_and_percentages():
+    f = table([["Item", "2024$m", "2023$m"], ["Revenue", "1700", "1100"],
+               ["Average pool ($bn)", "17.0", "11.0"], ["Net return", "2.30%", "2.69%"],
+               ["Earnings per share", "$1.70", "$1.10"]])
+    before = deepcopy(f)
+    view = bind_table_view("view", [f], [f])
+    rendered = render_semantic_view(view, [f])
+    assert "Revenue；2024$m：1700；2023$m：1100" in rendered
+    assert "Average pool ($bn)；2024：17.0；2023：11.0" in rendered
+    assert "Net return；2024：2.30%；2023：2.69%" in rendered
+    assert "Earnings per share；2024：$1.70；2023：$1.10" in rendered
+    assert f == before
+
+
+def test_currency_values_and_currency_business_names_do_not_override_column_scale():
+    f = table([["Item", "2024$m"], ["Foreign currency business", "$17"],
+               ["Fund (USD business line)", "11"], ["Index code", "12"]])
+    rendered = render_semantic_view(bind_table_view("view", [f], [f]), [f])
+    assert "business；2024$m：$17" in rendered
+    assert "(USD business line)；2024$m：11" in rendered
+    assert "Index code；2024$m：12" in rendered
+    f = table([["Item", "Rate", "Code$m"], ["Alpha", "17", "5%"]])
+    assert "Code$m：5%" in render_semantic_view(bind_table_view("view", [f], [f]), [f])
+
+
+def test_retained_unnamed_row_keeps_its_explicit_section_without_claiming_a_total():
+    from app.services.table_semantics_service import retained_table_parts
+
+    f = table([["Item", "2024"], ["Expenses", ""], ["Research", "17"],
+               ["", "17"], ["Net income", "11"]])
+    view = bind_table_view("view", [f], [f])
+    part = next(p for p in retained_table_parts(view, [f]) if 3 in p["source_rows"])
+    assert part["context_rows"] == [1]
+    assert "Expenses" in part["rendered"] and "17" in part["rendered"]
+    assert "Research" not in part["rendered"] and "Total" not in part["rendered"]
+    assert view.records[-1].row_groups == ()
+
+
+def test_retained_unnamed_row_cannot_borrow_a_section_after_its_explicit_close():
+    from app.services.table_semantics_service import retained_table_parts
+
+    f = table([["Item", "2024"], ["Expenses", ""], ["Research", "17"],
+               ["Total expenses", "17"], ["", "11"]])
+    view = bind_table_view("view", [f], [f])
+    part = next(p for p in retained_table_parts(view, [f]) if 4 in p["source_rows"])
+    assert part["context_rows"] == [] and "Expenses" not in part["rendered"]
+
+
+@pytest.mark.parametrize('caption_in_table', [False, True])
+def test_table_amount_caption_is_not_a_business_title_overriding_row_units(caption_in_table):
+    from app.models.parse_result import DocumentParseResult, ParsePipeline
+    from app.services.table_context_service import prepare_native_table_scopes
+
+    f = table([["Item", "2024", "Change(%)"], ["Revenue", "1700", "17"],
+               ["Return(%)", "2.30", "11"], ["Earnings(元/股)", "1.70", "9"],
+               ["Dividend per share", "$1.70", "8"]])
+    cap = {'type': 'table_caption', 'content': '单位：人民币百万元'}
+    result = DocumentParseResult(document_id='synthetic', filename='synthetic.pdf', mime_type='application/pdf',
+                                 page_count=1, processed_pages=1, pipeline=ParsePipeline(profile='accurate', primary='mineru'))
+    result._table_fragments = [f]
+    result._native_page_blocks = {1: ([{'type': 'table', 'content': [cap]}] if caption_in_table else
+                                     [cap, {'type': 'table', 'content': []}])}
+    prepare_native_table_scopes(result)
+    unit = next(ref for ref in f.context_refs if ref.kind == 'unit')
+    assert cap['content'][unit.start:unit.end] == unit.text == '人民币百万元'
+    view = bind_table_view('view', [f], [f])
+    rendered = render_semantic_view(view, [f])
+    assert '范围：单位' not in rendered
+    assert '2024：1700（单位：人民币百万元）' in rendered
+    assert 'Return(%)；2024：2.30；Change(%)：11' in rendered
+    assert 'Earnings(元/股)；2024：1.70；Change(%)：9' in rendered
+    assert 'Dividend per share；2024：$1.70；Change(%)：8' in rendered
+    assert all(not record.scope_refs for record in view.records)
+
+
+def test_business_caption_is_not_reclassified_by_the_word_currency_or_unit():
+    from app.services.table_context_service import _unit_caption
+
+    assert _unit_caption('单位：承运企业') is None
+    assert _unit_caption('Revenue ($m)') is None
+    assert _unit_caption('(USD business line)') is None
+
+
 def test_nested_native_list_period_is_printed_with_its_exact_literal_slice_and_closes():
     from app.models.parse_result import DocumentParseResult, ParsePipeline
     from app.services.table_context_service import prepare_native_table_scopes

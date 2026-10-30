@@ -1,7 +1,7 @@
 """Publish continuous business text, keeping assembly diagnostics out of it.
 
-Only producer-owned markers, explicit pagination and declared continuations
-are edited. No reference lookup, inferred fact or model call occurs here.
+Only producer-owned markers, explicit pagination, declared continuations and
+literal split currency scales are edited. No inferred fact or model call occurs.
 The edit ledger preserves exact character provenance for internal consumers.
 """
 
@@ -25,6 +25,32 @@ _PAGE = re.compile(r"<!--\s*page:\s*([1-9][0-9]*)\s*-->")
 _CJK = re.compile(r"[\u3400-\u9fff\uf900-\ufaff]")
 _FURNITURE = {"header", "footer", "page_number"}
 _PRODUCTION = re.compile(r"^(PATH|DRAFT|USER|MODIFY|TRANSLATE|EDIT(?:\s+EDIT)*\s+TRACE|LAYOUT|PAGE)\s*:")
+
+
+def _production_keys(markdown: str) -> set[str]:
+    """Require production fields, allowing only their typed control fragments."""
+    pieces = [part.strip() for part in re.split(r"[\r\n|]", markdown) if part.strip()]
+    matches = [_PRODUCTION.match(part) for part in pieces]
+    keys = {match[1] for match in matches if match}
+    fragments = {word.casefold() for key in keys for word in key.split()}
+    # A producer may repeat partial field labels at inline-span boundaries.
+    # Only key words from this same bundle and its explicit translation flag
+    # qualify; no business wording, names, dates or amounts are discarded.
+    fragments.update(part[match.end():].strip().casefold() for part, match in zip(pieces, matches, strict=True)
+                     if match and match[1] == "TRANSLATE" and part[match.end():].strip() in {"Y", "N"})
+    if any(not match and (not re.fullmatch(r"[A-Za-z]+(?:\s+[A-Za-z]+)*", part)
+                          or not all(word.casefold() in fragments for word in part.split()))
+           for part, match in zip(pieces, matches, strict=True)):
+        return set()
+    return keys
+
+
+def _currency_scale_seam(left: str, right: str) -> bool:
+    """Recognize only a split printed currency amount, not general prose joins."""
+    if re.search(r"`|\\[\[(]", left + right):
+        return False
+    return bool(re.search(r"(?:\\*\$|€|£|¥)\s*[+−-]?(?:\d{1,3}(?:,\d{3})+|\d+)(?:\.\d+)?$", left.rstrip())
+                and re.match(r"(?:million|billion|thousand)(?=[,;.)])", right.lstrip()))
 
 
 def apply_text_edits(source: str, edits: list[dict[str, Any]]) -> str:
@@ -167,8 +193,8 @@ class FinalContentService:
         for number, blocks in native_blocks.items():
             if number not in pages:
                 continue
-            production = {m[1] for block in blocks if block.get("type") == "footer"
-                          and (m := _PRODUCTION.match(ExportService.markdown_to_text(str(block.get("markdown", ""))).strip()))}
+            production = {key for block in blocks if block.get("type") == "footer"
+                          for key in _production_keys(str(block.get("markdown", "")))}
             for ordinal, block in enumerate(blocks):
                 role = block.get("type")
                 rendered = replacements.get((number, ordinal), block.get("markdown"))
@@ -178,9 +204,8 @@ class FinalContentService:
                 reason = None
                 if role == "page_number" and re.fullmatch(r"[ \t\-–—]*\d{1,5}(?:\s*/\s*\d{1,5})?[ \t\-–—]*", literal):
                     reason = "explicit_page_number"
-                elif role == "footer" and len(production) >= 2 and _PRODUCTION.match(
-                    ExportService.markdown_to_text(str(block.get("markdown", ""))).strip(),
-                ):
+                elif (role == "footer" and len(production) >= 2
+                      and _production_keys(str(block.get("markdown", "")))):
                     reason = "explicit_production_footer"
                 elif role == "header" and 0 < len(literal) <= 80 and not re.search(r"\d", literal):
                     if literal in header_seen:
@@ -219,7 +244,10 @@ class FinalContentService:
                 if role != "text":
                     previous = None
                     continue
-                if block.get("continues_prev") is True or block.get("merge_prev") is True:
+                declared = block.get("continues_prev") is True or block.get("merge_prev") is True
+                literal_scale = bool(previous and number == previous[0] and _currency_scale_seam(
+                    str(previous[1].get("markdown", "")), str(block.get("markdown", ""))))
+                if declared or literal_scale:
                     found = None
                     if previous is not None and 0 <= number - previous[0] <= 1:
                         old_number, old_block = previous
@@ -233,9 +261,10 @@ class FinalContentService:
                             separator = "" if left_text and right_text and (
                                 _CJK.search(left_text[-1]) or _CJK.search(right_text[0])
                             ) else " "
-                            add(*found, separator, "declared_paragraph_continuation")
-                            joins.append({"pages": [old_number, number], "input_range": list(found)})
-                    if found is None:
+                            reason = "declared_paragraph_continuation" if declared else "literal_currency_scale_continuation"
+                            add(*found, separator, reason)
+                            joins.append({"pages": [old_number, number], "input_range": list(found), "reason": reason})
+                    if found is None and declared:
                         pending.append({"page": number, "reason": "declared_continuation_has_no_unique_adjacent_text"})
                 previous = (number, block)
 
@@ -247,7 +276,7 @@ class FinalContentService:
             "assembly_markdown": source, "edits": edits,
             "joined_paragraphs": joins, "unresolved_continuations": pending,
             "operation_counts": dict(Counter(e["reason"] for e in edits)),
-            "policy": "explicit_native_roles_and_continuations_no_fact_inference",
+            "policy": "explicit_native_roles_and_literal_continuations_no_fact_inference",
         }
         result.markdown = final
         result.plain_text = ExportService.markdown_to_text(final, source_regions=[])
