@@ -30,6 +30,7 @@ from .information import (
 from .information_reading import (
     _scalar_units,
     ambiguous_note_scalar,
+    metric_units,
     read_information_observation,
     scalar_notes,
 )
@@ -447,6 +448,19 @@ def _locate_record_field(
 def _required_qualifiers(table: dict[str, Any], field: dict[str, Any]) -> dict[str, Any]:
     result = {key: field.get(key, table.get(key)) for key in ("unit", "period", "note_markers")}
     result = {key: value for key, value in result.items() if value is not None}
+    # Read an explicitly printed local ratio before a wider table amount
+    # caption. This consumes the frozen target literally, without rewriting
+    # it or manufacturing a unit from a metric name or an expected number.
+    # An authored field-level override remains authoritative.
+    if "unit" not in field:
+        local_units = [u for u in _scalar_units(str(field.get("value", "")))
+                       if u not in {"$", "€", "£", "¥"}]
+        if not local_units:
+            local_units = list(dict.fromkeys(u for label in field.get("column_header_path", [])
+                                             for u in metric_units(label)))
+        if len(local_units) == 1 and re.fullmatch(
+                r"[%‰]|[个個]?百分[点點]|percentage points?|basis points?|bps", local_units[0], re.I):
+            result["unit"] = local_units[0]
     if "unit" not in result:
         literal_units = [unit for unit in _scalar_units(str(field.get("value", "")))
                          if unit not in {"$", "€", "£", "¥"}]

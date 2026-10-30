@@ -538,7 +538,8 @@ def scoped_qualifiers(cell: dict[str, Any], endpoint_texts: list[str]) -> dict[s
     numeric, _notes = scalar_notes(cell)
     own_units = [unit for unit in _scalar_units(numeric) if unit not in {"$", "€", "£", "¥"}]
     row_units = [u for text in [*cell.get("row_header_path", []), *cell.get("information_row_labels", [])] for u in metric_units(text)]
-    ratio = any(re.search(r"同比|佔|占|比例|比率|percent|change|rate|ratio", text, re.I) for text in column_texts)
+    ratio = any(re.search(r"[%％‰]|同比|佔|占|比例|比率|percent|change|rate|ratio", text, re.I)
+                for text in column_texts)
     column_units = [u for text in [*column_texts, *cell.get("units", [])] for u in units(text)]
     if ratio:
         column_units = [u for u in column_units if re.fullmatch(
