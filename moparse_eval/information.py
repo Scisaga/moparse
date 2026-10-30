@@ -97,10 +97,11 @@ def path_locates(labels: list[str], native: Any, collapse_whitespace: bool) -> b
 
 
 def row_path_locates(labels: list[str], native: Any, collapse_whitespace: bool) -> bool:
-    """Keep the complete annotated path; additional leading context is allowed.
+    """Keep the complete requested path within actual, contiguous labels.
 
     Uniqueness is resolved over all actual candidate records by the caller.
-    A missing parent, an intervening business level, or a conflicting parent
+    Additional context outside it is not an extra prediction requirement.
+    A missing requested parent, an intervening business level, or a conflicting parent
     cannot be filled from the reference or from the expected value.
     """
     if (not isinstance(native, list) or not native or len(native) > 12
@@ -109,7 +110,11 @@ def row_path_locates(labels: list[str], native: Any, collapse_whitespace: bool) 
     wanted = [label_text(normalize_text(label, collapse_whitespace=collapse_whitespace)) for label in labels]
     if not wanted or not all(wanted):
         return False
-    pattern = r"\s*".join(re.escape(label) for label in wanted)
+    pattern = ""
+    for index, label in enumerate(wanted):
+        if index:
+            pattern += r"\s*[-:：/]?\s*" if all(re.search(r"[^\W\d_]", item) for item in wanted[index - 1:index + 1]) else r"\s*"
+        pattern += re.escape(label)
     views: list[list[str]] = [[]]
     for raw in native:
         part = label_text(normalize_text(raw, collapse_whitespace=collapse_whitespace))
@@ -126,8 +131,8 @@ def row_path_locates(labels: list[str], native: Any, collapse_whitespace: bool) 
         views = [[*view, option] for view in views for option in dict.fromkeys(variants)]
         if len(views) > 512:
             return False
-    return any(re.fullmatch(pattern, " ".join(view[start:])) is not None
-               for view in views for start in range(len(view)))
+    return any(re.fullmatch(pattern, " ".join(view[start:end])) is not None
+               for view in views for start in range(len(view)) for end in range(start + 1, len(view) + 1))
 
 
 def column_path_locates(labels: list[str], native: Any, collapse_whitespace: bool,
@@ -151,7 +156,9 @@ def column_path_locates(labels: list[str], native: Any, collapse_whitespace: boo
         optional = (unwrapped in tokens or unit_scope_literal(part) or bool(re.fullmatch(
             r"Year Ended|截至[^。；;]{1,30}(?:年度|年末)|[于於]\s*\d{1,2}月\d{1,2}日", unwrapped, re.I))
             and not re.search(r"(?:19|20)\d{2}", unwrapped))
-        variants: list[str | None] = [part]
+        variants: list[str | None] = [label_text(text) for text in label_views({"text": raw})]
+        optional |= (bool(re.match(r"^(?:For the year ended|As at)\s+\d{1,2}\s+[A-Za-z]+", unwrapped, re.I))
+                     and not re.search(r"(?:19|20)\d{2}", unwrapped))
         if optional:
             variants.append(None)
         for token in tokens:

@@ -57,3 +57,20 @@ def test_common_reader_changes_require_rescoring_and_cannot_admit_runtime_change
     identity["support_module_sha256"]["app/service.py"] = "new"
     with pytest.raises(ValueError, match="service implementation"):
         require_shared_scoring({"software": software}, identity, paired_native_rescore=True)
+
+
+def test_candidate_preparation_can_require_new_native_grades_but_not_change_native_readers():
+    from copy import deepcopy
+
+    import pytest
+
+    from moparse_eval.service_evaluation import SCORING_MODULES, require_preparation_scorer
+    previous = {'module_sha256': {name: 'same' for name in SCORING_MODULES}}
+    current = deepcopy(previous)
+    current['module_sha256']['information_reading.py'] = 'changed'
+    with pytest.raises(ValueError, match='shared scorer'):
+        require_preparation_scorer(previous, current)
+    require_preparation_scorer(previous, current, rescore_native=True)
+    current['module_sha256']['adapters.py'] = 'changed'
+    with pytest.raises(ValueError, match='shared scorer'):
+        require_preparation_scorer(previous, current, rescore_native=True)

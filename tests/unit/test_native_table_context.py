@@ -238,3 +238,20 @@ def test_nested_native_list_period_is_printed_with_its_exact_literal_slice_and_c
     assert projection[period.start:period.end] == period.text == "（3）2024 年度测量数据:"
     assert "期间：（3）2024 年度测量数据:" in render_semantic_view(bind_table_view("a", [first], [first]), [first])
     assert not any(ref.kind == "period" for ref in second.context_refs)
+
+
+def test_textual_performance_records_are_not_absorbed_into_a_numeric_rows_header():
+    f = table([['', 'Cash plan', 'Stock plan'],
+               ['Performance achievement', '$125.5 billion revenue', '80th percentile return'],
+               ['Payout as % of target', '150%', '120%']])
+    assert f.native_evidence['content_kind'] == 'unknown'
+    assert bind_table_view('view', [f], [f]).status == 'retained'
+
+
+def test_a_leading_text_record_is_preserved_beside_a_later_numeric_record():
+    f = table([['Item', '2024'], ['Legal conditions', 'No approval was given.'], ['Revenue', '17']])
+    assert f.source_header_scopes[0]['header_rows'] == [0]
+    view = bind_table_view('view', [f], [f])
+    assert view.status == 'partial'
+    rendered = render_semantic_view(view, [f])
+    assert 'Legal conditions' in rendered and 'No approval was given.' in rendered and 'Revenue；2024：17' in rendered

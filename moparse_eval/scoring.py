@@ -210,7 +210,7 @@ def _active_column_header_group(
     for item in group:
         cell = item["cell"]
         rows, columns = _native_range(cell, "row"), _native_range(cell, "col")
-        if (cell.get("is_column_header") is True and rows and columns
+        if (cell.get("is_column_header") is True and item["text"].strip() and rows and columns
                 and column in columns):
             headers.append((min(rows), max(rows), item["id"]))
     if not headers or not data_rows:
@@ -256,7 +256,7 @@ def _grid_column_header_pool(
             references, error = _html_header_references(item, group)
             if references is not None:
                 probes.append((item, references, error))
-    declared = any(item["cell"].get("is_column_header") is True for item in group)
+    declared = any(item["cell"].get("is_column_header") is True and item["text"].strip() for item in group)
     if not declared and not probes:
         scoped = [item for item in group if "information_header_body_rows" in item["cell"]]
         if scoped:
@@ -327,7 +327,7 @@ def _grid_value_header_scope(
                 ):
                     return "native_explicit_header_scope_ambiguous"
         return None
-    if not any(item["cell"].get("is_column_header") is True for item in group):
+    if not any(item["cell"].get("is_column_header") is True and item["text"].strip() for item in group):
         return None
     rows = _native_range(candidate["cell"], "row")
     columns = _native_range(candidate["cell"], "col")

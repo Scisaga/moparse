@@ -182,6 +182,8 @@ def _header_rows(cells: list[dict[str, Any]]) -> set[int]:
     first_stub = ""
     for row, band in sorted(rows.items()):
         nonempty = [c for c in band if str(c.get("text", "")).strip()]
+        if not nonempty:
+            continue
         if len(nonempty) == 1 and nonempty[0].get("col") == 0:
             left = nonempty[0]
             if (len(band) > 1 or left.get("col_span", 1) > 1) and not (
@@ -412,6 +414,15 @@ def read_information_observation(observation: dict[str, Any]) -> dict[str, Any]:
                             if re.search(r"(?:截至|於|于)[一二三四五六七八九十\d]{1,3}月[一二三四五六七八九十\d]{1,3}日止年度", header["text"])]
                 cell["information_row_labels"] = labels_by_row.get(row, [])
                 cell["information_table_units"] = table_units
+                path = cell.get("column_header_path", [])
+                if any(re.search(r"同比|[Cc]hange", text) for text in path):
+                    # Other explicitly printed measures in this very record
+                    # establish the comparison's annual frame, just as the
+                    # active headers do in a table. Never inherit money units.
+                    record_headers = [text for other in cells for text in other.get("column_header_path", [])]
+                    if len({year for text in record_headers for year in re.findall(r"(?:19|20)\d{2}", text)}) >= 2:
+                        cell["information_comparison_periods"] = [text for text in record_headers
+                            if re.search(r"(?:截至|於|于)[一二三四五六七八九十\d]{1,3}月[一二三四五六七八九十\d]{1,3}日止年度", text)]
                 if report_period and not any(re.search(r"(?:19|20)\d{2}|[二零〇一三四五六七八九]{4}年", text)
                         for text in [*cell["information_headers"], *(item["text"] for item in contexts)]):
                     cell["information_context"] = [*contexts, report_period]

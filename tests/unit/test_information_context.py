@@ -483,3 +483,43 @@ def test_spanning_date_header_keeps_its_explicit_annual_subheaders():
     table = '<table><tr><td colspan="3">As at 31 December</td><td>Change</td></tr><tr><td>Balance sheet item</td><td>2024</td><td>2023</td><td>Amount</td></tr><tr><td>Revenue</td><td>17</td><td>11</td><td>6</td></tr></table>'
     assert evaluate(table)['outcome'] == 'correct'
     assert evaluate(table.replace('<td>2024</td><td>2023</td>', '<td>2023</td><td>2024</td>'))['native_text'] == '11'
+
+
+def test_a_formatting_only_empty_gfm_header_does_not_hide_actual_column_labels():
+    from moparse_eval.adapters import markdown_cells
+    ref = {'sample_id': 'invented', 'review_status': 'confirmed', 'units': [
+        {'id': 'record', 'kind': 'table_record', 'status': 'confirmed', 'literal': 'Achievement', 'pages': [1],
+         'table': {'row_header_path': ['Achievement'], 'fields': [{'column_header_path': ['Plan A'], 'value': '17'}]}}]}
+    md = '| | | |\n|---|---|---|\n| Performance | | |\n| | Plan A | Plan B |\n| Achievement | 17 | 11 |'
+    obs = {'sample_id': 'invented', 'pages': [{'page': 1, 'blocks': [{'id': 't', 'kind': 'table', 'cells': markdown_cells(md)}]}]}
+    assert score_case(ref, obs)['units'][0]['fields'][0]['outcome'] == 'correct'
+
+
+def test_a_printed_records_other_year_columns_supply_its_generic_change_period_only():
+    cell = {'id': 'v', 'text': '5%', 'row_header_path': ['Revenue'], 'column_header_path': ['Change']}
+    reference = {'sample_id': 'invented', 'review_status': 'confirmed', 'units': [
+        {'id': 'r', 'kind': 'table_record', 'status': 'confirmed', 'literal': 'Revenue', 'pages': [1],
+         'table': {'row_header_path': ['Revenue'], 'period': '截至12月31日止年度', 'fields': [
+             {'column_header_path': ['Change'], 'value': '5%', 'unit': '%'}]}}]}
+    obs = {'sample_id': 'invented', 'pages': [{'page': 1, 'blocks': [{'id': 'record', 'kind': 'text_record', 'cells': [
+        cell, {'id': 'a', 'text': '17', 'row_header_path': ['Revenue'], 'column_header_path': ['截至12月31日止年度', '2024年', '万元']},
+        {'id': 'b', 'text': '11', 'row_header_path': ['Revenue'], 'column_header_path': ['截至12月31日止年度', '2023年', '万元']}]}]}]}
+    assert score_case(reference, obs)['units'][0]['fields'][0]['outcome'] == 'correct'
+    reference['units'][0]['table']['fields'][0]['unit'] = '万元'
+    assert score_case(reference, obs)['units'][0]['fields'][0]['outcome'] == 'incorrect'
+    obs['pages'][0]['blocks'][0]['cells'] = [cell]
+    reference['units'][0]['table']['fields'][0]['unit'] = '%'
+    assert score_case(reference, obs)['units'][0]['fields'][0]['outcome'] == 'incorrect'
+
+
+def test_bilingual_year_headers_and_external_date_frame_are_read_from_the_printed_path():
+    reference = {'sample_id': 'invented', 'review_status': 'confirmed', 'units': [
+        {'id': 'r', 'kind': 'table_record', 'status': 'confirmed', 'literal': 'Revenue', 'pages': [1],
+         'table': {'row_header_path': ['Revenue'], 'fields': [{'column_header_path': ['2024'],
+             'value': '17', 'unit': "RMB'000", 'period': 'For the year ended 31 December 2024'}]}}]}
+    cell = {'id': 'v', 'text': '17', 'row_header_path': ['Revenue', '營業額'],
+            'column_header_path': ['For the year ended 31 December截至十二月三十一日止年度', "2024二零二四年RMB'000人民幣千元"]}
+    obs = {'sample_id': 'invented', 'pages': [{'page': 1, 'blocks': [{'id': 't', 'kind': 'table', 'cells': [cell]}]}]}
+    assert score_case(reference, obs)['units'][0]['fields'][0]['outcome'] == 'correct'
+    cell['column_header_path'][1] = "2023二零二三年RMB'000人民幣千元"
+    assert score_case(reference, obs)['units'][0]['fields'][0]['outcome'] == 'incorrect'

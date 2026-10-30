@@ -47,6 +47,6 @@ Paddle原生服务使用单个长期owner线程统一初始化、推理与关闭
 
 新运行目录按`prepare` → `run --phase warmup` → `freeze` → `run --phase measured` → `freeze-scoring` → `score` → `report`执行；两个freeze命令都要求显式`--validation`工程验证记录，不能用文件存在或语料计数代替验证。`prepare`还需`--baseline`、`--output`和仅含公开处理参数的`--service-config`。服务执行与最终读回分别冻结身份，共享评分规则保持原样，旧运行目录不能覆盖。报告重生只读已有运行和评分JSON，不读取语料、重新推理或重新评分。
 
-当前读取修正采用`mo-parse-eval-information-v5`，完整标准见[评测任务](../benchmark/evaluation-tasks.md)。每个已纳入业务目标只判正确或错误，全部目标完成判定后才能发布质量报告；评分器读取故障须先修复。`service_evaluation prepare --previous-run <旧运行>`只接纳同一原生输入、参考声明和已冻结执行身份的旧候选，读取原样保存的最终正文；候选worker不挂载旧结果或参考。评分冻结可单独更新只用于分析的共同读取与报告模块，实际适配、后处理、app及依赖仍须与执行冻结一致；必须同步重评原生、旧正文及新正文，不能复用旧分数。`python -m moparse_eval.table_context_report`逐项列出新增正确、原正确项损失及单位、期间、附注退化。
+当前读取修正采用`mo-parse-eval-information-v5`，完整标准见[评测任务](../benchmark/evaluation-tasks.md)。每个已纳入业务目标只判正确或错误，全部目标完成判定后才能发布质量报告；评分器读取故障须先修复。`service_evaluation prepare --previous-run <旧运行>`只接纳同一原生输入、参考声明和已冻结执行身份的旧候选，读取原样保存的最终正文；候选worker不挂载旧结果或参考。评分冻结可单独更新只用于分析的共同读取与报告模块，实际适配、后处理、app及依赖仍须与执行冻结一致；必须同步重评原生、旧正文及新正文，不能复用旧分数。`prepare --rescore-native`允许在共同评分规则已修改时先准备候选回放；只放行评分模块差异，原生格式读取及依赖仍须一致，实际评分继续要求八组原生评分索引与当前完整软件身份一致，不能引用准备时的旧成绩。`python -m moparse_eval.table_context_report`逐项列出新增正确、原正确项损失及单位、期间、附注退化。
 
 代码验证使用`python -m pytest -q tests/unit tests/test_markdown_policy.py moparse_eval/tests`。其中`test_information_context.py`覆盖单位、年度、分组和脚注正反例，`test_native_table_context.py`覆盖原生结构与局部转换，`test_moparse_eval_service_observation.py`覆盖实际正文读取及未渲染内部关系不得计分。它们使用受控合成材料，与真实候选专项评分、原页目读及运行成本测量分别记录；通过代码测试不构成语料验收。

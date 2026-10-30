@@ -38,7 +38,7 @@ def now() -> str:
 
 
 def prepare_run(baseline: Path, destination: Path, service_config: Path, *, pipeline: str = "P07",
-                previous_run: Path | None = None) -> Path:
+                previous_run: Path | None = None, rescore_native: bool = False) -> Path:
     """Use declared execution identities; do not validate dataset contents."""
     from .cli import code_identity, snapshot_software
 
@@ -48,10 +48,7 @@ def prepare_run(baseline: Path, destination: Path, service_config: Path, *, pipe
     session = read_json(baseline / "run.json")
     score_index = read_json(inside(baseline, session["latest_scores"]))
     identity = code_identity()
-    old_hashes = score_index["software"]["module_sha256"]
-    if any(old_hashes.get(name) != identity["module_sha256"].get(name)
-           for name in SCORING_MODULES):
-        raise ValueError("paired comparison requires the unchanged frozen shared scorer")
+    require_preparation_scorer(score_index["software"], identity, rescore_native=rescore_native)
     if (identity["python"] != score_index["software"]["python"]
             or identity["dependencies"] != score_index["software"]["dependencies"]):
         raise ValueError("paired scoring requires the frozen scoring runtime dependencies")
@@ -99,6 +96,7 @@ def prepare_run(baseline: Path, destination: Path, service_config: Path, *, pipe
         "reference_adjudications": score_index.get("reference_adjudications", {}).get("record"),
         "scoring_protocol": score_index["scoring_protocol"], "software": identity,
         "paired_native_rescore_required": True,
+        "preparation_requires_fresh_native_scores": rescore_native,
         "native_pipeline": {**{key: copy.deepcopy(native_configuration.get(key)) for key in (
             "pipeline", "revisions", "native_view_policy", "source_policy", "inference_services",
         )}, "versions": {key: value for key, value in native_configuration.get("versions", {}).items()
@@ -157,6 +155,20 @@ def prepare_run(baseline: Path, destination: Path, service_config: Path, *, pipe
                   for case in cases],
     })
     return destination
+
+
+def require_preparation_scorer(previous: dict[str, Any], current: dict[str, Any], *,
+                               rescore_native: bool = False) -> None:
+    """Prepare candidates without reusing an obsolete grade as a new baseline.
+
+    Only common scoring rules may differ under this explicit mode. Scoring
+    still requires a completed all-native index with the exact current code
+    identity; native adapters and faithful format readers cannot drift here.
+    """
+    allowed = {"scoring.py", "information.py", "information_reading.py"} if rescore_native else set()
+    if any(previous["module_sha256"].get(name) != current["module_sha256"].get(name)
+           for name in set(SCORING_MODULES) - allowed):
+        raise ValueError("paired comparison requires the unchanged frozen shared scorer or an explicit common-rule rescore")
 
 
 def docker_command(run: Path, phase: str, name: str) -> list[str]:
@@ -728,6 +740,8 @@ def main() -> int:
     prepare.add_argument("--service-config", required=True, type=Path)
     prepare.add_argument("--pipeline", choices=["P07", "P08"], default="P07")
     prepare.add_argument("--previous-run", type=Path)
+    prepare.add_argument("--rescore-native", action="store_true",
+                         help="require fresh identical-software grading of saved native outputs before paired scoring")
     execute = commands.add_parser("run")
     execute.add_argument("--run", required=True, type=Path)
     execute.add_argument("--phase", choices=["warmup", "measured"], required=True)
@@ -744,7 +758,7 @@ def main() -> int:
     args = parser.parse_args()
     if args.command == "prepare":
         print(prepare_run(args.baseline, args.output, args.service_config, pipeline=args.pipeline,
-                          previous_run=args.previous_run))
+                          previous_run=args.previous_run, rescore_native=args.rescore_native))
     elif args.command == "run":
         return launch(args.run, args.phase)
     elif args.command == "freeze":

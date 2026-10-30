@@ -186,3 +186,10 @@ def test_repeated_reference_to_the_same_business_fact_needs_no_duplicate_output(
     result = score_case(case, observation)
     assert result["metrics"]["table_records"]["correct_fields"] == 2
     assert all(row["fields"][0]["information"]["status"] == "correct" for row in result["units"])
+
+
+def test_requested_row_identity_does_not_require_unannotated_outer_or_inner_context():
+    assert _declared_path_locates(['Revenue'], ['Revenue', '營業額'], True)
+    assert _declared_path_locates(['Lease', 'Adjustment'], ['IFRS', 'Lease-Adjustment'], True)
+    assert not _declared_path_locates(['North', 'Revenue'], ['South', 'Revenue'], True)
+    assert not _declared_path_locates(['North', 'Revenue'], ['North', 'Another measure', 'Revenue'], True)

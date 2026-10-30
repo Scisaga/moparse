@@ -82,7 +82,14 @@ def native_scopes(fragment: TableFragment) -> dict[str, Any]:
         prior = [c for c in cells if header_start <= c.row < row]
         field_header = len(prior) >= 2 and all(_FIELD.fullmatch(c.text.strip()) for c in prior if c.text.strip())
         date_value = any(re.fullmatch(r"\d{4}年\d{1,2}月\d{1,2}日", c.text.strip()) for c in band)
-        if values or field_header and date_value:
+        stub = next((c for c in band if c.column == 0 and c.text.strip()), None)
+        declared = all(c.is_column_header for c in band if c.text.strip())
+        dated_subheader = (any(c.column_span > 1 for c in prior)
+                           and any(c.column > 0 and re.match(r"(?:19|20)\d{2}", c.text.strip()) for c in band))
+        textual_record = (stub is not None and not declared and not dated_subheader
+                          and any(c.column > 0 and c.text.strip() for c in band)
+                          and not _PERIOD.fullmatch(stub.text.strip()) and not unit_description(stub.text))
+        if values or field_header and date_value or textual_record:
             first_body = row
             break
     if first_body is None or first_body - header_start > 8:
