@@ -468,13 +468,27 @@ def _bind_fragment(
             issues.append((row, "invalid_row_header_scope"))
             continue
         labels = [c for c in cells if set(range(c.column, c.column + c.column_span)).intersection(row_columns)]
+        from app.services.table_context_service import identity_header
+        summary_stub = (
+            fragment.native_evidence.get("content_kind") == "data_table" and row_columns == [1]
+            and len(labels) == 1 and labels[0].column == 0 and labels[0].column_span == 2
+            and labels[0].row == row and labels[0].row_span == 1
+            and bool(re.fullmatch(r"合计|合計|总计|總計|小计|小計|Total|Subtotal", labels[0].text.strip(), re.I))
+            and any(h.column == 0 and h.column_span == 1
+                    and re.fullmatch(r"序号|序號|Index|No\.?", h.text.strip(), re.I) for h in headers)
+            and any(h.column == 1 and h.column_span == 1 and identity_header(h.text) for h in headers)
+        )
+        if summary_stub:
+            # The printed total spans the ordinal and name fields, not a
+            # measurement. It is a summary label, never a person's name.
+            row_columns = [0, 1]
         if (not labels or any(not c.text.strip() for c in labels)
                 or any(not set(range(c.column, c.column + c.column_span)).issubset(row_columns) for c in labels)
                 or {col for c in labels for col in range(c.column, c.column + c.column_span)} != set(row_columns)):
             issues.append((row, "unresolved_row_subject"))
             continue
         subject, groups = labels[-1], labels[:-1]
-        label_paths = [path_for(label) for label in labels]
+        label_paths = [] if summary_stub else [path_for(label) for label in labels]
         if any(path is None for path in label_paths):
             issues.append((row, "subject_crosses_header_columns"))
             continue

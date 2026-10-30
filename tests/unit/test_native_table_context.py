@@ -338,6 +338,38 @@ def test_business_caption_is_not_reclassified_by_the_word_currency_or_unit():
     assert _unit_caption('(USD business line)') is None
 
 
+@pytest.mark.parametrize('name_header', ['认购方', '股东名称', 'Subscriber'])
+def test_explicit_total_spanning_ordinal_and_identity_fields_is_not_an_entity_name(name_header):
+    f = table([["序号", name_header, "Amount(万元)", "Shares(股)"],
+               ["1", "Alpha", "17.00", "1100"], ["2", "Beta", "11.00", "700"],
+               ["合计", "", "28.00", "1800"]])
+    total = next(c for c in f.cells if (c.row, c.column) == (3, 0))
+    total.column_span = 2
+    f.cells = [c for c in f.cells if (c.row, c.column) != (3, 1)]
+    f.native_evidence = native_scopes(f)
+    f.source_header_scopes = f.native_evidence['header_scopes']
+    before = deepcopy(f)
+    view = bind_table_view('view', [f], [f])
+    assert view.status == 'converted' and len(view.records) == 3
+    rendered = render_semantic_view(view, [f])
+    assert name_header + '：Alpha；序号：1' in rendered
+    assert '- 合计；Amount(万元)：28.00；Shares(股)：1800。' in rendered
+    assert name_header + '：合计' not in rendered and f == before
+
+
+@pytest.mark.parametrize('text,span', [('Unlabelled operation', 2), ('合计', 3)])
+def test_summary_span_rule_cannot_invent_a_total_or_cross_a_measurement_column(text, span):
+    f = table([["No", "Name", "Amount(万元)", "Shares(股)"],
+               ["1", "Alpha", "17", "1100"], [text, "", "" if span == 3 else "28", "1800"]])
+    stub = next(c for c in f.cells if (c.row, c.column) == (2, 0))
+    stub.column_span = span
+    f.cells = [c for c in f.cells if not (c.row == 2 and 0 < c.column < span)]
+    f.native_evidence = native_scopes(f)
+    f.source_header_scopes = f.native_evidence['header_scopes']
+    view = bind_table_view('view', [f], [f])
+    assert view.status == 'partial' and [r.source_row for r in view.records] == [1]
+
+
 def test_nested_native_list_period_is_printed_with_its_exact_literal_slice_and_closes():
     from app.models.parse_result import DocumentParseResult, ParsePipeline
     from app.services.table_context_service import prepare_native_table_scopes

@@ -20,10 +20,15 @@ _MEASURE = re.compile(r"金额|金額|收入|成本|比率|比例|占|佔|同比
 _FIELD = re.compile(r"^(?:召开日期|召開日期|会议内容|會議內容|重要意见和建议|重要意見和建議|会议决议|會議決議|姓名|名称|名稱|职务|職務|日期|Name|Date|Position)$", re.I)
 _UNIT = re.compile(r"(?:人民币|人民幣)?(?:百万元|百萬元|千元|万元|萬元|元)|\$\s*(?:bn|m)|[%％‰]|(?:毫克|千克|公斤|吨|噸)(?:/[^()（）\s]+)?")
 _SECTION = re.compile(r"^\s*(?:[（(]\d+[)）]\s*)?((?:19|20)\d{2}\s*年度)[^。；;]{0,32}(?:情况|情況|数据|數據)\s*[:：]$")
+_IDENTITY = re.compile(r"项目|項目|项目名称|項目名稱|名称|名稱|姓名|股东名称|股東名稱|认购方|認購方|认购对象|認購對象|Name|Item|Project|Subscriber|Investor", re.I)
 
 
 def scalar(text: str) -> bool:
     return bool(_SCALAR.fullmatch(text.strip()))
+
+
+def identity_header(text: str) -> bool:
+    return bool(_IDENTITY.fullmatch(text.strip()))
 
 
 def unit_description(text: str) -> bool:
@@ -128,7 +133,7 @@ def native_scopes(fragment: TableFragment) -> dict[str, Any]:
         if len(subjects) == 1 and subjects[0].column_span == 1:
             row_cols = [subjects[0].column]
     if first and re.fullmatch(r"序号|序號|Index|No\.?", first.text.strip(), re.I):
-        subjects = [c for c in headers if re.fullmatch(r"项目|項目|项目名称|項目名稱|名称|名稱|姓名|Name|Item", c.text.strip(), re.I)]
+        subjects = [c for c in headers if identity_header(c.text)]
         if len(subjects) == 1 and subjects[0].column_span == 1:
             row_cols = [subjects[0].column]
     if len(row_cols) >= fragment.num_cols:

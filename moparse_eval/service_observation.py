@@ -47,7 +47,7 @@ _IDENTITY_HEADER = re.compile(
     r"(?:[A-Za-z][A-Za-z -]{0,30} )?Name|Item|Project|Subscriber|Investor)", re.I,
 )
 _NOTE_HEADER = re.compile(r"备注|備註|注释|註釋|说明|說明|Note|Remark|Comment", re.I)
-_ORDINAL_HEADER = re.compile(r"序号|序號|No\.?|Number", re.I)
+_ORDINAL_HEADER = re.compile(r"序号|序號|No\.?|Number|Index", re.I)
 
 
 def _printed_unit_scope(text: str) -> bool:
@@ -339,6 +339,18 @@ def _semantic_blocks(
                             and _ORDINAL_HEADER.fullmatch(emitted_by_ref[record.subject_headers[0]].strip())
                             and re.fullmatch(r"\d+", emitted_by_ref[record.subject])):
                         aliases.append([*groups, emitted_by_ref[record.subject], emitted_by_ref[value.value]])
+            if (record.subject in emitted_by_ref and len(record.subject_headers) == 1
+                    and record.subject_headers[0] in emitted_by_ref
+                    and _IDENTITY_HEADER.fullmatch(emitted_by_ref[record.subject_headers[0]].strip())
+                    and not _NOTE_HEADER.search(emitted_by_ref[record.subject_headers[0]])):
+                ordinals = [value.value for value in record.values
+                            if value.value in emitted_by_ref and len(value.column_headers) == 1
+                            and value.column_headers[0] in emitted_by_ref
+                            and _ORDINAL_HEADER.fullmatch(emitted_by_ref[value.column_headers[0]].strip())
+                            and re.fullmatch(r"\d+", emitted_by_ref[value.value])]
+                if len(ordinals) == 1:
+                    ordinal = emitted_by_ref[ordinals[0]]
+                    aliases.extend(([*groups, ordinal], [*groups, ordinal, emitted_by_ref[record.subject]]))
         for cell_index, item in enumerate(emitted):
             ref = item["ref"]
             a, b = item["span"]

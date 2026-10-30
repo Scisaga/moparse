@@ -197,8 +197,8 @@ def test_currency_unit_scope_requires_an_actual_printed_unit_caption(caption, fo
     assert not _cells(build_service_observation(result, sample_id="invented"))
 
 
-def _named_record(*, identity_header="Name", group=None, duplicate=False):
-    fragment = _fragment([["No.", identity_header, "Amount"], ["1", "Acme", "17"]])
+def _named_record(*, identity_header="Name", group=None, duplicate=False, ordinal_header="No."):
+    fragment = _fragment([[ordinal_header, identity_header, "Amount"], ["1", "Acme", "17"]])
     def ref(row, col):
         return CellRef("t1", row, col)
 
@@ -255,6 +255,32 @@ def test_named_property_and_ordinal_are_read_as_printed_identifiers_not_inferred
             "table": {"row_header_path": row, "fields": [{"column_header_path": ["Amount"], "value": "17"}]}}
     _rows, metrics = _score_records([unit], observed, True, match_units([unit], observed))
     assert (metrics["information_correct_fields"] == 1) is correct
+
+
+@pytest.mark.parametrize('ordinal_header,group,row,correct', [
+    ('No.', None, ['Acme'], True), ('No.', None, ['1', 'Acme'], True),
+    ('No.', None, ['1'], True), ('No.', None, ['2', 'Acme'], False),
+    ('Index', None, ['1', 'Acme'], True), ('Cost', None, ['1', 'Acme'], False),
+    ('No.', 'South', ['South', '1', 'Acme'], True),
+    ('No.', 'South', ['North', '1', 'Acme'], False),
+    ('No.', 'South', ['1', 'Acme'], True),
+])
+def test_identity_subject_and_printed_ordinal_property_keep_the_same_record_scope(ordinal_header, group, row, correct):
+    result = _named_record(identity_header='股东名称', group=group, ordinal_header=ordinal_header)
+    fragment, view = result._table_fragments[0], result._semantic_tables[0]
+    old = view.records[0]
+    def ref(r, c):
+        return CellRef('t1', r, c)
+    record = SemanticRecord('t1', 1, tuple(ValueRelation(ref(1, col), (ref(1, 1),), (ref(0, col),))
+                                         for col in (0, 2)), ref(1, 1), (ref(0, 1),), old.row_groups)
+    view = replace(view, records=(record,))
+    result._semantic_tables = [view]
+    result.markdown = render_semantic_view(view, [fragment])
+    observed = build_service_observation(result, sample_id='invented')
+    unit = {'id': 'r', 'kind': 'table_record', 'reference_text': 'Acme', 'pages': [1],
+            'table': {'row_header_path': row, 'fields': [{'column_header_path': ['Amount'], 'value': '17'}]}}
+    _rows, metrics = _score_records([unit], observed, True, match_units([unit], observed))
+    assert (metrics['information_correct_fields'] == 1) is correct
 
 
 def _partial_result():

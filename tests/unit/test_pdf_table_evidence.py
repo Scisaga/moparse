@@ -240,15 +240,15 @@ def test_original_vectors_and_all_glyphs_bind_roles_and_cell_boxes(tmp_path: Pat
     assert item.source_header_scopes[0]["evidence"]["source_shading_contrast"] is True
 
 
-@pytest.mark.parametrize('closed', [False, True])
-def test_dimension_conflict_requires_a_closed_source_partition(closed: bool) -> None:
+@pytest.mark.parametrize('closed,source_columns', [(False, 2), (True, 2), (True, 1)])
+def test_dimension_conflict_requires_a_closed_source_partition(closed: bool, source_columns: int) -> None:
     from app.services.table_context_service import native_scopes
     from app.services.table_semantics_service import bind_table_view
 
     document = pymupdf.open()
     try:
         page = document.new_page(width=400, height=300)
-        for x in (40, 180, 360):
+        for x in ((40, 360) if source_columns == 1 else (40, 180, 360)):
             page.draw_line((x, 50), (x, 80 if x == 40 and not closed else 110), color=(0, 0, 0))
         for y in (50, 80, 110):
             page.draw_line((40, y), (360, y), color=(0, 0, 0))
@@ -259,11 +259,12 @@ def test_dimension_conflict_requires_a_closed_source_partition(closed: bool) -> 
         item.source_header_scopes = item.native_evidence['header_scopes']
         before = deepcopy(item.pdf_evidence)
         view = bind_table_view('view', [item], [item])
-        if closed:
+        if closed and source_columns > 1:
             assert item.pdf_evidence['reason'] == 'source_grid_dimensions_disagree'
             assert view.status == 'retained' and not view.records
         else:
-            assert item.pdf_evidence['reason'] == 'source_outer_border_incomplete'
+            assert item.pdf_evidence['reason'] == ('source_grid_has_no_internal_column_partition'
+                                                   if closed else 'source_outer_border_incomplete')
             assert view.status == 'converted' and len(view.records) == 1
         assert item.pdf_evidence == before
     finally:

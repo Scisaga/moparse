@@ -267,6 +267,12 @@ def _source_grid(page: Any, fragment: TableFragment) -> dict[str, Any]:
     # Partial rules do not establish a source partition to disagree with the
     # native structure. Preserve real size conflicts only after the detected
     # partition has a complete outer boundary.
+    if ny == fragment.num_rows and nx == 1 and fragment.num_cols > 1:
+        return {
+            "bound": False,
+            "reason": "source_grid_has_no_internal_column_partition",
+            "source_shape": [ny, nx],
+        }
     if (ny, nx) != (fragment.num_rows, fragment.num_cols):
         return {
             "bound": False,
