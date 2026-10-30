@@ -31,6 +31,7 @@ from app.services.table_service import (
     TableFragment,
     TableSourceView,
     render_gfm_rows,
+    table_view,
 )
 from app.utils.deadline import remaining_timeout
 
@@ -758,6 +759,12 @@ class TableSemanticsService:
                 if material:
                     body = body.replace(material, "", 1)
             body = re.sub(r"<!--.*?-->", "", body, flags=re.DOTALL)
+            # Accept only the exact producer projection. Unknown HTML neighbors
+            # and repeated public occurrences must retain their existing bytes.
+            if len(source_view.fragments) == 1:
+                _, owned_grid = table_view(source_view.fragments[0])
+                if owned_grid.startswith("<table>") and body.strip() == owned_grid:
+                    body = ""
             body = "\n".join(line for line in body.splitlines() if not line.strip().startswith("|"))
             unique = markdown.count(source_view.rendered) == 1
             if view.status in {"converted", "partial"} and (body.strip() or not unique):

@@ -437,3 +437,46 @@ async def test_cancellation_keeps_the_original_public_view():
     with pytest.raises(ParserCancelledError):
         await TableSemanticsService().apply(r, ContentParseOptions(), cancel_event=event)
     assert r.parse_result.renderings.markdown == before and not r._semantic_tables
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("extra,duplicate", [("", False), ("\n\n<div>Keep this note</div>", False), ("", True)])
+async def test_owned_html_span_table_reaches_semantic_conversion_without_accepting_neighbors(extra, duplicate):
+    from dataclasses import replace
+
+    f = table([["项目", "2024", ""], ["", "收入", "成本"], ["Alpha", "11", "7"]])
+    f.cells = [c for c in f.cells if (c.row, c.column) not in {(1, 0), (0, 2)}]
+    for cell in f.cells:
+        if (cell.row, cell.column) == (0, 0):
+            cell.row_span = 2
+        if (cell.row, cell.column) == (0, 1):
+            cell.column_span = 2
+    f.pdf_evidence = {"bound": True, "source_cells": [
+        {"row": c.row, "column": c.column, "row_span": c.row_span,
+         "column_span": c.column_span, "text": c.text, "shaded": False}
+        for c in f.cells
+    ]}
+    f.source_header_scopes = [{"header_rows": [0, 1], "body_rows": [2], "complete": True}]
+    f = replace(f, rendered=f"<!-- table-fragment: t1 -->\n\n{f.markdown}")
+    result = document(f)
+    view = result._table_views[0]
+    assert '<td colspan="2">2024</td>' in view.rendered
+    if extra:
+        result._table_views[0] = replace(view, rendered=view.rendered + extra)
+        result.parse_result.renderings.markdown = result.parse_result.renderings.markdown.replace(
+            view.rendered, view.rendered + extra, 1)
+    if duplicate:
+        result.parse_result.renderings.markdown += "\n\n" + view.rendered
+    before = deepcopy(f)
+    await TableSemanticsService().apply(result, ContentParseOptions())
+    output = result.parse_result.renderings.markdown
+    if extra or duplicate:
+        assert result._semantic_tables[0].status == "retained"
+        assert view.rendered in output
+        assert extra in output
+        assert "public_view_not_uniquely_owned" in result._semantic_tables[0].reason_codes
+    else:
+        assert result._semantic_tables[0].status == "converted"
+        assert "Alpha" in output and "收入" in output and "11" in output and "成本" in output and "7" in output
+        assert '<td colspan="2">2024</td>' not in output
+    assert "[图](/asset/test)" in output and f == before
