@@ -98,13 +98,13 @@ MinerU 原生匹配层使用 PDF 书写方向检查字符归属，不包含文�
 
 ## 表格显示映射
 
-本节只说明现有 GFM 显示代码，不规定候选解析管线或最终文档的通用表示。来源结构与显示映射分别生成，单表、内部表头分段和已确认的跨页逻辑表使用同一套无版本定义。显示所需的新增语法行不进入源格、来源行数、原始跨度或语义引用。
+本节只说明现有 GFM 与 HTML 显示代码，不规定候选解析管线或最终文档的通用表示。来源结构与显示映射分别生成，单表、内部表头分段和已确认的跨页逻辑表使用同一套无版本定义。显示所需的新增语法行不进入源格、来源行数、原始跨度或语义引用。
 
 `table-fragment` 或 `logical-table` 打开表格显示作用域，其后的 `table-source`、`table-structure` 和 `table-view-segment` 绑定到该表。`table-source` 的来源页、来源行和逻辑行范围从 1 起算，记录各物理片段和已删除的确认重复头；结构、跨度及分段来源行从 0 起算。合表后的逻辑坐标不能代替 PDF 来源坐标，物理位置须结合 `table-source` 读取。
 
 `table-structure` 声明 `row_coordinate_space="source_logical_rows"`。`num_rows`、`num_cols`、`header_rows` 和 `spans` 描述不含新增语法行的来源逻辑网格；`encoding="anchor_and_blanks"` 表示只在跨度锚点存文字，覆盖位置为空。`structure_valid` 只说明已有网格与跨度证据可用，不证明角色、内容或覆盖完整。
 
-所有显示映射统一保存在 `gfm.segments`，单段也使用列表；`gfm.rendered_num_rows_total` 为各段显示行数之和，不额外生成单段别名。每段之前的 `table-view-segment` 声明同一表身份与连续片段编号，不创建新的物理表。
+GFM显示映射统一保存在 `gfm.segments`，单段也使用列表；`gfm.rendered_num_rows_total` 为各段显示行数之和，不额外生成单段别名。每段之前的 `table-view-segment` 声明同一表身份与连续片段编号，不创建新的物理表。
 
 | 字段 | 含义 |
 | --- | --- |
@@ -115,6 +115,8 @@ MinerU 原生匹配层使用 PDF 书写方向检查字符归属，不包含文�
 | `rendered_num_rows` | 本段全部显示行数，含新增语法行，不含 GFM 分隔线 |
 | `source_to_rendered_row_offset` | `本段显示行号 = 来源逻辑行号 + offset` |
 | `source_header_scope_complete` | 本段是否有完整来源前置表头证据 |
+
+完整物理表的单元格覆盖有效且含明确跨度时，当前显示直接输出HTML的`rowspan`和`colspan`，复制既有标签与值，不因网格存在而新增表头语义。结构未知的表仍保留原用途状态。含嵌入Markdown图片的单元格保留原显示路径，图片引用不因表格显示切换丢失。部分转换后的剩余片段与跨页组合表仍使用下面的GFM映射，不能宣称所有跨度表达均已覆盖。
 
 GFM 语法要求分隔线之前有一行表头。来源首行角色未知时，显示增加一行全空语法头并声明 `[0]`，原首行仍作为数据；来源真实空白首行也继续保留。角色未知的一行来源 `Alpha, 12` 对应以下显示与映射，新增行不代表原件内容：
 

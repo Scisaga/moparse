@@ -259,6 +259,31 @@ def render_gfm_rows(rows: list[list[str]]) -> str:
     return "\n".join(lines)
 
 
+def render_source_rows(rows: list[list[str]], spans: list[list[int]]) -> str:
+    """Expose existing source spans in actual markup, without assigning roles.
+
+    Cells with embedded Markdown images keep their existing display path.
+    No label, value or relationship is completed from geometry or references.
+    """
+    if not spans or any(re.search(r"!\[|<img\b", cell, re.I) for row in rows for cell in row):
+        return render_gfm_rows(rows)
+    anchors = {(row, col): (height, width) for row, col, height, width in spans}
+    covered = {(r, c) for (row, col), (height, width) in anchors.items()
+               for r in range(row, row + height) for c in range(col, col + width) if (r, c) != (row, col)}
+    output = ["<table>"]
+    for row, values in enumerate(rows):
+        output.append("<tr>")
+        for col, value in enumerate(values):
+            if (row, col) in covered:
+                continue
+            height, width = anchors.get((row, col), (1, 1))
+            attributes = (f' rowspan="{height}"' if height > 1 else "") + (f' colspan="{width}"' if width > 1 else "")
+            output.append(f"<td{attributes}>{_escape_cell(value)}</td>")
+        output.append("</tr>")
+    output.append("</table>")
+    return "\n".join(output)
+
+
 def _structure_geometry_known(fragment: TableFragment) -> bool:
     """Confirm that source spans refer to the emitted anchor-and-blank grid."""
     if (
@@ -348,6 +373,14 @@ def _render_table_view(group: list[TableFragment], table_id: str) -> tuple[str, 
     """Render owned source rows with one mapping for single and grouped tables."""
     metadata = _table_structure(group, table_id)
     source_rows = _merged_rows(group)
+    if (len(group) == 1 and metadata["structure_valid"] and metadata["spans"]
+            and sum(cell.row_span * cell.column_span for cell in group[0].cells)
+            == metadata["num_rows"] * metadata["num_cols"]):
+        rendered = render_source_rows(source_rows, metadata["spans"])
+        if rendered.startswith("<table>"):
+            metadata["display_format"] = "html"
+            marker = "<!-- table-structure: " + json.dumps(metadata, ensure_ascii=False, separators=(",", ":")) + " -->"
+            return marker, rendered
     scoped_headers: dict[int, list[int]] = {}
     logical_start = 0
     for index, fragment in enumerate(group):

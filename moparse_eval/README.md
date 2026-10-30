@@ -50,3 +50,5 @@ Paddle原生服务使用单个长期owner线程统一初始化、推理与关闭
 当前读取修正采用`mo-parse-eval-information-v5`，完整标准见[评测任务](../benchmark/evaluation-tasks.md)。每个已纳入业务目标只判正确或错误，全部目标完成判定后才能发布质量报告；评分器读取故障须先修复。`service_evaluation prepare --previous-run <旧运行>`只接纳同一原生输入、参考声明和已冻结执行身份的旧候选，读取原样保存的最终正文；候选worker不挂载旧结果或参考。评分冻结可单独更新只用于分析的共同读取与报告模块，实际适配、后处理、app及依赖仍须与执行冻结一致；必须同步重评原生、旧正文及新正文，不能复用旧分数。`prepare --rescore-native`允许在共同评分规则已修改时先准备候选回放；只放行评分模块差异，原生格式读取及依赖仍须一致，实际评分继续要求八组原生评分索引与当前完整软件身份一致，不能引用准备时的旧成绩。`python -m moparse_eval.table_context_report`逐项列出新增正确、原正确项损失及单位、期间、附注退化。
 
 代码验证使用`python -m pytest -q tests/unit tests/test_markdown_policy.py moparse_eval/tests`。其中`test_information_context.py`覆盖单位、年度、分组和脚注正反例，`test_native_table_context.py`覆盖原生结构与局部转换，`test_moparse_eval_service_observation.py`覆盖实际正文读取及未渲染内部关系不得计分。它们使用受控合成材料，与真实候选专项评分、原页目读及运行成本测量分别记录；通过代码测试不构成语料验收。
+
+最终表格读回直接解析交付Markdown中的HTML单元格及真实跨度；私有跨度或表格分类不能给没有打印跨度的GFM补分。单元格字符范围来自实际HTML源码，旧正文仍按其保存的字节及格式读取。原生、旧正文和新正文必须使用同一当前读取器重新评分。

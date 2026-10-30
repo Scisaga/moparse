@@ -943,3 +943,41 @@ def test_inline_code_in_final_gfm_is_read_as_code_not_as_emphasis():
         if cell.get("source_cell_ref", {}).get("token") == "t1.r1c1"
     )
     assert actual["text"] == "**literal**"
+
+
+def test_actual_html_spans_survive_delivery_and_private_spans_cannot_repair_missing_markup():
+    from app.services.table_service import table_view
+    from moparse_eval.scoring import score_case
+    fragment = _fragment([['Metric', '2024', ''], ['', 'North', 'South'], ['Revenue', '17', '11']])
+    fragment.cells = [cell for cell in fragment.cells if (cell.row, cell.column) not in {(0, 2), (1, 0)}]
+    fragment.cells[0].row_span = 2
+    fragment.cells[1].column_span = 2
+    marker, rendered = table_view(fragment)
+    assert '<td colspan="2">2024</td>' in rendered
+    fragment.rendered = marker + '\n\n' + rendered
+    result = _result(fragment.rendered)
+    result._table_fragments = [fragment]
+    reference = {'sample_id': 'invented', 'review_status': 'confirmed', 'units': [
+        {'id': 'r', 'kind': 'table_record', 'status': 'confirmed', 'literal': 'Revenue', 'pages': [1],
+         'table': {'row_header_path': ['Revenue'], 'fields': [
+             {'column_header_path': ['2024', 'South'], 'value': '11'}]}}]}
+    observation, _ = read_final_observation(build_service_observation(result, sample_id='invented'))
+    assert score_case(reference, observation)['units'][0]['fields'][0]['outcome'] == 'correct'
+    value = next(cell for cell in _cells(observation) if cell['text'] == '11')
+    a, b = value['final_markdown_span']
+    assert result.markdown[a:b] == '11'
+    # The private source still has its span; only the real HTML has changed.
+    fragment.rendered = rendered.replace(' colspan="2"', '')
+    result.markdown = fragment.rendered
+    observation, _ = read_final_observation(build_service_observation(result, sample_id='invented'))
+    assert score_case(reference, observation)['units'][0]['fields'][0]['outcome'] == 'incorrect'
+
+
+def test_span_display_keeps_source_literal_signs_and_embedded_images_on_the_existing_path():
+    from app.services.table_service import render_source_rows
+    rows = [['Group', ''], ['(17)', '< 11 & 5%']]
+    original = deepcopy(rows)
+    rendered = render_source_rows(rows, [[0, 0, 1, 2]])
+    assert '(17)' in rendered and '&lt; 11 &amp; 5%' in rendered and rows == original
+    image = [['![source](assets/source.png)', ''], ['Label', '17']]
+    assert render_source_rows(image, [[0, 0, 1, 2]]).startswith('| ')

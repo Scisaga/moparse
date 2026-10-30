@@ -121,20 +121,10 @@ def test_source_multilevel_headers_and_spans_are_visible_without_coordinates() -
         "header_scope_rows": [0, 1],
         "header_scope_complete": True,
         "spans": [[0, 0, 2, 1], [0, 1, 1, 2], [2, 0, 2, 1]],
-        "gfm": {
-            "segments": [{
-                "index": 0,
-                "source_rows": [0, 1, 2, 3],
-                "header_rows": [0, 1],
-                "synthetic_header_rows": [],
-                "rendered_num_rows": 4,
-                "source_to_rendered_row_offset": 0,
-                "source_header_scope_complete": True,
-            }],
-            "rendered_num_rows_total": 4,
-        },
+        "display_format": "html",
     }
-    assert _visible_table(fragment.rendered) == fragment.markdown == render_gfm_rows(fragment.rows)
+    assert '<td rowspan="2">' in fragment.rendered and '<td colspan="2">' in fragment.rendered
+    assert fragment.markdown == render_gfm_rows(fragment.rows)
     assert not {"bbox", "cells", "text", "unit_text", "period"} & metadata.keys()
     assert "原始分组" not in json.dumps(metadata, ensure_ascii=False)
 

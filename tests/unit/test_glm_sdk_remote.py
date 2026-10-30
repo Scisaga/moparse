@@ -156,7 +156,7 @@ def test_explicit_cell_end_marker_preserves_opening_role_and_multilevel_spans(
     assert cells[1].is_column_header is True
 
 
-def test_mismatched_explicit_header_end_exports_complete_gfm_and_source_rows() -> None:
+def test_mismatched_explicit_header_end_preserves_source_rows_and_visible_spans() -> None:
     content = (
         "<table><tr><th rowspan='2'>Label</td><th colspan='2'>Values (kg)</th></tr>"
         "<tr><th>Prior</th><th>Current</th></tr>"
@@ -186,8 +186,9 @@ def test_mismatched_explicit_header_end_exports_complete_gfm_and_source_rows() -
         preserve_page_breaks=True,
         table_fragments=fragments,
     )
-    assert "<table" not in joined.casefold()
-    assert fragment.markdown in joined
+    assert '<td rowspan="2">Label</td>' in joined
+    assert '<td colspan="2">Values (kg)</td>' in joined
+    assert '<td>-2.50</td>' in joined and '<td>0.2907</td>' in joined
     assert (
         "<!-- table-source: sdk_p1_t1; source-page: 1; source-rows: 1-3; "
         "logical-rows: 1-3; repeated-header-rows: 0 -->"

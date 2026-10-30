@@ -170,9 +170,9 @@ def test_display_segment_cannot_split_a_source_rowspan() -> None:
     marker, view = table_view(item)
     state = meta(marker)
     assert state["spans"] == [[0, 0, 2, 1]]
-    assert len(state["gfm"]["segments"]) == 1
-    assert state["gfm"]["segments"][0]["source_rows"] == [0, 1, 2]
-    assert view.count("table-view-segment:") == 1
+    assert state["display_format"] == "html"
+    assert '<td rowspan="2">Group</td>' in view
+    assert view.count('<tr>') == 3
     assert item.cells == original
 
 

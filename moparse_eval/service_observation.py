@@ -31,14 +31,14 @@ from app.services.table_service import (
     _escape_cell,
 )
 
-from .adapters import markdown_cells
+from .adapters import html_cells, markdown_cells
 from .information_reading import unit_scope_literal
 from .native_relations import native_relations
 from .representations import visible_text
 
 SERVICE_OBSERVATION_VERSION = "mo-parse-final-output-observation-v7"
 FINAL_PAGE_PROVENANCE_VERSION = "mo-parse-final-page-provenance-v1"
-FINAL_OBSERVATION_READBACK_VERSION = "mo-parse-final-output-readback-v8"
+FINAL_OBSERVATION_READBACK_VERSION = "mo-parse-final-output-readback-v9"
 _METADATA_KEYS = {"run_id", "suite", "phase", "repetition", "timing", "resources", "runtime"}
 _IDENTITY_HEADER = re.compile(
     r"(?:[\u3400-\u9fff]{0,12}(?:名称|名稱|姓名)|项目|項目|认购方|認購方|认购对象|認購對象|"
@@ -621,6 +621,26 @@ def _scoped_partial_blocks(
     return blocks
 
 
+def _printed_html_block(raw: str, absolute: int, owner: str, pages: list[int]) -> dict[str, Any]:
+    """Read actual table markup; producer metadata supplies provenance only."""
+    path = f"#/markdown/{absolute}:{absolute + len(raw)}"
+    cells = html_cells(raw, path)
+    spans = list(re.finditer(r"<t[dh]\b[^>]*>(.*?)</t[dh]\s*>", raw, re.I | re.S))
+    if len(cells) != len(spans):
+        raise ValueError("printed HTML cell ranges are not readable")
+    for cell, match in zip(cells, spans, strict=True):
+        if visible_text(match[1], "html") != cell["text"]:
+            raise ValueError("printed HTML cell text differs from its markup")
+        a, b = absolute + match.start(1), absolute + match.end(1)
+        cell.update(final_markdown_span=[a, b], native_path=f"#/markdown/{a}:{b}",
+                    service_evidence_state="retained", provenance_pages=pages)
+    return {"id": f"service:retained-html:{owner}:{absolute}", "kind": "table_body", "text": raw,
+            "text_format": "html", "cells": cells, "native_path": path,
+            "final_markdown_span": [absolute, absolute + len(raw)], "provenance_pages": pages,
+            "parent_id": f"service:printed-html:{absolute}", "native_table_container": f"service:printed-html:{absolute}",
+            "service_evidence_state": "retained", "display_geometry_reader": "actual_html_only"}
+
+
 def _grid_blocks(
     rendered: str, final: str, fragments: Sequence[TableFragment], owner: str
 ) -> list[dict[str, Any]]:
@@ -642,6 +662,11 @@ def _grid_blocks(
         logical_start += len(fragment.rows) - skip
     blocks: list[dict[str, Any]] = []
     for start, end, token in _spans(rendered):
+        if token.type == "html_block" and re.match(r"\s*<table\b", rendered[start:end], re.I):
+            raw = rendered[start:end].rstrip("\r\n")
+            blocks.append(_printed_html_block(raw, base + start, owner,
+                                              sorted({fragment.page_number for fragment in fragments})))
+            continue
         if token.type != "table_open":
             continue
         raw = rendered[start:end].rstrip("\r\n")
