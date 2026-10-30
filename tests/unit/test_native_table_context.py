@@ -382,6 +382,42 @@ def test_complete_amount_and_currency_caption_keeps_its_exact_literal_payload():
     assert _unit_caption("单位:元 币种:贷款申请方") is None
 
 
+def test_a_literal_empty_amount_slot_keeps_its_unit_without_inventing_a_value():
+    from app.models.parse_result import DocumentParseResult, PageParseResult, ParsePipeline
+    from app.services.final_content_service import FinalContentService
+    from moparse_eval.matching import match_units
+    from moparse_eval.scoring import _score_records
+    from moparse_eval.service_observation import build_service_observation, read_final_observation
+
+    f = table([["Name", "贷款金额", "本期合计还款金额", "利率(%)", "备注", "序号"],
+               ["Alpha", "17", "", "", "", ""]])
+    f.context_refs = (TextRef("native", 1, "caption", "元 币种:人民币", "unit", 3, 11,
+                              (1,), (0, 1, 2, 3, 4, 5)),)
+    view = bind_table_view("view", [f], [f])
+    record = view.records[0]
+    blank = next(v for v in record.values if v.value.column == 2)
+    assert blank.value_state == "literal" and blank.unit_refs == f.context_refs
+    rendered = render_semantic_view(view, [f])
+    assert "本期合计还款金额：（单位：元 币种:人民币）" in rendered
+    assert "本期合计还款金额：0" not in rendered and "原表留空" not in rendered
+    assert all(not v.unit_refs for v in record.values if v.value.column in {4, 5})
+    ratio = next(v for v in record.values if v.value.column == 3)
+    assert all(ref != f.context_refs[0] for ref in ratio.unit_refs)
+    result = DocumentParseResult(document_id="authored", filename="authored.pdf", mime_type="application/pdf",
+                                 page_count=1, processed_pages=1, markdown=rendered,
+                                 pages=[PageParseResult(page_number=1, content=rendered)],
+                                 pipeline=ParsePipeline(profile="accurate", primary="mineru"))
+    result._table_fragments = [f]
+    result._semantic_tables = [view]
+    FinalContentService().apply(result)
+    observation, _diagnostic = read_final_observation(build_service_observation(result, sample_id="authored"))
+    target = {"id": "blank-amount", "kind": "table_record", "pages": [1],
+              "table": {"row_header_path": ["Alpha"], "fields": [
+                  {"column_header_path": ["本期合计还款金额"], "value": "", "unit": "元"}]}}
+    _units, metrics = _score_records([target], observation, True, match_units([target], observation))
+    assert metrics["target_fields"] == metrics["information_correct_fields"] == 1
+
+
 def test_existing_source_scope_owns_amount_caption_when_native_headers_are_unclassified():
     from app.models.parse_result import DocumentParseResult, ParsePipeline
     from app.services.table_context_service import prepare_native_table_scopes

@@ -40,6 +40,7 @@ _PERIOD = re.compile(r"报告期|同期|年度|期末|年末|月末|\d{4}\s*年|
 _UNIT = re.compile(r"[（(][^()（）]*(?:元|股|%|％)[^()（）]*[）)]")
 _NUMBER = re.compile(r"[+\-−]?(?:\d[\d,.]*(?:%|％)?|[—–-])\Z")
 _RATIO_HEADER = re.compile(r"[%％‰]|同比|佔|占|比例|比率|percent|change|ratio|rate", re.I)
+_AMOUNT_HEADER = re.compile(r"金额|金額|余额|餘額|额度|額度|\bAmount\b|\bBalance\b", re.I)
 
 
 def _compact(value: str) -> str:
@@ -264,6 +265,9 @@ def _qualify_relation(fragment: TableFragment, relation: ValueRelation,
     from app.services.table_context_service import scalar
     cell = registry[relation.value]
     labels = [registry[r].text for r in relation.column_headers]
+    amount_slot = scalar(cell.text) or (
+        not cell.text.strip() and any(_AMOUNT_HEADER.search(text) for text in labels)
+    )
     unit_refs = list(relation.unit_refs)
     period_refs = list(relation.period_refs)
     notes = []
@@ -272,7 +276,7 @@ def _qualify_relation(fragment: TableFragment, relation: ValueRelation,
     own_per_share = _per_share_currency([registry[r].text for r in relation.row_headers], cell.text)
     if ratio or own_unit:
         unit_refs = [ref for ref in unit_refs if re.search(r"[%％‰]", registry[ref].text)]
-    if scalar(cell.text) and not own_unit and not own_per_share and not ratio and not unit_refs:
+    if amount_slot and not own_unit and not own_per_share and not ratio and not unit_refs:
         active_headers = {r for scope in fragment.source_header_scopes if cell.row in scope.get("body_rows", [])
                           for r in scope.get("header_rows", [])}
         corner = next((c for c in fragment.cells if c.column == 0 and c.row in active_headers
@@ -282,7 +286,7 @@ def _qualify_relation(fragment: TableFragment, relation: ValueRelation,
     for ref in fragment.context_refs:
         if cell.row not in ref.body_rows or cell.column not in ref.columns:
             continue
-        if ref.kind == "unit" and scalar(cell.text) and not own_unit and not own_per_share and not unit_refs and not ratio:
+        if ref.kind == "unit" and amount_slot and not own_unit and not own_per_share and not unit_refs and not ratio:
             unit_refs.append(ref)
         elif ref.kind == "period" and not period_refs:
             period_refs.append(ref)
