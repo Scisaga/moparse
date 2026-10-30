@@ -27,7 +27,12 @@ from .information import (
 from .information import (
     row_path_locates as _declared_path_locates,
 )
-from .information_reading import ambiguous_note_scalar, read_information_observation, scalar_notes
+from .information_reading import (
+    _scalar_units,
+    ambiguous_note_scalar,
+    read_information_observation,
+    scalar_notes,
+)
 from .matching import in_page_scope, match_units, observation_candidates, reference_parent_scope
 from .metrics import (
     aggregate_text_metrics,
@@ -45,6 +50,41 @@ _RELATION_STATES = (
     "confirmed_correct", "confirmed_incorrect", "native_not_provided",
     "endpoint_unresolved", "unassessable",
 )
+
+
+def require_complete_target_grading(score: dict[str, Any]) -> None:
+    """Prevent final quality publication until every admitted field is graded.
+
+    This checks score outcomes only, without reading or accepting references.
+    It never converts a reader failure into an incorrect candidate answer.
+    """
+    fields = [(unit["id"], field) for unit in score.get("units", [])
+              if unit.get("kind") == "table_record" for field in unit.get("fields", [])
+              if field.get("status") != "not_scored"]
+    metric = score.get("metrics", {}).get("table_records", {})
+    expected = metric.get("target_fields")
+    if expected is not None and expected != len(fields):
+        raise ValueError("target grading incomplete: field outcomes do not cover the fixed target count")
+    identities = [(identity, field.get("index")) for identity, field in fields]
+    if len(identities) != len(set(identities)):
+        raise ValueError("target grading incomplete: duplicated target identities")
+    incomplete = [(identity, field.get("index")) for identity, field in fields
+                  if type(field.get("content_exact")) is not bool
+                  or field.get("information", {}).get("status") not in {"correct", "incorrect"}
+                  or field.get("outcome") != field.get("information", {}).get("status")]
+    actual = {"graded_fields": len(fields),
+              "correct_fields": sum(field.get("content_exact") is True for _, field in fields),
+              "incorrect_fields": sum(field.get("content_exact") is False for _, field in fields),
+              "information_correct_fields": sum(field.get("outcome") == "correct" for _, field in fields),
+              "information_incorrect_fields": sum(field.get("outcome") == "incorrect" for _, field in fields)}
+    if any(key in metric and metric[key] != value for key, value in actual.items()):
+        raise ValueError("target grading incomplete: aggregate outcomes disagree with field decisions")
+    if incomplete or metric.get("unresolved_fields", 0) or metric.get("information_unresolved_fields", 0):
+        raise ValueError(
+            f"target grading incomplete for {score.get('sample_id')!r}: "
+            f"{len(incomplete)} fields have no final correct/incorrect decision; "
+            "repair evaluation before publishing quality results"
+        )
 
 
 def _native_value_and_notes(cell: dict[str, Any], field: dict[str, Any]) -> tuple[str, Any]:
@@ -66,6 +106,9 @@ def _information_value_equal(expected: str, actual: str, field: dict[str, Any],
 
 def _record_path_locates(row_path: list[str], item: dict[str, Any], collapse_whitespace: bool) -> bool:
     cell = item["cell"]
+    if cell.get("information_prose_record"):
+        return all(any(_label_in_native_cell(label, actual, collapse_whitespace)
+                       for actual in cell.get("information_record_labels", [])) for label in row_path)
     paths = [cell.get("row_header_path")]
     if cell.get("service_evidence_state") == "converted":
         paths += cell.get("printed_record_row_paths", [])
@@ -92,39 +135,24 @@ def _record_candidate_pool(
     scope_key = (unit.get("table", {}).get("id"), tuple(unit.get("pages", [])))
     anchored = matching.get("information_table_bodies", {}).get(scope_key, set())
     if label_match is None and len(anchored) == 1:
-        pool = [item for item in pool if _candidate_table_identity(item) in anchored]
-    row_path = unit.get("table", {}).get("row_header_path") or []
-    locator = {**unit, "kind": "table_cell", "reference_text": row_path[-1] if row_path else ""}
-    parent, needs_scope, _numeric = reference_parent_scope(locator, collapse_whitespace=collapse_whitespace)
-    if needs_scope and not parent:
-        return [], "record_parent_scope_unavailable"
-    if needs_scope and parent is not None:
-        parent_match = matching["matches"].get(parent)
-        if parent_match is None:
-            return [], "record_parent_not_uniquely_localized"
-        parent_ids, ambiguous = _relation_endpoint_ids(parent_match, matching, observation, containers=False)
-        if ambiguous:
-            return [], "record_parent_identity_unresolved"
-        allowed = set().union(*parent_ids)
-        scoped = []
-        for candidate in pool:
-            aliases, ambiguous = _relation_endpoint_ids(
-                {"candidate_id": candidate["id"]}, matching, observation, containers=True,
-            )
-            if not ambiguous and any(allowed & identities for identities in aliases):
-                scoped.append(candidate)
-        pool = scoped
+        pool = [item for item in pool if _candidate_table_identity(item) in anchored
+                or item["cell"].get("information_prose_record")]
+    # Query the actual business labels together. A reference-side parent ID
+    # is navigation metadata, not another required prediction.
     if label_match is not None:
         table, _aliases, context = _table_endpoint_scope(label_match, matching, observation)
         if not context or table is None:
-            return [], "record_native_table_scope_unresolved"
+            # A printed record can express the same fact without a table.
+            # A table-only locator is not an additional evaluation target.
+            return pool, None
         claims = label_match.get("claims") or [label_match]
         bodies = {matching["candidate_map"].get(claim["candidate_id"], {}).get("parent_id")
                   for claim in claims}
         if len(bodies) != 1 or None in bodies:
             return [], "record_native_body_scope_unresolved"
         body = next(iter(bodies))
-        pool = [item for item in pool if item.get("parent_id") == body]
+        pool = [item for item in pool if item.get("parent_id") == body
+                or item["cell"].get("information_prose_record")]
         if not pool:
             return [], "record_native_parent_scope_conflict"
     return pool, None
@@ -231,7 +259,7 @@ def _grid_column_header_pool(
     declared = any(item["cell"].get("is_column_header") is True for item in group)
     if not declared and not probes:
         scoped = [item for item in group if "information_header_body_rows" in item["cell"]]
-        if scoped and any(item["cell"].get("information_scope_switch") for item in scoped):
+        if scoped:
             return [item for item in scoped if data_rows <= set(item["cell"]["information_header_body_rows"])]
         return group
     output = []
@@ -323,53 +351,73 @@ def _locate_record_field(
     solutions: list[dict[str, Any]] = []
     failures: list[dict[str, Any]] = []
     for body, group in bodies.items():
-        explicit_rows = [item for item in group if _record_path_locates(row_path, item, collapse_whitespace)]
-        if explicit_rows:
-            found = [item for item in explicit_rows if column_path_locates(
-                column_path, item["cell"].get("column_header_path"), collapse_whitespace,
-                [*item["cell"].get("units", []), *([item["cell"]["unit"]] if isinstance(item["cell"].get("unit"), str) else [])])]
-            for item in found:
-                solutions.append({"selected": [item], "rows": [], "columns": [],
-                                  "group": group, "method": "explicit_native_paths"})
-            if not found:
-                failures.append({"body": body, "axis": "column", "reason": "native_column_path_unavailable",
-                                 "label_presence": [any(_label_in_native_cell(label, text, collapse_whitespace)
-                                    for item in explicit_rows for text in item["cell"].get("column_header_path", []))
-                                    for label in column_path]})
-            continue
-        row_paths, reason = endpoint_paths(row_path, group, "row", collapse_whitespace)
-        if reason:
-            failures.append({"body": body, "axis": "row", "reason": reason,
-                             "label_presence": [any(_label_in_native_cell(label, item["text"], collapse_whitespace)
-                                                    for item in group) for label in row_path]})
-            continue
-        for row_endpoints in row_paths:
-            column_pool = _grid_column_header_pool(group, row_endpoints)
-            column_paths, reason = endpoint_paths(column_path, column_pool, "column", collapse_whitespace)
-            if reason:
-                failures.append({"body": body, "axis": "column", "reason": reason,
-                                 "label_presence": [any(_label_in_native_cell(label, item["text"], collapse_whitespace)
-                                                        for item in group) for label in column_path]})
+        before_body = len(solutions)
+        for physical_rows, physical_columns, orientation in (
+            (row_path, column_path, "as_returned"), (column_path, row_path, "transposed"),
+        ):
+            if orientation == "transposed" and len(solutions) > before_body:
+                break
+            explicit_rows = [item for item in group if _record_path_locates(physical_rows, item, collapse_whitespace)]
+            if explicit_rows:
+                found = [item for item in explicit_rows if column_path_locates(
+                    physical_columns, item["cell"].get("column_header_path"), collapse_whitespace,
+                    [*item["cell"].get("units", []), *([item["cell"]["unit"]] if isinstance(item["cell"].get("unit"), str) else [])],
+                    [*item["cell"].get("periods", []), *([item["cell"]["period"]] if isinstance(item["cell"].get("period"), str) else [])])]
+                for item in found:
+                    solutions.append({"selected": [item], "rows": [], "columns": [],
+                                      "group": group, "method": "explicit_native_paths", "orientation": orientation})
+                if not found:
+                    failures.append({"body": body, "axis": "column", "reason": "native_column_path_unavailable",
+                                     "label_presence": [any(_label_in_native_cell(label, text, collapse_whitespace)
+                                        for item in explicit_rows for text in item["cell"].get("column_header_path", []))
+                                        for label in physical_columns]})
                 continue
-            for column_endpoints in column_paths:
-                row_ranges = [_native_range(item["cell"], "row") for item in row_endpoints]
-                col_ranges = [_native_range(item["cell"], "col") for item in column_endpoints]
-                if any(extent is None for extent in [*row_ranges, *col_ranges]):
-                    failures.append({"body": body, "reason": "native_grid_fields_unavailable"})
+            # Path-only assertions have no physical grid. Failure to match
+            # their printed labels does not make their representation unreadable.
+            grid = [item for item in group if _native_range(item["cell"], "row")
+                    and _native_range(item["cell"], "col")]
+            row_paths, reason = endpoint_paths(physical_rows, grid, "row", collapse_whitespace)
+            if reason:
+                failures.append({"body": body, "axis": "row", "reason": reason,
+                                 "label_presence": [any(_label_in_native_cell(label, item["text"], collapse_whitespace)
+                                                        for item in group) for label in physical_rows]})
+                continue
+            for row_endpoints in row_paths:
+                if any(item["cell"].get("information_header_body_rows") is not None
+                       and item["cell"].get("is_row_header") is not True for item in row_endpoints):
                     continue
-                endpoint_ids = {item["id"] for item in [*row_endpoints, *column_endpoints]}
-                selected = []
-                for item in group:
-                    native_rows, native_cols = _native_range(item["cell"], "row"), _native_range(item["cell"], "col")
-                    if item["id"] not in endpoint_ids and native_rows and native_cols and (
-                        all(native_rows & extent for extent in row_ranges if extent is not None)
-                        and all(native_cols <= extent for extent in col_ranges if extent is not None)
-                    ):
-                        selected.append(item)
-                solutions.append({"selected": selected, "rows": row_endpoints, "columns": column_endpoints,
-                                  "group": group, "method": "native_grid_relation_probes"})
-                if len(solutions) > 512:
-                    return {"reason": "native_label_path_search_limit", "diagnostic": {"solution_limit": 512}}
+                column_pool = _grid_column_header_pool(grid, row_endpoints)
+                column_paths, reason = endpoint_paths(physical_columns, column_pool, "column", collapse_whitespace)
+                if reason:
+                    failures.append({"body": body, "axis": "column", "reason": reason,
+                                     "label_presence": [any(_label_in_native_cell(label, item["text"], collapse_whitespace)
+                                                            for item in group) for label in physical_columns]})
+                    continue
+                for column_endpoints in column_paths:
+                    row_ranges = [_native_range(item["cell"], "row") for item in row_endpoints]
+                    col_ranges = [_native_range(item["cell"], "col") for item in column_endpoints]
+                    if any(extent is None for extent in [*row_ranges, *col_ranges]):
+                        failures.append({"body": body, "reason": "native_grid_fields_unavailable"})
+                        continue
+                    endpoint_ids = {item["id"] for item in [*row_endpoints, *column_endpoints]}
+                    selected = []
+                    for item in group:
+                        native_rows, native_cols = _native_range(item["cell"], "row"), _native_range(item["cell"], "col")
+                        if item["id"] not in endpoint_ids and native_rows and native_cols and (
+                            all(native_rows & extent for extent in row_ranges if extent is not None)
+                            and all(native_cols <= extent for extent in col_ranges if extent is not None)
+                        ):
+                            selected.append(item)
+                    solutions.append({"selected": selected, "rows": row_endpoints, "columns": column_endpoints,
+                                      "group": group, "method": "native_grid_relation_probes", "orientation": orientation})
+                    if len(solutions) > 512:
+                        return {"reason": "native_label_path_search_limit", "diagnostic": {"solution_limit": 512}}
+    unique: dict[tuple[Any, ...], dict[str, Any]] = {}
+    for solution in solutions:
+        key = (tuple(item["id"] for item in solution["selected"]),
+               () if solution["selected"] else tuple(item["id"] for item in [*solution["rows"], *solution["columns"]]))
+        unique.setdefault(key, solution)
+    solutions = list(unique.values())
     diagnostic: dict[str, Any] = {"complete_label_solutions": len(solutions), "scope_failures": failures}
     diagnostic["diagnosis"] = (
         "multiple_complete_correspondences" if len(solutions) > 1
@@ -384,16 +432,79 @@ def _locate_record_field(
         else:
             reasons = {failure["reason"] for failure in failures}
             reason = next(iter(reasons)) if len(reasons) == 1 else "native_fields_unresolved"
-        return {"reason": reason, "diagnostic": diagnostic}
+        return {"reason": reason, "diagnostic": diagnostic, "alternatives": solutions}
     solution = solutions[0]
     selected = solution["selected"]
     if len(selected) > 1 or any(item.get("duplicate_native_id") for item in selected):
-        return {"reason": "ambiguous_native_value_position", "diagnostic": diagnostic}
+        return {"reason": "ambiguous_native_value_position", "diagnostic": diagnostic, "alternatives": [solution]}
     if selected and solution["method"] == "native_grid_relation_probes":
         reason = _grid_value_header_scope(selected[0], solution["group"], solution["rows"], solution["columns"])
         if reason:
             return {"reason": reason, "diagnostic": diagnostic}
     return {**solution, "reason": None, "diagnostic": diagnostic}
+
+
+def _required_qualifiers(table: dict[str, Any], field: dict[str, Any]) -> dict[str, Any]:
+    result = {key: field.get(key, table.get(key)) for key in ("unit", "period", "note_markers")}
+    result = {key: value for key, value in result.items() if value is not None}
+    if "unit" not in result:
+        literal_units = [unit for unit in _scalar_units(str(field.get("value", "")))
+                         if unit not in {"$", "€", "£", "¥"}]
+        if len(literal_units) == 1:
+            result["unit"] = literal_units[0]
+    return result
+
+
+def _field_qualifiers(table: dict[str, Any], field: dict[str, Any], resolution: dict[str, Any],
+                      *, identity_only: bool = False) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
+    """Read a candidate field's own qualifiers, without inspecting its target value."""
+    row_endpoints, column_endpoints = resolution["rows"], resolution["columns"]
+    if resolution["selected"]:
+        candidate = resolution["selected"][0]
+    else:
+        # An absent value still has an observed row and column scope. Read
+        # those actual headers to distinguish an absent CNY measure from an
+        # available USD measure; this does not create a candidate value.
+        rows = set.intersection(*(_native_range(item["cell"], "row") or set() for item in row_endpoints))
+        columns = set.intersection(*(_native_range(item["cell"], "col") or set() for item in column_endpoints))
+        headers = [item["text"] for item in resolution["group"]
+                   if rows <= set(item["cell"].get("information_header_body_rows", []))
+                   and columns & (_native_range(item["cell"], "col") or set())]
+        common = resolution["group"][0]["cell"]
+        scope = {"text": "", "information_headers": headers,
+                 "information_row_labels": [item["text"] for item in row_endpoints],
+                 **{key: common[key] for key in ("information_context", "information_table_units") if key in common}}
+        if rows and columns:
+            scope.update(row=min(rows), row_span=max(rows) - min(rows) + 1,
+                         col=min(columns), col_span=max(columns) - min(columns) + 1)
+        candidate = {"cell": scope}
+    method = resolution["method"]
+    _actual, actual_notes = _native_value_and_notes(candidate["cell"], field)
+    qualifiers = _required_qualifiers(table, field)
+    if identity_only:
+        qualifiers.pop("note_markers", None)
+    native_cell = candidate["cell"]
+    if not identity_only and "note_markers" in field:
+        qualifiers["note_markers"] = field["note_markers"]
+        if actual_notes is not None:
+            native_cell = {**native_cell, "note_markers": actual_notes}
+    endpoint_texts = [item["text"] for item in [*row_endpoints, *column_endpoints]]
+    endpoint_texts += [text for key in ("row_header_path", "column_header_path")
+                      for text in native_cell.get(key, []) if isinstance(text, str)]
+    caption = candidate.get("block", {}).get("caption")
+    if isinstance(caption, str):
+        endpoint_texts.append(caption)
+    if method == "native_grid_relation_probes":
+        for column in _native_range(native_cell, "col") or []:
+            active = _active_column_header_group(resolution["group"], column, _native_range(native_cell, "row") or set())
+            if active:
+                endpoint_texts += [item["text"] for item in resolution["group"] if item["id"] in active]
+    # Actual explicit HTML links may add scoped units or notes.
+    linked, error = _html_header_references(candidate, resolution["group"])
+    if linked and not error:
+        endpoint_texts += [item["text"] for item in resolution["group"] if item["id"] in linked]
+    evidence = qualifier_evidence(qualifiers, native_cell, endpoint_texts)
+    return qualifiers, native_cell, evidence
 
 
 def _score_records(
@@ -428,7 +539,7 @@ def _score_records(
     binding_observable = binding_correct = located_records = 0
     field_text: list[dict[str, Any]] = []
 
-    def unresolved(output: dict[str, Any], reason: str) -> None:
+    def reject(output: dict[str, Any], reason: str) -> None:
         output["reason"] = reason
         for item in output["fields"]:
             item["reason"] = reason
@@ -439,10 +550,12 @@ def _score_records(
         fields = table.get("fields") or []
         output: dict[str, Any] = {
             "id": unit["id"], "kind": "table_record", "reference": unit.get("reference"),
-            "status": "record_unresolved", "fields": [
-                {"index": index, "status": "unresolved", "reason": "record_scope_unresolved",
-                 "strict_exact": None, "content_exact": None}
-                for index in range(len(fields))
+            "status": "record_incorrect", "fields": [
+                    {"index": index, "status": "incorrect", "reason": "required_business_binding_not_expressed",
+                     "required_qualifiers": list(_required_qualifiers(table, field)),
+                 "strict_exact": False, "content_exact": False,
+                 "information": {"status": "incorrect", "reason": "required_business_binding_not_expressed"}}
+                    for index, field in enumerate(fields)
             ], "whole_record_edit_distance": None,
         }
         rows.append(output)
@@ -450,9 +563,11 @@ def _score_records(
         field_annotated_records += int(bool(fields))
         if table.get("row_binding", {}).get("status") in {"unresolved", "unknown", "not_annotated"}:
             source_unscoped_fields += len(fields)
-            unresolved(output, "source_row_binding_not_annotated")
+            reject(output, "source_row_binding_not_annotated")
             for item in output["fields"]:
                 item["status"] = "not_scored"
+                item.update(strict_exact=None, content_exact=None)
+                item.pop("information", None)
             continue
         target_fields += len(fields)
         blank_targets += sum(field.get("value") == "" for field in fields)
@@ -460,26 +575,66 @@ def _score_records(
         if label_match:
             output["label_match"] = label_match
             located_records += 1
-        if not row_path or not fields or any(not isinstance(label, str) or not label for label in row_path):
-            unresolved(output, "explicit_record_field_annotations_unavailable")
+        if not fields:
+            output.update(status="record_without_field_targets", reason="no_declared_field_targets")
             continue
+        if not row_path or any(not isinstance(label, str) or not label for label in row_path):
+            raise ValueError("frozen target has no evaluable business identity or fields")
         pool, reason = _record_candidate_pool(
             unit, candidates, observation, matching, label_match, collapse_whitespace,
         )
         if reason:
-            unresolved(output, reason)
+            reject(output, reason)
             continue
         for field, field_row in zip(fields, output["fields"], strict=True):
             value = field.get("value")
             column_path = field.get("column_header_path")
             if (not isinstance(value, str) or len(value) > 512 or not isinstance(column_path, list)
                     or not column_path or any(not isinstance(label, str) or not label for label in column_path)):
-                field_row["reason"] = "small_literal_or_column_path_unavailable"
-                continue
+                raise ValueError("frozen field lacks an evaluable literal or business label")
             resolution = _locate_record_field(row_path, column_path, pool, collapse_whitespace)
+            alternatives = [projected for alternative in resolution.get("alternatives", [])
+                            for projected in ([{**alternative, "selected": [candidate]}
+                                for candidate in alternative["selected"] if not candidate.get("duplicate_native_id")]
+                                if alternative["selected"] else [alternative])]
+            if alternatives:
+                # Period and unit identify the requested measure. Each comes
+                # from this candidate's own field; its value is not a locator.
+                qualified = [alternative for alternative in alternatives if all(
+                    item["status"] == "correct" for item in
+                    _field_qualifiers(table, field, alternative, identity_only=True)[2].values())]
+                considered = qualified or alternatives
+                present = [alternative for alternative in considered if alternative["selected"]]
+                agree = len(considered) == 1 or not present
+                if len(present) == len(considered):
+                    literal, notes = _native_value_and_notes(present[0]["selected"][0]["cell"], field)
+                    agree = True
+                for alternative in present if len(present) == len(considered) else []:
+                    actual, actual_notes = _native_value_and_notes(alternative["selected"][0]["cell"], field)
+                    attributes, _cell, evidence = _field_qualifiers(table, field, alternative)
+                    agree &= _information_value_equal(literal, actual, {**field, **attributes}, evidence)
+                    agree &= "note_markers" not in field or actual_notes == notes
+                if agree:
+                    resolution = {**considered[0], "reason": None, "diagnostic": resolution["diagnostic"],
+                                  "equivalent_claim_ids": [alternative["selected"][0]["id"] for alternative in present]}
+                    for alternative in present:
+                        if alternative["method"] == "native_grid_relation_probes":
+                            error = _grid_value_header_scope(alternative["selected"][0], alternative["group"],
+                                                             alternative["rows"], alternative["columns"])
+                            if error:
+                                resolution["reason"] = error
+                                break
             field_row["localization"] = resolution["diagnostic"]
             if resolution["reason"]:
+                if resolution["reason"] in {"native_label_path_search_limit", "native_grid_fields_unavailable"}:
+                    raise ValueError("scoring reader cannot evaluate candidate expression: " + resolution["reason"])
                 field_row["reason"] = resolution["reason"]
+                field_row["information"]["reason"] = resolution["reason"]
+                field_row["candidate_evidence"] = {"pages": unit.get("pages", []),
+                    "field_ids": [item["id"] for item in pool],
+                    "label_witnesses": [{"id": item["id"], "native_path": item.get("native_path"), "text": item["text"]}
+                        for item in pool if any(_label_in_native_cell(label, item["text"], collapse_whitespace)
+                                                for label in [*row_path, *column_path])]}
                 continue
             method = resolution["method"]
             output["method"] = method
@@ -489,16 +644,19 @@ def _score_records(
                 grid_targets += 1
                 grid_correct += int(len(selected) == 1)
                 field_row["grid_relation"] = {"target_candidates": len(selected), "correct": len(selected) == 1}
-            if not selected:
-                field_row.update(status="target_missing", reason="no_value_at_resolved_native_position",
-                                 strict_exact=False, content_exact=False,
-                                 text=text_metrics(value, "", collapse_whitespace=collapse_whitespace))
-                continue
-            candidate = selected[0]
-            field_row["candidate_id"] = candidate["id"]
             field_row["header_evidence"] = [{"native_id": item["native_id"], "text": item["text"],
                                            "native_path": item["native_path"]}
                                           for item in [*row_endpoints, *column_endpoints]]
+            if not selected:
+                field_row.update(status="incorrect", reason="no_value_at_resolved_native_position",
+                                 strict_exact=False, content_exact=False,
+                                 information={"status": "incorrect", "reason": "required_value_not_expressed"},
+                                 text=text_metrics(value, "", collapse_whitespace=collapse_whitespace))
+                continue
+            candidate = selected[0]
+            if resolution.get("equivalent_claim_ids"):
+                field_row["equivalent_claim_ids"] = resolution["equivalent_claim_ids"]
+            field_row["candidate_id"] = candidate["id"]
             actual, actual_notes = _native_value_and_notes(candidate["cell"], field)
             strict_correct = value == actual
             content_correct = value == actual  # assigned after reading candidate qualifiers
@@ -516,41 +674,24 @@ def _score_records(
                 native_text=candidate["text"], native_note_markers=actual_notes,
                 raw_transcription=text_metrics(value, candidate["text"], collapse_whitespace=collapse_whitespace),
             )
-            qualifiers = {key: field.get(key, table.get(key)) for key in ("unit", "period")}
-            qualifiers = {key: expected for key, expected in qualifiers.items() if expected is not None}
-            native_cell = candidate["cell"]
-            if "note_markers" in field:
-                qualifiers["note_markers"] = field["note_markers"]
-                if actual_notes is not None:
-                    native_cell = {**native_cell, "note_markers": actual_notes}
-            endpoint_texts = [item["text"] for item in [*row_endpoints, *column_endpoints]]
-            endpoint_texts += [text for key in ("row_header_path", "column_header_path")
-                              for text in native_cell.get(key, []) if isinstance(text, str)]
-            caption = candidate.get("block", {}).get("caption")
-            if isinstance(caption, str):
-                endpoint_texts.append(caption)
-            if method == "native_grid_relation_probes":
-                for column in _native_range(native_cell, "col") or []:
-                    active = _active_column_header_group(resolution["group"], column, _native_range(native_cell, "row") or set())
-                    if active:
-                        endpoint_texts += [item["text"] for item in resolution["group"] if item["id"] in active]
-            # Actual explicit HTML links may add scoped units or notes.
-            linked, error = _html_header_references(candidate, resolution["group"])
-            if linked and not error:
-                endpoint_texts += [item["text"] for item in resolution["group"] if item["id"] in linked]
-            evidence = qualifier_evidence(qualifiers, native_cell, endpoint_texts)
+            qualifiers, native_cell, evidence = _field_qualifiers(table, field, resolution)
             content_correct = _information_value_equal(value, actual, {**field, **qualifiers}, evidence)
             field_row["content_exact"] = content_correct
-            qualifier_observable = all(item["status"] != "unresolved" for item in evidence.values())
+            qualifier_observable = all(item.get("source") != "required_candidate_qualifier_not_expressed"
+                                       for item in evidence.values())
             qualifier_correct = all(item["status"] == "correct" for item in evidence.values())
             information_status = (
                 "incorrect" if not content_correct or any(item["status"] == "incorrect" for item in evidence.values())
-                else "correct" if qualifier_correct else "unresolved"
+                else "correct" if qualifier_correct else "incorrect"
             )
             field_row["information"] = {"status": information_status, "qualifiers": evidence}
+            if information_status == "incorrect":
+                wrong = [key for key, item in evidence.items() if item["status"] != "correct"]
+                field_row["information"]["reason"] = (
+                    "value_expression_incorrect" if not content_correct else "required_qualifier_incorrect:" + ",".join(wrong))
             if (not content_correct and ambiguous_note_scalar(native_cell)
                     and not any(item["status"] == "incorrect" for item in evidence.values())):
-                field_row["information"].update(status="unresolved", reason="ambiguous_note_or_exponent_format")
+                field_row["information"].update(status="incorrect", reason="ambiguous_note_or_exponent_format")
             field_row["binding"] = {
                 "observable": qualifier_observable,
                 "correct": bool(strict_correct and qualifier_correct) if qualifier_observable else None,
@@ -558,25 +699,12 @@ def _score_records(
                 "qualifier_correct": bool(qualifier_correct) if qualifier_observable else None,
                 "qualifiers": list(qualifiers),
             }
-        usable = [item for item in output["fields"] if item["status"] in {"compared", "target_missing"}]
+        usable = [item for item in output["fields"] if item["status"] == "compared"]
         if usable:
             output["status"] = "record_located"
         else:
             reasons = {item["reason"] for item in output["fields"]}
-            output["reason"] = next(iter(reasons)) if len(reasons) == 1 else "native_fields_unresolved"
-
-    claims: dict[str, list[dict[str, Any]]] = {}
-    for row in rows:
-        for item in row["fields"]:
-            if item.get("candidate_id") and item["status"] == "compared":
-                claims.setdefault(item["candidate_id"], []).append(item)
-    for items in claims.values():
-        if len(items) > 1:
-            for item in items:
-                item.update(status="unresolved", reason="native_value_claim_conflict",
-                            strict_exact=None, content_exact=None, text=None,
-                            information={"status": "unresolved", "reason": "native_value_claim_conflict"})
-                item.pop("binding", None)
+            output["reason"] = next(iter(reasons)) if len(reasons) == 1 else "required_business_binding_not_expressed"
     all_fields = [item for row in rows for item in row["fields"] if item["status"] != "not_scored"]
     compared = [item for item in all_fields if item["status"] == "compared"]
     correct_fields = sum(bool(item["content_exact"]) for item in compared)
@@ -587,15 +715,19 @@ def _score_records(
     blank_correct = sum(bool(item["strict_exact"]) for item in blank_compared)
     binding_observable = sum(bool(item.get("binding", {}).get("observable")) for item in compared)
     binding_correct = sum(bool(item.get("binding", {}).get("correct")) for item in compared)
-    information = Counter(item.get("information", {}).get("status", "unresolved") for item in all_fields)
+    information = Counter(item["information"]["status"] for item in all_fields)
+    if information["correct"] + information["incorrect"] != target_fields:
+        raise ValueError("not every admitted business target has a correct/incorrect decision")
+    for item in all_fields:
+        item["outcome"] = item["information"]["status"]
     for row in rows:
-        if row["fields"] and not any(item["status"] in {"compared", "target_missing"} for item in row["fields"]):
-            row["status"] = "record_unresolved"
+        if row["fields"] and not any(item["status"] == "compared" for item in row["fields"]):
+            row["status"] = "record_incorrect"
     located_records = sum(bool(row.get("label_match")) or row["status"] == "record_located" for row in rows)
     statuses = Counter(item["status"] for row in rows for item in row["fields"])
     compared_fields = statuses["compared"]
-    target_missing_fields = statuses["target_missing"]
-    unresolved_fields = statuses["unresolved"]
+    target_missing_fields = sum(item["reason"] == "no_value_at_resolved_native_position" for item in all_fields)
+    unresolved_fields = 0
     observed_fields = compared_fields + target_missing_fields
     return rows, {
         "target_records": len(units), "located_records": located_records,
@@ -605,18 +737,18 @@ def _score_records(
         "blank_fields": fraction(blank_correct, blank_targets, observable=blank_observed),
         "blank_observed_accuracy": fraction(blank_correct, blank_observed),
         "target_fields": target_fields, "observable_fields": observed_fields,
+        "graded_fields": target_fields, "incorrect_fields": target_fields - correct_fields,
         "compared_fields": compared_fields, "target_missing_fields": target_missing_fields,
         "unresolved_fields": unresolved_fields, "correct_fields": correct_fields,
         "strict_correct_fields": strict_correct_fields,
         "information_correct_fields": information["correct"],
         "information_incorrect_fields": information["incorrect"],
-        "information_unresolved_fields": information["unresolved"],
+        "information_unresolved_fields": 0,
         "information_target_correctness": fraction(information["correct"], target_fields),
         "information_compared_accuracy": fraction(information["correct"], information["correct"] + information["incorrect"]),
-        "field_unresolved_reasons": dict(Counter(item["reason"] for item in all_fields if item["status"] == "unresolved")),
-        "field_unresolved_diagnoses": dict(Counter(
-            item.get("localization", {}).get("diagnosis", item["reason"])
-            for item in all_fields if item["status"] == "unresolved")),
+        "field_unresolved_reasons": {}, "field_unresolved_diagnoses": {},
+        "field_error_reasons": dict(Counter(item.get("information", {}).get("reason", item["reason"])
+                                             for item in all_fields if item["outcome"] == "incorrect")),
         "field_coverage": fraction(observed_fields, target_fields),
         "field_comparison_coverage": fraction(compared_fields, target_fields),
         "field_compared_accuracy": fraction(correct_fields, compared_fields),
@@ -1072,6 +1204,8 @@ def score_case(
     """Score one frozen case. Unknown references never become correct answers."""
     if case.get("sample_id") != observation.get("sample_id"):
         raise ValueError("case and observation sample_id differ")
+    if observation.get("scoring_readback", {}).get("native_status") == "readback_error":
+        raise ValueError("candidate reader failed; repair readback before grading")
     if case.get("review_status") != "confirmed":
         raise ValueError("scoring requires an explicitly frozen, visually confirmed case")
     scoring = case.get("scoring", {})

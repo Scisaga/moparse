@@ -167,7 +167,7 @@ def test_new_table_ledger_aggregates_equivalent_and_strict_scores_without_zero_f
     for name in ("field_compared_accuracy", "field_strict_accuracy", "field_strict_target_correctness",
                  "target_missing_fields", "unresolved_fields"):
         assert f"table_records.{name}" in appendix
-    assert "目标格未取到值不证明全输出遗漏" in appendix
+    assert "每个已纳入目标均完成正确或错误判定" in appendix
     assert inputs == before
 
 
@@ -254,7 +254,7 @@ def test_quality_comparison_markdown_names_each_scope_and_links_deliverables():
     for identity in ("synthetic-sample-a", "synthetic-doc-a", "synthetic-family-a",
                      "synthetic-table", "source-unknown", "synthetic-author-read"):
         assert identity in comparisons
-    for label in ("定位", "CER", "相似度", "字段", "阅读顺序", "分母"):
+    for label in ("定位", "CER", "相似度", "全目标正确率", "阅读顺序", "分母"):
         assert label in comparisons
     assert "0.7500" in comparisons
     assert "0.1000" in comparisons

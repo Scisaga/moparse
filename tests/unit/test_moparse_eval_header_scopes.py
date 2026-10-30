@@ -26,9 +26,9 @@ def evaluate(cells, label, path, value, *, row_path=None):
     scored = score_case(reference, observation)
     assert (reference, observation) == original
     metrics = scored["metrics"]["table_records"]
-    assert metrics["target_fields"] == sum(metrics[key] for key in (
-        "compared_fields", "target_missing_fields", "unresolved_fields",
-    ))
+    assert metrics["target_fields"] == metrics["graded_fields"]
+    assert metrics["target_fields"] == metrics["information_correct_fields"] + metrics["information_incorrect_fields"]
+    assert metrics["unresolved_fields"] == 0
     return scored["units"][-1]["fields"][0], metrics
 
 
@@ -54,7 +54,7 @@ def test_native_html_each_record_uses_its_own_header_scope(explicit, label, year
 @pytest.mark.parametrize("label,year,value", [("Revenue", "2023", "900"), ("Cost", "2024", "200")])
 def test_native_html_cannot_borrow_a_future_or_replaced_period(explicit, label, year, value):
     field, metrics = evaluate(two_scopes(explicit=explicit), label, [year], value)
-    assert field["status"] == "unresolved" and metrics["correct_fields"] == 0
+    assert field["status"] == "incorrect" and metrics["correct_fields"] == 0
 
 
 def test_same_labels_in_separate_native_header_groups_are_localized_in_the_record_scope():
@@ -102,7 +102,7 @@ def test_explicit_associations_to_independent_column_header_groups_are_unresolve
     next(cell for cell in cells if cell["text"] == "900")["native_attributes"]["headers"] += " y23"
     for year in ("2024", "2023"):
         field, metrics = evaluate(cells, "Revenue", [year], "900")
-        assert field["status"] == "unresolved" and metrics["correct_fields"] == 0
+        assert field["status"] == "incorrect" and metrics["correct_fields"] == 0
 
 
 @pytest.mark.parametrize("failure", ["missing", "duplicate", "cycle", "nonheader", "empty"])
@@ -124,7 +124,7 @@ def test_broken_explicit_html_header_links_never_fall_back_to_a_matching_grid(fa
     else:
         value["native_attributes"]["headers"] = ""
     field, metrics = evaluate(cells, "Revenue", ["2024"], "900")
-    assert field["status"] == "unresolved" and metrics["correct_fields"] == 0
+    assert field["status"] == "incorrect" and metrics["correct_fields"] == 0
 
 
 def test_explicit_header_ids_without_scope_roles_are_still_explicit_relationships():
@@ -135,7 +135,7 @@ def test_explicit_header_ids_without_scope_roles_are_still_explicit_relationship
     field, metrics = evaluate(cells, "Revenue", ["2024"], "900")
     assert field["status"] == "compared" and metrics["correct_fields"] == 1
     field, metrics = evaluate(cells, "Revenue", ["2023"], "900")
-    assert field["status"] == "unresolved" and metrics["correct_fields"] == 0
+    assert field["status"] == "incorrect" and metrics["correct_fields"] == 0
 
 
 def test_adjacent_multilevel_column_headers_and_row_group_spans_remain_readable():
@@ -173,7 +173,7 @@ def test_value_row_span_crossing_an_internal_header_scope_is_unresolved():
         if cell["text"] == "900":
             cell["row_span"] = 3
     field, metrics = evaluate(cells, "Revenue", ["2024"], "900")
-    assert field["status"] == "unresolved" and metrics["correct_fields"] == 0
+    assert field["status"] == "incorrect" and metrics["correct_fields"] == 0
 
 
 def test_undeclared_plain_grid_keeps_the_existing_physical_relation_policy():
@@ -192,4 +192,4 @@ def test_explicit_json_paths_keep_their_existing_field_policy(year, correct):
               "row_header_path": ["Revenue"], "column_header_path": ["2024"]}]
     field, metrics = evaluate(cells, "Revenue", [year], "900")
     assert metrics["correct_fields"] == int(correct)
-    assert field["status"] == ("compared" if correct else "unresolved")
+    assert field["status"] == ("compared" if correct else "incorrect")

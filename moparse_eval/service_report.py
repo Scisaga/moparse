@@ -18,8 +18,9 @@ from pathlib import Path
 from typing import Any
 
 from .reporting import _quality
+from .scoring import require_complete_target_grading
 
-REPORT_VERSION = "moparse-service-paired-report-6"
+REPORT_VERSION = "moparse-service-paired-report-7"
 _SUCCESS = {"completed", "ok", "success", "succeeded"}
 _METRICS = {
     "content_recall": ("内容定位召回 ↑", "unit_presence.recall", True),
@@ -130,7 +131,7 @@ def _unit_projection(unit: Mapping[str, Any] | None) -> dict[str, Any] | None:
     return {key: unit[key] for key in (
         "id", "index", "kind", "status", "reason", "text", "strict_exact", "policy_exact", "content_exact",
         "native_id", "native_path", "match", "label_match", "grid_relation", "binding", "reference", "information",
-        "raw_transcription", "native_text",
+        "raw_transcription", "native_text", "outcome", "required_qualifiers",
     ) if key in unit}
 
 
@@ -148,7 +149,7 @@ def _changes(before: Mapping[str, Any] | None, after: Mapping[str, Any] | None, 
         if type(left) is bool and type(right) is bool:
             result[key] = {"delta": int(right) - int(left),
                            "transition": "gain" if right and not left else "loss" if left and not right else "unchanged"}
-    field_states = {"compared", "target_missing", "unresolved"}
+    field_states = {"compared", "incorrect"}
     if (is_field and type(before.get("index")) is int and before["index"] >= 0
             and type(after.get("index")) is int and after["index"] == before["index"]
             and before.get("status") in field_states and after.get("status") in field_states):
@@ -156,12 +157,17 @@ def _changes(before: Mapping[str, Any] | None, after: Mapping[str, Any] | None, 
         right = after.get("status") == "compared" and after.get("content_exact") is True
         result["field_target_success"] = {"delta": int(right) - int(left),
             "transition": "gain" if right and not left else "loss" if left and not right else "unchanged",
-            "meaning": "change_in_confirmed_correct_count_not_a_judgment_that_unresolved_content_is_wrong"}
+            "meaning": "change_in_correct_count_on_fixed_target_set"}
         left_info, right_info = before.get("information"), after.get("information")
         left = isinstance(left_info, Mapping) and left_info.get("status") == "correct"
         right = isinstance(right_info, Mapping) and right_info.get("status") == "correct"
         result["information_target_success"] = {"delta": int(right) - int(left),
             "transition": "gain" if right and not left else "loss" if left and not right else "unchanged"}
+        for key in sorted(set(before.get("required_qualifiers", [])) | set(after.get("required_qualifiers", []))):
+            left = (left_info or {}).get("qualifiers", {}).get(key, {}).get("status") == "correct"
+            right = (right_info or {}).get("qualifiers", {}).get(key, {}).get("status") == "correct"
+            result[key + "_target_success"] = {"delta": int(right) - int(left),
+                "transition": "gain" if right and not left else "loss" if left and not right else "unchanged"}
     return result
 
 
@@ -320,6 +326,9 @@ def _summarize(directory: Path, run: dict[str, Any], index: dict[str, Any]) -> t
         entry = indexed.get(identity, {})
         baseline, baseline_error = _load_score(directory, entry, "baseline", case)
         final, final_error = _load_score(directory, entry, "final", case)
+        for scored in (baseline, final):
+            if scored is not None:
+                require_complete_target_grading(scored)
         status = "missing_or_invalid_score" if baseline_error or final_error else "paired"
         if baseline is not None and final is not None:
             signatures = (_scope_signature(baseline), _scope_signature(final))
@@ -570,7 +579,7 @@ def _render_main(summary: dict[str, Any], figures: list[dict[str, str]]) -> str:
         difference = quality["delta"][key]
         change = "NA" if difference is None else f"{difference * 100:+.2f}"
         lines.append(f"| {label} | {_rate_with_denominator(quality['baseline'], key)} | {_rate_with_denominator(quality['final'], key)} | {change} |")
-    lines.extend(["", "内容召回衡量唯一定位；CER仅评价已定位正文，须结合字符覆盖。值与行列标签覆盖、包含已标单位期间附注的完整信息覆盖均保留全部目标，未判与明确错误分开。图片内容保真仍需目视判断。", ""])
+    lines.extend(["", "内容召回衡量定位；CER仅评价已定位正文，须结合字符覆盖。值与业务标签、包含已标单位期间附注的完整信息均按全部固定目标计算正确率，每个已纳入字段只判正确或错误。图片内容保真仍需目视判断。", ""])
     for side, label in (("baseline", "原生"), ("final", "最终")):
         micro = quality[side].get("micro", {})
         aligned = _value(micro, "text_aligned.strict.reference_chars")
@@ -619,7 +628,7 @@ def _render_appendix(summary: dict[str, Any]) -> str:
             metric = summary["quality"][side].get(scope, {}).get("text.strict.cer", {})
             cells.append(f"{_display(metric.get('value'))} ({_cell(metric.get('available_groups'))} / {_cell(metric.get('total_groups'))})")
         lines.append(f"| {label} | " + " | ".join(cells) + " |")
-    lines.extend(["", "表中 CER 微平均按参考字符数加权；宏平均仅对已配对且该项可用的组等权。分母可用数与总组数同时给出。字段的未取到值和未判定仍保留在全部目标分母，不能用条件正确率替代全目标覆盖。", ""])
+    lines.extend(["", "表中 CER 微平均按参考字符数加权；宏平均仅对已配对且该项可用的组等权。字段正确与错误之和等于全部固定目标数，不能用已比较子集的条件正确率替代全目标正确率。", ""])
     for scope, records in (("样本", summary["samples"]), ("原文档", summary["by_document"]), ("家族", summary["by_family"])):
         lines.extend([f"## {scope}", "", "| 身份 | 配对状态 | 已定位 CER 差（百分点） | 字段覆盖率差（百分点） | 完整信息覆盖差（百分点） |", "|---|---|---:|---:|---:|"])
         for record in records:

@@ -24,17 +24,19 @@ from .packaging import inside, package_dataset, read_json, write_json
 ROOT = Path(__file__).resolve().parent.parent
 PIPELINES = tuple(f"P{number:02}" for number in range(1, 9))
 SCORING_PROTOCOL = {
-    "id": "mo-parse-eval-information-v4",
+    "id": "mo-parse-eval-information-v5",
     "text_policy": "mo-parse-eval-text-v1",
     "field_content_equivalence": "declared_width_spacing_scoped_scalar_units_year_range_dash_terminal_prose_punctuation",
-    "field_locator": "unique_complete_native_label_combination_before_value_comparison",
+    "field_locator": "candidate_business_labels_and_scoped_context_before_value_comparison",
+    "field_grades": "correct_or_incorrect_for_every_fixed_admitted_target",
     "primary_metrics": ["unit_presence", "text_aligned_with_coverage", "field_target_correctness",
-                        "information_target_correctness", "reading_order", "measured_cost_and_stability"],
-    "diagnostic_metrics": ["unaligned_target_cer", "raw_grid", "heading_levels", "locator_failure_reasons"],
+                        "information_target_correctness", "measured_cost_and_stability"],
+    "diagnostic_metrics": ["unaligned_target_cer", "raw_grid", "reading_order", "heading_levels", "locator_failure_reasons"],
     "scope": "read_only_rescore_existing_native_outputs",
     "qualifier_reading": "candidate_only_table_header_introduction_section_and_note_scopes",
-    "reference_unknown": "unscored_separate_from_missing_incorrect_and_reader_unresolved",
-    "reader_revision": "scoped_literal_formats_8",
+    "reference_unknown": "outside_admitted_targets_references_remain_read_only",
+    "reader_failure": "repair_before_final_grading_and_publication",
+    "reader_revision": "scoped_literal_formats_9",
 }
 
 
@@ -533,18 +535,33 @@ def report_run(run: Path) -> Path:
         for item in index.get("unscored", [])
     }
     results = [read_json(inside(run, relative)) for relative in index["results"]]
+    from .scoring import require_complete_target_grading
+    for result in results:
+        require_complete_target_grading(result)
+    def quality_key(item: Mapping[str, Any]) -> tuple[Any, ...]:
+        return tuple(item.get(key) for key in ("pipeline", "sample_id", "suite", "phase", "repetition"))
+    required = [quality_key(case) for case in session.get("cases", [])
+                if case.get("suite") == "quality800" and case.get("phase") == "measured"
+                and unscored.get(quality_key(case), {}).get("reason") not in {
+                    "no_authored_scoring_reference", "reference_not_declared_visually_confirmed"}]
+    available = [quality_key(result) for result in results
+                 if result.get("suite") == "quality800" and result.get("phase") == "measured"]
+    if len(available) != len(set(available)) or set(required) - set(available):
+        raise ValueError("target grading incomplete: quality cases are missing or duplicated")
     field_details = []
     for relative, result in zip(index["results"], results, strict=True):
         if result.get("suite") != "quality800":
             continue
         for unit in result.get("units", []):
             for field in unit.get("fields", []):
+                if field["status"] == "not_scored":
+                    continue
                 field_details.append({
                     "pipeline": result.get("pipeline"), "sample_id": result.get("sample_id"),
                     "unit_id": unit["id"], "field_index": field["index"], "score_path": relative,
                     "status": field["status"], "reason": field["reason"],
                     "value_correct": field.get("content_exact"),
-                    "information_status": field.get("information", {}).get("status", "unresolved"),
+                    "information_status": field["outcome"],
                     "native_path": field.get("native_path"),
                     "details_json": json.dumps(field, ensure_ascii=False),
                 })

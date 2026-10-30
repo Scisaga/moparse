@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from copy import deepcopy
 
+import pytest
+
 from moparse_eval.report_overview import (
     _reversals,
     relation_breakdown,
@@ -23,8 +25,10 @@ def _quality(name: str = "P01", *, cer: float = 0.2, doc_cer: float = 0.3,
                 "unit_presence": {"recall": 0.6}, "text": {"strict": {"cer": cer, "reference_chars": 100}},
                 "text_aligned": {"strict": {"cer": cer / 2, "reference_chars": 80}},
                 "table_records": {
-                    "target_fields": 10, "observable_fields": 4,
-                    "compared_fields": 4, "target_missing_fields": 0, "unresolved_fields": 6,
+                    "target_fields": 10, "observable_fields": 4, "graded_fields": 10, "incorrect_fields": 7,
+                    "information_correct_fields": 2, "information_incorrect_fields": 8,
+                    "information_target_correctness": {"numerator": 2, "denominator": 10, "value": 0.2},
+                    "compared_fields": 4, "target_missing_fields": 0, "unresolved_fields": 0,
                     "correct_fields": 3, "strict_correct_fields": 2,
                     "field_target_correctness": {"numerator": 3, "denominator": 10, "value": 0.3},
                     "field_compared_accuracy": {"numerator": 3, "denominator": 4, "value": 0.75},
@@ -68,7 +72,7 @@ def test_overview_uses_actual_values_and_round_counts_without_mutating_input():
     assert "每组记录 17 个实际输入页" in text
     assert "包含 4 个样本、3 份原文档和 2 个家族" in text
     assert "| P01 | 17 / 17 | 2.00 / 1 | 1.33 / 2 | 0 / 0 |" in text
-    assert "| P01 | 60.00% | 10.00% | 80.00% | 30.00% | NA |" in text
+    assert "| P01 | 60.00% | 10.00% | 80.00% | 30.00% | 20.00% |" in text
     assert "各组已定位范围不同，不单独凭此CER排名" in text
     assert "正式集 n=1 与性能子集" in text
     assert report == before
@@ -88,8 +92,9 @@ def test_micro_macro_reversals_are_computed_from_scores():
 
 def test_coverage_is_not_replaced_by_conditional_field_accuracy():
     text = render_overview({"groups": [_quality()]})
-    assert "| P01 | 30.00% (3 / 10) | 75.00% (3 / 4) | 4 / 0 / 6 | 10 |" in text
-    assert "高条件正确率不能替代目标覆盖" in text
+    assert "| P01 | 30.00% (3 / 10) | 20.00% (2 / 10) | 8 | 10 |" in text
+    assert "以全部固定目标为分母" in text
+    assert "未判定" not in text
     assert "1,200 个参考字符" in text
     assert "已知图片目标 2 个" in text
     assert "图片保全为 NA" in text
@@ -101,9 +106,9 @@ def test_new_table_main_metrics_keep_denominators_and_protocol_separate_from_str
     report = {"groups": [quality], "scoring_protocol": {"id": "synthetic-fields-v2"}}
     before = deepcopy(report)
     text = render_overview(report)
-    assert "已证正确字段覆盖率" in text and "已比较字段正确率" in text
+    assert "值与标签正确 / 全部目标" in text and "完整信息错误" in text
     assert "评分协议：`synthetic-fields-v2`" in text
-    assert "目标格未取到值不证明文字在整个输出中遗漏" in text
+    assert "软件读取故障必须修复后重新评分" in text
     assert "heading_of" not in text
     assert "50.00%" not in text  # The strict-only field ratio is not a main result.
     assert report == before
@@ -114,15 +119,14 @@ def test_legacy_table_scores_never_fall_back_to_old_target_or_observable_accurac
     table = quality["quality"]["micro"]["table_records"]
     for key in ("compared_fields", "target_missing_fields", "unresolved_fields", "correct_fields", "strict_correct_fields"):
         table.pop(key)
-    text = render_overview({"groups": [quality]})
-    assert "| P01 | 60.00% | 10.00% | 80.00% | NA | NA |" in text
-    assert "已证正确字段覆盖率最高" not in text
-    assert "已比较字段正确率最高" not in text
-    assert "| P01 | NA (NA) | NA (NA) | NA / NA / NA | 10 |" in text
+    with pytest.raises(ValueError, match="target grading incomplete"):
+        render_overview({"groups": [quality]})
 
 
 def test_table_field_projection_preserves_confirmed_zero_and_rejects_unclosed_or_stale_rates():
-    table = {"target_fields": 0, "compared_fields": 0, "target_missing_fields": 0,
+    table = {"graded_fields": 0, "incorrect_fields": 0, "information_correct_fields": 0, "information_incorrect_fields": 0,
+             "information_target_correctness": {"numerator": 0, "denominator": 0, "value": None},
+             "target_fields": 0, "compared_fields": 0, "target_missing_fields": 0,
              "unresolved_fields": 0, "correct_fields": 0, "strict_correct_fields": 0,
              "field_target_correctness": {"numerator": 0, "denominator": 0, "value": None},
              "field_compared_accuracy": {"numerator": 0, "denominator": 0, "value": None}}
@@ -202,11 +206,12 @@ def test_figures_are_embedded_with_export_links_and_existing_case_navigation():
         "score_index": "synthetic-score/index.json", "scoring_notes": "scoring-notes.md",
     }
     text = render_overview(report, figures)
-    for ident in (item for item in ids if item != "averaging"):
+    for ident in (item for item in ids if item not in {"averaging", "coverage", "relations"}):
         assert f"![synthetic {ident}](figures/{ident}.png)" in text
         assert f"[SVG](figures/{ident}.svg)" in text
         assert f"[PDF](figures/{ident}.pdf)" in text
-    assert text.count("![") == 9
+    assert text.count("![") == 7
+    assert "figures/coverage.png" not in text and "figures/relations.png" not in text
     assert "figures/averaging.png" not in text
     assert "[人工个案与证据](visual-review/README.md)" in text
     assert "[详细附录](appendix.md)" in text
@@ -257,7 +262,7 @@ def test_declared_configuration_notes_follow_versions_without_changing_scores():
     assert "Missing evidence is not displayed" not in text
     assert text.index("表中软件版本来自保存的运行镜像记录") < text.index("### 配置补充说明")
     assert text.index("### 配置补充说明") < text.index("## 质量与成本对照")
-    assert "| P01 | 60.00% | 10.00% | 80.00% | 30.00% | NA |" in text
+    assert "| P01 | 60.00% | 10.00% | 80.00% | 30.00% | 20.00% |" in text
     assert report == before
     report.pop("overview_configuration_notes")
     assert "### 配置补充说明" not in render_overview(report)
@@ -268,10 +273,10 @@ def test_relations_are_separate_from_quality_leaders_and_legacy_values_stay_pend
     text = render_overview(report)
     assert "阅读及其他已标关系召回最高" not in text
     assert "已标关系召回 ↑" not in text
-    assert "### 阅读顺序" in text
-    assert "NA（复核中）" in text
+    assert "### 阅读顺序" not in text
+    assert "NA（复核中）" not in text
     assert "50.00%" not in text
-    assert "主比较只展示 before" in text
+    assert "不增加本轮业务信息的正确条件" in text
     assert "heading_of" not in text
 
 
@@ -286,7 +291,7 @@ def test_reading_order_states_are_main_and_heading_states_remain_outside_main():
     text = render_overview({"groups": [quality]})
     assert "heading_of" not in text
     assert "| P08 | 10 | 2 | 1 | 4 | 2 | 1 | 20.00% |" not in text
-    assert "标题层级及其他关系仅列" in text
+    assert "原始结构和关系读取只保留工程诊断" in text
     assert quality == before
     row = quality["quality"]["micro"]["relations"]["by_type"]["heading_of"]
     row.update(confirmed_correct=0, confirmed_incorrect=0, native_not_provided=7, value=0)

@@ -12,7 +12,12 @@ import statistics
 from pathlib import Path
 from typing import Any
 
-from .report_overview import RELATION_STATES, relation_breakdown, table_field_breakdown
+from .report_overview import (
+    RELATION_STATES,
+    relation_breakdown,
+    require_complete_quality_aggregates,
+    table_field_breakdown,
+)
 
 PIPELINE_COLORS = {
     "P01": "#4477AA", "P02": "#66AADD", "P03": "#228833", "P04": "#66AA55",
@@ -616,8 +621,8 @@ def _table_coverage(report: dict[str, Any], plt: Any, pipelines: list[str]) -> t
     from matplotlib.patches import Patch
     from matplotlib.ticker import PercentFormatter
 
-    definitions = (("field_target_correctness", "已证正确字段覆盖率 ↑"),
-                   ("field_compared_accuracy", "已比较字段正确率 ↑"))
+    definitions = (("field_target_correctness", "值与标签正确率 ↑"),
+                   ("information_target_correctness", "完整业务信息正确率 ↑"))
     figure, axes = plt.subplots(1, 3, figsize=(16.2, 6.8), gridspec_kw={"width_ratios": [1, 1, 1.4]})
     data: dict[str, Any] = {}
     ledgers = {pipeline: table_field_breakdown(
@@ -633,17 +638,13 @@ def _table_coverage(report: dict[str, Any], plt: Any, pipelines: list[str]) -> t
         data[metric] = rows
     axis = axes[2]
     _style_axis(axis)
-    states = (("correct_fields", "已比较且正确", "#228833"),
-              ("compared_incorrect", "已比较未通过", "#CC6677"),
-              ("target_missing_fields", "目标格未取到值", "#DDCC77"),
-              ("unresolved_fields", "未判定", "#BBBBBB"))
+    states = (("information_correct_fields", "正确", "#228833"),
+              ("information_incorrect_fields", "错误", "#CC6677"))
     rows = []
     for index, pipeline in enumerate(pipelines):
         ledger = ledgers[pipeline]
         total = ledger["target_fields"]
         counts = {key: ledger.get(key) for key, _, _ in states}
-        counts["compared_incorrect"] = (ledger["compared_fields"] - ledger["correct_fields"]
-                                       if ledger["available"] else None)
         rows.append({"pipeline": pipeline, "available": ledger["available"], "denominator": total,
                      "compared_fields": ledger["compared_fields"], "states": counts})
         if not ledger["available"] or not total:
@@ -660,11 +661,11 @@ def _table_coverage(report: dict[str, Any], plt: Any, pipelines: list[str]) -> t
     axis.set_xlim(0, 1.25)
     axis.set_xticks([0, 0.5, 1])
     axis.xaxis.set_major_formatter(PercentFormatter(1.0, decimals=0))
-    axis.set_title("全部目标的字段状态", loc="left", fontsize=14, fontweight="bold", pad=15)
+    axis.set_title("全部目标的业务信息判定", loc="left", fontsize=14, fontweight="bold", pad=15)
     data["field_states"] = rows
     figure.legend(handles=[Patch(facecolor=color, label=label) for _, label, color in states],
-                  loc="lower center", ncol=4, frameon=False, fontsize=10, bbox_to_anchor=(0.5, 0.005))
-    figure.suptitle("表格字段：内容等价正确与未判定范围", x=0.04, ha="left", fontsize=18, fontweight="bold")
+                  loc="lower center", ncol=2, frameon=False, fontsize=10, bbox_to_anchor=(0.5, 0.005))
+    figure.suptitle("表格字段：按全部固定目标判定正确或错误", x=0.04, ha="left", fontsize=18, fontweight="bold")
     figure.tight_layout(rect=(0, 0.09, 1, 0.94), w_pad=3)
     return figure, data
 
@@ -676,6 +677,7 @@ def render_figures(report: dict[str, Any], directory: Path) -> list[dict[str, An
     metadata are relative to its parent, so Markdown and HTML share the files.
     Unknown values remain ``None`` in JSON and are displayed as NA.
     """
+    require_complete_quality_aggregates(report)
     import matplotlib
 
     matplotlib.use("Agg")
@@ -695,9 +697,7 @@ def render_figures(report: dict[str, Any], directory: Path) -> list[dict[str, An
     }
     specifications = (
         ("quality", "核心质量对比", _quality,
-         "同一正式质量集。内容覆盖衡量定位存在性；CER仅针对已定位正文，字符覆盖见主表。表格分别报告值与行列标签正确覆盖、同时满足已标单位期间附注的完整信息正确覆盖。未定位和未确定保持在目标分母。"),
-        ("relations", "阅读顺序与证据状态", _relations,
-         "仅展示 before 的全部已标目标及五类证据状态；其他关系只见附录。未获关系证据与明确不符分开，未判定保持未知。缺少分型计数或计数不闭合时显示 NA，不把未知算成正确。"),
+         "同一正式质量集。内容覆盖衡量定位存在性；CER仅针对已定位正文，字符覆盖见主表。表格分别报告值与行列标签正确覆盖、同时满足已标单位期间附注的完整信息正确覆盖。全部已纳入字段只判正确或错误，分母固定。"),
         ("averaging", "字符、文档与家族平均", _averaging,
          "三面板共享CER纵轴，分别按字符加权、文档等权和家族等权；圆点直接标出实测值。纵轴采用对数刻度，存在真实零值时全图改用线性刻度。横轴是离散管线，细线只引导阅读，不拟合缩放规律。"),
         ("quality-time", "800 页完整运行耗时", _quality_time,
@@ -710,10 +710,8 @@ def render_figures(report: dict[str, Any], directory: Path) -> list[dict[str, An
          "生命周期采样含初始化，可能遗漏更短峰值；这些是已观测峰值而非精确绝对峰值或逐页峰值。显存只使用受测容器及其compute子进程的同时聚合观测，不含驻留TTS；归属未知为NA，不以整卡占用替代。整卡、TTS与余量见附录。Worker、推理宿主内存与自有显存分开绘制，不相加。"),
         ("categories", "代表类别热图", _categories,
          "固定选择已有普通正文、多栏、数据表、网格正文、跨页段落、跨页表格、混合文字和负数值标签。类别可重叠，按语义选取而非按成绩筛选。n 为样本数，d 为原文档数，各面板列出本指标分母；未标注为 NA。来源类别均未知，不绘制原生/扫描比较。"),
-        ("coverage", "同分母的定位状态", _coverage,
-         "分母为参与定位的内容目标加仅定位锚点；唯一定位数同样包含锚点，四种状态互斥。它与排除锚点的内容召回分母不同；定位歧义、未决和未定位不能全称模型遗漏。未能形成同一分母时显示 NA。"),
         ("table-coverage", "表格两项核心率与字段状态", _table_coverage,
-         "已证正确字段覆盖率=内容等价正确/全部目标；已比较字段正确率=内容等价正确/已比较字段。字段状态保留已比较、目标格未取到值和未判定，目标格未取到值不证明全输出遗漏；严格差异见附录，缺项为 NA。"),
+         "值与标签正确率、完整业务信息正确率均使用全部固定目标作分母。全部目标只分正确与错误；错误原因和严格字符差异留在明细。评分读取故障必须先修复，不能成为第三种成绩。"),
     )
     entries = []
     with plt.rc_context(settings):

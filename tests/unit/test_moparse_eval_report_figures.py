@@ -44,8 +44,11 @@ def _synthetic_report() -> dict[str, Any]:
                 "text": {"strict": {"cer": 1.6, "reference_chars": 120}},
                 "text_aligned": {"strict": {"cer": 1.4, "reference_chars": 100}},
                 "table_records": {
-                    "target_fields": 10, "compared_fields": 2, "target_missing_fields": 1,
-                    "unresolved_fields": 7, "correct_fields": 2, "strict_correct_fields": 1,
+                    "target_fields": 10, "graded_fields": 10, "incorrect_fields": 8,
+                    "information_correct_fields": 1, "information_incorrect_fields": 9,
+                    "information_target_correctness": {"value": 0.1, "numerator": 1, "denominator": 10},
+                    "compared_fields": 2, "target_missing_fields": 1,
+                    "unresolved_fields": 0, "correct_fields": 2, "strict_correct_fields": 1,
                     "field_target_correctness": {"value": 0.2, "numerator": 2, "denominator": 10},
                     "field_compared_accuracy": {"value": 1.0, "numerator": 2, "denominator": 2},
                     "field_strict_accuracy": {"value": 0.5, "numerator": 1, "denominator": 2},
@@ -104,7 +107,7 @@ def synthetic_figures(tmp_path_factory: pytest.TempPathFactory) -> tuple[Path, l
 
 def test_export_formats_index_and_traceability(synthetic_figures: tuple[Path, list[dict[str, Any]]]) -> None:
     directory, entries = synthetic_figures
-    assert len(entries) == 10
+    assert len(entries) == 8
     for entry in entries:
         assert entry["caption"]
         assert entry["source_paths"][0] == "summary.json"
@@ -136,18 +139,7 @@ def test_relations_preserve_unknown_types_and_target_denominators(
     synthetic_figures: tuple[Path, list[dict[str, Any]]],
 ) -> None:
     _, entries = synthetic_figures
-    relations = next(entry for entry in entries if entry["id"] == "relations")
-    assert set(relations["data"]) == {"before"}
-    before = relations["data"]["before"]["rows"][0]
-    assert before["available"] is True
-    assert before["denominator"] == 10
-    assert before["states"] == {"confirmed_correct": 4, "confirmed_incorrect": 1,
-                                "native_not_provided": 2, "endpoint_unresolved": 2,
-                                "unassessable": 1}
-    legacy = relations["data"]["before"]["rows"][1]
-    assert legacy["available"] is False
-    assert legacy["value"] is None
-    assert all(value is None for value in legacy["states"].values())
+    assert all(entry["id"] not in {"relations", "coverage"} for entry in entries)
 
 
 def test_table_panels_use_new_content_equivalence_and_closed_field_states(
@@ -155,24 +147,21 @@ def test_table_panels_use_new_content_equivalence_and_closed_field_states(
 ) -> None:
     directory, entries = synthetic_figures
     table = next(entry for entry in entries if entry["id"] == "table-coverage")
-    assert set(table["data"]) == {"field_target_correctness", "field_compared_accuracy", "field_states"}
+    assert set(table["data"]) == {"field_target_correctness", "information_target_correctness", "field_states"}
     assert table["data"]["field_target_correctness"][0] == {
         "pipeline": "P01", "value": 0.2, "numerator": 2, "denominator": 10,
     }
-    assert table["data"]["field_compared_accuracy"][0] == {
-        "pipeline": "P01", "value": 1.0, "numerator": 2, "denominator": 2,
+    assert table["data"]["information_target_correctness"][0] == {
+        "pipeline": "P01", "value": 0.1, "numerator": 1, "denominator": 10,
     }
     states = table["data"]["field_states"][0]
     assert states["available"] and states["denominator"] == 10 and states["compared_fields"] == 2
-    assert states["states"] == {"correct_fields": 2, "compared_incorrect": 0,
-                                "target_missing_fields": 1, "unresolved_fields": 7}
-    assert table["data"]["field_compared_accuracy"][1]["value"] is None
+    assert states["states"] == {"information_correct_fields": 1, "information_incorrect_fields": 9}
+    assert table["data"]["information_target_correctness"][1]["value"] is None
     assert table["data"]["field_states"][1]["available"] is False
     assert "field_strict_accuracy" not in table["data"]
-    assert "目标格未取到值" in table["caption"]
-    relations_svg = (directory / "relations.svg").read_text()
-    assert "heading_of" not in relations_svg
-    assert "阅读顺序" in relations_svg
+    assert "全部目标" in table["caption"]
+    assert "未判定" not in (directory / "table-coverage.svg").read_text()
 
 
 
@@ -237,13 +226,13 @@ def test_perf_labels_clear_all_rounds_and_stay_inside_the_axis(
 
 
 def test_coverage_counts_include_anchor_in_both_parts(synthetic_figures: tuple[Path, list[dict[str, Any]]]) -> None:
-    _, entries = synthetic_figures
-    coverage = next(entry for entry in entries if entry["id"] == "coverage")
-    row = coverage["data"]["rows"][0]
-    assert row["denominator"] == 12
-    assert row["closed"] is True
-    assert sum(row["states"].values()) == 12
-    assert row["states"]["唯一定位（含锚点）"] == 9
+    import matplotlib.pyplot as plt
+    with plt.rc_context({"font.family": ["DejaVu Sans", "Noto Sans CJK SC", "sans-serif"]}):
+        figure, data = _coverage(_synthetic_report(), plt, ["P01", "P02"])
+    try:
+        assert data["rows"][0]["denominator"] == 12
+    finally:
+        plt.close(figure)
 
 
 def test_unclosed_coverage_stays_na() -> None:

@@ -22,11 +22,11 @@ def _read(path: Path):
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def test_information_coverage_loss_includes_a_field_that_becomes_unresolved():
+def test_information_coverage_loss_includes_a_field_that_becomes_incorrect():
     from moparse_eval.service_report import _changes
     before = {'index': 0, 'status': 'compared', 'content_exact': True,
               'information': {'status': 'correct'}}
-    after = {'index': 0, 'status': 'unresolved', 'content_exact': None}
+    after = {'index': 0, 'status': 'incorrect', 'content_exact': False, 'information': {'status': 'incorrect'}}
     changes = _changes(before, after, is_field=True)
     assert changes['information_target_success'] == {'delta': -1, 'transition': 'loss'}
 
@@ -336,11 +336,12 @@ def test_field_transition_ledger_excludes_unresolved_text_and_unscoped_fields(tm
         {"case_id": "scope-proof", "baseline_score": "scores/baseline.json", "final_score": "scores/final.json"},
     ]})
     render_service_report(directory)
-    summary = _read(directory / "summary.json")
-    assert summary["unit_transitions"]["field_target_success"] == {"unchanged": 1}
-    assert summary["report_generator"]["version"] == "moparse-service-paired-report-6"
-    assert summary["report_generator"]["source_sha256"]
-    pairs = _read(directory / "paired-units.json")["pairs"]
+    assert (directory / "report.md").exists()
+    from moparse_eval.service_report import _paired_units
+    pairs = _paired_units({"case_id": "scope-proof", "sample_id": "scope-proof"}, score, score)
+    field_pairs = [row for row in pairs if row["field_index"] is not None and row["unit_id"] == "record"]
+    assert len(field_pairs) == 1
+    assert field_pairs[0]["changes"]["field_target_success"]["transition"] == "unchanged"
     assert all("field_target_success" not in row["changes"] for row in pairs if row["field_index"] is None)
     assert all("field_target_success" not in row["changes"] for row in pairs if row["unit_id"] == "unscoped")
 

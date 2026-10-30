@@ -203,20 +203,20 @@ def _quality_table(names: list[str], groups: dict[str, dict[str, Any]]) -> list[
             _pct(_value(micro, "unit_presence.recall")), _pct(_value(micro, "text_aligned.strict.cer")),
             _pct(aligned / total if _number(aligned) and _number(total) and total else None),
             _pct(table["field_target_correctness"]["value"]),
-            _pct(_value(micro, "table_records.information_target_correctness.value")),
+            _pct(table["information_target_correctness"]["value"]),
         ])
         lines.append(f"| {_text(name)} | {values} |")
     return [*lines, ""]
 
 
 def _information_table(names: list[str], groups: dict[str, dict[str, Any]]) -> list[str]:
-    lines = ["| 配置 | 完整信息正确 / 全部目标 | 明确错误 | 尚未确定 | 可判范围正确率 |",
-             "| --- | ---: | ---: | ---: | ---: |"]
+    lines = ["| 配置 | 完整信息正确 / 全部目标 | 完整信息错误 / 全部目标 | 全目标正确率 |",
+             "| --- | ---: | ---: | ---: |"]
     for name in names:
         table = _value(groups.get(name), "quality.micro.table_records") or {}
         lines.append(f"| {name} | {_ratio(table.get('information_correct_fields'), table.get('target_fields'))} | "
-                     f"{_count(table.get('information_incorrect_fields'))} | {_count(table.get('information_unresolved_fields'))} | "
-                     f"{_pct(_value(table, 'information_compared_accuracy.value'))} |")
+                     f"{_ratio(table.get('information_incorrect_fields'), table.get('target_fields'))} | "
+                     f"{_pct(_value(table, 'information_target_correctness.value'))} |")
     return [*lines, ""]
 
 
@@ -274,45 +274,53 @@ def _relation_section(names: list[str], groups: dict[str, dict[str, Any]],
 
 
 def table_field_breakdown(record: Any) -> dict[str, Any]:
-    """Project the new candidate-score ledger; legacy accuracy is never reused."""
+    """Expose final binary grades on the fixed admitted target denominator."""
     record = record if isinstance(record, dict) else {}
-    keys = ("target_fields", "compared_fields", "target_missing_fields", "unresolved_fields",
-            "correct_fields", "strict_correct_fields")
-    counts: dict[str, Any] = {key: record.get(key) if type(record.get(key)) is int and record[key] >= 0 else None
-              for key in keys}
+    keys = ("target_fields", "graded_fields", "compared_fields", "correct_fields", "incorrect_fields",
+            "strict_correct_fields", "information_correct_fields", "information_incorrect_fields")
+    counts: dict[str, Any] = {key: record.get(key) if type(record.get(key)) is int and record[key] >= 0 else None for key in keys}
     available = (all(value is not None for value in counts.values())
-                 and counts["compared_fields"] + counts["target_missing_fields"] + counts["unresolved_fields"] == counts["target_fields"]
-                 and counts["strict_correct_fields"] <= counts["correct_fields"] <= counts["compared_fields"])
+                 and record.get("unresolved_fields", 0) == 0
+                 and record.get("information_unresolved_fields", 0) == 0
+                 and counts["graded_fields"] == counts["target_fields"]
+                 and counts["correct_fields"] + counts["incorrect_fields"] == counts["target_fields"]
+                 and counts["information_correct_fields"] + counts["information_incorrect_fields"] == counts["target_fields"]
+                 and counts["strict_correct_fields"] <= counts["correct_fields"] <= counts["compared_fields"] <= counts["target_fields"])
     rates = {}
-    for key in ("field_target_correctness", "field_compared_accuracy"):
+    for key, numerator, denominator in (
+        ("field_target_correctness", counts["correct_fields"], counts["target_fields"]),
+        ("information_target_correctness", counts["information_correct_fields"], counts["target_fields"]),
+        ("field_compared_accuracy", counts["correct_fields"], counts["compared_fields"]),
+    ):
         metric = record.get(key) or {}
-        denominator = counts["target_fields"] if key == "field_target_correctness" else counts["compared_fields"]
-        consistent = (available and metric.get("numerator") == counts["correct_fields"]
-                      and metric.get("denominator") == denominator)
+        consistent = available and metric.get("numerator") == numerator and metric.get("denominator") == denominator
         value = metric.get("value")
         if consistent:
             consistent = (value is None if denominator == 0 else
-                          _number(value) and math.isclose(cast(float, value), counts["correct_fields"] / denominator, abs_tol=1e-12))
-        rates[key] = {field: metric.get(field) if consistent else None
-                      for field in ("value", "numerator", "denominator")}
+                          _number(value) and math.isclose(cast(float, value), numerator / denominator, abs_tol=1e-12))
+        rates[key] = {field: metric.get(field) if consistent else None for field in ("value", "numerator", "denominator")}
     return {"available": available, **counts, **rates}
 
 
 def _table_coverage(names: list[str], groups: dict[str, dict[str, Any]]) -> list[str]:
-    lines = [
-        "| 配置 | 已证正确字段覆盖率（正确/目标） | 已比较字段正确率（正确/已比较） | 已比较 / 目标格未取到值 / 未判定 | 全部字段目标 |",
-        "| --- | ---: | ---: | ---: | ---: |",
-    ]
+    lines = ["| 配置 | 值与标签正确 / 全部目标 | 完整业务信息正确 / 全部目标 | 完整信息错误 | 全部目标 |",
+             "| --- | ---: | ---: | ---: | ---: |"]
     for name in names:
         table = table_field_breakdown(_value(groups.get(name), "quality.micro.table_records"))
-        target, compared = table["field_target_correctness"], table["field_compared_accuracy"]
-        lines.append(
-            f"| {_text(name)} | {_pct(target['value'])} ({_ratio(target['numerator'], target['denominator'])}) | "
-            f"{_pct(compared['value'])} ({_ratio(compared['numerator'], compared['denominator'])}) | "
-            f"{_count(table['compared_fields'])} / {_count(table['target_missing_fields'])} / {_count(table['unresolved_fields'])} | "
-            f"{_count(table['target_fields'])} |"
-        )
+        target, information = table["field_target_correctness"], table["information_target_correctness"]
+        lines.append(f"| {_text(name)} | {_pct(target['value'])} ({_ratio(target['numerator'], target['denominator'])}) | "
+                     f"{_pct(information['value'])} ({_ratio(information['numerator'], information['denominator'])}) | "
+                     f"{_count(table['information_incorrect_fields'])} | {_count(table['target_fields'])} |")
     return [*lines, ""]
+
+
+def require_complete_quality_aggregates(report: dict[str, Any]) -> None:
+    for group in report.get("groups", []):
+        if group.get("suite") != "quality800":
+            continue
+        metric = _value(group, "quality.micro.table_records") or {}
+        if metric.get("target_fields", 0) and not table_field_breakdown(metric)["available"]:
+            raise ValueError("target grading incomplete: quality report requires every admitted target")
 
 
 def _timing_table(names: list[str], quality: dict[str, dict[str, Any]], perf: dict[str, dict[str, Any]]) -> list[str]:
@@ -355,6 +363,7 @@ def _coverage_lines(groups: dict[str, dict[str, Any]]) -> list[str]:
 
 def render_overview(report: dict[str, Any], figures: list[dict[str, Any]] | None = None) -> str:
     """Present comparison charts and conclusions, linking full detail to appendices."""
+    require_complete_quality_aggregates(report)
     figures_by_id = {str(item.get("id")): item for item in figures or []}
     groups = report.get("groups") or []
     declared = (report.get("execution") or {}).get("configurations") or []
@@ -461,15 +470,15 @@ def render_overview(report: dict[str, Any], figures: list[dict[str, Any]] | None
         lines.extend(_quality_table(names, quality))
         lines.extend(["未定位原因及把未定位参考计为删除的目标CER，连同字符、文档和家族平均对照，放入[诊断附录](appendix.md)。这些诊断不进入主帕累托分析。", ""])
         lines.extend(["### 完整信息：值、对象与限定语", "",
-                      "正确要求值、所需行列标签及参考已声明的单位、期间、附注共同成立。明确错误至少有一项可判内容不符；尚未确定包括定位歧义或限定信息读取不足，不能统称模型遗漏。", ""])
+                      "正确要求值、业务对象及参考已声明的单位、期间、附注共同成立。缺失、数值错误和错误归属均计为错误并保留证据。软件读取故障必须修复后重新评分。", ""])
         lines.extend(_information_table(names, quality))
-        lines.extend(["### 表格：正确与未判定分别保留", "", "已比较字段正确率不含目标格未取到值及未判定字段；已证正确字段覆盖率始终保留全部字段目标。高条件正确率不能替代目标覆盖。目标格未取到值不证明文字在整个输出中遗漏。缺少新版评分字段时保持 NA，不沿用旧准确率。严格字符差异仅在附录作为诊断。", ""])
+        lines.extend(["### 表格：全部目标逐项判定", "", "每个已纳入目标只判正确或错误；两项正确率均以全部固定目标为分母。不同的表格方向、路径分段或正文表达不单独扣分。严格字符差异仅在附录作为诊断。", ""])
         lines.extend(_figure(figures_by_id, "table-coverage"))
         lines.extend(_table_coverage(names, quality))
         lines.extend([
             "值与行列标签成绩不代表全部限定信息正确；完整信息指标才同时要求已标限定语。两者均只覆盖已有人工信息目标，不宣称全表穷尽或原版式还原。结构和其他关系仅用于[分项诊断](appendix.md)。", "",
         ])
-        lines.extend(_relation_section(names, quality, figures_by_id))
+        lines.extend(["原始结构和关系读取只保留工程诊断，不增加本轮业务信息的正确条件；业务归属已纳入上述完整信息判定。", ""])
         lines.extend([
             "## 处理成本、波动与稳定性", "",
             "正式集耗时是 worker 开始处理已就绪 PDF 至原生结果、忠实 Markdown 和必要资产就绪的直接测量，包含共同前处理、渲染、解析和导出。"
@@ -500,7 +509,7 @@ def render_overview(report: dict[str, Any], figures: list[dict[str, Any]] | None
             "完整[标签长表](group-comparisons.md#tag)、[原文档对照](group-comparisons.md#document)与[家族对照](group-comparisons.md#family)置于附录入口。", "",
             "## 结论覆盖到哪里", "",
         ])
-        lines.extend(_figure(figures_by_id, "coverage"))
+
         lines.extend(_coverage_lines(quality))
     lines.extend(["### 已目读的有限案例", ""])
     review = report.get("qualitative_review")
@@ -529,7 +538,7 @@ def render_overview(report: dict[str, Any], figures: list[dict[str, Any]] | None
         "| 完整指标、分母、初始化、软件与逐组明细 | [详细附录](appendix.md) |",
         "| 按文档、家族、标签、来源和样本比较 | [切片长表](group-comparisons.md) · [质量切片 CSV](quality-slices.csv) |",
         "| 机器可读汇总与完整指标 | [summary.json](summary.json) · [metrics.csv](metrics.csv) |",
-        "| 逐字段状态、原生证据及未判原因 | [field-details.csv](field-details.csv) |",
+        "| 逐字段判定、原生证据及错误原因 | [field-details.csv](field-details.csv) |",
         "| 实际执行配置、源码与资源声明 | [run.json](run.json) · [环境明细](appendix.md#实际环境证据与初始化成本) |",
     ])
     for key, label in (

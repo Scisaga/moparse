@@ -236,12 +236,12 @@ def test_printed_named_identity_locates_the_same_record_including_its_ordinal(he
     ({"group": "South"}, ["North", "Acme"]),
     ({"duplicate": True}, ["Acme"]),
 ])
-def test_record_alias_cannot_borrow_a_note_wrong_parent_or_choose_a_duplicate(options, row):
+def test_record_identity_requires_business_labels_but_repeated_identical_assertions_agree(options, row):
     observed = build_service_observation(_named_record(**options), sample_id="invented")
     unit = {"id": "r", "kind": "table_record", "reference_text": "Acme", "pages": [1],
             "table": {"row_header_path": row, "fields": [{"column_header_path": ["Amount"], "value": "17"}]}}
     _rows, metrics = _score_records([unit], observed, True, match_units([unit], observed))
-    assert metrics["information_correct_fields"] == 0
+    assert metrics["information_correct_fields"] == int(options.get("duplicate", False))
 
 
 @pytest.mark.parametrize("header,row,correct", [
@@ -634,7 +634,7 @@ def test_unprinted_source_header_span_cannot_credit_flat_gfm_but_explicit_prose_
     derived, _diagnostic = read_final_observation(observed)
     year = next(c for c in _cells(derived) if c["text"] == "2024")
     assert year["col_span"] == 1
-    assert score_case(reference, derived)["units"][0]["fields"][0]["status"] == "unresolved"
+    assert score_case(reference, derived)["units"][0]["fields"][0]["outcome"] == "incorrect"
     view = bind_table_view("view", [fragment], [fragment])
     result.markdown = render_semantic_view(view, [fragment])
     result._semantic_tables = [view]

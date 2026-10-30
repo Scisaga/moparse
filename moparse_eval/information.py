@@ -5,12 +5,20 @@ from __future__ import annotations
 import re
 from typing import Any
 
-from .information_reading import label_text, scoped_qualifiers, unit_scope_literal, units
+from .information_reading import (
+    label_text,
+    label_views,
+    scoped_qualifiers,
+    unit_scope_literal,
+    units,
+)
 from .metrics import normalize_text
 
 
 def unit_text(text: str) -> str:
     text = normalize_text(text, collapse_whitespace=True)
+    text = text.replace("’", "'").replace("‘", "'")
+    text = text.translate(str.maketrans("幣萬億個點噸", "币万亿个点吨"))
     if text.startswith("(") and text.endswith(")"):
         text = text[1:-1].strip()
     text = re.sub(r"\s*/\s*", "/", text)
@@ -20,7 +28,7 @@ def unit_text(text: str) -> str:
 def period_text(text: str) -> str:
     """Ignore display spacing before the existing Chinese year suffix only."""
     text = normalize_text(text, collapse_whitespace=True)
-    return re.sub(r"(?<=\d)\s+(?=年)|(?<=年)\s+(?=[度末])", "", text)
+    return re.sub(r"(?<=截至)\s+(?=\d)|(?<=\d)\s+(?=[年月日])|(?<=[年月])\s+(?=\d)|(?<=年)\s+(?=[度末])", "", text)
 
 
 def field_value_text(text: str) -> str:
@@ -38,15 +46,15 @@ def label_pattern(label: str) -> str:
     left = r"(?<!\w)" if re.match(r"\w", label[0]) else ""
     right = r"(?!\w)" if re.match(r"\w", label[-1]) else ""
     if label[0].isdigit():
-        left += r"(?<![+\-−/%‰])(?<!\d[.,])"
+        left += r"(?<![+\-−/%‰^])(?<!\d[.,])"
     if label[-1].isdigit():
-        right += r"(?![+\-−/%‰]|[.,]\d)"
+        right += r"(?![+\-−/%‰^]|[.,]\d)"
     return left + re.escape(label) + right
 
 
 def label_in_text(label: str, text: str, collapse_whitespace: bool) -> bool:
-    label = normalize_text(label, collapse_whitespace=collapse_whitespace)
-    text = normalize_text(text, collapse_whitespace=collapse_whitespace)
+    label = label_text(normalize_text(label, collapse_whitespace=collapse_whitespace))
+    text = label_text(normalize_text(text, collapse_whitespace=collapse_whitespace))
     if label and re.search(label_pattern(label), text):
         return True
     # Chinese labels and their attached currency/unit have no word boundary.
@@ -70,7 +78,15 @@ def path_locates(labels: list[str], native: Any, collapse_whitespace: bool) -> b
         return False
     text = " ".join(parts)
     # Only adjacency whitespace may vary between complete labels.
-    pattern = r"\s*".join(label_pattern(label) for label in labels)
+    first, last = label_pattern(labels[0]), label_pattern(labels[-1])
+    left = first[:first.index(re.escape(labels[0]))]
+    right = last[last.index(re.escape(labels[-1])) + len(re.escape(labels[-1])):]
+    pattern = left
+    for index, label in enumerate(labels):
+        if index:
+            pattern += r"\s*[-:：/]?\s*" if all(re.search(r"[^\W\d_]", item) for item in labels[index - 1:index + 1]) else r"\s*"
+        pattern += re.escape(label)
+    pattern += right
     offsets = []
     cursor = 0
     for part in parts:
@@ -115,7 +131,8 @@ def row_path_locates(labels: list[str], native: Any, collapse_whitespace: bool) 
 
 
 def column_path_locates(labels: list[str], native: Any, collapse_whitespace: bool,
-                        unit_literals: list[str] | None = None) -> bool:
+                        unit_literals: list[str] | None = None,
+                        period_literals: list[str] | None = None) -> bool:
     """Read explicit column labels with independently visible qualifier text.
 
     Unit legends and generic period descriptors may be expressed beside a
@@ -147,8 +164,15 @@ def column_path_locates(labels: list[str], native: Any, collapse_whitespace: boo
         if len(views) > 512:
             return False
     qualifiers = [text for text in dict.fromkeys(unit_literals or []) if unit_scope_literal(text)]
+    qualifiers += [text for text in dict.fromkeys(period_literals or []) if isinstance(text, str) and text.strip()]
     if len(qualifiers) > 12:
         return False
+    remaining = [label for label in labels if not any(
+        label_text(label) == label_text(qualifier) for qualifier in qualifiers)]
+    if remaining and len(remaining) < len(labels) and any(
+        path_locates(remaining, view, collapse_whitespace) for view in views if view
+    ):
+        return True
     return any(path_locates(labels, candidate, collapse_whitespace)
                for view in views if view
                for candidate in [view, *([*view, q] for q in qualifiers), *([q, *view] for q in qualifiers)])
@@ -175,14 +199,24 @@ def endpoint_paths(labels: list[str], group: list[dict[str, Any]], axis: str,
     role = "is_row_header" if axis == "row" else "is_column_header"
     extent_axis, order_axis = ("row", "col") if axis == "row" else ("col", "row")
     options = []
-    for label in labels:
-        matches = [item for item in group if label_in_text(label, item["text"], collapse_whitespace)]
+    for depth, label in enumerate(labels):
+        matches = [item for item in group if any(
+            label_in_text(label, view, collapse_whitespace)
+            or any(path_locates(labels[start:end], [view], collapse_whitespace)
+                   for start in range(depth + 1) for end in range(depth + 1, len(labels) + 1))
+            for view in label_views(item["cell"]))]
         if axis == "row":
+            if re.fullmatch(r"\d+(?:[.,]\d+)*", label):
+                matches = [item for item in matches if item["cell"].get("col") == 0
+                           or item["cell"].get("is_row_header") is True
+                           or any(re.fullmatch(r"No\.?|Year|Rank|ID|序号|编号|年份|年度", text.strip(), re.I)
+                                  for text in item["cell"].get("information_headers", []))]
             matches = [item for item in matches if (
-                label_text(item["text"]) == label_text(label)
-                or path_locates(labels, [item["text"]], collapse_whitespace)
-                and re.sub(r"\s+", "", label_text(item["text"])) == re.sub(r"\s+", "", "".join(labels))
-                or item["text"].startswith(label) and item["text"][len(label):].strip(" ()（）") in units(item["text"][len(label):])
+                any(label_text(view) == label_text(label)
+                    or path_locates(labels, [view], collapse_whitespace)
+                    and re.sub(r"[\s:：/\-]+", "", label_text(view)) == re.sub(r"[\s:：/\-]+", "", "".join(labels))
+                    or view.startswith(label) and view[len(label):].strip(" ()（）") in units(view[len(label):])
+                    for view in label_views(item["cell"]))
             )]
         exact = [item for item in matches if label_text(item["text"]) == label_text(label)]
         if exact:
@@ -264,13 +298,13 @@ def qualifier_evidence(expected: dict[str, Any], cell: dict[str, Any],
                         and re.search(r"(?<!\d)" + re.escape(value.rstrip("年")) + r"年(?:度|末)?(?!\d)", period_text(item["actual"])))]
             evidence[key] = ({"status": "correct", "source": "candidate_scoped_qualifier", "actual": matching}
                              if matching else {"status": "incorrect", "source": "candidate_scoped_qualifier", "actual": found}
-                             if key == "unit" and found else
-                             {"status": "unresolved", "source": "native_qualifier_scope_unavailable"})
+                             if found else
+                             {"status": "incorrect", "source": "required_candidate_qualifier_not_expressed"})
         elif isinstance(value, str) and any(label_in_text(value, text, True) for text in endpoint_texts):
             evidence[key] = {"status": "correct", "source": "located_native_header", "actual": [
                 text for text in endpoint_texts if label_in_text(value, text, True)]}
         else:
-            evidence[key] = {"status": "unresolved", "source": "native_qualifier_scope_unavailable"}
+            evidence[key] = {"status": "incorrect", "source": "required_candidate_qualifier_not_expressed"}
     return evidence
 
 
@@ -286,6 +320,23 @@ def information_value_equal(expected: str, actual: str, field: dict[str, Any],
             # Parentheses remain around the scalar, including accounting signs.
             return re.sub(re.escape(unit) + r"(?=\)?$)", "", text)
         return separate(left) == separate(right)
+    if isinstance(unit, str) and evidence.get("unit", {}).get("status") == "correct":
+        def measure(text: str) -> str:
+            for token in units(text):
+                if unit_text(token) == unit_text(unit):
+                    text = re.sub(re.escape(token) + r"(?=\)?$)", "", text)
+            symbol = ("$" if unit.startswith(("$", "USD", "HKD", "美元", "港元", "港币", "港幣")) else
+                      "¥" if unit.startswith(("¥", "CNY", "RMB", "人民币", "人民幣", "日元")) or unit == "元" else
+                      "€" if unit.startswith(("€", "EUR", "欧元", "歐元")) else
+                      "£" if unit.startswith(("£", "GBP", "英镑", "英鎊")) else None)
+            if symbol:
+                text = re.sub(r"^(\(?)\s*" + re.escape(symbol) + r"\s*(?=[+\-−]?\d|\()", r"\1", text)
+            return text
+        a, b = measure(left), measure(right)
+        numeric = r"\(?[+\-−]?(?:\d+(?:[.,]\d+)*|\.\d+)\)?"
+        if (re.fullmatch(numeric, a) and re.fullmatch(numeric, b)
+                and a.startswith("(") == a.endswith(")") and b.startswith("(") == b.endswith(")")):
+            return a == b
     if left in {"—", "–", "-"} and right in {"—", "–", "-"}:
         return True
     if not re.fullmatch(r"[\d\s,.+\-−()%‰$€£¥]+", left):

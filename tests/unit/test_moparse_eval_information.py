@@ -97,19 +97,49 @@ def test_repeated_row_leaf_is_resolved_by_a_native_row_group_span():
     assert field["status"] == "compared" and metrics["correct_fields"] == 1
 
 
-def test_two_complete_paths_stay_ambiguous_even_if_only_one_answer_is_correct():
+def test_conflicting_complete_business_records_fail_even_when_one_value_matches():
     cells = repeated_leaves()
     cells += [{"id": "another-revenue", "row": 3, "col": 0, "text": "Revenue"},
               {"id": "another-value", "row": 3, "col": 1, "text": "99"}]
     field, metrics = evaluate(cells)
-    assert field["status"] == "unresolved" and metrics["correct_fields"] == 0
+    assert field["status"] == "incorrect" and metrics["correct_fields"] == 0
 
 
 def test_missing_explicit_column_path_is_not_reported_as_a_missing_value():
     field, metrics = evaluate([{"id": "v", "text": "17", "row_header_path": ["Revenue"],
                                 "column_header_path": ["2024", "Amount"]}])
-    assert field["status"] == "unresolved"
+    assert field["status"] == "incorrect"
     assert metrics["target_missing_fields"] == 0
+
+
+@pytest.mark.parametrize("actual,correct", [("2.75", True), ("8.25", False)])
+def test_numbered_business_record_needs_no_extra_parent_annotation(actual, correct):
+    cells = html_cells('<table><tr><td>No.</td><td>Proposal</td><td>Price</td></tr>'
+                       f'<tr><td>1</td><td>Lease guarantee</td><td>{actual}</td></tr>'
+                       '<tr><td>2</td><td>Credit limit</td><td>2.75</td></tr></table>')
+    field, metrics = evaluate(cells, row=["1"], column=["Price"], value="2.75")
+    assert field["status"] == "compared"
+    assert field["native_text"] == actual
+    assert (metrics["information_correct_fields"] == 1) is correct
+
+
+def test_numbered_record_does_not_choose_a_table_using_its_expected_price():
+    cells = html_cells('<table><tr><td>No.</td><td>Price</td></tr>'
+                       '<tr><td>1</td><td>2.75</td></tr></table>')
+    case = {"sample_id": "invented", "review_status": "confirmed", "units": [{"id": "proposal", "kind": "table_record",
+            "status": "confirmed", "literal": "Proposal", "pages": [1], "table": {
+                "row_header_path": ["1"], "fields": [{"column_header_path": ["Price"], "value": "2.75"}]}}]}
+    other = deepcopy(cells)
+    for cell in other:
+        cell["id"] = "other-" + cell["id"]
+        if cell["text"] == "2.75":
+            cell["text"] = "8.25"
+    observation = {"sample_id": "invented", "pages": [{"page": 1, "blocks": [
+        {"id": "first", "kind": "table", "cells": cells},
+        {"id": "second", "kind": "table", "cells": other}]}]}
+    result = score_case(case, observation)
+    assert result["metrics"]["table_records"]["correct_fields"] == 0
+    assert result["units"][0]["fields"][0]["reason"] == "ambiguous_complete_label_path"
 
 
 @pytest.mark.parametrize("representation", ["json", "html", "markdown"])
@@ -127,7 +157,7 @@ def test_equivalent_native_representations_have_the_same_information_score(repre
     assert metrics["information_correct_fields"] == 1
 
 
-@pytest.mark.parametrize("unit,state", [("万元", "correct"), ("元", "incorrect"), (None, "unresolved")])
+@pytest.mark.parametrize("unit,state", [("万元", "correct"), ("元", "incorrect"), (None, "incorrect")])
 def test_qualifiers_are_required_for_complete_information_but_not_invented(unit, state):
     cell = {"id": "v", "text": "17", "row_header_path": ["Revenue"], "column_header_path": ["2025"]}
     if unit is not None:
@@ -146,7 +176,7 @@ def test_explicit_wrong_unit_is_not_overridden_by_a_matching_header_word():
     assert metrics["information_correct_fields"] == 0
 
 
-def test_one_output_value_cannot_satisfy_two_independent_targets():
+def test_repeated_reference_to_the_same_business_fact_needs_no_duplicate_output():
     case = {"sample_id": "invented", "review_status": "confirmed", "units": [
         {"id": name, "kind": "table_record", "status": "confirmed", "literal": "Revenue",
          "table": {"row_header_path": ["Revenue"], "fields": [{"column_header_path": ["2025"], "value": "17"}]}}
@@ -154,5 +184,5 @@ def test_one_output_value_cannot_satisfy_two_independent_targets():
     observation = {"sample_id": "invented", "pages": [{"page": 1, "blocks": [{"id": "table", "cells": [
         {"id": "v", "text": "17", "row_header_path": ["Revenue"], "column_header_path": ["2025"]}]}]}]}
     result = score_case(case, observation)
-    assert result["metrics"]["table_records"]["correct_fields"] == 0
-    assert all(row["fields"][0]["reason"] == "native_value_claim_conflict" for row in result["units"])
+    assert result["metrics"]["table_records"]["correct_fields"] == 2
+    assert all(row["fields"][0]["information"]["status"] == "correct" for row in result["units"])

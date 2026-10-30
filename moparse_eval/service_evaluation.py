@@ -258,7 +258,11 @@ def require_shared_scoring(record: dict[str, Any], identity: dict[str, Any], *,
     execution = record["software"]
     allowed = {"service_evaluation.py", "service_observation.py", "service_report.py", "service_artifacts.py"}
     if paired_native_rescore:
-        allowed.add("scoring.py")
+        # These modules only grade or present saved candidates. Admitting a
+        # changed common reader requires all native and final sides to be
+        # rescored under the newly validated identity, never old-score reuse.
+        allowed.update({"scoring.py", "information.py", "information_reading.py", "cli.py",
+                        "report_figures.py", "report_overview.py", "reporting.py", "table_context_report.py"})
     names = set(execution["module_sha256"]) | set(identity["module_sha256"])
     if any(execution["module_sha256"].get(name) != identity["module_sha256"].get(name)
            for name in names - allowed):
@@ -270,7 +274,7 @@ def require_shared_scoring(record: dict[str, Any], identity: dict[str, Any], *,
 
 
 def freeze_scoring(run: Path, validation: Path) -> None:
-    from .cli import code_identity, snapshot_software
+    from .cli import SCORING_PROTOCOL, code_identity, snapshot_software
     record = read_json(run / "run.json")
     if record["state"] != "completed":
         raise ValueError("finish candidate execution before freezing its analysis reader")
@@ -288,7 +292,7 @@ def freeze_scoring(run: Path, validation: Path) -> None:
     write_json(run / "scoring-freeze.json", {
         "software": identity, "software_id": identity["software_id"],
         "execution_software_id": record["software"]["software_id"],
-        "protocol_id": record["scoring_protocol"]["id"], "validation": checks,
+        "protocol_id": SCORING_PROTOCOL["id"], "scoring_protocol": copy.deepcopy(SCORING_PROTOCOL), "validation": checks,
         "reader_scope": "faithful final-output readback; same declared label policy in grids and paths",
         "paired_native_rescore": paired_native_rescore,
         "software_snapshot": str(software_path.relative_to(run)),
@@ -556,7 +560,7 @@ async def worker(plan_path: Path, phase: str) -> None:
 
 def score_run(run: Path) -> Path:
     from .adjudications import reference_exclusions
-    from .cli import code_identity
+    from .cli import code_identity, read_scoring_freeze
     from .scoring import score_case
     from .service_artifacts import rebuild_final_result
     from .service_observation import build_service_observation, read_final_observation
@@ -564,7 +568,7 @@ def score_run(run: Path) -> Path:
     if record["state"] != "completed":
         raise ValueError("complete all declared replay work before scoring")
     identity = code_identity()
-    scoring_freeze = read_json(run / "scoring-freeze.json")
+    scoring_freeze = read_scoring_freeze(run / "scoring-freeze.json", identity)
     paired_native_rescore = scoring_freeze.get("paired_native_rescore") is True
     require_shared_scoring(record, identity, paired_native_rescore=paired_native_rescore)
     if (scoring_freeze.get("software_id") != identity["software_id"]
@@ -580,7 +584,7 @@ def score_run(run: Path) -> Path:
     index: dict[str, Any] = {
         "schema": "moparse-service-scores/1", "score_id": run.name + "-paired-" + identity["software_id"][:12],
         "software": identity, "execution_software": record["software"],
-        "scoring_protocol": record["scoring_protocol"],
+        "scoring_protocol": scoring_freeze["scoring_protocol"],
         "reference_freeze": record["reference_freeze"], "created_at": now(), "results": [],
     }
     baseline_run = Path(record["baseline_run"])
@@ -710,6 +714,7 @@ def score_run(run: Path) -> Path:
     record["latest_scores"] = record["score_index"] = f"{destination_name}/index.json"
     record["scoring_status"] = "completed"
     record["scoring_software_id"] = identity["software_id"]
+    record["scoring_protocol"] = scoring_freeze["scoring_protocol"]
     write_json(run / "run.json", record)
     return destination / "index.json"
 

@@ -1,6 +1,6 @@
 # MO-Parse 评测工具
 
-本轮八组已按[冻结执行身份](../benchmark/execution-lock.json)各完成quality800一次和perf80三轮，统一评分、首版报告及原MO服务恢复完成。唯一比较结果见[本轮v3报告](../benchmark/reports/20261026-lite-v3/report.md)，状态与限制由[评测索引](../benchmark/reports/README.md)维护。TTS按2026-10-26授权仅观测、不控制，先前撤回测量不恢复；自动评分不构成语料重新验收。协议由[评测标准](../benchmark/evaluation-tasks.md)维护，配置身份由[八管线计划](../benchmark/pipelines-to-test.md)维护，修复及验证边界见[执行层诊断](../benchmark/diagnostics/README.md)。
+本轮八组已按[冻结执行身份](../benchmark/execution-lock.json)各完成quality800一次和perf80三轮，原MO服务恢复完成。[原生比较报告](../benchmark/reports/20261026-lite-v3/report.md)的评分完成状态、采用结论与限制由[评测索引](../benchmark/reports/README.md)维护，执行完成不代表质量已完成判定。TTS按2026-10-26授权仅观测、不控制，先前撤回测量不恢复；自动评分不构成语料重新验收。协议由[评测标准](../benchmark/evaluation-tasks.md)维护，配置身份由[八管线计划](../benchmark/pipelines-to-test.md)维护，修复及验证边界见[执行层诊断](../benchmark/diagnostics/README.md)。
 
 原件、Lite/Full数据包、冻结参考和作者标注保持原样，不重新生成或机械复核。Full不启动推理。GLM rotary、Paddle颜色接线、旋转路由与异常隔离已修复，并补足Paddle逐区域生成观测。八组在[当前工程预检02](../benchmark/reports/20261026-repaired-preflight-02/)共完成88项任务，其中64项独立单页标定全部成功；[执行就绪记录](../benchmark/reports/20261026-repaired-preflight-02/execution-readiness.json)保留实际配置、超时依据和Graph证据，并为本次冻结锁提供执行依据。这些记录只说明所测范围的执行就绪，不是页面质量评分或语料验收。
 
@@ -31,7 +31,7 @@ Paddle原生服务使用单个长期owner线程统一初始化、推理与关闭
 
 `score`只读冻结参考并写新评分版本，不提供语料检查或修复模式。主评测聚焦信息保全、内容准确和必要归属；结构、定位细节与字符差异作为诊断，未知和未标注保持NA。已知目标遗漏或运行失败仍保留目标分母；字符指标不能替代关键数值和关系正确性。DocVortex续接读回只读取明确原生声明，不补表头、期间、单位或内容。
 
-当前主评测使用`mo-parse-eval-information-v4`，以expected的预期信息为中心。正文并列定位覆盖、已定位CER和字符覆盖；表格在同一原生表体内联合定位完整标签组合，分别报告值与行列标签正确覆盖、同时满足已标单位期间附注的完整信息正确覆盖。路径分段和格位差异不单独扣内容分，严格字符与结构诊断进入附录。完整分母和有限排版等价政策只维护在[评测标准](../benchmark/evaluation-tasks.md#4-指标与匹配)。
+当前主评测使用`mo-parse-eval-information-v5`，以expected的预期信息为中心。正文并列定位覆盖、已定位CER和字符覆盖；表格或正文记录均按实际表达的业务事实读取，分别报告值与业务标签、同时满足已标单位期间附注的完整信息正确率。所有已纳入目标完成正确或错误判定，路径分段、表格方向和格位差异不单独扣内容分；严格字符与结构诊断进入附录。完整分母和表达等价政策只维护在[评测标准](../benchmark/evaluation-tasks.md#4-指标与匹配)。
 
 冻结并验证评分软件后，可用`score --run <run-directory> --freeze <scoring-freeze.json> --adjudications <existing-human-decision.json>`重评分已有产物。freeze记录软件身份、协议身份及通过的工程验证，入口拒绝身份不符或未通过验证的记录，评分结束再次确认软件未变。该操作不启动模型、不改写参考或执行观察，不回填原解析耗时；存在工程读回错误时不发布新的评分索引。原有人工排除决定继续统一适用，不能随重评分丢失。
 
@@ -47,6 +47,6 @@ Paddle原生服务使用单个长期owner线程统一初始化、推理与关闭
 
 新运行目录按`prepare` → `run --phase warmup` → `freeze` → `run --phase measured` → `freeze-scoring` → `score` → `report`执行；两个freeze命令都要求显式`--validation`工程验证记录，不能用文件存在或语料计数代替验证。`prepare`还需`--baseline`、`--output`和仅含公开处理参数的`--service-config`。服务执行与最终读回分别冻结身份，共享评分规则保持原样，旧运行目录不能覆盖。报告重生只读已有运行和评分JSON，不读取语料、重新推理或重新评分。
 
-2026-10-30读取修正采用`mo-parse-eval-information-v4`，完整标准见[评测任务](../benchmark/evaluation-tasks.md)。`service_evaluation prepare --previous-run <旧运行>`只接纳同一原生输入、参考声明和已冻结执行身份的旧候选，读取原样保存的最终正文；候选worker不挂载旧结果或参考。新评分仍须经过执行与评分冻结，旧正文重评不复用旧分数。`python -m moparse_eval.table_context_report`从冻结评分产物生成原生、旧正文和新正文的三方比较，逐项列出新增正确、原正确项损失和新增错误。
+当前读取修正采用`mo-parse-eval-information-v5`，完整标准见[评测任务](../benchmark/evaluation-tasks.md)。每个已纳入业务目标只判正确或错误，全部目标完成判定后才能发布质量报告；评分器读取故障须先修复。`service_evaluation prepare --previous-run <旧运行>`只接纳同一原生输入、参考声明和已冻结执行身份的旧候选，读取原样保存的最终正文；候选worker不挂载旧结果或参考。评分冻结可单独更新只用于分析的共同读取与报告模块，实际适配、后处理、app及依赖仍须与执行冻结一致；必须同步重评原生、旧正文及新正文，不能复用旧分数。`python -m moparse_eval.table_context_report`逐项列出新增正确、原正确项损失及单位、期间、附注退化。
 
 代码验证使用`python -m pytest -q tests/unit tests/test_markdown_policy.py moparse_eval/tests`。其中`test_information_context.py`覆盖单位、年度、分组和脚注正反例，`test_native_table_context.py`覆盖原生结构与局部转换，`test_moparse_eval_service_observation.py`覆盖实际正文读取及未渲染内部关系不得计分。它们使用受控合成材料，与真实候选专项评分、原页目读及运行成本测量分别记录；通过代码测试不构成语料验收。

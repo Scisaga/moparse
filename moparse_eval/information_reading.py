@@ -13,10 +13,10 @@ from typing import Any
 from .metrics import normalize_text
 from .representations import visible_text
 
-VERSION = "candidate-information-scopes-1"
-_UNIT = re.compile(r"(?:(?:人民币|人民幣|美元|港元|港幣|港币|欧元|歐元)?(?:万亿元|萬億元|千亿元|千億元|百亿元|百億元|十亿元|十億元|亿元|億元|千万元|千萬元|百万元|百萬元|千元|万元|萬元|元)|RMBbn|USD|EUR|HKD|CNY|RMB|\$\s*(?:in\s+millions|bn|m)|[个個]?百分点|[个個]?百分點|percentage points?|basis points?|bps|(?:毫克|千克|公斤|(?:千萬|千万|百萬|百万|萬|万|千)?(?:吨|噸))|[%‰])(?:/[A-Za-z\u3400-\u9fff0-9³²]+)?")
+VERSION = "candidate-information-scopes-2"
+_UNIT = re.compile(r"(?:(?:人民币|人民幣|美元|港元|港幣|港币|欧元|歐元)?(?:万亿元|萬億元|千亿元|千億元|百亿元|百億元|十亿元|十億元|亿元|億元|千万元|千萬元|百万元|百萬元|千元|万元|萬元|元)|RMBbn|RMB['’]000|(?:RMB|USD|HKD|CNY)\s+million|in\s+million|\bcontracts?\b|USD|EUR|HKD|CNY|RMB|\$\s*(?:in\s+millions|bn|m)|['’]\s*000\s+(?:contracts|lots)|[个個]?百分点|[个個]?百分點|percentage points?|basis points?|bps|(?:毫克|千克|公斤|(?:千萬|千万|百萬|百万|萬|万|千)?(?:吨|噸))|[%‰$€£¥])(?:/[A-Za-z\u3400-\u9fff0-9³²]+)?")
 _PERIOD = re.compile(r"(?:截至[^。；;]{1,30}(?:年度|年末)|(?:19|20)\d{2}\s*年(?:度|末)?|(?<!\d)(?:19|20)\d{2}(?!\d))")
-_INTRO = re.compile(r"(?:following\s+table|下表|本表|表中).*(?:percent(?:age)?|单位|單位)|(?:单位|單位)\s*[:：]", re.I)
+_INTRO = re.compile(r"(?:following\s+table|下表|本表|表中).*(?:percent(?:age)?|单位|單位)|(?:单位|單位|Units?)\s*[:：]", re.I)
 _SECTION_PERIOD = re.compile(r"^\s*(?:[（(]\d+[)）]\s*)?((?:19|20)\d{2}\s*年度)[^。；;]{0,32}(?:情况|情況|数据|數據)\s*[:：]$")
 _SCALAR = re.compile(r"\(?\s*[$€£¥]?\s*[+\-−]?(?:\d[\d,.]*|\.\d+)\s*[%‰]?\s*\)?|[—–-]")
 
@@ -33,7 +33,70 @@ def units(text: str) -> list[str]:
     values += [m.group() for m in re.finditer(r"(?<!\w)(?:人|次|股|台|家|个|個|天|日)(?!\w)", text)
                if not any(a.start(1) <= m.start() and m.end() <= a.end(1) for a in explicit)
                and not any(a.start() <= m.start() and m.end() <= a.end() for a in known)]
+    values += [unit for word, unit in (("次数", "次"), ("次數", "次"), ("年限", "年"),
+                                      ("人数", "人"), ("人數", "人"), ("股数", "股"), ("股數", "股"))
+               if word in text]
     return list(dict.fromkeys(values))
+
+
+def metric_units(text: str) -> list[str]:
+    """Only a metric's unit annotation qualifies its numbers.
+
+    Currency names and scalar conditions within a metric name do not: a
+    'USD depreciates 5%' scenario can still report its impact in CNY million.
+    """
+    text = normalize_text(text, collapse_whitespace=True)
+    return [token for token in units(text) if any(
+        (match.end() == len(text) or text[match.end():].strip() == ")")
+        and (not text[:match.start()].rstrip()[-1:].isdigit())
+        for match in re.finditer(re.escape(token), text))
+        or any(word in text for word in {"次": ("次数", "次數"), "年": ("年限",),
+                                        "人": ("人数", "人數"), "股": ("股数", "股數")}.get(token, ()))]
+
+
+def period_literals(texts: list[str]) -> list[str]:
+    """Read explicit period parts within one already scoped field/header path."""
+    result = list(texts)
+    years = list(dict.fromkeys(match[0] for text in texts for match in re.finditer(r"(?<!\d)(?:19|20)\d{2}\s*年", text)))
+    simple_years = list(dict.fromkeys(view for text in texts for view in label_views({"text": text})
+                                    if re.fullmatch(r"(?:19|20)\d{2}", view.strip())))
+    for text in texts:
+        if len(set(re.findall(r"(?:19|20)\d{2}", text))) == 1:
+            result += [match[0] for match in re.finditer(r"(?<!\d)(?:19|20)\d{2}\s*年(?:度|末)?", text)]
+        result += [match[0] for match in re.finditer(r"(?:19|20)\d{2}年(?:較|较|比)(?:19|20)\d{2}年|期初|期末|本期|本報告期|本报告期", text)]
+    if len(years) == 1:
+        year = re.sub(r"\s+", "", years[0])
+        for text in texts:
+            result += [year + match[0] for match in re.finditer(r"(?<!\d)(?:第?[一二三四1-4]季度|\d{1,2}月\d{1,2}日)", text)
+                       if not re.search(r"(?:19|20)\d{2}", text)]
+            result += [match[1] + year + match[2] for match in re.finditer(
+                r"(截至|於|于)([一二三四五六七八九十\d]{1,3}月[一二三四五六七八九十\d]{1,3}日止年度)", text)]
+    if len(simple_years) == 1:
+        for text in texts:
+            if re.search(r"(?:19|20)\d{2}|[零〇一二三四五六七八九]{4}年", text):
+                continue
+            result += [match[0].strip() + " " + simple_years[0] for match in re.finditer(
+                r"(?:For the year ended|As at)\s+\d{1,2}\s+[A-Za-z]+", text, re.I)]
+    return list(dict.fromkeys(result))
+
+
+def _numbered_record_labels(cells: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Read an adjacent printed record number and name as one label view."""
+    extra = []
+    for number in cells:
+        if number.get("col") != 0 or not re.fullmatch(r"\d{1,3}", str(number.get("text", ""))):
+            continue
+        names = [cell for cell in cells if cell.get("row") == number.get("row")
+                 and cell.get("col") == 1 and cell.get("row_span", 1) == number.get("row_span", 1)
+                 and str(cell.get("text", "")).strip() and not _is_scalar(str(cell["text"]))]
+        if len(names) != 1:
+            continue
+        name = names[0]
+        extra.append({**number, "id": str(number.get("id")) + ":record_label", "col_span": 1 + name.get("col_span", 1),
+                      "text": str(number["text"]) + " " + str(name["text"]),
+                      "readback_evidence": "adjacent_printed_number_and_name",
+                      "native_components": [number.get("id"), name.get("id")]})
+    return extra
 
 
 def unit_scope_literal(text: str) -> bool:
@@ -47,11 +110,57 @@ def unit_scope_literal(text: str) -> bool:
 def label_text(text: str) -> str:
     """A label may contain a separate unit suffix; never trim business words."""
     text = normalize_text(text, collapse_whitespace=True)
+    # Read typography in labels only. Values keep their original signs,
+    # exponents, footnote spelling and strict-character diagnostics.
+    text = text.translate(str.maketrans("⁰¹²³⁴⁵⁶⁷⁸⁹₀₁₂₃₄₅₆₇₈₉˒", "01234567890123456789,"))
+    text = text.replace("’", "'").replace("‘", "'")
+    text = re.sub(r"(?<=\d)\s+(?=年|月|日)", "", text)
+    text = re.sub(r"^[-–—•]\s*(?=[^\W\d_])", "", text)
+    text = re.sub(r"(January|February|March|April|May|June|July|August|September|October|November|December)(?=\d)", r"\1 ", text)
+    text = re.sub(r"^其中\s*[:：]\s*", "", text)
+    text = re.sub(r"\s*(?:\.{3,}|…{2,})$", "", text)
     return text.rstrip(" :：")
+
+
+def label_views(cell: dict[str, Any]) -> list[str]:
+    """Read a textual label's explicit note formatting, retaining its raw view."""
+    cached = cell.get("information_label_views")
+    if isinstance(cached, list) and all(isinstance(text, str) for text in cached):
+        return cached
+    text = str(cell.get("text", ""))
+    definitions = _note_definitions(cell)
+    def note(match: re.Match[str]) -> str:
+        word, marker = match[1], match[2]
+        return word.replace(r"\ ", " ").strip() if marker in definitions else match[0]
+    projected = re.sub(r"\\\(\s*([A-Za-z][A-Za-z\s\\]{1,80})\s*\^\s*\{?([0-9]{1,2})\}?\s*\\\)", note, text)
+    label_notes = _note_definitions(cell, ambiguous=True)
+    spaced = re.sub(r"(?<=[A-Za-z)])\s+([0-9]{1,2})(?=\s*[(,]|$)",
+                    lambda match: match[1] if match[1] in label_notes else match[0], text)
+    bilingual = re.match(r"\s*((?:19|20)\d{2})\s*([零〇一二三四五六七八九]{4})年", text)
+    years = []
+    if bilingual and bilingual[2].translate(str.maketrans("零〇一二三四五六七八九", "00123456789")) == bilingual[1]:
+        years = [bilingual[1], bilingual[1] + "年"]
+    return list(dict.fromkeys([text, projected, spaced, *years]))
 
 
 def _is_scalar(text: str) -> bool:
     return bool(_SCALAR.fullmatch(normalize_text(text).strip()))
+
+
+def _value_expression(text: str) -> bool:
+    """Recognize a data expression without interpreting its value or notes."""
+    text = normalize_text(text).strip()
+    return (_is_scalar(text) or bool(_scalar_units(text)) or bool(re.fullmatch(
+        r"(?:\\\(\s*)?[+\-−]?(?:\d[\d,.]*|\.\d+)\s*\^\s*(?:\{\s*\d+\s*\}|\d+)(?:\s*\\\))?", text))
+        or bool(re.fullmatch(r"[+\-−]?[\d,.]+[%‰][\d,.]+", text)))
+
+
+def _header_year(text: str) -> bool:
+    text = normalize_text(text, collapse_whitespace=True)
+    if re.fullmatch(r"(?:19|20)\d{2}(?:年(?:度|末)?)?", text):
+        return True
+    match = re.match(r"(?:19|20)\d{2}(?:年)?", text)
+    return bool(match and text[match.end():].strip() in units(text[match.end():]))
 
 
 def _scalar_units(text: str) -> list[str]:
@@ -70,19 +179,38 @@ def _header_rows(cells: list[dict[str, Any]]) -> set[int]:
         if type(cell.get("row")) is int:
             rows.setdefault(cell["row"], []).append(cell)
     header: set[int] = set()
+    first_stub = ""
     for row, band in sorted(rows.items()):
         nonempty = [c for c in band if str(c.get("text", "")).strip()]
-        if header and len(nonempty) == 1 and nonempty[0].get("col") == 0 and len(band) > 1:
-            break
+        if len(nonempty) == 1 and nonempty[0].get("col") == 0:
+            left = nonempty[0]
+            if (len(band) > 1 or left.get("col_span", 1) > 1) and not (
+                _PERIOD.fullmatch(str(left.get("text", "")).strip())
+                or unit_scope_literal(str(left.get("text", "")))
+            ):
+                break
         # Dates in the first row are header observations; a labeled row with
         # actual scalar data ends the leading header band.
         scalars = [c for c in band if c.get("col", 0) > 0 and _is_scalar(str(c.get("text", "")))
-                   and not re.fullmatch(r"(?:19|20)\d{2}", str(c.get("text", "")).strip())]
+                   and not _header_year(str(c.get("text", "")))]
         if scalars:
             break
+        if any(c.get("col", 0) > 0 and _value_expression(str(c.get("text", "")))
+               and not _header_year(str(c.get("text", ""))) for c in band):
+            break
+        stub = next((str(c.get("text", "")).strip() for c in band if c.get("col") == 0), "")
+        declared = nonempty and all(c.get("is_column_header") or c.get("native_tag") == "th"
+                                    and c.get("native_attributes", {}).get("scope") != "row" for c in nonempty)
+        dated_subheader = (any(c.get("row") in header and c.get("col_span", 1) > 1 for c in cells)
+                           and any(c.get("col", 0) > 0 and _header_year(str(c.get("text", ""))) for c in band))
+        if header and stub and stub != first_stub and not declared and not dated_subheader and not unit_scope_literal(stub):
+            if not first_stub or not unit_scope_literal(first_stub):
+                break
         if any(len(str(c.get("text", ""))) > 160 for c in band):
             break
         header.add(row)
+        if not first_stub:
+            first_stub = stub
         if len(header) > 12:
             return set()
     return header
@@ -140,10 +268,55 @@ def _header_scopes(cells: list[dict[str, Any]], leading: set[int]) -> list[tuple
             for i, band in enumerate(bands)]
 
 
+def _prose_fields(block: dict[str, Any]) -> list[dict[str, Any]]:
+    """Read explicitly delimited record assertions from the candidate itself.
+
+    These are a scoring view of printed text, never a replacement native
+    table or a business inference. Free text is retained as free text.
+    """
+    if block.get("cells") or block.get("kind") not in {"text", "paragraph", "list"}:
+        return []
+    text = visible_text(str(block.get("text", "")), block.get("text_format", "plain"))
+    records = []
+    for number, line in enumerate(text.splitlines()):
+        parts = [part.strip() for part in re.split(r"[；;]", line) if part.strip()]
+        pairs = []
+        subjects: list[str] = []
+        for index, part in enumerate(parts):
+            match = re.fullmatch(r"([^:：]{1,160})\s*[:：]\s*(.{1,512})", part)
+            if match:
+                pairs.append((match[1].strip(), match[2].removesuffix("。")))
+            elif index == 0 and len(parts) > 1:
+                subjects.extend(label.strip() for label in re.split(r"\s+/\s+|\s*>\s*", part) if label.strip())
+        if not pairs or not (subjects or len(pairs) > 1):
+            continue
+        identities = [*subjects, *(value for _key, value in pairs)]
+        periods = [value for key, value in pairs if re.fullmatch(r"期间|期間|年度|日期|Period|Date|Year", key, re.I)]
+        context = [{"id": block.get("id"), "kind": "period", "text": value} for value in periods]
+        context += [{"id": block.get("id"), "kind": "explicit_table_introduction", "text": key + ":" + value}
+                    for key, value in pairs if re.fullmatch(r"单位|單位|Units?", key, re.I)]
+        identity = f"{block.get('id', 'text')}:record:{number}"
+        cells = [{"id": f"{identity}:field:{index}", "text": value,
+                  "column_header_path": [key], "information_record_labels": identities,
+                  "information_context": context, "periods": periods, "text_format": "plain",
+                  "native_path": block.get("native_path"), "information_prose_record": True}
+                 for index, (key, value) in enumerate(pairs)]
+        records.append({**block, "id": identity, "text": "", "cells": cells,
+                        "kind": "text_record", "readback_evidence": "printed_key_value_record"})
+    return records
+
+
 def read_information_observation(observation: dict[str, Any]) -> dict[str, Any]:
     derived = copy.deepcopy(observation)
+    annual = [block for page in derived.get("pages", []) for block in page.get("blocks", [])
+              if block.get("kind") in {"header", "title", "heading"}
+              and re.search(r"(?:19|20)\d{2}\s*年?\s*年度报告|Annual\s+Report\s+(?:19|20)\d{2}", str(block.get("text", "")), re.I)]
+    annual_years = {year for block in annual for year in re.findall(r"(?:19|20)\d{2}", str(block.get("text", "")))}
+    report_period = ({"id": annual[0].get("id"), "text": annual[0]["text"], "kind": "period"}
+                     if len(annual_years) == 1 else None)
     for page in derived.get("pages", []):
         blocks = page.get("blocks", [])
+        prose = [record for block in blocks for record in _prose_fields(block)]
         section: dict[str, Any] | None = None
         for position, block in enumerate(blocks):
             text = visible_text(str(block.get("text", "")), block.get("text_format", "plain"))
@@ -154,6 +327,8 @@ def read_information_observation(observation: dict[str, Any]) -> dict[str, Any]:
             elif section is not None and re.match(r"^\s*[（(]\d+[)）]", text):
                 section = None
             cells = block.get("cells") or []
+            for cell in cells:
+                cell.pop("information_label_views", None)
             if not cells:
                 continue
             contexts: list[dict[str, Any]] = []
@@ -229,8 +404,21 @@ def read_information_observation(observation: dict[str, Any]) -> dict[str, Any]:
                 cell["information_notes"] = notes
                 cell["information_ambiguous_notes"] = numbered_notes
                 cell["information_headers"] = [c["text"] for c in column_headers]
+                all_column_headers = headers_by_body.get(row, [])
+                if any(re.search(r"同比|本年.*上年|[Cc]hange", text) for text in cell["information_headers"]):
+                    header_years = {year for header in all_column_headers for year in re.findall(r"(?:19|20)\d{2}", header["text"])}
+                    if len(header_years) >= 2:
+                        cell["information_comparison_periods"] = [header["text"] for header in all_column_headers
+                            if re.search(r"(?:截至|於|于)[一二三四五六七八九十\d]{1,3}月[一二三四五六七八九十\d]{1,3}日止年度", header["text"])]
                 cell["information_row_labels"] = labels_by_row.get(row, [])
                 cell["information_table_units"] = table_units
+                if report_period and not any(re.search(r"(?:19|20)\d{2}|[二零〇一三四五六七八九]{4}年", text)
+                        for text in [*cell["information_headers"], *(item["text"] for item in contexts)]):
+                    cell["information_context"] = [*contexts, report_period]
+            block["cells"] = [*cells, *_numbered_record_labels(cells)]
+            for cell in block["cells"]:
+                cell["information_label_views"] = label_views(cell)
+        page["blocks"] = [*blocks, *prose]
     return derived
 
 
@@ -276,14 +464,14 @@ def scalar_notes(cell: dict[str, Any]) -> tuple[str, list[str] | None]:
 def scoped_qualifiers(cell: dict[str, Any], endpoint_texts: list[str]) -> dict[str, list[dict[str, Any]]]:
     """Read qualifiers independent of the expected qualifier or value."""
     result: dict[str, list[dict[str, Any]]] = {"unit": [], "period": []}
-    direct = [*endpoint_texts, *cell.get("information_headers", [])]
     column_texts = [*cell.get("column_header_path", []), *cell.get("information_headers", [])]
+    direct = [*endpoint_texts, *column_texts]
     if not column_texts:
         column_texts = endpoint_texts
     contexts = cell.get("information_context", [])
     numeric, _notes = scalar_notes(cell)
-    own_units = _scalar_units(numeric)
-    row_units = [u for text in [*cell.get("row_header_path", []), *cell.get("information_row_labels", [])] for u in units(text)]
+    own_units = [unit for unit in _scalar_units(numeric) if unit not in {"$", "€", "£", "¥"}]
+    row_units = [u for text in [*cell.get("row_header_path", []), *cell.get("information_row_labels", [])] for u in metric_units(text)]
     ratio = any(re.search(r"同比|佔|占|比例|比率|percent|change|rate|ratio", text, re.I) for text in column_texts)
     column_units = [u for text in [*column_texts, *cell.get("units", [])] for u in units(text)]
     if ratio:
@@ -292,13 +480,11 @@ def scoped_qualifiers(cell: dict[str, Any], endpoint_texts: list[str]) -> dict[s
         row_units = []
     if any(re.search(r"expressed\s+as\s+a\s+percentage", text, re.I) for text in cell.get("units", [])):
         column_units.append("%")
-    actual_units = own_units or column_units or row_units
+    actual_units = own_units or row_units or column_units
     row_labels = [*cell.get("row_header_path", []), *cell.get("information_row_labels", [])]
-    legends = [*direct, *cell.get("units", []), *(item["text"] for item in contexts)]
     currency = re.match(r"\(?\s*([$€£¥])", numeric) if _is_scalar(numeric) else None
-    if (currency and any(re.search(r"per\s+(?:diluted\s+)?share|每股", label, re.I) for label in row_labels)
-            and any(re.search(r"except\s+per\s+share\s+(?:data|amounts)|每股.{0,8}除外", text, re.I) for text in legends)):
-        actual_units = [currency[1] + " per share"]
+    if (currency and any(re.search(r"per\s+(?:diluted\s+)?share|每股", label, re.I) for label in row_labels)):
+        actual_units = [currency[1], currency[1] + " per share"]
     if not actual_units:
         # A shared currency never qualifies an explicit ratio/change column.
         if not ratio:
@@ -309,16 +495,22 @@ def scoped_qualifiers(cell: dict[str, Any], endpoint_texts: list[str]) -> dict[s
                     actual_units.append("%")
                 elif _INTRO.search(text):
                     actual_units.extend(units(text))
+    if currency and not actual_units:
+        actual_units = [currency[1]]
     for unit in dict.fromkeys(actual_units):
         result["unit"].append({"actual": unit, "source": "candidate_scoped_unit"})
     # Keep whole literal labels as period evidence: e.g. an English date is
     # meaningful without attempting date conversion.
-    period_texts = [*direct, *cell.get("periods", []), *(item["text"] for item in contexts if item["kind"] == "period")]
+    period_texts = [*direct, *cell.get("periods", []), *cell.get("information_comparison_periods", []), *(item["text"] for item in contexts
+                    if item["kind"] in {"period", "table_caption"})]
     # A declared single-year section introduction contains an explicit
     # period even when its business description has no separating space.
     # Do not collapse ranges or multi-year descriptions to one endpoint.
     period_texts += [match[1] for text in period_texts
                      if (match := _SECTION_PERIOD.fullmatch(text))
                      and len(re.findall(r"(?:19|20)\d{2}", text)) == 1]
-    result["period"] = [{"actual": text, "source": "candidate_scoped_period"} for text in dict.fromkeys(period_texts)]
+    period_texts += [match[0] for text in period_texts
+                     if len(set(re.findall(r"(?:19|20)\d{2}", text))) == 1
+                     for match in re.finditer(r"截至\s*(?:19|20)\d{2}\s*年\s*\d{1,2}\s*月末", text)]
+    result["period"] = [{"actual": text, "source": "candidate_scoped_period"} for text in period_literals(period_texts)]
     return result

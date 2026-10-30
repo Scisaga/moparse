@@ -39,6 +39,7 @@ QUALITY_SLICE_COLUMNS = (
     "text_reference_chars", "text_aligned_reference_chars", "content_targets", "content_located",
     "table_field_targets", "table_field_correct", "table_fields_observable",
     "table_fields_compared", "table_fields_missing", "table_fields_unresolved",
+    "table_information_correct", "table_information_incorrect",
     "relation_targets", "relation_correct", "relation_observable", "relation_unresolved",
     *_SLICE_METRICS,
     *(column for name in _SLICE_METRICS for column in (
@@ -115,7 +116,7 @@ def _micro(results: list[dict[str, Any]]) -> dict[str, Any]:
         elif name == "table_records":
             counters = ("target_records", "located_records", "target_fields", "observable_fields", "declared_fields", "source_unscoped_fields", "blank_target_fields", "blank_observed_fields",
                         "compared_fields", "target_missing_fields", "unresolved_fields",
-                        "correct_fields", "strict_correct_fields", "information_correct_fields",
+                        "graded_fields", "incorrect_fields", "correct_fields", "strict_correct_fields", "information_correct_fields",
                         "information_incorrect_fields", "information_unresolved_fields")
             record_result: dict[str, Any] = {
                 key: sum(item[key] for item in items)
@@ -153,6 +154,8 @@ def _micro(results: list[dict[str, Any]]) -> dict[str, Any]:
                 (Counter(item.get("field_unresolved_reasons", {})) for item in items), Counter()))
             record_result["field_unresolved_diagnoses"] = dict(sum(
                 (Counter(item.get("field_unresolved_diagnoses", {})) for item in items), Counter()))
+            record_result["field_error_reasons"] = dict(sum(
+                (Counter(item.get("field_error_reasons", {})) for item in items), Counter()))
             combined[name] = record_result
         elif all("numerator" in item and "denominator" in item for item in items):
             combined[name] = fraction(
@@ -269,6 +272,8 @@ def _quality_slices(items: list[dict[str, Any]], pipeline: str, dataset: str,
             "table_fields_compared": "table_records.compared_fields",
             "table_fields_missing": "table_records.target_missing_fields",
             "table_fields_unresolved": "table_records.unresolved_fields",
+            "table_information_correct": "table_records.information_correct_fields",
+            "table_information_incorrect": "table_records.information_incorrect_fields",
             "relation_targets": "relations.by_type.before.denominator", "relation_correct": "relations.by_type.before.numerator",
             "relation_observable": "relations.by_type.before.observable", "relation_unresolved": "relations.by_type.before.endpoint_unresolved",
         }.items():
@@ -550,7 +555,7 @@ def render_quality_slices(report: dict[str, Any]) -> str:
             lines.extend(["NA：没有可比较的质量切片；阻断与未测状态见主报告和summary.json。", ""])
             continue
         lines.extend([
-            "| 分组 | 数据集 / suite | 配置 | 样本 / 文档 / 输入页 | 失败 / 未评分 | 定位R（命中/目标） | 严格CER（参考字符） | 编辑相似度 | 已证正确字段覆盖率（正确/目标） | 已比较字段正确率（正确/已比较） | 已比较 / 目标格未取到值 / 未判定 | 阅读顺序before满足率 | 文档宏CER（可用/总文档） | 成本：完整/已测秒；计时覆盖；完成页；秒/计划页；完成页/秒 |",
+            "| 分组 | 数据集 / suite | 配置 | 样本 / 文档 / 输入页 | 失败 / 未评分 | 定位R（命中/目标） | 严格CER（参考字符） | 编辑相似度 | 值与标签全目标正确率 | 完整信息全目标正确率 | 完整信息正确 / 错误 | 阅读顺序工程诊断 | 文档宏CER（可用/总文档） | 成本：完整/已测秒；计时覆盖；完成页；秒/计划页；完成页/秒 |",
             "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
         ])
         for row in members:
@@ -562,8 +567,8 @@ def render_quality_slices(report: dict[str, Any]) -> str:
                 f"{_display(row['strict_cer'])} ({_cell(row['text_reference_chars'])})",
                 _display(row["strict_edit_similarity"]),
                 f"{_display(row['table_field_target_correctness'])} ({_cell(row['table_field_correct'])}/{_cell(row['table_field_targets'])})",
-                f"{_display(row.get('table_field_compared_accuracy'))} ({_cell(row['table_field_correct'])}/{_cell(row.get('table_fields_compared'))})",
-                f"{_cell(row.get('table_fields_compared'))} / {_cell(row.get('table_fields_missing'))} / {_cell(row.get('table_fields_unresolved'))}",
+                f"{_display(row.get('information_target_correctness'))} ({_cell(row.get('table_information_correct'))}/{_cell(row.get('table_field_targets'))})",
+                f"{_cell(row.get('table_information_correct'))} / {_cell(row.get('table_information_incorrect'))}",
                 f"{_display(row['relation_recall'])} ({_cell(row['relation_correct'])}/{_cell(row['relation_targets'])})",
                 f"{_display(row['macro_document_strict_cer'])} ({_cell(row['macro_document_strict_cer_available_documents'])}/{_cell(row['macro_document_strict_cer_total_documents'])})",
                 f"{_display(row.get('processing_seconds_including_failures'))}/{_display(row.get('observed_processing_seconds_subtotal'))}；"
@@ -784,12 +789,12 @@ def render_appendix(report: dict[str, Any]) -> str:
                   "目标CER将未定位参考暂作删除，仅用于定位与文字差异诊断，不是全文OCR错误率或主排名。正文主表使用已定位CER并同时披露覆盖；下面保留目标CER的字符、文档、家族平均对照。", "",
                   "![目标CER的平均口径](figures/averaging.png)", "",
                   "[SVG](figures/averaging.svg) · [PDF](figures/averaging.pdf)", ""])
-    lines.extend(["## 字段定位未判原因", "",
-                  "仅描述候选输出的读取状态。标签未找到不能证明原件缺项；标签存在但路径未定不能计作模型识别错误。逐字段位置与证据见[field-details.csv](field-details.csv)及本次评分产物。", "",
-                  "| 配置 | 未判原因 | 字段数 |", "| --- | --- | ---: |"])
+    lines.extend(["## 字段错误原因", "",
+                  "每个已纳入字段已完成正确或错误判定。错误原因区分缺失、数值不符、业务归属和限定语不符；不据此判断原件有误。软件读取故障不发布为质量成绩。逐字段证据见[field-details.csv](field-details.csv)及本次评分产物。", "",
+                  "| 配置 | 错误原因 | 字段数 |", "| --- | --- | ---: |"])
     for group in report.get("groups", []):
         if group.get("suite") == "quality800":
-            for reason, count in sorted(group.get("quality", {}).get("micro", {}).get("table_records", {}).get("field_unresolved_reasons", {}).items()):
+            for reason, count in sorted(group.get("quality", {}).get("micro", {}).get("table_records", {}).get("field_error_reasons", {}).items()):
                 lines.append(f"| {group['pipeline']} | {reason} | {count} |")
     lines.append("")
     if report.get("qualitative_review"):
@@ -885,7 +890,7 @@ def render_appendix(report: dict[str, Any]) -> str:
         pipelines = sorted(declared_pipelines | {key[1] for key in quality_groups if key[0] == dataset})
         lines.extend([
             f"## 质量与成本对照 · {dataset}", "",
-            "| 配置 | 完整样本页/计划输入页 | 内容定位R | 目标保守CER | 已对齐参考字符/目标字符 | 已证正确字段覆盖率 | 已比较字段正确率 | 阅读顺序before满足率 | quality800秒 / 完整计时轮数 | perf80中位秒 / 完整计时轮数 |",
+            "| 配置 | 完整样本页/计划输入页 | 内容定位R | 目标保守CER | 已对齐参考字符/目标字符 | 值与标签全目标正确率 | 完整信息全目标正确率 | 阅读顺序before满足率 | quality800秒 / 完整计时轮数 | perf80中位秒 / 完整计时轮数 |",
             "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
         ])
         for name in pipelines:
@@ -907,7 +912,7 @@ def render_appendix(report: dict[str, Any]) -> str:
                 f"| {name} | {page_label} | {display(micro.get('unit_presence', {}).get('recall'))} | "
                 f"{display(micro.get('text', {}).get('strict', {}).get('cer'))} | {char_label} | "
                 f"{display(table['field_target_correctness']['value'])} | "
-                f"{display(table['field_compared_accuracy']['value'])} | "
+                f"{display(table['information_target_correctness']['value'])} | "
                 f"{display(micro.get('relations', {}).get('by_type', {}).get('before', {}).get('value'))} | "
                 f"{display(round_summary.get('median_seconds'))} / {_cell(round_summary.get('n'))} | "
                 f"{display(perf_summary.get('median_seconds'))} / {_cell(perf_summary.get('n'))} |"
@@ -964,21 +969,12 @@ def render_appendix(report: dict[str, Any]) -> str:
                 lines.append(f"| relations.{name} | {display(relations.get(name))} | {_cell(relation_denominators[name])} |")
             lines.append("")
             lines.extend([
-                "混合relations.recall仅保留全部已标目标的满足情况作覆盖诊断，不是标题识别准确率，也不用于关系能力总排名。各类证据状态如下；可判正确率仅计算明确正确 /（明确正确 + 明确不符），分母为零时为NA。", "",
-                "| 关系类型 | 全部目标 | 明确正确 | 明确不符 | 未获关系证据 | 端点未定位 | 证据或读取未判定 | 可判正确率 |",
-                "| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |",
+                "原始关系字段仅作工程诊断，保存在机器评分记录中；它们不增加本轮 expected 业务信息的正确条件，也不发布读取状态类别作为质量成绩。", "",
             ])
-            for kind, detail in sorted(relations.get("by_type", {}).items()):
-                counts = " | ".join(_cell(detail.get(key)) for key in (
-                    "denominator", "confirmed_correct", "confirmed_incorrect", "native_not_provided",
-                    "endpoint_unresolved", "unassessable",
-                ))
-                lines.append(f"| {kind} | {counts} | {display(detail.get('conditional_accuracy', {}).get('value'))} |")
-            lines.append("")
             lines.extend([
                 f"参考覆盖排除项：{quality.get('excluded_reference_units', {})}。未定位/歧义与已知遗漏分别保留在逐项记录中。", "",
                 "text为保留全部已知目标的保守口径，未唯一定位的参考暂作删除；text_aligned仅评价已唯一定位单元的字符，需结合定位覆盖阅读。前者不能证明所有未定位文字都被解析器漏掉，后者不能代表全部目标准确率。未认领的额外输出由闭合评分范围的存在性precision单列，不加入段落CER。", "",
-                "表格两项主指标采用既定内容等价政策：field_target_correctness=correct_fields/target_fields，field_compared_accuracy=correct_fields/compared_fields。目标格未取到值与未判定均保留在全部目标中，不能把条件正确率冒充全目标准确率；目标格未取到值不证明全输出遗漏。field_strict_accuracy=strict_correct_fields/compared_fields，field_strict_target_correctness=strict_correct_fields/target_fields，仅作严格字符诊断。field_coverage仍为(compared_fields+target_missing_fields)/target_fields，不能称为已比较覆盖。原生交叉位置可定位不等于源结构或业务绑定正确。", "",
+                "表格两项主指标采用全部固定目标作分母：field_target_correctness=correct_fields/target_fields，information_target_correctness=information_correct_fields/target_fields。每个已纳入目标均完成正确或错误判定，候选缺失或业务归属不满足计入错误并保留具体原因；软件读取故障必须修复后重评，不能直接转成候选错误。已定位字符指标只作严格转写诊断。", "",
                 "relations.precision分母为output_units（TP+FP），recall分母为target_units（TP+FN），F1分母为2TP+FP+FN，仅在三个计数均已知时展示。非穷尽参考的全局precision和F1保持NA，不以闭合子范围或方向对分类成绩代填。缺失计数显示NA，明确为零的分母保留0；零分母的比率未定义，不能解释为零分。", "",
                 f"状态分布：{quality.get('status_counts', {})}；无质量评分样本：{_cell(quality.get('unscored_samples'))}。图片字节保全需直接视觉证据，资产路径存在仅作为覆盖指标。", "",
                 f"已确认图片目标：{_cell(quality.get('coverage', {}).get('known_image_targets'))}；可自动对应目标：{_cell(quality.get('coverage', {}).get('image_automatic_identity_targets'))}；纳入统一量化评分的输出视觉保全目标：{_cell(quality.get('coverage', {}).get('image_output_visual_review_targets'))}。不同资产名不判丢图，未视觉对应的图片保全保持未测；有限人工案例另列，不扩展为全量保全成绩。", "",

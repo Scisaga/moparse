@@ -35,9 +35,9 @@ def _score(reference, observation):
     result = score_case(reference, observation)
     assert (reference, observation) == original
     metrics = result["metrics"]["table_records"]
-    assert metrics["target_fields"] == sum(metrics[key] for key in (
-        "compared_fields", "target_missing_fields", "unresolved_fields",
-    ))
+    assert metrics["target_fields"] == metrics["graded_fields"]
+    assert metrics["target_fields"] == metrics["information_correct_fields"] + metrics["information_incorrect_fields"]
+    assert metrics["unresolved_fields"] == 0
     assert metrics["observable_fields"] == metrics["compared_fields"] + metrics["target_missing_fields"]
     for row in result["units"]:
         if row["kind"] == "table_record":
@@ -60,8 +60,10 @@ def test_unavailable_or_ambiguous_other_column_does_not_suppress_a_known_field(o
     row, metrics = _score(reference, observation)
     assert row["fields"][0]["status"] == "compared"
     assert row["fields"][0]["content_exact"] is True
-    assert row["fields"][1]["status"] == "unresolved"
-    assert metrics["correct_fields"] == metrics["compared_fields"] == metrics["unresolved_fields"] == 1
+    assert row["fields"][1]["outcome"] == "incorrect"
+    assert metrics["correct_fields"] == 1
+    assert metrics["compared_fields"] == (2 if other_header == "2024" else 1)
+    assert metrics["information_incorrect_fields"] == 1
 
 
 def test_missing_position_is_distinct_from_unresolved_and_not_in_compared_accuracy():
@@ -73,7 +75,7 @@ def test_missing_position_is_distinct_from_unresolved_and_not_in_compared_accura
         {"id": "missing-column", "row": 0, "col": 2, "text": "2023"},
     )
     row, metrics = _score(reference, observation)
-    assert [item["status"] for item in row["fields"]] == ["compared", "target_missing", "unresolved"]
+    assert [item["status"] for item in row["fields"]] == ["compared", "incorrect", "incorrect"]
     assert row["fields"][1]["reason"] == "no_value_at_resolved_native_position"
     assert metrics["field_compared_accuracy"]["value"] == 1
     assert metrics["field_strict_accuracy"]["denominator"] == 1
@@ -109,10 +111,10 @@ def test_duplicate_headers_with_the_same_declared_role_remain_unresolved(axis):
     cells.append({"id": "duplicate-header", "row": 0 if axis == "column" else 2, "col": 2,
                   "text": chosen["text"], "is_" + axis + "_header": True})
     row, metrics = _score(reference, observation)
-    assert row["fields"][0]["status"] == "unresolved"
+    assert row["fields"][0]["status"] == "incorrect"
     if axis == "column":
         assert row["fields"][0]["reason"] == "ambiguous_complete_label_path"
-    assert metrics["unresolved_fields"] == 1
+    assert metrics["information_incorrect_fields"] == 1
 
 
 def test_unique_explicit_paths_do_not_require_a_repeated_row_label_string():
@@ -144,13 +146,13 @@ def test_explicit_paths_cannot_borrow_a_value_outside_an_independently_located_p
     assert metrics["compared_fields"] == 1 and metrics["correct_fields"] == 0
 
 
-def test_missing_declared_parent_stays_unresolved_despite_unique_explicit_paths():
+def test_reference_navigation_parent_is_not_an_extra_prediction_target():
     reference, observation = _inputs(parent="missing-parent", requires_parent_scope=True, cells=[{
         "id": "value", "text": "100", "row_header_path": ["Revenue"], "column_header_path": ["2024"],
     }])
     row, metrics = _score(reference, observation)
-    assert row["fields"][0]["reason"] == "record_parent_not_uniquely_localized"
-    assert metrics["unresolved_fields"] == 1
+    assert row["fields"][0]["outcome"] == "correct"
+    assert metrics["information_correct_fields"] == 1
 
 
 def test_content_parent_without_a_localization_dependency_does_not_require_native_heading_edges():
@@ -165,7 +167,7 @@ def test_content_parent_without_a_localization_dependency_does_not_require_nativ
     assert metrics["correct_fields"] == 1
 
 
-def test_numeric_row_labels_still_require_an_independent_parent_scope():
+def test_explicit_year_row_and_amount_column_express_the_business_fact():
     reference, observation = _inputs(cells=[{
         "id": "value", "text": "100", "row_header_path": ["2024"], "column_header_path": ["Amount"],
     }])
@@ -173,8 +175,8 @@ def test_numeric_row_labels_still_require_an_independent_parent_scope():
         row_header_path=["2024"], fields=[{"column_header_path": ["Amount"], "value": "100"}],
     )
     row, metrics = _score(reference, observation)
-    assert row["fields"][0]["reason"] == "record_parent_scope_unavailable"
-    assert metrics["unresolved_fields"] == 1
+    assert row["fields"][0]["outcome"] == "correct"
+    assert metrics["information_correct_fields"] == 1
 
 
 def test_an_outer_table_does_not_join_separate_body_coordinate_systems():
@@ -188,7 +190,7 @@ def test_an_outer_table_does_not_join_separate_body_coordinate_systems():
     ]
     observation["native_containers"] = [{"id": "outer", "label": "table", "native_children": ["header-body", "value-body"]}]
     row, metrics = _score(reference, observation)
-    assert row["fields"][0]["status"] == "unresolved"
+    assert row["fields"][0]["status"] == "incorrect"
     assert metrics["compared_fields"] == 0
 
 

@@ -55,18 +55,18 @@ def test_explicit_unit_scalar_equivalence_keeps_decimal_and_accounting_sign(actu
 
 def test_bare_percent_without_candidate_unit_is_not_confirmed_correct():
     table = '<table><tr><th>Metric</th><th>2024</th></tr><tr><td>Revenue</td><td>17</td></tr></table>'
-    assert evaluate(table, unit="%")["information"]["status"] == "unresolved"
+    assert evaluate(table, unit="%")["information"]["status"] == "incorrect"
     introduction = {"id": "p", "kind": "text", "text": "The following table is expressed as a percentage of revenue."}
     assert evaluate(table, unit="%", before=[introduction])["information"]["status"] == "correct"
     unrelated = {"id": "p", "kind": "text", "text": "A separate operation earned 17%."}
-    assert evaluate(table, unit="%", before=[unrelated])["information"]["status"] == "unresolved"
+    assert evaluate(table, unit="%", before=[unrelated])["information"]["status"] == "incorrect"
 
 
 def test_neighbouring_table_does_not_lend_its_unit_or_total():
     other = {"id": "other", "kind": "table", "cells": html_cells(TABLE, "#/other")}
     table = '<table><tr><th>Metric</th><th>2024</th></tr><tr><td>Total</td><td>17</td></tr></table>'
     f = evaluate(table, row="Total", unit="人民币百万元", extra=[other])
-    assert f["information"]["status"] == "unresolved"
+    assert f["information"]["status"] == "incorrect"
 
 
 def test_empty_section_rows_scope_repeated_labels_without_borrowing_another_group():
@@ -74,6 +74,166 @@ def test_empty_section_rows_scope_repeated_labels_without_borrowing_another_grou
     assert evaluate(table, row="North / Other")["information"]["status"] == "correct"
     f = evaluate(table, row="South / Other")
     assert f["native_text"] == "11" and f["information"]["status"] == "incorrect"
+
+
+def test_full_width_group_rows_are_not_mistaken_for_column_headers():
+    table = '<table><tr><td>Metric</td><td>2024</td></tr><tr><td colspan="2">North:</td></tr><tr><td>Other</td><td>17</td></tr><tr><td colspan="2">South:</td></tr><tr><td>Other</td><td>11</td></tr></table>'
+    assert evaluate(table, row="North / Other")["information"]["status"] == "correct"
+    assert evaluate(table, row="South / Other")["native_text"] == "11"
+    assert evaluate(table, row="South / Other")["information"]["status"] == "incorrect"
+
+
+def test_merged_business_column_labels_and_display_year_spacing_keep_the_same_fact():
+    table = '<table><tr><td>指标</td><td>2024 年境内审计</td><td>2024 年境外审计</td></tr><tr><td>-营业收入</td><td>17</td><td>11</td></tr></table>'
+    assert evaluate(table, row="营业收入", column="2024年境内审计")["information"]["status"] == "correct"
+    from moparse_eval.information import endpoint_paths
+    from moparse_eval.matching import observation_candidates
+    pool = observation_candidates({"pages": [{"page": 1, "blocks": [{"id": "t", "cells": html_cells(table)}]}]})
+    endpoints, reason = endpoint_paths(["2024年", "境内审计"], pool, "column", True)
+    assert reason is None and len(endpoints) == 1
+    assert endpoints[0][0]["id"] == endpoints[0][1]["id"]
+    assert evaluate(table, row="营业收入", column="2024年境外审计")["native_text"] == "11"
+
+
+def test_label_note_typography_does_not_change_the_record_or_the_value():
+    table = '<table><tr><td>Metric</td><td>2024</td></tr><tr><td>Trading1,2 ($bn)</td><td>17</td></tr><tr><td>Trading3 ($bn)</td><td>11</td></tr></table>'
+    f = evaluate(table, row="Trading¹˒² ($bn)", unit="$bn")
+    assert f["information"]["status"] == "correct"
+    assert evaluate(table, row="Trading³ ($bn)", unit="$bn")["native_text"] == "11"
+
+
+def test_currency_printed_on_a_per_share_value_overrides_a_millions_column():
+    table = '<table><tr><td>Metric</td><td>2024$m</td></tr><tr><td>Earnings per share</td><td>$0.17</td></tr><tr><td>Revenue</td><td>17</td></tr></table>'
+    assert evaluate(table, row="Earnings per share", column="2024$m", value="$0.17", unit="$")["information"]["status"] == "correct"
+    assert evaluate(table, row="Earnings per share", column="2024$m", value="$0.17", unit="$m")["information"]["status"] == "incorrect"
+    assert evaluate(table, column="2024$m", unit="$m")["information"]["status"] == "correct"
+
+
+def test_literal_cutoff_date_can_be_read_inside_an_actual_record_title():
+    from moparse_eval.information import qualifier_evidence
+    cell = {"text": "17", "periods": ["截至2024年9月末股东持股情况"]}
+    assert qualifier_evidence({"period": "截至2024年9月末"}, cell, [])["period"]["status"] == "correct"
+    assert qualifier_evidence({"period": "截至2023年9月末"}, cell, [])["period"]["status"] != "correct"
+
+
+def test_metric_specific_scale_overrides_general_column_scale():
+    table = '<table><tr><td>Metric</td><td>2024$m</td></tr><tr><td>Average balance ($bn)</td><td>17</td></tr><tr><td>Revenue</td><td>11</td></tr></table>'
+    assert evaluate(table, row="Average balance ($bn)", column="2024$m", unit="$bn")["outcome"] == "correct"
+    assert evaluate(table, row="Average balance ($bn)", column="2024$m", unit="$m")["outcome"] == "incorrect"
+
+
+def test_scenario_percent_and_currency_words_are_not_the_unit_of_its_reported_impact():
+    table = '<table><tr><td>(人民币百万元)</td><td>2024</td></tr><tr><td>美元贬值5%</td><td>17</td></tr></table>'
+    assert evaluate(table, row="美元贬值5%", unit="人民币百万元")["outcome"] == "correct"
+    assert evaluate(table, row="美元贬值5%", unit="%")["outcome"] == "incorrect"
+
+
+def test_explicit_count_measure_and_composed_period_parts():
+    from moparse_eval.information import qualifier_evidence
+    cell = {"text": "17", "column_header_path": ["2024年", "二季度", "参加会议次数"]}
+    assert qualifier_evidence({"unit": "次", "period": "2024年二季度"}, cell, [])["period"]["status"] == "correct"
+    assert qualifier_evidence({"unit": "次"}, cell, [])["unit"]["status"] == "correct"
+    assert qualifier_evidence({"period": "2024年三季度"}, cell, [])["period"]["status"] == "incorrect"
+    cell = {"text": "17", "column_header_path": ["截至12月31日止年度", "2024年"]}
+    assert qualifier_evidence({"period": "截至2024年12月31日止年度"}, cell, [])["period"]["status"] == "correct"
+    assert qualifier_evidence({"period": "截至2023年12月31日止年度"}, cell, [])["period"]["status"] == "incorrect"
+
+
+def test_printed_number_and_description_can_jointly_identify_a_record():
+    html = '<table><tr><td colspan="2">Matter</td><td>Decision</td></tr><tr><td colspan="3">Management:</td></tr><tr><td>1</td><td>Elect directors</td><td>FOR</td></tr><tr><td>2</td><td>Approve auditor</td><td>AGAINST</td></tr></table>'
+    assert evaluate(html, row="Management / 1 Elect directors", column="Decision", value="FOR")["outcome"] == "correct"
+    assert evaluate(html, row="Management / 2 Approve auditor", column="Decision", value="FOR")["outcome"] == "incorrect"
+
+
+def test_label_dot_leaders_are_display_and_do_not_change_the_fact():
+    table = '<table><tr><td>Item</td><td>2024</td></tr><tr><td>Revenue (2) ....</td><td>17</td></tr></table>'
+    assert evaluate(table, row="Revenue (2)")["outcome"] == "correct"
+    assert evaluate(table, row="Revenue (3)")["outcome"] == "incorrect"
+
+
+def test_transposed_business_dimensions_do_not_require_reference_grid_orientation():
+    table = '<table><tr><td>Year</td><td>Revenue</td><td>Cost</td></tr><tr><td>2024</td><td>17</td><td>11</td></tr><tr><td>2023</td><td>11</td><td>17</td></tr></table>'
+    assert evaluate(table)["outcome"] == "correct"
+    assert evaluate(table, column="2023")["native_text"] == "11"
+    assert evaluate(table, column="2023")["outcome"] == "incorrect"
+    assert evaluate(table, row="Cost", column="2024")["native_text"] == "11"
+    assert evaluate(table, row="Cost", column="2024")["outcome"] == "incorrect"
+
+
+@pytest.mark.parametrize("actual,correct", [("17", True), ("11", False)])
+def test_requested_measure_unit_selects_scope_before_any_value_comparison(actual, correct):
+    table = f'<table><tr><td>Item</td><td>2024USD</td><td>2024CNY</td></tr><tr><td>Revenue</td><td>17</td><td>{actual}</td></tr></table>'
+    field = evaluate(table, unit="CNY")
+    assert field["native_text"] == actual
+    assert (field["outcome"] == "correct") is correct
+
+
+def test_missing_other_measure_does_not_block_a_known_available_measure_or_lend_its_value():
+    table = '<table><tr><td>Item</td><td>2024USD</td><td>2024CNY</td></tr><tr><td>Revenue</td><td>17</td></tr></table>'
+    assert evaluate(table, unit="USD")["outcome"] == "correct"
+    missing = evaluate(table, unit="CNY")
+    assert missing["outcome"] == "incorrect" and missing["content_exact"] is False
+    assert missing["reason"] == "no_value_at_resolved_native_position"
+
+
+def test_identical_printed_facts_need_no_unique_physical_cell():
+    table = '<table><tr><td>Item</td><td>2024</td></tr><tr><td>Revenue</td><td>17</td></tr><tr><td>Revenue</td><td>17</td></tr></table>'
+    field = evaluate(table)
+    assert field["outcome"] == "correct" and len(field["equivalent_claim_ids"]) == 2
+
+
+def test_numeric_business_identifier_cannot_come_from_an_unrelated_count_column():
+    table = '<table><tr><td>No.</td><td>Count</td><td>Price</td></tr><tr><td>2</td><td>1</td><td>17</td></tr></table>'
+    assert evaluate(table, row="1", column="Price")["outcome"] == "incorrect"
+    assert evaluate(table, row="2", column="Price")["outcome"] == "correct"
+
+
+def test_report_year_qualifies_current_period_only_when_the_field_has_no_own_year():
+    report = {"id": "header", "kind": "header", "text": "2024年年度报告"}
+    table = '<table><tr><td>Item</td><td>第一季度</td><td>2023年</td></tr><tr><td>Revenue</td><td>17</td><td>11</td></tr></table>'
+    assert evaluate(table, column="第一季度", period="2024年", before=[report])["outcome"] == "correct"
+    assert evaluate(table, column="2023年", value="11", period="2024年", before=[report])["outcome"] == "incorrect"
+    assert evaluate(table, column="第一季度", period="2024年", before=[{**report, "kind": "footer"}])["outcome"] == "incorrect"
+
+
+@pytest.mark.parametrize("subject,actual,correct", [("North / Revenue", "17", True),
+                                                   ("North / Revenue", "11", False),
+                                                   ("South / Revenue", "17", False)])
+def test_explicit_prose_record_needs_no_private_table_metadata(subject, actual, correct):
+    reference = {"sample_id": "invented", "review_status": "confirmed", "units": [{
+        "id": "r", "status": "confirmed", "kind": "table_record", "pages": [1], "literal": "Revenue",
+        "table": {"row_header_path": ["North", "Revenue"], "fields": [{"column_header_path": ["2024"], "value": "17"}]}}]}
+    candidate = {"sample_id": "invented", "pages": [{"page": 1, "blocks": [{"id": "p", "kind": "paragraph",
+        "text": f"{subject};2024:{actual};2023:17。"}]}]}
+    before = deepcopy((reference, candidate))
+    field = score_case(reference, candidate)["units"][0]["fields"][0]
+    assert (field.get("information", {}).get("status") == "correct") is correct
+    if correct:
+        assert field["native_text"] == "17"
+    assert (reference, candidate) == before
+
+
+@pytest.mark.parametrize("period,unit,correct", [("2024", "万元", True), ("2023", "万元", False),
+                                               ("2024", "元", False)])
+def test_explicit_prose_qualifiers_need_not_be_written_as_column_header_paths(period, unit, correct):
+    reference = {"sample_id": "invented", "review_status": "confirmed", "units": [{
+        "id": "r", "status": "confirmed", "kind": "table_record", "pages": [1], "literal": "Revenue",
+        "table": {"row_header_path": ["Revenue"], "fields": [{"column_header_path": ["2024", "Amount"],
+                   "value": "17", "unit": "万元", "period": "2024"}]}}]}
+    candidate = {"sample_id": "invented", "pages": [{"page": 1, "blocks": [{"id": "p", "kind": "paragraph",
+        "text": f"Name:Revenue;Period:{period};Unit:{unit};Amount:17。"}]}]}
+    field = score_case(reference, candidate)["units"][0]["fields"][0]
+    assert (field["outcome"] == "correct") is correct
+
+
+def test_absent_field_and_missing_business_binding_have_final_incorrect_decisions():
+    missing = evaluate('<table><tr><td>Item</td><td>2024</td></tr><tr><td>Other</td><td>17</td></tr></table>')
+    conflicting = evaluate('<table><tr><td>Item</td><td>2024</td></tr><tr><td>Revenue</td><td>17</td></tr><tr><td>Revenue</td><td>11</td></tr></table>')
+    for field in (missing, conflicting):
+        assert field["outcome"] == "incorrect"
+        assert field["information"]["status"] == "incorrect"
+        assert field["content_exact"] is False
+        assert field["candidate_evidence"]["field_ids"]
 
 
 @pytest.mark.parametrize("annotation", ['17<sup>4</sup>', r'\( 17^4 \)'])
@@ -89,11 +249,11 @@ def test_superscript_needs_an_actual_scoped_note_definition(annotation):
 
 
 @pytest.mark.parametrize("scalar", ["17^4", "17^{4}", "17 ^ 4"])
-def test_bare_caret_with_scoped_note_stays_unresolved_without_scalar_credit(scalar):
+def test_bare_caret_with_scoped_note_fails_scalar_target_without_format_evidence(scalar):
     table = f'<table><tr><th>Metric</th><th>2024</th></tr><tr><td>Revenue</td><td>{scalar}</td></tr></table>'
     note = {"id": "note", "kind": "table_footnote", "text": "4 Record high."}
     f = evaluate(table, after=[note])
-    assert f["information"]["status"] == "unresolved"
+    assert f["information"]["status"] == "incorrect"
     assert f["information"]["reason"] == "ambiguous_note_or_exponent_format"
     assert f["status"] == "compared" and f["content_exact"] is False
     assert f["native_text"] == scalar and f["raw_transcription"]["strict"]["distance"] > 0
@@ -116,19 +276,19 @@ def test_ambiguous_note_does_not_hide_a_confirmed_wrong_currency():
 def test_attached_chinese_currency_can_be_read_without_matching_other_business_words():
     table = '<table><tr><td>Metric</td><td>金額人民幣千元</td></tr><tr><td>Other business</td><td>17</td></tr></table>'
     assert evaluate(table, row="Other business", column="金額", unit="人民幣千元")["information"]["status"] == "correct"
-    assert evaluate(table, row="Other", column="金額")["status"] == "unresolved"
+    assert evaluate(table, row="Other", column="金額")["status"] == "incorrect"
 
 
 def test_untyped_local_header_switch_does_not_lend_a_period_from_the_previous_scope():
     table = '<table><tr><td>Item</td><td>2024</td></tr><tr><td>Alpha</td><td>17</td></tr><tr><td>Item</td><td>2023</td></tr><tr><td>Beta</td><td>11</td></tr></table>'
     assert evaluate(table, row="Beta", column="2023", value="11")["information"]["status"] == "correct"
-    assert evaluate(table, row="Beta", column="2024", value="11")["status"] == "unresolved"
+    assert evaluate(table, row="Beta", column="2024", value="11")["status"] == "incorrect"
 
 
 def test_a_group_total_ends_the_group_scope_for_later_records():
     table = '<table><tr><td>Item</td><td>2024</td></tr><tr><td>Expenses</td><td></td></tr><tr><td>Research</td><td>17</td></tr><tr><td>Total expenses</td><td>17</td></tr><tr><td>Profit</td><td>11</td></tr></table>'
     assert evaluate(table, row="Expenses / Research")["information"]["status"] == "correct"
-    assert evaluate(table, row="Expenses / Profit", value="11")["status"] == "unresolved"
+    assert evaluate(table, row="Expenses / Profit", value="11")["status"] == "incorrect"
 
 
 def test_repeated_total_uses_the_actual_table_scope_across_separate_rendered_records():
@@ -155,7 +315,7 @@ def test_repeated_total_uses_the_actual_table_scope_across_separate_rendered_rec
     observation["pages"][0]["blocks"].pop(0)
     result = score_case(reference, observation)
     total = next(row for row in result["units"] if row["id"] == "total")["fields"][0]
-    assert total["status"] == "unresolved"
+    assert total["status"] == "incorrect"
 
 
 def test_column_qualifier_layout_can_vary_without_skipping_business_groups_or_years():
@@ -199,7 +359,7 @@ def test_shared_currency_scale_exception_for_explicit_per_share_records():
 def test_explicit_enumerated_sibling_stops_the_previous_group_scope():
     table = '<table><tr><td>Item</td><td>2024</td></tr><tr><td>二、Category</td><td></td></tr><tr><td>Child</td><td>17</td></tr><tr><td>三、Total</td><td>11</td></tr></table>'
     assert evaluate(table, row="三、Total", value="11")["information"]["status"] == "correct"
-    assert evaluate(table, row="二、Category / 三、Total", value="11")["status"] == "unresolved"
+    assert evaluate(table, row="二、Category / 三、Total", value="11")["status"] == "incorrect"
 
 
 def test_explicit_record_path_units_are_read_without_lending_currency_to_change():
@@ -264,11 +424,11 @@ def test_extra_leading_context_still_requires_a_unique_full_target_and_never_sel
                 "row_header_path": [group, "Other"], "column_header_path": ["2024"]}]}
     obs = {"sample_id": "invented", "pages": [{"page": 1, "blocks": [block("North", "17"), block("South", "99")]}]}
     scored = score_case(ref, obs)["units"][0]["fields"][0]
-    assert scored["status"] == "unresolved"
+    assert scored["status"] == "incorrect"
     ref["units"][0]["table"]["row_header_path"] = ["North", "Other"]
     assert score_case(ref, obs)["units"][0]["fields"][0]["information"]["status"] == "correct"
     obs["pages"][0]["blocks"] = [block("South", "17")]
-    assert score_case(ref, obs)["units"][0]["fields"][0]["status"] == "unresolved"
+    assert score_case(ref, obs)["units"][0]["fields"][0]["status"] == "incorrect"
 
 
 def test_percentage_points_attached_to_an_accounting_scalar_override_a_percent_column():
@@ -291,7 +451,7 @@ def test_numbered_plain_notes_only_establish_bare_caret_ambiguity_without_granti
     html = '<table><tr><td>Item</td><td>2024</td></tr><tr><td>Revenue</td><td>17^4</td></tr></table>'
     notes = [{'id': 'notes', 'kind': 'text', 'text': '1 Basis.\n2 Scope.\n3 Method.\n4 Record high.'}]
     f = evaluate(html, after=notes)
-    assert f['information']['status'] == 'unresolved' and f['content_exact'] is False
+    assert f['information']['status'] == 'incorrect' and f['content_exact'] is False
     assert f['native_text'] == '17^4'
     barrier = {'id': 'next', 'kind': 'title', 'text': 'Other business'}
     assert evaluate(html, after=[barrier, *notes])['information']['status'] == 'incorrect'
@@ -310,4 +470,16 @@ def test_last_explicit_annual_introduction_in_a_multiline_block_has_a_bounded_sc
     intro = {'id': 'intro', 'kind': 'text', 'text': '（1）Some context。\n（2）Other context。\n（3）2024 年度测量数据:'}
     assert evaluate(html, column='Amount', period='2024年度', before=[intro])['information']['status'] == 'correct'
     end = {'id': 'end', 'kind': 'title', 'text': '（4）Other operations'}
-    assert evaluate(html, column='Amount', period='2024年度', before=[intro, end])['information']['status'] == 'unresolved'
+    assert evaluate(html, column='Amount', period='2024年度', before=[intro, end])['information']['status'] == 'incorrect'
+
+
+def test_blank_header_corner_does_not_turn_textual_records_into_column_headers():
+    table = '<table><tr><td></td><td>Purpose A</td><td>Purpose B</td></tr><tr><td>Primary purpose</td><td>Scientific discovery</td><td>Model training</td></tr><tr><td>Example use cases</td><td>Climate modelling</td><td>Language models</td></tr></table>'
+    assert evaluate(table, row='Primary purpose', column='Purpose A', value='Scientific discovery')['outcome'] == 'correct'
+    assert evaluate(table, row='Primary purpose', column='Purpose B', value='Model training')['outcome'] == 'correct'
+
+
+def test_spanning_date_header_keeps_its_explicit_annual_subheaders():
+    table = '<table><tr><td colspan="3">As at 31 December</td><td>Change</td></tr><tr><td>Balance sheet item</td><td>2024</td><td>2023</td><td>Amount</td></tr><tr><td>Revenue</td><td>17</td><td>11</td><td>6</td></tr></table>'
+    assert evaluate(table)['outcome'] == 'correct'
+    assert evaluate(table.replace('<td>2024</td><td>2023</td>', '<td>2023</td><td>2024</td>'))['native_text'] == '11'

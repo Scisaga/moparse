@@ -445,15 +445,15 @@ def test_table_record_grid_probe_finds_position_before_comparing_value():
     assert result["metrics"]["text"]["strict"]["reference_chars"] == 0
 
 
-def test_table_record_duplicate_header_is_na_not_forced_by_correct_value():
+def test_numeric_data_below_a_record_is_not_a_competing_column_header():
     actual = grid_observation()
     actual["pages"][0]["blocks"][0]["cells"].append({"id": "duplicate", "row": 2, "col": 1, "text": "2024"})
     result = score_case(record_case(), actual)
     metrics = result["metrics"]["table_records"]
-    assert result["units"][0]["reason"] == "ambiguous_complete_label_path"
+    assert result["units"][0]["fields"][0]["outcome"] == "correct"
     assert metrics["target_fields"] == 1
-    assert metrics["field_strict_accuracy"]["value"] is None
-    assert metrics["field_coverage"]["value"] == 0
+    assert metrics["field_strict_accuracy"]["value"] == 1
+    assert metrics["field_coverage"]["value"] == 1
 
 
 def test_complete_label_combination_can_identify_one_of_two_native_tables():
@@ -553,7 +553,7 @@ def test_table_record_missing_unit_is_not_filled_from_expected():
 def test_whole_record_without_manual_fields_stays_visually_reviewable():
     target = case(unit("r", "同意：原表留空", kind="table_record", table={"id": "t", "row_header_path": ["议案"]}))
     result = score_case(target, observation())
-    assert result["units"][0]["reason"] == "explicit_record_field_annotations_unavailable"
+    assert result["units"][0]["reason"] == "no_declared_field_targets"
     assert result["metrics"]["table_records"]["whole_record_edit_distance"] is None
 
 

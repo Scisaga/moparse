@@ -394,6 +394,14 @@ def test_composed_report_keeps_per_pipeline_sources_and_both_windows_without_sco
     # This exercises rendering synthetic compositions, not formal admission.
     session.update(formal=False, development_experiment=True, experiment_id="synthetic-report-only")
     _json(output / "run.json", session)
+    with pytest.raises(ValueError, match="target grading incomplete"):
+        report_run(output)
+    # This execution-only fixture declares no authored targets. Missing scores
+    # for real admitted targets cannot be disguised as an empty comparison.
+    index = _read(output / index_path)
+    index["unscored"] = [{**case, "reason": "no_authored_scoring_reference"}
+                         for case in session["cases"] if case["phase"] == "measured"]
+    _json(output / index_path, index)
     assert report_run(output) == output / "report.md"
     report = _read(output / "summary.json")
     assert report["execution"]["execution_sources"] == session["execution_sources"]

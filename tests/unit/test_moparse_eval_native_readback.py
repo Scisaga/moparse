@@ -396,8 +396,12 @@ def test_unavailable_native_readback_does_not_prove_separate(native_status):
         {"page_idx": 1, "blocks": [_table("B", continues_prev=True)]},
     ])
     observation["scoring_readback"] = {"native_status": native_status}
-    result = score_case(_relation_reference(), observation)
-    assert all(not row["correct"] and not row["observable"] for row in result["relations"])
+    if native_status == "readback_error":
+        with pytest.raises(ValueError, match="reader failed"):
+            score_case(_relation_reference(), observation)
+    else:
+        result = score_case(_relation_reference(), observation)
+        assert all(not row["correct"] and not row["observable"] for row in result["relations"])
 
 
 def test_explicit_native_continuation_overrides_distinct_physical_table_ids_in_relation_scoring():
@@ -549,7 +553,7 @@ def test_cli_does_not_publish_engineering_readback_errors(tmp_path, monkeypatch)
 
     run, _, _, untouched = _synthetic_run(tmp_path, monkeypatch, native_status="malformed")
     before = (run / "run.json").read_bytes()
-    with pytest.raises(ValueError, match="cannot publish scores.*engineering readback errors"):
+    with pytest.raises(ValueError, match="reader failed; repair readback"):
         score_run(run)
     assert (run / "run.json").read_bytes() == before
     assert all(path.read_bytes() == payload for path, payload in untouched.items())
