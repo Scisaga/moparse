@@ -21,6 +21,7 @@ _FIELD = re.compile(r"^(?:召开日期|召開日期|会议内容|會議內容|�
 _UNIT = re.compile(r"(?:人民币|人民幣)?(?:百万元|百萬元|千元|万元|萬元|元)|\$\s*(?:bn|m)|[%％‰]|(?:毫克|千克|公斤|吨|噸)(?:/[^()（）\s]+)?")
 _SECTION = re.compile(r"^\s*(?:[（(]\d+[)）]\s*)?((?:19|20)\d{2}\s*年度)[^。；;]{0,32}(?:情况|情況|数据|數據)\s*[:：]$")
 _IDENTITY = re.compile(r"项目|項目|项目名称|項目名稱|名称|名稱|姓名|股东名称|股東名稱|认购方|認購方|认购对象|認購對象|Name|Item|Project|Subscriber|Investor", re.I)
+_TABLE_MARKUP = re.compile(r"(?:<|&lt;)\s*/?\s*(?:table|tr|td|th)\b", re.I)
 
 
 def scalar(text: str) -> bool:
@@ -44,8 +45,13 @@ def unit_description(text: str) -> bool:
 
 def _unit_caption(text: str) -> tuple[str, int] | None:
     match = re.fullmatch(r"\s*(?:单位|單位|Units?)\s*[:：]\s*(.+?)\s*", text, re.I | re.S)
-    if match and unit_description("(" + match[1] + ")"):
-        return match[1], match.start(1)
+    if match:
+        currency = re.fullmatch(
+            r"(.+?)\s+(?:币种|幣種|Currency)\s*[:：]\s*"
+            r"(?:人民币|人民幣|美元|港元|港币|港幣|欧元|歐元|RMB|CNY|USD|HKD|EUR)", match[1], re.I,
+        )
+        if unit_description("(" + (currency[1] if currency else match[1]) + ")"):
+            return match[1], match.start(1)
     return (text, 0) if unit_description(text) else None
 
 
@@ -264,6 +270,11 @@ def prepare_native_table_scopes(result: DocumentParseResult) -> None:
                     refs.append(TextRef(owner.fragment_id, number, index, value, kind, start, start + len(value), rows, cols))
 
             def caption(index: str, value: str) -> None:
+                # A malformed native caption can contain its complete table.
+                # Preserve that original body elsewhere, but never repeat its
+                # cells as a unit or title on neighboring business records.
+                if _TABLE_MARKUP.search(value):
+                    return
                 unit = _unit_caption(value)
                 if unit is not None:
                     add(index, unit[0], "unit", start=unit[1])
@@ -291,7 +302,9 @@ def prepare_native_table_scopes(result: DocumentParseResult) -> None:
                     continue
                 if prior.get("type") == "table_caption":
                     caption(str(previous), value)
-                elif re.search(r"(?:following\s+table|下表|本表).*(?:percent(?:age)?|单位|單位)|^(?:单位|單位)\s*[:：]", value, re.I):
+                elif (prior.get("type") in {"text", "paragraph", "list"}
+                      and not _TABLE_MARKUP.search(value)
+                      and re.search(r"(?:following\s+table|下表|本表).*(?:percent(?:age)?|单位|單位)|^(?:单位|單位)\s*[:：]", value, re.I)):
                     add(str(previous), value, "unit")
                 break
             for next_index in range(position + 1, len(raw_blocks)):

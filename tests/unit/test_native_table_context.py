@@ -338,6 +338,50 @@ def test_business_caption_is_not_reclassified_by_the_word_currency_or_unit():
     assert _unit_caption('(USD business line)') is None
 
 
+@pytest.mark.parametrize("owner", ["table", "text", "table_caption"])
+@pytest.mark.parametrize("escaped", [False, True])
+def test_neighboring_table_body_cannot_become_a_current_records_unit_or_title(owner, escaped):
+    import html
+
+    from app.models.parse_result import DocumentParseResult, ParsePipeline
+    from app.services.table_context_service import prepare_native_table_scopes
+
+    previous = table([["Name", "2024"], ["Separate loan", "777"]], "previous")
+    current = table([["Item", "Party", "Reporting period"], ["Interest", "Alpha", "17"]], "current")
+    current.source_header_scopes = [{"header_rows": [0], "body_rows": [1],
+                                     "row_header_columns": [0, 1], "complete": True}]
+    current.pdf_evidence = {"bound": True, "source_cells": [
+        {"row": c.row, "column": c.column, "row_span": c.row_span,
+         "column_span": c.column_span, "text": c.text, "shaded": False} for c in current.cells
+    ]}
+    raw = "单位:元 币种:人民币<table><tr><td>Separate loan</td><td>777</td></tr></table>"
+    if escaped:
+        raw = html.escape(raw)
+    blocks = [{"type": "table", "content": raw if owner == "table" else "other native table"}]
+    if owner != "table":
+        blocks.append({"type": owner, "content": raw})
+    blocks.append({"type": "table", "content": [{"type": "table_caption", "content": "Interest received"}]})
+    result = DocumentParseResult(document_id="authored", filename="authored.pdf", mime_type="application/pdf",
+                                 page_count=1, processed_pages=1,
+                                 pipeline=ParsePipeline(profile="accurate", primary="mineru"))
+    result._table_fragments = [previous, current]
+    result._native_page_blocks = {1: blocks}
+    prepare_native_table_scopes(result)
+    assert all("777" not in ref.text and "table" not in ref.text for ref in current.context_refs)
+    rendered = render_semantic_view(bind_table_view("view", [current], [current]), [current])
+    assert "17" in rendered and "777" not in rendered
+    assert "单位：单位" not in rendered
+
+
+def test_complete_amount_and_currency_caption_keeps_its_exact_literal_payload():
+    from app.services.table_context_service import _unit_caption
+
+    text = "单位:元 币种:人民币"
+    unit, start = _unit_caption(text)
+    assert text[start:start + len(unit)] == unit == "元 币种:人民币"
+    assert _unit_caption("单位:元 币种:贷款申请方") is None
+
+
 def test_existing_source_scope_owns_amount_caption_when_native_headers_are_unclassified():
     from app.models.parse_result import DocumentParseResult, ParsePipeline
     from app.services.table_context_service import prepare_native_table_scopes
