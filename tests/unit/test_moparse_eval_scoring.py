@@ -40,6 +40,79 @@ def block(identifier: str, text: str = "", **extra):
     return {"id": identifier, "kind": "text", "text": text, "native_path": f"$.{identifier}", **extra}
 
 
+def rendered_repetition(identifier: str, text: str):
+    return block(
+        identifier, f"- 范围：{text}；项目：样例；2025：17。", kind="table_body",
+        service_evidence_state="converted",
+        cells=[{"id": identifier + ":scope", "record_id": identifier, "text": text}],
+    )
+
+
+@pytest.mark.parametrize("original_kind", ["paragraph", "retained_grid"])
+def test_prose_locator_uses_independent_literal_instead_of_rendered_repetitions(original_kind):
+    text = "Quarterly operating results"
+    original = (block("original", text) if original_kind == "paragraph" else
+                block("grid", kind="table_body", service_evidence_state="retained",
+                      cells=[{"id": "original", "text": text}]))
+    result = score_case(case(unit("title", text)), observation(
+        original, rendered_repetition("one", text), rendered_repetition("two", text)))
+    row = result["units"][0]
+    assert row["status"] == "localized"
+    assert row["match"]["candidate_id"] == "original"
+    assert row["strict_exact"] is True
+
+
+def test_rendered_repetitions_alone_do_not_invent_an_independent_original():
+    text = "Quarterly operating results"
+    result = score_case(case(unit("title", text)), observation(
+        rendered_repetition("one", text), rendered_repetition("two", text)))
+    assert result["units"][0]["status"] == "ambiguous"
+
+
+@pytest.mark.parametrize("second_kind", ["paragraph", "retained_grid"])
+def test_true_independent_duplicates_remain_ambiguous_with_rendered_repetitions(second_kind):
+    text = "Quarterly operating results"
+    second = (block("second", text) if second_kind == "paragraph" else
+              block("grid", kind="table_body", service_evidence_state="retained",
+                    cells=[{"id": "second", "text": text}]))
+    result = score_case(case(unit("title", text)), observation(
+        block("first", text), second, rendered_repetition("copy", text)))
+    assert result["units"][0]["status"] == "ambiguous"
+
+
+@pytest.mark.parametrize("kind", ["field", "table_cell"])
+def test_prose_repetition_rule_does_not_relax_business_field_localization(kind):
+    text = "Long term facilities outstanding"
+    original = block("grid", kind="table_body", cells=[{"id": "original", "text": text}])
+    result = score_case(case(unit("field", text, kind=kind)), observation(
+        original, rendered_repetition("one", text), rendered_repetition("two", text)))
+    assert result["units"][0]["status"] == "ambiguous"
+
+
+def test_prose_repetition_rule_does_not_prefer_a_weaker_original_transcription():
+    text = "Quarterly operating results"
+    result = score_case(case(unit("title", text)), observation(
+        block("original", "Quarterly operating resultx"),
+        rendered_repetition("one", text), rendered_repetition("two", text)))
+    assert result["units"][0]["status"] == "ambiguous"
+
+
+def test_prose_repetition_rule_does_not_borrow_an_original_from_another_page():
+    text = "Quarterly operating results"
+    obs = observation(rendered_repetition("one", text), rendered_repetition("two", text))
+    obs["pages"].append({"page": 2, "blocks": [block("elsewhere", text)]})
+    result = score_case(case(unit("title", text)), obs)
+    assert result["units"][0]["status"] == "ambiguous"
+
+
+def test_a_rendered_state_label_without_record_identity_does_not_resolve_a_tie():
+    text = "Quarterly operating results"
+    suspect = rendered_repetition("one", text)
+    suspect["cells"][0]["record_id"] = "different-record"
+    result = score_case(case(unit("title", text)), observation(block("original", text), suspect))
+    assert result["units"][0]["status"] == "ambiguous"
+
+
 def record_case(value: str = "100", **table_extra):
     return case(unit(
         "record", "营业收入：2024年100；2023年200。", kind="table_record",

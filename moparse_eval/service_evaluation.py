@@ -271,9 +271,11 @@ def require_shared_scoring(record: dict[str, Any], identity: dict[str, Any], *,
     allowed = {"service_evaluation.py", "service_observation.py", "service_report.py", "service_artifacts.py"}
     if paired_native_rescore:
         # These modules only grade or present saved candidates. Admitting a
-        # changed common reader requires all native and final sides to be
-        # rescored under the newly validated identity, never old-score reuse.
-        allowed.update({"scoring.py", "information.py", "information_reading.py", "cli.py",
+        # changed common reader/localizer requires all native and final sides
+        # to be rescored under the newly validated identity, never old-score
+        # reuse. Native adapters/bridges, application code and dependencies
+        # remain frozen even in this analysis-only mode.
+        allowed.update({"scoring.py", "matching.py", "information.py", "information_reading.py", "cli.py",
                         "report_figures.py", "report_overview.py", "reporting.py", "table_context_report.py"})
     names = set(execution["module_sha256"]) | set(identity["module_sha256"])
     if any(execution["module_sha256"].get(name) != identity["module_sha256"].get(name)

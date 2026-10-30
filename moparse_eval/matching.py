@@ -418,6 +418,32 @@ def match_units(
                 proposal for proposal in proposals
                 if abs(proposal["locator_similarity"] - best) < 1e-12
             ]
+        if unit.get("kind", "text") == "text":
+            # Final-format readers expose literal per-record repetitions of
+            # titles, row context and notes as semantic cells. When the same
+            # text also has an independent prose/grid occurrence in this
+            # already-scoped pool, those copies are not competing originals.
+            # Never choose between independent originals, prefer a weaker
+            # transcription, or apply this rule to business-field bindings.
+            def rendered_copy(proposal: dict[str, Any]) -> bool:
+                parts = [candidate_map[claim["candidate_id"]] for claim in proposal["claims"]]
+                return bool(parts) and all(
+                    part["kind"] == "table_cell"
+                    and part["block"].get("service_evidence_state") in {"converted", "partial"}
+                    and part["block"].get("kind") == "table_body"
+                    and part.get("cell", {}).get("record_id") == part["block"].get("id")
+                    for part in parts
+                )
+
+            originals = {
+                normalize_text(proposal["hypothesis"], collapse_whitespace=collapse_whitespace)
+                for proposal in proposals if not rendered_copy(proposal)
+            }
+            proposals = [
+                proposal for proposal in proposals
+                if not rendered_copy(proposal)
+                or normalize_text(proposal["hypothesis"], collapse_whitespace=collapse_whitespace) not in originals
+            ]
         return proposals, None
 
     # Resolve unique exact content first; tied references never win by iteration order.

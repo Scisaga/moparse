@@ -36,7 +36,7 @@ SCORING_PROTOCOL = {
     "qualifier_reading": "candidate_only_table_header_introduction_section_and_note_scopes",
     "reference_unknown": "outside_admitted_targets_references_remain_read_only",
     "reader_failure": "repair_before_final_grading_and_publication",
-    "reader_revision": "scoped_literal_formats_13",
+    "reader_revision": "scoped_literal_formats_14",
     "reference_unit_reading": "explicit_field_then_literal_scalar_or_local_ratio_then_table_scope",
 }
 

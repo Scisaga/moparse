@@ -88,7 +88,13 @@ def test_final_reader_can_be_fixed_without_changing_shared_scoring_or_execution(
         paired_native_rescore=True)
     with pytest.raises(ValueError, match="shared scoring"):
         require_shared_scoring({"software": identity}, {
-            **revised, "module_sha256": {**revised["module_sha256"], "matching.py": "changed"}},
+            **revised, "module_sha256": {**revised["module_sha256"], "matching.py": "validated-fix"}})
+    require_shared_scoring({"software": identity}, {
+        **revised, "module_sha256": {**revised["module_sha256"], "matching.py": "validated-fix"}},
+        paired_native_rescore=True)
+    with pytest.raises(ValueError, match="shared scoring"):
+        require_shared_scoring({"software": identity}, {
+            **revised, "module_sha256": {**revised["module_sha256"], "native_readback.py": "changed"}},
             paired_native_rescore=True)
     with pytest.raises(ValueError, match="implementation or scoring dependencies"):
         require_shared_scoring({"software": identity}, {**revised, "dependencies": {"edlib": "changed"}})
