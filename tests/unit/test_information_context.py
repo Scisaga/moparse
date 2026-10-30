@@ -523,3 +523,134 @@ def test_bilingual_year_headers_and_external_date_frame_are_read_from_the_printe
     assert score_case(reference, obs)['units'][0]['fields'][0]['outcome'] == 'correct'
     cell['column_header_path'][1] = "2023二零二三年RMB'000人民幣千元"
     assert score_case(reference, obs)['units'][0]['fields'][0]['outcome'] == 'incorrect'
+
+
+@pytest.mark.parametrize("literal,value,correct", [
+    ("(in RMB million)", "(17)", True),
+    ("(IN RMB million)", "(17)", True),
+    ("(in USD million)", "(17)", False),
+    ("(in RMB million)", "17", False),
+    ("Price (in RMB million)", "(17)", False),
+])
+def test_literal_unit_as_printed_record_key_is_local_to_that_record(literal, value, correct):
+    reference = {"sample_id": "invented", "review_status": "confirmed", "units": [{
+        "id": "profit", "status": "confirmed", "kind": "table_record", "pages": [1], "literal": "Profit",
+        "table": {"row_header_path": ["North", "Profit"], "fields": [
+            {"column_header_path": ["2024"], "value": "(17)", "unit": "RMB million"},
+            {"column_header_path": ["Change"], "value": "3%", "unit": "%"}]}}]}
+    candidate = {"sample_id": "invented", "pages": [{"page": 1, "blocks": [{
+        "id": "p", "kind": "paragraph", "text": f"Scope:Group;{literal}:North / Profit;2024:{value};Change:3%。"}]}]}
+    before = deepcopy((reference, candidate))
+    fields = score_case(reference, candidate)["units"][0]["fields"]
+    assert (fields[0]["outcome"] == "correct") is correct
+    assert fields[1]["outcome"] == "correct"
+    assert (reference, candidate) == before
+
+
+def test_a_literal_unit_key_cannot_lend_units_to_a_neighboring_printed_record():
+    reference = {"sample_id": "invented", "review_status": "confirmed", "units": [{
+        "id": "profit", "status": "confirmed", "kind": "table_record", "pages": [1], "literal": "Profit",
+        "table": {"row_header_path": ["South", "Profit"], "fields": [
+            {"column_header_path": ["2024"], "value": "17", "unit": "RMB million"}]}}]}
+    candidate = {"sample_id": "invented", "pages": [{"page": 1, "blocks": [{
+        "id": "p", "kind": "paragraph", "text": "(in RMB million):North / Profit;2024:17。\nName:South / Profit;2024:17。"}]}]}
+    field = score_case(reference, candidate)["units"][0]["fields"][0]
+    assert field["content_exact"] is True
+    assert field["outcome"] == "incorrect"
+
+
+def test_literal_currency_key_does_not_override_an_explicit_percent_metric():
+    reference = {"sample_id": "invented", "review_status": "confirmed", "units": [{
+        "id": "margin", "status": "confirmed", "kind": "table_record", "pages": [1], "literal": "Margin",
+        "table": {"row_header_path": ["North", "Margin (%)"], "fields": [
+            {"column_header_path": ["2024"], "value": "3", "unit": "%"}]}}]}
+    candidate = {"sample_id": "invented", "pages": [{"page": 1, "blocks": [{
+        "id": "p", "kind": "paragraph", "text": "(in RMB million):North / Margin (%);2024:3。"}]}]}
+    field = score_case(reference, candidate)["units"][0]["fields"][0]
+    assert field["outcome"] == "correct"
+    reference["units"][0]["table"]["fields"][0]["unit"] = "RMB million"
+    assert score_case(reference, candidate)["units"][0]["fields"][0]["outcome"] == "incorrect"
+
+
+def _printed_period_field(text, period="2024", column="Amount", before=()):
+    reference = {"sample_id": "invented", "review_status": "confirmed", "units": [{
+        "id": "revenue", "status": "confirmed", "kind": "table_record", "pages": [1], "literal": "Revenue",
+        "table": {"row_header_path": ["Revenue"], "fields": [
+            {"column_header_path": [column], "value": "17", "period": period}]}}]}
+    candidate = {"sample_id": "invented", "pages": [{"page": 1, "blocks": [*before, {
+        "id": "record", "kind": "paragraph", "text": text}]}]}
+    return score_case(reference, candidate)["units"][0]["fields"][0]
+
+
+@pytest.mark.parametrize("text,column,correct", [
+    ("Scope:2024年度;Name:Revenue;Amount:17。", "Amount", True),
+    ("Scope:2023年度;Name:Revenue;Amount:17。", "Amount", False),
+    ("Scope:2024至2023年度;Name:Revenue;Amount:17。", "Amount", False),
+    ("Scope:2024年度;Name:Revenue;2023:17。", "2023", False),
+    ("Scope:2023年度;Name:Revenue;2024:17。", "2024", True),
+    ("Scope:2024年度;Name:Other;Amount:17。\nName:Revenue;Amount:17。", "Amount", False),
+])
+def test_explicit_printed_scope_supplies_only_its_records_unqualified_period(text, column, correct):
+    assert (_printed_period_field(text, column=column)["outcome"] == "correct") is correct
+
+
+@pytest.mark.parametrize("title,kind,correct", [
+    ("2024年年度报告", "paragraph", True),
+    ("示例股份有限公司 2024 年年度报告", "text", True),
+    ("Annual Report 2024", "paragraph", True),
+    ("2024年年度报告", "footer", False),
+    ("本页讨论2024年年度报告", "paragraph", False),
+    ("We discussed Annual Report 2024", "paragraph", False),
+])
+def test_report_year_is_read_from_an_explicit_plain_report_title(title, kind, correct):
+    before = [{"id": "title", "kind": kind, "text": title}]
+    assert (_printed_period_field("Name:Revenue;Amount:17。", before=before)["outcome"] == "correct") is correct
+    assert _printed_period_field("Name:Revenue;2023:17。", column="2023", before=before)["outcome"] == "incorrect"
+
+
+def test_conflicting_plain_report_titles_do_not_supply_a_year():
+    before = [{"id": str(year), "kind": "paragraph", "text": f"Annual Report {year}"} for year in (2023, 2024)]
+    assert _printed_period_field("Name:Revenue;Amount:17。", before=before)["outcome"] == "incorrect"
+
+
+@pytest.mark.parametrize("caption,correct", [("图表--1. 截至2014年9月末的明细", True),
+                                            ("相邻段落提及2014年9月末", False)])
+def test_explicit_numbered_caption_needs_no_private_caption_role(caption, correct):
+    table = '<table><tr><td>Metric</td><td>Amount</td></tr><tr><td>Revenue</td><td>17</td></tr></table>'
+    before = [{"id": "caption", "kind": "paragraph", "text": caption}]
+    assert (evaluate(table, column="Amount", period="截至2014年9月末", before=before)["outcome"] == "correct") is correct
+    before.append({"id": "neighbor", "kind": "table", "cells": html_cells(table.replace("Revenue", "Other"))})
+    assert evaluate(table, column="Amount", period="截至2014年9月末", before=before)["outcome"] == "incorrect"
+
+
+def test_existing_structured_cells_do_not_hide_a_printed_record_scope():
+    reference = {"sample_id": "invented", "review_status": "confirmed", "units": [{
+        "id": "revenue", "status": "confirmed", "kind": "table_record", "pages": [1], "literal": "Revenue",
+        "table": {"row_header_path": ["Revenue"], "fields": [
+            {"column_header_path": ["Amount"], "value": "17", "period": "2024"}]}}]}
+    candidate = {"sample_id": "invented", "pages": [{"page": 1, "blocks": [{
+        "id": "record", "kind": "table_body", "text": "Scope:2024年度;Name:Revenue;Amount:17。",
+        "cells": [{"id": "value", "text": "17", "row_header_path": ["Revenue"], "column_header_path": ["Amount"]}]}]}]}
+    candidate["pages"][0]["blocks"].insert(0, {"id": "report", "kind": "heading", "text": "Annual Report 2024"})
+    before = deepcopy((reference, candidate))
+    assert score_case(reference, candidate)["units"][0]["fields"][0]["outcome"] == "correct"
+    assert (reference, candidate) == before
+    candidate["pages"][0]["blocks"][-1]["text"] = "Scope:2023年度;Name:Revenue;Amount:17。"
+    assert score_case(reference, candidate)["units"][0]["fields"][0]["outcome"] == "incorrect"
+
+
+@pytest.mark.parametrize("caption,correct", [
+    ("2024年产品份额及排名（按收入）", True),
+    ("2024 Ranking of products", True),
+    ("2024年其他业务说明", False),
+    ("2024年排名情况发生变化。", False),
+    ("2024年及2023年排名情况", False),
+])
+def test_plain_period_title_must_name_this_tables_actual_header(caption, correct):
+    table = '<table><tr><td>Metric</td><td>排名 Ranking</td></tr><tr><td>Revenue</td><td>17</td></tr></table>'
+    # Use independently printed header labels, never the expected value.
+    table = table.replace("排名 Ranking", "排名" if "年" in caption else "Ranking")
+    before = [{"id": "title", "kind": "paragraph", "text": caption}]
+    assert (evaluate(table, column="排名" if "年" in caption else "Ranking", period="2024", before=before)["outcome"] == "correct") is correct
+    before.append({"id": "neighbor", "kind": "table", "cells": html_cells(table.replace("Revenue", "Other"))})
+    assert evaluate(table, column="排名" if "年" in caption else "Ranking", period="2024", before=before)["outcome"] == "incorrect"

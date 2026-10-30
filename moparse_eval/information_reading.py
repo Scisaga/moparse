@@ -17,6 +17,10 @@ VERSION = "candidate-information-scopes-2"
 _UNIT = re.compile(r"(?:(?:人民币|人民幣|美元|港元|港幣|港币|欧元|歐元)?(?:万亿元|萬億元|千亿元|千億元|百亿元|百億元|十亿元|十億元|亿元|億元|千万元|千萬元|百万元|百萬元|千元|万元|萬元|元)|RMBbn|RMB['’]000|(?:RMB|USD|HKD|CNY)\s+million|in\s+million|\bcontracts?\b|USD|EUR|HKD|CNY|RMB|\$\s*(?:in\s+millions|bn|m)|['’]\s*000\s+(?:contracts|lots)|[个個]?百分点|[个個]?百分點|percentage points?|basis points?|bps|(?:毫克|千克|公斤|(?:千萬|千万|百萬|百万|萬|万|千)?(?:吨|噸))|[%‰$€£¥])(?:/[A-Za-z\u3400-\u9fff0-9³²]+)?")
 _PERIOD = re.compile(r"(?:截至[^。；;]{1,30}(?:年度|年末)|(?:19|20)\d{2}\s*年(?:度|末)?|(?<!\d)(?:19|20)\d{2}(?!\d))")
 _INTRO = re.compile(r"(?:following\s+table|下表|本表|表中).*(?:percent(?:age)?|单位|單位)|(?:单位|單位|Units?)\s*[:：]", re.I)
+_PRINTED_CAPTION = re.compile(r"^(?:Table|图表|圖表|表)[\s\-–—]*\d+(?:[.\-]\d+)*(?:[.:：]\s*|\s+)", re.I)
+_PRINTED_REPORT_TITLE = re.compile(
+    r"(?:(?:[^\s。；;:：]{1,80}(?:有限公司|股份公司))\s+)?(?:19|20)\d{2}\s*年?\s*年度(?:报告|報告)|"
+    r"Annual\s+Report\s+(?:19|20)\d{2}", re.I)
 _SECTION_PERIOD = re.compile(r"^\s*(?:[（(]\d+[)）]\s*)?((?:19|20)\d{2}\s*年度)[^。；;]{0,32}(?:情况|情況|数据|數據)\s*[:：]$")
 _SCALAR = re.compile(r"\(?\s*[$€£¥]?\s*[+\-−]?(?:\d[\d,.]*|\.\d+)\s*[%‰]?\s*\)?|[—–-]")
 
@@ -102,8 +106,10 @@ def _numbered_record_labels(cells: list[dict[str, Any]]) -> list[dict[str, Any]]
 def unit_scope_literal(text: str) -> bool:
     text = normalize_text(text, collapse_whitespace=True)
     unwrapped = text.strip(" ()（）")
+    in_clause = re.fullmatch(r"in\s+(.+)", unwrapped, re.I)
     return bool(units(text) and (unwrapped in units(text) or re.search(
         r"(?:^|[（(])\s*(?:单位|單位)\s*[:：（(]", text)
+        or in_clause and in_clause[1] in units(in_clause[1])
         or re.fullmatch(r"\$\s*in\s+millions(?:,\s*except\s+per\s+share\s+(?:data|amounts))?", unwrapped, re.I)))
 
 
@@ -218,6 +224,19 @@ def _header_rows(cells: list[dict[str, Any]]) -> set[int]:
     return header
 
 
+def _printed_period_caption(text: str, cells: list[dict[str, Any]]) -> bool:
+    """Read a short year-leading title that names an actual table header."""
+    text = normalize_text(text, collapse_whitespace=True).strip()
+    if (len(text) > 120 or re.search(r"[\r\n。；;!?！？]", text)
+            or not re.match(r"(?:19|20)\d{2}(?:\s*年|\s+)", text)
+            or len(set(re.findall(r"(?:19|20)\d{2}", text))) != 1):
+        return False
+    headers = _header_rows(cells)
+    return any(2 <= len(label := str(cell.get("text", "")).strip()) <= 48
+               and not _is_scalar(label) and label in text
+               for cell in cells if cell.get("row") in headers)
+
+
 def _annotate_groups(cells: list[dict[str, Any]], headers: set[int]) -> None:
     bands: dict[int, list[dict[str, Any]]] = {}
     for cell in cells:
@@ -293,14 +312,22 @@ def _prose_fields(block: dict[str, Any]) -> list[dict[str, Any]]:
         if not pairs or not (subjects or len(pairs) > 1):
             continue
         identities = [*subjects, *(value for _key, value in pairs)]
+        unit_subjects = [(key, value) for key, value in pairs
+                         if unit_scope_literal(key) and not _is_scalar(value)]
         periods = [value for key, value in pairs if re.fullmatch(r"期间|期間|年度|日期|Period|Date|Year", key, re.I)]
         context = [{"id": block.get("id"), "kind": "period", "text": value} for value in periods]
         context += [{"id": block.get("id"), "kind": "explicit_table_introduction", "text": key + ":" + value}
                     for key, value in pairs if re.fullmatch(r"单位|單位|Units?", key, re.I)]
+        context += [{"id": block.get("id"), "kind": "explicit_table_introduction", "text": "Unit:" + key}
+                    for key, _value in unit_subjects]
+        scopes = [{"id": block.get("id"), "kind": "table_caption", "text": value}
+                  for key, value in pairs if re.fullmatch(r"范围|範圍|Scope", key, re.I)]
         identity = f"{block.get('id', 'text')}:record:{number}"
         cells = [{"id": f"{identity}:field:{index}", "text": value,
                   "column_header_path": [key], "information_record_labels": identities,
-                  "information_context": context, "periods": periods, "text_format": "plain",
+                  "information_row_labels": [*subjects, *(value for _key, value in unit_subjects)],
+                  "information_context": [*context, *(scopes if not any(re.search(r"(?:19|20)\d{2}", text)
+                      for text in [key, *periods]) else [])], "periods": periods, "text_format": "plain",
                   "native_path": block.get("native_path"), "information_prose_record": True}
                  for index, (key, value) in enumerate(pairs)]
         records.append({**block, "id": identity, "text": "", "cells": cells,
@@ -311,7 +338,10 @@ def _prose_fields(block: dict[str, Any]) -> list[dict[str, Any]]:
 def read_information_observation(observation: dict[str, Any]) -> dict[str, Any]:
     derived = copy.deepcopy(observation)
     annual = [block for page in derived.get("pages", []) for block in page.get("blocks", [])
-              if block.get("kind") in {"header", "title", "heading"}
+              if (block.get("kind") in {"header", "title", "heading"}
+                  or block.get("kind") in {"text", "paragraph"}
+                  and _PRINTED_REPORT_TITLE.fullmatch(visible_text(str(block.get("text", "")),
+                      block.get("text_format", "plain")).strip()))
               and re.search(r"(?:19|20)\d{2}\s*年?\s*年度报告|Annual\s+Report\s+(?:19|20)\d{2}", str(block.get("text", "")), re.I)]
     annual_years = {year for block in annual for year in re.findall(r"(?:19|20)\d{2}", str(block.get("text", "")))}
     report_period = ({"id": annual[0].get("id"), "text": annual[0]["text"], "kind": "period"}
@@ -319,6 +349,14 @@ def read_information_observation(observation: dict[str, Any]) -> dict[str, Any]:
     for page in derived.get("pages", []):
         blocks = page.get("blocks", [])
         prose = [record for block in blocks for record in _prose_fields(block)]
+        if report_period:
+            for record in prose:
+                for cell in record["cells"]:
+                    if not any(re.search(r"(?:19|20)\d{2}", text) for text in [
+                        *cell["column_header_path"], *cell.get("periods", []),
+                        *(item["text"] for item in cell["information_context"]),
+                    ]):
+                        cell["information_context"].append(report_period)
         section: dict[str, Any] | None = None
         for position, block in enumerate(blocks):
             text = visible_text(str(block.get("text", "")), block.get("text_format", "plain"))
@@ -333,6 +371,17 @@ def read_information_observation(observation: dict[str, Any]) -> dict[str, Any]:
                 cell.pop("information_label_views", None)
             if not cells:
                 continue
+            # Read printed qualifiers without creating competing value or
+            # identity assertions over already structured cells.
+            printed = _prose_fields({**block, "cells": [], "kind": "paragraph"})
+            printed_contexts: dict[str, list[dict[str, Any]]] = {}
+            if len(printed) == 1:
+                for field in printed[0]["cells"]:
+                    key = normalize_text(field["column_header_path"][0], collapse_whitespace=True)
+                    if key in printed_contexts:
+                        printed_contexts[key] = []
+                    else:
+                        printed_contexts[key] = field["information_context"]
             contexts: list[dict[str, Any]] = []
             notes: list[dict[str, Any]] = []
             numbered_notes: list[dict[str, Any]] = []
@@ -353,7 +402,8 @@ def read_information_observation(observation: dict[str, Any]) -> dict[str, Any]:
                 value = visible_text(str(prior.get("text", "")), prior.get("text_format", "plain"))
                 if not value.strip() and not prior.get("cells"):
                     continue
-                if kind == "table_caption" and not prior.get("cells"):
+                if (kind == "table_caption" or _PRINTED_CAPTION.match(value)
+                        or _printed_period_caption(value, cells)) and not prior.get("cells"):
                     contexts.append({"id": prior.get("id"), "text": value, "kind": "table_caption"})
                     continue
                 if not prior.get("cells") and _INTRO.search(value):
@@ -402,7 +452,10 @@ def read_information_observation(observation: dict[str, Any]) -> dict[str, Any]:
                 row, col = cell.get("row"), cell.get("col")
                 column_headers = [c for c in headers_by_body.get(row, []) if type(col) is int and type(c.get("col")) is int
                                   and c["col"] <= col < c["col"] + c.get("col_span", 1)]
-                cell["information_context"] = contexts
+                printed_path = cell.get("column_header_path", [])
+                printed_key = normalize_text(" / ".join(printed_path), collapse_whitespace=True) if (
+                    isinstance(printed_path, list) and all(isinstance(p, str) for p in printed_path)) else ""
+                cell["information_context"] = [*contexts, *printed_contexts.get(printed_key, [])]
                 cell["information_notes"] = notes
                 cell["information_ambiguous_notes"] = numbered_notes
                 cell["information_headers"] = [c["text"] for c in column_headers]
@@ -424,8 +477,10 @@ def read_information_observation(observation: dict[str, Any]) -> dict[str, Any]:
                         cell["information_comparison_periods"] = [text for text in record_headers
                             if re.search(r"(?:截至|於|于)[一二三四五六七八九十\d]{1,3}月[一二三四五六七八九十\d]{1,3}日止年度", text)]
                 if report_period and not any(re.search(r"(?:19|20)\d{2}|[二零〇一三四五六七八九]{4}年", text)
-                        for text in [*cell["information_headers"], *(item["text"] for item in contexts)]):
-                    cell["information_context"] = [*contexts, report_period]
+                        for text in [*cell["information_headers"], *cell.get("column_header_path", []),
+                                     *cell.get("periods", []),
+                                     *(item["text"] for item in cell["information_context"])]):
+                    cell["information_context"] = [*cell["information_context"], report_period]
             block["cells"] = [*cells, *_numbered_record_labels(cells)]
             for cell in block["cells"]:
                 cell["information_label_views"] = label_views(cell)
