@@ -107,6 +107,8 @@ P07研究执行路径已修复，[P07工程预检02](../../benchmark/reports/202
 
 ## 6. 格式核对依据
 
+2026-10-31工作区的共同表格后处理保留partial剩余片段的实际跨度，并在本表明确附注绑定支持时转写文本数学标签。来源约束见[表格证据规则](../specs/table-source.md)，实际回放与内容目读范围见[评测索引](../../benchmark/reports/README.md)；不据软件测试宣称全部Lite页面通过内容验收。
+
 格式依据沿用 2026-10-21 的静态核对：`mineru==4.0.12`、`docvortex==0.5.16`；`glmocr==0.1.5`。上述结构为类型与字段示意，完整配置的实际输出样本及适配验收状态见第 5 节。
 
 实现参考：[MinerU 远程读取](../../app/parsers/mineru_native_remote.py)、[native worker](../../native_worker/server.py)及[依赖锁](../../native_worker/requirements.lock.txt)；[GLM SDK 接入](../../app/parsers/glm_sdk_remote.py)。官方格式与源码链接在本页相应分支说明中列出。

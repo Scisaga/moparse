@@ -11,7 +11,7 @@ import asyncio
 import html
 import json
 import re
-from collections.abc import Sequence
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, replace
 from typing import Any
 
@@ -30,7 +30,7 @@ from app.services.table_service import (
     TableCellFragment,
     TableFragment,
     TableSourceView,
-    render_gfm_rows,
+    render_source_rows,
     table_view,
 )
 from app.utils.deadline import remaining_timeout
@@ -55,6 +55,58 @@ def _literal(value: str) -> str:
 
 def _label_separator(rendered_label: str) -> str:
     return "" if rendered_label.rstrip().endswith((":", "：")) else "："
+
+
+def _record_literal_parts(
+    record: SemanticRecord, reference: Any, registry: Mapping[Any, Any],
+) -> tuple[str, str]:
+    """Print a label's explicitly linked note without leaking TeX wrappers.
+
+    Only textual math labels with an actual scoped note definition qualify.
+    Values, bare carets, equations and labels without that definition retain
+    their exact literal rendering. The note marker remains visible in prose.
+    """
+    text = registry[reference].text
+    labels = {*record.row_groups, *record.subject_headers}
+    if record.subject is not None:
+        labels.add(record.subject)
+    for value in record.values:
+        labels.update((*value.row_headers, *value.column_headers))
+    if reference not in labels or any(value.value == reference for value in record.values):
+        return _literal(text), ""
+    notes = {
+        match[1] for value in record.values for ref in value.note_refs
+        if reference in (*value.row_headers, *value.column_headers, record.subject, *record.row_groups)
+        if (match := re.match(r"^\s*([0-9]{1,2}|[*†‡])(?:\s+|[.)、：:])", registry[ref].text))
+    }
+
+    markers = []
+
+    def render_note(match: re.Match[str]) -> str:
+        marker = match[2] or match[3]
+        if marker not in notes:
+            return match[0]
+        # A matching note number does not turn a variable's exponent into a
+        # footnote. Limit this display change to complete multiword text labels;
+        # standalone words, variables and unit/formula labels remain literal.
+        label = match[1].replace(r"\ ", " ").strip()
+        plain_label = (text[:match.start()] + label + text[match.end():]).strip()
+        if not re.fullmatch(r"[A-Za-z]{2,}(?:\s+[A-Za-z]{2,})+", plain_label):
+            return match[0]
+        markers.append(marker)
+        return label
+
+    text = re.sub(
+        r"\\\(\s*([A-Za-z](?:[A-Za-z\s]|\\ )*?)\s*\^\s*"
+        r"(?:\{([0-9]{1,2}|[*†‡])\}|([0-9]|[*†‡]))\s*\\\)",
+        render_note, text,
+    )
+    suffix = "（附注标记：" + "、".join(dict.fromkeys(markers)) + "）" if markers else ""
+    return _literal(text), suffix
+
+
+def _record_literal(record: SemanticRecord, reference: Any, registry: Mapping[Any, Any]) -> str:
+    return "".join(_record_literal_parts(record, reference, registry))
 
 
 def _ref(fragment: TableFragment, cell: TableCellFragment) -> CellRef:
@@ -620,9 +672,9 @@ def retained_table_parts(
                 "spans": spans, "start_row": chunk[0],
             }
             marker = "<!-- semantic-retained: " + json.dumps(metadata, separators=(",", ":")) + " -->"
-            rendered = marker + "\n\n" + render_gfm_rows([
-                [""] * fragment.num_cols, *[fragment.rows[row] for row in selected]
-            ])
+            rendered = marker + "\n\n" + render_source_rows(
+                [[""] * fragment.num_cols, *[fragment.rows[row] for row in selected]], spans,
+            )
             parts.append({**metadata, "rendered": rendered})
     return parts
 
@@ -643,16 +695,19 @@ def _render_record(record: SemanticRecord, registry: dict[Any, Any]) -> str:
     source = ",".join(ref.token for ref in sorted(r for r in refs if isinstance(r, CellRef)))
     headers = ",".join(ref.token for ref in sorted(header_refs))
     marker = f"<!-- semantic-source: cells={source}; headers={headers} -->"
+    def literal(ref: Any) -> str:
+        return _record_literal(record, ref, registry)
+
     parts = ["范围：" + " / ".join(_literal(ref.text) for ref in record.scope_refs)] if record.scope_refs else []
     if record.subject:
-        subject = " / ".join(_literal(registry[ref].text)
+        subject = " / ".join(literal(ref)
                              for ref in (*record.row_groups, record.subject))
-        label = " / ".join(_literal(registry[r].text) for r in dict.fromkeys(record.subject_headers))
+        label = " / ".join(literal(r) for r in dict.fromkeys(record.subject_headers))
         parts.append(f"{label}{_label_separator(label)}{subject}" if label else subject)
     for value in record.values:
         label_refs = value.column_headers if record.subject else value.row_headers
         label_refs = tuple(dict.fromkeys(label_refs))
-        label = " / ".join(_literal(registry[r].text) for r in label_refs)
+        label = " / ".join(literal(r) for r in label_refs)
         text = _literal(registry[value.value].text)
         if value.value_state == "source_blank":
             if text:

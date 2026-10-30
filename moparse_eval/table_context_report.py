@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import os
 from collections import Counter
 from pathlib import Path
 from typing import Any
@@ -12,7 +13,7 @@ from .reporting import _quality
 from .scoring import require_complete_target_grading
 from .service_report import _paired_units, _performance, _scope_signature
 
-VERSION = "table-information-context-2"
+VERSION = "table-information-context-3"
 
 
 def _summary(scores: list[dict[str, Any]]) -> dict[str, Any]:
@@ -97,6 +98,14 @@ def render_report(directory: Path, baseline: Path, runs: list[Path]) -> Path:
     write_json(directory / "comparison.json", summary)
     adoption_path = directory / "adoption.json"
     adoption = read_json(adoption_path) if adoption_path.is_file() else {}
+    source_record = adoption.get("source_visual_record")
+    if source_record:
+        source_path = Path(source_record)
+        if not source_path.is_absolute():
+            source_path = Path(__file__).resolve().parent.parent / source_path
+        visual_link = os.path.relpath(source_path, directory)
+    else:
+        visual_link = "case-notes.md"
     lines = ["# MO-Parse 评分读取与原生表格范围优化", "",
              f"报告版本：`{VERSION}`；评分协议：`mo-parse-eval-information-v5`；软件：`{summary['software_id']}`。", "",
              adoption.get("headline", "三方量化结果已生成；采用结论仍需结合原页与实际交付正文的独立目读。"), "",
@@ -140,7 +149,7 @@ def render_report(directory: Path, baseline: Path, runs: list[Path]) -> Path:
               "[实际正文对照与案例](case-notes.md)记录已目读范围和开发暴露；没有列出的页面不视为重新目读或验收。", ""]
     lines += [paragraph for text in adoption.get("limitations", []) for paragraph in (text, "")]
     lines += ["## 证据与复现", "",
-              f"[八管线当前原生比较](../{baseline.name}/report.md) · [原生详细字段](../{baseline.name}/field-details.csv) · [三方机器汇总](comparison.json) · [目读与采用记录](../../reference-decisions/20261030-table-context/visual-review.md)。", ""]
+              f"[八管线当前原生比较](../{baseline.name}/report.md) · [原生详细字段](../{baseline.name}/field-details.csv) · [三方机器汇总](comparison.json) · [目读与采用记录]({visual_link})。", ""]
     for run in runs:
         relative = run.relative_to(directory)
         lines.append(f"[{relative.name.upper()}原生与新正文报告]({relative}/report.md) · [三方配对]({relative}/three-way.json) · [逐项明细]({relative}/three-way-pairs.json) · [评分冻结]({relative}/scoring-freeze.json)。")

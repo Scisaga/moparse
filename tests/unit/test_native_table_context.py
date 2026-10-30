@@ -2,6 +2,8 @@
 
 from copy import deepcopy
 
+import pytest
+
 from app.models.table_semantics import TextRef
 from app.services.table_context_service import native_scopes
 from app.services.table_semantics_service import bind_table_view, render_semantic_view
@@ -59,6 +61,42 @@ def test_external_native_period_and_title_are_visible_in_each_record():
     rendered = render_semantic_view(view, [f])
     assert rendered.count("范围：Domestic operations") == 2
     assert rendered.count("期间：2024年度排放情况：") == 2
+
+
+@pytest.mark.parametrize("label,visible", [
+    (r"Corporate \( Cash^1 \)", "Corporate Cash（附注标记：1）"),
+    (r"\( Reserve\ Funds^{1} \)", "Reserve Funds（附注标记：1）"),
+])
+def test_linked_textual_math_note_label_is_readable_and_keeps_its_marker(label, visible):
+    f = table([["Item", "2034"], [label, "17"]])
+    text = "1 Includes collateral held by the fund."
+    f.context_refs = (TextRef("native", 1, "n1", text, "note", 0, len(text), (1,), (0, 1)),)
+    before = deepcopy(f)
+    view = bind_table_view("view", [f], [f])
+    assert view.status == "converted"
+    rendered = render_semantic_view(view, [f])
+    assert visible in rendered and "2034：17" in rendered
+    assert "附注：" + text in rendered
+    assert f == before
+
+
+@pytest.mark.parametrize("label,note", [
+    (r"Corporate \( Cash^1 \)", "2 A different note."),
+    (r"Corporate Cash^1", "1 A bare caret has no declared type."),
+    (r"\( x^2 + y \)", "2 An equation is not a textual label."),
+    (r"\( x^2 \)", "2 A matching note cannot change a mathematical variable."),
+    (r"\( cm^{2} \)", "2 A matching note cannot change a squared unit."),
+    (r"\( Revenue^2 \)", "2 A standalone mathematical word retains its exponent."),
+    (r"\( Cash^{12} \)", "1 A different note number."),
+])
+def test_note_rendering_does_not_strip_unbound_markers_or_mathematics(label, note):
+    from app.services.table_semantics_service import _literal
+
+    f = table([["Item", "2034"], [label, "17"]])
+    f.context_refs = (TextRef("native", 1, "n1", note, "note", 0, len(note), (1,), (0, 1)),)
+    view = bind_table_view("view", [f], [f])
+    assert _literal(label) in render_semantic_view(view, [f])
+    assert "附注标记" not in render_semantic_view(view, [f])
 
 
 def test_native_empty_section_rows_keep_bounded_group_names():

@@ -286,12 +286,122 @@ def test_partial_view_reads_confirmed_records_and_exact_residual_grid_without_re
     assert observation["service_output"]["conversion_summary"]["declared_partial_views"] == 1
 
 
+def _spanned_partial_result():
+    fragment = _fragment([["Item", "Year ended", ""], ["", "2034", "2033"],
+                          ["Alpha", "11", "7"], ["Beta", "13", "5"]], headers=False)
+    fragment.cells = [c for c in fragment.cells if (c.row, c.column) not in {(1, 0), (0, 2)}]
+    for cell in fragment.cells:
+        if (cell.row, cell.column) == (0, 0):
+            cell.row_span = 2
+        elif (cell.row, cell.column) == (0, 1):
+            cell.column_span = 2
+    fragment.pdf_evidence = {"bound": True, "source_cells": [
+        {"row": c.row, "column": c.column, "row_span": c.row_span,
+         "column_span": c.column_span, "text": c.text} for c in fragment.cells
+    ]}
+    fragment.source_header_scopes = [{"header_rows": [0, 1], "body_rows": [2, 3], "complete": True}]
+    fragment.native_evidence = {"operation_rows": [3]}
+    view = bind_table_view("partial-t1", [fragment], [fragment])
+    assert view.status == "partial" and len(view.records) == 1
+    result = _result(render_semantic_view(view, [fragment]))
+    result._table_fragments, result._semantic_tables = [fragment], [view]
+    return result
+
+
+def test_partial_html_period_paths_are_supported_by_printed_spans_after_publication():
+    from app.services.final_content_service import FinalContentService
+
+    result = _spanned_partial_result()
+    FinalContentService().apply(result)
+    observation, diagnostic = read_final_observation(build_service_observation(result, sample_id="sample"))
+    assert observation["errors"] == []
+    assert diagnostic["reader_version"] == "mo-parse-final-output-readback-v10"
+    unit = {"id": "beta", "kind": "table_record", "reference_text": "Beta", "pages": [1],
+            "table": {"row_header_path": ["Beta"], "fields": [
+                {"column_header_path": ["Year ended", "2034"], "value": "13", "period": "2034"},
+                {"column_header_path": ["Year ended", "2033"], "value": "5", "period": "2033"},
+            ]}}
+    _rows, metrics = _score_records([unit], observation, True, match_units([unit], observation))
+    assert metrics["information_correct_fields"] == metrics["target_fields"] == 2
+    assert result.markdown.count("13") == 1
+    value = next(c for c in _cells(observation) if c["text"] == "13")
+    a, b = value["final_markdown_span"]
+    assert result.markdown[a:b] == "13"
+
+
+def test_partial_html_changed_after_publication_is_rejected_instead_of_using_hidden_source():
+    from app.services.final_content_service import FinalContentService
+
+    result = _spanned_partial_result()
+    FinalContentService().apply(result)
+    result.markdown = result.markdown.replace("<td colspan=\"2\">Year ended</td>",
+                                              "<td colspan=\"2\"></td>")
+    with pytest.raises(ValueError, match="published output differs"):
+        build_service_observation(result, sample_id="sample")
+
+
+def test_partial_gfm_remains_readable_without_acquiring_unprinted_header_spans():
+    from app.services.final_content_service import FinalContentService
+    from app.services.table_semantics_service import retained_table_parts
+
+    result = _spanned_partial_result()
+    view, fragment = result._semantic_tables[0], result._table_fragments[0]
+    part = retained_table_parts(view, [fragment])[0]
+    marker = part["rendered"].partition("\n\n")[0]
+    gfm = marker + "\n\n" + render_gfm_rows([
+        [""] * fragment.num_cols, *[fragment.rows[row] for row in part["source_rows"]],
+    ])
+    result.markdown = result.markdown.replace(part["rendered"], gfm)
+    FinalContentService().apply(result)
+    observation, _ = read_final_observation(build_service_observation(result, sample_id="sample"))
+    assert observation["errors"] == []
+    assert any(c["text"] == "11" and c.get("column_header_path") == ["Year ended", "2034"]
+               for c in _cells(observation))
+    assert len([c for c in _cells(observation) if c["text"] == "13"]) == 1
+    unit = {"id": "beta", "kind": "table_record", "reference_text": "Beta", "pages": [1],
+            "table": {"row_header_path": ["Beta"], "fields": [
+                {"column_header_path": ["Year ended", "2034"], "value": "13"},
+                {"column_header_path": ["Year ended", "2033"], "value": "5"},
+            ]}}
+    _rows, metrics = _score_records([unit], observation, True, match_units([unit], observation))
+    assert metrics["correct_fields"] == 1
+
+
+def test_textual_math_label_note_is_read_from_actual_prose_with_unchanged_scoring():
+    from app.services.final_content_service import FinalContentService
+    from app.services.table_context_service import native_scopes
+
+    fragment = _fragment([["Item", "2034"], [r"Other \( Cash^1 \)", "17"]], headers=False)
+    fragment.source_kind = "mineru"
+    fragment.native_evidence = native_scopes(fragment)
+    fragment.source_header_scopes = fragment.native_evidence["header_scopes"]
+    note = "1 Includes collateral held by this fund."
+    fragment.context_refs = (TextRef("t1", 1, "n1", note, "note", 0, len(note), (1,), (0, 1)),)
+    view = bind_table_view("view", [fragment], [fragment])
+    result = _result(render_semantic_view(view, [fragment]))
+    result._table_fragments, result._semantic_tables = [fragment], [view]
+    FinalContentService().apply(result)
+    observation, _ = read_final_observation(build_service_observation(result, sample_id="sample"))
+    assert "Other Cash（附注标记：1）" in result.markdown
+    assert observation["errors"] == []
+    unit = {"id": "other", "kind": "table_record", "reference_text": "Other Cash", "pages": [1],
+            "table": {"row_header_path": ["Other Cash"], "fields": [
+                {"column_header_path": ["2034"], "value": "17", "period": "2034", "notes": ["1"]},
+            ]}}
+    _rows, metrics = _score_records([unit], observation, True, match_units([unit], observation))
+    assert metrics["information_correct_fields"] == 1
+
+
 def test_partial_view_cannot_recover_a_value_hidden_by_a_changed_final_rendering():
     result = _partial_result()
     result.markdown = result.markdown.replace("20", "99")
     observation = build_service_observation(result, sample_id="sample")
     assert not any(c["text"] == "20" for c in _cells(observation))
-    assert observation["service_output"]["semantic_views"][0]["final_evidence"] == "unknown"
+    # A changed residual value must not hide its unchanged converted neighbor.
+    # Read the actual new literal, without giving it the old source-cell ref.
+    assert observation["service_output"]["semantic_views"][0]["final_evidence"] == "partial"
+    changed = next(c for c in _cells(observation) if c["text"] == "99")
+    assert "source_cell_ref" not in changed
 
 
 def test_explicit_row_group_path_is_emitted_and_read_from_the_actual_semantic_text():

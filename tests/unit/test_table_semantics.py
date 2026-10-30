@@ -161,6 +161,37 @@ def test_actual_blank_row_is_not_an_invented_header_or_dropped_content():
     assert "原表留空" not in rendered
 
 
+def test_partial_table_prints_shared_header_spans_and_retains_only_unconverted_values():
+    from app.parsers.glm_sdk_remote import _html_table_layout
+
+    f = table([["Item", "Year ended", ""], ["", "2034", "2033"],
+               ["Alpha", "11", "7"], ["", "13", "5"]])
+    f.cells = [c for c in f.cells if (c.row, c.column) not in {(1, 0), (0, 2)}]
+    for cell in f.cells:
+        if (cell.row, cell.column) == (0, 0):
+            cell.row_span = 2
+        elif (cell.row, cell.column) == (0, 1):
+            cell.column_span = 2
+    f.pdf_evidence["source_cells"] = [
+        {"row": c.row, "column": c.column, "row_span": c.row_span,
+         "column_span": c.column_span, "text": c.text} for c in f.cells
+    ]
+    f.source_header_scopes = [{"header_rows": [0, 1], "body_rows": [2, 3], "complete": True}]
+    before = deepcopy(f)
+    view = bind_table_view("partial", [f], [f])
+    assert view.status == "partial" and len(view.records) == 1
+    rendered = render_semantic_view(view, [f])
+    assert '<td colspan="2">Year ended</td>' in rendered
+    assert '<td rowspan="2">Item</td>' in rendered
+    raw = "<table>" + rendered.partition("<table>")[2]
+    rows, _, cells = _html_table_layout(raw)
+    assert rows == [["", "", ""], ["Item", "Year ended", ""],
+                    ["", "2034", "2033"], ["", "13", "5"]]
+    assert any(c.column_span == 2 and c.text == "Year ended" for c in cells)
+    assert rendered.count("11") == 1 and rendered.count("13") == 1
+    assert f == before
+
+
 def test_unreferenced_nonempty_header_cannot_disappear_behind_coverage_metadata():
     f = table([["项目", "值"], ["A", "10"], ["另一个期间", "另一个单位"]], [(0, 2)])
     f.source_header_scopes.append({"header_rows": [2], "body_rows": [], "complete": True})
