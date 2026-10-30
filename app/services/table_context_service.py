@@ -248,7 +248,12 @@ def prepare_native_table_scopes(result: DocumentParseResult) -> None:
             scopes = fragment.native_evidence.get("header_scopes", [])
             if not fragment.source_header_scopes and scopes:
                 fragment.source_header_scopes = scopes
-            body = tuple(r for s in scopes for r in s["body_rows"])
+            # A PDF-bound scope may already identify headers such as Q1/Q2
+            # which the narrower native classifier does not recognize. Its
+            # actual body still owns the adjacent caption; an empty native
+            # proposal must not erase those declared relationships.
+            body = tuple(dict.fromkeys(r for s in fragment.source_header_scopes
+                                       if s.get("complete") for r in s.get("body_rows", [])))
             columns = tuple(range(fragment.num_cols))
             context: list[TextRef] = []
 

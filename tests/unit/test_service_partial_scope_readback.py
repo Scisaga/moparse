@@ -111,6 +111,27 @@ def test_changed_final_value_does_not_recover_the_private_original():
     assert not any(c["text"] == "200" for c in cells(observation))
 
 
+def test_saved_residual_without_an_empty_optional_context_list_is_read_from_its_actual_body():
+    result, _fragment = partial_result()
+    result.markdown = result.markdown.replace(',"context_rows":[]', '')
+    observation = build_service_observation(result, sample_id="authored")
+    assert observation["errors"] == []
+    assert score(observation, "Revenue", "2024", "900")[1]["correct_fields"] == 1
+    assert score(observation, "Cost", "2023", "200")[1]["correct_fields"] == 1
+    assert score(observation, "Cost", "2024", "200")[1]["correct_fields"] == 0
+
+
+def test_empty_context_omission_does_not_permit_changed_residual_coordinates():
+    from moparse_eval.service_observation import _printed_marker_forms
+
+    marker = '<!-- semantic-retained: {"source_rows":[1,2],"context_rows":[],"header_rows":[0]} -->'
+    forms = _printed_marker_forms(marker)
+    assert '<!-- semantic-retained: {"source_rows":[1,2],"header_rows":[0]} -->' in forms
+    assert '<!-- semantic-retained: {"source_rows":[2,3],"header_rows":[0]} -->' not in forms
+    nonempty = marker.replace('"context_rows":[]', '"context_rows":[1]')
+    assert _printed_marker_forms(nonempty) == {nonempty}
+
+
 @pytest.mark.parametrize("version", [
     "mo-parse-final-output-observation-v4", "mo-parse-final-output-observation-v5",
 ])

@@ -39,6 +39,7 @@ _ID = re.compile(r"[A-Za-z0-9_.-]{1,240}\Z")
 _PERIOD = re.compile(r"报告期|同期|年度|期末|年末|月末|\d{4}\s*年|(?<!\d)(?:19|20)\d{2}(?!\d)")
 _UNIT = re.compile(r"[（(][^()（）]*(?:元|股|%|％)[^()（）]*[）)]")
 _NUMBER = re.compile(r"[+\-−]?(?:\d[\d,.]*(?:%|％)?|[—–-])\Z")
+_RATIO_HEADER = re.compile(r"[%％‰]|同比|佔|占|比例|比率|percent|change|ratio|rate", re.I)
 
 
 def _compact(value: str) -> str:
@@ -266,7 +267,7 @@ def _qualify_relation(fragment: TableFragment, relation: ValueRelation,
     unit_refs = list(relation.unit_refs)
     period_refs = list(relation.period_refs)
     notes = []
-    ratio = any(re.search(r"同比|佔|占|比例|比率|percent|change|ratio|rate", text, re.I) for text in labels)
+    ratio = any(_RATIO_HEADER.search(text) for text in labels)
     own_unit = re.search(r"[%％‰]", cell.text)
     own_per_share = _per_share_currency([registry[r].text for r in relation.row_headers], cell.text)
     if ratio or own_unit:
@@ -531,13 +532,13 @@ def _bind_fragment(
                 break
             paths_seen.add(refs)
             relation = _relation(_ref(fragment, cell), tuple(_ref(fragment, label) for label in labels), refs, registry)
-            ratio = bool(re.search(r"[%％‰]", cell.text) or any(re.search(
-                r"同比|佔|占|比例|比率|percent|change|ratio|rate", registry[r].text, re.I) for r in refs))
+            ratio = bool(re.search(r"[%％‰]", cell.text) or any(
+                _RATIO_HEADER.search(registry[r].text) for r in refs))
             if ratio:
                 amount_units = {ref for ref in unit_headers if not re.search(r"[%％‰]", registry[ref].text)}
                 relation = replace(relation, unit_refs=tuple(ref for ref in relation.unit_refs if ref not in amount_units))
             if (unit_headers and scalar(cell.text) and not re.search(r"[%％‰]", cell.text)
-                    and not any(re.search(r"同比|佔|占|比例|比率|percent|change|ratio|rate", registry[r].text, re.I) for r in refs)):
+                    and not any(_RATIO_HEADER.search(registry[r].text) for r in refs)):
                 relation = replace(relation, unit_refs=tuple(dict.fromkeys((*relation.unit_refs, *unit_headers))))
             values.append(_qualify_relation(fragment, relation, registry))
         if reason or not values:

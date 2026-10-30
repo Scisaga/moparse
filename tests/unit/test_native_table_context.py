@@ -338,6 +338,42 @@ def test_business_caption_is_not_reclassified_by_the_word_currency_or_unit():
     assert _unit_caption('(USD business line)') is None
 
 
+def test_existing_source_scope_owns_amount_caption_when_native_headers_are_unclassified():
+    from app.models.parse_result import DocumentParseResult, ParsePipeline
+    from app.services.table_context_service import prepare_native_table_scopes
+
+    f = table([["", "第一季度", "第二季度"], ["Cash generated", "170", "110"],
+               ["Margin", "17%", "11%"]])
+    assert f.native_evidence["header_scopes"] == []
+    f.source_header_scopes = [{"header_rows": [0], "body_rows": [1, 2], "complete": True}]
+    f.pdf_evidence = {"bound": True, "source_cells": [
+        {"row": c.row, "column": c.column, "row_span": c.row_span,
+         "column_span": c.column_span, "text": c.text, "shaded": False} for c in f.cells
+    ]}
+    result = DocumentParseResult(document_id="authored", filename="authored.pdf", mime_type="application/pdf",
+                                 page_count=1, processed_pages=1,
+                                 pipeline=ParsePipeline(profile="accurate", primary="mineru"))
+    result._table_fragments = [f]
+    result._native_page_blocks = {1: [{"type": "table", "content": [
+        {"type": "table_caption", "content": "单位:千元"}]}]}
+    prepare_native_table_scopes(result)
+    assert f.context_refs[0].body_rows == (1, 2)
+    rendered = render_semantic_view(bind_table_view("view", [f], [f]), [f])
+    assert "第一季度：170（单位：千元）" in rendered
+    assert "第二季度：110（单位：千元）" in rendered
+    assert "17%（单位：千元）" not in rendered
+
+
+@pytest.mark.parametrize("header", ["增减%", "Change(%)", "变化（％）"])
+def test_percent_only_column_label_does_not_inherit_an_amount_caption(header):
+    f = table([["Item", "2024", header], ["Revenue", "170", "11"]])
+    f.context_refs = (TextRef("native", 1, "cap", "千元", "unit", 3, 5, (1,), (0, 1, 2)),)
+    rendered = render_semantic_view(bind_table_view("view", [f], [f]), [f])
+    assert "2024：170（单位：千元）" in rendered
+    assert header + "：11（单位：千元）" not in rendered
+    assert header + "：11。" in rendered
+
+
 @pytest.mark.parametrize('name_header', ['认购方', '股东名称', 'Subscriber'])
 def test_explicit_total_spanning_ordinal_and_identity_fields_is_not_an_entity_name(name_header):
     f = table([["序号", name_header, "Amount(万元)", "Shares(股)"],

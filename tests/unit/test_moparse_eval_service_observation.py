@@ -341,7 +341,7 @@ def test_partial_html_period_paths_are_supported_by_printed_spans_after_publicat
     FinalContentService().apply(result)
     observation, diagnostic = read_final_observation(build_service_observation(result, sample_id="sample"))
     assert observation["errors"] == []
-    assert diagnostic["reader_version"] == "mo-parse-final-output-readback-v11"
+    assert diagnostic["reader_version"] == "mo-parse-final-output-readback-v12"
     unit = {"id": "beta", "kind": "table_record", "reference_text": "Beta", "pages": [1],
             "table": {"row_header_path": ["Beta"], "fields": [
                 {"column_header_path": ["Year ended", "2034"], "value": "13", "period": "2034"},

@@ -40,7 +40,7 @@ from .representations import visible_text
 
 SERVICE_OBSERVATION_VERSION = "mo-parse-final-output-observation-v7"
 FINAL_PAGE_PROVENANCE_VERSION = "mo-parse-final-page-provenance-v1"
-FINAL_OBSERVATION_READBACK_VERSION = "mo-parse-final-output-readback-v11"
+FINAL_OBSERVATION_READBACK_VERSION = "mo-parse-final-output-readback-v12"
 _METADATA_KEYS = {"run_id", "suite", "phase", "repetition", "timing", "resources", "runtime"}
 _IDENTITY_HEADER = re.compile(
     r"(?:[\u3400-\u9fff]{0,12}(?:名称|名稱|姓名)|项目|項目|认购方|認購方|认购对象|認購對象|"
@@ -223,6 +223,23 @@ def _cell_registry(
     )
 
 
+def _printed_marker_forms(marker: str) -> set[str]:
+    """An omitted empty context list changes no printed residual mapping.
+
+    Saved final bodies can predate the optional context-row declaration. Only
+    an explicitly empty list may be omitted; all source rows, headers, spans
+    and display coordinates must retain their exact authored declaration.
+    """
+    forms = {marker}
+    prefix, suffix = "<!-- semantic-retained: ", " -->"
+    if marker.startswith(prefix) and marker.endswith(suffix):
+        declaration = json.loads(marker[len(prefix):-len(suffix)])
+        if declaration.get("context_rows") == []:
+            declaration.pop("context_rows")
+            forms.add(prefix + json.dumps(declaration, separators=(",", ":")) + suffix)
+    return forms
+
+
 def _semantic_span(final: str, rendered: str) -> tuple[int, int] | None:
     """Locate an owned view by actual comment/list/table boundaries.
 
@@ -234,7 +251,8 @@ def _semantic_span(final: str, rendered: str) -> tuple[int, int] | None:
     marker = rendered.partition("\n\n")[0]
     if final.count(marker) != 1:
         return None
-    expected = set(re.findall(r"<!-- semantic-(?:source|retained): [^\n]*? -->", rendered))
+    expected = {form for declaration in re.findall(r"<!-- semantic-(?:source|retained): [^\n]*? -->", rendered)
+                for form in _printed_marker_forms(declaration)}
     tokens = _spans(final)
     for index, (start, end, token) in enumerate(tokens):
         if token.type != "html_block" or final[start:end].strip() != marker:
@@ -473,11 +491,12 @@ def _partial_grid_blocks(
     blocks = []
     for part in retained_table_parts(view, fragments):
         marker = part["rendered"].partition("\n\n")[0]
+        marker_forms = _printed_marker_forms(marker)
         tokens = _spans(final)
         matches = []
         for index, (start, end, token) in enumerate(tokens[:-1]):
             a, b, following = tokens[index + 1]
-            if (token.type == "html_block" and final[start:end].strip() == marker
+            if (token.type == "html_block" and final[start:end].strip() in marker_forms
                     and not final[end:a].strip()
                     and (following.type == "table_open" or following.type == "html_block"
                          and re.match(r"\s*<table\b", final[a:b], re.I))):
