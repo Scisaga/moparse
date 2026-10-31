@@ -324,6 +324,65 @@ def test_currency_values_and_currency_business_names_do_not_override_column_scal
     assert "Code$m：5%" in render_semantic_view(bind_table_view("view", [f], [f]), [f])
 
 
+@pytest.mark.parametrize("period,unit", [("2034年", "人民幣百萬元"), ("2034年", "(人民币元)"),
+                                        ("2034", "(in RMB million)"), ("2034年末", "百万美元")])
+def test_complete_period_currency_labels_yield_to_a_rows_explicit_unit(period, unit):
+    header = period + " " + unit
+    f = table([["Item", header, "同比(%)"], ["Revenue", "1700", "5"],
+               ["Share count(千股)", "101", "3"], ["Return(%)", "6.2", "0.3个百分点"],
+               ["Printed ratio", "7%", "1"], ["Earnings per share", "¥0.17", "2"],
+               ["Currency business (USD business line)", "11", "4"]])
+    before = deepcopy(f)
+    view = bind_table_view("view", [f], [f])
+    text = render_semantic_view(view, [f])
+    assert f == before and view.status == "converted"
+    assert f"Revenue；{header}：1700" in text
+    assert f"Share count(千股)；{period}：101；同比(%)：3" in text
+    assert f"Return(%)；{period}：6.2；同比(%)：0.3个百分点" in text
+    assert f"Printed ratio；{period}：7%" in text
+    assert f"Earnings per share；{period}：¥0.17" in text
+    assert f"Currency business (USD business line)；{header}：11" in text
+
+
+@pytest.mark.parametrize("header", ["2034年度收入 人民币百万元", "2034 (USD business line)",
+                                   "2034年度 forecasts (人民币百万元)"])
+def test_a_business_column_label_cannot_be_shortened_as_a_period_currency_unit(header):
+    f = table([["Item", header], ["Return(%)", "6.2"]])
+    text = render_semantic_view(bind_table_view("view", [f], [f]), [f])
+    assert f"Return(%)；{header}：6.2" in text
+
+
+@pytest.mark.parametrize("qualifier", ["", "(Restated)(經重述)"])
+def test_bilingual_period_currency_keeps_its_year_and_restatement_on_non_amount_rows(qualifier):
+    period = "2034二零三四年"
+    header = period + "RMB'000人民幣千元" + qualifier
+    f = table([["Item", header], ["Revenue / 營業額", "1700"],
+               ["Margin (%) / 利率(%)", "6.2"], ["Turnover (days) / 週轉(日)", "17"],
+               ["Current ratio (times) / 流動比率(倍)", "0.7"]])
+    before = deepcopy(f)
+    text = render_semantic_view(bind_table_view("view", [f], [f]), [f])
+    assert f == before
+    assert f"Revenue / 營業額；{header}：1700" in text
+    for label, number in [("Margin (%) / 利率(%)", "6.2"), ("Turnover (days) / 週轉(日)", "17"),
+                          ("Current ratio (times) / 流動比率(倍)", "0.7")]:
+        assert f"{label}；{period}{qualifier}：{number}" in text
+
+
+@pytest.mark.parametrize("headers", [["2034 RMB million", "2034 USD million"],
+                                      ["2034$m", "2034$bn"]])
+def test_embedded_units_keep_column_identity_when_the_same_period_has_distinct_currency_columns(headers):
+    f = table([["Item", *headers], ["Return(%)", "6.2", "7.1"]])
+    text = render_semantic_view(bind_table_view("view", [f], [f]), [f])
+    assert f"Return(%)；{headers[0]}：6.2；{headers[1]}：7.1" in text
+
+
+def test_a_business_leaf_amount_suffix_yields_beneath_its_explicit_period_parent():
+    f = table([["Item", "2034", "2034"], ["", "Margin Funds$m", "House Funds$m"],
+               ["Average fund size ($bn)", "17", "11"]])
+    text = render_semantic_view(bind_table_view("view", [f], [f]), [f])
+    assert "Average fund size ($bn)；2034 / Margin Funds：17；2034 / House Funds：11" in text
+
+
 def test_unnamed_values_repeat_their_printed_section_without_claiming_a_total():
     f = table([["Item", "2024"], ["Expenses", ""], ["Research", "17"],
                ["", "17"], ["Net income", "11"]])

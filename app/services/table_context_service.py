@@ -61,7 +61,7 @@ def row_unit_description(text: str) -> bool:
     count_label = re.match(r"^(?:number\s+of\b|(?:retails?\s+)?(?:customers|contracts|employees|users|shares)\b)",
                            text.strip(), re.I)
     for part in re.finditer(r"[（(]([^()（）]+)[)）]", text):
-        if unit_description(part[0]) or (count_label and re.fullmatch(
+        if unit_description(part[0]) or part[1].strip().casefold() in {"days", "times"} or (count_label and re.fullmatch(
                 r"(?:in\s+)?(?:thousands?|millions?|billions?|contracts?|persons?|people|employees|users|shares)",
                 part[1].strip(), re.I)):
             return True

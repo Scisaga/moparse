@@ -119,6 +119,27 @@ def _per_share_currency(labels: Sequence[str], value: str) -> bool:
             and bool(re.fullmatch(r"\s*[$€£¥]\s*[+−-]?(?:\d[\d,.]*|\.\d+)\s*", value)))
 
 
+def _currency_column_label(text: str) -> tuple[str, str, str] | None:
+    """Read a literal currency suffix; its calling path must own a period."""
+    from app.services.table_context_service import unit_header
+
+    short = re.fullmatch(r"(.+?)(\$\s*(?:bn|m))", text.strip(), re.I)
+    if short is not None:
+        return short[1], short[2], ""
+    match = re.fullmatch(
+        r"((?:19|20)\d{2}(?:\s*年(?:度|末)?|\s*[〇零一二三四五六七八九]{4}年)?)\s*(.+?)"
+        r"((?:\s*[（(](?:Restated|經重述|经重述)[)）])*)", text.strip(), re.I,
+    )
+    if match is None:
+        return None
+    unit = match[2]
+    bilingual_thousands = re.fullmatch(r"(?:RMB|CNY)\s*['’]000(?:\s*(?:人民币|人民幣)千元)?", unit, re.I)
+    if not bilingual_thousands and (not unit_header(unit) or not re.search(
+            r"元|幣|币|[$€£¥]|\b(?:USD|EUR|HKD|RMB|CNY)\b", unit, re.I)):
+        return None
+    return match[1], unit, match[3]
+
+
 def _column_literal_parts(
     record: SemanticRecord, value: ValueRelation, reference: Any, registry: Mapping[Any, Any],
 ) -> tuple[str, str]:
@@ -131,17 +152,26 @@ def _column_literal_parts(
     from app.services.table_context_service import row_unit_description
 
     rendered, note = _record_literal_parts(record, reference, registry)
-    match = re.fullmatch(r"(.+?)(\$\s*(?:bn|m))", registry[reference].text.strip(), re.I)
-    if match is None or not any(_PERIOD.search(registry[ref].text) for ref in value.column_headers):
+    parts = _currency_column_label(registry[reference].text)
+    if parts is None or not any(_PERIOD.search(registry[ref].text) for ref in value.column_headers):
         return rendered, note
+    period, unit, qualifier = parts
+    for other in record.values:
+        if other.value == value.value:
+            continue
+        for header in other.column_headers:
+            other_parts = _currency_column_label(registry[header].text)
+            if other_parts and other_parts[0] == period and other_parts[1] != unit:
+                # Repeated labels need currency/scale to distinguish columns,
+                # even when this row measures a ratio.
+                return rendered, note
     row_labels = [registry[ref].text for ref in value.row_headers]
     explicit_unit = any(row_unit_description(label) for label in row_labels)
     printed_value = registry[value.value].text
     printed_ratio = bool(re.search(r"[%％‰]", printed_value))
     per_share = _per_share_currency(row_labels, printed_value)
-    suffix = _literal(match[2])
-    if (explicit_unit or printed_ratio or per_share) and rendered.endswith(suffix):
-        return rendered[:-len(suffix)].rstrip(), note
+    if (explicit_unit or printed_ratio or per_share) and rendered == _literal(registry[reference].text):
+        return _literal(period + qualifier), note
     return rendered, note
 
 
