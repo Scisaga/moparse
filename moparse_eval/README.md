@@ -1,5 +1,7 @@
 # MO-Parse 评测工具
 
+本次输出优化必须以`pdf_sample/parsing/expected/`中的现有expected为唯一验收标准。直接对照expected与被测实际输出，不查看原PDF图片裁决，不使用原图参考排除决定，不生成另一套答案，也不以原图理由改判或豁免差异。评分索引和已有1,726个字段仅是部分检查项，不能代替expected全部业务内容。完整规则见[当前验收标准](../benchmark/evaluation-tasks.md#current-task-expected-only)，续做使用[任务提示词](../docs/engineering/prompts/expected-output-optimization.md)。
+
 本轮八组已按[冻结执行身份](../benchmark/execution-lock.json)各完成quality800一次和perf80三轮，原MO服务恢复完成。[原生比较报告](../benchmark/reports/20261026-lite-v3/report.md)的评分完成状态、采用结论与限制由[评测索引](../benchmark/reports/README.md)维护，执行完成不代表质量已完成判定。TTS按2026-10-26授权仅观测、不控制，先前撤回测量不恢复；自动评分不构成语料重新验收。协议由[评测标准](../benchmark/evaluation-tasks.md)维护，配置身份由[八管线计划](../benchmark/pipelines-to-test.md)维护，修复及验证边界见[执行层诊断](../benchmark/diagnostics/README.md)。
 
 原件、Lite/Full数据包、冻结参考和作者标注保持原样，不重新生成或机械复核。Full不启动推理。GLM rotary、Paddle颜色接线、旋转路由与异常隔离已修复，并补足Paddle逐区域生成观测。八组在[当前工程预检02](../benchmark/reports/20261026-repaired-preflight-02/)共完成88项任务，其中64项独立单页标定全部成功；[执行就绪记录](../benchmark/reports/20261026-repaired-preflight-02/execution-readiness.json)保留实际配置、超时依据和Graph证据，并为本次冻结锁提供执行依据。这些记录只说明所测范围的执行就绪，不是页面质量评分或语料验收。
@@ -12,7 +14,9 @@
 python -m moparse_eval package --selection datasets/authoring/lite-selection.json --output /absolute/path/new-lite-package --source-root .
 ```
 
-用户已授权继续新预检与八组评测，不再等待TTS维护确认。下面保留新目录调用形态：预检使用准备配置，正式命令须先完成新的预检与执行锁冻结；`--prepare-only`不启动解析，实际GPU维护只通过`--maintenance-window`进入，同名运行目录不能覆盖。评分须等完整八组执行、MO服务恢复和受测请求清理结束后进行；TTS变化或unknown不阻断执行、评分或报告，撤回产物不得评分或拼接。
+## 历史原生执行示例
+
+以下保留此前原生预检和测量的方法，本次输出优化只复用保存原生产物，不执行这些新预检、推理或GPU维护命令。当前授权边界以[续做提示词](../docs/engineering/prompts/expected-output-optimization.md)为准。历史执行中预检使用准备配置，正式测量先完成预检与执行锁冻结；同名运行目录不能覆盖，撤回产物不得评分或拼接。
 
 ```bash
 python -m moparse_eval run --dataset datasets/moparse-dataset-v1-lite --suite preflight8 --pipeline all --config benchmark/execution-prepared.json --output benchmark/reports/new-preflight --prepare-only
@@ -29,13 +33,15 @@ python -m moparse_eval report --run benchmark/reports/new-lite
 
 Paddle原生服务使用单个长期owner线程统一初始化、推理与关闭，并显式`use_queues=False`；识别区域边界按固定颜色策略将BGR转为PIL RGB，布局模型继续接收BGR。每个区域记录有效生成参数、长度与EOS观测，输出上限保持4096，未暴露的实际停止原因保持unknown，不修改输出或重试。GLM native rotary按明确服务配置启用，保留支持且经验证的CUDA Graphs；Paddle捕获例外由新预检保留真实证据和重启用条件，不能以两token试验替代完整生成回放。具体字段见[运行手册](../docs/operations/runtime-recipes.md)。
 
-`score`只读冻结参考并写新评分版本，不提供语料检查或修复模式。主评测聚焦信息保全、内容准确和必要归属；结构、定位细节与字符差异作为诊断，未纳入冻结目标的内容单独披露覆盖边界，不形成第三种业务评分。既定目标遗漏或运行失败仍保留目标分母并判错；字符指标不能替代关键数值和关系正确性。DocVortex续接读回只读取明确原生声明，不补表头、期间、单位或内容。
+## 当前expected评测
 
-当前主评测使用`mo-parse-eval-information-v5`，以expected的预期信息为中心。正文并列定位覆盖、已定位CER和字符覆盖；表格或正文记录均按实际表达的业务事实读取，分别报告值与业务标签、同时满足已标单位期间附注的完整信息正确率。所有已纳入目标完成正确或错误判定，路径分段、表格方向和格位差异不单独扣内容分；严格字符与结构诊断进入附录。完整分母和表达等价政策只维护在[评测标准](../benchmark/evaluation-tasks.md#4-指标与匹配)。
+`score`只读expected并写评分结果，不提供语料检查或修复模式。主评测聚焦信息保全、内容准确和必要归属；结构、定位细节与字符差异作为诊断，旧索引未覆盖的expected内容仍需完成对照，不形成第三种业务评分。既定目标遗漏或运行失败仍保留目标分母并判错；字符指标不能替代关键数值和关系正确性。DocVortex续接读回只读取明确原生声明，不补表头、期间、单位或内容。
 
-冻结并验证评分软件后，可用`score --run <run-directory> --freeze <scoring-freeze.json> --adjudications <existing-human-decision.json>`重评分已有产物。freeze记录软件身份、协议身份及通过的工程验证，入口拒绝身份不符或未通过验证的记录，评分结束再次确认软件未变。该操作不启动模型、不改写参考或执行观察，不回填原解析耗时；存在工程读回错误时不发布新的评分索引。原有人工排除决定继续统一适用，不能随重评分丢失。
+既有实现使用`mo-parse-eval-information-v5`；本次必须以现有expected为唯一验收标准，并补足其全部业务内容的对照。正文并列定位覆盖、已定位CER和字符覆盖；表格或正文记录按实际表达的业务事实读取，分别报告值与业务标签、同时满足expected单位期间附注等要求的结果。每个业务目标必须完成正确或错误判定，路径分段、表格方向和格位差异不单独扣内容分；严格字符与结构诊断进入附录。完整分母和表达等价政策只维护在[评测标准](../benchmark/evaluation-tasks.md#4-指标与匹配)，旧子集成绩不构成当前任务完成声明。
 
-独立人工参考排除决定保存在`benchmark/reference-decisions/`，不包含管线成绩。需要使用时给`score`显式传`--adjudications`；其记录和证据根约定见该目录说明，新run引用证据时须同时搬运记录指定的图片。迁移并不重新验收裁定或语料，也不改写冻结参考。只支持统一的`exclude_unit_pending`，不按管线选择答案。
+冻结并验证评分软件后，可用`score --run <run-directory> --freeze <scoring-freeze.json>`重评分已有产物。freeze记录软件身份、协议身份及通过的工程验证，入口拒绝身份不符或未通过验证的记录，评分结束再次确认软件未变。该操作不启动模型、不改写参考或执行观察，不回填原解析耗时；存在工程读回错误时不发布新的评分索引。当前expected唯一标准下不传入基于原图的`--adjudications`；还必须检查既有运行记录和服务配对工具是否隐式继承此类排除，不能仅去掉命令行参数就宣称已完成标准切换。
+
+`benchmark/reference-decisions/`保留历史人工记录，当前不以其中原图结论排除目标、修改参考答案或判定输出通过。旧工具支持的`exclude_unit_pending`及历史裁定说明不构成本次授权；按现有expected完整对照的结果尚需实际生成。已有固定字段评分、测试通过和原图查看数量均不能证明expected全量覆盖。
 
 `report`从新运行已有的评分和执行记录生成图文正文、完整附录、机器明细及图件，不能重生已撤销的旧比较。`field-details.csv`保存逐字段状态、限定信息证据及评分产物路径；未知定位原因不冒充原PDF缺项。图件仅使用对应新测量，保留800页单次与80页三轮的不同口径、版本、分母、开发暴露和缺测。字体采用DejaVu Sans与Noto Sans CJK，PDF嵌入字体。人工案例必须明确作者阅读范围，不能自动生成来源判断。
 
@@ -47,9 +53,9 @@ Paddle原生服务使用单个长期owner线程统一初始化、推理与关闭
 
 新运行目录按`prepare` → `run --phase warmup` → `freeze` → `run --phase measured` → `freeze-scoring` → `score` → `report`执行；两个freeze命令都要求显式`--validation`工程验证记录，不能用文件存在或语料计数代替验证。`prepare`还需`--baseline`、`--output`和仅含公开处理参数的`--service-config`。服务执行与最终读回分别冻结身份，共享评分规则保持原样，旧运行目录不能覆盖。报告重生只读已有运行和评分JSON，不读取语料、重新推理或重新评分。
 
-当前读取修正采用`mo-parse-eval-information-v5`，完整标准见[评测任务](../benchmark/evaluation-tasks.md)。每个已纳入业务目标只判正确或错误，全部目标完成判定后才能发布质量报告；评分器读取故障须先修复。`service_evaluation prepare --previous-run <旧运行>`只接纳同一原生输入、参考声明和已冻结执行身份的旧候选，读取原样保存的最终正文；候选worker不挂载旧结果或参考。评分冻结可单独更新只用于分析的共同读取与报告模块，实际适配、后处理、app及依赖仍须与执行冻结一致；必须同步重评原生、旧正文及新正文，不能复用旧分数。`prepare --rescore-native`允许在共同评分规则已修改时先准备候选回放；只放行评分模块差异，原生格式读取及依赖仍须一致，实际评分继续要求八组原生评分索引与当前完整软件身份一致，不能引用准备时的旧成绩。`python -m moparse_eval.table_context_report`逐项列出新增正确、原正确项损失及单位、期间、附注退化。
+现有读取实现采用`mo-parse-eval-information-v5`，当前必须执行的expected唯一标准见[评测任务](../benchmark/evaluation-tasks.md#current-task-expected-only)。每个业务目标只判正确或错误，expected完整内容完成对照后才能宣布本任务验收完成；评分器读取故障须先修复。`service_evaluation prepare --previous-run <旧运行>`只接纳同一原生输入、参考声明和已冻结执行身份的修改前候选，读取原样保存的最终正文；候选worker不挂载旧结果或参考。评分冻结可单独更新只用于分析的共同读取与报告模块，实际适配、后处理、app及依赖仍须与执行冻结一致；必须同步重评原生、修改前和修改后输出，不能复用旧分数。`prepare --rescore-native`允许在共同评分规则已修改时先准备候选回放；只放行评分模块差异，原生格式读取及依赖仍须一致，实际评分继续要求八组原生评分索引与当前完整软件身份一致，不能引用准备时的旧成绩。`python -m moparse_eval.table_context_report`逐项列出新增正确、原正确项损失及单位、期间、附注退化；这些接口说明不代表现有代码已经完成expected-only切换。
 
-代码验证使用`python -m pytest -q tests/unit tests/test_markdown_policy.py moparse_eval/tests`。其中`test_information_context.py`覆盖单位、年度、分组和脚注正反例，`test_native_table_context.py`覆盖原生结构与局部转换，`test_moparse_eval_service_observation.py`覆盖实际正文读取及未渲染内部关系不得计分。它们使用受控合成材料，与真实候选专项评分、原页目读及运行成本测量分别记录；通过代码测试不构成语料验收。
+代码验证使用`python -m pytest -q tests/unit tests/test_markdown_policy.py moparse_eval/tests`。其中`test_information_context.py`覆盖单位、年度、分组和脚注正反例，`test_native_table_context.py`覆盖原生结构与局部转换，`test_moparse_eval_service_observation.py`覆盖实际正文读取及未渲染内部关系不得计分。它们使用受控合成材料，与对照expected的实际输出验收及运行成本分别记录；通过代码测试不代表expected中的业务内容已经验收。
 
 最终正文读回支持来源注释后独立保留的完整单位段落，避免该段落截断后面的已打印记录。只有实际存在、具有本表来源身份且内容为完整单位的段落可延长范围；普通段落、裸数值或缺少所属注释的单位不能据此接入后文。字段与限定成绩仍取自记录实际打印的文字，不用私有单元格补答案；没有独立单位段落的已保存记录也按同一实际输出读取。
 

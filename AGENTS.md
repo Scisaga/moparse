@@ -2,7 +2,19 @@
 
 The formal project name is **MO-Parse**. Keep existing `moparse` package names, configuration identifiers and public APIs compatible.
 
+## Current output-evaluation task: expected is the sole acceptance standard
+
+Latest user instruction, 2026-11-01: **本次任务必须且只能以 expected 为验收标准。** This applies to the ongoing scoring-readback and P07/P08 output-optimization task. Compare actual delivered outputs against the existing read-only expected content under `pdf_sample/parsing/expected/`, including its business information and relationships. Existing field indexes, annotations, scores and document IDs are evaluation aids, not another answer standard or a limit on expected coverage.
+
+Do not open, render, crop, visually inspect or OCR original PDF pages to decide this task's correctness. Do not create source-image judgments, revisit whether expected matches a PDF, use PDF-derived exceptions to exclude targets, or excuse an output difference because the PDF says something else. Historical original-page reviews are not current acceptance evidence. The former 57/800 visual-review count is not this task's progress, and reviewing the other 743 original pages is not a prerequisite. The tested pipeline's declared PDF input processing remains separate from evaluation and must never access expected to complete its answers.
+
+Expected remains unchanged. Evaluate each required item as correct or incorrect; repair a scorer that fails to read information actually expressed by the candidate. Do not rename an unresolved score or silently remove a target. Compare the same saved parser results after the previous and current post-processing code using one validated scoring version. Report progress by expected content actually compared, output defects fixed, regressions and remaining defects. The existing 1,726-field subset, software tests, commits, report generation and processing times do not establish full expected coverage or provide an independent stopping condition.
+
+The corpus-authoring rules below apply to separately authorized creation, editing or review of corpus materials; they must not turn this output-evaluation task into corpus review or add a second acceptance standard. Current evaluation rules are owned by [evaluation tasks](benchmark/evaluation-tasks.md#current-task-expected-only), and the execution-ready continuation prompt is [expected output optimization](docs/engineering/prompts/expected-output-optimization.md). These current user instructions take precedence over conflicting historical prompts, reports and memory.
+
 ## Highest-priority permanent corpus rule
+
+Scope: separately authorized corpus authoring, correction or review. It does not require original-page review for the current expected-only output-evaluation task defined above.
 
 User instruction dated 2026-10-24: **对于语料，永远绝不允许机械复核。** All corpus originals, expected results, annotations, source mappings and assets must be reviewed through actual visual reading of the original pages and direct comparison with the current authored material. This permanent execution rule applies to every future task, prompt and delegated agent; it supersedes any local instruction allowing mechanical corpus review or validation.
 
