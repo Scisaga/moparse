@@ -96,11 +96,14 @@ def path_locates(labels: list[str], native: Any, collapse_whitespace: bool) -> b
                for match in re.finditer(pattern, text))
 
 
-def row_path_locates(labels: list[str], native: Any, collapse_whitespace: bool) -> bool:
+def row_path_locates(labels: list[str], native: Any, collapse_whitespace: bool, *,
+                     require_leaf: bool = False) -> bool:
     """Keep the complete requested path within actual, contiguous labels.
 
     Uniqueness is resolved over all actual candidate records by the caller.
     Additional context outside it is not an extra prediction requirement.
+    The optional leaf probe distinguishes a separately expressed valued row
+    from its repetition as a child's parent; it does not reinterpret aliases.
     A missing requested parent, an intervening business level, or a conflicting parent
     cannot be filled from the reference or from the expected value.
     """
@@ -118,7 +121,9 @@ def row_path_locates(labels: list[str], native: Any, collapse_whitespace: bool) 
     views: list[list[str]] = [[]]
     for raw in native:
         part = label_text(normalize_text(raw, collapse_whitespace=collapse_whitespace))
-        variants = [part]
+        variants: list[str | None] = [part]
+        if require_leaf and (unit_scope_literal(part) or part.strip(" ()（）") in units(part)):
+            variants.append(None)
         for token in units(part):
             if part.endswith("(" + token + ")"):
                 prefix = part[:-len(token) - 2].rstrip()
@@ -128,11 +133,13 @@ def row_path_locates(labels: list[str], native: Any, collapse_whitespace: bool) 
                 continue
             if prefix:
                 variants.append(prefix)
-        views = [[*view, option] for view in views for option in dict.fromkeys(variants)]
+        views = [([*view, option] if option is not None else view)
+                 for view in views for option in dict.fromkeys(variants)]
         if len(views) > 512:
             return False
     return any(re.fullmatch(pattern, " ".join(view[start:end])) is not None
-               for view in views for start in range(len(view)) for end in range(start + 1, len(view) + 1))
+               for view in views for start in range(len(view))
+               for end in ([len(view)] if require_leaf else range(start + 1, len(view) + 1)))
 
 
 def column_path_locates(labels: list[str], native: Any, collapse_whitespace: bool,

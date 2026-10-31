@@ -40,7 +40,7 @@ from .representations import visible_text
 
 SERVICE_OBSERVATION_VERSION = "mo-parse-final-output-observation-v7"
 FINAL_PAGE_PROVENANCE_VERSION = "mo-parse-final-page-provenance-v1"
-FINAL_OBSERVATION_READBACK_VERSION = "mo-parse-final-output-readback-v14"
+FINAL_OBSERVATION_READBACK_VERSION = "mo-parse-final-output-readback-v15"
 _METADATA_KEYS = {"run_id", "suite", "phase", "repetition", "timing", "resources", "runtime"}
 _IDENTITY_HEADER = re.compile(
     r"(?:[\u3400-\u9fff]{0,12}(?:名称|名稱|姓名)|项目|項目|认购方|認購方|认购对象|認購對象|"
@@ -48,6 +48,9 @@ _IDENTITY_HEADER = re.compile(
 )
 _NOTE_HEADER = re.compile(r"备注|備註|注释|註釋|说明|說明|Note|Remark|Comment", re.I)
 _ORDINAL_HEADER = re.compile(r"序号|序號|No\.?|Number|Index", re.I)
+_UNITLESS_FIELD_HEADER = re.compile(
+    r"附注|附註|注释|註釋|备注|備註|说明|說明|Notes?|Remarks?|Comments?|代码|代碼|Code|ID", re.I,
+)
 
 
 def _printed_unit_scope(text: str) -> bool:
@@ -1408,6 +1411,53 @@ def _read_retained_gfm_geometry(observation: dict[str, Any]) -> int:
     return restored
 
 
+def _read_published_list_units(observation: dict[str, Any]) -> int:
+    """Read a complete unit caption immediately governing an actual Markdown list.
+
+    The public list boundary supplies the scope. No source cells, IR unit refs
+    or reference answers are consulted, and an intervening block ends it.
+    """
+    output = observation.get("service_output", {})
+    final = output.get("final_markdown")
+    if not isinstance(final, str):
+        return 0
+    tokens = _spans(final)
+    scopes = []
+    for (a, b, caption), (c, d, body) in zip(tokens, tokens[1:], strict=False):
+        if (caption.type != "paragraph_open" or body.type != "bullet_list_open"
+                or final[b:c].strip()):
+            continue
+        literal = _inline_text(final[a:b].strip())
+        if _printed_unit_scope(literal):
+            scopes.append((c, d, literal, [a, b]))
+    if not scopes:
+        return 0
+    updated = 0
+    for page in observation.get("pages", []):
+        for block in page.get("blocks", []):
+            for cell in block.get("cells", []):
+                span = cell.get("final_markdown_span")
+                if (not isinstance(span, list) or len(span) != 2
+                        or any(type(offset) is not int for offset in span)
+                        or not 0 <= span[0] < span[1] <= len(final)
+                        or cell.get("is_row_header") or cell.get("is_column_header")
+                        or cell.get("unit") or cell.get("units")
+                        or any(_UNITLESS_FIELD_HEADER.fullmatch(label.strip()) or _ORDINAL_HEADER.fullmatch(label)
+                               or _IDENTITY_HEADER.fullmatch(label)
+                               for label in cell.get("column_header_path", []) or []
+                               if isinstance(label, str))):
+                    continue
+                for start, end, literal, caption_span in scopes:
+                    if start <= span[0] < span[1] <= end:
+                        cell["units"] = [literal]
+                        cell["printed_list_unit_scope"] = {
+                            "caption_span": caption_span, "list_span": [start, end], "literal": literal,
+                        }
+                        updated += 1
+                        break
+    return updated
+
+
 def read_final_observation(
     observation: Mapping[str, Any],
 ) -> tuple[dict[str, Any], dict[str, Any]]:
@@ -1419,6 +1469,7 @@ def read_final_observation(
     derived, diagnostic = read_final_page_provenance(observation)
     derived = copy.deepcopy(derived)
     diagnostic["retained_gfm_geometry_blocks"] = _read_retained_gfm_geometry(derived)
+    diagnostic["published_list_unit_cells"] = _read_published_list_units(derived)
     diagnostic.update(
         reader_version=FINAL_OBSERVATION_READBACK_VERSION,
         page_provenance_reader_version=FINAL_PAGE_PROVENANCE_VERSION,

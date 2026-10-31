@@ -5,7 +5,7 @@ from copy import deepcopy
 import pytest
 
 from moparse_eval.adapters import html_cells, markdown_cells
-from moparse_eval.information import field_value_text
+from moparse_eval.information import field_value_text, row_path_locates
 from moparse_eval.scoring import _declared_path_locates, _label_in_native_cell, score_case
 
 
@@ -78,6 +78,49 @@ def test_percent_label_boundary_spacing_preserves_signs_values_units_and_words(a
 ])
 def test_path_segmentation_can_change_without_dropping_business_context(reference, native, found):
     assert _declared_path_locates(reference, native, True) is found
+
+
+@pytest.mark.parametrize("reference,native,found", [
+    (["Assets"], ["Assets", "Receivables"], False),
+    (["Assets"], ["Statement", "Assets"], True),
+    (["Assets"], ["Statement", "Assets", "(USD million)"], True),
+    (["North", "Other"], ["North", "Other", "Subsidiary"], False),
+    (["North", "Other"], ["Statement", "North", "Other"], True),
+    (["Revenue"], ["Revenue", "2025"], False),
+])
+def test_field_row_path_ends_at_the_actual_business_leaf(reference, native, found):
+    assert row_path_locates(reference, native, True, require_leaf=True) is found
+
+
+@pytest.mark.parametrize("wanted,correct", [("17", True), ("11", False)])
+def test_valued_parent_is_not_ambiguous_with_its_children_and_is_not_selected_by_value(wanted, correct):
+    cells = [
+        {"id": "parent", "text": "17", "row_header_path": ["Assets"], "column_header_path": ["2025"]},
+        {"id": "child", "text": "11", "row_header_path": ["Assets", "Receivables"], "column_header_path": ["2025"]},
+    ]
+    field, metrics = evaluate(cells, row=["Assets"], column=["2025"], value=wanted)
+    assert field["native_text"] == "17"
+    assert (metrics["information_correct_fields"] == 1) is correct
+
+
+def test_a_child_cannot_supply_a_missing_period_on_its_separately_expressed_ancestor():
+    field, metrics = evaluate([
+        {"id": "parent", "text": "99", "row_header_path": ["Assets"], "column_header_path": ["2024"]},
+        {"id": "child", "text": "17", "row_header_path": ["Assets", "Receivables"], "column_header_path": ["2025"]},
+    ], row=["Assets"], column=["2025"])
+    assert field["status"] == "incorrect"
+    assert metrics["information_correct_fields"] == 0
+
+
+def test_two_independently_expressed_parent_values_remain_ambiguous():
+    field, metrics = evaluate([
+        {"id": "a", "text": "17", "row_header_path": ["Assets"], "column_header_path": ["2025"]},
+        {"id": "b", "text": "11", "row_header_path": ["Assets"], "column_header_path": ["2025"]},
+        {"id": "c", "text": "17", "row_header_path": ["Assets", "Receivables"], "column_header_path": ["2025"]},
+    ], row=["Assets"], column=["2025"])
+    assert field["status"] == "incorrect"
+    assert field["reason"] == "ambiguous_complete_label_path"
+    assert metrics["information_correct_fields"] == 0
 
 
 def test_whole_column_path_resolves_repeated_leaf_titles_without_using_the_answer():

@@ -26,11 +26,69 @@ from app.services.table_service import (
 from moparse_eval.matching import match_units, observation_candidates
 from moparse_eval.scoring import _score_records
 from moparse_eval.service_observation import (
+    SERVICE_OBSERVATION_VERSION,
     _inline_text,
     build_service_observation,
     read_final_observation,
     read_final_page_provenance,
 )
+
+
+def _published_list_with_unqualified_value(caption="（单位:%）", *, separator="", value="N/A", unit=None,
+                                         column="2025"):
+    body = caption + "\n\n" + separator + f"- 项目：Coverage；{column}：17。\n\n\n\n- 项目：Liquidity；{column}：{value}。\n"
+    start = body.index(f"{column}：{value}。", body.index("Liquidity")) + len(column + "：")
+    cell = {"id": "actual-value", "text": value, "text_format": "plain",
+            "final_markdown_span": [start, start + len(value)],
+            "row_header_path": ["Liquidity"], "column_header_path": [column]}
+    if unit is not None:
+        cell["unit"] = unit
+    return {"input_page_count": 1, "pages": [{"page": 1, "blocks": [{
+        "id": "actual-record", "kind": "table_body", "cells": [cell],
+    }]}], "service_output": {"reader_version": SERVICE_OBSERVATION_VERSION,
+        "final_markdown": body, "published_provenance": {"status": "bound"}, "semantic_views": []}}
+
+
+@pytest.mark.parametrize("value", ["N/A", "不适用", "17"])
+def test_published_shared_list_unit_covers_values_without_repeating_a_suffix(value):
+    from moparse_eval.information import qualifier_evidence
+    observation = _published_list_with_unqualified_value(value=value)
+    before = deepcopy(observation)
+    derived, _diagnostic = read_final_observation(observation)
+    assert observation == before
+    cell = derived["pages"][0]["blocks"][0]["cells"][0]
+    assert qualifier_evidence({"unit": "%"}, cell, [])["unit"]["status"] == "correct"
+
+
+@pytest.mark.parametrize("caption,separator", [
+    ("A separate operation earned 17%.", ""),
+    ("（单位:%）", "Ordinary explanation.\n\n"),
+    ("（单位:%）", "## Another section\n\n"),
+    ("（单位:%）", "- A different list.\n\nAn independent paragraph.\n\n"),
+])
+def test_unrelated_or_ended_unit_scope_does_not_qualify_another_list(caption, separator):
+    from moparse_eval.information import qualifier_evidence
+    derived, _diagnostic = read_final_observation(
+        _published_list_with_unqualified_value(caption, separator=separator))
+    cell = derived["pages"][0]["blocks"][0]["cells"][0]
+    assert qualifier_evidence({"unit": "%"}, cell, [])["unit"]["status"] == "incorrect"
+
+
+def test_shared_list_unit_does_not_rescue_an_explicit_wrong_field_unit():
+    from moparse_eval.information import qualifier_evidence
+    derived, _diagnostic = read_final_observation(_published_list_with_unqualified_value(unit="USD"))
+    cell = derived["pages"][0]["blocks"][0]["cells"][0]
+    assert qualifier_evidence({"unit": "%"}, cell, [])["unit"]["status"] == "incorrect"
+
+
+@pytest.mark.parametrize("column,correct", [("附注", False), ("Notes", False), ("Code", False),
+                                           ("Notes receivable", True)])
+def test_shared_list_units_distinguish_reference_properties_from_whole_business_labels(column, correct):
+    from moparse_eval.information import qualifier_evidence
+    derived, _diagnostic = read_final_observation(
+        _published_list_with_unqualified_value("（单位:万元）", value="17", column=column))
+    cell = derived["pages"][0]["blocks"][0]["cells"][0]
+    assert (qualifier_evidence({"unit": "万元"}, cell, [])["unit"]["status"] == "correct") is correct
 
 
 def _fragment(rows=None, *, name="t1", page=1, headers=True):
@@ -402,7 +460,7 @@ def test_partial_html_period_paths_are_supported_by_printed_spans_after_publicat
     FinalContentService().apply(result)
     observation, diagnostic = read_final_observation(build_service_observation(result, sample_id="sample"))
     assert observation["errors"] == []
-    assert diagnostic["reader_version"] == "mo-parse-final-output-readback-v14"
+    assert diagnostic["reader_version"] == "mo-parse-final-output-readback-v15"
     unit = {"id": "beta", "kind": "table_record", "reference_text": "Beta", "pages": [1],
             "table": {"row_header_path": ["Beta"], "fields": [
                 {"column_header_path": ["Year ended", "2034"], "value": "13", "period": "2034"},

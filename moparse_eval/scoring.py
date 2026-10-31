@@ -105,15 +105,19 @@ def _information_value_equal(expected: str, actual: str, field: dict[str, Any],
     return information_value_equal(boundaries(expected), boundaries(actual), field, evidence)
 
 
-def _record_path_locates(row_path: list[str], item: dict[str, Any], collapse_whitespace: bool) -> bool:
+def _record_path_locates(row_path: list[str], item: dict[str, Any], collapse_whitespace: bool, *,
+                         require_leaf: bool = False) -> bool:
     cell = item["cell"]
     if cell.get("information_prose_record"):
+        if require_leaf:
+            return False
         return all(any(_label_in_native_cell(label, actual, collapse_whitespace)
                        for actual in cell.get("information_record_labels", [])) for label in row_path)
     paths = [cell.get("row_header_path")]
     if cell.get("service_evidence_state") == "converted":
         paths += cell.get("printed_record_row_paths", [])
-    return any(_declared_path_locates(row_path, path, collapse_whitespace) for path in paths)
+    return any(_declared_path_locates(row_path, path, collapse_whitespace, require_leaf=require_leaf)
+               for path in paths)
 
 
 def _candidate_table_identity(candidate: dict[str, Any]) -> str | None:
@@ -351,6 +355,13 @@ def _locate_record_field(
         bodies.setdefault(item["parent_id"], []).append(item)
     solutions: list[dict[str, Any]] = []
     failures: list[dict[str, Any]] = []
+    # A value on an explicitly expressed row is distinct from the same label
+    # repeated as context on that row's children. Resolve this by labels and
+    # declared table identity before columns or expected values are inspected.
+    leaf_tables = {tuple(labels): {_candidate_table_identity(item) for item in pool
+                   if _candidate_table_identity(item) is not None
+                   and _record_path_locates(labels, item, collapse_whitespace, require_leaf=True)}
+                   for labels in (row_path, column_path)}
     for body, group in bodies.items():
         before_body = len(solutions)
         for physical_rows, physical_columns, orientation in (
@@ -359,6 +370,9 @@ def _locate_record_field(
             if orientation == "transposed" and len(solutions) > before_body:
                 break
             explicit_rows = [item for item in group if _record_path_locates(physical_rows, item, collapse_whitespace)]
+            explicit_rows = [item for item in explicit_rows
+                             if _candidate_table_identity(item) not in leaf_tables[tuple(physical_rows)]
+                             or _record_path_locates(physical_rows, item, collapse_whitespace, require_leaf=True)]
             if explicit_rows:
                 found = [item for item in explicit_rows if column_path_locates(
                     physical_columns, item["cell"].get("column_header_path"), collapse_whitespace,
