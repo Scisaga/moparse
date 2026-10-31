@@ -51,6 +51,11 @@ def test_unnamed_values_and_incomplete_rows_do_not_create_a_new_period_band(repl
     assert len(f.native_evidence["header_scopes"]) == 1
 
 
+def test_an_empty_original_corner_does_not_turn_bare_yearlike_values_into_new_headers():
+    f = table([["", "2034年", "2033年"], ["Revenue", "17", "11"], ["", "2034", "2033"]])
+    assert len(f.native_evidence["header_scopes"]) == 1
+
+
 @pytest.mark.parametrize("quarters", [["第一季度", "第二季度", "第三季度", "第四季度"],
                                       ["第一季度(1-3月份)", "第二季度(4-6月份)", "第三季度(7-9月份)", "第四季度(10-12月份)"],
                                       ["Q1", "Q2", "Q3", "Q4"]])
@@ -474,6 +479,87 @@ def test_declared_native_continuation_keeps_complete_headers_units_and_physical_
     assert view.records[0].values[0].column_headers[0].table_id == "left"
     unit = view.records[0].values[0].unit_refs[0]
     assert unit.page == 1 and unit.text == "人民币百万元"
+
+
+@pytest.mark.parametrize("barrier", [None, "bad_offset", "mismatched_dashes", "date", "new_heading", "no_declaration"])
+def test_an_explicit_continuation_can_use_complete_yearend_headers_at_the_previous_tables_end(barrier):
+    from app.services.table_context_service import prepare_native_table_scopes
+    from app.services.table_service import PageFurnitureFragment
+
+    result, _, right = continuation_result()
+    left = table([["", "2034年", "2033年", "本年比上年增减"], ["Revenue", "17", "11", "5%"],
+                  ["", "2034年末", "2033年末", "本年末比上年末增减"]], "left")
+    left.source_header_scopes = [{"header_rows": [0], "body_rows": [1, 2], "complete": True,
+                                  "evidence_source": "pdf_glyph_structure_association"}]
+    left.pdf_evidence = {"bound": True, "source_cells": [
+        {"row": c.row, "column": c.column, "row_span": c.row_span,
+         "column_span": c.column_span, "text": c.text} for c in left.cells]}
+    footer_texts = ["- 8 -", "- 9 -"]
+    if barrier == "bad_offset":
+        footer_texts[1] = "- 17 -"
+    elif barrier == "mismatched_dashes":
+        footer_texts = ["- 8 –", "- 9 –"]
+    elif barrier == "date":
+        footer_texts = ["2024-12-30", "2024-12-31"]
+    if barrier == "no_declaration":
+        right.source_continues_prev = None
+    furniture = [PageFurnitureFragment(f"f{page}", page, "page_footer", text,
+                                       f"<!-- source-furniture: f{page} -->\n\n{text}", (0.4, 0.95, 0.6, 0.99))
+                 for page, text in enumerate(footer_texts, 1)]
+    result._table_fragments, result._page_furniture = [left, right], furniture
+    result.pages[0].content = left.rendered + "\n\n" + furniture[0].rendered
+    result.pages[1].content = right.rendered + "\n\n" + furniture[1].rendered
+    if barrier == "new_heading":
+        result.pages[0].content += "\n\n## A new business scope"
+    before = deepcopy((left.cells, right.cells))
+    prepare_native_table_scopes(result)
+    assert left.source_header_scopes[-1]["header_rows"] == [2]
+    assert left.source_header_scopes[-1]["body_rows"] == []
+    assert "header_scope_refinement" in left.native_evidence
+    view = bind_table_view("view", [right], [left, right])
+    if barrier is None:
+        text = render_semantic_view(view, [left, right])
+        assert "After；2034年末：19（单位：人民币百万元）；2033年末：13（单位：人民币百万元）；本年末比上年末增减：6%" in text
+    else:
+        assert view.status == "retained" and "inherited_header_scope" not in right.native_evidence
+    assert (left.cells, right.cells) == before
+
+
+def test_native_subranges_cannot_replace_a_different_bound_source_header():
+    from app.services.table_context_service import _refine_source_header_scopes
+
+    f = table([["", "2034年", "2033年"], ["Revenue", "17", "11"],
+               ["", "2034年末", "2033年末"], ["Assets", "19", "13"]])
+    scopes = f.source_header_scopes
+    f.source_header_scopes = [{"header_rows": [0, 1], "body_rows": [2, 3], "complete": True}]
+    f.pdf_evidence = {"bound": True}
+    before = deepcopy(f.source_header_scopes)
+    _refine_source_header_scopes(f, scopes)
+    assert f.source_header_scopes == before and "header_scope_refinement" not in f.native_evidence
+
+
+def test_a_repeated_stub_with_yearlike_values_cannot_erase_a_bound_source_record():
+    from app.services.table_context_service import _refine_source_header_scopes
+
+    f = table([["Item", "2034年", "2033年"], ["Revenue", "17", "11"],
+               ["Item", "2034", "2033"], ["Assets", "19", "13"]])
+    proposed = f.source_header_scopes
+    f.source_header_scopes = [{"header_rows": [0], "body_rows": [1, 2, 3], "complete": True}]
+    f.pdf_evidence = {"bound": True}
+    before = deepcopy(f.source_header_scopes)
+    _refine_source_header_scopes(f, proposed)
+    assert f.source_header_scopes == before and "header_scope_refinement" not in f.native_evidence
+
+
+@pytest.mark.parametrize("answer", ["□ 是 √ 否", "□适用√不适用", "☑是 ☐否"])
+def test_checkbox_only_native_captions_cannot_become_business_titles(answer):
+    from app.services.table_context_service import prepare_native_table_scopes
+
+    result, left, _ = continuation_result()
+    result._native_page_blocks[1][0]["content"].insert(0, {"type": "table_caption", "content": answer})
+    prepare_native_table_scopes(result)
+    assert all(ref.text != answer for ref in left.context_refs)
+    assert all(not r.scope_refs for r in bind_table_view("view", [left], [left]).records)
 
 
 @pytest.mark.parametrize("barrier", ["missing_declaration", "false_declaration", "own_headers", "new_caption",

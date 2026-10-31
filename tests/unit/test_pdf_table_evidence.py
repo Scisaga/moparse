@@ -463,6 +463,32 @@ def test_inherited_scope_maps_source_column_spans_without_merging_grids() -> Non
     assert all(item.logical_table_id is None for item in items)
 
 
+def test_pdf_continuation_uses_the_last_literal_header_before_binding_the_next_page() -> None:
+    from app.services.table_semantics_service import bind_table_view, render_semantic_view
+
+    left = fragment([["", "2034年", "2033年"], ["Revenue", "17", "11"],
+                     ["", "2034年末", "2033年末"]])
+    right = fragment([["Assets", "19", "13"]], page=2)
+    left.source_header_scopes = [{"header_rows": [0], "body_rows": [1, 2], "complete": True}]
+    xs = [40, 150, 250, 360]
+    for item in [left, right]:
+        item.pdf_evidence = {"bound": True, "x_grid": xs, "source_cells": [
+            {"row": c.row, "column": c.column, "row_span": 1, "column_span": 1, "text": c.text,
+             "shaded": c.column == 0, "bbox": [xs[c.column], 50 + c.row * 30, xs[c.column + 1], 80 + c.row * 30]}
+            for c in item.cells]}
+    right.source_continues_prev = True
+    pages = [PageParseResult(page_number=f.page_number, content=f.rendered) for f in [left, right]]
+    original = deepcopy([left.cells, right.cells])
+    evidence._bind_header_scope_continuations([left, right], pages, [])
+    assert right.pdf_evidence["inherited_header_scope"]["header_rows"] == [2]
+    assert left.pdf_evidence["header_scope_refinement"]["original_scope"]["header_rows"] == [0]
+    view = bind_table_view("view", [right], [left, right])
+    text = render_semantic_view(view, [left, right])
+    assert "Assets；2034年末：19；2033年末：13" in text
+    assert "Assets；2034年：" not in text
+    assert [left.cells, right.cells] == original
+
+
 @pytest.mark.parametrize(
     "damage",
     ["no_hint", "column_scope", "new_context", "source_unbound", "new_unit", "different_style"],

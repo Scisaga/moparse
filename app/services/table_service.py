@@ -1048,9 +1048,13 @@ def _table_context_pages(
         # page numbers across all adjacent pages. Arbitrary footer numbers and
         # unit/period declarations do not satisfy that evidence.
         def pagination_id(source: PageFurnitureFragment) -> tuple[tuple[str, ...], int] | None:
-            if not re.fullmatch(r"\s*[0-9]+(?:\s*[-–—]\s*[0-9]+)*\s*", source.text):
+            text = source.text.strip()
+            decorated = re.fullmatch(r"([-–—])\s*([0-9]+)\s*\1", text)
+            if decorated:
+                text = decorated[2]
+            if not re.fullmatch(r"[0-9]+(?:\s*[-–—]\s*[0-9]+)*", text):
                 return None
-            components = tuple(re.split(r"\s*[-–—]\s*", source.text.strip()))
+            components = tuple(re.split(r"\s*[-–—]\s*", text))
             return components[:-1], int(components[-1]) - source.page_number
 
         identity = pagination_id(candidate)

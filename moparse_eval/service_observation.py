@@ -40,7 +40,7 @@ from .representations import visible_text
 
 SERVICE_OBSERVATION_VERSION = "mo-parse-final-output-observation-v7"
 FINAL_PAGE_PROVENANCE_VERSION = "mo-parse-final-page-provenance-v1"
-FINAL_OBSERVATION_READBACK_VERSION = "mo-parse-final-output-readback-v12"
+FINAL_OBSERVATION_READBACK_VERSION = "mo-parse-final-output-readback-v13"
 _METADATA_KEYS = {"run_id", "suite", "phase", "repetition", "timing", "resources", "runtime"}
 _IDENTITY_HEADER = re.compile(
     r"(?:[\u3400-\u9fff]{0,12}(?:名称|名稱|姓名)|项目|項目|认购方|認購方|认购对象|認購對象|"
@@ -248,11 +248,18 @@ def _semantic_span(final: str, rendered: str) -> tuple[int, int] | None:
     Only declared source markers and their immediately following blocks may
     extend this view; an ordinary neighboring paragraph ends it.
     """
+    from app.services.table_context_service import unit_header
+
     marker = rendered.partition("\n\n")[0]
     if final.count(marker) != 1:
         return None
     expected = {form for declaration in re.findall(r"<!-- semantic-(?:source|retained): [^\n]*? -->", rendered)
                 for form in _printed_marker_forms(declaration)}
+    template = _spans(rendered)
+    unit_markers = {rendered[a:b].strip() for (a, b, comment), (c, d, content)
+                    in zip(template, template[1:], strict=False)
+                    if comment.type == "html_block" and rendered[a:b].strip().startswith("<!-- semantic-source:")
+                    and content.type == "paragraph_open" and unit_header(_inline_text(rendered[c:d].strip()))}
     tokens = _spans(final)
     for index, (start, end, token) in enumerate(tokens):
         if token.type != "html_block" or final[start:end].strip() != marker:
@@ -266,7 +273,9 @@ def _semantic_span(final: str, rendered: str) -> tuple[int, int] | None:
             table = (content.type == "table_open" or content.type == "html_block"
                      and re.match(r"\s*<table\b", final[c:d], re.I))
             permitted = (declaration.startswith("<!-- semantic-source:") and content.type == "bullet_list_open"
-                         or declaration.startswith("<!-- semantic-retained:") and table)
+                         or declaration.startswith("<!-- semantic-retained:") and table
+                         or declaration in unit_markers and content.type == "paragraph_open"
+                         and unit_header(_inline_text(final[c:d].strip())))
             if (comment.type != "html_block" or declaration not in expected or not permitted
                     or final[stop:a].strip() or final[b:c].strip()):
                 break

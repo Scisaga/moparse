@@ -1009,6 +1009,7 @@ def _bind_header_scope_continuations(
     boundaries, full glyph/span binding, source style roles and empty intervening
     context. This is a scope edge, not permission to merge incompatible grids.
     """
+    from app.services.table_context_service import _refine_source_header_scopes, native_scopes
     from app.services.table_service import (
         _context_evidence,
         _preceding_content,
@@ -1034,12 +1035,22 @@ def _bind_header_scope_continuations(
             or right.normalized_bbox[1] > 0.18
         ):
             continue
+        # Finalize supported local period roles before deriving a cross-page
+        # edge. A later refinement must not leave an earlier annual header
+        # attached to rows whose printed predecessor is a year-end band.
+        proposal = native_scopes(left)
+        if proposal.get("structure_readable"):
+            left.native_evidence = proposal
+            _refine_source_header_scopes(left, proposal.get("header_scopes", []))
+            if refinement := left.native_evidence.get("header_scope_refinement"):
+                left.pdf_evidence["header_scope_refinement"] = refinement
         scopes = [scope for scope in left.source_header_scopes if scope.get("complete")]
         if not scopes:
             continue
         scope = scopes[-1]
         rows = scope["header_rows"]
-        if len(rows) != 1 or scope["body_rows"][-1:] != [left.num_rows - 1]:
+        if len(rows) != 1 or not (scope["body_rows"][-1:] == [left.num_rows - 1]
+                                 or not scope["body_rows"] and rows[-1] == left.num_rows - 1):
             continue
         header_cells = [
             cell for cell in left.pdf_evidence["source_cells"] if cell["row"] == rows[0]

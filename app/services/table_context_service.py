@@ -20,7 +20,7 @@ _PERIOD = re.compile(
     r"第[一二三四1-4]季度(?:\s*[（(]\s*\d{1,2}\s*[-–—至]\s*\d{1,2}\s*月份?\s*[)）])?|"
     r"(?<![A-Za-z0-9])Q[1-4](?![A-Za-z0-9])", re.I,
 )
-_MEASURE = re.compile(r"金额|金額|收入|成本|比率|比例|占|佔|同比|单位|單位|浓度|濃度|排放|数量|數量|Amount|Revenue|Cost|Change|Rate|Ratio|Balance|Total", re.I)
+_MEASURE = re.compile(r"金额|金額|收入|成本|比率|比例|占|佔|同比|增减|增減|单位|單位|浓度|濃度|排放|数量|數量|Amount|Revenue|Cost|Change|Rate|Ratio|Balance|Total", re.I)
 _FIELD = re.compile(r"^(?:召开日期|召開日期|会议内容|會議內容|重要意见和建议|重要意見和建議|会议决议|會議決議|姓名|名称|名稱|职务|職務|日期|Name|Date|Position)$", re.I)
 _UNIT = re.compile(r"(?:人民币|人民幣)?(?:百万元|百萬元|千元|万元|萬元|元)|\$\s*(?:bn|m)|[%％‰]|(?:毫克|千克|公斤|吨|噸)(?:/[^()（）\s]+)?")
 _SECTION = re.compile(r"^\s*(?:[（(]\d+[)）]\s*)?((?:19|20)\d{2}\s*年度)[^。；;]{0,32}(?:情况|情況|数据|數據)\s*[:：]$")
@@ -180,7 +180,7 @@ def native_scopes(fragment: TableFragment) -> dict[str, Any]:
     for row in range(first_body + 1, fragment.num_rows):
         band = [c for c in cells if c.row == row]
         stub = next((c for c in band if c.column == 0), None)
-        repeat = bool(stub and first and stub.text.strip() == first.text.strip()
+        repeat = bool(stub and first and stub.text.strip() and stub.text.strip() == first.text.strip()
                 and any(_PERIOD.search(c.text) or _MEASURE.search(c.text) for c in band if c.column > 0)
                 and all(not scalar(c.text) or _PERIOD.fullmatch(c.text.strip()) for c in band)
                 and all(c.row_span == 1 for c in band))
@@ -198,7 +198,8 @@ def native_scopes(fragment: TableFragment) -> dict[str, Any]:
         )
         if repeat or changed_period:
             scopes[-1]["body_rows"] = [r for r in scopes[-1]["body_rows"] if r < row]
-            scopes.append({**scope, "header_rows": [row], "body_rows": list(range(row + 1, fragment.num_rows))})
+            scopes.append({**scope, "header_rows": [row], "body_rows": list(range(row + 1, fragment.num_rows)),
+                           "evidence": {**scope["evidence"], "explicit_period_switch": changed_period}})
     evidence.update(content_kind="data_table", header_scopes=scopes)
     _row_context(fragment, evidence, scopes)
     return evidence
@@ -353,6 +354,26 @@ def _literal_table_captions(blocks: list[Any], position: int) -> list[tuple[int,
     return []
 
 
+def _refine_source_header_scopes(fragment: TableFragment, scopes: list[dict[str, Any]]) -> None:
+    """Refine a coarser bound role range using its complete literal subranges."""
+    if (not fragment.pdf_evidence.get("bound") or len(fragment.source_header_scopes) != 1 or len(scopes) < 2
+            or not fragment.native_evidence.get("structure_readable")):
+        return
+    original = fragment.source_header_scopes[0]
+    if (not original.get("complete") or original.get("header_rows") != scopes[0].get("header_rows")
+            or any(not scope.get("evidence", {}).get("explicit_period_switch") for scope in scopes[1:])
+            or any(not scope.get("complete") or scope.get("evidence_source") != "native_literal_measurement_headers"
+                   or scope.get("row_header_columns", [0]) != original.get("row_header_columns", [0]) for scope in scopes)):
+        return
+    declared = [row for scope in scopes for row in (*scope["header_rows"], *scope["body_rows"])]
+    source_rows = [*original.get("header_rows", []), *original.get("body_rows", [])]
+    if len(declared) != len(set(declared)) or sorted(declared) != sorted(source_rows):
+        return
+    fragment.native_evidence["header_scope_refinement"] = {"original_scope": original,
+                                                          "reason": "complete_literal_subranges_of_bound_source_scope"}
+    fragment.source_header_scopes = scopes
+
+
 def prepare_native_table_scopes(result: DocumentParseResult) -> None:
     for page, raw_blocks in result._native_page_blocks.items():
         fragments = [f for f in result._table_fragments if isinstance(f, TableFragment) and f.page_number == page]
@@ -383,6 +404,8 @@ def prepare_native_table_scopes(result: DocumentParseResult) -> None:
             scopes = fragment.native_evidence.get("header_scopes", [])
             if not fragment.source_header_scopes and scopes:
                 fragment.source_header_scopes = scopes
+            else:
+                _refine_source_header_scopes(fragment, scopes)
             # A PDF-bound scope may already identify headers such as Q1/Q2
             # which the narrower native classifier does not recognize. Its
             # actual body still owns the adjacent caption; an empty native
@@ -403,6 +426,10 @@ def prepare_native_table_scopes(result: DocumentParseResult) -> None:
                 # Preserve that original body elsewhere, but never repeat its
                 # cells as a unit or title on neighboring business records.
                 if _TABLE_MARKUP.search(value):
+                    return
+                if re.fullmatch(r"\s*(?:[□☐☑✓√]\s*(?:不适用|不適用|适用|適用|是|否)\s*)+", value):
+                    # Keep the printed answer in its original body, without
+                    # turning a checkbox response into every record's title.
                     return
                 unit = _unit_caption(value)
                 if unit is not None:
@@ -542,7 +569,8 @@ def _prepare_native_continuations(result: DocumentParseResult) -> None:
                 or any(type(row) is not int or not 0 <= row < left.num_rows for row in rows)
                 or rows != list(range(rows[0], rows[-1] + 1))
                 or not isinstance(scope.get("body_rows"), list)
-                or scope["body_rows"][-1:] != [left.num_rows - 1]
+                or not (scope["body_rows"][-1:] == [left.num_rows - 1]
+                        or not scope["body_rows"] and rows[-1] == left.num_rows - 1)
                 or left.num_rows - 1 in left.native_evidence.get("operation_rows", [])):
             blocked("preceding_scope_does_not_reach_continuation")
             continue

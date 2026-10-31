@@ -128,6 +128,67 @@ def test_clean_public_body_keeps_real_table_values_and_qualifier_evidence():
     assert result.markdown[a:b] == '100'
 
 
+def _unit_corner_result():
+    from app.services.table_context_service import native_scopes
+
+    fragment = _fragment([["(in RMB million)", "2034"], ["Revenue", "17"],
+                          ["Number of customers (in million)", "2.47"]])
+    fragment.source_kind = "mineru"
+    fragment.native_evidence = native_scopes(fragment)
+    fragment.source_header_scopes = fragment.native_evidence["header_scopes"]
+    view = bind_table_view("view-t1", [fragment], [fragment])
+    result = _result(render_semantic_view(view, [fragment]) + "\n\nSeparate business paragraph.")
+    result._table_fragments, result._semantic_tables = [fragment], [view]
+    return result, fragment, view
+
+
+def test_a_visible_owned_unit_paragraph_does_not_hide_following_semantic_records():
+    from app.services.final_content_service import FinalContentService
+
+    result, _, _ = _unit_corner_result()
+    FinalContentService().apply(result)
+    observation = build_service_observation(result, sample_id="invented")
+    cells = _cells(observation)
+    revenue = next(c for c in cells if c["text"] == "17")
+    count = next(c for c in cells if c["text"] == "2.47")
+    assert revenue["units"] == ["(in RMB million)"]
+    assert count["units"] == ["Number of customers (in million)"]
+    assert observation["service_output"]["semantic_views"][0]["final_evidence"] == "converted"
+    for cell in [revenue, count]:
+        a, b = cell["final_markdown_span"]
+        assert result.markdown[a:b] == cell["text"]
+
+
+@pytest.mark.parametrize("old_subject_header", [False, True])
+def test_old_records_remain_readable_without_a_new_unit_paragraph(old_subject_header):
+    result, fragment, view = _unit_corner_result()
+    if old_subject_header:
+        view = replace(view, records=tuple(replace(r, subject_headers=(CellRef("t1", 0, 0),)) for r in view.records))
+        result._semantic_tables = [view]
+    text = render_semantic_view(view, [fragment])
+    result.markdown = text.replace(
+        "<!-- semantic-source: cells=t1.r0c0; headers=t1.r0c0 -->\n\n(in RMB million)\n\n", "", 1)
+    assert not result.markdown.startswith("(in RMB million)")
+    observed = build_service_observation(result, sample_id="invented")
+    assert {"17", "2.47"}.issubset({c["text"] for c in _cells(observed)})
+
+
+@pytest.mark.parametrize("replacement", ["An ordinary business paragraph.", "999"])
+def test_a_unit_marker_cannot_authorize_nonunit_paragraphs_or_hidden_records(replacement):
+    result, _, _ = _unit_corner_result()
+    result.markdown = result.markdown.replace("(in RMB million)\n\n", replacement + "\n\n", 1)
+    observed = build_service_observation(result, sample_id="invented")
+    assert not {"17", "2.47"}.intersection({c["text"] for c in _cells(observed)})
+    assert replacement in observed["service_output"]["final_markdown"]
+
+
+def test_an_unmarked_unit_paragraph_cannot_bridge_to_an_unowned_record_copy():
+    result, _, _ = _unit_corner_result()
+    result.markdown = result.markdown.replace("<!-- semantic-source: cells=t1.r0c0; headers=t1.r0c0 -->\n\n", "", 1)
+    observed = build_service_observation(result, sample_id="invented")
+    assert not {"17", "2.47"}.intersection({c["text"] for c in _cells(observed)})
+
+
 def test_external_native_qualifier_requires_its_literal_in_the_real_final_body():
     result, fragment, view = _converted()
     period = TextRef("t1", 1, "native.p0", "2025年度排放情况：", "period", 0, 12, (1,), (1,))
@@ -341,7 +402,7 @@ def test_partial_html_period_paths_are_supported_by_printed_spans_after_publicat
     FinalContentService().apply(result)
     observation, diagnostic = read_final_observation(build_service_observation(result, sample_id="sample"))
     assert observation["errors"] == []
-    assert diagnostic["reader_version"] == "mo-parse-final-output-readback-v12"
+    assert diagnostic["reader_version"] == "mo-parse-final-output-readback-v13"
     unit = {"id": "beta", "kind": "table_record", "reference_text": "Beta", "pages": [1],
             "table": {"row_header_path": ["Beta"], "fields": [
                 {"column_header_path": ["Year ended", "2034"], "value": "13", "period": "2034"},
