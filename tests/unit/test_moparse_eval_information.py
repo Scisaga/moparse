@@ -29,6 +29,48 @@ def repeated_leaves():
                       '<tr><td>Revenue</td><td>17</td><td>5%</td><td>99</td><td>8%</td></tr></table>')
 
 
+@pytest.mark.parametrize("representation", ["grid", "record"])
+@pytest.mark.parametrize("difference", [None, "wrong-year", "missing-prior", "mixed-years", "no-comparison", "other-table", "other-record", "reversed-target", "month-end", "no-year"])
+def test_year_end_comparison_requires_its_explicit_annual_frame_and_both_printed_endpoints(representation, difference):
+    relative = "本年末比上年末增减" if difference != "no-comparison" else "增减比率"
+    year, prior = "2027年末", "2026年末" if difference != "missing-prior" else "2025年末"
+    if difference == "month-end":
+        year, prior = "2027年9月末", "2026年9月末"
+    cells = (html_cells('<table><tr><th>项目</th><th>' + year + '</th><th>' + prior +
+                        '</th><th>' + relative + '</th></tr><tr><td>资产</td><td>17</td>'
+                        '<td>11</td><td>54.55%</td></tr></table>') if representation == "grid" else [
+        {"id": "current", "text": "17", "row_header_path": ["资产"], "column_header_path": [year], "record_id": "row"},
+        {"id": "prior", "text": "11", "row_header_path": ["资产"], "column_header_path": [prior], "record_id": "row"},
+        {"id": "comparison", "text": "54.55%", "row_header_path": ["资产"], "column_header_path": [relative], "record_id": "row"},
+    ])
+    title = "2028年度报告" if difference == "wrong-year" else "2027年度报告"
+    if difference == "mixed-years":
+        title += "，2028年度报告"
+    if difference == "no-year":
+        title = "Company financial statements"
+    table = {"id": "table", "kind": "table", "cells": cells}
+    if difference in {"other-table", "other-record"}:
+        if representation == "record":
+            cells[0]["record_id"] = cells[1]["record_id"] = "different-row"
+        else:
+            for cell in cells:
+                if cell["text"] in {year, prior}:
+                    cell["row"] = 7  # These year labels no longer head the tested data row.
+    reference = {"sample_id": "synthetic", "review_status": "confirmed", "relations": [], "units": [{"id": "assets", "kind": "table_record",
+        "status": "confirmed", "pages": [1], "literal": "资产", "table": {
+            "row_header_path": ["资产"], "fields": [{"column_header_path": [relative], "value": "54.55%",
+                                                    "unit": "%", "period": ("2026年末比2027年末" if difference == "reversed-target"
+                                                                              else "2027年末比2026年末")}]}}]}
+    observation = {"sample_id": "synthetic", "pipeline": "synthetic", "status": "success",
+                   "pages": [{"page": 1, "blocks": [{"id": "title", "kind": "text", "text": title}, table]}]}
+    if difference == "other-table":
+        # Keep the genuine endpoint labels visible, but in another table.
+        observation["pages"][0]["blocks"].insert(1, {"id": "other", "kind": "table", "cells": [
+            {"id": "elsewhere-current", "text": year}, {"id": "elsewhere-prior", "text": prior}]})
+    result = score_case(reference, observation)
+    assert (result["metrics"]["table_records"]["information_correct_fields"] == 1) is (difference is None)
+
+
 @pytest.mark.parametrize("label,text,found", [
     ("$m", "2025$m", True), ("(%)", "占比(%)", True), ("%", "增长率%", True),
     ("元", "万元", False), ("2025", "12025", False), ("Amount", "Amounts", False),

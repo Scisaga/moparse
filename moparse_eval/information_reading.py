@@ -84,6 +84,24 @@ def period_literals(texts: list[str]) -> list[str]:
     return list(dict.fromkeys(result))
 
 
+def _year_end_comparison(headers: list[str], peers: list[str], contexts: list[dict[str, Any]]) -> str | None:
+    """Read 'this year end versus last year end' inside an explicit annual frame."""
+    if not any(re.search(r"本年末比上年末", text) for text in headers):
+        return None
+    scope = [item["text"] for item in contexts if item.get("kind") in {"period", "table_caption"}]
+    annual_years = {match[1] for text in scope for match in re.finditer(r"(?<!\d)((?:19|20)\d{2})\s*年\s*度", text)}
+    scope_years = {year for text in scope for year in re.findall(r"(?<!\d)(?:19|20)\d{2}(?!\d)", text)}
+    if len(annual_years) != 1 or scope_years != annual_years:
+        return None
+    current = next(iter(annual_years))
+    previous = str(int(current) - 1)
+    printed_ends = {match[1] for text in peers
+                    if (match := re.fullmatch(r"\s*((?:19|20)\d{2})\s*年\s*末\s*", text))}
+    if {current, previous} <= printed_ends:
+        return current + "年末比" + previous + "年末"
+    return None
+
+
 def _numbered_record_labels(cells: list[dict[str, Any]]) -> list[dict[str, Any]]:
     """Read an adjacent printed record number and name as one label view."""
     extra = []
@@ -481,6 +499,23 @@ def read_information_observation(observation: dict[str, Any]) -> dict[str, Any]:
                                      *cell.get("periods", []),
                                      *(item["text"] for item in cell["information_context"])]):
                     cell["information_context"] = [*cell["information_context"], report_period]
+                # Only the active grid header band or this very printed
+                # record can supply endpoints. Other rows and tables cannot.
+                relative_headers = [*cell["information_headers"], *cell.get("column_header_path", [])]
+                if any(re.search(r"本年末比上年末", text) for text in relative_headers):
+                    record_headers = [text for other in cells
+                        if (cell.get("record_id") and other.get("record_id") == cell["record_id"]
+                            or not cell.get("record_id") and cell.get("row_header_path")
+                            and other.get("row_header_path") == cell["row_header_path"])
+                        for text in other.get("column_header_path", [])]
+                    comparison = _year_end_comparison(
+                        relative_headers, [header["text"] for header in all_column_headers] + record_headers,
+                        cell["information_context"],
+                    )
+                    if comparison is not None:
+                        cell["information_comparison_periods"] = [
+                            *cell.get("information_comparison_periods", []), comparison,
+                        ]
             block["cells"] = [*cells, *_numbered_record_labels(cells)]
             for cell in block["cells"]:
                 cell["information_label_views"] = label_views(cell)
