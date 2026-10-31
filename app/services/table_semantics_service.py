@@ -128,15 +128,14 @@ def _column_literal_parts(
     percentage, or a currency value explicitly labelled per share. A currency
     symbol alone does not override a column's million/billion scale.
     """
-    from app.services.table_context_service import unit_description
+    from app.services.table_context_service import row_unit_description
 
     rendered, note = _record_literal_parts(record, reference, registry)
     match = re.fullmatch(r"(.+?)(\$\s*(?:bn|m))", registry[reference].text.strip(), re.I)
     if match is None or not any(_PERIOD.search(registry[ref].text) for ref in value.column_headers):
         return rendered, note
     row_labels = [registry[ref].text for ref in value.row_headers]
-    explicit_unit = any(unit_description(part[0]) for label in row_labels
-                        for part in re.finditer(r"[（(][^()（）]+[)）]", label))
+    explicit_unit = any(row_unit_description(label) for label in row_labels)
     printed_value = registry[value.value].text
     printed_ratio = bool(re.search(r"[%％‰]", printed_value))
     per_share = _per_share_currency(row_labels, printed_value)
@@ -230,14 +229,15 @@ def _relation(
     columns: tuple[CellRef, ...],
     registry: dict[CellRef, TableCellFragment],
 ) -> ValueRelation:
-    from app.services.table_context_service import unit_description
+    from app.services.table_context_service import row_unit_description, unit_description
 
     labels = (*rows, *columns)
+    row_units = tuple(r for r in rows if row_unit_description(registry[r].text))
     return ValueRelation(
         value=value,
         row_headers=rows,
         column_headers=columns,
-        unit_refs=tuple(r for r in labels if any(
+        unit_refs=row_units[-1:] or tuple(r for r in columns if any(
             unit_description(part[0]) for part in re.finditer(r"[（(][^()（）]+[)）]", registry[r].text))),
         period_refs=tuple(r for r in labels if _PERIOD.search(registry[r].text)),
         # A bound grid and empty parser text do not independently declare a
@@ -282,12 +282,22 @@ def _consumed_cells(fragment: TableFragment, records: Sequence[SemanticRecord]) 
         rows = scope.get("header_rows", [])
         if scope.get("complete") and any(ref.row in rows for ref in consumed):
             consumed.update(_ref(fragment, c) for c in fragment.cells if c.row in rows and not c.text.strip())
+    consumed.update(_ref(fragment, cell) for cell in _unit_context_cells(fragment, records))
     return consumed
+
+
+def _unit_context_cells(fragment: TableFragment, records: Sequence[SemanticRecord]) -> list[TableCellFragment]:
+    from app.services.table_context_service import unit_header
+
+    converted = {record.source_row for record in records if record.source_table_id == fragment.fragment_id}
+    rows = {row for scope in fragment.source_header_scopes if scope.get("complete")
+            and converted.intersection(scope.get("body_rows", [])) for row in scope.get("header_rows", [])}
+    return [cell for cell in fragment.cells if cell.row in rows and cell.column == 0 and unit_header(cell.text)]
 
 
 def _qualify_relation(fragment: TableFragment, relation: ValueRelation,
                       registry: dict[Any, Any]) -> ValueRelation:
-    from app.services.table_context_service import scalar
+    from app.services.table_context_service import scalar, unit_header
     cell = registry[relation.value]
     labels = [registry[r].text for r in relation.column_headers]
     reference_field = any(_REFERENCE_HEADER.fullmatch(text.strip().rstrip(":：")) for text in labels)
@@ -315,8 +325,7 @@ def _qualify_relation(fragment: TableFragment, relation: ValueRelation,
             header_table = inherited.get("source_table_id", "")
         corner = next((ref for ref, c in registry.items()
                        if isinstance(ref, CellRef) and ref.table_id == header_table and ref.column == 0
-                       and ref.row in active_headers and re.fullmatch(
-                           r"[（(]?(?:人民币|人民幣)?(?:百万元|百萬元|千元|万元|萬元|元)[)）]?", c.text.strip())), None)
+                       and ref.row in active_headers and unit_header(c.text)), None)
         if corner is not None:
             unit_refs.append(corner)
     for ref in fragment.context_refs:
@@ -548,9 +557,8 @@ def _bind_fragment(
             issues.append((row, "subject_crosses_header_columns"))
             continue
         subject_path = tuple({(h.row, h.column): h for path in label_paths if path for h in path}.values())
-        if native_scope:
-            subject_path = tuple(h for h in subject_path if not re.fullmatch(
-                r"[（(]?(?:人民币|人民幣)?(?:百万元|百萬元|千元|万元|萬元|元)[)）]?", h.text.strip()))
+        from app.services.table_context_service import unit_header
+        subject_path = tuple(h for h in subject_path if not unit_header(h.text))
         values = []
         paths_seen: set[tuple[CellRef, ...]] = set()
         reason = None
@@ -591,7 +599,7 @@ def _bind_fragment(
             if ratio:
                 amount_units = {ref for ref in unit_headers if not re.search(r"[%％‰]", registry[ref].text)}
                 relation = replace(relation, unit_refs=tuple(ref for ref in relation.unit_refs if ref not in amount_units))
-            if (unit_headers and scalar(cell.text) and not re.search(r"[%％‰]", cell.text)
+            if (unit_headers and not relation.unit_refs and scalar(cell.text) and not re.search(r"[%％‰]", cell.text)
                     and not any(_RATIO_HEADER.search(registry[r].text) for r in refs)):
                 relation = replace(relation, unit_refs=tuple(dict.fromkeys((*relation.unit_refs, *unit_headers))))
             values.append(_qualify_relation(fragment, relation, registry))
@@ -846,6 +854,13 @@ def render_semantic_view(view: SemanticTableView, fragments: Sequence[TableFragm
     sequence = {identity: index for index, identity in enumerate(view.source_tables)}
     output = [((sequence[record.source_table_id], record.source_row, 1),
                _render_record(record, registry)) for record in view.records]
+    for fragment in fragments:
+        if fragment.fragment_id not in sequence:
+            continue
+        for cell in _unit_context_cells(fragment, view.records):
+            ref = _ref(fragment, cell)
+            output.append(((sequence[fragment.fragment_id], cell.row, 0),
+                           f"<!-- semantic-source: cells={ref.token}; headers={ref.token} -->\n\n{_literal(cell.text)}"))
     if view.status == "partial":
         output.extend(((sequence[part["table_id"]], part["start_row"], 0), part["rendered"])
                       for part in retained_table_parts(view, fragments))

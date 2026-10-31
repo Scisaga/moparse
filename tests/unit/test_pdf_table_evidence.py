@@ -271,6 +271,42 @@ def test_dimension_conflict_requires_a_closed_source_partition(closed: bool, sou
         document.close()
 
 
+@pytest.mark.parametrize('extension', ['both_top', 'both_bottom', 'one_side', 'detached'])
+def test_an_internal_horizontal_rule_cannot_close_an_open_outer_band(extension: str) -> None:
+    from app.services.table_context_service import native_scopes
+    from app.services.table_semantics_service import bind_table_view
+
+    document = pymupdf.open()
+    try:
+        page = document.new_page(width=400, height=300)
+        for x in (40, 160, 260, 360):
+            start = 30 if extension == 'both_top' and x in (40, 360) or extension == 'one_side' and x == 40 else 50
+            end = 130 if extension == 'both_bottom' and x in (40, 360) else 110
+            page.draw_line((x, start), (x, end), color=(0, 0, 0))
+        if extension == 'detached':
+            for x in (40, 360):
+                page.draw_line((x, 30), (x, 40), color=(0, 0, 0))
+        for y in (50, 80, 110):
+            page.draw_line((40, y), (360, y), color=(0, 0, 0))
+        item = fragment([["Item", "2034", "2033"], ["Alpha", "17", "11"], ["Beta", "19", "13"]])
+        item.normalized_bbox = (0.1, (50 if extension == 'both_bottom' else 30) / 300,
+                                0.9, (130 if extension == 'both_bottom' else 110) / 300)
+        item.pdf_evidence = evidence._source_grid(page, item)
+        item.native_evidence = native_scopes(item)
+        item.source_header_scopes = item.native_evidence['header_scopes']
+        view = bind_table_view('view', [item], [item])
+        if extension in {'both_top', 'both_bottom'}:
+            assert item.pdf_evidence['reason'] == 'source_outer_border_incomplete'
+            assert view.status == 'converted' and len(view.records) == 2
+        else:
+            # A one-sided flourish or two detached rules do not establish
+            # another open row. Real closed-partition conflicts still block.
+            assert item.pdf_evidence['reason'] == 'source_grid_dimensions_disagree'
+            assert view.status == 'retained' and not view.records
+    finally:
+        document.close()
+
+
 @pytest.mark.parametrize("damage", ["numeric_header", "missing_rule", "changed_value"])
 def test_source_style_or_partial_grid_cannot_invent_a_header(tmp_path: Path, damage: str) -> None:
     path = tmp_path / "negative.pdf"

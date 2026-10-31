@@ -15,7 +15,11 @@ from app.models.table_semantics import TextRef
 from app.services.table_service import TableFragment
 
 _SCALAR = re.compile(r"\(?\s*(?:(?:[<>]=?|[≤≥≧≦])\s*)?[$€£¥]?\s*[+\-−]?(?:\d[\d,.]*|\.\d+)\s*[%％‰]?\s*\)?|[—–-]")
-_PERIOD = re.compile(r"(?:19|20)\d{2}(?:\s*年(?:度|末)?)?|Year Ended|截至.{1,24}(?:年度|年末)", re.I)
+_PERIOD = re.compile(
+    r"(?:19|20)\d{2}(?:\s*年(?:度|末)?)?|Year Ended|截至.{1,24}(?:年度|年末)|"
+    r"第[一二三四1-4]季度(?:\s*[（(]\s*\d{1,2}\s*[-–—至]\s*\d{1,2}\s*月份?\s*[)）])?|"
+    r"(?<![A-Za-z0-9])Q[1-4](?![A-Za-z0-9])", re.I,
+)
 _MEASURE = re.compile(r"金额|金額|收入|成本|比率|比例|占|佔|同比|单位|單位|浓度|濃度|排放|数量|數量|Amount|Revenue|Cost|Change|Rate|Ratio|Balance|Total", re.I)
 _FIELD = re.compile(r"^(?:召开日期|召開日期|会议内容|會議內容|重要意见和建议|重要意見和建議|会议决议|會議決議|姓名|名称|名稱|职务|職務|日期|Name|Date|Position)$", re.I)
 _UNIT = re.compile(r"(?:人民币|人民幣)?(?:百万元|百萬元|千元|万元|萬元|元)|\$\s*(?:bn|m)|[%％‰]|(?:毫克|千克|公斤|吨|噸)(?:/[^()（）\s]+)?")
@@ -37,11 +41,31 @@ def unit_description(text: str) -> bool:
     if not literal:
         return False
     payload = re.sub(r"(?<=[\u3400-\u9fff])\s+(?=[\u3400-\u9fff])", "", literal[1])
-    amount = (r"(?:人民币|人民幣|美元|港元|港幣|港币|欧元|歐元)?"
-              r"[十百千万萬亿億]*元(?:/[^\s()（）]+)?")
-    currency = r"(?:[$€£¥]|USD|EUR|HKD|RMB|CNY)\s*(?:(?:in\s+)?(?:millions?|billions?)|bn|m)?(?:,\s*except\s+per\s+share\s+(?:data|amounts))?"
+    scale = r"[十百千万萬亿億]*"
+    amount = (rf"(?:(?:人民币|人民幣|美元|港元|港幣|港币|欧元|歐元)?{scale}元"
+              rf"|{scale}(?:美元|港元|港幣|港币|欧元|歐元)|人民币|人民幣)(?:/[^\s()（）]+)?")
+    currency = (r"(?:in\s+)?(?:[$€£¥]|USD|EUR|HKD|RMB|CNY)\s*"
+                r"(?:(?:in\s+)?(?:thousands?|millions?|billions?)|bn|m)?"
+                r"(?:,\s*except\s+per\s+share\s+(?:data|amounts))?")
     shares = r"[十百千万萬亿億]*股"
-    return bool(re.fullmatch(amount + "|" + currency + "|" + shares + r"|[%％‰]", payload, re.I))
+    physical = rf"{scale}(?:盎司|吨|噸|千克|公斤|毫克)(?:/[^\s()（）]+)?"
+    return bool(re.fullmatch(amount + "|" + currency + "|" + shares + "|" + physical + r"|[%％‰]", payload, re.I))
+
+
+def unit_header(text: str) -> bool:
+    return unit_description(text) or unit_description("(" + text.strip() + ")")
+
+
+def row_unit_description(text: str) -> bool:
+    """Read a row's whole unit, including an explicitly labelled count scale."""
+    count_label = re.match(r"^(?:number\s+of\b|(?:retails?\s+)?(?:customers|contracts|employees|users|shares)\b)",
+                           text.strip(), re.I)
+    for part in re.finditer(r"[（(]([^()（）]+)[)）]", text):
+        if unit_description(part[0]) or (count_label and re.fullmatch(
+                r"(?:in\s+)?(?:thousands?|millions?|billions?|contracts?|persons?|people|employees|users|shares)",
+                part[1].strip(), re.I)):
+            return True
+    return False
 
 
 def _unit_caption(text: str) -> tuple[str, int] | None:
@@ -156,10 +180,23 @@ def native_scopes(fragment: TableFragment) -> dict[str, Any]:
     for row in range(first_body + 1, fragment.num_rows):
         band = [c for c in cells if c.row == row]
         stub = next((c for c in band if c.column == 0), None)
-        if (stub and first and stub.text.strip() == first.text.strip()
+        repeat = bool(stub and first and stub.text.strip() == first.text.strip()
                 and any(_PERIOD.search(c.text) or _MEASURE.search(c.text) for c in band if c.column > 0)
                 and all(not scalar(c.text) or _PERIOD.fullmatch(c.text.strip()) for c in band)
-                and all(c.row_span == 1 for c in band)):
+                and all(c.row_span == 1 for c in band))
+        # A blank corner may introduce a complete new period band. Bare
+        # numeric years could also be unnamed values, so require explicit
+        # dated labels and the complete original single-row partition.
+        dated = re.compile(r"(?:19|20)\d{2}\s*年(?:度|末)")
+        changed_period = bool(
+            stub and not stub.text.strip() and first_body - header_start == 1
+            and len(band) == fragment.num_cols and all(c.row_span == c.column_span == 1 for c in band)
+            and all(c.row_span == c.column_span == 1 for c in headers)
+            and sum(bool(dated.fullmatch(c.text.strip())) for c in band if c.column > 0) >= 2
+            and all(dated.fullmatch(c.text.strip()) or (not scalar(c.text) and len(c.text) <= 60
+                    and (_MEASURE.search(c.text) or re.search(r"[%％‰]", c.text))) for c in band if c.column > 0)
+        )
+        if repeat or changed_period:
             scopes[-1]["body_rows"] = [r for r in scopes[-1]["body_rows"] if r < row]
             scopes.append({**scope, "header_rows": [row], "body_rows": list(range(row + 1, fragment.num_rows))})
     evidence.update(content_kind="data_table", header_scopes=scopes)
@@ -241,6 +278,43 @@ def _row_context(fragment: TableFragment, evidence: dict[str, Any], scopes: list
             if closed:
                 group = None
                 bulleted_group = None
+    _bounded_numbered_groups(fragment, evidence, scopes)
+
+
+def _bounded_numbered_groups(fragment: TableFragment, evidence: dict[str, Any], scopes: list[dict[str, Any]]) -> None:
+    """Read complete literal numbered sections, not lost numeric indentation."""
+    by_row: dict[int, list[Any]] = {}
+    for cell in fragment.cells:
+        by_row.setdefault(cell.row, []).append(cell)
+
+    def measurement(row: int) -> Any:
+        cells = by_row.get(row, [])
+        stub = next((c for c in cells if c.column == 0 and c.row_span == c.column_span == 1
+                     and c.text.strip()), None)
+        return stub if stub and any(c.column > 0 and scalar(c.text) for c in cells) else None
+
+    numbered = re.compile(r"^([一二三四五六七八九十百]+)([、.])\s*\S")
+    for scope in scopes:
+        if scope.get("row_header_columns", [0]) != [0] or scope.get("evidence", {}).get("explicit_record_fields"):
+            continue
+        rows = scope["body_rows"]
+        parents = [(row, stub, match) for row in rows if (stub := measurement(row)) is not None
+                   and (match := numbered.match(stub.text.strip()))]
+        for (start, parent, opening), (end, _, closing) in zip(parents, parents[1:], strict=False):
+            children = [row for row in rows if start < row < end]
+            if (opening[1] == closing[1] or opening[2] != closing[2]
+                    or not children or children != list(range(start + 1, end))):
+                continue
+            labels = [measurement(row) for row in children]
+            if (any(label is None for label in labels)
+                    or not re.match(r"^其中\s*[:：]", labels[0].text.strip())
+                    or any(row in evidence.get("operation_rows", []) for row in children)
+                    or any(str(row) in evidence["row_groups"] for row in [start, *children])
+                    or any(re.match(r"^(?:注|Notes?)\s*[:：]|^(?:合计|合計|总计|總計|小计|小計|Total|Subtotal)(?:\s|$)",
+                                    label.text.strip(), re.I) for label in labels)):
+                continue
+            for row in children:
+                evidence["row_groups"][str(row)] = [parent.row, parent.column]
 
 
 def _text(block: dict[str, Any]) -> str:
@@ -251,6 +325,32 @@ def _text(block: dict[str, Any]) -> str:
         parts = [_text(item) for item in value if isinstance(item, dict)]
         return ("\n" if block.get("type") == "list" else "").join(parts)
     return ""
+
+
+def _literal_table_captions(blocks: list[Any], position: int) -> list[tuple[int, str]]:
+    """Read an adjacent literal table number/name, without a producer role tag."""
+    run: list[tuple[int, str]] = []
+    for index in range(position - 1, max(-1, position - 5), -1):
+        block = blocks[index]
+        if not isinstance(block, dict) or block.get("type") not in {
+                "text", "paragraph", "title", "paragraph_title", "table_caption"}:
+            break
+        text = _text(block).strip()
+        if not text or _TABLE_MARKUP.search(text):
+            break
+        run.insert(0, (index, _text(block)))
+        if re.fullmatch(r"\s*(?:附?表|Table)\s*[A-Z]?\d+(?:[.\-]\d+)*\s*", text, re.I):
+            if len(run) < 2:
+                return []
+            title = run[1][1].strip()
+            if (len(title) > 80 or re.search(r"[。；;：:\n]|\bsee\b|\brefer\b", title, re.I)
+                    or _unit_caption(title) or re.fullmatch(r"[（(].*[)）]", title)):
+                return []
+            if all(_unit_caption(value) or (re.fullmatch(r"\s*[（(][^()（）\n]{1,40}[)）]\s*", value)
+                       and not re.search(r"[=\\$<>]", value)) for _, value in run[2:]):
+                return run
+            return []
+    return []
 
 
 def prepare_native_table_scopes(result: DocumentParseResult) -> None:
@@ -320,7 +420,12 @@ def prepare_native_table_scopes(result: DocumentParseResult) -> None:
                             caption(f"{position}.{child_index}", _text(child))
                         else:
                             add(f"{position}.{child_index}", _text(child), "note")
-            previous = position - 1
+            literal_captions = _literal_table_captions(raw_blocks, position) if body else []
+            for index, value in literal_captions:
+                caption(str(index), value)
+            previous = -1 if literal_captions else position - 1
+            preceding: list[tuple[int, str, str]] = []
+            numbered_caption = False
             while previous >= 0:
                 prior = raw_blocks[previous]
                 if not isinstance(prior, dict):
@@ -330,18 +435,46 @@ def prepare_native_table_scopes(result: DocumentParseResult) -> None:
                     previous -= 1
                     continue
                 if prior.get("type") == "table_caption":
-                    caption(str(previous), value)
+                    if (_TABLE_MARKUP.search(value) or re.search(
+                            r"参见|參見|见表|見表|\bsee\s+(?:also\s+)?(?:table|appendix)\b|\brefer\s+to\b", value, re.I)):
+                        break
+                    if re.match(r"^\s*(?:附?表|Table|Appendix)\s*[A-Z]?\d+", value, re.I):
+                        if numbered_caption:
+                            break
+                        numbered_caption = True
+                    preceding.append((previous, value, "caption"))
+                    previous -= 1
+                    continue
+                elif (preceding and prior.get("type") in {"text", "paragraph"}
+                      and re.fullmatch(r"\s*[（(][^()（）\n]{1,40}[)）]\s*", value)
+                      and not re.search(r"[=\\$<>]", value)
+                      and previous > 0 and isinstance(raw_blocks[previous - 1], dict)
+                      and raw_blocks[previous - 1].get("type") == "table_caption"):
+                    preceding.append((previous, value, "caption"))
+                    previous -= 1
+                    continue
                 elif (prior.get("type") in {"text", "paragraph", "list"}
                       and not _TABLE_MARKUP.search(value)
                       and (_unit_caption(value) is not None or re.search(
                           r"(?:following\s+table|下表|本表).*(?:percent(?:age)?|单位|單位)", value, re.I))):
-                    unit = _unit_caption(value)
-                    add(str(previous), unit[0] if unit else value, "unit", start=unit[1] if unit else 0)
+                    preceding.append((previous, value, "unit"))
                 elif (prior.get("type") in {"text", "paragraph", "list"} and not _TABLE_MARKUP.search(value)
                       and value.rstrip().endswith((":", "："))
                       and re.search(r"\bfollowing\b|如下|下表|本表", value, re.I)):
-                    add(str(previous), value, "title")
+                    preceding.append((previous, value, "title"))
+                elif (body and prior.get("type") in {"title", "paragraph_title"}
+                      and re.search(r"分季度[^。；;\n]{0,40}(?:数据|數據|指标|指標)\s*$", value)
+                      and not _TABLE_MARKUP.search(value)):
+                    preceding.append((previous, value, "title"))
                 break
+            for index, value, kind in reversed(preceding):
+                if kind == "caption":
+                    caption(str(index), value)
+                elif kind == "unit":
+                    unit = _unit_caption(value)
+                    add(str(index), unit[0] if unit else value, "unit", start=unit[1] if unit else 0)
+                else:
+                    add(str(index), value, "title")
             for next_index in range(position + 1, len(raw_blocks)):
                 following = raw_blocks[next_index]
                 if not isinstance(following, dict):

@@ -30,6 +30,45 @@ def test_native_measurement_structure_does_not_require_a_pdf_vector_grid():
     assert "同比：5%（单位" not in text
 
 
+def test_an_explicit_midtable_period_band_replaces_the_earlier_year_headers():
+    f = table([["Item", "2034年", "2033年", "同比(%)"], ["Revenue", "17", "11", "5"],
+               ["", "2034年末", "2033年末", "本年末比上年末增减(%)"], ["Assets", "19", "13", "6"]])
+    before = deepcopy(f)
+    view = bind_table_view("view", [f], [f])
+    text = render_semantic_view(view, [f])
+    assert view.status == "converted" and f == before
+    assert "Revenue；2034年：17；2033年：11；同比(%)：5" in text
+    assert "Assets；2034年末：19；2033年末：13；本年末比上年末增减(%)：6" in text
+    assert "Assets；2034年：" not in text
+
+
+@pytest.mark.parametrize("replacement", [["", "2034", "2033", "5"],
+                                           ["", "2034年末", "No approval was given.", "6"],
+                                           ["", "2034年末", "2033年末", ""]])
+def test_unnamed_values_and_incomplete_rows_do_not_create_a_new_period_band(replacement):
+    f = table([["Item", "2034年", "2033年", "同比(%)"], ["Revenue", "17", "11", "5"],
+               replacement, ["Assets", "19", "13", "6"]])
+    assert len(f.native_evidence["header_scopes"]) == 1
+
+
+@pytest.mark.parametrize("quarters", [["第一季度", "第二季度", "第三季度", "第四季度"],
+                                      ["第一季度(1-3月份)", "第二季度(4-6月份)", "第三季度(7-9月份)", "第四季度(10-12月份)"],
+                                      ["Q1", "Q2", "Q3", "Q4"]])
+def test_native_quarter_periods_preserve_all_literal_measurement_columns(quarters):
+    f = table([["", *quarters], ["Revenue", "17", "11", "13", "19"], ["Profit", "7", "5", "9", "11"]])
+    before = deepcopy(f)
+    view = bind_table_view("view", [f], [f])
+    text = render_semantic_view(view, [f])
+    assert f == before and view.status == "converted" and len(view.records) == 2
+    assert "Revenue；" + "；".join(q + "：" + v for q, v in zip(quarters, ["17", "11", "13", "19"], strict=True)) in text
+    assert "2034" not in text
+
+
+def test_quarter_words_in_layout_prose_do_not_manufacture_measurement_records():
+    f = table([["Q1 outlook", "Q2 concerns"], ["No approval was given.", "We considered several proposals."]])
+    assert bind_table_view("view", [f], [f]).status == "retained"
+
+
 def test_a_known_source_conflict_cannot_be_bypassed_by_native_structure():
     f = table([["Item", "2024"], ["Alpha", "17"]])
     f.pdf_evidence = {"bound": False, "reason": "source_cell_text_or_spans_disagree"}
@@ -340,6 +379,40 @@ def test_a_later_bullet_does_not_reinterpret_an_unmarked_parent_section():
     assert all(r.row_groups for r in view.records)
 
 
+def test_numbered_measurement_sections_need_both_literal_boundaries_and_including_cue():
+    f = table([["Item", "2034"], ["一、North", "17"], ["其中:Fees", "11"], ["Other", "6"],
+               ["二、South", "19"], ["其中:Fees", "13"], ["Other", "6"],
+               ["三、Equity", "7"], ["Per share", "1.7"], ["四、Loans", "9"], ["其中:Retail", "4"]])
+    before = deepcopy(f)
+    view = bind_table_view("view", [f], [f])
+    text = render_semantic_view(view, [f])
+    assert "一、North / Other；2034：6" in text and "二、South / Other；2034：6" in text
+    assert "三、Equity / Per share" not in text
+    assert "四、Loans /" not in text
+    assert view.status == "converted" and f == before
+    assert len(view.records) == 10 and all(not r.row_groups for r in view.records if r.source_row in {1, 4, 7, 9})
+
+
+@pytest.mark.parametrize("barrier", ["missing_including", "no_end", "changed_numbering", "unqualified_total", "note", "prose"])
+def test_numbered_values_do_not_manufacture_an_unbounded_or_conflicting_parent(barrier):
+    rows = [["Item", "2034"], ["一、North", "17"], ["其中:Fees", "11"], ["Other", "6"], ["二、South", "19"]]
+    if barrier == "missing_including":
+        rows[2][0] = "Fees"
+    elif barrier == "no_end":
+        rows.pop()
+    elif barrier == "changed_numbering":
+        rows[-1][0] = "二.South"
+    elif barrier == "unqualified_total":
+        rows[3][0] = "Total"
+    elif barrier == "note":
+        rows[3][0] = "Note: a separate matter"
+    elif barrier == "prose":
+        rows[3][1] = "No approval was given."
+    f = table(rows)
+    view = bind_table_view("view", [f], [f])
+    assert all(not r.row_groups for r in view.records)
+
+
 @pytest.mark.parametrize("label", ["附注", "附註", "Notes", "Note references", "序号", "Index", "Code"])
 def test_table_currency_does_not_turn_a_note_reference_or_identifier_into_an_amount(label):
     f = table([["(人民币百万元)", label, "2024", "2023"], ["Revenue", "8", "1700", "1100"]])
@@ -528,6 +601,158 @@ def test_business_caption_is_not_reclassified_by_the_word_currency_or_unit():
     assert _unit_caption('(USD business line)') is None
 
 
+@pytest.mark.parametrize("unit", ["(in RMB million)", "(in RMB)", "(百万美元)", "(美元)", "(万盎司)"])
+def test_complete_currency_and_physical_units_are_literal_expressions(unit):
+    from app.services.table_context_service import unit_description
+
+    assert unit_description(unit)
+
+
+@pytest.mark.parametrize("pdf_bound", [False, True])
+def test_a_currency_corner_is_context_while_explicit_row_units_override_it(pdf_bound):
+    from app.models.table_semantics import CellRef
+
+    f = table([["(in RMB million)", "2034", "2033"], ["Operating profit", "1700", "1100"],
+               ["Number of customers (in million)", "2.47", "2.31"],
+               ["Number of contracts per customer (contract)", "2.92", "2.93"],
+               ["Retails customers entitled to benefits (in million)", "1.52", "1.47"],
+               ["Operating ROE(1) (%)", "12.7", "12.5"], ["Dividend per share (in RMB)", "2.55", "2.43"]])
+    if pdf_bound:
+        f.source_header_scopes[0]["evidence_source"] = "source_style_contrast"
+        f.pdf_evidence = {"bound": True, "source_cells": [
+            {"row": c.row, "column": c.column, "row_span": c.row_span,
+             "column_span": c.column_span, "text": c.text} for c in f.cells]}
+    before = deepcopy(f)
+    view = bind_table_view("view", [f], [f])
+    rendered = render_semantic_view(view, [f])
+    assert f == before and view.status == "converted"
+    assert "(in RMB million)：" not in rendered
+    assert "2034：1700（单位：(in RMB million)）" in rendered
+    assert all(not record.subject_headers for record in view.records)
+    assert all(all(ref != CellRef("native", 0, 0) for ref in value.unit_refs)
+               for record in view.records[1:] for value in record.values)
+    assert "Number of contracts per customer (contract)；2034：2.92；2033：2.93" in rendered
+    assert "Retails customers entitled to benefits (in million)；2034：1.52；2033：1.47" in rendered
+    assert "Operating ROE(1) (%)；2034：12.7；2033：12.5" in rendered
+    assert "Dividend per share (in RMB)；2034：2.55；2033：2.43" in rendered
+
+
+def test_an_overridden_corner_unit_is_preserved_when_no_row_uses_it():
+    f = table([["(in RMB million)", "2034"], ["Number of customers (in million)", "2.47"]])
+    view = bind_table_view("view", [f], [f])
+    text = render_semantic_view(view, [f])
+    assert view.status == "converted" and "(in RMB million)\n\n" in text
+    assert "单位：(in RMB million)" not in text
+
+
+def test_a_scale_on_a_monetary_row_is_not_misclassified_by_a_customer_word():
+    from app.services.table_context_service import row_unit_description
+
+    assert not row_unit_description("Revenue from customers (in million)")
+    assert not row_unit_description("Profit (in million)")
+    assert not row_unit_description("Number of customers (business strategy)")
+
+
+def test_a_literal_physical_row_unit_overrides_a_currency_caption_without_conversion():
+    f = table([["Item", "2034", "2033"], ["外汇", "17", "11"], ["黄金(万盎司)", "6264", "6264"]])
+    f.context_refs = (TextRef("native", 1, "cap", "百万美元", "unit", 3, 7, (1, 2), (0, 1, 2)),)
+    view = bind_table_view("view", [f], [f])
+    text = render_semantic_view(view, [f])
+    assert "外汇；2034：17（单位：百万美元）；2033：11（单位：百万美元）" in text
+    assert "黄金(万盎司)；2034：6264；2033：6264" in text
+    assert all(ref.text != "百万美元" for value in view.records[1].values for ref in value.unit_refs
+               if isinstance(ref, TextRef))
+
+
+@pytest.mark.parametrize("barrier", [None, "prose", "reference", "math", "other_table_number"])
+def test_adjacent_native_captions_keep_their_order_and_stop_at_unowned_context(barrier):
+    from app.models.parse_result import DocumentParseResult, ParsePipeline
+    from app.services.table_context_service import prepare_native_table_scopes
+
+    f = table([["Item", "2034"], ["Alpha", "17"]])
+    blocks = [{"type": "table_caption", "content": "附表 7"},
+              {"type": "table_caption", "content": "金融指标"},
+              {"type": "text", "content": "(年末余额)"},
+              {"type": "table_caption", "content": "单位：百万美元"},
+              {"type": "table", "content": []}]
+    if barrier == "prose":
+        blocks[2]["content"] = "A separate ordinary paragraph."
+    elif barrier == "reference":
+        blocks[1]["content"] = "See Table 7 for details"
+    elif barrier == "math":
+        blocks[2]["content"] = "(x = y + 7)"
+    elif barrier == "other_table_number":
+        blocks.insert(0, {"type": "table_caption", "content": "附表 6"})
+    result = DocumentParseResult(document_id="synthetic", filename="synthetic.pdf", mime_type="application/pdf",
+                                 page_count=1, processed_pages=1, pipeline=ParsePipeline(profile="accurate", primary="mineru"))
+    result._table_fragments = [f]
+    result._native_page_blocks = {1: blocks}
+    prepare_native_table_scopes(result)
+    view = bind_table_view("view", [f], [f])
+    text = render_semantic_view(view, [f])
+    assert "2034：17（单位：百万美元）" in text and "范围：单位" not in text
+    if barrier in {None, "other_table_number"}:
+        assert [ref.text for ref in f.context_refs if ref.kind == "title"] == ["附表 7", "金融指标", "(年末余额)"]
+        assert "范围：附表 7 / 金融指标 / (年末余额)" in text
+        assert "附表 6" not in text
+    else:
+        assert "附表 7" not in text
+        assert "A separate" not in text and "See Table" not in text and "x =" not in text
+
+
+@pytest.mark.parametrize("barrier", [None, "no_number", "sentence", "intervening", "reference"])
+def test_a_complete_literal_table_caption_run_does_not_require_native_caption_tags(barrier):
+    from app.models.parse_result import DocumentParseResult, ParsePipeline
+    from app.services.table_context_service import prepare_native_table_scopes
+
+    f = table([["Item", "2034"], ["Alpha", "17"]])
+    blocks = [{"type": "text", "content": "附表 7"}, {"type": "text", "content": "金融指标（一）"},
+              {"type": "text", "content": "（年末余额）"},
+              {"type": "table", "content": [{"type": "table_caption", "content": "单位：亿元"}]}]
+    if barrier == "no_number":
+        blocks[0]["content"] = "A nearby chapter"
+    elif barrier == "sentence":
+        blocks[1]["content"] = "这是另一段正文。"
+    elif barrier == "intervening":
+        blocks.insert(3, {"type": "text", "content": "A separate ordinary paragraph."})
+    elif barrier == "reference":
+        blocks[0]["content"] = "See Table 7"
+    result = DocumentParseResult(document_id="synthetic", filename="synthetic.pdf", mime_type="application/pdf",
+                                 page_count=1, processed_pages=1, pipeline=ParsePipeline(profile="accurate", primary="mineru"))
+    result._table_fragments = [f]
+    result._native_page_blocks = {1: blocks}
+    prepare_native_table_scopes(result)
+    text = render_semantic_view(bind_table_view("view", [f], [f]), [f])
+    assert "2034：17（单位：亿元）" in text
+    if barrier is None:
+        assert "范围：附表 7 / 金融指标（一） / （年末余额）" in text
+    else:
+        assert "范围：" not in text
+
+
+@pytest.mark.parametrize("barrier", [None, "ordinary_prose", "new_heading"])
+def test_a_native_quarterly_heading_and_its_unit_stay_with_the_adjacent_table(barrier):
+    from app.models.parse_result import DocumentParseResult, ParsePipeline
+    from app.services.table_context_service import prepare_native_table_scopes
+
+    f = table([["", "第一季度", "第二季度"], ["Revenue", "17", "11"]])
+    blocks = [{"type": "title", "content": "八、分季度主要财务指标"},
+              {"type": "table_caption", "content": "单位：千元"}, {"type": "table", "content": []}]
+    if barrier == "ordinary_prose":
+        blocks.insert(1, {"type": "text", "content": "A separate paragraph."})
+    elif barrier == "new_heading":
+        blocks.insert(1, {"type": "title", "content": "Other operations"})
+    result = DocumentParseResult(document_id="synthetic", filename="synthetic.pdf", mime_type="application/pdf",
+                                 page_count=1, processed_pages=1, pipeline=ParsePipeline(profile="accurate", primary="mineru"))
+    result._table_fragments = [f]
+    result._native_page_blocks = {1: blocks}
+    prepare_native_table_scopes(result)
+    text = render_semantic_view(bind_table_view("view", [f], [f]), [f])
+    assert "第一季度：17（单位：千元）；第二季度：11（单位：千元）" in text
+    assert "2034" not in text
+    assert ("范围：八、分季度主要财务指标" in text) == (barrier is None)
+
+
 @pytest.mark.parametrize("owner", ["table", "text", "table_caption"])
 @pytest.mark.parametrize("escaped", [False, True])
 def test_neighboring_table_body_cannot_become_a_current_records_unit_or_title(owner, escaped):
@@ -612,7 +837,7 @@ def test_existing_source_scope_owns_amount_caption_when_native_headers_are_uncla
     from app.models.parse_result import DocumentParseResult, ParsePipeline
     from app.services.table_context_service import prepare_native_table_scopes
 
-    f = table([["", "第一季度", "第二季度"], ["Cash generated", "170", "110"],
+    f = table([["", "Window A", "Window B"], ["Cash generated", "170", "110"],
                ["Margin", "17%", "11%"]])
     assert f.native_evidence["header_scopes"] == []
     f.source_header_scopes = [{"header_rows": [0], "body_rows": [1, 2], "complete": True}]
@@ -629,8 +854,8 @@ def test_existing_source_scope_owns_amount_caption_when_native_headers_are_uncla
     prepare_native_table_scopes(result)
     assert f.context_refs[0].body_rows == (1, 2)
     rendered = render_semantic_view(bind_table_view("view", [f], [f]), [f])
-    assert "第一季度：170（单位：千元）" in rendered
-    assert "第二季度：110（单位：千元）" in rendered
+    assert "Window A：170（单位：千元）" in rendered
+    assert "Window B：110（单位：千元）" in rendered
     assert "17%（单位：千元）" not in rendered
 
 

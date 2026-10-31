@@ -244,25 +244,32 @@ def _source_grid(page: Any, fragment: TableFragment) -> dict[str, Any]:
             right,
         )
 
-    if not all(
-        (
-            vborder(xs[0], ys[0], ys[-1]),
-            vborder(xs[-1], ys[0], ys[-1]),
-            hborder(ys[0], xs[0], xs[-1]),
-            hborder(ys[-1], xs[0], xs[-1]),
-        )
-    ):
+    # The first/last horizontal rule may be an internal separator of an
+    # open page-edge row. Both outer side rules must continuously extend
+    # into that band; a one-sided flourish or detached rule is insufficient.
+    sides = [[(a, b) for coordinate, a, b in vertical if abs(x - coordinate) < 0.7]
+             for x in (xs[0], xs[-1])]
+    frame_top, frame_bottom = ys[0], ys[-1]
+    common_start = max(min(a for a, _ in side) for side in sides)
+    common_end = min(max(b for _, b in side) for side in sides)
+    if frame_top - common_start > 0.8 and all(vborder(x, common_start, frame_top) for x in (xs[0], xs[-1])):
+        frame_top = common_start
+    if common_end - frame_bottom > 0.8 and all(vborder(x, frame_bottom, common_end) for x in (xs[0], xs[-1])):
+        frame_bottom = common_end
+    borders = [
+        vborder(xs[0], frame_top, frame_bottom),
+        vborder(xs[-1], frame_top, frame_bottom),
+        hborder(frame_top, xs[0], xs[-1]),
+        hborder(frame_bottom, xs[0], xs[-1]),
+    ]
+    if not all(borders):
         return {
             "bound": False,
             "reason": "source_outer_border_incomplete",
             "x_grid": xs,
             "y_grid": ys,
-            "borders": [
-                vborder(xs[0], ys[0], ys[-1]),
-                vborder(xs[-1], ys[0], ys[-1]),
-                hborder(ys[0], xs[0], xs[-1]),
-                hborder(ys[-1], xs[0], xs[-1]),
-            ],
+            "source_frame_y": [frame_top, frame_bottom],
+            "borders": borders,
         }
     # Partial rules do not establish a source partition to disagree with the
     # native structure. Preserve real size conflicts only after the detected
