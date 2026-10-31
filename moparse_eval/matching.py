@@ -266,6 +266,68 @@ def reference_parent_scope(
     return parent, needs_scope, bare_number
 
 
+def _published_header_origin(candidate: dict[str, Any], proposal: dict[str, Any],
+                             collapse_whitespace: bool) -> tuple[Any, ...] | None:
+    """Identify a complete, actually printed row header, never an inferred label."""
+    cell, block = candidate.get("cell", {}), candidate["block"]
+    source = cell.get("source_cell_ref", {})
+    span = cell.get("final_markdown_span")
+    if (candidate["kind"] != "table_cell" or not cell.get("is_row_header")
+            or block.get("kind") != "table_body"
+            or block.get("service_evidence_state") not in {"converted", "partial"}
+            or cell.get("record_id") != block.get("id") or candidate.get("duplicate_native_id")
+            or not block.get("native_table_container")
+            or not source.get("table_id") or not source.get("token")
+            or not isinstance(source.get("row"), int) or not isinstance(source.get("column"), int)
+            or not isinstance(span, list) or len(span) != 2
+            or not all(isinstance(position, int) for position in span)
+            or span[1] - span[0] != len(candidate["text"])):
+        return None
+    text = normalize_text(candidate["text"], collapse_whitespace=collapse_whitespace)
+    hypothesis = normalize_text(proposal["hypothesis"], collapse_whitespace=collapse_whitespace)
+    if hypothesis != text and hypothesis != text.removesuffix(":").rstrip():
+        return None
+    return (block["native_table_container"], source["table_id"], source["token"],
+            source["row"], source["column"], text)
+
+
+def _published_header_proposals(proposals: list[dict[str, Any]], candidates: dict[str, Any],
+                                *, record: bool, collapse_whitespace: bool) -> list[dict[str, Any]]:
+    origins: dict[tuple[Any, ...], list[dict[str, Any]]] = {}
+    for proposal in proposals:
+        if len(proposal["claims"]) != 1:
+            continue
+        origin = _published_header_origin(candidates[proposal["candidate_id"]], proposal, collapse_whitespace)
+        if origin is not None:
+            origins.setdefault(origin, []).append(proposal)
+    removed: set[int] = set()
+    for copies in origins.values():
+        records = [candidates[item["candidate_id"]]["cell"]["record_id"] for item in copies]
+        if len(records) != len(set(records)):
+            continue  # Two occurrences in one record are still two competing spans.
+        first = min(copies, key=lambda item: (*candidates[item["candidate_id"]]["order"], item["span"][0]))
+        removed.update(id(item) for item in copies if item is not first)
+    if record and origins:
+        for proposal in proposals:
+            candidate = candidates[proposal["candidate_id"]]
+            cell, block = candidate.get("cell", {}), candidate["block"]
+            source = cell.get("source_cell_ref", {})
+            # A project mentioned inside the row's copied scope paragraph is
+            # not a second row label. Require its explicit table/row/column
+            # scope; a bare mention or an independent full label remains a tie.
+            if (candidate["kind"] == "table_cell" and block.get("kind") == "table_body"
+                    and block.get("service_evidence_state") in {"converted", "partial"}
+                    and cell.get("record_id") == block.get("id")
+                    and source.get("block_id") and source.get("text_span")
+                    and proposal["span"] != [0, len(candidate["text"])]
+                    and any(block.get("native_table_container") == origin[0]
+                            and source.get("table_id") == origin[1]
+                            and origin[3] in source.get("scope_rows", [])
+                            and origin[4] in source.get("scope_columns", []) for origin in origins)):
+                removed.add(id(proposal))
+    return [proposal for proposal in proposals if id(proposal) not in removed]
+
+
 def match_units(
     units: list[dict[str, Any]],
     observation: dict[str, Any],
@@ -310,7 +372,7 @@ def match_units(
         pool = [candidate for candidate in candidates if in_page_scope(candidate, pages)]
         kind = unit.get("kind", "text")
         pool = [candidate for candidate in pool if (candidate["kind"] == "image") == (kind == "image")]
-        if kind == "table_cell":
+        if kind in {"table_cell", "table_record"}:
             pool = [candidate for candidate in pool if candidate["kind"] == "table_cell"]
         if kind == "text":
             # A parser may put grid-layout prose into native cells. Its text
@@ -435,15 +497,24 @@ def match_units(
                     for part in parts
                 )
 
+            def converted_container(proposal: dict[str, Any]) -> bool:
+                return any(candidate_map[claim["candidate_id"]]["block"].get("service_evidence_state")
+                           in {"converted", "partial"} for claim in proposal["claims"])
+
             originals = {
                 normalize_text(proposal["hypothesis"], collapse_whitespace=collapse_whitespace)
-                for proposal in proposals if not rendered_copy(proposal)
+                for proposal in proposals if not converted_container(proposal)
             }
             proposals = [
                 proposal for proposal in proposals
                 if not rendered_copy(proposal)
                 or normalize_text(proposal["hypothesis"], collapse_whitespace=collapse_whitespace) not in originals
             ]
+        if not fuzzy and unit.get("kind", "text") in {"text", "table_record"}:
+            proposals = _published_header_proposals(
+                proposals, candidate_map, record=unit.get("kind") == "table_record",
+                collapse_whitespace=collapse_whitespace,
+            )
         return proposals, None
 
     # Resolve unique exact content first; tied references never win by iteration order.

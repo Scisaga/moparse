@@ -1323,7 +1323,7 @@ def score_case(
     record_units = [unit for unit in prepared if unit.get("kind") == "table_record"]
     prepared = [unit for unit in prepared if unit.get("kind") != "table_record"]
     record_locators = [
-        {**unit, "kind": "table_cell", "reference_text": unit["table"]["row_header_path"][-1]}
+        {**unit, "reference_text": unit["table"]["row_header_path"][-1]}
         for unit in record_units if unit.get("table", {}).get("row_header_path")
         and unit.get("table", {}).get("row_binding", {}).get("status") not in {"unresolved", "unknown", "not_annotated"}
     ]

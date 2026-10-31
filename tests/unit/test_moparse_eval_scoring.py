@@ -113,6 +113,105 @@ def test_a_rendered_state_label_without_record_identity_does_not_resolve_a_tie()
     assert result["units"][0]["status"] == "ambiguous"
 
 
+def published_header(identifier, text, *, table="table-a", token="table-a.r1c0", row=1):
+    return block(
+        identifier, kind="table_body", service_evidence_state="converted",
+        native_table_container="service:table:" + table,
+        cells=[{
+            "id": identifier + ":header", "record_id": identifier, "text": text,
+            "is_row_header": True, "final_markdown_span": [100, 100 + len(text)],
+            "source_cell_ref": {"table_id": table, "token": token, "row": row, "column": 0},
+        }],
+    )
+
+
+@pytest.mark.parametrize("kind", ["text", "table_record"])
+@pytest.mark.parametrize("suffix", ["", ":"])
+def test_printed_shared_row_header_is_one_origin_across_records(kind, suffix):
+    text = "Operating results attributable to"
+    obs = observation(published_header("one", text + suffix), published_header("two", text + suffix))
+    result = match_units([dict(unit("group", text, kind=kind), reference_text=text)], obs)
+    assert result["diagnostics"]["group"]["status"] == "localized"
+    assert result["matches"]["group"]["candidate_id"] == "one:header"
+
+
+@pytest.mark.parametrize("difference", ["table", "token", "row", "record", "span", "role", "text"])
+def test_independent_or_unproven_row_header_repetitions_stay_ambiguous(difference):
+    text = "Operating results attributable to"
+    first, second = published_header("one", text), published_header("two", text)
+    cell = second["cells"][0]
+    if difference == "table":
+        second["native_table_container"] = "service:table:other"
+    elif difference in {"token", "row"}:
+        cell["source_cell_ref"][difference] = "other" if difference == "token" else 7
+    elif difference == "record":
+        cell["record_id"] = "unrelated"
+    elif difference == "span":
+        cell.pop("final_markdown_span")
+    elif difference == "role":
+        cell.pop("is_row_header")
+    else:
+        cell["text"] += " (continued)"
+        cell["final_markdown_span"][1] += len(" (continued)")
+    result = match_units([dict(unit("group", text), reference_text=text)], observation(first, second))
+    assert result["diagnostics"]["group"]["status"] == "ambiguous"
+
+
+def test_repeating_a_shared_header_twice_inside_one_record_remains_ambiguous():
+    text = "Operating results attributable to"
+    one = published_header("one", text)
+    repeated = copy.deepcopy(one["cells"][0])
+    repeated["id"] = "second-header"
+    repeated["final_markdown_span"] = [200, 200 + len(text)]
+    one["cells"].append(repeated)
+    result = match_units([dict(unit("group", text), reference_text=text)], observation(one))
+    assert result["diagnostics"]["group"]["status"] == "ambiguous"
+
+
+@pytest.mark.parametrize("difference", [None, "other-table", "outside-scope", "no-scope", "whole-cell"])
+def test_record_locator_distinguishes_its_row_header_from_a_scoped_prose_mention(difference):
+    text = "Nuclear power equipment production line"
+    header = published_header("one", text)
+    context = rendered_repetition("two", "Proceeds will fund " + text + " and other equipment.")
+    context["native_table_container"] = header["native_table_container"]
+    cell = context["cells"][0]
+    cell["source_cell_ref"] = {
+        "table_id": "table-a", "block_id": "intro", "text_span": [0, len(cell["text"])],
+        "scope_rows": [1, 2], "scope_columns": [0, 1],
+    }
+    if difference == "other-table":
+        context["native_table_container"] = "service:table:other"
+    elif difference == "outside-scope":
+        cell["source_cell_ref"]["scope_rows"] = [7]
+    elif difference == "no-scope":
+        cell["source_cell_ref"].pop("scope_rows")
+    elif difference == "whole-cell":
+        cell["text"] = text
+    result = match_units([dict(unit("record", text, kind="table_record"), reference_text=text)],
+                         observation(header, context))
+    if difference is None:
+        assert result["matches"]["record"]["candidate_id"] == "one:header"
+    else:
+        assert result["diagnostics"]["record"]["status"] == "ambiguous"
+
+
+def test_scoring_record_order_uses_the_printed_row_label_beside_its_copied_scope():
+    text = "Nuclear power equipment production line"
+    intro = "Proceeds will fund " + text + " and other equipment."
+    header = published_header("record", text)
+    context = {"id": "scope", "record_id": "record", "text": intro,
+               "source_cell_ref": {"table_id": "table-a", "block_id": "intro", "text_span": [0, len(intro)],
+                                   "scope_rows": [1], "scope_columns": [0]}}
+    header["cells"].insert(0, context)
+    result = score_case(case(
+        unit("intro", intro), unit("project", text, kind="table_record",
+                                  table={"row_header_path": [text], "fields": []}),
+        relations=[{"type": "before", "source": "intro", "target": "project", "status": "confirmed"}],
+    ), observation(block("intro", intro), header))
+    assert result["units"][1]["label_match"]["candidate_id"] == "record:header"
+    assert result["relations"][0]["correct"] is True
+
+
 def record_case(value: str = "100", **table_extra):
     return case(unit(
         "record", "营业收入：2024年100；2023年200。", kind="table_record",
