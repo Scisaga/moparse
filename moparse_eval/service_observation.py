@@ -34,13 +34,13 @@ from app.services.table_service import (
 )
 
 from .adapters import html_cells, markdown_cells
-from .information_reading import unit_scope_literal
+from .information_reading import unit_scope_literal, units
 from .native_relations import native_relations
 from .representations import visible_text
 
 SERVICE_OBSERVATION_VERSION = "mo-parse-final-output-observation-v7"
 FINAL_PAGE_PROVENANCE_VERSION = "mo-parse-final-page-provenance-v1"
-FINAL_OBSERVATION_READBACK_VERSION = "mo-parse-final-output-readback-v13"
+FINAL_OBSERVATION_READBACK_VERSION = "mo-parse-final-output-readback-v14"
 _METADATA_KEYS = {"run_id", "suite", "phase", "repetition", "timing", "resources", "runtime"}
 _IDENTITY_HEADER = re.compile(
     r"(?:[\u3400-\u9fff]{0,12}(?:名称|名稱|姓名)|项目|項目|认购方|認購方|认购对象|認購對象|"
@@ -51,11 +51,12 @@ _ORDINAL_HEADER = re.compile(r"序号|序號|No\.?|Number|Index", re.I)
 
 
 def _printed_unit_scope(text: str) -> bool:
-    """An explicit currency-unit caption is a unit, not a business title."""
+    """Read unit evidence visibly printed in this record's declared scope."""
     return unit_scope_literal(text) or bool(re.fullmatch(
         r"\s*[（(]?\s*(?:货币|貨幣)(?:单位|單位)\s*[:：]\s*[^()（）:：；;]+\s*[)）]?\s*",
         text,
-    ))
+    )) or bool(re.search(r"(?:following\s+table|下表|本表).*(?:percent(?:age)?|单位|單位)", text, re.I)
+               and (units(text) or re.search(r"expressed\s+as\s+a\s+percentage|占收入百分比", text, re.I)))
 
 
 def _physical_lines(text: str) -> list[str]:

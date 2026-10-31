@@ -482,9 +482,15 @@ def prepare_native_table_scopes(result: DocumentParseResult) -> None:
                     continue
                 elif (prior.get("type") in {"text", "paragraph", "list"}
                       and not _TABLE_MARKUP.search(value)
-                      and (_unit_caption(value) is not None or re.search(
-                          r"(?:following\s+table|下表|本表).*(?:percent(?:age)?|单位|單位)", value, re.I))):
+                      and _unit_caption(value) is not None):
                     preceding.append((previous, value, "unit"))
+                elif (prior.get("type") in {"text", "paragraph", "list"}
+                      and not _TABLE_MARKUP.search(value) and re.search(
+                          r"(?:following\s+table|下表|本表).*(?:percent(?:age)?|单位|單位)", value, re.I)):
+                    # An explicit description of this table's metric is
+                    # business scope, including for values already printed
+                    # with a unit. Do not suppress it as a redundant legend.
+                    preceding.append((previous, value, "title"))
                 elif (prior.get("type") in {"text", "paragraph", "list"} and not _TABLE_MARKUP.search(value)
                       and value.rstrip().endswith((":", "："))
                       and re.search(r"\bfollowing\b|如下|下表|本表", value, re.I)):

@@ -701,6 +701,69 @@ def test_only_an_explicit_adjacent_introduction_becomes_a_record_scope(intro, ex
     assert ("范围：" + intro in text) == expected
 
 
+@pytest.mark.parametrize("kind", ["text", "paragraph", "list"])
+def test_a_declared_table_metric_is_scope_even_when_values_already_print_percent(kind):
+    from app.services.table_context_service import prepare_native_table_scopes
+
+    result, _, _ = continuation_result()
+    f = table([["Item", "2034", "2033"], ["Starting balance", "100%", "100%"],
+               ["Expense", "17.0", "11.0"], ["Net balance", "83%", "89%"]])
+    intro = "The following table presents balances expressed as a percentage of total assets."
+    result._table_fragments = [f]
+    result._native_page_blocks = {1: [{"type": kind, "content": intro}, {"type": "table", "content": []}]}
+    prepare_native_table_scopes(result)
+    view = bind_table_view("view", [f], [f])
+    text = render_semantic_view(view, [f])
+    assert view.status == "converted"
+    assert all([ref.text for ref in record.scope_refs] == [intro] for record in view.records)
+    assert f"范围：{intro}；Item：Starting balance；2034：100%；2033：100%" in text
+    assert f"范围：{intro}；Item：Expense；2034：17.0；2033：11.0" in text
+    assert f"范围：{intro}；Item：Net balance；2034：83%；2033：89%" in text
+    assert "单位：" + intro not in text
+    from app.models.parse_result import DocumentParseResult, PageParseResult, ParsePipeline
+    from moparse_eval.matching import match_units
+    from moparse_eval.scoring import _score_records
+    from moparse_eval.service_observation import build_service_observation, read_final_observation
+
+    published = DocumentParseResult(document_id="authored", filename="authored.pdf", mime_type="application/pdf",
+                                    page_count=1, processed_pages=1, markdown=text,
+                                    pages=[PageParseResult(page_number=1, content=text)],
+                                    pipeline=ParsePipeline(profile="accurate", primary="mineru"))
+    published._table_fragments, published._semantic_tables = [f], [view]
+    observed, _ = read_final_observation(build_service_observation(published, sample_id="authored"))
+    target = {"id": "scoped-ratio", "kind": "table_record", "pages": [1],
+              "table": {"row_header_path": ["Expense"], "fields": [
+                  {"column_header_path": ["2034"], "value": "17.0", "unit": "%"},
+                  {"column_header_path": ["2033"], "value": "11.0", "unit": "%"}]}}
+    _, metrics = _score_records([target], observed, True, match_units([target], observed))
+    assert metrics["target_fields"] == metrics["information_correct_fields"] == 2
+
+
+@pytest.mark.parametrize("intro", ["The committee discussed percentage changes.",
+                                  "Percentage illustrations are mentioned elsewhere in this report."])
+def test_an_ordinary_printed_scope_cannot_supply_a_percentage_unit(intro):
+    from app.models.parse_result import DocumentParseResult, PageParseResult, ParsePipeline
+    from moparse_eval.matching import match_units
+    from moparse_eval.scoring import _score_records
+    from moparse_eval.service_observation import build_service_observation, read_final_observation
+
+    f = table([["Item", "2034"], ["Expense", "17.0"]])
+    f.context_refs = (TextRef("native", 1, "scope", intro, "title", 0, len(intro), (1,), (0, 1)),)
+    view = bind_table_view("view", [f], [f])
+    text = render_semantic_view(view, [f])
+    result = DocumentParseResult(document_id="authored", filename="authored.pdf", mime_type="application/pdf",
+                                 page_count=1, processed_pages=1, markdown=text,
+                                 pages=[PageParseResult(page_number=1, content=text)],
+                                 pipeline=ParsePipeline(profile="accurate", primary="mineru"))
+    result._table_fragments, result._semantic_tables = [f], [view]
+    observed, _ = read_final_observation(build_service_observation(result, sample_id="authored"))
+    target = {"id": "unqualified-ratio", "kind": "table_record", "pages": [1],
+              "table": {"row_header_path": ["Expense"], "fields": [
+                  {"column_header_path": ["2034"], "value": "17.0", "unit": "%"}]}}
+    _, metrics = _score_records([target], observed, True, match_units([target], observed))
+    assert metrics["information_correct_fields"] == 0 and metrics["information_incorrect_fields"] == 1
+
+
 def test_retained_unnamed_row_cannot_borrow_a_section_after_its_explicit_close():
     from app.services.table_semantics_service import retained_table_parts
 
