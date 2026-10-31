@@ -2,6 +2,8 @@
 
 本次输出优化必须以`pdf_sample/parsing/expected/`中的现有expected为唯一验收标准。直接对照expected与被测实际输出，不查看原PDF图片裁决，不使用原图参考排除决定，不生成另一套答案，也不以原图理由改判或豁免差异。评分索引和已有1,726个字段仅是部分检查项，不能代替expected全部业务内容。完整规则见[当前验收标准](../benchmark/evaluation-tasks.md#current-task-expected-only)，续做使用[任务提示词](../docs/engineering/prompts/expected-output-optimization.md)。
 
+检查和判分必须由同一程序对所有管线执行，统一expected范围、业务目标、分母、等价规则、异常政策及冻结评分版本。人工阅读用于诊断程序缺陷，不提供正式成绩或验收决定。不同格式可有忠实读取器，不能按管线身份设评分例外；共同修正后全部受影响组统一重评。八组原生结果横向比较，P07/P08后处理前后最终正文另作配对比较；评分器补读收益与实际正文改善分别报告，不将后处理结果与其他组原生结果混排。
+
 本轮八组已按[冻结执行身份](../benchmark/execution-lock.json)各完成quality800一次和perf80三轮，原MO服务恢复完成。[原生比较报告](../benchmark/reports/20261026-lite-v3/report.md)的评分完成状态、采用结论与限制由[评测索引](../benchmark/reports/README.md)维护，执行完成不代表质量已完成判定。TTS按2026-10-26授权仅观测、不控制，先前撤回测量不恢复；自动评分不构成语料重新验收。协议由[评测标准](../benchmark/evaluation-tasks.md)维护，配置身份由[八管线计划](../benchmark/pipelines-to-test.md)维护，修复及验证边界见[执行层诊断](../benchmark/diagnostics/README.md)。
 
 原件、Lite/Full数据包、冻结参考和作者标注保持原样，不重新生成或机械复核。Full不启动推理。GLM rotary、Paddle颜色接线、旋转路由与异常隔离已修复，并补足Paddle逐区域生成观测。八组在[当前工程预检02](../benchmark/reports/20261026-repaired-preflight-02/)共完成88项任务，其中64项独立单页标定全部成功；[执行就绪记录](../benchmark/reports/20261026-repaired-preflight-02/execution-readiness.json)保留实际配置、超时依据和Graph证据，并为本次冻结锁提供执行依据。这些记录只说明所测范围的执行就绪，不是页面质量评分或语料验收。
@@ -56,6 +58,8 @@ Paddle原生服务使用单个长期owner线程统一初始化、推理与关闭
 现有读取实现采用`mo-parse-eval-information-v5`，当前必须执行的expected唯一标准见[评测任务](../benchmark/evaluation-tasks.md#current-task-expected-only)。每个业务目标只判正确或错误，expected完整内容完成对照后才能宣布本任务验收完成；评分器读取故障须先修复。`service_evaluation prepare --previous-run <旧运行>`只接纳同一原生输入、参考声明和已冻结执行身份的修改前候选，读取原样保存的最终正文；候选worker不挂载旧结果或参考。评分冻结可单独更新只用于分析的共同读取与报告模块，实际适配、后处理、app及依赖仍须与执行冻结一致；必须同步重评原生、修改前和修改后输出，不能复用旧分数。`prepare --rescore-native`允许在共同评分规则已修改时先准备候选回放；只放行评分模块差异，原生格式读取及依赖仍须一致，实际评分继续要求八组原生评分索引与当前完整软件身份一致，不能引用准备时的旧成绩。`python -m moparse_eval.table_context_report`逐项列出新增正确、原正确项损失及单位、期间、附注退化；这些接口说明不代表现有代码已经完成expected-only切换。
 
 代码验证使用`python -m pytest -q tests/unit tests/test_markdown_policy.py moparse_eval/tests`。其中`test_information_context.py`覆盖单位、年度、分组和脚注正反例，`test_native_table_context.py`覆盖原生结构与局部转换，`test_moparse_eval_service_observation.py`覆盖实际正文读取及未渲染内部关系不得计分。它们使用受控合成材料，与对照expected的实际输出验收及运行成本分别记录；通过代码测试不代表expected中的业务内容已经验收。
+
+`tests/unit/test_moparse_eval_pipeline_fairness.py`使用合成HTML与GFM正反例，把完全相同的候选分别标为P01-P08，要求全部判分和证据一致，覆盖年份交换、单位错误、符号错误及目标缺失，且参考与候选不被改写。它约束管线身份不能改变共同判分，不替代八组真实产物的统一评分或expected内容覆盖。
 
 最终正文读回支持来源注释后独立保留的完整单位段落，避免该段落截断后面的已打印记录。只有实际存在、具有本表来源身份且内容为完整单位的段落可延长范围；普通段落、裸数值或缺少所属注释的单位不能据此接入后文。字段与限定成绩仍取自记录实际打印的文字，不用私有单元格补答案；没有独立单位段落的已保存记录也按同一实际输出读取。
 
