@@ -37,10 +37,13 @@ from app.utils.deadline import remaining_timeout
 
 _ID = re.compile(r"[A-Za-z0-9_.-]{1,240}\Z")
 _PERIOD = re.compile(r"报告期|同期|年度|期末|年末|月末|\d{4}\s*年|(?<!\d)(?:19|20)\d{2}(?!\d)")
-_UNIT = re.compile(r"[（(][^()（）]*(?:元|股|%|％)[^()（）]*[）)]")
 _NUMBER = re.compile(r"[+\-−]?(?:\d[\d,.]*(?:%|％)?|[—–-])\Z")
-_RATIO_HEADER = re.compile(r"[%％‰]|同比|佔|占|比例|比率|percent|change|ratio|rate", re.I)
+_RATIO_HEADER = re.compile(r"[%％‰]|同比|增减率|增減率|比上年(?:末|同期)?增[减減]|佔|占|比例|比率|percent|change|ratio|rate", re.I)
 _AMOUNT_HEADER = re.compile(r"金额|金額|余额|餘額|额度|額度|\bAmount\b|\bBalance\b", re.I)
+_REFERENCE_HEADER = re.compile(
+    r"附注|附註|注释|註釋|备注|備註|序号|序號|编号|編號|代码|代碼|"
+    r"Notes?|Note\s+references?|References?|Ref\.?|Index|No\.?|ID|Code", re.I,
+)
 
 
 def _compact(value: str) -> str:
@@ -234,7 +237,7 @@ def _relation(
         value=value,
         row_headers=rows,
         column_headers=columns,
-        unit_refs=tuple(r for r in labels if _UNIT.search(registry[r].text) or any(
+        unit_refs=tuple(r for r in labels if any(
             unit_description(part[0]) for part in re.finditer(r"[（(][^()（）]+[)）]", registry[r].text))),
         period_refs=tuple(r for r in labels if _PERIOD.search(registry[r].text)),
         # A bound grid and empty parser text do not independently declare a
@@ -260,15 +263,40 @@ def _record_refs(record: SemanticRecord) -> set[CellRef]:
     return {ref for ref in references if isinstance(ref, CellRef)}
 
 
+def _consumed_cells(fragment: TableFragment, records: Sequence[SemanticRecord]) -> set[CellRef]:
+    """Cover literal references and only their explicitly empty source anchors."""
+    consumed = {ref for record in records for ref in _record_refs(record)
+                if ref.table_id == fragment.fragment_id}
+    group_rows = {ref.row for record in records for ref in record.row_groups
+                  if ref.table_id == fragment.fragment_id}
+    for record in records:
+        subject = record.subject
+        if (record.source_table_id == fragment.fragment_id and subject is not None
+                and fragment.native_evidence.get("retained_row_context", {}).get(str(record.source_row))
+                == [subject.row, subject.column]):
+            group_rows.add(subject.row)
+            consumed.update(_ref(fragment, c) for c in fragment.cells
+                            if c.row == record.source_row and c.column == subject.column and not c.text.strip())
+    consumed.update(_ref(fragment, c) for c in fragment.cells if c.row in group_rows and not c.text.strip())
+    for scope in fragment.source_header_scopes:
+        rows = scope.get("header_rows", [])
+        if scope.get("complete") and any(ref.row in rows for ref in consumed):
+            consumed.update(_ref(fragment, c) for c in fragment.cells if c.row in rows and not c.text.strip())
+    return consumed
+
+
 def _qualify_relation(fragment: TableFragment, relation: ValueRelation,
                       registry: dict[Any, Any]) -> ValueRelation:
     from app.services.table_context_service import scalar
     cell = registry[relation.value]
     labels = [registry[r].text for r in relation.column_headers]
-    amount_slot = scalar(cell.text) or (
+    reference_field = any(_REFERENCE_HEADER.fullmatch(text.strip().rstrip(":：")) for text in labels)
+    amount_slot = not reference_field and (scalar(cell.text) or (
         not cell.text.strip() and any(_AMOUNT_HEADER.search(text) for text in labels)
-    )
-    unit_refs = list(relation.unit_refs)
+    ))
+    # A numeric note reference, index or code is not a monetary measurement,
+    # even beneath a shared currency band. Its literal and column label stay.
+    unit_refs = [] if reference_field else list(relation.unit_refs)
     period_refs = list(relation.period_refs)
     notes = []
     ratio = any(_RATIO_HEADER.search(text) for text in labels)
@@ -279,10 +307,18 @@ def _qualify_relation(fragment: TableFragment, relation: ValueRelation,
     if amount_slot and not own_unit and not own_per_share and not ratio and not unit_refs:
         active_headers = {r for scope in fragment.source_header_scopes if cell.row in scope.get("body_rows", [])
                           for r in scope.get("header_rows", [])}
-        corner = next((c for c in fragment.cells if c.column == 0 and c.row in active_headers
-                       and re.fullmatch(r"[（(]?(?:人民币|人民幣)?(?:百万元|百萬元|千元|万元|萬元|元)[)）]?", c.text.strip())), None)
-        if corner:
-            unit_refs.append(_ref(fragment, corner))
+        header_table = fragment.fragment_id
+        inherited = (fragment.pdf_evidence.get("inherited_header_scope")
+                     or fragment.native_evidence.get("inherited_header_scope", {}))
+        if inherited.get("complete") and cell.row in inherited.get("body_rows", []):
+            active_headers = set(inherited.get("header_rows", []))
+            header_table = inherited.get("source_table_id", "")
+        corner = next((ref for ref, c in registry.items()
+                       if isinstance(ref, CellRef) and ref.table_id == header_table and ref.column == 0
+                       and ref.row in active_headers and re.fullmatch(
+                           r"[（(]?(?:人民币|人民幣)?(?:百万元|百萬元|千元|万元|萬元|元)[)）]?", c.text.strip())), None)
+        if corner is not None:
+            unit_refs.append(corner)
     for ref in fragment.context_refs:
         if cell.row not in ref.body_rows or cell.column not in ref.columns:
             continue
@@ -388,7 +424,8 @@ def _bind_fragment(
                 continue
             headers_by_row[row] = fragment, headers, scope
 
-    inherited = fragment.pdf_evidence.get("inherited_header_scope", {})
+    inherited = (fragment.pdf_evidence.get("inherited_header_scope")
+                 or fragment.native_evidence.get("inherited_header_scope", {}))
     inherited_source = fragments.get(inherited.get("source_table_id"))
     inherited_groups = inherited.get("source_column_groups", [])
     if inherited.get("complete") and inherited_source is not None:
@@ -473,6 +510,19 @@ def _bind_fragment(
             issues.append((row, "invalid_row_header_scope"))
             continue
         labels = [c for c in cells if set(range(c.column, c.column + c.column_span)).intersection(row_columns)]
+        contextual_subject = False
+        context = fragment.native_evidence.get("retained_row_context", {}).get(str(row))
+        if (fragment.native_evidence.get("content_kind") == "data_table" and row_columns == [0]
+                and len(labels) == 1 and not labels[0].text.strip()
+                and labels[0].row == row and labels[0].row_span == labels[0].column_span == 1
+                and isinstance(context, list) and len(context) == 2):
+            parent = registry.get(CellRef(fragment.fragment_id, *context))
+            if parent is not None and parent.row < row and parent.text.strip() and parent.column == 0:
+                # The printed section owns these otherwise unnamed values.
+                # Repeat its exact label without inventing Total/Subtotal,
+                # calculating an answer or borrowing another table's name.
+                labels = [parent]
+                contextual_subject = True
         from app.services.table_context_service import identity_header
         summary_stub = (
             fragment.native_evidence.get("content_kind") == "data_table" and row_columns == [1]
@@ -487,13 +537,13 @@ def _bind_fragment(
             # The printed total spans the ordinal and name fields, not a
             # measurement. It is a summary label, never a person's name.
             row_columns = [0, 1]
-        if (not labels or any(not c.text.strip() for c in labels)
+        if not contextual_subject and (not labels or any(not c.text.strip() for c in labels)
                 or any(not set(range(c.column, c.column + c.column_span)).issubset(row_columns) for c in labels)
                 or {col for c in labels for col in range(c.column, c.column + c.column_span)} != set(row_columns)):
             issues.append((row, "unresolved_row_subject"))
             continue
         subject, groups = labels[-1], labels[:-1]
-        label_paths = [] if summary_stub else [path_for(label) for label in labels]
+        label_paths = [] if summary_stub or contextual_subject else [path_for(label) for label in labels]
         if any(path is None for path in label_paths):
             issues.append((row, "subject_crosses_header_columns"))
             continue
@@ -512,7 +562,7 @@ def _bind_fragment(
                 key = tuple(h.text.strip() for h in candidate_path if not unit_description(h.text))
                 path_counts[key] = path_counts.get(key, 0) + 1
         for cell in cells:
-            if cell in labels:
+            if cell in labels or contextual_subject and cell.column in row_columns:
                 continue
             if (cell.row != row or cell.row_span != 1) and not native_scope:
                 reason = "value_span_crosses_records"
@@ -574,19 +624,7 @@ def _bind_fragment(
             break
         records = [record for record in records if record.source_row not in unsafe]
         issues.extend((r, "row_span_crosses_unresolved_region") for r in sorted(unsafe))
-    consumed = {ref for record in records for ref in _record_refs(record)
-                if ref.table_id == fragment.fragment_id}
-    group_rows = {ref.row for record in records for ref in record.row_groups
-                  if ref.table_id == fragment.fragment_id}
-    consumed.update(_ref(fragment, c) for c in fragment.cells if c.row in group_rows and not c.text.strip())
-    # Empty span/header anchors have no literal to drop, but remain structural
-    # coverage only when the entire header band is actually used by a record.
-    used_headers = {ref.row for ref in consumed if ref.row in header_rows}
-    for scope in fragment.source_header_scopes:
-        rows = scope.get("header_rows", [])
-        if scope.get("complete") and used_headers.intersection(rows):
-            consumed.update(_ref(fragment, c) for c in fragment.cells
-                            if c.row in rows and not c.text.strip())
+    consumed = _consumed_cells(fragment, records)
     return _FragmentBinding(records, consumed, issues)
 
 
@@ -621,6 +659,8 @@ def bind_table_view(
     }
     header_positions.update((f.fragment_id, int(position[0])) for f in group
                             for position in f.native_evidence.get("row_groups", {}).values())
+    header_positions.update((f.fragment_id, int(position[0])) for f in group
+                            for position in f.native_evidence.get("retained_row_context", {}).values())
     while True:
         missing = expected - covered
         retained_rows = {(ref.table_id, row) for ref in missing
@@ -638,16 +678,7 @@ def bind_table_view(
             break
         records = [record for record in records
                    if (record.source_table_id, record.source_row) not in unsafe]
-        covered = {ref for record in records for ref in _record_refs(record)
-                   if ref in expected}
-        for fragment in group:
-            for scope in fragment.source_header_scopes:
-                rows = scope.get("header_rows", [])
-                if scope.get("complete") and any(
-                    ref.table_id == fragment.fragment_id and ref.row in rows for ref in covered
-                ):
-                    covered.update(_ref(fragment, c) for c in fragment.cells
-                                   if c.row in rows and not c.text.strip())
+        covered = {ref for fragment in group for ref in _consumed_cells(fragment, records) if ref in expected}
         issues.extend((identity, row, "shared_reference_crosses_unresolved_region")
                       for identity, row in sorted(unsafe))
         reasons = tuple(dict.fromkeys((*reasons, "incomplete_source_cell_coverage")))

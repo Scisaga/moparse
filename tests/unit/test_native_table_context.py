@@ -280,17 +280,207 @@ def test_currency_values_and_currency_business_names_do_not_override_column_scal
     assert "Code$m：5%" in render_semantic_view(bind_table_view("view", [f], [f]), [f])
 
 
-def test_retained_unnamed_row_keeps_its_explicit_section_without_claiming_a_total():
-    from app.services.table_semantics_service import retained_table_parts
-
+def test_unnamed_values_repeat_their_printed_section_without_claiming_a_total():
     f = table([["Item", "2024"], ["Expenses", ""], ["Research", "17"],
                ["", "17"], ["Net income", "11"]])
+    before = deepcopy(f)
     view = bind_table_view("view", [f], [f])
-    part = next(p for p in retained_table_parts(view, [f]) if 3 in p["source_rows"])
-    assert part["context_rows"] == [1]
-    assert "Expenses" in part["rendered"] and "17" in part["rendered"]
-    assert "Research" not in part["rendered"] and "Total" not in part["rendered"]
+    text = render_semantic_view(view, [f])
+    assert "- Expenses；2024：17。" in text and "Total" not in text
+    assert view.status == "converted" and f == before
+    assert view.records[1].source_row == 3 and view.records[1].subject.row == 1
     assert view.records[-1].row_groups == ()
+
+
+def test_full_width_context_supplies_a_label_but_not_an_invented_total_role():
+    f = table([["Item", "2024", "Change"], ["Expenses", "", ""], ["Research", "17", "5%"],
+               ["", "17", "5%"], ["Net income", "11", "7%"]])
+    group = next(c for c in f.cells if (c.row, c.column) == (1, 0))
+    group.column_span = 3
+    f.cells = [c for c in f.cells if c.row != 1 or c.column == 0]
+    f.native_evidence = native_scopes(f)
+    f.source_header_scopes = f.native_evidence["header_scopes"]
+    view = bind_table_view("view", [f], [f])
+    text = render_semantic_view(view, [f])
+    assert "- Expenses；2024：17；Change：5%。" in text
+    assert "Expenses / Net income" not in text and "Total" not in text
+    assert view.status == "converted"
+
+
+def test_an_unnamed_row_without_a_printed_section_keeps_its_original_values():
+    f = table([["Item", "2024"], ["First payment", "$1.70"], ["Second payment", "$1.10"], ["", "$2.80"]])
+    view = bind_table_view("view", [f], [f])
+    assert view.status == "partial" and [r.source_row for r in view.records] == [1, 2]
+    assert "$2.80" in render_semantic_view(view, [f])
+    assert not f.native_evidence["retained_row_context"]
+
+
+@pytest.mark.parametrize("bullet", ["-", "–", "—", "•"])
+@pytest.mark.parametrize("label", ["Income from:", "Non-audit services"])
+def test_literal_bulleted_child_list_ends_before_the_next_unmarked_record(bullet, label):
+    f = table([["Item", "2024"], [label, ""], [bullet + " Deposits", "17"],
+               [bullet + " Securities", "11"], ["Total income", "28"], ["Average balance", "7"]])
+    view = bind_table_view("view", [f], [f])
+    assert all(r.row_groups for r in view.records[:2])
+    assert all(not r.row_groups for r in view.records[2:])
+    assert "Income from: / Average balance" not in render_semantic_view(view, [f])
+
+
+@pytest.mark.parametrize("group,child", [("Financial assets", "Cash"), ("Financial assets:", "Cash")])
+def test_an_unmarked_section_does_not_acquire_an_invented_bullet_boundary(group, child):
+    f = table([["Item", "2024"], [group, ""], [child, "17"], ["Investments", "11"]])
+    view = bind_table_view("view", [f], [f])
+    assert all(r.row_groups for r in view.records)
+
+
+def test_a_later_bullet_does_not_reinterpret_an_unmarked_parent_section():
+    f = table([["Item", "2024"], ["Financial assets", ""], ["Cash", "17"],
+               ["- Restricted cash", "11"], ["Investments", "7"]])
+    view = bind_table_view("view", [f], [f])
+    assert all(r.row_groups for r in view.records)
+
+
+@pytest.mark.parametrize("label", ["附注", "附註", "Notes", "Note references", "序号", "Index", "Code"])
+def test_table_currency_does_not_turn_a_note_reference_or_identifier_into_an_amount(label):
+    f = table([["(人民币百万元)", label, "2024", "2023"], ["Revenue", "8", "1700", "1100"]])
+    view = bind_table_view("view", [f], [f])
+    record = view.records[0]
+    assert not record.values[0].unit_refs
+    assert record.values[1].unit_refs and record.values[2].unit_refs
+    text = render_semantic_view(view, [f])
+    assert label + "：8；2024：1700（单位：(人民币百万元)）" in text
+
+
+def test_a_column_with_a_measurement_name_still_owns_its_unit():
+    f = table([["(人民币百万元)", "Notes payable", "2024"], ["Alpha", "17", "11"]])
+    record = bind_table_view("view", [f], [f]).records[0]
+    assert record.values[0].unit_refs and record.values[1].unit_refs
+
+
+@pytest.mark.parametrize("caption", ["（货币单位:人民币百万元）", " (貨幣單位：人民幣百萬元) ", "单位：人民币百万元"])
+def test_wrapped_currency_declaration_keeps_its_literal_native_slice(caption):
+    from app.services.table_context_service import _unit_caption
+
+    unit, start = _unit_caption(caption)
+    assert caption[start:start + len(unit)] == unit
+    assert unit in {"人民币百万元", "人民幣百萬元"}
+    assert _unit_caption("（货币单位：承运企业）") is None
+
+
+def continuation_result():
+    from app.models.parse_result import DocumentParseResult, PageParseResult, ParsePipeline
+
+    left = table([["Item", "2034", "2033", "Change"], ["Before", "17", "11", "5%"]], "left")
+    right = table([["After", "19", "13", "6%"]], "right")
+    right.page_number = 2
+    right.source_continues_prev = True
+    result = DocumentParseResult(document_id="synthetic", filename="synthetic.pdf", mime_type="application/pdf",
+                                 page_count=2, processed_pages=2,
+                                 pipeline=ParsePipeline(profile="accurate", primary="mineru"),
+                                 pages=[PageParseResult(page_number=1, content=left.rendered),
+                                        PageParseResult(page_number=2, content=right.rendered)])
+    result._table_fragments = [left, right]
+    result._native_page_blocks = {1: [{"type": "table", "content": [
+        {"type": "table_caption", "content": "（货币单位:人民币百万元）"}]}],
+                                 2: [{"type": "table", "content": []}]}
+    return result, left, right
+
+
+def test_declared_native_continuation_keeps_complete_headers_units_and_physical_cells():
+    from app.services.table_context_service import prepare_native_table_scopes
+
+    result, left, right = continuation_result()
+    before = deepcopy((left.rows, left.cells, right.rows, right.cells))
+    prepare_native_table_scopes(result)
+    view = bind_table_view("view", [right], [left, right])
+    assert view.status == "converted"
+    text = render_semantic_view(view, [left, right])
+    assert "After；2034：19（单位：人民币百万元）；2033：13（单位：人民币百万元）；Change：6%。" in text
+    assert right.source_header_scopes == [] and not right.pdf_evidence
+    assert (left.rows, left.cells, right.rows, right.cells) == before
+    assert view.records[0].values[0].column_headers[0].table_id == "left"
+    unit = view.records[0].values[0].unit_refs[0]
+    assert unit.page == 1 and unit.text == "人民币百万元"
+
+
+@pytest.mark.parametrize("barrier", ["missing_declaration", "false_declaration", "own_headers", "new_caption",
+                                   "new_unit", "intervening_heading", "left_tail", "source_conflict", "column_span",
+                                   "missing_field_path", "arithmetic_boundary"])
+def test_native_continuation_never_borrows_incompatible_or_unresolved_context(barrier):
+    from app.services.table_context_service import prepare_native_table_scopes
+
+    result, left, right = continuation_result()
+    if barrier == "missing_declaration":
+        right.source_continues_prev = None
+    elif barrier == "false_declaration":
+        right.source_continues_prev = False
+    elif barrier == "own_headers":
+        right.source_header_scopes = [{"complete": True, "header_rows": [0], "body_rows": []}]
+    elif barrier == "new_caption":
+        right.caption = "A different scope"
+    elif barrier == "new_unit":
+        result._native_page_blocks[2][0]["content"] = [{"type": "table_caption", "content": "单位：元"}]
+    elif barrier == "intervening_heading":
+        result.pages[1].content = "## A different scope\n\n" + right.rendered
+    elif barrier == "left_tail":
+        result.pages[0].content += "\n\nThe preceding scope has ended."
+    elif barrier == "source_conflict":
+        right.pdf_evidence = {"bound": False, "reason": "source_cell_text_or_spans_disagree"}
+    elif barrier == "column_span":
+        right.cells[1].column_span = 2
+        right.cells = [c for c in right.cells if c.column != 2]
+    elif barrier == "missing_field_path":
+        next(c for c in left.cells if (c.row, c.column) == (0, 2)).text = ""
+    elif barrier == "arithmetic_boundary":
+        left = table([["Item", "2034", "2033", "Change"], ["Profit", "17", "11", "5%"],
+                      ["Add:", "", "", ""], ["Adjustment", "3", "2", "6%"]], "left")
+        result._table_fragments = [left, right]
+        result.pages[0].content = left.rendered
+    prepare_native_table_scopes(result)
+    assert "inherited_header_scope" not in right.native_evidence
+
+
+def test_a_declared_continuation_keeps_the_original_header_corner_unit():
+    from app.models.table_semantics import CellRef
+    from app.services.table_context_service import prepare_native_table_scopes
+
+    result, left, right = continuation_result()
+    next(c for c in left.cells if (c.row, c.column) == (0, 0)).text = "(人民币百万元)"
+    left.rows[0][0] = "(人民币百万元)"
+    result._native_page_blocks[1][0]["content"] = []
+    prepare_native_table_scopes(result)
+    view = bind_table_view("view", [right], [left, right])
+    assert view.records[0].values[0].unit_refs == (CellRef("left", 0, 0),)
+    assert not view.records[0].values[-1].unit_refs
+    assert "2034：19（单位：(人民币百万元)）" in render_semantic_view(view, [left, right])
+
+
+def test_a_continuation_keeps_its_own_note_and_does_not_inherit_an_unreferenced_note():
+    from app.services.table_context_service import prepare_native_table_scopes
+
+    result, left, right = continuation_result()
+    result._native_page_blocks[1][0]["content"].append({"type": "table_footnote", "content": "1 Left-side note."})
+    result._native_page_blocks[2][0]["content"] = [{"type": "table_footnote", "content": "2 Right-side note."}]
+    prepare_native_table_scopes(result)
+    assert bind_table_view("view", [right], [left, right]).status == "converted"
+    assert [ref.text for ref in right.context_refs if ref.kind == "note"] == ["2 Right-side note."]
+    assert right.context_refs[0].body_rows == (0,)
+
+
+@pytest.mark.parametrize("intro,expected", [
+    ("Net income is allocated to the following segments:", True),
+    ("本表各项情况如下：", True),
+    ("An unrelated paragraph mentions net income.", False),
+    ("A preceding example refers to the following paragraphs.", False),
+])
+def test_only_an_explicit_adjacent_introduction_becomes_a_record_scope(intro, expected):
+    from app.services.table_context_service import prepare_native_table_scopes
+
+    result, left, right = continuation_result()
+    result._native_page_blocks[1] = [{"type": "text", "content": intro}, {"type": "table", "content": []}]
+    prepare_native_table_scopes(result)
+    text = render_semantic_view(bind_table_view("view", [left], [left, right]), [left, right])
+    assert ("范围：" + intro in text) == expected
 
 
 def test_retained_unnamed_row_cannot_borrow_a_section_after_its_explicit_close():
@@ -444,7 +634,7 @@ def test_existing_source_scope_owns_amount_caption_when_native_headers_are_uncla
     assert "17%（单位：千元）" not in rendered
 
 
-@pytest.mark.parametrize("header", ["增减%", "Change(%)", "变化（％）"])
+@pytest.mark.parametrize("header", ["增减%", "Change(%)", "变化（％）", "增减率", "增減率", "本年末比上年末增减"])
 def test_percent_only_column_label_does_not_inherit_an_amount_caption(header):
     f = table([["Item", "2024", header], ["Revenue", "170", "11"]])
     f.context_refs = (TextRef("native", 1, "cap", "千元", "unit", 3, 5, (1,), (0, 1, 2)),)
@@ -452,6 +642,64 @@ def test_percent_only_column_label_does_not_inherit_an_amount_caption(header):
     assert "2024：170（单位：千元）" in rendered
     assert header + "：11（单位：千元）" not in rendered
     assert header + "：11。" in rendered
+
+
+def test_ratio_dash_and_empty_amount_slots_keep_distinct_unit_meanings():
+    f = table([["Item", "Amount", "增减率"], ["Cash movement", "", "—"]])
+    f.context_refs = (TextRef("native", 1, "cap", "万元", "unit", 3, 5, (1,), (0, 1, 2)),)
+    view = bind_table_view("view", [f], [f])
+    # A declared source header permits an empty monetary slot without
+    # manufacturing zero; the neighboring rate's dash is still unitless.
+    assert view.records[0].values[0].unit_refs
+    assert not view.records[0].values[1].unit_refs
+    text = render_semantic_view(view, [f])
+    assert "Amount：（单位：万元）" in text and "增减率：—。" in text
+
+
+def test_parenthetical_equity_business_terms_are_not_mistaken_for_units():
+    f = table([["Item", "2034", "本年末比上年末增减"],
+               ["资产处置（包括股权及其他投资）", "17", "—"]])
+    f.context_refs = (TextRef("native", 1, "cap", "万元", "unit", 0, 2, (1,), (0, 1, 2)),)
+    view = bind_table_view("view", [f], [f])
+    text = render_semantic_view(view, [f])
+    assert "2034：17（单位：万元）；本年末比上年末增减：—。" in text
+    assert view.records[0].values[0].unit_refs == f.context_refs
+
+
+def test_an_explicit_share_unit_is_preserved_without_matching_equity_business_words():
+    from app.services.table_context_service import unit_description
+
+    assert unit_description("(股)") and unit_description("(万股)")
+    assert not unit_description("(股权及其他投资)")
+    f = table([["Item", "2034"], ["Issued shares(万股)", "17"]])
+    record = bind_table_view("view", [f], [f]).records[0]
+    assert record.values[0].unit_refs == (record.subject,)
+
+
+@pytest.mark.parametrize("unit", ["人民币十亿元", "港元百萬元", "亿元", "万亿元"])
+def test_explicit_currency_scale_words_keep_precedence_over_a_table_caption(unit):
+    f = table([["Item", "2034$m"], ["Reserve(" + unit + ")", "17"]])
+    f.context_refs = (TextRef("native", 1, "cap", "千元", "unit", 0, 2, (1,), (0, 1)),)
+    view = bind_table_view("view", [f], [f])
+    assert view.records[0].values[0].unit_refs == (view.records[0].subject,)
+    assert "Reserve(" + unit + ")；2034：17。" in render_semantic_view(view, [f])
+    assert "单位：千元" not in render_semantic_view(view, [f])
+
+
+@pytest.mark.parametrize("value", ["≥25", "≤10.5", ">=8.5", "<4", "≧7.5"])
+def test_numeric_limits_keep_their_printed_operator_and_declared_unit(value):
+    f = table([["Item", "Standard", "2034"], ["Liquidity", value, "52.51"]])
+    f.context_refs = (TextRef("native", 1, "cap", "%", "unit", 0, 1, (1,), (0, 1, 2)),)
+    view = bind_table_view("view", [f], [f])
+    assert view.records[0].values[0].unit_refs == f.context_refs
+    text = render_semantic_view(view, [f])
+    assert "Standard：" + value.replace(">", "&gt;").replace("<", "&lt;") + "（单位：%）" in text
+    assert "2034：52.51（单位：%）" in text
+
+
+def test_a_first_numeric_limit_is_data_and_cannot_supply_a_header():
+    f = table([["Liquidity minimum", "≥25"], ["Capital minimum", "≥8.5"]])
+    assert bind_table_view("view", [f], [f]).status == "retained"
 
 
 @pytest.mark.parametrize('name_header', ['认购方', '股东名称', 'Subscriber'])

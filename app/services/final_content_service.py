@@ -24,7 +24,7 @@ _OWNED_COMMENT = re.compile(
 _PAGE = re.compile(r"<!--\s*page:\s*([1-9][0-9]*)\s*-->")
 _CJK = re.compile(r"[\u3400-\u9fff\uf900-\ufaff]")
 _FURNITURE = {"header", "footer", "page_number"}
-_PRODUCTION = re.compile(r"^(PATH|DRAFT|USER|MODIFY|TRANSLATE|EDIT(?:\s+EDIT)*\s+TRACE|LAYOUT|PAGE)\s*:")
+_PRODUCTION = re.compile(r"^(PATH|PART|DRAFT|USER|MODIFY|TRANSLATE|EDIT(?:\s+EDIT)*\s+(?:TRACE|TRADE)|LAYOUT|PAGE)\s*:")
 
 
 def _production_keys(markdown: str) -> set[str]:
@@ -193,8 +193,18 @@ class FinalContentService:
         for number, blocks in native_blocks.items():
             if number not in pages:
                 continue
-            production = {key for block in blocks if block.get("type") == "footer"
+            production = {key for block in blocks if block.get("type") in {"header", "footer"}
                           for key in _production_keys(str(block.get("markdown", "")))}
+            # Confusable field labels qualify only beside several unchanged
+            # production controls. A header additionally needs a path and
+            # layout/edit controls; a business DRAFT label alone stays.
+            controls = production - {"PART", "EDIT TRADE"}
+            production_bundle = len(production) >= 2 and (
+                not production.intersection({"PART", "EDIT TRADE"}) or len(controls) >= 3
+            )
+            production_header = (production_bundle and len(controls) >= 3
+                                 and bool(production.intersection({"PATH", "PART"}))
+                                 and bool(production.intersection({"LAYOUT", "EDIT TRACE", "EDIT TRADE"})))
             for ordinal, block in enumerate(blocks):
                 role = block.get("type")
                 rendered = replacements.get((number, ordinal), block.get("markdown"))
@@ -204,9 +214,10 @@ class FinalContentService:
                 reason = None
                 if role == "page_number" and re.fullmatch(r"[ \t\-–—]*\d{1,5}(?:\s*/\s*\d{1,5})?[ \t\-–—]*", literal):
                     reason = "explicit_page_number"
-                elif (role == "footer" and len(production) >= 2
+                elif (role in {"header", "footer"} and production_bundle
+                      and (role == "footer" or production_header)
                       and _production_keys(str(block.get("markdown", "")))):
-                    reason = "explicit_production_footer"
+                    reason = f"explicit_production_{role}"
                 elif role == "header" and 0 < len(literal) <= 80 and not re.search(r"\d", literal):
                     if literal in header_seen:
                         reason = "repeated_native_header"
@@ -216,9 +227,16 @@ class FinalContentService:
                               and str(getattr(f, "rendered", "")).endswith(rendered)]
                     owned_text = str(getattr(owners[0], "rendered", "")) if len(owners) == 1 else rendered
                     found = _unique(source, owned_text, *pages[number])
+                    if found is None and reason in {"explicit_production_header", "explicit_production_footer"}:
+                        # The same owned export stage strips trailing spaces
+                        # and folds CR/LF before this stage. Match that exact
+                        # producer projection, never an approximate footer.
+                        owned_text = ExportService.normalize_markdown(owned_text)
+                        rendered = ExportService.normalize_markdown(rendered)
+                        found = _unique(source, owned_text, *pages[number])
                     if found:
                         add(*found, "", reason)
-                    elif reason == "explicit_production_footer":
+                    elif reason in {"explicit_production_header", "explicit_production_footer"}:
                         # Source supplementation can repeat this typed footer.
                         # Remove exact standalone copies, never inline business text.
                         a, b = pages[number]

@@ -119,6 +119,19 @@ def test_multiline_production_bundle_in_one_typed_footer_is_removed():
     assert result._native_page_blocks == before
 
 
+def test_a_normalized_owned_footer_keeps_exact_export_ownership():
+    material = ('PATH: /author/layout/report  \n'
+                'DRAFT: First proof | USER: author | MODIFY: 2025-06-03 | '
+                'TRANSLATE: N | EDIT TRACE: None | LAYOUT: Updated Layout  ')
+    result = _result([[_block('text', 'No agreement was signed on 3 June 2025.'), _block('footer', material)]])
+    assert material not in result.markdown
+    FinalContentService().apply(result)
+    assert 'PATH:' not in result.markdown and 'EDIT TRACE:' not in result.markdown
+    assert 'No agreement was signed on 3 June 2025.' in result.markdown
+    assert apply_text_edits(result._final_text_evidence['assembly_markdown'],
+                            result._final_text_evidence['edits']) == result.markdown
+
+
 def test_production_inline_span_fragments_must_belong_to_keys_in_the_same_bundle():
     material = 'PATH: /author/report | TRANSLATE: N | EDIT TRACE: None | EDIT N | LAYOUT: Updated Layout | Layout |'
     result = _result([[_block('text', 'The company did not sign the agreement.'), _block('footer', material)]])
@@ -130,6 +143,29 @@ def test_production_inline_span_fragments_must_belong_to_keys_in_the_same_bundle
 def test_production_field_fragments_do_not_authorize_removing_unknown_footer_words():
     material = 'PATH: /author/report | TRANSLATE: N | EDIT TRACE: None | Layout | Signed on 3 June 2025'
     result = _result([[_block('text', 'A business qualification follows.'), _block('footer', material)]])
+    FinalContentService().apply(result)
+    assert material in result.markdown
+
+
+def test_corrupted_production_keys_in_a_typed_header_require_the_full_control_bundle():
+    material = ('PART: /author/layout/report | PAGE: (4 / 8)\n'
+                'DRAFT: First proof | USER: author | MODIFY: 2025-06-03 | '
+                'TRANSLATE: N | EDIT TRADE: None | LAYOUT: Updated Layout |')
+    result = _result([[_block('header', material), _block('text', 'The company has not signed the agreement.')]])
+    FinalContentService().apply(result)
+    assert material not in result.markdown
+    assert result._final_text_evidence['operation_counts']['explicit_production_header'] == 1
+    assert 'The company has not signed the agreement.' in result.markdown
+
+
+@pytest.mark.parametrize('role,material', [
+    ('header', 'DRAFT: Contract not signed | USER: Client'),
+    ('header', 'PART: Amount payable | PAGE: 4'),
+    ('footer', 'PART: Amount payable | EDIT TRADE: No agreement signed'),
+    ('header', 'PATH: /author/report | USER: author | MODIFY: 2025-06-03\nSigned on 3 June 2025'),
+])
+def test_header_or_footer_business_fields_do_not_become_a_production_bundle(role, material):
+    result = _result([[_block(role, material), _block('text', 'Retain this legal qualification.')]])
     FinalContentService().apply(result)
     assert material in result.markdown
 
