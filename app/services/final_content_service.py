@@ -1,7 +1,7 @@
 """Publish continuous business text, keeping assembly diagnostics out of it.
 
-Only producer-owned markers, explicit pagination, declared continuations and
-literal split currency scales are edited. No inferred fact or model call occurs.
+Only producer-owned markers, explicit pagination, declared continuations,
+literal quantities and split currency scales are edited. No inferred fact or model call occurs.
 The edit ledger preserves exact character provenance for internal consumers.
 """
 
@@ -143,6 +143,22 @@ def _typed_inline_rendering(block: dict[str, Any]) -> str | None:
     return "".join(new) if bold and "".join(old) == block.get("markdown") else None
 
 
+def _literal_quantity_rendering(block: dict[str, Any]) -> str | None:
+    """Keep a native numeric comparison from becoming a Markdown quotation.
+
+    The whole producer text must be the unchanged literal numeric measure.
+    Spaced quotations, prose, code, math and richer typed content stay under
+    their existing rendering; a missing operator is never supplied.
+    """
+    text = block.get("content")
+    if block.get("type") != "text" or not isinstance(text, str) or text != block.get("markdown"):
+        return None
+    unit = (r"(?:[%％‰]|[十百千万萬亿億]*(?:个|個|人|件|座|家|户|戶|台|辆|輛|架|米|平米|平方米|平方公里|吨|噸|股)|"
+            r"m[²³]?|bn|millions?|billions?|units?|people|km|kg|tons?|tonnes?|items?|lots?|shares?)")
+    measure = r">[$€£¥]?[+−-]?\d+(?:,\d{3})*(?:\.\d+)?[ \t]*" + unit
+    return html.escape(text, quote=False) if re.fullmatch(measure, text) else None
+
+
 class FinalContentService:
     """Last text stage after table and image processing, before persistence."""
 
@@ -185,6 +201,11 @@ class FinalContentService:
                     found = _unique(source, original_markdown, *pages[number])
                     if found:
                         add(*found, inline_rendered, "explicit_native_inline_style")
+                literal_quantity = _literal_quantity_rendering(block)
+                if literal_quantity is not None and isinstance(original_markdown, str) and number in pages:
+                    found = _unique(source, original_markdown, *pages[number])
+                    if found:
+                        add(*found, literal_quantity, "explicit_native_quantity_operator")
 
         # A footer date/signature is business content. Only explicit page_number
         # roles and repeated short, nonnumeric headers are eligible for removal.

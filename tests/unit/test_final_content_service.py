@@ -271,6 +271,39 @@ def test_without_native_declaration_no_sentence_is_invented():
     assert '甲公司拟收购乙公司未出售。' not in result.markdown
 
 
+@pytest.mark.parametrize('quantity', ['>23,100件', '>620萬平米', '>23.5%', '>€42m'])
+def test_a_literal_native_numeric_operator_survives_markdown_and_plain_text(quantity):
+    result = _result([[_block('title', 'Existing capacity'), _block('text', quantity)]])
+    native_before = deepcopy(result._native_page_blocks)
+    FinalContentService().apply(result)
+    assert '&gt;' + quantity[1:] in result.markdown
+    assert quantity in result.plain_text.splitlines()
+    assert '\\' + quantity not in result.plain_text
+    assert result._native_page_blocks == native_before
+    assert result._final_text_evidence['operation_counts']['explicit_native_quantity_operator'] == 1
+    assert apply_text_edits(result._final_text_evidence['assembly_markdown'],
+                            result._final_text_evidence['edits']) == result.markdown
+    observed, _ = read_final_observation(build_service_observation(result, sample_id='invented'))
+    assert observed['service_output']['final_markdown'] == result.markdown
+
+
+@pytest.mark.parametrize('text', ['> A deliberate quotation', '> 23 units', '>23',
+                                  '>23日內完成', '>23件尚未结算',
+                                  'The threshold is >23 units.', '`>23units`', r'\(x > 23\)'])
+def test_quantity_display_does_not_reinterpret_quotations_prose_code_or_math(text):
+    result = _result([[_block('text', text)]])
+    FinalContentService().apply(result)
+    assert text in result.markdown
+    assert 'explicit_native_quantity_operator' not in result._final_text_evidence['operation_counts']
+
+
+def test_quantity_display_requires_the_unchanged_native_text_projection():
+    result = _result([[_block('text', '>23units')]])
+    result._native_page_blocks[1][0]['markdown'] = '> A deliberate quotation'
+    FinalContentService().apply(result)
+    assert 'explicit_native_quantity_operator' not in result._final_text_evidence['operation_counts']
+
+
 def test_published_reader_refuses_a_hidden_answer_not_in_final_text():
     result = _result([[_block('text', '已披露金额100万元。')]])
     FinalContentService().apply(result)
