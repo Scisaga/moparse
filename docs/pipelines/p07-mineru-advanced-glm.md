@@ -105,7 +105,7 @@ DocVortex 0.5.16的官方`render._internal.common.planner._merge_continued_table
 
 2026-10-28的服务客户端修复隔离MinerU与GLM已收到的局部格式错误，保留有效邻居、原始块及未知候选；worker官方渲染的局部错误也不再阻断其他块。HTML读取拒绝把多根或嵌套表解释为一张网格，显式sup/sub边界保留。实现与合成证据见[服务保全诊断](../../benchmark/diagnostics/service-postprocessing.md)；这些修改尚未部署，不改变下面研究测量的执行身份或分数。
 
-P07研究执行路径已修复，[P07工程预检02](../../benchmark/reports/20261026-repaired-preflight-02/)独立完成同一清单的11个任务并提供本次冻结依据。本组已完成quality800一次和perf80三轮，八组统一评分、首版报告及原MO服务恢复完成；结果只见[当前统一评测报告](../../benchmark/reports/20261101-preservation-repair-08/report.md)，状态与限制由[评测索引](../../benchmark/reports/README.md)维护。TTS只观测不控制，先前撤回测量不恢复；执行和自动评分完成不构成内容、Gold或图片内容验收。
+P07研究执行路径已修复，[P07工程预检02](../../benchmark/runs/lite/preflight/)独立完成同一清单的11个任务并提供本次冻结依据。本组已完成quality800一次和perf80三轮，八组统一评分、首版报告及原MO服务恢复完成；结果只见[当前统一评测报告](../../benchmark/reports/lite/report.md)，状态与限制由[评测索引](../../benchmark/reports/README.md)维护。TTS只观测不控制，先前撤回测量不恢复；执行和自动评分完成不构成内容、Gold或图片内容验收。
 
 研究执行器显式使用 tier=advanced，实际映射为 xhigh，与 P06 的 Standard/high 不同。共享 GLM 研究分支已采用 native rotary，避开 vLLM 0.19.1 的 GPT-J MRoPE 配对错误；MinerU 主模型的 NeoX 配对不具有同一冲突，不对其套用 GLM 修复。研究路径的旋转坐标交接、分支结果先行保全及局部图片导出隔离已修复；机制证据见[执行层诊断](../../benchmark/diagnostics/README.md)。
 

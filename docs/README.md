@@ -14,7 +14,7 @@
 | 研究什么、如何作判断 | [研究框架](research/research-framework.md) | 解析与转换研究的问题、证据、评价方法及既有有界历史记录 |
 | 使用哪套数据 | [Lite数据包](../datasets/moparse-dataset-v1-lite/README.md) · [Full数据包](../datasets/moparse-dataset-v1-full/README.md) | 资料范围、包内路径、审核状态、未知与开发暴露 |
 | 如何执行和评分 | [评测标准](../benchmark/evaluation-tasks.md) · [评测工具](../moparse_eval/README.md) | 评价单元、分母、字符与关系指标、运行及重生命令 |
-| 查看评测状态 | [当前统一评测报告](../benchmark/reports/20261101-preservation-repair-08/report.md) · [状态与限制](../benchmark/reports/README.md) · [执行层诊断](../benchmark/diagnostics/README.md) | 八组各完成800页一次及80页三轮，统一评分、首版报告与原MO服务恢复完成；TTS仅观测不控制，撤回测量不恢复 |
+| 查看评测状态 | [当前统一评测报告](../benchmark/reports/lite/report.md) · [状态与限制](../benchmark/reports/README.md) · [执行层诊断](../benchmark/diagnostics/README.md) | 八组各完成800页一次及80页三轮，统一评分、首版报告与原MO服务恢复完成；TTS仅观测不控制，撤回测量不恢复 |
 
 ## 解析管线
 

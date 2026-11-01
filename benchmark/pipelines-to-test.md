@@ -2,7 +2,7 @@
 
 本文件定义本轮主对比的8个固定配置，不记录历史成绩，不预先选择优胜方法。数据集、测试任务和评分要求见[评估任务](evaluation-tasks.md)；MinerU内部参数研究见[MinerU调优](mineru-tuning.md)，不增加本表的主比较组数。
 
-本轮八组已按冻结身份各完成quality800一次和perf80三轮，统一评分、首版报告及原MO服务恢复完成。结果只见[当前统一评测报告](reports/20261101-preservation-repair-08/report.md)，当前状态与限制由[评测索引](reports/README.md)维护。TTS仅观测不控制，先前撤回测量不恢复；执行和预检完成不构成内容、Gold或图片内容验收，缺陷机制与修复边界见[工程诊断](diagnostics/README.md)。
+本轮八组已按冻结身份各完成quality800一次和perf80三轮，统一评分、首版报告及原MO服务恢复完成。结果只见[当前统一评测报告](reports/lite/report.md)，当前状态与限制由[评测索引](reports/README.md)维护。TTS仅观测不控制，先前撤回测量不恢复；执行和预检完成不构成内容、Gold或图片内容验收，缺陷机制与修复边界见[工程诊断](diagnostics/README.md)。
 
 本表定义[研究顺序](../docs/research/research-framework.md#2-管线研究的顺序)第 3 步的固定配置，用于第 4 步执行和第 5 步分析。比较对象是各管线本身的解析结果与处理成本，不要求直接满足 MO-Parse 接口最终语义格式。逐组原生输出、格式依据与适配逻辑统一见[管线输出与适配](../docs/pipelines/README.md)；服务集成按[技术路线](../docs/engineering/technical-route.md)先确认本组输出再设计适配和共同组装，新增路由仍由比较证据决定。
 
@@ -57,7 +57,7 @@ P03、P04、P05、P08不使用页分类进行模型路由：原生、扫描、�
 | PaddleOCR-VL | P03固定模型1.5，P04固定模型1.6；统一FP16及方向处理 | 分别冻结实际模型仓库、revision、权重与处理器SHA，固定PaddleOCR包及推理后端版本；不能从显示名称推断权重已相同或已锁定 |
 | 结果读取与导出 | 固定各组读取代码及共同忠实 Markdown 导出规则，保留原始输出 | 记录构建镜像SHA、依赖、实际启动命令与完整配置；不在导出中加入 MO-Parse 语义转换或修正答案 |
 
-当前[工程预检02](reports/20261026-repaired-preflight-02/)已完成，八组分别执行同一清单的11个输入任务；实际配置、直接单页标定、共同截止及Graph证据见[执行就绪记录](reports/20261026-repaired-preflight-02/execution-readiness.json)。据此冻结的[执行锁](execution-lock.json)记录本轮执行代码、镜像、依赖、后端、权重revision、解码参数、资源与导出规则，禁止使用浮动模型身份或失效执行锁。逐组字段、媒体、失败及未验证范围由各管线专文维护；工程预检与已完成的800页正式测量分别记录，结论仅适用于实际可评范围。
+当前[工程预检02](runs/lite/preflight/)已完成，八组分别执行同一清单的11个输入任务；实际配置、直接单页标定、共同截止及Graph证据见[执行就绪记录](runs/lite/preflight/execution-readiness.json)。据此冻结的[执行锁](execution-lock.json)记录本轮执行代码、镜像、依赖、后端、权重revision、解码参数、资源与导出规则，禁止使用浮动模型身份或失效执行锁。逐组字段、媒体、失败及未验证范围由各管线专文维护；工程预检与已完成的800页正式测量分别记录，结论仅适用于实际可评范围。
 
 旧比较成绩及相关执行锁已撤销删除，不保留为历史基线，也不得恢复。P01—P08按新的冻结身份和同一协议统一比较，不拼接此前不同执行身份的结果。新报告的唯一入口为[评测索引](reports/README.md)，修复机制与未解决事项由[工程诊断](diagnostics/README.md)维护。
 

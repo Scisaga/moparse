@@ -54,6 +54,7 @@ test-results/
 /datasets/*/evaluation/
 
 # Keep report documents, summaries and figures in Git; keep raw runs local.
+/benchmark/runs/
 /benchmark/reports/**/artifacts/
 /benchmark/reports/**/private/
 /benchmark/reports/**/calibration-inputs/

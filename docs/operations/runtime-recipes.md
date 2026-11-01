@@ -288,7 +288,7 @@ docker compose up -d --no-deps --no-build moparse
 
 线程修复保持声明的镜像、模型revision、FP16、解码参数和4 CPU/20 GiB宿主内存限制，不依赖增加内存上限、逐页重启服务或通过GC清缓存。CUDA Graphs须按实际捕获与使用范围记录，不能把局部捕获作为全部生成计算使用Graphs的证明。缺陷、受控验证与未验证范围见[工程诊断](../../benchmark/diagnostics/README.md)。
 
-线程生命周期配置只处理对应的研究执行问题，不构成P03/P04质量或效率验收。研究修复与工程预检02之后，本轮八组各完成quality800一次和perf80三轮，统一评分、首版报告及原MO服务恢复完成；结果只见[当前统一评测报告](../../benchmark/reports/20261101-preservation-repair-08/report.md)，状态与限制由[评测索引](../../benchmark/reports/README.md)维护。TTS仅观测不控制，先前撤回测量不恢复，生产Compose、部署环境和现有服务配置不因研究配置而改变。
+线程生命周期配置只处理对应的研究执行问题，不构成P03/P04质量或效率验收。研究修复与工程预检02之后，本轮八组各完成quality800一次和perf80三轮，统一评分、首版报告及原MO服务恢复完成；结果只见[当前统一评测报告](../../benchmark/reports/lite/report.md)，状态与限制由[评测索引](../../benchmark/reports/README.md)维护。TTS仅观测不控制，先前撤回测量不恢复，生产Compose、部署环境和现有服务配置不因研究配置而改变。
 
 受测进程合计16 GiB自有显存预算及TTS共驻观测口径以[评测标准](../../benchmark/evaluation-tasks.md)为准；20 GiB仍是GPU推理侧宿主内存预算。按2026-10-26最新授权，TTS不由评测启动、停止、重启或改配置，身份和活动只观测，不控制负载，也不因变化或unknown阻断执行、评分或报告，无需等待TTS维护确认。维护窗口只暂停授权的原MO-Parse模型容器，退出时按原配置和身份恢复，不能用研究配置覆盖原生产GLM或MinerU服务；工程预检不构成部署验收。
 

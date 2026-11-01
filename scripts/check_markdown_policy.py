@@ -22,7 +22,7 @@ def corpus_path(path: Path) -> bool:
     parts = path.parts
     return any(part in CORPUS_DIRECTORIES for part in parts) or any(
         parts[index : index + 2] in {
-            ("benchmark", "reports"), ("benchmark", "reference-decisions"),
+            ("benchmark", "reports"), ("benchmark", "runs"), ("benchmark", "reference-decisions"),
         }
         for index in range(len(parts) - 1)
     )

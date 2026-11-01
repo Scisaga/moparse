@@ -1,10 +1,15 @@
 """Direct processing costs remain independent of scoring and warm-up."""
 
+from moparse_eval.metrics import text_metrics
 from moparse_eval.reporting import native_performance, postprocessing_performance
-from scripts.render_preservation_summary import (
+from scripts.render_lite_report import (
+    PIPELINES,
+    cohort_rows,
+    error_category,
     memory_bytes,
     observed_dominates,
     summarize_resource_samples,
+    text_diagnostics,
 )
 
 
@@ -140,3 +145,38 @@ def test_missing_dimension_cannot_create_a_dominance_claim():
     missing_quality = vector()
     missing_quality["qualities"].pop("text")
     assert observed_dominates(missing_quality, vector()) is None
+
+
+def test_cohort_totals_use_all_targets_of_tagged_samples_and_allow_overlap():
+    tagged = {"tags": ["data-table", "mixed-units"], "by_kind": {
+        "business_field": {"correct": 2, "targets": 5}, "text": {"correct": 1, "targets": 3}}}
+    other = {"tags": ["ordinary-prose"], "by_kind": {
+        "business_field": {"correct": 7, "targets": 9}, "text": {"correct": 3, "targets": 4}}}
+    rows = cohort_rows({p: [tagged, other] for p in PIPELINES})
+    selected = [r for r in rows if r["pipeline"] == "P01" and r["tag"] in {"data-table", "mixed-units"} and r["kind"] == "business_field"]
+    assert len(selected) == 2
+    assert all((r["samples"], r["correct"], r["targets"], r["correctness"]) == (1, 2, 5, 0.4) for r in selected)
+    empty = next(r for r in rows if r["pipeline"] == "P01" and r["tag"] == "multi-column")
+    assert empty["targets"] == 0
+    assert empty["correctness"] is None
+
+
+def test_strict_character_diagnostics_separate_missing_text_from_located_text():
+    result = text_diagnostics([{"outcomes": [
+        {"kind": "text", "candidate": "abX", "text": text_metrics("abc", "abX")},
+        {"kind": "heading", "candidate": None, "text": text_metrics("missing", "")},
+        {"kind": "business_field", "candidate": "999"},
+    ]}])
+    assert result["targets"] == 2
+    assert result["missing"] == 1
+    assert result["located_reference_characters"] == 3
+    assert result["strict_edit_distance"] == 1
+    assert result["located_strict_cer"] == 1 / 3
+    assert text_diagnostics([])["located_strict_cer"] is None
+
+
+def test_error_categories_keep_unrecognized_reasons_visible():
+    assert error_category("native_header_endpoints_unavailable") == "定位或表头范围"
+    assert error_category("native_label_path_scope_conflict") == "范围或位置歧义"
+    assert error_category("required_qualifier_incorrect:period") == "限定不符"
+    assert error_category("future_reason") == "其他"

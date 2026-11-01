@@ -66,7 +66,7 @@ P08 的必要裁图只能使用本组输入页面图像及 SDK 区域，保存�
 
 2026-10-29工作区新增[视觉结果适配器](../../app/parsers/mineru_visual_result.py)，直接读取固定SDK块的`content`、`type`、bbox和`merge_prev`，隔离畸形区域并保留邻居。固定SDK的`content`允许None；无文字的列表容器和图片块保留原始空值及位置，不误报读取失败。HTML表体沿实际单元格与跨度交接，图片沿本组页面图像裁取；不调用原生文字层、矢量表格补充或其他解析器。标题角色形成显示边界，`doc_title`显示为一级标题，其余标题角色显示为二级标题，不宣称真实多级从属。最终正文只采用唯一、相邻且无标题、表格、图片阻隔的显式正文续接，以及输出契约规定的受限同页货币单位断裂处理；不跨非正文块猜接事件上下文。当前接入已保存原生产物的服务replay，未新增线上模型执行入口或更改部署。按[配对协议](../../benchmark/evaluation-tasks.md#7-p07p08与mo-parse最终输出的配对评测)与P07共同验证，结果由评测索引维护。
 
-P08研究执行路径已修复，[P08工程预检02](../../benchmark/reports/20261026-repaired-preflight-02/)独立完成同一清单的11个任务并提供本次冻结依据。本组已完成quality800一次和perf80三轮，八组统一评分、首版报告及原MO服务恢复完成；结果只见[当前统一评测报告](../../benchmark/reports/20261101-preservation-repair-08/report.md)，状态与限制由[评测索引](../../benchmark/reports/README.md)维护。TTS只观测不控制，先前撤回测量不恢复；执行和自动评分完成不构成内容、Gold或图片内容验收。
+P08研究执行路径已修复，[P08工程预检02](../../benchmark/runs/lite/preflight/)独立完成同一清单的11个任务并提供本次冻结依据。本组已完成quality800一次和perf80三轮，八组统一评分、首版报告及原MO服务恢复完成；结果只见[当前统一评测报告](../../benchmark/reports/lite/report.md)，状态与限制由[评测索引](../../benchmark/reports/README.md)维护。TTS只观测不控制，先前撤回测量不恢复；执行和自动评分完成不构成内容、Gold或图片内容验收。
 
 研究侧已有独立 P08 执行器，直接调用官方 SDK 的 aio_two_step_extract，关闭 image_analysis 与重试，不读取原生文字或其他解析器补答案。源码追踪未发现其 Qwen2VL/NeoX 解码器具有 P05 的 GPT-J rotary 配对冲突；这只是该机制的边界，不构成完整模型数值或解析质量验收。机制诊断统一见[执行层诊断](../../benchmark/diagnostics/README.md)。
 

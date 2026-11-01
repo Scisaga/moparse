@@ -1,0 +1,152 @@
+{
+  "scope": "report layout and saved output evaluation; not corpus acceptance",
+  "scoring_software_id": "b2d1a022a2a4225608203449ef64d19571112320c05e2b91be69cc9fdae83643",
+  "relocation": {
+    "scope": "saved output evaluation after role-based directory relocation; no corpus acceptance",
+    "scoring_software_id": "b2d1a022a2a4225608203449ef64d19571112320c05e2b91be69cc9fdae83643",
+    "sample_scores_compared": 2422,
+    "target_decisions_and_evidence_equal": 205408,
+    "summary_and_adoption_equal": true,
+    "processing_measurements_equal": true,
+    "normalization": "declared operational path-prefix relocation only",
+    "candidate_content_rewritten": false
+  },
+  "independent_scoring_reproduction": {
+    "scope": "independent evaluation of saved real outputs against read-only canonical expected",
+    "sample_ids": [
+      "hkex-key-tables-p011",
+      "midea-front-p001-012",
+      "moutai-governance-p018-029",
+      "nvidia-business-overview-p018-019"
+    ],
+    "groups": 14,
+    "scores_reproduced": 56,
+    "target_decisions_and_evidence_reproduced": 11844,
+    "scoring_software_id": "b2d1a022a2a4225608203449ef64d19571112320c05e2b91be69cc9fdae83643",
+    "original_pdfs_opened": false,
+    "model_calls": 0,
+    "candidate_replays": 0
+  },
+  "report_reproduction": {
+    "artifacts": 35,
+    "byte_identical": true,
+    "sha256": {
+      "report.md": "2a85b75de31f19e90495526ed5b6948f7cd4aca804a0f762c8779d25b74abafe",
+      "appendix.md": "6c485022bf631d3a18f707ce71f31da47d22a988b0abbf15e6d3793f252c95ab",
+      "data/results.json": "79cb974e0ff427383ea8b0a17e2609d9eb222d61826b5d4cbf5ebf63b9f7acf8",
+      "data/resources.json": "1e2e004c3b6a386c4c747ced134e5ac3ce5eda63a0a805e05038923239521221",
+      "data/execution.json": "f2c3cb0d1dd0bf045d5b0dbe7241067e7caf8fc5cb0d062eaaf42730ebc91f9f",
+      "data/errors.json": "ff9b29025d2142ca543dfe24853aa66c1cc4933bed2da42a2c684260b6fceffd",
+      "data/provenance.json": "1275982dda73fba9ea13b4759f4d9c0f49f46eb1b1f831fca5af7b2c9a3dcba1",
+      "data/native.csv": "0001b5c32062acf976709b0f3e2c8c84870d5f9fe1eb2d63edab1fa532556621",
+      "data/postprocessing.csv": "b15f4eb4a7d9ca7f342a961d7a270be694c953374f601ffa31cd3b33903df79f",
+      "data/cohorts.csv": "efa78bb8cc48904dc4a5c3272808beb3ce96a93a207f3d3dadd934cb998afcf9",
+      "data/text-diagnostics.csv": "b24a6f06a82ffbf0c0795e1c06859b904698613f825b8a71af9fa41e640677e9",
+      "data/documents.csv": "6643377119200ddb956aff527130e000c4f7e1a2951423b59c0a32b5347c203a",
+      "data/families.csv": "6d48b0633d0608b6a82ab01d319d6dd0e5950e6bed3c89b6ac2428f1e59bbe2d",
+      "figures/quality.png": "bb192a5ff786e8c158691fb5a1da220d35b0f4038bf870b7bf49318e653fb165",
+      "figures/quality.svg": "fc25126aa728e9f46579e607e0a6c9b328d7c63964e418a103ad4c3093d7bbed",
+      "figures/quality.pdf": "bcafcdaea15b9245707cb2e600a6f13db8bcc4160809faca101643a81154dc96",
+      "figures/processing.png": "d62055bee1bbc799dfe274cfb7aac6985157446bafceb34c9be9a191abfd0e7d",
+      "figures/processing.svg": "75c7f920f388962fbe8e05ed319f0f06a1a9072db57437855592e7d31280310a",
+      "figures/processing.pdf": "ded318b9e345f7bbe2259b7a204e8acd9c7bb8675e58266268c1e1bf47d2f71d",
+      "figures/resources.png": "03b62f3da6d056e864ce1ac5199acebe73e6938d48d2fcced0f4fcd14dfd5c7c",
+      "figures/resources.svg": "e6a405f6e1fafb29dcc3c92c2735e8e45e162fb0c7b3df1c0039a1b1bd096a88",
+      "figures/resources.pdf": "2c94056df4414df36a26fc47c1e216ef756dd6d7a1e76d1113fc11bc2187f54a",
+      "figures/tradeoffs.png": "263d0c5ae6d72e70bdcee6e0063ffb87bf99ac1994447792995069635d636a12",
+      "figures/tradeoffs.svg": "aafc44b900adc9d71c794f227f17487ec12f72aa0f331d896b121ed5761d2a85",
+      "figures/tradeoffs.pdf": "6244bc67ff6d196d53e18eab573cbf8e75ff13a7f8b9f265407f3df3a622a10c",
+      "figures/postprocessing.png": "8a36e5cecf1ad54f3ed287c0e937101ecf4427ae6f27426be6c1b89a25d7e36f",
+      "figures/postprocessing.svg": "31955b20d0aa74c7d5ad9ee33bd8d1753377750ec083078c5e4ae4e0d7d00a8b",
+      "figures/postprocessing.pdf": "a7578d9d5c993ef4acd17e2674701098bef976c913df7f860820b35cb3720cef",
+      "figures/errors.png": "ff9029dfb0d9f73391d7d23a3871789b81e451f93dd04d187c382fa7757a8436",
+      "figures/errors.svg": "2e40d6cd2534bf3b9b3996f302423fbc878ac59b8f3dbb479171a1b84890d2bc",
+      "figures/errors.pdf": "b70c6396e5796fd8de77240161e18e146039156773dc5ec6da1c52709a9e72f7",
+      "figures/cohorts.png": "5380f576e679af2ca6269f99bf16e61e34a9c3945d0e776076dbb49d5679b0c1",
+      "figures/cohorts.svg": "85d6c11e130b46209a69f908fccdb535d4c97da17bdceb6cd6c357fc3070d9c2",
+      "figures/cohorts.pdf": "0d588aa801f683e469982a492522c533f5b8675b560c6990cbb9ced10ed02a70",
+      "data/artifacts.json": "bdd2d9648e7c6d74f862f8457edd9bd622e50fd94d70e9a1b7310f363b66c581"
+    }
+  },
+  "figures": [
+    {
+      "figure": "quality",
+      "embedded_pdf_fonts": [
+        "BMQQDV+DejaVuSans",
+        "CVKVVF+NotoSansCJKsc-Regular"
+      ],
+      "svg_explicit_sans_fallback": true
+    },
+    {
+      "figure": "processing",
+      "embedded_pdf_fonts": [
+        "BMQQDV+DejaVuSans",
+        "CVKVVF+NotoSansCJKsc-Regular"
+      ],
+      "svg_explicit_sans_fallback": true
+    },
+    {
+      "figure": "resources",
+      "embedded_pdf_fonts": [
+        "BMQQDV+DejaVuSans",
+        "CVKVVF+NotoSansCJKsc-Regular"
+      ],
+      "svg_explicit_sans_fallback": true
+    },
+    {
+      "figure": "tradeoffs",
+      "embedded_pdf_fonts": [
+        "BMQQDV+DejaVuSans",
+        "CVKVVF+NotoSansCJKsc-Regular"
+      ],
+      "svg_explicit_sans_fallback": true
+    },
+    {
+      "figure": "postprocessing",
+      "embedded_pdf_fonts": [
+        "BMQQDV+DejaVuSans",
+        "CVKVVF+NotoSansCJKsc-Regular"
+      ],
+      "svg_explicit_sans_fallback": true
+    },
+    {
+      "figure": "errors",
+      "embedded_pdf_fonts": [
+        "BMQQDV+DejaVuSans",
+        "CVKVVF+NotoSansCJKsc-Regular"
+      ],
+      "svg_explicit_sans_fallback": true
+    },
+    {
+      "figure": "cohorts",
+      "embedded_pdf_fonts": [
+        "BMQQDV+DejaVuSans",
+        "CVKVVF+NotoSansCJKsc-Regular"
+      ],
+      "svg_explicit_sans_fallback": true
+    }
+  ],
+  "visual_review": {
+    "measurement_figures_inspected": 7,
+    "original_pages_inspected": 0
+  },
+  "software_checks": {
+    "report_resource_and_policy_tests": 23,
+    "markdown_files": 55,
+    "markdown_violations": 0,
+    "ruff": "passed"
+  },
+  "changes": {
+    "candidate_processing_changed": false,
+    "model_calls": 0,
+    "cpu_candidate_replays": 0,
+    "pdf_reference_review": false,
+    "deployment": false
+  },
+  "layout": {
+    "sole_formal_report": "benchmark/reports/lite/report.md",
+    "saved_runs": "benchmark/runs/lite",
+    "duplicate_scores_removed": true,
+    "duplicate_target_csv_removed_bytes": 2247647855
+  }
+}

@@ -48,6 +48,7 @@ def test_generator_source_is_checked_before_markdown_is_written(tmp_path):
         "pdf_sample/parsing/expected/synthetic/expected.md",
         "datasets/synthetic/references/expected.md",
         "benchmark/reports/synthetic/native/faithful.md",
+        "benchmark/runs/synthetic/native/faithful.md",
         "benchmark/reference-decisions/synthetic/decision.md",
     ],
 )

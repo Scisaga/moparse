@@ -17,7 +17,7 @@
 | [P07：MinerU Advanced + TXT + GLM SDK](p07-mineru-advanced-glm.md) | 与P06共享格式读取 | Advanced显式入口，独立运行及分支记录 |
 | [P08：MinerU 全页纯视觉 SDK + vLLM](p08-mineru-visual.md) | 完整PDF渲染及官方纯视觉SDK | 原生块先行保全、局部导出隔离已修复，独立工程预检完成 |
 
-研究入口及共享读取代码位于[评测模块](../../moparse_eval/README.md)。本轮八组已按冻结身份各完成quality800一次和perf80三轮，统一评分、首版报告及原MO服务恢复完成。结果只见[当前统一评测报告](../../benchmark/reports/20261101-preservation-repair-08/report.md)，状态与限制由[评测索引](../../benchmark/reports/README.md)维护。TTS只观测不控制，先前撤回测量不恢复；执行和自动评分完成不表示内容、Gold、图片内容或生产部署已验收，机制证据由[执行层诊断](../../benchmark/diagnostics/README.md)维护。
+研究入口及共享读取代码位于[评测模块](../../moparse_eval/README.md)。本轮八组已按冻结身份各完成quality800一次和perf80三轮，统一评分、首版报告及原MO服务恢复完成。结果只见[当前统一评测报告](../../benchmark/reports/lite/report.md)，状态与限制由[评测索引](../../benchmark/reports/README.md)维护。TTS只观测不控制，先前撤回测量不恢复；执行和自动评分完成不表示内容、Gold、图片内容或生产部署已验收，机制证据由[执行层诊断](../../benchmark/diagnostics/README.md)维护。
 
 ## 共用规则
 
@@ -27,7 +27,7 @@
 
 ## 核实状态
 
-已修复的研究执行问题包括共享 GLM 的 MRoPE 配对错误、Paddle 颜色交接错误、旋转坐标混用的来源路由，以及局部异常影响已有原生结果与导出的问题。源码审计和受控探针支持限定的机制结论；八组各自完成当前[工程预检02](../../benchmark/reports/20261026-repaired-preflight-02/)同一清单的11个输入任务，实际配置与直接单页标定记录作为本次冻结依据。这些工程证据不能生成解析质量成绩或排名，生产路径也不能据此被认定已修复或验收；各组边界见对应专文和[执行层诊断](../../benchmark/diagnostics/README.md)。
+已修复的研究执行问题包括共享 GLM 的 MRoPE 配对错误、Paddle 颜色交接错误、旋转坐标混用的来源路由，以及局部异常影响已有原生结果与导出的问题。源码审计和受控探针支持限定的机制结论；八组各自完成当前[工程预检02](../../benchmark/runs/lite/preflight/)同一清单的11个输入任务，实际配置与直接单页标定记录作为本次冻结依据。这些工程证据不能生成解析质量成绩或排名，生产路径也不能据此被认定已修复或验收；各组边界见对应专文和[执行层诊断](../../benchmark/diagnostics/README.md)。
 
 本轮[执行锁](../../benchmark/execution-lock.json)已据当前工程预检02冻结，八组的工程预检互不替代，不能沿用失效执行锁。完整页面执行、分支页序、方向、媒体、原生读回、失败隔离及资源约束的具体证据按组保存，质量与成本按[统一标准](../../benchmark/evaluation-tasks.md)测量。未提供字段、未读资源和未标注结构保持缺失或未知，执行完成不能替代来源内容验收。
 

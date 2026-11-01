@@ -70,7 +70,7 @@ HTTP response
 
 ### 2.3 表格字段补读
 
-2026-10-28评分读回补齐TableCell已有的起止offset、行列标题角色、row_section与fillable，并保存表的尺寸和方向；通过唯一原生路径及所属表关联，不覆盖冻结执行观察。RichTableCell.ref的明确引用保留节点、边、文字项及媒体证据，唯一纯文字叶子另存native_rich_text，不改原cell.text，也不自动拼合混合内容。本轮候选原生产物未出现含ref的格，当前字段匹配不消费该补充文字，因此不能用引用补读解释本轮成绩变化。修复与评分边界见[本轮评分说明](../../benchmark/reports/20261026-lite-v3/scoring-implementation-notes.md)。
+2026-10-28评分读回补齐TableCell已有的起止offset、行列标题角色、row_section与fillable，并保存表的尺寸和方向；通过唯一原生路径及所属表关联，不覆盖冻结执行观察。RichTableCell.ref的明确引用保留节点、边、文字项及媒体证据，唯一纯文字叶子另存native_rich_text，不改原cell.text，也不自动拼合混合内容。本轮候选原生产物未出现含ref的格，当前字段匹配不消费该补充文字，因此不能用引用补读解释本轮成绩变化。修复与评分边界见[本轮评分说明](../../benchmark/reports/lite/appendix.md#共同评分与目标覆盖)。
 
 ### 2.4 标题角色与级别来源
 
@@ -91,7 +91,7 @@ GLM 固定以 `json_result` 为主要评分视图，`raw_json_result` 是独立�
 
 ## 5. 实现状态与验证项
 
-P01研究执行路径已修复，[P01工程预检02](../../benchmark/reports/20261026-repaired-preflight-02/)独立完成同一清单的11个任务并提供本次冻结依据。本组已完成quality800一次和perf80三轮，八组统一评分、首版报告及原MO服务恢复完成；结果只见[当前统一评测报告](../../benchmark/reports/20261101-preservation-repair-08/report.md)，状态与限制由[评测索引](../../benchmark/reports/README.md)维护。TTS只观测不控制，先前撤回测量不恢复；执行和自动评分完成不构成内容、Gold或图片内容验收。
+P01研究执行路径已修复，[P01工程预检02](../../benchmark/runs/lite/preflight/)独立完成同一清单的11个任务并提供本次冻结依据。本组已完成quality800一次和perf80三轮，八组统一评分、首版报告及原MO服务恢复完成；结果只见[当前统一评测报告](../../benchmark/reports/lite/report.md)，状态与限制由[评测索引](../../benchmark/reports/README.md)维护。TTS只观测不控制，先前撤回测量不恢复；执行和自动评分完成不构成内容、Gold或图片内容验收。
 
 研究执行器显式使用 TableFormer V1，Docling 阅读树、表格、媒体和共享 GLM 分支分别保存，与 P02 的模型选择不同。共享 GLM 已显式采用 native rotary，避开 vLLM 0.19.1 的 GPT-J MRoPE CUDA 配对缺陷；研究路径的旋转坐标交接和原生结果先行保全、局部导出错误隔离已修复。机制证据与修复边界见[执行层诊断](../../benchmark/diagnostics/README.md)，不据工程修复推定具体语料影响或解析成绩。
 

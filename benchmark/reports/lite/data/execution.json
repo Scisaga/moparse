@@ -1,0 +1,2345 @@
+{
+  "native": {
+    "P01": {
+      "quality800": {
+        "boundary": "direct_worker_processing_to_native_and_faithful_export_ready",
+        "measured_runs": 173,
+        "scheduled_runs": 173,
+        "successful_runs": 173,
+        "failed_runs": 0,
+        "warmup": [
+          {
+            "sample_id": "vanke-interest-p001-002",
+            "run_id": "20261026-lite-v3",
+            "repetition": 1,
+            "status": "completed",
+            "processing_seconds": 2.2880721061956137,
+            "input_pages": 2
+          },
+          {
+            "sample_id": "spdb-cover-declaration-p001-002",
+            "run_id": "20261026-lite-v3",
+            "repetition": 1,
+            "status": "completed",
+            "processing_seconds": 4.701799998991191,
+            "input_pages": 2
+          },
+          {
+            "sample_id": "pingan-financials-p001-004",
+            "run_id": "20261026-lite-v3",
+            "repetition": 1,
+            "status": "completed",
+            "processing_seconds": 20.504097865894437,
+            "input_pages": 4
+          }
+        ],
+        "initialization": [
+          {
+            "run_id": "20261026-lite-v3",
+            "initialization_seconds": 7.728249937063083,
+            "scope": "persistent_sdk_worker_once"
+          }
+        ],
+        "timing_unavailable": [],
+        "status_counts": {
+          "completed": 176
+        },
+        "rounds": [
+          {
+            "repetition": "1",
+            "measured_samples": 173,
+            "attempted_input_pages": 800,
+            "completed_input_pages": 800,
+            "processing_seconds_including_failures": 1565.3464858389925,
+            "observed_processing_seconds_subtotal": 1565.3464858389925,
+            "observed_processing_samples": 173,
+            "timing_complete": true,
+            "completed_pages_per_second_including_failure_cost": 0.51106895964392,
+            "seconds_per_attempted_input_page": 1.9566831072987407,
+            "all_samples_completed": true
+          }
+        ]
+      },
+      "perf80": {
+        "boundary": "direct_worker_processing_to_native_and_faithful_export_ready",
+        "measured_runs": 84,
+        "scheduled_runs": 84,
+        "successful_runs": 84,
+        "failed_runs": 0,
+        "warmup": [
+          {
+            "sample_id": "vanke-interest-p001-002",
+            "run_id": "20261026-lite-v3",
+            "repetition": 1,
+            "status": "completed",
+            "processing_seconds": 2.2880721061956137,
+            "input_pages": 2
+          },
+          {
+            "sample_id": "spdb-cover-declaration-p001-002",
+            "run_id": "20261026-lite-v3",
+            "repetition": 1,
+            "status": "completed",
+            "processing_seconds": 4.701799998991191,
+            "input_pages": 2
+          },
+          {
+            "sample_id": "pingan-financials-p001-004",
+            "run_id": "20261026-lite-v3",
+            "repetition": 1,
+            "status": "completed",
+            "processing_seconds": 20.504097865894437,
+            "input_pages": 4
+          }
+        ],
+        "initialization": [
+          {
+            "run_id": "20261026-lite-v3",
+            "initialization_seconds": 7.728249937063083,
+            "scope": "persistent_sdk_worker_once"
+          }
+        ],
+        "timing_unavailable": [],
+        "status_counts": {
+          "completed": 87
+        },
+        "rounds": [
+          {
+            "repetition": "1",
+            "measured_samples": 28,
+            "attempted_input_pages": 80,
+            "completed_input_pages": 80,
+            "processing_seconds_including_failures": 201.00379916280508,
+            "observed_processing_seconds_subtotal": 201.00379916280508,
+            "observed_processing_samples": 28,
+            "timing_complete": true,
+            "completed_pages_per_second_including_failure_cost": 0.3980024274824934,
+            "seconds_per_attempted_input_page": 2.5125474895350637,
+            "all_samples_completed": true
+          },
+          {
+            "repetition": "2",
+            "measured_samples": 28,
+            "attempted_input_pages": 80,
+            "completed_input_pages": 80,
+            "processing_seconds_including_failures": 199.89884769148193,
+            "observed_processing_seconds_subtotal": 199.89884769148193,
+            "observed_processing_samples": 28,
+            "timing_complete": true,
+            "completed_pages_per_second_including_failure_cost": 0.40020240698670595,
+            "seconds_per_attempted_input_page": 2.4987355961435243,
+            "all_samples_completed": true
+          },
+          {
+            "repetition": "3",
+            "measured_samples": 28,
+            "attempted_input_pages": 80,
+            "completed_input_pages": 80,
+            "processing_seconds_including_failures": 199.42380343098193,
+            "observed_processing_seconds_subtotal": 199.42380343098193,
+            "observed_processing_samples": 28,
+            "timing_complete": true,
+            "completed_pages_per_second_including_failure_cost": 0.4011557227554683,
+            "seconds_per_attempted_input_page": 2.492797542887274,
+            "all_samples_completed": true
+          }
+        ]
+      }
+    },
+    "P02": {
+      "quality800": {
+        "boundary": "direct_worker_processing_to_native_and_faithful_export_ready",
+        "measured_runs": 173,
+        "scheduled_runs": 173,
+        "successful_runs": 173,
+        "failed_runs": 0,
+        "warmup": [
+          {
+            "sample_id": "vanke-interest-p001-002",
+            "run_id": "20261026-lite-v3",
+            "repetition": 1,
+            "status": "completed",
+            "processing_seconds": 2.318309146910906,
+            "input_pages": 2
+          },
+          {
+            "sample_id": "spdb-cover-declaration-p001-002",
+            "run_id": "20261026-lite-v3",
+            "repetition": 1,
+            "status": "completed",
+            "processing_seconds": 4.676176737062633,
+            "input_pages": 2
+          },
+          {
+            "sample_id": "pingan-financials-p001-004",
+            "run_id": "20261026-lite-v3",
+            "repetition": 1,
+            "status": "completed",
+            "processing_seconds": 15.646094913827255,
+            "input_pages": 4
+          }
+        ],
+        "initialization": [
+          {
+            "run_id": "20261026-lite-v3",
+            "initialization_seconds": 8.023209649836645,
+            "scope": "persistent_sdk_worker_once"
+          }
+        ],
+        "timing_unavailable": [],
+        "status_counts": {
+          "completed": 176
+        },
+        "rounds": [
+          {
+            "repetition": "1",
+            "measured_samples": 173,
+            "attempted_input_pages": 800,
+            "completed_input_pages": 800,
+            "processing_seconds_including_failures": 1478.3034848573152,
+            "observed_processing_seconds_subtotal": 1478.3034848573152,
+            "observed_processing_samples": 173,
+            "timing_complete": true,
+            "completed_pages_per_second_including_failure_cost": 0.5411608700071592,
+            "seconds_per_attempted_input_page": 1.847879356071644,
+            "all_samples_completed": true
+          }
+        ]
+      },
+      "perf80": {
+        "boundary": "direct_worker_processing_to_native_and_faithful_export_ready",
+        "measured_runs": 84,
+        "scheduled_runs": 84,
+        "successful_runs": 84,
+        "failed_runs": 0,
+        "warmup": [
+          {
+            "sample_id": "vanke-interest-p001-002",
+            "run_id": "20261026-lite-v3",
+            "repetition": 1,
+            "status": "completed",
+            "processing_seconds": 2.318309146910906,
+            "input_pages": 2
+          },
+          {
+            "sample_id": "spdb-cover-declaration-p001-002",
+            "run_id": "20261026-lite-v3",
+            "repetition": 1,
+            "status": "completed",
+            "processing_seconds": 4.676176737062633,
+            "input_pages": 2
+          },
+          {
+            "sample_id": "pingan-financials-p001-004",
+            "run_id": "20261026-lite-v3",
+            "repetition": 1,
+            "status": "completed",
+            "processing_seconds": 15.646094913827255,
+            "input_pages": 4
+          }
+        ],
+        "initialization": [
+          {
+            "run_id": "20261026-lite-v3",
+            "initialization_seconds": 8.023209649836645,
+            "scope": "persistent_sdk_worker_once"
+          }
+        ],
+        "timing_unavailable": [],
+        "status_counts": {
+          "completed": 87
+        },
+        "rounds": [
+          {
+            "repetition": "1",
+            "measured_samples": 28,
+            "attempted_input_pages": 80,
+            "completed_input_pages": 80,
+            "processing_seconds_including_failures": 186.26586437644437,
+            "observed_processing_seconds_subtotal": 186.26586437644437,
+            "observed_processing_samples": 28,
+            "timing_complete": true,
+            "completed_pages_per_second_including_failure_cost": 0.42949361799497277,
+            "seconds_per_attempted_input_page": 2.3283233047055547,
+            "all_samples_completed": true
+          },
+          {
+            "repetition": "2",
+            "measured_samples": 28,
+            "attempted_input_pages": 80,
+            "completed_input_pages": 80,
+            "processing_seconds_including_failures": 186.33224307745695,
+            "observed_processing_seconds_subtotal": 186.33224307745695,
+            "observed_processing_samples": 28,
+            "timing_complete": true,
+            "completed_pages_per_second_including_failure_cost": 0.42934061587368205,
+            "seconds_per_attempted_input_page": 2.329153038468212,
+            "all_samples_completed": true
+          },
+          {
+            "repetition": "3",
+            "measured_samples": 28,
+            "attempted_input_pages": 80,
+            "completed_input_pages": 80,
+            "processing_seconds_including_failures": 187.18763404642232,
+            "observed_processing_seconds_subtotal": 187.18763404642232,
+            "observed_processing_samples": 28,
+            "timing_complete": true,
+            "completed_pages_per_second_including_failure_cost": 0.4273786588923929,
+            "seconds_per_attempted_input_page": 2.339845425580279,
+            "all_samples_completed": true
+          }
+        ]
+      }
+    },
+    "P03": {
+      "quality800": {
+        "boundary": "direct_worker_processing_to_native_and_faithful_export_ready",
+        "measured_runs": 173,
+        "scheduled_runs": 173,
+        "successful_runs": 173,
+        "failed_runs": 0,
+        "warmup": [
+          {
+            "sample_id": "vanke-interest-p001-002",
+            "run_id": "20261026-lite-v3",
+            "repetition": 1,
+            "status": "completed",
+            "processing_seconds": 21.356731621082872,
+            "input_pages": 2
+          },
+          {
+            "sample_id": "spdb-cover-declaration-p001-002",
+            "run_id": "20261026-lite-v3",
+            "repetition": 1,
+            "status": "completed",
+            "processing_seconds": 8.471062351949513,
+            "input_pages": 2
+          },
+          {
+            "sample_id": "pingan-financials-p001-004",
+            "run_id": "20261026-lite-v3",
+            "repetition": 1,
+            "status": "completed",
+            "processing_seconds": 73.18715218221769,
+            "input_pages": 4
+          }
+        ],
+        "initialization": [
+          {
+            "run_id": "20261026-lite-v3",
+            "initialization_seconds": 4.5576432049274445,
+            "scope": "persistent_sdk_worker_once"
+          }
+        ],
+        "timing_unavailable": [],
+        "status_counts": {
+          "completed": 176
+        },
+        "rounds": [
+          {
+            "repetition": "1",
+            "measured_samples": 173,
+            "attempted_input_pages": 800,
+            "completed_input_pages": 800,
+            "processing_seconds_including_failures": 11576.992026767693,
+            "observed_processing_seconds_subtotal": 11576.992026767693,
+            "observed_processing_samples": 173,
+            "timing_complete": true,
+            "completed_pages_per_second_including_failure_cost": 0.069102578472049,
+            "seconds_per_attempted_input_page": 14.471240033459617,
+            "all_samples_completed": true
+          }
+        ]
+      },
+      "perf80": {
+        "boundary": "direct_worker_processing_to_native_and_faithful_export_ready",
+        "measured_runs": 84,
+        "scheduled_runs": 84,
+        "successful_runs": 84,
+        "failed_runs": 0,
+        "warmup": [
+          {
+            "sample_id": "vanke-interest-p001-002",
+            "run_id": "20261026-lite-v3",
+            "repetition": 1,
+            "status": "completed",
+            "processing_seconds": 21.356731621082872,
+            "input_pages": 2
+          },
+          {
+            "sample_id": "spdb-cover-declaration-p001-002",
+            "run_id": "20261026-lite-v3",
+            "repetition": 1,
+            "status": "completed",
+            "processing_seconds": 8.471062351949513,
+            "input_pages": 2
+          },
+          {
+            "sample_id": "pingan-financials-p001-004",
+            "run_id": "20261026-lite-v3",
+            "repetition": 1,
+            "status": "completed",
+            "processing_seconds": 73.18715218221769,
+            "input_pages": 4
+          }
+        ],
+        "initialization": [
+          {
+            "run_id": "20261026-lite-v3",
+            "initialization_seconds": 4.5576432049274445,
+            "scope": "persistent_sdk_worker_once"
+          }
+        ],
+        "timing_unavailable": [],
+        "status_counts": {
+          "completed": 87
+        },
+        "rounds": [
+          {
+            "repetition": "1",
+            "measured_samples": 28,
+            "attempted_input_pages": 80,
+            "completed_input_pages": 80,
+            "processing_seconds_including_failures": 1001.9608269094024,
+            "observed_processing_seconds_subtotal": 1001.9608269094024,
+            "observed_processing_samples": 28,
+            "timing_complete": true,
+            "completed_pages_per_second_including_failure_cost": 0.07984344083267601,
+            "seconds_per_attempted_input_page": 12.52451033636753,
+            "all_samples_completed": true
+          },
+          {
+            "repetition": "2",
+            "measured_samples": 28,
+            "attempted_input_pages": 80,
+            "completed_input_pages": 80,
+            "processing_seconds_including_failures": 893.8748234345112,
+            "observed_processing_seconds_subtotal": 893.8748234345112,
+            "observed_processing_samples": 28,
+            "timing_complete": true,
+            "completed_pages_per_second_including_failure_cost": 0.08949798998993858,
+            "seconds_per_attempted_input_page": 11.17343529293139,
+            "all_samples_completed": true
+          },
+          {
+            "repetition": "3",
+            "measured_samples": 28,
+            "attempted_input_pages": 80,
+            "completed_input_pages": 80,
+            "processing_seconds_including_failures": 937.5070395867806,
+            "observed_processing_seconds_subtotal": 937.5070395867806,
+            "observed_processing_samples": 28,
+            "timing_complete": true,
+            "completed_pages_per_second_including_failure_cost": 0.08533269257931239,
+            "seconds_per_attempted_input_page": 11.718837994834757,
+            "all_samples_completed": true
+          }
+        ]
+      }
+    },
+    "P04": {
+      "quality800": {
+        "boundary": "direct_worker_processing_to_native_and_faithful_export_ready",
+        "measured_runs": 173,
+        "scheduled_runs": 173,
+        "successful_runs": 173,
+        "failed_runs": 0,
+        "warmup": [
+          {
+            "sample_id": "vanke-interest-p001-002",
+            "run_id": "20261026-lite-v3",
+            "repetition": 1,
+            "status": "completed",
+            "processing_seconds": 21.513914037961513,
+            "input_pages": 2
+          },
+          {
+            "sample_id": "spdb-cover-declaration-p001-002",
+            "run_id": "20261026-lite-v3",
+            "repetition": 1,
+            "status": "completed",
+            "processing_seconds": 8.864882363937795,
+            "input_pages": 2
+          },
+          {
+            "sample_id": "pingan-financials-p001-004",
+            "run_id": "20261026-lite-v3",
+            "repetition": 1,
+            "status": "completed",
+            "processing_seconds": 75.37359763681889,
+            "input_pages": 4
+          }
+        ],
+        "initialization": [
+          {
+            "run_id": "20261026-lite-v3",
+            "initialization_seconds": 4.3483645499218255,
+            "scope": "persistent_sdk_worker_once"
+          }
+        ],
+        "timing_unavailable": [],
+        "status_counts": {
+          "completed": 176
+        },
+        "rounds": [
+          {
+            "repetition": "1",
+            "measured_samples": 173,
+            "attempted_input_pages": 800,
+            "completed_input_pages": 800,
+            "processing_seconds_including_failures": 11826.903032033239,
+            "observed_processing_seconds_subtotal": 11826.903032033239,
+            "observed_processing_samples": 173,
+            "timing_complete": true,
+            "completed_pages_per_second_including_failure_cost": 0.06764239106663808,
+            "seconds_per_attempted_input_page": 14.783628790041549,
+            "all_samples_completed": true
+          }
+        ]
+      },
+      "perf80": {
+        "boundary": "direct_worker_processing_to_native_and_faithful_export_ready",
+        "measured_runs": 84,
+        "scheduled_runs": 84,
+        "successful_runs": 84,
+        "failed_runs": 0,
+        "warmup": [
+          {
+            "sample_id": "vanke-interest-p001-002",
+            "run_id": "20261026-lite-v3",
+            "repetition": 1,
+            "status": "completed",
+            "processing_seconds": 21.513914037961513,
+            "input_pages": 2
+          },
+          {
+            "sample_id": "spdb-cover-declaration-p001-002",
+            "run_id": "20261026-lite-v3",
+            "repetition": 1,
+            "status": "completed",
+            "processing_seconds": 8.864882363937795,
+            "input_pages": 2
+          },
+          {
+            "sample_id": "pingan-financials-p001-004",
+            "run_id": "20261026-lite-v3",
+            "repetition": 1,
+            "status": "completed",
+            "processing_seconds": 75.37359763681889,
+            "input_pages": 4
+          }
+        ],
+        "initialization": [
+          {
+            "run_id": "20261026-lite-v3",
+            "initialization_seconds": 4.3483645499218255,
+            "scope": "persistent_sdk_worker_once"
+          }
+        ],
+        "timing_unavailable": [],
+        "status_counts": {
+          "completed": 87
+        },
+        "rounds": [
+          {
+            "repetition": "1",
+            "measured_samples": 28,
+            "attempted_input_pages": 80,
+            "completed_input_pages": 80,
+            "processing_seconds_including_failures": 778.1862981119193,
+            "observed_processing_seconds_subtotal": 778.1862981119193,
+            "observed_processing_samples": 28,
+            "timing_complete": true,
+            "completed_pages_per_second_including_failure_cost": 0.10280314648831602,
+            "seconds_per_attempted_input_page": 9.72732872639899,
+            "all_samples_completed": true
+          },
+          {
+            "repetition": "2",
+            "measured_samples": 28,
+            "attempted_input_pages": 80,
+            "completed_input_pages": 80,
+            "processing_seconds_including_failures": 967.766511595808,
+            "observed_processing_seconds_subtotal": 967.766511595808,
+            "observed_processing_samples": 28,
+            "timing_complete": true,
+            "completed_pages_per_second_including_failure_cost": 0.08266456737388363,
+            "seconds_per_attempted_input_page": 12.0970813949476,
+            "all_samples_completed": true
+          },
+          {
+            "repetition": "3",
+            "measured_samples": 28,
+            "attempted_input_pages": 80,
+            "completed_input_pages": 80,
+            "processing_seconds_including_failures": 778.3100642494392,
+            "observed_processing_seconds_subtotal": 778.3100642494392,
+            "observed_processing_samples": 28,
+            "timing_complete": true,
+            "completed_pages_per_second_including_failure_cost": 0.10278679882823788,
+            "seconds_per_attempted_input_page": 9.72887580311799,
+            "all_samples_completed": true
+          }
+        ]
+      }
+    },
+    "P05": {
+      "quality800": {
+        "boundary": "direct_worker_processing_to_native_and_faithful_export_ready",
+        "measured_runs": 173,
+        "scheduled_runs": 173,
+        "successful_runs": 173,
+        "failed_runs": 0,
+        "warmup": [
+          {
+            "sample_id": "vanke-interest-p001-002",
+            "run_id": "20261026-lite-v3",
+            "repetition": 1,
+            "status": "completed",
+            "processing_seconds": 6.964439589064568,
+            "input_pages": 2
+          },
+          {
+            "sample_id": "spdb-cover-declaration-p001-002",
+            "run_id": "20261026-lite-v3",
+            "repetition": 1,
+            "status": "completed",
+            "processing_seconds": 4.440894896863028,
+            "input_pages": 2
+          },
+          {
+            "sample_id": "pingan-financials-p001-004",
+            "run_id": "20261026-lite-v3",
+            "repetition": 1,
+            "status": "completed",
+            "processing_seconds": 26.601969361072406,
+            "input_pages": 4
+          }
+        ],
+        "initialization": [
+          {
+            "run_id": "20261026-lite-v3",
+            "initialization_seconds": 5.405667201150209,
+            "scope": "persistent_sdk_worker_once"
+          }
+        ],
+        "timing_unavailable": [],
+        "status_counts": {
+          "completed": 176
+        },
+        "rounds": [
+          {
+            "repetition": "1",
+            "measured_samples": 173,
+            "attempted_input_pages": 800,
+            "completed_input_pages": 800,
+            "processing_seconds_including_failures": 2908.116385015659,
+            "observed_processing_seconds_subtotal": 2908.116385015659,
+            "observed_processing_samples": 173,
+            "timing_complete": true,
+            "completed_pages_per_second_including_failure_cost": 0.2750921538498509,
+            "seconds_per_attempted_input_page": 3.6351454812695736,
+            "all_samples_completed": true
+          }
+        ]
+      },
+      "perf80": {
+        "boundary": "direct_worker_processing_to_native_and_faithful_export_ready",
+        "measured_runs": 84,
+        "scheduled_runs": 84,
+        "successful_runs": 84,
+        "failed_runs": 0,
+        "warmup": [
+          {
+            "sample_id": "vanke-interest-p001-002",
+            "run_id": "20261026-lite-v3",
+            "repetition": 1,
+            "status": "completed",
+            "processing_seconds": 6.964439589064568,
+            "input_pages": 2
+          },
+          {
+            "sample_id": "spdb-cover-declaration-p001-002",
+            "run_id": "20261026-lite-v3",
+            "repetition": 1,
+            "status": "completed",
+            "processing_seconds": 4.440894896863028,
+            "input_pages": 2
+          },
+          {
+            "sample_id": "pingan-financials-p001-004",
+            "run_id": "20261026-lite-v3",
+            "repetition": 1,
+            "status": "completed",
+            "processing_seconds": 26.601969361072406,
+            "input_pages": 4
+          }
+        ],
+        "initialization": [
+          {
+            "run_id": "20261026-lite-v3",
+            "initialization_seconds": 5.405667201150209,
+            "scope": "persistent_sdk_worker_once"
+          }
+        ],
+        "timing_unavailable": [],
+        "status_counts": {
+          "completed": 87
+        },
+        "rounds": [
+          {
+            "repetition": "1",
+            "measured_samples": 28,
+            "attempted_input_pages": 80,
+            "completed_input_pages": 80,
+            "processing_seconds_including_failures": 278.2327583548613,
+            "observed_processing_seconds_subtotal": 278.2327583548613,
+            "observed_processing_samples": 28,
+            "timing_complete": true,
+            "completed_pages_per_second_including_failure_cost": 0.2875290475249038,
+            "seconds_per_attempted_input_page": 3.477909479435766,
+            "all_samples_completed": true
+          },
+          {
+            "repetition": "2",
+            "measured_samples": 28,
+            "attempted_input_pages": 80,
+            "completed_input_pages": 80,
+            "processing_seconds_including_failures": 275.324763630284,
+            "observed_processing_seconds_subtotal": 275.324763630284,
+            "observed_processing_samples": 28,
+            "timing_complete": true,
+            "completed_pages_per_second_including_failure_cost": 0.29056594454186796,
+            "seconds_per_attempted_input_page": 3.44155954537855,
+            "all_samples_completed": true
+          },
+          {
+            "repetition": "3",
+            "measured_samples": 28,
+            "attempted_input_pages": 80,
+            "completed_input_pages": 80,
+            "processing_seconds_including_failures": 276.4646110511385,
+            "observed_processing_seconds_subtotal": 276.4646110511385,
+            "observed_processing_samples": 28,
+            "timing_complete": true,
+            "completed_pages_per_second_including_failure_cost": 0.28936795814782296,
+            "seconds_per_attempted_input_page": 3.4558076381392313,
+            "all_samples_completed": true
+          }
+        ]
+      }
+    },
+    "P06": {
+      "quality800": {
+        "boundary": "direct_worker_processing_to_native_and_faithful_export_ready",
+        "measured_runs": 173,
+        "scheduled_runs": 173,
+        "successful_runs": 173,
+        "failed_runs": 0,
+        "warmup": [
+          {
+            "sample_id": "vanke-interest-p001-002",
+            "run_id": "20261026-lite-v3",
+            "repetition": 1,
+            "status": "completed",
+            "processing_seconds": 5.277254435000941,
+            "input_pages": 2
+          },
+          {
+            "sample_id": "spdb-cover-declaration-p001-002",
+            "run_id": "20261026-lite-v3",
+            "repetition": 1,
+            "status": "completed",
+            "processing_seconds": 4.975482326000929,
+            "input_pages": 2
+          },
+          {
+            "sample_id": "pingan-financials-p001-004",
+            "run_id": "20261026-lite-v3",
+            "repetition": 1,
+            "status": "completed",
+            "processing_seconds": 5.898018103092909,
+            "input_pages": 4
+          }
+        ],
+        "initialization": [
+          {
+            "run_id": "20261026-lite-v3",
+            "initialization_seconds": 7.5399008630774915,
+            "scope": "persistent_sdk_worker_once"
+          }
+        ],
+        "timing_unavailable": [],
+        "status_counts": {
+          "completed": 176
+        },
+        "rounds": [
+          {
+            "repetition": "1",
+            "measured_samples": 173,
+            "attempted_input_pages": 800,
+            "completed_input_pages": 800,
+            "processing_seconds_including_failures": 1619.3374621237163,
+            "observed_processing_seconds_subtotal": 1619.3374621237163,
+            "observed_processing_samples": 173,
+            "timing_complete": true,
+            "completed_pages_per_second_including_failure_cost": 0.49402920559302205,
+            "seconds_per_attempted_input_page": 2.024171827654645,
+            "all_samples_completed": true
+          }
+        ]
+      },
+      "perf80": {
+        "boundary": "direct_worker_processing_to_native_and_faithful_export_ready",
+        "measured_runs": 84,
+        "scheduled_runs": 84,
+        "successful_runs": 84,
+        "failed_runs": 0,
+        "warmup": [
+          {
+            "sample_id": "vanke-interest-p001-002",
+            "run_id": "20261026-lite-v3",
+            "repetition": 1,
+            "status": "completed",
+            "processing_seconds": 5.277254435000941,
+            "input_pages": 2
+          },
+          {
+            "sample_id": "spdb-cover-declaration-p001-002",
+            "run_id": "20261026-lite-v3",
+            "repetition": 1,
+            "status": "completed",
+            "processing_seconds": 4.975482326000929,
+            "input_pages": 2
+          },
+          {
+            "sample_id": "pingan-financials-p001-004",
+            "run_id": "20261026-lite-v3",
+            "repetition": 1,
+            "status": "completed",
+            "processing_seconds": 5.898018103092909,
+            "input_pages": 4
+          }
+        ],
+        "initialization": [
+          {
+            "run_id": "20261026-lite-v3",
+            "initialization_seconds": 7.5399008630774915,
+            "scope": "persistent_sdk_worker_once"
+          }
+        ],
+        "timing_unavailable": [],
+        "status_counts": {
+          "completed": 87
+        },
+        "rounds": [
+          {
+            "repetition": "1",
+            "measured_samples": 28,
+            "attempted_input_pages": 80,
+            "completed_input_pages": 80,
+            "processing_seconds_including_failures": 202.43531208485365,
+            "observed_processing_seconds_subtotal": 202.43531208485365,
+            "observed_processing_samples": 28,
+            "timing_complete": true,
+            "completed_pages_per_second_including_failure_cost": 0.3951879698067048,
+            "seconds_per_attempted_input_page": 2.5304414010606706,
+            "all_samples_completed": true
+          },
+          {
+            "repetition": "2",
+            "measured_samples": 28,
+            "attempted_input_pages": 80,
+            "completed_input_pages": 80,
+            "processing_seconds_including_failures": 202.1400690956507,
+            "observed_processing_seconds_subtotal": 202.1400690956507,
+            "observed_processing_samples": 28,
+            "timing_complete": true,
+            "completed_pages_per_second_including_failure_cost": 0.39576517588971827,
+            "seconds_per_attempted_input_page": 2.5267508636956335,
+            "all_samples_completed": true
+          },
+          {
+            "repetition": "3",
+            "measured_samples": 28,
+            "attempted_input_pages": 80,
+            "completed_input_pages": 80,
+            "processing_seconds_including_failures": 202.87228469038382,
+            "observed_processing_seconds_subtotal": 202.87228469038382,
+            "observed_processing_samples": 28,
+            "timing_complete": true,
+            "completed_pages_per_second_including_failure_cost": 0.39433676276724067,
+            "seconds_per_attempted_input_page": 2.5359035586297978,
+            "all_samples_completed": true
+          }
+        ]
+      }
+    },
+    "P07": {
+      "quality800": {
+        "boundary": "direct_worker_processing_to_native_and_faithful_export_ready",
+        "measured_runs": 173,
+        "scheduled_runs": 173,
+        "successful_runs": 173,
+        "failed_runs": 0,
+        "warmup": [
+          {
+            "sample_id": "vanke-interest-p001-002",
+            "run_id": "20261026-lite-v3",
+            "repetition": 1,
+            "status": "completed",
+            "processing_seconds": 8.98719214880839,
+            "input_pages": 2
+          },
+          {
+            "sample_id": "spdb-cover-declaration-p001-002",
+            "run_id": "20261026-lite-v3",
+            "repetition": 1,
+            "status": "completed",
+            "processing_seconds": 6.324331459123641,
+            "input_pages": 2
+          },
+          {
+            "sample_id": "pingan-financials-p001-004",
+            "run_id": "20261026-lite-v3",
+            "repetition": 1,
+            "status": "completed",
+            "processing_seconds": 16.11012820689939,
+            "input_pages": 4
+          }
+        ],
+        "initialization": [
+          {
+            "run_id": "20261026-lite-v3",
+            "initialization_seconds": 7.317869688151404,
+            "scope": "persistent_sdk_worker_once"
+          }
+        ],
+        "timing_unavailable": [],
+        "status_counts": {
+          "completed": 176
+        },
+        "rounds": [
+          {
+            "repetition": "1",
+            "measured_samples": 173,
+            "attempted_input_pages": 800,
+            "completed_input_pages": 800,
+            "processing_seconds_including_failures": 2411.6955469599925,
+            "observed_processing_seconds_subtotal": 2411.6955469599925,
+            "observed_processing_samples": 173,
+            "timing_complete": true,
+            "completed_pages_per_second_including_failure_cost": 0.3317168292691097,
+            "seconds_per_attempted_input_page": 3.0146194336999907,
+            "all_samples_completed": true
+          }
+        ]
+      },
+      "perf80": {
+        "boundary": "direct_worker_processing_to_native_and_faithful_export_ready",
+        "measured_runs": 84,
+        "scheduled_runs": 84,
+        "successful_runs": 84,
+        "failed_runs": 0,
+        "warmup": [
+          {
+            "sample_id": "vanke-interest-p001-002",
+            "run_id": "20261026-lite-v3",
+            "repetition": 1,
+            "status": "completed",
+            "processing_seconds": 8.98719214880839,
+            "input_pages": 2
+          },
+          {
+            "sample_id": "spdb-cover-declaration-p001-002",
+            "run_id": "20261026-lite-v3",
+            "repetition": 1,
+            "status": "completed",
+            "processing_seconds": 6.324331459123641,
+            "input_pages": 2
+          },
+          {
+            "sample_id": "pingan-financials-p001-004",
+            "run_id": "20261026-lite-v3",
+            "repetition": 1,
+            "status": "completed",
+            "processing_seconds": 16.11012820689939,
+            "input_pages": 4
+          }
+        ],
+        "initialization": [
+          {
+            "run_id": "20261026-lite-v3",
+            "initialization_seconds": 7.317869688151404,
+            "scope": "persistent_sdk_worker_once"
+          }
+        ],
+        "timing_unavailable": [],
+        "status_counts": {
+          "completed": 87
+        },
+        "rounds": [
+          {
+            "repetition": "1",
+            "measured_samples": 28,
+            "attempted_input_pages": 80,
+            "completed_input_pages": 80,
+            "processing_seconds_including_failures": 279.99178051995113,
+            "observed_processing_seconds_subtotal": 279.99178051995113,
+            "observed_processing_samples": 28,
+            "timing_complete": true,
+            "completed_pages_per_second_including_failure_cost": 0.28572267318504196,
+            "seconds_per_attempted_input_page": 3.499897256499389,
+            "all_samples_completed": true
+          },
+          {
+            "repetition": "2",
+            "measured_samples": 28,
+            "attempted_input_pages": 80,
+            "completed_input_pages": 80,
+            "processing_seconds_including_failures": 276.89699258399196,
+            "observed_processing_seconds_subtotal": 276.89699258399196,
+            "observed_processing_samples": 28,
+            "timing_complete": true,
+            "completed_pages_per_second_including_failure_cost": 0.2889161028924262,
+            "seconds_per_attempted_input_page": 3.4612124072998993,
+            "all_samples_completed": true
+          },
+          {
+            "repetition": "3",
+            "measured_samples": 28,
+            "attempted_input_pages": 80,
+            "completed_input_pages": 80,
+            "processing_seconds_including_failures": 274.57029026397504,
+            "observed_processing_seconds_subtotal": 274.57029026397504,
+            "observed_processing_samples": 28,
+            "timing_complete": true,
+            "completed_pages_per_second_including_failure_cost": 0.29136437129846454,
+            "seconds_per_attempted_input_page": 3.432128628299688,
+            "all_samples_completed": true
+          }
+        ]
+      }
+    },
+    "P08": {
+      "quality800": {
+        "boundary": "direct_worker_processing_to_native_and_faithful_export_ready",
+        "measured_runs": 173,
+        "scheduled_runs": 173,
+        "successful_runs": 173,
+        "failed_runs": 0,
+        "warmup": [
+          {
+            "sample_id": "vanke-interest-p001-002",
+            "run_id": "20261026-lite-v3",
+            "repetition": 1,
+            "status": "completed",
+            "processing_seconds": 8.202540470985696,
+            "input_pages": 2
+          },
+          {
+            "sample_id": "spdb-cover-declaration-p001-002",
+            "run_id": "20261026-lite-v3",
+            "repetition": 1,
+            "status": "completed",
+            "processing_seconds": 6.41592507599853,
+            "input_pages": 2
+          },
+          {
+            "sample_id": "pingan-financials-p001-004",
+            "run_id": "20261026-lite-v3",
+            "repetition": 1,
+            "status": "completed",
+            "processing_seconds": 21.56457357783802,
+            "input_pages": 4
+          }
+        ],
+        "initialization": [
+          {
+            "run_id": "20261026-lite-v3",
+            "initialization_seconds": 4.674814380938187,
+            "scope": "persistent_sdk_worker_once"
+          }
+        ],
+        "timing_unavailable": [],
+        "status_counts": {
+          "completed": 176
+        },
+        "rounds": [
+          {
+            "repetition": "1",
+            "measured_samples": 173,
+            "attempted_input_pages": 800,
+            "completed_input_pages": 800,
+            "processing_seconds_including_failures": 3327.525034005288,
+            "observed_processing_seconds_subtotal": 3327.525034005288,
+            "observed_processing_samples": 173,
+            "timing_complete": true,
+            "completed_pages_per_second_including_failure_cost": 0.24041892752856406,
+            "seconds_per_attempted_input_page": 4.15940629250661,
+            "all_samples_completed": true
+          }
+        ]
+      },
+      "perf80": {
+        "boundary": "direct_worker_processing_to_native_and_faithful_export_ready",
+        "measured_runs": 84,
+        "scheduled_runs": 84,
+        "successful_runs": 84,
+        "failed_runs": 0,
+        "warmup": [
+          {
+            "sample_id": "vanke-interest-p001-002",
+            "run_id": "20261026-lite-v3",
+            "repetition": 1,
+            "status": "completed",
+            "processing_seconds": 8.202540470985696,
+            "input_pages": 2
+          },
+          {
+            "sample_id": "spdb-cover-declaration-p001-002",
+            "run_id": "20261026-lite-v3",
+            "repetition": 1,
+            "status": "completed",
+            "processing_seconds": 6.41592507599853,
+            "input_pages": 2
+          },
+          {
+            "sample_id": "pingan-financials-p001-004",
+            "run_id": "20261026-lite-v3",
+            "repetition": 1,
+            "status": "completed",
+            "processing_seconds": 21.56457357783802,
+            "input_pages": 4
+          }
+        ],
+        "initialization": [
+          {
+            "run_id": "20261026-lite-v3",
+            "initialization_seconds": 4.674814380938187,
+            "scope": "persistent_sdk_worker_once"
+          }
+        ],
+        "timing_unavailable": [],
+        "status_counts": {
+          "completed": 87
+        },
+        "rounds": [
+          {
+            "repetition": "1",
+            "measured_samples": 28,
+            "attempted_input_pages": 80,
+            "completed_input_pages": 80,
+            "processing_seconds_including_failures": 316.18072399590164,
+            "observed_processing_seconds_subtotal": 316.18072399590164,
+            "observed_processing_samples": 28,
+            "timing_complete": true,
+            "completed_pages_per_second_including_failure_cost": 0.25301985202942656,
+            "seconds_per_attempted_input_page": 3.9522590499487706,
+            "all_samples_completed": true
+          },
+          {
+            "repetition": "2",
+            "measured_samples": 28,
+            "attempted_input_pages": 80,
+            "completed_input_pages": 80,
+            "processing_seconds_including_failures": 310.5298639179673,
+            "observed_processing_seconds_subtotal": 310.5298639179673,
+            "observed_processing_samples": 28,
+            "timing_complete": true,
+            "completed_pages_per_second_including_failure_cost": 0.25762417498477247,
+            "seconds_per_attempted_input_page": 3.881623298974591,
+            "all_samples_completed": true
+          },
+          {
+            "repetition": "3",
+            "measured_samples": 28,
+            "attempted_input_pages": 80,
+            "completed_input_pages": 80,
+            "processing_seconds_including_failures": 311.49094247235917,
+            "observed_processing_seconds_subtotal": 311.49094247235917,
+            "observed_processing_samples": 28,
+            "timing_complete": true,
+            "completed_pages_per_second_including_failure_cost": 0.2568292977157722,
+            "seconds_per_attempted_input_page": 3.8936367809044894,
+            "all_samples_completed": true
+          }
+        ]
+      }
+    }
+  },
+  "final": {
+    "P07-previous": {
+      "run": "/opt/moparse/benchmark/runs/lite/service/earlier/p07",
+      "software_id": "dba742040fc1cfb54722d7b190f915dc9131e3e83a724660abdc5c35f822ce33",
+      "measurement_notes": [
+        "Saved valid P07 native candidates are replayed; no model inference is repeated.",
+        "P08 keeps visual-only source access; PDF text and vector-table supplementation are disabled.",
+        "PDF source supplementation is actual candidate service processing, not corpus review.",
+        "Reference materials are unavailable to the isolated candidate worker.",
+        "Postprocessing wall time includes bridge readback, source processing, export, IR, assets and semantics.",
+        "Native JSON loading and final result persistence/scoring/reporting are timed separately.",
+        "Asset writes internal to actual asset materialization remain in the measured stage.",
+        "Candidate stage snapshots are captured without references; capture CPU overhead stays inside postprocessing time and is recorded separately.",
+        "Stage snapshot persistence and all stage scoring are outside postprocessing time.",
+        "The historical native duration plus replay time is not a newly measured end-to-end duration."
+      ],
+      "quality800": {
+        "suite": "quality800",
+        "rounds": [
+          {
+            "repetition": 1,
+            "samples": 173,
+            "expected_samples": 173,
+            "input_pages": 800,
+            "postprocessing_seconds": 213.81607012846507,
+            "observed_seconds_subtotal": 213.81607012846507,
+            "missing_timing_samples": 0,
+            "timing_complete": true,
+            "status_counts": {
+              "completed": 121,
+              "partial": 37,
+              "completed_with_warnings": 15
+            },
+            "diagnostic_capture_seconds": 1.40275892149657
+          }
+        ],
+        "complete_timing_rounds": 1,
+        "median_postprocessing_seconds": 213.81607012846507,
+        "minimum_seconds": 213.81607012846507,
+        "maximum_seconds": 213.81607012846507,
+        "coefficient_of_variation": null,
+        "meaning": "postprocessing_only_not_new_end_to_end_parse_timing"
+      },
+      "perf80": {
+        "suite": "perf80",
+        "rounds": [
+          {
+            "repetition": 1,
+            "samples": 28,
+            "expected_samples": 28,
+            "input_pages": 80,
+            "postprocessing_seconds": 28.04273754521273,
+            "observed_seconds_subtotal": 28.04273754521273,
+            "missing_timing_samples": 0,
+            "timing_complete": true,
+            "status_counts": {
+              "completed": 20,
+              "partial": 5,
+              "completed_with_warnings": 3
+            },
+            "diagnostic_capture_seconds": 0.2530847401358187
+          },
+          {
+            "repetition": 2,
+            "samples": 28,
+            "expected_samples": 28,
+            "input_pages": 80,
+            "postprocessing_seconds": 27.784609058871865,
+            "observed_seconds_subtotal": 27.784609058871865,
+            "missing_timing_samples": 0,
+            "timing_complete": true,
+            "status_counts": {
+              "completed": 20,
+              "partial": 5,
+              "completed_with_warnings": 3
+            },
+            "diagnostic_capture_seconds": 0.2291432518977672
+          },
+          {
+            "repetition": 3,
+            "samples": 28,
+            "expected_samples": 28,
+            "input_pages": 80,
+            "postprocessing_seconds": 27.41880641132593,
+            "observed_seconds_subtotal": 27.41880641132593,
+            "missing_timing_samples": 0,
+            "timing_complete": true,
+            "status_counts": {
+              "completed": 20,
+              "partial": 5,
+              "completed_with_warnings": 3
+            },
+            "diagnostic_capture_seconds": 0.1758006801828742
+          }
+        ],
+        "complete_timing_rounds": 3,
+        "median_postprocessing_seconds": 27.784609058871865,
+        "minimum_seconds": 27.41880641132593,
+        "maximum_seconds": 28.04273754521273,
+        "coefficient_of_variation": 0.009224931638536073,
+        "meaning": "postprocessing_only_not_new_end_to_end_parse_timing"
+      },
+      "warmup": [
+        {
+          "case_id": "preflight8-r1-vanke-interest-p001-002",
+          "sample_id": "vanke-interest-p001-002",
+          "input_pages": 2,
+          "timing": {
+            "postprocessing_seconds": 0.4551601121202111,
+            "native_json_load_seconds": 0.00040122284553945065,
+            "pure_persistence_and_observation_seconds": 0.10046932706609368,
+            "diagnostic_capture_seconds": 0.00033575226552784443,
+            "saved_orientation_seconds": 0.00018746615387499332,
+            "native_bridge_seconds": 0.37134147901088,
+            "page_evidence_seconds": 0.03540341788902879,
+            "table_source_seconds": 4.0085986256599426e-05,
+            "native_text_seconds": 0.010973308933898807,
+            "exports_seconds": 0.007928973063826561,
+            "quality_diagnostics_seconds": 0.0025133490562438965,
+            "ir_seconds": 0.0024352690670639277,
+            "assets_seconds": 0.0026500888634473085,
+            "semantics_seconds": 0.01165139488875866,
+            "final_content_seconds": 0.008584017166867852
+          },
+          "resources": {
+            "peak_rss_bytes": 110788608,
+            "rss_samples": 14
+          },
+          "status": "completed"
+        },
+        {
+          "case_id": "preflight8-r1-spdb-cover-declaration-p001-002",
+          "sample_id": "spdb-cover-declaration-p001-002",
+          "input_pages": 2,
+          "timing": {
+            "postprocessing_seconds": 0.6435977581422776,
+            "native_json_load_seconds": 0.008040431886911392,
+            "pure_persistence_and_observation_seconds": 0.09356195502914488,
+            "diagnostic_capture_seconds": 0.0004255021922290325,
+            "saved_orientation_seconds": 6.803893484175205e-05,
+            "native_bridge_seconds": 0.007015859009698033,
+            "page_evidence_seconds": 0.1917409359011799,
+            "table_source_seconds": 8.253590203821659e-05,
+            "native_text_seconds": 0.008229573955759406,
+            "exports_seconds": 0.010156369069591165,
+            "quality_diagnostics_seconds": 0.0009258298669010401,
+            "ir_seconds": 0.006065707886591554,
+            "assets_seconds": 0.4031198990996927,
+            "semantics_seconds": 0.005639967974275351,
+            "final_content_seconds": 0.009566515916958451
+          },
+          "resources": {
+            "peak_rss_bytes": 204148736,
+            "rss_samples": 18
+          },
+          "status": "completed"
+        },
+        {
+          "case_id": "preflight8-r1-pingan-financials-p001-004",
+          "sample_id": "pingan-financials-p001-004",
+          "input_pages": 4,
+          "timing": {
+            "postprocessing_seconds": 1.030849802074954,
+            "native_json_load_seconds": 0.034972009947523475,
+            "pure_persistence_and_observation_seconds": 2.504671667004004,
+            "diagnostic_capture_seconds": 0.09089915081858635,
+            "saved_orientation_seconds": 6.425799801945686e-05,
+            "native_bridge_seconds": 0.10694549605250359,
+            "page_evidence_seconds": 0.10420183395035565,
+            "table_source_seconds": 0.421030952129513,
+            "native_text_seconds": 0.027039838954806328,
+            "exports_seconds": 0.026511323871091008,
+            "quality_diagnostics_seconds": 0.00472584692761302,
+            "ir_seconds": 0.01586823002435267,
+            "assets_seconds": 0.014346825890243053,
+            "semantics_seconds": 0.10797531600110233,
+            "final_content_seconds": 0.11077962489798665
+          },
+          "resources": {
+            "peak_rss_bytes": 201338880,
+            "rss_samples": 16
+          },
+          "status": "partial"
+        }
+      ]
+    },
+    "P08-previous": {
+      "run": "/opt/moparse/benchmark/runs/lite/service/earlier/p08",
+      "software_id": "dba742040fc1cfb54722d7b190f915dc9131e3e83a724660abdc5c35f822ce33",
+      "measurement_notes": [
+        "Saved valid P08 native candidates are replayed; no model inference is repeated.",
+        "P08 keeps visual-only source access; PDF text and vector-table supplementation are disabled.",
+        "PDF source supplementation is actual candidate service processing, not corpus review.",
+        "Reference materials are unavailable to the isolated candidate worker.",
+        "Postprocessing wall time includes bridge readback, source processing, export, IR, assets and semantics.",
+        "Native JSON loading and final result persistence/scoring/reporting are timed separately.",
+        "Asset writes internal to actual asset materialization remain in the measured stage.",
+        "Candidate stage snapshots are captured without references; capture CPU overhead stays inside postprocessing time and is recorded separately.",
+        "Stage snapshot persistence and all stage scoring are outside postprocessing time.",
+        "The historical native duration plus replay time is not a newly measured end-to-end duration."
+      ],
+      "quality800": {
+        "suite": "quality800",
+        "rounds": [
+          {
+            "repetition": 1,
+            "samples": 173,
+            "expected_samples": 173,
+            "input_pages": 800,
+            "postprocessing_seconds": 183.09236820344813,
+            "observed_seconds_subtotal": 183.09236820344813,
+            "missing_timing_samples": 0,
+            "timing_complete": true,
+            "status_counts": {
+              "completed": 124,
+              "partial": 37,
+              "completed_with_warnings": 12
+            },
+            "diagnostic_capture_seconds": 0.6880490884650499
+          }
+        ],
+        "complete_timing_rounds": 1,
+        "median_postprocessing_seconds": 183.09236820344813,
+        "minimum_seconds": 183.09236820344813,
+        "maximum_seconds": 183.09236820344813,
+        "coefficient_of_variation": null,
+        "meaning": "postprocessing_only_not_new_end_to_end_parse_timing"
+      },
+      "perf80": {
+        "suite": "perf80",
+        "rounds": [
+          {
+            "repetition": 1,
+            "samples": 28,
+            "expected_samples": 28,
+            "input_pages": 80,
+            "postprocessing_seconds": 27.680365143110976,
+            "observed_seconds_subtotal": 27.680365143110976,
+            "missing_timing_samples": 0,
+            "timing_complete": true,
+            "status_counts": {
+              "completed": 21,
+              "partial": 5,
+              "completed_with_warnings": 2
+            },
+            "diagnostic_capture_seconds": 0.11174708069302142
+          },
+          {
+            "repetition": 2,
+            "samples": 28,
+            "expected_samples": 28,
+            "input_pages": 80,
+            "postprocessing_seconds": 27.462997780181468,
+            "observed_seconds_subtotal": 27.462997780181468,
+            "missing_timing_samples": 0,
+            "timing_complete": true,
+            "status_counts": {
+              "completed": 21,
+              "partial": 5,
+              "completed_with_warnings": 2
+            },
+            "diagnostic_capture_seconds": 0.11369536980055273
+          },
+          {
+            "repetition": 3,
+            "samples": 28,
+            "expected_samples": 28,
+            "input_pages": 80,
+            "postprocessing_seconds": 27.424148431047797,
+            "observed_seconds_subtotal": 27.424148431047797,
+            "missing_timing_samples": 0,
+            "timing_complete": true,
+            "status_counts": {
+              "completed": 21,
+              "partial": 5,
+              "completed_with_warnings": 2
+            },
+            "diagnostic_capture_seconds": 0.1317348771262914
+          }
+        ],
+        "complete_timing_rounds": 3,
+        "median_postprocessing_seconds": 27.462997780181468,
+        "minimum_seconds": 27.424148431047797,
+        "maximum_seconds": 27.680365143110976,
+        "coefficient_of_variation": 0.0040965005307314365,
+        "meaning": "postprocessing_only_not_new_end_to_end_parse_timing"
+      },
+      "warmup": [
+        {
+          "case_id": "preflight8-r1-vanke-interest-p001-002",
+          "sample_id": "vanke-interest-p001-002",
+          "input_pages": 2,
+          "timing": {
+            "postprocessing_seconds": 0.039585616905242205,
+            "native_json_load_seconds": 0.00026029697619378567,
+            "pure_persistence_and_observation_seconds": 0.1794667870271951,
+            "diagnostic_capture_seconds": 0.00014931010082364082,
+            "saved_orientation_seconds": 7.547414861619473e-05,
+            "native_bridge_seconds": 0.003139271168038249,
+            "page_evidence_seconds": 4.200264811515808e-07,
+            "table_source_seconds": 2.3515895009040833e-07,
+            "native_text_seconds": 2.3213215172290802e-07,
+            "exports_seconds": 0.0041501878295093775,
+            "quality_diagnostics_seconds": 0.0010313598904758692,
+            "ir_seconds": 0.0005586459301412106,
+            "assets_seconds": 0.0014905661810189486,
+            "semantics_seconds": 0.023616675985977054,
+            "final_content_seconds": 0.004769197199493647
+          },
+          "resources": {
+            "peak_rss_bytes": 91213824,
+            "rss_samples": 2
+          },
+          "status": "completed"
+        },
+        {
+          "case_id": "preflight8-r1-spdb-cover-declaration-p001-002",
+          "sample_id": "spdb-cover-declaration-p001-002",
+          "input_pages": 2,
+          "timing": {
+            "postprocessing_seconds": 1.679130838951096,
+            "native_json_load_seconds": 0.00024106004275381565,
+            "pure_persistence_and_observation_seconds": 0.10202067205682397,
+            "diagnostic_capture_seconds": 0.00022975471802055836,
+            "saved_orientation_seconds": 6.912881508469582e-05,
+            "native_bridge_seconds": 0.0023258388973772526,
+            "page_evidence_seconds": 5.508773028850555e-07,
+            "table_source_seconds": 3.0105002224445343e-07,
+            "native_text_seconds": 2.7497299015522003e-07,
+            "exports_seconds": 0.0031375179532915354,
+            "quality_diagnostics_seconds": 0.0002962311264127493,
+            "ir_seconds": 0.0027890619821846485,
+            "assets_seconds": 1.6533110700547695,
+            "semantics_seconds": 0.0035907397978007793,
+            "final_content_seconds": 0.012853728840127587
+          },
+          "resources": {
+            "peak_rss_bytes": 213819392,
+            "rss_samples": 19
+          },
+          "status": "completed"
+        },
+        {
+          "case_id": "preflight8-r1-pingan-financials-p001-004",
+          "sample_id": "pingan-financials-p001-004",
+          "input_pages": 4,
+          "timing": {
+            "postprocessing_seconds": 0.2476712199859321,
+            "native_json_load_seconds": 0.000561663880944252,
+            "pure_persistence_and_observation_seconds": 2.4805493080057204,
+            "diagnostic_capture_seconds": 0.03473137109540403,
+            "saved_orientation_seconds": 7.130787707865238e-05,
+            "native_bridge_seconds": 0.013611837988719344,
+            "page_evidence_seconds": 5.851034075021744e-07,
+            "table_source_seconds": 2.3189932107925415e-07,
+            "native_text_seconds": 2.1187588572502136e-07,
+            "exports_seconds": 0.022912430111318827,
+            "quality_diagnostics_seconds": 0.005594086134806275,
+            "ir_seconds": 0.011552003910765052,
+            "assets_seconds": 0.010402345797047019,
+            "semantics_seconds": 0.10129024391062558,
+            "final_content_seconds": 0.04709802404977381
+          },
+          "resources": {
+            "peak_rss_bytes": 207691776,
+            "rss_samples": 5
+          },
+          "status": "partial"
+        }
+      ]
+    },
+    "P07-intermediate": {
+      "run": "/opt/moparse/benchmark/runs/lite/service/before/p07",
+      "software_id": "8b292af10747c75ab187fcbb46d2839434faf71d24b85b4cac1a686cc3c8d74d",
+      "measurement_notes": [
+        "Saved valid P07 native candidates are replayed; no model inference is repeated.",
+        "P08 keeps visual-only source access; PDF text and vector-table supplementation are disabled.",
+        "PDF source supplementation is actual candidate service processing, not corpus review.",
+        "Reference materials are unavailable to the isolated candidate worker.",
+        "Postprocessing wall time includes bridge readback, source processing, export, IR, assets and semantics.",
+        "Native JSON loading and final result persistence/scoring/reporting are timed separately.",
+        "Asset writes internal to actual asset materialization remain in the measured stage.",
+        "Candidate stage snapshots are captured without references; capture CPU overhead stays inside postprocessing time and is recorded separately.",
+        "Stage snapshot persistence and all stage scoring are outside postprocessing time.",
+        "The historical native duration plus replay time is not a newly measured end-to-end duration."
+      ],
+      "quality800": {
+        "suite": "quality800",
+        "rounds": [
+          {
+            "repetition": 1,
+            "samples": 173,
+            "expected_samples": 173,
+            "input_pages": 800,
+            "postprocessing_seconds": 235.5367430462502,
+            "observed_seconds_subtotal": 235.5367430462502,
+            "missing_timing_samples": 0,
+            "timing_complete": true,
+            "status_counts": {
+              "completed": 124,
+              "partial": 33,
+              "completed_with_warnings": 16
+            },
+            "diagnostic_capture_seconds": 1.755031740758568
+          }
+        ],
+        "complete_timing_rounds": 1,
+        "median_postprocessing_seconds": 235.5367430462502,
+        "minimum_seconds": 235.5367430462502,
+        "maximum_seconds": 235.5367430462502,
+        "coefficient_of_variation": null,
+        "meaning": "postprocessing_only_not_new_end_to_end_parse_timing"
+      },
+      "perf80": {
+        "suite": "perf80",
+        "rounds": [
+          {
+            "repetition": 1,
+            "samples": 28,
+            "expected_samples": 28,
+            "input_pages": 80,
+            "postprocessing_seconds": 29.947580456966534,
+            "observed_seconds_subtotal": 29.947580456966534,
+            "missing_timing_samples": 0,
+            "timing_complete": true,
+            "status_counts": {
+              "completed": 21,
+              "partial": 4,
+              "completed_with_warnings": 3
+            },
+            "diagnostic_capture_seconds": 0.26805646950379014
+          },
+          {
+            "repetition": 2,
+            "samples": 28,
+            "expected_samples": 28,
+            "input_pages": 80,
+            "postprocessing_seconds": 28.96651858673431,
+            "observed_seconds_subtotal": 28.96651858673431,
+            "missing_timing_samples": 0,
+            "timing_complete": true,
+            "status_counts": {
+              "completed": 21,
+              "partial": 4,
+              "completed_with_warnings": 3
+            },
+            "diagnostic_capture_seconds": 0.2027047050651163
+          },
+          {
+            "repetition": 3,
+            "samples": 28,
+            "expected_samples": 28,
+            "input_pages": 80,
+            "postprocessing_seconds": 28.273824476636946,
+            "observed_seconds_subtotal": 28.273824476636946,
+            "missing_timing_samples": 0,
+            "timing_complete": true,
+            "status_counts": {
+              "completed": 21,
+              "partial": 4,
+              "completed_with_warnings": 3
+            },
+            "diagnostic_capture_seconds": 0.1815994952339679
+          }
+        ],
+        "complete_timing_rounds": 3,
+        "median_postprocessing_seconds": 28.96651858673431,
+        "minimum_seconds": 28.273824476636946,
+        "maximum_seconds": 29.947580456966534,
+        "coefficient_of_variation": 0.023627589172345184,
+        "meaning": "postprocessing_only_not_new_end_to_end_parse_timing"
+      },
+      "warmup": [
+        {
+          "case_id": "preflight8-r1-vanke-interest-p001-002",
+          "sample_id": "vanke-interest-p001-002",
+          "input_pages": 2,
+          "timing": {
+            "postprocessing_seconds": 0.4617815038654953,
+            "native_json_load_seconds": 0.0004230600316077471,
+            "pure_persistence_and_observation_seconds": 0.1038225470110774,
+            "diagnostic_capture_seconds": 0.0003444759640842676,
+            "saved_orientation_seconds": 0.00019244407303631306,
+            "native_bridge_seconds": 0.3702768860384822,
+            "page_evidence_seconds": 0.0354704400524497,
+            "table_source_seconds": 4.874705336987972e-05,
+            "native_text_seconds": 0.009809801820665598,
+            "exports_seconds": 0.007614169968292117,
+            "quality_diagnostics_seconds": 0.0021511611994355917,
+            "ir_seconds": 0.0018670270219445229,
+            "assets_seconds": 0.002869964111596346,
+            "semantics_seconds": 0.019386057974770665,
+            "final_content_seconds": 0.010597979184240103
+          },
+          "resources": {
+            "peak_rss_bytes": 113336320,
+            "rss_samples": 15
+          },
+          "status": "completed"
+        },
+        {
+          "case_id": "preflight8-r1-spdb-cover-declaration-p001-002",
+          "sample_id": "spdb-cover-declaration-p001-002",
+          "input_pages": 2,
+          "timing": {
+            "postprocessing_seconds": 0.6853775379713625,
+            "native_json_load_seconds": 0.011612985050305724,
+            "pure_persistence_and_observation_seconds": 0.09823678201064467,
+            "diagnostic_capture_seconds": 0.0003935170825570822,
+            "saved_orientation_seconds": 0.000194489024579525,
+            "native_bridge_seconds": 0.020251489942893386,
+            "page_evidence_seconds": 0.20769350207410753,
+            "table_source_seconds": 8.071097545325756e-05,
+            "native_text_seconds": 0.008239055052399635,
+            "exports_seconds": 0.04023536411114037,
+            "quality_diagnostics_seconds": 0.0014128598850220442,
+            "ir_seconds": 0.0068663309793919325,
+            "assets_seconds": 0.3846129958983511,
+            "semantics_seconds": 0.0048808560241013765,
+            "final_content_seconds": 0.009718168992549181
+          },
+          "resources": {
+            "peak_rss_bytes": 205041664,
+            "rss_samples": 18
+          },
+          "status": "completed"
+        },
+        {
+          "case_id": "preflight8-r1-pingan-financials-p001-004",
+          "sample_id": "pingan-financials-p001-004",
+          "input_pages": 4,
+          "timing": {
+            "postprocessing_seconds": 1.0842911780346185,
+            "native_json_load_seconds": 0.04426820017397404,
+            "pure_persistence_and_observation_seconds": 3.279665611917153,
+            "diagnostic_capture_seconds": 0.0914041567593813,
+            "saved_orientation_seconds": 0.0002184149343520403,
+            "native_bridge_seconds": 0.11909983400255442,
+            "page_evidence_seconds": 0.11754611996002495,
+            "table_source_seconds": 0.43259672401472926,
+            "native_text_seconds": 0.03599306009709835,
+            "exports_seconds": 0.04125264589674771,
+            "quality_diagnostics_seconds": 0.003482649801298976,
+            "ir_seconds": 0.011933565838262439,
+            "assets_seconds": 0.011148621095344424,
+            "semantics_seconds": 0.1369131829123944,
+            "final_content_seconds": 0.08131063799373806
+          },
+          "resources": {
+            "peak_rss_bytes": 203976704,
+            "rss_samples": 21
+          },
+          "status": "partial"
+        }
+      ]
+    },
+    "P08-intermediate": {
+      "run": "/opt/moparse/benchmark/runs/lite/service/before/p08",
+      "software_id": "8b292af10747c75ab187fcbb46d2839434faf71d24b85b4cac1a686cc3c8d74d",
+      "measurement_notes": [
+        "Saved valid P08 native candidates are replayed; no model inference is repeated.",
+        "P08 keeps visual-only source access; PDF text and vector-table supplementation are disabled.",
+        "PDF source supplementation is actual candidate service processing, not corpus review.",
+        "Reference materials are unavailable to the isolated candidate worker.",
+        "Postprocessing wall time includes bridge readback, source processing, export, IR, assets and semantics.",
+        "Native JSON loading and final result persistence/scoring/reporting are timed separately.",
+        "Asset writes internal to actual asset materialization remain in the measured stage.",
+        "Candidate stage snapshots are captured without references; capture CPU overhead stays inside postprocessing time and is recorded separately.",
+        "Stage snapshot persistence and all stage scoring are outside postprocessing time.",
+        "The historical native duration plus replay time is not a newly measured end-to-end duration."
+      ],
+      "quality800": {
+        "suite": "quality800",
+        "rounds": [
+          {
+            "repetition": 1,
+            "samples": 173,
+            "expected_samples": 173,
+            "input_pages": 800,
+            "postprocessing_seconds": 182.62629374605604,
+            "observed_seconds_subtotal": 182.62629374605604,
+            "missing_timing_samples": 0,
+            "timing_complete": true,
+            "status_counts": {
+              "completed": 125,
+              "partial": 35,
+              "completed_with_warnings": 13
+            },
+            "diagnostic_capture_seconds": 0.7253802323248237
+          }
+        ],
+        "complete_timing_rounds": 1,
+        "median_postprocessing_seconds": 182.62629374605604,
+        "minimum_seconds": 182.62629374605604,
+        "maximum_seconds": 182.62629374605604,
+        "coefficient_of_variation": null,
+        "meaning": "postprocessing_only_not_new_end_to_end_parse_timing"
+      },
+      "perf80": {
+        "suite": "perf80",
+        "rounds": [
+          {
+            "repetition": 1,
+            "samples": 28,
+            "expected_samples": 28,
+            "input_pages": 80,
+            "postprocessing_seconds": 27.676983480108902,
+            "observed_seconds_subtotal": 27.676983480108902,
+            "missing_timing_samples": 0,
+            "timing_complete": true,
+            "status_counts": {
+              "completed": 22,
+              "partial": 4,
+              "completed_with_warnings": 2
+            },
+            "diagnostic_capture_seconds": 0.11213755654171109
+          },
+          {
+            "repetition": 2,
+            "samples": 28,
+            "expected_samples": 28,
+            "input_pages": 80,
+            "postprocessing_seconds": 27.045490039512515,
+            "observed_seconds_subtotal": 27.045490039512515,
+            "missing_timing_samples": 0,
+            "timing_complete": true,
+            "status_counts": {
+              "completed": 22,
+              "partial": 4,
+              "completed_with_warnings": 2
+            },
+            "diagnostic_capture_seconds": 0.12495632516220212
+          },
+          {
+            "repetition": 3,
+            "samples": 28,
+            "expected_samples": 28,
+            "input_pages": 80,
+            "postprocessing_seconds": 27.192389159230515,
+            "observed_seconds_subtotal": 27.192389159230515,
+            "missing_timing_samples": 0,
+            "timing_complete": true,
+            "status_counts": {
+              "completed": 22,
+              "partial": 4,
+              "completed_with_warnings": 2
+            },
+            "diagnostic_capture_seconds": 0.11558714811690152
+          }
+        ],
+        "complete_timing_rounds": 3,
+        "median_postprocessing_seconds": 27.192389159230515,
+        "minimum_seconds": 27.045490039512515,
+        "maximum_seconds": 27.676983480108902,
+        "coefficient_of_variation": 0.009881493076172556,
+        "meaning": "postprocessing_only_not_new_end_to_end_parse_timing"
+      },
+      "warmup": [
+        {
+          "case_id": "preflight8-r1-vanke-interest-p001-002",
+          "sample_id": "vanke-interest-p001-002",
+          "input_pages": 2,
+          "timing": {
+            "postprocessing_seconds": 0.07735385303385556,
+            "native_json_load_seconds": 0.00024751084856688976,
+            "pure_persistence_and_observation_seconds": 0.10313187097199261,
+            "diagnostic_capture_seconds": 0.00033674086444079876,
+            "saved_orientation_seconds": 7.947394624352455e-05,
+            "native_bridge_seconds": 0.006527711171656847,
+            "page_evidence_seconds": 1.6598496586084366e-06,
+            "table_source_seconds": 8.621718734502792e-07,
+            "native_text_seconds": 7.220078259706497e-07,
+            "exports_seconds": 0.012168097076937556,
+            "quality_diagnostics_seconds": 0.002771663013845682,
+            "ir_seconds": 0.0008791028521955013,
+            "assets_seconds": 0.0027323171962052584,
+            "semantics_seconds": 0.03478658385574818,
+            "final_content_seconds": 0.0163967979606241
+          },
+          "resources": {
+            "peak_rss_bytes": 92311552,
+            "rss_samples": 3
+          },
+          "status": "completed"
+        },
+        {
+          "case_id": "preflight8-r1-spdb-cover-declaration-p001-002",
+          "sample_id": "spdb-cover-declaration-p001-002",
+          "input_pages": 2,
+          "timing": {
+            "postprocessing_seconds": 1.8223428910132498,
+            "native_json_load_seconds": 0.044324812944978476,
+            "pure_persistence_and_observation_seconds": 0.12601955700665712,
+            "diagnostic_capture_seconds": 0.00039798906072974205,
+            "saved_orientation_seconds": 0.00017380714416503906,
+            "native_bridge_seconds": 0.00790577195584774,
+            "page_evidence_seconds": 1.176958903670311e-06,
+            "table_source_seconds": 8.700881153345108e-07,
+            "native_text_seconds": 7.699709385633469e-07,
+            "exports_seconds": 0.009355955058708787,
+            "quality_diagnostics_seconds": 0.0005721589550375938,
+            "ir_seconds": 0.005153408041223884,
+            "assets_seconds": 1.7804333560634404,
+            "semantics_seconds": 0.0050362530164420605,
+            "final_content_seconds": 0.012507471023127437
+          },
+          "resources": {
+            "peak_rss_bytes": 224624640,
+            "rss_samples": 20
+          },
+          "status": "completed"
+        },
+        {
+          "case_id": "preflight8-r1-pingan-financials-p001-004",
+          "sample_id": "pingan-financials-p001-004",
+          "input_pages": 4,
+          "timing": {
+            "postprocessing_seconds": 0.29908921010792255,
+            "native_json_load_seconds": 0.0006319929379969835,
+            "pure_persistence_and_observation_seconds": 2.843675799202174,
+            "diagnostic_capture_seconds": 0.038086469983682036,
+            "saved_orientation_seconds": 0.0002111620269715786,
+            "native_bridge_seconds": 0.033283700002357364,
+            "page_evidence_seconds": 6.610061973333359e-07,
+            "table_source_seconds": 3.681052476167679e-07,
+            "native_text_seconds": 3.159511834383011e-07,
+            "exports_seconds": 0.02562240487895906,
+            "quality_diagnostics_seconds": 0.004546132870018482,
+            "ir_seconds": 0.010964435059577227,
+            "assets_seconds": 0.012301965849474072,
+            "semantics_seconds": 0.13028704887256026,
+            "final_content_seconds": 0.04300159006379545
+          },
+          "resources": {
+            "peak_rss_bytes": 226222080,
+            "rss_samples": 6
+          },
+          "status": "partial"
+        }
+      ]
+    },
+    "P07-current": {
+      "run": "/opt/moparse/benchmark/runs/lite/service/after/p07",
+      "software_id": "f5e9063bfd2ac64be79796389d4cdaf3ad3770a8820a0628a1b245fff05a8a03",
+      "measurement_notes": [
+        "Saved valid P07 native candidates are replayed; no model inference is repeated.",
+        "P08 keeps visual-only source access; PDF text and vector-table supplementation are disabled.",
+        "PDF source supplementation is actual candidate service processing, not corpus review.",
+        "Reference materials are unavailable to the isolated candidate worker.",
+        "Postprocessing wall time includes bridge readback, source processing, export, IR, assets and semantics.",
+        "Native JSON loading and final result persistence/scoring/reporting are timed separately.",
+        "Asset writes internal to actual asset materialization remain in the measured stage.",
+        "Candidate stage snapshots are captured without references; capture CPU overhead stays inside postprocessing time and is recorded separately.",
+        "Stage snapshot persistence and all stage scoring are outside postprocessing time.",
+        "The historical native duration plus replay time is not a newly measured end-to-end duration."
+      ],
+      "quality800": {
+        "suite": "quality800",
+        "rounds": [
+          {
+            "repetition": 1,
+            "samples": 173,
+            "expected_samples": 173,
+            "input_pages": 800,
+            "postprocessing_seconds": 216.08729466283694,
+            "observed_seconds_subtotal": 216.08729466283694,
+            "missing_timing_samples": 0,
+            "timing_complete": true,
+            "status_counts": {
+              "completed": 126,
+              "partial": 31,
+              "completed_with_warnings": 16
+            },
+            "diagnostic_capture_seconds": 1.553255813429132
+          }
+        ],
+        "complete_timing_rounds": 1,
+        "median_postprocessing_seconds": 216.08729466283694,
+        "minimum_seconds": 216.08729466283694,
+        "maximum_seconds": 216.08729466283694,
+        "coefficient_of_variation": null,
+        "meaning": "postprocessing_only_not_new_end_to_end_parse_timing"
+      },
+      "perf80": {
+        "suite": "perf80",
+        "rounds": [
+          {
+            "repetition": 1,
+            "samples": 28,
+            "expected_samples": 28,
+            "input_pages": 80,
+            "postprocessing_seconds": 28.396627821028233,
+            "observed_seconds_subtotal": 28.396627821028233,
+            "missing_timing_samples": 0,
+            "timing_complete": true,
+            "status_counts": {
+              "completed": 21,
+              "partial": 4,
+              "completed_with_warnings": 3
+            },
+            "diagnostic_capture_seconds": 0.2253653972875327
+          },
+          {
+            "repetition": 2,
+            "samples": 28,
+            "expected_samples": 28,
+            "input_pages": 80,
+            "postprocessing_seconds": 28.02058982872404,
+            "observed_seconds_subtotal": 28.02058982872404,
+            "missing_timing_samples": 0,
+            "timing_complete": true,
+            "status_counts": {
+              "completed": 21,
+              "partial": 4,
+              "completed_with_warnings": 3
+            },
+            "diagnostic_capture_seconds": 0.18280066340230405
+          },
+          {
+            "repetition": 3,
+            "samples": 28,
+            "expected_samples": 28,
+            "input_pages": 80,
+            "postprocessing_seconds": 27.742312064627185,
+            "observed_seconds_subtotal": 27.742312064627185,
+            "missing_timing_samples": 0,
+            "timing_complete": true,
+            "status_counts": {
+              "completed": 21,
+              "partial": 4,
+              "completed_with_warnings": 3
+            },
+            "diagnostic_capture_seconds": 0.18351547187194228
+          }
+        ],
+        "complete_timing_rounds": 3,
+        "median_postprocessing_seconds": 28.02058982872404,
+        "minimum_seconds": 27.742312064627185,
+        "maximum_seconds": 28.396627821028233,
+        "coefficient_of_variation": 0.009557394398444143,
+        "meaning": "postprocessing_only_not_new_end_to_end_parse_timing"
+      },
+      "warmup": [
+        {
+          "case_id": "preflight8-r1-vanke-interest-p001-002",
+          "sample_id": "vanke-interest-p001-002",
+          "input_pages": 2,
+          "timing": {
+            "postprocessing_seconds": 0.4277774919755757,
+            "native_json_load_seconds": 0.00039787800051271915,
+            "pure_persistence_and_observation_seconds": 0.2227676878683269,
+            "diagnostic_capture_seconds": 0.00034487410448491573,
+            "saved_orientation_seconds": 6.991997361183167e-05,
+            "native_bridge_seconds": 0.33105519390664995,
+            "page_evidence_seconds": 0.036251157987862825,
+            "table_source_seconds": 5.681207403540611e-05,
+            "native_text_seconds": 0.010521415155380964,
+            "exports_seconds": 0.01195322792045772,
+            "quality_diagnostics_seconds": 0.0025073960423469543,
+            "ir_seconds": 0.002853088080883026,
+            "assets_seconds": 0.003711617086082697,
+            "semantics_seconds": 0.01714964210987091,
+            "final_content_seconds": 0.010757793905213475
+          },
+          "resources": {
+            "peak_rss_bytes": 113655808,
+            "rss_samples": 14
+          },
+          "status": "completed"
+        },
+        {
+          "case_id": "preflight8-r1-spdb-cover-declaration-p001-002",
+          "sample_id": "spdb-cover-declaration-p001-002",
+          "input_pages": 2,
+          "timing": {
+            "postprocessing_seconds": 0.5991626819595695,
+            "native_json_load_seconds": 0.007773190038278699,
+            "pure_persistence_and_observation_seconds": 0.08994145598262548,
+            "diagnostic_capture_seconds": 0.00036088679917156696,
+            "saved_orientation_seconds": 6.762309931218624e-05,
+            "native_bridge_seconds": 0.006884392816573381,
+            "page_evidence_seconds": 0.22439047205261886,
+            "table_source_seconds": 7.223105058073997e-05,
+            "native_text_seconds": 0.00830025295726955,
+            "exports_seconds": 0.010278841014951468,
+            "quality_diagnostics_seconds": 0.00129754189401865,
+            "ir_seconds": 0.00599731900729239,
+            "assets_seconds": 0.3291307690087706,
+            "semantics_seconds": 0.0026208970230072737,
+            "final_content_seconds": 0.009215692058205605
+          },
+          "resources": {
+            "peak_rss_bytes": 205361152,
+            "rss_samples": 17
+          },
+          "status": "completed"
+        },
+        {
+          "case_id": "preflight8-r1-pingan-financials-p001-004",
+          "sample_id": "pingan-financials-p001-004",
+          "input_pages": 4,
+          "timing": {
+            "postprocessing_seconds": 1.0546735911630094,
+            "native_json_load_seconds": 0.02727426402270794,
+            "pure_persistence_and_observation_seconds": 3.2244761909823865,
+            "diagnostic_capture_seconds": 0.0894484231248498,
+            "saved_orientation_seconds": 6.227986887097359e-05,
+            "native_bridge_seconds": 0.09849095321260393,
+            "page_evidence_seconds": 0.1181815410964191,
+            "table_source_seconds": 0.41160263679921627,
+            "native_text_seconds": 0.036760488990694284,
+            "exports_seconds": 0.04450122104026377,
+            "quality_diagnostics_seconds": 0.0034688380546867847,
+            "ir_seconds": 0.011982938973233104,
+            "assets_seconds": 0.011207816889509559,
+            "semantics_seconds": 0.1452671680599451,
+            "final_content_seconds": 0.08324278891086578
+          },
+          "resources": {
+            "peak_rss_bytes": 202571776,
+            "rss_samples": 18
+          },
+          "status": "partial"
+        }
+      ]
+    },
+    "P08-current": {
+      "run": "/opt/moparse/benchmark/runs/lite/service/after/p08",
+      "software_id": "f5e9063bfd2ac64be79796389d4cdaf3ad3770a8820a0628a1b245fff05a8a03",
+      "measurement_notes": [
+        "Saved valid P08 native candidates are replayed; no model inference is repeated.",
+        "P08 keeps visual-only source access; PDF text and vector-table supplementation are disabled.",
+        "PDF source supplementation is actual candidate service processing, not corpus review.",
+        "Reference materials are unavailable to the isolated candidate worker.",
+        "Postprocessing wall time includes bridge readback, source processing, export, IR, assets and semantics.",
+        "Native JSON loading and final result persistence/scoring/reporting are timed separately.",
+        "Asset writes internal to actual asset materialization remain in the measured stage.",
+        "Candidate stage snapshots are captured without references; capture CPU overhead stays inside postprocessing time and is recorded separately.",
+        "Stage snapshot persistence and all stage scoring are outside postprocessing time.",
+        "The historical native duration plus replay time is not a newly measured end-to-end duration."
+      ],
+      "quality800": {
+        "suite": "quality800",
+        "rounds": [
+          {
+            "repetition": 1,
+            "samples": 173,
+            "expected_samples": 173,
+            "input_pages": 800,
+            "postprocessing_seconds": 194.04550682730041,
+            "observed_seconds_subtotal": 194.04550682730041,
+            "missing_timing_samples": 0,
+            "timing_complete": true,
+            "status_counts": {
+              "completed": 127,
+              "partial": 32,
+              "completed_with_warnings": 14
+            },
+            "diagnostic_capture_seconds": 0.8024115196894854
+          }
+        ],
+        "complete_timing_rounds": 1,
+        "median_postprocessing_seconds": 194.04550682730041,
+        "minimum_seconds": 194.04550682730041,
+        "maximum_seconds": 194.04550682730041,
+        "coefficient_of_variation": null,
+        "meaning": "postprocessing_only_not_new_end_to_end_parse_timing"
+      },
+      "perf80": {
+        "suite": "perf80",
+        "rounds": [
+          {
+            "repetition": 1,
+            "samples": 28,
+            "expected_samples": 28,
+            "input_pages": 80,
+            "postprocessing_seconds": 29.269844939000905,
+            "observed_seconds_subtotal": 29.269844939000905,
+            "missing_timing_samples": 0,
+            "timing_complete": true,
+            "status_counts": {
+              "completed": 22,
+              "partial": 4,
+              "completed_with_warnings": 2
+            },
+            "diagnostic_capture_seconds": 0.11799620185047388
+          },
+          {
+            "repetition": 2,
+            "samples": 28,
+            "expected_samples": 28,
+            "input_pages": 80,
+            "postprocessing_seconds": 28.914666503435,
+            "observed_seconds_subtotal": 28.914666503435,
+            "missing_timing_samples": 0,
+            "timing_complete": true,
+            "status_counts": {
+              "completed": 22,
+              "partial": 4,
+              "completed_with_warnings": 2
+            },
+            "diagnostic_capture_seconds": 0.11930865026079118
+          },
+          {
+            "repetition": 3,
+            "samples": 28,
+            "expected_samples": 28,
+            "input_pages": 80,
+            "postprocessing_seconds": 28.820855932543054,
+            "observed_seconds_subtotal": 28.820855932543054,
+            "missing_timing_samples": 0,
+            "timing_complete": true,
+            "status_counts": {
+              "completed": 22,
+              "partial": 4,
+              "completed_with_warnings": 2
+            },
+            "diagnostic_capture_seconds": 0.11813994916155934
+          }
+        ],
+        "complete_timing_rounds": 3,
+        "median_postprocessing_seconds": 28.914666503435,
+        "minimum_seconds": 28.820855932543054,
+        "maximum_seconds": 29.269844939000905,
+        "coefficient_of_variation": 0.006667674821578998,
+        "meaning": "postprocessing_only_not_new_end_to_end_parse_timing"
+      },
+      "warmup": [
+        {
+          "case_id": "preflight8-r1-vanke-interest-p001-002",
+          "sample_id": "vanke-interest-p001-002",
+          "input_pages": 2,
+          "timing": {
+            "postprocessing_seconds": 0.07750766607932746,
+            "native_json_load_seconds": 0.0002816349733620882,
+            "pure_persistence_and_observation_seconds": 0.09906646399758756,
+            "diagnostic_capture_seconds": 0.0003143209032714367,
+            "saved_orientation_seconds": 0.00018818513490259647,
+            "native_bridge_seconds": 0.01092711603268981,
+            "page_evidence_seconds": 1.4801044017076492e-06,
+            "table_source_seconds": 7.851049304008484e-07,
+            "native_text_seconds": 7.441267371177673e-07,
+            "exports_seconds": 0.010020060930401087,
+            "quality_diagnostics_seconds": 0.002245798008516431,
+            "ir_seconds": 0.0006908830255270004,
+            "assets_seconds": 0.003224305110052228,
+            "semantics_seconds": 0.03402463416568935,
+            "final_content_seconds": 0.014714836841449142
+          },
+          "resources": {
+            "peak_rss_bytes": 92200960,
+            "rss_samples": 3
+          },
+          "status": "completed"
+        },
+        {
+          "case_id": "preflight8-r1-spdb-cover-declaration-p001-002",
+          "sample_id": "spdb-cover-declaration-p001-002",
+          "input_pages": 2,
+          "timing": {
+            "postprocessing_seconds": 1.6988730479497463,
+            "native_json_load_seconds": 0.00038576009683310986,
+            "pure_persistence_and_observation_seconds": 0.12403068202547729,
+            "diagnostic_capture_seconds": 0.0003295568749308586,
+            "saved_orientation_seconds": 7.634400390088558e-05,
+            "native_bridge_seconds": 0.002629725029692054,
+            "page_evidence_seconds": 6.940681487321854e-07,
+            "table_source_seconds": 3.6298297345638275e-07,
+            "native_text_seconds": 5.660112947225571e-07,
+            "exports_seconds": 0.0034931988921016455,
+            "quality_diagnostics_seconds": 0.0003747588489204645,
+            "ir_seconds": 0.003022416029125452,
+            "assets_seconds": 1.670296662952751,
+            "semantics_seconds": 0.004394575022161007,
+            "final_content_seconds": 0.01366108888760209
+          },
+          "resources": {
+            "peak_rss_bytes": 216567808,
+            "rss_samples": 20
+          },
+          "status": "completed"
+        },
+        {
+          "case_id": "preflight8-r1-pingan-financials-p001-004",
+          "sample_id": "pingan-financials-p001-004",
+          "input_pages": 4,
+          "timing": {
+            "postprocessing_seconds": 0.2978636990301311,
+            "native_json_load_seconds": 0.0006512179970741272,
+            "pure_persistence_and_observation_seconds": 2.8405074439942837,
+            "diagnostic_capture_seconds": 0.038717460818588734,
+            "saved_orientation_seconds": 0.0001966219861060381,
+            "native_bridge_seconds": 0.03314451593905687,
+            "page_evidence_seconds": 5.569308996200562e-07,
+            "table_source_seconds": 3.350432962179184e-07,
+            "native_text_seconds": 2.5494955480098724e-07,
+            "exports_seconds": 0.025054468773305416,
+            "quality_diagnostics_seconds": 0.003648107871413231,
+            "ir_seconds": 0.009326657047495246,
+            "assets_seconds": 0.01051533198915422,
+            "semantics_seconds": 0.1320812590420246,
+            "final_content_seconds": 0.04451650590635836
+          },
+          "resources": {
+            "peak_rss_bytes": 210776064,
+            "rss_samples": 6
+          },
+          "status": "partial"
+        }
+      ]
+    }
+  },
+  "historical_native_conditions": {
+    "valid": true,
+    "status": "valid",
+    "observed": {
+      "maintenance.phase": "restored",
+      "tts_policy": "keep_running",
+      "tts_observation_policy": "observe_only",
+      "user_instruction_date": "2026-10-26",
+      "tts_identity_condition.status": "unchanged",
+      "tts_no_calls_condition.status": "observed_activity"
+    },
+    "problems": [],
+    "warnings": [
+      {
+        "condition": "tts_no_calls_condition.status",
+        "observed": "observed_activity",
+        "effect": "observation_only"
+      }
+    ],
+    "qualifications": [
+      "TTS is co-resident and uncontrolled; its activity, identity and query availability do not determine measurement admission. Performance reflects these actual shared-GPU conditions."
+    ],
+    "evidence": {
+      "tts_identity_condition": {
+        "status": "unchanged",
+        "before": {
+          "MainPID": "1696293",
+          "InvocationID": "64077a7ecc7243b2872e573cf022b078"
+        },
+        "after": {
+          "MainPID": "1696293",
+          "InvocationID": "64077a7ecc7243b2872e573cf022b078"
+        },
+        "changed_keys": [],
+        "scope": "measurement condition, independent of service health and MO-Parse restoration"
+      },
+      "tts_no_calls_condition": {
+        "declaration": "uncontrolled_observed_only",
+        "before": {
+          "active_job": false,
+          "persistent_active_jobs": [],
+          "job_count": 71
+        },
+        "after": {
+          "active_job": false,
+          "persistent_active_jobs": [],
+          "job_count": 76
+        },
+        "status": "observed_activity",
+        "observed_new_jobs": 5,
+        "reason": "active_or_new_jobs",
+        "limitation": "start/end health and persistent-job counters are not atomic admission control; short calls without a persistent job may be unobserved"
+      },
+      "tts_readiness_observation": {
+        "status": "observed",
+        "ready": true
+      }
+    },
+    "scope": "runtime measurement conditions only; not parser quality or corpus acceptance"
+  },
+  "shared_native_worker": "initialization and warmup repeated in suite summaries describe the same worker, not additive costs"
+}
