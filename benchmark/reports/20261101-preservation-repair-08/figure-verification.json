@@ -1,7 +1,7 @@
 {
   "state": "passed",
   "scope": "generated_measurement_chart_only",
-  "software_id": "53149b18bbbfe4373b848547adbb310e32439262a9929641e4600aa3aaad1834",
+  "software_id": "b2d1a022a2a4225608203449ef64d19571112320c05e2b91be69cc9fdae83643",
   "PDF_fonts": [
     {
       "name": "BMQQDV+DejaVuSans",
@@ -10,5 +10,5 @@
     }
   ],
   "SVG_sans_serif_fallback": true,
-  "visual_inspection": "all eight labels, percentages and denominators in the generated chart are legible without clipping"
+  "visual_inspection": "all eight pipeline labels, percentages and denominators are legible without clipping"
 }

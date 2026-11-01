@@ -61,7 +61,7 @@ HTTP response
 
 ## 5. 实现状态与验证项
 
-P05研究执行路径已修复，[P05工程预检02](../../benchmark/reports/20261026-repaired-preflight-02/)独立完成同一清单的11个任务并提供本次冻结依据。本组已完成quality800一次和perf80三轮，八组统一评分、首版报告及原MO服务恢复完成；结果只见[本轮v3报告](../../benchmark/reports/20261026-lite-v3/report.md)，状态与限制由[评测索引](../../benchmark/reports/README.md)维护。TTS只观测不控制，先前撤回测量不恢复；执行和自动评分完成不构成内容、Gold或图片内容验收。
+P05研究执行路径已修复，[P05工程预检02](../../benchmark/reports/20261026-repaired-preflight-02/)独立完成同一清单的11个任务并提供本次冻结依据。本组已完成quality800一次和perf80三轮，八组统一评分、首版报告及原MO服务恢复完成；结果只见[当前统一评测报告](../../benchmark/reports/20261101-preservation-repair-08/report.md)，状态与限制由[评测索引](../../benchmark/reports/README.md)维护。TTS只观测不控制，先前撤回测量不恢复；执行和自动评分完成不构成内容、Gold或图片内容验收。
 
 vLLM 0.19.1 的 MRoPE CUDA 快路径忽略 GLM-OCR decoder 所需 GPT-J 相邻配对的缺陷，已由研究配置显式使用 native rotary 绕开，并保留 CUDA Graphs；glmocr 0.1.5、FP16 和 repetition_penalty=1.1 保持原定义。P01/P02/P06/P07 的共享 GLM 研究分支使用同一修复，各组分别完成自身工程预检。机制证据及上游出处见[执行层诊断](../../benchmark/diagnostics/README.md)；算子及工程验证不能替代完整 SDK 的质量与成本测量，也不代表生产GLM配置已改变。
 

@@ -6,4 +6,4 @@
 
 收尾还暴露出维护模块的问题：TTS身份变化曾使恢复检查提前退出，造成原MO容器仍在启动时记录restoration_failed。后续已把TTS身份与活动变为独立观测，MO服务继续等待自身健康恢复；TTS变化、活动或未知不再构成执行、评分或报告阻断。执行器不启动、停止、重启或配置TTS，合成测试覆盖新TTS身份、MO先starting后healthy，以及旧维护记录不能触发TTS启动。
 
-用户于2026-10-26明确“你不用管TTS了 继续”，当前环境策略是TTS保持运行、仅观测且负载不控制；观测缺失保持未知并如实披露，不宣称独占或TTS空闲。当前[工程预检02](../reports/20261026-repaired-preflight-02/execution-readiness.json)和新锁冻结后，本轮八组已各完成quality800一次和perf80三轮，统一评分、首版报告及原MO服务恢复完成。该次新运行不恢复或拼接撤回产物，结果只见[本轮v3报告](../reports/20261026-lite-v3/report.md)，状态与限制由[报告索引](../reports/README.md)维护。
+用户于2026-10-26明确“你不用管TTS了 继续”，当前环境策略是TTS保持运行、仅观测且负载不控制；观测缺失保持未知并如实披露，不宣称独占或TTS空闲。当前[工程预检02](../reports/20261026-repaired-preflight-02/execution-readiness.json)和新锁冻结后，本轮八组已各完成quality800一次和perf80三轮，统一评分、首版报告及原MO服务恢复完成。该次新运行不恢复或拼接撤回产物，结果只见[当前统一评测报告](../reports/20261101-preservation-repair-08/report.md)，状态与限制由[报告索引](../reports/README.md)维护。

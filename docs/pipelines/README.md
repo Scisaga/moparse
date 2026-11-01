@@ -17,7 +17,7 @@
 | [P07：MinerU Advanced + TXT + GLM SDK](p07-mineru-advanced-glm.md) | 与P06共享格式读取 | Advanced显式入口，独立运行及分支记录 |
 | [P08：MinerU 全页纯视觉 SDK + vLLM](p08-mineru-visual.md) | 完整PDF渲染及官方纯视觉SDK | 原生块先行保全、局部导出隔离已修复，独立工程预检完成 |
 
-研究入口及共享读取代码位于[评测模块](../../moparse_eval/README.md)。本轮八组已按冻结身份各完成quality800一次和perf80三轮，统一评分、首版报告及原MO服务恢复完成。结果只见[本轮v3报告](../../benchmark/reports/20261026-lite-v3/report.md)，状态与限制由[评测索引](../../benchmark/reports/README.md)维护。TTS只观测不控制，先前撤回测量不恢复；执行和自动评分完成不表示内容、Gold、图片内容或生产部署已验收，机制证据由[执行层诊断](../../benchmark/diagnostics/README.md)维护。
+研究入口及共享读取代码位于[评测模块](../../moparse_eval/README.md)。本轮八组已按冻结身份各完成quality800一次和perf80三轮，统一评分、首版报告及原MO服务恢复完成。结果只见[当前统一评测报告](../../benchmark/reports/20261101-preservation-repair-08/report.md)，状态与限制由[评测索引](../../benchmark/reports/README.md)维护。TTS只观测不控制，先前撤回测量不恢复；执行和自动评分完成不表示内容、Gold、图片内容或生产部署已验收，机制证据由[执行层诊断](../../benchmark/diagnostics/README.md)维护。
 
 ## 共用规则
 

@@ -1,9 +1,9 @@
 {
-  "score_index": "/opt/moparse/benchmark/reports/20261026-lite-v3/artifacts/scores/preservation-repair-08-final-r4/index.json",
-  "scoring_software_id": "53149b18bbbfe4373b848547adbb310e32439262a9929641e4600aa3aaad1834",
+  "score_index": "/opt/moparse/benchmark/reports/20261026-lite-v3/artifacts/scores/preservation-clean-20261102/index.json",
+  "scoring_software_id": "b2d1a022a2a4225608203449ef64d19571112320c05e2b91be69cc9fdae83643",
   "adoptable": true,
   "generator": "scripts/render_preservation_summary.py",
-  "generator_sha256": "e30749e8a64b2f40fd5a8d89d7b3d8136f4ffc794f03b7bca174931f9597accb",
+  "generator_sha256": "58288dd68deff523c3e1ceb5d210d669657f8c27d1adc42415bc3c6f628c0d38",
   "scope": "presentation_only_from_completed_uniform_scores_no_regrading",
   "comparison_details": {
     "previous_to_current": "private/paired-changes.json",

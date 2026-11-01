@@ -2,7 +2,7 @@
 
 本文件定义本轮主对比的8个固定配置，不记录历史成绩，不预先选择优胜方法。数据集、测试任务和评分要求见[评估任务](evaluation-tasks.md)；MinerU内部参数研究见[MinerU调优](mineru-tuning.md)，不增加本表的主比较组数。
 
-本轮八组已按冻结身份各完成quality800一次和perf80三轮，统一评分、首版报告及原MO服务恢复完成。结果只见[本轮v3报告](reports/20261026-lite-v3/report.md)，当前状态与限制由[评测索引](reports/README.md)维护。TTS仅观测不控制，先前撤回测量不恢复；执行和预检完成不构成内容、Gold或图片内容验收，缺陷机制与修复边界见[工程诊断](diagnostics/README.md)。
+本轮八组已按冻结身份各完成quality800一次和perf80三轮，统一评分、首版报告及原MO服务恢复完成。结果只见[当前统一评测报告](reports/20261101-preservation-repair-08/report.md)，当前状态与限制由[评测索引](reports/README.md)维护。TTS仅观测不控制，先前撤回测量不恢复；执行和预检完成不构成内容、Gold或图片内容验收，缺陷机制与修复边界见[工程诊断](diagnostics/README.md)。
 
 本表定义[研究顺序](../docs/research/research-framework.md#2-管线研究的顺序)第 3 步的固定配置，用于第 4 步执行和第 5 步分析。比较对象是各管线本身的解析结果与处理成本，不要求直接满足 MO-Parse 接口最终语义格式。逐组原生输出、格式依据与适配逻辑统一见[管线输出与适配](../docs/pipelines/README.md)；服务集成按[技术路线](../docs/engineering/technical-route.md)先确认本组输出再设计适配和共同组装，新增路由仍由比较证据决定。
 

@@ -37853,6 +37853,5 @@
     },
     "scope": "runtime measurement conditions only; not parser quality or corpus acceptance"
   },
-  "policy": "recorded_native_and_postprocessing_costs_separate_no_new_end_to_end_sum",
-  "source": "execution-costs.json (full original resource payload retained locally)"
+  "policy": "recorded_native_and_postprocessing_costs_separate_no_new_end_to_end_sum"
 }

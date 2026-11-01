@@ -54,7 +54,7 @@ predict(...) -> 页面结果对象序列
 
 ## 5. 实现状态与验证项
 
-P04研究执行路径已修复，[P04工程预检02](../../benchmark/reports/20261026-repaired-preflight-02/)独立完成同一清单的11个任务并提供本次冻结依据。本组已完成quality800一次和perf80三轮，八组统一评分、首版报告及原MO服务恢复完成；结果只见[本轮v3报告](../../benchmark/reports/20261026-lite-v3/report.md)，状态与限制由[评测索引](../../benchmark/reports/README.md)维护。TTS只观测不控制，先前撤回测量不恢复；执行和自动评分完成不构成内容、Gold或图片内容验收。
+P04研究执行路径已修复，[P04工程预检02](../../benchmark/reports/20261026-repaired-preflight-02/)独立完成同一清单的11个任务并提供本次冻结依据。本组已完成quality800一次和perf80三轮，八组统一评分、首版报告及原MO服务恢复完成；结果只见[当前统一评测报告](../../benchmark/reports/20261101-preservation-repair-08/report.md)，状态与限制由[评测索引](../../benchmark/reports/README.md)维护。TTS只观测不控制，先前撤回测量不恢复；执行和自动评分完成不构成内容、Gold或图片内容验收。
 
 研究执行器、完整页面 native RPC 服务及同族读取器已实现。固定 PaddleX 3.7.2 路径的 BGR/RGB 交接缺陷已在研究路径修复；该问题与线程生命周期引发的宿主内存留存分开处理。模型及调用由长期线程统一持有，并显式使用 use_queues=False；本组独立工程预检不借用 P03 的产物，也不据此宣称内容或效率已验收。机制诊断见[执行层诊断](../../benchmark/diagnostics/README.md)。
 

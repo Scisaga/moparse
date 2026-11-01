@@ -2,18 +2,16 @@
   "state": "complete",
   "objective": "expected_only_common_scoring_and_native_to_final_information_preservation",
   "software": {
-    "git_head": "2052426732d9eced6215ec5af8feb037fc2ea91a",
+    "git_head": "d4da3be318b2b67e68320828412412b20c34eb3e",
     "module_sha256": {
       "__init__.py": "bc8b7b20c651ddfd3eb71db86d0b406249a77d64449fc4fef23bcc4ab75adb62",
       "__main__.py": "935a1c1166b0c1ea35a82256345000bf2c73ded718d77773bc27a71ecce28f7d",
       "adapters.py": "affcf961c8befc74bfdacb4adb3930437f4a9e5e9749ae982e5cfc75496f286c",
-      "adjudications.py": "b27836915817f6bf9b6ea6d14ba9835eafe83153c868b7517206a5ddeeadcb94",
       "candidate_delivery.py": "941496db8bffa12aff8a867b5d1c7a2e2e1def1d67582b84ee2955fa52730155",
-      "cli.py": "5d7f182ffa070ad4abf577e1ee20d270f8c4a9398ae7786b8828b5ea0221adde",
-      "compose_runs.py": "720a8e701fe6afb88660cb1e44f555ae4177b85ba8d15128e6dc3186823e9bce",
+      "cli.py": "609fb583ab7b84394ef817806a182d3b1083cbc77435fe2159ac0580a3684921",
       "cuda_graphs.py": "a26f40b5a24a287a05e4fb0775001ecbc915af9610485354b4c71d1546811653",
       "executors.py": "0163210d018d45d692bf8516c5c02d9fc134d6ce1f2671dbdc5f869d1bb02139",
-      "expected_evaluation.py": "1c94e60ae5381da22cbce5f4a72b159d34b36fdd44e8d2f23aa818f1a94a7dbd",
+      "expected_evaluation.py": "9097dddabc4778a0077e49ae28d815c3eaa3d2f138baf608e45b5bbf9bf89af4",
       "expected_readback.py": "6f833ae0212ddf14c21e60ae3f64f868391b6b4b2571babed1bd77cb84420ea5",
       "expected_report.py": "fc3efdfd80d39c0fb9b24bf2e94fd5ee0cfd3e8ca4af0137f9e742370d78fdf3",
       "expected_scoring.py": "476eb3962cab3fdefcd3efda59d6ba94675dc48eab81addaa496f456a196bfb6",
@@ -26,27 +24,21 @@
       "native_readback.py": "a0570a29f606a963b1d600c330a762e4f8467807430cd5822e61d3052fc29680",
       "native_relations.py": "ed740925348b320123db371e6c44e71391ea8008b6c8237b324ea10c0a06729a",
       "p05_optimization.py": "ff982f210cfd95a4d3d5462d0e428013a760e5fdc5a44efe346bad3a0351c502",
-      "p05_optimization_report.py": "7dfd8342af8a7be5bf9bfe6a391e1934d42e7d3262d76f6892bd1f1fecbf5344",
       "packaging.py": "976599ca86c7a4c38f021efd342203d1010c7c8abbf17560846ae133e8e3fc2c",
       "paddle_compat.py": "14b499c8745fb7c4117506eeff7a8d3b740d212d2762fc7290df3e510c7d3ce2",
       "paddle_server.py": "a1b57f269094f0fe3df513bb4a98a51cab017518417166bc592cfe82a05ad7d6",
-      "pareto.py": "84d25ca69f4ec63937c65555da61ee534d19e7d7517db9861e043360b02ce733",
       "preparation.py": "435988dbec36daa89efb1c26045acb80d0d55ea7299f41249a376f65d1dbf803",
       "rebenchmark.py": "45d4ffc2ca12f61459e1b0311c80cccd7e7b753960fbda047908287f765be4ed",
-      "report_figures.py": "a295f395ede7d63bd9632aee2c58b8d91ec6850f8532167a38572f4da6833411",
-      "report_overview.py": "f874c3fc8ba0df17506a94eb0cc80f59ff6352b8b51402a832aaab1a233b4dbf",
-      "reporting.py": "fd712b2583a9e3caa1d3c628e71ce89ec6401dc12822f5119a556464d354c3e0",
+      "report_figures.py": "e04312d31052533a6cf2d3925c995cd0508f7c94f85dd42358b409ffc0049974",
+      "reporting.py": "fca7a5ecaa817d6adff580c22233dba43fad280f0678f58023f839d5c933ece6",
       "representations.py": "694ebf1615de650701e76c8a717fc0fd324b92fe1a1b5caf94982c9eacb07c93",
       "request_control.py": "ac70b2a53421d3cf3faea4d0cb1e8dd72ddb477a450210580a50660965b2839f",
       "runtime.py": "91a5f011f7fa59028ad6cfee33dd93faacd6724d8885a60a7957f6c25cfd1c23",
-      "scoring.py": "abd5cc211d944d8d6942c160ed3fed2b1ce09908e5195ec561cd53c784c0673e",
-      "service_artifacts.py": "b154aff40ca108a79bb403f94373870649460488b4f8bff106f2c1e41a3374e1",
-      "service_evaluation.py": "f30758b079a28f502f30d3f2ef0de6d6337e3fb4b9fd522d03f756c3806d664d",
+      "scoring.py": "649e565d464358ca4f36717adf31f4f9e4d123231012c3f71306b513d2a8d064",
+      "service_evaluation.py": "e26cccc6cff43961e84fb49a93f1f356a0cef3b7297f5b2e303e6b2a0dcfc633",
       "service_observation.py": "21fa4494a34f8b9068c2fabd472c7755531ad34d7ab766bee679e6d1dc45b932",
       "service_replay_native.py": "e49e719a5e9562d6f3014524e2c8b96cdc4199cbf02b3090b551b70cf77d19a5",
-      "service_report.py": "96ce19ee9a1c603ecefca3544a9db05de8af9ec747ad5c9d8eb4669fbb2c3d33",
-      "service_stages.py": "70ac8729152d8a378c7cd1d014738a6b0566013d383375ad4879c10ee7f7a2af",
-      "table_context_report.py": "44f6b13709d57b432813a18ced9a3895524a62da578a2c068d47ee5882436fb7"
+      "service_stages.py": "70ac8729152d8a378c7cd1d014738a6b0566013d383375ad4879c10ee7f7a2af"
     },
     "support_module_sha256": {
       "app/__init__.py": "2bf493bcf3e107d4dbc6ae82158b66e50cc1548ff0d1aa4b57b88c88ab5279d1",
@@ -118,7 +110,7 @@
       "native_worker/request_control.py": "0f336dc81dbee95de6b2d311d83b1779ca198a70a86591d4f54edd59dce40549",
       "native_worker/server.py": "ab64842e12e3e2d810cf5f303b4c7f31e5654cee73573095f47b2b61eaffb8cc"
     },
-    "software_id": "53149b18bbbfe4373b848547adbb310e32439262a9929641e4600aa3aaad1834",
+    "software_id": "b2d1a022a2a4225608203449ef64d19571112320c05e2b91be69cc9fdae83643",
     "python": "3.13.5 | packaged by Anaconda, Inc. | (main, Jun 12 2025, 16:09:02) [GCC 11.2.0]",
     "dependencies": {
       "rapidfuzz": "3.14.6",
@@ -129,24 +121,7 @@
       "psutil": "7.2.2"
     }
   },
-  "protocol": {
-    "id": "mo-parse-expected-only-v1",
-    "reference": "canonical_expected_read_only",
-    "scope": "existing_authored_source_map_selected_content",
-    "grades": [
-      "correct",
-      "incorrect"
-    ],
-    "legacy_adjudications": "not_consumed",
-    "field_locator": "complete_business_labels_before_value_comparison",
-    "text_policy": "mo-parse-eval-text-v1",
-    "reader_failure": "repair_before_publication",
-    "field_content_equivalence": "declared_width_spacing_scoped_scalar_units_year_range_dash_terminal_prose_punctuation",
-    "qualifier_reading": "candidate_only_explicit_table_record_caption_and_note_scopes",
-    "output_reading": "native_fields_or_actual_public_markdown_without_private_ir_credit",
-    "reader_revision": "canonical_expected_8"
-  },
-  "score_index": "/opt/moparse/benchmark/reports/20261026-lite-v3/artifacts/scores/preservation-repair-08-final-r4/index.json",
+  "score_index": "/opt/moparse/benchmark/reports/20261026-lite-v3/artifacts/scores/preservation-clean-20261102/index.json",
   "coverage": {
     "samples": 173,
     "pages": 800,
@@ -159,30 +134,6 @@
     "business_targets_per_group": 7133,
     "groups": 14,
     "sample_evaluations": 2422
-  },
-  "native_preservation": {
-    "P07": {
-      "native_correct_business_targets": 2449,
-      "preserved": 2449,
-      "lost_correct_business_targets": 0,
-      "native_correct_targets": 7851,
-      "preserved_targets": 7851,
-      "lost_correct_targets": 0,
-      "passed": true,
-      "comparison": "native_to_actual_final_markdown_under_one_shared_scorer",
-      "all_content_correct_losses": 0
-    },
-    "P08": {
-      "native_correct_business_targets": 2502,
-      "preserved": 2502,
-      "lost_correct_business_targets": 0,
-      "native_correct_targets": 8017,
-      "preserved_targets": 8017,
-      "lost_correct_targets": 0,
-      "passed": true,
-      "comparison": "native_to_actual_final_markdown_under_one_shared_scorer",
-      "all_content_correct_losses": 0
-    }
   },
   "adoption": {
     "P07": {
@@ -204,6 +155,30 @@
       "native_to_final_content_losses": 0,
       "adoptable": true,
       "comparison": "both_previous_and_intermediate_to_current"
+    }
+  },
+  "native_preservation": {
+    "P07": {
+      "native_correct_business_targets": 2449,
+      "preserved": 2449,
+      "lost_correct_business_targets": 0,
+      "native_correct_targets": 7851,
+      "preserved_targets": 7851,
+      "lost_correct_targets": 0,
+      "passed": true,
+      "comparison": "native_to_actual_final_markdown_under_one_shared_scorer",
+      "details": "private/native-preservation.json"
+    },
+    "P08": {
+      "native_correct_business_targets": 2502,
+      "preserved": 2502,
+      "lost_correct_business_targets": 0,
+      "native_correct_targets": 8017,
+      "preserved_targets": 8017,
+      "lost_correct_targets": 0,
+      "passed": true,
+      "comparison": "native_to_actual_final_markdown_under_one_shared_scorer",
+      "details": "private/native-preservation.json"
     }
   },
   "changes": {
@@ -262,15 +237,8 @@
     "P07": 4335,
     "P08": 4267
   },
-  "remaining_errors": "remaining-errors.json and private/target-details.csv",
-  "engineering_validation": {
-    "passed": 2427,
-    "skipped": 1,
-    "independent_preservation_probe_violations": 0
-  },
-  "deployment": "not_deployed",
-  "new_model_inference": false,
-  "GPU_TTS_or_service_actions": false,
-  "reference_policy": "canonical_expected_read_only_no_original_page_adjudication_no_manual_exclusions",
-  "development_exposure": "Lite documents and expected syntax used in development; not an independent unseen evaluation"
+  "cleanup": "legacy scoring logic and its products deleted without archival; valid outputs retained",
+  "processing": "saved native and actual Markdown reused; original processing costs retained",
+  "model_inference_calls": 0,
+  "deployment": "not_deployed"
 }

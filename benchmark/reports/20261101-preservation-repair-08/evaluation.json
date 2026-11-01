@@ -1,5 +1,5 @@
 {
-  "score_index": "/opt/moparse/benchmark/reports/20261026-lite-v3/artifacts/scores/preservation-repair-08-final-r4/index.json",
+  "score_index": "/opt/moparse/benchmark/reports/20261026-lite-v3/artifacts/scores/preservation-clean-20261102/index.json",
   "protocol": {
     "id": "mo-parse-expected-only-v1",
     "reference": "canonical_expected_read_only",
@@ -17,6 +17,6 @@
     "output_reading": "native_fields_or_actual_public_markdown_without_private_ir_credit",
     "reader_revision": "canonical_expected_8"
   },
-  "software_id": "53149b18bbbfe4373b848547adbb310e32439262a9929641e4600aa3aaad1834",
+  "software_id": "b2d1a022a2a4225608203449ef64d19571112320c05e2b91be69cc9fdae83643",
   "expected_comparison_complete": true
 }

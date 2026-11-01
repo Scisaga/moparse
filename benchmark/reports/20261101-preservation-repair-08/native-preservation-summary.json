@@ -8,7 +8,7 @@
     "lost_correct_targets": 0,
     "passed": true,
     "comparison": "native_to_actual_final_markdown_under_one_shared_scorer",
-    "all_content_correct_losses": 0
+    "details": "private/native-preservation.json"
   },
   "P08": {
     "native_correct_business_targets": 2502,
@@ -19,6 +19,6 @@
     "lost_correct_targets": 0,
     "passed": true,
     "comparison": "native_to_actual_final_markdown_under_one_shared_scorer",
-    "all_content_correct_losses": 0
+    "details": "private/native-preservation.json"
   }
 }
