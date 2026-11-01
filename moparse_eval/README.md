@@ -1,6 +1,6 @@
 # MO-Parse 评测工具
 
-当前版本已复现评分假阳性、假阴性及转换单位错误，见[根因诊断](../benchmark/reports/20261101-expected-only-06/root-cause-analysis.md)。旧`expected-only-r5`冻结及已生成成绩不能继续作为质量采用依据。先运行`.venv/bin/python benchmark/diagnostics/expected-preservation-probes.py`验证已知契约缺口；当前退出1表示缺陷未修复。后续应先关闭反例，再生成新的工程冻结和统一评分，保留旧产物及执行计时，不改expected或人工排除目标。
+当前读取修复由独立契约反例约束：`.venv/bin/python benchmark/diagnostics/expected-preservation-probes.py`应退出0。历史评分假阳性、假阴性及转换单位错误见[根因诊断](../benchmark/reports/20261101-expected-only-06/root-cause-analysis.md)，旧`expected-only-r5`成绩继续撤回采用依据。当前工程冻结、统一重评和正文回放状态由[评测索引](../benchmark/reports/README.md)维护；保留旧产物，不改expected或人工排除目标。
 
 本次输出优化必须以`pdf_sample/parsing/expected/`中的现有expected为唯一验收标准。直接对照expected与被测实际输出，不查看原PDF图片裁决，不使用原图参考排除决定，不生成另一套答案，也不以原图理由改判或豁免差异。评分索引和已有1,726个字段仅是部分检查项，不能代替expected全部业务内容。完整规则见[当前验收标准](../benchmark/evaluation-tasks.md#current-task-expected-only)，续做使用[任务提示词](../docs/engineering/prompts/expected-output-optimization.md)。
 
@@ -11,10 +11,14 @@
 冻结已通过软件验证的当前身份后，用下列命令生成独立运行目录。`--output`必须尚不存在，冻结记录须位于该目录之外。该命令只评分保存输出，不执行模型或后处理；报告、分项汇总及覆盖记录可见于运行目录，逐项内容、读回观察和变化证据保存在其`private/`目录。
 
 ```bash
-uv run python -m moparse_eval.expected_evaluation --baseline benchmark/reports/20261026-lite-v3 --previous-root benchmark/reports/20261031-units-continuations-04 --intermediate-root benchmark/reports/20261101-business-coverage-05 --current-root benchmark/reports/20261101-expected-only-06 --freeze benchmark/diagnostics/expected-only-r5-validation-20261101.json --output benchmark/reports/20261026-lite-v3/artifacts/scores/new-expected-only-reproduction --report-output benchmark/reports/new-expected-only-reproduction --workers 4
+.venv/bin/python -m moparse_eval.expected_evaluation --baseline benchmark/reports/20261026-lite-v3 --previous-root benchmark/reports/20261031-units-continuations-04 --intermediate-root benchmark/reports/20261101-expected-only-06 --current-root benchmark/reports/20261101-preservation-repair-07 --freeze benchmark/diagnostics/expected-preservation-validation-20261101.json --output benchmark/reports/20261026-lite-v3/artifacts/scores/new-preservation-reproduction --report-output benchmark/reports/new-preservation-reproduction --workers 4
 ```
 
 `--previous-root`是较早保存的最终正文，`--intermediate-root`是本轮开始时已保存的最终正文，`--current-root`是本次代码CPU回放生成的最终正文；三者都不是expected。`--workers`只并行分析保存输出，不改变判分和原处理计时。最终覆盖清单按每个expected内容元素追溯至实际目标，编译器遗漏任一内容元素时拒绝发布。
+
+读取器`canonical_expected_6`保留实际具名字段、复合主体、斜线路径、局部计量单位、年度说明及连续列表币种。具名数值不作为实体身份，业务词尾也不作为单位声明；完整目标标签和明确业务范围先定位，数值随后比较。标题、表号和单位说明可按自身语法约束相关字段，不能跨越其他正文或表格借用。
+
+采用同时要求正文版本间没有正确目标损失，以及原生正确业务目标在当前实际Markdown中全部保留。`private/native-preservation.json`列出原生到正文的每项损失，`adoption.json`保存两道门槛；报告会从逐项结果复算门槛，拒绝与实际判定不一致的采用声明。旧错误在多个正文版本中持续存在也不能通过采用。
 
 `score --run ... --freeze ...`同样使用新入口，先完成八组原生对照，再将新索引写入该运行的`latest_scores`。P07/P08新候选准备要求已有完整expected-only原生索引；历史裁定不会继承，显式`--adjudications`立即失败且不打开裁定文件。评分协议仅由`expected_scoring.PROTOCOL`定义，原生、最终正文、冻结和报告共用该定义。工程检查通过与实际评测完成分别记录，当前运行状态见[评测索引](../benchmark/reports/README.md)。
 

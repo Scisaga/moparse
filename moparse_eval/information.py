@@ -6,7 +6,10 @@ import re
 from functools import lru_cache
 from typing import Any
 
+from app.utils.measurement import unit_applicable
+
 from .information_reading import (
+    _SECTION_PERIOD,
     label_text,
     label_views,
     scoped_qualifiers,
@@ -29,6 +32,9 @@ def unit_text(text: str) -> str:
 def period_text(text: str) -> str:
     """Ignore display spacing before the existing Chinese year suffix only."""
     text = normalize_text(text, collapse_whitespace=True)
+    section = _SECTION_PERIOD.fullmatch(text)
+    if section and len(set(re.findall(r"(?:19|20)\d{2}", text))) == 1:
+        text = section[1]
     return re.sub(r"(?<=截至)\s+(?=\d)|(?<=\d)\s+(?=[年月日])|(?<=[年月])\s+(?=\d)|(?<=年)\s+(?=[度末])", "", text)
 
 
@@ -161,7 +167,7 @@ def _row_path_locates_cached(labels: tuple[str, ...], native: tuple[str, ...], c
 
 def column_path_locates(labels: list[str], native: Any, collapse_whitespace: bool,
                         unit_literals: list[str] | None = None,
-                        period_literals: list[str] | None = None) -> bool:
+                        period_literals: list[str] | None = None, *, allow_prefix: bool = False) -> bool:
     """Read explicit column labels with independently visible qualifier text.
 
     Unit legends and generic period descriptors may be expressed beside a
@@ -172,6 +178,12 @@ def column_path_locates(labels: list[str], native: Any, collapse_whitespace: boo
         return True
     if not isinstance(native, list) or len(native) > 12 or any(not isinstance(p, str) for p in native):
         return False
+    if allow_prefix and not any(re.search(r"(?:19|20)\d{2}", part) for part in native) and row_path_locates(
+            labels, native, collapse_whitespace, require_leaf=True):
+        # The resolver still retains every candidate and checks ambiguity
+        # and required scope. A shorter authored leaf never deletes an
+        # explicitly requested parent or a dated qualification.
+        return True
     views: list[list[str]] = [[]]
     for raw in native:
         part = label_text(raw)
@@ -180,6 +192,9 @@ def column_path_locates(labels: list[str], native: Any, collapse_whitespace: boo
         optional = (unwrapped in tokens or unit_scope_literal(part) or bool(re.fullmatch(
             r"Year Ended|截至[^。；;]{1,30}(?:年度|年末)|[于於]\s*\d{1,2}月\d{1,2}日", unwrapped, re.I))
             and not re.search(r"(?:19|20)\d{2}", unwrapped))
+        optional |= bool(re.match(r"^截至[^。；;]{1,60}(?:年度|年末)", unwrapped)
+                         and not re.search(r"(?:19|20)\d{2}", unwrapped))
+        optional |= bool(re.fullmatch(r"(?:19|20)\d{2}\s*年?(?:度|末)?", unwrapped))
         variants: list[str | None] = [label_text(text) for text in label_views({"text": raw})]
         optional |= (bool(re.match(r"^(?:For the year ended|As at)\s+\d{1,2}\s+[A-Za-z]+", unwrapped, re.I))
                      and not re.search(r"(?:19|20)\d{2}", unwrapped))
@@ -190,6 +205,8 @@ def column_path_locates(labels: list[str], native: Any, collapse_whitespace: boo
                 prefix = part[:-len(token)].rstrip(" (（")
                 if prefix:
                     variants.append(prefix)
+                    if re.fullmatch(r"(?:19|20)\d{2}\s*年?(?:度|末)?", prefix):
+                        variants.append(None)
         views = [([*view, option] if option is not None else view)
                  for view in views for option in dict.fromkeys(variants)]
         if len(views) > 512:
@@ -297,8 +314,14 @@ def endpoint_paths(labels: list[str], group: list[dict[str, Any]], axis: str,
 def qualifier_evidence(expected: dict[str, Any], cell: dict[str, Any],
                        endpoint_texts: list[str]) -> dict[str, dict[str, Any]]:
     """Read only explicitly scoped metadata or actual located header text."""
-    evidence = {}
+    evidence: dict[str, dict[str, Any]] = {}
     scoped = scoped_qualifiers(cell, endpoint_texts)
+    explicit_unit = cell.get("unit")
+    if isinstance(explicit_unit, str) and not unit_applicable(
+            explicit_unit, cell.get("column_header_path", []) or cell.get("information_headers", []),
+            cell.get("row_header_path", []) or endpoint_texts):
+        evidence["unit_applicability"] = {"status": "incorrect", "source": "printed_field_unit",
+                                           "actual": explicit_unit}
     for key, value in expected.items():
         if key in cell:
             actual = cell[key]

@@ -22,6 +22,7 @@ from app.models.table_semantics import (
     SemanticKind,
     SemanticRecord,
     SemanticTableView,
+    TextRef,
     ValueRelation,
 )
 from app.parsers.base import ParserCancelledError
@@ -34,6 +35,7 @@ from app.services.table_service import (
     table_view,
 )
 from app.utils.deadline import remaining_timeout
+from app.utils.measurement import unit_applicable
 
 _ID = re.compile(r"[A-Za-z0-9_.-]{1,240}\Z")
 _PERIOD = re.compile(r"报告期|同期|年度|期末|年末|月末|\d{4}\s*年|(?<!\d)(?:19|20)\d{2}(?!\d)")
@@ -331,6 +333,11 @@ def _consumed_cells(fragment: TableFragment, records: Sequence[SemanticRecord]) 
         if scope.get("complete") and any(ref.row in rows for ref in consumed):
             consumed.update(_ref(fragment, c) for c in fragment.cells if c.row in rows and not c.text.strip())
     consumed.update(_ref(fragment, cell) for cell in _unit_context_cells(fragment, records))
+    for position in fragment.native_evidence.get("title_cells", []):
+        cell = next((c for c in fragment.cells if [c.row, c.column] == position), None)
+        if cell and any(any(ref.block_id == f"{fragment.fragment_id}.title.{cell.row}.{cell.column}"
+                            and ref.text == cell.text for ref in record.scope_refs) for record in records):
+            consumed.add(_ref(fragment, cell))
     return consumed
 
 
@@ -388,6 +395,8 @@ def _qualify_relation(fragment: TableFragment, relation: ValueRelation,
             if marker and any(re.search(r"(?:\^\s*\{?|<sup>)" + re.escape(marker[1]) + r"(?:\}|</sup>|\b)", registry[r].text)
                               for r in (relation.value, *relation.row_headers)):
                 notes.append(ref)
+    unit_refs = [ref for ref in unit_refs if unit_applicable(registry[ref].text, labels,
+                 [registry[r].text for r in relation.row_headers])]
     return replace(relation, unit_refs=tuple(unit_refs), period_refs=tuple(period_refs), note_refs=tuple(notes))
 
 
@@ -401,13 +410,16 @@ def _field_record(
     # Mere adjacency, a backend table label or equal glyphs never creates one.
     explicit = [scope for scope in fragment.pdf_evidence.get("field_scopes", [])
                 if scope.get("complete") and row in scope.get("body_rows", [])]
+    if not explicit:
+        explicit = [scope for scope in fragment.native_evidence.get("field_scopes", [])
+                    if scope.get("complete") and row in scope.get("body_rows", [])]
     if len(explicit) != 1:
         return None
     pairs = []
     if explicit:
         evidence = explicit[0].get("evidence", {})
         if not (explicit[0].get("evidence_source") and (
-            evidence.get("explicit_label_delimiters") or
+            evidence.get("explicit_label_delimiters") or evidence.get("literal_property_labels") or
             evidence.get("source_style_contrast") and (
                 evidence.get("numeric_value_evidence") or evidence.get("explicit_field_label_type")
             )
@@ -415,6 +427,10 @@ def _field_record(
             return None
         by_position = {(c.row, c.column): c for c in cells}
         claimed: set[tuple[int, int]] = set()
+        group_position = tuple(explicit[0].get("group") or [])
+        group = by_position.get(group_position)
+        if group:
+            claimed.add(group_position)
         for pair in explicit[0].get("pairs", []):
             label_pos, value_pos = tuple(pair.get("label", [])), tuple(pair.get("value", []))
             if (len(label_pos) != 2 or len(value_pos) != 2 or label_pos in claimed
@@ -432,7 +448,8 @@ def _field_record(
                         or label.row_span != 1 or value.row_span != 1 for label, value in pairs):
         return None
     return SemanticRecord(fragment.fragment_id, row, tuple(
-        _relation(_ref(fragment, value), (_ref(fragment, label),), (), registry)
+        _qualify_relation(fragment, _relation(_ref(fragment, value),
+                         (*((_ref(fragment, group),) if group else ()), _ref(fragment, label)), (), registry), registry)
         for label, value in pairs
     ))
 
@@ -680,6 +697,12 @@ def _bind_fragment(
             break
         records = [record for record in records if record.source_row not in unsafe]
         issues.extend((r, "row_span_crosses_unresolved_region") for r in sorted(unsafe))
+    titles = [c for c in fragment.cells if [c.row, c.column] in fragment.native_evidence.get("title_cells", [])]
+    if titles:
+        records = [replace(record, scope_refs=tuple(TextRef(
+            fragment.fragment_id, fragment.page_number, f"{fragment.fragment_id}.title.{c.row}.{c.column}",
+            c.text, "title", 0, len(c.text), (record.source_row,), tuple(range(fragment.num_cols))) for c in titles)
+            + record.scope_refs) for record in records]
     consumed = _consumed_cells(fragment, records)
     return _FragmentBinding(records, consumed, issues)
 
@@ -784,7 +807,8 @@ def retained_table_parts(
             else:
                 chunks[-1].append(row)
         for index, chunk in enumerate(chunks):
-            context = set()
+            context: set[int] = set()
+            context.update(position[0] for position in fragment.native_evidence.get("title_cells", []))
             for scope in fragment.source_header_scopes:
                 headers = scope.get("header_rows", [])
                 if (scope.get("complete") and headers

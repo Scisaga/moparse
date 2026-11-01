@@ -1212,8 +1212,8 @@ def test_nested_native_list_period_is_printed_with_its_exact_literal_slice_and_c
     prepare_native_table_scopes(result)
     period = next(ref for ref in first.context_refs if ref.kind == "period")
     projection = "（1）Other context。\n（3）2024 年度测量数据:"
-    assert projection[period.start:period.end] == period.text == "（3）2024 年度测量数据:"
-    assert "期间：（3）2024 年度测量数据:" in render_semantic_view(bind_table_view("a", [first], [first]), [first])
+    assert projection[period.start:period.end] == period.text == "2024 年度"
+    assert "期间：2024 年度" in render_semantic_view(bind_table_view("a", [first], [first]), [first])
     assert not any(ref.kind == "period" for ref in second.context_refs)
 
 

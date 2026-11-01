@@ -11,6 +11,8 @@ import re
 from functools import lru_cache
 from typing import Any
 
+from app.utils.measurement import unit_applicable
+
 from .metrics import normalize_text
 from .representations import visible_text
 
@@ -18,7 +20,7 @@ VERSION = "candidate-information-scopes-2"
 _UNIT = re.compile(r"(?:(?:人民币|人民幣|美元|港元|港幣|港币|欧元|歐元)?(?:万亿元|萬億元|千亿元|千億元|百亿元|百億元|十亿元|十億元|亿元|億元|千万元|千萬元|百万元|百萬元|千元|万元|萬元|元)|RMBbn|RMB['’]000|(?:RMB|USD|HKD|CNY)\s+million|(?<!\w)(?:in\s+)?(?:thousands?|millions?|billions?|[Dd]ays?|[Tt]imes)(?!\w)|\bcontracts?\b|[十百千万萬亿億]*股(?!\w)|USD|EUR|HKD|CNY|RMB|\$\s*(?:in\s+millions|bn|m)|['’]\s*000\s+(?:contracts|lots)|[个個]?百分点|[个個]?百分點|percentage points?|basis points?|bps|(?:毫克|千克|公斤|(?:千萬|千万|百萬|百万|萬|万|千)?(?:吨|噸))|[%‰$€£¥])(?:/[A-Za-z\u3400-\u9fff0-9³²]+)?")
 _PERIOD = re.compile(r"(?:截至[^。；;]{1,30}(?:年度|年末)|(?:19|20)\d{2}\s*年(?:度|末)?|(?<!\d)(?:19|20)\d{2}(?!\d))")
 _INTRO = re.compile(r"(?:following\s+table|下表|本表|表中).*(?:percent(?:age)?|单位|單位)|(?:单位|單位|Units?)\s*[:：]", re.I)
-_PRINTED_CAPTION = re.compile(r"^(?:Table|图表|圖表|表)[\s\-–—]*\d+(?:[.\-]\d+)*(?:[.:：]\s*|\s+)", re.I)
+_PRINTED_CAPTION = re.compile(r"^(?:Table|附表|图表|圖表|表)[\s\-–—]*\d+(?:[.\-]\d+)*(?:[.:：]\s*|\s+)", re.I)
 _PRINTED_REPORT_TITLE = re.compile(
     r"(?:(?:[^\s。；;:：]{1,80}(?:有限公司|股份公司))\s+)?(?:19|20)\d{2}\s*年?\s*年度(?:报告|報告)|"
     r"Annual\s+Report\s+(?:19|20)\d{2}", re.I)
@@ -61,6 +63,8 @@ def metric_units(text: str) -> list[str]:
     return [token for token in units(text) if any(
         (match.end() == len(text) or text[match.end():].strip() == ")")
         and (not text[:match.start()].rstrip()[-1:].isdigit())
+        and (match.start() == 0 or text[match.start() - 1] in " (：:"
+             or re.fullmatch(r"(?:19|20)\d{2}\s*年?", text[:match.start()].strip()))
         for match in re.finditer(re.escape(token), text))
         or any(word in text for word in {"次": ("次数", "次數"), "年": ("年限",),
                                         "人": ("人数", "人數"), "股": ("股数", "股數")}.get(token, ()))]
@@ -394,6 +398,14 @@ def _prose_fields(block: dict[str, Any]) -> list[dict[str, Any]]:
                       for text in [key, *periods]) else [])], "periods": periods, "text_format": "plain",
                   "native_path": block.get("native_path"), "information_prose_record": True}
                  for index, (key, value) in enumerate(pairs)]
+        if parsed:
+            for cell in cells:
+                cell["printed_subject_paths"] = parsed.get("printed_subject_paths", [])
+            for index, assertion in enumerate(parsed.get("named_measurements", [])):
+                cells.append({"id": f"{identity}:measurement:{index}", "text": assertion["value"],
+                    "row_header_path": assertion["row_header_path"], "column_header_path": [],
+                    "information_context": [*context, *scopes], "native_path": block.get("native_path"),
+                    **{key: assertion[key] for key in ("unit", "period", "notes", "currency") if key in assertion}})
         records.append({**block, "id": identity, "text": "", "cells": cells,
                         "kind": "text_record", "readback_evidence": "printed_key_value_record"})
     return records
@@ -444,6 +456,8 @@ def read_information_observation(observation: dict[str, Any]) -> dict[str, Any]:
             printed_contexts: dict[str, list[dict[str, Any]]] = {}
             if len(printed) == 1:
                 for field in printed[0]["cells"]:
+                    if not field.get("column_header_path"):
+                        continue
                     key = normalize_text(field["column_header_path"][0], collapse_whitespace=True)
                     if key in printed_contexts:
                         printed_contexts[key] = []
@@ -483,6 +497,7 @@ def read_information_observation(observation: dict[str, Any]) -> dict[str, Any]:
                     continue
                 if not prior.get("cells") and _INTRO.search(value):
                     contexts.append({"id": prior.get("id"), "text": value, "kind": "explicit_table_introduction"})
+                    continue
                 break
             for following in blocks[position + 1:]:
                 kind = following.get("kind", "")
@@ -530,7 +545,8 @@ def read_information_observation(observation: dict[str, Any]) -> dict[str, Any]:
                 printed_path = cell.get("column_header_path", [])
                 printed_key = normalize_text(" / ".join(printed_path), collapse_whitespace=True) if (
                     isinstance(printed_path, list) and all(isinstance(p, str) for p in printed_path)) else ""
-                cell["information_context"] = [*contexts, *printed_contexts.get(printed_key, [])]
+                cell["information_context"] = [*contexts, *cell.get("printed_scope_context", []),
+                                               *printed_contexts.get(printed_key, [])]
                 cell["information_notes"] = notes
                 cell["information_ambiguous_notes"] = numbered_notes
                 cell["information_headers"] = [c["text"] for c in column_headers]
@@ -667,9 +683,9 @@ def scoped_qualifiers(cell: dict[str, Any], endpoint_texts: list[str]) -> dict[s
         column_units.append("%")
     actual_units = own_units or row_units or column_units
     row_labels = [*cell.get("row_header_path", []), *cell.get("information_row_labels", [])]
-    currency = re.match(r"\(?\s*([$€£¥])", numeric) if _is_scalar(numeric) else None
-    if (currency and any(re.search(r"per\s+(?:diluted\s+)?share|每股", label, re.I) for label in row_labels)):
-        actual_units = [currency[1], currency[1] + " per share"]
+    currency_symbol = re.match(r"\(?\s*([$€£¥])", numeric) if _is_scalar(numeric) else None
+    if (currency_symbol and any(re.search(r"per\s+(?:diluted\s+)?share|每股", label, re.I) for label in row_labels)):
+        actual_units = [currency_symbol[1], currency_symbol[1] + " per share"]
     if not actual_units:
         # A shared currency never qualifies an explicit ratio/change column.
         if not ratio:
@@ -680,8 +696,9 @@ def scoped_qualifiers(cell: dict[str, Any], endpoint_texts: list[str]) -> dict[s
                     actual_units.append("%")
                 elif _INTRO.search(text):
                     actual_units.extend(units(text))
-    if currency and not actual_units:
-        actual_units = [currency[1]]
+    if currency_symbol and not actual_units:
+        actual_units = [currency_symbol[1]]
+    actual_units = [unit for unit in actual_units if unit_applicable(unit, column_texts, row_labels)]
     for unit in dict.fromkeys(actual_units):
         result["unit"].append({"actual": unit, "source": "candidate_scoped_unit"})
     # Keep whole literal labels as period evidence: e.g. an English date is

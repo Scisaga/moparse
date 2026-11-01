@@ -28,6 +28,41 @@ _IDENTITY = re.compile(r"项目|項目|项目名称|項目名稱|名称|名稱|�
 _TABLE_MARKUP = re.compile(r"(?:<|&lt;)\s*/?\s*(?:table|tr|td|th)\b", re.I)
 
 
+def property_label(text: str) -> bool:
+    """Recognize explicit property labels, never arbitrary grid prose."""
+    text = text.strip().rstrip(":：")
+    return bool(_FIELD.fullmatch(text) or re.fullmatch(
+        r"(?:.{0,50}(?:名称|名稱|简称|簡稱|代码|代碼|地址|邮政编码|郵政編碼|网址|網址|"
+        r"电子信箱|電子信箱|电子邮箱|電子郵箱|法定代表人|上市交易所|注册资本|註冊資本|股数|股數|日期|姓名|"
+        r"注册地址历史变更情况|上市以来主营业务的变化情况\(如有\)))|"
+        r"股票种类|股票種類|证券种类|證券種類|性别|性別|年龄|年齡|"
+        r"Legal name|Registered address|Postal code|Website|Email|Stock code|Stock type|Exchange|Age|Gender",
+        re.sub(r"[（(]([^()（）]*)[）)]$", lambda match: "" if unit_description(match[1]) else match[0],
+               text.replace("（", "(").replace("）", ")")), re.I))
+
+
+def _property_scopes(fragment: TableFragment) -> list[dict[str, Any]]:
+    scopes = []
+    for row in range(fragment.num_rows):
+        band = sorted((c for c in fragment.cells if c.row <= row < c.row + c.row_span), key=lambda c: c.column)
+        group = band[0] if len(band) % 2 and band[0].row_span > 1 else None
+        items = band[1:] if group else band
+        if not items or len(items) % 2:
+            continue
+        pairs = list(zip(items[::2], items[1::2], strict=True))
+        if not all(label.row == value.row == row and label.row_span == value.row_span == 1
+                   and property_label(label.text) and (not property_label(value.text)
+                       or label.text.rstrip().endswith((":", "："))) for label, value in pairs):
+            continue
+        scopes.append({"body_rows": [row], "complete": True,
+                       "evidence_source": "native_literal_property_schema",
+                       "evidence": {"literal_property_labels": True},
+                       "group": [group.row, group.column] if group else None,
+                       "pairs": [{"label": [label.row, label.column], "value": [value.row, value.column]}
+                                 for label, value in pairs]})
+    return scopes
+
+
 def scalar(text: str) -> bool:
     return bool(_SCALAR.fullmatch(text.strip()))
 
@@ -114,6 +149,7 @@ def native_scopes(fragment: TableFragment) -> dict[str, Any]:
         evidence["structure_readable"] = False
         return evidence
     evidence["structure_readable"] = True
+    evidence["field_scopes"] = _property_scopes(fragment)
     first_body = None
     header_start = 0
     for row in range(fragment.num_rows):
@@ -127,7 +163,7 @@ def native_scopes(fragment: TableFragment) -> dict[str, Any]:
             continue
         values = [c for c in band if c.column > 0 and scalar(c.text)]
         prior = [c for c in cells if header_start <= c.row < row]
-        field_header = len(prior) >= 2 and all(_FIELD.fullmatch(c.text.strip()) for c in prior if c.text.strip())
+        field_header = len(prior) >= 2 and all(property_label(c.text) for c in prior if c.text.strip())
         date_value = any(re.fullmatch(r"\d{4}年\d{1,2}月\d{1,2}日", c.text.strip()) for c in band)
         stub = next((c for c in band if c.column == 0 and c.text.strip()), None)
         declared = all(c.is_column_header for c in band if c.text.strip())
@@ -156,7 +192,7 @@ def native_scopes(fragment: TableFragment) -> dict[str, Any]:
     if any(c.column > 0 and scalar(c.text) and not _PERIOD.fullmatch(c.text.strip()) for c in headers):
         return evidence
     labels = [c.text.strip() for c in headers if c.text.strip()]
-    field_header = len(labels) >= 2 and all(_FIELD.fullmatch(t) for t in labels)
+    field_header = len(labels) >= 2 and all(property_label(t) for t in labels)
     if not field_header and not any(_PERIOD.search(t) or _MEASURE.search(t) or _UNIT.search(t) for t in labels):
         return evidence
     # Row header columns may occupy a merged field label (group + record).
@@ -201,6 +237,9 @@ def native_scopes(fragment: TableFragment) -> dict[str, Any]:
             scopes.append({**scope, "header_rows": [row], "body_rows": list(range(row + 1, fragment.num_rows)),
                            "evidence": {**scope["evidence"], "explicit_period_switch": changed_period}})
     evidence.update(content_kind="data_table", header_scopes=scopes)
+    evidence["title_cells"] = [[c.row, c.column] for c in cells if c.row < header_start
+                               and c.column == 0 and c.column_span == fragment.num_cols
+                               and c.text.strip() and not unit_header(c.text)]
     _row_context(fragment, evidence, scopes)
     return evidence
 
@@ -393,7 +432,9 @@ def prepare_native_table_scopes(result: DocumentParseResult) -> None:
             tail = lines[-1] if lines else None
             if tail and _SECTION.fullmatch(tail[0].strip()):
                 literal = tail[0].strip()
-                section = position, literal, tail.start() + len(tail[0]) - len(tail[0].lstrip())
+                match = _SECTION.fullmatch(literal)
+                assert match is not None
+                section = position, match[1], tail.start() + len(tail[0]) - len(tail[0].lstrip()) + match.start(1)
             elif section and re.match(r"^\s*[（(]\d+[)）]", text):
                 section = None
             if block.get("type") != "table":
@@ -410,7 +451,8 @@ def prepare_native_table_scopes(result: DocumentParseResult) -> None:
             # which the narrower native classifier does not recognize. Its
             # actual body still owns the adjacent caption; an empty native
             # proposal must not erase those declared relationships.
-            body = tuple(dict.fromkeys(r for s in fragment.source_header_scopes
+            body = tuple(dict.fromkeys(r for s in [*fragment.source_header_scopes,
+                                                  *fragment.native_evidence.get("field_scopes", [])]
                                        if s.get("complete") for r in s.get("body_rows", [])))
             columns = tuple(range(fragment.num_cols))
             context: list[TextRef] = []

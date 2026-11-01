@@ -183,3 +183,29 @@ def test_dataset_is_read_only_for_score_output(tmp_path, monkeypatch):
     baseline, dataset, expected, freeze, _ = invented_run(tmp_path, monkeypatch)
     with pytest.raises(ValueError, match="read-only dataset"):
         evaluate_saved(baseline, dataset / "forbidden", expected_root=expected, freeze=freeze)
+
+
+def test_persistent_native_information_loss_cannot_pass_a_no_new_loss_gate():
+    from moparse_eval.expected_evaluation import (
+        adoption_status,
+        native_preservation,
+        paired_changes,
+    )
+
+    def scores(state):
+        row = {"id": "target", "kind": "business_field", "outcome": state,
+               "reference": {"path": "invented.md", "lines": [1, 1]}, "expected": {"value": "17"}}
+        return [{"sample_id": "invented", "targets": 1, "correct": int(state == "correct"),
+                 "incorrect": int(state == "incorrect"), "outcomes": [row]}]
+
+    native, old, current = scores("correct"), scores("incorrect"), scores("incorrect")
+    delta = paired_changes(old, current)
+    preservation = native_preservation(native, current)
+    assert delta["lost_correct"] == 0
+    gate = adoption_status({"P07": delta}, {}, {"P07": preservation})["P07"]
+    assert gate["no_lost_correct_targets"] is True
+    assert gate["native_to_final_business_losses"] == 1 and gate["adoptable"] is False
+    fixed = scores("correct")
+    passed = adoption_status({"P07": paired_changes(old, fixed)}, {},
+                             {"P07": native_preservation(native, fixed)})["P07"]
+    assert passed["native_correct_business_preserved"] and passed["adoptable"]

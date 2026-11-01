@@ -112,11 +112,14 @@ def _record_path_locates(row_path: list[str], item: dict[str, Any], collapse_whi
                          require_leaf: bool = False) -> bool:
     cell = item["cell"]
     if cell.get("information_prose_record"):
+        if any(_declared_path_locates(row_path, path, collapse_whitespace, require_leaf=require_leaf)
+               for path in cell.get("printed_subject_paths", [])):
+            return True
         if require_leaf:
             return False
         return all(any(_label_in_native_cell(label, actual, collapse_whitespace)
                        for actual in cell.get("information_record_labels", [])) for label in row_path)
-    paths = [cell.get("row_header_path")]
+    paths = [cell.get("row_header_path"), *cell.get("printed_subject_paths", [])]
     if cell.get("service_evidence_state") == "converted":
         paths += cell.get("printed_record_row_paths", [])
     return any(_declared_path_locates(row_path, path, collapse_whitespace, require_leaf=require_leaf)
@@ -140,6 +143,12 @@ def _record_candidate_pool(
     existing body; sibling bodies are not joined or renumbered here.
     """
     pool = [item for item in candidates if in_page_scope(item, set(unit.get("pages", [])))]
+    if unit.get("source_element_id"):
+        # Canonical expected IDs and list spans are navigation only. A row
+        # text match cannot choose a table before its full business scope.
+        # The field resolver below uses labels and scoped qualifiers across
+        # all actual bodies, without looking at the expected value.
+        return pool, None
     scope_key = (unit.get("table", {}).get("id"), tuple(unit.get("pages", [])))
     anchored = matching.get("information_table_bodies", {}).get(scope_key, set())
     if label_match is None and len(anchored) == 1:
@@ -383,13 +392,14 @@ def _locate_record_field(
                 break
             explicit_rows = [item for item in group if _record_path_locates(physical_rows, item, collapse_whitespace)]
             explicit_rows = [item for item in explicit_rows
-                             if _candidate_table_identity(item) not in leaf_tables[tuple(physical_rows)]
+                             if not leaf_tables[tuple(physical_rows)]
                              or _record_path_locates(physical_rows, item, collapse_whitespace, require_leaf=True)]
             if explicit_rows:
-                found = [item for item in explicit_rows if not physical_columns or column_path_locates(
+                found = [item for item in explicit_rows if (not physical_columns and item["cell"].get("named_value") is not False) or physical_columns and column_path_locates(
                     physical_columns, item["cell"].get("column_header_path"), collapse_whitespace,
                     [*item["cell"].get("units", []), *([item["cell"]["unit"]] if isinstance(item["cell"].get("unit"), str) else [])],
-                    [*item["cell"].get("periods", []), *([item["cell"]["period"]] if isinstance(item["cell"].get("period"), str) else [])])]
+                    [*item["cell"].get("periods", []), *([item["cell"]["period"]] if isinstance(item["cell"].get("period"), str) else [])],
+                    allow_prefix=True)]
                 for item in found:
                     solutions.append({"selected": [item], "rows": [], "columns": [],
                                       "group": group, "method": "explicit_native_paths", "orientation": orientation})
@@ -410,7 +420,8 @@ def _locate_record_field(
                                                         for item in group) for label in physical_rows]})
                 continue
             for row_endpoints in row_paths:
-                if any(item["cell"].get("information_header_body_rows") is not None
+                if any((physical_columns and item["cell"].get("information_header_body_rows") is not None
+                        or item["cell"].get("is_column_header") is True)
                        and item["cell"].get("is_row_header") is not True for item in row_endpoints):
                     continue
                 if not physical_columns:
@@ -656,6 +667,16 @@ def _score_records(
                             for projected in ([{**alternative, "selected": [candidate]}
                                 for candidate in alternative["selected"] if not candidate.get("duplicate_native_id")]
                                 if alternative["selected"] else [alternative])]
+            # Authored business headings locate homonymous records, even
+            # when the selected expected range contains only one of them.
+            # This uses labels and actual scope, never a field's answer.
+            for heading in reversed(unit.get("expected_context", [])):
+                scoped = [alternative for alternative in alternatives if all(
+                    item["status"] == "correct" for item in _field_qualifiers(
+                        {**table, "business_scope": heading}, field, alternative, identity_only=True)[2].values())]
+                if scoped:
+                    alternatives = scoped
+                    break
             if alternatives:
                 # Period and unit identify the requested measure. Each comes
                 # from this candidate's own field; its value is not a locator.

@@ -27,7 +27,7 @@ PROTOCOL = {
     "field_content_equivalence": "declared_width_spacing_scoped_scalar_units_year_range_dash_terminal_prose_punctuation",
     "qualifier_reading": "candidate_only_explicit_table_record_caption_and_note_scopes",
     "output_reading": "native_fields_or_actual_public_markdown_without_private_ir_credit",
-    "reader_revision": "canonical_expected_5",
+    "reader_revision": "canonical_expected_6",
 }
 
 

@@ -8,7 +8,13 @@ from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Any
 
-from .expected_evaluation import PIPELINES, paired_changes, summarize
+from .expected_evaluation import (
+    PIPELINES,
+    adoption_status,
+    native_preservation,
+    paired_changes,
+    summarize,
+)
 from .expected_scoring import PROTOCOL, require_paired_targets
 from .packaging import inside, read_json, write_json
 
@@ -60,6 +66,14 @@ def load_complete(index_path: Path) -> tuple[dict[str, Any], dict[str, list[dict
     for group, scores in groups.items():
         if summarize(scores) != index["summary"][group]:
             raise ValueError("aggregate differs from the actual target decisions")
+    preservation = {p: native_preservation(groups[p], groups[f"{p}-current"])
+                    for p in ("P07", "P08") if f"{p}-current" in groups}
+    changes = {p: paired_changes(groups[f"{p}-previous"], groups[f"{p}-current"])
+               for p in preservation if f"{p}-previous" in groups}
+    incremental = {p: paired_changes(groups[f"{p}-intermediate"], groups[f"{p}-current"])
+                   for p in preservation if f"{p}-intermediate" in groups}
+    if index.get("adoption", {}) != adoption_status(changes, incremental, preservation):
+        raise ValueError("adoption gates differ from the actual native and final decisions")
     return index, dict(groups)
 
 
@@ -160,6 +174,14 @@ def render_expected_report(index_path: Path, *, figures: bool = True, output: Pa
             loss_fields = sum(x["kind"] == "business_field" for x in delta["losses"])
             lines.append(f"| {pipeline} | {delta['new_correct']:,} | {delta['lost_correct']:,} | {gain_fields:,} | {loss_fields:,} | {delta['raw_literal_new_exact']:,} | {delta['raw_literal_lost_exact']:,} |")
     lines += ["", "以上变化来自实际保存的最终Markdown，内部IR和未打印关系不能补分。数值字面诊断单独比较实际打印的值，不增加业务分母或覆盖业务错误。评分器读取修复本身不算正文改善；原生与最终正文的结果分别保留。", "",
+              "## 原生正确信息保留门槛", "",
+              "| 管线 | 原生正确业务目标 | 正文仍正确 | 正文丢失 | 门槛通过 |",
+              "| --- | ---: | ---: | ---: | --- |"]
+    preservation = {p: native_preservation(groups[p], groups[f"{p}-current"])
+                    for p in ("P07", "P08") if f"{p}-current" in groups}
+    for pipeline, row in preservation.items():
+        lines.append(f"| {pipeline} | {row['native_correct_business_targets']:,} | {row['preserved']:,} | {row['lost_correct_business_targets']:,} | {'是' if row['passed'] else '否'} |")
+    lines += ["", "这项门槛直接比较原生输出与当前实际Markdown；旧正文到新正文没有新增退化，不能代替原生信息保留。逐项差异见private/native-preservation.json。", "",
               "## expected覆盖与具体错误", "",
               f"共同程序已对本轮{len(index['coverage']):,}个样本的声明expected范围完成比较；每项只有正确或错误。覆盖记录位于coverage.json，内容位置和候选证据保存在逐项结果中。", "",
               "错误按缺失、数值、单位、期间、业务归属、附注及冲突分别保留，不通过历史原图裁定或旧标注状态退出分母。普通正文按完整文本比较，字符差异与业务字段关系分开报告。逐项错误及其最早出现的输出阶段见private/target-details.csv和failure-stages.json：原生已错记为native_output，原生正确而正文错误记为final_markdown_conversion；该归因不冒充识别、适配或渲染内部根因诊断。", "",
@@ -221,6 +243,7 @@ def render_expected_report(index_path: Path, *, figures: bool = True, output: Pa
     write_json(output / "execution-costs.json", index.get("execution_costs", {}))
     write_json(output / "private/paired-changes.json", changes)
     write_json(output / "private/incremental-changes.json", incremental)
+    write_json(output / "private/native-preservation.json", preservation)
     write_json(output / "adoption.json", index.get("adoption", {}))
     report = output / "report.md"
     report.write_text("\n".join(lines), encoding="utf-8")

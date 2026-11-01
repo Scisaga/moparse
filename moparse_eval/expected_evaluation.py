@@ -178,6 +178,35 @@ def _change_summary(changes: dict[str, Any]) -> dict[str, Any]:
             for pipeline, delta in changes.items()}
 
 
+def native_preservation(native: list[dict[str, Any]], final: list[dict[str, Any]]) -> dict[str, Any]:
+    """Require every native-correct business target to survive public export."""
+    delta = paired_changes(native, final)
+    losses = [row for row in delta["losses"] if row["kind"] == "business_field"]
+    correct = sum(row["kind"] == "business_field" and row["outcome"] == "correct"
+                  for score in native for row in score["outcomes"])
+    return {"native_correct_business_targets": correct, "preserved": correct - len(losses),
+            "lost_correct_business_targets": len(losses), "losses": losses,
+            "passed": not losses,
+            "comparison": "native_to_actual_final_markdown_under_one_shared_scorer"}
+
+
+def adoption_status(changes: dict[str, Any], incremental: dict[str, Any],
+                    preservation: dict[str, Any]) -> dict[str, Any]:
+    result = {}
+    for pipeline, delta in (incremental or changes).items():
+        no_losses = delta["lost_correct"] == 0 and changes.get(pipeline, delta)["lost_correct"] == 0
+        native = preservation[pipeline]
+        result[pipeline] = {
+            "no_lost_correct_targets": no_losses,
+            "no_lost_exact_value_literals": delta["raw_literal_lost_exact"] == 0,
+            "native_correct_business_preserved": native["passed"],
+            "native_to_final_business_losses": native["lost_correct_business_targets"],
+            "adoptable": no_losses and native["passed"],
+            "comparison": "both_previous_and_intermediate_to_current" if pipeline in incremental else "previous_to_current",
+        }
+    return result
+
+
 def execution_costs(baseline: Path, session: dict[str, Any], service: dict[str, Any]) -> dict[str, Any]:
     """Copy recorded timing/resource evidence, never rerun a parser or infer cost."""
     from .reporting import _performance as native_performance
@@ -371,13 +400,16 @@ def evaluate_saved(baseline: Path, output: Path, *, expected_root: Path,
     incremental = {p: paired_changes(groups[f"{p}-intermediate"], groups[f"{p}-current"])
                    for p in ("P07", "P08") if f"{p}-intermediate" in groups and f"{p}-current" in groups}
     write_json(output / "private/incremental-changes.json", incremental)
+    preservation = {p: native_preservation(groups[p], groups[f"{p}-current"])
+                    for p in ("P07", "P08") if f"{p}-current" in groups}
+    write_json(output / "private/native-preservation.json", preservation)
     index.update(state="completed", expected_comparison_complete=True, summary=summary, changes=_change_summary(changes),
                  execution_costs=costs,
                  incremental_changes=_change_summary(incremental),
-                 adoption={p: {"no_lost_correct_targets": delta["lost_correct"] == 0 and changes.get(p, delta)["lost_correct"] == 0,
-                               "no_lost_exact_value_literals": delta["raw_literal_lost_exact"] == 0,
-                               "comparison": "both_previous_and_intermediate_to_current" if p in incremental else "previous_to_current"}
-                           for p, delta in (incremental or changes).items()},
+                 native_preservation={p: {**{k: v for k, v in row.items() if k != "losses"},
+                                         "details": "private/native-preservation.json"}
+                                      for p, row in preservation.items()},
+                 adoption=adoption_status(changes, incremental, preservation),
                  development_exposure="Lite outputs and expected syntax used for software development; no independent held-out claim")
     write_json(output / "index.json", index)
     write_json(output / "execution-status.json", {key: value for key, value in index.items() if key != "results"})
@@ -449,6 +481,14 @@ def score_saved_service(run: Path) -> Path:
         changes = {pipeline: paired_changes(groups[f"{pipeline}-previous"], groups[f"{pipeline}-current"])}
         write_json(output / "private/paired-changes.json", changes)
         index["changes"] = _change_summary(changes)
+    else:
+        changes = {}
+    preservation = {pipeline: native_preservation(groups[pipeline], groups[f"{pipeline}-current"])}
+    write_json(output / "private/native-preservation.json", preservation)
+    index["native_preservation"] = {p: {**{k: v for k, v in row.items() if k != "losses"},
+                                        "details": "private/native-preservation.json"}
+                                    for p, row in preservation.items()}
+    index["adoption"] = adoption_status(changes, {}, preservation)
     write_json(output / "index.json", index)
     write_json(output / "scoring-freeze.json", frozen)
     record["latest_scores"] = record["score_index"] = str((output / "index.json").relative_to(run))
