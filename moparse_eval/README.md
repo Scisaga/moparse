@@ -1,5 +1,7 @@
 # MO-Parse 评测工具
 
+当前版本已复现评分假阳性、假阴性及转换单位错误，见[根因诊断](../benchmark/reports/20261101-expected-only-06/root-cause-analysis.md)。旧`expected-only-r5`冻结及已生成成绩不能继续作为质量采用依据。先运行`.venv/bin/python benchmark/diagnostics/expected-preservation-probes.py`验证已知契约缺口；当前退出1表示缺陷未修复。后续应先关闭反例，再生成新的工程冻结和统一评分，保留旧产物及执行计时，不改expected或人工排除目标。
+
 本次输出优化必须以`pdf_sample/parsing/expected/`中的现有expected为唯一验收标准。直接对照expected与被测实际输出，不查看原PDF图片裁决，不使用原图参考排除决定，不生成另一套答案，也不以原图理由改判或豁免差异。评分索引和已有1,726个字段仅是部分检查项，不能代替expected全部业务内容。完整规则见[当前验收标准](../benchmark/evaluation-tasks.md#current-task-expected-only)，续做使用[任务提示词](../docs/engineering/prompts/expected-output-optimization.md)。
 
 检查和判分必须由同一程序对所有管线执行，统一expected范围、业务目标、分母、等价规则、异常政策及冻结评分版本。人工阅读用于诊断程序缺陷，不提供正式成绩或验收决定。不同格式可有忠实读取器，不能按管线身份设评分例外；共同修正后全部受影响组统一重评。八组原生结果横向比较，P07/P08后处理前后最终正文另作配对比较；评分器补读收益与实际正文改善分别报告，不将后处理结果与其他组原生结果混排。

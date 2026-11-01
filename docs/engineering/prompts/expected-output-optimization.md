@@ -22,6 +22,8 @@ P07/P08是本轮确定性服务转换代码的优化对象，所有八条管线�
 
 ## 读取当前状态
 
+当前已复现的评分及转换缺陷见`benchmark/reports/20261101-expected-only-06/root-cause-analysis.md`和`current-validation-status.json`。旧软件`2828b9bb...`的质量采用及业务完成结论已撤回；139/211不是可靠的真实损失总数。先执行只含虚构材料的`benchmark/diagnostics/expected-preservation-probes.py`，当前12例中8例违反契约，退出1是缺陷仍存在。先修复单位答案构造、HTML字段读取、列表币种作用域及行列路径等价，再处理实际正文中的错误单位和字段表分类，关闭局部反例后再冻结和统一重评。不得把旧2373项工程测试、42份同结果复算或13项产物复现当业务正确性的证明，也不得把旧正文到新正文零新增退化当作原生到正文信息损失已经修好。
+
 先查看Git状态，阅读`AGENTS.md`、`benchmark/evaluation-tasks.md`、`moparse_eval/README.md`、`benchmark/reports/README.md`及`docs/specs/moparse-output-spec.md`。当前验收标准的规范定义在`benchmark/evaluation-tasks.md#current-task-expected-only`，不要复制成另一份标准。
 
 有效保存原生产物位于`benchmark/reports/20261026-lite-v3/`。较早的04版正文位于`benchmark/reports/20261031-units-continuations-04/{p07,p08}/candidate/artifacts/`，本轮开始时的05版正文位于`benchmark/reports/20261101-business-coverage-05/{p07,p08}/candidate/artifacts/`，每个样本目录中的`final.md`才是被测实际交付正文。既有运行记录和人工选择声明只用于导航，不通过扫描原PDF重建或验收映射。
