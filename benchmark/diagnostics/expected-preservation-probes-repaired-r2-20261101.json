@@ -1,0 +1,544 @@
+{
+  "scope": "invented_software_contracts_only_not_quality_results",
+  "software_id": "f5e9063bfd2ac64be79796389d4cdaf3ad3770a8820a0628a1b245fff05a8a03",
+  "cases": 12,
+  "contract_failures": 0,
+  "results": [
+    {
+      "id": "named_html_span",
+      "reference_fixture": "- Legal name: Example Corp\n",
+      "candidate_fixture": "<table><tr><td></td><td></td><td></td><td></td></tr><tr><td>Legal name</td><td colspan=\"3\">Example Corp</td></tr></table>",
+      "intended_all_business_fields_correct": true,
+      "observed_all_business_fields_correct": true,
+      "violates_contract": false,
+      "fields": [
+        {
+          "row_header_path": [
+            "Legal name"
+          ],
+          "expected": {
+            "column_header_path": [],
+            "named_value": true,
+            "value": "Example Corp",
+            "unit": null,
+            "required": {}
+          },
+          "actual": "Example Corp",
+          "outcome": "correct",
+          "reason": "native_value_compared"
+        }
+      ]
+    },
+    {
+      "id": "named_prose_control",
+      "reference_fixture": "- Legal name: Example Corp\n",
+      "candidate_fixture": "- Legal name: Example Corp\n",
+      "intended_all_business_fields_correct": true,
+      "observed_all_business_fields_correct": true,
+      "violates_contract": false,
+      "fields": [
+        {
+          "row_header_path": [
+            "Legal name"
+          ],
+          "expected": {
+            "column_header_path": [],
+            "named_value": true,
+            "value": "Example Corp",
+            "unit": null,
+            "required": {}
+          },
+          "actual": "Example Corp",
+          "outcome": "correct",
+          "reason": "native_value_compared"
+        }
+      ]
+    },
+    {
+      "id": "monetary_stock_account",
+      "reference_fixture": "单位：人民币千元。\n\n- 庫存股：2024年金額：17。\n",
+      "candidate_fixture": "- 庫存股：2024年金額：17（单位：人民币千元）。\n",
+      "intended_all_business_fields_correct": true,
+      "observed_all_business_fields_correct": true,
+      "violates_contract": false,
+      "fields": [
+        {
+          "row_header_path": [
+            "庫存股"
+          ],
+          "expected": {
+            "column_header_path": [
+              "2024年金額"
+            ],
+            "value": "17",
+            "required": {
+              "unit": "人民币千元"
+            }
+          },
+          "actual": "17",
+          "outcome": "correct",
+          "reason": "native_value_compared"
+        }
+      ]
+    },
+    {
+      "id": "stock_account_wrong_count_unit",
+      "reference_fixture": "单位：人民币千元。\n\n- 庫存股：2024年金額：17。\n",
+      "candidate_fixture": "- 庫存股：2024年金額：17（单位：股）。\n",
+      "intended_all_business_fields_correct": false,
+      "observed_all_business_fields_correct": false,
+      "violates_contract": false,
+      "fields": [
+        {
+          "row_header_path": [
+            "庫存股"
+          ],
+          "expected": {
+            "column_header_path": [
+              "2024年金額"
+            ],
+            "value": "17",
+            "required": {
+              "unit": "人民币千元"
+            }
+          },
+          "actual": "17",
+          "outcome": "incorrect",
+          "reason": "required_qualifier_incorrect:unit_applicability,unit"
+        }
+      ]
+    },
+    {
+      "id": "age_without_shares",
+      "reference_fixture": "单位：股。\n\n- 姓名：甲；年龄：52；年末持股数：17。\n",
+      "candidate_fixture": "- 姓名：甲；年龄：52；年末持股数：17（单位：股）。\n",
+      "intended_all_business_fields_correct": true,
+      "observed_all_business_fields_correct": true,
+      "violates_contract": false,
+      "fields": [
+        {
+          "row_header_path": [
+            "甲"
+          ],
+          "expected": {
+            "column_header_path": [
+              "姓名"
+            ],
+            "value": "甲",
+            "identity_field": true,
+            "unit": null,
+            "required": {}
+          },
+          "actual": "甲",
+          "outcome": "correct",
+          "reason": "native_value_compared"
+        },
+        {
+          "row_header_path": [
+            "甲"
+          ],
+          "expected": {
+            "column_header_path": [
+              "年龄"
+            ],
+            "value": "52",
+            "unit": null,
+            "required": {}
+          },
+          "actual": "52",
+          "outcome": "correct",
+          "reason": "native_value_compared"
+        },
+        {
+          "row_header_path": [
+            "甲"
+          ],
+          "expected": {
+            "column_header_path": [
+              "年末持股数"
+            ],
+            "value": "17",
+            "unit": "股",
+            "required": {
+              "unit": "股"
+            }
+          },
+          "actual": "17",
+          "outcome": "correct",
+          "reason": "native_value_compared"
+        }
+      ]
+    },
+    {
+      "id": "age_with_wrong_shares",
+      "reference_fixture": "单位：股。\n\n- 姓名：甲；年龄：52；年末持股数：17。\n",
+      "candidate_fixture": "- 姓名：甲；年龄：52（单位：股）；年末持股数：17（单位：股）。\n",
+      "intended_all_business_fields_correct": false,
+      "observed_all_business_fields_correct": false,
+      "violates_contract": false,
+      "fields": [
+        {
+          "row_header_path": [
+            "甲"
+          ],
+          "expected": {
+            "column_header_path": [
+              "姓名"
+            ],
+            "value": "甲",
+            "identity_field": true,
+            "unit": null,
+            "required": {}
+          },
+          "actual": "甲",
+          "outcome": "correct",
+          "reason": "native_value_compared"
+        },
+        {
+          "row_header_path": [
+            "甲"
+          ],
+          "expected": {
+            "column_header_path": [
+              "年龄"
+            ],
+            "value": "52",
+            "unit": null,
+            "required": {}
+          },
+          "actual": "52",
+          "outcome": "incorrect",
+          "reason": "required_qualifier_incorrect:unit_applicability"
+        },
+        {
+          "row_header_path": [
+            "甲"
+          ],
+          "expected": {
+            "column_header_path": [
+              "年末持股数"
+            ],
+            "value": "17",
+            "unit": "股",
+            "required": {
+              "unit": "股"
+            }
+          },
+          "actual": "17",
+          "outcome": "correct",
+          "reason": "native_value_compared"
+        }
+      ]
+    },
+    {
+      "id": "currency_one_list_caption",
+      "reference_fixture": "单位：元 币种：人民币。\n\n- 名称：Alpha；金额：17。\n- 名称：Beta；金额：原表留空。\n",
+      "candidate_fixture": "单位：元 币种：人民币\n\n- 名称：Alpha；金额：17。\n- 名称：Beta；金额：。\n",
+      "intended_all_business_fields_correct": true,
+      "observed_all_business_fields_correct": true,
+      "violates_contract": false,
+      "fields": [
+        {
+          "row_header_path": [
+            "Alpha"
+          ],
+          "expected": {
+            "column_header_path": [
+              "名称"
+            ],
+            "value": "Alpha",
+            "identity_field": true,
+            "unit": null,
+            "required": {}
+          },
+          "actual": "Alpha",
+          "outcome": "correct",
+          "reason": "native_value_compared"
+        },
+        {
+          "row_header_path": [
+            "Alpha"
+          ],
+          "expected": {
+            "column_header_path": [
+              "金额"
+            ],
+            "value": "17",
+            "currency": "人民币",
+            "required": {
+              "unit": "元",
+              "currency": "人民币"
+            }
+          },
+          "actual": "17",
+          "outcome": "correct",
+          "reason": "native_value_compared"
+        },
+        {
+          "row_header_path": [
+            "Beta"
+          ],
+          "expected": {
+            "column_header_path": [
+              "名称"
+            ],
+            "value": "Beta",
+            "identity_field": true,
+            "unit": null,
+            "required": {}
+          },
+          "actual": "Beta",
+          "outcome": "correct",
+          "reason": "native_value_compared"
+        },
+        {
+          "row_header_path": [
+            "Beta"
+          ],
+          "expected": {
+            "column_header_path": [
+              "金额"
+            ],
+            "value": "",
+            "authored_value": "原表留空",
+            "reference_blank": true,
+            "currency": "人民币",
+            "required": {
+              "unit": "元",
+              "currency": "人民币"
+            }
+          },
+          "actual": "",
+          "outcome": "correct",
+          "reason": "native_value_compared"
+        }
+      ]
+    },
+    {
+      "id": "currency_repeated_caption_control",
+      "reference_fixture": "单位：元 币种：人民币。\n\n- 名称：Alpha；金额：17。\n- 名称：Beta；金额：原表留空。\n",
+      "candidate_fixture": "单位：元 币种：人民币\n\n- 名称：Alpha；金额：17。\n\n单位：元 币种：人民币\n\n- 名称：Beta；金额：。\n",
+      "intended_all_business_fields_correct": true,
+      "observed_all_business_fields_correct": true,
+      "violates_contract": false,
+      "fields": [
+        {
+          "row_header_path": [
+            "Alpha"
+          ],
+          "expected": {
+            "column_header_path": [
+              "名称"
+            ],
+            "value": "Alpha",
+            "identity_field": true,
+            "unit": null,
+            "required": {}
+          },
+          "actual": "Alpha",
+          "outcome": "correct",
+          "reason": "native_value_compared"
+        },
+        {
+          "row_header_path": [
+            "Alpha"
+          ],
+          "expected": {
+            "column_header_path": [
+              "金额"
+            ],
+            "value": "17",
+            "currency": "人民币",
+            "required": {
+              "unit": "元",
+              "currency": "人民币"
+            }
+          },
+          "actual": "17",
+          "outcome": "correct",
+          "reason": "native_value_compared"
+        },
+        {
+          "row_header_path": [
+            "Beta"
+          ],
+          "expected": {
+            "column_header_path": [
+              "名称"
+            ],
+            "value": "Beta",
+            "identity_field": true,
+            "unit": null,
+            "required": {}
+          },
+          "actual": "Beta",
+          "outcome": "correct",
+          "reason": "native_value_compared"
+        },
+        {
+          "row_header_path": [
+            "Beta"
+          ],
+          "expected": {
+            "column_header_path": [
+              "金额"
+            ],
+            "value": "",
+            "authored_value": "原表留空",
+            "reference_blank": true,
+            "currency": "人民币",
+            "required": {
+              "unit": "元",
+              "currency": "人民币"
+            }
+          },
+          "actual": "",
+          "outcome": "correct",
+          "reason": "native_value_compared"
+        }
+      ]
+    },
+    {
+      "id": "year_unit_column_path",
+      "reference_fixture": "单位：人民币百万元。\n\n- 项目：Alpha；一季度：17。\n",
+      "candidate_fixture": "单位：人民币百万元\n\n- 项目：Alpha；2024年人民币百万元 / 一季度：17。\n",
+      "intended_all_business_fields_correct": true,
+      "observed_all_business_fields_correct": true,
+      "violates_contract": false,
+      "fields": [
+        {
+          "row_header_path": [
+            "Alpha"
+          ],
+          "expected": {
+            "column_header_path": [
+              "项目"
+            ],
+            "value": "Alpha",
+            "identity_field": true,
+            "unit": null,
+            "required": {}
+          },
+          "actual": "Alpha",
+          "outcome": "correct",
+          "reason": "native_value_compared"
+        },
+        {
+          "row_header_path": [
+            "Alpha"
+          ],
+          "expected": {
+            "column_header_path": [
+              "一季度"
+            ],
+            "value": "17",
+            "required": {
+              "unit": "人民币百万元"
+            }
+          },
+          "actual": "17",
+          "outcome": "correct",
+          "reason": "native_value_compared"
+        }
+      ]
+    },
+    {
+      "id": "separate_column_qualifier_control",
+      "reference_fixture": "单位：人民币百万元。\n\n- 项目：Alpha；一季度：17。\n",
+      "candidate_fixture": "单位：人民币百万元\n\n- 项目：Alpha；一季度：17（单位：人民币百万元）。\n",
+      "intended_all_business_fields_correct": true,
+      "observed_all_business_fields_correct": true,
+      "violates_contract": false,
+      "fields": [
+        {
+          "row_header_path": [
+            "Alpha"
+          ],
+          "expected": {
+            "column_header_path": [
+              "项目"
+            ],
+            "value": "Alpha",
+            "identity_field": true,
+            "unit": null,
+            "required": {}
+          },
+          "actual": "Alpha",
+          "outcome": "correct",
+          "reason": "native_value_compared"
+        },
+        {
+          "row_header_path": [
+            "Alpha"
+          ],
+          "expected": {
+            "column_header_path": [
+              "一季度"
+            ],
+            "value": "17",
+            "required": {
+              "unit": "人民币百万元"
+            }
+          },
+          "actual": "17",
+          "outcome": "correct",
+          "reason": "native_value_compared"
+        }
+      ]
+    },
+    {
+      "id": "printed_subject_path",
+      "reference_fixture": "- 总资产(亿元)：2011年：17。\n",
+      "candidate_fixture": "- 范围：主要财务数据；项目：财务数据与指标 / 总资产(亿元)；2011年：17。\n",
+      "intended_all_business_fields_correct": true,
+      "observed_all_business_fields_correct": true,
+      "violates_contract": false,
+      "fields": [
+        {
+          "row_header_path": [
+            "总资产"
+          ],
+          "expected": {
+            "column_header_path": [
+              "2011年"
+            ],
+            "value": "17",
+            "required": {
+              "unit": "亿元"
+            }
+          },
+          "actual": "17",
+          "outcome": "correct",
+          "reason": "native_value_compared"
+        }
+      ]
+    },
+    {
+      "id": "nested_subject_path_control",
+      "reference_fixture": "- 总资产(亿元)：2011年：17。\n",
+      "candidate_fixture": "- 财务数据与指标\n  - 总资产(亿元)：2011年：17。\n",
+      "intended_all_business_fields_correct": true,
+      "observed_all_business_fields_correct": true,
+      "violates_contract": false,
+      "fields": [
+        {
+          "row_header_path": [
+            "总资产"
+          ],
+          "expected": {
+            "column_header_path": [
+              "2011年"
+            ],
+            "value": "17",
+            "required": {
+              "unit": "亿元"
+            }
+          },
+          "actual": "17",
+          "outcome": "correct",
+          "reason": "native_value_compared"
+        }
+      ]
+    }
+  ]
+}

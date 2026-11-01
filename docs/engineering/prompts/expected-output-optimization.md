@@ -22,13 +22,13 @@ P07/P08是本轮确定性服务转换代码的优化对象，所有八条管线�
 
 ## 读取当前状态
 
-历史缺陷诊断位于`benchmark/reports/20261101-expected-only-06/root-cause-analysis.md`；旧软件`2828b9bb...`的质量采用及业务完成结论继续撤回，139/211不是可靠的真实损失总数。当前修复入口为`canonical_expected_6`，工程冻结见`benchmark/diagnostics/expected-preservation-validation-20261101.json`，12个独立反例的修复结果见`expected-preservation-probes-repaired-20261101.json`。先读取`benchmark/reports/README.md`和`20261101-preservation-repair-07/current-validation-status.json`核实整批实际结果，再决定后续工作；反例、软件测试和产物复现不能代替实际expected对照。不得把旧正文到新正文零新增退化当作原生到正文信息损失已经修好。
+历史缺陷诊断位于`benchmark/reports/20261101-expected-only-06/root-cause-analysis.md`；旧软件`2828b9bb...`的质量采用及业务完成结论继续撤回，139/211不是可靠的真实损失总数。当前修复入口为`canonical_expected_7`，工程冻结见`benchmark/diagnostics/expected-preservation-validation-r3-20261101.json`，12个独立反例的修复结果见`expected-preservation-probes-repaired-r3-20261101.json`。先读取`benchmark/reports/README.md`和`20261101-preservation-repair-08/current-validation-status.json`核实整批实际结果，再决定后续工作；反例、软件测试和产物复现不能代替实际expected对照。不得把旧正文到新正文零新增退化当作原生到正文信息损失已经修好。
 
 先查看Git状态，阅读`AGENTS.md`、`benchmark/evaluation-tasks.md`、`moparse_eval/README.md`、`benchmark/reports/README.md`及`docs/specs/moparse-output-spec.md`。当前验收标准的规范定义在`benchmark/evaluation-tasks.md#current-task-expected-only`，不要复制成另一份标准。
 
 有效保存原生产物位于`benchmark/reports/20261026-lite-v3/`。较早的04版正文位于`benchmark/reports/20261031-units-continuations-04/{p07,p08}/candidate/artifacts/`，本次修复前的06版正文位于`benchmark/reports/20261101-expected-only-06/{p07,p08}/candidate/artifacts/`，每个样本目录中的`final.md`才是被测实际交付正文。既有运行记录和人工选择声明只用于导航，不通过扫描原PDF重建或验收映射。
 
-本轮CPU回放正文位于`benchmark/reports/20261101-preservation-repair-07/{p07,p08}/candidate/artifacts/`。共同程序以04、06、07三个保存版本分别计算，较早诊断不作为采用依据。最终评分入口支持`--intermediate-root`与仅用于分析的`--workers`；评分协议及依赖身份必须取最终冻结记录。内容元素遗漏检测、字段业务范围与币种、空字段、跨表位置及附注正反例都必须通过，再核对正式索引。`private/native-preservation.json`直接比较原生正确业务目标与07正文，`private/incremental-changes.json`比较06与07正文，不能互相代替。
+本轮CPU回放正文位于`benchmark/reports/20261101-preservation-repair-08/{p07,p08}/candidate/artifacts/`。共同程序以04、06、07三个保存版本分别计算，较早诊断不作为采用依据。最终评分入口支持`--intermediate-root`与仅用于分析的`--workers`；评分协议及依赖身份必须取最终冻结记录。内容元素遗漏检测、字段业务范围与币种、空字段、跨表位置及附注正反例都必须通过，再核对正式索引。`private/native-preservation.json`直接比较原生正确业务目标与07正文，`private/incremental-changes.json`比较06与07正文，不能互相代替。
 
 已有1,726个固定字段检查项只覆盖部分业务信息。原图查看57页、旧原图诊断800页、剩余743页等数字均不表示本任务的expected对照完成度，也不是继续工作的前置条件。此前基于原图的采用结论不再适用；既有代码、原生产物、候选、执行计时和测试记录保留，不冒称已按当前唯一标准重新评测。
 

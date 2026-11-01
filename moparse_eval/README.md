@@ -11,12 +11,12 @@
 冻结已通过软件验证的当前身份后，用下列命令生成独立运行目录。`--output`必须尚不存在，冻结记录须位于该目录之外。该命令只评分保存输出，不执行模型或后处理；报告、分项汇总及覆盖记录可见于运行目录，逐项内容、读回观察和变化证据保存在其`private/`目录。
 
 ```bash
-.venv/bin/python -m moparse_eval.expected_evaluation --baseline benchmark/reports/20261026-lite-v3 --previous-root benchmark/reports/20261031-units-continuations-04 --intermediate-root benchmark/reports/20261101-expected-only-06 --current-root benchmark/reports/20261101-preservation-repair-07 --freeze benchmark/diagnostics/expected-preservation-validation-20261101.json --output benchmark/reports/20261026-lite-v3/artifacts/scores/new-preservation-reproduction --report-output benchmark/reports/new-preservation-reproduction --workers 4
+.venv/bin/python -m moparse_eval.expected_evaluation --baseline benchmark/reports/20261026-lite-v3 --previous-root benchmark/reports/20261031-units-continuations-04 --intermediate-root benchmark/reports/20261101-expected-only-06 --current-root benchmark/reports/20261101-preservation-repair-08 --freeze benchmark/diagnostics/expected-preservation-validation-r3-20261101.json --output benchmark/reports/20261026-lite-v3/artifacts/scores/new-preservation-reproduction --report-output benchmark/reports/new-preservation-reproduction --workers 4
 ```
 
 `--previous-root`是较早保存的最终正文，`--intermediate-root`是本轮开始时已保存的最终正文，`--current-root`是本次代码CPU回放生成的最终正文；三者都不是expected。`--workers`只并行分析保存输出，不改变判分和原处理计时。最终覆盖清单按每个expected内容元素追溯至实际目标，编译器遗漏任一内容元素时拒绝发布。
 
-读取器`canonical_expected_6`保留实际具名字段、复合主体、斜线路径、局部计量单位、年度说明及连续列表币种。具名数值不作为实体身份，业务词尾也不作为单位声明；完整目标标签和明确业务范围先定位，数值随后比较。标题、表号和单位说明可按自身语法约束相关字段，不能跨越其他正文或表格借用。
+读取器`canonical_expected_7`保留实际具名字段、复合主体、斜线路径、局部计量单位、年度说明及连续列表币种。具名数值不作为实体身份，业务词尾也不作为单位声明；完整目标标签和明确业务范围先定位，数值随后比较。同一事实中的不适用单位不能被另一条正确陈述掩盖，不同明确期间分别判定。标题、表号和单位说明可按自身语法约束相关字段，不能跨越其他正文或表格借用。
 
 采用同时要求正文版本间没有正确目标损失，以及原生正确业务目标在当前实际Markdown中全部保留。`private/native-preservation.json`列出原生到正文的每项损失，`adoption.json`保存两道门槛；报告会从逐项结果复算门槛，拒绝与实际判定不一致的采用声明。旧错误在多个正文版本中持续存在也不能通过采用。
 

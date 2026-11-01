@@ -680,15 +680,26 @@ def _score_records(
             if alternatives:
                 # Period and unit identify the requested measure. Each comes
                 # from this candidate's own field; its value is not a locator.
-                qualified = [alternative for alternative in alternatives if all(
-                    item["status"] == "correct" for item in
-                    _field_qualifiers(table, field, alternative, identity_only=True)[2].values())]
+                identities = [(alternative, _field_qualifiers(table, field, alternative, identity_only=True)[2])
+                              for alternative in alternatives]
+                qualified = [alternative for alternative, evidence in identities
+                             if all(item["status"] == "correct" for item in evidence.values())]
+                incompatible = [alternative for alternative, evidence in identities
+                    if evidence.get("unit_applicability", {}).get("status") == "incorrect"
+                    and all(item["status"] == "correct" for key, item in evidence.items()
+                            if key not in {"unit", "unit_applicability"})]
+                conflict = bool(qualified and incompatible)
+                if conflict:
+                    resolution["reason"] = "conflicting_incompatible_field_units"
+                    resolution["diagnostic"]["conflicting_claim_ids"] = [
+                        candidate["id"] for alternative in [*qualified, *incompatible]
+                        for candidate in alternative["selected"]]
                 considered = qualified or alternatives
                 present = [alternative for alternative in considered if alternative["selected"]]
-                agree = len(considered) == 1 or not present
+                agree = not conflict and (len(considered) == 1 or not present)
                 if len(present) == len(considered):
                     literal, notes = _native_value_and_notes(present[0]["selected"][0]["cell"], field)
-                    agree = True
+                    agree = not conflict
                 for alternative in present if len(present) == len(considered) else []:
                     actual, actual_notes = _native_value_and_notes(alternative["selected"][0]["cell"], field)
                     attributes, _cell, evidence = _field_qualifiers(table, field, alternative)

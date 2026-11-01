@@ -183,3 +183,38 @@ def test_parallel_measurements_are_named_facts_instead_of_numeric_identities(tmp
     assert any(r["outcome"] == "incorrect" for r in rows)  # Growth is still absent.
     bad = fields(reference, actual.replace("$17", "$18"))
     assert next(r for r in bad if r["expected"].get("named_value"))["outcome"] == "incorrect"
+
+
+def test_named_record_header_is_not_consumed_as_a_property_value(tmp_path):
+    from test_native_table_context import table
+
+    from app.services.table_semantics_service import bind_table_view, render_semantic_view
+
+    source = table([["姓名", "主要工作经历"], ["甲", "曾任Example研究员。现任技术负责人。"],
+                    ["乙", "曾任Example工程师。现任产品负责人。"]])
+    assert not source.native_evidence["field_scopes"]
+    view = bind_table_view("v", [source], [source])
+    markdown = render_semantic_view(view, [source])
+    reference = expected(tmp_path, "- 姓名：甲；主要工作经历：曾任Example研究员。现任技术负责人。\n"
+                                  "- 姓名：乙；主要工作经历：曾任Example工程师。现任产品负责人。\n")
+    assert view.status == "converted"
+    assert "姓名：主要工作经历" not in markdown
+    assert all(r["outcome"] == "correct" for r in fields(reference, markdown))
+
+
+@pytest.mark.parametrize("order", [False, True])
+def test_a_correct_claim_does_not_hide_an_incompatible_duplicate_unit(tmp_path, order):
+    reference = expected(tmp_path, "- 姓名：Alpha；年龄：52\n")
+    claims = ["- 姓名：Alpha；年龄：52", "- 姓名：Alpha；年龄：52（单位：股）"]
+    if order:
+        claims.reverse()
+    result = fields(reference, "\n".join(claims))
+    age = next(r for r in result if r["expected"]["column_header_path"] == ["年龄"])
+    assert age["outcome"] == "incorrect"
+
+
+def test_an_incompatible_unit_in_a_different_explicit_period_is_not_the_same_fact(tmp_path):
+    reference = expected(tmp_path, "## 2024年度\n\n- 姓名：Alpha；年龄：52\n")
+    actual = "- 姓名：Alpha；年龄：52（期间：2024年度）\n- 姓名：Alpha；年龄：51（单位：股；期间：2023年度）\n"
+    age = next(r for r in fields(reference, actual) if r["expected"]["column_header_path"] == ["年龄"])
+    assert age["outcome"] == "correct"

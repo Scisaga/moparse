@@ -192,7 +192,17 @@ def native_scopes(fragment: TableFragment) -> dict[str, Any]:
     if any(c.column > 0 and scalar(c.text) and not _PERIOD.fullmatch(c.text.strip()) for c in headers):
         return evidence
     labels = [c.text.strip() for c in headers if c.text.strip()]
-    field_header = len(labels) >= 2 and all(property_label(t) for t in labels)
+    # A named-record column can have an open-ended textual property such
+    # as a biography. Its header is not itself a property/value record.
+    # Alternating property lists instead have property labels in the next
+    # row's stub, and must not be mistaken for column-oriented records.
+    named_body = next((c for c in cells if c.row == first_body and c.column == 0), None)
+    named_header = (len(labels) >= 2 and any(identity_header(t) for t in labels)
+                    and not any(_PERIOD.search(t) or _MEASURE.search(t) or unit_header(t) or scalar(t)
+                                for t in labels if not identity_header(t))
+                    and named_body is not None and bool(named_body.text.strip())
+                    and not property_label(named_body.text) and not scalar(named_body.text))
+    field_header = len(labels) >= 2 and (all(property_label(t) for t in labels) or named_header)
     if not field_header and not any(_PERIOD.search(t) or _MEASURE.search(t) or _UNIT.search(t) for t in labels):
         return evidence
     # Row header columns may occupy a merged field label (group + record).
@@ -237,6 +247,9 @@ def native_scopes(fragment: TableFragment) -> dict[str, Any]:
             scopes.append({**scope, "header_rows": [row], "body_rows": list(range(row + 1, fragment.num_rows)),
                            "evidence": {**scope["evidence"], "explicit_period_switch": changed_period}})
     evidence.update(content_kind="data_table", header_scopes=scopes)
+    header_rows = {row for scope in scopes for row in scope["header_rows"]}
+    evidence["field_scopes"] = [scope for scope in evidence["field_scopes"]
+                               if not header_rows.intersection(scope["body_rows"])]
     evidence["title_cells"] = [[c.row, c.column] for c in cells if c.row < header_start
                                and c.column == 0 and c.column_span == fragment.num_cols
                                and c.text.strip() and not unit_header(c.text)]
