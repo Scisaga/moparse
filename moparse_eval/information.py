@@ -11,6 +11,7 @@ from app.utils.measurement import unit_applicable
 from .information_reading import (
     _SECTION_PERIOD,
     label_text,
+    label_unit_suffix,
     label_views,
     scoped_qualifiers,
     unit_scope_literal,
@@ -75,7 +76,7 @@ def label_in_text(label: str, text: str, collapse_whitespace: bool) -> bool:
         return True
     # Chinese labels and their attached currency/unit have no word boundary.
     # Only a completely recognized suffix is separable, never another label.
-    return bool(label and text.startswith(label) and text[len(label):] in units(text[len(label):]))
+    return bool(label and text.startswith(label) and label_unit_suffix(text, text[len(label):]))
 
 
 def path_locates(labels: list[str], native: Any, collapse_whitespace: bool) -> bool:
@@ -148,6 +149,8 @@ def _row_path_locates_cached(labels: tuple[str, ...], native: tuple[str, ...], c
         if require_leaf and (unit_scope_literal(part) or part.strip(" ()（）") in units(part)):
             variants.append(None)
         for token in units(part):
+            if not label_unit_suffix(part, token):
+                continue
             if part.endswith("(" + token + ")"):
                 prefix = part[:-len(token) - 2].rstrip()
             elif part.endswith(token):
@@ -187,7 +190,7 @@ def column_path_locates(labels: list[str], native: Any, collapse_whitespace: boo
     views: list[list[str]] = [[]]
     for raw in native:
         part = label_text(raw)
-        tokens = units(part)
+        tokens = [token for token in units(part) if label_unit_suffix(part, token)]
         unwrapped = part.strip(" ()（）")
         optional = (unwrapped in tokens or unit_scope_literal(part) or bool(re.fullmatch(
             r"Year Ended|截至[^。；;]{1,30}(?:年度|年末)|[于於]\s*\d{1,2}月\d{1,2}日", unwrapped, re.I))
@@ -263,7 +266,7 @@ def endpoint_paths(labels: list[str], group: list[dict[str, Any]], axis: str,
                 any(label_text(view) == label_text(label)
                     or path_locates(labels, [view], collapse_whitespace)
                     and re.sub(r"[\s:：/\-]+", "", label_text(view)) == re.sub(r"[\s:：/\-]+", "", "".join(labels))
-                    or view.startswith(label) and view[len(label):].strip(" ()（）") in units(view[len(label):])
+                    or view.startswith(label) and label_unit_suffix(view, view[len(label):].strip(" ()（）"))
                     for view in label_views(item["cell"]))
             )]
         exact = [item for item in matches if label_text(item["text"]) == label_text(label)]

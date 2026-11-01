@@ -179,14 +179,16 @@ def _change_summary(changes: dict[str, Any]) -> dict[str, Any]:
 
 
 def native_preservation(native: list[dict[str, Any]], final: list[dict[str, Any]]) -> dict[str, Any]:
-    """Require every native-correct business target to survive public export."""
+    """Require every native-correct target to survive public export."""
     delta = paired_changes(native, final)
     losses = [row for row in delta["losses"] if row["kind"] == "business_field"]
     correct = sum(row["kind"] == "business_field" and row["outcome"] == "correct"
                   for score in native for row in score["outcomes"])
+    all_correct = sum(row["outcome"] == "correct" for score in native for row in score["outcomes"])
     return {"native_correct_business_targets": correct, "preserved": correct - len(losses),
-            "lost_correct_business_targets": len(losses), "losses": losses,
-            "passed": not losses,
+            "lost_correct_business_targets": len(losses), "losses": delta["losses"],
+            "native_correct_targets": all_correct, "preserved_targets": all_correct - delta["lost_correct"],
+            "lost_correct_targets": delta["lost_correct"], "passed": delta["lost_correct"] == 0,
             "comparison": "native_to_actual_final_markdown_under_one_shared_scorer"}
 
 
@@ -199,8 +201,10 @@ def adoption_status(changes: dict[str, Any], incremental: dict[str, Any],
         result[pipeline] = {
             "no_lost_correct_targets": no_losses,
             "no_lost_exact_value_literals": delta["raw_literal_lost_exact"] == 0,
-            "native_correct_business_preserved": native["passed"],
+            "native_correct_business_preserved": native["lost_correct_business_targets"] == 0,
+            "native_correct_content_preserved": native["passed"],
             "native_to_final_business_losses": native["lost_correct_business_targets"],
+            "native_to_final_content_losses": native["lost_correct_targets"],
             "adoptable": no_losses and native["passed"],
             "comparison": "both_previous_and_intermediate_to_current" if pipeline in incremental else "previous_to_current",
         }

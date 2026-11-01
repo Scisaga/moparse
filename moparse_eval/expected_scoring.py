@@ -10,6 +10,7 @@ from typing import Any
 from .expected_readback import ExpectedReadError, _field, qualify_reference_record
 from .matching import (
     _normalized_positions,
+    _text_streams,
     _whole_numeric_span,
     in_page_scope,
     match_units,
@@ -27,7 +28,7 @@ PROTOCOL = {
     "field_content_equivalence": "declared_width_spacing_scoped_scalar_units_year_range_dash_terminal_prose_punctuation",
     "qualifier_reading": "candidate_only_explicit_table_record_caption_and_note_scopes",
     "output_reading": "native_fields_or_actual_public_markdown_without_private_ir_credit",
-    "reader_revision": "canonical_expected_7",
+    "reader_revision": "canonical_expected_8",
 }
 
 
@@ -123,7 +124,10 @@ def grade_expected(expected: dict[str, Any], observation: dict[str, Any]) -> dic
     texts, records = _prepared(expected)
     matching = match_units(records, observation, threshold=0.8, collapse_whitespace=True)
     text_matching = match_units(texts, observation, threshold=0.8, collapse_whitespace=True)
-    visible = [(item, *_normalized_positions(item["text"], True)) for item in observation_candidates(observation)]
+    candidates = observation_candidates(observation)
+    visible = [(item, *_normalized_positions(item["text"], True)) for item in candidates]
+    streams_by_pages: dict[tuple[int, ...], list[tuple[Any, ...]]] = {}
+    candidate_map = {item["id"]: item for item in candidates}
     record_rows, record_metrics = _score_records(records, observation, True, matching)
     outcomes = []
     for target in texts:
@@ -132,7 +136,11 @@ def grade_expected(expected: dict[str, Any], observation: dict[str, Any]) -> dic
         # Repeated headings/labels still preserve their literal content. Their
         # business ownership is graded independently by complete record paths.
         if not match and wanted:
-            exact = [(item, text.index(wanted), positions) for item, text, positions in visible if wanted in text
+            scope = tuple(sorted(target["pages"]))
+            if scope not in streams_by_pages:
+                streams_by_pages[scope] = [(item, *_normalized_positions(item["text"], True))
+                                          for item in _text_streams(candidates, set(scope))]
+            exact = [(item, text.index(wanted), positions) for item, text, positions in [*visible, *streams_by_pages[scope]] if wanted in text
                      and in_page_scope(item, set(target["pages"]))
                      and (not wanted.replace(",", "").replace(".", "").isdigit()
                           or _whole_numeric_span(text, text.index(wanted), text.index(wanted) + len(wanted)))]
@@ -143,6 +151,12 @@ def grade_expected(expected: dict[str, Any], observation: dict[str, Any]) -> dic
                          "hypothesis": item["text"][raw_start:raw_end], "span": [raw_start, raw_end],
                          "normalized_span": [start, start + len(wanted)],
                          "method": "complete_visible_literal_presence", "matching_occurrences": len(exact)}
+                if item.get("components"):
+                    match["claims"] = [{"candidate_id": part["candidate_id"],
+                        "native_path": candidate_map[part["candidate_id"]].get("native_path"),
+                        "span": [max(raw_start, part["start"]) - part["start"],
+                                 min(raw_end, part["end"]) - part["start"]]}
+                        for part in item["components"] if part["start"] < raw_end and part["end"] > raw_start]
         actual = match["hypothesis"] if match else ""
         correct = bool(match and normalize_text(target["reference_text"], collapse_whitespace=True)
                        == normalize_text(actual, collapse_whitespace=True))

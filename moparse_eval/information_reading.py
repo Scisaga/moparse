@@ -70,6 +70,14 @@ def metric_units(text: str) -> list[str]:
                                         "人": ("人数", "人數"), "股": ("股数", "股數")}.get(token, ()))]
 
 
+@lru_cache(maxsize=32768)
+def label_unit_suffix(text: str, suffix: str) -> bool:
+    """A share-word ending in a business name is not a removable unit."""
+    return suffix in units(suffix) and (not re.fullmatch(r"[十百千万萬亿億]*股", suffix)
+        or suffix in metric_units(text) or text.endswith(suffix) and bool(re.fullmatch(
+            r"(?:19|20)\d{2}\s*年?(?:度|末)?", text[:-len(suffix)].strip())))
+
+
 def period_literals(texts: list[str]) -> list[str]:
     """Read explicit period parts within one already scoped field/header path."""
     result = list(texts)

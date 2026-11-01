@@ -533,7 +533,7 @@ def markdown_observation(markdown: str, *, sample_id: str, pipeline: str, pages:
     for index, element in enumerate(elements(markdown)):
         identifier = f"markdown:L{element.lines[0]}:{index}"
         ordinal = re.match(r"\s*([0-9]{1,2})[.)、]\s+", element.raw)
-        block: dict[str, Any] = {"id": identifier, "kind": "heading" if element.kind == "heading" else "text",
+        block: dict[str, Any] = {"id": identifier, "kind": "image" if element.kind == "image_caption" else "heading" if element.kind == "heading" else "text",
                                  "text": (ordinal[1] + ". " if ordinal else "") + element.text,
                                  "text_format": "plain", "native_path": identifier,
                                  "provenance_pages": pages, "public_lines": list(element.lines)}

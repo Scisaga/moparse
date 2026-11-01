@@ -22,7 +22,7 @@ P07/P08是本轮确定性服务转换代码的优化对象，所有八条管线�
 
 ## 读取当前状态
 
-历史缺陷诊断位于`benchmark/reports/20261101-expected-only-06/root-cause-analysis.md`；旧软件`2828b9bb...`的质量采用及业务完成结论继续撤回，139/211不是可靠的真实损失总数。当前修复入口为`canonical_expected_7`，工程冻结见`benchmark/diagnostics/expected-preservation-validation-r3-20261101.json`，12个独立反例的修复结果见`expected-preservation-probes-repaired-r3-20261101.json`。先读取`benchmark/reports/README.md`和`20261101-preservation-repair-08/current-validation-status.json`核实整批实际结果，再决定后续工作；反例、软件测试和产物复现不能代替实际expected对照。不得把旧正文到新正文零新增退化当作原生到正文信息损失已经修好。
+历史缺陷诊断位于`benchmark/reports/20261101-expected-only-06/root-cause-analysis.md`；旧软件`2828b9bb...`的质量采用及业务完成结论继续撤回，139/211不是可靠的真实损失总数。当前修复入口为`canonical_expected_8`，工程冻结见`benchmark/diagnostics/expected-preservation-validation-r4-20261101.json`，12个独立反例的修复结果见`expected-preservation-probes-repaired-r4-20261101.json`。先读取`benchmark/reports/README.md`和`20261101-preservation-repair-08/current-validation-status.json`核实整批实际结果，再决定后续工作；反例、软件测试和产物复现不能代替实际expected对照。不得把旧正文到新正文零新增退化当作原生到正文信息损失已经修好。
 
 先查看Git状态，阅读`AGENTS.md`、`benchmark/evaluation-tasks.md`、`moparse_eval/README.md`、`benchmark/reports/README.md`及`docs/specs/moparse-output-spec.md`。当前验收标准的规范定义在`benchmark/evaluation-tasks.md#current-task-expected-only`，不要复制成另一份标准。
 
@@ -42,7 +42,7 @@ P07/P08是本轮确定性服务转换代码的优化对象，所有八条管线�
 4. 继续区分数据表、布局正文和混合区域，保全有效邻居、业务文字、符号、负数、脚注、来源图题及引用；图片语义不在本任务范围。数据表转为业务记录，布局正文恢复段落；原生确实缺失的信息按expected记录为输出错误并写清缺口，不重看原图另定答案。
 5. 统一使用修正并验证后的同一评分程序比较八组保存原生产物，以及P07/P08原生、修改前输出、修改后输出。共同程序必须执行每一条管线，核对各组实际使用的目标范围、分母和评分版本一致，不能只检查P07/P08。每个expected业务目标必须判正确或错误，读取器不会读实际已有信息时先修读取，不发布任何改名后的未判成绩，不默删目标或按期望值选择位置。固定字段子集与expected完整内容覆盖分开报告，原生横向比较与最终正文配对比较分别呈现。
 6. 对后处理代码实际有变更的版本，按已有隔离和计时协议完成必要的800页CPU回放及固定80页三轮测量。仅修改评分读取或文档且已确认实际后处理代码、依赖和候选均不变时，保留原计时，重评受影响的输出，不无故重跑处理。历史原生耗时不与CPU后处理耗时相加冒充新端到端测量。
-7. 汇报相对同一基线的新增正确、原正确项损失及新增错误，区分评分器补读和真实输出改善。采用须同时通过正文版本之间零正确项损失，以及原生正确业务目标在最终实际Markdown中零损失；不能把持续存在的旧错误藏在零新增退化中。逐项查看共同程序生成的native-preservation与paired-changes，修复可由现有候选支持的问题后继续回放和统一重评。说明expected哪些内容已完成对照、还存在什么具体错误，不能在单测、提交或报告生成后自行结束原始任务。
+7. 汇报相对同一基线的新增正确、原正确项损失及新增错误，区分评分器补读和真实输出改善。采用须同时通过正文版本之间零正确项损失，以及原生正确的全部内容目标在最终实际Markdown中零损失，另报业务字段；不能把持续存在的旧错误藏在零新增退化中。标题或段落分块不同但完整文字连续存在时，先修复共同读取，不能据此宣称正文丢失；连续文本不得跨表、跳过否定或建立业务关系。逐项查看共同程序生成的native-preservation与paired-changes，修复可由现有候选支持的问题后继续回放和统一重评。说明expected哪些内容已完成对照、还存在什么具体错误，不能在单测、提交或报告生成后自行结束原始任务。
 
 ## 执行边界
 

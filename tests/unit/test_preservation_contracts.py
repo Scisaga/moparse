@@ -218,3 +218,59 @@ def test_an_incompatible_unit_in_a_different_explicit_period_is_not_the_same_fac
     actual = "- 姓名：Alpha；年龄：52（期间：2024年度）\n- 姓名：Alpha；年龄：51（单位：股；期间：2023年度）\n"
     age = next(r for r in fields(reference, actual) if r["expected"]["column_header_path"] == ["年龄"])
     assert age["outcome"] == "correct"
+
+
+@pytest.mark.parametrize("reference,actual", [
+    ("## The Factory Is Ready\n\n![The Factory Is Ready](image.png)\n", "## The Factory\nIs Ready\n"),
+    ("## 公司评级报告　概述\n", "## 公司评级报告\n\n## 概述\n"),
+])
+def test_complete_visible_text_can_cross_adjacent_markdown_blocks(tmp_path, reference, actual):
+    ref = expected(tmp_path, reference)
+    observation = markdown_observation(actual, sample_id="invented", pipeline="P01", pages=[1])
+    rows = grade_expected(ref, observation)["outcomes"]
+    assert rows and all(r["outcome"] == "correct" for r in rows)
+    assert any(len(r["candidate"].get("claims", [])) >= 2 for r in rows)
+
+
+@pytest.mark.parametrize("actual", [
+    "## The Factory\nIs not Ready\n",
+    "## The Factory\n\n| Metric | Amount |\n| --- | --- |\n| Extra | 17 |\n\nIs Ready\n",
+    "## The Factory\n\n![](image.png)\n\nIs Ready\n",
+    "## Is Ready\n\nThe Factory\n",
+])
+def test_continuous_text_never_skips_negation_a_table_or_reading_order(tmp_path, actual):
+    ref = expected(tmp_path, "## The Factory Is Ready\n")
+    observation = markdown_observation(actual, sample_id="invented", pipeline="P01", pages=[1])
+    assert all(r["outcome"] == "incorrect" for r in grade_expected(ref, observation)["outcomes"])
+
+
+def test_continuous_text_respects_known_physical_page_scope(tmp_path):
+    ref = expected(tmp_path, "## The Factory Is Ready\n")
+    observation = {"sample_id": "invented", "pages": [
+        {"page": 1, "blocks": [{"id": "first", "kind": "text", "text": "The Factory"}]},
+        {"page": 2, "blocks": [{"id": "second", "kind": "text", "text": "Is Ready"}]},
+    ]}
+    assert all(r["outcome"] == "incorrect" for r in grade_expected(ref, observation)["outcomes"])
+
+
+def test_continuous_text_does_not_invent_a_business_record_binding(tmp_path):
+    ref = expected(tmp_path, "- 名称：Alpha；金额：17\n")
+    assert all(r["outcome"] == "incorrect" for r in fields(ref, "Alpha\n\n金额：17\n"))
+
+
+@pytest.mark.parametrize("actual", [
+    "- 库存股；2024年金额：17（单位：人民币千元）\n",
+    "单位：人民币千元\n\n<table><tr><th>项目</th><th>2024年金额</th></tr><tr><td>库存股</td><td>17</td></tr></table>",
+])
+def test_business_name_ending_in_shares_cannot_rescue_a_different_metric(tmp_path, actual):
+    reference = expected(tmp_path, "单位：人民币千元\n\n- 库存：2024年金额：17\n")
+    assert all(r["outcome"] == "incorrect" for r in fields(reference, actual))
+    assert all(r["outcome"] == "correct" for r in fields(reference, actual.replace("库存股", "库存")))
+
+
+@pytest.mark.parametrize("year", ["2024", "2024年末"])
+def test_explicit_year_and_share_unit_are_not_mistaken_for_a_business_name(tmp_path, year):
+    reference = expected(tmp_path, f"- 项目：Alpha；{year}：17（单位：千股）\n")
+    actual = f"- 项目：Alpha；{year}千股：17\n"
+    assert all(r["outcome"] == "correct" for r in fields(reference, actual))
+    assert any(r["outcome"] == "incorrect" for r in fields(reference, actual.replace("2024", "2023")))
