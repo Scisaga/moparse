@@ -1,0 +1,22 @@
+{
+  "P07": {
+    "no_lost_correct_targets": true,
+    "no_lost_exact_value_literals": true,
+    "native_correct_business_preserved": true,
+    "native_correct_content_preserved": true,
+    "native_to_final_business_losses": 0,
+    "native_to_final_content_losses": 0,
+    "adoptable": true,
+    "comparison": "both_previous_and_intermediate_to_current"
+  },
+  "P08": {
+    "no_lost_correct_targets": true,
+    "no_lost_exact_value_literals": true,
+    "native_correct_business_preserved": true,
+    "native_correct_content_preserved": true,
+    "native_to_final_business_losses": 0,
+    "native_to_final_content_losses": 0,
+    "adoptable": true,
+    "comparison": "both_previous_and_intermediate_to_current"
+  }
+}

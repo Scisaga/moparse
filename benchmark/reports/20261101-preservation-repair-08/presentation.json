@@ -1,0 +1,13 @@
+{
+  "score_index": "/opt/moparse/benchmark/reports/20261026-lite-v3/artifacts/scores/preservation-repair-08-final-r4/index.json",
+  "scoring_software_id": "53149b18bbbfe4373b848547adbb310e32439262a9929641e4600aa3aaad1834",
+  "adoptable": true,
+  "generator": "scripts/render_preservation_summary.py",
+  "generator_sha256": "e30749e8a64b2f40fd5a8d89d7b3d8136f4ffc794f03b7bca174931f9597accb",
+  "scope": "presentation_only_from_completed_uniform_scores_no_regrading",
+  "comparison_details": {
+    "previous_to_current": "private/paired-changes.json",
+    "before_to_current": "private/incremental-changes.json",
+    "native_to_current": "private/native-preservation.json"
+  }
+}

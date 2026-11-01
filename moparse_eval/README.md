@@ -12,9 +12,12 @@
 
 ```bash
 .venv/bin/python -m moparse_eval.expected_evaluation --baseline benchmark/reports/20261026-lite-v3 --previous-root benchmark/reports/20261031-units-continuations-04 --intermediate-root benchmark/reports/20261101-expected-only-06 --current-root benchmark/reports/20261101-preservation-repair-08 --freeze benchmark/diagnostics/expected-preservation-validation-r4-20261101.json --output benchmark/reports/20261026-lite-v3/artifacts/scores/new-preservation-reproduction --report-output benchmark/reports/new-preservation-reproduction --workers 4
+.venv/bin/python scripts/render_preservation_summary.py --index benchmark/reports/20261026-lite-v3/artifacts/scores/new-preservation-reproduction/index.json --output benchmark/reports/new-preservation-reproduction
 ```
 
 `--previous-root`是较早保存的最终正文，`--intermediate-root`是本轮开始时已保存的最终正文，`--current-root`是本次代码CPU回放生成的最终正文；三者都不是expected。`--workers`只并行分析保存输出，不改变判分和原处理计时。最终覆盖清单按每个expected内容元素追溯至实际目标，编译器遗漏任一内容元素时拒绝发布。
+
+`summary.md`先呈现本轮06至08版的实际变化和原生信息保留，`report.md`保留八组原生及04版以来的完整统计。摘要程序只读取已完成的同版评分产物，不重新判分；其报告代码身份单独记录在`presentation.json`。错误清单用共享来源表压缩重复路径，每项仍可定位完整评分证据。
 
 读取器`canonical_expected_8`保留实际具名字段、复合主体、斜线路径、局部计量单位、年度说明及连续列表币种。具名数值不作为实体身份，业务词尾也不作为单位声明；完整目标标签和明确业务范围先定位，数值随后比较。同一事实中的不适用单位不能被另一条正确陈述掩盖，不同明确期间分别判定。标题、表号和单位说明可按自身语法约束相关字段，不能跨越其他正文或表格借用。
 

@@ -1,0 +1,48 @@
+{
+  "P01": {
+    "native_output": 10079
+  },
+  "P02": {
+    "native_output": 10605
+  },
+  "P03": {
+    "native_output": 6797
+  },
+  "P04": {
+    "native_output": 7160
+  },
+  "P05": {
+    "native_output": 8097
+  },
+  "P06": {
+    "native_output": 7208
+  },
+  "P07": {
+    "native_output": 6821
+  },
+  "P08": {
+    "native_output": 6655
+  },
+  "P07-previous": {
+    "native_output": 6469,
+    "final_markdown_conversion": 3
+  },
+  "P08-previous": {
+    "native_output": 6310,
+    "final_markdown_conversion": 3
+  },
+  "P07-intermediate": {
+    "native_output": 6397,
+    "final_markdown_conversion": 13
+  },
+  "P08-intermediate": {
+    "native_output": 6260,
+    "final_markdown_conversion": 13
+  },
+  "P07-current": {
+    "native_output": 6381
+  },
+  "P08-current": {
+    "native_output": 6240
+  }
+}

@@ -1,0 +1,11449 @@
+[
+  {
+    "sample_id": "alibaba-business-risks-p109-112",
+    "document_id": "complex-alibaba-2025-annual",
+    "scope": [
+      {
+        "lines": [
+          2353,
+          2361
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          2363,
+          2377
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          2379,
+          2379
+        ],
+        "pages": [
+          2,
+          3
+        ]
+      },
+      {
+        "lines": [
+          2381,
+          2398
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          2400,
+          2400
+        ],
+        "pages": [
+          3,
+          4
+        ]
+      },
+      {
+        "lines": [
+          2402,
+          2421
+        ],
+        "pages": [
+          4
+        ]
+      }
+    ],
+    "expected_elements": 43,
+    "content_coverage": {
+      "expected_elements": 43,
+      "compared_elements": 43,
+      "omitted_elements": 0
+    },
+    "targets": 43,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "alibaba-company-overview-p006-008",
+    "document_id": "complex-alibaba-2025-annual",
+    "scope": [
+      {
+        "lines": [
+          110,
+          138
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          140,
+          164
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          166,
+          166
+        ],
+        "pages": [
+          2,
+          3
+        ]
+      },
+      {
+        "lines": [
+          168,
+          178
+        ],
+        "pages": [
+          3
+        ]
+      }
+    ],
+    "expected_elements": 35,
+    "content_coverage": {
+      "expected_elements": 35,
+      "compared_elements": 35,
+      "omitted_elements": 0
+    },
+    "targets": 35,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "alibaba-international-and-data-risks-p117-124",
+    "document_id": "complex-alibaba-2025-annual",
+    "scope": [
+      {
+        "lines": [
+          2461,
+          2481
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          2482,
+          2495
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          2496,
+          2509
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          2511,
+          2511
+        ],
+        "pages": [
+          3,
+          4
+        ]
+      },
+      {
+        "lines": [
+          2513,
+          2517
+        ],
+        "pages": [
+          4
+        ]
+      },
+      {
+        "lines": [
+          2519,
+          2519
+        ],
+        "pages": [
+          4,
+          5
+        ]
+      },
+      {
+        "lines": [
+          2521,
+          2533
+        ],
+        "pages": [
+          5
+        ]
+      },
+      {
+        "lines": [
+          2535,
+          2539
+        ],
+        "pages": [
+          6
+        ]
+      },
+      {
+        "lines": [
+          2541,
+          2541
+        ],
+        "pages": [
+          6,
+          7
+        ]
+      },
+      {
+        "lines": [
+          2543,
+          2551
+        ],
+        "pages": [
+          7
+        ]
+      },
+      {
+        "lines": [
+          2553,
+          2563
+        ],
+        "pages": [
+          8
+        ]
+      }
+    ],
+    "expected_elements": 67,
+    "content_coverage": {
+      "expected_elements": 67,
+      "compared_elements": 67,
+      "omitted_elements": 0
+    },
+    "targets": 67,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "alibaba-mission-values-p003",
+    "document_id": "complex-alibaba-2025-annual",
+    "scope": [
+      {
+        "lines": [
+          29,
+          50
+        ],
+        "pages": [
+          1
+        ]
+      }
+    ],
+    "expected_elements": 14,
+    "content_coverage": {
+      "expected_elements": 14,
+      "compared_elements": 14,
+      "omitted_elements": 0
+    },
+    "targets": 14,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "alibaba-risk-summary-p105-108",
+    "document_id": "complex-alibaba-2025-annual",
+    "scope": [
+      {
+        "lines": [
+          2254,
+          2277
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          2278,
+          2302
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          2302,
+          2321
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          2323,
+          2351
+        ],
+        "pages": [
+          4
+        ]
+      }
+    ],
+    "expected_elements": 70,
+    "content_coverage": {
+      "expected_elements": 70,
+      "compared_elements": 70,
+      "omitted_elements": 0
+    },
+    "targets": 70,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "alibaba-shareholder-letter-p004-005",
+    "document_id": "complex-alibaba-2025-annual",
+    "scope": [
+      {
+        "lines": [
+          52,
+          78
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          80,
+          108
+        ],
+        "pages": [
+          2
+        ]
+      }
+    ],
+    "expected_elements": 29,
+    "content_coverage": {
+      "expected_elements": 29,
+      "compared_elements": 29,
+      "omitted_elements": 0
+    },
+    "targets": 29,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "alibaba-strategies-p009-010",
+    "document_id": "complex-alibaba-2025-annual",
+    "scope": [
+      {
+        "lines": [
+          180,
+          202
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          204,
+          204
+        ],
+        "pages": [
+          1,
+          2
+        ]
+      },
+      {
+        "lines": [
+          206,
+          228
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          230,
+          230
+        ],
+        "pages": [
+          2
+        ]
+      }
+    ],
+    "expected_elements": 26,
+    "content_coverage": {
+      "expected_elements": 26,
+      "compared_elements": 26,
+      "omitted_elements": 0
+    },
+    "targets": 26,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "alibaba-trade-sanction-risks-p113-116",
+    "document_id": "complex-alibaba-2025-annual",
+    "scope": [
+      {
+        "lines": [
+          2423,
+          2429
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          2431,
+          2431
+        ],
+        "pages": [
+          1,
+          2
+        ]
+      },
+      {
+        "lines": [
+          2433,
+          2435
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          2437,
+          2437
+        ],
+        "pages": [
+          2,
+          3
+        ]
+      },
+      {
+        "lines": [
+          2439,
+          2447
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          2449,
+          2459
+        ],
+        "pages": [
+          4
+        ]
+      }
+    ],
+    "expected_elements": 19,
+    "content_coverage": {
+      "expected_elements": 19,
+      "compared_elements": 19,
+      "omitted_elements": 0
+    },
+    "targets": 19,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "beijing-media-director-p001-003",
+    "document_id": "1201816142",
+    "scope": [
+      {
+        "lines": [
+          1,
+          23
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          25,
+          39
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          41,
+          57
+        ],
+        "pages": [
+          3
+        ]
+      }
+    ],
+    "expected_elements": 29,
+    "content_coverage": {
+      "expected_elements": 29,
+      "compared_elements": 29,
+      "omitted_elements": 0
+    },
+    "targets": 29,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "beijing-media-disposal-p001-008",
+    "document_id": "1202164176",
+    "scope": [
+      {
+        "lines": [
+          1,
+          17
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          19,
+          39
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          41,
+          51
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          53,
+          66
+        ],
+        "pages": [
+          4
+        ]
+      },
+      {
+        "lines": [
+          68,
+          84
+        ],
+        "pages": [
+          5
+        ]
+      },
+      {
+        "lines": [
+          86,
+          106
+        ],
+        "pages": [
+          6
+        ]
+      },
+      {
+        "lines": [
+          108,
+          120
+        ],
+        "pages": [
+          7
+        ]
+      },
+      {
+        "lines": [
+          122,
+          139
+        ],
+        "pages": [
+          8
+        ]
+      }
+    ],
+    "expected_elements": 78,
+    "content_coverage": {
+      "expected_elements": 78,
+      "compared_elements": 78,
+      "omitted_elements": 0
+    },
+    "targets": 80,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "bis-economic-review-p022-025",
+    "document_id": "complex-bis-economic-2024",
+    "scope": [
+      {
+        "lines": [
+          448,
+          458
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          460,
+          460
+        ],
+        "pages": [
+          1,
+          2
+        ]
+      },
+      {
+        "lines": [
+          462,
+          470
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          472,
+          480
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          482,
+          482
+        ],
+        "pages": [
+          2,
+          3
+        ]
+      },
+      {
+        "lines": [
+          484,
+          500
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          502,
+          516
+        ],
+        "pages": [
+          4
+        ]
+      }
+    ],
+    "expected_elements": 35,
+    "content_coverage": {
+      "expected_elements": 35,
+      "compared_elements": 35,
+      "omitted_elements": 0
+    },
+    "targets": 35,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "bis-endnotes-technical-annex-p052-057",
+    "document_id": "complex-bis-economic-2024",
+    "scope": [
+      {
+        "lines": [
+          962,
+          978
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          979,
+          984
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          986,
+          1010
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          1012,
+          1030
+        ],
+        "pages": [
+          4
+        ]
+      },
+      {
+        "lines": [
+          1032,
+          1050
+        ],
+        "pages": [
+          5
+        ]
+      },
+      {
+        "lines": [
+          1052,
+          1070
+        ],
+        "pages": [
+          6
+        ]
+      }
+    ],
+    "expected_elements": 65,
+    "content_coverage": {
+      "expected_elements": 65,
+      "compared_elements": 65,
+      "omitted_elements": 0
+    },
+    "targets": 66,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "bis-financial-risk-boxes-p035-041",
+    "document_id": "complex-bis-economic-2024",
+    "scope": [
+      {
+        "lines": [
+          684,
+          700
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          702,
+          712
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          714,
+          714
+        ],
+        "pages": [
+          2,
+          5,
+          7
+        ]
+      },
+      {
+        "lines": [
+          716,
+          730
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          732,
+          732
+        ],
+        "pages": [
+          3,
+          4
+        ]
+      },
+      {
+        "lines": [
+          734,
+          748
+        ],
+        "pages": [
+          4
+        ]
+      },
+      {
+        "lines": [
+          750,
+          766
+        ],
+        "pages": [
+          5
+        ]
+      },
+      {
+        "lines": [
+          768,
+          780
+        ],
+        "pages": [
+          6
+        ]
+      },
+      {
+        "lines": [
+          782,
+          782
+        ],
+        "pages": [
+          6,
+          7
+        ]
+      },
+      {
+        "lines": [
+          784,
+          796
+        ],
+        "pages": [
+          7
+        ]
+      }
+    ],
+    "expected_elements": 57,
+    "content_coverage": {
+      "expected_elements": 57,
+      "compared_elements": 57,
+      "omitted_elements": 0
+    },
+    "targets": 57,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "bis-fiscal-productivity-policy-p042-051",
+    "document_id": "complex-bis-economic-2024",
+    "scope": [
+      {
+        "lines": [
+          798,
+          804
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          806,
+          806
+        ],
+        "pages": [
+          1,
+          3
+        ]
+      },
+      {
+        "lines": [
+          808,
+          814
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          816,
+          820
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          822,
+          822
+        ],
+        "pages": [
+          2,
+          3
+        ]
+      },
+      {
+        "lines": [
+          824,
+          830
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          832,
+          840
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          842,
+          842
+        ],
+        "pages": [
+          3,
+          4
+        ]
+      },
+      {
+        "lines": [
+          844,
+          860
+        ],
+        "pages": [
+          4
+        ]
+      },
+      {
+        "lines": [
+          862,
+          876
+        ],
+        "pages": [
+          5
+        ]
+      },
+      {
+        "lines": [
+          878,
+          892
+        ],
+        "pages": [
+          6
+        ]
+      },
+      {
+        "lines": [
+          894,
+          894
+        ],
+        "pages": [
+          6,
+          7
+        ]
+      },
+      {
+        "lines": [
+          896,
+          914
+        ],
+        "pages": [
+          7
+        ]
+      },
+      {
+        "lines": [
+          916,
+          930
+        ],
+        "pages": [
+          8
+        ]
+      },
+      {
+        "lines": [
+          932,
+          932
+        ],
+        "pages": [
+          8,
+          9
+        ]
+      },
+      {
+        "lines": [
+          934,
+          944
+        ],
+        "pages": [
+          9
+        ]
+      },
+      {
+        "lines": [
+          946,
+          946
+        ],
+        "pages": [
+          9,
+          10
+        ]
+      },
+      {
+        "lines": [
+          948,
+          960
+        ],
+        "pages": [
+          10
+        ]
+      }
+    ],
+    "expected_elements": 82,
+    "content_coverage": {
+      "expected_elements": 82,
+      "compared_elements": 82,
+      "omitted_elements": 0
+    },
+    "targets": 82,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "bis-policy-boxes-p026-034",
+    "document_id": "complex-bis-economic-2024",
+    "scope": [
+      {
+        "lines": [
+          518,
+          536
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          538,
+          554
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          556,
+          556
+        ],
+        "pages": [
+          2,
+          3
+        ]
+      },
+      {
+        "lines": [
+          558,
+          570
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          572,
+          572
+        ],
+        "pages": [
+          3,
+          5
+        ]
+      },
+      {
+        "lines": [
+          574,
+          592
+        ],
+        "pages": [
+          4
+        ]
+      },
+      {
+        "lines": [
+          594,
+          594
+        ],
+        "pages": [
+          5,
+          7
+        ]
+      },
+      {
+        "lines": [
+          596,
+          612
+        ],
+        "pages": [
+          5
+        ]
+      },
+      {
+        "lines": [
+          614,
+          628
+        ],
+        "pages": [
+          6
+        ]
+      },
+      {
+        "lines": [
+          630,
+          630
+        ],
+        "pages": [
+          6,
+          7
+        ]
+      },
+      {
+        "lines": [
+          632,
+          634
+        ],
+        "pages": [
+          7
+        ]
+      },
+      {
+        "lines": [
+          636,
+          636
+        ],
+        "pages": [
+          7,
+          8
+        ]
+      },
+      {
+        "lines": [
+          638,
+          646
+        ],
+        "pages": [
+          7
+        ]
+      },
+      {
+        "lines": [
+          648,
+          656
+        ],
+        "pages": [
+          8
+        ]
+      },
+      {
+        "lines": [
+          658,
+          658
+        ],
+        "pages": [
+          8,
+          9
+        ]
+      },
+      {
+        "lines": [
+          660,
+          666
+        ],
+        "pages": [
+          8
+        ]
+      },
+      {
+        "lines": [
+          668,
+          682
+        ],
+        "pages": [
+          9
+        ]
+      }
+    ],
+    "expected_elements": 83,
+    "content_coverage": {
+      "expected_elements": 83,
+      "compared_elements": 83,
+      "omitted_elements": 0
+    },
+    "targets": 83,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "byd-bilingual-front-p001-012",
+    "document_id": "complex-byd-2024-annual",
+    "scope": [
+      {
+        "lines": [
+          1,
+          11
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          13,
+          39
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          41,
+          65
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          67,
+          110
+        ],
+        "pages": [
+          4
+        ]
+      },
+      {
+        "lines": [
+          112,
+          112
+        ],
+        "pages": [
+          5
+        ]
+      },
+      {
+        "lines": [
+          114,
+          116
+        ],
+        "pages": [
+          6
+        ]
+      },
+      {
+        "lines": [
+          118,
+          120
+        ],
+        "pages": [
+          7
+        ]
+      },
+      {
+        "lines": [
+          122,
+          182
+        ],
+        "pages": [
+          8
+        ]
+      },
+      {
+        "lines": [
+          184,
+          232
+        ],
+        "pages": [
+          9
+        ]
+      },
+      {
+        "lines": [
+          234,
+          260
+        ],
+        "pages": [
+          10
+        ]
+      },
+      {
+        "lines": [
+          262,
+          277
+        ],
+        "pages": [
+          11
+        ]
+      },
+      {
+        "lines": [
+          279,
+          297
+        ],
+        "pages": [
+          12
+        ]
+      }
+    ],
+    "expected_elements": 180,
+    "content_coverage": {
+      "expected_elements": 180,
+      "compared_elements": 180,
+      "omitted_elements": 0
+    },
+    "targets": 229,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "byd-bilingual-review-p013-024",
+    "document_id": "complex-byd-2024-annual",
+    "scope": [
+      {
+        "lines": [
+          299,
+          321
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          323,
+          341
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          343,
+          369
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          371,
+          371
+        ],
+        "pages": [
+          4
+        ]
+      },
+      {
+        "lines": [
+          373,
+          387
+        ],
+        "pages": [
+          5
+        ]
+      },
+      {
+        "lines": [
+          389,
+          389
+        ],
+        "pages": [
+          6,
+          7
+        ]
+      },
+      {
+        "lines": [
+          391,
+          391
+        ],
+        "pages": [
+          6,
+          7
+        ]
+      },
+      {
+        "lines": [
+          393,
+          393
+        ],
+        "pages": [
+          7,
+          8
+        ]
+      },
+      {
+        "lines": [
+          395,
+          395
+        ],
+        "pages": [
+          7,
+          8
+        ]
+      },
+      {
+        "lines": [
+          397,
+          407
+        ],
+        "pages": [
+          9
+        ]
+      },
+      {
+        "lines": [
+          409,
+          419
+        ],
+        "pages": [
+          10
+        ]
+      },
+      {
+        "lines": [
+          421,
+          427
+        ],
+        "pages": [
+          11
+        ]
+      },
+      {
+        "lines": [
+          429,
+          435
+        ],
+        "pages": [
+          12
+        ]
+      }
+    ],
+    "expected_elements": 67,
+    "content_coverage": {
+      "expected_elements": 67,
+      "compared_elements": 67,
+      "omitted_elements": 0
+    },
+    "targets": 67,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "byd-outlook-finance-p037-044",
+    "document_id": "complex-byd-2024-annual",
+    "scope": [
+      {
+        "lines": [
+          681,
+          695
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          697,
+          703
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          705,
+          719
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          721,
+          735
+        ],
+        "pages": [
+          4
+        ]
+      },
+      {
+        "lines": [
+          737,
+          751
+        ],
+        "pages": [
+          5
+        ]
+      },
+      {
+        "lines": [
+          753,
+          767
+        ],
+        "pages": [
+          6
+        ]
+      },
+      {
+        "lines": [
+          769,
+          799
+        ],
+        "pages": [
+          7
+        ]
+      },
+      {
+        "lines": [
+          801,
+          823
+        ],
+        "pages": [
+          8
+        ]
+      }
+    ],
+    "expected_elements": 72,
+    "content_coverage": {
+      "expected_elements": 72,
+      "compared_elements": 72,
+      "omitted_elements": 0
+    },
+    "targets": 72,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "byd-product-cards-p025-036",
+    "document_id": "complex-byd-2024-annual",
+    "scope": [
+      {
+        "lines": [
+          437,
+          447
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          449,
+          469
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          471,
+          503
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          505,
+          531
+        ],
+        "pages": [
+          4
+        ]
+      },
+      {
+        "lines": [
+          533,
+          559
+        ],
+        "pages": [
+          5
+        ]
+      },
+      {
+        "lines": [
+          561,
+          581
+        ],
+        "pages": [
+          6
+        ]
+      },
+      {
+        "lines": [
+          583,
+          603
+        ],
+        "pages": [
+          7
+        ]
+      },
+      {
+        "lines": [
+          605,
+          625
+        ],
+        "pages": [
+          8
+        ]
+      },
+      {
+        "lines": [
+          627,
+          643
+        ],
+        "pages": [
+          9
+        ]
+      },
+      {
+        "lines": [
+          645,
+          659
+        ],
+        "pages": [
+          10
+        ]
+      },
+      {
+        "lines": [
+          661,
+          671
+        ],
+        "pages": [
+          11
+        ]
+      },
+      {
+        "lines": [
+          673,
+          679
+        ],
+        "pages": [
+          12
+        ]
+      }
+    ],
+    "expected_elements": 122,
+    "content_coverage": {
+      "expected_elements": 122,
+      "compared_elements": 122,
+      "omitted_elements": 0
+    },
+    "targets": 122,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "catl-impairment-investment-debt-risks-p064-066",
+    "document_id": "complex-catl-2025-prospectus",
+    "scope": [
+      {
+        "lines": [
+          999,
+          1009
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          1011,
+          1021
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          1023,
+          1029
+        ],
+        "pages": [
+          3
+        ]
+      }
+    ],
+    "expected_elements": 16,
+    "content_coverage": {
+      "expected_elements": 16,
+      "compared_elements": 16,
+      "omitted_elements": 0
+    },
+    "targets": 16,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "catl-industry-market-overseas-risks-p053-057",
+    "document_id": "complex-catl-2025-prospectus",
+    "scope": [
+      {
+        "lines": [
+          851,
+          865
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          867,
+          879
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          881,
+          889
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          891,
+          908
+        ],
+        "pages": [
+          4
+        ]
+      },
+      {
+        "lines": [
+          909,
+          921
+        ],
+        "pages": [
+          5
+        ]
+      }
+    ],
+    "expected_elements": 42,
+    "content_coverage": {
+      "expected_elements": 42,
+      "compared_elements": 42,
+      "omitted_elements": 0
+    },
+    "targets": 42,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "catl-ip-newbusiness-finance-risks-p058-063",
+    "document_id": "complex-catl-2025-prospectus",
+    "scope": [
+      {
+        "lines": [
+          923,
+          931
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          933,
+          945
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          946,
+          959
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          961,
+          973
+        ],
+        "pages": [
+          4
+        ]
+      },
+      {
+        "lines": [
+          975,
+          975
+        ],
+        "pages": [
+          4,
+          5
+        ]
+      },
+      {
+        "lines": [
+          977,
+          985
+        ],
+        "pages": [
+          5
+        ]
+      },
+      {
+        "lines": [
+          987,
+          987
+        ],
+        "pages": [
+          5,
+          6
+        ]
+      },
+      {
+        "lines": [
+          989,
+          997
+        ],
+        "pages": [
+          6
+        ]
+      }
+    ],
+    "expected_elements": 42,
+    "content_coverage": {
+      "expected_elements": 42,
+      "compared_elements": 42,
+      "omitted_elements": 0
+    },
+    "targets": 42,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "catl-listing-ownership-diagrams-p178-180",
+    "document_id": "complex-catl-2025-prospectus",
+    "scope": [
+      {
+        "lines": [
+          2491,
+          2499
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          2501,
+          2521
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          2523,
+          2529
+        ],
+        "pages": [
+          3
+        ]
+      }
+    ],
+    "expected_elements": 20,
+    "content_coverage": {
+      "expected_elements": 20,
+      "compared_elements": 20,
+      "omitted_elements": 0
+    },
+    "targets": 20,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "catl-nev-battery-markets-p127-132",
+    "document_id": "complex-catl-2025-prospectus",
+    "scope": [
+      {
+        "lines": [
+          1727,
+          1749
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          1751,
+          1777
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          1779,
+          1809
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          1811,
+          1826
+        ],
+        "pages": [
+          4
+        ]
+      },
+      {
+        "lines": [
+          1828,
+          1828
+        ],
+        "pages": [
+          4,
+          5
+        ]
+      },
+      {
+        "lines": [
+          1830,
+          1850
+        ],
+        "pages": [
+          5
+        ]
+      },
+      {
+        "lines": [
+          1852,
+          1872
+        ],
+        "pages": [
+          6
+        ]
+      }
+    ],
+    "expected_elements": 80,
+    "content_coverage": {
+      "expected_elements": 80,
+      "compared_elements": 80,
+      "omitted_elements": 0
+    },
+    "targets": 80,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "catl-power-market-materials-drivers-p133-136",
+    "document_id": "complex-catl-2025-prospectus",
+    "scope": [
+      {
+        "lines": [
+          1874,
+          1905
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          1907,
+          1928
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          1930,
+          1934
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          1936,
+          1948
+        ],
+        "pages": [
+          4
+        ]
+      }
+    ],
+    "expected_elements": 42,
+    "content_coverage": {
+      "expected_elements": 42,
+      "compared_elements": 42,
+      "omitted_elements": 0
+    },
+    "targets": 42,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "catl-recycling-emerging-entry-barriers-p144-147",
+    "document_id": "complex-catl-2025-prospectus",
+    "scope": [
+      {
+        "lines": [
+          2073,
+          2079
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          2081,
+          2097
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          2099,
+          2114
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          2116,
+          2124
+        ],
+        "pages": [
+          4
+        ]
+      }
+    ],
+    "expected_elements": 28,
+    "content_coverage": {
+      "expected_elements": 28,
+      "compared_elements": 28,
+      "omitted_elements": 0
+    },
+    "targets": 28,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "catl-storage-renewables-markets-p137-143",
+    "document_id": "complex-catl-2025-prospectus",
+    "scope": [
+      {
+        "lines": [
+          1950,
+          1952
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          1954,
+          1968
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          1970,
+          1996
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          1998,
+          2016
+        ],
+        "pages": [
+          4
+        ]
+      },
+      {
+        "lines": [
+          2018,
+          2045
+        ],
+        "pages": [
+          5
+        ]
+      },
+      {
+        "lines": [
+          2047,
+          2057
+        ],
+        "pages": [
+          6
+        ]
+      },
+      {
+        "lines": [
+          2059,
+          2071
+        ],
+        "pages": [
+          7
+        ]
+      }
+    ],
+    "expected_elements": 65,
+    "content_coverage": {
+      "expected_elements": 65,
+      "compared_elements": 65,
+      "omitted_elements": 0
+    },
+    "targets": 66,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "fiyta-bond-followup-p011-017",
+    "document_id": "1200778318",
+    "scope": [
+      {
+        "lines": [
+          156,
+          166
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          168,
+          170
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          172,
+          174
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          176,
+          182
+        ],
+        "pages": [
+          4
+        ]
+      },
+      {
+        "lines": [
+          184,
+          186
+        ],
+        "pages": [
+          5
+        ]
+      },
+      {
+        "lines": [
+          188,
+          200
+        ],
+        "pages": [
+          6
+        ]
+      },
+      {
+        "lines": [
+          202,
+          206
+        ],
+        "pages": [
+          7
+        ]
+      }
+    ],
+    "expected_elements": 26,
+    "content_coverage": {
+      "expected_elements": 26,
+      "compared_elements": 26,
+      "omitted_elements": 0
+    },
+    "targets": 26,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "fiyta-terms-financials-p001-010",
+    "document_id": "1200778318",
+    "scope": [
+      {
+        "lines": [
+          1,
+          17
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          19,
+          21
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          23,
+          34
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          36,
+          60
+        ],
+        "pages": [
+          4
+        ]
+      },
+      {
+        "lines": [
+          62,
+          62
+        ],
+        "pages": [
+          4,
+          5
+        ]
+      },
+      {
+        "lines": [
+          64,
+          74
+        ],
+        "pages": [
+          5
+        ]
+      },
+      {
+        "lines": [
+          76,
+          76
+        ],
+        "pages": [
+          5,
+          6
+        ]
+      },
+      {
+        "lines": [
+          78,
+          80
+        ],
+        "pages": [
+          6
+        ]
+      },
+      {
+        "lines": [
+          82,
+          96
+        ],
+        "pages": [
+          7
+        ]
+      },
+      {
+        "lines": [
+          98,
+          98
+        ],
+        "pages": [
+          7,
+          8
+        ]
+      },
+      {
+        "lines": [
+          100,
+          108
+        ],
+        "pages": [
+          8
+        ]
+      },
+      {
+        "lines": [
+          110,
+          110
+        ],
+        "pages": [
+          8,
+          9
+        ]
+      },
+      {
+        "lines": [
+          112,
+          128
+        ],
+        "pages": [
+          9
+        ]
+      },
+      {
+        "lines": [
+          130,
+          154
+        ],
+        "pages": [
+          10
+        ]
+      }
+    ],
+    "expected_elements": 89,
+    "content_coverage": {
+      "expected_elements": 89,
+      "compared_elements": 89,
+      "omitted_elements": 0
+    },
+    "targets": 128,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "hkex-audit-committee-p109-111",
+    "document_id": "complex-hkex-2024-annual",
+    "scope": [
+      {
+        "lines": [
+          3352,
+          3381
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          3383,
+          3406
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          3408,
+          3443
+        ],
+        "pages": [
+          3
+        ]
+      }
+    ],
+    "expected_elements": 57,
+    "content_coverage": {
+      "expected_elements": 57,
+      "compared_elements": 57,
+      "omitted_elements": 0
+    },
+    "targets": 61,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "hkex-board-portraits-p030",
+    "document_id": "complex-hkex-2024-annual",
+    "scope": [
+      {
+        "lines": [
+          570,
+          596
+        ],
+        "pages": [
+          1
+        ]
+      }
+    ],
+    "expected_elements": 14,
+    "content_coverage": {
+      "expected_elements": 14,
+      "compared_elements": 14,
+      "omitted_elements": 0
+    },
+    "targets": 14,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "hkex-ceo-review-p021-027",
+    "document_id": "complex-hkex-2024-annual",
+    "scope": [
+      {
+        "lines": [
+          412,
+          414
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          416,
+          430
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          432,
+          460
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          462,
+          490
+        ],
+        "pages": [
+          4
+        ]
+      },
+      {
+        "lines": [
+          492,
+          510
+        ],
+        "pages": [
+          5
+        ]
+      },
+      {
+        "lines": [
+          512,
+          542
+        ],
+        "pages": [
+          6
+        ]
+      },
+      {
+        "lines": [
+          544,
+          562
+        ],
+        "pages": [
+          7
+        ]
+      }
+    ],
+    "expected_elements": 81,
+    "content_coverage": {
+      "expected_elements": 81,
+      "compared_elements": 81,
+      "omitted_elements": 0
+    },
+    "targets": 81,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "hkex-chairman-statement-p017-020",
+    "document_id": "complex-hkex-2024-annual",
+    "scope": [
+      {
+        "lines": [
+          334,
+          336
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          338,
+          360
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          362,
+          382
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          384,
+          410
+        ],
+        "pages": [
+          4
+        ]
+      }
+    ],
+    "expected_elements": 39,
+    "content_coverage": {
+      "expected_elements": 39,
+      "compared_elements": 39,
+      "omitted_elements": 0
+    },
+    "targets": 39,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "hkex-contents-p003",
+    "document_id": "complex-hkex-2024-annual",
+    "scope": [
+      {
+        "lines": [
+          11,
+          56
+        ],
+        "pages": [
+          1
+        ]
+      }
+    ],
+    "expected_elements": 33,
+    "content_coverage": {
+      "expected_elements": 33,
+      "compared_elements": 33,
+      "omitted_elements": 0
+    },
+    "targets": 33,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "hkex-financial-cards-p010",
+    "document_id": "complex-hkex-2024-annual",
+    "scope": [
+      {
+        "lines": [
+          145,
+          178
+        ],
+        "pages": [
+          1
+        ]
+      }
+    ],
+    "expected_elements": 18,
+    "content_coverage": {
+      "expected_elements": 18,
+      "compared_elements": 18,
+      "omitted_elements": 0
+    },
+    "targets": 18,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "hkex-independent-auditor-p137-141",
+    "document_id": "complex-hkex-2024-annual",
+    "scope": [
+      {
+        "lines": [
+          4258,
+          4298
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          4300,
+          4329
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          4331,
+          4350
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          4352,
+          4372
+        ],
+        "pages": [
+          4
+        ]
+      },
+      {
+        "lines": [
+          4374,
+          4395
+        ],
+        "pages": [
+          5
+        ]
+      }
+    ],
+    "expected_elements": 78,
+    "content_coverage": {
+      "expected_elements": 78,
+      "compared_elements": 78,
+      "omitted_elements": 0
+    },
+    "targets": 78,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "hkex-investment-and-resources-p075-080",
+    "document_id": "complex-hkex-2024-annual",
+    "scope": [
+      {
+        "lines": [
+          2280,
+          2328
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          2330,
+          2380
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          2382,
+          2401
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          2403,
+          2421
+        ],
+        "pages": [
+          4
+        ]
+      },
+      {
+        "lines": [
+          2423,
+          2443
+        ],
+        "pages": [
+          5
+        ]
+      },
+      {
+        "lines": [
+          2445,
+          2467
+        ],
+        "pages": [
+          6
+        ]
+      }
+    ],
+    "expected_elements": 138,
+    "content_coverage": {
+      "expected_elements": 138,
+      "compared_elements": 138,
+      "omitted_elements": 0
+    },
+    "targets": 180,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "hkex-key-tables-p011",
+    "document_id": "complex-hkex-2024-annual",
+    "scope": [
+      {
+        "lines": [
+          180,
+          212
+        ],
+        "pages": [
+          1
+        ]
+      }
+    ],
+    "expected_elements": 29,
+    "content_coverage": {
+      "expected_elements": 29,
+      "compared_elements": 29,
+      "omitted_elements": 0
+    },
+    "targets": 73,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "hkex-nomination-governance-p105-108",
+    "document_id": "complex-hkex-2024-annual",
+    "scope": [
+      {
+        "lines": [
+          3219,
+          3251
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          3253,
+          3273
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          3275,
+          3312
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          3314,
+          3350
+        ],
+        "pages": [
+          4
+        ]
+      }
+    ],
+    "expected_elements": 76,
+    "content_coverage": {
+      "expected_elements": 76,
+      "compared_elements": 76,
+      "omitted_elements": 0
+    },
+    "targets": 76,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "hkex-operational-timeline-p008-009",
+    "document_id": "complex-hkex-2024-annual",
+    "scope": [
+      {
+        "lines": [
+          78,
+          117
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          119,
+          143
+        ],
+        "pages": [
+          2
+        ]
+      }
+    ],
+    "expected_elements": 53,
+    "content_coverage": {
+      "expected_elements": 53,
+      "compared_elements": 53,
+      "omitted_elements": 0
+    },
+    "targets": 53,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "hkex-organisation-photo-p028-029",
+    "document_id": "complex-hkex-2024-annual",
+    "scope": [
+      {
+        "lines": [
+          564,
+          566
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          568,
+          568
+        ],
+        "pages": [
+          2
+        ]
+      }
+    ],
+    "expected_elements": 3,
+    "content_coverage": {
+      "expected_elements": 3,
+      "compared_elements": 3,
+      "omitted_elements": 0
+    },
+    "targets": 3,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "hkex-overview-photo-p005-006",
+    "document_id": "complex-hkex-2024-annual",
+    "scope": [
+      {
+        "lines": [
+          60,
+          62
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          64,
+          64
+        ],
+        "pages": [
+          2
+        ]
+      }
+    ],
+    "expected_elements": 3,
+    "content_coverage": {
+      "expected_elements": 3,
+      "compared_elements": 3,
+      "omitted_elements": 0
+    },
+    "targets": 3,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "hkex-quarterly-results-p074",
+    "document_id": "complex-hkex-2024-annual",
+    "scope": [
+      {
+        "lines": [
+          2241,
+          2278
+        ],
+        "pages": [
+          1
+        ]
+      }
+    ],
+    "expected_elements": 34,
+    "content_coverage": {
+      "expected_elements": 34,
+      "compared_elements": 34,
+      "omitted_elements": 0
+    },
+    "targets": 158,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "hkex-risk-committee-p112-117",
+    "document_id": "complex-hkex-2024-annual",
+    "scope": [
+      {
+        "lines": [
+          3445,
+          3459
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          3461,
+          3478
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          3480,
+          3492
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          3494,
+          3534
+        ],
+        "pages": [
+          4
+        ]
+      },
+      {
+        "lines": [
+          3535,
+          3563
+        ],
+        "pages": [
+          5
+        ]
+      },
+      {
+        "lines": [
+          3564,
+          3589
+        ],
+        "pages": [
+          6
+        ]
+      }
+    ],
+    "expected_elements": 121,
+    "content_coverage": {
+      "expected_elements": 121,
+      "compared_elements": 121,
+      "omitted_elements": 0
+    },
+    "targets": 121,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "hkex-strategic-message-p007",
+    "document_id": "complex-hkex-2024-annual",
+    "scope": [
+      {
+        "lines": [
+          66,
+          76
+        ],
+        "pages": [
+          1
+        ]
+      }
+    ],
+    "expected_elements": 6,
+    "content_coverage": {
+      "expected_elements": 6,
+      "compared_elements": 6,
+      "omitted_elements": 0
+    },
+    "targets": 6,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "huawei-address-p004-005",
+    "document_id": "complex-huawei-2024-annual",
+    "scope": [
+      {
+        "lines": [
+          52,
+          78
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          80,
+          128
+        ],
+        "pages": [
+          2
+        ]
+      }
+    ],
+    "expected_elements": 39,
+    "content_coverage": {
+      "expected_elements": 39,
+      "compared_elements": 39,
+      "omitted_elements": 0
+    },
+    "targets": 39,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "huawei-audit-p066",
+    "document_id": "complex-huawei-2024-annual",
+    "scope": [
+      {
+        "lines": [
+          1707,
+          1745
+        ],
+        "pages": [
+          1
+        ]
+      }
+    ],
+    "expected_elements": 20,
+    "content_coverage": {
+      "expected_elements": 20,
+      "compared_elements": 20,
+      "omitted_elements": 0
+    },
+    "targets": 20,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "huawei-automotive-p047",
+    "document_id": "complex-huawei-2024-annual",
+    "scope": [
+      {
+        "lines": [
+          1222,
+          1250
+        ],
+        "pages": [
+          1
+        ]
+      }
+    ],
+    "expected_elements": 15,
+    "content_coverage": {
+      "expected_elements": 15,
+      "compared_elements": 15,
+      "omitted_elements": 0
+    },
+    "targets": 15,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "huawei-business-review-p017",
+    "document_id": "complex-huawei-2024-annual",
+    "scope": [
+      {
+        "lines": [
+          443,
+          516
+        ],
+        "pages": [
+          1
+        ]
+      }
+    ],
+    "expected_elements": 64,
+    "content_coverage": {
+      "expected_elements": 64,
+      "compared_elements": 64,
+      "omitted_elements": 0
+    },
+    "targets": 64,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "huawei-carrier-business-p018-022",
+    "document_id": "complex-huawei-2024-annual",
+    "scope": [
+      {
+        "lines": [
+          518,
+          544
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          544,
+          572
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          574,
+          600
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          601,
+          621
+        ],
+        "pages": [
+          4
+        ]
+      },
+      {
+        "lines": [
+          623,
+          640
+        ],
+        "pages": [
+          5
+        ]
+      }
+    ],
+    "expected_elements": 80,
+    "content_coverage": {
+      "expected_elements": 80,
+      "compared_elements": 80,
+      "omitted_elements": 0
+    },
+    "targets": 80,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "huawei-cash-and-risk-p064-065",
+    "document_id": "complex-huawei-2024-annual",
+    "scope": [
+      {
+        "lines": [
+          1640,
+          1671
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          1673,
+          1705
+        ],
+        "pages": [
+          2
+        ]
+      }
+    ],
+    "expected_elements": 42,
+    "content_coverage": {
+      "expected_elements": 42,
+      "compared_elements": 42,
+      "omitted_elements": 0
+    },
+    "targets": 57,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "huawei-chairman-p008-010",
+    "document_id": "complex-huawei-2024-annual",
+    "scope": [
+      {
+        "lines": [
+          242,
+          260
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          260,
+          284
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          284,
+          306
+        ],
+        "pages": [
+          3
+        ]
+      }
+    ],
+    "expected_elements": 33,
+    "content_coverage": {
+      "expected_elements": 33,
+      "compared_elements": 33,
+      "omitted_elements": 0
+    },
+    "targets": 33,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "huawei-cloud-business-p033-036",
+    "document_id": "complex-huawei-2024-annual",
+    "scope": [
+      {
+        "lines": [
+          917,
+          939
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          941,
+          967
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          969,
+          991
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          993,
+          1013
+        ],
+        "pages": [
+          4
+        ]
+      }
+    ],
+    "expected_elements": 49,
+    "content_coverage": {
+      "expected_elements": 49,
+      "compared_elements": 49,
+      "omitted_elements": 0
+    },
+    "targets": 49,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "huawei-compliance-management-p051-053",
+    "document_id": "complex-huawei-2024-annual",
+    "scope": [
+      {
+        "lines": [
+          1312,
+          1351
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          1353,
+          1388
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          1388,
+          1409
+        ],
+        "pages": [
+          3
+        ]
+      }
+    ],
+    "expected_elements": 61,
+    "content_coverage": {
+      "expected_elements": 61,
+      "compared_elements": 61,
+      "omitted_elements": 0
+    },
+    "targets": 61,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "huawei-cybersecurity-p054-057",
+    "document_id": "complex-huawei-2024-annual",
+    "scope": [
+      {
+        "lines": [
+          1411,
+          1431
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          1431,
+          1444
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          1446,
+          1469
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          1470,
+          1493
+        ],
+        "pages": [
+          4
+        ]
+      }
+    ],
+    "expected_elements": 44,
+    "content_coverage": {
+      "expected_elements": 44,
+      "compared_elements": 44,
+      "omitted_elements": 0
+    },
+    "targets": 44,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "huawei-digital-energy-p037-040",
+    "document_id": "complex-huawei-2024-annual",
+    "scope": [
+      {
+        "lines": [
+          1015,
+          1035
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          1037,
+          1062
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          1064,
+          1091
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          1093,
+          1108
+        ],
+        "pages": [
+          4
+        ]
+      }
+    ],
+    "expected_elements": 51,
+    "content_coverage": {
+      "expected_elements": 51,
+      "compared_elements": 51,
+      "omitted_elements": 0
+    },
+    "targets": 53,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "huawei-enterprise-business-p023-027",
+    "document_id": "complex-huawei-2024-annual",
+    "scope": [
+      {
+        "lines": [
+          642,
+          674
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          676,
+          699
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          701,
+          737
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          739,
+          769
+        ],
+        "pages": [
+          4
+        ]
+      },
+      {
+        "lines": [
+          771,
+          793
+        ],
+        "pages": [
+          5
+        ]
+      }
+    ],
+    "expected_elements": 93,
+    "content_coverage": {
+      "expected_elements": 93,
+      "compared_elements": 93,
+      "omitted_elements": 0
+    },
+    "targets": 93,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "huawei-financial-summary-p007",
+    "document_id": "complex-huawei-2024-annual",
+    "scope": [
+      {
+        "lines": [
+          158,
+          240
+        ],
+        "pages": [
+          1
+        ]
+      }
+    ],
+    "expected_elements": 80,
+    "content_coverage": {
+      "expected_elements": 80,
+      "compared_elements": 80,
+      "omitted_elements": 0
+    },
+    "targets": 80,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "huawei-front-p002-003",
+    "document_id": "complex-huawei-2024-annual",
+    "scope": [
+      {
+        "lines": [
+          7,
+          23
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          25,
+          50
+        ],
+        "pages": [
+          2
+        ]
+      }
+    ],
+    "expected_elements": 28,
+    "content_coverage": {
+      "expected_elements": 28,
+      "compared_elements": 28,
+      "omitted_elements": 0
+    },
+    "targets": 28,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "huawei-industry-trends-p011-013",
+    "document_id": "complex-huawei-2024-annual",
+    "scope": [
+      {
+        "lines": [
+          308,
+          328
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          330,
+          356
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          358,
+          380
+        ],
+        "pages": [
+          3
+        ]
+      }
+    ],
+    "expected_elements": 37,
+    "content_coverage": {
+      "expected_elements": 37,
+      "compared_elements": 37,
+      "omitted_elements": 0
+    },
+    "targets": 38,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "huawei-management-toc-p014",
+    "document_id": "complex-huawei-2024-annual",
+    "scope": [
+      {
+        "lines": [
+          382,
+          403
+        ],
+        "pages": [
+          1
+        ]
+      }
+    ],
+    "expected_elements": 20,
+    "content_coverage": {
+      "expected_elements": 20,
+      "compared_elements": 20,
+      "omitted_elements": 0
+    },
+    "targets": 20,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "huawei-open-ecosystem-p058-061",
+    "document_id": "complex-huawei-2024-annual",
+    "scope": [
+      {
+        "lines": [
+          1495,
+          1513
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          1515,
+          1534
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          1536,
+          1551
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          1553,
+          1566
+        ],
+        "pages": [
+          4
+        ]
+      }
+    ],
+    "expected_elements": 45,
+    "content_coverage": {
+      "expected_elements": 45,
+      "compared_elements": 45,
+      "omitted_elements": 0
+    },
+    "targets": 45,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "huawei-operating-results-p062-063",
+    "document_id": "complex-huawei-2024-annual",
+    "scope": [
+      {
+        "lines": [
+          1568,
+          1604
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          1606,
+          1638
+        ],
+        "pages": [
+          2
+        ]
+      }
+    ],
+    "expected_elements": 52,
+    "content_coverage": {
+      "expected_elements": 52,
+      "compared_elements": 52,
+      "omitted_elements": 0
+    },
+    "targets": 92,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "huawei-progress-p006",
+    "document_id": "complex-huawei-2024-annual",
+    "scope": [
+      {
+        "lines": [
+          130,
+          156
+        ],
+        "pages": [
+          1
+        ]
+      }
+    ],
+    "expected_elements": 19,
+    "content_coverage": {
+      "expected_elements": 19,
+      "compared_elements": 19,
+      "omitted_elements": 0
+    },
+    "targets": 19,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "huawei-research-quality-p048-050",
+    "document_id": "complex-huawei-2024-annual",
+    "scope": [
+      {
+        "lines": [
+          1252,
+          1266
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          1267,
+          1287
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          1289,
+          1310
+        ],
+        "pages": [
+          3
+        ]
+      }
+    ],
+    "expected_elements": 38,
+    "content_coverage": {
+      "expected_elements": 38,
+      "compared_elements": 38,
+      "omitted_elements": 0
+    },
+    "targets": 38,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "huawei-services-connection-computing-p028-032",
+    "document_id": "complex-huawei-2024-annual",
+    "scope": [
+      {
+        "lines": [
+          795,
+          821
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          823,
+          848
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          850,
+          874
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          876,
+          895
+        ],
+        "pages": [
+          4
+        ]
+      },
+      {
+        "lines": [
+          897,
+          915
+        ],
+        "pages": [
+          5
+        ]
+      }
+    ],
+    "expected_elements": 72,
+    "content_coverage": {
+      "expected_elements": 72,
+      "compared_elements": 72,
+      "omitted_elements": 0
+    },
+    "targets": 72,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "huawei-statements-p068-070",
+    "document_id": "complex-huawei-2024-annual",
+    "scope": [
+      {
+        "lines": [
+          1790,
+          1827
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          1829,
+          1878
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          1880,
+          1896
+        ],
+        "pages": [
+          3
+        ]
+      }
+    ],
+    "expected_elements": 96,
+    "content_coverage": {
+      "expected_elements": 96,
+      "compared_elements": 96,
+      "omitted_elements": 0
+    },
+    "targets": 133,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "huawei-terminal-business-p041-046",
+    "document_id": "complex-huawei-2024-annual",
+    "scope": [
+      {
+        "lines": [
+          1110,
+          1132
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          1134,
+          1152
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          1154,
+          1170
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          1172,
+          1186
+        ],
+        "pages": [
+          4
+        ]
+      },
+      {
+        "lines": [
+          1188,
+          1200
+        ],
+        "pages": [
+          5
+        ]
+      },
+      {
+        "lines": [
+          1202,
+          1220
+        ],
+        "pages": [
+          6
+        ]
+      }
+    ],
+    "expected_elements": 56,
+    "content_coverage": {
+      "expected_elements": 56,
+      "compared_elements": 56,
+      "omitted_elements": 0
+    },
+    "targets": 56,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "huawei-vision-p015-016",
+    "document_id": "complex-huawei-2024-annual",
+    "scope": [
+      {
+        "lines": [
+          405,
+          415
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          417,
+          441
+        ],
+        "pages": [
+          2
+        ]
+      }
+    ],
+    "expected_elements": 19,
+    "content_coverage": {
+      "expected_elements": 19,
+      "compared_elements": 19,
+      "omitted_elements": 0
+    },
+    "targets": 19,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "huaweitech-5ga-p007-009",
+    "document_id": "complex-huaweitech-2024-096",
+    "scope": [
+      {
+        "lines": [
+          231,
+          231
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          233,
+          265
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          265,
+          299
+        ],
+        "pages": [
+          3
+        ]
+      }
+    ],
+    "expected_elements": 40,
+    "content_coverage": {
+      "expected_elements": 40,
+      "compared_elements": 40,
+      "omitted_elements": 0
+    },
+    "targets": 40,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "huaweitech-apn6-p027-030",
+    "document_id": "complex-huaweitech-2024-096",
+    "scope": [
+      {
+        "lines": [
+          811,
+          840
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          840,
+          868
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          869,
+          889
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          889,
+          908
+        ],
+        "pages": [
+          4
+        ]
+      }
+    ],
+    "expected_elements": 54,
+    "content_coverage": {
+      "expected_elements": 54,
+      "compared_elements": 54,
+      "omitted_elements": 0
+    },
+    "targets": 57,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "huaweitech-cover-p001",
+    "document_id": "complex-huaweitech-2024-096",
+    "scope": [
+      {
+        "lines": [
+          1,
+          29
+        ],
+        "pages": [
+          1
+        ]
+      }
+    ],
+    "expected_elements": 15,
+    "content_coverage": {
+      "expected_elements": 15,
+      "compared_elements": 15,
+      "omitted_elements": 0
+    },
+    "targets": 15,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "huaweitech-editorial-spread-p002",
+    "document_id": "complex-huaweitech-2024-096",
+    "scope": [
+      {
+        "lines": [
+          31,
+          61
+        ],
+        "pages": [
+          1
+        ]
+      }
+    ],
+    "expected_elements": 16,
+    "content_coverage": {
+      "expected_elements": 16,
+      "compared_elements": 16,
+      "omitted_elements": 0
+    },
+    "targets": 16,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "huaweitech-future-optical-p024-026",
+    "document_id": "complex-huaweitech-2024-096",
+    "scope": [
+      {
+        "lines": [
+          720,
+          746
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          746,
+          771
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          771,
+          809
+        ],
+        "pages": [
+          3
+        ]
+      }
+    ],
+    "expected_elements": 49,
+    "content_coverage": {
+      "expected_elements": 49,
+      "compared_elements": 49,
+      "omitted_elements": 0
+    },
+    "targets": 49,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "huaweitech-intelligence-address-p004-006",
+    "document_id": "complex-huaweitech-2024-096",
+    "scope": [
+      {
+        "lines": [
+          151,
+          177
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          179,
+          215
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          215,
+          229
+        ],
+        "pages": [
+          3
+        ]
+      }
+    ],
+    "expected_elements": 40,
+    "content_coverage": {
+      "expected_elements": 40,
+      "compared_elements": 40,
+      "omitted_elements": 0
+    },
+    "targets": 40,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "huaweitech-metro-p016-019",
+    "document_id": "complex-huaweitech-2024-096",
+    "scope": [
+      {
+        "lines": [
+          501,
+          521
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          521,
+          537
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          539,
+          580
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          582,
+          598
+        ],
+        "pages": [
+          4
+        ]
+      }
+    ],
+    "expected_elements": 56,
+    "content_coverage": {
+      "expected_elements": 56,
+      "compared_elements": 56,
+      "omitted_elements": 0
+    },
+    "targets": 62,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "huaweitech-middle-east-p021-023",
+    "document_id": "complex-huaweitech-2024-096",
+    "scope": [
+      {
+        "lines": [
+          602,
+          638
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          640,
+          676
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          678,
+          718
+        ],
+        "pages": [
+          3
+        ]
+      }
+    ],
+    "expected_elements": 65,
+    "content_coverage": {
+      "expected_elements": 65,
+      "compared_elements": 65,
+      "omitted_elements": 0
+    },
+    "targets": 65,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "huaweitech-network-divider-p020",
+    "document_id": "complex-huaweitech-2024-096",
+    "scope": [
+      {
+        "lines": [
+          600,
+          600
+        ],
+        "pages": [
+          1
+        ]
+      }
+    ],
+    "expected_elements": 1,
+    "content_coverage": {
+      "expected_elements": 1,
+      "compared_elements": 1,
+      "omitted_elements": 0
+    },
+    "targets": 1,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "huaweitech-odn-p010-015",
+    "document_id": "complex-huaweitech-2024-096",
+    "scope": [
+      {
+        "lines": [
+          301,
+          327
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          329,
+          359
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          359,
+          425
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          425,
+          459
+        ],
+        "pages": [
+          4
+        ]
+      },
+      {
+        "lines": [
+          461,
+          483
+        ],
+        "pages": [
+          5
+        ]
+      },
+      {
+        "lines": [
+          483,
+          499
+        ],
+        "pages": [
+          6
+        ]
+      }
+    ],
+    "expected_elements": 101,
+    "content_coverage": {
+      "expected_elements": 101,
+      "compared_elements": 101,
+      "omitted_elements": 0
+    },
+    "targets": 101,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "iea-adoption-ai-types-p025-031",
+    "document_id": "complex-iea-energy-ai-2025",
+    "scope": [
+      {
+        "lines": [
+          494,
+          506
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          508,
+          518
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          520,
+          530
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          532,
+          546
+        ],
+        "pages": [
+          4
+        ]
+      },
+      {
+        "lines": [
+          547,
+          558
+        ],
+        "pages": [
+          5
+        ]
+      },
+      {
+        "lines": [
+          560,
+          572
+        ],
+        "pages": [
+          6
+        ]
+      },
+      {
+        "lines": [
+          574,
+          574
+        ],
+        "pages": [
+          6,
+          7
+        ]
+      },
+      {
+        "lines": [
+          576,
+          580
+        ],
+        "pages": [
+          7
+        ]
+      }
+    ],
+    "expected_elements": 46,
+    "content_coverage": {
+      "expected_elements": 46,
+      "compared_elements": 46,
+      "omitted_elements": 0
+    },
+    "targets": 47,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "iea-data-centre-definitions-history-p049-061",
+    "document_id": "complex-iea-energy-ai-2025",
+    "scope": [
+      {
+        "lines": [
+          813,
+          825
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          827,
+          843
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          845,
+          845
+        ],
+        "pages": [
+          2,
+          3
+        ]
+      },
+      {
+        "lines": [
+          847,
+          860
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          861,
+          873
+        ],
+        "pages": [
+          4
+        ]
+      },
+      {
+        "lines": [
+          874,
+          889
+        ],
+        "pages": [
+          5
+        ]
+      },
+      {
+        "lines": [
+          890,
+          904
+        ],
+        "pages": [
+          6
+        ]
+      },
+      {
+        "lines": [
+          906,
+          906
+        ],
+        "pages": [
+          6,
+          7
+        ]
+      },
+      {
+        "lines": [
+          908,
+          918
+        ],
+        "pages": [
+          7
+        ]
+      },
+      {
+        "lines": [
+          920,
+          920
+        ],
+        "pages": [
+          7,
+          8
+        ]
+      },
+      {
+        "lines": [
+          922,
+          936
+        ],
+        "pages": [
+          8
+        ]
+      },
+      {
+        "lines": [
+          938,
+          952
+        ],
+        "pages": [
+          9
+        ]
+      },
+      {
+        "lines": [
+          954,
+          964
+        ],
+        "pages": [
+          10
+        ]
+      },
+      {
+        "lines": [
+          966,
+          966
+        ],
+        "pages": [
+          10,
+          11
+        ]
+      },
+      {
+        "lines": [
+          968,
+          976
+        ],
+        "pages": [
+          11
+        ]
+      },
+      {
+        "lines": [
+          978,
+          992
+        ],
+        "pages": [
+          12
+        ]
+      },
+      {
+        "lines": [
+          994,
+          1006
+        ],
+        "pages": [
+          13
+        ]
+      }
+    ],
+    "expected_elements": 110,
+    "content_coverage": {
+      "expected_elements": 110,
+      "compared_elements": 110,
+      "omitted_elements": 0
+    },
+    "targets": 110,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "iea-energy-manufacturing-p037-040",
+    "document_id": "complex-iea-energy-ai-2025",
+    "scope": [
+      {
+        "lines": [
+          641,
+          655
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          657,
+          657
+        ],
+        "pages": [
+          1,
+          2
+        ]
+      },
+      {
+        "lines": [
+          659,
+          667
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          669,
+          685
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          687,
+          701
+        ],
+        "pages": [
+          4
+        ]
+      }
+    ],
+    "expected_elements": 31,
+    "content_coverage": {
+      "expected_elements": 31,
+      "compared_elements": 31,
+      "omitted_elements": 0
+    },
+    "targets": 31,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "iea-inference-energy-boxes-p043-048",
+    "document_id": "complex-iea-energy-ai-2025",
+    "scope": [
+      {
+        "lines": [
+          732,
+          743
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          745,
+          745
+        ],
+        "pages": [
+          1,
+          2
+        ]
+      },
+      {
+        "lines": [
+          747,
+          753
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          755,
+          755
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          757,
+          761
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          763,
+          773
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          775,
+          785
+        ],
+        "pages": [
+          4
+        ]
+      },
+      {
+        "lines": [
+          787,
+          799
+        ],
+        "pages": [
+          5
+        ]
+      },
+      {
+        "lines": [
+          801,
+          811
+        ],
+        "pages": [
+          6
+        ]
+      }
+    ],
+    "expected_elements": 44,
+    "content_coverage": {
+      "expected_elements": 44,
+      "compared_elements": 44,
+      "omitted_elements": 0
+    },
+    "targets": 44,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "iea-infrastructure-capabilities-p032-036",
+    "document_id": "complex-iea-energy-ai-2025",
+    "scope": [
+      {
+        "lines": [
+          582,
+          590
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          592,
+          592
+        ],
+        "pages": [
+          1,
+          2
+        ]
+      },
+      {
+        "lines": [
+          594,
+          605
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          607,
+          607
+        ],
+        "pages": [
+          2,
+          3
+        ]
+      },
+      {
+        "lines": [
+          609,
+          617
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          619,
+          627
+        ],
+        "pages": [
+          4
+        ]
+      },
+      {
+        "lines": [
+          629,
+          629
+        ],
+        "pages": [
+          4,
+          5
+        ]
+      },
+      {
+        "lines": [
+          631,
+          639
+        ],
+        "pages": [
+          5
+        ]
+      }
+    ],
+    "expected_elements": 33,
+    "content_coverage": {
+      "expected_elements": 33,
+      "compared_elements": 33,
+      "omitted_elements": 0
+    },
+    "targets": 57,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "iea-outlook-computing-rating-table-p062-070",
+    "document_id": "complex-iea-energy-ai-2025",
+    "scope": [
+      {
+        "lines": [
+          1008,
+          1019
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          1020,
+          1020
+        ],
+        "pages": [
+          1,
+          2
+        ]
+      },
+      {
+        "lines": [
+          1021,
+          1031
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          1033,
+          1033
+        ],
+        "pages": [
+          2,
+          3
+        ]
+      },
+      {
+        "lines": [
+          1035,
+          1045
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          1047,
+          1047
+        ],
+        "pages": [
+          3,
+          4
+        ]
+      },
+      {
+        "lines": [
+          1049,
+          1059
+        ],
+        "pages": [
+          4
+        ]
+      },
+      {
+        "lines": [
+          1061,
+          1073
+        ],
+        "pages": [
+          5
+        ]
+      },
+      {
+        "lines": [
+          1075,
+          1075
+        ],
+        "pages": [
+          5,
+          6
+        ]
+      },
+      {
+        "lines": [
+          1077,
+          1087
+        ],
+        "pages": [
+          6
+        ]
+      },
+      {
+        "lines": [
+          1089,
+          1089
+        ],
+        "pages": [
+          6,
+          7
+        ]
+      },
+      {
+        "lines": [
+          1091,
+          1101
+        ],
+        "pages": [
+          7
+        ]
+      },
+      {
+        "lines": [
+          1103,
+          1123
+        ],
+        "pages": [
+          8
+        ]
+      },
+      {
+        "lines": [
+          1124,
+          1197
+        ],
+        "pages": [
+          9
+        ]
+      }
+    ],
+    "expected_elements": 135,
+    "content_coverage": {
+      "expected_elements": 135,
+      "compared_elements": 135,
+      "omitted_elements": 0
+    },
+    "targets": 135,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "iea-rise-ai-p021-024",
+    "document_id": "complex-iea-energy-ai-2025",
+    "scope": [
+      {
+        "lines": [
+          430,
+          446
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          448,
+          460
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          462,
+          462
+        ],
+        "pages": [
+          2,
+          3
+        ]
+      },
+      {
+        "lines": [
+          464,
+          476
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          478,
+          478
+        ],
+        "pages": [
+          3,
+          4
+        ]
+      },
+      {
+        "lines": [
+          480,
+          492
+        ],
+        "pages": [
+          4
+        ]
+      }
+    ],
+    "expected_elements": 33,
+    "content_coverage": {
+      "expected_elements": 33,
+      "compared_elements": 33,
+      "omitted_elements": 0
+    },
+    "targets": 33,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "iea-training-energy-p041-042",
+    "document_id": "complex-iea-energy-ai-2025",
+    "scope": [
+      {
+        "lines": [
+          703,
+          713
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          714,
+          718
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          720,
+          722
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          724,
+          730
+        ],
+        "pages": [
+          2
+        ]
+      }
+    ],
+    "expected_elements": 16,
+    "content_coverage": {
+      "expected_elements": 16,
+      "compared_elements": 16,
+      "omitted_elements": 0
+    },
+    "targets": 16,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "midea-business-p013-024",
+    "document_id": "complex-midea-2024-annual",
+    "scope": [
+      {
+        "lines": [
+          219,
+          230
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          232,
+          248
+        ],
+        "pages": [
+          1,
+          2
+        ]
+      },
+      {
+        "lines": [
+          250,
+          263
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          265,
+          271
+        ],
+        "pages": [
+          2,
+          3
+        ]
+      },
+      {
+        "lines": [
+          273,
+          277
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          279,
+          279
+        ],
+        "pages": [
+          3,
+          4
+        ]
+      },
+      {
+        "lines": [
+          281,
+          285
+        ],
+        "pages": [
+          4
+        ]
+      },
+      {
+        "lines": [
+          287,
+          287
+        ],
+        "pages": [
+          4,
+          5
+        ]
+      },
+      {
+        "lines": [
+          289,
+          293
+        ],
+        "pages": [
+          5
+        ]
+      },
+      {
+        "lines": [
+          295,
+          297
+        ],
+        "pages": [
+          6
+        ]
+      },
+      {
+        "lines": [
+          299,
+          299
+        ],
+        "pages": [
+          6,
+          7
+        ]
+      },
+      {
+        "lines": [
+          301,
+          303
+        ],
+        "pages": [
+          7
+        ]
+      },
+      {
+        "lines": [
+          305,
+          305
+        ],
+        "pages": [
+          7,
+          8
+        ]
+      },
+      {
+        "lines": [
+          307,
+          309
+        ],
+        "pages": [
+          8
+        ]
+      },
+      {
+        "lines": [
+          311,
+          315
+        ],
+        "pages": [
+          9
+        ]
+      },
+      {
+        "lines": [
+          317,
+          317
+        ],
+        "pages": [
+          9,
+          10
+        ]
+      },
+      {
+        "lines": [
+          319,
+          321
+        ],
+        "pages": [
+          10
+        ]
+      },
+      {
+        "lines": [
+          323,
+          323
+        ],
+        "pages": [
+          10,
+          11
+        ]
+      },
+      {
+        "lines": [
+          325,
+          329
+        ],
+        "pages": [
+          11
+        ]
+      },
+      {
+        "lines": [
+          331,
+          331
+        ],
+        "pages": [
+          11,
+          12
+        ]
+      },
+      {
+        "lines": [
+          333,
+          339
+        ],
+        "pages": [
+          12
+        ]
+      }
+    ],
+    "expected_elements": 78,
+    "content_coverage": {
+      "expected_elements": 78,
+      "compared_elements": 78,
+      "omitted_elements": 0
+    },
+    "targets": 116,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "midea-front-p001-012",
+    "document_id": "complex-midea-2024-annual",
+    "scope": [
+      {
+        "lines": [
+          1,
+          8
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          10,
+          16
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          18,
+          18
+        ],
+        "pages": [
+          2,
+          3
+        ]
+      },
+      {
+        "lines": [
+          20,
+          32
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          34,
+          44
+        ],
+        "pages": [
+          4
+        ]
+      },
+      {
+        "lines": [
+          46,
+          57
+        ],
+        "pages": [
+          5
+        ]
+      },
+      {
+        "lines": [
+          59,
+          67
+        ],
+        "pages": [
+          6
+        ]
+      },
+      {
+        "lines": [
+          69,
+          82
+        ],
+        "pages": [
+          7
+        ]
+      },
+      {
+        "lines": [
+          84,
+          123
+        ],
+        "pages": [
+          8
+        ]
+      },
+      {
+        "lines": [
+          125,
+          156
+        ],
+        "pages": [
+          9
+        ]
+      },
+      {
+        "lines": [
+          158,
+          159
+        ],
+        "pages": [
+          9,
+          10
+        ]
+      },
+      {
+        "lines": [
+          161,
+          190
+        ],
+        "pages": [
+          10
+        ]
+      },
+      {
+        "lines": [
+          192,
+          207
+        ],
+        "pages": [
+          11
+        ]
+      },
+      {
+        "lines": [
+          209,
+          217
+        ],
+        "pages": [
+          12
+        ]
+      }
+    ],
+    "expected_elements": 145,
+    "content_coverage": {
+      "expected_elements": 145,
+      "compared_elements": 145,
+      "omitted_elements": 0
+    },
+    "targets": 181,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "midea-fx-derivatives-p001-004",
+    "document_id": "1200767518",
+    "scope": [
+      {
+        "lines": [
+          1,
+          25
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          27,
+          51
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          53,
+          83
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          83,
+          103
+        ],
+        "pages": [
+          4
+        ]
+      }
+    ],
+    "expected_elements": 52,
+    "content_coverage": {
+      "expected_elements": 52,
+      "compared_elements": 52,
+      "omitted_elements": 0
+    },
+    "targets": 52,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "midea-resumption-p001",
+    "document_id": "1200767576",
+    "scope": [
+      {
+        "lines": [
+          1,
+          15
+        ],
+        "pages": [
+          1
+        ]
+      }
+    ],
+    "expected_elements": 10,
+    "content_coverage": {
+      "expected_elements": 10,
+      "compared_elements": 10,
+      "omitted_elements": 0
+    },
+    "targets": 10,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "midea-strategy-p025-036",
+    "document_id": "complex-midea-2024-annual",
+    "scope": [
+      {
+        "lines": [
+          341,
+          341
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          343,
+          343
+        ],
+        "pages": [
+          1,
+          2
+        ]
+      },
+      {
+        "lines": [
+          345,
+          351
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          353,
+          353
+        ],
+        "pages": [
+          2,
+          3
+        ]
+      },
+      {
+        "lines": [
+          355,
+          359
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          361,
+          361
+        ],
+        "pages": [
+          3,
+          4
+        ]
+      },
+      {
+        "lines": [
+          363,
+          369
+        ],
+        "pages": [
+          4
+        ]
+      },
+      {
+        "lines": [
+          371,
+          371
+        ],
+        "pages": [
+          4,
+          5
+        ]
+      },
+      {
+        "lines": [
+          373,
+          373
+        ],
+        "pages": [
+          5
+        ]
+      },
+      {
+        "lines": [
+          375,
+          375
+        ],
+        "pages": [
+          5,
+          6
+        ]
+      },
+      {
+        "lines": [
+          377,
+          381
+        ],
+        "pages": [
+          6
+        ]
+      },
+      {
+        "lines": [
+          383,
+          383
+        ],
+        "pages": [
+          6,
+          7
+        ]
+      },
+      {
+        "lines": [
+          385,
+          385
+        ],
+        "pages": [
+          7
+        ]
+      },
+      {
+        "lines": [
+          387,
+          387
+        ],
+        "pages": [
+          7,
+          8
+        ]
+      },
+      {
+        "lines": [
+          389,
+          391
+        ],
+        "pages": [
+          8
+        ]
+      },
+      {
+        "lines": [
+          393,
+          393
+        ],
+        "pages": [
+          8,
+          9
+        ]
+      },
+      {
+        "lines": [
+          395,
+          399
+        ],
+        "pages": [
+          9
+        ]
+      },
+      {
+        "lines": [
+          401,
+          401
+        ],
+        "pages": [
+          9,
+          10
+        ]
+      },
+      {
+        "lines": [
+          403,
+          403
+        ],
+        "pages": [
+          10,
+          11
+        ]
+      },
+      {
+        "lines": [
+          405,
+          409
+        ],
+        "pages": [
+          11
+        ]
+      },
+      {
+        "lines": [
+          411,
+          411
+        ],
+        "pages": [
+          11,
+          12
+        ]
+      },
+      {
+        "lines": [
+          413,
+          415
+        ],
+        "pages": [
+          12
+        ]
+      },
+      {
+        "lines": [
+          417,
+          417
+        ],
+        "pages": [
+          12
+        ]
+      }
+    ],
+    "expected_elements": 39,
+    "content_coverage": {
+      "expected_elements": 39,
+      "compared_elements": 39,
+      "omitted_elements": 0
+    },
+    "targets": 39,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "moutai-governance-environment-p030-039",
+    "document_id": "complex-moutai-2024-annual",
+    "scope": [
+      {
+        "lines": [
+          1025,
+          1044
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          1046,
+          1087
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          1089,
+          1109
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          1111,
+          1156
+        ],
+        "pages": [
+          4
+        ]
+      },
+      {
+        "lines": [
+          1158,
+          1202
+        ],
+        "pages": [
+          5
+        ]
+      },
+      {
+        "lines": [
+          1203,
+          1244
+        ],
+        "pages": [
+          6
+        ]
+      },
+      {
+        "lines": [
+          1246,
+          1290
+        ],
+        "pages": [
+          7
+        ]
+      },
+      {
+        "lines": [
+          1292,
+          1313
+        ],
+        "pages": [
+          8
+        ]
+      },
+      {
+        "lines": [
+          1314,
+          1317
+        ],
+        "pages": [
+          8,
+          9
+        ]
+      },
+      {
+        "lines": [
+          1319,
+          1351
+        ],
+        "pages": [
+          9
+        ]
+      },
+      {
+        "lines": [
+          1353,
+          1394
+        ],
+        "pages": [
+          10
+        ]
+      }
+    ],
+    "expected_elements": 224,
+    "content_coverage": {
+      "expected_elements": 224,
+      "compared_elements": 224,
+      "omitted_elements": 0
+    },
+    "targets": 442,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "moutai-governance-p018-029",
+    "document_id": "complex-moutai-2024-annual",
+    "scope": [
+      {
+        "lines": [
+          715,
+          745
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          747,
+          765
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          767,
+          804
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          806,
+          806
+        ],
+        "pages": [
+          3,
+          4
+        ]
+      },
+      {
+        "lines": [
+          808,
+          824
+        ],
+        "pages": [
+          4
+        ]
+      },
+      {
+        "lines": [
+          826,
+          826
+        ],
+        "pages": [
+          4,
+          5
+        ]
+      },
+      {
+        "lines": [
+          828,
+          850
+        ],
+        "pages": [
+          5
+        ]
+      },
+      {
+        "lines": [
+          852,
+          852
+        ],
+        "pages": [
+          5,
+          6
+        ]
+      },
+      {
+        "lines": [
+          854,
+          882
+        ],
+        "pages": [
+          6
+        ]
+      },
+      {
+        "lines": [
+          884,
+          885
+        ],
+        "pages": [
+          6,
+          7
+        ]
+      },
+      {
+        "lines": [
+          887,
+          893
+        ],
+        "pages": [
+          7
+        ]
+      },
+      {
+        "lines": [
+          895,
+          928
+        ],
+        "pages": [
+          8
+        ]
+      },
+      {
+        "lines": [
+          929,
+          929
+        ],
+        "pages": [
+          8,
+          9
+        ]
+      },
+      {
+        "lines": [
+          930,
+          950
+        ],
+        "pages": [
+          9
+        ]
+      },
+      {
+        "lines": [
+          951,
+          951
+        ],
+        "pages": [
+          9,
+          10
+        ]
+      },
+      {
+        "lines": [
+          952,
+          963
+        ],
+        "pages": [
+          10
+        ]
+      },
+      {
+        "lines": [
+          965,
+          1000
+        ],
+        "pages": [
+          11
+        ]
+      },
+      {
+        "lines": [
+          1002,
+          1024
+        ],
+        "pages": [
+          12
+        ]
+      }
+    ],
+    "expected_elements": 198,
+    "content_coverage": {
+      "expected_elements": 198,
+      "compared_elements": 198,
+      "omitted_elements": 0
+    },
+    "targets": 526,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "moutai-introduction-p001-008",
+    "document_id": "complex-moutai-2024-annual",
+    "scope": [
+      {
+        "lines": [
+          1,
+          5
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          7,
+          45
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          47,
+          64
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          66,
+          121
+        ],
+        "pages": [
+          4
+        ]
+      },
+      {
+        "lines": [
+          123,
+          154
+        ],
+        "pages": [
+          5
+        ]
+      },
+      {
+        "lines": [
+          156,
+          190
+        ],
+        "pages": [
+          6
+        ]
+      },
+      {
+        "lines": [
+          191,
+          191
+        ],
+        "pages": [
+          6,
+          7
+        ]
+      },
+      {
+        "lines": [
+          192,
+          228
+        ],
+        "pages": [
+          7
+        ]
+      },
+      {
+        "lines": [
+          230,
+          230
+        ],
+        "pages": [
+          7,
+          8
+        ]
+      },
+      {
+        "lines": [
+          232,
+          270
+        ],
+        "pages": [
+          8
+        ]
+      }
+    ],
+    "expected_elements": 170,
+    "content_coverage": {
+      "expected_elements": 170,
+      "compared_elements": 170,
+      "omitted_elements": 0
+    },
+    "targets": 278,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "moutai-transactions-p040-049",
+    "document_id": "complex-moutai-2024-annual",
+    "scope": [
+      {
+        "lines": [
+          1396,
+          1430
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          1432,
+          1474
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          1476,
+          1476
+        ],
+        "pages": [
+          2,
+          3
+        ]
+      },
+      {
+        "lines": [
+          1478,
+          1528
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          1530,
+          1530
+        ],
+        "pages": [
+          3,
+          4,
+          5
+        ]
+      },
+      {
+        "lines": [
+          1532,
+          1581
+        ],
+        "pages": [
+          3,
+          4
+        ]
+      },
+      {
+        "lines": [
+          1582,
+          1595
+        ],
+        "pages": [
+          3,
+          5
+        ]
+      },
+      {
+        "lines": [
+          1597,
+          1633
+        ],
+        "pages": [
+          5
+        ]
+      },
+      {
+        "lines": [
+          1635,
+          1637
+        ],
+        "pages": [
+          5,
+          6
+        ]
+      },
+      {
+        "lines": [
+          1639,
+          1693
+        ],
+        "pages": [
+          6
+        ]
+      },
+      {
+        "lines": [
+          1694,
+          1715
+        ],
+        "pages": [
+          6,
+          7
+        ]
+      },
+      {
+        "lines": [
+          1717,
+          1748
+        ],
+        "pages": [
+          7
+        ]
+      },
+      {
+        "lines": [
+          1749,
+          1767
+        ],
+        "pages": [
+          7,
+          8
+        ]
+      },
+      {
+        "lines": [
+          1769,
+          1793
+        ],
+        "pages": [
+          8
+        ]
+      },
+      {
+        "lines": [
+          1794,
+          1795
+        ],
+        "pages": [
+          8,
+          9
+        ]
+      },
+      {
+        "lines": [
+          1797,
+          1843
+        ],
+        "pages": [
+          9
+        ]
+      },
+      {
+        "lines": [
+          1845,
+          1895
+        ],
+        "pages": [
+          10
+        ]
+      }
+    ],
+    "expected_elements": 337,
+    "content_coverage": {
+      "expected_elements": 337,
+      "compared_elements": 337,
+      "omitted_elements": 0
+    },
+    "targets": 1077,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "nhu-related-party-audit-p002-003",
+    "document_id": "1202194188",
+    "scope": [
+      {
+        "lines": [
+          6,
+          22
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          24,
+          44
+        ],
+        "pages": [
+          2
+        ]
+      }
+    ],
+    "expected_elements": 20,
+    "content_coverage": {
+      "expected_elements": 20,
+      "compared_elements": 20,
+      "omitted_elements": 0
+    },
+    "targets": 20,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "nhu-subsidiary-guarantees-p001-003",
+    "document_id": "1202194191",
+    "scope": [
+      {
+        "lines": [
+          1,
+          21
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          21,
+          43
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          45,
+          67
+        ],
+        "pages": [
+          3
+        ]
+      }
+    ],
+    "expected_elements": 35,
+    "content_coverage": {
+      "expected_elements": 35,
+      "compared_elements": 35,
+      "omitted_elements": 0
+    },
+    "targets": 37,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "nvidia-business-manufacturing-people-p096-104",
+    "document_id": "complex-nvidia-2025-annual",
+    "scope": [
+      {
+        "lines": [
+          3030,
+          3050
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          3052,
+          3080
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          3082,
+          3082
+        ],
+        "pages": [
+          2,
+          3
+        ]
+      },
+      {
+        "lines": [
+          3084,
+          3106
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          3108,
+          3126
+        ],
+        "pages": [
+          4
+        ]
+      },
+      {
+        "lines": [
+          3128,
+          3128
+        ],
+        "pages": [
+          4,
+          5
+        ]
+      },
+      {
+        "lines": [
+          3130,
+          3146
+        ],
+        "pages": [
+          5
+        ]
+      },
+      {
+        "lines": [
+          3148,
+          3148
+        ],
+        "pages": [
+          5,
+          6
+        ]
+      },
+      {
+        "lines": [
+          3150,
+          3170
+        ],
+        "pages": [
+          6
+        ]
+      },
+      {
+        "lines": [
+          3171,
+          3195
+        ],
+        "pages": [
+          7
+        ]
+      },
+      {
+        "lines": [
+          3197,
+          3221
+        ],
+        "pages": [
+          8
+        ]
+      },
+      {
+        "lines": [
+          3223,
+          3223
+        ],
+        "pages": [
+          8,
+          9
+        ]
+      },
+      {
+        "lines": [
+          3225,
+          3258
+        ],
+        "pages": [
+          9
+        ]
+      }
+    ],
+    "expected_elements": 122,
+    "content_coverage": {
+      "expected_elements": 122,
+      "compared_elements": 122,
+      "omitted_elements": 0
+    },
+    "targets": 122,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "nvidia-business-overview-p018-019",
+    "document_id": "complex-nvidia-2025-annual",
+    "scope": [
+      {
+        "lines": [
+          495,
+          532
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          534,
+          556
+        ],
+        "pages": [
+          2
+        ]
+      }
+    ],
+    "expected_elements": 43,
+    "content_coverage": {
+      "expected_elements": 43,
+      "compared_elements": 43,
+      "omitted_elements": 0
+    },
+    "targets": 66,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "nvidia-ceo-letter-p010-014",
+    "document_id": "complex-nvidia-2025-annual",
+    "scope": [
+      {
+        "lines": [
+          65,
+          69
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          71,
+          159
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          160,
+          240
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          242,
+          242
+        ],
+        "pages": [
+          3,
+          4
+        ]
+      },
+      {
+        "lines": [
+          244,
+          323
+        ],
+        "pages": [
+          4
+        ]
+      },
+      {
+        "lines": [
+          325,
+          359
+        ],
+        "pages": [
+          5
+        ]
+      }
+    ],
+    "expected_elements": 162,
+    "content_coverage": {
+      "expected_elements": 162,
+      "compared_elements": 162,
+      "omitted_elements": 0
+    },
+    "targets": 162,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "nvidia-definitions-p017",
+    "document_id": "complex-nvidia-2025-annual",
+    "scope": [
+      {
+        "lines": [
+          443,
+          493
+        ],
+        "pages": [
+          1
+        ]
+      }
+    ],
+    "expected_elements": 50,
+    "content_coverage": {
+      "expected_elements": 50,
+      "compared_elements": 50,
+      "omitted_elements": 0
+    },
+    "targets": 50,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "nvidia-global-regulatory-risks-p111-120",
+    "document_id": "complex-nvidia-2025-annual",
+    "scope": [
+      {
+        "lines": [
+          3415,
+          3433
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          3434,
+          3450
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          3452,
+          3452
+        ],
+        "pages": [
+          2,
+          3
+        ]
+      },
+      {
+        "lines": [
+          3454,
+          3458
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          3460,
+          3460
+        ],
+        "pages": [
+          3,
+          4
+        ]
+      },
+      {
+        "lines": [
+          3462,
+          3476
+        ],
+        "pages": [
+          4
+        ]
+      },
+      {
+        "lines": [
+          3478,
+          3498
+        ],
+        "pages": [
+          5
+        ]
+      },
+      {
+        "lines": [
+          3500,
+          3500
+        ],
+        "pages": [
+          5,
+          6
+        ]
+      },
+      {
+        "lines": [
+          3502,
+          3517
+        ],
+        "pages": [
+          6
+        ]
+      },
+      {
+        "lines": [
+          3518,
+          3531
+        ],
+        "pages": [
+          7
+        ]
+      },
+      {
+        "lines": [
+          3533,
+          3533
+        ],
+        "pages": [
+          7,
+          8
+        ]
+      },
+      {
+        "lines": [
+          3535,
+          3545
+        ],
+        "pages": [
+          8
+        ]
+      },
+      {
+        "lines": [
+          3547,
+          3571
+        ],
+        "pages": [
+          9
+        ]
+      },
+      {
+        "lines": [
+          3573,
+          3579
+        ],
+        "pages": [
+          10
+        ]
+      }
+    ],
+    "expected_elements": 94,
+    "content_coverage": {
+      "expected_elements": 94,
+      "compared_elements": 94,
+      "omitted_elements": 0
+    },
+    "targets": 94,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "nvidia-illustrated-review-p002-009",
+    "document_id": "complex-nvidia-2025-annual",
+    "scope": [
+      {
+        "lines": [
+          9,
+          15
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          17,
+          21
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          23,
+          27
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          29,
+          33
+        ],
+        "pages": [
+          4
+        ]
+      },
+      {
+        "lines": [
+          35,
+          39
+        ],
+        "pages": [
+          5
+        ]
+      },
+      {
+        "lines": [
+          41,
+          45
+        ],
+        "pages": [
+          6
+        ]
+      },
+      {
+        "lines": [
+          47,
+          57
+        ],
+        "pages": [
+          7
+        ]
+      },
+      {
+        "lines": [
+          59,
+          63
+        ],
+        "pages": [
+          8
+        ]
+      }
+    ],
+    "expected_elements": 29,
+    "content_coverage": {
+      "expected_elements": 29,
+      "compared_elements": 29,
+      "omitted_elements": 0
+    },
+    "targets": 29,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "nvidia-management-estimates-ratio-table-p128-132",
+    "document_id": "complex-nvidia-2025-annual",
+    "scope": [
+      {
+        "lines": [
+          3724,
+          3754
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          3756,
+          3772
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          3774,
+          3807
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          3809,
+          3809
+        ],
+        "pages": [
+          3,
+          4
+        ]
+      },
+      {
+        "lines": [
+          3811,
+          3835
+        ],
+        "pages": [
+          4
+        ]
+      },
+      {
+        "lines": [
+          3837,
+          3862
+        ],
+        "pages": [
+          5
+        ]
+      }
+    ],
+    "expected_elements": 79,
+    "content_coverage": {
+      "expected_elements": 79,
+      "compared_elements": 79,
+      "omitted_elements": 0
+    },
+    "targets": 105,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "nvidia-meeting-notice-toc-p015-016",
+    "document_id": "complex-nvidia-2025-annual",
+    "scope": [
+      {
+        "lines": [
+          361,
+          390
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          392,
+          441
+        ],
+        "pages": [
+          2
+        ]
+      }
+    ],
+    "expected_elements": 69,
+    "content_coverage": {
+      "expected_elements": 69,
+      "compared_elements": 69,
+      "omitted_elements": 0
+    },
+    "targets": 69,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "nvidia-officers-risk-supply-p105-110",
+    "document_id": "complex-nvidia-2025-annual",
+    "scope": [
+      {
+        "lines": [
+          3260,
+          3284
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          3286,
+          3286
+        ],
+        "pages": [
+          1,
+          2
+        ]
+      },
+      {
+        "lines": [
+          3288,
+          3320
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          3321,
+          3348
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          3350,
+          3350
+        ],
+        "pages": [
+          3,
+          4
+        ]
+      },
+      {
+        "lines": [
+          3352,
+          3373
+        ],
+        "pages": [
+          4
+        ]
+      },
+      {
+        "lines": [
+          3374,
+          3390
+        ],
+        "pages": [
+          5
+        ]
+      },
+      {
+        "lines": [
+          3392,
+          3392
+        ],
+        "pages": [
+          5,
+          6
+        ]
+      },
+      {
+        "lines": [
+          3394,
+          3413
+        ],
+        "pages": [
+          6
+        ]
+      }
+    ],
+    "expected_elements": 108,
+    "content_coverage": {
+      "expected_elements": 108,
+      "compared_elements": 108,
+      "omitted_elements": 0
+    },
+    "targets": 118,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "nvidia-proxy-summary-p020-024",
+    "document_id": "complex-nvidia-2025-annual",
+    "scope": [
+      {
+        "lines": [
+          558,
+          581
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          583,
+          611
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          613,
+          654
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          656,
+          687
+        ],
+        "pages": [
+          4
+        ]
+      },
+      {
+        "lines": [
+          689,
+          699
+        ],
+        "pages": [
+          5
+        ]
+      }
+    ],
+    "expected_elements": 95,
+    "content_coverage": {
+      "expected_elements": 95,
+      "compared_elements": 95,
+      "omitted_elements": 0
+    },
+    "targets": 354,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "nvidia-regulatory-governance-equity-p121-127",
+    "document_id": "complex-nvidia-2025-annual",
+    "scope": [
+      {
+        "lines": [
+          3581,
+          3593
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          3595,
+          3595
+        ],
+        "pages": [
+          1,
+          2
+        ]
+      },
+      {
+        "lines": [
+          3597,
+          3607
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          3609,
+          3609
+        ],
+        "pages": [
+          2,
+          3
+        ]
+      },
+      {
+        "lines": [
+          3611,
+          3619
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          3621,
+          3621
+        ],
+        "pages": [
+          3,
+          4
+        ]
+      },
+      {
+        "lines": [
+          3623,
+          3645
+        ],
+        "pages": [
+          4
+        ]
+      },
+      {
+        "lines": [
+          3647,
+          3677
+        ],
+        "pages": [
+          5
+        ]
+      },
+      {
+        "lines": [
+          3679,
+          3679
+        ],
+        "pages": [
+          5,
+          6
+        ]
+      },
+      {
+        "lines": [
+          3681,
+          3708
+        ],
+        "pages": [
+          6
+        ]
+      },
+      {
+        "lines": [
+          3710,
+          3722
+        ],
+        "pages": [
+          7
+        ]
+      }
+    ],
+    "expected_elements": 74,
+    "content_coverage": {
+      "expected_elements": 74,
+      "compared_elements": 74,
+      "omitted_elements": 0
+    },
+    "targets": 105,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "pboc-banking-columns-p029-040",
+    "document_id": "complex-pboc-stability-2024",
+    "scope": [
+      {
+        "lines": [
+          362,
+          380
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          382,
+          382
+        ],
+        "pages": [
+          1,
+          2
+        ]
+      },
+      {
+        "lines": [
+          384,
+          394
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          396,
+          396
+        ],
+        "pages": [
+          2,
+          3
+        ]
+      },
+      {
+        "lines": [
+          398,
+          410
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          412,
+          412
+        ],
+        "pages": [
+          3,
+          4
+        ]
+      },
+      {
+        "lines": [
+          414,
+          426
+        ],
+        "pages": [
+          4
+        ]
+      },
+      {
+        "lines": [
+          428,
+          428
+        ],
+        "pages": [
+          4,
+          5
+        ]
+      },
+      {
+        "lines": [
+          430,
+          448
+        ],
+        "pages": [
+          5
+        ]
+      },
+      {
+        "lines": [
+          450,
+          462
+        ],
+        "pages": [
+          6
+        ]
+      },
+      {
+        "lines": [
+          464,
+          464
+        ],
+        "pages": [
+          6,
+          7
+        ]
+      },
+      {
+        "lines": [
+          466,
+          476
+        ],
+        "pages": [
+          7
+        ]
+      },
+      {
+        "lines": [
+          478,
+          478
+        ],
+        "pages": [
+          7,
+          8
+        ]
+      },
+      {
+        "lines": [
+          480,
+          488
+        ],
+        "pages": [
+          8
+        ]
+      },
+      {
+        "lines": [
+          490,
+          490
+        ],
+        "pages": [
+          8,
+          9
+        ]
+      },
+      {
+        "lines": [
+          492,
+          502
+        ],
+        "pages": [
+          9
+        ]
+      },
+      {
+        "lines": [
+          504,
+          504
+        ],
+        "pages": [
+          9,
+          10
+        ]
+      },
+      {
+        "lines": [
+          506,
+          512
+        ],
+        "pages": [
+          10
+        ]
+      },
+      {
+        "lines": [
+          514,
+          514
+        ],
+        "pages": [
+          10,
+          11
+        ]
+      },
+      {
+        "lines": [
+          516,
+          524
+        ],
+        "pages": [
+          11
+        ]
+      },
+      {
+        "lines": [
+          526,
+          526
+        ],
+        "pages": [
+          11,
+          12
+        ]
+      },
+      {
+        "lines": [
+          528,
+          538
+        ],
+        "pages": [
+          12
+        ]
+      },
+      {
+        "lines": [
+          540,
+          540
+        ],
+        "pages": [
+          12
+        ]
+      }
+    ],
+    "expected_elements": 90,
+    "content_coverage": {
+      "expected_elements": 90,
+      "compared_elements": 90,
+      "omitted_elements": 0
+    },
+    "targets": 90,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "pboc-committees-p002-003",
+    "document_id": "complex-pboc-stability-2024",
+    "scope": [
+      {
+        "lines": [
+          9,
+          16
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          18,
+          50
+        ],
+        "pages": [
+          2
+        ]
+      }
+    ],
+    "expected_elements": 37,
+    "content_coverage": {
+      "expected_elements": 37,
+      "compared_elements": 37,
+      "omitted_elements": 0
+    },
+    "targets": 37,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "pboc-contents-p007-008",
+    "document_id": "complex-pboc-stability-2024",
+    "scope": [
+      {
+        "lines": [
+          64,
+          85
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          86,
+          110
+        ],
+        "pages": [
+          2
+        ]
+      }
+    ],
+    "expected_elements": 46,
+    "content_coverage": {
+      "expected_elements": 46,
+      "compared_elements": 46,
+      "omitted_elements": 0
+    },
+    "targets": 46,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "pboc-cover-p001",
+    "document_id": "complex-pboc-stability-2024",
+    "scope": [
+      {
+        "lines": [
+          1,
+          7
+        ],
+        "pages": [
+          1
+        ]
+      }
+    ],
+    "expected_elements": 4,
+    "content_coverage": {
+      "expected_elements": 4,
+      "compared_elements": 4,
+      "omitted_elements": 0
+    },
+    "targets": 4,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "pboc-macro-columns-p011-018",
+    "document_id": "complex-pboc-stability-2024",
+    "scope": [
+      {
+        "lines": [
+          114,
+          128
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          130,
+          132
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          134,
+          134
+        ],
+        "pages": [
+          1,
+          2
+        ]
+      },
+      {
+        "lines": [
+          136,
+          146
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          148,
+          148
+        ],
+        "pages": [
+          2,
+          3
+        ]
+      },
+      {
+        "lines": [
+          150,
+          168
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          170,
+          170
+        ],
+        "pages": [
+          3,
+          4
+        ]
+      },
+      {
+        "lines": [
+          172,
+          182
+        ],
+        "pages": [
+          4
+        ]
+      },
+      {
+        "lines": [
+          184,
+          184
+        ],
+        "pages": [
+          4,
+          5
+        ]
+      },
+      {
+        "lines": [
+          186,
+          202
+        ],
+        "pages": [
+          5
+        ]
+      },
+      {
+        "lines": [
+          204,
+          204
+        ],
+        "pages": [
+          5,
+          6
+        ]
+      },
+      {
+        "lines": [
+          206,
+          222
+        ],
+        "pages": [
+          6
+        ]
+      },
+      {
+        "lines": [
+          224,
+          234
+        ],
+        "pages": [
+          7
+        ]
+      },
+      {
+        "lines": [
+          236,
+          236
+        ],
+        "pages": [
+          7,
+          8
+        ]
+      },
+      {
+        "lines": [
+          238,
+          250
+        ],
+        "pages": [
+          8
+        ]
+      },
+      {
+        "lines": [
+          252,
+          252
+        ],
+        "pages": [
+          8
+        ]
+      }
+    ],
+    "expected_elements": 70,
+    "content_coverage": {
+      "expected_elements": 70,
+      "compared_elements": 70,
+      "omitted_elements": 0
+    },
+    "targets": 70,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "pboc-overview-p004-006",
+    "document_id": "complex-pboc-stability-2024",
+    "scope": [
+      {
+        "lines": [
+          52,
+          54
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          56,
+          56
+        ],
+        "pages": [
+          1,
+          2
+        ]
+      },
+      {
+        "lines": [
+          58,
+          58
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          60,
+          60
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          62,
+          62
+        ],
+        "pages": [
+          2,
+          3
+        ]
+      }
+    ],
+    "expected_elements": 6,
+    "content_coverage": {
+      "expected_elements": 6,
+      "compared_elements": 6,
+      "omitted_elements": 0
+    },
+    "targets": 6,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "pboc-policy-columns-p019-026",
+    "document_id": "complex-pboc-stability-2024",
+    "scope": [
+      {
+        "lines": [
+          252,
+          252
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          254,
+          262
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          264,
+          264
+        ],
+        "pages": [
+          1,
+          2
+        ]
+      },
+      {
+        "lines": [
+          266,
+          280
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          282,
+          282
+        ],
+        "pages": [
+          2,
+          3
+        ]
+      },
+      {
+        "lines": [
+          284,
+          298
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          300,
+          300
+        ],
+        "pages": [
+          3,
+          4
+        ]
+      },
+      {
+        "lines": [
+          302,
+          310
+        ],
+        "pages": [
+          4
+        ]
+      },
+      {
+        "lines": [
+          312,
+          312
+        ],
+        "pages": [
+          4,
+          5
+        ]
+      },
+      {
+        "lines": [
+          314,
+          322
+        ],
+        "pages": [
+          5
+        ]
+      },
+      {
+        "lines": [
+          324,
+          324
+        ],
+        "pages": [
+          5,
+          6
+        ]
+      },
+      {
+        "lines": [
+          326,
+          340
+        ],
+        "pages": [
+          6
+        ]
+      },
+      {
+        "lines": [
+          342,
+          354
+        ],
+        "pages": [
+          7
+        ]
+      },
+      {
+        "lines": [
+          356,
+          356
+        ],
+        "pages": [
+          7,
+          8
+        ]
+      },
+      {
+        "lines": [
+          358,
+          358
+        ],
+        "pages": [
+          8
+        ]
+      }
+    ],
+    "expected_elements": 54,
+    "content_coverage": {
+      "expected_elements": 54,
+      "compared_elements": 54,
+      "omitted_elements": 0
+    },
+    "targets": 54,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "pboc-statistical-tables-p101-108",
+    "document_id": "complex-pboc-stability-2024",
+    "scope": [
+      {
+        "lines": [
+          1329,
+          1354
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          1356,
+          1400
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          1402,
+          1442
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          1444,
+          1466
+        ],
+        "pages": [
+          4
+        ]
+      },
+      {
+        "lines": [
+          1468,
+          1496
+        ],
+        "pages": [
+          5
+        ]
+      },
+      {
+        "lines": [
+          1498,
+          1533
+        ],
+        "pages": [
+          6
+        ]
+      },
+      {
+        "lines": [
+          1535,
+          1570
+        ],
+        "pages": [
+          7
+        ]
+      },
+      {
+        "lines": [
+          1572,
+          1607
+        ],
+        "pages": [
+          8
+        ]
+      }
+    ],
+    "expected_elements": 232,
+    "content_coverage": {
+      "expected_elements": 232,
+      "compared_elements": 232,
+      "omitted_elements": 0
+    },
+    "targets": 973,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "peoples-network-fundraising-p001-003",
+    "document_id": "1202180643",
+    "scope": [
+      {
+        "lines": [
+          1,
+          13
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          15,
+          28
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          30,
+          30
+        ],
+        "pages": [
+          2,
+          3
+        ]
+      },
+      {
+        "lines": [
+          32,
+          49
+        ],
+        "pages": [
+          3
+        ]
+      }
+    ],
+    "expected_elements": 30,
+    "content_coverage": {
+      "expected_elements": 30,
+      "compared_elements": 30,
+      "omitted_elements": 0
+    },
+    "targets": 44,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "pingan-business-highlights-p012-013",
+    "document_id": "complex-pingan-2024-annual",
+    "scope": [
+      {
+        "lines": [
+          372,
+          438
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          440,
+          500
+        ],
+        "pages": [
+          2
+        ]
+      }
+    ],
+    "expected_elements": 65,
+    "content_coverage": {
+      "expected_elements": 65,
+      "compared_elements": 65,
+      "omitted_elements": 0
+    },
+    "targets": 65,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "pingan-chairman-p014-019",
+    "document_id": "complex-pingan-2024-annual",
+    "scope": [
+      {
+        "lines": [
+          502,
+          508
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          510,
+          510
+        ],
+        "pages": [
+          1,
+          2
+        ]
+      },
+      {
+        "lines": [
+          512,
+          520
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          522,
+          528
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          530,
+          540
+        ],
+        "pages": [
+          4
+        ]
+      },
+      {
+        "lines": [
+          542,
+          550
+        ],
+        "pages": [
+          5
+        ]
+      },
+      {
+        "lines": [
+          552,
+          552
+        ],
+        "pages": [
+          5,
+          6
+        ]
+      },
+      {
+        "lines": [
+          554,
+          564
+        ],
+        "pages": [
+          6
+        ]
+      }
+    ],
+    "expected_elements": 32,
+    "content_coverage": {
+      "expected_elements": 32,
+      "compared_elements": 32,
+      "omitted_elements": 0
+    },
+    "targets": 32,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "pingan-financials-p001-004",
+    "document_id": "1200694562",
+    "scope": [
+      {
+        "lines": [
+          1,
+          34
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          35,
+          66
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          67,
+          101
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          102,
+          140
+        ],
+        "pages": [
+          4
+        ]
+      }
+    ],
+    "expected_elements": 108,
+    "content_coverage": {
+      "expected_elements": 108,
+      "compared_elements": 108,
+      "omitted_elements": 0
+    },
+    "targets": 208,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "pingan-fundraising-assurance-p003-007",
+    "document_id": "1202033380",
+    "scope": [
+      {
+        "lines": [
+          8,
+          18
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          20,
+          34
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          36,
+          58
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          60,
+          74
+        ],
+        "pages": [
+          4
+        ]
+      },
+      {
+        "lines": [
+          76,
+          108
+        ],
+        "pages": [
+          5
+        ]
+      }
+    ],
+    "expected_elements": 60,
+    "content_coverage": {
+      "expected_elements": 60,
+      "compared_elements": 60,
+      "omitted_elements": 0
+    },
+    "targets": 120,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "pingan-health-senior-care-p025-030",
+    "document_id": "complex-pingan-2024-annual",
+    "scope": [
+      {
+        "lines": [
+          722,
+          743
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          745,
+          768
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          770,
+          796
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          798,
+          816
+        ],
+        "pages": [
+          4
+        ]
+      },
+      {
+        "lines": [
+          818,
+          838
+        ],
+        "pages": [
+          5
+        ]
+      },
+      {
+        "lines": [
+          840,
+          862
+        ],
+        "pages": [
+          6
+        ]
+      }
+    ],
+    "expected_elements": 75,
+    "content_coverage": {
+      "expected_elements": 75,
+      "compared_elements": 75,
+      "omitted_elements": 0
+    },
+    "targets": 75,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "pingan-honors-p020",
+    "document_id": "complex-pingan-2024-annual",
+    "scope": [
+      {
+        "lines": [
+          566,
+          614
+        ],
+        "pages": [
+          1
+        ]
+      }
+    ],
+    "expected_elements": 25,
+    "content_coverage": {
+      "expected_elements": 25,
+      "compared_elements": 25,
+      "omitted_elements": 0
+    },
+    "targets": 25,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "pingan-integrated-finance-p021",
+    "document_id": "complex-pingan-2024-annual",
+    "scope": [
+      {
+        "lines": [
+          616,
+          634
+        ],
+        "pages": [
+          1
+        ]
+      }
+    ],
+    "expected_elements": 10,
+    "content_coverage": {
+      "expected_elements": 10,
+      "compared_elements": 10,
+      "omitted_elements": 0
+    },
+    "targets": 10,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "pingan-integrated-finance-p022-024",
+    "document_id": "complex-pingan-2024-annual",
+    "scope": [
+      {
+        "lines": [
+          636,
+          650
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          652,
+          680
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          682,
+          720
+        ],
+        "pages": [
+          3
+        ]
+      }
+    ],
+    "expected_elements": 45,
+    "content_coverage": {
+      "expected_elements": 45,
+      "compared_elements": 45,
+      "omitted_elements": 0
+    },
+    "targets": 45,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "pingan-mission-opportunities-p006-007",
+    "document_id": "complex-pingan-2024-annual",
+    "scope": [
+      {
+        "lines": [
+          215,
+          237
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          239,
+          273
+        ],
+        "pages": [
+          2
+        ]
+      }
+    ],
+    "expected_elements": 30,
+    "content_coverage": {
+      "expected_elements": 30,
+      "compared_elements": 30,
+      "omitted_elements": 0
+    },
+    "targets": 30,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "pingan-results-announcement-p001",
+    "document_id": "complex-pingan-2024-annual",
+    "scope": [
+      {
+        "lines": [
+          1,
+          31
+        ],
+        "pages": [
+          1
+        ]
+      }
+    ],
+    "expected_elements": 16,
+    "content_coverage": {
+      "expected_elements": 16,
+      "compared_elements": 16,
+      "omitted_elements": 0
+    },
+    "targets": 16,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "pingan-strategy-cards-p008-011",
+    "document_id": "complex-pingan-2024-annual",
+    "scope": [
+      {
+        "lines": [
+          275,
+          283
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          285,
+          317
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          319,
+          342
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          344,
+          370
+        ],
+        "pages": [
+          4
+        ]
+      }
+    ],
+    "expected_elements": 53,
+    "content_coverage": {
+      "expected_elements": 53,
+      "compared_elements": 53,
+      "omitted_elements": 0
+    },
+    "targets": 53,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "pingan-summary-and-profile-p004-005",
+    "document_id": "complex-pingan-2024-annual",
+    "scope": [
+      {
+        "lines": [
+          139,
+          202
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          204,
+          213
+        ],
+        "pages": [
+          2
+        ]
+      }
+    ],
+    "expected_elements": 50,
+    "content_coverage": {
+      "expected_elements": 50,
+      "compared_elements": 50,
+      "omitted_elements": 0
+    },
+    "targets": 174,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "sf-auditor-grid-prose-responsibilities-p087-088",
+    "document_id": "complex-sf-2024-annual",
+    "scope": [
+      {
+        "lines": [
+          2191,
+          2228
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          2230,
+          2255
+        ],
+        "pages": [
+          2
+        ]
+      }
+    ],
+    "expected_elements": 37,
+    "content_coverage": {
+      "expected_elements": 37,
+      "compared_elements": 37,
+      "omitted_elements": 0
+    },
+    "targets": 37,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "sf-brand-award-callouts-p034",
+    "document_id": "complex-sf-2024-annual",
+    "scope": [
+      {
+        "lines": [
+          711,
+          734
+        ],
+        "pages": [
+          1
+        ]
+      }
+    ],
+    "expected_elements": 15,
+    "content_coverage": {
+      "expected_elements": 15,
+      "compared_elements": 15,
+      "omitted_elements": 0
+    },
+    "targets": 15,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "sf-cashflow-assets-liabilities-p040-041",
+    "document_id": "complex-sf-2024-annual",
+    "scope": [
+      {
+        "lines": [
+          898,
+          914
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          916,
+          950
+        ],
+        "pages": [
+          2
+        ]
+      }
+    ],
+    "expected_elements": 40,
+    "content_coverage": {
+      "expected_elements": 40,
+      "compared_elements": 40,
+      "omitted_elements": 0
+    },
+    "targets": 134,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "sf-industry-business-review-p017-024",
+    "document_id": "complex-sf-2024-annual",
+    "scope": [
+      {
+        "lines": [
+          400,
+          412
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          414,
+          414
+        ],
+        "pages": [
+          1,
+          2
+        ]
+      },
+      {
+        "lines": [
+          416,
+          426
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          428,
+          444
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          446,
+          446
+        ],
+        "pages": [
+          3,
+          4
+        ]
+      },
+      {
+        "lines": [
+          448,
+          464
+        ],
+        "pages": [
+          4
+        ]
+      },
+      {
+        "lines": [
+          466,
+          484
+        ],
+        "pages": [
+          5
+        ]
+      },
+      {
+        "lines": [
+          486,
+          504
+        ],
+        "pages": [
+          6
+        ]
+      },
+      {
+        "lines": [
+          506,
+          520
+        ],
+        "pages": [
+          7
+        ]
+      },
+      {
+        "lines": [
+          522,
+          536
+        ],
+        "pages": [
+          8
+        ]
+      }
+    ],
+    "expected_elements": 69,
+    "content_coverage": {
+      "expected_elements": 69,
+      "compared_elements": 69,
+      "omitted_elements": 0
+    },
+    "targets": 69,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "sf-margin-profit-ebitda-p037-039",
+    "document_id": "complex-sf-2024-annual",
+    "scope": [
+      {
+        "lines": [
+          801,
+          826
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          828,
+          868
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          870,
+          896
+        ],
+        "pages": [
+          3
+        ]
+      }
+    ],
+    "expected_elements": 58,
+    "content_coverage": {
+      "expected_elements": 58,
+      "compared_elements": 58,
+      "omitted_elements": 0
+    },
+    "targets": 92,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "sf-network-infographics-p027-031",
+    "document_id": "complex-sf-2024-annual",
+    "scope": [
+      {
+        "lines": [
+          568,
+          585
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          587,
+          610
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          612,
+          629
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          631,
+          650
+        ],
+        "pages": [
+          4
+        ]
+      },
+      {
+        "lines": [
+          652,
+          665
+        ],
+        "pages": [
+          5
+        ]
+      }
+    ],
+    "expected_elements": 73,
+    "content_coverage": {
+      "expected_elements": 73,
+      "compared_elements": 73,
+      "omitted_elements": 0
+    },
+    "targets": 73,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "sf-revenue-operating-cost-tables-p035-036",
+    "document_id": "complex-sf-2024-annual",
+    "scope": [
+      {
+        "lines": [
+          736,
+          765
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          767,
+          799
+        ],
+        "pages": [
+          2
+        ]
+      }
+    ],
+    "expected_elements": 46,
+    "content_coverage": {
+      "expected_elements": 46,
+      "compared_elements": 46,
+      "omitted_elements": 0
+    },
+    "targets": 146,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "sf-supply-chain-operating-efficiency-p025-026",
+    "document_id": "complex-sf-2024-annual",
+    "scope": [
+      {
+        "lines": [
+          538,
+          552
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          554,
+          566
+        ],
+        "pages": [
+          2
+        ]
+      }
+    ],
+    "expected_elements": 15,
+    "content_coverage": {
+      "expected_elements": 15,
+      "compared_elements": 15,
+      "omitted_elements": 0
+    },
+    "targets": 15,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "sinopec-finance-governance-p025-036",
+    "document_id": "complex-sinopec-2024-annual",
+    "scope": [
+      {
+        "lines": [
+          752,
+          776
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          778,
+          813
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          815,
+          848
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          850,
+          880
+        ],
+        "pages": [
+          4
+        ]
+      },
+      {
+        "lines": [
+          882,
+          902
+        ],
+        "pages": [
+          5
+        ]
+      },
+      {
+        "lines": [
+          904,
+          953
+        ],
+        "pages": [
+          6
+        ]
+      },
+      {
+        "lines": [
+          955,
+          979
+        ],
+        "pages": [
+          7
+        ]
+      },
+      {
+        "lines": [
+          981,
+          1013
+        ],
+        "pages": [
+          8
+        ]
+      },
+      {
+        "lines": [
+          1015,
+          1051
+        ],
+        "pages": [
+          9
+        ]
+      },
+      {
+        "lines": [
+          1051,
+          1067
+        ],
+        "pages": [
+          10
+        ]
+      },
+      {
+        "lines": [
+          1067,
+          1087
+        ],
+        "pages": [
+          11
+        ]
+      },
+      {
+        "lines": [
+          1089,
+          1111
+        ],
+        "pages": [
+          12
+        ]
+      }
+    ],
+    "expected_elements": 202,
+    "content_coverage": {
+      "expected_elements": 202,
+      "compared_elements": 202,
+      "omitted_elements": 0
+    },
+    "targets": 269,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "sinopec-front-p001-012",
+    "document_id": "complex-sinopec-2024-annual",
+    "scope": [
+      {
+        "lines": [
+          1,
+          9
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          11,
+          30
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          32,
+          66
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          68,
+          111
+        ],
+        "pages": [
+          4
+        ]
+      },
+      {
+        "lines": [
+          113,
+          137
+        ],
+        "pages": [
+          5
+        ]
+      },
+      {
+        "lines": [
+          139,
+          168
+        ],
+        "pages": [
+          6
+        ]
+      },
+      {
+        "lines": [
+          170,
+          194
+        ],
+        "pages": [
+          7
+        ]
+      },
+      {
+        "lines": [
+          196,
+          210
+        ],
+        "pages": [
+          8
+        ]
+      },
+      {
+        "lines": [
+          212,
+          220
+        ],
+        "pages": [
+          9
+        ]
+      },
+      {
+        "lines": [
+          222,
+          234
+        ],
+        "pages": [
+          10
+        ]
+      },
+      {
+        "lines": [
+          236,
+          258
+        ],
+        "pages": [
+          11
+        ]
+      },
+      {
+        "lines": [
+          260,
+          294
+        ],
+        "pages": [
+          12
+        ]
+      }
+    ],
+    "expected_elements": 202,
+    "content_coverage": {
+      "expected_elements": 202,
+      "compared_elements": 202,
+      "omitted_elements": 0
+    },
+    "targets": 425,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "sinopec-operations-p013-024",
+    "document_id": "complex-sinopec-2024-annual",
+    "scope": [
+      {
+        "lines": [
+          296,
+          350
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          352,
+          386
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          388,
+          415
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          417,
+          437
+        ],
+        "pages": [
+          4
+        ]
+      },
+      {
+        "lines": [
+          439,
+          449
+        ],
+        "pages": [
+          5
+        ]
+      },
+      {
+        "lines": [
+          451,
+          503
+        ],
+        "pages": [
+          6
+        ]
+      },
+      {
+        "lines": [
+          505,
+          537
+        ],
+        "pages": [
+          7
+        ]
+      },
+      {
+        "lines": [
+          539,
+          591
+        ],
+        "pages": [
+          8
+        ]
+      },
+      {
+        "lines": [
+          593,
+          637
+        ],
+        "pages": [
+          9
+        ]
+      },
+      {
+        "lines": [
+          639,
+          673
+        ],
+        "pages": [
+          10
+        ]
+      },
+      {
+        "lines": [
+          675,
+          714
+        ],
+        "pages": [
+          11
+        ]
+      },
+      {
+        "lines": [
+          716,
+          750
+        ],
+        "pages": [
+          12
+        ]
+      }
+    ],
+    "expected_elements": 308,
+    "content_coverage": {
+      "expected_elements": 308,
+      "compared_elements": 308,
+      "omitted_elements": 0
+    },
+    "targets": 428,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "spdb-acquisition-approval-p001-002",
+    "document_id": "1201786046",
+    "scope": [
+      {
+        "lines": [
+          1,
+          21
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          23,
+          33
+        ],
+        "pages": [
+          2
+        ]
+      }
+    ],
+    "expected_elements": 19,
+    "content_coverage": {
+      "expected_elements": 19,
+      "compared_elements": 19,
+      "omitted_elements": 0
+    },
+    "targets": 19,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "spdb-cover-declaration-p001-002",
+    "document_id": "1200454112",
+    "scope": [
+      {
+        "lines": [
+          1,
+          11
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          13,
+          23
+        ],
+        "pages": [
+          2
+        ]
+      }
+    ],
+    "expected_elements": 12,
+    "content_coverage": {
+      "expected_elements": 12,
+      "compared_elements": 12,
+      "omitted_elements": 0
+    },
+    "targets": 13,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "spdb-credit-overview-p001-004",
+    "document_id": "1200707112",
+    "scope": [
+      {
+        "lines": [
+          1,
+          7
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          9,
+          97
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          99,
+          117
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          119,
+          142
+        ],
+        "pages": [
+          4
+        ]
+      }
+    ],
+    "expected_elements": 94,
+    "content_coverage": {
+      "expected_elements": 94,
+      "compared_elements": 94,
+      "omitted_elements": 0
+    },
+    "targets": 176,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "spdb-prospectus-financials-seal-p021-023",
+    "document_id": "1200454112",
+    "scope": [
+      {
+        "lines": [
+          219,
+          243
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          244,
+          251
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          253,
+          257
+        ],
+        "pages": [
+          3
+        ]
+      }
+    ],
+    "expected_elements": 31,
+    "content_coverage": {
+      "expected_elements": 31,
+      "compared_elements": 31,
+      "omitted_elements": 0
+    },
+    "targets": 31,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "spdb-prospectus-issuer-terms-p006-012",
+    "document_id": "1200454112",
+    "scope": [
+      {
+        "lines": [
+          58,
+          86
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          88,
+          101
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          102,
+          102
+        ],
+        "pages": [
+          2,
+          3
+        ]
+      },
+      {
+        "lines": [
+          103,
+          106
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          107,
+          107
+        ],
+        "pages": [
+          3,
+          4
+        ]
+      },
+      {
+        "lines": [
+          108,
+          120
+        ],
+        "pages": [
+          4
+        ]
+      },
+      {
+        "lines": [
+          121,
+          131
+        ],
+        "pages": [
+          5
+        ]
+      },
+      {
+        "lines": [
+          132,
+          132
+        ],
+        "pages": [
+          5,
+          6
+        ]
+      },
+      {
+        "lines": [
+          133,
+          144
+        ],
+        "pages": [
+          6
+        ]
+      },
+      {
+        "lines": [
+          145,
+          152
+        ],
+        "pages": [
+          7
+        ]
+      }
+    ],
+    "expected_elements": 84,
+    "content_coverage": {
+      "expected_elements": 84,
+      "compared_elements": 84,
+      "omitted_elements": 0
+    },
+    "targets": 84,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "spdb-prospectus-risk-tax-p013-020",
+    "document_id": "1200454112",
+    "scope": [
+      {
+        "lines": [
+          153,
+          163
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          164,
+          164
+        ],
+        "pages": [
+          1,
+          2
+        ]
+      },
+      {
+        "lines": [
+          165,
+          171
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          172,
+          172
+        ],
+        "pages": [
+          2,
+          3
+        ]
+      },
+      {
+        "lines": [
+          173,
+          177
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          179,
+          192
+        ],
+        "pages": [
+          4
+        ]
+      },
+      {
+        "lines": [
+          193,
+          193
+        ],
+        "pages": [
+          4,
+          5
+        ]
+      },
+      {
+        "lines": [
+          194,
+          202
+        ],
+        "pages": [
+          5
+        ]
+      },
+      {
+        "lines": [
+          203,
+          209
+        ],
+        "pages": [
+          6
+        ]
+      },
+      {
+        "lines": [
+          210,
+          210
+        ],
+        "pages": [
+          6,
+          7
+        ]
+      },
+      {
+        "lines": [
+          211,
+          214
+        ],
+        "pages": [
+          7
+        ]
+      },
+      {
+        "lines": [
+          215,
+          215
+        ],
+        "pages": [
+          7,
+          8
+        ]
+      },
+      {
+        "lines": [
+          216,
+          217
+        ],
+        "pages": [
+          8
+        ]
+      }
+    ],
+    "expected_elements": 59,
+    "content_coverage": {
+      "expected_elements": 59,
+      "compared_elements": 59,
+      "omitted_elements": 0
+    },
+    "targets": 59,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "spdb-summary-financials-p001-004",
+    "document_id": "1200716038",
+    "scope": [
+      {
+        "lines": [
+          1,
+          35
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          37,
+          63
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          65,
+          102
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          103,
+          107
+        ],
+        "pages": [
+          3,
+          4
+        ]
+      },
+      {
+        "lines": [
+          109,
+          136
+        ],
+        "pages": [
+          4
+        ]
+      }
+    ],
+    "expected_elements": 96,
+    "content_coverage": {
+      "expected_elements": 96,
+      "compared_elements": 96,
+      "omitted_elements": 0
+    },
+    "targets": 183,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "tangshan-accounting-policy-p001-005",
+    "document_id": "1200838381",
+    "scope": [
+      {
+        "lines": [
+          1,
+          6
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          8,
+          34
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          36,
+          48
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          50,
+          77
+        ],
+        "pages": [
+          4
+        ]
+      },
+      {
+        "lines": [
+          77,
+          107
+        ],
+        "pages": [
+          5
+        ]
+      }
+    ],
+    "expected_elements": 56,
+    "content_coverage": {
+      "expected_elements": 56,
+      "compared_elements": 56,
+      "omitted_elements": 0
+    },
+    "targets": 63,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "tangshan-directors-opinion-p001-002",
+    "document_id": "1200975009",
+    "scope": [
+      {
+        "lines": [
+          1,
+          11
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          13,
+          19
+        ],
+        "pages": [
+          2
+        ]
+      }
+    ],
+    "expected_elements": 10,
+    "content_coverage": {
+      "expected_elements": 10,
+      "compared_elements": 10,
+      "omitted_elements": 0
+    },
+    "targets": 10,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "tangshan-li-nomination-p009-011",
+    "document_id": "1200838391",
+    "scope": [
+      {
+        "lines": [
+          273,
+          299
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          301,
+          333
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          335,
+          341
+        ],
+        "pages": [
+          3
+        ]
+      }
+    ],
+    "expected_elements": 35,
+    "content_coverage": {
+      "expected_elements": 35,
+      "compared_elements": 35,
+      "omitted_elements": 0
+    },
+    "targets": 35,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "tangshan-rong-nomination-p001-002",
+    "document_id": "1200838391",
+    "scope": [
+      {
+        "lines": [
+          1,
+          29
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          31,
+          67
+        ],
+        "pages": [
+          2
+        ]
+      }
+    ],
+    "expected_elements": 34,
+    "content_coverage": {
+      "expected_elements": 34,
+      "compared_elements": 34,
+      "omitted_elements": 0
+    },
+    "targets": 34,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "tencent-conditions-definitions-formulas-p102-107",
+    "document_id": "complex-tencent-2025-bond-programme",
+    "scope": [
+      {
+        "lines": [
+          1411,
+          1420
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          1422,
+          1439
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          1440,
+          1452
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          1453,
+          1465
+        ],
+        "pages": [
+          4
+        ]
+      },
+      {
+        "lines": [
+          1466,
+          1487
+        ],
+        "pages": [
+          5
+        ]
+      },
+      {
+        "lines": [
+          1488,
+          1508
+        ],
+        "pages": [
+          6
+        ]
+      }
+    ],
+    "expected_elements": 81,
+    "content_coverage": {
+      "expected_elements": 81,
+      "compared_elements": 81,
+      "omitted_elements": 0
+    },
+    "targets": 81,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "tencent-conditions-entity-payment-definitions-p108-114",
+    "document_id": "complex-tencent-2025-bond-programme",
+    "scope": [
+      {
+        "lines": [
+          1509,
+          1525
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          1526,
+          1537
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          1538,
+          1548
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          1549,
+          1561
+        ],
+        "pages": [
+          4
+        ]
+      },
+      {
+        "lines": [
+          1562,
+          1575
+        ],
+        "pages": [
+          5
+        ]
+      },
+      {
+        "lines": [
+          1576,
+          1586
+        ],
+        "pages": [
+          6
+        ]
+      },
+      {
+        "lines": [
+          1587,
+          1601
+        ],
+        "pages": [
+          7
+        ]
+      }
+    ],
+    "expected_elements": 90,
+    "content_coverage": {
+      "expected_elements": 90,
+      "compared_elements": 90,
+      "omitted_elements": 0
+    },
+    "targets": 90,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "tencent-covenants-interest-conditions-p118-123",
+    "document_id": "complex-tencent-2025-bond-programme",
+    "scope": [
+      {
+        "lines": [
+          1640,
+          1657
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          1658,
+          1665
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          1666,
+          1666
+        ],
+        "pages": [
+          2,
+          3
+        ]
+      },
+      {
+        "lines": [
+          1667,
+          1675
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          1676,
+          1688
+        ],
+        "pages": [
+          4
+        ]
+      },
+      {
+        "lines": [
+          1689,
+          1701
+        ],
+        "pages": [
+          5
+        ]
+      },
+      {
+        "lines": [
+          1702,
+          1717
+        ],
+        "pages": [
+          6
+        ]
+      }
+    ],
+    "expected_elements": 61,
+    "content_coverage": {
+      "expected_elements": 61,
+      "compared_elements": 61,
+      "omitted_elements": 0
+    },
+    "targets": 61,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "tencent-enforcement-notices-jurisdiction-p149-151",
+    "document_id": "complex-tencent-2025-bond-programme",
+    "scope": [
+      {
+        "lines": [
+          2082,
+          2100
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          2102,
+          2118
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          2119,
+          2122
+        ],
+        "pages": [
+          3
+        ]
+      }
+    ],
+    "expected_elements": 25,
+    "content_coverage": {
+      "expected_elements": 25,
+      "compared_elements": 25,
+      "omitted_elements": 0
+    },
+    "targets": 25,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "tencent-issuer-summary-p024-026",
+    "document_id": "complex-tencent-2025-bond-programme",
+    "scope": [
+      {
+        "lines": [
+          367,
+          387
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          389,
+          414
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          416,
+          438
+        ],
+        "pages": [
+          3
+        ]
+      }
+    ],
+    "expected_elements": 41,
+    "content_coverage": {
+      "expected_elements": 41,
+      "compared_elements": 41,
+      "omitted_elements": 0
+    },
+    "targets": 41,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "tencent-programme-summary-p027-033",
+    "document_id": "complex-tencent-2025-bond-programme",
+    "scope": [
+      {
+        "lines": [
+          440,
+          453
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          455,
+          460
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          461,
+          463
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          464,
+          470
+        ],
+        "pages": [
+          4
+        ]
+      },
+      {
+        "lines": [
+          472,
+          478
+        ],
+        "pages": [
+          5
+        ]
+      },
+      {
+        "lines": [
+          480,
+          489
+        ],
+        "pages": [
+          6
+        ]
+      },
+      {
+        "lines": [
+          491,
+          496
+        ],
+        "pages": [
+          7
+        ]
+      }
+    ],
+    "expected_elements": 51,
+    "content_coverage": {
+      "expected_elements": 51,
+      "compared_elements": 51,
+      "omitted_elements": 0
+    },
+    "targets": 51,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "tencent-redemption-bearer-payments-p135-140",
+    "document_id": "complex-tencent-2025-bond-programme",
+    "scope": [
+      {
+        "lines": [
+          1896,
+          1913
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          1914,
+          1928
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          1930,
+          1932
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          1933,
+          1946
+        ],
+        "pages": [
+          4
+        ]
+      },
+      {
+        "lines": [
+          1948,
+          1966
+        ],
+        "pages": [
+          5
+        ]
+      },
+      {
+        "lines": [
+          1968,
+          1976
+        ],
+        "pages": [
+          6
+        ]
+      }
+    ],
+    "expected_elements": 55,
+    "content_coverage": {
+      "expected_elements": 55,
+      "compared_elements": 55,
+      "omitted_elements": 0
+    },
+    "targets": 55,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "tencent-registered-tax-default-trustee-p141-148",
+    "document_id": "complex-tencent-2025-bond-programme",
+    "scope": [
+      {
+        "lines": [
+          1977,
+          1987
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          1988,
+          1988
+        ],
+        "pages": [
+          1,
+          2
+        ]
+      },
+      {
+        "lines": [
+          1990,
+          1997
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          1999,
+          1999
+        ],
+        "pages": [
+          2,
+          3
+        ]
+      },
+      {
+        "lines": [
+          2000,
+          2011
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          2012,
+          2018
+        ],
+        "pages": [
+          4
+        ]
+      },
+      {
+        "lines": [
+          2019,
+          2030
+        ],
+        "pages": [
+          5
+        ]
+      },
+      {
+        "lines": [
+          2031,
+          2046
+        ],
+        "pages": [
+          6
+        ]
+      },
+      {
+        "lines": [
+          2048,
+          2048
+        ],
+        "pages": [
+          6,
+          7
+        ]
+      },
+      {
+        "lines": [
+          2050,
+          2067
+        ],
+        "pages": [
+          7
+        ]
+      },
+      {
+        "lines": [
+          2069,
+          2069
+        ],
+        "pages": [
+          7,
+          8
+        ]
+      },
+      {
+        "lines": [
+          2071,
+          2081
+        ],
+        "pages": [
+          8
+        ]
+      }
+    ],
+    "expected_elements": 70,
+    "content_coverage": {
+      "expected_elements": 70,
+      "compared_elements": 70,
+      "omitted_elements": 0
+    },
+    "targets": 70,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "tencent-sofr-formulas-benchmark-replacement-p124-134",
+    "document_id": "complex-tencent-2025-bond-programme",
+    "scope": [
+      {
+        "lines": [
+          1718,
+          1741
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          1742,
+          1762
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          1764,
+          1780
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          1782,
+          1796
+        ],
+        "pages": [
+          4
+        ]
+      },
+      {
+        "lines": [
+          1797,
+          1814
+        ],
+        "pages": [
+          5
+        ]
+      },
+      {
+        "lines": [
+          1816,
+          1827
+        ],
+        "pages": [
+          6
+        ]
+      },
+      {
+        "lines": [
+          1829,
+          1847
+        ],
+        "pages": [
+          7
+        ]
+      },
+      {
+        "lines": [
+          1849,
+          1849
+        ],
+        "pages": [
+          7,
+          8
+        ]
+      },
+      {
+        "lines": [
+          1851,
+          1856
+        ],
+        "pages": [
+          8
+        ]
+      },
+      {
+        "lines": [
+          1857,
+          1857
+        ],
+        "pages": [
+          8,
+          9
+        ]
+      },
+      {
+        "lines": [
+          1858,
+          1862
+        ],
+        "pages": [
+          9
+        ]
+      },
+      {
+        "lines": [
+          1864,
+          1880
+        ],
+        "pages": [
+          10
+        ]
+      },
+      {
+        "lines": [
+          1881,
+          1895
+        ],
+        "pages": [
+          11
+        ]
+      }
+    ],
+    "expected_elements": 114,
+    "content_coverage": {
+      "expected_elements": 114,
+      "compared_elements": 114,
+      "omitted_elements": 0
+    },
+    "targets": 114,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "tencent-title-transfer-status-p115-117",
+    "document_id": "complex-tencent-2025-bond-programme",
+    "scope": [
+      {
+        "lines": [
+          1602,
+          1621
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          1622,
+          1629
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          1630,
+          1638
+        ],
+        "pages": [
+          3
+        ]
+      }
+    ],
+    "expected_elements": 29,
+    "content_coverage": {
+      "expected_elements": 29,
+      "compared_elements": 29,
+      "omitted_elements": 0
+    },
+    "targets": 29,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "tgood-acquisition-terms-p009-019",
+    "document_id": "1200968001",
+    "scope": [
+      {
+        "lines": [
+          571,
+          601
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          601,
+          623
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          623,
+          651
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          653,
+          679
+        ],
+        "pages": [
+          4
+        ]
+      },
+      {
+        "lines": [
+          681,
+          701
+        ],
+        "pages": [
+          5
+        ]
+      },
+      {
+        "lines": [
+          703,
+          721
+        ],
+        "pages": [
+          6
+        ]
+      },
+      {
+        "lines": [
+          723,
+          745
+        ],
+        "pages": [
+          7
+        ]
+      },
+      {
+        "lines": [
+          747,
+          771
+        ],
+        "pages": [
+          8
+        ]
+      },
+      {
+        "lines": [
+          773,
+          800
+        ],
+        "pages": [
+          9
+        ]
+      },
+      {
+        "lines": [
+          802,
+          830
+        ],
+        "pages": [
+          10
+        ]
+      },
+      {
+        "lines": [
+          832,
+          834
+        ],
+        "pages": [
+          11
+        ]
+      }
+    ],
+    "expected_elements": 140,
+    "content_coverage": {
+      "expected_elements": 140,
+      "compared_elements": 140,
+      "omitted_elements": 0
+    },
+    "targets": 140,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "tgood-compensation-subscription-p022-028",
+    "document_id": "1200967992",
+    "scope": [
+      {
+        "lines": [
+          752,
+          774
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          774,
+          792
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          794,
+          810
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          812,
+          838
+        ],
+        "pages": [
+          4
+        ]
+      },
+      {
+        "lines": [
+          838,
+          869
+        ],
+        "pages": [
+          5
+        ]
+      },
+      {
+        "lines": [
+          871,
+          895
+        ],
+        "pages": [
+          6
+        ]
+      },
+      {
+        "lines": [
+          895,
+          905
+        ],
+        "pages": [
+          7
+        ]
+      }
+    ],
+    "expected_elements": 83,
+    "content_coverage": {
+      "expected_elements": 83,
+      "compared_elements": 83,
+      "omitted_elements": 0
+    },
+    "targets": 83,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "tgood-meeting-p001-006",
+    "document_id": "1200467021",
+    "scope": [
+      {
+        "lines": [
+          1,
+          26
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          27,
+          27
+        ],
+        "pages": [
+          1,
+          2
+        ]
+      },
+      {
+        "lines": [
+          29,
+          63
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          65,
+          102
+        ],
+        "pages": [
+          3
+        ]
+      },
+      {
+        "lines": [
+          104,
+          128
+        ],
+        "pages": [
+          4
+        ]
+      },
+      {
+        "lines": [
+          130,
+          155
+        ],
+        "pages": [
+          5
+        ]
+      },
+      {
+        "lines": [
+          157,
+          182
+        ],
+        "pages": [
+          6
+        ]
+      }
+    ],
+    "expected_elements": 107,
+    "content_coverage": {
+      "expected_elements": 107,
+      "compared_elements": 107,
+      "omitted_elements": 0
+    },
+    "targets": 119,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "vanke-acquisition-guarantee-p001-002",
+    "document_id": "1201830493",
+    "scope": [
+      {
+        "lines": [
+          1,
+          24
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          26,
+          44
+        ],
+        "pages": [
+          2
+        ]
+      }
+    ],
+    "expected_elements": 25,
+    "content_coverage": {
+      "expected_elements": 25,
+      "compared_elements": 25,
+      "omitted_elements": 0
+    },
+    "targets": 25,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "vanke-interest-p001-002",
+    "document_id": "10726562",
+    "scope": [
+      {
+        "lines": [
+          1,
+          37
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          37,
+          55
+        ],
+        "pages": [
+          2
+        ]
+      }
+    ],
+    "expected_elements": 30,
+    "content_coverage": {
+      "expected_elements": 30,
+      "compared_elements": 30,
+      "omitted_elements": 0
+    },
+    "targets": 30,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "vanke-repurchase-share-changes-p001-003",
+    "document_id": "1201917092",
+    "scope": [
+      {
+        "lines": [
+          1,
+          19
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          21,
+          50
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          52,
+          54
+        ],
+        "pages": [
+          3
+        ]
+      }
+    ],
+    "expected_elements": 30,
+    "content_coverage": {
+      "expected_elements": 30,
+      "compared_elements": 30,
+      "omitted_elements": 0
+    },
+    "targets": 56,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "vanke-sales-projects-p001",
+    "document_id": "1200800787",
+    "scope": [
+      {
+        "lines": [
+          1,
+          27
+        ],
+        "pages": [
+          1
+        ]
+      }
+    ],
+    "expected_elements": 15,
+    "content_coverage": {
+      "expected_elements": 15,
+      "compared_elements": 15,
+      "omitted_elements": 0
+    },
+    "targets": 15,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "wuliangye-appeal-progress-p001",
+    "document_id": "1201860324",
+    "scope": [
+      {
+        "lines": [
+          1,
+          33
+        ],
+        "pages": [
+          1
+        ]
+      }
+    ],
+    "expected_elements": 19,
+    "content_coverage": {
+      "expected_elements": 19,
+      "compared_elements": 19,
+      "omitted_elements": 0
+    },
+    "targets": 19,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "wuliangye-litigation-ruling-p001-002",
+    "document_id": "1201791349",
+    "scope": [
+      {
+        "lines": [
+          1,
+          27
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          29,
+          39
+        ],
+        "pages": [
+          2
+        ]
+      }
+    ],
+    "expected_elements": 22,
+    "content_coverage": {
+      "expected_elements": 22,
+      "compared_elements": 22,
+      "omitted_elements": 0
+    },
+    "targets": 22,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "zhenye-correction-p001",
+    "document_id": "1200799174",
+    "scope": [
+      {
+        "lines": [
+          1,
+          19
+        ],
+        "pages": [
+          1
+        ]
+      }
+    ],
+    "expected_elements": 12,
+    "content_coverage": {
+      "expected_elements": 12,
+      "compared_elements": 12,
+      "omitted_elements": 0
+    },
+    "targets": 12,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  },
+  {
+    "sample_id": "zhenye-coupon-seals-p001-003",
+    "document_id": "1200694910",
+    "scope": [
+      {
+        "lines": [
+          1,
+          19
+        ],
+        "pages": [
+          1
+        ]
+      },
+      {
+        "lines": [
+          21,
+          23
+        ],
+        "pages": [
+          2
+        ]
+      },
+      {
+        "lines": [
+          25,
+          27
+        ],
+        "pages": [
+          3
+        ]
+      }
+    ],
+    "expected_elements": 14,
+    "content_coverage": {
+      "expected_elements": 14,
+      "compared_elements": 14,
+      "omitted_elements": 0
+    },
+    "targets": 16,
+    "groups_graded": 14,
+    "reference": "canonical_expected_only"
+  }
+]

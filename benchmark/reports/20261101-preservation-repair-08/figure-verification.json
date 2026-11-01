@@ -1,0 +1,14 @@
+{
+  "state": "passed",
+  "scope": "generated_measurement_chart_only",
+  "software_id": "53149b18bbbfe4373b848547adbb310e32439262a9929641e4600aa3aaad1834",
+  "PDF_fonts": [
+    {
+      "name": "BMQQDV+DejaVuSans",
+      "type": "Type0",
+      "embedded_bytes": 11860
+    }
+  ],
+  "SVG_sans_serif_fallback": true,
+  "visual_inspection": "all eight labels, percentages and denominators in the generated chart are legible without clipping"
+}

@@ -1,0 +1,24 @@
+{
+  "P07": {
+    "native_correct_business_targets": 2449,
+    "preserved": 2449,
+    "lost_correct_business_targets": 0,
+    "native_correct_targets": 7851,
+    "preserved_targets": 7851,
+    "lost_correct_targets": 0,
+    "passed": true,
+    "comparison": "native_to_actual_final_markdown_under_one_shared_scorer",
+    "all_content_correct_losses": 0
+  },
+  "P08": {
+    "native_correct_business_targets": 2502,
+    "preserved": 2502,
+    "lost_correct_business_targets": 0,
+    "native_correct_targets": 8017,
+    "preserved_targets": 8017,
+    "lost_correct_targets": 0,
+    "passed": true,
+    "comparison": "native_to_actual_final_markdown_under_one_shared_scorer",
+    "all_content_correct_losses": 0
+  }
+}

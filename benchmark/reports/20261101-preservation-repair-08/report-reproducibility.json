@@ -1,0 +1,105 @@
+{
+  "state": "passed",
+  "software_id": "53149b18bbbfe4373b848547adbb310e32439262a9929641e4600aa3aaad1834",
+  "scope": "seventeen_named_generated_artifacts_only_not_corpus_acceptance",
+  "artifacts": [
+    {
+      "artifact": "report.md",
+      "bytes": 8301,
+      "exact_equal": true
+    },
+    {
+      "artifact": "summary.json",
+      "bytes": 2000288,
+      "exact_equal": true
+    },
+    {
+      "artifact": "coverage.json",
+      "bytes": 179183,
+      "exact_equal": true
+    },
+    {
+      "artifact": "execution-costs.json",
+      "bytes": 209676674,
+      "exact_equal": true
+    },
+    {
+      "artifact": "evaluation.json",
+      "bytes": 1045,
+      "exact_equal": true
+    },
+    {
+      "artifact": "failure-stages.json",
+      "bytes": 799,
+      "exact_equal": true
+    },
+    {
+      "artifact": "adoption.json",
+      "bytes": 715,
+      "exact_equal": true
+    },
+    {
+      "artifact": "native-business.svg",
+      "bytes": 11829,
+      "exact_equal": true
+    },
+    {
+      "artifact": "native-business.png",
+      "bytes": 70083,
+      "exact_equal": true
+    },
+    {
+      "artifact": "native-business.pdf",
+      "bytes": 12370,
+      "exact_equal": true
+    },
+    {
+      "artifact": "private/paired-changes.json",
+      "bytes": 16308846,
+      "exact_equal": true
+    },
+    {
+      "artifact": "private/incremental-changes.json",
+      "bytes": 4273719,
+      "exact_equal": true
+    },
+    {
+      "artifact": "private/native-preservation.json",
+      "bytes": 675,
+      "exact_equal": true
+    },
+    {
+      "artifact": "private/target-details.csv",
+      "bytes": 2247647855,
+      "exact_equal": true
+    },
+    {
+      "artifact": "summary.md",
+      "bytes": 3019,
+      "exact_equal": true
+    },
+    {
+      "artifact": "presentation.json",
+      "bytes": 677,
+      "exact_equal": true
+    },
+    {
+      "artifact": "remaining-errors.json",
+      "bytes": 2680885,
+      "exact_equal": true
+    }
+  ],
+  "presentation_generator": {
+    "score_index": "/opt/moparse/benchmark/reports/20261026-lite-v3/artifacts/scores/preservation-repair-08-final-r4/index.json",
+    "scoring_software_id": "53149b18bbbfe4373b848547adbb310e32439262a9929641e4600aa3aaad1834",
+    "adoptable": true,
+    "generator": "scripts/render_preservation_summary.py",
+    "generator_sha256": "e30749e8a64b2f40fd5a8d89d7b3d8136f4ffc794f03b7bca174931f9597accb",
+    "scope": "presentation_only_from_completed_uniform_scores_no_regrading",
+    "comparison_details": {
+      "previous_to_current": "private/paired-changes.json",
+      "before_to_current": "private/incremental-changes.json",
+      "native_to_current": "private/native-preservation.json"
+    }
+  }
+}

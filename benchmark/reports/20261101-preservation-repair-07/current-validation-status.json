@@ -1,0 +1,10 @@
+{
+  "state": "rejected_by_native_preservation_gate",
+  "software_id": "dc681d24004c3b380026ad7354f55de1c1c2b3b42d8759df38e069f32631630c",
+  "evidence": "programmatic native-to-P07 final comparison on all 173 quality800 samples",
+  "native_correct_business_losses": 5,
+  "cause": "a named-record header was consumed as a property/value record",
+  "quality_adoption": false,
+  "next_run": "../20261101-preservation-repair-08",
+  "originals_expected_annotations": "unchanged"
+}

@@ -1,0 +1,22 @@
+{
+  "score_index": "/opt/moparse/benchmark/reports/20261026-lite-v3/artifacts/scores/preservation-repair-08-final-r4/index.json",
+  "protocol": {
+    "id": "mo-parse-expected-only-v1",
+    "reference": "canonical_expected_read_only",
+    "scope": "existing_authored_source_map_selected_content",
+    "grades": [
+      "correct",
+      "incorrect"
+    ],
+    "legacy_adjudications": "not_consumed",
+    "field_locator": "complete_business_labels_before_value_comparison",
+    "text_policy": "mo-parse-eval-text-v1",
+    "reader_failure": "repair_before_publication",
+    "field_content_equivalence": "declared_width_spacing_scoped_scalar_units_year_range_dash_terminal_prose_punctuation",
+    "qualifier_reading": "candidate_only_explicit_table_record_caption_and_note_scopes",
+    "output_reading": "native_fields_or_actual_public_markdown_without_private_ir_credit",
+    "reader_revision": "canonical_expected_8"
+  },
+  "software_id": "53149b18bbbfe4373b848547adbb310e32439262a9929641e4600aa3aaad1834",
+  "expected_comparison_complete": true
+}
