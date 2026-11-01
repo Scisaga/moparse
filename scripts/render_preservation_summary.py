@@ -1,17 +1,238 @@
-"""Present completed score artifacts; never read references or candidates."""
+"""Present completed scores and resource records, never reference or answer files."""
 
 from __future__ import annotations
 
 import argparse
 import hashlib
+import math
+import re
+import statistics
 import sys
 from collections import Counter
 from pathlib import Path
+from typing import Any
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from moparse_eval.expected_report import first_failure_stage, load_complete  # noqa: E402
-from moparse_eval.packaging import write_json  # noqa: E402
+from moparse_eval.packaging import read_json, write_json  # noqa: E402
+
+RESOURCE_MARKER = "<!-- recorded-resource-comparison -->"
+COST_KEYS = ("processing_seconds", "worker_host_bytes", "inference_host_bytes", "owned_gpu_mib")
+
+
+def finite_nonnegative(value: Any) -> float | None:
+    return float(value) if isinstance(value, (int, float)) and not isinstance(value, bool) and math.isfinite(value) and value >= 0 else None
+
+
+def memory_bytes(value: Any) -> float | None:
+    """Read Docker's used-memory display, never its limit or a declared quota."""
+    if not isinstance(value, str):
+        return None
+    match = re.fullmatch(r"\s*(\d+(?:\.\d+)?)\s*(GiB|MiB|KiB|GB|MB|kB|B)\s*", value.split("/", 1)[0])
+    if not match:
+        return None
+    amount = finite_nonnegative(float(match[1]))
+    factor = {"GiB": 2**30, "MiB": 2**20, "KiB": 2**10, "GB": 10**9, "MB": 10**6, "kB": 10**3, "B": 1}[match[2]]
+    return amount * factor if amount is not None else None
+
+
+def summarize_resource_samples(record: dict[str, Any]) -> dict[str, Any]:
+    """Aggregate complete sampling rounds; independent component peaks never add."""
+    host, owned, whole, tts, stamps = [], [], [], [], []
+    names_seen: set[str] = set()
+    samples = record.get("samples", [])
+    for sample in samples:
+        names = set(sample.get("expected_containers", []))
+        names_seen.update(names)
+        values = {}
+        for container in sample.get("containers", []):
+            name = container.get("owned_name", container.get("Name"))
+            if name in names:
+                values[name] = memory_bytes(container.get("MemUsage"))
+        if names and names <= values.keys() and all(values[name] is not None for name in names):
+            host.append(sum(values[name] for name in names))
+        gpu = sample.get("owned_gpu", {})
+        attributed = gpu.get("memory_mib_by_container", {})
+        if (names and gpu.get("status") == "complete_observed_sample" and names <= attributed.keys()
+                and all(finite_nonnegative(attributed[name]) is not None for name in names)):
+            owned.append(sum(attributed[name] for name in names))
+        for output, value in ((whole, sample.get("gpu1", {}).get("used_memory_mib")),
+                              (tts, sample.get("tts_gpu", {}).get("used_memory_mib"))):
+            number = finite_nonnegative(value)
+            if number is not None:
+                output.append(number)
+        stamp = finite_nonnegative(sample.get("monotonic_seconds"))
+        if stamp is not None:
+            stamps.append(stamp)
+    gaps = [b - a for a, b in zip(stamps[:-1], stamps[1:], strict=True) if b >= a]
+    return {"host_peak_bytes": max(host, default=None), "owned_gpu_peak_mib": max(owned, default=None),
+            "whole_gpu_peak_mib": max(whole, default=None), "tts_peak_mib": max(tts, default=None),
+            "samples": len(samples), "host_complete_samples": len(host), "gpu_complete_samples": len(owned),
+            "container_names": sorted(names_seen),
+            "sample_span_seconds": stamps[-1] - stamps[0] if len(stamps) > 1 else None,
+            "median_gap_seconds": statistics.median(gaps) if gaps else None,
+            "maximum_gap_seconds": max(gaps, default=None),
+            "scope": "whole recorded protocol including initialization, warmup, quality800 and perf80; sampled peaks"}
+
+
+def observed_dominates(left: dict[str, Any], right: dict[str, Any]) -> bool | None:
+    """Compare every declared quality and cost dimension, with missing distinct from zero."""
+    if not left["qualities"] or left["qualities"].keys() != right["qualities"].keys():
+        return None
+    pairs = [(left["qualities"][key], right["qualities"][key], True) for key in left["qualities"]]
+    pairs += [(left["costs"].get(key), right["costs"].get(key), False) for key in COST_KEYS]
+    if any(finite_nonnegative(a) is None or finite_nonnegative(b) is None for a, b, _ in pairs):
+        return None
+    return all(a >= b if maximize else a <= b for a, b, maximize in pairs) and any(a != b for a, b, _ in pairs)
+
+
+def collect_resource_comparison(index: dict[str, Any]) -> dict[str, Any]:
+    baseline = Path(index["baseline"])
+    native = {}
+    sources = []
+    for pipeline in (f"P{i:02}" for i in range(1, 9)):
+        records = {}
+        for name, relative in (("worker", "worker-resources.json"), ("inference", "inference/resources.json")):
+            path = baseline / "artifacts" / pipeline / relative
+            raw = path.read_bytes() if path.is_file() else None
+            records[name] = summarize_resource_samples(read_json(path)) if raw is not None else summarize_resource_samples({})
+            sources.append({"pipeline": pipeline, "scope": name, "path": str(path.resolve()),
+                            "sha256": hashlib.sha256(raw).hexdigest() if raw is not None else None})
+        rounds = index["execution_costs"]["native"][pipeline]["quality800"].get("rounds", [])
+        quality = index["summary"][pipeline]["by_kind"]
+        native[pipeline] = {"qualities": {kind: value["correct"] / value["targets"] if value["targets"] else None
+                                              for kind, value in sorted(quality.items())},
+                            "costs": {"processing_seconds": rounds[0].get("processing_seconds_including_failures") if len(rounds) == 1 else None,
+                                      "worker_host_bytes": records["worker"]["host_peak_bytes"],
+                                      "inference_host_bytes": records["inference"]["host_peak_bytes"],
+                                      "owned_gpu_mib": records["inference"]["owned_gpu_peak_mib"]},
+                            "resource_observations": records}
+    for pipeline, row in native.items():
+        comparable = observed_dominates(row, row) is not None
+        row["observed_dominated_by"] = [other for other, candidate in native.items()
+                                         if other != pipeline and observed_dominates(candidate, row) is True]
+        row["comparison_status"] = "observed_vector_compared" if comparable else "missing_dimensions_no_dominance_claim"
+        row["single_quality_dominated_by"] = {
+            kind: [other for other, candidate in native.items() if other != pipeline and observed_dominates(
+                {"qualities": {kind: candidate["qualities"][kind]}, "costs": candidate["costs"]},
+                {"qualities": {kind: row["qualities"][kind]}, "costs": row["costs"]}) is True]
+            for kind in ("business_field", "text")}
+    final = {}
+    for pipeline in ("P07", "P08"):
+        path = Path(index["execution_costs"]["final"][pipeline + "-current"]["run"]) / "run.json"
+        raw = path.read_bytes()
+        run = read_json(path)
+        cases = [case for case in run["cases"] if case["phase"] == "measured" and case["suite"] == "quality800"]
+        peaks = [finite_nonnegative(case.get("resources", {}).get("peak_rss_bytes")) for case in cases]
+        available = [peak for peak in peaks if peak is not None]
+        final[pipeline] = {"quality800_peak_process_rss_bytes": max(available, default=None),
+                           "measured_samples": len(cases), "memory_samples_available": len(available),
+                           "gpu_devices": run["execution_environment"].get("observed_worker", {}).get("gpu_devices"),
+                           "scope": "saved quality800 CPU postprocessing process RSS samples; separate from native parsing"}
+        sources.append({"pipeline": pipeline, "scope": "final_cpu", "path": str(path.resolve()),
+                        "sha256": hashlib.sha256(raw).hexdigest()})
+    return {"scoring_software_id": index["software"]["software_id"], "native": native, "final_cpu": final,
+            "sources": sources, "quality_dimensions": sorted(next(iter(native.values()))["qualities"]),
+            "minimized_cost_dimensions": list(COST_KEYS),
+            "interpretation": "observed vector dominance only; projections are not full dominance and finite sampling can miss peaks",
+            "memory_policy": "worker and inference RAM stay separate; never add independent peaks; TTS and whole-card GPU are context only"}
+
+
+def render_resource_comparison(index: dict[str, Any], output: Path) -> str:
+    comparison = collect_resource_comparison(index)
+    write_json(output / "resource-costs.json", comparison)
+
+    def show(value, divisor=1):
+        return f"{value / divisor:.3f}" if value is not None else "缺测"
+
+    lines = ["## 内存、显存与质量成本比较", "",
+             "质量与800页直接处理耗时取当前冻结结果；资源取原执行完整协议的采样记录，包含初始化、预热、quality800与perf80。记录没有各样本完整起止时刻，不能把全程资源峰值改称800页阶段峰值。", "",
+             "| 管线 | 800页秒 | 工作容器内存GiB | 推理容器合计内存GiB | 受测显存GiB | 观测向量的支配者 |",
+             "| --- | ---: | ---: | ---: | ---: | --- |"]
+    for pipeline, row in comparison["native"].items():
+        cost = row["costs"]
+        label = ", ".join(row["observed_dominated_by"]) or "无"
+        if row["comparison_status"] != "observed_vector_compared":
+            label = "缺测，不作结论"
+        lines.append(f"| {pipeline} | {show(cost['processing_seconds'])} | {show(cost['worker_host_bytes'], 2**30)} | {show(cost['inference_host_bytes'], 2**30)} | {show(cost['owned_gpu_mib'], 1024)} | {label} |")
+    lines += ["", "内存来自Docker stats的已用内存显示；推理侧先在同一采样轮内合计当前受测容器，再取峰值。容器读取有先后；工作容器与推理容器分开采样，因此不相加成整条管线的同时内存峰值。显存使用同次进程查询中归属受测容器及其子进程的合计，不使用Torch allocated/reserved代替总量，也不把预算上限当实测使用。", "",
+              "支配检验同时比较业务字段、标题、图片alt字面、列表、正文、单位说明六类正确率及耗时、两项内存、受测显存共十维，不合成加权分数；质量分子分母见report.md。另分别计算只用业务或正文正确率的五维比较，结果保存在resource-costs.json。缺测不按零处理，不给出完整支配结论。结论仅针对记录中的观测向量；有限采样可能漏过更短峰值，不能据此声称实际资源的精确最优或普遍方法优劣。", "",
+              "![质量与四项成本的投影](resource-tradeoffs.svg)", "",
+              "各面板都是单项成本投影，不以灰叉或阶梯线表示全面支配。速度更快可以同时需要更多内存或显存。", "",
+              "### 采样覆盖与共驻环境", "",
+              "| 管线 | 工作内存有效轮/总轮 | 推理内存有效轮/总轮 | 显存归属有效轮/总轮 | 工作采样间隔中位数/最大秒 | 推理采样间隔中位数/最大秒 | TTS显存峰GiB | 整卡显存峰GiB |",
+              "| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |"]
+    for pipeline, row in comparison["native"].items():
+        worker, inference = (row["resource_observations"][key] for key in ("worker", "inference"))
+        lines.append(f"| {pipeline} | {worker['host_complete_samples']}/{worker['samples']} | {inference['host_complete_samples']}/{inference['samples']} | {inference['gpu_complete_samples']}/{inference['samples']} | {show(worker['median_gap_seconds'])}/{show(worker['maximum_gap_seconds'])} | {show(inference['median_gap_seconds'])}/{show(inference['maximum_gap_seconds'])} | {show(inference['tts_peak_mib'], 1024)} | {show(inference['whole_gpu_peak_mib'], 1024)} |")
+    lines += ["", "实际采样周期包括串行Docker及GPU查询，0.25秒只是轮间等待，不能称为250毫秒采样精度。缺失轮次保留在覆盖分母中。TTS保持共驻、负载不受控；TTS与整卡值仅描述环境，不进入受测资源支配计算，也不通过相减制造管线显存。", "",
+              "### 最终正文CPU后处理内存", "",
+              "| 管线 | 800页进程RSS采样峰GiB | 有内存记录的样本 | GPU |",
+              "| --- | ---: | ---: | --- |"]
+    for pipeline, row in comparison["final_cpu"].items():
+        gpu = "未挂载" if row["gpu_devices"] == [] else "缺少隔离证据"
+        lines.append(f"| {pipeline} | {show(row['quality800_peak_process_rss_bytes'], 2**30)} | {row['memory_samples_available']}/{row['measured_samples']} | {gpu} |")
+    lines += ["", "后处理RSS单列，不能与原生阶段不同时发生的峰值相加。原始测量路径及测量文件身份见resource-costs.json；本次只呈现已有记录，没有重新推理、测量或操作服务。", ""]
+    markdown = "\n".join(lines)
+    (output / "resource-costs.md").write_text(markdown)
+    draw_resource_comparison(comparison, output)
+    return markdown
+
+
+def draw_resource_comparison(comparison: dict[str, Any], output: Path) -> None:
+    import matplotlib
+
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    from matplotlib.ticker import NullFormatter, PercentFormatter, ScalarFormatter
+
+    from moparse_eval.report_figures import PIPELINE_COLORS, _register_cjk_fonts
+
+    _register_cjk_fonts(output)
+    columns = [("processing_seconds", 60, "800页直接处理耗时（分钟，对数轴）↓"),
+               ("worker_host_bytes", 2**30, "工作容器采样内存峰值（GiB）↓"),
+               ("inference_host_bytes", 2**30, "推理容器合计采样内存峰值（GiB）↓"),
+               ("owned_gpu_mib", 1024, "受测进程合计采样显存峰值（GiB）↓")]
+    with plt.rc_context({"font.family": ["DejaVu Sans", "Noto Sans CJK SC", "sans-serif"],
+                         "font.sans-serif": ["DejaVu Sans", "Noto Sans CJK SC"],
+                         "mathtext.fontset": "dejavusans", "text.usetex": False,
+                         "pdf.fonttype": 42, "svg.fonttype": "none", "svg.hashsalt": "mo-parse-resource-costs"}):
+        fig, axes = plt.subplots(2, 4, figsize=(21, 9.8), layout="constrained")
+        fig.suptitle("质量与资源成本：耗时、内存与显存\n质量与耗时：800页；内存与显存：固定协议全程采样峰值", fontsize=19)
+        for row_index, (kind, ylabel) in enumerate((("business_field", "业务字段正确率 ↑"), ("text", "完整正文目标正确率 ↑"))):
+            highest = max(record["qualities"][kind] or 0 for record in comparison["native"].values())
+            for column, (key, divisor, xlabel) in enumerate(columns):
+                ax = axes[row_index, column]
+                for pipeline, record in comparison["native"].items():
+                    x, y = record["costs"][key], record["qualities"][kind]
+                    if x is None or y is None:
+                        continue
+                    x /= divisor
+                    ax.scatter(x, y, color=PIPELINE_COLORS[pipeline], s=62, zorder=3)
+                    offset = {"P01": (-10, 10), "P02": (-25, -16), "P03": (8, -27), "P04": (-30, 10),
+                              "P05": (5, -18), "P06": (-28, -18), "P07": (7, 10), "P08": (7, 10)}[pipeline]
+                    ax.annotate(pipeline, (x, y), xytext=offset, textcoords="offset points", color=PIPELINE_COLORS[pipeline], fontsize=10,
+                                arrowprops={"arrowstyle": "-", "color": PIPELINE_COLORS[pipeline], "lw": 0.7})
+                if key == "processing_seconds":
+                    ax.set_xscale("log")
+                    lower, upper = ax.get_xlim()
+                    ticks = [base * 10**power for power in range(-2, 6) for base in (1, 2, 3, 5)]
+                    ax.set_xticks([tick for tick in ticks if lower <= tick <= upper])
+                    ax.xaxis.set_major_formatter(ScalarFormatter())
+                    ax.xaxis.set_minor_formatter(NullFormatter())
+                ax.set_xlabel(xlabel, fontsize=11)
+                if column == 0:
+                    ax.set_ylabel(ylabel, fontsize=12)
+                ax.set_ylim(0, min(1.08, math.ceil((highest + 0.06) * 10) / 10))
+                ax.yaxis.set_major_formatter(PercentFormatter(1))
+                ax.margins(x=0.2)
+                ax.grid(alpha=0.2)
+                ax.spines[["top", "right"]].set_visible(False)
+        for extension in ("png", "svg", "pdf"):
+            metadata = {"CreationDate": None, "ModDate": None} if extension == "pdf" else {"Date": None} if extension == "svg" else None
+            fig.savefig(output / ("resource-tradeoffs." + extension), dpi=150, metadata=metadata)
+        plt.close(fig)
 
 
 def render(index_path: Path, output: Path) -> None:
@@ -95,7 +316,8 @@ def render(index_path: Path, output: Path) -> None:
         "scoring_software_id": index["software"]["software_id"], "adoptable": passed,
         "generator": "scripts/render_preservation_summary.py",
         "generator_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
-        "scope": "presentation_only_from_completed_uniform_scores_no_regrading",
+        "scope": "presentation_from_completed_uniform_scores_and_recorded_resources_no_regrading",
+        "resource_evidence": "resource-costs.json",
         "comparison_details": {"previous_to_current": "private/paired-changes.json",
                                "before_to_current": "private/incremental-changes.json",
                                "native_to_current": "private/native-preservation.json"}})
@@ -143,6 +365,18 @@ def render(index_path: Path, output: Path) -> None:
         return value
 
     write_json(output / "execution-cost-summary.json", compact_costs(index["execution_costs"]))
+    resources = render_resource_comparison(index, output)
+    report = output / "report.md"
+    if not report.is_file():
+        from moparse_eval.expected_report import render_expected_report
+
+        render_expected_report(index_path, output=output)
+    base = report.read_text().split(RESOURCE_MARKER, 1)[0].rstrip()
+    if f"软件：`{index['software']['software_id']}`" not in base:
+        raise ValueError("base report must be regenerated from the same frozen scoring index")
+    report.write_text(base + "\n\n" + RESOURCE_MARKER + "\n\n" + resources)
+    summary_path = output / "summary.md"
+    summary_path.write_text(summary_path.read_text() + "\n资源成本必须同时查看内存和显存，不能仅按耗时宣布配置被全面支配。见[资源成本与采样覆盖](resource-costs.md)。\n")
 
 
 if __name__ == "__main__":

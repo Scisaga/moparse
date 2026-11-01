@@ -1,11 +1,11 @@
 {
   "state": "passed",
   "software_id": "b2d1a022a2a4225608203449ef64d19571112320c05e2b91be69cc9fdae83643",
-  "scope": "twenty_two_named_generated_artifacts_only_not_corpus_acceptance",
+  "scope": "twenty_seven_named_generated_artifacts_after_both_report_steps_not_corpus_acceptance",
   "artifacts": [
     {
       "artifact": "report.md",
-      "bytes": 8301,
+      "bytes": 12068,
       "exact_equal": true
     },
     {
@@ -75,12 +75,12 @@
     },
     {
       "artifact": "summary.md",
-      "bytes": 3235,
+      "bytes": 3387,
       "exact_equal": true
     },
     {
       "artifact": "presentation.json",
-      "bytes": 673,
+      "bytes": 737,
       "exact_equal": true
     },
     {
@@ -112,6 +112,31 @@
       "artifact": "execution-cost-summary.json",
       "bytes": 1480220,
       "exact_equal": true
+    },
+    {
+      "artifact": "resource-costs.json",
+      "bytes": 22215,
+      "exact_equal": true
+    },
+    {
+      "artifact": "resource-costs.md",
+      "bytes": 3727,
+      "exact_equal": true
+    },
+    {
+      "artifact": "resource-tradeoffs.png",
+      "bytes": 222520,
+      "exact_equal": true
+    },
+    {
+      "artifact": "resource-tradeoffs.svg",
+      "bytes": 129933,
+      "exact_equal": true
+    },
+    {
+      "artifact": "resource-tradeoffs.pdf",
+      "bytes": 48064,
+      "exact_equal": true
     }
   ],
   "presentation_generator": {
@@ -119,8 +144,9 @@
     "scoring_software_id": "b2d1a022a2a4225608203449ef64d19571112320c05e2b91be69cc9fdae83643",
     "adoptable": true,
     "generator": "scripts/render_preservation_summary.py",
-    "generator_sha256": "58288dd68deff523c3e1ceb5d210d669657f8c27d1adc42415bc3c6f628c0d38",
-    "scope": "presentation_only_from_completed_uniform_scores_no_regrading",
+    "generator_sha256": "6b4e2a0f9ff8707248c43fc74ec1d498f006f49496df86d885697757995e05ad",
+    "scope": "presentation_from_completed_uniform_scores_and_recorded_resources_no_regrading",
+    "resource_evidence": "resource-costs.json",
     "comparison_details": {
       "previous_to_current": "private/paired-changes.json",
       "before_to_current": "private/incremental-changes.json",

@@ -1,14 +1,34 @@
 {
   "state": "passed",
-  "scope": "generated_measurement_chart_only",
+  "scope": "generated_measurement_figures_only",
   "software_id": "b2d1a022a2a4225608203449ef64d19571112320c05e2b91be69cc9fdae83643",
-  "PDF_fonts": [
-    {
-      "name": "BMQQDV+DejaVuSans",
-      "type": "Type0",
-      "embedded_bytes": 11860
+  "figures": {
+    "native-business": {
+      "embedded_fonts": [
+        {
+          "name": "BMQQDV+DejaVuSans",
+          "type": "Type0",
+          "embedded_bytes": 11860
+        }
+      ],
+      "SVG_sans_serif_fallback": true,
+      "visual_inspection": "labels readable, no clipping; resource projections show all eight configurations without full-dominance symbols"
+    },
+    "resource-tradeoffs": {
+      "embedded_fonts": [
+        {
+          "name": "BMQQDV+DejaVuSans",
+          "type": "Type0",
+          "embedded_bytes": 7180
+        },
+        {
+          "name": "CVKVVF+NotoSansCJKsc-Regular",
+          "type": "Type0",
+          "embedded_bytes": 22128
+        }
+      ],
+      "SVG_sans_serif_fallback": true,
+      "visual_inspection": "labels readable, no clipping; resource projections show all eight configurations without full-dominance symbols"
     }
-  ],
-  "SVG_sans_serif_fallback": true,
-  "visual_inspection": "all eight pipeline labels, percentages and denominators are legible without clipping"
+  }
 }
