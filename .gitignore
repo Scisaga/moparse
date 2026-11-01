@@ -62,6 +62,8 @@ test-results/
 /benchmark/reports/**/scores-*/
 /benchmark/reports/**/software/
 /benchmark/reports/**/scoring-software/
+/benchmark/reports/**/execution-costs.json
+/benchmark/reports/**/fonts/
 /benchmark/reference-decisions/evidence/
 
 # Editors / operating systems

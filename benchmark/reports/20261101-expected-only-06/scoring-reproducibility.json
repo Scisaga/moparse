@@ -1,0 +1,265 @@
+{
+  "state": "passed",
+  "software_id": "2828b9bbcdb702196a873d008b3465c76221d5a752fe87049ac794df0fa14411",
+  "scope": "independent_rescoring_of_saved_outputs_not_additional_quality_samples",
+  "samples": [
+    "hkex-key-tables-p011",
+    "nvidia-proxy-summary-p020-024",
+    "zhenye-correction-p001"
+  ],
+  "cases": 42,
+  "verified": [
+    {
+      "group": "P01",
+      "sample_id": "hkex-key-tables-p011",
+      "targets": 73,
+      "complete_score_equal": true
+    },
+    {
+      "group": "P02",
+      "sample_id": "hkex-key-tables-p011",
+      "targets": 73,
+      "complete_score_equal": true
+    },
+    {
+      "group": "P03",
+      "sample_id": "hkex-key-tables-p011",
+      "targets": 73,
+      "complete_score_equal": true
+    },
+    {
+      "group": "P04",
+      "sample_id": "hkex-key-tables-p011",
+      "targets": 73,
+      "complete_score_equal": true
+    },
+    {
+      "group": "P05",
+      "sample_id": "hkex-key-tables-p011",
+      "targets": 73,
+      "complete_score_equal": true
+    },
+    {
+      "group": "P06",
+      "sample_id": "hkex-key-tables-p011",
+      "targets": 73,
+      "complete_score_equal": true
+    },
+    {
+      "group": "P07",
+      "sample_id": "hkex-key-tables-p011",
+      "targets": 73,
+      "complete_score_equal": true
+    },
+    {
+      "group": "P07-current",
+      "sample_id": "hkex-key-tables-p011",
+      "targets": 73,
+      "complete_score_equal": true
+    },
+    {
+      "group": "P07-intermediate",
+      "sample_id": "hkex-key-tables-p011",
+      "targets": 73,
+      "complete_score_equal": true
+    },
+    {
+      "group": "P07-previous",
+      "sample_id": "hkex-key-tables-p011",
+      "targets": 73,
+      "complete_score_equal": true
+    },
+    {
+      "group": "P08",
+      "sample_id": "hkex-key-tables-p011",
+      "targets": 73,
+      "complete_score_equal": true
+    },
+    {
+      "group": "P08-current",
+      "sample_id": "hkex-key-tables-p011",
+      "targets": 73,
+      "complete_score_equal": true
+    },
+    {
+      "group": "P08-intermediate",
+      "sample_id": "hkex-key-tables-p011",
+      "targets": 73,
+      "complete_score_equal": true
+    },
+    {
+      "group": "P08-previous",
+      "sample_id": "hkex-key-tables-p011",
+      "targets": 73,
+      "complete_score_equal": true
+    },
+    {
+      "group": "P01",
+      "sample_id": "nvidia-proxy-summary-p020-024",
+      "targets": 232,
+      "complete_score_equal": true
+    },
+    {
+      "group": "P02",
+      "sample_id": "nvidia-proxy-summary-p020-024",
+      "targets": 232,
+      "complete_score_equal": true
+    },
+    {
+      "group": "P03",
+      "sample_id": "nvidia-proxy-summary-p020-024",
+      "targets": 232,
+      "complete_score_equal": true
+    },
+    {
+      "group": "P04",
+      "sample_id": "nvidia-proxy-summary-p020-024",
+      "targets": 232,
+      "complete_score_equal": true
+    },
+    {
+      "group": "P05",
+      "sample_id": "nvidia-proxy-summary-p020-024",
+      "targets": 232,
+      "complete_score_equal": true
+    },
+    {
+      "group": "P06",
+      "sample_id": "nvidia-proxy-summary-p020-024",
+      "targets": 232,
+      "complete_score_equal": true
+    },
+    {
+      "group": "P07",
+      "sample_id": "nvidia-proxy-summary-p020-024",
+      "targets": 232,
+      "complete_score_equal": true
+    },
+    {
+      "group": "P07-current",
+      "sample_id": "nvidia-proxy-summary-p020-024",
+      "targets": 232,
+      "complete_score_equal": true
+    },
+    {
+      "group": "P07-intermediate",
+      "sample_id": "nvidia-proxy-summary-p020-024",
+      "targets": 232,
+      "complete_score_equal": true
+    },
+    {
+      "group": "P07-previous",
+      "sample_id": "nvidia-proxy-summary-p020-024",
+      "targets": 232,
+      "complete_score_equal": true
+    },
+    {
+      "group": "P08",
+      "sample_id": "nvidia-proxy-summary-p020-024",
+      "targets": 232,
+      "complete_score_equal": true
+    },
+    {
+      "group": "P08-current",
+      "sample_id": "nvidia-proxy-summary-p020-024",
+      "targets": 232,
+      "complete_score_equal": true
+    },
+    {
+      "group": "P08-intermediate",
+      "sample_id": "nvidia-proxy-summary-p020-024",
+      "targets": 232,
+      "complete_score_equal": true
+    },
+    {
+      "group": "P08-previous",
+      "sample_id": "nvidia-proxy-summary-p020-024",
+      "targets": 232,
+      "complete_score_equal": true
+    },
+    {
+      "group": "P01",
+      "sample_id": "zhenye-correction-p001",
+      "targets": 12,
+      "complete_score_equal": true
+    },
+    {
+      "group": "P02",
+      "sample_id": "zhenye-correction-p001",
+      "targets": 12,
+      "complete_score_equal": true
+    },
+    {
+      "group": "P03",
+      "sample_id": "zhenye-correction-p001",
+      "targets": 12,
+      "complete_score_equal": true
+    },
+    {
+      "group": "P04",
+      "sample_id": "zhenye-correction-p001",
+      "targets": 12,
+      "complete_score_equal": true
+    },
+    {
+      "group": "P05",
+      "sample_id": "zhenye-correction-p001",
+      "targets": 12,
+      "complete_score_equal": true
+    },
+    {
+      "group": "P06",
+      "sample_id": "zhenye-correction-p001",
+      "targets": 12,
+      "complete_score_equal": true
+    },
+    {
+      "group": "P07",
+      "sample_id": "zhenye-correction-p001",
+      "targets": 12,
+      "complete_score_equal": true
+    },
+    {
+      "group": "P07-current",
+      "sample_id": "zhenye-correction-p001",
+      "targets": 12,
+      "complete_score_equal": true
+    },
+    {
+      "group": "P07-intermediate",
+      "sample_id": "zhenye-correction-p001",
+      "targets": 12,
+      "complete_score_equal": true
+    },
+    {
+      "group": "P07-previous",
+      "sample_id": "zhenye-correction-p001",
+      "targets": 12,
+      "complete_score_equal": true
+    },
+    {
+      "group": "P08",
+      "sample_id": "zhenye-correction-p001",
+      "targets": 12,
+      "complete_score_equal": true
+    },
+    {
+      "group": "P08-current",
+      "sample_id": "zhenye-correction-p001",
+      "targets": 12,
+      "complete_score_equal": true
+    },
+    {
+      "group": "P08-intermediate",
+      "sample_id": "zhenye-correction-p001",
+      "targets": 12,
+      "complete_score_equal": true
+    },
+    {
+      "group": "P08-previous",
+      "sample_id": "zhenye-correction-p001",
+      "targets": 12,
+      "complete_score_equal": true
+    }
+  ]
+}

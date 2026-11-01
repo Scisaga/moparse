@@ -4,6 +4,18 @@
 
 检查和判分必须由同一程序对所有管线执行，统一expected范围、业务目标、分母、等价规则、异常政策及冻结评分版本。人工阅读用于诊断程序缺陷，不提供正式成绩或验收决定。不同格式可有忠实读取器，不能按管线身份设评分例外；共同修正后全部受影响组统一重评。八组原生结果横向比较，P07/P08后处理前后最终正文另作配对比较；评分器补读收益与实际正文改善分别报告，不将后处理结果与其他组原生结果混排。
 
+当前程序入口使用`mo-parse-expected-only-v1`。`expected_readback`只读canonical expected及现有选段映射，用Markdown语法树读取完整选段；不读取旧评价文件的答案或人工裁定。`expected_evaluation`对八组保存原生结果及P07/P08保存的最终Markdown运行同一个评分器。最终正文读取不依赖私有IR，缺失候选保留目标并判错，软件读取故障阻止发布。
+
+冻结已通过软件验证的当前身份后，用下列命令生成独立运行目录。`--output`必须尚不存在，冻结记录须位于该目录之外。该命令只评分保存输出，不执行模型或后处理；报告、分项汇总及覆盖记录可见于运行目录，逐项内容、读回观察和变化证据保存在其`private/`目录。
+
+```bash
+uv run python -m moparse_eval.expected_evaluation --baseline benchmark/reports/20261026-lite-v3 --previous-root benchmark/reports/20261031-units-continuations-04 --intermediate-root benchmark/reports/20261101-business-coverage-05 --current-root benchmark/reports/20261101-expected-only-06 --freeze benchmark/diagnostics/expected-only-r5-validation-20261101.json --output benchmark/reports/20261026-lite-v3/artifacts/scores/new-expected-only-reproduction --report-output benchmark/reports/new-expected-only-reproduction --workers 4
+```
+
+`--previous-root`是较早保存的最终正文，`--intermediate-root`是本轮开始时已保存的最终正文，`--current-root`是本次代码CPU回放生成的最终正文；三者都不是expected。`--workers`只并行分析保存输出，不改变判分和原处理计时。最终覆盖清单按每个expected内容元素追溯至实际目标，编译器遗漏任一内容元素时拒绝发布。
+
+`score --run ... --freeze ...`同样使用新入口，先完成八组原生对照，再将新索引写入该运行的`latest_scores`。P07/P08新候选准备要求已有完整expected-only原生索引；历史裁定不会继承，显式`--adjudications`立即失败且不打开裁定文件。评分协议仅由`expected_scoring.PROTOCOL`定义，原生、最终正文、冻结和报告共用该定义。工程检查通过与实际评测完成分别记录，当前运行状态见[评测索引](../benchmark/reports/README.md)。
+
 本轮八组已按[冻结执行身份](../benchmark/execution-lock.json)各完成quality800一次和perf80三轮，原MO服务恢复完成。[原生比较报告](../benchmark/reports/20261026-lite-v3/report.md)的评分完成状态、采用结论与限制由[评测索引](../benchmark/reports/README.md)维护，执行完成不代表质量已完成判定。TTS按2026-10-26授权仅观测、不控制，先前撤回测量不恢复；自动评分不构成语料重新验收。协议由[评测标准](../benchmark/evaluation-tasks.md)维护，配置身份由[八管线计划](../benchmark/pipelines-to-test.md)维护，修复及验证边界见[执行层诊断](../benchmark/diagnostics/README.md)。
 
 原件、Lite/Full数据包、冻结参考和作者标注保持原样，不重新生成或机械复核。Full不启动推理。GLM rotary、Paddle颜色接线、旋转路由与异常隔离已修复，并补足Paddle逐区域生成观测。八组在[当前工程预检02](../benchmark/reports/20261026-repaired-preflight-02/)共完成88项任务，其中64项独立单页标定全部成功；[执行就绪记录](../benchmark/reports/20261026-repaired-preflight-02/execution-readiness.json)保留实际配置、超时依据和Graph证据，并为本次冻结锁提供执行依据。这些记录只说明所测范围的执行就绪，不是页面质量评分或语料验收。
@@ -39,9 +51,9 @@ Paddle原生服务使用单个长期owner线程统一初始化、推理与关闭
 
 `score`只读expected并写评分结果，不提供语料检查或修复模式。主评测聚焦信息保全、内容准确和必要归属；结构、定位细节与字符差异作为诊断，旧索引未覆盖的expected内容仍需完成对照，不形成第三种业务评分。既定目标遗漏或运行失败仍保留目标分母并判错；字符指标不能替代关键数值和关系正确性。DocVortex续接读回只读取明确原生声明，不补表头、期间、单位或内容。
 
-既有实现使用`mo-parse-eval-information-v5`；本次必须以现有expected为唯一验收标准，并补足其全部业务内容的对照。正文并列定位覆盖、已定位CER和字符覆盖；表格或正文记录按实际表达的业务事实读取，分别报告值与业务标签、同时满足expected单位期间附注等要求的结果。每个业务目标必须完成正确或错误判定，路径分段、表格方向和格位差异不单独扣内容分；严格字符与结构诊断进入附录。完整分母和表达等价政策只维护在[评测标准](../benchmark/evaluation-tasks.md#4-指标与匹配)，旧子集成绩不构成当前任务完成声明。
+当前使用`mo-parse-expected-only-v1`，旧`mo-parse-eval-information-v5`仅属历史记录。正文定位及字符诊断、表格或正文中的业务字段分别统计；业务正确要求实际值、业务标签、单位、期间和附注满足expected。每个目标必须完成正确或错误判定，路径分段、表格方向和格位差异不单独扣内容分。完整分母和表达等价政策只维护在[评测标准](../benchmark/evaluation-tasks.md#4-指标与匹配)，旧子集成绩不构成当前任务完成声明。
 
-冻结并验证评分软件后，可用`score --run <run-directory> --freeze <scoring-freeze.json>`重评分已有产物。freeze记录软件身份、协议身份及通过的工程验证，入口拒绝身份不符或未通过验证的记录，评分结束再次确认软件未变。该操作不启动模型、不改写参考或执行观察，不回填原解析耗时；存在工程读回错误时不发布新的评分索引。当前expected唯一标准下不传入基于原图的`--adjudications`；还必须检查既有运行记录和服务配对工具是否隐式继承此类排除，不能仅去掉命令行参数就宣称已完成标准切换。
+冻结并验证评分软件后，可用`score --run <run-directory> --freeze <scoring-freeze.json>`重评分已有产物。freeze记录软件身份、协议身份及通过的工程验证，入口拒绝身份不符或未通过验证的记录，评分结束再次确认软件未变。该操作不启动模型、不改写参考或执行观察，不回填原解析耗时；存在工程读回错误时不发布新的评分索引。当前入口拒绝`--adjudications`，服务配对不继承历史排除记录；合成测试覆盖显式及隐式两条路径，实际统一评测单独记录。
 
 `benchmark/reference-decisions/`保留历史人工记录，当前不以其中原图结论排除目标、修改参考答案或判定输出通过。旧工具支持的`exclude_unit_pending`及历史裁定说明不构成本次授权；按现有expected完整对照的结果尚需实际生成。已有固定字段评分、测试通过和原图查看数量均不能证明expected全量覆盖。
 
@@ -55,18 +67,12 @@ Paddle原生服务使用单个长期owner线程统一初始化、推理与关闭
 
 新运行目录按`prepare` → `run --phase warmup` → `freeze` → `run --phase measured` → `freeze-scoring` → `score` → `report`执行；两个freeze命令都要求显式`--validation`工程验证记录，不能用文件存在或语料计数代替验证。`prepare`还需`--baseline`、`--output`和仅含公开处理参数的`--service-config`。服务执行与最终读回分别冻结身份，共享评分规则保持原样，旧运行目录不能覆盖。报告重生只读已有运行和评分JSON，不读取语料、重新推理或重新评分。
 
-现有读取实现采用`mo-parse-eval-information-v5`，当前必须执行的expected唯一标准见[评测任务](../benchmark/evaluation-tasks.md#current-task-expected-only)。每个业务目标只判正确或错误，expected完整内容完成对照后才能宣布本任务验收完成；评分器读取故障须先修复。`service_evaluation prepare --previous-run <旧运行>`只接纳同一原生输入、参考声明和已冻结执行身份的修改前候选，读取原样保存的最终正文；候选worker不挂载旧结果或参考。评分冻结可单独更新只用于分析的共同读取与报告模块，实际适配、后处理、app及依赖仍须与执行冻结一致；必须同步重评原生、修改前和修改后输出，不能复用旧分数。`prepare --rescore-native`允许在共同评分规则已修改时先准备候选回放；只放行评分模块差异，原生格式读取及依赖仍须一致，实际评分继续要求八组原生评分索引与当前完整软件身份一致，不能引用准备时的旧成绩。`python -m moparse_eval.table_context_report`逐项列出新增正确、原正确项损失及单位、期间、附注退化；这些接口说明不代表现有代码已经完成expected-only切换。
+当前服务配对同样采用`mo-parse-expected-only-v1`，标准见[评测任务](../benchmark/evaluation-tasks.md#current-task-expected-only)。每个目标只判正确或错误，读取故障先修复。`service_evaluation prepare --previous-run <旧运行>`要求完整expected-only原生索引，接纳同一原生输入、参考声明及已冻结执行身份的修改前候选；候选worker不挂载旧结果或参考。候选执行继续冻结实际适配、后处理、app及依赖，公开Markdown的评分由单独冻结的共同程序完成。必须同步重评原生、修改前和修改后输出，不能复制旧分数；新增正确、原正确项损失及分项退化由`expected_report`从当前评分产物生成。原表格上下文工具保留历史诊断用途，不作为新协议的报告入口。
 
 代码验证使用`python -m pytest -q tests/unit tests/test_markdown_policy.py moparse_eval/tests`。其中`test_information_context.py`覆盖单位、年度、分组和脚注正反例，`test_native_table_context.py`覆盖原生结构与局部转换，`test_moparse_eval_service_observation.py`覆盖实际正文读取及未渲染内部关系不得计分。它们使用受控合成材料，与对照expected的实际输出验收及运行成本分别记录；通过代码测试不代表expected中的业务内容已经验收。
 
 `tests/unit/test_moparse_eval_pipeline_fairness.py`使用合成HTML与GFM正反例，把完全相同的候选分别标为P01-P08，要求全部判分和证据一致，覆盖年份交换、单位错误、符号错误及目标缺失，且参考与候选不被改写。它约束管线身份不能改变共同判分，不替代八组真实产物的统一评分或expected内容覆盖。
 
-最终正文读回支持来源注释后独立保留的完整单位段落，避免该段落截断后面的已打印记录。只有实际存在、具有本表来源身份且内容为完整单位的段落可延长范围；普通段落、裸数值或缺少所属注释的单位不能据此接入后文。字段与限定成绩仍取自记录实际打印的文字，不用私有单元格补答案；没有独立单位段落的已保存记录也按同一实际输出读取。
+## 历史读取诊断
 
-最终读回v15读取每条正文实际打印的完整下表计量范围；例如已声明expressed as a percentage的句子同时保留其业务主体和百分比口径。它也读取完整字面单位caption紧接的实际Markdown列表，用公开列表边界限定没有重复后缀的记录，不跳过中间段落、标题或其他列表。已有明确局部单位不由共享单位救正，附注、序号和身份字段不因此附金额。读取只使用公开文字，不从未打印的原文或内部引用补单位；普通业务段落或仅提到percentage的标题不能自动赋予记录百分比单位。
-
-共同读取修订scoped_literal_formats_17区分同一明确表中单独表达的有值行与其在子项中的父级引用，也识别最终正文中来源相同且完整打印的共享行标题副本。来源身份确定后以第一次实际出现作为该标题的读序位置，不把不同表、不同来源格或同一记录的多次出现合并。正式行标签不与明确覆盖该行列的范围段落内提及竞争；缺少覆盖证据或完整独立标签仍保留歧义。标签和表身份在读取列及比较数值之前确定；已有自身行不因子项复制父标签变成多份矛盾答案，两个真正独立自身行仍判冲突，其他表不参与消歧。额外双语上下文和主目标分母保持既有政策。仅更新分析读取时，原样候选、实际服务软件及已测处理时间保留，统一重评所有受影响原生及新旧正文。
-
-最终表格读回直接解析交付Markdown中的HTML单元格及真实跨度；私有跨度或表格分类不能给没有打印跨度的GFM补分。单元格字符范围来自实际HTML源码，旧正文仍按其保存的字节及格式读取。原生、旧正文和新正文必须使用同一当前读取器重新评分。
-
-共同读取器还读取实际记录中的字面单位字段名、范围内期间、普通文字形式的明确报告标题与表题。已有结构化单元格只补读同条实际打印记录中的限定，不重新猜测主体或重复产生候选值。短期间表题须以年度起始并包含本表实际表头文字，不能按期望值选择范围。单位不跨记录或套给比例，明确局部期间优先于共享报告年，冲突年份不强行取一；这些边界均有独立合成反例。
+先前`service_observation`、v15及`scoped_literal_formats_17`的实现记录保留在[读取诊断](../benchmark/diagnostics/service-readback.md)。本轮实际最终Markdown只走`expected_readback`，旧记录不提供当前答案、排除或分数。当前读取器支持明确空字段、显式原表留空、不同表的唯一实际位置、完整业务范围、单位与币种、具名类别及附注；图片alt文字仅作字面诊断，资产交付另记，不构成图片语义理解。

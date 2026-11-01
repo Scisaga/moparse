@@ -114,6 +114,24 @@ def _record_literal(record: SemanticRecord, reference: Any, registry: Mapping[An
     return "".join(_record_literal_parts(record, reference, registry))
 
 
+def _record_value_literal(value: ValueRelation, registry: Mapping[Any, Any]) -> str:
+    """Print a scalar's explicitly linked footnote as the existing note clause.
+
+    Its original literal stays in source evidence. Unlinked superscripts,
+    bare carets, variables and compound formulas retain their source spelling.
+    """
+    text = registry[value.value].text
+    wrapped = re.fullmatch(r"\s*\\\(\s*([+\-−]?(?:\d[\d,.]*|\.\d+))\s*\^\s*"
+                           r"(?:\{([0-9]{1,2}|[*†‡])\}|([0-9]|[*†‡]))\s*\\\)\s*", text)
+    if wrapped:
+        marker = wrapped[2] or wrapped[3]
+        linked = [ref for ref in value.note_refs if re.match(
+            r"^\s*" + re.escape(marker) + r"(?:\s+|[.)、：:])", registry[ref].text)]
+        if linked:
+            return _literal(wrapped[1])
+    return _literal(text)
+
+
 def _per_share_currency(labels: Sequence[str], value: str) -> bool:
     return (any(re.search(r"per\s+share\b|每股", label, re.I) for label in labels)
             and bool(re.fullmatch(r"\s*[$€£¥]\s*[+−-]?(?:\d[\d,.]*|\.\d+)\s*", value)))
@@ -840,7 +858,7 @@ def _render_record(record: SemanticRecord, registry: dict[Any, Any]) -> str:
         label_refs = tuple(dict.fromkeys(label_refs))
         label = " / ".join("".join(_column_literal_parts(record, value, r, registry))
                            if record.subject else literal(r) for r in label_refs)
-        text = _literal(registry[value.value].text)
+        text = _record_value_literal(value, registry)
         if value.value_state == "source_blank":
             if text:
                 raise ValueError("source-blank relation conflicts with a nonempty literal")

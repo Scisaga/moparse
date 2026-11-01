@@ -1,0 +1,72 @@
+{
+  "state": "passed",
+  "software_id": "2828b9bbcdb702196a873d008b3465c76221d5a752fe87049ac794df0fa14411",
+  "scope": "named_generated_report_artifacts_only_not_corpus_acceptance",
+  "artifacts": [
+    {
+      "artifact": "report.md",
+      "bytes": 7753,
+      "exact_equal": true
+    },
+    {
+      "artifact": "summary.json",
+      "bytes": 2008281,
+      "exact_equal": true
+    },
+    {
+      "artifact": "coverage.json",
+      "bytes": 179179,
+      "exact_equal": true
+    },
+    {
+      "artifact": "execution-costs.json",
+      "bytes": 209676674,
+      "exact_equal": true
+    },
+    {
+      "artifact": "evaluation.json",
+      "bytes": 1039,
+      "exact_equal": true
+    },
+    {
+      "artifact": "failure-stages.json",
+      "bytes": 879,
+      "exact_equal": true
+    },
+    {
+      "artifact": "adoption.json",
+      "bytes": 317,
+      "exact_equal": true
+    },
+    {
+      "artifact": "native-business.svg",
+      "bytes": 11827,
+      "exact_equal": true
+    },
+    {
+      "artifact": "native-business.png",
+      "bytes": 70454,
+      "exact_equal": true
+    },
+    {
+      "artifact": "native-business.pdf",
+      "bytes": 12361,
+      "exact_equal": true
+    },
+    {
+      "artifact": "private/paired-changes.json",
+      "bytes": 14396475,
+      "exact_equal": true
+    },
+    {
+      "artifact": "private/incremental-changes.json",
+      "bytes": 74683,
+      "exact_equal": true
+    },
+    {
+      "artifact": "private/target-details.csv",
+      "bytes": 1439602568,
+      "exact_equal": true
+    }
+  ]
+}

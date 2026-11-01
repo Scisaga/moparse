@@ -15,6 +15,11 @@ from .metrics import normalize_text
 from .representations import visible_text
 
 try:
+    import numpy as _np
+except ImportError:
+    _np = None
+
+try:
     import edlib as _edlib
 except ImportError:
     _edlib = None
@@ -134,6 +139,43 @@ def _normalized_positions(text: str, collapse_whitespace: bool) -> tuple[str, li
     return "".join(pieces), positions
 
 
+def _unicode_infix_distances(reference: str, text: str, *, vectorized: bool = True):
+    """Exact HW edit distances and start positions, including Unicode text.
+
+    A row is the prefix minimum of diagonal/above costs minus the column
+    number. The latest equal minimum preserves the scalar algorithm's tie
+    order (diagonal, above, left). Neither version changes any input text.
+    """
+    if vectorized and _np is not None:
+        columns = _np.arange(len(text) + 1, dtype=_np.int64)
+        output = _np.fromiter(map(ord, text), dtype=_np.uint32, count=len(text))
+        cost = _np.zeros(len(text) + 1, dtype=_np.int64)
+        starts = columns.copy()
+        for row, char in enumerate(reference, 1):
+            diagonal = cost[:-1] + (output != ord(char))
+            above = cost[1:] + 1
+            base = _np.empty_like(cost)
+            base[0], base[1:] = row, _np.minimum(diagonal, above)
+            base_starts = _np.empty_like(starts)
+            base_starts[0] = 0
+            base_starts[1:] = _np.where(diagonal <= above, starts[:-1], starts[1:])
+            adjusted = base - columns
+            prefix = _np.minimum.accumulate(adjusted)
+            sources = _np.maximum.accumulate(_np.where(adjusted == prefix, columns, 0))
+            cost, starts = prefix + columns, base_starts[sources]
+        return list(zip(cost.tolist(), starts.tolist(), strict=True))
+    previous = [(0, index) for index in range(len(text) + 1)]
+    for row, char in enumerate(reference, 1):
+        current = [(row, 0)]
+        for column, output_char in enumerate(text, 1):
+            diagonal, above, left = previous[column - 1], previous[column], current[column - 1]
+            options = [(diagonal[0] + (char != output_char), diagonal[1]),
+                       (above[0] + 1, above[1]), (left[0] + 1, left[1])]
+            current.append(min(options, key=lambda item: item[0]))
+        previous = current
+    return previous
+
+
 def _approximate_spans(reference: str, text: str, threshold: float) -> list[tuple[int, int, float]]:
     """Locate minimum-Levenshtein infixes, then apply the frozen similarity gate.
 
@@ -161,18 +203,7 @@ def _approximate_spans(reference: str, text: str, threshold: float) -> list[tupl
             for start, end in locations if start is not None and start < end
             if (similarity := 1 - distance / max(len(reference), end - start)) + 1e-12 >= threshold
         ]
-    previous = [(0, index) for index in range(len(text) + 1)]
-    for row, char in enumerate(reference, 1):
-        current = [(row, 0)]
-        for column, output_char in enumerate(text, 1):
-            diagonal, above, left = previous[column - 1], previous[column], current[column - 1]
-            options = [
-                (diagonal[0] + (char != output_char), diagonal[1]),
-                (above[0] + 1, above[1]),
-                (left[0] + 1, left[1]),
-            ]
-            current.append(min(options, key=lambda item: item[0]))
-        previous = current
+    previous = _unicode_infix_distances(reference, text)
     found: list[tuple[int, int, float]] = []
     minimum_distance = min(distance for distance, _start in previous)
     for end, (distance, start) in enumerate(previous):

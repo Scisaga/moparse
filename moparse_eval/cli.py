@@ -4,13 +4,11 @@ from __future__ import annotations
 
 import argparse
 import asyncio
-import copy
 import hashlib
 import json
 import shutil
 import subprocess
 import sys
-import time
 import traceback
 from collections.abc import Mapping
 from datetime import datetime
@@ -19,26 +17,12 @@ from pathlib import Path
 from typing import Any
 from zoneinfo import ZoneInfo
 
+from .expected_scoring import PROTOCOL as EXPECTED_PROTOCOL
 from .packaging import inside, package_dataset, read_json, write_json
 
 ROOT = Path(__file__).resolve().parent.parent
 PIPELINES = tuple(f"P{number:02}" for number in range(1, 9))
-SCORING_PROTOCOL = {
-    "id": "mo-parse-eval-information-v5",
-    "text_policy": "mo-parse-eval-text-v1",
-    "field_content_equivalence": "declared_width_spacing_scoped_scalar_units_year_range_dash_terminal_prose_punctuation",
-    "field_locator": "candidate_business_labels_and_scoped_context_before_value_comparison",
-    "field_grades": "correct_or_incorrect_for_every_fixed_admitted_target",
-    "primary_metrics": ["unit_presence", "text_aligned_with_coverage", "field_target_correctness",
-                        "information_target_correctness", "measured_cost_and_stability"],
-    "diagnostic_metrics": ["unaligned_target_cer", "raw_grid", "reading_order", "heading_levels", "locator_failure_reasons"],
-    "scope": "read_only_rescore_existing_native_outputs",
-    "qualifier_reading": "candidate_only_table_header_introduction_section_and_note_scopes",
-    "reference_unknown": "outside_admitted_targets_references_remain_read_only",
-    "reader_failure": "repair_before_final_grading_and_publication",
-    "reader_revision": "scoped_literal_formats_17",
-    "reference_unit_reading": "explicit_field_then_literal_scalar_or_local_ratio_then_table_scope",
-}
+SCORING_PROTOCOL = EXPECTED_PROTOCOL
 
 
 def read_scoring_freeze(path: Path, identity: Mapping[str, Any]) -> dict[str, Any]:
@@ -71,7 +55,7 @@ def code_identity() -> dict[str, Any]:
         for path in sorted((ROOT / directory).rglob("*.py")):
             support_modules[str(path.relative_to(ROOT))] = hashlib.sha256(path.read_bytes()).hexdigest()
     dependencies: dict[str, str | None] = {}
-    for distribution in ("rapidfuzz", "edlib", "markdown-it-py", "PyMuPDF", "psutil"):
+    for distribution in ("rapidfuzz", "edlib", "numpy", "markdown-it-py", "PyMuPDF", "psutil"):
         try:
             dependencies[distribution] = metadata.version(distribution)
         except metadata.PackageNotFoundError:
@@ -357,9 +341,10 @@ def _require_formal_measurement_conditions(run: Path, session: Mapping[str, Any]
 
 def score_run(run: Path, *, adjudications: Path | None = None,
               freeze: Path | None = None) -> Path:
-    from .adjudications import reference_exclusions
-    from .native_readback import READBACK_VERSION, read_native_relations
-    from .scoring import score_case
+    from .expected_evaluation import evaluate_saved
+
+    if adjudications is not None:
+        raise ValueError("expected-only scoring does not accept adjudications; no decision file was opened")
 
     run = run.resolve()
     session = read_json(run / "run.json")
@@ -376,144 +361,24 @@ def score_run(run: Path, *, adjudications: Path | None = None,
                 "cannot score development experiment arm before confirmed service restoration; "
                 "wait for the driver to record cleanup_evidence.maintenance_phase='restored'"
             )
-    dataset = Path(session["dataset"])
-    manifest = read_json(dataset / "manifest.json")
-    samples = {sample["id"]: sample for sample in manifest["samples"]}
-    documents = {document["document_id"]: document for document in manifest.get("documents", [])}
-    sample_metadata = {key: _sample_metadata(sample, documents) for key, sample in samples.items()}
-    human_record = read_json(adjudications) if adjudications else None
-    if human_record is not None:
-        reference_exclusions(human_record, "")  # Validate the supplied operation, not the corpus.
-    identity = code_identity()
-    frozen_scoring = read_scoring_freeze(freeze, identity) if freeze is not None else None
+    if freeze is None:
+        raise ValueError("expected-only scoring requires a validated software freeze")
     score_id = datetime.now(ZoneInfo("Asia/Shanghai")).strftime("%Y%m%dT%H%M%S%f")
-    destination = run / "artifacts" / "scores" / f"{score_id}-{identity['software_id'][:12]}"
-    destination.mkdir(parents=True, exist_ok=False)
-    snapshot_software(destination / "software", identity)
-    index: dict[str, Any] = {
-        "score_id": destination.name,
-        "run_id": session["run_id"],
-        "created_at": _now(),
-        "formal": session["formal"],
-        "software": identity,
-        "scoring_protocol": copy.deepcopy(SCORING_PROTOCOL),
-        "reference_freeze": manifest.get("freeze_record"),
-        "dataset_declaration": {
-            "name": manifest.get("name"), "kind": manifest.get("kind"),
-            "state": manifest.get("state"), "freeze_record": manifest.get("freeze_record"),
-            "suites": manifest.get("suites", {}), "sample_metadata": sample_metadata,
-            "scope": "frozen_manifest_declarations_not_corpus_acceptance",
-        },
-        "results": [],
-        "unscored": [],
-        "native_readback": {"reader_version": READBACK_VERSION, "software_id": identity["software_id"],
-                            "observations": []},
-    }
-    if frozen_scoring is not None:
-        write_json(destination / "scoring-freeze.json", frozen_scoring)
-        index["scoring_freeze"] = {
-            "path": str((destination / "scoring-freeze.json").relative_to(run)),
-            "record": frozen_scoring,
-        }
-    if human_record is not None:
-        write_json(destination / "reference-adjudications.json", human_record)
-        index["reference_adjudications"] = {
-            "path": str((destination / "reference-adjudications.json").relative_to(run)),
-            "record": human_record,
-            "applied_decision_ids": [], "unmatched_decision_ids": [], "applied_score_cases": 0,
-        }
-    applied_decisions: set[str] = set()
-    active_pipeline: str | None = None
-    for case in session["cases"]:
-        if case["phase"] == "warmup":
-            continue
-        if case["pipeline"] != active_pipeline:
-            active_pipeline = case["pipeline"]
-            print(f"Scoring saved outputs: {active_pipeline}", file=sys.stderr, flush=True)
-        sample = samples[case["sample_id"]]
-        reference_path = sample.get("evaluation")
-        if not reference_path:
-            index["unscored"].append({**sample_metadata[case["sample_id"]], **case,
-                                      "reason": "no_authored_scoring_reference"})
-            continue
-        reference = read_json(inside(dataset, reference_path))
-        if reference.get("review_status") != "confirmed":
-            index["unscored"].append({**sample_metadata[case["sample_id"]], **case,
-                                      "reason": "reference_not_declared_visually_confirmed"})
-            continue
-        original_observation = inside(run, case["observation"])
-        observation = read_json(original_observation)
-        source_native = original_observation.with_name("native.json")
-        readback_started = time.perf_counter()
-        native_exists = source_native.is_file()
-        try:
-            native = read_json(source_native) if native_exists else None
-            if native_exists and not isinstance(native, Mapping):
-                raise ValueError("saved native result is not an object")
-            observation, diagnostic = read_native_relations(observation, native)
-        except (OSError, ValueError, TypeError, KeyError, IndexError) as exc:
-            observation = copy.deepcopy(observation)
-            diagnostic = {"reader_version": READBACK_VERSION, "status": "readback_error",
-                          "error_type": type(exc).__name__, "message": str(exc), "records": []}
-        readback_seconds = time.perf_counter() - readback_started
-        derived_relative = f"observations/{case['pipeline']}/{case['suite']}-r{case['repetition']}/{case['sample_id']}.json"
-        diagnostic_relative = str(Path(derived_relative).with_suffix(".readback.json"))
-        provenance = {
-            "reader_version": READBACK_VERSION, "software_id": identity["software_id"],
-            "source_observation": str(original_observation.relative_to(run)),
-            "source_native": str(source_native.relative_to(run)),
-            "native_status": diagnostic["status"], "observation": str((destination / derived_relative).relative_to(run)),
-            "diagnostics": str((destination / diagnostic_relative).relative_to(run)),
-            "readback_seconds": readback_seconds,
-            "timing_scope": "scoring_analysis_only_not_original_worker_processing",
-        }
-        observation["scoring_readback"] = provenance
-        diagnostic.update(provenance)
-        write_json(destination / derived_relative, observation)
-        write_json(destination / diagnostic_relative, diagnostic)
-        index["native_readback"]["observations"].append(provenance)
-        declared = sample_metadata[case["sample_id"]]
-        reference = {**reference,
-                     **{key: reference.get(key, declared[key]) for key in (
-                         "document_id", "family_id", "tags", "source_category", "development_exposure",
-                     )},
-                     **{key: observation.get(key) for key in (
-            "suite", "phase", "repetition", "input_page_count", "dataset", "run_id"
-        )}}
-        scored = score_case(
-            reference, observation, dataset,
-            reference_exclusions=reference_exclusions(human_record, case["sample_id"]) if human_record else None,
-        )
-        if human_record is not None and scored["human_reference_adjudications"]:
-            applied_decisions.update(item["id"] for item in scored["human_reference_adjudications"])
-            index["reference_adjudications"]["applied_score_cases"] += 1
-        relative = f"{case['pipeline']}/{case['suite']}-r{case['repetition']}/{case['sample_id']}.json"
-        write_json(destination / relative, scored)
-        index["results"].append(str((destination / relative).relative_to(run)))
-    if human_record is not None:
-        index["reference_adjudications"]["applied_decision_ids"] = sorted(applied_decisions)
-        index["reference_adjudications"]["unmatched_decision_ids"] = [
-            item["id"] for item in human_record.get("decisions", []) if item["id"] not in applied_decisions
-        ]
-    failed_readbacks = [item for item in index["native_readback"]["observations"]
-                        if item.get("native_status") == "readback_error"]
-    if failed_readbacks:
-        raise ValueError(
-            f"cannot publish scores with {len(failed_readbacks)} engineering readback errors; "
-            "repair the reader before rescoring"
-        )
-    if frozen_scoring is not None and code_identity()["software_id"] != identity["software_id"]:
-        raise ValueError("scoring software changed during the frozen scoring session")
-    write_json(destination / "index.json", index)
-    session["latest_scores"] = str((destination / "index.json").relative_to(run))
+    destination = run / "artifacts" / "scores" / ("expected-" + score_id)
+    index = evaluate_saved(run, destination, expected_root=ROOT / "pdf_sample/parsing/expected", freeze=freeze)
+    session["latest_scores"] = str(index.relative_to(run))
     write_json(run / "run.json", session)
-    return destination / "index.json"
+    return index
 
 
 def report_run(run: Path) -> Path:
     run = run.resolve()
     session = read_json(run / "run.json")
     _require_formal_measurement_conditions(run, session)
+    index = read_json(inside(run, session["latest_scores"]))
+    if index.get("protocol", {}).get("id") == EXPECTED_PROTOCOL["id"]:
+        from .expected_report import render_expected_report
+        return render_expected_report(inside(run, session["latest_scores"]))
 
     import csv
 
@@ -692,7 +557,7 @@ def parser() -> argparse.ArgumentParser:
         child = commands.add_parser(name)
         child.add_argument("--run", type=Path, required=True)
         if name == "score":
-            child.add_argument("--adjudications", type=Path, help="explicit human source-backed exclusions, uniformly applied")
+            child.add_argument("--adjudications", type=Path, help="unsupported in expected-only evaluation; fails without reading the file")
             child.add_argument("--freeze", type=Path, help="validated scoring software and protocol identity")
     return command
 

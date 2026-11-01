@@ -212,6 +212,33 @@ def test_unmarked_business_note_is_not_assigned_to_unrelated_records_or_periods(
     assert all(not value.note_refs for value in view.records[0].values)
 
 
+def test_explicitly_linked_numeric_math_footnote_prints_the_value_and_full_note():
+    f = table([["Item", "2034", "2033"], ["Alpha", r"\( 17^4 \)", "11"]])
+    note = "4 Includes the newly opened operation."
+    f.context_refs = (TextRef("native", 1, "n4", note, "note", 0, len(note), (1,), (1, 2)),)
+    before = deepcopy(f)
+    view = bind_table_view("view", [f], [f])
+    rendered = render_semantic_view(view, [f])
+    assert "2034：17（附注：4 Includes the newly opened operation.）" in rendered
+    assert "2033：11" in rendered and "2033：11（附注" not in rendered
+    assert f == before
+
+
+@pytest.mark.parametrize("text,note", [
+    (r"\( 17^4 \)", "5 A different note."),
+    (r"17^4", "4 A bare caret remains untyped."),
+    (r"\( x^4 \)", "4 A variable remains mathematical text."),
+    (r"\( 17 * 10^4 \)", "4 A scientific expression remains mathematical text."),
+])
+def test_numeric_note_rendering_preserves_unlinked_or_nonscalar_mathematics(text, note):
+    from app.services.table_semantics_service import _literal
+
+    f = table([["Item", "2034", "2033"], ["Alpha", text, "11"]])
+    f.context_refs = (TextRef("native", 1, "n4", note, "note", 0, len(note), (1,), (1, 2)),)
+    rendered = render_semantic_view(bind_table_view("view", [f], [f]), [f])
+    assert _literal(text) in rendered
+
+
 def test_ordinal_column_is_a_field_while_explicit_project_name_identifies_the_record():
     f = table([["序号", "项目", "金额(万元)"], ["1", "Alpha", "17"], ["2", "Beta", "11"]])
     view = bind_table_view("view", [f], [f])

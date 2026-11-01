@@ -480,81 +480,58 @@ def _synthetic_run(tmp_path, monkeypatch, *, native_status="present"):
     return run, source_observation, source_native, untouched
 
 
-def test_cli_saves_versioned_derived_observation_and_readback_diagnostics_without_rewriting_inputs(
-    tmp_path, monkeypatch,
-):
-    from moparse_eval.cli import score_run
+def test_common_reader_preserves_versioned_observations_without_rewriting_inputs(tmp_path, monkeypatch):
+    from moparse_eval.expected_evaluation import native_observation
 
     run, source_observation, source_native, untouched = _synthetic_run(tmp_path, monkeypatch)
-    relations_by_run = []
-    declarations_by_run = []
-    for _ in range(2):
-        index_path = score_run(run)
-        index = json.loads(index_path.read_text())
-        readback = index["native_readback"]
-        assert readback["reader_version"] == READBACK_VERSION
-        assert len(readback["observations"]) == 1
-        item = readback["observations"][0]
+    case = json.loads((run / "run.json").read_text())["cases"][0]
+    versions = []
+    for version in range(2):
+        analysis = run / "analysis" / str(version)
+        derived = native_observation(run, case, analysis=analysis, software_id="synthetic-software")
+        item = derived["scoring_readback"]
+        assert item["reader_version"] == READBACK_VERSION
         assert item["source_observation"] == str(source_observation.relative_to(run))
         assert item["source_native"] == str(source_native.relative_to(run))
         assert item["software_id"] == "synthetic-software"
         assert math.isfinite(item["readback_seconds"]) and item["readback_seconds"] >= 0
         assert item["observation"].endswith("observations/P06/quality800-r1/synthetic.json")
-        assert item["diagnostics"].endswith("observations/P06/quality800-r1/synthetic.readback.json")
-        derived = json.loads((run / item["observation"]).read_text())
-        diagnostics = json.loads((run / item["diagnostics"]).read_text())
-        assert diagnostics["reader_version"] == READBACK_VERSION
+        assert (analysis / item["diagnostics"]).is_file()
         assert _continuations(derived)
-        relations_by_run.append(derived["relations"])
-        declarations_by_run.append(derived["native_table_declarations"])
-        scored = json.loads((run / index["results"][0]).read_text())
-        assert scored["timing"]["processing_seconds"] == 2.5
+        scored = score_case(_relation_reference(), derived)
         relations = {row["type"]: row for row in scored["relations"]}
         assert relations["continues"]["correct"] is True
         assert relations["separate"]["correct"] is False
-    assert relations_by_run[0] == relations_by_run[1]
-    assert declarations_by_run[0] == declarations_by_run[1]
+        assert derived["timing"] == json.loads(source_observation.read_text())["timing"]
+        versions.append((derived["relations"], derived["native_table_declarations"]))
+    assert versions[0] == versions[1]
     assert all(path.read_bytes() == payload for path, payload in untouched.items())
 
 
-@pytest.mark.parametrize("native_status,diagnostic_status", [
-    ("missing", "native_missing"),
-])
-def test_cli_missing_or_malformed_native_keeps_independent_candidate_status_and_known_targets(
-    tmp_path, monkeypatch, native_status, diagnostic_status,
-):
-    from moparse_eval.cli import score_run
+def test_missing_native_keeps_available_candidate_content_and_status(tmp_path, monkeypatch):
+    from moparse_eval.expected_evaluation import native_observation
 
-    run, source_observation, source_native, untouched = _synthetic_run(
-        tmp_path, monkeypatch, native_status=native_status,
-    )
-    index = json.loads(score_run(run).read_text())
-    item = index["native_readback"]["observations"][0]
-    assert item["source_native"] == str(source_native.relative_to(run))
-    assert "native_status" in item
-    derived = json.loads((run / item["observation"]).read_text())
-    diagnostics = json.loads((run / item["diagnostics"]).read_text())
+    run, source_observation, _, untouched = _synthetic_run(tmp_path, monkeypatch, native_status="missing")
+    case = json.loads((run / "run.json").read_text())["cases"][0]
+    derived = native_observation(run, case, analysis=run / "analysis", software_id="synthetic-software")
     original = json.loads(source_observation.read_text())
-    assert diagnostics["status"] == diagnostic_status
+    assert derived["scoring_readback"]["native_status"] == "native_missing"
     assert derived["status"] == original["status"] == "completed"
     assert derived["pages"] == original["pages"]
     assert derived["timing"] == original["timing"]
     assert _continuations(derived) == []
-    scored = json.loads((run / index["results"][0]).read_text())
-    assert scored["status"] == "completed"
-    assert scored["metrics"]["unit_presence"]["target_units"] == 2
-    assert scored["metrics"]["unit_presence"]["recall"] == 1
-    assert scored["metrics"]["relations"]["target_units"] == 2
     assert all(path.read_bytes() == payload for path, payload in untouched.items())
 
 
-def test_cli_does_not_publish_engineering_readback_errors(tmp_path, monkeypatch):
-    from moparse_eval.cli import score_run
+def test_common_reader_does_not_publish_engineering_readback_errors(tmp_path, monkeypatch):
+    from moparse_eval.expected_evaluation import native_observation
 
     run, _, _, untouched = _synthetic_run(tmp_path, monkeypatch, native_status="malformed")
+    case = json.loads((run / "run.json").read_text())["cases"][0]
     before = (run / "run.json").read_bytes()
     with pytest.raises(ValueError, match="reader failed; repair readback"):
-        score_run(run)
+        native_observation(run, case, analysis=run / "analysis")
+    assert not (run / "analysis").exists()
     assert (run / "run.json").read_bytes() == before
     assert all(path.read_bytes() == payload for path, payload in untouched.items())
 

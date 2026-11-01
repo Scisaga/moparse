@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import re
+from functools import lru_cache
 from typing import Any
 
 from .information_reading import (
@@ -31,6 +32,13 @@ def period_text(text: str) -> str:
     return re.sub(r"(?<=截至)\s+(?=\d)|(?<=\d)\s+(?=[年月日])|(?<=[年月])\s+(?=\d)|(?<=年)\s+(?=[度末])", "", text)
 
 
+def business_scope_text(text: str) -> str:
+    """Read explicit scope-path separators as heading layout, retaining words and IDs."""
+    text = label_text(normalize_text(text, collapse_whitespace=True))
+    text = re.sub(r"\s+/\s+", " ", text)
+    return re.sub(r"(?<=[\u3400-\u9fff])\s+(?=[\u3400-\u9fff\d(])|(?<=[\d)])\s+(?=[\u3400-\u9fff(])", "", text)
+
+
 def field_value_text(text: str) -> str:
     """Ignore display spacing beside an existing currency or percent symbol.
 
@@ -42,6 +50,7 @@ def field_value_text(text: str) -> str:
     return "".join(scalar.groups()) if scalar else text
 
 
+@lru_cache(maxsize=8192)
 def label_pattern(label: str) -> str:
     left = r"(?<!\w)" if re.match(r"\w", label[0]) else ""
     right = r"(?!\w)" if re.match(r"\w", label[-1]) else ""
@@ -52,6 +61,7 @@ def label_pattern(label: str) -> str:
     return left + re.escape(label) + right
 
 
+@lru_cache(maxsize=65536)
 def label_in_text(label: str, text: str, collapse_whitespace: bool) -> bool:
     label = label_text(normalize_text(label, collapse_whitespace=collapse_whitespace))
     text = label_text(normalize_text(text, collapse_whitespace=collapse_whitespace))
@@ -110,6 +120,13 @@ def row_path_locates(labels: list[str], native: Any, collapse_whitespace: bool, 
     if (not isinstance(native, list) or not native or len(native) > 12
             or any(not isinstance(part, str) or not part.strip() for part in native)):
         return False
+    return _row_path_locates_cached(tuple(labels), tuple(native), collapse_whitespace, require_leaf=require_leaf)
+
+
+@lru_cache(maxsize=32768)
+def _row_path_locates_cached(labels: tuple[str, ...], native: tuple[str, ...], collapse_whitespace: bool, *,
+                              require_leaf: bool = False) -> bool:
+    """Memoize the same immutable label-path calculation, without values or IDs."""
     wanted = [label_text(normalize_text(label, collapse_whitespace=collapse_whitespace)) for label in labels]
     if not wanted or not all(wanted):
         return False
@@ -285,16 +302,21 @@ def qualifier_evidence(expected: dict[str, Any], cell: dict[str, Any],
     for key, value in expected.items():
         if key in cell:
             actual = cell[key]
-            if isinstance(value, str) and isinstance(actual, str):
+            if key == "note_texts" and isinstance(value, list) and isinstance(actual, list):
+                correct = {normalize_text(v, collapse_whitespace=True) for v in value} == {
+                    normalize_text(v, collapse_whitespace=True) for v in actual}
+            elif isinstance(value, str) and isinstance(actual, str):
                 wanted = normalize_text(value, collapse_whitespace=True)
                 found_literal = normalize_text(actual, collapse_whitespace=True)
-                if key == "unit":
+                if key in {"unit", "currency"}:
                     # Outer legend parentheses are presentation, not an
                     # accounting sign or a change to the unit's multiplier.
                     wanted = unit_text(wanted)
                     found_literal = unit_text(found_literal)
                 elif key == "period":
                     wanted, found_literal = period_text(wanted), period_text(found_literal)
+                elif key == "business_scope":
+                    wanted, found_literal = business_scope_text(wanted), business_scope_text(found_literal)
                 correct = wanted == found_literal
             else:
                 correct = value == actual
@@ -304,7 +326,8 @@ def qualifier_evidence(expected: dict[str, Any], cell: dict[str, Any],
             matching = [item for item in found if not (
                 key == "period" and re.fullmatch(r"(?:19|20)\d{2}(?:年(?:度|末)?)?", value)
                 and len(set(re.findall(r"(?:19|20)\d{2}", item["actual"]))) > 1
-            ) and ((key not in {"unit", "period"} and label_in_text(value, item["actual"], True))
+            ) and ((key not in {"unit", "period", "business_scope"} and label_in_text(value, item["actual"], True))
+                        or key == "business_scope" and label_in_text(business_scope_text(value), business_scope_text(item["actual"]), True)
                         or key == "period" and label_in_text(period_text(value), period_text(item["actual"]), True)
                         or key == "unit" and unit_text(value) == unit_text(item["actual"])
                         or normalize_text(value, collapse_whitespace=True) == normalize_text(item["actual"], collapse_whitespace=True)

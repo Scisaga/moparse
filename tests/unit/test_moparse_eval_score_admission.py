@@ -75,30 +75,35 @@ def test_completed_development_arm_waits_for_driver_restoration_record(tmp_path,
     {"state": "failed"},
     {},
 ])
-def test_terminal_restored_or_legacy_runs_continue_to_normal_dataset_read(tmp_path, monkeypatch, extra):
+def test_terminal_restored_or_legacy_runs_reach_common_expected_evaluation(tmp_path, monkeypatch, extra):
+    from moparse_eval import expected_evaluation
+
     run, metadata = _runtime_metadata(tmp_path, extra)
     original_read = cli.read_json
     reads = []
 
-    class NormalDatasetReadReached(RuntimeError):
+    class CommonEvaluationReached(RuntimeError):
         pass
 
-    def stop_at_normal_dataset_read(path):
+    def read_runtime_metadata(path):
         reads.append(path)
-        if path == metadata:
-            return original_read(path)
-        assert str(path) == "/invalid-dataset-must-not-be-read/manifest.json"
-        raise NormalDatasetReadReached("normal dataset read reached without opening a dataset")
+        assert path == metadata
+        return original_read(path)
+
+    def stop_at_common_evaluation(directory, destination, **kwargs):
+        assert directory == run
+        assert kwargs["freeze"] == tmp_path / "validation.json"
+        raise CommonEvaluationReached
 
     def forbidden(*_args, **_kwargs):
-        pytest.fail("this synthetic test must stop before software identity or scoring writes")
+        pytest.fail("this admission test must stop before reading dataset or writing scores")
 
-    monkeypatch.setattr(cli, "read_json", stop_at_normal_dataset_read)
-    monkeypatch.setattr(cli, "code_identity", forbidden)
+    monkeypatch.setattr(cli, "read_json", read_runtime_metadata)
+    monkeypatch.setattr(expected_evaluation, "evaluate_saved", stop_at_common_evaluation)
     monkeypatch.setattr(cli, "write_json", forbidden)
-    with pytest.raises(NormalDatasetReadReached):
-        cli.score_run(run)
-    assert len(reads) == 2 and reads[0] == metadata
+    with pytest.raises(CommonEvaluationReached):
+        cli.score_run(run, freeze=tmp_path / "validation.json")
+    assert reads == [metadata]
     assert not (run / "artifacts").exists()
 
 

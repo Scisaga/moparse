@@ -1,0 +1,22 @@
+{
+  "software_id": "2828b9bbcdb702196a873d008b3465c76221d5a752fe87049ac794df0fa14411",
+  "protocol_id": "mo-parse-expected-only-v1",
+  "git_head": "05279aeb55ac4f4979720c3eca200b149b2c5db1",
+  "validation": {
+    "status": "passed",
+    "scope": "synthetic_software_only",
+    "software_id": "2828b9bbcdb702196a873d008b3465c76221d5a752fe87049ac794df0fa14411",
+    "paired_native_rescore": true,
+    "reference_policy": "canonical_expected_only",
+    "static": {
+      "ruff": "passed",
+      "mypy": "passed: five new modules with follow-imports=skip"
+    },
+    "command": ".venv/bin/python -m pytest -q tests/unit moparse_eval/tests tests/test_markdown_policy.py --tb=short --junitxml=/tmp/moparse-expected-only-r5-adoption-validation.xml",
+    "log": "/tmp/moparse-expected-only-r5-adoption-validation.log",
+    "tests": 2374,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 1
+  }
+}

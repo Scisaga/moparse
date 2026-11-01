@@ -664,6 +664,9 @@ def render_service_report(run_path: str | Path) -> Path:
         raise ValueError("the service scores were withdrawn; an obsolete report cannot be regenerated")
     index_path = directory / str(run.get("score_index", "scores/index.json"))
     index = _read_json(index_path) if index_path.is_file() else {"results": [], "score_id": None}
+    if index.get("protocol", {}).get("id") == "mo-parse-expected-only-v1":
+        from .expected_report import render_expected_report
+        return render_expected_report(index_path)
     if index.get("state") == "primary_complete_stages_pending":
         raise ValueError("stage scoring is still pending; this is not a completed service report")
     outputs = {directory / name for name in ("summary.json", "paired-units.json", "paired-units.csv", "report.md", "appendix.md")}

@@ -1,0 +1,17 @@
+{
+  "state": "passed",
+  "software_id": "2828b9bbcdb702196a873d008b3465c76221d5a752fe87049ac794df0fa14411",
+  "inspected": "generated_native-business.png",
+  "layout": "all_eight_pipeline_labels_values_and_axis_visible",
+  "svg_font_stack": "'DejaVu Sans', 'Noto Sans CJK SC', sans-serif",
+  "pdf_examined": "generated_native-business.pdf",
+  "pdf_fonts": [
+    {
+      "name": "BMQQDV+DejaVuSans",
+      "type": "Type0",
+      "extension": "ttf",
+      "embedded_bytes": 11860
+    }
+  ],
+  "source_pdf_review": false
+}

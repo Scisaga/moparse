@@ -8,13 +8,14 @@ from __future__ import annotations
 
 import copy
 import re
+from functools import lru_cache
 from typing import Any
 
 from .metrics import normalize_text
 from .representations import visible_text
 
 VERSION = "candidate-information-scopes-2"
-_UNIT = re.compile(r"(?:(?:人民币|人民幣|美元|港元|港幣|港币|欧元|歐元)?(?:万亿元|萬億元|千亿元|千億元|百亿元|百億元|十亿元|十億元|亿元|億元|千万元|千萬元|百万元|百萬元|千元|万元|萬元|元)|RMBbn|RMB['’]000|(?:RMB|USD|HKD|CNY)\s+million|in\s+million|\bcontracts?\b|USD|EUR|HKD|CNY|RMB|\$\s*(?:in\s+millions|bn|m)|['’]\s*000\s+(?:contracts|lots)|[个個]?百分点|[个個]?百分點|percentage points?|basis points?|bps|(?:毫克|千克|公斤|(?:千萬|千万|百萬|百万|萬|万|千)?(?:吨|噸))|[%‰$€£¥])(?:/[A-Za-z\u3400-\u9fff0-9³²]+)?")
+_UNIT = re.compile(r"(?:(?:人民币|人民幣|美元|港元|港幣|港币|欧元|歐元)?(?:万亿元|萬億元|千亿元|千億元|百亿元|百億元|十亿元|十億元|亿元|億元|千万元|千萬元|百万元|百萬元|千元|万元|萬元|元)|RMBbn|RMB['’]000|(?:RMB|USD|HKD|CNY)\s+million|(?<!\w)(?:in\s+)?(?:thousands?|millions?|billions?|[Dd]ays?|[Tt]imes)(?!\w)|\bcontracts?\b|[十百千万萬亿億]*股(?!\w)|USD|EUR|HKD|CNY|RMB|\$\s*(?:in\s+millions|bn|m)|['’]\s*000\s+(?:contracts|lots)|[个個]?百分点|[个個]?百分點|percentage points?|basis points?|bps|(?:毫克|千克|公斤|(?:千萬|千万|百萬|百万|萬|万|千)?(?:吨|噸))|[%‰$€£¥])(?:/[A-Za-z\u3400-\u9fff0-9³²]+)?")
 _PERIOD = re.compile(r"(?:截至[^。；;]{1,30}(?:年度|年末)|(?:19|20)\d{2}\s*年(?:度|末)?|(?<!\d)(?:19|20)\d{2}(?!\d))")
 _INTRO = re.compile(r"(?:following\s+table|下表|本表|表中).*(?:percent(?:age)?|单位|單位)|(?:单位|單位|Units?)\s*[:：]", re.I)
 _PRINTED_CAPTION = re.compile(r"^(?:Table|图表|圖表|表)[\s\-–—]*\d+(?:[.\-]\d+)*(?:[.:：]\s*|\s+)", re.I)
@@ -23,6 +24,13 @@ _PRINTED_REPORT_TITLE = re.compile(
     r"Annual\s+Report\s+(?:19|20)\d{2}", re.I)
 _SECTION_PERIOD = re.compile(r"^\s*(?:[（(]\d+[)）]\s*)?((?:19|20)\d{2}\s*年度)[^。；;]{0,32}(?:情况|情況|数据|數據)\s*[:：]$")
 _SCALAR = re.compile(r"\(?\s*[$€£¥]?\s*[+\-−]?(?:\d[\d,.]*|\.\d+)\s*[%‰]?\s*\)?|[—–-]")
+
+
+def currencies(text: str) -> list[str]:
+    """Read an explicit currency declaration, independently of any target."""
+    return list(dict.fromkeys(m[1] for m in re.finditer(
+        r"(?:币种|幣種|Currency)\s*[:：]\s*(人民币|人民幣|美元|港元|港币|港幣|欧元|歐元|RMB|CNY|USD|HKD|EUR)(?![A-Za-z])",
+        normalize_text(text), re.I)))
 
 
 def units(text: str) -> list[str]:
@@ -131,12 +139,14 @@ def unit_scope_literal(text: str) -> bool:
         or re.fullmatch(r"\$\s*in\s+millions(?:,\s*except\s+per\s+share\s+(?:data|amounts))?", unwrapped, re.I)))
 
 
+@lru_cache(maxsize=8192)
 def label_text(text: str) -> str:
     """A label may contain a separate unit suffix; never trim business words."""
     text = normalize_text(text, collapse_whitespace=True)
     # Read typography in labels only. Values keep their original signs,
     # exponents, footnote spelling and strict-character diagnostics.
     text = text.translate(str.maketrans("⁰¹²³⁴⁵⁶⁷⁸⁹₀₁₂₃₄₅₆₇₈₉˒", "01234567890123456789,"))
+    text = text.translate(str.maketrans("⁽⁾", "()"))
     text = text.replace("’", "'").replace("‘", "'")
     text = re.sub(r"(?<=\d)\s+(?=年|月|日)", "", text)
     text = re.sub(r"^[-–—•]\s*(?=[^\W\d_])", "", text)
@@ -255,6 +265,34 @@ def _printed_period_caption(text: str, cells: list[dict[str, Any]]) -> bool:
                for cell in cells if cell.get("row") in headers)
 
 
+def _split_caption_context(blocks: list[dict[str, Any]], position: int) -> dict[str, Any] | None:
+    """Read a numbered caption split into adjacent title, period and legend blocks.
+
+    A table number must anchor the chain. Another table, image, sentence or
+    unrelated paragraph ends it; ordinary nearby prose never becomes a scope.
+    """
+    parts = []
+    for prior in reversed(blocks[:position]):
+        if prior.get("cells") or prior.get("kind") in {"image", "picture", "figure"}:
+            break
+        text = normalize_text(visible_text(str(prior.get("text", "")), prior.get("text_format", "plain")),
+                              collapse_whitespace=True).strip()
+        if not text:
+            continue
+        if len(text) > 160 or re.search(r"[。；;!?！？]", text):
+            break
+        if re.fullmatch(r"(?:附表|附表格|图表|圖表|表|Table)\s*\d+(?:[.\-]\d+)*(?:[.:：]\s*.*|\s+.*)?", text, re.I):
+            parts.append(text)
+            return {"id": prior.get("id"), "kind": "table_caption", "text": " ".join(reversed(parts)),
+                    "readback_evidence": "adjacent_numbered_caption_parts"}
+        if (unit_scope_literal(text) or re.fullmatch(r"[（(][^()（）]{1,120}[）)]", text)
+                or re.match(r"^(?:19|20)\d{2}\s*年[^。；;!?！？]+$", text)):
+            parts.append(text)
+        else:
+            break
+    return None
+
+
 def _annotate_groups(cells: list[dict[str, Any]], headers: set[int]) -> None:
     bands: dict[int, list[dict[str, Any]]] = {}
     for cell in cells:
@@ -315,6 +353,7 @@ def _prose_fields(block: dict[str, Any]) -> list[dict[str, Any]]:
     """
     if block.get("cells") or block.get("kind") not in {"text", "paragraph", "list"}:
         return []
+    from .expected_readback import _IDENTITY, Element, record
     text = visible_text(str(block.get("text", "")), block.get("text_format", "plain"))
     records = []
     for number, line in enumerate(text.splitlines()):
@@ -322,16 +361,23 @@ def _prose_fields(block: dict[str, Any]) -> list[dict[str, Any]]:
         pairs = []
         subjects: list[str] = []
         for index, part in enumerate(parts):
-            match = re.fullmatch(r"([^:：]{1,160})\s*[:：]\s*(.{1,512})", part)
+            match = re.fullmatch(r"([^:：]{1,512})\s*[:：]\s*(.*)", part)
             if match:
                 pairs.append((match[1].strip(), match[2].removesuffix("。")))
             elif index == 0 and len(parts) > 1:
                 subjects.extend(label.strip() for label in re.split(r"\s+/\s+|\s*>\s*", part) if label.strip())
         if not pairs or not (subjects or len(pairs) > 1):
             continue
-        identities = [*subjects, *(value for _key, value in pairs)]
         unit_subjects = [(key, value) for key, value in pairs
                          if unit_scope_literal(key) and not _is_scalar(value)]
+        identities = [*subjects, *(label.strip() for key, value in pairs
+                      if _IDENTITY.fullmatch(key) or re.fullmatch(r"范围|範圍|Scope", key, re.I)
+                      for label in re.split(r"\s+/\s+", value) if label.strip()),
+                      *(label.strip() for _key, value in unit_subjects
+                        for label in re.split(r"\s+/\s+", value) if label.strip())]
+        parsed = record(Element("text", line, (number + 1, number + 1), line))
+        if parsed:
+            identities = parsed["row_header_path"]
         periods = [value for key, value in pairs if re.fullmatch(r"期间|期間|年度|日期|Period|Date|Year", key, re.I)]
         context = [{"id": block.get("id"), "kind": "period", "text": value} for value in periods]
         context += [{"id": block.get("id"), "kind": "explicit_table_introduction", "text": key + ":" + value}
@@ -364,6 +410,7 @@ def read_information_observation(observation: dict[str, Any]) -> dict[str, Any]:
     annual_years = {year for block in annual for year in re.findall(r"(?:19|20)\d{2}", str(block.get("text", "")))}
     report_period = ({"id": annual[0].get("id"), "text": annual[0]["text"], "kind": "period"}
                      if len(annual_years) == 1 else None)
+    business_heading: dict[str, Any] | None = None
     for page in derived.get("pages", []):
         blocks = page.get("blocks", [])
         prose = [record for block in blocks for record in _prose_fields(block)]
@@ -378,6 +425,8 @@ def read_information_observation(observation: dict[str, Any]) -> dict[str, Any]:
         section: dict[str, Any] | None = None
         for position, block in enumerate(blocks):
             text = visible_text(str(block.get("text", "")), block.get("text_format", "plain"))
+            if block.get("kind") in {"heading", "title", "section_header", "paragraph_title", "doc_title"} and text.strip():
+                business_heading = {"id": block.get("id"), "text": text, "kind": "business_heading"}
             lines = [line for line in text.splitlines() if line.strip()]
             tail = lines[-1].strip() if lines else ""
             if _SECTION_PERIOD.fullmatch(tail):
@@ -401,6 +450,11 @@ def read_information_observation(observation: dict[str, Any]) -> dict[str, Any]:
                     else:
                         printed_contexts[key] = field["information_context"]
             contexts: list[dict[str, Any]] = []
+            if business_heading:
+                contexts.append(business_heading)
+            split_caption = _split_caption_context(blocks, position)
+            if split_caption:
+                contexts.append(split_caption)
             notes: list[dict[str, Any]] = []
             numbered_notes: list[dict[str, Any]] = []
             parent = block.get("native_table_container") or block.get("parent_id")
@@ -423,6 +477,9 @@ def read_information_observation(observation: dict[str, Any]) -> dict[str, Any]:
                 if (kind == "table_caption" or _PRINTED_CAPTION.match(value)
                         or _printed_period_caption(value, cells)) and not prior.get("cells"):
                     contexts.append({"id": prior.get("id"), "text": value, "kind": "table_caption"})
+                    continue
+                if not prior.get("cells") and re.fullmatch(r"\s*(?:币种|幣種|Currency)\s*[:：].*", value, re.I):
+                    contexts.append({"id": prior.get("id"), "text": value, "kind": "currency_caption"})
                     continue
                 if not prior.get("cells") and _INTRO.search(value):
                     contexts.append({"id": prior.get("id"), "text": value, "kind": "explicit_table_introduction"})
@@ -546,6 +603,11 @@ def scalar_notes(cell: dict[str, Any]) -> tuple[str, list[str] | None]:
     text = str(cell.get("text", ""))
     notes = cell.get("note_markers")
     definitions = _note_definitions(cell)
+    superscript = re.fullmatch(r"\s*(.*?)([⁰¹²³⁴⁵⁶⁷⁸⁹]+)\s*", text)
+    if superscript and _is_scalar(superscript[1]):
+        marker = superscript[2].translate(str.maketrans("⁰¹²³⁴⁵⁶⁷⁸⁹", "0123456789"))
+        if marker in definitions:
+            return superscript[1], [marker]
     annotations = [a for a in cell.get("inline_annotations", []) if a.get("type") == "superscript"]
     if annotations and all(a.get("text") in definitions for a in annotations):
         spans = sorted(a.get("span", []) for a in annotations)
@@ -562,14 +624,35 @@ def scalar_notes(cell: dict[str, Any]) -> tuple[str, list[str] | None]:
     return text, notes
 
 
+def candidate_note_texts(cell: dict[str, Any]) -> list[str]:
+    """Read a value's own printed note or its explicitly linked definition."""
+    direct = [re.sub(r"^\s*[0-9]{1,2}(?:\s+|[.)、：:])\s*", "", note)
+              for note in cell.get("notes", []) if isinstance(note, str)]
+    _value, markers = scalar_notes(cell)
+    for marker in markers or []:
+        for item in cell.get("information_notes", []):
+            for line in item["text"].splitlines():
+                match = re.match(r"\s*" + re.escape(marker) + r"(?:\s+|[.)、：:])\s*(.+)", line)
+                if match:
+                    direct.append(match[1])
+    return list(dict.fromkeys(text.strip() for text in direct if isinstance(text, str) and text.strip()))
+
+
 def scoped_qualifiers(cell: dict[str, Any], endpoint_texts: list[str]) -> dict[str, list[dict[str, Any]]]:
     """Read qualifiers independent of the expected qualifier or value."""
-    result: dict[str, list[dict[str, Any]]] = {"unit": [], "period": []}
+    result: dict[str, list[dict[str, Any]]] = {"unit": [], "period": [], "currency": [], "business_scope": []}
     column_texts = [*cell.get("column_header_path", []), *cell.get("information_headers", [])]
     direct = [*endpoint_texts, *column_texts]
     if not column_texts:
         column_texts = endpoint_texts
     contexts = cell.get("information_context", [])
+    result["business_scope"] = [{"actual": text, "source": "candidate_printed_business_scope"}
+        for text in [*cell.get("row_header_path", []), *cell.get("information_record_labels", []),
+                     *(item["text"] for item in contexts)]]
+    currency_sources = [*direct, *cell.get("units", []), *cell.get("information_table_units", []),
+                        *(item["text"] for item in contexts)]
+    for currency in dict.fromkeys(c for text in currency_sources for c in currencies(text)):
+        result["currency"].append({"actual": currency, "source": "candidate_explicit_currency"})
     numeric, _notes = scalar_notes(cell)
     own_units = [unit for unit in _scalar_units(numeric) if unit not in {"$", "€", "£", "¥"}]
     row_units = [u for text in [*cell.get("row_header_path", []), *cell.get("information_row_labels", [])] for u in metric_units(text)]

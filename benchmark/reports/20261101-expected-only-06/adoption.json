@@ -1,0 +1,12 @@
+{
+  "P07": {
+    "no_lost_correct_targets": true,
+    "no_lost_exact_value_literals": true,
+    "comparison": "both_previous_and_intermediate_to_current"
+  },
+  "P08": {
+    "no_lost_correct_targets": true,
+    "no_lost_exact_value_literals": true,
+    "comparison": "both_previous_and_intermediate_to_current"
+  }
+}

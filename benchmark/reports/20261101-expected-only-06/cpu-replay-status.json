@@ -1,0 +1,10 @@
+{
+  "state": "completed",
+  "pipelines": [
+    "P07",
+    "P08"
+  ],
+  "model_inference": "not_run",
+  "deployment_status": "not_deployed",
+  "source": "owned_isolated_candidate_execution_records"
+}

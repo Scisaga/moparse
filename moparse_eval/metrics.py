@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import re
 from collections.abc import Iterable
+from functools import lru_cache
 from importlib import import_module
 from typing import Any
 
@@ -18,6 +19,7 @@ except ImportError:  # The isolated parsing workers do not need scoring dependen
 TEXT_POLICY = "mo-parse-eval-text-v1"
 
 
+@lru_cache(maxsize=8192)
 def normalize_text(text: str, *, collapse_whitespace: bool = False) -> str:
     """Apply only the declared width policy, optionally folding whitespace."""
     normalized = "".join(

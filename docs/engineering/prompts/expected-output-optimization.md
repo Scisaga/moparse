@@ -24,9 +24,13 @@ P07/P08是本轮确定性服务转换代码的优化对象，所有八条管线�
 
 先查看Git状态，阅读`AGENTS.md`、`benchmark/evaluation-tasks.md`、`moparse_eval/README.md`、`benchmark/reports/README.md`及`docs/specs/moparse-output-spec.md`。当前验收标准的规范定义在`benchmark/evaluation-tasks.md#current-task-expected-only`，不要复制成另一份标准。
 
-有效保存原生产物位于`benchmark/reports/20261026-lite-v3/`。已有修改前输出位于`benchmark/reports/20261031-units-continuations-04/{p07,p08}/candidate/artifacts/`，已有修改后输出位于`benchmark/reports/20261101-business-coverage-05/{p07,p08}/candidate/artifacts/`，每个样本目录中的`final.md`才是被测实际交付正文。既有运行记录和人工选择声明只用于导航，不通过扫描原PDF重建或验收映射。
+有效保存原生产物位于`benchmark/reports/20261026-lite-v3/`。较早的04版正文位于`benchmark/reports/20261031-units-continuations-04/{p07,p08}/candidate/artifacts/`，本轮开始时的05版正文位于`benchmark/reports/20261101-business-coverage-05/{p07,p08}/candidate/artifacts/`，每个样本目录中的`final.md`才是被测实际交付正文。既有运行记录和人工选择声明只用于导航，不通过扫描原PDF重建或验收映射。
+
+本轮CPU回放正文位于`benchmark/reports/20261101-expected-only-06/{p07,p08}/candidate/artifacts/`。最终共同程序以04、05、06三个保存版本分别计算，初始诊断运行不作为采用依据。最终评分入口支持`--intermediate-root`与仅用于分析的`--workers`；评分协议及依赖身份必须取最终冻结记录。内容元素遗漏检测、字段业务范围与币种、空字段、跨表位置及附注正反例都必须通过，再核对正式索引。
 
 已有1,726个固定字段检查项只覆盖部分业务信息。原图查看57页、旧原图诊断800页、剩余743页等数字均不表示本任务的expected对照完成度，也不是继续工作的前置条件。此前基于原图的采用结论不再适用；既有代码、原生产物、候选、执行计时和测试记录保留，不冒称已按当前唯一标准重新评测。
+
+当前代码已新增`expected_readback`、`expected_scoring`、`expected_evaluation`和`expected_report`，共同协议为`mo-parse-expected-only-v1`。从这些入口继续实现、验证和运行，不另起评分框架。执行入口见`moparse_eval/README.md`；当前评测是否完成、是否仍有读取缺陷以实际运行及逐项证据为准。旧`literal`、字段值、评价状态和原图裁定不进入新程序的答案来源；原生读取诊断及逐项内容留在运行的`private/`目录，正式汇总和报告单独维护。
 
 ## 必须完成的工作
 

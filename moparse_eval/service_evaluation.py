@@ -11,7 +11,6 @@ import argparse
 import asyncio
 import copy
 import json
-import shutil
 import subprocess
 import time
 from dataclasses import asdict
@@ -27,6 +26,8 @@ SCORING_MODULES = (
     "scoring.py", "matching.py", "metrics.py", "representations.py", "adapters.py",
     "native_relations.py", "native_readback.py", "adjudications.py", "information.py",
     "information_reading.py",
+    "expected_readback.py", "expected_scoring.py", "expected_evaluation.py", "expected_report.py",
+    "candidate_delivery.py",
 )
 WORKER_CASE_FIELDS = (
     "case_id", "sample_id", "suite", "phase", "repetition", "input_pages", "input", "native", "job_id",
@@ -46,7 +47,11 @@ def prepare_run(baseline: Path, destination: Path, service_config: Path, *, pipe
         raise ValueError("service comparison supports P07 and P08")
     baseline = baseline.resolve()
     session = read_json(baseline / "run.json")
-    score_index = read_json(inside(baseline, session["latest_scores"]))
+    score_index_path = inside(baseline, session["latest_scores"])
+    score_index = read_json(score_index_path)
+    if (score_index.get("protocol", {}).get("id") != "mo-parse-expected-only-v1"
+            or score_index.get("expected_comparison_complete") is not True):
+        raise ValueError("finish the expected-only native comparison before preparing a new candidate")
     identity = code_identity()
     require_preparation_scorer(score_index["software"], identity, rescore_native=rescore_native)
     if (identity["python"] != score_index["software"]["python"]
@@ -61,8 +66,9 @@ def prepare_run(baseline: Path, destination: Path, service_config: Path, *, pipe
     for relative in score_index["results"]:
         if f"/{pipeline}/quality800-r1/" not in "/" + relative:
             continue
-        scored = read_json(inside(baseline, relative))
-        quality_scores[scored["sample_id"]] = relative, scored
+        score_path = inside(score_index_path.parent, relative)
+        scored = read_json(score_path)
+        quality_scores[scored["sample_id"]] = str(score_path.relative_to(baseline)), scored
     cases = []
     for ordinal, case in enumerate(c for c in session["cases"] if c["pipeline"] == pipeline):
         observation = read_json(inside(baseline, case["observation"]))
@@ -93,7 +99,7 @@ def prepare_run(baseline: Path, destination: Path, service_config: Path, *, pipe
         "baseline_run": str(baseline), "baseline_score_id": score_index["score_id"],
         "baseline_software": score_index["software"], "dataset": str(dataset),
         "dataset_name": manifest.get("name"), "reference_freeze": manifest.get("freeze_record"),
-        "reference_adjudications": score_index.get("reference_adjudications", {}).get("record"),
+        "reference_policy": "canonical_expected_only_no_adjudications",
         "scoring_protocol": score_index["scoring_protocol"], "software": identity,
         "paired_native_rescore_required": True,
         "preparation_requires_fresh_native_scores": rescore_native,
@@ -165,7 +171,8 @@ def require_preparation_scorer(previous: dict[str, Any], current: dict[str, Any]
     still requires a completed all-native index with the exact current code
     identity; native adapters and faithful format readers cannot drift here.
     """
-    allowed = {"scoring.py", "information.py", "information_reading.py"} if rescore_native else set()
+    allowed = {"scoring.py", "matching.py", "information.py", "information_reading.py",
+               "expected_readback.py", "expected_scoring.py", "expected_evaluation.py", "expected_report.py", "candidate_delivery.py"} if rescore_native else set()
     if any(previous["module_sha256"].get(name) != current["module_sha256"].get(name)
            for name in set(SCORING_MODULES) - allowed):
         raise ValueError("paired comparison requires the unchanged frozen shared scorer or an explicit common-rule rescore")
@@ -276,7 +283,8 @@ def require_shared_scoring(record: dict[str, Any], identity: dict[str, Any], *,
         # reuse. Native adapters/bridges, application code and dependencies
         # remain frozen even in this analysis-only mode.
         allowed.update({"scoring.py", "matching.py", "information.py", "information_reading.py", "cli.py",
-                        "report_figures.py", "report_overview.py", "reporting.py", "table_context_report.py"})
+                        "report_figures.py", "report_overview.py", "reporting.py", "table_context_report.py",
+                        "expected_readback.py", "expected_scoring.py", "expected_evaluation.py", "expected_report.py", "candidate_delivery.py"})
     names = set(execution["module_sha256"]) | set(identity["module_sha256"])
     if any(execution["module_sha256"].get(name) != identity["module_sha256"].get(name)
            for name in names - allowed):
@@ -573,164 +581,9 @@ async def worker(plan_path: Path, phase: str) -> None:
 
 
 def score_run(run: Path) -> Path:
-    from .adjudications import reference_exclusions
-    from .cli import code_identity, read_scoring_freeze
-    from .scoring import score_case
-    from .service_artifacts import rebuild_final_result
-    from .service_observation import build_service_observation, read_final_observation
-    record = read_json(run / "run.json")
-    if record["state"] != "completed":
-        raise ValueError("complete all declared replay work before scoring")
-    identity = code_identity()
-    scoring_freeze = read_scoring_freeze(run / "scoring-freeze.json", identity)
-    paired_native_rescore = scoring_freeze.get("paired_native_rescore") is True
-    require_shared_scoring(record, identity, paired_native_rescore=paired_native_rescore)
-    if (scoring_freeze.get("software_id") != identity["software_id"]
-            or scoring_freeze.get("validation", {}).get("status") != "passed"
-            or scoring_freeze.get("execution_software_id") != record["software"]["software_id"]):
-        raise ValueError("analysis software differs from the validated scoring freeze")
-    dataset = Path(record["dataset"])
-    manifest = read_json(dataset / "manifest.json")
-    samples = {sample["id"]: sample for sample in manifest["samples"]}
-    destination_name = "scores-" + identity["software_id"][:12]
-    destination = run / destination_name
-    destination.mkdir(exist_ok=False)
-    index: dict[str, Any] = {
-        "schema": "moparse-service-scores/1", "score_id": run.name + "-paired-" + identity["software_id"][:12],
-        "software": identity, "execution_software": record["software"],
-        "scoring_protocol": scoring_freeze["scoring_protocol"],
-        "reference_freeze": record["reference_freeze"], "created_at": now(), "results": [],
-    }
-    baseline_run = Path(record["baseline_run"])
-    native_index = (paired_native_index(baseline_run, identity) if paired_native_rescore else
-                    read_json(baseline_run / "artifacts" / "scores" / record["baseline_score_id"] / "index.json"))
-    native_observations = {item["source_observation"]: item["observation"]
-                           for item in native_index["native_readback"]["observations"]}
-    native_score_sources = {tuple(Path(path).parts[-3:]): path for path in native_index["results"]}
-    if len(native_score_sources) != len(native_index["results"]):
-        raise ValueError("ambiguous native score identities")
-    quality_cases = [case for case in record["cases"]
-                     if case["phase"] == "measured" and case["suite"] == "quality800"]
-    contexts: list[tuple[dict[str, Any], dict[str, Any], dict[str, Any]]] = []
-    for ordinal, case in enumerate(quality_cases, 1):
-        sample = samples[case["sample_id"]]
-        reference = read_json(inside(dataset, sample["evaluation"]))
-        raw_observation = read_json(inside(run, case["observation"]))
-        readback_started = time.perf_counter()
-        candidate_dir = inside(run, case["observation"]).parent
-        preserved = rebuild_final_result(
-            (candidate_dir / "final.md").read_text(), read_json(candidate_dir / "final.json"),
-            read_json(candidate_dir / "service-evidence.json"), raw_observation)
-        metadata = {key: raw_observation[key] for key in (
-            "run_id", "suite", "phase", "repetition", "timing", "resources", "runtime",
-        ) if key in raw_observation}
-        rebuilt = build_service_observation(preserved, sample_id=case["sample_id"], metadata=metadata,
-                                             pipeline=f"{record['native_pipeline']['pipeline']}+MO-Parse")
-        rebuilt["input_page_count"] = case["input_pages"]
-        rebuilt["dataset"] = record["dataset_name"]
-        observation, readback = read_final_observation(rebuilt)
-        readback["analysis_seconds"] = time.perf_counter() - readback_started
-        readback["timing_scope"] = "scoring_analysis_only_not_service_processing"
-        observation_path = f"{destination_name}/observations/{case['sample_id']}.json"
-        write_json(run / observation_path, observation)
-        write_json(run / f"{destination_name}/observations/{case['sample_id']}.readback.json", readback)
-        reference = {**reference, **{key: observation.get(key) for key in (
-            "suite", "phase", "repetition", "input_page_count", "dataset", "run_id",
-        )}}
-        native_path = inside(baseline_run, native_score_sources[tuple(Path(case["baseline_score_source"]).parts[-3:])])
-        baseline = read_json(native_path)
-        for key in ("document_id", "family_id", "tags", "source_category", "development_exposure"):
-            reference.setdefault(key, baseline.get(key))
-        human = record.get("reference_adjudications")
-        final = score_case(reference, observation, dataset,
-                           reference_exclusions=reference_exclusions(human, case["sample_id"])
-                           if human else None)
-        native_relative = f"{destination_name}/native/{case['sample_id']}.json"
-        final_relative = f"{destination_name}/final/{case['sample_id']}.json"
-        (run / native_relative).parent.mkdir(parents=True, exist_ok=True)
-        if paired_native_rescore:
-            native_observation = read_json(inside(baseline_run, native_observations[case["baseline_observation_source"]]))
-            native_reference = {**reference, **{key: native_observation.get(key) for key in (
-                "suite", "phase", "repetition", "input_page_count", "dataset", "run_id",
-            )}}
-            native_scored = score_case(native_reference, native_observation, dataset,
-                                       reference_exclusions=reference_exclusions(human, case["sample_id"])
-                                       if human else None)
-            write_json(run / native_relative, native_scored)
-        else:
-            shutil.copyfile(native_path, run / native_relative)
-        write_json(run / final_relative, final)
-        entry: dict[str, Any] = {
-            "case_id": case["case_id"], "sample_id": case["sample_id"], "suite": case["suite"],
-            "phase": case["phase"], "repetition": case["repetition"],
-            "baseline_score": native_relative, "final_score": final_relative,
-            "final_observation": observation_path, "stage_scores": [],
-        }
-        if record.get("previous_outputs"):
-            previous_root = Path(record["previous_outputs"]["run"])
-            previous_path = inside(previous_root, case["previous_observation"])
-            previous_raw = read_json(previous_path)
-            previous_dir = previous_path.parent
-            previous_result = rebuild_final_result(
-                (previous_dir / "final.md").read_text(), read_json(previous_dir / "final.json"),
-                read_json(previous_dir / "service-evidence.json"), previous_raw)
-            previous_observation = build_service_observation(previous_result, sample_id=case["sample_id"],
-                metadata=metadata, pipeline=f"{record['native_pipeline']['pipeline']}+MO-Parse:previous")
-            previous_observation.update(input_page_count=case["input_pages"], dataset=record["dataset_name"])
-            previous_observation, previous_readback = read_final_observation(previous_observation)
-            previous_score = score_case(reference, previous_observation, dataset,
-                reference_exclusions=reference_exclusions(human, case["sample_id"]) if human else None)
-            entry["previous_score"] = f"{destination_name}/previous/{case['sample_id']}.json"
-            entry["previous_observation"] = f"{destination_name}/previous-observations/{case['sample_id']}.json"
-            write_json(run / entry["previous_score"], previous_score)
-            write_json(run / entry["previous_observation"], previous_observation)
-            write_json(run / f"{destination_name}/previous-observations/{case['sample_id']}.readback.json", previous_readback)
-        index["results"].append(entry)
-        contexts.append((case, reference, entry))
-        print(json.dumps({"score_phase": "primary", "completed_samples": ordinal,
-                          "declared_samples": len(quality_cases)}), flush=True)
-    write_json(destination / "primary-index.json", {
-        **index, "state": "primary_complete_stages_pending",
-    })
-    for ordinal, (case, reference, entry) in enumerate(contexts, 1):
-        stage_scores = entry["stage_scores"]
-        human = record.get("reference_adjudications")
-        for stage in case.get("stage_outputs", []):
-            name = stage["stage"]
-            if name == "final":
-                stage_scores.append({"stage": name, "scope": stage["scope"], "score": entry["final_score"],
-                                     "observation": entry["final_observation"]})
-                continue
-            stage_started = time.perf_counter()
-            stage_observation, stage_readback = read_final_observation(
-                read_json(inside(run, stage["observation"]))
-            )
-            stage_reference = {**reference, **{key: stage_observation.get(key) for key in (
-                "suite", "phase", "repetition", "input_page_count", "dataset", "run_id",
-            )}}
-            stage_scored = score_case(
-                stage_reference, stage_observation, dataset,
-                reference_exclusions=reference_exclusions(human, case["sample_id"]) if human else None,
-            )
-            stage_relative = f"{destination_name}/stages/{name}/{case['sample_id']}.json"
-            write_json(run / stage_relative, stage_scored)
-            stage_readback["analysis_seconds"] = time.perf_counter() - stage_started
-            stage_readback["timing_scope"] = "stage_scoring_analysis_only_not_service_processing"
-            write_json(run / f"{destination_name}/stages/{name}/{case['sample_id']}.readback.json", stage_readback)
-            stage_scores.append({"stage": name, "scope": stage["scope"], "score": stage_relative,
-                                 "observation": stage["observation"]})
-        print(json.dumps({"score_phase": "stages", "completed_samples": ordinal,
-                          "declared_samples": len(quality_cases)}), flush=True)
-    if code_identity()["software_id"] != identity["software_id"]:
-        raise ValueError("software changed during scoring")
-    index["state"] = "completed"
-    write_json(destination / "index.json", index)
-    record["latest_scores"] = record["score_index"] = f"{destination_name}/index.json"
-    record["scoring_status"] = "completed"
-    record["scoring_software_id"] = identity["software_id"]
-    record["scoring_protocol"] = scoring_freeze["scoring_protocol"]
-    write_json(run / "run.json", record)
-    return destination / "index.json"
+    from .expected_evaluation import score_saved_service
+
+    return score_saved_service(run)
 
 
 def main() -> int:

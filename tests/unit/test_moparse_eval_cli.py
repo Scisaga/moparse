@@ -88,57 +88,13 @@ def test_software_identity_and_snapshot_exclude_synthetic_corpus(tmp_path, monke
     assert not (destination / "benchmark").exists()
 
 
-def test_score_and_report_reproduce_from_outputs_without_writing_reference(tmp_path):
-    dataset = tmp_path / "data"
-    (dataset / "references").mkdir(parents=True)
-    reference = dataset / "references/expected.md"
-    reference.write_text("Synthetic complete paragraph.\n")
-    (dataset / "evaluation").mkdir()
-    case = {
-        "sample_id": "one", "document_id": "doc", "review_status": "confirmed",
-        "units": [{"id": "p", "kind": "text", "pages": [1], "status": "confirmed",
-                   "reference": {"path": "references/expected.md", "lines": [1, 1]}}],
-        "relations": [], "scoring": {"exhaustive_units": True},
-    }
-    (dataset / "evaluation/one.json").write_text(json.dumps(case))
-    declaration = manifest()
-    declaration["samples"][0]["evaluation"] = "evaluation/one.json"
-    (dataset / "manifest.json").write_text(json.dumps(declaration))
+def test_current_scoring_requires_a_freeze_without_reading_references(tmp_path):
     run = tmp_path / "run"
-    (run / "artifacts/P01").mkdir(parents=True)
-    observation = {
-        "sample_id": "one", "pipeline": "P01", "dataset": "synthetic-lite",
-        "suite": "quality800", "phase": "measured", "repetition": 1,
-        "input_page_count": 1, "status": "completed",
-        "pages": [{"page": 1, "blocks": [{"id": "p1", "kind": "text",
-                                              "text": "Synthetic complete paragraph."}]}],
-        "relations": [], "timing": {"processing_seconds": 1.5}, "errors": [],
-    }
-    (run / "artifacts/P01/observation.json").write_text(json.dumps(observation))
-    session = {
-        "run_id": "synthetic-run", "dataset": str(dataset), "formal": True,
-        "state": "completed", "cases": [{"sample_id": "one", "pipeline": "P01",
-            "suite": "quality800", "phase": "measured", "repetition": 1,
-            "observation": "artifacts/P01/observation.json"}],
-    }
-    (run / "run.json").write_text(json.dumps(session))
-    (run / "maintenance.json").write_text(json.dumps(stable_maintenance()))
-    (run / "presentation-notes.json").write_text(json.dumps({"case_studies": [{
-        "pipeline": "P01", "observation": "Synthetic manual observation",
-        "scope": "Only this synthetic example", "path": "manual-review.md",
-    }]}))
-    before = reference.read_bytes()
-    scores = score_run(run)
-    assert scores.is_file()
-    report = report_run(run)
-    first = report.read_text()
-    assert "Synthetic manual observation" in first
-    assert "appendix.md" in first and "figures/quality.png" in first
-    assert (run / "appendix.md").is_file()
-    assert json.loads((run / "summary.json").read_text())["presentation"]["matplotlib_version"]
-    assert report_run(run).read_text() == first
-    assert (run / "summary.json").is_file() and (run / "metrics.csv").is_file()
-    assert reference.read_bytes() == before
+    run.mkdir()
+    (run / "run.json").write_text(json.dumps({"state": "completed", "dataset": "/must-not-read", "cases": []}))
+    with pytest.raises(ValueError, match="requires a validated software freeze"):
+        score_run(run)
+    assert not (run / "artifacts").exists()
 
 
 def test_preflight_passes_live_endpoint_and_continues_only_after_owned_cleanup(tmp_path, monkeypatch):

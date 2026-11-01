@@ -30,6 +30,7 @@ from .information import (
 from .information_reading import (
     _scalar_units,
     ambiguous_note_scalar,
+    candidate_note_texts,
     metric_units,
     read_information_observation,
     scalar_notes,
@@ -90,6 +91,8 @@ def require_complete_target_grading(score: dict[str, Any]) -> None:
 
 def _native_value_and_notes(cell: dict[str, Any], field: dict[str, Any]) -> tuple[str, Any]:
     """Project only explicitly represented native formatting, never a Gold suffix."""
+    if re.fullmatch(r"[（(]?原表留空[）)]?", str(cell.get("text", "")).strip()):
+        return "", cell.get("note_markers")
     return scalar_notes(cell)
 
 
@@ -347,7 +350,7 @@ def _grid_value_header_scope(
 
 def _locate_record_field(
     row_path: list[str], column_path: list[str], pool: list[dict[str, Any]],
-    collapse_whitespace: bool,
+    collapse_whitespace: bool, *, identity_field: bool = False, endpoint_cache: dict | None = None,
 ) -> dict[str, Any]:
     """Select a unique complete label solution before looking at a value."""
     bodies: dict[str, list[dict[str, Any]]] = {}
@@ -355,6 +358,15 @@ def _locate_record_field(
         bodies.setdefault(item["parent_id"], []).append(item)
     solutions: list[dict[str, Any]] = []
     failures: list[dict[str, Any]] = []
+
+    def endpoints(labels, cells, axis):
+        key = tuple(labels), tuple(id(item) for item in cells), axis, collapse_whitespace
+        if endpoint_cache is not None and key in endpoint_cache:
+            return endpoint_cache[key]
+        result = endpoint_paths(labels, cells, axis, collapse_whitespace)
+        if endpoint_cache is not None:
+            endpoint_cache[key] = result
+        return result
     # A value on an explicitly expressed row is distinct from the same label
     # repeated as context on that row's children. Resolve this by labels and
     # declared table identity before columns or expected values are inspected.
@@ -374,7 +386,7 @@ def _locate_record_field(
                              if _candidate_table_identity(item) not in leaf_tables[tuple(physical_rows)]
                              or _record_path_locates(physical_rows, item, collapse_whitespace, require_leaf=True)]
             if explicit_rows:
-                found = [item for item in explicit_rows if column_path_locates(
+                found = [item for item in explicit_rows if not physical_columns or column_path_locates(
                     physical_columns, item["cell"].get("column_header_path"), collapse_whitespace,
                     [*item["cell"].get("units", []), *([item["cell"]["unit"]] if isinstance(item["cell"].get("unit"), str) else [])],
                     [*item["cell"].get("periods", []), *([item["cell"]["period"]] if isinstance(item["cell"].get("period"), str) else [])])]
@@ -391,7 +403,7 @@ def _locate_record_field(
             # their printed labels does not make their representation unreadable.
             grid = [item for item in group if _native_range(item["cell"], "row")
                     and _native_range(item["cell"], "col")]
-            row_paths, reason = endpoint_paths(physical_rows, grid, "row", collapse_whitespace)
+            row_paths, reason = endpoints(physical_rows, grid, "row")
             if reason:
                 failures.append({"body": body, "axis": "row", "reason": reason,
                                  "label_presence": [any(_label_in_native_cell(label, item["text"], collapse_whitespace)
@@ -401,8 +413,18 @@ def _locate_record_field(
                 if any(item["cell"].get("information_header_body_rows") is not None
                        and item["cell"].get("is_row_header") is not True for item in row_endpoints):
                     continue
+                if not physical_columns:
+                    row_ranges = [_native_range(item["cell"], "row") for item in row_endpoints]
+                    endpoint_ids = {item["id"] for item in row_endpoints}
+                    selected = [item for item in grid if item["id"] not in endpoint_ids
+                                and item["cell"].get("is_column_header") is not True
+                                and all(set(_native_range(item["cell"], "row") or []) & set(r or []) for r in row_ranges)]
+                    if len(selected) == 1:
+                        solutions.append({"selected": selected, "rows": row_endpoints, "columns": [],
+                                          "group": group, "method": "explicit_single_value_row", "orientation": orientation})
+                    continue
                 column_pool = _grid_column_header_pool(grid, row_endpoints)
-                column_paths, reason = endpoint_paths(physical_columns, column_pool, "column", collapse_whitespace)
+                column_paths, reason = endpoints(physical_columns, column_pool, "column")
                 if reason:
                     failures.append({"body": body, "axis": "column", "reason": reason,
                                      "label_presence": [any(_label_in_native_cell(label, item["text"], collapse_whitespace)
@@ -418,7 +440,8 @@ def _locate_record_field(
                     selected = []
                     for item in group:
                         native_rows, native_cols = _native_range(item["cell"], "row"), _native_range(item["cell"], "col")
-                        if item["id"] not in endpoint_ids and native_rows and native_cols and (
+                        is_identity_value = identity_field and item["id"] == row_endpoints[-1]["id"]
+                        if (item["id"] not in endpoint_ids or is_identity_value) and native_rows and native_cols and (
                             all(native_rows & extent for extent in row_ranges if extent is not None)
                             and all(native_cols <= extent for extent in col_ranges if extent is not None)
                         ):
@@ -460,7 +483,7 @@ def _locate_record_field(
 
 
 def _required_qualifiers(table: dict[str, Any], field: dict[str, Any]) -> dict[str, Any]:
-    result = {key: field.get(key, table.get(key)) for key in ("unit", "period", "note_markers")}
+    result = {key: field.get(key, table.get(key)) for key in ("unit", "currency", "period", "business_scope", "note_markers", "note_texts")}
     result = {key: value for key, value in result.items() if value is not None}
     # Read an explicitly printed local ratio before a wider table amount
     # caption. This consumes the frozen target literally, without rewriting
@@ -493,8 +516,8 @@ def _field_qualifiers(table: dict[str, Any], field: dict[str, Any], resolution: 
         # An absent value still has an observed row and column scope. Read
         # those actual headers to distinguish an absent CNY measure from an
         # available USD measure; this does not create a candidate value.
-        rows = set.intersection(*(_native_range(item["cell"], "row") or set() for item in row_endpoints))
-        columns = set.intersection(*(_native_range(item["cell"], "col") or set() for item in column_endpoints))
+        rows = set.intersection(*(_native_range(item["cell"], "row") or set() for item in row_endpoints)) if row_endpoints else set()
+        columns = set.intersection(*(_native_range(item["cell"], "col") or set() for item in column_endpoints)) if column_endpoints else set()
         headers = [item["text"] for item in resolution["group"]
                    if rows <= set(item["cell"].get("information_header_body_rows", []))
                    and columns & (_native_range(item["cell"], "col") or set())]
@@ -511,7 +534,11 @@ def _field_qualifiers(table: dict[str, Any], field: dict[str, Any], resolution: 
     qualifiers = _required_qualifiers(table, field)
     if identity_only:
         qualifiers.pop("note_markers", None)
+        qualifiers.pop("note_texts", None)
     native_cell = candidate["cell"]
+    notes = candidate_note_texts(native_cell)
+    if notes:
+        native_cell = {**native_cell, "note_texts": notes}
     if not identity_only and "note_markers" in field:
         qualifiers["note_markers"] = field["note_markers"]
         if actual_notes is not None:
@@ -566,6 +593,7 @@ def _score_records(
     blank_targets = blank_observed = blank_correct = 0
     binding_observable = binding_correct = located_records = 0
     field_text: list[dict[str, Any]] = []
+    endpoint_cache: dict = {}
 
     def reject(output: dict[str, Any], reason: str) -> None:
         output["reason"] = reason
@@ -617,10 +645,13 @@ def _score_records(
         for field, field_row in zip(fields, output["fields"], strict=True):
             value = field.get("value")
             column_path = field.get("column_header_path")
-            if (not isinstance(value, str) or len(value) > 512 or not isinstance(column_path, list)
-                    or not column_path or any(not isinstance(label, str) or not label for label in column_path)):
+            if (not isinstance(value, str) or not isinstance(column_path, list)
+                    or not column_path and field.get("named_value") is not True
+                    or any(not isinstance(label, str) or not label for label in column_path)):
                 raise ValueError("frozen field lacks an evaluable literal or business label")
-            resolution = _locate_record_field(row_path, column_path, pool, collapse_whitespace)
+            resolution = _locate_record_field(row_path, column_path, pool, collapse_whitespace,
+                                              identity_field=field.get("identity_field") is True,
+                                              endpoint_cache=endpoint_cache)
             alternatives = [projected for alternative in resolution.get("alternatives", [])
                             for projected in ([{**alternative, "selected": [candidate]}
                                 for candidate in alternative["selected"] if not candidate.get("duplicate_native_id")]
@@ -1230,6 +1261,8 @@ def score_case(
     reference_exclusions: dict[str, dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     """Score one frozen case. Unknown references never become correct answers."""
+    if reference_exclusions:
+        raise ValueError("expected-only evaluation does not accept reference exclusions")
     if case.get("sample_id") != observation.get("sample_id"):
         raise ValueError("case and observation sample_id differ")
     if observation.get("scoring_readback", {}).get("native_status") == "readback_error":
