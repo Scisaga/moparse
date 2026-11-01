@@ -211,3 +211,41 @@ def test_persistent_native_information_loss_cannot_pass_a_no_new_loss_gate(kind)
     passed = adoption_status({"P07": paired_changes(old, fixed)}, {},
                              {"P07": native_preservation(native, fixed)})["P07"]
     assert passed["native_correct_business_preserved"] and passed["adoptable"]
+
+
+def test_common_reader_changes_require_rescoring_and_cannot_admit_runtime_changes():
+    from copy import deepcopy
+
+    import pytest
+
+    from moparse_eval.service_evaluation import require_shared_scoring
+    software = {"module_sha256": {"information.py": "old", "service_replay_native.py": "same"},
+                "support_module_sha256": {"app/service.py": "same"}, "python": "same", "dependencies": {}}
+    identity = deepcopy(software)
+    identity["module_sha256"]["information.py"] = "new"
+    with pytest.raises(ValueError, match="shared scoring"):
+        require_shared_scoring({"software": software}, identity)
+    require_shared_scoring({"software": software}, identity, paired_native_rescore=True)
+    identity["module_sha256"]["service_replay_native.py"] = "new"
+    with pytest.raises(ValueError, match="shared scoring"):
+        require_shared_scoring({"software": software}, identity, paired_native_rescore=True)
+    identity = deepcopy(software)
+    identity["support_module_sha256"]["app/service.py"] = "new"
+    with pytest.raises(ValueError, match="service implementation"):
+        require_shared_scoring({"software": software}, identity, paired_native_rescore=True)
+
+def test_candidate_preparation_can_require_new_native_grades_but_not_change_native_readers():
+    from copy import deepcopy
+
+    import pytest
+
+    from moparse_eval.service_evaluation import SCORING_MODULES, require_preparation_scorer
+    previous = {'module_sha256': {name: 'same' for name in SCORING_MODULES}}
+    current = deepcopy(previous)
+    current['module_sha256']['information_reading.py'] = 'changed'
+    with pytest.raises(ValueError, match='shared scorer'):
+        require_preparation_scorer(previous, current)
+    require_preparation_scorer(previous, current, rescore_native=True)
+    current['module_sha256']['adapters.py'] = 'changed'
+    with pytest.raises(ValueError, match='shared scorer'):
+        require_preparation_scorer(previous, current, rescore_native=True)

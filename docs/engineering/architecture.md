@@ -160,8 +160,9 @@ GFM 语法要求分隔线之前有一行表头。来源首行角色未知时，�
 | preparation、runtime、executors | 固定依赖、隔离worker、完整SDK执行与直接处理时钟；SDK跨样本保留，初始化与预热单列 |
 | adapters、native_relations | 忠实读取已有原生字段、顺序、格位、媒体和关系，不接收expected |
 | native_readback | 评分侧从已有原生产物补读明确关系，独立保存派生观察与分析耗时，不修改执行产物或解析时间 |
-| matching、metrics、scoring、adjudications | 冻结参考的内容定位、字符与关系评分、明确的人工待判排除；不提供语料验收或修复 |
-| reporting | 从已有运行及评分记录重生覆盖、分项质量、成本、失败与分组比较 |
+| expected_readback、expected_scoring、scoring、matching、metrics | 直接读取只读canonical expected，定位实际内容并比较业务字段；每项只判正确或错误，不读取人工排除 |
+| expected_evaluation、expected_report | 同版评测全部组，从逐项结果核对覆盖、采用门槛及报告 |
+| reporting、report_figures | 保存原生与后处理的直接计时口径，以及共同图件的字体和颜色；不包含旧评分或旧报告分支 |
 | maintenance、request_control、cuda_graphs | 授权GPU 1维护窗口及恢复、在途所有权、预算内图捕获与真实例外记录 |
 
 评分软件和执行软件分别保存身份及源码快照；修复评分读取后统一重评已有八组产物，不将分析耗时回填worker主耗时。实现验证使用合成材料，正式质量与服务恢复状态以[新运行记录](../../benchmark/reports/README.md)为准。

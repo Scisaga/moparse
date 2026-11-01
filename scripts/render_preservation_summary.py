@@ -21,6 +21,7 @@ def render(index_path: Path, output: Path) -> None:
     baseline = "intermediate" if "P07-intermediate" in summary else "previous"
     lines = ["# MO-Parse 本轮修复结果", "",
              "本轮目标是保留原生已正确的信息，并让最终Markdown明确表达已有业务关系。唯一答案来源是现有expected；所有组使用同一冻结程序。", "",
+             "2026-11-02清理已删除错误的旧评分逻辑及其产物；当前成绩由清理后的程序统一重算。以下正文收益仍比较保存的06与08版实际Markdown，本次清理没有新增正文处理。", "",
              "## 原生到最终正文的信息保留", "",
              "| 管线 | 原生正确的全部目标 | 正文仍正确 | 全部目标损失 | 其中业务目标损失 |",
              "| --- | ---: | ---: | ---: | ---: |"]
@@ -98,6 +99,50 @@ def render(index_path: Path, output: Path) -> None:
         "comparison_details": {"previous_to_current": "private/paired-changes.json",
                                "before_to_current": "private/incremental-changes.json",
                                "native_to_current": "private/native-preservation.json"}})
+    coverage = {
+        "samples": len(index["coverage"]),
+        "pages": sum(len({page for scope in row["scope"] for page in scope["pages"]})
+                     for row in index["coverage"]),
+        "documents": first["documents"], "families": len(first["by_family"]),
+        "expected_content_elements": content, "compared_elements": content - omitted,
+        "omitted_elements": omitted, "targets_per_group": targets,
+        "business_targets_per_group": first["by_kind"]["business_field"]["targets"],
+        "groups": len(index["groups"]), "sample_evaluations": len(index["records"]),
+    }
+    preservation = index["native_preservation"]
+    write_json(output / "native-preservation-summary.json", preservation)
+    write_json(output / "conversion-errors.json", {
+        pipeline: [row for row in errors if sources[row[0]]["pipeline"] == pipeline
+                   and row[4] == "final_markdown_conversion"]
+        for pipeline in ("P07", "P08")})
+    status = {"state": "completed_and_adoptable" if passed else "completed_not_adoptable",
+              "software_id": index["software"]["software_id"], "reader": index["protocol"]["reader_revision"],
+              "expected_comparison_complete": True, "coverage": coverage,
+              "native_preservation": preservation, "adoption": index["adoption"],
+              "completion": "completion.json", "remaining_errors": "remaining-errors.json",
+              "deployment": "not_deployed"}
+    write_json(output / "current-validation-status.json", status)
+    write_json(output / "completion.json", {
+        "state": "complete" if passed else "not_adoptable",
+        "objective": "expected_only_common_scoring_and_native_to_final_information_preservation",
+        "software": index["software"], "score_index": str(index_path.resolve()),
+        "coverage": coverage, "adoption": index["adoption"], "native_preservation": preservation,
+        "changes": index["changes"], "incremental_changes": index["incremental_changes"],
+        "remaining_business_errors": {
+            pipeline: summary[f"{pipeline}-current"]["by_kind"]["business_field"]["incorrect"]
+            for pipeline in ("P07", "P08")},
+        "cleanup": "legacy scoring logic and its products deleted without archival; valid outputs retained",
+        "processing": "saved native and actual Markdown reused; original processing costs retained",
+        "model_inference_calls": 0, "deployment": "not_deployed"})
+
+    def compact_costs(value):
+        if isinstance(value, dict):
+            return {key: compact_costs(item) for key, item in value.items() if key != "resource_observations"}
+        if isinstance(value, list):
+            return [compact_costs(item) for item in value]
+        return value
+
+    write_json(output / "execution-cost-summary.json", compact_costs(index["execution_costs"]))
 
 
 if __name__ == "__main__":

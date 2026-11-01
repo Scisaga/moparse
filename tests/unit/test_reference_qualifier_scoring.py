@@ -4,7 +4,8 @@ from copy import deepcopy
 
 import pytest
 
-from moparse_eval.scoring import _required_qualifiers, score_case
+from moparse_eval.matching import match_units
+from moparse_eval.scoring import _required_qualifiers, _score_records
 
 
 def grade(*, header="Movement(%)", value="17", actual="17", candidate_unit=None,
@@ -29,12 +30,13 @@ def grade(*, header="Movement(%)", value="17", actual="17", candidate_unit=None,
         "id": "table", "kind": "table", "cells": [cell],
     }]}]}
     before = deepcopy((reference, observation))
-    result = score_case(reference, observation)
+    targets = [{**row, "reference_text": row["literal"]} for row in reference["units"]]
+    matching = match_units(targets, observation, threshold=0.8, collapse_whitespace=True)
+    units, metrics = _score_records(targets, observation, True, matching)
     assert (reference, observation) == before
-    metrics = result["metrics"]["table_records"]
     assert metrics["target_fields"] == metrics["graded_fields"] == 1
     assert metrics["information_correct_fields"] + metrics["information_incorrect_fields"] == 1
-    return result["units"][0]["fields"][0]
+    return units[0]["fields"][0]
 
 
 @pytest.mark.parametrize("header", ["Movement(%)", "本年比上年增减（%）", "Variation(‰)"])

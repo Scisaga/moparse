@@ -5,14 +5,12 @@ from __future__ import annotations
 import copy
 import inspect
 import json
-import math
 from typing import Any
 
 import pytest
 
 from moparse_eval.native_readback import READBACK_VERSION, read_native_relations
 from moparse_eval.native_relations import HEADING_SCOPE_EVIDENCE
-from moparse_eval.scoring import score_case
 
 
 def _table(text, *, index=0, continues_prev=None, cell_merge=None):
@@ -376,58 +374,6 @@ def test_cell_merge_is_preserved_without_manufacturing_continuation_or_cell_merg
     assert derived["pages"] == observation["pages"]
 
 
-def test_ambiguous_table_view_does_not_reward_physical_fragment_separation():
-    observation, native = _inputs([
-        {"page_idx": 0, "blocks": [_table("A")]},
-        {"page_idx": 1, "blocks": [_table("B", continues_prev=True)]},
-    ])
-    duplicate = copy.deepcopy(observation["native_containers"][1])
-    duplicate["id"] = "ambiguous-second-table"
-    observation["native_containers"].append(duplicate)
-    derived, _ = _read_unchanged(observation, native)
-    result = score_case(_relation_reference(), derived)
-    assert all(not row["correct"] and not row["observable"] for row in result["relations"])
-
-
-@pytest.mark.parametrize("native_status", ["native_missing", "readback_error"])
-def test_unavailable_native_readback_does_not_prove_separate(native_status):
-    observation, _ = _inputs([
-        {"page_idx": 0, "blocks": [_table("A")]},
-        {"page_idx": 1, "blocks": [_table("B", continues_prev=True)]},
-    ])
-    observation["scoring_readback"] = {"native_status": native_status}
-    if native_status == "readback_error":
-        with pytest.raises(ValueError, match="reader failed"):
-            score_case(_relation_reference(), observation)
-    else:
-        result = score_case(_relation_reference(), observation)
-        assert all(not row["correct"] and not row["observable"] for row in result["relations"])
-
-
-def test_explicit_native_continuation_overrides_distinct_physical_table_ids_in_relation_scoring():
-    observation, native = _inputs([
-        {"page_idx": 0, "blocks": [_table("A")]},
-        {"page_idx": 1, "blocks": [_table("B", continues_prev=True)]},
-    ])
-    derived, _ = _read_unchanged(observation, native)
-    scored = score_case(_relation_reference(), derived)
-    relations = {row["type"]: row for row in scored["relations"]}
-    assert relations["continues"]["observable"] is True and relations["continues"]["correct"] is True
-    assert relations["separate"]["observable"] is True and relations["separate"]["correct"] is False
-    assert scored["metrics"]["unit_presence"]["recall"] == 1
-
-
-def test_unresolved_native_predecessor_keeps_continuation_and_separation_unknown():
-    observation, native = _inputs([
-        {"page_idx": 0, "blocks": [_table("A", index=0), _table("Other", index=0)]},
-        {"page_idx": 1, "blocks": [_table("B", continues_prev=True)]},
-    ])
-    derived, _ = _read_unchanged(observation, native)
-    scored = score_case(_relation_reference(), derived)
-    assert scored["metrics"]["unit_presence"]["recall"] == 1
-    assert all(row["observable"] is False and row["correct"] is False for row in scored["relations"])
-
-
 def _write_json(path, value):
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(value), encoding="utf-8")
@@ -480,34 +426,6 @@ def _synthetic_run(tmp_path, monkeypatch, *, native_status="present"):
     return run, source_observation, source_native, untouched
 
 
-def test_common_reader_preserves_versioned_observations_without_rewriting_inputs(tmp_path, monkeypatch):
-    from moparse_eval.expected_evaluation import native_observation
-
-    run, source_observation, source_native, untouched = _synthetic_run(tmp_path, monkeypatch)
-    case = json.loads((run / "run.json").read_text())["cases"][0]
-    versions = []
-    for version in range(2):
-        analysis = run / "analysis" / str(version)
-        derived = native_observation(run, case, analysis=analysis, software_id="synthetic-software")
-        item = derived["scoring_readback"]
-        assert item["reader_version"] == READBACK_VERSION
-        assert item["source_observation"] == str(source_observation.relative_to(run))
-        assert item["source_native"] == str(source_native.relative_to(run))
-        assert item["software_id"] == "synthetic-software"
-        assert math.isfinite(item["readback_seconds"]) and item["readback_seconds"] >= 0
-        assert item["observation"].endswith("observations/P06/quality800-r1/synthetic.json")
-        assert (analysis / item["diagnostics"]).is_file()
-        assert _continuations(derived)
-        scored = score_case(_relation_reference(), derived)
-        relations = {row["type"]: row for row in scored["relations"]}
-        assert relations["continues"]["correct"] is True
-        assert relations["separate"]["correct"] is False
-        assert derived["timing"] == json.loads(source_observation.read_text())["timing"]
-        versions.append((derived["relations"], derived["native_table_declarations"]))
-    assert versions[0] == versions[1]
-    assert all(path.read_bytes() == payload for path, payload in untouched.items())
-
-
 def test_missing_native_keeps_available_candidate_content_and_status(tmp_path, monkeypatch):
     from moparse_eval.expected_evaluation import native_observation
 
@@ -536,105 +454,6 @@ def test_common_reader_does_not_publish_engineering_readback_errors(tmp_path, mo
     assert all(path.read_bytes() == payload for path, payload in untouched.items())
 
 
-def _assert_unknown_continuation_pair(derived):
-    assert _continuations(derived) == []
-    for reference in (
-        _relation_reference(),
-        _relation_reference(source="B", target="A", source_page=2, target_page=1),
-    ):
-        scored = score_case(reference, derived)
-        assert scored["metrics"]["unit_presence"]["recall"] == 1
-        assert all(not row["correct"] and not row["observable"] for row in scored["relations"])
-
-
-@pytest.mark.parametrize("identity_problem", [
-    "missing", "nonexistent_document", "unrecognized_schema", "integer", "list", "mapping",
-])
-def test_mineru_true_declaration_is_not_hidden_by_unresolved_document_identity(identity_problem):
-    observation, native = _inputs([
-        {"page_idx": 0, "blocks": [_table("A")]},
-        {"page_idx": 1, "blocks": [_table("B", continues_prev=True)]},
-    ])
-    raw = native["pages"][1]["raw"]
-    if identity_problem == "missing":
-        raw.pop("native_document")
-    elif identity_problem == "nonexistent_document":
-        raw["native_document"] = "#/documents/999"
-    elif identity_problem == "unrecognized_schema":
-        native["documents"][0]["schema"] = "synthetic-unrecognized.middle"
-    elif identity_problem == "integer":
-        raw["native_document"] = 0
-    elif identity_problem == "list":
-        raw["native_document"] = ["#/documents/0"]
-    else:
-        raw["native_document"] = {"id": "#/documents/0"}
-    derived, diagnostics = _read_unchanged(observation, native)
-    declaration = _declaration(derived, "#/pages/1/raw/blocks/0")
-    assert declaration["continues_prev"] is True
-    assert declaration["status"] == "unknown"
-    assert declaration["previous_table_id"] is None
-    assert diagnostics["records"]
-    _assert_unknown_continuation_pair(derived)
-
-
-def _replace_second_page_observed_tables(observation, pointer_text_pairs):
-    observation["native_containers"] = [
-        item for item in observation["native_containers"]
-        if not item["native_path"].startswith("#/pages/1/")
-    ]
-    observation["pages"][1]["blocks"] = []
-    for pointer, text in pointer_text_pairs:
-        _observe_table(observation, 2, pointer, text)
-
-
-@pytest.mark.parametrize("shape", ["index_mapping", "wrapper_mapping"])
-def test_nonlist_raw_blocks_keeps_visible_true_flag_unknown_instead_of_hiding_it(shape):
-    observation, native = _inputs([
-        {"page_idx": 0, "blocks": [_table("A")]},
-        {"page_idx": 1, "blocks": [_table("B", continues_prev=True)]},
-    ])
-    table = native["pages"][1]["raw"]["blocks"][0]
-    key = "0" if shape == "index_mapping" else "wrapped"
-    native["pages"][1]["raw"]["blocks"] = {key: table}
-    pointer = f"#/pages/1/raw/blocks/{key}"
-    _replace_second_page_observed_tables(observation, [(pointer, "B")])
-    derived, _ = _read_unchanged(observation, native)
-    declaration = _declaration(derived, pointer)
-    assert declaration["continues_prev"] is True
-    assert declaration["status"] == "unknown"
-    assert declaration["previous_table_id"] is None
-    _assert_unknown_continuation_pair(derived)
-
-
-@pytest.mark.parametrize("order_problem", ["reversed_indices", "duplicate_indices", "missing_index"])
-def test_invalid_order_in_raw_view_cannot_borrow_valid_canonical_document_order(order_problem):
-    observation, native = _inputs([
-        {"page_idx": 0, "blocks": [_table("A")]},
-        {"page_idx": 1, "blocks": [
-            _table("B", index=0, continues_prev=True), _table("Other", index=1),
-        ]},
-    ])
-    blocks = native["pages"][1]["raw"]["blocks"]
-    if order_problem == "reversed_indices":
-        blocks.reverse()
-        pointer = "#/pages/1/raw/blocks/1"
-        _replace_second_page_observed_tables(observation, [
-            ("#/pages/1/raw/blocks/0", "Other"), (pointer, "B"),
-        ])
-    else:
-        pointer = "#/pages/1/raw/blocks/0"
-        if order_problem == "duplicate_indices":
-            blocks[1]["index"] = 0
-        else:
-            blocks[0].pop("index")
-    derived, _ = _read_unchanged(observation, native)
-    declaration = _declaration(derived, pointer)
-    assert declaration["continues_prev"] is True
-    assert declaration["status"] == "unknown"
-    assert declaration["previous_table_id"] is None
-    _assert_unknown_continuation_pair(derived)
-
-
 @pytest.mark.parametrize("branch", ["glm", "paddle"])
 def test_other_native_schema_is_not_treated_as_missing_mineru_document_identity(branch):
     observation = {
@@ -654,33 +473,3 @@ def test_other_native_schema_is_not_treated_as_missing_mineru_document_identity(
     assert diagnostics["records"] == []
     assert derived.get("native_table_declarations", []) == []
     assert derived["pages"] == observation["pages"]
-
-
-def test_continuation_and_separation_score_the_unordered_pair_when_endpoints_are_reversed():
-    observation, native = _inputs([
-        {"page_idx": 0, "blocks": [_table("A")]},
-        {"page_idx": 1, "blocks": [_table("B", continues_prev=True)]},
-    ])
-    derived, _ = _read_unchanged(observation, native)
-    reference = _relation_reference(source="B", target="A", source_page=2, target_page=1)
-    scored = score_case(reference, derived)
-    assert scored["metrics"]["unit_presence"]["recall"] == 1
-    relations = {row["type"]: row for row in scored["relations"]}
-    assert relations["continues"]["observable"] is True and relations["continues"]["correct"] is True
-    assert relations["separate"]["observable"] is True and relations["separate"]["correct"] is False
-
-
-def test_malformed_wrapper_path_does_not_turn_an_old_observation_pointer_into_separation_evidence():
-    observation, native = _inputs([
-        {"page_idx": 0, "blocks": [_table("A")]},
-        {"page_idx": 1, "blocks": [_table("B", continues_prev=True)]},
-    ])
-    table = native["pages"][1]["raw"]["blocks"][0]
-    native["pages"][1]["raw"]["blocks"] = {"wrapped": table}
-    derived, _ = _read_unchanged(observation, native)
-    declaration = _declaration(derived, "#/pages/1/raw/blocks/wrapped")
-    assert declaration["status"] == "unknown"
-    assert declaration["table_id"] is None
-    assert declaration["previous_table_id"] is None
-    assert declaration["unresolved_observation_table_ids"] == ["#/pages/1/raw/blocks/0"]
-    _assert_unknown_continuation_pair(derived)

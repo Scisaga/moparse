@@ -1,16 +1,16 @@
 {
   "scope": "invented_software_contracts_only_not_quality_results",
-  "software_id": "2828b9bbcdb702196a873d008b3465c76221d5a752fe87049ac794df0fa14411",
+  "software_id": "b2d1a022a2a4225608203449ef64d19571112320c05e2b91be69cc9fdae83643",
   "cases": 12,
-  "contract_failures": 8,
+  "contract_failures": 0,
   "results": [
     {
       "id": "named_html_span",
       "reference_fixture": "- Legal name: Example Corp\n",
       "candidate_fixture": "<table><tr><td></td><td></td><td></td><td></td></tr><tr><td>Legal name</td><td colspan=\"3\">Example Corp</td></tr></table>",
       "intended_all_business_fields_correct": true,
-      "observed_all_business_fields_correct": false,
-      "violates_contract": true,
+      "observed_all_business_fields_correct": true,
+      "violates_contract": false,
       "fields": [
         {
           "row_header_path": [
@@ -23,9 +23,9 @@
             "unit": null,
             "required": {}
           },
-          "actual": "",
-          "outcome": "incorrect",
-          "reason": "value_expression_incorrect"
+          "actual": "Example Corp",
+          "outcome": "correct",
+          "reason": "native_value_compared"
         }
       ]
     },
@@ -59,35 +59,8 @@
       "reference_fixture": "单位：人民币千元。\n\n- 庫存股：2024年金額：17。\n",
       "candidate_fixture": "- 庫存股：2024年金額：17（单位：人民币千元）。\n",
       "intended_all_business_fields_correct": true,
-      "observed_all_business_fields_correct": false,
-      "violates_contract": true,
-      "fields": [
-        {
-          "row_header_path": [
-            "庫存股"
-          ],
-          "expected": {
-            "column_header_path": [
-              "2024年金額"
-            ],
-            "value": "17",
-            "required": {
-              "unit": "股"
-            }
-          },
-          "actual": "17",
-          "outcome": "incorrect",
-          "reason": "required_qualifier_incorrect:unit"
-        }
-      ]
-    },
-    {
-      "id": "stock_account_wrong_count_unit",
-      "reference_fixture": "单位：人民币千元。\n\n- 庫存股：2024年金額：17。\n",
-      "candidate_fixture": "- 庫存股：2024年金額：17（单位：股）。\n",
-      "intended_all_business_fields_correct": false,
       "observed_all_business_fields_correct": true,
-      "violates_contract": true,
+      "violates_contract": false,
       "fields": [
         {
           "row_header_path": [
@@ -99,7 +72,7 @@
             ],
             "value": "17",
             "required": {
-              "unit": "股"
+              "unit": "人民币千元"
             }
           },
           "actual": "17",
@@ -109,12 +82,39 @@
       ]
     },
     {
+      "id": "stock_account_wrong_count_unit",
+      "reference_fixture": "单位：人民币千元。\n\n- 庫存股：2024年金額：17。\n",
+      "candidate_fixture": "- 庫存股：2024年金額：17（单位：股）。\n",
+      "intended_all_business_fields_correct": false,
+      "observed_all_business_fields_correct": false,
+      "violates_contract": false,
+      "fields": [
+        {
+          "row_header_path": [
+            "庫存股"
+          ],
+          "expected": {
+            "column_header_path": [
+              "2024年金額"
+            ],
+            "value": "17",
+            "required": {
+              "unit": "人民币千元"
+            }
+          },
+          "actual": "17",
+          "outcome": "incorrect",
+          "reason": "required_qualifier_incorrect:unit_applicability,unit"
+        }
+      ]
+    },
+    {
       "id": "age_without_shares",
       "reference_fixture": "单位：股。\n\n- 姓名：甲；年龄：52；年末持股数：17。\n",
       "candidate_fixture": "- 姓名：甲；年龄：52；年末持股数：17（单位：股）。\n",
       "intended_all_business_fields_correct": true,
-      "observed_all_business_fields_correct": false,
-      "violates_contract": true,
+      "observed_all_business_fields_correct": true,
+      "violates_contract": false,
       "fields": [
         {
           "row_header_path": [
@@ -142,13 +142,12 @@
               "年龄"
             ],
             "value": "52",
-            "required": {
-              "unit": "股"
-            }
+            "unit": null,
+            "required": {}
           },
           "actual": "52",
-          "outcome": "incorrect",
-          "reason": "required_qualifier_incorrect:unit"
+          "outcome": "correct",
+          "reason": "native_value_compared"
         },
         {
           "row_header_path": [
@@ -175,8 +174,8 @@
       "reference_fixture": "单位：股。\n\n- 姓名：甲；年龄：52；年末持股数：17。\n",
       "candidate_fixture": "- 姓名：甲；年龄：52（单位：股）；年末持股数：17（单位：股）。\n",
       "intended_all_business_fields_correct": false,
-      "observed_all_business_fields_correct": true,
-      "violates_contract": true,
+      "observed_all_business_fields_correct": false,
+      "violates_contract": false,
       "fields": [
         {
           "row_header_path": [
@@ -204,13 +203,12 @@
               "年龄"
             ],
             "value": "52",
-            "required": {
-              "unit": "股"
-            }
+            "unit": null,
+            "required": {}
           },
           "actual": "52",
-          "outcome": "correct",
-          "reason": "native_value_compared"
+          "outcome": "incorrect",
+          "reason": "required_qualifier_incorrect:unit_applicability"
         },
         {
           "row_header_path": [
@@ -237,8 +235,8 @@
       "reference_fixture": "单位：元 币种：人民币。\n\n- 名称：Alpha；金额：17。\n- 名称：Beta；金额：原表留空。\n",
       "candidate_fixture": "单位：元 币种：人民币\n\n- 名称：Alpha；金额：17。\n- 名称：Beta；金额：。\n",
       "intended_all_business_fields_correct": true,
-      "observed_all_business_fields_correct": false,
-      "violates_contract": true,
+      "observed_all_business_fields_correct": true,
+      "violates_contract": false,
       "fields": [
         {
           "row_header_path": [
@@ -311,8 +309,8 @@
             }
           },
           "actual": "",
-          "outcome": "incorrect",
-          "reason": "required_qualifier_incorrect:currency"
+          "outcome": "correct",
+          "reason": "native_value_compared"
         }
       ]
     },
@@ -405,8 +403,8 @@
       "reference_fixture": "单位：人民币百万元。\n\n- 项目：Alpha；一季度：17。\n",
       "candidate_fixture": "单位：人民币百万元\n\n- 项目：Alpha；2024年人民币百万元 / 一季度：17。\n",
       "intended_all_business_fields_correct": true,
-      "observed_all_business_fields_correct": false,
-      "violates_contract": true,
+      "observed_all_business_fields_correct": true,
+      "violates_contract": false,
       "fields": [
         {
           "row_header_path": [
@@ -438,9 +436,9 @@
               "unit": "人民币百万元"
             }
           },
-          "actual": null,
-          "outcome": "incorrect",
-          "reason": "native_fields_unresolved"
+          "actual": "17",
+          "outcome": "correct",
+          "reason": "native_value_compared"
         }
       ]
     },
@@ -493,8 +491,8 @@
       "reference_fixture": "- 总资产(亿元)：2011年：17。\n",
       "candidate_fixture": "- 范围：主要财务数据；项目：财务数据与指标 / 总资产(亿元)；2011年：17。\n",
       "intended_all_business_fields_correct": true,
-      "observed_all_business_fields_correct": false,
-      "violates_contract": true,
+      "observed_all_business_fields_correct": true,
+      "violates_contract": false,
       "fields": [
         {
           "row_header_path": [
@@ -509,9 +507,9 @@
               "unit": "亿元"
             }
           },
-          "actual": null,
-          "outcome": "incorrect",
-          "reason": "native_header_endpoints_unavailable"
+          "actual": "17",
+          "outcome": "correct",
+          "reason": "native_value_compared"
         }
       ]
     },

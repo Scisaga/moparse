@@ -547,3 +547,30 @@ def test_compiler_omission_is_a_software_error_even_if_every_pipeline_would_drop
     monkeypatch.setattr(expected_scoring, "_prepared", broken)
     with pytest.raises(ExpectedReadError, match="omitted by the scoring compiler"):
         grade_expected(expected, candidate(REFERENCE))
+
+
+@pytest.mark.parametrize("pipeline", [f"P{i:02}" for i in range(1, 9)])
+def test_cli_rejects_old_exclusion_option_without_opening_it(tmp_path, monkeypatch, pipeline):
+    from moparse_eval import cli
+    from moparse_eval.cli import parser, score_run
+
+    def forbidden(*args, **kwargs):
+        pytest.fail("no inputs or exclusions may be opened after a rejected option")
+
+    monkeypatch.setattr(cli, "read_json", forbidden)
+    args = parser().parse_args(["score", "--run", str(tmp_path / pipeline),
+                               "--adjudications", str(tmp_path / "must-not-read.json")])
+    with pytest.raises(ValueError, match="does not accept adjudications"):
+        score_run(args.run, adjudications=args.adjudications)
+    assert not (tmp_path / pipeline).exists()
+
+
+def test_reports_reject_the_deleted_scoring_protocol(tmp_path):
+    from moparse_eval.expected_report import load_complete
+    from moparse_eval.packaging import write_json
+
+    index = tmp_path / "index.json"
+    write_json(index, {"state": "completed", "expected_comparison_complete": True,
+                       "protocol": {"id": "mo-parse-eval-information-v5"}})
+    with pytest.raises(ValueError, match="complete expected-only evaluation"):
+        load_complete(index)

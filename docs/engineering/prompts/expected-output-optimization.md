@@ -22,15 +22,15 @@ P07/P08是本轮确定性服务转换代码的优化对象，所有八条管线�
 
 ## 读取当前状态
 
-历史缺陷诊断位于`benchmark/reports/20261101-expected-only-06/root-cause-analysis.md`；旧软件`2828b9bb...`的质量采用及业务完成结论继续撤回，139/211不是可靠的真实损失总数。当前修复入口为`canonical_expected_8`，工程冻结见`benchmark/diagnostics/expected-preservation-validation-r4-20261101.json`，12个独立反例的修复结果见`benchmark/diagnostics/expected-preservation-probes-repaired-r4-20261101.json`。先读取`benchmark/reports/README.md`和`benchmark/reports/20261101-preservation-repair-08/current-validation-status.json`核实整批实际结果，再决定后续工作；反例、软件测试和产物复现不能代替实际expected对照。不得把旧正文到新正文零新增退化当作原生到正文信息损失已经修好。
+当前共同评分入口为`canonical_expected_8`，工程冻结见`benchmark/diagnostics/expected-preservation-validation-20261102.json`，12个独立反例的结果见`benchmark/diagnostics/expected-preservation-probes-20261102.json`。先读取`benchmark/reports/README.md`及`benchmark/reports/20261101-preservation-repair-08/current-validation-status.json`，软件缺陷与修复见同目录`root-cause-resolution.md`。2026-11-02用户要求直接删除错误评分逻辑及其产物，不归档，不恢复旧成绩、旧图件、再生脚本或兼容入口；保留有效原生输入、04/06/08实际正文与处理计时。反例和软件测试不能代替实际expected对照，正文版本之间零退化也不能代替原生到正文信息保留门槛。
 
 先查看Git状态，阅读`AGENTS.md`、`benchmark/evaluation-tasks.md`、`moparse_eval/README.md`、`benchmark/reports/README.md`及`docs/specs/moparse-output-spec.md`。当前验收标准的规范定义在`benchmark/evaluation-tasks.md#current-task-expected-only`，不要复制成另一份标准。
 
 有效保存原生产物位于`benchmark/reports/20261026-lite-v3/`。较早的04版正文位于`benchmark/reports/20261031-units-continuations-04/{p07,p08}/candidate/artifacts/`，本次修复前的06版正文位于`benchmark/reports/20261101-expected-only-06/{p07,p08}/candidate/artifacts/`，每个样本目录中的`final.md`才是被测实际交付正文。既有运行记录和人工选择声明只用于导航，不通过扫描原PDF重建或验收映射。
 
-本轮CPU回放正文位于`benchmark/reports/20261101-preservation-repair-08/{p07,p08}/candidate/artifacts/`。共同程序以04、06、08三个保存版本分别计算，较早诊断不作为采用依据；中间07版因表头回归未采用，保留其拒绝记录。最终评分入口支持`--intermediate-root`与仅用于分析的`--workers`；评分协议及依赖身份必须取最终冻结记录。内容元素遗漏检测、字段业务范围与币种、空字段、跨表位置及附注正反例都必须通过，再核对正式索引。`private/native-preservation.json`直接比较原生正确的全部内容目标与08正文，业务目标单列；`private/incremental-changes.json`比较06与08正文，不能互相代替。
+本轮CPU回放正文位于`benchmark/reports/20261101-preservation-repair-08/{p07,p08}/candidate/artifacts/`。共同程序以04、06、08三个保存版本分别计算，较早诊断不作为采用依据；错误中间版本及其产物已经删除。最终评分入口支持`--intermediate-root`与仅用于分析的`--workers`；评分协议及依赖身份必须取最终冻结记录。内容元素遗漏检测、字段业务范围与币种、空字段、跨表位置及附注正反例都必须通过，再核对正式索引。`private/native-preservation.json`直接比较原生正确的全部内容目标与08正文，业务目标单列；`private/incremental-changes.json`比较06与08正文，不能互相代替。
 
-已有1,726个固定字段检查项只覆盖部分业务信息。原图查看57页、旧原图诊断800页、剩余743页等数字均不表示本任务的expected对照完成度，也不是继续工作的前置条件。此前基于原图的采用结论不再适用；既有代码、原生产物、候选、执行计时和测试记录保留，不冒称已按当前唯一标准重新评测。
+已有1,726个固定字段检查项只覆盖部分业务信息。原图查看57页、旧原图诊断800页、剩余743页等数字均不表示本任务的expected对照完成度，也不是继续工作的前置条件。此前基于原图或旧评分的采用结论不再适用；有效原生产物、候选正文及实际计时继续保留，旧评分逻辑、成绩和临时程序直接删除。
 
 当前代码已新增`expected_readback`、`expected_scoring`、`expected_evaluation`和`expected_report`，共同协议为`mo-parse-expected-only-v1`。从这些入口继续实现、验证和运行，不另起评分框架。执行入口见`moparse_eval/README.md`；当前评测是否完成、是否仍有读取缺陷以实际运行及逐项证据为准。旧`literal`、字段值、评价状态和原图裁定不进入新程序的答案来源；原生读取诊断及逐项内容留在运行的`private/`目录，正式汇总和报告单独维护。
 

@@ -138,9 +138,7 @@ def test_preflight_passes_live_endpoint_and_continues_only_after_owned_cleanup(t
     assert retained["cases"][0]["pipeline"] == "P02"
 
 
-def test_report_loads_configuration_notes_and_retains_cases_without_scoring(tmp_path, monkeypatch):
-    from moparse_eval import report_figures
-
+def test_report_rejects_the_deleted_score_format(tmp_path):
     run = tmp_path / "synthetic-report"
     (run / "scores").mkdir(parents=True)
     (run / "run.json").write_text(json.dumps({
@@ -151,22 +149,9 @@ def test_report_loads_configuration_notes_and_retains_cases_without_scoring(tmp_
     (run / "scores/index.json").write_text(json.dumps({
         "results": [], "unscored": [], "score_id": "synthetic-score",
     }))
-    notes = {
-        "scope": "Synthetic authored presentation only",
-        "case_studies": [{"pipeline": "P23", "observation": "Synthetic manual case",
-                          "scope": "Only this example", "path": "synthetic-case.md"}],
-        "configuration_notes": [{"pipeline": "P23", "note": "Synthetic follow-up",
-                                 "scope": "Separate measurements", "path": "synthetic-followup.md"}],
-    }
-    (run / "presentation-notes.json").write_text(json.dumps(notes))
-    monkeypatch.setattr(report_figures, "render_figures", lambda *_args: [])
-    report = report_run(run)
-    summary = json.loads((run / "summary.json").read_text())
-    assert summary["overview_configuration_notes"] == notes["configuration_notes"]
-    assert summary["overview_case_studies"] == notes["case_studies"]
-    assert summary["presentation"]["scope"] == "existing score and runtime artifacts only; no rescoring, inference or corpus acceptance"
-    assert "[Synthetic manual case](synthetic-case.md)" in report.read_text()
-    assert json.loads((run / "presentation-notes.json").read_text()) == notes
+    with pytest.raises(ValueError, match="canonical expected scores"):
+        report_run(run)
+    assert not (run / "report.md").exists()
 
 
 @pytest.mark.parametrize("suite", ["preflight8", "lite"])

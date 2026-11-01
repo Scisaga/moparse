@@ -24,7 +24,7 @@ from .packaging import inside, read_json, write_json
 ROOT = Path(__file__).resolve().parent.parent
 SCORING_MODULES = (
     "scoring.py", "matching.py", "metrics.py", "representations.py", "adapters.py",
-    "native_relations.py", "native_readback.py", "adjudications.py", "information.py",
+    "native_relations.py", "native_readback.py", "information.py",
     "information_reading.py",
     "expected_readback.py", "expected_scoring.py", "expected_evaluation.py", "expected_report.py",
     "candidate_delivery.py",
@@ -66,9 +66,9 @@ def prepare_run(baseline: Path, destination: Path, service_config: Path, *, pipe
     for relative in score_index["results"]:
         if f"/{pipeline}/quality800-r1/" not in "/" + relative:
             continue
-        score_path = inside(score_index_path.parent, relative)
-        scored = read_json(score_path)
-        quality_scores[scored["sample_id"]] = str(score_path.relative_to(baseline)), scored
+        score_file = inside(score_index_path.parent, relative)
+        scored = read_json(score_file)
+        quality_scores[scored["sample_id"]] = str(score_file.relative_to(baseline)), scored
     cases = []
     for ordinal, case in enumerate(c for c in session["cases"] if c["pipeline"] == pipeline):
         observation = read_json(inside(baseline, case["observation"]))
@@ -275,7 +275,7 @@ def require_shared_scoring(record: dict[str, Any], identity: dict[str, Any], *,
                            paired_native_rescore: bool = False) -> None:
     """Allow a separately validated final reader without altering the shared rules."""
     execution = record["software"]
-    allowed = {"service_evaluation.py", "service_observation.py", "service_report.py", "service_artifacts.py"}
+    allowed = {"service_evaluation.py", "service_observation.py"}
     if paired_native_rescore:
         # These modules only grade or present saved candidates. Admitting a
         # changed common reader/localizer requires all native and final sides
@@ -283,7 +283,7 @@ def require_shared_scoring(record: dict[str, Any], identity: dict[str, Any], *,
         # reuse. Native adapters/bridges, application code and dependencies
         # remain frozen even in this analysis-only mode.
         allowed.update({"scoring.py", "matching.py", "information.py", "information_reading.py", "cli.py",
-                        "report_figures.py", "report_overview.py", "reporting.py", "table_context_report.py",
+                        "report_figures.py", "reporting.py",
                         "expected_readback.py", "expected_scoring.py", "expected_evaluation.py", "expected_report.py", "candidate_delivery.py"})
     names = set(execution["module_sha256"]) | set(identity["module_sha256"])
     if any(execution["module_sha256"].get(name) != identity["module_sha256"].get(name)
@@ -625,8 +625,9 @@ def main() -> int:
     elif args.command == "score":
         print(score_run(args.run))
     elif args.command == "report":
-        from .service_report import render_service_report
-        print(render_service_report(args.run))
+        from .expected_report import render_expected_report
+        run = read_json(args.run / "run.json")
+        print(render_expected_report(inside(args.run, run["score_index"])))
     return 0
 
 

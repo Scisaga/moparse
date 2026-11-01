@@ -372,168 +372,17 @@ def score_run(run: Path, *, adjudications: Path | None = None,
 
 
 def report_run(run: Path) -> Path:
+    """Publish only completed canonical expected scores."""
+    from .expected_report import render_expected_report
+
     run = run.resolve()
     session = read_json(run / "run.json")
     _require_formal_measurement_conditions(run, session)
-    index = read_json(inside(run, session["latest_scores"]))
-    if index.get("protocol", {}).get("id") == EXPECTED_PROTOCOL["id"]:
-        from .expected_report import render_expected_report
-        return render_expected_report(inside(run, session["latest_scores"]))
-
-    import csv
-
-    import matplotlib
-
-    from .report_figures import render_figures
-    from .reporting import (
-        QUALITY_SLICE_COLUMNS,
-        aggregate_reports,
-        render_appendix,
-        render_markdown,
-        render_quality_slices,
-    )
-
-    index = read_json(inside(run, session["latest_scores"]))
-    declarations = index.get("dataset_declaration", {})
-    sample_metadata = declarations.get("sample_metadata", {})
-    unscored = {
-        tuple(item.get(key) for key in ("pipeline", "sample_id", "suite", "phase", "repetition")): item
-        for item in index.get("unscored", [])
-    }
-    results = [read_json(inside(run, relative)) for relative in index["results"]]
-    from .scoring import require_complete_target_grading
-    for result in results:
-        require_complete_target_grading(result)
-    def quality_key(item: Mapping[str, Any]) -> tuple[Any, ...]:
-        return tuple(item.get(key) for key in ("pipeline", "sample_id", "suite", "phase", "repetition"))
-    required = [quality_key(case) for case in session.get("cases", [])
-                if case.get("suite") == "quality800" and case.get("phase") == "measured"
-                and unscored.get(quality_key(case), {}).get("reason") not in {
-                    "no_authored_scoring_reference", "reference_not_declared_visually_confirmed"}]
-    available = [quality_key(result) for result in results
-                 if result.get("suite") == "quality800" and result.get("phase") == "measured"]
-    if len(available) != len(set(available)) or set(required) - set(available):
-        raise ValueError("target grading incomplete: quality cases are missing or duplicated")
-    field_details = []
-    for relative, result in zip(index["results"], results, strict=True):
-        if result.get("suite") != "quality800":
-            continue
-        for unit in result.get("units", []):
-            for field in unit.get("fields", []):
-                if field["status"] == "not_scored":
-                    continue
-                field_details.append({
-                    "pipeline": result.get("pipeline"), "sample_id": result.get("sample_id"),
-                    "unit_id": unit["id"], "field_index": field["index"], "score_path": relative,
-                    "status": field["status"], "reason": field["reason"],
-                    "value_correct": field.get("content_exact"),
-                    "information_status": field["outcome"],
-                    "native_path": field.get("native_path"),
-                    "details_json": json.dumps(field, ensure_ascii=False),
-                })
-    with (run / "field-details.csv").open("w", encoding="utf-8", newline="") as handle:
-        detail_writer = csv.DictWriter(handle, fieldnames=(
-            "pipeline", "sample_id", "unit_id", "field_index", "score_path", "status", "reason",
-            "value_correct", "information_status", "native_path", "details_json"))
-        detail_writer.writeheader()
-        detail_writer.writerows(field_details)
-    scored_identities = {
-        tuple(result.get(key) for key in ("pipeline", "sample_id", "suite", "phase", "repetition"))
-        for result in results
-    }
-    for item in session["cases"]:
-        identity = tuple(item.get(key) for key in ("pipeline", "sample_id", "suite", "phase", "repetition"))
-        if identity in scored_identities:
-            continue
-        observation = read_json(inside(run, item["observation"]))
-        declared = sample_metadata.get(item["sample_id"], {})
-        missing = unscored.get(identity, {})
-        results.append({**observation, **declared,
-                        "input_page_count": observation.get("input_page_count", declared.get("input_page_count")),
-                        "metrics": {}, "coverage": {}, "scorer_status": "not_scored",
-                        "not_scored_reason": missing.get("reason", "warmup_or_no_score_record")})
-    report = aggregate_reports(results)
-    report["execution"] = {
-        key: session.get(key)
-        for key in ("run_id", "formal", "state", "created_at", "finished_at", "errors", "dataset_name", "software", "configurations", "reference_freeze", "execution_sources", "source_runs", "composition", "measurement_conditions")
-    }
-    report["unscored"] = index["unscored"]
-    report["score_id"] = index["score_id"]
-    report["score_index"] = session["latest_scores"]
-    report["scoring_software"] = index.get("software")
-    report["scoring_protocol"] = index.get("scoring_protocol")
-    report["scoring_freeze"] = index.get("scoring_freeze")
-    report["reference_adjudications"] = index.get("reference_adjudications")
-    report["dataset_declaration"] = declarations
-    inspection = run / "artifacts/software-inspection.json"
-    report["software_inspection"] = {
-        "path": str(inspection.relative_to(run)), "record": read_json(inspection),
-    } if inspection.is_file() else None
-    for key, relative in (("qualitative_review", "visual-review/README.md"),
-                          ("execution_failure_notes", "execution-failure-notes.md"),
-                          ("scoring_notes", "scoring-implementation-notes.md")):
-        report[key] = relative if inside(run, relative).is_file() else None
-    # These are declared execution artifacts, never corpus inventory checks.
-    # Lifecycle peaks include model loading and warm-up; do not relabel them
-    # as per-sample resource maxima.
-    report["runtime_evidence"] = {}
-    for config in session.get("configurations", []):
-        name = config["pipeline"]
-        evidence = {}
-        for key, relative in (
-            ("inference_lifecycle", f"artifacts/{name}/inference/inference-ownership.json"),
-            ("inference_lifecycle_resources", f"artifacts/{name}/inference/resources.json"),
-            ("worker_lifecycle_resources", f"artifacts/{name}/worker-resources.json"),
-            ("worker_exit", f"artifacts/{name}/worker-exit.json"),
-        ):
-            path = inside(run, relative)
-            evidence[key] = {"path": relative, "record": read_json(path)} if path.is_file() else None
-        report["runtime_evidence"][name] = evidence
-    maintenance_record = run / "maintenance.json"
-    report["maintenance"] = read_json(maintenance_record) if maintenance_record.is_file() else None
-    # Assess the actual maintenance evidence again rather than treating a
-    # cached run summary as proof of either policy or service restoration.
-    from .rebenchmark import assess_measurement_conditions
-    report["measurement_conditions"] = assess_measurement_conditions(report["maintenance"])
-    presentation_notes = inside(run, "presentation-notes.json")
-    if presentation_notes.is_file():
-        notes = read_json(presentation_notes)
-        report["overview_case_studies"] = notes.get("case_studies", [])
-        report["overview_configuration_notes"] = notes.get("configuration_notes", [])
-    figures = render_figures(report, inside(run, "figures"))
-    report["presentation"] = {
-        "layout": "comparison_overview_with_full_appendix",
-        "generator_software": code_identity(),
-        "matplotlib_version": matplotlib.__version__,
-        "figure_index": "figures/index.json",
-        "appendix": "appendix.md",
-        "scope": "existing score and runtime artifacts only; no rescoring, inference or corpus acceptance",
-    }
-    write_json(run / "summary.json", report)
-    markdown = render_markdown(report, figures)
-    appendix = render_appendix(report)
-    if not session["formal"]:
-        markdown = (
-            "# 工程预检记录：不构成Lite正式评测\n\n"
-            "本次仅运行已目视确认的预检输入；800页正式参考尚未由本次运行证明完成。\n\n"
-            + markdown.replace("# MO-Parse 解析评测报告\n\n", "", 1)
-        )
-    (run / "report.md").write_text(markdown, encoding="utf-8")
-    (run / "appendix.md").write_text(appendix, encoding="utf-8")
-    (run / "group-comparisons.md").write_text(render_quality_slices(report), encoding="utf-8")
-    with (run / "quality-slices.csv").open("w", encoding="utf-8", newline="") as handle:
-        slice_writer = csv.DictWriter(handle, fieldnames=QUALITY_SLICE_COLUMNS)
-        slice_writer.writeheader()
-        slice_writer.writerows(report.get("quality_slices", []))
-    with (run / "metrics.csv").open("w", encoding="utf-8", newline="") as handle:
-        writer = csv.writer(handle)
-        writer.writerow(("pipeline", "sample_id", "suite", "phase", "repetition", "metrics_json"))
-        for result in results:
-            writer.writerow(
-                [result.get(key) for key in ("pipeline", "sample_id", "suite", "phase", "repetition")]
-                + [json.dumps(result.get("metrics", {}), ensure_ascii=False)]
-            )
-    return run / "report.md"
+    index_path = inside(run, session["latest_scores"])
+    index = read_json(index_path)
+    if index.get("protocol", {}).get("id") != SCORING_PROTOCOL["id"]:
+        raise ValueError("reporting accepts only completed canonical expected scores")
+    return render_expected_report(index_path)
 
 
 def parser() -> argparse.ArgumentParser:

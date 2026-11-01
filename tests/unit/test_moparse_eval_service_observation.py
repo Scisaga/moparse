@@ -867,61 +867,6 @@ def test_plain_text_or_headerless_fragment_cannot_acquire_geometry_from_hidden_m
         assert "row" not in observed["pages"][0]["blocks"][0]["cells"][0]
 
 
-def test_unprinted_source_header_span_cannot_credit_flat_gfm_but_explicit_prose_can():
-    from app.services.table_context_service import native_scopes
-    from moparse_eval.scoring import score_case
-    fragment = _fragment([["Item", "2024", ""], ["", "Amount", "Ratio"], ["Revenue", "17", "5%"]])
-    fragment.source_kind = "mineru"
-    next(c for c in fragment.cells if (c.row, c.column) == (0, 0)).row_span = 2
-    next(c for c in fragment.cells if (c.row, c.column) == (0, 1)).column_span = 2
-    fragment.cells = [c for c in fragment.cells if (c.row, c.column) not in {(0, 2), (1, 0)}]
-    for cell in fragment.cells:
-        cell.is_column_header = cell.row < 2
-    fragment.native_evidence = native_scopes(fragment)
-    fragment.source_header_scopes = fragment.native_evidence["header_scopes"]
-    reference = {"sample_id": "sample", "review_status": "confirmed", "units": [{
-        "id": "record", "kind": "table_record", "literal": "Revenue", "status": "confirmed", "pages": [1],
-        "table": {"row_header_path": ["Revenue"], "fields": [{"column_header_path": ["2024", "Ratio"],
-                    "value": "5%", "unit": "%"}]}}]}
-    result = _result(fragment.rendered)
-    result._table_fragments = [fragment]
-    observed = build_service_observation(result, sample_id="sample")
-    derived, _diagnostic = read_final_observation(observed)
-    year = next(c for c in _cells(derived) if c["text"] == "2024")
-    assert year["col_span"] == 1
-    assert score_case(reference, derived)["units"][0]["fields"][0]["outcome"] == "incorrect"
-    view = bind_table_view("view", [fragment], [fragment])
-    result.markdown = render_semantic_view(view, [fragment])
-    result._semantic_tables = [view]
-    final, _diagnostic = read_final_observation(build_service_observation(result, sample_id="sample"))
-    assert score_case(reference, final)["units"][0]["fields"][0]["information"]["status"] == "correct"
-
-
-@pytest.mark.parametrize("first,second,status", [("17", "99", "correct"), ("99", "17", "incorrect")])
-def test_actual_gfm_tables_do_not_share_totals_through_a_private_parent(first, second, status):
-    from moparse_eval.scoring import score_case
-    a = _fragment([["Item", "2024"], ["Alpha", "11"], ["Total", first]], name="a")
-    b = _fragment([["Item", "2024"], ["Beta", "22"], ["Total", second]], name="b")
-    result = _result(a.rendered + "\n\n" + b.rendered)
-    result._table_fragments = [a, b]
-    observation = build_service_observation(result, sample_id="sample")
-    for block in observation["pages"][0]["blocks"]:
-        if block.get("cells"):
-            block.update(native_table_container="hidden-shared-parent", parent_id="hidden-shared-parent")
-    observation.setdefault("native_containers", []).append({"id": "hidden-shared-parent", "label": "table"})
-    derived, _diagnostic = read_final_observation(observation)
-    reference = {"sample_id": "sample", "review_status": "confirmed", "units": [
-        {"id": label, "kind": "table_record", "literal": label, "status": "confirmed", "pages": [1],
-         "table": {"id": "authored-a", "row_header_path": [label],
-                   "fields": [{"column_header_path": ["2024"], "value": value}]}}
-        for label, value in (("Alpha", "11"), ("Total", "17"))]}
-    scored = score_case(reference, derived)
-    total = next(u for u in scored["units"] if u["id"] == "Total")["fields"][0]
-    assert total["native_text"] == first and total["information"]["status"] == status
-    repeated, _diagnostic = read_final_observation(derived)
-    assert score_case(reference, repeated)["metrics"] == scored["metrics"]
-
-
 def test_final_page_comments_resolve_repeated_text_without_mutating_raw_or_timing():
     final = "<!-- page: 1 -->\n\nRepeated sentence.\n\n<!-- page: 2 -->\n\nRepeated sentence."
     observation = build_service_observation(
@@ -1198,34 +1143,6 @@ def test_inline_code_in_final_gfm_is_read_as_code_not_as_emphasis():
         if cell.get("source_cell_ref", {}).get("token") == "t1.r1c1"
     )
     assert actual["text"] == "**literal**"
-
-
-def test_actual_html_spans_survive_delivery_and_private_spans_cannot_repair_missing_markup():
-    from app.services.table_service import table_view
-    from moparse_eval.scoring import score_case
-    fragment = _fragment([['Metric', '2024', ''], ['', 'North', 'South'], ['Revenue', '17', '11']])
-    fragment.cells = [cell for cell in fragment.cells if (cell.row, cell.column) not in {(0, 2), (1, 0)}]
-    fragment.cells[0].row_span = 2
-    fragment.cells[1].column_span = 2
-    marker, rendered = table_view(fragment)
-    assert '<td colspan="2">2024</td>' in rendered
-    fragment.rendered = marker + '\n\n' + rendered
-    result = _result(fragment.rendered)
-    result._table_fragments = [fragment]
-    reference = {'sample_id': 'invented', 'review_status': 'confirmed', 'units': [
-        {'id': 'r', 'kind': 'table_record', 'status': 'confirmed', 'literal': 'Revenue', 'pages': [1],
-         'table': {'row_header_path': ['Revenue'], 'fields': [
-             {'column_header_path': ['2024', 'South'], 'value': '11'}]}}]}
-    observation, _ = read_final_observation(build_service_observation(result, sample_id='invented'))
-    assert score_case(reference, observation)['units'][0]['fields'][0]['outcome'] == 'correct'
-    value = next(cell for cell in _cells(observation) if cell['text'] == '11')
-    a, b = value['final_markdown_span']
-    assert result.markdown[a:b] == '11'
-    # The private source still has its span; only the real HTML has changed.
-    fragment.rendered = rendered.replace(' colspan="2"', '')
-    result.markdown = fragment.rendered
-    observation, _ = read_final_observation(build_service_observation(result, sample_id='invented'))
-    assert score_case(reference, observation)['units'][0]['fields'][0]['outcome'] == 'incorrect'
 
 
 def test_span_display_keeps_source_literal_signs_and_embedded_images_on_the_existing_path():

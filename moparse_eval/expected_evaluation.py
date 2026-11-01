@@ -168,13 +168,13 @@ def paired_changes(previous: list[dict[str, Any]], current: list[dict[str, Any]]
             "raw_literal_gains": literal_gains, "raw_literal_losses": literal_losses}
 
 
-def _change_summary(changes: dict[str, Any]) -> dict[str, Any]:
+def _change_summary(changes: dict[str, Any], *, details: str = "private/paired-changes.json") -> dict[str, Any]:
     return {pipeline: {"new_correct": delta["new_correct"], "lost_correct": delta["lost_correct"],
                        "raw_literal_new_exact": delta["raw_literal_new_exact"],
                        "raw_literal_lost_exact": delta["raw_literal_lost_exact"],
                        "gains_by_kind": dict(Counter(x["kind"] for x in delta["gains"])),
                        "losses_by_kind": dict(Counter(x["kind"] for x in delta["losses"])),
-                       "details": "private/paired-changes.json"}
+                       "details": details}
             for pipeline, delta in changes.items()}
 
 
@@ -213,8 +213,7 @@ def adoption_status(changes: dict[str, Any], incremental: dict[str, Any],
 
 def execution_costs(baseline: Path, session: dict[str, Any], service: dict[str, Any]) -> dict[str, Any]:
     """Copy recorded timing/resource evidence, never rerun a parser or infer cost."""
-    from .reporting import _performance as native_performance
-    from .service_report import _performance as service_performance
+    from .reporting import native_performance, postprocessing_performance
 
     native: dict[str, list[dict[str, Any]]] = {pipeline: [] for pipeline in PIPELINES}
     for case in session["cases"]:
@@ -233,8 +232,8 @@ def execution_costs(baseline: Path, session: dict[str, Any], service: dict[str, 
             "run": str(_directory.resolve()),
             "software_id": run["software"]["software_id"], "execution_environment": run.get("execution_environment"),
             "measurement_notes": run.get("measurement_notes"),
-            "quality800": service_performance(run["cases"], "quality800"),
-            "perf80": service_performance(run["cases"], "perf80"),
+            "quality800": postprocessing_performance(run["cases"], "quality800"),
+            "perf80": postprocessing_performance(run["cases"], "perf80"),
             "warmup": [{k: case.get(k) for k in ("case_id", "sample_id", "input_pages", "timing", "resources", "status")}
                        for case in run["cases"] if case["phase"] == "warmup"]}
     return result
@@ -409,7 +408,7 @@ def evaluate_saved(baseline: Path, output: Path, *, expected_root: Path,
     write_json(output / "private/native-preservation.json", preservation)
     index.update(state="completed", expected_comparison_complete=True, summary=summary, changes=_change_summary(changes),
                  execution_costs=costs,
-                 incremental_changes=_change_summary(incremental),
+                 incremental_changes=_change_summary(incremental, details="private/incremental-changes.json"),
                  native_preservation={p: {**{k: v for k, v in row.items() if k != "losses"},
                                          "details": "private/native-preservation.json"}
                                       for p, row in preservation.items()},

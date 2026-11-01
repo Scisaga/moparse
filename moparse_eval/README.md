@@ -1,6 +1,6 @@
 # MO-Parse 评测工具
 
-当前读取修复由独立契约反例约束：`.venv/bin/python benchmark/diagnostics/expected-preservation-probes.py`应退出0。历史评分假阳性、假阴性及转换单位错误见[根因诊断](../benchmark/reports/20261101-expected-only-06/root-cause-analysis.md)，旧`expected-only-r5`成绩继续撤回采用依据。当前工程冻结、统一重评和正文回放状态由[评测索引](../benchmark/reports/README.md)维护；保留旧产物，不改expected或人工排除目标。
+当前读取修复由独立契约反例约束：`.venv/bin/python benchmark/diagnostics/expected-preservation-probes.py`应退出0。评分及转换缺陷的修复见[根因与修复](../benchmark/reports/20261101-preservation-repair-08/root-cause-resolution.md)。2026-11-02已按用户要求删除旧评分、人工排除、旧报告入口及其产物，不保留归档或旧格式兼容路径。当前工程冻结、统一重评和正文回放状态由[评测索引](../benchmark/reports/README.md)维护；canonical expected保持只读，不人工排除目标。
 
 本次输出优化必须以`pdf_sample/parsing/expected/`中的现有expected为唯一验收标准。直接对照expected与被测实际输出，不查看原PDF图片裁决，不使用原图参考排除决定，不生成另一套答案，也不以原图理由改判或豁免差异。评分索引和已有1,726个字段仅是部分检查项，不能代替expected全部业务内容。完整规则见[当前验收标准](../benchmark/evaluation-tasks.md#current-task-expected-only)，续做使用[任务提示词](../docs/engineering/prompts/expected-output-optimization.md)。
 
@@ -11,7 +11,7 @@
 冻结已通过软件验证的当前身份后，用下列命令生成独立运行目录。`--output`必须尚不存在，冻结记录须位于该目录之外。该命令只评分保存输出，不执行模型或后处理；报告、分项汇总及覆盖记录可见于运行目录，逐项内容、读回观察和变化证据保存在其`private/`目录。
 
 ```bash
-.venv/bin/python -m moparse_eval.expected_evaluation --baseline benchmark/reports/20261026-lite-v3 --previous-root benchmark/reports/20261031-units-continuations-04 --intermediate-root benchmark/reports/20261101-expected-only-06 --current-root benchmark/reports/20261101-preservation-repair-08 --freeze benchmark/diagnostics/expected-preservation-validation-r4-20261101.json --output benchmark/reports/20261026-lite-v3/artifacts/scores/new-preservation-reproduction --report-output benchmark/reports/new-preservation-reproduction --workers 4
+.venv/bin/python -m moparse_eval.expected_evaluation --baseline benchmark/reports/20261026-lite-v3 --previous-root benchmark/reports/20261031-units-continuations-04 --intermediate-root benchmark/reports/20261101-expected-only-06 --current-root benchmark/reports/20261101-preservation-repair-08 --freeze benchmark/diagnostics/expected-preservation-validation-20261102.json --output benchmark/reports/20261026-lite-v3/artifacts/scores/new-preservation-reproduction --report-output benchmark/reports/new-preservation-reproduction --workers 4
 .venv/bin/python scripts/render_preservation_summary.py --index benchmark/reports/20261026-lite-v3/artifacts/scores/new-preservation-reproduction/index.json --output benchmark/reports/new-preservation-reproduction
 ```
 
@@ -27,7 +27,7 @@
 
 `score --run ... --freeze ...`同样使用新入口，先完成八组原生对照，再将新索引写入该运行的`latest_scores`。P07/P08新候选准备要求已有完整expected-only原生索引；历史裁定不会继承，显式`--adjudications`立即失败且不打开裁定文件。评分协议仅由`expected_scoring.PROTOCOL`定义，原生、最终正文、冻结和报告共用该定义。工程检查通过与实际评测完成分别记录，当前运行状态见[评测索引](../benchmark/reports/README.md)。
 
-本轮八组已按[冻结执行身份](../benchmark/execution-lock.json)各完成quality800一次和perf80三轮，原MO服务恢复完成。[原生比较报告](../benchmark/reports/20261026-lite-v3/report.md)的评分完成状态、采用结论与限制由[评测索引](../benchmark/reports/README.md)维护，执行完成不代表质量已完成判定。TTS按2026-10-26授权仅观测、不控制，先前撤回测量不恢复；自动评分不构成语料重新验收。协议由[评测标准](../benchmark/evaluation-tasks.md)维护，配置身份由[八管线计划](../benchmark/pipelines-to-test.md)维护，修复及验证边界见[执行层诊断](../benchmark/diagnostics/README.md)。
+本轮八组已按[冻结执行身份](../benchmark/execution-lock.json)各完成quality800一次和perf80三轮，原MO服务恢复完成。[当前比较报告](../benchmark/reports/20261101-preservation-repair-08/report.md)的评分完成状态、采用结论与限制由[评测索引](../benchmark/reports/README.md)维护，执行完成不代表质量已完成判定。TTS按2026-10-26授权仅观测、不控制，先前撤回测量不恢复；自动评分不构成语料重新验收。协议由[评测标准](../benchmark/evaluation-tasks.md)维护，配置身份由[八管线计划](../benchmark/pipelines-to-test.md)维护，修复及验证边界见[执行层诊断](../benchmark/diagnostics/README.md)。
 
 原件、Lite/Full数据包、冻结参考和作者标注保持原样，不重新生成或机械复核。Full不启动推理。GLM rotary、Paddle颜色接线、旋转路由与异常隔离已修复，并补足Paddle逐区域生成观测。八组在[当前工程预检02](../benchmark/reports/20261026-repaired-preflight-02/)共完成88项任务，其中64项独立单页标定全部成功；[执行就绪记录](../benchmark/reports/20261026-repaired-preflight-02/execution-readiness.json)保留实际配置、超时依据和Graph证据，并为本次冻结锁提供执行依据。这些记录只说明所测范围的执行就绪，不是页面质量评分或语料验收。
 
@@ -62,11 +62,11 @@ Paddle原生服务使用单个长期owner线程统一初始化、推理与关闭
 
 `score`只读expected并写评分结果，不提供语料检查或修复模式。主评测聚焦信息保全、内容准确和必要归属；结构、定位细节与字符差异作为诊断，旧索引未覆盖的expected内容仍需完成对照，不形成第三种业务评分。既定目标遗漏或运行失败仍保留目标分母并判错；字符指标不能替代关键数值和关系正确性。DocVortex续接读回只读取明确原生声明，不补表头、期间、单位或内容。
 
-当前使用`mo-parse-expected-only-v1`，旧`mo-parse-eval-information-v5`仅属历史记录。正文定位及字符诊断、表格或正文中的业务字段分别统计；业务正确要求实际值、业务标签、单位、期间和附注满足expected。每个目标必须完成正确或错误判定，路径分段、表格方向和格位差异不单独扣内容分。完整分母和表达等价政策只维护在[评测标准](../benchmark/evaluation-tasks.md#4-指标与匹配)，旧子集成绩不构成当前任务完成声明。
+当前只使用`mo-parse-expected-only-v1`，旧评分实现及成绩已经删除。正文定位及字符诊断、表格或正文中的业务字段分别统计；业务正确要求实际值、业务标签、单位、期间和附注满足expected。每个目标必须完成正确或错误判定，路径分段、表格方向和格位差异不单独扣内容分。完整分母和表达等价政策只维护在[评测标准](../benchmark/evaluation-tasks.md#4-指标与匹配)，旧子集成绩不构成当前任务完成声明。
 
 冻结并验证评分软件后，可用`score --run <run-directory> --freeze <scoring-freeze.json>`重评分已有产物。freeze记录软件身份、协议身份及通过的工程验证，入口拒绝身份不符或未通过验证的记录，评分结束再次确认软件未变。该操作不启动模型、不改写参考或执行观察，不回填原解析耗时；存在工程读回错误时不发布新的评分索引。当前入口拒绝`--adjudications`，服务配对不继承历史排除记录；合成测试覆盖显式及隐式两条路径，实际统一评测单独记录。
 
-`benchmark/reference-decisions/`保留历史人工记录，当前不以其中原图结论排除目标、修改参考答案或判定输出通过。旧工具支持的`exclude_unit_pending`及历史裁定说明不构成本次授权；按现有expected完整对照的结果尚需实际生成。已有固定字段评分、测试通过和原图查看数量均不能证明expected全量覆盖。
+`benchmark/reference-decisions/`保留历史人工记录，当前不以其中原图结论排除目标、修改参考答案或判定输出通过。旧`exclude_unit_pending`实现已删除；按现有expected完成的程序对照范围见当前评测索引。已有固定字段评分、测试通过和原图查看数量均不能证明expected全量覆盖。
 
 `report`从新运行已有的评分和执行记录生成图文正文、完整附录、机器明细及图件，不能重生已撤销的旧比较。`field-details.csv`保存逐字段状态、限定信息证据及评分产物路径；未知定位原因不冒充原PDF缺项。图件仅使用对应新测量，保留800页单次与80页三轮的不同口径、版本、分母、开发暴露和缺测。字体采用DejaVu Sans与Noto Sans CJK，PDF嵌入字体。人工案例必须明确作者阅读范围，不能自动生成来源判断。
 
@@ -78,7 +78,7 @@ Paddle原生服务使用单个长期owner线程统一初始化、推理与关闭
 
 新运行目录按`prepare` → `run --phase warmup` → `freeze` → `run --phase measured` → `freeze-scoring` → `score` → `report`执行；两个freeze命令都要求显式`--validation`工程验证记录，不能用文件存在或语料计数代替验证。`prepare`还需`--baseline`、`--output`和仅含公开处理参数的`--service-config`。服务执行与最终读回分别冻结身份，共享评分规则保持原样，旧运行目录不能覆盖。报告重生只读已有运行和评分JSON，不读取语料、重新推理或重新评分。
 
-当前服务配对同样采用`mo-parse-expected-only-v1`，标准见[评测任务](../benchmark/evaluation-tasks.md#current-task-expected-only)。每个目标只判正确或错误，读取故障先修复。`service_evaluation prepare --previous-run <旧运行>`要求完整expected-only原生索引，接纳同一原生输入、参考声明及已冻结执行身份的修改前候选；候选worker不挂载旧结果或参考。候选执行继续冻结实际适配、后处理、app及依赖，公开Markdown的评分由单独冻结的共同程序完成。必须同步重评原生、修改前和修改后输出，不能复制旧分数；新增正确、原正确项损失及分项退化由`expected_report`从当前评分产物生成。原表格上下文工具保留历史诊断用途，不作为新协议的报告入口。
+当前服务配对同样采用`mo-parse-expected-only-v1`，标准见[评测任务](../benchmark/evaluation-tasks.md#current-task-expected-only)。每个目标只判正确或错误，读取故障先修复。`service_evaluation prepare --previous-run <旧运行>`要求完整expected-only原生索引，接纳同一原生输入、参考声明及已冻结执行身份的修改前候选；候选worker不挂载旧结果或参考。候选执行继续冻结实际适配、后处理、app及依赖，公开Markdown的评分由单独冻结的共同程序完成。必须同步重评原生、修改前和修改后输出，不能复制旧分数；新增正确、原正确项损失及分项退化由`expected_report`从当前评分产物生成。原表格上下文报告工具已删除；原生与正文共用同一报告入口。
 
 代码验证使用`python -m pytest -q tests/unit tests/test_markdown_policy.py moparse_eval/tests`。其中`test_information_context.py`覆盖单位、年度、分组和脚注正反例，`test_native_table_context.py`覆盖原生结构与局部转换，`test_moparse_eval_service_observation.py`覆盖实际正文读取及未渲染内部关系不得计分。它们使用受控合成材料，与对照expected的实际输出验收及运行成本分别记录；通过代码测试不代表expected中的业务内容已经验收。
 

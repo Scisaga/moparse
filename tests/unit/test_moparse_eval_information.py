@@ -1,74 +1,10 @@
 """Independently authored information-level examples; no real corpus is read."""
 
-from copy import deepcopy
 
 import pytest
 
-from moparse_eval.adapters import html_cells, markdown_cells
 from moparse_eval.information import field_value_text, row_path_locates
-from moparse_eval.scoring import _declared_path_locates, _label_in_native_cell, score_case
-
-
-def evaluate(cells, *, row=None, column=None, value="17", qualifiers=None):
-    field = {"column_header_path": column or ["2025", "Amount"], "value": value, **(qualifiers or {})}
-    reference = {"sample_id": "invented", "review_status": "confirmed", "relations": [],
-                 "units": [{"id": "record", "kind": "table_record", "status": "confirmed",
-                            "pages": [1], "literal": "Independent example", "table": {
-                                "row_header_path": row or ["Revenue"], "fields": [field]}}]}
-    observation = {"sample_id": "invented", "pipeline": "synthetic", "status": "completed",
-                   "pages": [{"page": 1, "blocks": [{"id": "table", "kind": "table", "cells": cells}]}]}
-    before = deepcopy((reference, observation))
-    result = score_case(reference, observation)
-    assert (reference, observation) == before
-    return result["units"][0]["fields"][0], result["metrics"]["table_records"]
-
-
-def repeated_leaves():
-    return html_cells('<table><tr><th>Item</th><th colspan="2">2025</th><th colspan="2">2024</th></tr>'
-                      '<tr><th>Item</th><th>Amount</th><th>Rate</th><th>Amount</th><th>Rate</th></tr>'
-                      '<tr><td>Revenue</td><td>17</td><td>5%</td><td>99</td><td>8%</td></tr></table>')
-
-
-@pytest.mark.parametrize("representation", ["grid", "record"])
-@pytest.mark.parametrize("difference", [None, "wrong-year", "missing-prior", "mixed-years", "no-comparison", "other-table", "other-record", "reversed-target", "month-end", "no-year"])
-def test_year_end_comparison_requires_its_explicit_annual_frame_and_both_printed_endpoints(representation, difference):
-    relative = "本年末比上年末增减" if difference != "no-comparison" else "增减比率"
-    year, prior = "2027年末", "2026年末" if difference != "missing-prior" else "2025年末"
-    if difference == "month-end":
-        year, prior = "2027年9月末", "2026年9月末"
-    cells = (html_cells('<table><tr><th>项目</th><th>' + year + '</th><th>' + prior +
-                        '</th><th>' + relative + '</th></tr><tr><td>资产</td><td>17</td>'
-                        '<td>11</td><td>54.55%</td></tr></table>') if representation == "grid" else [
-        {"id": "current", "text": "17", "row_header_path": ["资产"], "column_header_path": [year], "record_id": "row"},
-        {"id": "prior", "text": "11", "row_header_path": ["资产"], "column_header_path": [prior], "record_id": "row"},
-        {"id": "comparison", "text": "54.55%", "row_header_path": ["资产"], "column_header_path": [relative], "record_id": "row"},
-    ])
-    title = "2028年度报告" if difference == "wrong-year" else "2027年度报告"
-    if difference == "mixed-years":
-        title += "，2028年度报告"
-    if difference == "no-year":
-        title = "Company financial statements"
-    table = {"id": "table", "kind": "table", "cells": cells}
-    if difference in {"other-table", "other-record"}:
-        if representation == "record":
-            cells[0]["record_id"] = cells[1]["record_id"] = "different-row"
-        else:
-            for cell in cells:
-                if cell["text"] in {year, prior}:
-                    cell["row"] = 7  # These year labels no longer head the tested data row.
-    reference = {"sample_id": "synthetic", "review_status": "confirmed", "relations": [], "units": [{"id": "assets", "kind": "table_record",
-        "status": "confirmed", "pages": [1], "literal": "资产", "table": {
-            "row_header_path": ["资产"], "fields": [{"column_header_path": [relative], "value": "54.55%",
-                                                    "unit": "%", "period": ("2026年末比2027年末" if difference == "reversed-target"
-                                                                              else "2027年末比2026年末")}]}}]}
-    observation = {"sample_id": "synthetic", "pipeline": "synthetic", "status": "success",
-                   "pages": [{"page": 1, "blocks": [{"id": "title", "kind": "text", "text": title}, table]}]}
-    if difference == "other-table":
-        # Keep the genuine endpoint labels visible, but in another table.
-        observation["pages"][0]["blocks"].insert(1, {"id": "other", "kind": "table", "cells": [
-            {"id": "elsewhere-current", "text": year}, {"id": "elsewhere-prior", "text": prior}]})
-    result = score_case(reference, observation)
-    assert (result["metrics"]["table_records"]["information_correct_fields"] == 1) is (difference is None)
+from moparse_eval.scoring import _declared_path_locates, _label_in_native_cell
 
 
 @pytest.mark.parametrize("label,text,found", [
@@ -90,21 +26,6 @@ def test_label_boundary_depends_on_the_actual_label_ends(label, text, found):
 ])
 def test_scalar_display_spacing_does_not_normalize_numbers_or_change_units(expected, actual, correct):
     assert (field_value_text(expected) == field_value_text(actual)) is correct
-
-
-@pytest.mark.parametrize("actual,correct", [
-    ("CEO 150%Other NEOs 200%", True), ("CEO 150% Other NEOs 200%", True),
-    ("CEO 150%Other NEOs 201%", False), ("CEO -150%Other NEOs 200%", False),
-    ("CEO 150Other NEOs 200%", False), ("CEO 150%OtherNEOs 200%", False),
-    ("CEO 150%Other NEOs 200‰", False),
-])
-def test_percent_label_boundary_spacing_preserves_signs_values_units_and_words(actual, correct):
-    expected = "CEO 150% Other NEOs 200%"
-    field, metrics = evaluate([{"id": "v", "text": actual, "row_header_path": ["Revenue"],
-                                "column_header_path": ["Plan"]}], column=["Plan"], value=expected)
-    assert (metrics["information_correct_fields"] == 1) is correct
-    assert field["strict_exact"] is (actual == expected)
-    assert field["raw_transcription"]["strict"]["distance"] > 0 if actual != expected else True
 
 
 @pytest.mark.parametrize("reference,native,found", [
@@ -132,145 +53,6 @@ def test_path_segmentation_can_change_without_dropping_business_context(referenc
 ])
 def test_field_row_path_ends_at_the_actual_business_leaf(reference, native, found):
     assert row_path_locates(reference, native, True, require_leaf=True) is found
-
-
-@pytest.mark.parametrize("wanted,correct", [("17", True), ("11", False)])
-def test_valued_parent_is_not_ambiguous_with_its_children_and_is_not_selected_by_value(wanted, correct):
-    cells = [
-        {"id": "parent", "text": "17", "row_header_path": ["Assets"], "column_header_path": ["2025"]},
-        {"id": "child", "text": "11", "row_header_path": ["Assets", "Receivables"], "column_header_path": ["2025"]},
-    ]
-    field, metrics = evaluate(cells, row=["Assets"], column=["2025"], value=wanted)
-    assert field["native_text"] == "17"
-    assert (metrics["information_correct_fields"] == 1) is correct
-
-
-def test_a_child_cannot_supply_a_missing_period_on_its_separately_expressed_ancestor():
-    field, metrics = evaluate([
-        {"id": "parent", "text": "99", "row_header_path": ["Assets"], "column_header_path": ["2024"]},
-        {"id": "child", "text": "17", "row_header_path": ["Assets", "Receivables"], "column_header_path": ["2025"]},
-    ], row=["Assets"], column=["2025"])
-    assert field["status"] == "incorrect"
-    assert metrics["information_correct_fields"] == 0
-
-
-def test_two_independently_expressed_parent_values_remain_ambiguous():
-    field, metrics = evaluate([
-        {"id": "a", "text": "17", "row_header_path": ["Assets"], "column_header_path": ["2025"]},
-        {"id": "b", "text": "11", "row_header_path": ["Assets"], "column_header_path": ["2025"]},
-        {"id": "c", "text": "17", "row_header_path": ["Assets", "Receivables"], "column_header_path": ["2025"]},
-    ], row=["Assets"], column=["2025"])
-    assert field["status"] == "incorrect"
-    assert field["reason"] == "ambiguous_complete_label_path"
-    assert metrics["information_correct_fields"] == 0
-
-
-def test_whole_column_path_resolves_repeated_leaf_titles_without_using_the_answer():
-    field, metrics = evaluate(repeated_leaves())
-    assert field["status"] == "compared" and metrics["correct_fields"] == 1
-    field, metrics = evaluate(repeated_leaves(), value="99")
-    assert field["status"] == "compared" and field["native_text"] == "17"
-    assert metrics["correct_fields"] == 0
-
-
-def test_repeated_row_leaf_is_resolved_by_a_native_row_group_span():
-    cells = html_cells('<table><tr><th>Group</th><th>Item</th><th>2025</th></tr>'
-                       '<tr><td rowspan="2">Domestic</td><td>Revenue</td><td>17</td></tr>'
-                       '<tr><td>Cost</td><td>9</td></tr>'
-                       '<tr><td>Overseas</td><td>Revenue</td><td>99</td></tr></table>')
-    field, metrics = evaluate(cells, row=["Domestic", "Revenue"], column=["2025"])
-    assert field["status"] == "compared" and metrics["correct_fields"] == 1
-
-
-def test_conflicting_complete_business_records_fail_even_when_one_value_matches():
-    cells = repeated_leaves()
-    cells += [{"id": "another-revenue", "row": 3, "col": 0, "text": "Revenue"},
-              {"id": "another-value", "row": 3, "col": 1, "text": "99"}]
-    field, metrics = evaluate(cells)
-    assert field["status"] == "incorrect" and metrics["correct_fields"] == 0
-
-
-def test_missing_explicit_column_path_is_not_reported_as_a_missing_value():
-    field, metrics = evaluate([{"id": "v", "text": "17", "row_header_path": ["Revenue"],
-                                "column_header_path": ["2024", "Amount"]}])
-    assert field["status"] == "incorrect"
-    assert metrics["target_missing_fields"] == 0
-
-
-@pytest.mark.parametrize("actual,correct", [("2.75", True), ("8.25", False)])
-def test_numbered_business_record_needs_no_extra_parent_annotation(actual, correct):
-    cells = html_cells('<table><tr><td>No.</td><td>Proposal</td><td>Price</td></tr>'
-                       f'<tr><td>1</td><td>Lease guarantee</td><td>{actual}</td></tr>'
-                       '<tr><td>2</td><td>Credit limit</td><td>2.75</td></tr></table>')
-    field, metrics = evaluate(cells, row=["1"], column=["Price"], value="2.75")
-    assert field["status"] == "compared"
-    assert field["native_text"] == actual
-    assert (metrics["information_correct_fields"] == 1) is correct
-
-
-def test_numbered_record_does_not_choose_a_table_using_its_expected_price():
-    cells = html_cells('<table><tr><td>No.</td><td>Price</td></tr>'
-                       '<tr><td>1</td><td>2.75</td></tr></table>')
-    case = {"sample_id": "invented", "review_status": "confirmed", "units": [{"id": "proposal", "kind": "table_record",
-            "status": "confirmed", "literal": "Proposal", "pages": [1], "table": {
-                "row_header_path": ["1"], "fields": [{"column_header_path": ["Price"], "value": "2.75"}]}}]}
-    other = deepcopy(cells)
-    for cell in other:
-        cell["id"] = "other-" + cell["id"]
-        if cell["text"] == "2.75":
-            cell["text"] = "8.25"
-    observation = {"sample_id": "invented", "pages": [{"page": 1, "blocks": [
-        {"id": "first", "kind": "table", "cells": cells},
-        {"id": "second", "kind": "table", "cells": other}]}]}
-    result = score_case(case, observation)
-    assert result["metrics"]["table_records"]["correct_fields"] == 0
-    assert result["units"][0]["fields"][0]["reason"] == "ambiguous_complete_label_path"
-
-
-@pytest.mark.parametrize("representation", ["json", "html", "markdown"])
-def test_equivalent_native_representations_have_the_same_information_score(representation):
-    if representation == "json":
-        cells = [{"id": "v", "text": "17", "row_header_path": ["Revenue"],
-                  "column_header_path": ["2025$m"]}]
-    elif representation == "html":
-        cells = html_cells('<table><tr><th>Item</th><th>2025$m</th></tr>'
-                           '<tr><td>Revenue</td><td>17</td></tr></table>')
-    else:
-        cells = markdown_cells('| Item | 2025$m |\n| --- | --- |\n| Revenue | 17 |')
-    field, metrics = evaluate(cells, column=["2025", "$m"], qualifiers={"unit": "$m", "period": "2025"})
-    assert field["status"] == "compared"
-    assert metrics["information_correct_fields"] == 1
-
-
-@pytest.mark.parametrize("unit,state", [("万元", "correct"), ("元", "incorrect"), (None, "incorrect")])
-def test_qualifiers_are_required_for_complete_information_but_not_invented(unit, state):
-    cell = {"id": "v", "text": "17", "row_header_path": ["Revenue"], "column_header_path": ["2025"]}
-    if unit is not None:
-        cell["unit"] = unit
-    field, metrics = evaluate([cell], column=["2025"], qualifiers={"unit": "万元", "period": "2025"})
-    assert metrics["correct_fields"] == 1
-    assert field["information"]["status"] == state
-    assert metrics[f"information_{state}_fields"] == 1
-
-
-def test_explicit_wrong_unit_is_not_overridden_by_a_matching_header_word():
-    field, metrics = evaluate([{"id": "v", "text": "17", "row_header_path": ["Revenue"],
-                                "column_header_path": ["2025$m"], "unit": "$bn"}],
-                              column=["2025", "$m"], qualifiers={"unit": "$m"})
-    assert field["information"]["status"] == "incorrect"
-    assert metrics["information_correct_fields"] == 0
-
-
-def test_repeated_reference_to_the_same_business_fact_needs_no_duplicate_output():
-    case = {"sample_id": "invented", "review_status": "confirmed", "units": [
-        {"id": name, "kind": "table_record", "status": "confirmed", "literal": "Revenue",
-         "table": {"row_header_path": ["Revenue"], "fields": [{"column_header_path": ["2025"], "value": "17"}]}}
-        for name in ("first", "second")]}
-    observation = {"sample_id": "invented", "pages": [{"page": 1, "blocks": [{"id": "table", "cells": [
-        {"id": "v", "text": "17", "row_header_path": ["Revenue"], "column_header_path": ["2025"]}]}]}]}
-    result = score_case(case, observation)
-    assert result["metrics"]["table_records"]["correct_fields"] == 2
-    assert all(row["fields"][0]["information"]["status"] == "correct" for row in result["units"])
 
 
 def test_requested_row_identity_does_not_require_unannotated_outer_or_inner_context():
