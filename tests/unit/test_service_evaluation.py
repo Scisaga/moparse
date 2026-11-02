@@ -9,9 +9,7 @@ from moparse_eval.packaging import write_json
 from moparse_eval.service_evaluation import (
     docker_command,
     oriented_source,
-    paired_native_index,
     require_replay_ready,
-    require_shared_scoring,
 )
 
 
@@ -71,42 +69,3 @@ def test_engineering_readback_failure_cannot_be_scored_as_parser_omission(error)
 
 def test_received_local_structure_warning_can_retain_valid_neighbors():
     require_replay_ready({"errors": [{"warnings": ["mineru_native_local_region_unreadable"]}]})
-
-
-def test_final_reader_can_be_fixed_without_changing_shared_scoring_or_execution():
-    identity = {"module_sha256": {"scoring.py": "fixed", "service_observation.py": "old"},
-                "support_module_sha256": {"app/service.py": "fixed"},
-                "python": "fixed-python", "dependencies": {"edlib": "fixed"}}
-    revised = {**identity, "module_sha256": {**identity["module_sha256"],
-                                            "service_observation.py": "corrected"}}
-    require_shared_scoring({"software": identity}, revised)
-    with pytest.raises(ValueError, match="shared scoring"):
-        require_shared_scoring({"software": identity}, {
-            **revised, "module_sha256": {**revised["module_sha256"], "scoring.py": "changed"}})
-    require_shared_scoring({"software": identity}, {
-        **revised, "module_sha256": {**revised["module_sha256"], "scoring.py": "validated-fix"}},
-        paired_native_rescore=True)
-    with pytest.raises(ValueError, match="shared scoring"):
-        require_shared_scoring({"software": identity}, {
-            **revised, "module_sha256": {**revised["module_sha256"], "matching.py": "validated-fix"}})
-    require_shared_scoring({"software": identity}, {
-        **revised, "module_sha256": {**revised["module_sha256"], "matching.py": "validated-fix"}},
-        paired_native_rescore=True)
-    with pytest.raises(ValueError, match="shared scoring"):
-        require_shared_scoring({"software": identity}, {
-            **revised, "module_sha256": {**revised["module_sha256"], "native_readback.py": "changed"}},
-            paired_native_rescore=True)
-    with pytest.raises(ValueError, match="implementation or scoring dependencies"):
-        require_shared_scoring({"software": identity}, {**revised, "dependencies": {"edlib": "changed"}})
-
-
-def test_paired_native_analysis_uses_current_unified_identity_without_withdrawn_scores(tmp_path: Path):
-    write_json(tmp_path / "run.json", {"latest_scores": "current/index.json"})
-    index = {"software": {"software_id": "current"}, "unscored": []}
-    write_json(tmp_path / "current/index.json", index)
-    assert paired_native_index(tmp_path, {"software_id": "current"}) == index
-    with pytest.raises(ValueError, match="same current unified software"):
-        paired_native_index(tmp_path, {"software_id": "old"})
-    write_json(tmp_path / "current/index.json", {**index, "unscored": ["unfinished"]})
-    with pytest.raises(ValueError, match="finish unified"):
-        paired_native_index(tmp_path, {"software_id": "current"})

@@ -14,7 +14,7 @@
 
 <p align="center"><strong>在消费级 GPU 和 CPU 上探索高质量文档解析，让大模型更好地理解文档、提取信息。</strong></p>
 
-MO-Parse 是可自托管的内容解析项目，提供 Web 工作台、HTTP API 和 MCP 接口。项目一方面研究不同解析方法的质量与实际成本，另一方面将解析结果整理为面向大模型的 Markdown 正文和关联图片。
+MO-Parse 是可自托管的内容解析项目，提供 Web 工作台、HTTP API 和 MCP 接口。项目比较解析方法的信息保全与实际成本，并将已识别内容整理为下游能正确理解和抽取的 Markdown 正文与关联图片；文字、数值以及主体、指标、单位、期间、分组、附注和否定条件的归属都属于目标。
 
 [快速开始](#快速开始) · [输出格式](#为什么生成-mo-parse-格式) · [研究与进展](#研究与当前进展) · [文档导航](docs/README.md)
 
@@ -93,7 +93,7 @@ curl --fail-with-body http://localhost:12303/v1/content/parse \
 
 | 工作线 | 要回答的问题 | 当前进展与入口 |
 | --- | --- | --- |
-| 解析研究 | 各方法在什么来源和版式上解析得更好，实际处理成本是多少 | 本轮八组各完成800页一次和80页三轮，统一评分、首版报告及原MO服务恢复已完成；结果见[当前统一评测报告](benchmark/reports/lite/report.md)，状态与限制由[评测索引](benchmark/reports/README.md)维护。TTS仅观测不控制，先前撤回测量不恢复；方法范围见[研究框架](docs/research/research-framework.md)与[固定配置](benchmark/pipelines-to-test.md) |
+| 解析研究 | 各方法在什么来源和版式上解析得更好，实际处理成本是多少 | 八组有效800页原生输出及80页三轮测量保留，共同expected-only重评和P07/P08实际正文配对已完成；分项结果、剩余错误和质量/成本取舍见[当前统一评测报告](benchmark/reports/lite/report.md)，状态与限制由[评测索引](benchmark/reports/README.md)维护。TTS仅观测不控制，先前撤回测量不恢复；方法范围见[研究框架](docs/research/research-framework.md)与[固定配置](benchmark/pipelines-to-test.md) |
 | 服务开发 | 如何保真读取原生结果，并交付适合下游消费的正文和图片 | 已有 API、Web UI、MCP、任务与资产能力；表格转换、正文清理及完整打包仍有缺口；见[架构](docs/engineering/architecture.md)与[输出规范当前差距](docs/specs/moparse-output-spec.md#9-当前实现差距与迁移) |
 
 解析研究比较完整管线的原始质量与实际成本，候选可以保留自身的表格和页面信息；MO-Parse 最终格式转换另行开发、验证和计时。候选方法、资源与统一条件见[待测试管线](benchmark/pipelines-to-test.md)，任务与外部原件、独立标注交接见[评测任务](benchmark/evaluation-tasks.md)，路线内性能实验见[MinerU 调优](benchmark/mineru-tuning.md)。不沿用已移除的旧成绩。

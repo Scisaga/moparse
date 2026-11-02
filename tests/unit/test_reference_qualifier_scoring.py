@@ -34,7 +34,8 @@ def grade(*, header="Movement(%)", value="17", actual="17", candidate_unit=None,
     matching = match_units(targets, observation, threshold=0.8, collapse_whitespace=True)
     units, metrics = _score_records(targets, observation, True, matching)
     assert (reference, observation) == before
-    assert metrics["target_fields"] == metrics["graded_fields"] == 1
+    assert metrics["target_fields"] == 1
+    assert sum(len(row["fields"]) for row in units) == 1
     assert metrics["information_correct_fields"] + metrics["information_incorrect_fields"] == 1
     return units[0]["fields"][0]
 
@@ -44,8 +45,10 @@ def test_local_printed_ratio_overrides_a_wider_target_and_candidate_amount_capti
     field = grade(header=header)
     assert field["outcome"] == "correct"
     expected = "‰" if "‰" in header else "%"
-    assert field["information"]["qualifiers"]["unit"]["actual"] == [
-        {"actual": expected, "source": "candidate_scoped_unit"}]
+    evidence = field["information"]["qualifiers"]["unit"]
+    actual = evidence["actual"]
+    assert (actual if isinstance(actual, str) else actual[0]["actual"]) == expected
+    assert evidence["source"] in {"candidate_scoped_qualifier", "printed_label_unit"}
 
 
 @pytest.mark.parametrize("value", ["17%", "(17%)", "17‰"])

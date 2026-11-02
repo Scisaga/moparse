@@ -338,7 +338,8 @@ def _locate_record_field(
         ):
             if orientation == "transposed" and len(solutions) > before_body:
                 break
-            explicit_rows = [item for item in group if _record_path_locates(physical_rows, item, collapse_whitespace)]
+            explicit_rows = [item for item in group if (not physical_rows and item["cell"].get("column_header_path")
+                             or _record_path_locates(physical_rows, item, collapse_whitespace))]
             explicit_rows = [item for item in explicit_rows
                              if not leaf_tables[tuple(physical_rows)]
                              or _record_path_locates(physical_rows, item, collapse_whitespace, require_leaf=True)]
@@ -356,7 +357,9 @@ def _locate_record_field(
                                      "label_presence": [any(_label_in_native_cell(label, text, collapse_whitespace)
                                         for item in explicit_rows for text in item["cell"].get("column_header_path", []))
                                         for label in physical_columns]})
-                continue
+                # Explicit statement views supplement the original grid.
+                # Keep both, so a missing path cannot hide an original cell
+                # and conflicting statements cannot be selected by answer.
             # Path-only assertions have no physical grid. Failure to match
             # their printed labels does not make their representation unreadable.
             grid = [item for item in group if _native_range(item["cell"], "row")
@@ -383,6 +386,9 @@ def _locate_record_field(
                                           "group": group, "method": "explicit_single_value_row", "orientation": orientation})
                     continue
                 column_pool = _grid_column_header_pool(grid, row_endpoints)
+                if not physical_rows:
+                    column_pool = [item for item in column_pool if item["cell"].get("is_column_header") is True
+                                   or item["cell"].get("native_header_tag") is True and item["cell"].get("is_row_header") is not True]
                 column_paths, reason = endpoints(physical_columns, column_pool, "column")
                 if reason:
                     failures.append({"body": body, "axis": "column", "reason": reason,
@@ -399,7 +405,7 @@ def _locate_record_field(
                     selected = []
                     for item in group:
                         native_rows, native_cols = _native_range(item["cell"], "row"), _native_range(item["cell"], "col")
-                        is_identity_value = identity_field and item["id"] == row_endpoints[-1]["id"]
+                        is_identity_value = identity_field and bool(row_endpoints) and item["id"] == row_endpoints[-1]["id"]
                         if (item["id"] not in endpoint_ids or is_identity_value) and native_rows and native_cols and (
                             all(native_rows & extent for extent in row_ranges if extent is not None)
                             and all(native_cols <= extent for extent in col_ranges if extent is not None)
@@ -468,6 +474,19 @@ def _required_qualifiers(table: dict[str, Any], field: dict[str, Any]) -> dict[s
 def _field_qualifiers(table: dict[str, Any], field: dict[str, Any], resolution: dict[str, Any],
                       *, identity_only: bool = False) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
     """Read a candidate field's own qualifiers, without inspecting its target value."""
+    qualifiers = _required_qualifiers(table, field)
+    if identity_only:
+        qualifiers.pop("note_markers", None)
+        qualifiers.pop("note_texts", None)
+    if set(qualifiers) <= {"business_scope"} and resolution["selected"]:
+        cell = resolution["selected"][0]["cell"]
+        labels = [*cell.get("column_header_path", []), *cell.get("row_header_path", []),
+                  *cell.get("information_headers", []),
+                  *(item["text"] for item in [*resolution["rows"], *resolution["columns"]])]
+        if not isinstance(cell.get("unit"), str) and not any(metric_units(label) for label in labels):
+            # Scope uses the already exposed printed context. Unit/note
+            # traversal cannot add a requirement to this comparison.
+            return qualifiers, cell, qualifier_evidence(qualifiers, cell, labels)
     row_endpoints, column_endpoints = resolution["rows"], resolution["columns"]
     if resolution["selected"]:
         candidate = resolution["selected"][0]
@@ -547,8 +566,8 @@ def _score_records(
                 matching["information_table_bodies"].setdefault(key, set()).update(bodies)
     rows: list[dict[str, Any]] = []
     declared_fields = target_fields = correct_fields = strict_correct_fields = 0
-    compared_fields = target_missing_fields = unresolved_fields = 0
-    grid_targets = grid_correct = source_unscoped_fields = field_annotated_records = 0
+    compared_fields = target_missing_fields = 0
+    grid_targets = grid_correct = 0
     blank_targets = blank_observed = blank_correct = 0
     binding_observable = binding_correct = located_records = 0
     field_text: list[dict[str, Any]] = []
@@ -575,15 +594,6 @@ def _score_records(
         }
         rows.append(output)
         declared_fields += len(fields)
-        field_annotated_records += int(bool(fields))
-        if table.get("row_binding", {}).get("status") in {"unresolved", "unknown", "not_annotated"}:
-            source_unscoped_fields += len(fields)
-            reject(output, "source_row_binding_not_annotated")
-            for item in output["fields"]:
-                item["status"] = "not_scored"
-                item.update(strict_exact=None, content_exact=None)
-                item.pop("information", None)
-            continue
         target_fields += len(fields)
         blank_targets += sum(field.get("value") == "" for field in fields)
         label_match = matching["matches"].get(unit["id"])
@@ -608,8 +618,10 @@ def _score_records(
                     or not column_path and field.get("named_value") is not True
                     or any(not isinstance(label, str) or not label for label in column_path)):
                 raise ValueError("frozen field lacks an evaluable literal or business label")
-            resolution = _locate_record_field(row_path, column_path, pool, collapse_whitespace,
-                                              identity_field=field.get("identity_field") is True,
+            subject = field.get("subject_identity")
+            resolution = _locate_record_field(subject["row_header_path"] if subject else row_path,
+                                              subject["column_header_path"] if subject else column_path, pool, collapse_whitespace,
+                                              identity_field=bool(subject) or field.get("identity_field") is True,
                                               endpoint_cache=endpoint_cache)
             alternatives = [projected for alternative in resolution.get("alternatives", [])
                             for projected in ([{**alternative, "selected": [candidate]}
@@ -653,6 +665,8 @@ def _score_records(
                     attributes, _cell, evidence = _field_qualifiers(table, field, alternative)
                     agree &= _information_value_equal(literal, actual, {**field, **attributes}, evidence)
                     agree &= "note_markers" not in field or actual_notes == notes
+                    if not agree:
+                        break
                 if agree:
                     resolution = {**considered[0], "reason": None, "diagnostic": resolution["diagnostic"],
                                   "equivalent_claim_ids": [alternative["selected"][0]["id"] for alternative in present]}
@@ -744,7 +758,7 @@ def _score_records(
         else:
             reasons = {item["reason"] for item in output["fields"]}
             output["reason"] = next(iter(reasons)) if len(reasons) == 1 else "required_business_binding_not_expressed"
-    all_fields = [item for row in rows for item in row["fields"] if item["status"] != "not_scored"]
+    all_fields = [item for row in rows for item in row["fields"]]
     compared = [item for item in all_fields if item["status"] == "compared"]
     correct_fields = sum(bool(item["content_exact"]) for item in compared)
     strict_correct_fields = sum(bool(item["strict_exact"]) for item in compared)
@@ -766,39 +780,29 @@ def _score_records(
     statuses = Counter(item["status"] for row in rows for item in row["fields"])
     compared_fields = statuses["compared"]
     target_missing_fields = sum(item["reason"] == "no_value_at_resolved_native_position" for item in all_fields)
-    unresolved_fields = 0
     observed_fields = compared_fields + target_missing_fields
     return rows, {
         "target_records": len(units), "located_records": located_records,
-        "field_annotation_record_coverage": fraction(field_annotated_records, len(units)),
-        "declared_fields": declared_fields, "source_unscoped_fields": source_unscoped_fields,
-        "blank_target_fields": blank_targets, "blank_observed_fields": blank_observed,
-        "blank_fields": fraction(blank_correct, blank_targets, observable=blank_observed),
-        "blank_observed_accuracy": fraction(blank_correct, blank_observed),
-        "target_fields": target_fields, "observable_fields": observed_fields,
-        "graded_fields": target_fields, "incorrect_fields": target_fields - correct_fields,
-        "compared_fields": compared_fields, "target_missing_fields": target_missing_fields,
-        "unresolved_fields": unresolved_fields, "correct_fields": correct_fields,
-        "strict_correct_fields": strict_correct_fields,
+        "target_fields": target_fields, "compared_fields": compared_fields,
+        "correct_fields": correct_fields, "strict_correct_fields": strict_correct_fields,
         "information_correct_fields": information["correct"],
         "information_incorrect_fields": information["incorrect"],
-        "information_unresolved_fields": 0,
-        "information_target_correctness": fraction(information["correct"], target_fields),
-        "information_compared_accuracy": fraction(information["correct"], information["correct"] + information["incorrect"]),
-        "field_unresolved_reasons": {}, "field_unresolved_diagnoses": {},
+        "value_and_labels_target_correctness": fraction(correct_fields, target_fields),
+        "complete_information_target_correctness": fraction(information["correct"], target_fields),
         "field_error_reasons": dict(Counter(item.get("information", {}).get("reason", item["reason"])
                                              for item in all_fields if item["outcome"] == "incorrect")),
-        "field_coverage": fraction(observed_fields, target_fields),
-        "field_comparison_coverage": fraction(compared_fields, target_fields),
-        "field_compared_accuracy": fraction(correct_fields, compared_fields),
-        "field_strict_accuracy": fraction(strict_correct_fields, compared_fields),
-        "field_target_correctness": fraction(correct_fields, target_fields),
-        "field_strict_target_correctness": fraction(strict_correct_fields, target_fields),
-        "field_text": aggregate_text_metrics(field_text),
-        "grid_relation": fraction(grid_correct, grid_targets, meaning="unique_native_grid_probe_resolution_not_source_structure_accuracy"),
-        "binding": fraction(binding_correct, binding_observable),
-        "binding_target_coverage": fraction(binding_observable, target_fields),
-        "whole_record_edit_distance": None,
+        "diagnostics": {
+            "reading_coverage": fraction(observed_fields, target_fields),
+            "compared_coverage": fraction(compared_fields, target_fields),
+            "conditional_value_correctness": fraction(correct_fields, compared_fields),
+            "conditional_complete_correctness": fraction(information["correct"], compared_fields),
+            "strict_value_correctness": fraction(strict_correct_fields, compared_fields),
+            "blank_target_fields": blank_targets, "blank_observed_fields": blank_observed,
+            "blank_correct_fields": blank_correct,
+            "value_characters": aggregate_text_metrics(field_text),
+            "grid_reading": fraction(grid_correct, grid_targets),
+            "binding": fraction(binding_correct, binding_observable),
+        },
     }
 
 

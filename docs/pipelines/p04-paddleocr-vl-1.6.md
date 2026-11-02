@@ -1,5 +1,7 @@
 # P04：全页 PaddleOCR-VL 1.6
 
+当前共同评测从保存native.json经`moparse_eval/saved_native.py`调用本格式读取器，忠实读取Paddle parsing_res_list中的block_content、HTML/Markdown、区域顺序和媒体。读取器不接收expected答案。最终正文另只读取实际final.md；主指标、失败政策及同版重评由[评测任务](../../benchmark/evaluation-tasks.md#current-task-expected-only)维护。
+
 [全部管线](README.md) · [固定比较条件](../../benchmark/pipelines-to-test.md#主比较配置)
 
 ## 1. 配置与执行边界
@@ -40,7 +42,7 @@ predict(...) -> 页面结果对象序列
 
 ### 2.2 标题角色与级别来源
 
-2026-10-27追踪正式Paddle镜像内PaddleX 3.7.2的markdown_format_funcs.py：doc_title固定导出一级标题；paragraph_title有title_level时使用该声明，否则按标题内点号数量及固定偏移生成二级或更深标题。纯合成导出验证中，普通标题产生二级标题，1.2开头及普通文字含一个点号的标题均产生三级标题，说明这些级别可以来自软件格式规则。可选restructure_pages才调用额外层级分配，本轮逐页predict执行入口未调用该步骤。1.6模型身份不改变这一共享格式化路径；SDK已有标题语法可供评分器结合原生顺序读取作用域，但不能将heading_of成绩解释成模型已恢复真实多级树。
+2026-10-27追踪正式Paddle镜像内PaddleX 3.7.2的markdown_format_funcs.py：doc_title固定导出一级标题；paragraph_title有title_level时使用该声明，否则按标题内点号数量及固定偏移生成二级或更深标题。纯合成导出验证中，普通标题产生二级标题，1.2开头及普通文字含一个点号的标题均产生三级标题，说明这些级别可以来自软件格式规则。可选restructure_pages才调用额外层级分配，本轮逐页predict执行入口未调用该步骤。1.6模型身份不改变这一共享格式化路径；当前标题归属按expected明确文字与原生顺序读取，不要求私有关系字段；这些SDK显示级别不证明模型恢复了真实多级树。
 
 ## 3. 研究侧读取与导出
 
@@ -54,7 +56,7 @@ predict(...) -> 页面结果对象序列
 
 ## 5. 实现状态与验证项
 
-P04研究执行路径已修复，[P04工程预检02](../../benchmark/runs/lite/preflight/)独立完成同一清单的11个任务并提供本次冻结依据。本组已完成quality800一次和perf80三轮，八组统一评分、首版报告及原MO服务恢复完成；结果只见[当前统一评测报告](../../benchmark/reports/lite/report.md)，状态与限制由[评测索引](../../benchmark/reports/README.md)维护。TTS只观测不控制，先前撤回测量不恢复；执行和自动评分完成不构成内容、Gold或图片内容验收。
+P04研究执行路径已修复，[P04工程预检02](../../benchmark/runs/lite/preflight/)独立完成同一清单的11个任务并提供本次冻结依据。本组保存quality800一次和perf80三轮的有效原生结果及测量；错误评分已删除，现已按同一新程序重评；结果只见[当前统一评测报告](../../benchmark/reports/lite/report.md)，状态与限制由[评测索引](../../benchmark/reports/README.md)维护。TTS只观测不控制，先前撤回测量不恢复；执行和自动评分完成不构成内容、Gold或图片内容验收。
 
 研究执行器、完整页面 native RPC 服务及同族读取器已实现。固定 PaddleX 3.7.2 路径的 BGR/RGB 交接缺陷已在研究路径修复；该问题与线程生命周期引发的宿主内存留存分开处理。模型及调用由长期线程统一持有，并显式使用 use_queues=False；本组独立工程预检不借用 P03 的产物，也不据此宣称内容或效率已验收。机制诊断见[执行层诊断](../../benchmark/diagnostics/README.md)。
 

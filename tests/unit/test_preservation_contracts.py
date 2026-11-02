@@ -2,17 +2,47 @@
 
 from __future__ import annotations
 
-import runpy
-from pathlib import Path
-
 import pytest
 
 from moparse_eval.expected_readback import markdown_observation, read_expected
 from moparse_eval.expected_scoring import grade_expected
 from moparse_eval.packaging import write_json
 
-ROOT = Path(__file__).resolve().parents[2]
-CASES = runpy.run_path(str(ROOT / "benchmark/diagnostics/expected-preservation-probes.py"))["cases"]()
+
+def cases():
+    name = "- Legal name: Example Corp\n"
+    money = "单位：人民币千元。\n\n- 庫存股：2024年金額：17。\n"
+    age = "单位：股。\n\n- 姓名：甲；年龄：52；年末持股数：17。\n"
+    currency = "单位：元 币种：人民币。\n\n- 名称：Alpha；金额：17。\n- 名称：Beta；金额：原表留空。\n"
+    quarter = "单位：人民币百万元。\n\n- 项目：Alpha；一季度：17。\n"
+    path = "- 总资产(亿元)：2011年：17。\n"
+    return [
+        ("named_html_span", name,
+         '<table><tr><td></td><td></td><td></td><td></td></tr>'
+         '<tr><td>Legal name</td><td colspan="3">Example Corp</td></tr></table>', True),
+        ("named_prose_control", name, name, True),
+        ("monetary_stock_account", money, "- 庫存股：2024年金額：17（单位：人民币千元）。\n", True),
+        ("stock_account_wrong_count_unit", money, "- 庫存股：2024年金額：17（单位：股）。\n", False),
+        ("age_without_shares", age, "- 姓名：甲；年龄：52；年末持股数：17（单位：股）。\n", True),
+        ("age_with_wrong_shares", age,
+         "- 姓名：甲；年龄：52（单位：股）；年末持股数：17（单位：股）。\n", False),
+        ("currency_one_list_caption", currency,
+         "单位：元 币种：人民币\n\n- 名称：Alpha；金额：17。\n- 名称：Beta；金额：。\n", True),
+        ("currency_repeated_caption_control", currency,
+         "单位：元 币种：人民币\n\n- 名称：Alpha；金额：17。\n\n"
+         "单位：元 币种：人民币\n\n- 名称：Beta；金额：。\n", True),
+        ("year_unit_column_path", quarter,
+         "单位：人民币百万元\n\n- 项目：Alpha；2024年人民币百万元 / 一季度：17。\n", True),
+        ("separate_column_qualifier_control", quarter,
+         "单位：人民币百万元\n\n- 项目：Alpha；一季度：17（单位：人民币百万元）。\n", True),
+        ("printed_subject_path", path,
+         "- 范围：主要财务数据；项目：财务数据与指标 / 总资产(亿元)；2011年：17。\n", True),
+        ("nested_subject_path_control", path,
+         "- 财务数据与指标\n  - 总资产(亿元)：2011年：17。\n", True),
+    ]
+
+
+CASES = cases()
 
 
 def expected(tmp_path, markdown):

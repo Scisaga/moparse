@@ -1,4 +1,4 @@
-"""Paired service-output evaluation over saved P07/P08 results.
+"""Isolated CPU service replay over saved P07/P08 results.
 
 The isolated worker receives input PDFs and native candidates, never expected
 materials. PDF access here is candidate service processing, not corpus review.
@@ -22,13 +22,6 @@ from zoneinfo import ZoneInfo
 from .packaging import inside, read_json, write_json
 
 ROOT = Path(__file__).resolve().parent.parent
-SCORING_MODULES = (
-    "scoring.py", "matching.py", "metrics.py", "representations.py", "adapters.py",
-    "native_relations.py", "native_readback.py", "information.py",
-    "information_reading.py",
-    "expected_readback.py", "expected_scoring.py", "expected_evaluation.py", "expected_report.py",
-    "candidate_delivery.py",
-)
 WORKER_CASE_FIELDS = (
     "case_id", "sample_id", "suite", "phase", "repetition", "input_pages", "input", "native", "job_id",
 )
@@ -39,7 +32,7 @@ def now() -> str:
 
 
 def prepare_run(baseline: Path, destination: Path, service_config: Path, *, pipeline: str = "P07",
-                previous_run: Path | None = None, rescore_native: bool = False) -> Path:
+                ) -> Path:
     """Use declared execution identities; do not validate dataset contents."""
     from .cli import code_identity, snapshot_software
 
@@ -47,33 +40,14 @@ def prepare_run(baseline: Path, destination: Path, service_config: Path, *, pipe
         raise ValueError("service comparison supports P07 and P08")
     baseline = baseline.resolve()
     session = read_json(baseline / "run.json")
-    score_index_path = inside(baseline, session["latest_scores"])
-    score_index = read_json(score_index_path)
-    if (score_index.get("protocol", {}).get("id") != "mo-parse-expected-only-v1"
-            or score_index.get("expected_comparison_complete") is not True):
-        raise ValueError("finish the expected-only native comparison before preparing a new candidate")
     identity = code_identity()
-    require_preparation_scorer(score_index["software"], identity, rescore_native=rescore_native)
-    if (identity["python"] != score_index["software"]["python"]
-            or identity["dependencies"] != score_index["software"]["dependencies"]):
-        raise ValueError("paired scoring requires the frozen scoring runtime dependencies")
     dataset = Path(session["dataset"]).resolve()
     manifest = read_json(dataset / "manifest.json")
-    if manifest.get("freeze_record") != score_index.get("reference_freeze"):
-        raise ValueError("reference freeze declaration differs from the baseline score")
     samples = {sample["id"]: sample for sample in manifest["samples"]}
-    quality_scores: dict[str, tuple[str, dict[str, Any]]] = {}
-    for relative in score_index["results"]:
-        if f"/{pipeline}/quality800-r1/" not in "/" + relative:
-            continue
-        score_file = inside(score_index_path.parent, relative)
-        scored = read_json(score_file)
-        quality_scores[scored["sample_id"]] = str(score_file.relative_to(baseline)), scored
     cases = []
     for ordinal, case in enumerate(c for c in session["cases"] if c["pipeline"] == pipeline):
         observation = read_json(inside(baseline, case["observation"]))
         sample = samples[case["sample_id"]]
-        score_path, scored = quality_scores[case["sample_id"]]
         native_relative = Path(case["observation"]).relative_to(f"artifacts/{pipeline}").with_name("native.json")
         case_id = f"{case['suite']}-r{case['repetition']}-{case['sample_id']}"
         cases.append({
@@ -81,10 +55,10 @@ def prepare_run(baseline: Path, destination: Path, service_config: Path, *, pipe
             "phase": case["phase"], "repetition": case["repetition"],
             "input_pages": observation["input_page_count"],
             "input": str(Path(sample["input"]).relative_to("inputs")),
-            "native": native_relative.as_posix(), "baseline_score_source": score_path,
+            "native": native_relative.as_posix(),
             "baseline_observation_source": case["observation"],
             "job_id": f"service_{ordinal:04d}",
-            **{key: copy.deepcopy(scored.get(key)) for key in (
+            **{key: copy.deepcopy(sample.get(key)) for key in (
                 "document_id", "family_id", "tags", "development_exposure", "source_category",
             )},
         })
@@ -96,13 +70,10 @@ def prepare_run(baseline: Path, destination: Path, service_config: Path, *, pipe
     record = {
         "schema": "moparse-service-evaluation/1", "run_id": destination.name,
         "report_version": "service-paired-v1", "state": "prepared", "created_at": now(),
-        "baseline_run": str(baseline), "baseline_score_id": score_index["score_id"],
-        "baseline_software": score_index["software"], "dataset": str(dataset),
+        "baseline_run": str(baseline), "dataset": str(dataset),
         "dataset_name": manifest.get("name"), "reference_freeze": manifest.get("freeze_record"),
         "reference_policy": "canonical_expected_only_no_adjudications",
-        "scoring_protocol": score_index["scoring_protocol"], "software": identity,
-        "paired_native_rescore_required": True,
-        "preparation_requires_fresh_native_scores": rescore_native,
+        "software": identity,
         "native_pipeline": {**{key: copy.deepcopy(native_configuration.get(key)) for key in (
             "pipeline", "revisions", "native_view_policy", "source_policy", "inference_services",
         )}, "versions": {key: value for key, value in native_configuration.get("versions", {}).items()
@@ -127,30 +98,6 @@ def prepare_run(baseline: Path, destination: Path, service_config: Path, *, pipe
         ],
         "cases": cases,
     }
-    if previous_run is not None:
-        previous_run = previous_run.resolve()
-        previous = read_json(previous_run / "run.json")
-        previous_freeze = read_json(previous_run / "execution-freeze.json")
-        if (previous.get("state") != "completed"
-                or previous["software"]["software_id"] != previous_freeze["software"]["software_id"]
-                or previous.get("reference_freeze") != record["reference_freeze"]
-                or Path(previous["dataset"]).resolve() != dataset
-                or Path(previous["baseline_run"]).resolve() != baseline
-                or previous["native_pipeline"] != record["native_pipeline"]):
-            raise ValueError("previous candidate execution identity or reference scope differs")
-        previous_cases = {case["case_id"]: case for case in previous["cases"]}
-        for case in cases:
-            old = previous_cases.get(case["case_id"])
-            if old is None or any(old.get(key) != case.get(key) for key in (
-                "sample_id", "suite", "phase", "repetition", "input_pages", "input", "native", "baseline_observation_source",
-            )):
-                raise ValueError("previous candidate is not the same declared native input")
-            case["previous_observation"] = old["observation"]
-        record["previous_outputs"] = {
-            "run": str(previous_run), "software": previous["software"],
-            "execution_freeze": str(previous_run / "execution-freeze.json"),
-            "policy": "unchanged_saved_final_bytes_rescored_with_current_shared_frozen_rules",
-        }
     write_json(destination / "run.json", record)
     snapshot_software(destination / "software", identity)
     write_json(destination / "candidate" / "worker-plan.json", {
@@ -161,21 +108,6 @@ def prepare_run(baseline: Path, destination: Path, service_config: Path, *, pipe
                   for case in cases],
     })
     return destination
-
-
-def require_preparation_scorer(previous: dict[str, Any], current: dict[str, Any], *,
-                               rescore_native: bool = False) -> None:
-    """Prepare candidates without reusing an obsolete grade as a new baseline.
-
-    Only common scoring rules may differ under this explicit mode. Scoring
-    still requires a completed all-native index with the exact current code
-    identity; native adapters and faithful format readers cannot drift here.
-    """
-    allowed = {"scoring.py", "matching.py", "information.py", "information_reading.py",
-               "expected_readback.py", "expected_scoring.py", "expected_evaluation.py", "expected_report.py", "candidate_delivery.py"} if rescore_native else set()
-    if any(previous["module_sha256"].get(name) != current["module_sha256"].get(name)
-           for name in set(SCORING_MODULES) - allowed):
-        raise ValueError("paired comparison requires the unchanged frozen shared scorer or an explicit common-rule rescore")
 
 
 def docker_command(run: Path, phase: str, name: str) -> list[str]:
@@ -266,71 +198,9 @@ def freeze_run(run: Path, validation: Path) -> None:
     write_json(run / "execution-freeze.json", {
         "software": identity, "options": record["options"], "service_config": record["service_config"],
         "environment": record["execution_environment"], "validation": checks,
-        "baseline_score_id": record["baseline_score_id"], "frozen_at": record["frozen_at"],
+        "frozen_at": record["frozen_at"],
     })
     write_json(run / "run.json", record)
-
-
-def require_shared_scoring(record: dict[str, Any], identity: dict[str, Any], *,
-                           paired_native_rescore: bool = False) -> None:
-    """Allow a separately validated final reader without altering the shared rules."""
-    execution = record["software"]
-    allowed = {"service_evaluation.py", "service_observation.py"}
-    if paired_native_rescore:
-        # These modules only grade or present saved candidates. Admitting a
-        # changed common reader/localizer requires all native and final sides
-        # to be rescored under the newly validated identity, never old-score
-        # reuse. Native adapters/bridges, application code and dependencies
-        # remain frozen even in this analysis-only mode.
-        allowed.update({"scoring.py", "matching.py", "information.py", "information_reading.py", "cli.py",
-                        "report_figures.py", "reporting.py",
-                        "expected_readback.py", "expected_scoring.py", "expected_evaluation.py", "expected_report.py", "candidate_delivery.py"})
-    names = set(execution["module_sha256"]) | set(identity["module_sha256"])
-    if any(execution["module_sha256"].get(name) != identity["module_sha256"].get(name)
-           for name in names - allowed):
-        raise ValueError("shared scoring or native bridge changed; paired scoring is not admitted")
-    if any(execution[key] != identity[key] for key in (
-        "support_module_sha256", "python", "dependencies",
-    )):
-        raise ValueError("service implementation or scoring dependencies changed after execution")
-
-
-def freeze_scoring(run: Path, validation: Path) -> None:
-    from .cli import SCORING_PROTOCOL, code_identity, snapshot_software
-    record = read_json(run / "run.json")
-    if record["state"] != "completed":
-        raise ValueError("finish candidate execution before freezing its analysis reader")
-    identity = code_identity()
-    checks = read_json(validation)
-    if checks.get("status") != "passed":
-        raise ValueError("final-output readback requires passed synthetic validation")
-    paired_native_rescore = checks.get("paired_native_rescore") is True
-    if record.get("paired_native_rescore_required") and not paired_native_rescore:
-        raise ValueError("this paired run requires native and final outputs to be rescored together")
-    require_shared_scoring(record, identity, paired_native_rescore=paired_native_rescore)
-    software_path = run / "scoring-software" / identity["software_id"]
-    if not software_path.exists():
-        snapshot_software(software_path, identity)
-    write_json(run / "scoring-freeze.json", {
-        "software": identity, "software_id": identity["software_id"],
-        "execution_software_id": record["software"]["software_id"],
-        "protocol_id": SCORING_PROTOCOL["id"], "scoring_protocol": copy.deepcopy(SCORING_PROTOCOL), "validation": checks,
-        "reader_scope": "faithful final-output readback; same declared label policy in grids and paths",
-        "paired_native_rescore": paired_native_rescore,
-        "software_snapshot": str(software_path.relative_to(run)),
-        "frozen_at": now(),
-    })
-
-
-def paired_native_index(baseline_run: Path, identity: dict[str, Any]) -> dict[str, Any]:
-    """Use the current unified rescore, never depend on withdrawn score files."""
-    session = read_json(baseline_run / "run.json")
-    index = read_json(inside(baseline_run, session["latest_scores"]))
-    if index["software"]["software_id"] != identity["software_id"]:
-        raise ValueError("paired native rescoring requires the same current unified software")
-    if index.get("unscored"):
-        raise ValueError("finish unified native rescoring before paired final scoring")
-    return index
 
 
 def oriented_source(path: Path, native: dict[str, Any], destination: Path) -> Path:
@@ -580,12 +450,6 @@ async def worker(plan_path: Path, phase: str) -> None:
                           "seconds": outcome["timing"]["postprocessing_seconds"]}), flush=True)
 
 
-def score_run(run: Path) -> Path:
-    from .expected_evaluation import score_saved_service
-
-    return score_saved_service(run)
-
-
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
@@ -594,40 +458,24 @@ def main() -> int:
     prepare.add_argument("--output", required=True, type=Path)
     prepare.add_argument("--service-config", required=True, type=Path)
     prepare.add_argument("--pipeline", choices=["P07", "P08"], default="P07")
-    prepare.add_argument("--previous-run", type=Path)
-    prepare.add_argument("--rescore-native", action="store_true",
-                         help="require fresh identical-software grading of saved native outputs before paired scoring")
     execute = commands.add_parser("run")
     execute.add_argument("--run", required=True, type=Path)
     execute.add_argument("--phase", choices=["warmup", "measured"], required=True)
-    for name in ("freeze", "freeze-scoring"):
-        freeze = commands.add_parser(name)
-        freeze.add_argument("--run", required=True, type=Path)
-        freeze.add_argument("--validation", required=True, type=Path)
-    for name in ("score", "report"):
-        subparser = commands.add_parser(name)
-        subparser.add_argument("--run", required=True, type=Path)
+    freeze = commands.add_parser("freeze")
+    freeze.add_argument("--run", required=True, type=Path)
+    freeze.add_argument("--validation", required=True, type=Path)
     candidate = commands.add_parser("worker")
     candidate.add_argument("--plan", required=True, type=Path)
     candidate.add_argument("--phase", required=True, choices=["warmup", "measured"])
     args = parser.parse_args()
     if args.command == "prepare":
-        print(prepare_run(args.baseline, args.output, args.service_config, pipeline=args.pipeline,
-                          previous_run=args.previous_run, rescore_native=args.rescore_native))
+        print(prepare_run(args.baseline, args.output, args.service_config, pipeline=args.pipeline))
     elif args.command == "run":
         return launch(args.run, args.phase)
     elif args.command == "freeze":
         freeze_run(args.run, args.validation)
-    elif args.command == "freeze-scoring":
-        freeze_scoring(args.run, args.validation)
     elif args.command == "worker":
         asyncio.run(worker(args.plan, args.phase))
-    elif args.command == "score":
-        print(score_run(args.run))
-    elif args.command == "report":
-        from .expected_report import render_expected_report
-        run = read_json(args.run / "run.json")
-        print(render_expected_report(inside(args.run, run["score_index"])))
     return 0
 
 

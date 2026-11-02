@@ -36,6 +36,11 @@ def currencies(text: str) -> list[str]:
 
 
 def units(text: str) -> list[str]:
+    return list(_cached_units(text))
+
+
+@lru_cache(maxsize=8192)
+def _cached_units(text: str) -> tuple[str, ...]:
     text = normalize_text(text)
     explicit = list(re.finditer(r"(?:^|[（(\s])(?:单位|單位)\s*[:：(（]\s*([^()（）,，。;；\n]{1,48})", text))
     known = list(_UNIT.finditer(text))
@@ -50,24 +55,29 @@ def units(text: str) -> list[str]:
     values += [unit for word, unit in (("次数", "次"), ("次數", "次"), ("年限", "年"),
                                       ("人数", "人"), ("人數", "人"), ("股数", "股"), ("股數", "股"))
                if word in text]
-    return list(dict.fromkeys(values))
+    return tuple(dict.fromkeys(values))
 
 
 def metric_units(text: str) -> list[str]:
+    return list(_cached_metric_units(text))
+
+
+@lru_cache(maxsize=8192)
+def _cached_metric_units(text: str) -> tuple[str, ...]:
     """Only a metric's unit annotation qualifies its numbers.
 
     Currency names and scalar conditions within a metric name do not: a
     'USD depreciates 5%' scenario can still report its impact in CNY million.
     """
     text = normalize_text(text, collapse_whitespace=True)
-    return [token for token in units(text) if any(
+    return tuple(token for token in units(text) if any(
         (match.end() == len(text) or text[match.end():].strip() == ")")
         and (not text[:match.start()].rstrip()[-1:].isdigit())
         and (match.start() == 0 or text[match.start() - 1] in " (：:"
              or re.fullmatch(r"(?:19|20)\d{2}\s*年?", text[:match.start()].strip()))
         for match in re.finditer(re.escape(token), text))
         or any(word in text for word in {"次": ("次数", "次數"), "年": ("年限",),
-                                        "人": ("人数", "人數"), "股": ("股数", "股數")}.get(token, ()))]
+                                        "人": ("人数", "人數"), "股": ("股数", "股數")}.get(token, ())))
 
 
 @lru_cache(maxsize=32768)
@@ -363,13 +373,13 @@ def _prose_fields(block: dict[str, Any]) -> list[dict[str, Any]]:
     These are a scoring view of printed text, never a replacement native
     table or a business inference. Free text is retained as free text.
     """
-    if block.get("cells") or block.get("kind") not in {"text", "paragraph", "list"}:
+    if block.get("cells") or block.get("kind") in {"image", "picture", "figure", "image_body", "chart", "chart_body"}:
         return []
-    from .expected_readback import _IDENTITY, Element, record
+    from .expected_readback import _IDENTITY, Element, _parts, record
     text = visible_text(str(block.get("text", "")), block.get("text_format", "plain"))
     records = []
     for number, line in enumerate(text.splitlines()):
-        parts = [part.strip() for part in re.split(r"[；;]", line) if part.strip()]
+        parts = _parts(line)
         pairs = []
         subjects: list[str] = []
         for index, part in enumerate(parts):
@@ -378,7 +388,10 @@ def _prose_fields(block: dict[str, Any]) -> list[dict[str, Any]]:
                 pairs.append((match[1].strip(), match[2].removesuffix("。")))
             elif index == 0 and len(parts) > 1:
                 subjects.extend(label.strip() for label in re.split(r"\s+/\s+|\s*>\s*", part) if label.strip())
-        if not pairs or not (subjects or len(pairs) > 1):
+        parsed = record(Element("text", line, (number + 1, number + 1), line))
+        if parsed is None and pairs:
+            parsed = record(Element("item", line, (number + 1, number + 1), line))
+        if not pairs or not (subjects or len(pairs) > 1 or parsed):
             continue
         unit_subjects = [(key, value) for key, value in pairs
                          if unit_scope_literal(key) and not _is_scalar(value)]
@@ -387,7 +400,6 @@ def _prose_fields(block: dict[str, Any]) -> list[dict[str, Any]]:
                       for label in re.split(r"\s+/\s+", value) if label.strip()),
                       *(label.strip() for _key, value in unit_subjects
                         for label in re.split(r"\s+/\s+", value) if label.strip())]
-        parsed = record(Element("text", line, (number + 1, number + 1), line))
         if parsed:
             identities = parsed["row_header_path"]
         periods = [value for key, value in pairs if re.fullmatch(r"期间|期間|年度|日期|Period|Date|Year", key, re.I)]
@@ -407,8 +419,29 @@ def _prose_fields(block: dict[str, Any]) -> list[dict[str, Any]]:
                   "native_path": block.get("native_path"), "information_prose_record": True}
                  for index, (key, value) in enumerate(pairs)]
         if parsed:
+            # Use the syntax reader's literal label/value split, including
+            # singleton named values, signed scalars and explicit qualifiers.
+            cells = [{**block, "id": f"{identity}:field:{index}", "text": field["value"],
+                      "row_header_path": parsed["row_header_path"],
+                      "column_header_path": field["column_header_path"],
+                      "named_value": bool(field.get("named_value")),
+                      "information_record_labels": identities,
+                      "information_context": [*context, *scopes], "information_prose_record": True,
+                      **{key: field[key] for key in ("unit", "period", "note_texts", "currency") if key in field}}
+                     for index, field in enumerate(parsed["fields"])]
             for cell in cells:
                 cell["printed_subject_paths"] = parsed.get("printed_subject_paths", [])
+            for index, assertion in enumerate(parsed["fields"]):
+                if assertion.get("named_value") and not assertion["column_header_path"] and parsed["row_header_path"]:
+                    cells.append({"id": f"{identity}:identity:{index}", "text": assertion["value"],
+                        "row_header_path": [assertion["value"]], "column_header_path": parsed["row_header_path"][-1:],
+                        "named_value": True, "native_path": block.get("native_path"),
+                        "information_context": [*context, *scopes]})
+                if assertion.get("identity_field"):
+                    cells.append({"id": f"{identity}:named:{index}", "text": assertion["value"],
+                        "row_header_path": assertion["column_header_path"], "column_header_path": [],
+                        "named_value": True, "native_path": block.get("native_path"),
+                        "information_context": [*context, *scopes]})
             for index, assertion in enumerate(parsed.get("named_measurements", [])):
                 cells.append({"id": f"{identity}:measurement:{index}", "text": assertion["value"],
                     "row_header_path": assertion["row_header_path"], "column_header_path": [],
@@ -597,7 +630,26 @@ def read_information_observation(observation: dict[str, Any]) -> dict[str, Any]:
                         cell["information_comparison_periods"] = [
                             *cell.get("information_comparison_periods", []), comparison,
                         ]
-            block["cells"] = [*cells, *_numbered_record_labels(cells)]
+            # A cell may explicitly print several labelled measurements. Expose
+            # each assertion with this cell's own row/header/context evidence.
+            # The original text and grid remain present, without answer input.
+            from .expected_readback import _pairs
+            assertions = []
+            for cell in cells:
+                pairs = _pairs(str(cell.get("text", "")))
+                if not pairs or not all(value.strip() for _, value in pairs):
+                    continue
+                labels = cell.get("row_header_path") or cell.get("information_row_labels", [])
+                if not labels:
+                    continue
+                for index, (key, value) in enumerate(pairs):
+                    fact = {k: v for k, v in cell.items() if k not in {"row", "col", "row_span", "col_span", "is_row_header", "is_column_header"}}
+                    assertions.append({**fact, "id": str(cell.get("id")) + f":assertion:{index}",
+                        "text": value, "row_header_path": labels,
+                        "column_header_path": [*cell.get("information_headers", []), key],
+                        "readback_evidence": {"cell": cell.get("native_path", cell.get("id")),
+                                              "literal": cell["text"], "label": key, "value": value}})
+            block["cells"] = [*cells, *_numbered_record_labels(cells), *assertions]
             for cell in block["cells"]:
                 cell["information_label_views"] = label_views(cell)
         page["blocks"] = [*blocks, *prose]
@@ -605,7 +657,8 @@ def read_information_observation(observation: dict[str, Any]) -> dict[str, Any]:
 
 
 def _note_definitions(cell: dict[str, Any], *, ambiguous: bool = False) -> set[str]:
-    note_texts = [*(item["text"] for item in cell.get("information_notes", [])), *cell.get("notes", [])]
+    note_texts = [*(item["text"] for item in cell.get("information_notes", [])),
+                  *cell.get("notes", []), *cell.get("note_texts", [])]
     if ambiguous:
         note_texts += [item["text"] for item in cell.get("information_ambiguous_notes", [])]
     return {match.group(1) for text in note_texts for line in text.splitlines()
@@ -651,7 +704,7 @@ def scalar_notes(cell: dict[str, Any]) -> tuple[str, list[str] | None]:
 def candidate_note_texts(cell: dict[str, Any]) -> list[str]:
     """Read a value's own printed note or its explicitly linked definition."""
     direct = [re.sub(r"^\s*[0-9]{1,2}(?:\s+|[.)、：:])\s*", "", note)
-              for note in cell.get("notes", []) if isinstance(note, str)]
+              for note in [*cell.get("notes", []), *cell.get("note_texts", [])] if isinstance(note, str)]
     _value, markers = scalar_notes(cell)
     for marker in markers or []:
         for item in cell.get("information_notes", []):
@@ -662,7 +715,8 @@ def candidate_note_texts(cell: dict[str, Any]) -> list[str]:
     return list(dict.fromkeys(text.strip() for text in direct if isinstance(text, str) and text.strip()))
 
 
-def scoped_qualifiers(cell: dict[str, Any], endpoint_texts: list[str]) -> dict[str, list[dict[str, Any]]]:
+def scoped_qualifiers(cell: dict[str, Any], endpoint_texts: list[str], *,
+                      business_scope_only: bool = False) -> dict[str, list[dict[str, Any]]]:
     """Read qualifiers independent of the expected qualifier or value."""
     result: dict[str, list[dict[str, Any]]] = {"unit": [], "period": [], "currency": [], "business_scope": []}
     column_texts = [*cell.get("column_header_path", []), *cell.get("information_headers", [])]
@@ -673,6 +727,8 @@ def scoped_qualifiers(cell: dict[str, Any], endpoint_texts: list[str]) -> dict[s
     result["business_scope"] = [{"actual": text, "source": "candidate_printed_business_scope"}
         for text in [*cell.get("row_header_path", []), *cell.get("information_record_labels", []),
                      *(item["text"] for item in contexts)]]
+    if business_scope_only:
+        return result
     currency_sources = [*direct, *cell.get("units", []), *cell.get("information_table_units", []),
                         *(item["text"] for item in contexts)]
     for currency in dict.fromkeys(c for text in currency_sources for c in currencies(text)):

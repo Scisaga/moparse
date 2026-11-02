@@ -3,11 +3,7 @@
 from moparse_eval.metrics import text_metrics
 from moparse_eval.reporting import native_performance, postprocessing_performance
 from scripts.render_lite_report import (
-    PIPELINES,
-    cohort_rows,
-    error_category,
     memory_bytes,
-    observed_dominates,
     summarize_resource_samples,
     text_diagnostics,
 )
@@ -118,65 +114,25 @@ def test_unknown_gpu_attribution_is_not_zero_consumption():
     assert result["gpu_complete_samples"] == 0
 
 
-def vector(*, quality=0.8, seconds=10, worker=2, inference=3, gpu=4):
-    return {"qualities": {"business_field": quality, "text": quality},
-            "costs": {"processing_seconds": seconds, "worker_host_bytes": worker,
-                      "inference_host_bytes": inference, "owned_gpu_mib": gpu}}
 
 
-def test_faster_and_more_accurate_is_not_dominance_with_more_gpu_memory():
-    faster = vector(quality=0.9, seconds=5, gpu=8)
-    smaller = vector(quality=0.8, seconds=10, gpu=3)
-    assert observed_dominates(faster, smaller) is False
-    assert observed_dominates(smaller, faster) is False
 
 
-def test_all_reported_dimensions_must_improve_or_tie_with_one_strict_gain():
-    assert observed_dominates(vector(seconds=5), vector(seconds=10)) is True
-    assert observed_dominates(vector(), vector()) is False
-    different = vector(seconds=5)
-    different["qualities"]["text"] = 0.1
-    assert observed_dominates(different, vector()) is False
 
 
-def test_missing_dimension_cannot_create_a_dominance_claim():
-    assert observed_dominates(vector(gpu=None), vector()) is None
-    assert observed_dominates(vector(), vector(gpu=None)) is None
-    missing_quality = vector()
-    missing_quality["qualities"].pop("text")
-    assert observed_dominates(missing_quality, vector()) is None
 
 
-def test_cohort_totals_use_all_targets_of_tagged_samples_and_allow_overlap():
-    tagged = {"tags": ["data-table", "mixed-units"], "by_kind": {
-        "business_field": {"correct": 2, "targets": 5}, "text": {"correct": 1, "targets": 3}}}
-    other = {"tags": ["ordinary-prose"], "by_kind": {
-        "business_field": {"correct": 7, "targets": 9}, "text": {"correct": 3, "targets": 4}}}
-    rows = cohort_rows({p: [tagged, other] for p in PIPELINES})
-    selected = [r for r in rows if r["pipeline"] == "P01" and r["tag"] in {"data-table", "mixed-units"} and r["kind"] == "business_field"]
-    assert len(selected) == 2
-    assert all((r["samples"], r["correct"], r["targets"], r["correctness"]) == (1, 2, 5, 0.4) for r in selected)
-    empty = next(r for r in rows if r["pipeline"] == "P01" and r["tag"] == "multi-column")
-    assert empty["targets"] == 0
-    assert empty["correctness"] is None
 
 
 def test_strict_character_diagnostics_separate_missing_text_from_located_text():
     result = text_diagnostics([{"outcomes": [
-        {"kind": "text", "candidate": "abX", "text": text_metrics("abc", "abX")},
-        {"kind": "heading", "candidate": None, "text": text_metrics("missing", "")},
+        {"kind": "text", "candidate": "abX", "outcome": "incorrect", "text": text_metrics("abc", "abX")},
+        {"kind": "heading", "candidate": None, "outcome": "incorrect", "text": text_metrics("missing", "")},
         {"kind": "business_field", "candidate": "999"},
     ]}])
     assert result["targets"] == 2
-    assert result["missing"] == 1
-    assert result["located_reference_characters"] == 3
-    assert result["strict_edit_distance"] == 1
-    assert result["located_strict_cer"] == 1 / 3
-    assert text_diagnostics([])["located_strict_cer"] is None
-
-
-def test_error_categories_keep_unrecognized_reasons_visible():
-    assert error_category("native_header_endpoints_unavailable") == "定位或表头范围"
-    assert error_category("native_label_path_scope_conflict") == "范围或位置歧义"
-    assert error_category("required_qualifier_incorrect:period") == "限定不符"
-    assert error_category("future_reason") == "其他"
+    assert result["missing_targets"] == 1
+    assert result["aligned_reference_characters"] == 3
+    assert result["aligned"]["strict"]["distance"] == 1
+    assert result["aligned_strict_cer"] == 1 / 3
+    assert text_diagnostics([])["aligned_strict_cer"] is None

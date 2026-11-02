@@ -1,0 +1,16 @@
+{
+  "P07": {
+    "new_correct": 509,
+    "lost_correct": 0,
+    "raw_literal_new_exact": 150,
+    "raw_literal_lost_exact": 10,
+    "details": "private/native-to-baseline.json"
+  },
+  "P08": {
+    "new_correct": 175,
+    "lost_correct": 0,
+    "raw_literal_new_exact": 114,
+    "raw_literal_lost_exact": 4,
+    "details": "private/native-to-baseline.json"
+  }
+}

@@ -10,9 +10,11 @@ from app.utils.measurement import unit_applicable
 
 from .information_reading import (
     _SECTION_PERIOD,
+    _scalar_units,
     label_text,
     label_unit_suffix,
     label_views,
+    metric_units,
     scoped_qualifiers,
     unit_scope_literal,
     units,
@@ -39,6 +41,7 @@ def period_text(text: str) -> str:
     return re.sub(r"(?<=截至)\s+(?=\d)|(?<=\d)\s+(?=[年月日])|(?<=[年月])\s+(?=\d)|(?<=年)\s+(?=[度末])", "", text)
 
 
+@lru_cache(maxsize=8192)
 def business_scope_text(text: str) -> str:
     """Read explicit scope-path separators as heading layout, retaining words and IDs."""
     text = label_text(normalize_text(text, collapse_whitespace=True))
@@ -318,15 +321,28 @@ def qualifier_evidence(expected: dict[str, Any], cell: dict[str, Any],
                        endpoint_texts: list[str]) -> dict[str, dict[str, Any]]:
     """Read only explicitly scoped metadata or actual located header text."""
     evidence: dict[str, dict[str, Any]] = {}
-    scoped = scoped_qualifiers(cell, endpoint_texts)
+    scoped = scoped_qualifiers(cell, endpoint_texts, business_scope_only=set(expected) <= {"business_scope"})
     explicit_unit = cell.get("unit")
-    if isinstance(explicit_unit, str) and not unit_applicable(
+    if not isinstance(explicit_unit, str):
+        columns = [*cell.get("column_header_path", []), *cell.get("information_headers", [])]
+        printed_units = _scalar_units(str(cell.get("text", ""))) or list(dict.fromkeys(
+            unit for text in columns or endpoint_texts for unit in metric_units(text)))
+        if not printed_units and not any(re.search(r"[%％‰]|同比|佔|占|比例|比率|percent|change|rate|ratio", text, re.I) for text in columns):
+            printed_units = list(dict.fromkeys([*cell.get("printed_row_units", []),
+                *(unit for text in [*cell.get("row_header_path", []), *cell.get("information_row_labels", [])] for unit in metric_units(text))]))
+        if len(printed_units) == 1:
+            explicit_unit = printed_units[0]
+    expected_unit_matches = isinstance(expected.get("unit"), str) and isinstance(explicit_unit, str) and unit_text(expected["unit"]) == unit_text(explicit_unit)
+    if isinstance(explicit_unit, str) and not expected_unit_matches and not unit_applicable(
             explicit_unit, cell.get("column_header_path", []) or cell.get("information_headers", []),
             cell.get("row_header_path", []) or endpoint_texts):
         evidence["unit_applicability"] = {"status": "incorrect", "source": "printed_field_unit",
                                            "actual": explicit_unit}
     for key, value in expected.items():
-        if key in cell:
+        if key == "unit" and key not in cell and isinstance(explicit_unit, str):
+            evidence[key] = {"status": "correct" if unit_text(value) == unit_text(explicit_unit) else "incorrect",
+                             "source": "printed_label_unit", "actual": explicit_unit}
+        elif key in cell:
             actual = cell[key]
             if key == "note_texts" and isinstance(value, list) and isinstance(actual, list):
                 correct = {normalize_text(v, collapse_whitespace=True) for v in value} == {
@@ -375,6 +391,9 @@ def information_value_equal(expected: str, actual: str, field: dict[str, Any],
                             evidence: dict[str, dict[str, Any]]) -> bool:
     """Declared expression equivalence, preserving numeric and sign spelling."""
     left, right = field_value_text(expected), field_value_text(actual)
+    # Keep the printed separator. Its display spacing cannot concatenate two
+    # bare numeric tokens, alter a sign, or supply a missing comma.
+    left, right = (re.sub(r"\s*,\s*", ",", text) for text in (left, right))
     if left == right:
         return True
     unit = field.get("unit")

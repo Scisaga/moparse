@@ -22,6 +22,8 @@ from .expected_readback import markdown_observation, read_expected
 from .expected_scoring import PROTOCOL, grade_expected, require_paired_targets
 from .native_readback import READBACK_VERSION, read_native_relations
 from .packaging import inside, read_json, write_json
+from .prose_metrics import summarize_text
+from .saved_native import read_saved_native
 
 PIPELINES = tuple(f"P{i:02}" for i in range(1, 9))
 ROOT = Path(__file__).resolve().parent.parent
@@ -56,6 +58,8 @@ def native_observation(run: Path, case: dict[str, Any], *, analysis: Path | None
     started = time.perf_counter()
     try:
         native = read_json(native_path) if native_path.is_file() else None
+        if native is not None:
+            observation = read_saved_native(native, observation)
         observation, diagnostic = read_native_relations(observation, native)
     except (ValueError, TypeError, KeyError, IndexError) as error:
         raise ValueError("native reader failed; repair readback before grading") from error
@@ -124,6 +128,14 @@ def summarize(scores: list[dict[str, Any]], *, grouped: bool = True) -> dict[str
         "width_equivalent_exact": sum(row["width_equivalent"]["distance"] == 0 for row in literals),
         "strict_exact": sum(row["strict"]["distance"] == 0 for row in literals),
         "meaning": "printed_value_spelling_only_separate_from_business_correctness"}
+    result["text_metrics"] = summarize_text([row for score in scores for row in score["outcomes"]])
+    fields = [row for score in scores for row in score["outcomes"] if row["kind"] == "business_field"]
+    result["business_metrics"] = {
+        "targets": len(fields), "value_and_labels_correct": sum(row.get("value_and_labels_correct", False) for row in fields),
+        "complete_information_correct": sum(row["outcome"] == "correct" for row in fields),
+        "readable": sum(row.get("actual") is not None for row in fields),
+        "conditional_correctness_diagnostic": (sum(row["outcome"] == "correct" for row in fields)
+            / sum(row.get("actual") is not None for row in fields)) if any(row.get("actual") is not None for row in fields) else None}
     deliveries = [score["asset_delivery"] for score in scores if score.get("asset_delivery")]
     result["asset_delivery"] = {"observed_samples": len(deliveries), "missing_delivery_records": len(scores) - len(deliveries),
         **{key: sum(row.get(key, 0) for row in deliveries) for key in (
@@ -192,23 +204,16 @@ def native_preservation(native: list[dict[str, Any]], final: list[dict[str, Any]
             "comparison": "native_to_actual_final_markdown_under_one_shared_scorer"}
 
 
-def adoption_status(changes: dict[str, Any], incremental: dict[str, Any],
-                    preservation: dict[str, Any]) -> dict[str, Any]:
-    result = {}
-    for pipeline, delta in (incremental or changes).items():
-        no_losses = delta["lost_correct"] == 0 and changes.get(pipeline, delta)["lost_correct"] == 0
-        native = preservation[pipeline]
-        result[pipeline] = {
-            "no_lost_correct_targets": no_losses,
-            "no_lost_exact_value_literals": delta["raw_literal_lost_exact"] == 0,
-            "native_correct_business_preserved": native["lost_correct_business_targets"] == 0,
-            "native_correct_content_preserved": native["passed"],
-            "native_to_final_business_losses": native["lost_correct_business_targets"],
-            "native_to_final_content_losses": native["lost_correct_targets"],
-            "adoptable": no_losses and native["passed"],
-            "comparison": "both_previous_and_intermediate_to_current" if pipeline in incremental else "previous_to_current",
-        }
-    return result
+def adoption_status(changes: dict[str, Any], preservation: dict[str, Any]) -> dict[str, Any]:
+    return {pipeline: {
+        "no_lost_correct_targets": delta["lost_correct"] == 0,
+        "native_correct_business_preserved": preservation[pipeline]["lost_correct_business_targets"] == 0,
+        "native_correct_content_preserved": preservation[pipeline]["passed"],
+        "native_to_final_business_losses": preservation[pipeline]["lost_correct_business_targets"],
+        "native_to_final_content_losses": preservation[pipeline]["lost_correct_targets"],
+        "adoptable": delta["lost_correct"] == 0 and preservation[pipeline]["passed"],
+        "comparison": "sole_baseline_to_current_and_native_to_current",
+    } for pipeline, delta in changes.items()}
 
 
 def execution_costs(baseline: Path, session: dict[str, Any], service: dict[str, Any]) -> dict[str, Any]:
@@ -251,7 +256,10 @@ def _grade_saved_group(task: dict[str, Any]) -> dict[str, Any]:
         source = inside(directory, relative)
         observation = final_observation(source, sample_id=sample_id, pipeline=group,
             pages=list(range(1, len(expected["source_pages"]) + 1)), metadata=case)
-    score = grade_expected(expected, observation)
+    try:
+        score = grade_expected(expected, observation)
+    except (ValueError, IndexError, KeyError, TypeError) as error:
+        raise ValueError(f"shared grader failed on {group}/{sample_id}; repair before publication: {error}") from error
     score.update(scoring_software_id=task["software_id"], candidate_source=str(source))
     if task.get("execution_id"):
         score["execution_software_id"] = task["execution_id"]
@@ -278,8 +286,8 @@ def _grade_tasks(tasks: list[dict[str, Any]], workers: int):
 
 @_record_failure
 def evaluate_saved(baseline: Path, output: Path, *, expected_root: Path,
-                   freeze: Path, previous_root: Path | None = None, current_root: Path | None = None,
-                   intermediate_root: Path | None = None, workers: int = 1) -> Path:
+                   freeze: Path, service_baseline_root: Path | None = None, current_root: Path | None = None,
+                   workers: int = 1) -> Path:
     from .cli import (
         _require_formal_measurement_conditions,
         code_identity,
@@ -318,7 +326,7 @@ def evaluate_saved(baseline: Path, output: Path, *, expected_root: Path,
     write_json(output / "scoring-freeze.json", frozen)
     groups: dict[str, list[dict[str, Any]]] = {p: [] for p in PIPELINES}
     service = {}
-    for label, root in (("previous", previous_root), ("intermediate", intermediate_root), ("current", current_root)):
+    for label, root in (("baseline", service_baseline_root), ("current", current_root)):
         if root is None:
             continue
         for pipeline in ("P07", "P08"):
@@ -343,12 +351,17 @@ def evaluate_saved(baseline: Path, output: Path, *, expected_root: Path,
                             "expected_comparison_complete": False, "results": [], "records": [], "coverage": [],
                             "quality_suite": "quality800", "groups": list(groups),
                             "analysis_workers": workers, "analysis_timing": "excluded_from_parser_and_postprocessing_costs",
+                            "validation": frozen["validation"],
                             "native_readback": {"reader_version": READBACK_VERSION, "observations": []},
                             "historical_adjudications": "not_read_or_applied"}
     write_json(output / "execution-status.json", index)
     reference_cache: dict[Path, Any] = {}
-    expected_by_sample = {sample_id: read_expected(samples[sample_id], expected_root, cache=reference_cache)
-                          for sample_id in sorted(sample_ids)}
+    expected_by_sample = {}
+    for sample_id in sorted(sample_ids):
+        expected_by_sample[sample_id] = read_expected(samples[sample_id], expected_root, cache=reference_cache)
+        if len(expected_by_sample) % 10 == 0:
+            print(json.dumps({"stage": "expected_readback", "samples_ready": len(expected_by_sample),
+                              "samples": len(sample_ids)}), flush=True)
     print(json.dumps({"stage": "expected_readback_ready", "samples": len(expected_by_sample)}), flush=True)
     tasks = []
     for sample_id in sorted(sample_ids):
@@ -396,107 +409,22 @@ def evaluate_saved(baseline: Path, output: Path, *, expected_root: Path,
     if code_identity()["software_id"] != identity["software_id"]:
         raise ValueError("scoring software changed during the run; do not publish mixed identities")
     summary = {key: summarize(members) for key, members in groups.items()}
-    changes = {p: paired_changes(groups[f"{p}-previous"], groups[f"{p}-current"])
-               for p in ("P07", "P08") if f"{p}-previous" in groups and f"{p}-current" in groups}
+    changes = {p: paired_changes(groups[f"{p}-baseline"], groups[f"{p}-current"])
+               for p in ("P07", "P08") if f"{p}-baseline" in groups and f"{p}-current" in groups}
     write_json(output / "private/paired-changes.json", changes)
     costs = execution_costs(baseline, session, service)
-    incremental = {p: paired_changes(groups[f"{p}-intermediate"], groups[f"{p}-current"])
-                   for p in ("P07", "P08") if f"{p}-intermediate" in groups and f"{p}-current" in groups}
-    write_json(output / "private/incremental-changes.json", incremental)
     preservation = {p: native_preservation(groups[p], groups[f"{p}-current"])
                     for p in ("P07", "P08") if f"{p}-current" in groups}
     write_json(output / "private/native-preservation.json", preservation)
     index.update(state="completed", expected_comparison_complete=True, summary=summary, changes=_change_summary(changes),
                  execution_costs=costs,
-                 incremental_changes=_change_summary(incremental, details="private/incremental-changes.json"),
                  native_preservation={p: {**{k: v for k, v in row.items() if k != "losses"},
                                          "details": "private/native-preservation.json"}
                                       for p, row in preservation.items()},
-                 adoption=adoption_status(changes, incremental, preservation),
+                 adoption=adoption_status(changes, preservation),
                  development_exposure="Lite outputs and expected syntax used for software development; no independent held-out claim")
     write_json(output / "index.json", index)
     write_json(output / "execution-status.json", {key: value for key, value in index.items() if key != "results"})
-    return output / "index.json"
-
-
-def score_saved_service(run: Path) -> Path:
-    """Rescore public final bytes, including old executions, without using IR."""
-    from .cli import code_identity, read_scoring_freeze, snapshot_software
-
-    record = read_json(run / "run.json")
-    if record.get("state") != "completed":
-        raise ValueError("finish saved service processing before scoring")
-    identity = code_identity()
-    frozen = read_scoring_freeze(run / "scoring-freeze.json", identity)
-    baseline = Path(record["baseline_run"])
-    base_run = read_json(baseline / "run.json")
-    native_index = read_json(inside(baseline, base_run["latest_scores"]))
-    if (native_index.get("software", {}).get("software_id") != identity["software_id"]
-            or native_index.get("protocol", {}).get("id") != PROTOCOL["id"]
-            or native_index.get("expected_comparison_complete") is not True):
-        raise ValueError("first finish all eight native groups with this exact expected-only scorer")
-    dataset = Path(record["dataset"])
-    manifest = read_json(dataset / "manifest.json")
-    samples = {sample["id"]: sample for sample in manifest["samples"]}
-    pipeline = record["native_pipeline"]["pipeline"]
-    native_cases = {c["sample_id"]: c for c in quality_cases(base_run) if c["pipeline"] == pipeline}
-    output = run / ("scores-expected-" + identity["software_id"][:12])
-    output.mkdir(exist_ok=False)
-    snapshot_software(output / "software", identity)
-    groups: dict[str, list[dict[str, Any]]] = {pipeline: [], f"{pipeline}-current": []}
-    if record.get("previous_outputs"):
-        groups[f"{pipeline}-previous"] = []
-    index: dict[str, Any] = {"state": "running", "protocol": PROTOCOL, "scoring_protocol": PROTOCOL,
-                            "score_id": output.name, "software": identity, "groups": list(groups), "records": [],
-                            "expected_comparison_complete": False, "results": [], "coverage": [],
-                            "execution_software": record["software"], "historical_adjudications": "not_read_or_applied"}
-    for case in quality_cases(record):
-        sample_id = case["sample_id"]
-        expected = read_expected(samples[sample_id], ROOT / "pdf_sample/parsing/expected")
-        native = native_observation(baseline, native_cases[sample_id])
-        native_score = grade_expected(expected, native)
-        native_score["scoring_software_id"] = identity["software_id"]
-        groups[pipeline].append(native_score)
-        for label, directory, observation_path in (
-            ("current", run, case["observation"]),
-            *(([("previous", Path(record["previous_outputs"]["run"]), case["previous_observation"])])
-              if record.get("previous_outputs") else []),
-        ):
-            source = inside(directory, str(Path(observation_path).with_name("final.md")))
-            observation = final_observation(source, sample_id=sample_id, pipeline=f"{pipeline}-{label}",
-                                           pages=list(range(1, case["input_pages"] + 1)), metadata=case)
-            scored = grade_expected(expected, observation)
-            scored["scoring_software_id"] = identity["software_id"]
-            scored["candidate_source"] = str(source)
-            groups[f"{pipeline}-{label}"].append(scored)
-        require_paired_targets([members[-1] for members in groups.values()])
-        for key, members in groups.items():
-            relative = f"private/scores/{key}/quality800-r1/{sample_id}.json"
-            write_json(output / relative, members[-1])
-            index["results"].append(relative)
-            index["records"].append({"group": key, "sample_id": sample_id, "path": relative})
-        index["coverage"].append({"sample_id": sample_id, "scope": expected["scope"], "targets": groups[pipeline][-1]["targets"]})
-    if code_identity()["software_id"] != identity["software_id"]:
-        raise ValueError("software changed during expected scoring")
-    index.update(state="completed", expected_comparison_complete=True,
-                 summary={key: summarize(members) for key, members in groups.items()})
-    if f"{pipeline}-previous" in groups:
-        changes = {pipeline: paired_changes(groups[f"{pipeline}-previous"], groups[f"{pipeline}-current"])}
-        write_json(output / "private/paired-changes.json", changes)
-        index["changes"] = _change_summary(changes)
-    else:
-        changes = {}
-    preservation = {pipeline: native_preservation(groups[pipeline], groups[f"{pipeline}-current"])}
-    write_json(output / "private/native-preservation.json", preservation)
-    index["native_preservation"] = {p: {**{k: v for k, v in row.items() if k != "losses"},
-                                        "details": "private/native-preservation.json"}
-                                    for p, row in preservation.items()}
-    index["adoption"] = adoption_status(changes, {}, preservation)
-    write_json(output / "index.json", index)
-    write_json(output / "scoring-freeze.json", frozen)
-    record["latest_scores"] = record["score_index"] = str((output / "index.json").relative_to(run))
-    record["scoring_status"] = "completed"
-    write_json(run / "run.json", record)
     return output / "index.json"
 
 
@@ -506,22 +434,22 @@ def main() -> int:
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--expected-root", type=Path, default=ROOT / "pdf_sample/parsing/expected")
     parser.add_argument("--freeze", type=Path, required=True)
-    parser.add_argument("--previous-root", type=Path)
+    parser.add_argument("--service-baseline-root", type=Path)
     parser.add_argument("--current-root", type=Path)
-    parser.add_argument("--intermediate-root", type=Path)
     parser.add_argument("--workers", type=int, default=1, help="analysis CPU processes; does not change scoring or processing times")
     parser.add_argument("--report-output", type=Path)
     args = parser.parse_args()
     index_path = evaluate_saved(args.baseline, args.output, expected_root=args.expected_root, freeze=args.freeze,
-                                previous_root=args.previous_root, current_root=args.current_root,
-                                intermediate_root=args.intermediate_root, workers=args.workers)
+                                service_baseline_root=args.service_baseline_root, current_root=args.current_root,
+                                workers=args.workers)
     if index_path.resolve().is_relative_to(args.baseline.resolve()):
         session = read_json(args.baseline / "run.json")
         session["latest_scores"] = str(index_path.resolve().relative_to(args.baseline.resolve()))
         write_json(args.baseline / "run.json", session)
     print(index_path)
-    from .expected_report import render_expected_report
-    print(render_expected_report(index_path, output=args.report_output))
+    if args.report_output:
+        from scripts.render_lite_report import render
+        render(index_path, args.report_output)
     return 0
 
 

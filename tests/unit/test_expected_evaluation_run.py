@@ -1,13 +1,21 @@
 """End-to-end software evaluation over invented eight-pipeline runs only."""
 
 
+
 import pytest
 
 from moparse_eval import cli
 from moparse_eval.expected_evaluation import PIPELINES, evaluate_saved
 from moparse_eval.expected_readback import markdown_observation
-from moparse_eval.expected_report import load_complete, render_expected_report
+from moparse_eval.expected_report import load_complete
 from moparse_eval.packaging import read_json, write_json
+from scripts.render_lite_report import render
+
+
+def render_test_report(index, *, figures=False):
+    directory = index.parent / "rendered"
+    render(index, directory, figures=figures)
+    return directory / "report.md"
 
 
 def invented_run(tmp_path, monkeypatch):
@@ -50,7 +58,7 @@ def test_all_eight_saved_groups_are_programmatically_scored(tmp_path, monkeypatc
     assert set(groups) == set(PIPELINES)
     assert record["expected_comparison_complete"] is True
     assert all(group[0]["incorrect"] == 0 for group in groups.values())
-    report = render_expected_report(index, figures=False)
+    report = render_test_report(index, figures=False)
     assert "P01" in report.read_text() and "P08" in report.read_text()
 
 
@@ -74,7 +82,21 @@ def test_report_rejects_mixed_software_even_with_the_same_protocol(tmp_path, mon
     score["scoring_software_id"] = "different"
     write_json(source, score)
     with pytest.raises(ValueError, match="mixed scoring software"):
-        render_expected_report(index, figures=False)
+        render_test_report(index, figures=False)
+
+
+def test_report_refuses_score_aggregates_that_disagree_with_actual_decisions(tmp_path, monkeypatch):
+    baseline, _, expected, freeze, _ = invented_run(tmp_path, monkeypatch)
+    index = evaluate_saved(baseline, tmp_path / "scores", expected_root=expected, freeze=freeze)
+    record = read_json(index)
+    path = index.parent / record["records"][0]["path"]
+    score = read_json(path)
+    score["by_kind"]["business_field"]["correct"] -= 1
+    record["summary"]["P01"]["by_kind"] = score["by_kind"]
+    write_json(path, score)
+    write_json(index, record)
+    with pytest.raises(ValueError, match="aggregate differs from its target decisions"):
+        render_test_report(index, figures=False)
 
 
 def test_output_cannot_be_written_into_reference_directory(tmp_path, monkeypatch):
@@ -87,7 +109,7 @@ def test_output_cannot_be_written_into_reference_directory(tmp_path, monkeypatch
 def test_final_outputs_are_read_from_markdown_without_private_metadata(tmp_path, monkeypatch):
     baseline, dataset, expected, freeze, text = invented_run(tmp_path, monkeypatch)
     metadata = read_json(baseline / "run.json")
-    for label, amount in (("previous", "19"), ("current", "17")):
+    for label, amount in (("baseline", "19"), ("current", "17")):
         for pipeline in ("P07", "P08"):
             directory = tmp_path / label / pipeline.lower()
             final = directory / "candidate/final.md"
@@ -100,13 +122,11 @@ def test_final_outputs_are_read_from_markdown_without_private_metadata(tmp_path,
                 "dataset": str(dataset), "native_pipeline": {"pipeline": pipeline}, "cases": [case],
                 "software": {"software_id": label}, "reference_adjudications": "/must-not-open.json"})
     index = evaluate_saved(baseline, tmp_path / "scores", expected_root=expected, freeze=freeze,
-                           previous_root=tmp_path / "previous", current_root=tmp_path / "current",
-                           intermediate_root=tmp_path / "previous")
+                           service_baseline_root=tmp_path / "baseline", current_root=tmp_path / "current")
     record, groups = load_complete(index)
-    assert len(groups) == 14
+    assert len(groups) == 12
     assert record["changes"]["P07"]["new_correct"] == 1
     assert record["changes"]["P08"]["lost_correct"] == 0
-    assert record["incremental_changes"]["P07"]["new_correct"] == 1
     assert record["adoption"]["P07"]["no_lost_correct_targets"] is True
 
 
@@ -115,11 +135,11 @@ def test_report_is_reproducible_with_references_and_dataset_offline(tmp_path, mo
     index = evaluate_saved(baseline, tmp_path / "scores", expected_root=expected, freeze=freeze)
     dataset.rename(tmp_path / "dataset-offline")
     expected.rename(tmp_path / "expected-offline")
-    report = render_expected_report(index, figures=False)
+    report = render_test_report(index, figures=False)
     first = report.read_bytes()
-    assert render_expected_report(index, figures=False).read_bytes() == first
-    summary = read_json(index.parent / "summary.json")
-    group = summary["groups"]["P01"]
+    assert render_test_report(index, figures=False).read_bytes() == first
+    summary = read_json(report.parent / "data/results.json")
+    group = summary["P01"]
     assert group["by_family"]["invented-family"]["samples"] == 1
     assert group["development_exposure"] == {"synthetic-exposed": 1}
 
@@ -131,7 +151,7 @@ def test_report_refuses_duplicate_sample_records(tmp_path, monkeypatch):
     record["records"].append(record["records"][0])
     write_json(index, record)
     with pytest.raises(ValueError, match="duplicate"):
-        render_expected_report(index, figures=False)
+        render_test_report(index, figures=False)
 
 
 def test_missing_recorded_costs_are_never_filled_with_zero(tmp_path, monkeypatch):
@@ -203,49 +223,11 @@ def test_persistent_native_information_loss_cannot_pass_a_no_new_loss_gate(kind)
     delta = paired_changes(old, current)
     preservation = native_preservation(native, current)
     assert delta["lost_correct"] == 0
-    gate = adoption_status({"P07": delta}, {}, {"P07": preservation})["P07"]
+    gate = adoption_status({"P07": delta}, {"P07": preservation})["P07"]
     assert gate["no_lost_correct_targets"] is True
     assert gate["native_to_final_business_losses"] == int(kind == "business_field")
     assert gate["native_to_final_content_losses"] == 1 and gate["adoptable"] is False
     fixed = scores("correct")
-    passed = adoption_status({"P07": paired_changes(old, fixed)}, {},
+    passed = adoption_status({"P07": paired_changes(old, fixed)},
                              {"P07": native_preservation(native, fixed)})["P07"]
     assert passed["native_correct_business_preserved"] and passed["adoptable"]
-
-
-def test_common_reader_changes_require_rescoring_and_cannot_admit_runtime_changes():
-    from copy import deepcopy
-
-    import pytest
-
-    from moparse_eval.service_evaluation import require_shared_scoring
-    software = {"module_sha256": {"information.py": "old", "service_replay_native.py": "same"},
-                "support_module_sha256": {"app/service.py": "same"}, "python": "same", "dependencies": {}}
-    identity = deepcopy(software)
-    identity["module_sha256"]["information.py"] = "new"
-    with pytest.raises(ValueError, match="shared scoring"):
-        require_shared_scoring({"software": software}, identity)
-    require_shared_scoring({"software": software}, identity, paired_native_rescore=True)
-    identity["module_sha256"]["service_replay_native.py"] = "new"
-    with pytest.raises(ValueError, match="shared scoring"):
-        require_shared_scoring({"software": software}, identity, paired_native_rescore=True)
-    identity = deepcopy(software)
-    identity["support_module_sha256"]["app/service.py"] = "new"
-    with pytest.raises(ValueError, match="service implementation"):
-        require_shared_scoring({"software": software}, identity, paired_native_rescore=True)
-
-def test_candidate_preparation_can_require_new_native_grades_but_not_change_native_readers():
-    from copy import deepcopy
-
-    import pytest
-
-    from moparse_eval.service_evaluation import SCORING_MODULES, require_preparation_scorer
-    previous = {'module_sha256': {name: 'same' for name in SCORING_MODULES}}
-    current = deepcopy(previous)
-    current['module_sha256']['information_reading.py'] = 'changed'
-    with pytest.raises(ValueError, match='shared scorer'):
-        require_preparation_scorer(previous, current)
-    require_preparation_scorer(previous, current, rescore_native=True)
-    current['module_sha256']['adapters.py'] = 'changed'
-    with pytest.raises(ValueError, match='shared scorer'):
-        require_preparation_scorer(previous, current, rescore_native=True)

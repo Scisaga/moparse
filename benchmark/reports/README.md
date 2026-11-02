@@ -1,14 +1,11 @@
-# MO-Parse评测报告
+# MO-Parse 评测状态
 
-唯一正式入口是[Lite比较报告](lite/report.md)：八组原生质量、处理耗时、内存及显存，以及P07/P08实际正文的修复前后比较。方法、目录角色、采样覆盖、开发暴露和复现命令见[附录](lite/appendix.md)，分项结果与采用门槛见[机器数据](lite/data/results.json)。
+唯一正式Lite报告为[lite/report.md](lite/report.md)，方法和完成条件由[评测任务](../evaluation-tasks.md#current-task-expected-only)维护。此前评分、覆盖完成、零损失和采用结论已删除，本轮使用同一验证后的程序重新计算，不能继承历史分数。
 
-| 位置 | 保留内容 |
-| --- | --- |
-| `benchmark/reports/lite/` | 主报告、方法附录、图件、数据与证据入口，纳入Git |
-| `benchmark/runs/lite/` | 本地保存的八组原生输出、原计时与统一评分，不纳入Git |
-| `benchmark/runs/lite/preflight/` | 工程预检及执行冻结依据 |
-| `benchmark/runs/lite/service/{earlier,before,after}/` | 较早、修复前、修复后的实际正文及CPU处理记录 |
+有效八组原生输出、原始计时及资源记录在本地`benchmark/runs/lite/`。原after已原位移动至唯一`service/baseline/`，正文、资产和测量保留；earlier/before和失效评分已删除。新实际正文使用`service/current/`，不维护工程迭代日期报告。
 
-五个原日期目录已按上述角色合并；原生输出、实际正文和原测量继续保留，重复报告和中间副本删除。原始记录中的旧路径与当前位置对应关系见[来源身份](lite/data/provenance.json)。错误旧评分逻辑、成绩与产物直接删除，不恢复或归档。
+当前已用同一冻结程序重评八组原生及P07/P08唯一基线：800页、173个样本、44份文档、33个家族，8077个文字目标包含1,404,198个expected字符，另有5933个业务字段。独立反例和真实格式读取修复覆盖正文、共享表头、命名主体、父范围、单位、期间、附注、否定及冲突；两组原生正确目标在实际final.md中均未发现丢失，详细证据由唯一报告维护。
 
-expected是唯一只读答案来源。统一程序只判正确或错误，遗漏和候选失败留在分母；评分软件故障必须修复后发布。详细规则见[评测任务](../evaluation-tasks.md#current-task-expected-only)，执行工具见[moparse_eval](../../moparse_eval/README.md)，继续优化须遵循[任务提示词](../../docs/engineering/prompts/expected-output-optimization.md)。
+本轮没有修改实际正文生成代码或配置，没有生成service/current/或新增CPU回放。当前交付沿用baseline相同字节，本轮交付新增正确0项、损失0项；评分补读不算正文收益。既有原生到基线的转换差异另报，剩余错误仍保留全部分母，不宣称所有内容正确。软件检查和报告复现不构成语料验收。
+
+本轮无新模型推理、视觉识别或OCR，无GPU、TTS及在线服务操作，无Full、额外PDF、部署或公开API变化。canonical expected、原件、标注、映射、资产与数据包保持原样。

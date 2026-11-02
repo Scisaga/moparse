@@ -1,0 +1,98 @@
+{
+  "P01": {
+    "sample": "hkex-key-tables-p011",
+    "target": "expected:L207-207:field:0",
+    "row": [
+      "ADT of Northbound Bond Connect"
+    ],
+    "column": [
+      "2024"
+    ],
+    "expected": "41.6",
+    "actual": "41.64 "
+  },
+  "P02": {
+    "sample": "hkex-key-tables-p011",
+    "target": "expected:L207-207:field:0",
+    "row": [
+      "ADT of Northbound Bond Connect"
+    ],
+    "column": [
+      "2024"
+    ],
+    "expected": "41.6",
+    "actual": "41.64 "
+  },
+  "P03": {
+    "sample": "midea-business-p013-024",
+    "target": "expected:L245-245:field:1",
+    "row": [
+      "净水器"
+    ],
+    "column": [
+      "排名"
+    ],
+    "expected": "2",
+    "actual": "1"
+  },
+  "P04": {
+    "sample": "midea-business-p013-024",
+    "target": "expected:L245-245:field:1",
+    "row": [
+      "净水器"
+    ],
+    "column": [
+      "排名"
+    ],
+    "expected": "2",
+    "actual": "1"
+  },
+  "P05": {
+    "sample": "midea-business-p013-024",
+    "target": "expected:L245-245:field:1",
+    "row": [
+      "净水器"
+    ],
+    "column": [
+      "排名"
+    ],
+    "expected": "2",
+    "actual": "1"
+  },
+  "P06": {
+    "sample": "hkex-key-tables-p011",
+    "target": "expected:L204-204:field:0",
+    "row": [
+      "ADV of derivatives contracts traded on the Futures Exchange"
+    ],
+    "column": [
+      "2024"
+    ],
+    "expected": "830",
+    "actual": "8304"
+  },
+  "P07": {
+    "sample": "midea-business-p013-024",
+    "target": "expected:L245-245:field:1",
+    "row": [
+      "净水器"
+    ],
+    "column": [
+      "排名"
+    ],
+    "expected": "2",
+    "actual": "1"
+  },
+  "P08": {
+    "sample": "midea-business-p013-024",
+    "target": "expected:L245-245:field:1",
+    "row": [
+      "净水器"
+    ],
+    "column": [
+      "排名"
+    ],
+    "expected": "2",
+    "actual": "1"
+  }
+}

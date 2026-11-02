@@ -1,45 +1,22 @@
 {
-  "layout": {
-    "report": "benchmark/reports/lite/report.md",
-    "appendix": "benchmark/reports/lite/appendix.md",
-    "baseline": "benchmark/runs/lite",
-    "preflight": "benchmark/runs/lite/preflight",
-    "service": {
-      "earlier": "benchmark/runs/lite/service/earlier",
-      "before": "benchmark/runs/lite/service/before",
-      "after": "benchmark/runs/lite/service/after"
-    },
-    "scoring_index": "benchmark/runs/lite/scores/current/index.json",
-    "original_locations": {
-      "/opt/moparse/benchmark/reports/20261026-lite-v3": "/opt/moparse/benchmark/runs/lite",
-      "/opt/moparse/benchmark/reports/20261026-repaired-preflight-02": "/opt/moparse/benchmark/runs/lite/preflight",
-      "/opt/moparse/benchmark/reports/20261031-units-continuations-04": "/opt/moparse/benchmark/runs/lite/service/earlier",
-      "/opt/moparse/benchmark/reports/20261101-expected-only-06": "/opt/moparse/benchmark/runs/lite/service/before",
-      "/opt/moparse/benchmark/reports/20261101-preservation-repair-08/p07": "/opt/moparse/benchmark/runs/lite/service/after/p07",
-      "/opt/moparse/benchmark/reports/20261101-preservation-repair-08/p08": "/opt/moparse/benchmark/runs/lite/service/after/p08",
-      "/opt/moparse/benchmark/reports/20261101-preservation-repair-08": "/opt/moparse/benchmark/reports/lite"
-    },
-    "policy": "candidate files and original measurement/freeze bytes moved without rewriting; only operational run paths updated"
-  },
-  "score_index": "/opt/moparse/benchmark/runs/lite/scores/current/index.json",
-  "score_index_sha256": "9e942698d4440da3c331581ac7989bc65ce990b4329da6311abb32cb097732fa",
-  "scoring_software": {
-    "git_head": "7ff9ffa012cb8438ca9ad95439400b92d2aec962",
+  "index": "/opt/moparse/benchmark/runs/lite/scores/current/index.json",
+  "software": {
+    "git_head": "d41f96f69b064c2dac16dc5e67165ce30f219d74",
     "module_sha256": {
       "__init__.py": "bc8b7b20c651ddfd3eb71db86d0b406249a77d64449fc4fef23bcc4ab75adb62",
       "__main__.py": "935a1c1166b0c1ea35a82256345000bf2c73ded718d77773bc27a71ecce28f7d",
       "adapters.py": "affcf961c8befc74bfdacb4adb3930437f4a9e5e9749ae982e5cfc75496f286c",
       "candidate_delivery.py": "941496db8bffa12aff8a867b5d1c7a2e2e1def1d67582b84ee2955fa52730155",
-      "cli.py": "609fb583ab7b84394ef817806a182d3b1083cbc77435fe2159ac0580a3684921",
+      "cli.py": "d5e5525bd10e3d11d08f17bb9dfb46684ed0641a0a1b5f675050334123fd08a3",
       "cuda_graphs.py": "a26f40b5a24a287a05e4fb0775001ecbc915af9610485354b4c71d1546811653",
       "executors.py": "0163210d018d45d692bf8516c5c02d9fc134d6ce1f2671dbdc5f869d1bb02139",
-      "expected_evaluation.py": "9097dddabc4778a0077e49ae28d815c3eaa3d2f138baf608e45b5bbf9bf89af4",
-      "expected_readback.py": "6f833ae0212ddf14c21e60ae3f64f868391b6b4b2571babed1bd77cb84420ea5",
-      "expected_report.py": "fc3efdfd80d39c0fb9b24bf2e94fd5ee0cfd3e8ca4af0137f9e742370d78fdf3",
-      "expected_scoring.py": "476eb3962cab3fdefcd3efda59d6ba94675dc48eab81addaa496f456a196bfb6",
+      "expected_evaluation.py": "1e1f0983d86bbd9bc04d863f27174672aa3f59bf885ed0ee59ffb294ac41ad5e",
+      "expected_readback.py": "169121dd1bddaccf4d48c10b9cc90356fce3320fe1148b27233772777e033a41",
+      "expected_report.py": "cfdea8fedf83202e42494023509855894a3e0b3064960488696d39810f5668ad",
+      "expected_scoring.py": "1a649e7753408a7c7f096e1576a5d1ac73ebe7a12d796cdf18876359f817aaeb",
       "glm_observation.py": "9a022885d3f1d50a9e0b0b31e821c176cb06cbfaf369ba909e4980729816471f",
-      "information.py": "981b4abeb10292b74a3c4442c2333e15534b3a62c930d89b25113b327fbb4a31",
-      "information_reading.py": "d80d4031c2e96fc2823cc7aeee049b08a23199d82a0e2ae878b1e660a62b4b1b",
+      "information.py": "5d49348720a530f8171fddadf11bb3639c6643b5cfce241a3aac35cd99e1331c",
+      "information_reading.py": "638d90cd15494a3b08ea8fdaeb8ae3673e29ae81422be857a918ce73df17ce88",
       "maintenance.py": "17a06685e33eb378a2cc7477b413edd2c0a26f8a40cf7d4c0a065bfb1ae36368",
       "matching.py": "d7dff14c602ee676b474f7746b5fd1cb7365a9a1280ba46d0e6f574fe6a46683",
       "metrics.py": "52333c29bcd50f83db016731cc84c28e190aa1e73be5089ff9c1cc1fc2786ac8",
@@ -50,17 +27,20 @@
       "paddle_compat.py": "14b499c8745fb7c4117506eeff7a8d3b740d212d2762fc7290df3e510c7d3ce2",
       "paddle_server.py": "a1b57f269094f0fe3df513bb4a98a51cab017518417166bc592cfe82a05ad7d6",
       "preparation.py": "435988dbec36daa89efb1c26045acb80d0d55ea7299f41249a376f65d1dbf803",
+      "prose_metrics.py": "26725f20af71d290352dc5a437c6d6e443e5913b05b84474ba31dd7e8927fade",
       "rebenchmark.py": "45d4ffc2ca12f61459e1b0311c80cccd7e7b753960fbda047908287f765be4ed",
       "report_figures.py": "e04312d31052533a6cf2d3925c995cd0508f7c94f85dd42358b409ffc0049974",
       "reporting.py": "fca7a5ecaa817d6adff580c22233dba43fad280f0678f58023f839d5c933ece6",
       "representations.py": "694ebf1615de650701e76c8a717fc0fd324b92fe1a1b5caf94982c9eacb07c93",
       "request_control.py": "ac70b2a53421d3cf3faea4d0cb1e8dd72ddb477a450210580a50660965b2839f",
       "runtime.py": "91a5f011f7fa59028ad6cfee33dd93faacd6724d8885a60a7957f6c25cfd1c23",
-      "scoring.py": "649e565d464358ca4f36717adf31f4f9e4d123231012c3f71306b513d2a8d064",
-      "service_evaluation.py": "e26cccc6cff43961e84fb49a93f1f356a0cef3b7297f5b2e303e6b2a0dcfc633",
+      "saved_native.py": "8b8b94f0aa92fab435ac2d908c6d335ac2ea72671bbb088b8266ca21a1c1d4c1",
+      "scoring.py": "0ef78529574ac9eebdb3f93de98d1cbdbe6ecf397fa22db7730a2b0961961542",
+      "service_evaluation.py": "93f68a60deb0936efc3bd9efcaf84e1048460ce9407f11ac6207964bdfae1dbb",
       "service_observation.py": "21fa4494a34f8b9068c2fabd472c7755531ad34d7ab766bee679e6d1dc45b932",
       "service_replay_native.py": "e49e719a5e9562d6f3014524e2c8b96cdc4199cbf02b3090b551b70cf77d19a5",
-      "service_stages.py": "70ac8729152d8a378c7cd1d014738a6b0566013d383375ad4879c10ee7f7a2af"
+      "service_stages.py": "70ac8729152d8a378c7cd1d014738a6b0566013d383375ad4879c10ee7f7a2af",
+      "target_coverage.py": "e0828315e288a76324b0df5ed3cf65b0b3d3d47120137db5dbe09c0f5f537711"
     },
     "support_module_sha256": {
       "app/__init__.py": "2bf493bcf3e107d4dbc6ae82158b66e50cc1548ff0d1aa4b57b88c88ab5279d1",
@@ -132,7 +112,7 @@
       "native_worker/request_control.py": "0f336dc81dbee95de6b2d311d83b1779ca198a70a86591d4f54edd59dce40549",
       "native_worker/server.py": "ab64842e12e3e2d810cf5f303b4c7f31e5654cee73573095f47b2b61eaffb8cc"
     },
-    "software_id": "b2d1a022a2a4225608203449ef64d19571112320c05e2b91be69cc9fdae83643",
+    "software_id": "2b48468a71cc5b81afa3e804e29991c047f6966c6591cdbdaaf35f3ff35b6f88",
     "python": "3.13.5 | packaged by Anaconda, Inc. | (main, Jun 12 2025, 16:09:02) [GCC 11.2.0]",
     "dependencies": {
       "rapidfuzz": "3.14.6",
@@ -143,117 +123,23 @@
       "psutil": "7.2.2"
     }
   },
-  "report_generator": "scripts/render_lite_report.py",
-  "report_generator_sha256": "bfd5c0b603a95e21529176666845bd873af1a8ed6add48dbc09b01fcea6a9c7a",
-  "resource_sources": [
-    {
-      "pipeline": "P01",
-      "scope": "worker",
-      "path": "/opt/moparse/benchmark/runs/lite/artifacts/P01/worker-resources.json",
-      "sha256": "03b6c2b8daed24a8e152c306ebe8c96339b6e611941b6282cce1503d3e896f35"
-    },
-    {
-      "pipeline": "P01",
-      "scope": "inference",
-      "path": "/opt/moparse/benchmark/runs/lite/artifacts/P01/inference/resources.json",
-      "sha256": "d67d8125ffe547cdb0798c891caf8ef8dfc58ddcbcedd16ed7b881ab27200e0f"
-    },
-    {
-      "pipeline": "P02",
-      "scope": "worker",
-      "path": "/opt/moparse/benchmark/runs/lite/artifacts/P02/worker-resources.json",
-      "sha256": "6c70fd8ce7c92d996827225c7256e4b555e2769a471975ecf417b6838f8ba1e4"
-    },
-    {
-      "pipeline": "P02",
-      "scope": "inference",
-      "path": "/opt/moparse/benchmark/runs/lite/artifacts/P02/inference/resources.json",
-      "sha256": "e31c840d47cf2408001ca8cbb52380fef78b9d0c3e2eef49f9e4b5e5b0a71230"
-    },
-    {
-      "pipeline": "P03",
-      "scope": "worker",
-      "path": "/opt/moparse/benchmark/runs/lite/artifacts/P03/worker-resources.json",
-      "sha256": "ba7aba45bbaa70d955fe84974cc7a2edb0efb9f072036fc926888aa42de768f6"
-    },
-    {
-      "pipeline": "P03",
-      "scope": "inference",
-      "path": "/opt/moparse/benchmark/runs/lite/artifacts/P03/inference/resources.json",
-      "sha256": "96d928fe6e1b19307bc58fbb55a3d2750ee830ab47997ae68bc2e43df99d0125"
-    },
-    {
-      "pipeline": "P04",
-      "scope": "worker",
-      "path": "/opt/moparse/benchmark/runs/lite/artifacts/P04/worker-resources.json",
-      "sha256": "1f492fee85e1dc07dfb5a538a64f463d281f1f98b33ea9977e54dcf6cac6eee7"
-    },
-    {
-      "pipeline": "P04",
-      "scope": "inference",
-      "path": "/opt/moparse/benchmark/runs/lite/artifacts/P04/inference/resources.json",
-      "sha256": "e8efb06554e6cd074e75f0b314121e91b95bfec9da490dd6398f88c9ec20d4f1"
-    },
-    {
-      "pipeline": "P05",
-      "scope": "worker",
-      "path": "/opt/moparse/benchmark/runs/lite/artifacts/P05/worker-resources.json",
-      "sha256": "5a93435d6c577e191994914a089dd7cceff2bdde534491518f1cb3f7f8c2337a"
-    },
-    {
-      "pipeline": "P05",
-      "scope": "inference",
-      "path": "/opt/moparse/benchmark/runs/lite/artifacts/P05/inference/resources.json",
-      "sha256": "aca83d258c20d3c22c4175c6376c0ee210083d20f184b7d5c877d5f9f52ebc7b"
-    },
-    {
-      "pipeline": "P06",
-      "scope": "worker",
-      "path": "/opt/moparse/benchmark/runs/lite/artifacts/P06/worker-resources.json",
-      "sha256": "c79031447332448bd974f5bcc5460f1ee2c07365442b59d27e170dcbdcb948f7"
-    },
-    {
-      "pipeline": "P06",
-      "scope": "inference",
-      "path": "/opt/moparse/benchmark/runs/lite/artifacts/P06/inference/resources.json",
-      "sha256": "ee457f9df1479975da7dabad65eb4a7c99454c0298c07558a1a34eadb4982a72"
-    },
-    {
-      "pipeline": "P07",
-      "scope": "worker",
-      "path": "/opt/moparse/benchmark/runs/lite/artifacts/P07/worker-resources.json",
-      "sha256": "b6fd10be38396174a2236d136eb459e0b86b63144f93b8c4fd6d180c959698df"
-    },
-    {
-      "pipeline": "P07",
-      "scope": "inference",
-      "path": "/opt/moparse/benchmark/runs/lite/artifacts/P07/inference/resources.json",
-      "sha256": "e945e6f153dec87e387b69ae1e62636cadd0cc3588d680d27c56f21c4669a235"
-    },
-    {
-      "pipeline": "P08",
-      "scope": "worker",
-      "path": "/opt/moparse/benchmark/runs/lite/artifacts/P08/worker-resources.json",
-      "sha256": "66de9235b968b2b8bf16ed52a524a5d1899f9b2664580ff126ebbb5d468a9454"
-    },
-    {
-      "pipeline": "P08",
-      "scope": "inference",
-      "path": "/opt/moparse/benchmark/runs/lite/artifacts/P08/inference/resources.json",
-      "sha256": "ae579fcad3c1a060d1e43b875a63e51717d0eb68ff9a61fa0d41d02ccb6ee998"
-    },
-    {
-      "pipeline": "P07",
-      "scope": "final_cpu",
-      "path": "/opt/moparse/benchmark/runs/lite/service/after/p07/run.json",
-      "sha256": "70816094bdd32f617f9759f38b477a1287775fc7ac066e6ba67df67f41f40384"
-    },
-    {
-      "pipeline": "P08",
-      "scope": "final_cpu",
-      "path": "/opt/moparse/benchmark/runs/lite/service/after/p08/run.json",
-      "sha256": "b659d541f4459b1adf8754cb3af11903e6822eb723cae534bac48836f93bacf2"
-    }
-  ],
-  "development_exposure": "Lite outputs and expected syntax used for software development; no independent held-out claim"
+  "protocol": {
+    "id": "mo-parse-expected-only-v2",
+    "reference": "canonical_expected_read_only",
+    "scope": "existing_authored_source_map_selected_content",
+    "grades": [
+      "correct",
+      "incorrect"
+    ],
+    "legacy_adjudications": "not_consumed",
+    "field_locator": "complete_business_labels_before_value_comparison",
+    "text_policy": "mo-parse-eval-text-v1",
+    "reader_failure": "repair_before_publication",
+    "field_content_equivalence": "declared_width_spacing_comma_separator_spacing_scoped_scalar_units_year_range_dash_terminal_prose_punctuation",
+    "qualifier_reading": "candidate_only_explicit_table_record_caption_and_note_scopes",
+    "output_reading": "native_fields_or_actual_public_markdown_without_private_ir_credit",
+    "reader_revision": "complete_prose_and_explicit_business_1"
+  },
+  "development_exposure": "Lite outputs and expected syntax used for software development; no independent held-out claim",
+  "report_generator_sha256": "ded4b792bdb5ff1b3952b475c0f88fb1e11ba544d5e1c1db056b82666ae77c47"
 }

@@ -1,5 +1,7 @@
 # P06：MinerU Standard + TXT + GLM SDK
 
+当前共同评测从保存native.json经`moparse_eval/saved_native.py`调用本格式读取器，忠实读取DocVortex typed blocks、inline spans、HTML表体、caption、footnote及明确续接；GLM分支独立读取。读取器不接收expected答案。最终正文另只读取实际final.md；主指标、失败政策及同版重评由[评测任务](../../benchmark/evaluation-tasks.md#current-task-expected-only)维护。
+
 [全部管线](README.md) · [固定比较条件](../../benchmark/pipelines-to-test.md#主比较配置)
 
 ## 1. 配置与执行边界
@@ -72,7 +74,7 @@ HTTP response
 
 2026-10-27追踪正式worker内MinerU 4.0.12和DocVortex 0.5.16：Standard/high路径把本地布局的doc_title和paragraph_title交给视觉SDK识别内容，DocVortex再将前者级别设为1、后者缺省设为2，renderer按已有level添加Markdown井号。这是完整PDF管线的布局角色与规则赋值，P08的单页视觉SDK不包含这些额外步骤。GLM分支见[P05标题来源](p05-glm-sdk.md#22-标题角色与级别来源)。
 
-完整MinerU另有默认关闭的LLM title_leveling后处理，仅在该特性开启且输入标为is_full_document时执行，需要独立模型、连接和调用成本；当前执行器未显式开启。它与视觉SDK采样或导出开关不同，不能为既有测量追补为免费能力。固定版处理边界见[文档后处理](https://github.com/opendatalab/MinerU/blob/b7f3dd0c5f6e6d66a298239ffd02b328b873918e/mineru/backend/postprocess/llm_aided.py#L18-L27)。本轮heading_of只评价既有级别和原生顺序支持的作用域，不证明真实多级树恢复。
+完整MinerU另有默认关闭的LLM title_leveling后处理，仅在该特性开启且输入标为is_full_document时执行，需要独立模型、连接和调用成本；当前执行器未显式开启。它与视觉SDK采样或导出开关不同，不能为既有测量追补为免费能力。固定版处理边界见[文档后处理](https://github.com/opendatalab/MinerU/blob/b7f3dd0c5f6e6d66a298239ffd02b328b873918e/mineru/backend/postprocess/llm_aided.py#L18-L27)。当前标题归属按expected明确文字及原生顺序定位，不以SDK显示级别或私有关系字段证明真实多级树恢复。
 
 ## 3. 研究侧读取与导出
 
@@ -91,7 +93,7 @@ DocVortex 0.5.16的官方`render._internal.common.planner._merge_continued_table
 
 ## 5. 实现状态与验证项
 
-P06研究执行路径已修复，[P06工程预检02](../../benchmark/runs/lite/preflight/)独立完成同一清单的11个任务并提供本次冻结依据。本组已完成quality800一次和perf80三轮，八组统一评分、首版报告及原MO服务恢复完成；结果只见[当前统一评测报告](../../benchmark/reports/lite/report.md)，状态与限制由[评测索引](../../benchmark/reports/README.md)维护。TTS只观测不控制，先前撤回测量不恢复；执行和自动评分完成不构成内容、Gold或图片内容验收。
+P06研究执行路径已修复，[P06工程预检02](../../benchmark/runs/lite/preflight/)独立完成同一清单的11个任务并提供本次冻结依据。本组保存quality800一次和perf80三轮的有效原生结果及测量；错误评分已删除，现已按同一新程序重评；结果只见[当前统一评测报告](../../benchmark/reports/lite/report.md)，状态与限制由[评测索引](../../benchmark/reports/README.md)维护。TTS只观测不控制，先前撤回测量不恢复；执行和自动评分完成不构成内容、Gold或图片内容验收。
 
 研究执行器显式使用 tier=standard，实际映射为 high，与 P07 的 Advanced/xhigh 不同。共享 GLM 研究分支已采用 native rotary，避开 vLLM 0.19.1 的 GPT-J MRoPE 配对错误；MinerU 主模型的 NeoX 配对不具有同一冲突，不对其套用 GLM 修复。研究路径的旋转坐标交接、分支结果先行保全及局部图片导出隔离已修复；机制证据见[执行层诊断](../../benchmark/diagnostics/README.md)。
 

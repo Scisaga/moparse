@@ -183,7 +183,7 @@ def test_legacy_adjudication_argument_fails_before_reading_any_input(tmp_path, m
 
     monkeypatch.setattr(cli, "read_json", forbidden)
     monkeypatch.setattr(cli, "write_json", forbidden)
-    with pytest.raises(ValueError, match="does not accept adjudications"):
+    with pytest.raises(TypeError, match="unexpected keyword argument 'adjudications'"):
         cli.score_run(tmp_path / "missing-run", adjudications=tmp_path / "must-not-open.json")
 
 
@@ -552,16 +552,16 @@ def test_compiler_omission_is_a_software_error_even_if_every_pipeline_would_drop
 @pytest.mark.parametrize("pipeline", [f"P{i:02}" for i in range(1, 9)])
 def test_cli_rejects_old_exclusion_option_without_opening_it(tmp_path, monkeypatch, pipeline):
     from moparse_eval import cli
-    from moparse_eval.cli import parser, score_run
+    from moparse_eval.cli import parser
 
     def forbidden(*args, **kwargs):
         pytest.fail("no inputs or exclusions may be opened after a rejected option")
 
     monkeypatch.setattr(cli, "read_json", forbidden)
-    args = parser().parse_args(["score", "--run", str(tmp_path / pipeline),
-                               "--adjudications", str(tmp_path / "must-not-read.json")])
-    with pytest.raises(ValueError, match="does not accept adjudications"):
-        score_run(args.run, adjudications=args.adjudications)
+    with pytest.raises(SystemExit) as error:
+        parser().parse_args(["score", "--run", str(tmp_path / pipeline),
+                             "--adjudications", str(tmp_path / "must-not-read.json")])
+    assert error.value.code == 2
     assert not (tmp_path / pipeline).exists()
 
 

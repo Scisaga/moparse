@@ -25,7 +25,7 @@ MARKDOWN = MarkdownIt("commonmark", {"html": True}).enable("table")
 _COLON = re.compile(r"^([^:：\n]{1,512})[:：]\s*(.+)$", re.S)
 _YEAR = re.compile(r"^((?:19|20)\d{2}\s*年?)\s*[:：]?\s*(.+)$", re.S)
 _SCALAR = re.compile(r"^(?:\(?[$€£¥]?\s*[+\-−]?(?:\d[\d,. ]*|\.\d+)(?:\s*[%‰])?\)?(?:[⁰¹²³⁴⁵⁶⁷⁸⁹˒⁽⁾]+)?|[—–-])$")
-_IDENTITY = re.compile(r"[^:：;；]{0,30}(?:名称|名稱|全称|全稱|姓名|类别|類別|品类|品類|种类|種類)|关联方|關聯方|项目|項目|认购方|認購方|会议届次|會議屆次|会议内容|會議內容|Name|Item|(?:[A-Za-z]+\s+)?(?:Category|Type|Name)|Metric|Region|Segment", re.I)
+_IDENTITY = re.compile(r"[^:：;；]{0,30}(?:名称|名稱|全称|全稱|姓名|类别|類別|品类|品類|种类|種類)|关联方|關聯方|项目|項目|认购方|認購方|会议届次|會議屆次|会议内容|會議內容|Name|Item|(?:[A-Za-z]+\s+)?(?:Category|Type|Name)|Metric|Region|Segment|Ticker|(?:Security\s+)?codes?|证券代码|證券代碼", re.I)
 
 
 class ExpectedReadError(ValueError):
@@ -150,6 +150,21 @@ def _parent_labels(parents: tuple[str, ...]) -> list[str]:
     return labels
 
 
+def list_scope(parents: list[str]) -> dict[str, list[str]] | None:
+    """Expose named parent identities and their printed subsection labels."""
+    rows, columns = [], []
+    for parent in parents:
+        pair = _explicit_pair(parent)
+        if (pair and pair[2].strip() and not _SCALAR.fullmatch(pair[2].strip())
+                and not _pairs(pair[2]) and not re.fullmatch(
+                    r"范围|範圍|Scope|单位|單位|Units?|期间|期間|Period|币种|幣種|Currency|附注|附註|Note", pair[1], re.I)):
+            rows.append(pair[2].strip())
+            columns = []
+        else:
+            columns.append(_label(parent))
+    return {"rows": rows, "columns": columns} if rows else None
+
+
 def _row_path_units(path: list[str]) -> tuple[list[str], list[str]]:
     labels, found = [], []
     for label in path:
@@ -165,6 +180,14 @@ def _row_path_units(path: list[str]) -> tuple[list[str], list[str]]:
 
 
 def _parts(text: str) -> list[str]:
+    # Successive explicit labels can be printed on one line with spacing.
+    # Read that delimiter only after the first colon, never within its label.
+    first_colon = re.search(r"[:：]", text)
+    if first_colon and not re.search(r"[;；/（(]", text):
+        boundary = first_colon.end()
+        text = text[:boundary] + re.sub(
+            r"[ \t\u3000]+(?=[A-Z\u3400-\u9fff][^\s:：;；]{0,39}(?:[ \t]+[a-z][^\s:：;；]*){0,3}\s*[:：])",
+            "; ", text[boundary:])
     parts, stack, start = [], [], 0
     closing = {"(": ")", "（": "）", "[": "]", "【": "】"}
     for index, char in enumerate(text):
@@ -179,10 +202,26 @@ def _parts(text: str) -> list[str]:
     return [part.strip() for part in parts if part.strip()]
 
 
+def _explicit_pair(part: str):
+    stack = []
+    closing = {"(": ")", "（": "）", "[": "]", "【": "】"}
+    for index, char in enumerate(part):
+        if char in closing:
+            stack.append(closing[char])
+        elif stack and char == stack[-1]:
+            stack.pop()
+        elif char in ":：" and not stack and 0 < index <= 512:
+            return (None, part[:index], part[index + 1:].strip())
+    return None
+
+
 def _pair(part: str):
+    # A signed scalar is a value, never an implicit label followed by digits.
+    if _SCALAR.fullmatch(part.strip()):
+        return None
     if re.search(r"[:：]\s*/\s+", part) or re.match(r"[A-Za-z][A-Za-z0-9+.-]*://", part):
         return None
-    explicit = re.fullmatch(r"([^:：\n]{1,512})[:：]\s*(.*)", part, re.S)
+    explicit = _explicit_pair(part)
     if explicit:
         return explicit
     year = _YEAR.match(part)
@@ -203,12 +242,12 @@ def _field(key: str, value: str) -> dict[str, Any]:
     if qualifier:
         pairs = _pairs(qualifier[2], terminal_punctuation=False)
         keys = {"单位": "unit", "單位": "unit", "Unit": "unit", "期间": "period", "期間": "period",
-                "Period": "period", "附注": "notes", "附註": "notes", "Note": "notes",
+                "Period": "period", "附注": "note_texts", "附註": "note_texts", "Note": "note_texts",
                 "币种": "currency", "幣種": "currency", "Currency": "currency"}
         if pairs and all(k in keys for k, _ in pairs):
             result["value"] = qualifier[1].strip()
             for label, literal in pairs:
-                result[keys[label]] = [literal] if keys[label] == "notes" else literal
+                result[keys[label]] = [literal] if keys[label] == "note_texts" else literal
                 if keys[label] == "unit":
                     found = units("单位：" + literal)
                     if len(found) == 1:
@@ -249,10 +288,23 @@ def record(element: Element) -> dict[str, Any] | None:
     """Read explicit label/value syntax; no missing relationship is inferred."""
     if element.kind not in {"item", "text"}:
         return None
+    if element.kind == "text":
+        if not re.search(r"[:：]", element.text):
+            return None
+        # Paragraph punctuation does not declare a business record. Only a
+        # complete, explicit sequence of typed assertions can add a field view;
+        # read_expected still compares its complete paragraph as prose.
+        assertions = _pairs(element.text)
+        typed = assertions and all(_measurement_literal(value) or _IDENTITY.fullmatch(key)
+                           or re.fullmatch(r"Scope|范围|範圍|Units?|单位|單位|Period|期间|期間", key, re.I)
+                           for key, value in assertions)
+        anchored = assertions and len(assertions) > 1 and any(_IDENTITY.fullmatch(key) for key, _ in assertions)
+        if not assertions or any(not value.strip() for _, value in assertions) or not (typed or anchored):
+            return None
     if re.match(r"^(?:(?:金额|金額|货币|貨幣)?(?:单位|單位)|Units?)\s*[:：]", element.text, re.I):
         return None
-    outer = _COLON.match(element.text)
     parts = _parts(element.text.removesuffix("。").removesuffix("."))
+    outer = _explicit_pair("; ".join(parts))
     explicit_fields = [i for i, part in enumerate(parts) if (match := _COLON.match(part))
                        and not re.fullmatch(r"范围|範圍|Scope", match[1], re.I)]
     first_field = min(explicit_fields, default=0)
@@ -261,6 +313,8 @@ def record(element: Element) -> dict[str, Any] | None:
     pairs: list[Any] | None
     subject_assertion: tuple[str, str] | None = None
     if len(parts) > 1 and bare:
+        if any(parts.index(part) > first_field for part in bare):
+            return None
         pairs = [_pair(part) for part in parts if part not in bare and _pair(part) is not None]
         scopes = [label.strip() for pair in pairs if re.fullmatch(r"范围|範圍|Scope", pair[1], re.I)
                   for label in re.split(r"\s+/\s+", pair[2]) if label.strip()]
@@ -311,9 +365,10 @@ def record(element: Element) -> dict[str, Any] | None:
             path = [*parent_path, *scopes, *identities]
         elif outer and (_SCALAR.fullmatch(outer[2].strip().removesuffix("。"))
                         or len(outer[2]) < 80 and not re.search(r"[。！？.!?]", outer[2].removesuffix("。").removesuffix("."))):
+            named = _field(outer[1].strip(), outer[2].strip().removesuffix("。"))
+            named.pop("identity_field", None)
             return {"row_header_path": [*parent_path, outer[1].strip()],
-                    "fields": [{"column_header_path": [], "named_value": True,
-                                "value": outer[2].strip().removesuffix("。")}]}
+                    "fields": [{**named, "column_header_path": [], "named_value": True}]}
         else:
             # A prose label with no delimited fields remains complete prose.
             return None
@@ -402,11 +457,11 @@ def qualify_reference_record(parsed: dict[str, Any], caption_units: list[str], c
     for value in parsed["fields"]:
         if re.fullmatch(r"[（(]?原表留空[）)]?", value["value"]):
             value.update(authored_value=value["value"], value="", reference_blank=True)
-        if (not _SCALAR.fullmatch(value["value"]) and not value.get("reference_blank")) or any(re.fullmatch(r"序号|序號|编号|編號|姓名|名称|名稱|Name|ID", key, re.I)
-                                                       for key in value["column_header_path"]):
+        if "unit" not in value and ((not _SCALAR.fullmatch(value["value"]) and not value.get("reference_blank")) or any(re.fullmatch(r"序号|序號|编号|編號|姓名|名称|名稱|Name|ID", key, re.I)
+                                                       for key in value["column_header_path"])):
             value["unit"] = None
         effective_unit = value.get("unit", parsed.get("unit"))
-        if effective_unit and not unit_applicable(effective_unit, value["column_header_path"], parsed["row_header_path"]):
+        if "unit" not in value and not local_units and effective_unit and not unit_applicable(effective_unit, value["column_header_path"], parsed["row_header_path"]):
             value["unit"] = None
         ratio = bool(re.search(r"[%‰]", value["value"]) or any(re.search(
             r"[%‰]|占|佔|同比|比例|比率|percent|ratio|rate|change", key, re.I)
@@ -423,7 +478,7 @@ def qualify_reference_record(parsed: dict[str, Any], caption_units: list[str], c
     if len(caption_periods) == 1:
         for value in parsed["fields"]:
             if not any(re.search(r"(?:19|20)\d{2}", key) for key in value["column_header_path"]):
-                value["period"] = caption_periods[0]
+                value.setdefault("period", caption_periods[0])
 
 
 def read_expected(sample: dict[str, Any], expected_root: Path, *,
@@ -470,7 +525,9 @@ def read_expected(sample: dict[str, Any], expected_root: Path, *,
         target: dict[str, Any] = {"id": f"expected:L{element.lines[0]}-{element.lines[1]}{suffix}", "kind": element.kind,
                   "reference": {"path": str(source), "lines": list(element.lines)},
                   "text": element.text, "pages": pages, "context": list(active_heading),
-                  "parents": list(element.parents), "list_span": element.list_span}
+                  "parents": list(element.parents), "list_span": element.list_span,
+                  "has_children": element.has_children,
+                  "heading_level": len(element.headings) + 1 if element.kind == "heading" else None}
         if element.part_index is not None:
             target["reference"]["part_index"] = element.part_index
         if element.kind == "text" and re.match(r"^(?:单位|單位|Units?)\s*[:：]", element.text, re.I):
@@ -491,6 +548,7 @@ def read_expected(sample: dict[str, Any], expected_root: Path, *,
             except ExpectedReadError as error:
                 raise ExpectedReadError(f"{source}:L{element.lines[0]}: {error}") from error
             target["record"] = parsed
+            target["also_prose"] = element.kind == "text"
             qualify_reference_record(parsed, caption_units, caption_periods, caption_currencies)
         if element.cells:
             target["cells"] = element.cells
@@ -537,6 +595,7 @@ def markdown_observation(markdown: str, *, sample_id: str, pipeline: str, pages:
                                  "text": (ordinal[1] + ". " if ordinal else "") + element.text,
                                  "text_format": "plain", "native_path": identifier,
                                  "provenance_pages": pages, "public_lines": list(element.lines)}
+        block["public_list_parents"] = list(element.parents)
         caption = bool(re.match(r"^(?:Table|附表|图表|圖表|表)\s*\d+(?:[.\-]\d+)*(?:[:：.]|\s)", element.text, re.I))
         parsed = None if caption else record(element)
         if caption:
@@ -566,9 +625,10 @@ def markdown_observation(markdown: str, *, sample_id: str, pipeline: str, pages:
                                 "column_header_path": value["column_header_path"],
                                 "named_value": bool(value.get("named_value")),
                                 "units": [parsed["unit"]] if parsed.get("unit") else local_units or caption_units,
+                                "printed_row_units": local_units,
                                 "periods": [parsed["period"]] if parsed.get("period") else [],
                                 "printed_scope_context": list(caption_context),
-                                **{k: value[k] for k in ("unit", "period", "notes", "currency") if k in value},
+                                **{k: value[k] for k in ("unit", "period", "note_texts", "currency") if k in value},
                                 "native_path": identifier, "provenance_pages": pages}
                                for i, value in enumerate(parsed["fields"])]
             # A printed compound subject such as "Instrument: Loan" also
@@ -596,6 +656,15 @@ def markdown_observation(markdown: str, *, sample_id: str, pipeline: str, pages:
                     "named_value": True,
                     "native_path": identifier, "provenance_pages": pages,
                     **{key: assertion[key] for key in ("unit", "period", "notes", "currency") if key in assertion}})
+            for i, value in enumerate(parsed["fields"]):
+                if value.get("named_value") and not value["column_header_path"] and parsed["row_header_path"]:
+                    block["cells"].append({"id": f"{identifier}:identity:{i}", "text": value["value"],
+                        "row_header_path": [value["value"]], "column_header_path": parsed["row_header_path"][-1:],
+                        "named_value": True, "native_path": identifier, "provenance_pages": pages})
+                if value.get("identity_field"):
+                    block["cells"].append({"id": f"{identifier}:named:{i}", "text": value["value"],
+                        "row_header_path": value["column_header_path"], "column_header_path": [],
+                        "named_value": True, "native_path": identifier, "provenance_pages": pages})
         elif element.cells:
             block["kind"], block["cells"] = "table", element.cells
             block["native_table_container"] = identifier

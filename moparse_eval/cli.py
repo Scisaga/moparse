@@ -37,6 +37,8 @@ def read_scoring_freeze(path: Path, identity: Mapping[str, Any]) -> dict[str, An
     validation = record.get("validation")
     if not isinstance(validation, Mapping) or validation.get("status") != "passed":
         raise ValueError("scoring freeze must record passed engineering validation")
+    if validation.get("known_reader_defects"):
+        raise ValueError("known reader defects must be repaired before scoring")
     return record
 
 
@@ -339,12 +341,8 @@ def _require_formal_measurement_conditions(run: Path, session: Mapping[str, Any]
         raise ValueError(f"formal measurement conditions are not satisfied: {failures}")
 
 
-def score_run(run: Path, *, adjudications: Path | None = None,
-              freeze: Path | None = None) -> Path:
+def score_run(run: Path, *, freeze: Path | None = None) -> Path:
     from .expected_evaluation import evaluate_saved
-
-    if adjudications is not None:
-        raise ValueError("expected-only scoring does not accept adjudications; no decision file was opened")
 
     run = run.resolve()
     session = read_json(run / "run.json")
@@ -373,7 +371,7 @@ def score_run(run: Path, *, adjudications: Path | None = None,
 
 def report_run(run: Path) -> Path:
     """Publish only completed canonical expected scores."""
-    from .expected_report import render_expected_report
+    from scripts.render_lite_report import render
 
     run = run.resolve()
     session = read_json(run / "run.json")
@@ -382,7 +380,9 @@ def report_run(run: Path) -> Path:
     index = read_json(index_path)
     if index.get("protocol", {}).get("id") != SCORING_PROTOCOL["id"]:
         raise ValueError("reporting accepts only completed canonical expected scores")
-    return render_expected_report(index_path)
+    output = ROOT / "benchmark/reports/lite"
+    render(index_path, output)
+    return output / "report.md"
 
 
 def parser() -> argparse.ArgumentParser:
@@ -406,7 +406,6 @@ def parser() -> argparse.ArgumentParser:
         child = commands.add_parser(name)
         child.add_argument("--run", type=Path, required=True)
         if name == "score":
-            child.add_argument("--adjudications", type=Path, help="unsupported in expected-only evaluation; fails without reading the file")
             child.add_argument("--freeze", type=Path, help="validated scoring software and protocol identity")
     return command
 
@@ -419,7 +418,7 @@ def main(argv: list[str] | None = None) -> int:
     elif args.command == "run":
         return asyncio.run(run_dataset(args))
     elif args.command == "score":
-        print(score_run(args.run, adjudications=args.adjudications, freeze=args.freeze))
+        print(score_run(args.run, freeze=args.freeze))
     else:
         print(report_run(args.run))
     return 0

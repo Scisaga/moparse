@@ -1,5 +1,7 @@
 # P01：Docling TableFormer V1 + GLM SDK
 
+当前共同评测从保存native.json经`moparse_eval/saved_native.py`调用本格式读取器，忠实读取Docling阅读树、texts、table_cells、跨度、角色和引用；GLM分支只读json_result。读取器不接收expected答案。最终正文另只读取实际final.md；主指标、失败政策及同版重评由[评测任务](../../benchmark/evaluation-tasks.md#current-task-expected-only)维护。
+
 [全部管线](README.md) · [固定比较条件](../../benchmark/pipelines-to-test.md#主比较配置)
 
 ## 1. 配置与执行边界
@@ -91,7 +93,7 @@ GLM 固定以 `json_result` 为主要评分视图，`raw_json_result` 是独立�
 
 ## 5. 实现状态与验证项
 
-P01研究执行路径已修复，[P01工程预检02](../../benchmark/runs/lite/preflight/)独立完成同一清单的11个任务并提供本次冻结依据。本组已完成quality800一次和perf80三轮，八组统一评分、首版报告及原MO服务恢复完成；结果只见[当前统一评测报告](../../benchmark/reports/lite/report.md)，状态与限制由[评测索引](../../benchmark/reports/README.md)维护。TTS只观测不控制，先前撤回测量不恢复；执行和自动评分完成不构成内容、Gold或图片内容验收。
+P01研究执行路径已修复，[P01工程预检02](../../benchmark/runs/lite/preflight/)独立完成同一清单的11个任务并提供本次冻结依据。本组保存quality800一次和perf80三轮的有效原生结果及测量；错误评分已删除，现已按同一新程序重评；结果只见[当前统一评测报告](../../benchmark/reports/lite/report.md)，状态与限制由[评测索引](../../benchmark/reports/README.md)维护。TTS只观测不控制，先前撤回测量不恢复；执行和自动评分完成不构成内容、Gold或图片内容验收。
 
 研究执行器显式使用 TableFormer V1，Docling 阅读树、表格、媒体和共享 GLM 分支分别保存，与 P02 的模型选择不同。共享 GLM 已显式采用 native rotary，避开 vLLM 0.19.1 的 GPT-J MRoPE CUDA 配对缺陷；研究路径的旋转坐标交接和原生结果先行保全、局部导出错误隔离已修复。机制证据与修复边界见[执行层诊断](../../benchmark/diagnostics/README.md)，不据工程修复推定具体语料影响或解析成绩。
 
