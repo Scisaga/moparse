@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import re
 from copy import deepcopy
+from xml.etree import ElementTree
 
 import pytest
 
@@ -26,7 +27,8 @@ def public_tables(markdown: str) -> list[dict]:
         assert structure is not None
         metadata = json.loads(structure[1])
         assert "version" not in metadata
-        assert set(metadata["gfm"]) == {"segments", "rendered_num_rows_total"}
+        if metadata.get("display_format") != "html":
+            assert set(metadata["gfm"]) == {"segments", "rendered_num_rows_total"}
         sources = []
         for source in re.finditer(r"<!-- table-source: (.*?) -->", content):
             fragment_id, *fields = source[1].split("; ")
@@ -44,6 +46,24 @@ def public_tables(markdown: str) -> list[dict]:
                 cells = [cell.strip() for cell in line.strip().strip("|").split("|")]
                 if not all(re.fullmatch(r":?-+:?", cell) for cell in cells):
                     rows.append(cells)
+        if metadata.get("display_format") == "html":
+            markup = re.search(r"<table>.*?</table>", content, re.S)
+            assert markup is not None
+            physical = ElementTree.fromstring(markup[0]).findall("tr")
+            rows = [[""] * metadata["num_cols"] for _ in physical]
+            occupied = set()
+            for row, tr in enumerate(physical):
+                column = 0
+                for cell in tr:
+                    while (row, column) in occupied:
+                        column += 1
+                    assert cell.tag in {"td", "th"}
+                    rows[row][column] = "".join(cell.itertext())
+                    span = [(r, c) for r in range(row, row + int(cell.get("rowspan", 1)))
+                            for c in range(column, column + int(cell.get("colspan", 1)))]
+                    assert all(r < len(rows) and c < len(rows[r]) and (r, c) not in occupied for r, c in span)
+                    occupied.update(span)
+                    column += int(cell.get("colspan", 1))
         tables.append({"id": start[1], "sources": sources,
                        "meta": metadata, "rows": rows})
     return tables

@@ -16,11 +16,13 @@ from .expected_evaluation import (
 from .expected_scoring import PROTOCOL, require_paired_targets
 from .packaging import inside, read_json
 from .prose_metrics import summarize_text
+from .score_contract import require_retrieval_evidence
 from .target_coverage import require_complete_ranges
 
 
 def first_failure_stage(group: str, outcome: dict[str, Any], native: dict[str, Any] | None) -> str:
     """Report the first observed failing output, without inventing an SDK cause."""
+    require_retrieval_evidence([outcome])
     if outcome["outcome"] == "correct":
         return "none"
     if group in PIPELINES:
@@ -51,6 +53,7 @@ def load_complete(index_path: Path) -> tuple[dict[str, Any], dict[str, list[dict
         if score.get("scoring_software_id") != index["software"]["software_id"]:
             raise ValueError("mixed scoring software cannot be published")
         decisions = score["outcomes"]
+        require_retrieval_evidence(decisions)
         expected_counts = {kind: {"targets": sum(row["kind"] == kind for row in decisions),
             **{state: sum(row["kind"] == kind and row["outcome"] == state for row in decisions)
                for state in ("correct", "incorrect")}} for kind in {row["kind"] for row in decisions}}

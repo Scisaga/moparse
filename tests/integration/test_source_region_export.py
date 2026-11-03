@@ -83,7 +83,9 @@ async def test_unknown_region_literal_text_image_and_private_evidence_survive_ex
     assert f"]({asset.download_url})" in ir.renderings.markdown
     assert "source-region-image:" not in ir.renderings.markdown
     assert literal in ir.renderings.markdown
-    assert literal in ir.renderings.plain_text
+    # The document plain-text view omits its trailing newline, while every
+    # literal character (including the two final spaces) remains present.
+    assert ir.renderings.plain_text.endswith(literal.removesuffix("\n"))
     assert "````text\n" in ir.renderings.markdown
     assert "structure: unknown" in ir.renderings.markdown
     assert "private model candidate" not in ir.model_dump_json()

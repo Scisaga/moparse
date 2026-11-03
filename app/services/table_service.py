@@ -1049,6 +1049,14 @@ def _table_context_pages(
         # unit/period declarations do not satisfy that evidence.
         def pagination_id(source: PageFurnitureFragment) -> tuple[tuple[str, ...], int] | None:
             text = source.text.strip()
+            fraction = re.fullmatch(r"([0-9]+)\s*/\s*([0-9]+)", text)
+            if fraction:
+                current, total = int(fraction[1]), int(fraction[2])
+                if 0 < current <= total:
+                    # Keep the printed total literal. The corroboration below
+                    # requires three consecutive source pages at this box.
+                    return ("/", fraction[2]), current - source.page_number
+                return None
             decorated = re.fullmatch(r"([-–—])\s*([0-9]+)\s*\1", text)
             if decorated:
                 text = decorated[2]

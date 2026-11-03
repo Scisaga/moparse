@@ -1030,7 +1030,17 @@ class TableSemanticsService:
                     p for p in (source_view.prefix, rendered, source_view.suffix) if p
                 )
             else:
-                replacement = source_view.rendered + "\n\n" + rendered
+                legends = []
+                for fragment in source_view.fragments if len(source_view.fragments) == 1 else []:
+                    inherited = fragment.native_evidence.get("continuation_unit_context", {})
+                    for ref in fragment.context_refs:
+                        if ref.token in inherited.get("scope_ref_tokens", []) and ref.kind == "unit":
+                            literal = _literal(ref.text)
+                            legends.append(
+                                literal if re.search(r"(?:单位|單位|Unit)\s*[:：]", literal, re.I)
+                                else "单位：" + literal
+                            )
+                replacement = "\n\n".join([*dict.fromkeys(legends), source_view.rendered, rendered])
             markdown = markdown.replace(source_view.rendered, replacement, 1)
         owned = {source for view in rendered_views for source in view.source_tables}
         for fragment in fragments:

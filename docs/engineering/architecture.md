@@ -6,6 +6,14 @@
 
 2026-10-30工作区的`table_context_service`从已保全原生块和`TableFragment`读取局部计量或记录字段及文字限定，补充原生结构证据；`table_semantics_service`分别检查来源冲突、用途与记录范围，使用`CellRef`或`TextRef`渲染实际正文。PDF来源补充继续独立运行，P08不进入该路径。评分器的`information_reading`独立读取候选表和实际正文限定，不调用服务关系判断；只共用既有忠实格式读取，不循环认定正确。运行身份、后处理计时和统一评分冻结分别保存。
 
+`candidate_context`是研究评分侧的候选文字范围读取，`table_context_service`是实际服务侧的原生关系处理，二者分别实现、分别测试，不能用服务的内部绑定给实际Markdown补分。共同评分保存字符串命中、身份检查、上下文来源和排除理由；`score_contract`另检查选值是否属于已验证候选集合。正文近似检索先裁到已打印标题范围；报告入口同时拒绝已知读取问题及范围冲突的数值比较。实际服务的受限打印范围与源格引用由[表格来源](../specs/table-source.md#跨页来源与继承)定义，完整流程和完成条件由[评测任务](../../benchmark/evaluation-tasks.md#current-task-expected-only)维护。
+
+`context_matching`在匹配阶段查询已暴露的实际标题与文件前置信息，既保留父范围，也检查停止边界；候选年度不再从全文无界复制。原生网格的命名属性读取由查询身份键和实际相邻键值建立范围，普通行列定位检查表头对数据行的约束并比较两个方向。这些读取不改写原始格或引用，不接入服务语义判断；最终Markdown仍只靠打印内容获得判分。
+
+`named_retrieval`在共同匹配阶段读取命名列记录和实际列表的单项属性；`expected_readback`仅将真实Markdown列表行范围作为`public_list_span`暴露。它们不使用未打印IR范围，不把共享外层容器当作同一坐标网格。正文的父级检查保存各实际锚点及停止位置，拆分标题的完整匹配可证明其中的子标题部分。
+
+`record_collections`处理expected已声明的同身份多记录：定位阶段仍返回完整来源集合，比较阶段才联合核对全部字段向量并保存一一对应。单条正确值、缺失字段或额外冲突记录不能满足完整集合条件；定义与独立反例由评测任务维护。
+
 ![MO-Parse 服务：解析、适配、转换、组装、引用检查与返回保存](../assets/workspace-pdf-pipeline.svg)
 
 图描述目标运行流程，第 6 步是程序对引用和覆盖状态的检查；完整内容与接口验收属于开发发布阶段，见[技术路线](technical-route.md#4-验证与发布条件)。第 2 步取得声明管线的原始解析，第 3 至 7 步属于 MO-Parse 服务处理。解析研究按[研究框架](../research/research-framework.md#2-管线研究的顺序)比较原始结果与费用，服务转换按[技术路线](technical-route.md)开发与验收，两者不能共用最终格式门槛或混合计时。
@@ -43,7 +51,7 @@
 
 ## 当前 PDF 路由与来源能力
 
-服务端 `NATIVE_PARSER_BACKEND` 选择原生后端，公共 HTTP/MCP 不增加模型选择参数。原生页可以保留 PDF 文字证据；扫描、混合页经现有 GLM SDK 处理。现有来源规则和解析分工属于待评价的实现起点，八个主比较配置仍须在统一协议下重新测量。
+服务端 `NATIVE_PARSER_BACKEND` 选择原生后端，公共 HTTP/MCP 不增加模型选择参数。原生页可以保留 PDF 文字证据；扫描、混合页经现有 GLM SDK 处理。八个主比较配置已有的有效Lite原生结果及原始测量按[当前评测任务](../../benchmark/evaluation-tasks.md#current-task-expected-only)统一读取与重新评分，本轮不重新推理；服务来源处理和原生比较边界仍分别保持。
 
 - MinerU 路径使用 MinerU 4.0.12 Advanced + TXT，CPU native worker 执行 PDF 与 ONNX 工作，FP16 vLLM 执行视觉布局和表格任务。TXT 不保证表内字值全部来自 PDF 字层。
 - Docling 仍是独立可选原生后端，使用 TableFormer、`do_cell_matching=False` 与 PyPdfium；MinerU 后不调用第二个 Docling 解析器。

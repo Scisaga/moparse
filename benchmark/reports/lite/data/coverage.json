@@ -69,7 +69,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 43,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -1071,7 +1071,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 35,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -1962,7 +1962,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 67,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -2110,20 +2110,12 @@
           {
             "span": [
               0,
-              72
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L2469-2469:field:0"
-            ]
-          },
-          {
-            "span": [
-              72,
               73
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L2469-2469"
+            ]
           }
         ]
       },
@@ -3472,7 +3464,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 14,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -3835,7 +3827,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 70,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -5412,7 +5404,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 29,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -6106,7 +6098,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 26,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -6753,7 +6745,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 19,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -7217,7 +7209,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 29,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -7946,7 +7938,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 80,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -9908,7 +9900,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 35,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -10751,7 +10743,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 65,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -12294,7 +12286,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 57,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -13735,7 +13727,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 82,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -15717,7 +15709,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 83,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -17670,7 +17662,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 232,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -26001,7 +25993,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 67,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -27566,7 +27558,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 72,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -29277,7 +29269,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 122,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -32007,7 +31999,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 16,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -32423,7 +32415,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 42,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -33440,7 +33432,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 42,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -34410,7 +34402,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 20,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -34933,7 +34925,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 80,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -36748,7 +36740,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 42,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -37727,7 +37719,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 28,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -38425,7 +38417,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 65,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -39937,7 +39929,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 26,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -40658,7 +40650,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 129,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -44707,7 +44699,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 61,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -46493,7 +46485,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 14,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -46883,7 +46875,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 81,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -48720,7 +48712,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 39,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -49606,7 +49598,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 33,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -50810,7 +50802,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 18,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -51270,7 +51262,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 78,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -53059,7 +53051,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 180,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -61681,7 +61673,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 78,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -65412,7 +65404,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 76,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -67121,7 +67113,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 53,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -68828,7 +68820,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 3,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -68931,7 +68923,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 3,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -69025,7 +69017,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 158,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -75917,7 +75909,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 121,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -78841,7 +78833,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 6,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -79010,7 +79002,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 39,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -79896,7 +79888,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 20,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -80364,7 +80356,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 15,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -80722,7 +80714,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 64,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -82896,7 +82888,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 80,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -84693,7 +84685,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 53,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -85742,20 +85734,12 @@
           {
             "span": [
               0,
-              28
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L1683-1683:field:0"
-            ]
-          },
-          {
-            "span": [
-              28,
               29
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L1683-1683"
+            ]
           }
         ]
       },
@@ -86168,7 +86152,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 33,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -86949,7 +86933,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 49,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -88073,7 +88057,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 61,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -88881,20 +88865,12 @@
           {
             "span": [
               0,
-              33
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L1375-1375:field:0"
-            ]
-          },
-          {
-            "span": [
-              33,
               34
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L1375-1375"
+            ]
           }
         ]
       },
@@ -88977,20 +88953,12 @@
           {
             "span": [
               0,
-              10
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L1379-1379:field:0"
-            ]
-          },
-          {
-            "span": [
-              10,
               11
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L1379-1379"
+            ]
           }
         ]
       },
@@ -89007,20 +88975,12 @@
           {
             "span": [
               0,
-              108
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L1381-1381:field:0"
-            ]
-          },
-          {
-            "span": [
-              108,
               109
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L1381-1381"
+            ]
           }
         ]
       },
@@ -89081,20 +89041,12 @@
           {
             "span": [
               0,
-              24
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L1384-1384:field:0"
-            ]
-          },
-          {
-            "span": [
-              24,
               25
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L1384-1384"
+            ]
           }
         ]
       },
@@ -89133,20 +89085,12 @@
           {
             "span": [
               0,
-              33
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L1387-1387:field:0"
-            ]
-          },
-          {
-            "span": [
-              33,
               34
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L1387-1387"
+            ]
           }
         ]
       },
@@ -89273,20 +89217,12 @@
           {
             "span": [
               0,
-              23
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L1393-1393:field:0"
-            ]
-          },
-          {
-            "span": [
-              23,
               24
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L1393-1393"
+            ]
           }
         ]
       },
@@ -89518,7 +89454,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 44,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -89644,20 +89580,12 @@
           {
             "span": [
               0,
-              26
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L1421-1421:field:0"
-            ]
-          },
-          {
-            "span": [
-              26,
               27
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L1421-1421"
+            ]
           }
         ]
       },
@@ -89850,20 +89778,12 @@
           {
             "span": [
               0,
-              33
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L1438-1438:field:0"
-            ]
-          },
-          {
-            "span": [
-              33,
               34
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L1438-1438"
+            ]
           }
         ]
       },
@@ -90078,20 +89998,12 @@
           {
             "span": [
               0,
-              10
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L1458-1458:field:0"
-            ]
-          },
-          {
-            "span": [
-              10,
               11
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L1458-1458"
+            ]
           }
         ]
       },
@@ -90130,20 +90042,12 @@
           {
             "span": [
               0,
-              13
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L1461-1461:field:0"
-            ]
-          },
-          {
-            "span": [
-              13,
               14
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L1461-1461"
+            ]
           }
         ]
       },
@@ -90248,20 +90152,12 @@
           {
             "span": [
               0,
-              33
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L1470-1470:field:0"
-            ]
-          },
-          {
-            "span": [
-              33,
               34
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L1470-1470"
+            ]
           }
         ]
       },
@@ -90322,20 +90218,12 @@
           {
             "span": [
               0,
-              29
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L1475-1475:field:0"
-            ]
-          },
-          {
-            "span": [
-              29,
               30
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L1475-1475"
+            ]
           }
         ]
       },
@@ -90589,7 +90477,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 51,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -91931,7 +91819,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 93,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -94005,7 +93893,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 80,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -96990,7 +96878,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 28,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -97652,7 +97540,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 37,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -98494,7 +98382,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 20,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -98989,7 +98877,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 45,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -100068,7 +99956,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 70,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -101816,7 +101704,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 19,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -102280,7 +102168,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 38,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -103180,7 +103068,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 72,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -104818,7 +104706,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 133,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -108690,7 +108578,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 56,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -109959,7 +109847,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 19,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -110423,7 +110311,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 40,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -110879,20 +110767,12 @@
           {
             "span": [
               0,
-              65
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L269-269:field:0"
-            ]
-          },
-          {
-            "span": [
-              65,
               66
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L269-269"
+            ]
           }
         ]
       },
@@ -111470,7 +111350,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 57,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -112892,7 +112772,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 15,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -113250,7 +113130,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 16,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -113648,7 +113528,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 49,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -114868,7 +114748,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 40,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -115803,7 +115683,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 62,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -117597,7 +117477,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 65,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -119163,7 +119043,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 1,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -119258,7 +119138,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 101,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -121670,7 +121550,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 46,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -122858,7 +122738,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 110,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -125343,7 +125223,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 31,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -126126,7 +126006,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 44,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -127188,7 +127068,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 54,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -129149,7 +129029,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 135,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -133084,7 +132964,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 33,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -133865,7 +133745,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 16,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -134434,7 +134314,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 116,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -137955,7 +137835,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 179,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -143150,7 +143030,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 52,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -144322,7 +144202,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 11,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -144782,7 +144662,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 39,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -145759,7 +145639,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 443,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -167017,7 +166897,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 526,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -187470,7 +187350,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 277,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -198289,7 +198169,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 1077,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -198570,7 +198450,16 @@
             ],
             "role": "business_requirement",
             "target_ids": [
-              "expected:L1414-1414:field:1"
+              "expected:L1414-1414:field:0",
+              "expected:L1414-1414:field:1",
+              "expected:L1414-1414:field:2",
+              "expected:L1414-1414:field:3",
+              "expected:L1414-1414:field:4",
+              "expected:L1414-1414:field:5",
+              "expected:L1414-1414:field:6",
+              "expected:L1414-1414:field:7",
+              "expected:L1414-1414:field:8",
+              "expected:L1414-1414:field:9"
             ]
           },
           {
@@ -201117,7 +201006,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
-              "expected:L1532-1532:field:2"
+              "expected:L1532-1532:field:0",
+              "expected:L1532-1532:field:1",
+              "expected:L1532-1532:field:2",
+              "expected:L1532-1532:field:3",
+              "expected:L1532-1532:field:4",
+              "expected:L1532-1532:field:5",
+              "expected:L1532-1532:field:6"
             ]
           },
           {
@@ -201405,8 +201300,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
+              "expected:L1533-1533:field:0",
+              "expected:L1533-1533:field:1",
               "expected:L1533-1533:field:2",
-              "expected:L1533-1533:field:3"
+              "expected:L1533-1533:field:3",
+              "expected:L1533-1533:field:4",
+              "expected:L1533-1533:field:5",
+              "expected:L1533-1533:field:6"
             ]
           },
           {
@@ -201442,8 +201342,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
+              "expected:L1533-1533:field:0",
+              "expected:L1533-1533:field:1",
               "expected:L1533-1533:field:2",
-              "expected:L1533-1533:field:3"
+              "expected:L1533-1533:field:3",
+              "expected:L1533-1533:field:4",
+              "expected:L1533-1533:field:5",
+              "expected:L1533-1533:field:6"
             ]
           },
           {
@@ -201716,8 +201621,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
+              "expected:L1534-1534:field:0",
+              "expected:L1534-1534:field:1",
               "expected:L1534-1534:field:2",
-              "expected:L1534-1534:field:3"
+              "expected:L1534-1534:field:3",
+              "expected:L1534-1534:field:4",
+              "expected:L1534-1534:field:5",
+              "expected:L1534-1534:field:6"
             ]
           },
           {
@@ -201753,8 +201663,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
+              "expected:L1534-1534:field:0",
+              "expected:L1534-1534:field:1",
               "expected:L1534-1534:field:2",
-              "expected:L1534-1534:field:3"
+              "expected:L1534-1534:field:3",
+              "expected:L1534-1534:field:4",
+              "expected:L1534-1534:field:5",
+              "expected:L1534-1534:field:6"
             ]
           },
           {
@@ -202027,8 +201942,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
+              "expected:L1535-1535:field:0",
+              "expected:L1535-1535:field:1",
               "expected:L1535-1535:field:2",
-              "expected:L1535-1535:field:3"
+              "expected:L1535-1535:field:3",
+              "expected:L1535-1535:field:4",
+              "expected:L1535-1535:field:5",
+              "expected:L1535-1535:field:6"
             ]
           },
           {
@@ -202064,8 +201984,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
+              "expected:L1535-1535:field:0",
+              "expected:L1535-1535:field:1",
               "expected:L1535-1535:field:2",
-              "expected:L1535-1535:field:3"
+              "expected:L1535-1535:field:3",
+              "expected:L1535-1535:field:4",
+              "expected:L1535-1535:field:5",
+              "expected:L1535-1535:field:6"
             ]
           },
           {
@@ -202338,8 +202263,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
+              "expected:L1536-1536:field:0",
+              "expected:L1536-1536:field:1",
               "expected:L1536-1536:field:2",
-              "expected:L1536-1536:field:3"
+              "expected:L1536-1536:field:3",
+              "expected:L1536-1536:field:4",
+              "expected:L1536-1536:field:5",
+              "expected:L1536-1536:field:6"
             ]
           },
           {
@@ -202375,8 +202305,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
+              "expected:L1536-1536:field:0",
+              "expected:L1536-1536:field:1",
               "expected:L1536-1536:field:2",
-              "expected:L1536-1536:field:3"
+              "expected:L1536-1536:field:3",
+              "expected:L1536-1536:field:4",
+              "expected:L1536-1536:field:5",
+              "expected:L1536-1536:field:6"
             ]
           },
           {
@@ -202628,8 +202563,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
+              "expected:L1537-1537:field:0",
+              "expected:L1537-1537:field:1",
               "expected:L1537-1537:field:2",
-              "expected:L1537-1537:field:3"
+              "expected:L1537-1537:field:3",
+              "expected:L1537-1537:field:4",
+              "expected:L1537-1537:field:5",
+              "expected:L1537-1537:field:6"
             ]
           },
           {
@@ -202665,8 +202605,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
+              "expected:L1537-1537:field:0",
+              "expected:L1537-1537:field:1",
               "expected:L1537-1537:field:2",
-              "expected:L1537-1537:field:3"
+              "expected:L1537-1537:field:3",
+              "expected:L1537-1537:field:4",
+              "expected:L1537-1537:field:5",
+              "expected:L1537-1537:field:6"
             ]
           },
           {
@@ -202939,8 +202884,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
+              "expected:L1538-1538:field:0",
+              "expected:L1538-1538:field:1",
               "expected:L1538-1538:field:2",
-              "expected:L1538-1538:field:3"
+              "expected:L1538-1538:field:3",
+              "expected:L1538-1538:field:4",
+              "expected:L1538-1538:field:5",
+              "expected:L1538-1538:field:6"
             ]
           },
           {
@@ -202976,8 +202926,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
+              "expected:L1538-1538:field:0",
+              "expected:L1538-1538:field:1",
               "expected:L1538-1538:field:2",
-              "expected:L1538-1538:field:3"
+              "expected:L1538-1538:field:3",
+              "expected:L1538-1538:field:4",
+              "expected:L1538-1538:field:5",
+              "expected:L1538-1538:field:6"
             ]
           },
           {
@@ -203229,8 +203184,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
+              "expected:L1539-1539:field:0",
+              "expected:L1539-1539:field:1",
               "expected:L1539-1539:field:2",
-              "expected:L1539-1539:field:3"
+              "expected:L1539-1539:field:3",
+              "expected:L1539-1539:field:4",
+              "expected:L1539-1539:field:5",
+              "expected:L1539-1539:field:6"
             ]
           },
           {
@@ -203266,8 +203226,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
+              "expected:L1539-1539:field:0",
+              "expected:L1539-1539:field:1",
               "expected:L1539-1539:field:2",
-              "expected:L1539-1539:field:3"
+              "expected:L1539-1539:field:3",
+              "expected:L1539-1539:field:4",
+              "expected:L1539-1539:field:5",
+              "expected:L1539-1539:field:6"
             ]
           },
           {
@@ -203540,8 +203505,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
+              "expected:L1540-1540:field:0",
+              "expected:L1540-1540:field:1",
               "expected:L1540-1540:field:2",
-              "expected:L1540-1540:field:3"
+              "expected:L1540-1540:field:3",
+              "expected:L1540-1540:field:4",
+              "expected:L1540-1540:field:5",
+              "expected:L1540-1540:field:6"
             ]
           },
           {
@@ -203577,8 +203547,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
+              "expected:L1540-1540:field:0",
+              "expected:L1540-1540:field:1",
               "expected:L1540-1540:field:2",
-              "expected:L1540-1540:field:3"
+              "expected:L1540-1540:field:3",
+              "expected:L1540-1540:field:4",
+              "expected:L1540-1540:field:5",
+              "expected:L1540-1540:field:6"
             ]
           },
           {
@@ -203851,8 +203826,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
+              "expected:L1541-1541:field:0",
+              "expected:L1541-1541:field:1",
               "expected:L1541-1541:field:2",
-              "expected:L1541-1541:field:3"
+              "expected:L1541-1541:field:3",
+              "expected:L1541-1541:field:4",
+              "expected:L1541-1541:field:5",
+              "expected:L1541-1541:field:6"
             ]
           },
           {
@@ -203888,8 +203868,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
+              "expected:L1541-1541:field:0",
+              "expected:L1541-1541:field:1",
               "expected:L1541-1541:field:2",
-              "expected:L1541-1541:field:3"
+              "expected:L1541-1541:field:3",
+              "expected:L1541-1541:field:4",
+              "expected:L1541-1541:field:5",
+              "expected:L1541-1541:field:6"
             ]
           },
           {
@@ -204141,8 +204126,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
+              "expected:L1542-1542:field:0",
+              "expected:L1542-1542:field:1",
               "expected:L1542-1542:field:2",
-              "expected:L1542-1542:field:3"
+              "expected:L1542-1542:field:3",
+              "expected:L1542-1542:field:4",
+              "expected:L1542-1542:field:5",
+              "expected:L1542-1542:field:6"
             ]
           },
           {
@@ -204178,8 +204168,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
+              "expected:L1542-1542:field:0",
+              "expected:L1542-1542:field:1",
               "expected:L1542-1542:field:2",
-              "expected:L1542-1542:field:3"
+              "expected:L1542-1542:field:3",
+              "expected:L1542-1542:field:4",
+              "expected:L1542-1542:field:5",
+              "expected:L1542-1542:field:6"
             ]
           },
           {
@@ -204431,8 +204426,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
+              "expected:L1543-1543:field:0",
+              "expected:L1543-1543:field:1",
               "expected:L1543-1543:field:2",
-              "expected:L1543-1543:field:3"
+              "expected:L1543-1543:field:3",
+              "expected:L1543-1543:field:4",
+              "expected:L1543-1543:field:5",
+              "expected:L1543-1543:field:6"
             ]
           },
           {
@@ -204468,8 +204468,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
+              "expected:L1543-1543:field:0",
+              "expected:L1543-1543:field:1",
               "expected:L1543-1543:field:2",
-              "expected:L1543-1543:field:3"
+              "expected:L1543-1543:field:3",
+              "expected:L1543-1543:field:4",
+              "expected:L1543-1543:field:5",
+              "expected:L1543-1543:field:6"
             ]
           },
           {
@@ -204721,8 +204726,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
+              "expected:L1544-1544:field:0",
+              "expected:L1544-1544:field:1",
               "expected:L1544-1544:field:2",
-              "expected:L1544-1544:field:3"
+              "expected:L1544-1544:field:3",
+              "expected:L1544-1544:field:4",
+              "expected:L1544-1544:field:5",
+              "expected:L1544-1544:field:6"
             ]
           },
           {
@@ -204758,8 +204768,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
+              "expected:L1544-1544:field:0",
+              "expected:L1544-1544:field:1",
               "expected:L1544-1544:field:2",
-              "expected:L1544-1544:field:3"
+              "expected:L1544-1544:field:3",
+              "expected:L1544-1544:field:4",
+              "expected:L1544-1544:field:5",
+              "expected:L1544-1544:field:6"
             ]
           },
           {
@@ -205011,8 +205026,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
+              "expected:L1545-1545:field:0",
+              "expected:L1545-1545:field:1",
               "expected:L1545-1545:field:2",
-              "expected:L1545-1545:field:3"
+              "expected:L1545-1545:field:3",
+              "expected:L1545-1545:field:4",
+              "expected:L1545-1545:field:5",
+              "expected:L1545-1545:field:6"
             ]
           },
           {
@@ -205048,8 +205068,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
+              "expected:L1545-1545:field:0",
+              "expected:L1545-1545:field:1",
               "expected:L1545-1545:field:2",
-              "expected:L1545-1545:field:3"
+              "expected:L1545-1545:field:3",
+              "expected:L1545-1545:field:4",
+              "expected:L1545-1545:field:5",
+              "expected:L1545-1545:field:6"
             ]
           },
           {
@@ -205301,7 +205326,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
-              "expected:L1546-1546:field:2"
+              "expected:L1546-1546:field:0",
+              "expected:L1546-1546:field:1",
+              "expected:L1546-1546:field:2",
+              "expected:L1546-1546:field:3",
+              "expected:L1546-1546:field:4",
+              "expected:L1546-1546:field:5",
+              "expected:L1546-1546:field:6"
             ]
           },
           {
@@ -205589,7 +205620,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
-              "expected:L1547-1547:field:2"
+              "expected:L1547-1547:field:0",
+              "expected:L1547-1547:field:1",
+              "expected:L1547-1547:field:2",
+              "expected:L1547-1547:field:3",
+              "expected:L1547-1547:field:4",
+              "expected:L1547-1547:field:5",
+              "expected:L1547-1547:field:6"
             ]
           },
           {
@@ -205877,7 +205914,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
-              "expected:L1548-1548:field:2"
+              "expected:L1548-1548:field:0",
+              "expected:L1548-1548:field:1",
+              "expected:L1548-1548:field:2",
+              "expected:L1548-1548:field:3",
+              "expected:L1548-1548:field:4",
+              "expected:L1548-1548:field:5",
+              "expected:L1548-1548:field:6"
             ]
           },
           {
@@ -206165,7 +206208,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
-              "expected:L1549-1549:field:2"
+              "expected:L1549-1549:field:0",
+              "expected:L1549-1549:field:1",
+              "expected:L1549-1549:field:2",
+              "expected:L1549-1549:field:3",
+              "expected:L1549-1549:field:4",
+              "expected:L1549-1549:field:5",
+              "expected:L1549-1549:field:6"
             ]
           },
           {
@@ -206453,7 +206502,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
-              "expected:L1550-1550:field:2"
+              "expected:L1550-1550:field:0",
+              "expected:L1550-1550:field:1",
+              "expected:L1550-1550:field:2",
+              "expected:L1550-1550:field:3",
+              "expected:L1550-1550:field:4",
+              "expected:L1550-1550:field:5",
+              "expected:L1550-1550:field:6"
             ]
           },
           {
@@ -206741,7 +206796,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
-              "expected:L1551-1551:field:2"
+              "expected:L1551-1551:field:0",
+              "expected:L1551-1551:field:1",
+              "expected:L1551-1551:field:2",
+              "expected:L1551-1551:field:3",
+              "expected:L1551-1551:field:4",
+              "expected:L1551-1551:field:5",
+              "expected:L1551-1551:field:6"
             ]
           },
           {
@@ -207029,7 +207090,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
-              "expected:L1552-1552:field:2"
+              "expected:L1552-1552:field:0",
+              "expected:L1552-1552:field:1",
+              "expected:L1552-1552:field:2",
+              "expected:L1552-1552:field:3",
+              "expected:L1552-1552:field:4",
+              "expected:L1552-1552:field:5",
+              "expected:L1552-1552:field:6"
             ]
           },
           {
@@ -207317,7 +207384,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
-              "expected:L1553-1553:field:2"
+              "expected:L1553-1553:field:0",
+              "expected:L1553-1553:field:1",
+              "expected:L1553-1553:field:2",
+              "expected:L1553-1553:field:3",
+              "expected:L1553-1553:field:4",
+              "expected:L1553-1553:field:5",
+              "expected:L1553-1553:field:6"
             ]
           },
           {
@@ -207605,7 +207678,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
-              "expected:L1554-1554:field:2"
+              "expected:L1554-1554:field:0",
+              "expected:L1554-1554:field:1",
+              "expected:L1554-1554:field:2",
+              "expected:L1554-1554:field:3",
+              "expected:L1554-1554:field:4",
+              "expected:L1554-1554:field:5",
+              "expected:L1554-1554:field:6"
             ]
           },
           {
@@ -207893,7 +207972,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
-              "expected:L1555-1555:field:2"
+              "expected:L1555-1555:field:0",
+              "expected:L1555-1555:field:1",
+              "expected:L1555-1555:field:2",
+              "expected:L1555-1555:field:3",
+              "expected:L1555-1555:field:4",
+              "expected:L1555-1555:field:5",
+              "expected:L1555-1555:field:6"
             ]
           },
           {
@@ -208181,7 +208266,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
-              "expected:L1556-1556:field:2"
+              "expected:L1556-1556:field:0",
+              "expected:L1556-1556:field:1",
+              "expected:L1556-1556:field:2",
+              "expected:L1556-1556:field:3",
+              "expected:L1556-1556:field:4",
+              "expected:L1556-1556:field:5",
+              "expected:L1556-1556:field:6"
             ]
           },
           {
@@ -208469,7 +208560,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
-              "expected:L1557-1557:field:2"
+              "expected:L1557-1557:field:0",
+              "expected:L1557-1557:field:1",
+              "expected:L1557-1557:field:2",
+              "expected:L1557-1557:field:3",
+              "expected:L1557-1557:field:4",
+              "expected:L1557-1557:field:5",
+              "expected:L1557-1557:field:6"
             ]
           },
           {
@@ -208757,7 +208854,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
-              "expected:L1558-1558:field:2"
+              "expected:L1558-1558:field:0",
+              "expected:L1558-1558:field:1",
+              "expected:L1558-1558:field:2",
+              "expected:L1558-1558:field:3",
+              "expected:L1558-1558:field:4",
+              "expected:L1558-1558:field:5",
+              "expected:L1558-1558:field:6"
             ]
           },
           {
@@ -209045,7 +209148,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
-              "expected:L1559-1559:field:2"
+              "expected:L1559-1559:field:0",
+              "expected:L1559-1559:field:1",
+              "expected:L1559-1559:field:2",
+              "expected:L1559-1559:field:3",
+              "expected:L1559-1559:field:4",
+              "expected:L1559-1559:field:5",
+              "expected:L1559-1559:field:6"
             ]
           },
           {
@@ -209333,7 +209442,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
-              "expected:L1560-1560:field:2"
+              "expected:L1560-1560:field:0",
+              "expected:L1560-1560:field:1",
+              "expected:L1560-1560:field:2",
+              "expected:L1560-1560:field:3",
+              "expected:L1560-1560:field:4",
+              "expected:L1560-1560:field:5",
+              "expected:L1560-1560:field:6"
             ]
           },
           {
@@ -209621,7 +209736,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
-              "expected:L1561-1561:field:2"
+              "expected:L1561-1561:field:0",
+              "expected:L1561-1561:field:1",
+              "expected:L1561-1561:field:2",
+              "expected:L1561-1561:field:3",
+              "expected:L1561-1561:field:4",
+              "expected:L1561-1561:field:5",
+              "expected:L1561-1561:field:6"
             ]
           },
           {
@@ -209909,7 +210030,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
-              "expected:L1562-1562:field:2"
+              "expected:L1562-1562:field:0",
+              "expected:L1562-1562:field:1",
+              "expected:L1562-1562:field:2",
+              "expected:L1562-1562:field:3",
+              "expected:L1562-1562:field:4",
+              "expected:L1562-1562:field:5",
+              "expected:L1562-1562:field:6"
             ]
           },
           {
@@ -210197,7 +210324,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
-              "expected:L1563-1563:field:2"
+              "expected:L1563-1563:field:0",
+              "expected:L1563-1563:field:1",
+              "expected:L1563-1563:field:2",
+              "expected:L1563-1563:field:3",
+              "expected:L1563-1563:field:4",
+              "expected:L1563-1563:field:5",
+              "expected:L1563-1563:field:6"
             ]
           },
           {
@@ -210485,8 +210618,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
+              "expected:L1564-1564:field:0",
+              "expected:L1564-1564:field:1",
               "expected:L1564-1564:field:2",
-              "expected:L1564-1564:field:3"
+              "expected:L1564-1564:field:3",
+              "expected:L1564-1564:field:4",
+              "expected:L1564-1564:field:5",
+              "expected:L1564-1564:field:6"
             ]
           },
           {
@@ -210522,8 +210660,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
+              "expected:L1564-1564:field:0",
+              "expected:L1564-1564:field:1",
               "expected:L1564-1564:field:2",
-              "expected:L1564-1564:field:3"
+              "expected:L1564-1564:field:3",
+              "expected:L1564-1564:field:4",
+              "expected:L1564-1564:field:5",
+              "expected:L1564-1564:field:6"
             ]
           },
           {
@@ -210771,32 +210914,17 @@
           {
             "span": [
               46,
-              50
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L1565-1565:field:2"
-            ]
-          },
-          {
-            "span": [
-              50,
-              52
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L1565-1565:field:1",
-              "expected:L1565-1565:field:2"
-            ]
-          },
-          {
-            "span": [
-              52,
               62
             ],
             "role": "business_requirement",
             "target_ids": [
-              "expected:L1565-1565:field:2"
+              "expected:L1565-1565:field:0",
+              "expected:L1565-1565:field:1",
+              "expected:L1565-1565:field:2",
+              "expected:L1565-1565:field:3",
+              "expected:L1565-1565:field:4",
+              "expected:L1565-1565:field:5",
+              "expected:L1565-1565:field:6"
             ]
           },
           {
@@ -211084,7 +211212,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
-              "expected:L1566-1566:field:2"
+              "expected:L1566-1566:field:0",
+              "expected:L1566-1566:field:1",
+              "expected:L1566-1566:field:2",
+              "expected:L1566-1566:field:3",
+              "expected:L1566-1566:field:4",
+              "expected:L1566-1566:field:5",
+              "expected:L1566-1566:field:6"
             ]
           },
           {
@@ -211372,7 +211506,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
-              "expected:L1567-1567:field:2"
+              "expected:L1567-1567:field:0",
+              "expected:L1567-1567:field:1",
+              "expected:L1567-1567:field:2",
+              "expected:L1567-1567:field:3",
+              "expected:L1567-1567:field:4",
+              "expected:L1567-1567:field:5",
+              "expected:L1567-1567:field:6"
             ]
           },
           {
@@ -211660,7 +211800,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
-              "expected:L1568-1568:field:2"
+              "expected:L1568-1568:field:0",
+              "expected:L1568-1568:field:1",
+              "expected:L1568-1568:field:2",
+              "expected:L1568-1568:field:3",
+              "expected:L1568-1568:field:4",
+              "expected:L1568-1568:field:5",
+              "expected:L1568-1568:field:6"
             ]
           },
           {
@@ -211948,7 +212094,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
-              "expected:L1569-1569:field:2"
+              "expected:L1569-1569:field:0",
+              "expected:L1569-1569:field:1",
+              "expected:L1569-1569:field:2",
+              "expected:L1569-1569:field:3",
+              "expected:L1569-1569:field:4",
+              "expected:L1569-1569:field:5",
+              "expected:L1569-1569:field:6"
             ]
           },
           {
@@ -212236,7 +212388,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
-              "expected:L1570-1570:field:2"
+              "expected:L1570-1570:field:0",
+              "expected:L1570-1570:field:1",
+              "expected:L1570-1570:field:2",
+              "expected:L1570-1570:field:3",
+              "expected:L1570-1570:field:4",
+              "expected:L1570-1570:field:5",
+              "expected:L1570-1570:field:6"
             ]
           },
           {
@@ -212524,7 +212682,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
-              "expected:L1571-1571:field:2"
+              "expected:L1571-1571:field:0",
+              "expected:L1571-1571:field:1",
+              "expected:L1571-1571:field:2",
+              "expected:L1571-1571:field:3",
+              "expected:L1571-1571:field:4",
+              "expected:L1571-1571:field:5",
+              "expected:L1571-1571:field:6"
             ]
           },
           {
@@ -212812,7 +212976,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
-              "expected:L1572-1572:field:2"
+              "expected:L1572-1572:field:0",
+              "expected:L1572-1572:field:1",
+              "expected:L1572-1572:field:2",
+              "expected:L1572-1572:field:3",
+              "expected:L1572-1572:field:4",
+              "expected:L1572-1572:field:5",
+              "expected:L1572-1572:field:6"
             ]
           },
           {
@@ -213100,8 +213270,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
+              "expected:L1573-1573:field:0",
+              "expected:L1573-1573:field:1",
               "expected:L1573-1573:field:2",
-              "expected:L1573-1573:field:3"
+              "expected:L1573-1573:field:3",
+              "expected:L1573-1573:field:4",
+              "expected:L1573-1573:field:5",
+              "expected:L1573-1573:field:6"
             ]
           },
           {
@@ -213137,8 +213312,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
+              "expected:L1573-1573:field:0",
+              "expected:L1573-1573:field:1",
               "expected:L1573-1573:field:2",
-              "expected:L1573-1573:field:3"
+              "expected:L1573-1573:field:3",
+              "expected:L1573-1573:field:4",
+              "expected:L1573-1573:field:5",
+              "expected:L1573-1573:field:6"
             ]
           },
           {
@@ -213390,8 +213570,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
+              "expected:L1574-1574:field:0",
+              "expected:L1574-1574:field:1",
               "expected:L1574-1574:field:2",
-              "expected:L1574-1574:field:3"
+              "expected:L1574-1574:field:3",
+              "expected:L1574-1574:field:4",
+              "expected:L1574-1574:field:5",
+              "expected:L1574-1574:field:6"
             ]
           },
           {
@@ -213427,8 +213612,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
+              "expected:L1574-1574:field:0",
+              "expected:L1574-1574:field:1",
               "expected:L1574-1574:field:2",
-              "expected:L1574-1574:field:3"
+              "expected:L1574-1574:field:3",
+              "expected:L1574-1574:field:4",
+              "expected:L1574-1574:field:5",
+              "expected:L1574-1574:field:6"
             ]
           },
           {
@@ -213680,8 +213870,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
+              "expected:L1575-1575:field:0",
+              "expected:L1575-1575:field:1",
               "expected:L1575-1575:field:2",
-              "expected:L1575-1575:field:3"
+              "expected:L1575-1575:field:3",
+              "expected:L1575-1575:field:4",
+              "expected:L1575-1575:field:5",
+              "expected:L1575-1575:field:6"
             ]
           },
           {
@@ -213717,8 +213912,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
+              "expected:L1575-1575:field:0",
+              "expected:L1575-1575:field:1",
               "expected:L1575-1575:field:2",
-              "expected:L1575-1575:field:3"
+              "expected:L1575-1575:field:3",
+              "expected:L1575-1575:field:4",
+              "expected:L1575-1575:field:5",
+              "expected:L1575-1575:field:6"
             ]
           },
           {
@@ -213991,8 +214191,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
+              "expected:L1576-1576:field:0",
+              "expected:L1576-1576:field:1",
               "expected:L1576-1576:field:2",
-              "expected:L1576-1576:field:3"
+              "expected:L1576-1576:field:3",
+              "expected:L1576-1576:field:4",
+              "expected:L1576-1576:field:5",
+              "expected:L1576-1576:field:6"
             ]
           },
           {
@@ -214028,8 +214233,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
+              "expected:L1576-1576:field:0",
+              "expected:L1576-1576:field:1",
               "expected:L1576-1576:field:2",
-              "expected:L1576-1576:field:3"
+              "expected:L1576-1576:field:3",
+              "expected:L1576-1576:field:4",
+              "expected:L1576-1576:field:5",
+              "expected:L1576-1576:field:6"
             ]
           },
           {
@@ -214281,8 +214491,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
+              "expected:L1577-1577:field:0",
+              "expected:L1577-1577:field:1",
               "expected:L1577-1577:field:2",
-              "expected:L1577-1577:field:3"
+              "expected:L1577-1577:field:3",
+              "expected:L1577-1577:field:4",
+              "expected:L1577-1577:field:5",
+              "expected:L1577-1577:field:6"
             ]
           },
           {
@@ -214318,8 +214533,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
+              "expected:L1577-1577:field:0",
+              "expected:L1577-1577:field:1",
               "expected:L1577-1577:field:2",
-              "expected:L1577-1577:field:3"
+              "expected:L1577-1577:field:3",
+              "expected:L1577-1577:field:4",
+              "expected:L1577-1577:field:5",
+              "expected:L1577-1577:field:6"
             ]
           },
           {
@@ -214571,8 +214791,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
+              "expected:L1578-1578:field:0",
+              "expected:L1578-1578:field:1",
               "expected:L1578-1578:field:2",
-              "expected:L1578-1578:field:3"
+              "expected:L1578-1578:field:3",
+              "expected:L1578-1578:field:4",
+              "expected:L1578-1578:field:5",
+              "expected:L1578-1578:field:6"
             ]
           },
           {
@@ -214608,8 +214833,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
+              "expected:L1578-1578:field:0",
+              "expected:L1578-1578:field:1",
               "expected:L1578-1578:field:2",
-              "expected:L1578-1578:field:3"
+              "expected:L1578-1578:field:3",
+              "expected:L1578-1578:field:4",
+              "expected:L1578-1578:field:5",
+              "expected:L1578-1578:field:6"
             ]
           },
           {
@@ -214882,8 +215112,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
+              "expected:L1579-1579:field:0",
+              "expected:L1579-1579:field:1",
               "expected:L1579-1579:field:2",
-              "expected:L1579-1579:field:3"
+              "expected:L1579-1579:field:3",
+              "expected:L1579-1579:field:4",
+              "expected:L1579-1579:field:5",
+              "expected:L1579-1579:field:6"
             ]
           },
           {
@@ -214919,8 +215154,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
+              "expected:L1579-1579:field:0",
+              "expected:L1579-1579:field:1",
               "expected:L1579-1579:field:2",
-              "expected:L1579-1579:field:3"
+              "expected:L1579-1579:field:3",
+              "expected:L1579-1579:field:4",
+              "expected:L1579-1579:field:5",
+              "expected:L1579-1579:field:6"
             ]
           },
           {
@@ -215172,8 +215412,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
+              "expected:L1580-1580:field:0",
+              "expected:L1580-1580:field:1",
               "expected:L1580-1580:field:2",
-              "expected:L1580-1580:field:3"
+              "expected:L1580-1580:field:3",
+              "expected:L1580-1580:field:4",
+              "expected:L1580-1580:field:5",
+              "expected:L1580-1580:field:6"
             ]
           },
           {
@@ -215209,8 +215454,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
+              "expected:L1580-1580:field:0",
+              "expected:L1580-1580:field:1",
               "expected:L1580-1580:field:2",
-              "expected:L1580-1580:field:3"
+              "expected:L1580-1580:field:3",
+              "expected:L1580-1580:field:4",
+              "expected:L1580-1580:field:5",
+              "expected:L1580-1580:field:6"
             ]
           },
           {
@@ -215462,8 +215712,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
+              "expected:L1581-1581:field:0",
+              "expected:L1581-1581:field:1",
               "expected:L1581-1581:field:2",
-              "expected:L1581-1581:field:3"
+              "expected:L1581-1581:field:3",
+              "expected:L1581-1581:field:4",
+              "expected:L1581-1581:field:5",
+              "expected:L1581-1581:field:6"
             ]
           },
           {
@@ -215499,8 +215754,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
+              "expected:L1581-1581:field:0",
+              "expected:L1581-1581:field:1",
               "expected:L1581-1581:field:2",
-              "expected:L1581-1581:field:3"
+              "expected:L1581-1581:field:3",
+              "expected:L1581-1581:field:4",
+              "expected:L1581-1581:field:5",
+              "expected:L1581-1581:field:6"
             ]
           },
           {
@@ -215752,8 +216012,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
+              "expected:L1582-1582:field:0",
+              "expected:L1582-1582:field:1",
               "expected:L1582-1582:field:2",
-              "expected:L1582-1582:field:3"
+              "expected:L1582-1582:field:3",
+              "expected:L1582-1582:field:4",
+              "expected:L1582-1582:field:5",
+              "expected:L1582-1582:field:6"
             ]
           },
           {
@@ -215789,8 +216054,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
+              "expected:L1582-1582:field:0",
+              "expected:L1582-1582:field:1",
               "expected:L1582-1582:field:2",
-              "expected:L1582-1582:field:3"
+              "expected:L1582-1582:field:3",
+              "expected:L1582-1582:field:4",
+              "expected:L1582-1582:field:5",
+              "expected:L1582-1582:field:6"
             ]
           },
           {
@@ -216042,8 +216312,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
+              "expected:L1583-1583:field:0",
+              "expected:L1583-1583:field:1",
               "expected:L1583-1583:field:2",
-              "expected:L1583-1583:field:3"
+              "expected:L1583-1583:field:3",
+              "expected:L1583-1583:field:4",
+              "expected:L1583-1583:field:5",
+              "expected:L1583-1583:field:6"
             ]
           },
           {
@@ -216079,8 +216354,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
+              "expected:L1583-1583:field:0",
+              "expected:L1583-1583:field:1",
               "expected:L1583-1583:field:2",
-              "expected:L1583-1583:field:3"
+              "expected:L1583-1583:field:3",
+              "expected:L1583-1583:field:4",
+              "expected:L1583-1583:field:5",
+              "expected:L1583-1583:field:6"
             ]
           },
           {
@@ -216332,8 +216612,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
+              "expected:L1584-1584:field:0",
+              "expected:L1584-1584:field:1",
               "expected:L1584-1584:field:2",
-              "expected:L1584-1584:field:3"
+              "expected:L1584-1584:field:3",
+              "expected:L1584-1584:field:4",
+              "expected:L1584-1584:field:5",
+              "expected:L1584-1584:field:6"
             ]
           },
           {
@@ -216369,8 +216654,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
+              "expected:L1584-1584:field:0",
+              "expected:L1584-1584:field:1",
               "expected:L1584-1584:field:2",
-              "expected:L1584-1584:field:3"
+              "expected:L1584-1584:field:3",
+              "expected:L1584-1584:field:4",
+              "expected:L1584-1584:field:5",
+              "expected:L1584-1584:field:6"
             ]
           },
           {
@@ -216622,8 +216912,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
+              "expected:L1585-1585:field:0",
+              "expected:L1585-1585:field:1",
               "expected:L1585-1585:field:2",
-              "expected:L1585-1585:field:3"
+              "expected:L1585-1585:field:3",
+              "expected:L1585-1585:field:4",
+              "expected:L1585-1585:field:5",
+              "expected:L1585-1585:field:6"
             ]
           },
           {
@@ -216659,8 +216954,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
+              "expected:L1585-1585:field:0",
+              "expected:L1585-1585:field:1",
               "expected:L1585-1585:field:2",
-              "expected:L1585-1585:field:3"
+              "expected:L1585-1585:field:3",
+              "expected:L1585-1585:field:4",
+              "expected:L1585-1585:field:5",
+              "expected:L1585-1585:field:6"
             ]
           },
           {
@@ -216912,7 +217212,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
-              "expected:L1586-1586:field:2"
+              "expected:L1586-1586:field:0",
+              "expected:L1586-1586:field:1",
+              "expected:L1586-1586:field:2",
+              "expected:L1586-1586:field:3",
+              "expected:L1586-1586:field:4",
+              "expected:L1586-1586:field:5",
+              "expected:L1586-1586:field:6"
             ]
           },
           {
@@ -217200,7 +217506,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
-              "expected:L1587-1587:field:2"
+              "expected:L1587-1587:field:0",
+              "expected:L1587-1587:field:1",
+              "expected:L1587-1587:field:2",
+              "expected:L1587-1587:field:3",
+              "expected:L1587-1587:field:4",
+              "expected:L1587-1587:field:5",
+              "expected:L1587-1587:field:6"
             ]
           },
           {
@@ -217488,7 +217800,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
-              "expected:L1588-1588:field:2"
+              "expected:L1588-1588:field:0",
+              "expected:L1588-1588:field:1",
+              "expected:L1588-1588:field:2",
+              "expected:L1588-1588:field:3",
+              "expected:L1588-1588:field:4",
+              "expected:L1588-1588:field:5",
+              "expected:L1588-1588:field:6"
             ]
           },
           {
@@ -217776,7 +218094,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
-              "expected:L1589-1589:field:2"
+              "expected:L1589-1589:field:0",
+              "expected:L1589-1589:field:1",
+              "expected:L1589-1589:field:2",
+              "expected:L1589-1589:field:3",
+              "expected:L1589-1589:field:4",
+              "expected:L1589-1589:field:5",
+              "expected:L1589-1589:field:6"
             ]
           },
           {
@@ -218064,7 +218388,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
-              "expected:L1590-1590:field:2"
+              "expected:L1590-1590:field:0",
+              "expected:L1590-1590:field:1",
+              "expected:L1590-1590:field:2",
+              "expected:L1590-1590:field:3",
+              "expected:L1590-1590:field:4",
+              "expected:L1590-1590:field:5",
+              "expected:L1590-1590:field:6"
             ]
           },
           {
@@ -218352,7 +218682,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
-              "expected:L1591-1591:field:2"
+              "expected:L1591-1591:field:0",
+              "expected:L1591-1591:field:1",
+              "expected:L1591-1591:field:2",
+              "expected:L1591-1591:field:3",
+              "expected:L1591-1591:field:4",
+              "expected:L1591-1591:field:5",
+              "expected:L1591-1591:field:6"
             ]
           },
           {
@@ -218640,7 +218976,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
-              "expected:L1592-1592:field:2"
+              "expected:L1592-1592:field:0",
+              "expected:L1592-1592:field:1",
+              "expected:L1592-1592:field:2",
+              "expected:L1592-1592:field:3",
+              "expected:L1592-1592:field:4",
+              "expected:L1592-1592:field:5",
+              "expected:L1592-1592:field:6"
             ]
           },
           {
@@ -218928,7 +219270,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
-              "expected:L1593-1593:field:2"
+              "expected:L1593-1593:field:0",
+              "expected:L1593-1593:field:1",
+              "expected:L1593-1593:field:2",
+              "expected:L1593-1593:field:3",
+              "expected:L1593-1593:field:4",
+              "expected:L1593-1593:field:5",
+              "expected:L1593-1593:field:6"
             ]
           },
           {
@@ -219216,7 +219564,13 @@
             ],
             "role": "business_requirement",
             "target_ids": [
-              "expected:L1594-1594:field:2"
+              "expected:L1594-1594:field:0",
+              "expected:L1594-1594:field:1",
+              "expected:L1594-1594:field:2",
+              "expected:L1594-1594:field:3",
+              "expected:L1594-1594:field:4",
+              "expected:L1594-1594:field:5",
+              "expected:L1594-1594:field:6"
             ]
           },
           {
@@ -240128,7 +240482,11 @@
             ],
             "role": "business_requirement",
             "target_ids": [
-              "expected:L1793-1793:field:2"
+              "expected:L1793-1793:field:0",
+              "expected:L1793-1793:field:1",
+              "expected:L1793-1793:field:2",
+              "expected:L1793-1793:field:3",
+              "expected:L1793-1793:field:4"
             ]
           },
           {
@@ -240324,7 +240682,11 @@
             ],
             "role": "business_requirement",
             "target_ids": [
-              "expected:L1794-1794:field:2"
+              "expected:L1794-1794:field:0",
+              "expected:L1794-1794:field:1",
+              "expected:L1794-1794:field:2",
+              "expected:L1794-1794:field:3",
+              "expected:L1794-1794:field:4"
             ]
           },
           {
@@ -240520,7 +240882,11 @@
             ],
             "role": "business_requirement",
             "target_ids": [
-              "expected:L1795-1795:field:2"
+              "expected:L1795-1795:field:0",
+              "expected:L1795-1795:field:1",
+              "expected:L1795-1795:field:2",
+              "expected:L1795-1795:field:3",
+              "expected:L1795-1795:field:4"
             ]
           },
           {
@@ -241739,7 +242105,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 20,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -242225,7 +242591,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 35,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -243189,7 +243555,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 122,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -245910,7 +246276,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 66,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -248166,7 +248532,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 162,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -251820,7 +252186,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 50,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -253789,7 +254155,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 94,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -255948,7 +256314,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 29,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -256660,7 +257026,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 105,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -260512,7 +260878,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 69,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -260648,20 +261014,12 @@
           {
             "span": [
               0,
-              17
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L365-365:field:0"
-            ]
-          },
-          {
-            "span": [
-              17,
               18
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L365-365"
+            ]
           }
         ]
       },
@@ -263851,7 +264209,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 118,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -266791,7 +267149,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 354,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -280968,7 +281326,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 105,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -284332,7 +284690,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 90,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -286349,7 +286707,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 37,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -288024,7 +288382,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 46,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -290182,7 +290540,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 4,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -290439,7 +290797,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 70,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -292045,7 +292403,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 6,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -292337,7 +292695,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 54,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -293616,7 +293974,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 973,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -334303,7 +334661,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 45,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -335976,7 +336334,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 65,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -337707,7 +338065,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 32,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -338466,7 +338824,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 155,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -342360,7 +342718,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 120,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -346959,7 +347317,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 75,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -348871,7 +349229,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 25,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -349449,7 +349807,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 10,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -349715,7 +350073,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 45,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -350872,7 +351230,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 30,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -351638,7 +351996,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 16,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -352045,7 +352403,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 53,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -353690,7 +354048,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 174,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -363977,7 +364335,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 37,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -364819,7 +365177,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 15,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -365238,7 +365596,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 134,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -369349,7 +369707,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 69,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -370913,7 +371271,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 78,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -372498,20 +372856,12 @@
           {
             "span": [
               0,
-              1
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L889-889:field:0"
-            ]
-          },
-          {
-            "span": [
-              1,
               2
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L889-889"
+            ]
           }
         ]
       },
@@ -373045,7 +373395,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 73,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -375468,7 +375818,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 146,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -379923,7 +380273,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 15,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -380380,7 +380730,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 245,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -387222,7 +387572,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 339,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -396350,7 +396700,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 347,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -400923,20 +401273,12 @@
           {
             "span": [
               0,
-              3
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L481-481:field:0"
-            ]
-          },
-          {
-            "span": [
-              3,
               4
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L481-481"
+            ]
           }
         ]
       },
@@ -405016,7 +405358,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 20,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -405475,7 +405817,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 12,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -405794,7 +406136,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 176,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -413049,7 +413391,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 31,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -414151,7 +414493,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 84,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -416764,7 +417106,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 59,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -418014,20 +418356,12 @@
           {
             "span": [
               0,
-              65
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L208-208:field:0"
-            ]
-          },
-          {
-            "span": [
-              65,
               66
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L208-208"
+            ]
           }
         ]
       },
@@ -418343,7 +418677,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 117,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -418602,20 +418936,12 @@
           {
             "span": [
               0,
-              8
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L13-13:field:0"
-            ]
-          },
-          {
-            "span": [
-              8,
               9
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L13-13"
+            ]
           }
         ]
       },
@@ -419102,20 +419428,12 @@
           {
             "span": [
               0,
-              9
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L41-41:field:0"
-            ]
-          },
-          {
-            "span": [
-              9,
               10
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L41-41"
+            ]
           }
         ]
       },
@@ -421316,7 +421634,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 63,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -423018,7 +423336,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 10,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -423284,7 +423602,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 35,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -424091,7 +424409,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 34,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -424912,7 +425230,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 81,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -425324,20 +425642,12 @@
           {
             "span": [
               0,
-              99
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L1438-1438:field:0"
-            ]
-          },
-          {
-            "span": [
-              99,
               100
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L1438-1438"
+            ]
           }
         ]
       },
@@ -425420,20 +425730,12 @@
           {
             "span": [
               0,
-              317
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L1442-1442:field:0"
-            ]
-          },
-          {
-            "span": [
-              317,
               318
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L1442-1442"
+            ]
           }
         ]
       },
@@ -425516,20 +425818,12 @@
           {
             "span": [
               0,
-              393
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L1446-1446:field:0"
-            ]
-          },
-          {
-            "span": [
-              393,
               394
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L1446-1446"
+            ]
           }
         ]
       },
@@ -425788,20 +426082,12 @@
           {
             "span": [
               0,
-              224
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L1458-1458:field:0"
-            ]
-          },
-          {
-            "span": [
-              224,
               225
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L1458-1458"
+            ]
           }
         ]
       },
@@ -425818,20 +426104,12 @@
           {
             "span": [
               0,
-              52
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L1459-1459:field:0"
-            ]
-          },
-          {
-            "span": [
-              52,
               53
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L1459-1459"
+            ]
           }
         ]
       },
@@ -425870,20 +426148,12 @@
           {
             "span": [
               0,
-              78
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L1461-1461:field:0"
-            ]
-          },
-          {
-            "span": [
-              78,
               79
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L1461-1461"
+            ]
           }
         ]
       },
@@ -426010,20 +426280,12 @@
           {
             "span": [
               0,
-              134
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L1467-1467:field:0"
-            ]
-          },
-          {
-            "span": [
-              134,
               135
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L1467-1467"
+            ]
           }
         ]
       },
@@ -426062,20 +426324,12 @@
           {
             "span": [
               0,
-              5
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L1471-1471:field:0"
-            ]
-          },
-          {
-            "span": [
-              5,
               6
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L1471-1471"
+            ]
           }
         ]
       },
@@ -426224,20 +426478,12 @@
           {
             "span": [
               0,
-              156
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L1478-1478:field:0"
-            ]
-          },
-          {
-            "span": [
-              156,
               157
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L1478-1478"
+            ]
           }
         ]
       },
@@ -426276,20 +426522,12 @@
           {
             "span": [
               0,
-              5
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L1482-1482:field:0"
-            ]
-          },
-          {
-            "span": [
-              5,
               6
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L1482-1482"
+            ]
           }
         ]
       },
@@ -426438,20 +426676,12 @@
           {
             "span": [
               0,
-              144
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L1489-1489:field:0"
-            ]
-          },
-          {
-            "span": [
-              144,
               145
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L1489-1489"
+            ]
           }
         ]
       },
@@ -426490,20 +426720,12 @@
           {
             "span": [
               0,
-              5
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L1493-1493:field:0"
-            ]
-          },
-          {
-            "span": [
-              5,
               6
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L1493-1493"
+            ]
           }
         ]
       },
@@ -426872,7 +427094,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 90,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -426998,20 +427220,12 @@
           {
             "span": [
               0,
-              149
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L1514-1514:field:0"
-            ]
-          },
-          {
-            "span": [
-              149,
               150
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L1514-1514"
+            ]
           }
         ]
       },
@@ -427204,20 +427418,12 @@
           {
             "span": [
               0,
-              271
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L1523-1523:field:0"
-            ]
-          },
-          {
-            "span": [
-              271,
               272
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L1523-1523"
+            ]
           }
         ]
       },
@@ -427388,20 +427594,12 @@
           {
             "span": [
               0,
-              85
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L1531-1531:field:0"
-            ]
-          },
-          {
-            "span": [
-              85,
               86
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L1531-1531"
+            ]
           }
         ]
       },
@@ -427484,20 +427682,12 @@
           {
             "span": [
               0,
-              63
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L1536-1536:field:0"
-            ]
-          },
-          {
-            "span": [
-              63,
               64
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L1536-1536"
+            ]
           }
         ]
       },
@@ -427954,20 +428144,12 @@
           {
             "span": [
               0,
-              28
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L1559-1559:field:0"
-            ]
-          },
-          {
-            "span": [
-              28,
               29
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L1559-1559"
+            ]
           }
         ]
       },
@@ -427984,20 +428166,12 @@
           {
             "span": [
               0,
-              56
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L1560-1560:field:0"
-            ]
-          },
-          {
-            "span": [
-              56,
               57
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L1560-1560"
+            ]
           }
         ]
       },
@@ -428058,20 +428232,12 @@
           {
             "span": [
               0,
-              61
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L1563-1563:field:0"
-            ]
-          },
-          {
-            "span": [
-              61,
               62
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L1563-1563"
+            ]
           }
         ]
       },
@@ -428198,20 +428364,12 @@
           {
             "span": [
               0,
-              137
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L1569-1569:field:0"
-            ]
-          },
-          {
-            "span": [
-              137,
               138
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L1569-1569"
+            ]
           }
         ]
       },
@@ -428426,20 +428584,12 @@
           {
             "span": [
               0,
-              22
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L1579-1579:field:0"
-            ]
-          },
-          {
-            "span": [
-              22,
               23
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L1579-1579"
+            ]
           }
         ]
       },
@@ -429007,7 +429157,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 61,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -429221,38 +429371,12 @@
           {
             "span": [
               0,
-              512
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L1656-1656:field:0"
-            ]
-          },
-          {
-            "span": [
-              512,
-              514
-            ],
-            "role": "format_separator",
-            "target_ids": []
-          },
-          {
-            "span": [
-              514,
-              716
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L1656-1656:field:0"
-            ]
-          },
-          {
-            "span": [
-              716,
               717
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L1656-1656"
+            ]
           }
         ]
       },
@@ -429625,20 +429749,12 @@
           {
             "span": [
               0,
-              397
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L1676-1676:field:0"
-            ]
-          },
-          {
-            "span": [
-              397,
               398
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L1676-1676"
+            ]
           }
         ]
       },
@@ -429787,20 +429903,12 @@
           {
             "span": [
               0,
-              130
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L1685-1685:field:0"
-            ]
-          },
-          {
-            "span": [
-              130,
               131
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L1685-1685"
+            ]
           }
         ]
       },
@@ -429883,20 +429991,12 @@
           {
             "span": [
               0,
-              330
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L1689-1689:field:0"
-            ]
-          },
-          {
-            "span": [
-              330,
               331
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L1689-1689"
+            ]
           }
         ]
       },
@@ -429979,20 +430079,12 @@
           {
             "span": [
               0,
-              160
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L1695-1695:field:0"
-            ]
-          },
-          {
-            "span": [
-              160,
               161
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L1695-1695"
+            ]
           }
         ]
       },
@@ -430075,20 +430167,12 @@
           {
             "span": [
               0,
-              158
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L1699-1699:field:0"
-            ]
-          },
-          {
-            "span": [
-              158,
               159
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L1699-1699"
+            ]
           }
         ]
       },
@@ -430193,20 +430277,12 @@
           {
             "span": [
               0,
-              42
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L1704-1704:field:0"
-            ]
-          },
-          {
-            "span": [
-              42,
               43
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L1704-1704"
+            ]
           }
         ]
       },
@@ -430311,20 +430387,12 @@
           {
             "span": [
               0,
-              83
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L1709-1709:field:0"
-            ]
-          },
-          {
-            "span": [
-              83,
               84
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L1709-1709"
+            ]
           }
         ]
       },
@@ -430503,7 +430571,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 25,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -431099,7 +431167,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 41,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -432083,7 +432151,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 51,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -432537,20 +432605,12 @@
           {
             "span": [
               0,
-              17
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L457-457:field:0"
-            ]
-          },
-          {
-            "span": [
-              17,
               18
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L457-457"
+            ]
           }
         ]
       },
@@ -433029,20 +433089,12 @@
           {
             "span": [
               0,
-              19
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L481-481:field:0"
-            ]
-          },
-          {
-            "span": [
-              19,
               20
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L481-481"
+            ]
           }
         ]
       },
@@ -433147,20 +433199,12 @@
           {
             "span": [
               0,
-              6
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L486-486:field:0"
-            ]
-          },
-          {
-            "span": [
-              6,
               7
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L486-486"
+            ]
           }
         ]
       },
@@ -433243,20 +433287,12 @@
           {
             "span": [
               0,
-              20
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L491-491:field:0"
-            ]
-          },
-          {
-            "span": [
-              20,
               21
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L491-491"
+            ]
           }
         ]
       },
@@ -433440,7 +433476,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 55,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -433838,20 +433874,12 @@
           {
             "span": [
               0,
-              311
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L1918-1918:field:0"
-            ]
-          },
-          {
-            "span": [
-              311,
               312
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L1918-1918"
+            ]
           }
         ]
       },
@@ -433912,20 +433940,12 @@
           {
             "span": [
               0,
-              80
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L1922-1922:field:0"
-            ]
-          },
-          {
-            "span": [
-              80,
               81
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L1922-1922"
+            ]
           }
         ]
       },
@@ -434162,20 +434182,12 @@
           {
             "span": [
               0,
-              88
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L1939-1939:field:0"
-            ]
-          },
-          {
-            "span": [
-              88,
               89
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L1939-1939"
+            ]
           }
         ]
       },
@@ -434258,20 +434270,12 @@
           {
             "span": [
               0,
-              57
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L1944-1944:field:0"
-            ]
-          },
-          {
-            "span": [
-              57,
               58
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L1944-1944"
+            ]
           }
         ]
       },
@@ -434714,20 +434718,12 @@
           {
             "span": [
               0,
-              107
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L1972-1972:field:0"
-            ]
-          },
-          {
-            "span": [
-              107,
               108
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L1972-1972"
+            ]
           }
         ]
       },
@@ -434925,7 +434921,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 70,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -435843,20 +435839,12 @@
           {
             "span": [
               0,
-              44
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L2032-2032:field:0"
-            ]
-          },
-          {
-            "span": [
-              44,
               45
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L2032-2032"
+            ]
           }
         ]
       },
@@ -435873,20 +435861,12 @@
           {
             "span": [
               0,
-              104
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L2033-2033:field:0"
-            ]
-          },
-          {
-            "span": [
-              104,
               105
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L2033-2033"
+            ]
           }
         ]
       },
@@ -436619,7 +436599,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 114,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -436635,20 +436615,12 @@
           {
             "span": [
               0,
-              45
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L1718-1718:field:0"
-            ]
-          },
-          {
-            "span": [
-              45,
               46
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L1718-1718"
+            ]
           }
         ]
       },
@@ -436731,20 +436703,12 @@
           {
             "span": [
               0,
-              359
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L1726-1726:field:0"
-            ]
-          },
-          {
-            "span": [
-              359,
               360
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L1726-1726"
+            ]
           }
         ]
       },
@@ -436783,20 +436747,12 @@
           {
             "span": [
               0,
-              37
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L1730-1730:field:0"
-            ]
-          },
-          {
-            "span": [
-              37,
               38
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L1730-1730"
+            ]
           }
         ]
       },
@@ -436879,20 +436835,12 @@
           {
             "span": [
               0,
-              65
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L1736-1736:field:0"
-            ]
-          },
-          {
-            "span": [
-              65,
               66
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L1736-1736"
+            ]
           }
         ]
       },
@@ -436953,20 +436901,12 @@
           {
             "span": [
               0,
-              216
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L1740-1740:field:0"
-            ]
-          },
-          {
-            "span": [
-              216,
               217
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L1740-1740"
+            ]
           }
         ]
       },
@@ -437115,20 +437055,12 @@
           {
             "span": [
               0,
-              73
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L1752-1752:field:0"
-            ]
-          },
-          {
-            "span": [
-              73,
               74
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L1752-1752"
+            ]
           }
         ]
       },
@@ -437233,20 +437165,12 @@
           {
             "span": [
               0,
-              26
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L1760-1760:field:0"
-            ]
-          },
-          {
-            "span": [
-              26,
               27
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L1760-1760"
+            ]
           }
         ]
       },
@@ -437351,20 +437275,12 @@
           {
             "span": [
               0,
-              328
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L1768-1768:field:0"
-            ]
-          },
-          {
-            "span": [
-              328,
               329
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L1768-1768"
+            ]
           }
         ]
       },
@@ -437447,20 +437363,12 @@
           {
             "span": [
               0,
-              43
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L1773-1773:field:0"
-            ]
-          },
-          {
-            "span": [
-              43,
               44
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L1773-1773"
+            ]
           }
         ]
       },
@@ -437499,20 +437407,12 @@
           {
             "span": [
               0,
-              154
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L1777-1777:field:0"
-            ]
-          },
-          {
-            "span": [
-              154,
               155
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L1777-1777"
+            ]
           }
         ]
       },
@@ -437595,20 +437495,12 @@
           {
             "span": [
               0,
-              181
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L1782-1782:field:0"
-            ]
-          },
-          {
-            "span": [
-              181,
               182
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L1782-1782"
+            ]
           }
         ]
       },
@@ -437713,20 +437605,12 @@
           {
             "span": [
               0,
-              197
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L1789-1789:field:0"
-            ]
-          },
-          {
-            "span": [
-              197,
               198
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L1789-1789"
+            ]
           }
         ]
       },
@@ -437809,20 +437693,12 @@
           {
             "span": [
               0,
-              205
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L1795-1795:field:0"
-            ]
-          },
-          {
-            "span": [
-              205,
               206
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L1795-1795"
+            ]
           }
         ]
       },
@@ -438037,20 +437913,12 @@
           {
             "span": [
               0,
-              164
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L1812-1812:field:0"
-            ]
-          },
-          {
-            "span": [
-              164,
               165
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L1812-1812"
+            ]
           }
         ]
       },
@@ -438155,20 +438023,12 @@
           {
             "span": [
               0,
-              55
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L1819-1819:field:0"
-            ]
-          },
-          {
-            "span": [
-              55,
               56
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L1819-1819"
+            ]
           }
         ]
       },
@@ -438185,20 +438045,12 @@
           {
             "span": [
               0,
-              464
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L1821-1821:field:0"
-            ]
-          },
-          {
-            "span": [
-              464,
               465
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L1821-1821"
+            ]
           }
         ]
       },
@@ -438237,20 +438089,12 @@
           {
             "span": [
               0,
-              139
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L1825-1825:field:0"
-            ]
-          },
-          {
-            "span": [
-              139,
               140
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L1825-1825"
+            ]
           }
         ]
       },
@@ -438729,20 +438573,12 @@
           {
             "span": [
               0,
-              37
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L1864-1864:field:0"
-            ]
-          },
-          {
-            "span": [
-              37,
               38
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L1864-1864"
+            ]
           }
         ]
       },
@@ -438759,20 +438595,12 @@
           {
             "span": [
               0,
-              312
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L1866-1866:field:0"
-            ]
-          },
-          {
-            "span": [
-              312,
               313
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L1866-1866"
+            ]
           }
         ]
       },
@@ -438833,20 +438661,12 @@
           {
             "span": [
               0,
-              23
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L1870-1870:field:0"
-            ]
-          },
-          {
-            "span": [
-              23,
               24
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L1870-1870"
+            ]
           }
         ]
       },
@@ -438995,20 +438815,12 @@
           {
             "span": [
               0,
-              92
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L1878-1878:field:0"
-            ]
-          },
-          {
-            "span": [
-              92,
               93
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L1878-1878"
+            ]
           }
         ]
       },
@@ -439157,20 +438969,12 @@
           {
             "span": [
               0,
-              90
-            ],
-            "role": "business_requirement",
-            "target_ids": [
-              "expected:L1887-1887:field:0"
-            ]
-          },
-          {
-            "span": [
-              90,
               91
             ],
-            "role": "format_separator",
-            "target_ids": []
+            "role": "complete_prose",
+            "target_ids": [
+              "expected:L1887-1887"
+            ]
           }
         ]
       },
@@ -439349,7 +439153,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 29,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -440131,7 +439935,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 140,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -443689,7 +443493,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 83,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -445940,7 +445744,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 120,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -449433,7 +449237,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 25,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -450146,7 +449950,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 31,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -450855,7 +450659,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 57,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -452632,7 +452436,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 16,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -452992,7 +452796,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 20,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -453450,7 +453254,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 23,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -453965,7 +453769,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 13,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {
@@ -454278,7 +454082,7 @@
       "method": "complete_literal_partition_plus_explicit_business_requirements"
     },
     "targets": 14,
-    "groups_graded": 10,
+    "groups_graded": 12,
     "reference": "canonical_expected_only",
     "range_evidence": [
       {

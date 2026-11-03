@@ -18,6 +18,34 @@ def render_test_report(index, *, figures=False):
     return directory / "report.md"
 
 
+@pytest.mark.parametrize("missing", [False, True])
+def test_conversion_examples_read_public_files_and_never_reconstruct_private_evidence(tmp_path, missing):
+    from scripts.render_lite_report import collect_conversion_examples
+
+    before = tmp_path / "baseline.md"
+    after = tmp_path / "current.md"
+    before.write_text("## Operations\n\n| Item | 4 |\n")
+    if not missing:
+        after.write_text("## Operations\n\n- Item：Amount：4（单位：元）\n")
+    query = {"row_header_path": ["Item"], "column_header_path": ["Amount"], "identity": {"unit": "元"}}
+    field = {"native_id": "markdown:L3:0", "localization": {"query": query, "candidates": []},
+             "private_value": "forged internal value 9999"}
+    gain = {"sample_id": "invented", "target": "target", "kind": "business_field", "expected": {"value": "4"},
+            "before": {"outcome": "incorrect", "candidate": field},
+            "after": {"outcome": "correct", "candidate": field}}
+    groups = {"P08-baseline": [{"sample_id": "invented", "candidate_source": str(before)}],
+              "P08-current": [{"sample_id": "invented", "candidate_source": str(after)}]}
+    pairs = {"P08": {"new_correct": 1, "gains": [gain]}}
+    if missing:
+        with pytest.raises(ValueError, match="actual saved final.md"):
+            collect_conversion_examples(groups, pairs)
+    else:
+        [example] = collect_conversion_examples(groups, pairs)
+        assert "| Item | 4 |" in example["before"]["markdown"]
+        assert "Amount：4（单位：元）" in example["after"]["markdown"]
+        assert "forged" not in str(example)
+
+
 def invented_run(tmp_path, monkeypatch):
     expected = tmp_path / "expected"
     document = expected / "invented-document"
@@ -179,10 +207,11 @@ def test_missing_native_decision_cannot_become_an_invented_failure_stage():
         first_failure_stage("P07-current", {"outcome": "incorrect"}, None)
 
 
-def test_parallel_analysis_produces_identical_target_decisions_and_evidence(tmp_path, monkeypatch):
+@pytest.mark.parametrize("workers", [2, 16])
+def test_parallel_analysis_produces_identical_target_decisions_and_evidence(tmp_path, monkeypatch, workers):
     baseline, _, expected, freeze, _ = invented_run(tmp_path, monkeypatch)
     serial = evaluate_saved(baseline, tmp_path / "serial", expected_root=expected, freeze=freeze)
-    parallel = evaluate_saved(baseline, tmp_path / "parallel", expected_root=expected, freeze=freeze, workers=2)
+    parallel = evaluate_saved(baseline, tmp_path / "parallel", expected_root=expected, freeze=freeze, workers=workers)
     _, left = load_complete(serial)
     _, right = load_complete(parallel)
     assert {group: [score["outcomes"] for score in scores] for group, scores in left.items()} == {

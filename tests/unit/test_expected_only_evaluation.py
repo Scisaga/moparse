@@ -206,8 +206,15 @@ def test_same_business_fields_across_public_and_native_formats(tmp_path, format_
                      {"id": "v2", "text": "11", "row_header_path": ["Revenue"],
                       "column_header_path": ["2023"], "unit": "人民币百万元"}]
         output = {"sample_id": "invented", "pipeline": "arbitrary-name", "pages": [{"page": 1, "blocks": [
+            {"id": "heading", "kind": "heading", "text": "Results"},
             {"id": "table", "kind": "table", "cells": cells}]}]}
     assert all(row["outcome"] == "correct" for row in fields(grade_expected(expected, output)))
+    # These formats are equivalent only when the required parent scope is
+    # present too; the old positive fixture silently omitted that requirement.
+    missing_scope = deepcopy(output)
+    for page in missing_scope["pages"]:
+        page["blocks"] = [block for block in page["blocks"] if block.get("text") != "Results"]
+    assert all(row["outcome"] == "incorrect" for row in fields(grade_expected(expected, missing_scope)))
 
 
 def test_single_named_value_is_not_looked_up_in_another_column(tmp_path):
@@ -363,7 +370,7 @@ def test_printed_note_number_and_linked_body_are_compared_as_one_note(tmp_path):
     markdown = "## Results\n\n- Revenue: 2024: 17⁴; 2023: 11.\n\n4. A new high.\n"
     expected, _ = reference(tmp_path, markdown)
     math_literal = r"\\( 17^4 \\)"
-    actual = f"- Revenue；2024：{math_literal}（附注：4 A new high.）；2023：11。\n\n4. A new high.\n"
+    actual = f"## Results\n\n- Revenue；2024：{math_literal}（附注：4 A new high.）；2023：11。\n\n4. A new high.\n"
     assert fields(grade_expected(expected, candidate(actual)))[0]["outcome"] == "correct"
     assert fields(grade_expected(expected, candidate(actual.replace("4 A new high.", "4 A different condition."))))[0]["outcome"] == "incorrect"
 

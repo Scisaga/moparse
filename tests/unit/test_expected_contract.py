@@ -35,10 +35,11 @@ def business(score):
     "The board records the following conditions:",
     "事项说明：暂不支付；仍需独立批准。",
 ])
-def test_narrative_punctuation_never_creates_empty_or_partial_fields(tmp_path, text):
-    reference = expected(tmp_path, text + "\n")
+@pytest.mark.parametrize("prefix", ["", "- "])
+def test_narrative_punctuation_never_creates_empty_or_partial_fields(tmp_path, text, prefix):
+    reference = expected(tmp_path, prefix + text + "\n")
     assert not any(row.get("record") for row in reference["targets"])
-    score = grade_expected(reference, md(text))
+    score = grade_expected(reference, md(prefix + text))
     assert not business(score)
     assert score["text_metrics"]["reference_characters"] == len(text)
 
@@ -151,7 +152,10 @@ def test_explicit_heading_ownership_is_not_global_literal_presence(tmp_path):
     score = grade_expected(reference, md(wrong))
     paragraphs = [row for row in score["outcomes"] if row["kind"] == "text"]
     assert len(paragraphs) == 2 and all(row["outcome"] == "incorrect" for row in paragraphs)
-    assert all(row.get("context_evidence", {}).get("correct") is False for row in paragraphs)
+    # A similar paragraph inside the correct section may now be located, but
+    # its wording remains wrong. Exact foreign text must stay rejected.
+    assert all(any("heading_scope_conflict" in hit["reasons"]
+                   for hit in row["localization"]["candidates"]) for row in paragraphs)
 
 
 def test_expected_table_multi_fact_cell_is_not_one_opaque_value(tmp_path):

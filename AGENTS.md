@@ -1,5 +1,7 @@
 # MO-Parse project instructions
 
+User clarification dated 2026-11-03: saved-output scoring uses 16 CPU processes. This changes analysis parallelism only; keep the declared pipeline and isolated post-processing execution resources unchanged.
+
 The formal project name is **MO-Parse**. Keep existing `moparse` package names, configuration identifiers and public APIs compatible.
 
 ## Current output-evaluation task: expected is the sole acceptance standard
@@ -21,6 +23,8 @@ Keep two comparisons separate: P01-P08 native outputs under the common grader, a
 Latest user instruction, 2026-11-02: delete incorrect legacy scoring logic and its generated scores, reports, charts, temporary scripts and software copies. Do not archive them or retain compatibility entry points. Preserve canonical expected, corpus materials, valid native candidates, actual before/after Markdown and original processing costs. Current results must be recomputed with one validated scorer after grading-code changes.
 
 Saved Lite executions, candidates, measurements and scores belong in `benchmark/runs/lite/` and remain local. The sole maintained Lite report is `benchmark/reports/lite/report.md`, with methods and detailed evidence in its appendix and data files. Do not create parallel dated report entries for engineering iterations. Generic repository checks must exclude `benchmark/runs/`, including explicit-path invocations, just as they exclude report and corpus materials. Layout changes must preserve actual candidate bytes and measured durations and verify current scoring and report reproduction.
+
+Latest user instruction, 2026-11-03: update the owning documentation and continuation prompt, then complete the original unified evaluation, P07/P08 output work, report, commit and push using saved outputs; do not rerun pipeline inference. The observed scope-matching failure invalidates prior scoring-completion and zero-loss claims. Do not treat one user-provided example as the entire defect scope or substitute more framework prose for implementation and real-output diagnosis. Implement the retrieval contract in the evaluation tasks: retain textual hits, check each candidate's business identity and actual context, reject explicit conflicts, establish the position before comparing values, and retain the complete retrieval trace. Every candidate, including a unique hit, follows the same checks. Independent counterexamples and real-format end-to-end diagnosis must establish behavior before freezing and rescoring; test counts, reproducibility and report generation alone are insufficient.
 
 The corpus-authoring rules below apply to separately authorized creation, editing or review of corpus materials; they must not turn this output-evaluation task into corpus review or add a second acceptance standard. Current evaluation rules are owned by [evaluation tasks](benchmark/evaluation-tasks.md#current-task-expected-only), and the execution-ready continuation prompt is [expected output optimization](docs/engineering/prompts/expected-output-optimization.md). These current user instructions take precedence over conflicting historical prompts, reports and memory.
 

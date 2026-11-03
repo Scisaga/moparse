@@ -76,7 +76,7 @@ HTTP response
 
 ### 2.4 标题角色与级别来源
 
-2026-10-27追踪正式worker内Docling 2.139.0和docling-core 2.101.1：readingorder_model调用add_heading时未传level，原生SectionHeaderItem因此使用默认level=1；官方Markdown序列化将该级别显示为二级标题。HeadingHierarchyOptions.enabled默认关闭，本轮执行器未开启该额外阶段。标题角色、默认显示级别和真实多级层次预测必须区分，不能因存在level或Markdown井号便认定恢复了文档标题树。GLM分支的固定类别格式化见[P05标题来源](p05-glm-sdk.md#22-标题角色与级别来源)。评分器只据已声明级别和原生顺序读取作用域，本轮heading_of成绩不单独证明模型具有多级树恢复能力。
+2026-10-27追踪正式worker内Docling 2.139.0和docling-core 2.101.1：readingorder_model调用add_heading时未传level，原生SectionHeaderItem因此使用默认level=1；官方Markdown序列化将该级别显示为二级标题。HeadingHierarchyOptions.enabled默认关闭，本轮执行器未开启该额外阶段。标题角色、默认显示级别和真实多级层次预测必须区分，不能因存在level或Markdown井号便认定恢复了文档标题树。GLM分支的固定类别格式化见[P05标题来源](p05-glm-sdk.md#22-标题角色与级别来源)。评分器按expected明确归属、实际标题文字和原生顺序读取范围，默认显示级别不自动覆盖已有从属关系，本轮heading_of成绩不单独证明模型具有多级树恢复能力。
 
 ## 3. 研究侧读取与导出
 
@@ -93,7 +93,7 @@ GLM 固定以 `json_result` 为主要评分视图，`raw_json_result` 是独立�
 
 ## 5. 实现状态与验证项
 
-P01研究执行路径已修复，[P01工程预检02](../../benchmark/runs/lite/preflight/)独立完成同一清单的11个任务并提供本次冻结依据。本组保存quality800一次和perf80三轮的有效原生结果及测量；错误评分已删除，现已按同一新程序重评；结果只见[当前统一评测报告](../../benchmark/reports/lite/report.md)，状态与限制由[评测索引](../../benchmark/reports/README.md)维护。TTS只观测不控制，先前撤回测量不恢复；执行和自动评分完成不构成内容、Gold或图片内容验收。
+P01研究执行路径已修复，[P01工程预检02](../../benchmark/runs/lite/preflight/)独立完成同一清单的11个任务并提供本次冻结依据。本组保存quality800一次和perf80三轮的有效原生结果及测量；错误评分及结论已删除；本轮以完整身份、候选上下文和源位置核对后的同一程序重评，完成范围以评测索引为准；结果只见[当前统一评测报告](../../benchmark/reports/lite/report.md)，状态与限制由[评测索引](../../benchmark/reports/README.md)维护。TTS只观测不控制，先前撤回测量不恢复；执行和自动评分完成不构成内容、Gold或图片内容验收。
 
 研究执行器显式使用 TableFormer V1，Docling 阅读树、表格、媒体和共享 GLM 分支分别保存，与 P02 的模型选择不同。共享 GLM 已显式采用 native rotary，避开 vLLM 0.19.1 的 GPT-J MRoPE CUDA 配对缺陷；研究路径的旋转坐标交接和原生结果先行保全、局部导出错误隔离已修复。机制证据与修复边界见[执行层诊断](../../benchmark/diagnostics/README.md)，不据工程修复推定具体语料影响或解析成绩。
 

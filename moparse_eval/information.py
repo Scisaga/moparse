@@ -11,6 +11,7 @@ from app.utils.measurement import unit_applicable
 from .information_reading import (
     _SECTION_PERIOD,
     _scalar_units,
+    cjk_term_spacing,
     label_text,
     label_unit_suffix,
     label_views,
@@ -44,18 +45,18 @@ def period_text(text: str) -> str:
 @lru_cache(maxsize=8192)
 def business_scope_text(text: str) -> str:
     """Read explicit scope-path separators as heading layout, retaining words and IDs."""
-    text = label_text(normalize_text(text, collapse_whitespace=True))
-    text = re.sub(r"\s+/\s+", " ", text)
+    text = re.sub(r"\s*([/+])\s*", r"\1", normalize_text(text, collapse_whitespace=True))
+    text = label_text(text)
     return re.sub(r"(?<=[\u3400-\u9fff])\s+(?=[\u3400-\u9fff\d(])|(?<=[\d)])\s+(?=[\u3400-\u9fff(])", "", text)
 
 
 def field_value_text(text: str) -> str:
-    """Ignore display spacing beside an existing currency or percent symbol.
+    """Read declared symbol and CJK/Latin term edge display spacing.
 
     Digits, signs, decimal places, grouping marks and symbols are unchanged.
-    Spaces between digits or business words are never removed.
+    Spaces inside Latin words or between numeric-only terms are never removed.
     """
-    text = normalize_text(text, collapse_whitespace=True)
+    text = cjk_term_spacing(normalize_text(text, collapse_whitespace=True))
     scalar = re.fullmatch(r"([$€£¥]?)\s*([+\-−]?(?:\d+(?:[.,]\d+)*|\.\d+))\s*([%‰]?)", text)
     return "".join(scalar.groups()) if scalar else text
 
@@ -104,7 +105,11 @@ def path_locates(labels: list[str], native: Any, collapse_whitespace: bool) -> b
     pattern = left
     for index, label in enumerate(labels):
         if index:
-            pattern += r"\s*[-:：/]?\s*" if all(re.search(r"[^\W\d_]", item) for item in labels[index - 1:index + 1]) else r"\s*"
+            pair = labels[index - 1:index + 1]
+            dated_separator = bool(re.fullmatch(r"(?:19|20)\d{2}", pair[0])
+                                   and re.search(r"[A-Za-z]|[年月日]", pair[1]))
+            pattern += (r"\s*[-:：/]?\s*" if all(re.search(r"[^\W\d_]", item) for item in pair)
+                        else r"\s*/?\s*" if dated_separator else r"\s*")
         pattern += re.escape(label)
     pattern += right
     offsets = []
@@ -256,6 +261,9 @@ def endpoint_paths(labels: list[str], group: list[dict[str, Any]], axis: str,
     for depth, label in enumerate(labels):
         matches = [item for item in group if any(
             label_in_text(label, view, collapse_whitespace)
+            or axis=='column' and re.fullmatch(r'(?:19|20)\d{2}',label_text(label))
+            and (item['cell'].get('is_column_header') is True or item['cell'].get('information_header_body_rows') is not None)
+            and re.match(r'^'+re.escape(label_text(label))+r'\s*/(?:\s*[^\d\s]|\s*$)',label_text(view))
             or any(path_locates(labels[start:end], [view], collapse_whitespace)
                    for start in range(depth + 1) for end in range(depth + 1, len(labels) + 1))
             for view in label_views(item["cell"]))]
@@ -269,7 +277,8 @@ def endpoint_paths(labels: list[str], group: list[dict[str, Any]], axis: str,
                 any(label_text(view) == label_text(label)
                     or path_locates(labels, [view], collapse_whitespace)
                     and re.sub(r"[\s:：/\-]+", "", label_text(view)) == re.sub(r"[\s:：/\-]+", "", "".join(labels))
-                    or view.startswith(label) and label_unit_suffix(view, view[len(label):].strip(" ()（）"))
+                    or label_text(view).startswith(label_text(label))
+                    and label_unit_suffix(view,label_text(view)[len(label_text(label)):].strip(" ()（）"))
                     for view in label_views(item["cell"]))
             )]
         exact = [item for item in matches if label_text(item["text"]) == label_text(label)]
@@ -339,12 +348,17 @@ def qualifier_evidence(expected: dict[str, Any], cell: dict[str, Any],
         evidence["unit_applicability"] = {"status": "incorrect", "source": "printed_field_unit",
                                            "actual": explicit_unit}
     for key, value in expected.items():
-        if key == "unit" and key not in cell and isinstance(explicit_unit, str):
+        if key == "business_scope" and cell.get("information_business_scope_exclusion"):
+            evidence[key] = {"status": "incorrect", "source": "separate_direct_business_scope",
+                             "actual": cell["information_business_scope_exclusion"]}
+        elif key == "unit" and key not in cell and isinstance(explicit_unit, str):
             evidence[key] = {"status": "correct" if unit_text(value) == unit_text(explicit_unit) else "incorrect",
                              "source": "printed_label_unit", "actual": explicit_unit}
         elif key in cell:
             actual = cell[key]
-            if key == "note_texts" and isinstance(value, list) and isinstance(actual, list):
+            if key == 'parent_scopes' and isinstance(value,list) and isinstance(actual,list):
+                correct=[business_scope_text(label) for label in value]==[business_scope_text(label) for label in actual]
+            elif key == "note_texts" and isinstance(value, list) and isinstance(actual, list):
                 correct = {normalize_text(v, collapse_whitespace=True) for v in value} == {
                     normalize_text(v, collapse_whitespace=True) for v in actual}
             elif isinstance(value, str) and isinstance(actual, str):
@@ -369,7 +383,9 @@ def qualifier_evidence(expected: dict[str, Any], cell: dict[str, Any],
                 key == "period" and re.fullmatch(r"(?:19|20)\d{2}(?:年(?:度|末)?)?", value)
                 and len(set(re.findall(r"(?:19|20)\d{2}", item["actual"]))) > 1
             ) and ((key not in {"unit", "period", "business_scope"} and label_in_text(value, item["actual"], True))
-                        or key == "business_scope" and label_in_text(business_scope_text(value), business_scope_text(item["actual"]), True)
+                        or key == "business_scope" and (business_scope_text(value)==business_scope_text(item['actual'])
+                            or any(business_scope_text(value)==business_scope_text(part)
+                                   for part in re.split(r'\s+/\s+',item['actual'])))
                         or key == "period" and label_in_text(period_text(value), period_text(item["actual"]), True)
                         or key == "unit" and unit_text(value) == unit_text(item["actual"])
                         or normalize_text(value, collapse_whitespace=True) == normalize_text(item["actual"], collapse_whitespace=True)

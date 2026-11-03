@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import AsyncMock
@@ -93,7 +94,11 @@ def test_real_census_failed_state_keeps_page_position_and_source_through_http(tm
         assert unit.table_ids == [] and ir.tables == [] and parsed._source_regions == []
         assert "structure: unknown" in page.content and "source-page-image:" not in response.text
         assert page.content == unit.renderings.markdown
-        assert page.content in ir.renderings.markdown == response.text
+        # Final delivery removes internal source markers, while the unit keeps
+        # the original failure evidence and visible fallback content.
+        visible_page = re.sub(r"<!--.*?-->", "", page.content, flags=re.S).strip()
+        assert visible_page in ir.renderings.markdown == response.text
+        assert "<!-- source-page:" not in response.text
         assert "<!-- table-fragment:" not in response.text
         assert unit.diagnostics.quality_verdict == "untrusted"
         [unknown] = [region for region in unit.regions if region.region_type.value == "unknown"]
@@ -164,9 +169,10 @@ def test_malformed_neighbor_keeps_usable_regions_through_final_http(tmp_path):
         assert observed.posts == 1
         assert all(text in response.text for text in (
             "Usable preceding paragraph.", "Usable following paragraph.",
-            "Unverified complete words 42", "structure: unknown", "sdk_p6_t1", "17"))
+            "Unverified complete words 42", "17"))
         assert "<table" not in response.text
         [parsed] = observed.results
+        assert "structure: unknown" in parsed.pages[0].content
         assert [table.table_id for table in parsed.parse_result.tables] == ["sdk_p6_t1"]
         assert parsed.pages[0].status == PageStatus.FAILED
         assets = client.get(f"/v1/content/jobs/{job}/assets").json()

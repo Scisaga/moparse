@@ -16,16 +16,16 @@ from markdown_it import MarkdownIt
 from app.utils.measurement import unit_applicable
 
 from .adapters import html_cells, markdown_cells
-from .information_reading import currencies, metric_units, units
+from .information_reading import currencies, descriptive_column, metric_units, units
 from .metrics import normalize_text
 from .packaging import inside, read_json
 from .representations import visible_text
 
 MARKDOWN = MarkdownIt("commonmark", {"html": True}).enable("table")
 _COLON = re.compile(r"^([^:：\n]{1,512})[:：]\s*(.+)$", re.S)
-_YEAR = re.compile(r"^((?:19|20)\d{2}\s*年?)\s*[:：]?\s*(.+)$", re.S)
+_YEAR = re.compile(r"^((?:19|20)\d{2}(?:\s*年|(?=\s|[:：])))\s*[:：]?\s*(.+)$", re.S)
 _SCALAR = re.compile(r"^(?:\(?[$€£¥]?\s*[+\-−]?(?:\d[\d,. ]*|\.\d+)(?:\s*[%‰])?\)?(?:[⁰¹²³⁴⁵⁶⁷⁸⁹˒⁽⁾]+)?|[—–-])$")
-_IDENTITY = re.compile(r"[^:：;；]{0,30}(?:名称|名稱|全称|全稱|姓名|类别|類別|品类|品類|种类|種類)|关联方|關聯方|项目|項目|认购方|認購方|会议届次|會議屆次|会议内容|會議內容|Name|Item|(?:[A-Za-z]+\s+)?(?:Category|Type|Name)|Metric|Region|Segment|Ticker|(?:Security\s+)?codes?|证券代码|證券代碼", re.I)
+_IDENTITY = re.compile(r"[^:：;；]{0,30}(?:名称|名稱|全称|全稱|姓名|类别|類別|品类|品類|种类|種類|类型|類型)|关联方|關聯方|项目|項目|认购方|認購方|会议届次|會議屆次|会议内容|會議內容|Name|Item|(?:[A-Za-z]+\s+)?(?:Category|Type|Name)|Metric|Region|Segment|Ticker|(?:Security\s+)?codes?|证券代码|證券代碼", re.I)
 
 
 class ExpectedReadError(ValueError):
@@ -44,6 +44,7 @@ class Element:
     cells: list[dict[str, Any]] = field(default_factory=list)
     list_span: tuple[int, int] | None = None
     part_index: int | None = None
+    native_heading_level: int | None = None
 
 
 def inline_text(text: str) -> str:
@@ -95,7 +96,7 @@ def elements(markdown: str) -> list[Element]:
             if previous.type == "heading_open":
                 level = int(previous.tag[1:])
                 headings = [(n, t) for n, t in headings if n < level]
-                element = Element("heading", text, (a + 1, b), raw, tuple(t for _, t in headings))
+                element = Element("heading", text, (a + 1, b), raw, tuple(t for _, t in headings), native_heading_level=level)
                 headings.append((level, text))
             else:
                 image = token.children is not None and bool(token.children) and all(c.type in {"image", "softbreak", "hardbreak"}
@@ -161,8 +162,10 @@ def list_scope(parents: list[str]) -> dict[str, list[str]] | None:
             rows.append(pair[2].strip())
             columns = []
         else:
-            columns.append(_label(parent))
-    return {"rows": rows, "columns": columns} if rows else None
+            measurement_parent = pair and _measurement_literal(pair[2].strip()) and not re.fullmatch(
+                r'期间|期間|Period|年度|Year|日期|Date|单位|單位|Units?|币种|幣種|Currency',pair[1],re.I)
+            columns.append(_label(pair[1] if measurement_parent else parent))
+    return {"rows": rows or columns, "columns": columns if rows else []} if rows or columns else None
 
 
 def _row_path_units(path: list[str]) -> tuple[list[str], list[str]]:
@@ -219,9 +222,13 @@ def _pair(part: str):
     # A signed scalar is a value, never an implicit label followed by digits.
     if _SCALAR.fullmatch(part.strip()):
         return None
-    if re.search(r"[:：]\s*/\s+", part) or re.match(r"[A-Za-z][A-Za-z0-9+.-]*://", part):
+    if re.match(r"[A-Za-z][A-Za-z0-9+.-]*://", part):
         return None
     explicit = _explicit_pair(part)
+    if re.search(r"[:：]\s*/\s+", part):
+        # A path label may itself end with a colon. An explicit identity
+        # prefix still owns its complete value; it is not part of the label.
+        return explicit if explicit and _IDENTITY.fullmatch(explicit[1].strip()) else None
     if explicit:
         return explicit
     year = _YEAR.match(part)
@@ -288,6 +295,8 @@ def record(element: Element) -> dict[str, Any] | None:
     """Read explicit label/value syntax; no missing relationship is inferred."""
     if element.kind not in {"item", "text"}:
         return None
+    if re.fullmatch(r'[^:：\n]+[:：]\s*',element.text):
+        return None
     if element.kind == "text":
         if not re.search(r"[:：]", element.text):
             return None
@@ -346,7 +355,12 @@ def record(element: Element) -> dict[str, Any] | None:
                       for label in re.split(r"\s+/\s+", value) if label.strip()]
             substantive = [(key, value) for key, value in pairs
                            if not re.fullmatch(r"范围|範圍|Scope|单位|單位|Units?|期间|期間|Period|年度|日期|Date", key, re.I)]
-            if not identities and not parent_path:
+            classification_only = identities and all(re.fullmatch(
+                r"[^:：;；]{0,30}(?:类别|類別|品类|品類|种类|種類|类型|類型)|(?:[A-Za-z]+\s+)?(?:Category|Type)", key, re.I)
+                for key, _value in pairs if _IDENTITY.fullmatch(key))
+            primary_before_classification = (classification_only and substantive
+                and not _IDENTITY.fullmatch(substantive[0][0]))
+            if not parent_path and (not identities or primary_before_classification):
                 if substantive and _measurement_literal(_field(*substantive[0])["value"]):
                     key, literal = substantive[0]
                     fields = [_field(k, v) for k, v in pairs]
@@ -359,7 +373,8 @@ def record(element: Element) -> dict[str, Any] | None:
                 if (substantive and substantive[0][1] and not _measurement_literal(substantive[0][1])
                         and not re.fullmatch(r"附注|附註|注释|註釋|备注|備註|说明|說明|Note|Description|Comment", substantive[0][0], re.I)):
                     subject_assertion = substantive[0]
-                    identities = [label.strip() for label in re.split(r"\s+/\s+", substantive[0][1]) if label.strip()]
+                    identities = [*[label.strip() for label in re.split(r"\s+/\s+", substantive[0][1]) if label.strip()],
+                                  *(identities if primary_before_classification else [])]
                 else:
                     return None
             path = [*parent_path, *scopes, *identities]
@@ -457,7 +472,7 @@ def qualify_reference_record(parsed: dict[str, Any], caption_units: list[str], c
     for value in parsed["fields"]:
         if re.fullmatch(r"[（(]?原表留空[）)]?", value["value"]):
             value.update(authored_value=value["value"], value="", reference_blank=True)
-        if "unit" not in value and ((not _SCALAR.fullmatch(value["value"]) and not value.get("reference_blank")) or any(re.fullmatch(r"序号|序號|编号|編號|姓名|名称|名稱|Name|ID", key, re.I)
+        if "unit" not in value and (descriptive_column(value['column_header_path']) or (not _SCALAR.fullmatch(value["value"]) and not value.get("reference_blank")) or any(re.fullmatch(r"序号|序號|编号|編號|姓名|名称|名稱|Name|ID", key, re.I)
                                                        for key in value["column_header_path"])):
             value["unit"] = None
         effective_unit = value.get("unit", parsed.get("unit"))
@@ -596,6 +611,10 @@ def markdown_observation(markdown: str, *, sample_id: str, pipeline: str, pages:
                                  "text_format": "plain", "native_path": identifier,
                                  "provenance_pages": pages, "public_lines": list(element.lines)}
         block["public_list_parents"] = list(element.parents)
+        if element.list_span:
+            block['public_list_span']=list(element.list_span)
+        if element.kind == "heading":
+            block["heading_level"] = element.native_heading_level
         caption = bool(re.match(r"^(?:Table|附表|图表|圖表|表)\s*\d+(?:[.\-]\d+)*(?:[:：.]|\s)", element.text, re.I))
         parsed = None if caption else record(element)
         if caption:

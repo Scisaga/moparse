@@ -297,8 +297,8 @@ def evaluate_saved(baseline: Path, output: Path, *, expected_root: Path,
 
     identity = code_identity()
     frozen = read_scoring_freeze(freeze, identity)
-    if not 1 <= workers <= 8:
-        raise ValueError("analysis workers must be between 1 and 8")
+    if not 1 <= workers <= 16:
+        raise ValueError("analysis workers must be between 1 and 16")
     if output.resolve().is_relative_to(expected_root.resolve()):
         raise ValueError("evaluation output must be outside the read-only expected directory")
     baseline = baseline.resolve()

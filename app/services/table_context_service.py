@@ -14,52 +14,89 @@ from app.models.parse_result import DocumentParseResult
 from app.models.table_semantics import TextRef
 from app.services.table_service import TableFragment
 
-_SCALAR = re.compile(r"\(?\s*(?:(?:[<>]=?|[≤≥≧≦])\s*)?[$€£¥]?\s*[+\-−]?(?:\d[\d,.]*|\.\d+)\s*[%％‰]?\s*\)?|[—–-]")
+_SCALAR = re.compile(
+    r"\(?\s*(?:(?:[<>]=?|[≤≥≧≦])\s*)?[$€£¥]?\s*[+\-−]?(?:\d[\d,.]*|\.\d+)\s*[%％‰]?\s*\)?|[—–-]"
+)
 _PERIOD = re.compile(
     r"(?:19|20)\d{2}(?:\s*年(?:度|末)?)?|Year Ended|截至.{1,24}(?:年度|年末)|"
     r"第[一二三四1-4]季度(?:\s*[（(]\s*\d{1,2}\s*[-–—至]\s*\d{1,2}\s*月份?\s*[)）])?|"
-    r"(?<![A-Za-z0-9])Q[1-4](?![A-Za-z0-9])", re.I,
+    r"(?<![A-Za-z0-9])Q[1-4](?![A-Za-z0-9])",
+    re.I,
 )
-_MEASURE = re.compile(r"金额|金額|收入|成本|比率|比例|占|佔|同比|增减|增減|单位|單位|浓度|濃度|排放|数量|數量|Amount|Revenue|Cost|Change|Rate|Ratio|Balance|Total", re.I)
-_FIELD = re.compile(r"^(?:召开日期|召開日期|会议内容|會議內容|重要意见和建议|重要意見和建議|会议决议|會議決議|姓名|名称|名稱|职务|職務|日期|Name|Date|Position)$", re.I)
-_UNIT = re.compile(r"(?:人民币|人民幣)?(?:百万元|百萬元|千元|万元|萬元|元)|\$\s*(?:bn|m)|[%％‰]|(?:毫克|千克|公斤|吨|噸)(?:/[^()（）\s]+)?")
-_SECTION = re.compile(r"^\s*(?:[（(]\d+[)）]\s*)?((?:19|20)\d{2}\s*年度)[^。；;]{0,32}(?:情况|情況|数据|數據)\s*[:：]$")
-_IDENTITY = re.compile(r"项目|項目|项目名称|項目名稱|名称|名稱|姓名|股东名称|股東名稱|认购方|認購方|认购对象|認購對象|Name|Item|Project|Subscriber|Investor", re.I)
+_MEASURE = re.compile(
+    r"金额|金額|收入|成本|比率|比例|占|佔|同比|增减|增減|单位|單位|浓度|濃度|排放|数量|數量|Amount|Revenue|Cost|Change|Rate|Ratio|Balance|Total",
+    re.I,
+)
+_FIELD = re.compile(
+    r"^(?:召开日期|召開日期|会议内容|會議內容|重要意见和建议|重要意見和建議|会议决议|會議決議|姓名|名称|名稱|职务|職務|日期|Name|Date|Position)$",
+    re.I,
+)
+_UNIT = re.compile(
+    r"(?:人民币|人民幣)?(?:百万元|百萬元|千元|万元|萬元|元)|\$\s*(?:bn|m)|[%％‰]|(?:毫克|千克|公斤|吨|噸)(?:/[^()（）\s]+)?"
+)
+_SECTION = re.compile(
+    r"^\s*(?:[（(]\d+[)）]\s*)?((?:19|20)\d{2}\s*年度)[^。；;]{0,32}(?:情况|情況|数据|數據)\s*[:：]$"
+)
+_IDENTITY = re.compile(
+    r"项目|項目|项目名称|項目名稱|名称|名稱|姓名|股东名称|股東名稱|认购方|認購方|认购对象|認購對象|Name|Item|Project|Subscriber|Investor",
+    re.I,
+)
 _TABLE_MARKUP = re.compile(r"(?:<|&lt;)\s*/?\s*(?:table|tr|td|th)\b", re.I)
 
 
 def property_label(text: str) -> bool:
     """Recognize explicit property labels, never arbitrary grid prose."""
     text = text.strip().rstrip(":：")
-    return bool(_FIELD.fullmatch(text) or re.fullmatch(
-        r"(?:.{0,50}(?:名称|名稱|简称|簡稱|代码|代碼|地址|邮政编码|郵政編碼|网址|網址|"
-        r"电子信箱|電子信箱|电子邮箱|電子郵箱|法定代表人|上市交易所|注册资本|註冊資本|股数|股數|日期|姓名|"
-        r"注册地址历史变更情况|上市以来主营业务的变化情况\(如有\)))|"
-        r"股票种类|股票種類|证券种类|證券種類|性别|性別|年龄|年齡|"
-        r"Legal name|Registered address|Postal code|Website|Email|Stock code|Stock type|Exchange|Age|Gender",
-        re.sub(r"[（(]([^()（）]*)[）)]$", lambda match: "" if unit_description(match[1]) else match[0],
-               text.replace("（", "(").replace("）", ")")), re.I))
+    return bool(
+        _FIELD.fullmatch(text)
+        or re.fullmatch(
+            r"(?:.{0,50}(?:名称|名稱|简称|簡稱|代码|代碼|地址|邮政编码|郵政編碼|网址|網址|"
+            r"电子信箱|電子信箱|电子邮箱|電子郵箱|法定代表人|上市交易所|注册资本|註冊資本|股数|股數|日期|姓名|"
+            r"注册地址历史变更情况|上市以来主营业务的变化情况\(如有\)))|"
+            r"股票种类|股票種類|证券种类|證券種類|性别|性別|年龄|年齡|"
+            r"Legal name|Registered address|Postal code|Website|Email|Stock code|Stock type|Exchange|Age|Gender",
+            re.sub(
+                r"[（(]([^()（）]*)[）)]$",
+                lambda match: "" if unit_description(match[1]) else match[0],
+                text.replace("（", "(").replace("）", ")"),
+            ),
+            re.I,
+        )
+    )
 
 
 def _property_scopes(fragment: TableFragment) -> list[dict[str, Any]]:
     scopes = []
     for row in range(fragment.num_rows):
-        band = sorted((c for c in fragment.cells if c.row <= row < c.row + c.row_span), key=lambda c: c.column)
+        band = sorted(
+            (c for c in fragment.cells if c.row <= row < c.row + c.row_span), key=lambda c: c.column
+        )
         group = band[0] if len(band) % 2 and band[0].row_span > 1 else None
         items = band[1:] if group else band
         if not items or len(items) % 2:
             continue
         pairs = list(zip(items[::2], items[1::2], strict=True))
-        if not all(label.row == value.row == row and label.row_span == value.row_span == 1
-                   and property_label(label.text) and (not property_label(value.text)
-                       or label.text.rstrip().endswith((":", "："))) for label, value in pairs):
+        if not all(
+            label.row == value.row == row
+            and label.row_span == value.row_span == 1
+            and property_label(label.text)
+            and (not property_label(value.text) or label.text.rstrip().endswith((":", "：")))
+            for label, value in pairs
+        ):
             continue
-        scopes.append({"body_rows": [row], "complete": True,
-                       "evidence_source": "native_literal_property_schema",
-                       "evidence": {"literal_property_labels": True},
-                       "group": [group.row, group.column] if group else None,
-                       "pairs": [{"label": [label.row, label.column], "value": [value.row, value.column]}
-                                 for label, value in pairs]})
+        scopes.append(
+            {
+                "body_rows": [row],
+                "complete": True,
+                "evidence_source": "native_literal_property_schema",
+                "evidence": {"literal_property_labels": True},
+                "group": [group.row, group.column] if group else None,
+                "pairs": [
+                    {"label": [label.row, label.column], "value": [value.row, value.column]}
+                    for label, value in pairs
+                ],
+            }
+        )
     return scopes
 
 
@@ -77,14 +114,22 @@ def unit_description(text: str) -> bool:
         return False
     payload = re.sub(r"(?<=[\u3400-\u9fff])\s+(?=[\u3400-\u9fff])", "", literal[1])
     scale = r"[十百千万萬亿億]*"
-    amount = (rf"(?:(?:人民币|人民幣|美元|港元|港幣|港币|欧元|歐元)?{scale}元"
-              rf"|{scale}(?:美元|港元|港幣|港币|欧元|歐元)|人民币|人民幣)(?:/[^\s()（）]+)?")
-    currency = (r"(?:in\s+)?(?:[$€£¥]|USD|EUR|HKD|RMB|CNY)\s*"
-                r"(?:(?:in\s+)?(?:thousands?|millions?|billions?)|bn|m)?"
-                r"(?:,\s*except\s+per\s+share\s+(?:data|amounts))?")
+    amount = (
+        rf"(?:(?:人民币|人民幣|美元|港元|港幣|港币|欧元|歐元)?{scale}元"
+        rf"|{scale}(?:美元|港元|港幣|港币|欧元|歐元)|人民币|人民幣)(?:/[^\s()（）]+)?"
+    )
+    currency = (
+        r"(?:in\s+)?(?:[$€£¥]|USD|EUR|HKD|RMB|CNY)\s*"
+        r"(?:(?:in\s+)?(?:thousands?|millions?|billions?)|bn|m)?"
+        r"(?:,\s*except\s+per\s+share\s+(?:data|amounts))?"
+    )
     shares = r"[十百千万萬亿億]*股"
     physical = rf"{scale}(?:盎司|吨|噸|千克|公斤|毫克)(?:/[^\s()（）]+)?"
-    return bool(re.fullmatch(amount + "|" + currency + "|" + shares + "|" + physical + r"|[%％‰]", payload, re.I))
+    return bool(
+        re.fullmatch(
+            amount + "|" + currency + "|" + shares + "|" + physical + r"|[%％‰]", payload, re.I
+        )
+    )
 
 
 def unit_header(text: str) -> bool:
@@ -93,12 +138,24 @@ def unit_header(text: str) -> bool:
 
 def row_unit_description(text: str) -> bool:
     """Read a row's whole unit, including an explicitly labelled count scale."""
-    count_label = re.match(r"^(?:number\s+of\b|(?:retails?\s+)?(?:customers|contracts|employees|users|shares)\b)",
-                           text.strip(), re.I)
+    count_label = re.match(
+        r"^(?:number\s+of\b|(?:retails?\s+)?(?:customers|contracts|employees|users|shares)\b)",
+        text.strip(),
+        re.I,
+    )
     for part in re.finditer(r"[（(]([^()（）]+)[)）]", text):
-        if unit_description(part[0]) or part[1].strip().casefold() in {"days", "times"} or (count_label and re.fullmatch(
-                r"(?:in\s+)?(?:thousands?|millions?|billions?|contracts?|persons?|people|employees|users|shares)",
-                part[1].strip(), re.I)):
+        if (
+            unit_description(part[0])
+            or part[1].strip().casefold() in {"days", "times"}
+            or (
+                count_label
+                and re.fullmatch(
+                    r"(?:in\s+)?(?:thousands?|millions?|billions?|contracts?|persons?|people|employees|users|shares)",
+                    part[1].strip(),
+                    re.I,
+                )
+            )
+        ):
             return True
     return False
 
@@ -107,11 +164,15 @@ def _unit_caption(text: str) -> tuple[str, int] | None:
     wrapper = re.fullmatch(r"\s*[（(]\s*(.*?)\s*[)）]\s*", text, re.S)
     declaration = wrapper[1] if wrapper else text
     offset = wrapper.start(1) if wrapper else 0
-    match = re.fullmatch(r"\s*(?:货币单位|貨幣單位|单位|單位|Units?)\s*[:：]\s*(.+?)\s*", declaration, re.I | re.S)
+    match = re.fullmatch(
+        r"\s*(?:货币单位|貨幣單位|单位|單位|Units?)\s*[:：]\s*(.+?)\s*", declaration, re.I | re.S
+    )
     if match:
         currency = re.fullmatch(
             r"(.+?)\s+(?:币种|幣種|Currency)\s*[:：]\s*"
-            r"(?:人民币|人民幣|美元|港元|港币|港幣|欧元|歐元|RMB|CNY|USD|HKD|EUR)", match[1], re.I,
+            r"(?:人民币|人民幣|美元|港元|港币|港幣|欧元|歐元|RMB|CNY|USD|HKD|EUR)",
+            match[1],
+            re.I,
         )
         if unit_description("(" + (currency[1] if currency else match[1]) + ")"):
             return match[1], offset + match.start(1)
@@ -130,17 +191,31 @@ def closes_group(group: str, label: str) -> bool:
 def native_scopes(fragment: TableFragment) -> dict[str, Any]:
     """Classify local relationships from actual native fields, not grid shape."""
     cells = fragment.cells
-    evidence: dict[str, Any] = {"source": "native_cells_and_literal_context", "content_kind": "unknown",
-                                "header_scopes": [], "row_groups": {}, "retained_row_context": {},
-                                "structure_readable": False}
+    evidence: dict[str, Any] = {
+        "source": "native_cells_and_literal_context",
+        "content_kind": "unknown",
+        "header_scopes": [],
+        "row_groups": {},
+        "retained_row_context": {},
+        "structure_readable": False,
+    }
     if not fragment.valid or not cells or fragment.source_kind != "mineru":
         return evidence
     occupied: set[tuple[int, int]] = set()
     for c in cells:
-        slots = {(r, col) for r in range(c.row, c.row + c.row_span)
-                 for col in range(c.column, c.column + c.column_span)}
-        if c.row_span < 1 or c.column_span < 1 or occupied & slots or any(
-            r < 0 or col < 0 or r >= fragment.num_rows or col >= fragment.num_cols for r, col in slots
+        slots = {
+            (r, col)
+            for r in range(c.row, c.row + c.row_span)
+            for col in range(c.column, c.column + c.column_span)
+        }
+        if (
+            c.row_span < 1
+            or c.column_span < 1
+            or occupied & slots
+            or any(
+                r < 0 or col < 0 or r >= fragment.num_rows or col >= fragment.num_cols
+                for r, col in slots
+            )
         ):
             evidence["structure_readable"] = False
             return evidence
@@ -163,24 +238,35 @@ def native_scopes(fragment: TableFragment) -> dict[str, Any]:
             continue
         values = [c for c in band if c.column > 0 and scalar(c.text)]
         prior = [c for c in cells if header_start <= c.row < row]
-        field_header = len(prior) >= 2 and all(property_label(c.text) for c in prior if c.text.strip())
+        field_header = len(prior) >= 2 and all(
+            property_label(c.text) for c in prior if c.text.strip()
+        )
         date_value = any(re.fullmatch(r"\d{4}年\d{1,2}月\d{1,2}日", c.text.strip()) for c in band)
         stub = next((c for c in band if c.column == 0 and c.text.strip()), None)
         declared = all(c.is_column_header for c in band if c.text.strip())
-        dated_subheader = (any(c.column_span > 1 for c in prior)
-                           and any(c.column > 0 and re.match(r"(?:19|20)\d{2}", c.text.strip()) for c in band))
-        textual_record = (stub is not None and not declared and not dated_subheader
-                          and any(c.column > 0 and c.text.strip() for c in band)
-                          and not _PERIOD.fullmatch(stub.text.strip()) and not unit_description(stub.text))
+        dated_subheader = any(c.column_span > 1 for c in prior) and any(
+            c.column > 0 and re.match(r"(?:19|20)\d{2}", c.text.strip()) for c in band
+        )
+        textual_record = (
+            stub is not None
+            and not declared
+            and not dated_subheader
+            and any(c.column > 0 and c.text.strip() for c in band)
+            and not _PERIOD.fullmatch(stub.text.strip())
+            and not unit_description(stub.text)
+        )
         if values or field_header and date_value or textual_record:
             first_body = row
             break
     if first_body is None or first_body - header_start > 8:
         return evidence
-    empty_sections = [row for row in range(header_start + 1, first_body)
-                      if (band := [c for c in cells if c.row == row])
-                      and len([c for c in band if c.text.strip()]) == 1
-                      and any(c.column == 0 and c.text.strip() for c in band)]
+    empty_sections = [
+        row
+        for row in range(header_start + 1, first_body)
+        if (band := [c for c in cells if c.row == row])
+        and len([c for c in band if c.text.strip()]) == 1
+        and any(c.column == 0 and c.text.strip() for c in band)
+    ]
     if empty_sections:
         first_body = empty_sections[0]
     headers = [c for c in cells if header_start <= c.row < first_body]
@@ -189,7 +275,9 @@ def native_scopes(fragment: TableFragment) -> dict[str, Any]:
     # A leading key/value record is still data. A scalar can identify a
     # column only when its literal is a complete period, never an amount
     # borrowed from the first row to manufacture a measurement schema.
-    if any(c.column > 0 and scalar(c.text) and not _PERIOD.fullmatch(c.text.strip()) for c in headers):
+    if any(
+        c.column > 0 and scalar(c.text) and not _PERIOD.fullmatch(c.text.strip()) for c in headers
+    ):
         return evidence
     labels = [c.text.strip() for c in headers if c.text.strip()]
     # A named-record column can have an open-ended textual property such
@@ -197,19 +285,33 @@ def native_scopes(fragment: TableFragment) -> dict[str, Any]:
     # Alternating property lists instead have property labels in the next
     # row's stub, and must not be mistaken for column-oriented records.
     named_body = next((c for c in cells if c.row == first_body and c.column == 0), None)
-    named_header = (len(labels) >= 2 and any(identity_header(t) for t in labels)
-                    and not any(_PERIOD.search(t) or _MEASURE.search(t) or unit_header(t) or scalar(t)
-                                for t in labels if not identity_header(t))
-                    and named_body is not None and bool(named_body.text.strip())
-                    and not property_label(named_body.text) and not scalar(named_body.text))
+    named_header = (
+        len(labels) >= 2
+        and any(identity_header(t) for t in labels)
+        and not any(
+            _PERIOD.search(t) or _MEASURE.search(t) or unit_header(t) or scalar(t)
+            for t in labels
+            if not identity_header(t)
+        )
+        and named_body is not None
+        and bool(named_body.text.strip())
+        and not property_label(named_body.text)
+        and not scalar(named_body.text)
+    )
     field_header = len(labels) >= 2 and (all(property_label(t) for t in labels) or named_header)
-    if not field_header and not any(_PERIOD.search(t) or _MEASURE.search(t) or _UNIT.search(t) for t in labels):
+    if not field_header and not any(
+        _PERIOD.search(t) or _MEASURE.search(t) or _UNIT.search(t) for t in labels
+    ):
         return evidence
     # Row header columns may occupy a merged field label (group + record).
     first = next((c for c in headers if c.column == 0), None)
     row_cols = list(range(first.column_span)) if first else [0]
     if field_header:
-        subjects = [c for c in headers if re.fullmatch(r"会议内容|會議內容|姓名|名称|名稱|Name", c.text.strip(), re.I)]
+        subjects = [
+            c
+            for c in headers
+            if re.fullmatch(r"会议内容|會議內容|姓名|名称|名稱|Name", c.text.strip(), re.I)
+        ]
         if len(subjects) == 1 and subjects[0].column_span == 1:
             row_cols = [subjects[0].column]
     if first and re.fullmatch(r"序号|序號|Index|No\.?", first.text.strip(), re.I):
@@ -218,46 +320,85 @@ def native_scopes(fragment: TableFragment) -> dict[str, Any]:
             row_cols = [subjects[0].column]
     if len(row_cols) >= fragment.num_cols:
         return evidence
-    scope: dict[str, Any] = {"header_rows": list(range(header_start, first_body)),
-             "body_rows": list(range(first_body, fragment.num_rows)), "row_header_columns": row_cols,
-             "complete": True, "evidence_source": "native_literal_record_schema" if field_header else "native_literal_measurement_headers",
-             "evidence": {"explicit_record_fields": field_header, "scalar_body": not field_header}}
+    scope: dict[str, Any] = {
+        "header_rows": list(range(header_start, first_body)),
+        "body_rows": list(range(first_body, fragment.num_rows)),
+        "row_header_columns": row_cols,
+        "complete": True,
+        "evidence_source": "native_literal_record_schema"
+        if field_header
+        else "native_literal_measurement_headers",
+        "evidence": {"explicit_record_fields": field_header, "scalar_body": not field_header},
+    }
     scopes = [scope]
     for row in range(first_body + 1, fragment.num_rows):
         band = [c for c in cells if c.row == row]
         stub = next((c for c in band if c.column == 0), None)
-        repeat = bool(stub and first and stub.text.strip() and stub.text.strip() == first.text.strip()
-                and any(_PERIOD.search(c.text) or _MEASURE.search(c.text) for c in band if c.column > 0)
-                and all(not scalar(c.text) or _PERIOD.fullmatch(c.text.strip()) for c in band)
-                and all(c.row_span == 1 for c in band))
+        repeat = bool(
+            stub
+            and first
+            and stub.text.strip()
+            and stub.text.strip() == first.text.strip()
+            and any(_PERIOD.search(c.text) or _MEASURE.search(c.text) for c in band if c.column > 0)
+            and all(not scalar(c.text) or _PERIOD.fullmatch(c.text.strip()) for c in band)
+            and all(c.row_span == 1 for c in band)
+        )
         # A blank corner may introduce a complete new period band. Bare
         # numeric years could also be unnamed values, so require explicit
         # dated labels and the complete original single-row partition.
         dated = re.compile(r"(?:19|20)\d{2}\s*年(?:度|末)")
         changed_period = bool(
-            stub and not stub.text.strip() and first_body - header_start == 1
-            and len(band) == fragment.num_cols and all(c.row_span == c.column_span == 1 for c in band)
+            stub
+            and not stub.text.strip()
+            and first_body - header_start == 1
+            and len(band) == fragment.num_cols
+            and all(c.row_span == c.column_span == 1 for c in band)
             and all(c.row_span == c.column_span == 1 for c in headers)
             and sum(bool(dated.fullmatch(c.text.strip())) for c in band if c.column > 0) >= 2
-            and all(dated.fullmatch(c.text.strip()) or (not scalar(c.text) and len(c.text) <= 60
-                    and (_MEASURE.search(c.text) or re.search(r"[%％‰]", c.text))) for c in band if c.column > 0)
+            and all(
+                dated.fullmatch(c.text.strip())
+                or (
+                    not scalar(c.text)
+                    and len(c.text) <= 60
+                    and (_MEASURE.search(c.text) or re.search(r"[%％‰]", c.text))
+                )
+                for c in band
+                if c.column > 0
+            )
         )
         if repeat or changed_period:
             scopes[-1]["body_rows"] = [r for r in scopes[-1]["body_rows"] if r < row]
-            scopes.append({**scope, "header_rows": [row], "body_rows": list(range(row + 1, fragment.num_rows)),
-                           "evidence": {**scope["evidence"], "explicit_period_switch": changed_period}})
+            scopes.append(
+                {
+                    **scope,
+                    "header_rows": [row],
+                    "body_rows": list(range(row + 1, fragment.num_rows)),
+                    "evidence": {**scope["evidence"], "explicit_period_switch": changed_period},
+                }
+            )
     evidence.update(content_kind="data_table", header_scopes=scopes)
     header_rows = {row for scope in scopes for row in scope["header_rows"]}
-    evidence["field_scopes"] = [scope for scope in evidence["field_scopes"]
-                               if not header_rows.intersection(scope["body_rows"])]
-    evidence["title_cells"] = [[c.row, c.column] for c in cells if c.row < header_start
-                               and c.column == 0 and c.column_span == fragment.num_cols
-                               and c.text.strip() and not unit_header(c.text)]
+    evidence["field_scopes"] = [
+        scope
+        for scope in evidence["field_scopes"]
+        if not header_rows.intersection(scope["body_rows"])
+    ]
+    evidence["title_cells"] = [
+        [c.row, c.column]
+        for c in cells
+        if c.row < header_start
+        and c.column == 0
+        and c.column_span == fragment.num_cols
+        and c.text.strip()
+        and not unit_header(c.text)
+    ]
     _row_context(fragment, evidence, scopes)
     return evidence
 
 
-def _row_context(fragment: TableFragment, evidence: dict[str, Any], scopes: list[dict[str, Any]]) -> None:
+def _row_context(
+    fragment: TableFragment, evidence: dict[str, Any], scopes: list[dict[str, Any]]
+) -> None:
     """Keep literal section/list boundaries within a declared column scope."""
     cells = fragment.cells
     row_cols = scopes[-1].get("row_header_columns", [0])
@@ -269,19 +410,25 @@ def _row_context(fragment: TableFragment, evidence: dict[str, Any], scopes: list
         for row in body:
             band = [c for c in cells if c.row == row]
             labels_in_row = [c for c in band if c.column in row_cols and c.text.strip()]
-            if (len(labels_in_row) == 1
-                    and re.fullmatch(r"(?:加|减|減|Add|Less)\s*[:：]?", labels_in_row[0].text.strip(), re.I)
-                    and all(not c.text.strip() for c in band if c.column not in row_cols)):
+            if (
+                len(labels_in_row) == 1
+                and re.fullmatch(
+                    r"(?:加|减|減|Add|Less)\s*[:：]?", labels_in_row[0].text.strip(), re.I
+                )
+                and all(not c.text.strip() for c in band if c.column not in row_cols)
+            ):
                 beginnings.append(row)
         if beginnings:
             # No arithmetic or typography-based inference supplies an end.
             # Keep this region until the next independently declared header.
             operation_rows.extend(row for row in body if row >= min(beginnings))
     evidence["operation_rows"] = operation_rows
-    # A blank value band explicitly introduces a group. Numeric parent rows
-    # do not establish indentation that the producer did not preserve.
+    # A blank band can preserve an explicit section/list scope. The first
+    # text of a headerless continuation can also be an unfinished prior row;
+    # blank columns alone never establish that text as a new parent.
     group = None
     bulleted_group: bool | None = None
+    leading_continuation = bool(evidence.get("inherited_header_scope"))
     for row in range(first_body, fragment.num_rows):
         if any(row in s["header_rows"] for s in scopes):
             group = None
@@ -291,17 +438,34 @@ def _row_context(fragment: TableFragment, evidence: dict[str, Any], scopes: list
         labels_in_row = [c for c in band if c.column in row_cols and c.text.strip()]
         nonlabels = [c for c in band if c.column not in row_cols]
         title = labels_in_row[0].text.strip() if len(labels_in_row) == 1 else ""
-        if (re.fullmatch(r"(?:加|减|減|Add|Less)\s*[:：]?", title, re.I)
-                or re.match(r"(?:注|Notes?)\s*[:：]", title, re.I)):
+        if any(c.text.strip() for c in nonlabels):
+            leading_continuation = False
+        if (leading_continuation and title and not re.search(r"[:：]\s*$", title)
+                and not any(c.text.strip() for c in nonlabels)):
+            evidence.setdefault("unresolved_leading_context_rows", []).append(row)
+            group = None
+            bulleted_group = None
+            continue
+        if re.fullmatch(r"(?:加|减|減|Add|Less)\s*[:：]?", title, re.I) or re.match(
+            r"(?:注|Notes?)\s*[:：]", title, re.I
+        ):
             # Arithmetic instructions remain source text, never entity parents.
             group = None
             bulleted_group = None
             continue
-        full_width = (len(band) == 1 and band[0].column == 0
-                      and band[0].column_span == fragment.num_cols and band[0].row_span == 1)
-        if (len(labels_in_row) == 1 and (full_width or nonlabels and all(not c.text.strip() for c in nonlabels))
-                and len(title) <= 100 and not re.search(r"[。；;]", title)
-                and not re.match(r"(?:注|Notes?)\s*[:：]", title, re.I)):
+        full_width = (
+            len(band) == 1
+            and band[0].column == 0
+            and band[0].column_span == fragment.num_cols
+            and band[0].row_span == 1
+        )
+        if (
+            len(labels_in_row) == 1
+            and (full_width or nonlabels and all(not c.text.strip() for c in nonlabels))
+            and len(title) <= 100
+            and not re.search(r"[。；;]", title)
+            and not re.match(r"(?:注|Notes?)\s*[:：]", title, re.I)
+        ):
             group = (labels_in_row[0].row, labels_in_row[0].column)
             bulleted_group = None
         elif not labels_in_row:
@@ -325,7 +489,9 @@ def _row_context(fragment: TableFragment, evidence: dict[str, Any], scopes: list
             if bulleted_group is None:
                 bulleted_group = bullet
             closed = closes_group(group_cell.text, labels_in_row[-1].text)
-            sibling = bool(re.match(r"^[一二三四五六七八九十百]+[、.]", labels_in_row[-1].text.strip()))
+            sibling = bool(
+                re.match(r"^[一二三四五六七八九十百]+[、.]", labels_in_row[-1].text.strip())
+            )
             if not closed or not sibling:
                 evidence["row_groups"][str(row)] = list(group)
             if closed:
@@ -334,7 +500,9 @@ def _row_context(fragment: TableFragment, evidence: dict[str, Any], scopes: list
     _bounded_numbered_groups(fragment, evidence, scopes)
 
 
-def _bounded_numbered_groups(fragment: TableFragment, evidence: dict[str, Any], scopes: list[dict[str, Any]]) -> None:
+def _bounded_numbered_groups(
+    fragment: TableFragment, evidence: dict[str, Any], scopes: list[dict[str, Any]]
+) -> None:
     """Read complete literal numbered sections, not lost numeric indentation."""
     by_row: dict[int, list[Any]] = {}
     for cell in fragment.cells:
@@ -342,29 +510,53 @@ def _bounded_numbered_groups(fragment: TableFragment, evidence: dict[str, Any], 
 
     def measurement(row: int) -> Any:
         cells = by_row.get(row, [])
-        stub = next((c for c in cells if c.column == 0 and c.row_span == c.column_span == 1
-                     and c.text.strip()), None)
+        stub = next(
+            (
+                c
+                for c in cells
+                if c.column == 0 and c.row_span == c.column_span == 1 and c.text.strip()
+            ),
+            None,
+        )
         return stub if stub and any(c.column > 0 and scalar(c.text) for c in cells) else None
 
     numbered = re.compile(r"^([一二三四五六七八九十百]+)([、.])\s*\S")
     for scope in scopes:
-        if scope.get("row_header_columns", [0]) != [0] or scope.get("evidence", {}).get("explicit_record_fields"):
+        if scope.get("row_header_columns", [0]) != [0] or scope.get("evidence", {}).get(
+            "explicit_record_fields"
+        ):
             continue
         rows = scope["body_rows"]
-        parents = [(row, stub, match) for row in rows if (stub := measurement(row)) is not None
-                   and (match := numbered.match(stub.text.strip()))]
+        parents = [
+            (row, stub, match)
+            for row in rows
+            if (stub := measurement(row)) is not None
+            and (match := numbered.match(stub.text.strip()))
+        ]
         for (start, parent, opening), (end, _, closing) in zip(parents, parents[1:], strict=False):
             children = [row for row in rows if start < row < end]
-            if (opening[1] == closing[1] or opening[2] != closing[2]
-                    or not children or children != list(range(start + 1, end))):
+            if (
+                opening[1] == closing[1]
+                or opening[2] != closing[2]
+                or not children
+                or children != list(range(start + 1, end))
+            ):
                 continue
             labels = [measurement(row) for row in children]
-            if (any(label is None for label in labels)
-                    or not re.match(r"^其中\s*[:：]", labels[0].text.strip())
-                    or any(row in evidence.get("operation_rows", []) for row in children)
-                    or any(str(row) in evidence["row_groups"] for row in [start, *children])
-                    or any(re.match(r"^(?:注|Notes?)\s*[:：]|^(?:合计|合計|总计|總計|小计|小計|Total|Subtotal)(?:\s|$)",
-                                    label.text.strip(), re.I) for label in labels)):
+            if (
+                any(label is None for label in labels)
+                or not re.match(r"^其中\s*[:：]", labels[0].text.strip())
+                or any(row in evidence.get("operation_rows", []) for row in children)
+                or any(str(row) in evidence["row_groups"] for row in [start, *children])
+                or any(
+                    re.match(
+                        r"^(?:注|Notes?)\s*[:：]|^(?:合计|合計|总计|總計|小计|小計|Total|Subtotal)(?:\s|$)",
+                        label.text.strip(),
+                        re.I,
+                    )
+                    for label in labels
+                )
+            ):
                 continue
             for row in children:
                 evidence["row_groups"][str(row)] = [parent.row, parent.column]
@@ -386,7 +578,12 @@ def _literal_table_captions(blocks: list[Any], position: int) -> list[tuple[int,
     for index in range(position - 1, max(-1, position - 5), -1):
         block = blocks[index]
         if not isinstance(block, dict) or block.get("type") not in {
-                "text", "paragraph", "title", "paragraph_title", "table_caption"}:
+            "text",
+            "paragraph",
+            "title",
+            "paragraph_title",
+            "table_caption",
+        }:
             break
         text = _text(block).strip()
         if not text or _TABLE_MARKUP.search(text):
@@ -396,11 +593,21 @@ def _literal_table_captions(blocks: list[Any], position: int) -> list[tuple[int,
             if len(run) < 2:
                 return []
             title = run[1][1].strip()
-            if (len(title) > 80 or re.search(r"[。；;：:\n]|\bsee\b|\brefer\b", title, re.I)
-                    or _unit_caption(title) or re.fullmatch(r"[（(].*[)）]", title)):
+            if (
+                len(title) > 80
+                or re.search(r"[。；;：:\n]|\bsee\b|\brefer\b", title, re.I)
+                or _unit_caption(title)
+                or re.fullmatch(r"[（(].*[)）]", title)
+            ):
                 return []
-            if all(_unit_caption(value) or (re.fullmatch(r"\s*[（(][^()（）\n]{1,40}[)）]\s*", value)
-                       and not re.search(r"[=\\$<>]", value)) for _, value in run[2:]):
+            if all(
+                _unit_caption(value)
+                or (
+                    re.fullmatch(r"\s*[（(][^()（）\n]{1,40}[)）]\s*", value)
+                    and not re.search(r"[=\\$<>]", value)
+                )
+                for _, value in run[2:]
+            ):
                 return run
             return []
     return []
@@ -408,27 +615,44 @@ def _literal_table_captions(blocks: list[Any], position: int) -> list[tuple[int,
 
 def _refine_source_header_scopes(fragment: TableFragment, scopes: list[dict[str, Any]]) -> None:
     """Refine a coarser bound role range using its complete literal subranges."""
-    if (not fragment.pdf_evidence.get("bound") or len(fragment.source_header_scopes) != 1 or len(scopes) < 2
-            or not fragment.native_evidence.get("structure_readable")):
+    if (
+        not fragment.pdf_evidence.get("bound")
+        or len(fragment.source_header_scopes) != 1
+        or len(scopes) < 2
+        or not fragment.native_evidence.get("structure_readable")
+    ):
         return
     original = fragment.source_header_scopes[0]
-    if (not original.get("complete") or original.get("header_rows") != scopes[0].get("header_rows")
-            or any(not scope.get("evidence", {}).get("explicit_period_switch") for scope in scopes[1:])
-            or any(not scope.get("complete") or scope.get("evidence_source") != "native_literal_measurement_headers"
-                   or scope.get("row_header_columns", [0]) != original.get("row_header_columns", [0]) for scope in scopes)):
+    if (
+        not original.get("complete")
+        or original.get("header_rows") != scopes[0].get("header_rows")
+        or any(not scope.get("evidence", {}).get("explicit_period_switch") for scope in scopes[1:])
+        or any(
+            not scope.get("complete")
+            or scope.get("evidence_source") != "native_literal_measurement_headers"
+            or scope.get("row_header_columns", [0]) != original.get("row_header_columns", [0])
+            for scope in scopes
+        )
+    ):
         return
     declared = [row for scope in scopes for row in (*scope["header_rows"], *scope["body_rows"])]
     source_rows = [*original.get("header_rows", []), *original.get("body_rows", [])]
     if len(declared) != len(set(declared)) or sorted(declared) != sorted(source_rows):
         return
-    fragment.native_evidence["header_scope_refinement"] = {"original_scope": original,
-                                                          "reason": "complete_literal_subranges_of_bound_source_scope"}
+    fragment.native_evidence["header_scope_refinement"] = {
+        "original_scope": original,
+        "reason": "complete_literal_subranges_of_bound_source_scope",
+    }
     fragment.source_header_scopes = scopes
 
 
 def prepare_native_table_scopes(result: DocumentParseResult) -> None:
     for page, raw_blocks in result._native_page_blocks.items():
-        fragments = [f for f in result._table_fragments if isinstance(f, TableFragment) and f.page_number == page]
+        fragments = [
+            f
+            for f in result._table_fragments
+            if isinstance(f, TableFragment) and f.page_number == page
+        ]
         tables = [b for b in raw_blocks if isinstance(b, dict) and b.get("type") == "table"]
         # Multiple bodies or malformed tables retain their own existing data;
         # do not assign outside context through a guessed ordinal mapping.
@@ -447,7 +671,11 @@ def prepare_native_table_scopes(result: DocumentParseResult) -> None:
                 literal = tail[0].strip()
                 match = _SECTION.fullmatch(literal)
                 assert match is not None
-                section = position, match[1], tail.start() + len(tail[0]) - len(tail[0].lstrip()) + match.start(1)
+                section = (
+                    position,
+                    match[1],
+                    tail.start() + len(tail[0]) - len(tail[0].lstrip()) + match.start(1),
+                )
             elif section and re.match(r"^\s*[（(]\d+[)）]", text):
                 section = None
             if block.get("type") != "table":
@@ -464,17 +692,46 @@ def prepare_native_table_scopes(result: DocumentParseResult) -> None:
             # which the narrower native classifier does not recognize. Its
             # actual body still owns the adjacent caption; an empty native
             # proposal must not erase those declared relationships.
-            body = tuple(dict.fromkeys(r for s in [*fragment.source_header_scopes,
-                                                  *fragment.native_evidence.get("field_scopes", [])]
-                                       if s.get("complete") for r in s.get("body_rows", [])))
+            body = tuple(
+                dict.fromkeys(
+                    r
+                    for s in [
+                        *fragment.source_header_scopes,
+                        *fragment.native_evidence.get("field_scopes", []),
+                    ]
+                    if s.get("complete")
+                    for r in s.get("body_rows", [])
+                )
+            )
             columns = tuple(range(fragment.num_cols))
             context: list[TextRef] = []
 
-            def add(index: str, value: str, kind: Any, *, start: int = 0, refs: list[TextRef] = context,
-                    owner: TableFragment = fragment, number: int = page,
-                    rows: tuple[int, ...] = body, cols: tuple[int, ...] = columns) -> None:
+            def add(
+                index: str,
+                value: str,
+                kind: Any,
+                *,
+                start: int = 0,
+                refs: list[TextRef] = context,
+                owner: TableFragment = fragment,
+                number: int = page,
+                rows: tuple[int, ...] = body,
+                cols: tuple[int, ...] = columns,
+            ) -> None:
                 if value.strip():
-                    refs.append(TextRef(owner.fragment_id, number, index, value, kind, start, start + len(value), rows, cols))
+                    refs.append(
+                        TextRef(
+                            owner.fragment_id,
+                            number,
+                            index,
+                            value,
+                            kind,
+                            start,
+                            start + len(value),
+                            rows,
+                            cols,
+                        )
+                    )
 
             def caption(index: str, value: str) -> None:
                 # A malformed native caption can contain its complete table.
@@ -497,7 +754,10 @@ def prepare_native_table_scopes(result: DocumentParseResult) -> None:
             children = block.get("content", [])
             if isinstance(children, list):
                 for child_index, child in enumerate(children):
-                    if isinstance(child, dict) and child.get("type") in {"table_caption", "table_footnote"}:
+                    if isinstance(child, dict) and child.get("type") in {
+                        "table_caption",
+                        "table_footnote",
+                    }:
                         if child["type"] == "table_caption":
                             caption(f"{position}.{child_index}", _text(child))
                         else:
@@ -517,8 +777,11 @@ def prepare_native_table_scopes(result: DocumentParseResult) -> None:
                     previous -= 1
                     continue
                 if prior.get("type") == "table_caption":
-                    if (_TABLE_MARKUP.search(value) or re.search(
-                            r"参见|參見|见表|見表|\bsee\s+(?:also\s+)?(?:table|appendix)\b|\brefer\s+to\b", value, re.I)):
+                    if _TABLE_MARKUP.search(value) or re.search(
+                        r"参见|參見|见表|見表|\bsee\s+(?:also\s+)?(?:table|appendix)\b|\brefer\s+to\b",
+                        value,
+                        re.I,
+                    ):
                         break
                     if re.match(r"^\s*(?:附?表|Table|Appendix)\s*[A-Z]?\d+", value, re.I):
                         if numbered_caption:
@@ -527,32 +790,50 @@ def prepare_native_table_scopes(result: DocumentParseResult) -> None:
                     preceding.append((previous, value, "caption"))
                     previous -= 1
                     continue
-                elif (preceding and prior.get("type") in {"text", "paragraph"}
-                      and re.fullmatch(r"\s*[（(][^()（）\n]{1,40}[)）]\s*", value)
-                      and not re.search(r"[=\\$<>]", value)
-                      and previous > 0 and isinstance(raw_blocks[previous - 1], dict)
-                      and raw_blocks[previous - 1].get("type") == "table_caption"):
+                elif (
+                    preceding
+                    and prior.get("type") in {"text", "paragraph"}
+                    and re.fullmatch(r"\s*[（(][^()（）\n]{1,40}[)）]\s*", value)
+                    and not re.search(r"[=\\$<>]", value)
+                    and previous > 0
+                    and isinstance(raw_blocks[previous - 1], dict)
+                    and raw_blocks[previous - 1].get("type") == "table_caption"
+                ):
                     preceding.append((previous, value, "caption"))
                     previous -= 1
                     continue
-                elif (prior.get("type") in {"text", "paragraph", "list"}
-                      and not _TABLE_MARKUP.search(value)
-                      and _unit_caption(value) is not None):
+                elif (
+                    prior.get("type") in {"text", "paragraph", "list"}
+                    and not _TABLE_MARKUP.search(value)
+                    and _unit_caption(value) is not None
+                ):
                     preceding.append((previous, value, "unit"))
-                elif (prior.get("type") in {"text", "paragraph", "list"}
-                      and not _TABLE_MARKUP.search(value) and re.search(
-                          r"(?:following\s+table|下表|本表).*(?:percent(?:age)?|单位|單位)", value, re.I)):
+                elif (
+                    prior.get("type") in {"text", "paragraph", "list"}
+                    and not _TABLE_MARKUP.search(value)
+                    and re.search(
+                        r"(?:following\s+table|下表|本表).*(?:percent(?:age)?|单位|單位)",
+                        value,
+                        re.I,
+                    )
+                ):
                     # An explicit description of this table's metric is
                     # business scope, including for values already printed
                     # with a unit. Do not suppress it as a redundant legend.
                     preceding.append((previous, value, "title"))
-                elif (prior.get("type") in {"text", "paragraph", "list"} and not _TABLE_MARKUP.search(value)
-                      and value.rstrip().endswith((":", "："))
-                      and re.search(r"\bfollowing\b|如下|下表|本表", value, re.I)):
+                elif (
+                    prior.get("type") in {"text", "paragraph", "list"}
+                    and not _TABLE_MARKUP.search(value)
+                    and value.rstrip().endswith((":", "："))
+                    and re.search(r"\bfollowing\b|如下|下表|本表", value, re.I)
+                ):
                     preceding.append((previous, value, "title"))
-                elif (body and prior.get("type") in {"title", "paragraph_title"}
-                      and re.search(r"分季度[^。；;\n]{0,40}(?:数据|數據|指标|指標)\s*$", value)
-                      and not _TABLE_MARKUP.search(value)):
+                elif (
+                    body
+                    and prior.get("type") in {"title", "paragraph_title"}
+                    and re.search(r"分季度[^。；;\n]{0,40}(?:数据|數據|指标|指標)\s*$", value)
+                    and not _TABLE_MARKUP.search(value)
+                ):
                     preceding.append((previous, value, "title"))
                 break
             for index, value, kind in reversed(preceding):
@@ -560,7 +841,9 @@ def prepare_native_table_scopes(result: DocumentParseResult) -> None:
                     caption(str(index), value)
                 elif kind == "unit":
                     unit = _unit_caption(value)
-                    add(str(index), unit[0] if unit else value, "unit", start=unit[1] if unit else 0)
+                    add(
+                        str(index), unit[0] if unit else value, "unit", start=unit[1] if unit else 0
+                    )
                 else:
                     add(str(index), value, "title")
             for next_index in range(position + 1, len(raw_blocks)):
@@ -574,18 +857,256 @@ def prepare_native_table_scopes(result: DocumentParseResult) -> None:
                     break
                 add(str(next_index), value, "note")
             for cell in fragment.cells:
-                if cell.column == 0 and cell.column_span == fragment.num_cols and cell.row < min(body, default=0):
+                if (
+                    cell.column == 0
+                    and cell.column_span == fragment.num_cols
+                    and cell.row < min(body, default=0)
+                ):
                     caption(f"cell.{cell.row}.0", cell.text)
             fragment.context_refs = tuple(dict.fromkeys(context))
     _prepare_native_continuations(result)
 
 
-def _prepare_native_continuations(result: DocumentParseResult) -> None:
-    """Use an explicit producer continuation with complete local source paths.
+def _native_table_gap(
+    result: DocumentParseResult, left: TableFragment, right: TableFragment
+) -> dict[str, Any] | None:
+    """Locate separate actual native bodies and the typed blocks between them."""
+    locations = []
+    for fragment in (left, right):
+        blocks = result._native_page_blocks.get(fragment.page_number, [])
+        tables = [
+            (i, block)
+            for i, block in enumerate(blocks)
+            if isinstance(block, dict) and block.get("type") == "table"
+        ]
+        fragments = [
+            f
+            for f in result._table_fragments
+            if isinstance(f, TableFragment) and f.page_number == fragment.page_number
+        ]
+        if len(tables) != len(fragments) or not 1 <= fragment.ordinal <= len(tables):
+            return None
+        index, block = tables[fragment.ordinal - 1]
+        if block.get("export_error") or not _TABLE_MARKUP.search(_text(block)):
+            return None
+        locations.append((blocks, index))
+    between = [*locations[0][0][locations[0][1] + 1 :], *locations[1][0][: locations[1][1]]]
+    if any(
+        not isinstance(block, dict)
+        or block.get("type") not in {"header", "footer", "page_number"}
+        or block.get("export_error")
+        for block in between
+    ):
+        return None
+    return {
+        "left_native_block": [left.page_number, locations[0][1]],
+        "right_native_block": [right.page_number, locations[1][1]],
+        "intervening_roles": [block["type"] for block in between],
+    }
 
-    Physical tables and their cell identities stay separate. Missing declarations,
-    conflicting source evidence, local headers, intervening content and changed
-    column partitions block inheritance rather than borrow a nearby table.
+
+def _printed_caption_range(
+    result: DocumentParseResult, left: TableFragment, right: TableFragment
+) -> dict[str, Any] | None:
+    """Certify an uninterrupted scalar range with complete existing headers."""
+    if (
+        right.source_continues_prev is not None
+        or left.native_evidence.get("content_kind") != "data_table"
+        or not any(ref.kind in {"title", "unit", "period"} for ref in left.context_refs)
+    ):
+        return None
+    gap = _native_table_gap(result, left, right)
+    if gap is None:
+        return None
+    categorical = {}
+    scopes = [scope for scope in left.source_header_scopes if scope.get("complete")]
+    if scopes:
+        scope = scopes[-1]
+        for column in range(1, left.num_cols):
+            headers = [
+                cell
+                for cell in left.cells
+                if cell.row in scope.get("header_rows", [])
+                and cell.column <= column < cell.column + cell.column_span
+                and cell.text.strip()
+            ]
+            if not any(
+                re.fullmatch(
+                    r".{0,30}(?:关系|關係|类别|類別|类型|類型)|(?:[A-Za-z]+\s+)?(?:Relationship|Category|Type)",
+                    cell.text.strip(),
+                    re.I,
+                )
+                for cell in headers
+            ):
+                continue
+            prior = [
+                cell
+                for cell in left.cells
+                if cell.row in scope.get("body_rows", [])
+                and cell.column == column
+                and cell.column_span == cell.row_span == 1
+                and cell.text.strip()
+            ]
+            if prior and all(
+                len(cell.text.strip()) <= 80 and not re.search(r"[。;；!?！？\n]", cell.text)
+                for cell in prior
+            ):
+                categorical[column] = {
+                    "header_cells": [[cell.row, cell.column, cell.text] for cell in headers],
+                    "body_cells": [[cell.row, cell.column, cell.text] for cell in prior],
+                }
+    rows = 0
+    for row in range(right.num_rows):
+        band = sorted(
+            (cell for cell in right.cells if cell.row == row), key=lambda cell: cell.column
+        )
+        if len(band) == 1 and band[0].column == 0 and band[0].column_span == right.num_cols:
+            label = band[0].text.strip()
+            if label and (
+                not label.endswith((":", "："))
+                or re.search(r"[。；;\n]", label)
+                or re.match(r"^(?:加|减|減|Add|Less|注|Notes?)\s*[:：]", label, re.I)
+            ):
+                return None
+            continue
+        if (
+            len(band) != right.num_cols
+            or any(cell.row_span != 1 or cell.column_span != 1 for cell in band)
+            or not band[0].text.strip()
+            or scalar(band[0].text)
+            or any(
+                cell.text.strip()
+                and not scalar(cell.text)
+                and not (
+                    cell.text.strip() == "/"
+                    and re.fullmatch(
+                        r"合计|合計|总计|總計|小计|小計|Total|Subtotal", band[0].text.strip(), re.I
+                    )
+                )
+                and cell.text.strip()
+                not in {
+                    item[2].strip()
+                    for item in categorical.get(cell.column, {}).get("body_cells", [])
+                }
+                for cell in band[1:]
+            )
+        ):
+            return None
+        rows += 1
+    if not rows:
+        return None
+    return {
+        "source": "native_literal_caption_range",
+        "scope_refs": [
+            ref.token for ref in left.context_refs if ref.kind in {"title", "unit", "period"}
+        ],
+        **gap,
+        "scalar_rows": rows,
+        "literal_category_columns": categorical,
+        "producer_continuation_claimed": False,
+    }
+
+
+def _native_header_part_context(
+    context: dict[int, str], left: TableFragment, right: TableFragment, furniture: list[Any]
+) -> tuple[dict[int, str], list[dict[str, Any]]]:
+    """Recognize source-proven repeated top-margin header text.
+
+    This only affects a declared continuation or certified caption range's
+    guard view. A complete same-script component needs the immediately prior
+    typed header; an identical whole header can use an earlier typed header at
+    the same position. Public bytes remain present. Digits, units,
+    partial names, unlocated headers and new business words are never removed.
+    """
+
+    def parts(text):
+        if re.search(
+            r"\d|单位|單位|币种|幣種|人民币|人民幣|USD|RMB|CNY|HKD|EUR|Unit|Currency|[%‰$€£¥]",
+            text,
+            re.I,
+        ):
+            return []
+        chunks = []
+        current = ""
+        script = None
+        for char in text.strip():
+            kind = (
+                "cjk"
+                if "\u3400" <= char <= "\u9fff"
+                else "latin"
+                if char.isascii() and char.isalpha()
+                else None
+            )
+            if kind and script and kind != script:
+                chunks.append(current)
+                current = ""
+            if kind:
+                script = kind
+            if not char.isspace():
+                current += char
+        if current:
+            chunks.append(current)
+        return chunks
+
+    typed = {
+        (item.source_ref, item.page_number): item
+        for item in furniture
+        if item.label == "page_header"
+        and item.normalized_bbox is not None
+        and item.normalized_bbox[3] <= 0.15
+    }
+    previous = [item for item in typed.values() if item.page_number <= left.page_number]
+    result = context.copy()
+    proof = []
+    for item in typed.values():
+        if (
+            item.page_number != right.page_number
+            or result.get(item.page_number, "").count(item.rendered) != 1
+        ):
+            continue
+        literal = "".join(item.text.split())
+        if len(literal) < 3 or parts(item.text) != [literal]:
+            continue
+        for prior in previous:
+            a, b = prior.normalized_bbox, item.normalized_bbox
+            exact_repeat = literal == "".join(prior.text.split()) and all(
+                abs(x - y) <= 0.01 for x, y in zip(a, b, strict=True)
+            )
+            if (
+                (
+                    prior.page_number == left.page_number
+                    and literal in parts(prior.text)
+                    or exact_repeat
+                )
+                and a[0] - 0.01 <= b[0]
+                and a[1] - 0.01 <= b[1]
+                and b[2] <= a[2] + 0.01
+                and b[3] <= a[3] + 0.01
+            ):
+                result[item.page_number] = result[item.page_number].replace(item.rendered, "", 1)
+                proof.append(
+                    {
+                        "source_ref": item.source_ref,
+                        "preceding_source_ref": prior.source_ref,
+                        "preceding_page": prior.page_number,
+                        "method": "identical_positioned_header"
+                        if exact_repeat
+                        else "complete_prior_header_component",
+                        "literal_component": literal,
+                        "source_bbox": list(b),
+                        "preceding_bbox": list(a),
+                    }
+                )
+                break
+    return result, proof
+
+
+def _prepare_native_continuations(result: DocumentParseResult) -> None:
+    """Use complete source paths in a declared or printed native table scope.
+
+    Physical tables and their cell identities stay separate. A missing producer
+    flag requires a separate caption-range certificate. Conflicts, local headers,
+    intervening content and changed partitions always block header inheritance.
     """
     from dataclasses import replace
 
@@ -595,63 +1116,166 @@ def _prepare_native_continuations(result: DocumentParseResult) -> None:
         _table_context_pages,
     )
 
-    fragments = sorted((f for f in result._table_fragments if isinstance(f, TableFragment)),
-                       key=lambda f: (f.page_number, f.ordinal))
+    fragments = sorted(
+        (f for f in result._table_fragments if isinstance(f, TableFragment)),
+        key=lambda f: (f.page_number, f.ordinal),
+    )
     contents = {page.page_number: page.content or "" for page in result.pages}
     furniture = [f for f in result._page_furniture if isinstance(f, PageFurnitureFragment)]
     for left, right in zip(fragments, fragments[1:], strict=False):
-        def blocked(reason: str, *, owner: TableFragment = right, source: str = left.fragment_id,
-                    **details: Any) -> None:
+
+        def blocked(
+            reason: str,
+            *,
+            owner: TableFragment = right,
+            source: str = left.fragment_id,
+            **details: Any,
+        ) -> None:
             owner.native_evidence["continuation_scope_guard"] = {
-                "source_table_id": source, "reason": reason, **details,
+                "source_table_id": source,
+                "reason": reason,
+                **details,
             }
 
+        caption_range = None
+        literal_unit_range = None
         if right.source_continues_prev is not True:
-            continue
-        if (right.page_number != left.page_number + 1
-                or left.source_kind != "mineru" or right.source_kind != "mineru"
-                or left.num_cols != right.num_cols or right.source_header_scopes or right.header_row_indices
-                or not all(f.valid and f.native_evidence.get("structure_readable") for f in (left, right))
-                or right.pdf_evidence.get("inherited_header_scope")
-                or right.caption or right.unit_text or any(ref.kind != "note" for ref in right.context_refs)):
+            caption_range = _printed_caption_range(result, left, right)
+            if (
+                right.source_continues_prev is None
+                and left.num_cols == right.num_cols == 2
+                and any(ref.kind == "unit" for ref in left.context_refs)
+            ):
+                literal_unit_range = _native_table_gap(result, left, right)
+            if caption_range is None and literal_unit_range is None:
+                continue
+        if (
+            right.page_number != left.page_number + 1
+            or left.source_kind != "mineru"
+            or right.source_kind != "mineru"
+            or left.num_cols != right.num_cols
+            or right.source_header_scopes
+            or right.header_row_indices
+            or not all(
+                f.valid and f.native_evidence.get("structure_readable") for f in (left, right)
+            )
+            or right.pdf_evidence.get("inherited_header_scope")
+            or right.caption
+            or right.unit_text
+            or any(ref.kind != "note" for ref in right.context_refs)
+        ):
             blocked("incompatible_native_structure_or_existing_scope")
             continue
-        if any(re.search(r"disagree|conflict|ownership_ambiguous", str(f.pdf_evidence.get(key, "")))
-               for f in (left, right) for key in ("reason", "cell_box_attempt_reason")):
+        if any(
+            re.search(r"disagree|conflict|ownership_ambiguous", str(f.pdf_evidence.get(key, "")))
+            for f in (left, right)
+            for key in ("reason", "cell_box_attempt_reason")
+        ):
             blocked("source_conflict")
             continue
         scopes = [s for s in left.source_header_scopes if s.get("complete")]
-        if not scopes:
+        unit_only = literal_unit_range is not None and caption_range is None
+        if not scopes or unit_only:
+            # A physical continuation can retain its explicit unit legend
+            # without pretending that an unknown grid has semantic headers.
+            units = [ref for ref in left.context_refs if ref.kind == "unit"]
+            if (
+                (right.source_continues_prev is True or literal_unit_range is not None)
+                and left.num_cols == right.num_cols == 2
+                and units
+                and len({ref.text for ref in units}) == 1
+                and all(c.row_span == c.column_span == 1 for c in (*left.cells, *right.cells))
+                and all(
+                    c.column != 1 or not c.text.strip() or scalar(c.text)
+                    for c in (*left.cells, *right.cells)
+                )
+                and all(
+                    contents.get(f.page_number, "").count(f.rendered) == 1 for f in (left, right)
+                )
+            ):
+                context = _table_context_pages([left, right], contents, fragments, furniture)
+                context, parts = _native_header_part_context(context, left, right, furniture)
+                gap = (
+                    context[left.page_number].partition(left.rendered)[2],
+                    context[right.page_number].partition(right.rendered)[0],
+                )
+                if all(_context_evidence(text) == ({}, ()) for text in gap):
+                    body = tuple(range(right.num_rows))
+                    copied = tuple(
+                        replace(
+                            ref,
+                            table_id=right.fragment_id,
+                            block_id=f"continuation.{left.fragment_id}.{ref.block_id}",
+                            body_rows=body,
+                        )
+                        for ref in units
+                    )
+                    right.context_refs = (*right.context_refs, *copied)
+                    right.native_evidence["continuation_unit_context"] = {
+                        "source_table_id": left.fragment_id,
+                        "source_ref_tokens": [ref.token for ref in units],
+                        "scope_ref_tokens": [ref.token for ref in copied],
+                        "furniture_evidence": parts,
+                        "semantic_headers_inferred": False,
+                        "printed_unit_range": literal_unit_range,
+                    }
+                    right.native_evidence["continuation_scope_guard"] = {
+                        "source_table_id": left.fragment_id,
+                        "reason": "literal_unit_context_bound_without_headers",
+                    }
+                    continue
             blocked("missing_complete_preceding_headers")
             continue
         scope = scopes[-1]
+        if caption_range is not None and scope.get("evidence", {}).get("scalar_body") is not True:
+            blocked("caption_range_requires_measurement_schema")
+            continue
         rows = scope.get("header_rows")
-        if (not isinstance(rows, list) or not rows
-                or any(type(row) is not int or not 0 <= row < left.num_rows for row in rows)
-                or rows != list(range(rows[0], rows[-1] + 1))
-                or not isinstance(scope.get("body_rows"), list)
-                or not (scope["body_rows"][-1:] == [left.num_rows - 1]
-                        or not scope["body_rows"] and rows[-1] == left.num_rows - 1)
-                or left.num_rows - 1 in left.native_evidence.get("operation_rows", [])):
+        if (
+            not isinstance(rows, list)
+            or not rows
+            or any(type(row) is not int or not 0 <= row < left.num_rows for row in rows)
+            or rows != list(range(rows[0], rows[-1] + 1))
+            or not isinstance(scope.get("body_rows"), list)
+            or not (
+                scope["body_rows"][-1:] == [left.num_rows - 1]
+                or not scope["body_rows"]
+                and rows[-1] == left.num_rows - 1
+            )
+            or left.num_rows - 1 in left.native_evidence.get("operation_rows", [])
+        ):
             blocked("preceding_scope_does_not_reach_continuation")
             continue
         # Each field must keep the same complete column partition. A native
         # continuation flag never authorizes splitting a value across fields.
         row_cols = scope.get("row_header_columns", [0])
-        if row_cols != [0] or any(
-            c.column_span != 1 and not (c.column == 0 and c.column_span == right.num_cols)
-            for c in right.cells
-        ) or any(c.row_span != 1 for c in right.cells):
+        if (
+            row_cols != [0]
+            or any(
+                c.column_span != 1 and not (c.column == 0 and c.column_span == right.num_cols)
+                for c in right.cells
+            )
+            or any(c.row_span != 1 for c in right.cells)
+        ):
             blocked("incompatible_column_partitions")
             continue
         if any(contents.get(f.page_number, "").count(f.rendered) != 1 for f in (left, right)):
             blocked("physical_table_not_uniquely_located")
             continue
         context = _table_context_pages([left, right], contents, fragments, furniture)
+        furniture_evidence = []
+        if right.source_continues_prev is True or caption_range is not None:
+            context, furniture_evidence = _native_header_part_context(
+                context, left, right, furniture
+            )
         tail = context[left.page_number].partition(left.rendered)[2]
         prefix = context[right.page_number].partition(right.rendered)[0]
         if any(_context_evidence(text) != ({}, ()) for text in (tail, prefix)):
-            blocked("intervening_content", left_tail=_context_evidence(tail), right_prefix=_context_evidence(prefix))
+            blocked(
+                "intervening_content",
+                left_tail=_context_evidence(tail),
+                right_prefix=_context_evidence(prefix),
+            )
             continue
         # Complete nonempty measurement paths must exist for every value
         # column; headers crossing the body or spanning incompatible fields
@@ -660,23 +1284,51 @@ def _prepare_native_continuations(result: DocumentParseResult) -> None:
         if not headers or any(c.row + c.row_span > rows[-1] + 1 for c in headers):
             blocked("header_spans_cross_body")
             continue
-        if any(not any(c.text.strip() and c.column <= col < c.column + c.column_span for c in headers)
-               for col in range(1, right.num_cols)):
+        if any(
+            not any(c.text.strip() and c.column <= col < c.column + c.column_span for c in headers)
+            for col in range(1, right.num_cols)
+        ):
             blocked("missing_column_header_path")
             continue
         body = list(range(right.num_rows))
-        inherited = {"complete": True, "source_table_id": left.fragment_id,
-                     "source_page": left.page_number, "header_rows": list(rows),
-                     "source_column_groups": [[col] for col in range(right.num_cols)],
-                     "body_rows": body, "body_columns": list(range(right.num_cols)), "row_header_columns": row_cols,
-                     "evidence_source": "native_literal_declared_continuation",
-                     "evidence": {"explicit_record_fields": scope.get("evidence", {}).get("explicit_record_fields", False)}}
+        inherited = {
+            "complete": True,
+            "source_table_id": left.fragment_id,
+            "source_page": left.page_number,
+            "header_rows": list(rows),
+            "source_column_groups": [[col] for col in range(right.num_cols)],
+            "body_rows": body,
+            "body_columns": list(range(right.num_cols)),
+            "row_header_columns": row_cols,
+            "evidence_source": "native_literal_caption_range"
+            if caption_range
+            else "native_literal_declared_continuation",
+            "evidence": {
+                "explicit_record_fields": scope.get("evidence", {}).get(
+                    "explicit_record_fields", False
+                )
+            },
+        }
+        if caption_range:
+            inherited["caption_range"] = caption_range
+        if furniture_evidence:
+            inherited["furniture_evidence"] = furniture_evidence
         right.native_evidence["inherited_header_scope"] = inherited
-        right.native_evidence["continuation_scope_guard"] = {"source_table_id": left.fragment_id, "reason": "bound"}
+        right.native_evidence["continuation_scope_guard"] = {
+            "source_table_id": left.fragment_id,
+            "reason": "bound",
+        }
         right.native_evidence["content_kind"] = "data_table"
         _row_context(right, right.native_evidence, [{**inherited, "header_rows": []}])
         own_notes = tuple(replace(ref, body_rows=tuple(body)) for ref in right.context_refs)
-        inherited_context = tuple(replace(ref, table_id=right.fragment_id,
-                                           block_id=f"continuation.{left.fragment_id}.{ref.block_id}",
-                                           body_rows=tuple(body)) for ref in left.context_refs if ref.kind != "note")
+        inherited_context = tuple(
+            replace(
+                ref,
+                table_id=right.fragment_id,
+                block_id=f"continuation.{left.fragment_id}.{ref.block_id}",
+                body_rows=tuple(body),
+            )
+            for ref in left.context_refs
+            if ref.kind != "note"
+        )
         right.context_refs = (*own_notes, *inherited_context)

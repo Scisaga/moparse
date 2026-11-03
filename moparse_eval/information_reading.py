@@ -22,10 +22,42 @@ _PERIOD = re.compile(r"(?:截至[^。；;]{1,30}(?:年度|年末)|(?:19|20)\d{2}
 _INTRO = re.compile(r"(?:following\s+table|下表|本表|表中).*(?:percent(?:age)?|单位|單位)|(?:单位|單位|Units?)\s*[:：]", re.I)
 _PRINTED_CAPTION = re.compile(r"^(?:Table|附表|图表|圖表|表)[\s\-–—]*\d+(?:[.\-]\d+)*(?:[.:：]\s*|\s+)", re.I)
 _PRINTED_REPORT_TITLE = re.compile(
-    r"(?:(?:[^\s。；;:：]{1,80}(?:有限公司|股份公司))\s+)?(?:19|20)\d{2}\s*年?\s*年度(?:报告|報告)|"
+    r"(?:(?:[^\s。；;:：]{1,80}(?:有限公司|股份公司))\s*)?(?:19|20)\d{2}\s*年?\s*年度(?:报告|報告)|"
     r"Annual\s+Report\s+(?:19|20)\d{2}", re.I)
 _SECTION_PERIOD = re.compile(r"^\s*(?:[（(]\d+[)）]\s*)?((?:19|20)\d{2}\s*年度)[^。；;]{0,32}(?:情况|情況|数据|數據)\s*[:：]$")
 _SCALAR = re.compile(r"\(?\s*[$€£¥]?\s*[+\-−]?(?:\d[\d,.]*|\.\d+)\s*[%‰]?\s*\)?|[—–-]")
+
+
+def report_title_transition(text, kind, position, markers):
+    """An initial unqualified annual period alone does not open a new entity.
+
+    A different printed report year, a new complete company/report identity or
+    an explicit document-title role does. Only preceding candidate text is used.
+    """
+    if kind == 'doc_title':
+        return True
+
+    def identity(literal):
+        literal = normalize_text(literal, collapse_whitespace=True)
+        if not _PRINTED_REPORT_TITLE.fullmatch(literal):
+            return None
+        match = re.search(r'((?:19|20)\d{2})\s*年?\s*年度(?:报告|報告)$|Annual\s+Report\s+((?:19|20)\d{2})$', literal, re.I)
+        if match is None:
+            return None
+        company = literal[:match.start()].strip() if match[1] else ''
+        return company, match[1] or match[2]
+
+    current = identity(text)
+    if current is None:
+        return False
+    prior = sorted([(item['position'], found) for item in markers
+                    if item['position'] < position and (found := identity(item['text']))], key=lambda item:item[0])
+    if prior and prior[-1][1][1] != current[1]:
+        return True
+    if current[0]:
+        companies = [found for _where, found in prior if found[0]]
+        return not companies or companies[-1] != current
+    return False
 
 
 def currencies(text: str) -> list[str]:
@@ -118,7 +150,8 @@ def _year_end_comparison(headers: list[str], peers: list[str], contexts: list[di
     """Read 'this year end versus last year end' inside an explicit annual frame."""
     if not any(re.search(r"本年末比上年末", text) for text in headers):
         return None
-    scope = [item["text"] for item in contexts if item.get("kind") in {"period", "table_caption"}]
+    scope = [item["text"] for item in contexts if item.get("kind") in {"period", "table_caption"}
+             or item.get('readback_evidence')=='matched_complete_printed_scope']
     annual_years = {match[1] for text in scope for match in re.finditer(r"(?<!\d)((?:19|20)\d{2})\s*年\s*度", text)}
     scope_years = {year for text in scope for year in re.findall(r"(?<!\d)(?:19|20)\d{2}(?!\d)", text)}
     if len(annual_years) != 1 or scope_years != annual_years:
@@ -161,21 +194,47 @@ def unit_scope_literal(text: str) -> bool:
         or re.fullmatch(r"\$\s*in\s+millions(?:,\s*except\s+per\s+share\s+(?:data|amounts))?", unwrapped, re.I)))
 
 
+def cjk_term_spacing(text: str) -> str:
+    """Read CJK/Latin term edge spacing without joining words or numbers.
+
+    A term must contain a Latin letter. Its internal characters, numeric-only
+    runs and separators between Latin words remain literal. Raw diagnostics
+    never use this display-equivalence view.
+    """
+    term = r"[A-Za-z0-9]*[A-Za-z][A-Za-z0-9]*"
+    text = re.sub(r"(?<=[\u3400-\u9fff])\s+(?=" + term + r"(?:[^A-Za-z0-9]|$))", "", text)
+    return re.sub(r"(?<![A-Za-z0-9])(" + term + r")\s+(?=[\u3400-\u9fff])", r"\1", text)
+
+
 @lru_cache(maxsize=8192)
 def label_text(text: str) -> str:
     """A label may contain a separate unit suffix; never trim business words."""
-    text = normalize_text(text, collapse_whitespace=True)
+    text = cjk_term_spacing(normalize_text(text, collapse_whitespace=True))
     # Read typography in labels only. Values keep their original signs,
     # exponents, footnote spelling and strict-character diagnostics.
     text = text.translate(str.maketrans("⁰¹²³⁴⁵⁶⁷⁸⁹₀₁₂₃₄₅₆₇₈₉˒", "01234567890123456789,"))
     text = text.translate(str.maketrans("⁽⁾", "()"))
     text = text.replace("’", "'").replace("‘", "'")
+    text = text.replace('“','"').replace('”','"')
+    # Label typography may attach a printed note/unit parenthesis. Retain
+    # every glyph and spaces inside words/numbers; only its edge spacing varies.
+    text = re.sub(r'\s*([()])\s*',r'\1',text)
+    text = re.sub(r'\s*([<>≤≥=])\s*',r'\1',text)
     text = re.sub(r"(?<=\d)\s+(?=年|月|日)", "", text)
-    text = re.sub(r"^[-–—•]\s*(?=[^\W\d_])", "", text)
+    text = re.sub(r"^[-–—•·\uf06e]\s*(?=[^\W\d_])", "", text)
     text = re.sub(r"(January|February|March|April|May|June|July|August|September|October|November|December)(?=\d)", r"\1 ", text)
+    text = re.sub(r'((?:January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{1,2}),\s*((?:19|20)\d{2})',r'\1, \2',text)
     text = re.sub(r"^其中\s*[:：]\s*", "", text)
-    text = re.sub(r"\s*(?:\.{3,}|…{2,})$", "", text)
+    text = re.sub(r"\s*(?:\.{3,}|(?:\.\s+){2,}\.|…{2,})$", "", text)
     return text.rstrip(" :：")
+
+
+def descriptive_column(labels: list[str]) -> bool:
+    """A note column does not measure the amount in its neighboring column."""
+    nonempty=[label_text(label) for label in labels if str(label).strip()]
+    return bool(nonempty and re.fullmatch(
+        r'(?:附注|附註|备注|備註|注释|註釋|说明|說明|Notes?|Remarks?|Comments?|Description)'
+        r'(?:\((?:如适用|如適用|if applicable|[0-9]+)\))?',nonempty[-1],re.I))
 
 
 def label_views(cell: dict[str, Any]) -> list[str]:
@@ -373,12 +432,16 @@ def _prose_fields(block: dict[str, Any]) -> list[dict[str, Any]]:
     These are a scoring view of printed text, never a replacement native
     table or a business inference. Free text is retained as free text.
     """
-    if block.get("cells") or block.get("kind") in {"image", "picture", "figure", "image_body", "chart", "chart_body"}:
+    if block.get("cells") or block.get('information_following_literal') or block.get("kind") in {"image", "picture", "figure", "image_body", "chart", "chart_body"}:
         return []
     from .expected_readback import _IDENTITY, Element, _parts, record
     text = visible_text(str(block.get("text", "")), block.get("text_format", "plain"))
     records = []
-    for number, line in enumerate(text.splitlines()):
+    offset=0
+    for number, raw_line in enumerate(text.splitlines(keepends=True)):
+        line=raw_line.rstrip('\r\n')
+        start=offset
+        offset+=len(raw_line)
         parts = _parts(line)
         pairs = []
         subjects: list[str] = []
@@ -408,7 +471,7 @@ def _prose_fields(block: dict[str, Any]) -> list[dict[str, Any]]:
                     for key, value in pairs if re.fullmatch(r"单位|單位|Units?", key, re.I)]
         context += [{"id": block.get("id"), "kind": "explicit_table_introduction", "text": "Unit:" + key}
                     for key, _value in unit_subjects]
-        scopes = [{"id": block.get("id"), "kind": "table_caption", "text": value}
+        scopes = [{"id": block.get("id"), "kind": "table_caption", "text": value, "explicit_scope_path": True}
                   for key, value in pairs if re.fullmatch(r"范围|範圍|Scope", key, re.I)]
         identity = f"{block.get('id', 'text')}:record:{number}"
         cells = [{"id": f"{identity}:field:{index}", "text": value,
@@ -447,6 +510,9 @@ def _prose_fields(block: dict[str, Any]) -> list[dict[str, Any]]:
                     "row_header_path": assertion["row_header_path"], "column_header_path": [],
                     "information_context": [*context, *scopes], "native_path": block.get("native_path"),
                     **{key: assertion[key] for key in ("unit", "period", "notes", "currency") if key in assertion}})
+        for cell in cells:
+            cell['information_source_span']=[start,start+len(line)]
+            cell['information_source_block']=block.get('id')
         records.append({**block, "id": identity, "text": "", "cells": cells,
                         "kind": "text_record", "readback_evidence": "printed_key_value_record"})
     return records
@@ -454,27 +520,12 @@ def _prose_fields(block: dict[str, Any]) -> list[dict[str, Any]]:
 
 def read_information_observation(observation: dict[str, Any]) -> dict[str, Any]:
     derived = copy.deepcopy(observation)
-    annual = [block for page in derived.get("pages", []) for block in page.get("blocks", [])
-              if (block.get("kind") in {"header", "title", "heading"}
-                  or block.get("kind") in {"text", "paragraph"}
-                  and _PRINTED_REPORT_TITLE.fullmatch(visible_text(str(block.get("text", "")),
-                      block.get("text_format", "plain")).strip()))
-              and re.search(r"(?:19|20)\d{2}\s*年?\s*年度报告|Annual\s+Report\s+(?:19|20)\d{2}", str(block.get("text", "")), re.I)]
-    annual_years = {year for block in annual for year in re.findall(r"(?:19|20)\d{2}", str(block.get("text", "")))}
-    report_period = ({"id": annual[0].get("id"), "text": annual[0]["text"], "kind": "period"}
-                     if len(annual_years) == 1 else None)
+    from .candidate_sequences import read_colon_value_pairs
+    read_colon_value_pairs(derived)
     business_heading: dict[str, Any] | None = None
     for page in derived.get("pages", []):
         blocks = page.get("blocks", [])
         prose = [record for block in blocks for record in _prose_fields(block)]
-        if report_period:
-            for record in prose:
-                for cell in record["cells"]:
-                    if not any(re.search(r"(?:19|20)\d{2}", text) for text in [
-                        *cell["column_header_path"], *cell.get("periods", []),
-                        *(item["text"] for item in cell["information_context"]),
-                    ]):
-                        cell["information_context"].append(report_period)
         section: dict[str, Any] | None = None
         for position, block in enumerate(blocks):
             text = visible_text(str(block.get("text", "")), block.get("text_format", "plain"))
@@ -608,11 +659,6 @@ def read_information_observation(observation: dict[str, Any]) -> dict[str, Any]:
                     if len({year for text in record_headers for year in re.findall(r"(?:19|20)\d{2}", text)}) >= 2:
                         cell["information_comparison_periods"] = [text for text in record_headers
                             if re.search(r"(?:截至|於|于)[一二三四五六七八九十\d]{1,3}月[一二三四五六七八九十\d]{1,3}日止年度", text)]
-                if report_period and not any(re.search(r"(?:19|20)\d{2}|[二零〇一三四五六七八九]{4}年", text)
-                        for text in [*cell["information_headers"], *cell.get("column_header_path", []),
-                                     *cell.get("periods", []),
-                                     *(item["text"] for item in cell["information_context"])]):
-                    cell["information_context"] = [*cell["information_context"], report_period]
                 # Only the active grid header band or this very printed
                 # record can supply endpoints. Other rows and tables cannot.
                 relative_headers = [*cell["information_headers"], *cell.get("column_header_path", [])]
@@ -633,9 +679,13 @@ def read_information_observation(observation: dict[str, Any]) -> dict[str, Any]:
             # A cell may explicitly print several labelled measurements. Expose
             # each assertion with this cell's own row/header/context evidence.
             # The original text and grid remain present, without answer input.
+            from .candidate_sequences import read_compound_measurement_labels
             from .expected_readback import _pairs
+            metric_values, compound_label_ids = read_compound_measurement_labels(cells,all_headers)
             assertions = []
             for cell in cells:
+                if cell.get('id') in compound_label_ids:
+                    continue
                 pairs = _pairs(str(cell.get("text", "")))
                 if not pairs or not all(value.strip() for _, value in pairs):
                     continue
@@ -649,10 +699,70 @@ def read_information_observation(observation: dict[str, Any]) -> dict[str, Any]:
                         "column_header_path": [*cell.get("information_headers", []), key],
                         "readback_evidence": {"cell": cell.get("native_path", cell.get("id")),
                                               "literal": cell["text"], "label": key, "value": value}})
-            block["cells"] = [*cells, *_numbered_record_labels(cells), *assertions]
+            block["cells"] = [*cells, *_numbered_record_labels(cells), *assertions, *metric_values]
             for cell in block["cells"]:
                 cell["information_label_views"] = label_views(cell)
         page["blocks"] = [*blocks, *prose]
+    # Explicit initial document metadata may be split into adjacent native
+    # text blocks. Read the same record without requiring the export to put
+    # every key/value on one line; preserve each field's actual source.
+    for page in derived.get('pages',[])[:1]:
+        members=[]
+        metadata_title=None
+        for block in page.get('blocks',[]):
+            if block.get('kind')=='text_record':
+                continue
+            literal=visible_text(str(block.get('text','')),block.get('text_format','plain')).strip()
+            title=(block.get('kind') in {'heading','title','doc_title','paragraph_title','section_header'}
+                   or block.get('text_format')=='markdown' and re.match(r'^\s*#{1,6}\s+',str(block.get('text',''))))
+            if title:
+                metadata_title=block.get('id')
+                break
+            if not literal and not block.get('cells'):
+                continue
+            if len(literal)>240 or not re.search(r'[:：]',literal) or re.search(r'[。!?！？]',literal):
+                members=[]
+                break
+            if block.get('cells'):
+                if not any(cell.get('public_record_literal') for cell in block['cells']):
+                    members=[]
+                    break
+                members.extend({**cell,'information_source_span':[0,len(literal)],
+                                'information_source_block':block.get('id'),
+                                'provenance_pages':cell.get('provenance_pages') or block.get('provenance_pages') or [page.get('page')]}
+                               for cell in block['cells'] if cell.get('column_header_path'))
+            else:
+                exposed=[cell for record in _prose_fields(block) for cell in record['cells']
+                         if cell.get('column_header_path')]
+                # A document identifier need not be a scalar or a word-only
+                # name. Its explicit metadata key/value still remains literal.
+                if not exposed and (pair:=re.fullmatch(r'([^:：;；]+)[:：]\s*(\S.*)',literal)):
+                    label,value=pair[1].strip(),pair[2].strip()
+                    exposed=[{'id':str(block.get('id'))+':metadata_value','text':value,
+                              'row_header_path':[label],'column_header_path':[],'named_value':True},
+                             {'id':str(block.get('id'))+':metadata_identity','text':value,
+                              'row_header_path':[value],'column_header_path':[label],'named_value':True}]
+                    exposed=[{**cell,'native_path':block.get('native_path',block.get('id')),
+                              'information_source_span':[0,len(literal)],'information_source_block':block.get('id')}
+                             for cell in exposed]
+                members.extend({**cell,'provenance_pages':cell.get('provenance_pages') or block.get('provenance_pages') or [page.get('page')]}
+                               for cell in exposed)
+        paths=[cell['row_header_path'] for cell in members if cell.get('named_value')
+               and cell.get('row_header_path')==[cell['text']]]
+        if metadata_title and len(members)>1 and paths:
+            page['blocks'].append({'id':'candidate:initial_metadata','kind':'text_record','text':'',
+                'readback_evidence':'initial_delimited_document_metadata',
+                'printed_title_source':metadata_title,
+                'cells':[{**cell,'id':str(cell.get('id'))+':initial_metadata',
+                          'printed_subject_paths':[*cell.get('printed_subject_paths',[]),*paths],
+                          'information_prose_record':True,
+                          'information_metadata_sources':[member.get('id') for member in members]}
+                         for cell in members]})
+    from .candidate_context import annotate_caption_ranges
+    from .candidate_sequences import read_identifier_descriptions
+    read_identifier_descriptions(derived)
+
+    annotate_caption_ranges(derived)
     return derived
 
 
@@ -727,6 +837,9 @@ def scoped_qualifiers(cell: dict[str, Any], endpoint_texts: list[str], *,
     result["business_scope"] = [{"actual": text, "source": "candidate_printed_business_scope"}
         for text in [*cell.get("row_header_path", []), *cell.get("information_record_labels", []),
                      *(item["text"] for item in contexts)]]
+    result["business_scope"].extend({"actual": " ".join(re.split(r"\s+/\s+", item["text"])),
+        "source": "candidate_explicit_scope_path", "printed_path": item["text"]}
+        for item in contexts if item.get("explicit_scope_path"))
     if business_scope_only:
         return result
     currency_sources = [*direct, *cell.get("units", []), *cell.get("information_table_units", []),
@@ -763,12 +876,24 @@ def scoped_qualifiers(cell: dict[str, Any], endpoint_texts: list[str], *,
     if currency_symbol and not actual_units:
         actual_units = [currency_symbol[1]]
     actual_units = [unit for unit in actual_units if unit_applicable(unit, column_texts, row_labels)]
+    if descriptive_column(column_texts) and not own_units and not any(metric_units(text) for text in column_texts):
+        actual_units=[]
+        result['currency']=[]
     for unit in dict.fromkeys(actual_units):
         result["unit"].append({"actual": unit, "source": "candidate_scoped_unit"})
     # Keep whole literal labels as period evidence: e.g. an English date is
     # meaningful without attempting date conversion.
-    period_texts = [*direct, *cell.get("periods", []), *cell.get("information_comparison_periods", []), *(item["text"] for item in contexts
-                    if item["kind"] in {"period", "table_caption"})]
+    local_periods = [*column_texts, *cell.get("information_matched_headers", []),
+                     *cell.get("periods", []), *cell.get("information_comparison_periods", [])]
+    local_periods += [text for text in cell.get("row_header_path", []) if _PERIOD.fullmatch(text)]
+    # An explicitly dated field/header outranks its wider section. Otherwise
+    # a 2026 column under a 2027 caption could incorrectly pass as 2027.
+    # Undated quarters/days may still use one printed surrounding year.
+    dated_locally = any(re.search(r"(?<!\d)(?:19|20)\d{2}(?!\d)", text) for text in local_periods)
+    surrounding_periods = [item["text"] for item in contexts
+                           if item["kind"] in {"period", "table_caption"}
+                           or item.get("readback_evidence") == "matched_complete_printed_scope"]
+    period_texts = local_periods if dated_locally else [*direct, *local_periods, *surrounding_periods]
     # A declared single-year section introduction contains an explicit
     # period even when its business description has no separating space.
     # Do not collapse ranges or multi-year descriptions to one endpoint.

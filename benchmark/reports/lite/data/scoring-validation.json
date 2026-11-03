@@ -1,0 +1,192 @@
+{
+  "status": "passed",
+  "known_reader_defects": [],
+  "tests": {
+    "path": "software-validation.xml",
+    "tests": 2505,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 1,
+    "passed": 2504,
+    "skip_reason": "real FFmpeg acceptance runs in the application image"
+  },
+  "report_tests": {
+    "path": "report-software-validation.xml",
+    "tests": 33,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "passed": 33
+  },
+  "independent_counterexamples": [
+    "tests/unit/test_expected_retrieval.py",
+    "tests/unit/test_expected_contract.py",
+    "tests/unit/test_expected_only_evaluation.py",
+    "tests/unit/test_expected_evaluation_run.py",
+    "tests/unit/test_native_caption_ranges.py"
+  ],
+  "real_readback": {
+    "status": "passed",
+    "samples": 28,
+    "groups": 12,
+    "comparisons": 336,
+    "sample_ids": [
+      "midea-business-p013-024",
+      "vanke-interest-p001-002",
+      "pingan-financials-p001-004",
+      "bis-policy-boxes-p026-034",
+      "pingan-summary-and-profile-p004-005",
+      "sinopec-operations-p013-024",
+      "pingan-mission-opportunities-p006-007",
+      "byd-product-cards-p025-036",
+      "bis-fiscal-productivity-policy-p042-051",
+      "huawei-carrier-business-p018-022",
+      "sf-revenue-operating-cost-tables-p035-036",
+      "spdb-summary-financials-p001-004",
+      "moutai-governance-environment-p030-039",
+      "huawei-cybersecurity-p054-057",
+      "nvidia-ceo-letter-p010-014",
+      "huaweitech-future-optical-p024-026",
+      "moutai-transactions-p040-049",
+      "moutai-introduction-p001-008",
+      "nvidia-global-regulatory-risks-p111-120",
+      "spdb-prospectus-risk-tax-p013-020",
+      "tencent-programme-summary-p027-033",
+      "huaweitech-cover-p001",
+      "pingan-chairman-p014-019",
+      "moutai-governance-p018-029",
+      "spdb-credit-overview-p001-004",
+      "huawei-cash-and-risk-p064-065",
+      "tencent-conditions-entity-payment-definitions-p108-114",
+      "huawei-digital-energy-p037-040"
+    ],
+    "examples": [
+      {
+        "sample_id": "midea-business-p013-024",
+        "target_id": "expected:L245-245:field:1",
+        "purpose": "已修复的线下定位，排除线上同名项"
+      },
+      {
+        "sample_id": "midea-business-p013-024",
+        "target_id": "expected:L262-262:field:1",
+        "purpose": "已修复的线上定位，排除线下同名项"
+      },
+      {
+        "sample_id": "pingan-financials-p001-004",
+        "target_id": "expected:L11-11:field:2",
+        "purpose": "同格年度与名称绑定"
+      },
+      {
+        "sample_id": "pingan-financials-p001-004",
+        "target_id": "expected:L12-12:field:3",
+        "purpose": "完整命名属性读取"
+      },
+      {
+        "sample_id": "pingan-financials-p001-004",
+        "target_id": "expected:L36-36:field:0",
+        "purpose": "单位与期间不跨列借用"
+      },
+      {
+        "sample_id": "spdb-summary-financials-p001-004",
+        "target_id": "expected:L103-103:field:0",
+        "purpose": "现有表头下的完整金额"
+      },
+      {
+        "sample_id": "moutai-governance-environment-p030-039",
+        "target_id": "expected:L1203-1203:field:0",
+        "purpose": "完整单位和期间范围"
+      },
+      {
+        "sample_id": "moutai-transactions-p040-049",
+        "target_id": "expected:L1694-1694:field:2",
+        "purpose": "实际续表保留完整存款字段"
+      },
+      {
+        "sample_id": "moutai-transactions-p040-049",
+        "target_id": "expected:L1567-1567:field:5",
+        "purpose": "同一主体按实际交易类型区分"
+      },
+      {
+        "sample_id": "moutai-transactions-p040-049",
+        "target_id": "expected:L1591-1591:field:5",
+        "purpose": "另一记录不借前一记录的值"
+      },
+      {
+        "sample_id": "moutai-transactions-p040-049",
+        "target_id": "expected:L1532-1532:field:0",
+        "purpose": "明确多记录的完整集合比较"
+      },
+      {
+        "sample_id": "huawei-cash-and-risk-p064-065",
+        "target_id": "expected:L1675-1675:field:0",
+        "purpose": "首次普通年度页眉不误切文档"
+      },
+      {
+        "sample_id": "moutai-governance-environment-p030-039",
+        "target_id": "expected:L1063-1063:field:0",
+        "purpose": "复合行名与独立值格已正确区分"
+      },
+      {
+        "sample_id": "spdb-credit-overview-p001-004",
+        "target_id": "expected:L3-3:field:0",
+        "purpose": "总览业务事实与子章节同名事实分别定位"
+      },
+      {
+        "sample_id": "spdb-credit-overview-p001-004",
+        "target_id": "expected:L14-14:field:0",
+        "purpose": "拆分子标题与编号的实际范围"
+      },
+      {
+        "sample_id": "huaweitech-future-optical-p024-026",
+        "target_id": "expected:L732-732:field:0",
+        "purpose": "词项边缘空格不改变业务内容"
+      },
+      {
+        "sample_id": "huawei-digital-energy-p037-040",
+        "target_id": "expected:L1028-1028:field:0",
+        "purpose": "业务词真正变化仍计错"
+      },
+      {
+        "sample_id": "moutai-introduction-p001-008",
+        "target_id": "expected:L192-192:field:0",
+        "purpose": "续表残句独立保留，不给后续记录增造父分组"
+      }
+    ],
+    "method": "saved expected/candidate text and full common program traces; no source PDF/image/vision/OCR and no manual grades",
+    "readers": [
+      "Docling trees/cells/roles/references and GLM branches",
+      "Paddle parsing_res_list HTML/Markdown",
+      "GLM json_result primary",
+      "DocVortex typed blocks/spans/captions/footnotes and GLM branches",
+      "visual SDK typed ContentBlock array",
+      "actual final.md only"
+    ],
+    "verified": [
+      "all hits including unique candidates check complete identity before values",
+      "offline2 and online1 have separate accepted/rejected sources",
+      "compound row label is distinct from actual right-hand value cell",
+      "type belongs to own source key and repeated records compare as complete collections",
+      "local periods and explicit unit/header/caption ranges",
+      "generic annual header, complete long list parents and repeat ancestor scopes",
+      "direct business scopes differ from inclusive parent ancestry",
+      "shallow root identity and complete child title parts, with at most one declared identifier block",
+      "CJK/Latin term edge spacing preserves digits/signs/inner word spaces and business wording errors",
+      "actual unfinished leading continuation text retained without fabricated parent paths in both new CPU candidates"
+    ],
+    "paired_small_batch": {
+      "P07": {
+        "gains_business": 10,
+        "baseline_losses": 0,
+        "native_losses": 0
+      },
+      "P08": {
+        "gains_business": 185,
+        "baseline_losses": 0,
+        "native_losses": 0
+      }
+    },
+    "limitations": "development-exposed software diagnosis, not corpus certification, manual acceptance grades, image semantics or held-out evaluation"
+  },
+  "service_regression": "service/public-markdown-regression.json",
+  "policy": "all published grades recomputed from saved outputs under this common version; text review never overrides grades"
+}

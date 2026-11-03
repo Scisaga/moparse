@@ -12,8 +12,14 @@ expected选段读取现有manifest/source-map。每个可见文字范围按完�
 
 统一重评所有受影响组，评分依赖及代码身份见provenance.json。报告入口重新核对逐项、汇总、范围与配对门槛；报告复现仅证明再现，判分有效性由独立反例和真实格式读取验证另行约束。
 
+## 检索修复及独立验证
+
+字符串召回保留全部候选，唯一命中也核对完整业务身份。父标题、同名市场、局部期间与单位按候选实际文字和边界检查；范围不满足时拒绝比较该值，不回退到另一表。表内明确年份优先于外层年度，默认显示级别不能截断expected明确归属的细标题。查询不携带expected数值。每个字段的完整候选、来源、接受与排除理由保存在本地评分JSON的candidate.localization。
+
+独立正反例和真实保存样本的文字诊断范围见[软件验证记录](data/scoring-validation.json)，检索召回与排除分布及已报告错误案例的逐组判定见[检索证据](data/retrieval.json)。这些诊断用于发现软件缺陷；正式成绩来自同一冻结程序，人工阅读不提供改分。评分器补读、实际正文变化和剩余解析错误分别报告，旧错误成绩不提供收益基线。
+
 ```bash
-.venv/bin/python scripts/render_lite_report.py --index benchmark/runs/lite/scores/current/index.json --output benchmark/reports/lite
+.venv/bin/python scripts/render_lite_report.py --index /opt/moparse/benchmark/runs/lite/scores/current/index.json --output benchmark/reports/lite
 ```
 
 保存原生候选、实际正文、运行和逐项目标明细在本地benchmark/runs/lite/；完整配对文字在报告private/目录。公开data仅保留汇总及文字范围、候选路径索引，不复制整套参考或大型候选，它们不随报告提交。原件、expected、标注、映射、资产和数据包均未改写。
@@ -43,12 +49,14 @@ TTS和整卡峰值仅为共驻环境观察；工作进程GPU归属缺测，不�
 
 ## CPU后处理原始成本
 
-| 保存正文组 | quality800秒 | perf80三轮秒 | quality800过程RSS采样峰GiB |
-| --- | ---: | --- | ---: |
-| P07-baseline | 216.09 | 28.40, 28.02, 27.74 | 0.82 |
-| P08-baseline | 194.05 | 29.27, 28.91, 28.82 | 0.79 |
+| 保存正文组 | quality800秒 | perf80三轮秒 | quality800过程RSS采样峰GiB | 原CPU输出状态 |
+| --- | ---: | --- | ---: | --- |
+| P07-baseline | 216.09 | 28.40, 28.02, 27.74 | 0.82 | completed:126, partial:31, completed_with_warnings:16 |
+| P08-baseline | 194.05 | 29.27, 28.91, 28.82 | 0.79 | completed:127, partial:32, completed_with_warnings:14 |
+| P07-current | 216.84 | 28.22, 27.91, 28.04 | 0.77 | completed:126, partial:31, completed_with_warnings:16 |
+| P08-current | 181.99 | 27.39, 27.18, 27.37 | 0.95 | completed:128, partial:31, completed_with_warnings:14 |
 
-这些是各正文原执行记录，预热单列于execution.json；仅改评分程序时不重新运行候选，也不修改这些历史耗时。
+这些是各正文原执行记录，预热单列于execution.json；仅改评分程序时不重新运行候选，也不修改这些历史耗时。原生组状态沿用原运行，正文组的读取状态表示final.md可读取性，原CPU的partial和警告等状态另在本表及execution.json保留。CPU回放按8核、8 GiB容器配额串行执行，没有专用物理核隔离；本轮工程检查曾同时使用宿主资源，时长保留共享主机条件。
 
 ## 原生数值字面差异示例
 
@@ -56,11 +64,6 @@ TTS和整卡峰值仅为共驻环境观察；工作进程GPU归属缺测，不�
 
 | 管线 | 样本 | 目标 | expected值 | 实际值 |
 | --- | --- | --- | --- | --- |
-| P01 | hkex-key-tables-p011 | expected:L207-207:field:0 | 41.6 | 41.64  |
-| P02 | hkex-key-tables-p011 | expected:L207-207:field:0 | 41.6 | 41.64  |
-| P03 | midea-business-p013-024 | expected:L245-245:field:1 | 2 | 1 |
-| P04 | midea-business-p013-024 | expected:L245-245:field:1 | 2 | 1 |
-| P05 | midea-business-p013-024 | expected:L245-245:field:1 | 2 | 1 |
-| P06 | hkex-key-tables-p011 | expected:L204-204:field:0 | 830 | 8304 |
-| P07 | midea-business-p013-024 | expected:L245-245:field:1 | 2 | 1 |
-| P08 | midea-business-p013-024 | expected:L245-245:field:1 | 2 | 1 |
+| P01 | hkex-key-tables-p011 | expected:L202-202:field:0 | 150.1 | 150.14  |
+| P02 | hkex-key-tables-p011 | expected:L199-199:field:0 | 120.0 | 20.0  |
+| P06 | hkex-key-tables-p011 | expected:L202-202:field:0 | 150.1 | 150.14 |

@@ -1,202 +1,140 @@
 {
   "P01": {
     "incorrect_reasons": {
-      "text_missing_or_different": 4710,
-      "explicit_heading_ownership_incorrect": 742,
-      "native_fields_unresolved": 1119,
-      "native_header_endpoints_unavailable": 2809,
-      "value_expression_incorrect": 246,
-      "required_qualifier_incorrect:unit": 133,
-      "native_grid_header_scope_unresolved": 13,
-      "required_qualifier_incorrect:business_scope": 79,
-      "required_qualifier_incorrect:period": 4,
-      "required_qualifier_incorrect:period,business_scope": 103,
-      "ambiguous_native_value_position": 34,
-      "required_value_not_expressed": 5,
-      "required_qualifier_incorrect:unit,currency": 125,
-      "required_qualifier_incorrect:unit,currency,business_scope": 9,
-      "ambiguous_complete_label_path": 13,
-      "native_label_path_scope_conflict": 48,
-      "required_qualifier_incorrect:unit,period,business_scope": 72,
-      "explicit_list_ownership_incorrect": 7
+      "text_missing_or_different": 5528,
+      "native_fields_unresolved": 985,
+      "required_business_identity_conflict": 739,
+      "native_header_endpoints_unavailable": 2596,
+      "native_grid_header_scope_unresolved": 8,
+      "value_expression_incorrect": 194,
+      "ambiguous_complete_label_path": 15,
+      "ambiguous_native_value_position": 36,
+      "native_label_path_scope_conflict": 76
     },
     "changed_character_spans": {
-      "literal_text_or_name": 17197,
-      "number_or_sign": 1253,
-      "negation_or_condition": 1604
+      "literal_text_or_name": 13466,
+      "negation_or_condition": 1407,
+      "number_or_sign": 2028
     }
   },
   "P02": {
     "incorrect_reasons": {
-      "text_missing_or_different": 4733,
-      "explicit_heading_ownership_incorrect": 742,
-      "native_fields_unresolved": 769,
-      "native_header_endpoints_unavailable": 3896,
-      "value_expression_incorrect": 236,
-      "required_qualifier_incorrect:unit": 129,
-      "native_grid_header_scope_unresolved": 4,
-      "explicit_list_ownership_incorrect": 25,
-      "required_qualifier_incorrect:business_scope": 50,
-      "required_qualifier_incorrect:period": 4,
-      "required_qualifier_incorrect:period,business_scope": 85,
-      "ambiguous_native_value_position": 8,
-      "required_value_not_expressed": 4,
-      "ambiguous_complete_label_path": 10,
-      "required_qualifier_incorrect:unit,currency": 51,
-      "required_qualifier_incorrect:unit,currency,business_scope": 4,
-      "required_qualifier_incorrect:unit,period,business_scope": 72,
-      "native_label_path_scope_conflict": 2
+      "text_missing_or_different": 5568,
+      "native_fields_unresolved": 746,
+      "required_business_identity_conflict": 505,
+      "native_header_endpoints_unavailable": 3733,
+      "native_grid_header_scope_unresolved": 2,
+      "value_expression_incorrect": 172,
+      "ambiguous_complete_label_path": 11,
+      "ambiguous_native_value_position": 7,
+      "native_label_path_scope_conflict": 5
     },
     "changed_character_spans": {
-      "literal_text_or_name": 16981,
-      "number_or_sign": 1273,
-      "negation_or_condition": 1592
+      "literal_text_or_name": 13453,
+      "negation_or_condition": 1398,
+      "number_or_sign": 2040
     }
   },
   "P03": {
     "incorrect_reasons": {
-      "text_missing_or_different": 2683,
-      "explicit_heading_ownership_incorrect": 927,
-      "native_fields_unresolved": 1079,
-      "native_header_endpoints_unavailable": 1808,
-      "value_expression_incorrect": 167,
-      "required_qualifier_incorrect:business_scope": 106,
-      "required_value_not_expressed": 29,
-      "required_qualifier_incorrect:unit,currency": 30,
-      "required_qualifier_incorrect:period": 17,
-      "required_qualifier_incorrect:unit,currency,business_scope": 4,
-      "ambiguous_complete_label_path": 20,
-      "ambiguous_native_value_position": 39,
-      "native_label_path_scope_conflict": 86,
-      "required_qualifier_incorrect:period,business_scope": 37,
-      "required_qualifier_incorrect:unit": 35,
-      "explicit_list_ownership_incorrect": 22
+      "text_missing_or_different": 3636,
+      "required_business_identity_conflict": 352,
+      "native_fields_unresolved": 880,
+      "native_header_endpoints_unavailable": 1602,
+      "value_expression_incorrect": 143,
+      "ambiguous_complete_label_path": 16,
+      "ambiguous_native_value_position": 45,
+      "native_label_path_scope_conflict": 97
     },
     "changed_character_spans": {
-      "literal_text_or_name": 6085,
-      "number_or_sign": 976,
-      "negation_or_condition": 548
+      "literal_text_or_name": 5100,
+      "negation_or_condition": 511,
+      "number_or_sign": 1573
     }
   },
   "P04": {
     "incorrect_reasons": {
-      "text_missing_or_different": 2659,
-      "explicit_heading_ownership_incorrect": 765,
-      "native_fields_unresolved": 1094,
-      "native_header_endpoints_unavailable": 2081,
-      "value_expression_incorrect": 319,
-      "required_qualifier_incorrect:business_scope": 83,
-      "required_value_not_expressed": 23,
-      "required_qualifier_incorrect:unit,currency": 29,
-      "required_qualifier_incorrect:unit,currency,business_scope": 4,
-      "ambiguous_complete_label_path": 18,
-      "native_label_path_scope_conflict": 102,
-      "ambiguous_native_value_position": 38,
-      "required_qualifier_incorrect:period,business_scope": 29,
-      "required_qualifier_incorrect:period": 1,
-      "required_qualifier_incorrect:unit": 13,
-      "explicit_list_ownership_incorrect": 20
+      "text_missing_or_different": 3492,
+      "native_header_endpoints_unavailable": 1882,
+      "required_business_identity_conflict": 324,
+      "native_fields_unresolved": 902,
+      "value_expression_incorrect": 291,
+      "ambiguous_native_value_position": 49,
+      "ambiguous_complete_label_path": 14,
+      "native_label_path_scope_conflict": 111
     },
     "changed_character_spans": {
-      "literal_text_or_name": 4782,
-      "number_or_sign": 971,
-      "negation_or_condition": 399
+      "literal_text_or_name": 4213,
+      "negation_or_condition": 413,
+      "number_or_sign": 1506
     }
   },
   "P05": {
     "incorrect_reasons": {
-      "text_missing_or_different": 3815,
-      "explicit_heading_ownership_incorrect": 938,
-      "native_fields_unresolved": 1033,
-      "native_header_endpoints_unavailable": 2156,
-      "value_expression_incorrect": 151,
-      "explicit_list_ownership_incorrect": 22,
-      "required_qualifier_incorrect:business_scope": 156,
-      "required_value_not_expressed": 34,
-      "required_qualifier_incorrect:unit,currency": 26,
-      "required_qualifier_incorrect:unit,currency,business_scope": 7,
-      "ambiguous_complete_label_path": 19,
-      "ambiguous_native_value_position": 56,
-      "required_qualifier_incorrect:period,business_scope": 37,
-      "native_label_path_scope_conflict": 18,
-      "required_qualifier_incorrect:unit": 8
+      "text_missing_or_different": 4832,
+      "native_header_endpoints_unavailable": 1800,
+      "required_business_identity_conflict": 492,
+      "native_fields_unresolved": 933,
+      "native_label_path_scope_conflict": 28,
+      "value_expression_incorrect": 68,
+      "ambiguous_complete_label_path": 14,
+      "ambiguous_native_value_position": 61
     },
     "changed_character_spans": {
-      "literal_text_or_name": 7726,
-      "negation_or_condition": 441,
-      "number_or_sign": 983
+      "literal_text_or_name": 6270,
+      "negation_or_condition": 484,
+      "number_or_sign": 1847
     }
   },
   "P06": {
     "incorrect_reasons": {
-      "text_missing_or_different": 2794,
-      "explicit_heading_ownership_incorrect": 1065,
-      "native_fields_unresolved": 1145,
-      "native_header_endpoints_unavailable": 2216,
-      "required_qualifier_incorrect:unit": 12,
-      "value_expression_incorrect": 160,
-      "required_qualifier_incorrect:business_scope": 107,
-      "required_value_not_expressed": 23,
-      "required_qualifier_incorrect:unit,currency": 27,
-      "required_qualifier_incorrect:unit,currency,business_scope": 6,
-      "ambiguous_complete_label_path": 14,
+      "text_missing_or_different": 3961,
+      "native_header_endpoints_unavailable": 1495,
+      "required_business_identity_conflict": 1336,
+      "native_fields_unresolved": 941,
+      "value_expression_incorrect": 124,
+      "ambiguous_complete_label_path": 16,
       "ambiguous_native_value_position": 38,
-      "required_qualifier_incorrect:unit,period,business_scope": 1,
-      "required_qualifier_incorrect:period": 1,
-      "native_label_path_scope_conflict": 46,
-      "explicit_list_ownership_incorrect": 22
+      "native_label_path_scope_conflict": 61
     },
     "changed_character_spans": {
-      "literal_text_or_name": 6327,
-      "number_or_sign": 1075,
-      "negation_or_condition": 476
+      "literal_text_or_name": 5394,
+      "negation_or_condition": 452,
+      "number_or_sign": 1810
     }
   },
   "P07": {
     "incorrect_reasons": {
-      "text_missing_or_different": 2802,
-      "explicit_heading_ownership_incorrect": 1039,
-      "native_fields_unresolved": 1111,
-      "native_header_endpoints_unavailable": 1792,
-      "value_expression_incorrect": 167,
-      "required_qualifier_incorrect:business_scope": 128,
-      "required_value_not_expressed": 33,
-      "required_qualifier_incorrect:unit,currency": 27,
-      "required_qualifier_incorrect:period": 17,
-      "required_qualifier_incorrect:unit,currency,business_scope": 6,
-      "ambiguous_complete_label_path": 14,
+      "text_missing_or_different": 3922,
+      "native_header_endpoints_unavailable": 1058,
+      "required_business_identity_conflict": 1462,
+      "native_fields_unresolved": 899,
+      "value_expression_incorrect": 134,
+      "ambiguous_complete_label_path": 16,
       "ambiguous_native_value_position": 38,
-      "native_label_path_scope_conflict": 45,
-      "required_qualifier_incorrect:unit": 18,
-      "explicit_list_ownership_incorrect": 22
+      "native_label_path_scope_conflict": 64
     },
     "changed_character_spans": {
-      "literal_text_or_name": 6467,
-      "number_or_sign": 1047,
-      "negation_or_condition": 534
+      "literal_text_or_name": 5450,
+      "negation_or_condition": 462,
+      "number_or_sign": 1790
     }
   },
   "P08": {
     "incorrect_reasons": {
-      "text_missing_or_different": 2661,
-      "explicit_heading_ownership_incorrect": 644,
-      "native_fields_unresolved": 1105,
-      "native_header_endpoints_unavailable": 1797,
-      "value_expression_incorrect": 163,
-      "required_qualifier_incorrect:business_scope": 77,
-      "required_value_not_expressed": 33,
-      "required_qualifier_incorrect:unit,currency": 33,
-      "required_qualifier_incorrect:period": 16,
-      "ambiguous_complete_label_path": 14,
-      "ambiguous_native_value_position": 38,
-      "native_label_path_scope_conflict": 45,
-      "required_qualifier_incorrect:unit": 18,
-      "explicit_list_ownership_incorrect": 21
+      "text_missing_or_different": 3315,
+      "native_header_endpoints_unavailable": 1064,
+      "native_fields_unresolved": 880,
+      "required_business_identity_conflict": 392,
+      "value_expression_incorrect": 136,
+      "ambiguous_complete_label_path": 16,
+      "ambiguous_native_value_position": 43,
+      "native_label_path_scope_conflict": 64
     },
     "changed_character_spans": {
-      "literal_text_or_name": 5967,
-      "number_or_sign": 940,
-      "negation_or_condition": 495
+      "literal_text_or_name": 5159,
+      "negation_or_condition": 446,
+      "number_or_sign": 1374
     }
   }
 }
