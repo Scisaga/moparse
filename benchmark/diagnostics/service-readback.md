@@ -1,18 +1,12 @@
 # 服务最终输出的读取回归
 
-本页只记录软件缺陷与受控回归，不保存真实材料的错误质量分数或旧报告。最终质量结果由[评测索引](../reports/README.md)链接到唯一Lite报告，标准见[服务配对协议](../evaluation-tasks.md#7-p07p08与mo-parse最终输出的配对评测)。当前正式评分只读实际final.md；内部IR、阶段快照和私有跨度仅能诊断处理过程，不能为未打印内容补分。
+本页仅记录候选文字与来源读取的软件回归，不发布质量结论。正式状态见[评测索引](../reports/README.md)，三层解释及当前阻塞见[保存输出诊断](three-layer-native-readback.md)。当前正式输入只读实际final.md，内部IR及私有跨度不能为未打印内容补分。
 
-| 缺陷 | 修复 | 受控证据 |
-| --- | --- | --- |
-| Python的通用分行把真实分页符当成Markdown换行，造成后页偏移或重复代码 | 按CommonMark的CRLF、CR、LF保存原字符范围，普通块忠实读取最终显式页声明 | [导出回归](../../tests/unit/test_export_fidelity_repairs.py)、[多页交接回归](../../tests/unit/test_postprocessing_preservation.py)、[最终观察回归](../../tests/unit/test_moparse_eval_service_observation.py) |
-| 单格内容再次作为块级Markdown解析，短横线等被读为空 | 对格、标签、值和限定语采用实际行内投影，保留代码和实体语义 | [最终观察回归](../../tests/unit/test_moparse_eval_service_observation.py) |
-| 网格与明确语义路径对同一标签采用不同的定位口径 | 两者复用既有标签定位函数，完整路径层数、顺序及独立表范围继续生效，值不被修正 | [共同格式与范围反例](../../tests/unit/test_expected_contract.py) |
-| 最终观察读取修复后缺少过程诊断重建入口 | 从保存的最终Markdown、最终IR及明确私有证据恢复过程对象，矛盾结构报工程错；正式评分另从final.md独立读取 | [过程阶段回归](../../tests/unit/test_service_stages.py) |
-| 同一表的有值父行被其子项复制的父标签误计为多份自身数据 | 先按实际标签及明确表身份辨别自身行和子项上下文，不按列值或参考答案选取；真正重复自身行仍判错 | [有值父行、缺期与冲突反例](../../tests/unit/test_moparse_eval_information.py) |
-| 实际列表前有完整单位caption，但未重复后缀的原“不适用”格没有取得共享单位 | 读取公开Markdown中紧邻列表的完整caption，仅限同一列表边界；普通文字、标题及其他块阻断，明确错误局部单位不被救正 | [共享列表单位与隔离反例](../../tests/unit/test_moparse_eval_service_observation.py) |
-| 共享行标题在多条记录中完整打印，或正式项目名称同时出现在本行覆盖说明里，导致文字和读序端点被误计歧义 | 仅合并同表、同来源格、完整公开字面的跨记录标题；正式行标签只排除明确覆盖该行列的段内提及，其他独立重复仍保留 | [共享标题、独立重复及范围提及反例](../../tests/unit/test_moparse_eval_scoring.py) |
-| 已实际打印年度范围及同表两个年末端点，“本年末比上年末”仍缺少比较期间 | 只读取唯一明确年度与当前表头带或同条公开记录共同支持的年末比较；缺端点、错年、跨表行、月末及反向期间不通过 | [年末比较的两种格式及隔离反例](../../tests/unit/test_moparse_eval_information.py) |
+| 保留的读取机制 | 受控证据与界限 |
+| --- | --- |
+| CommonMark换行与真实分页保全 | [导出回归](../../tests/unit/test_export_fidelity_repairs.py)、[多页交接](../../tests/unit/test_postprocessing_preservation.py)保留实际字符、出现次数和来源页，不以原评分器的定位通过认定文字正确 |
+| 单元格行内字面保全 | [最终观察回归](../../tests/unit/test_moparse_eval_service_observation.py)保存短横线、代码、HTML实体、原文字面、span及页声明，不凭格子数量生成业务判断 |
+| 保存对象与实际正文隔离 | [局部范围回归](../../tests/unit/test_service_partial_scope_readback.py)及[过程阶段回归](../../tests/unit/test_service_stages.py)保留私有证据和公开正文边界，不恢复已经移除的答案 |
+| 已有共享单位声明的读取 | 最终观察回归保存紧邻列表的实际caption及其局部证据；这不是新三层中单位适用性、计数和完整业务关系已经验证的结论 |
 
-涉及八组共同网格读取及完整正文比较的修复由[作用范围诊断](table-header-scope.md)维护。八组原生、P07/P08唯一基线及实际新正文使用同一冻结程序重新评分，处理结果和已测耗时不被评分阶段改写；旧成绩和错误框架直接删除，不引用旧版本数值作为质量基线。
-
-评分输入、派生读取、代码快照与身份分别保留，已错误计分的中间产物删除。真实缺失、错误或未表达关系计incorrect，评分器未能读取已有表达时先修软件，阻止发布。自动评分不构成语料重新审核；通用检查和受控测试不读取真实语料或参考。
+旧评分核心删除后，依赖旧字段路径、旧普通文字匹配和旧业务列通过的断言已经移除或迁移。原生内容、实际正文、分页来源、原计时和私有IR隔离断言保留；软件尚不能解释的记录明确阻断发布，不改写为评分通过。新三层反例分别检验身份、单位、显式关系和独立文字保全，不能用这里的读取回归代替正式共同评分。

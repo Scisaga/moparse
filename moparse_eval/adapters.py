@@ -162,6 +162,7 @@ class _HTMLCells(HTMLParser):
         self.parts: list[str] = []
         self.depth = 0
         self.table_count = 0
+        self.section: str | None = None
         self.inline: list[dict[str, Any]] = []
         self.annotation_stack: list[tuple[str, dict[str, Any]]] = []
 
@@ -173,6 +174,8 @@ class _HTMLCells(HTMLParser):
                 raise NativeReadError("nested table: retain HTML without inferred cells")
             if self.table_count > 1:
                 raise NativeReadError("multiple native tables cannot become one inferred grid")
+        elif tag in {"thead", "tbody", "tfoot"}:
+            self.section = tag
         elif tag == "tr":
             if self.current is not None:
                 raise NativeReadError("unclosed native HTML cell")
@@ -196,13 +199,37 @@ class _HTMLCells(HTMLParser):
                             "page": None, "text_format": "plain"}
             if values.get("id") is not None:
                 self.current["native_id"] = values["id"]
+            # Expose declarations from the candidate's own HTML. A leading
+            # td row without these declarations remains an untyped grid.
+            # Keep the original attributes even when declarations conflict.
+            declarations: list[str] = []
+            roles: set[str] = set()
+            scope = (values.get("scope") or "").strip().lower()
+            aria_role = (values.get("role") or "").strip().lower()
             if tag == "th":
-                scope = values.get("scope")
-                if scope in {"row", "rowgroup"}:
-                    self.current["is_row_header"] = True
-                elif scope in {"col", "colgroup"}:
-                    self.current["is_column_header"] = True
                 self.current["native_header_tag"] = True
+                declarations.append("tag:th")
+                if scope in {"row", "rowgroup"}:
+                    roles.add("row")
+                    declarations.append("scope:" + scope)
+                elif scope in {"col", "colgroup"}:
+                    roles.add("column")
+                    declarations.append("scope:" + scope)
+            if aria_role in {"rowheader", "columnheader"}:
+                roles.add("row" if aria_role == "rowheader" else "column")
+                declarations.append("role:" + aria_role)
+            if self.section == "thead":
+                self.current["native_header_section"] = "thead"
+                declarations.append("section:thead")
+                # An explicitly scoped row header in thead keeps that role.
+                if not roles:
+                    roles.add("column")
+            if declarations:
+                self.current["native_header_declarations"] = declarations
+            if len(roles) > 1:
+                self.current["native_header_role_conflict"] = sorted(roles)
+            elif roles:
+                self.current["is_" + next(iter(roles)) + "_header"] = True
             self.parts = []
             self.inline = []
             self.annotation_stack = []
@@ -242,8 +269,11 @@ class _HTMLCells(HTMLParser):
             self.cells.append(cell)
             self.col += cell["col_span"]
             self.current = None
+        elif tag in {"thead", "tbody", "tfoot"} and self.section == tag:
+            self.section = None
         elif tag == "table":
             self.depth -= 1
+            self.section = None
 
 
 def html_cells(html: str, pointer: str = "#/html") -> list[dict[str, Any]]:

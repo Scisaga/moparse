@@ -7,13 +7,19 @@ import json
 import pytest
 
 from moparse_eval.cli import SCORING_PROTOCOL, parser, read_scoring_freeze
+from moparse_eval.layer_aggregation import VALIDATION_STAGES
 
 
 def _record():
     return {
         "software_id": "synthetic-software",
         "protocol_id": SCORING_PROTOCOL["id"],
-        "validation": {"status": "passed", "scope": "synthetic software tests only"},
+        "validation": {
+            "status": "passed",
+            "scope": "synthetic software tests only",
+            **{stage: {"status": "passed", "evidence": [f"synthetic/{stage}.json"]}
+               for stage in VALIDATION_STAGES},
+        },
     }
 
 

@@ -4,15 +4,13 @@
 
 ## 目标处理流程
 
-2026-10-30工作区的`table_context_service`从已保全原生块和`TableFragment`读取局部计量或记录字段及文字限定，补充原生结构证据；`table_semantics_service`分别检查来源冲突、用途与记录范围，使用`CellRef`或`TextRef`渲染实际正文。PDF来源补充继续独立运行，P08不进入该路径。评分器的`information_reading`独立读取候选表和实际正文限定，不调用服务关系判断；只共用既有忠实格式读取，不循环认定正确。运行身份、后处理计时和统一评分冻结分别保存。
+工作区的`table_context_service`从已保全原生块和`TableFragment`读取局部计量、记录字段及文字限定；`table_semantics_service`检查来源、用途与记录范围并渲染实际正文。PDF来源补充保持独立，P08不进入该路径。本轮不改变服务或候选处理，不以评分软件重建推导线上部署或交付改善。
 
-`candidate_context`是研究评分侧的候选文字范围读取，`table_context_service`是实际服务侧的原生关系处理，二者分别实现、分别测试，不能用服务的内部绑定给实际Markdown补分。共同评分保存字符串命中、身份检查、上下文来源和排除理由；`score_contract`另检查选值是否属于已验证候选集合。正文近似检索先裁到已打印标题范围；报告入口同时拒绝已知读取问题及范围冲突的数值比较。实际服务的受限打印范围与源格引用由[表格来源](../specs/table-source.md#跨页来源与继承)定义，完整流程和完成条件由[评测任务](../../benchmark/evaluation-tasks.md#current-task-expected-only)维护。
+研究评分独立使用`expected_readback`读取canonical expected选段的原始语法，`saved_native`及`adapters`按声明分支读取保存SDK对象，`native_readback`保留已有明确角色与关系。候选读取接口不接收expected，最终正文从实际final.md读取，不能用内部IR补分。
 
-`context_matching`在匹配阶段查询已暴露的实际标题与文件前置信息，既保留父范围，也检查停止边界；候选年度不再从全文无界复制。原生网格的命名属性读取由查询身份键和实际相邻键值建立范围，普通行列定位检查表头对数据行的约束并比较两个方向。这些读取不改写原始格或引用，不接入服务语义判断；最终Markdown仍只靠打印内容获得判分。
+`three_layer`分别产生文字、关系和业务要求及候选证据，再进行对应和分层判定；`layer_aggregation`只汇总分层计数和同目标配对。`expected_evaluation`使用16个CPU进程遍历已保存输出，不调用推理或后处理。`expected_report`复核逐项字符、身份检索、关系端点和共同要求；任何软件未支持或不完整状态阻止正式发布。当前语义支持不完整，方法、独立验证义务及状态由[评测任务](../../benchmark/evaluation-tasks.md#three-layer-evaluation)和[评测索引](../../benchmark/reports/README.md)维护。
 
-`named_retrieval`在共同匹配阶段读取命名列记录和实际列表的单项属性；`expected_readback`仅将真实Markdown列表行范围作为`public_list_span`暴露。它们不使用未打印IR范围，不把共享外层容器当作同一坐标网格。正文的父级检查保存各实际锚点及停止位置，拆分标题的完整匹配可证明其中的子标题部分。
-
-`record_collections`处理expected已声明的同身份多记录：定位阶段仍返回完整来源集合，比较阶段才联合核对全部字段向量并保存一一对应。单条正确值、缺失字段或额外冲突记录不能满足完整集合条件；定义与独立反例由评测任务维护。
+旧硬行列定位、字段评分、普通文字评分及相应兼容入口已删除，不保留运行回退。`information_reading`只留下供既有service readback使用的单位字面lexer。新核心未实现的矩阵、分组、文字重述及完整正文范围不会因删除旧算法自动成为已解决问题；具体原文与来源见[三层保存输出诊断](../../benchmark/diagnostics/three-layer-native-readback.md)。
 
 ![MO-Parse 服务：解析、适配、转换、组装、引用检查与返回保存](../assets/workspace-pdf-pipeline.svg)
 

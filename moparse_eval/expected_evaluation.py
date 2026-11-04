@@ -1,17 +1,17 @@
-"""Uniform evaluation of saved native and public Markdown outputs.
+"""One shared three-layer evaluation of already saved outputs.
 
-This command never launches parsing, opens PDFs, edits references, or consumes
-historical annotation answers/adjudications. All groups use the same targets.
+Only expected text, declared selections, native objects, actual Markdown and
+original observations are read. Diagnostic traversal is explicitly unpublished;
+software blockers never become zero-valued candidate quality measurements.
 """
 
 from __future__ import annotations
 
 import argparse
 import json
-import math
 import multiprocessing
 import time
-from collections import Counter, defaultdict
+from collections import Counter
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from functools import wraps
 from pathlib import Path
@@ -20,9 +20,9 @@ from typing import Any
 from .candidate_delivery import final_delivery, native_delivery
 from .expected_readback import markdown_observation, read_expected
 from .expected_scoring import PROTOCOL, grade_expected, require_paired_targets
+from .layer_aggregation import LAYERS, paired_layers, summarize_layers
 from .native_readback import READBACK_VERSION, read_native_relations
 from .packaging import inside, read_json, write_json
-from .prose_metrics import summarize_text
 from .saved_native import read_saved_native
 
 PIPELINES = tuple(f"P{i:02}" for i in range(1, 9))
@@ -32,6 +32,7 @@ ROOT = Path(__file__).resolve().parent.parent
 def _record_failure(function):
     @wraps(function)
     def wrapped(baseline, output, **kwargs):
+        output = Path(output)
         owned = not output.exists()
         try:
             return function(baseline, output, **kwargs)
@@ -41,7 +42,10 @@ def _record_failure(function):
                 record = read_json(status)
                 record.update(state="failed", expected_comparison_complete=False,
                               error={"type": type(error).__name__, "message": str(error)})
+                for key in ("summary", "paired", "adoption"):
+                    record.pop(key, None)
                 write_json(status, record)
+                write_json(output / "index.json", record)
             raise
     return wrapped
 
@@ -108,114 +112,6 @@ def final_observation(source: Path, *, sample_id: str, pipeline: str, pages: lis
     return observation
 
 
-def summarize(scores: list[dict[str, Any]], *, grouped: bool = True) -> dict[str, Any]:
-    kinds: dict[str, Counter] = defaultdict(Counter)
-    reasons: Counter = Counter()
-    for score in scores:
-        for kind, counts in score["by_kind"].items():
-            kinds[kind].update(counts)
-        reasons.update(row["reason"] for row in score["outcomes"] if row["outcome"] == "incorrect")
-    durations = [s.get("timing", {}).get("processing_seconds") for s in scores]
-    measured = [value for value in durations if type(value) in {int, float} and math.isfinite(value)]
-    result = {"samples": len(scores), "documents": len({s["document_id"] for s in scores}),
-              "by_kind": dict(kinds), "incorrect_reasons": dict(reasons),
-              "status_counts": dict(Counter(s.get("status") for s in scores)),
-              "processing_seconds": sum(measured) if len(measured) == len(scores) else None,
-              "observed_processing_seconds_subtotal": sum(measured) if measured else None,
-              "measured_processing_samples": len(measured), "missing_processing_samples": len(scores) - len(measured)}
-    literals = [row["raw_value_text"] for score in scores for row in score["outcomes"] if row.get("raw_value_text")]
-    result["raw_value_diagnostics"] = {"targets": len(literals),
-        "width_equivalent_exact": sum(row["width_equivalent"]["distance"] == 0 for row in literals),
-        "strict_exact": sum(row["strict"]["distance"] == 0 for row in literals),
-        "meaning": "printed_value_spelling_only_separate_from_business_correctness"}
-    result["text_metrics"] = summarize_text([row for score in scores for row in score["outcomes"]])
-    fields = [row for score in scores for row in score["outcomes"] if row["kind"] == "business_field"]
-    result["business_metrics"] = {
-        "targets": len(fields), "value_and_labels_correct": sum(row.get("value_and_labels_correct", False) for row in fields),
-        "complete_information_correct": sum(row["outcome"] == "correct" for row in fields),
-        "readable": sum(row.get("actual") is not None for row in fields),
-        "conditional_correctness_diagnostic": (sum(row["outcome"] == "correct" for row in fields)
-            / sum(row.get("actual") is not None for row in fields)) if any(row.get("actual") is not None for row in fields) else None}
-    deliveries = [score["asset_delivery"] for score in scores if score.get("asset_delivery")]
-    result["asset_delivery"] = {"observed_samples": len(deliveries), "missing_delivery_records": len(scores) - len(deliveries),
-        **{key: sum(row.get(key, 0) for row in deliveries) for key in (
-            "declared_files", "files_present", "image_references", "references_with_file", "references_without_file")},
-        "meaning": "candidate_delivery_observation_not_image_content_correctness"}
-    if grouped:
-        for key in ("document_id", "family_id"):
-            members = defaultdict(list)
-            for score in scores:
-                members[score.get(key) or "not_declared"].append(score)
-            result["by_" + key.removesuffix("_id")] = {name: summarize(group, grouped=False) for name, group in members.items()}
-        result["development_exposure"] = dict(Counter(str(s.get("development_exposure") or "not_declared") for s in scores))
-    return result
-
-
-def paired_changes(previous: list[dict[str, Any]], current: list[dict[str, Any]]) -> dict[str, Any]:
-    old = {score["sample_id"]: score for score in previous}
-    gains: list[dict[str, Any]] = []
-    losses: list[dict[str, Any]] = []
-    literal_gains: list[dict[str, Any]] = []
-    literal_losses: list[dict[str, Any]] = []
-    for score in current:
-        before = old[score["sample_id"]]
-        require_paired_targets([before, score])
-        states = {row["id"]: row for row in before["outcomes"]}
-        for row in score["outcomes"]:
-            prior = states[row["id"]]
-            if row.get("raw_value_text") and prior.get("raw_value_text"):
-                left = prior["raw_value_text"]["width_equivalent"]["distance"] == 0
-                right = row["raw_value_text"]["width_equivalent"]["distance"] == 0
-                if left != right:
-                    (literal_gains if right else literal_losses).append({"sample_id": score["sample_id"],
-                        "id": row["id"], "before": prior, "after": row})
-            if prior["outcome"] == row["outcome"]:
-                continue
-            item = {"sample_id": score["sample_id"], "target": row["id"], "kind": row["kind"],
-                    "reference": row["reference"], "expected": row["expected"],
-                    "before": prior, "after": row}
-            (gains if row["outcome"] == "correct" else losses).append(item)
-    return {"new_correct": len(gains), "lost_correct": len(losses), "gains": gains, "losses": losses,
-            "raw_literal_new_exact": len(literal_gains), "raw_literal_lost_exact": len(literal_losses),
-            "raw_literal_gains": literal_gains, "raw_literal_losses": literal_losses}
-
-
-def _change_summary(changes: dict[str, Any], *, details: str = "private/paired-changes.json") -> dict[str, Any]:
-    return {pipeline: {"new_correct": delta["new_correct"], "lost_correct": delta["lost_correct"],
-                       "raw_literal_new_exact": delta["raw_literal_new_exact"],
-                       "raw_literal_lost_exact": delta["raw_literal_lost_exact"],
-                       "gains_by_kind": dict(Counter(x["kind"] for x in delta["gains"])),
-                       "losses_by_kind": dict(Counter(x["kind"] for x in delta["losses"])),
-                       "details": details}
-            for pipeline, delta in changes.items()}
-
-
-def native_preservation(native: list[dict[str, Any]], final: list[dict[str, Any]]) -> dict[str, Any]:
-    """Require every native-correct target to survive public export."""
-    delta = paired_changes(native, final)
-    losses = [row for row in delta["losses"] if row["kind"] == "business_field"]
-    correct = sum(row["kind"] == "business_field" and row["outcome"] == "correct"
-                  for score in native for row in score["outcomes"])
-    all_correct = sum(row["outcome"] == "correct" for score in native for row in score["outcomes"])
-    return {"native_correct_business_targets": correct, "preserved": correct - len(losses),
-            "lost_correct_business_targets": len(losses), "losses": delta["losses"],
-            "native_correct_targets": all_correct, "preserved_targets": all_correct - delta["lost_correct"],
-            "lost_correct_targets": delta["lost_correct"], "passed": delta["lost_correct"] == 0,
-            "comparison": "native_to_actual_final_markdown_under_one_shared_scorer"}
-
-
-def adoption_status(changes: dict[str, Any], preservation: dict[str, Any]) -> dict[str, Any]:
-    return {pipeline: {
-        "no_lost_correct_targets": delta["lost_correct"] == 0,
-        "native_correct_business_preserved": preservation[pipeline]["lost_correct_business_targets"] == 0,
-        "native_correct_content_preserved": preservation[pipeline]["passed"],
-        "native_to_final_business_losses": preservation[pipeline]["lost_correct_business_targets"],
-        "native_to_final_content_losses": preservation[pipeline]["lost_correct_targets"],
-        "adoptable": delta["lost_correct"] == 0 and preservation[pipeline]["passed"],
-        "comparison": "sole_baseline_to_current_and_native_to_current",
-    } for pipeline, delta in changes.items()}
-
-
 def execution_costs(baseline: Path, session: dict[str, Any], service: dict[str, Any]) -> dict[str, Any]:
     """Copy recorded timing/resource evidence, never rerun a parser or infer cost."""
     from .reporting import native_performance, postprocessing_performance
@@ -244,25 +140,52 @@ def execution_costs(baseline: Path, session: dict[str, Any], service: dict[str, 
     return result
 
 
+def _blocked_score(expected: dict[str, Any], group: str, blocker: dict[str, Any]) -> dict[str, Any]:
+    """Represent a software failure without manufacturing any quality result."""
+    return {
+        "sample_id": expected["sample_id"], "document_id": expected.get("document_id"),
+        "family_id": expected.get("family_id"), "pipeline": group, "protocol": PROTOCOL,
+        "publishable": False, "blockers": [blocker], "outcomes": [], "score": None,
+        "layers": {layer: {"numerator": None, "denominator": None, "score": None, "complete": False}
+                   for layer in LAYERS},
+        "status": "software_failure",
+    }
+
+
 def _grade_saved_group(task: dict[str, Any]) -> dict[str, Any]:
-    """Compute one saved candidate in an analysis-only CPU process."""
+    """Read and diagnose one saved output, inside an analysis-only CPU process."""
     group, sample_id, expected = task["group"], task["sample_id"], task["expected"]
     directory, case, output = task["directory"], task["case"], task["output"]
-    if group in PIPELINES:
-        observation = native_observation(directory, case, analysis=output / "private", software_id=task["software_id"])
-        source = observation["candidate_source"]
-    else:
-        relative = case.get("final_markdown") or str(Path(case["observation"]).with_name("final.md"))
-        source = inside(directory, relative)
-        observation = final_observation(source, sample_id=sample_id, pipeline=group,
-            pages=list(range(1, len(expected["source_pages"]) + 1)), metadata=case)
+    source = inside(directory, case["observation"])
+    observation: dict[str, Any] = {}
     try:
-        score = grade_expected(expected, observation)
-    except (ValueError, IndexError, KeyError, TypeError) as error:
-        raise ValueError(f"shared grader failed on {group}/{sample_id}; repair before publication: {error}") from error
+        if group in PIPELINES:
+            observation = native_observation(directory, case, analysis=output / "private", software_id=task["software_id"])
+            source = Path(observation["candidate_source"])
+        else:
+            relative = case.get("final_markdown") or str(Path(case["observation"]).with_name("final.md"))
+            source = inside(directory, relative)
+            observation = final_observation(source, sample_id=sample_id, pipeline=group,
+                pages=list(range(1, len(expected["source_pages"]) + 1)), metadata=case)
+        if expected.get("reader_blocker"):
+            score = _blocked_score(expected, group, expected["reader_blocker"])
+        else:
+            score = grade_expected(expected, observation)
+    except (ValueError, IndexError, KeyError, TypeError, AttributeError, RuntimeError, OSError) as error:
+        score = _blocked_score(expected, group, {
+            "side": "software", "reason": "saved_reader_or_grader_failure",
+            "source": {"path": str(source)},
+            "error": {"type": type(error).__name__, "message": str(error)},
+        })
     score.update(scoring_software_id=task["software_id"], candidate_source=str(source))
     if task.get("execution_id"):
         score["execution_software_id"] = task["execution_id"]
+    if (task.get("diagnostic") or score.get("blockers") or score.get("publishable") is not True
+            or any(layer.get("complete") is not True for layer in score["layers"].values())):
+        score.update(diagnostic_only=bool(task.get("diagnostic")), quality_scores_withheld=True, score=None)
+        for layer in score["layers"].values():
+            layer["score"], layer["numerator"] = None, None
+            layer.pop("diagnostic_score", None)
     relative = f"private/scores/{group}/quality800-r1/{sample_id}.json"
     write_json(output / relative, score)
     return {"group": group, "sample_id": sample_id, "path": relative,
@@ -284,10 +207,35 @@ def _grade_tasks(tasks: list[dict[str, Any]], workers: int):
             raise
 
 
+def _pair_summary(pair: dict[str, Any]) -> dict[str, Any]:
+    return {layer: {"new_correct": pair["layers"][layer]["new_correct"],
+                    "lost_correct": pair["layers"][layer]["lost_correct"],
+                    "remaining_incorrect": pair["layers"][layer]["remaining_defects"],
+                    "required_units": pair["layers"][layer]["after"]["denominator"]}
+            for layer in LAYERS}
+
+
+def _blocker_index(score: dict[str, Any], record: dict[str, Any]) -> list[dict[str, Any]]:
+    blockers = score.get("blockers", [])
+    if (score.get("publishable") is not True or set(score.get("layers", {})) != set(LAYERS) or any(
+            layer.get("complete") is not True for layer in score.get("layers", {}).values())) and not blockers:
+        blockers = [{"side": "software", "reason": "incomplete_layer_judgments"}]
+    return [{"group": record["group"], "sample_id": record["sample_id"],
+             "reason": blocker.get("reason", "unspecified_software_failure"),
+             "side": blocker.get("side", "software"), "source": blocker.get("source"),
+             "detail_path": record["path"], "blocker_index": number}
+            for number, blocker in enumerate(blockers)]
+
+
 @_record_failure
 def evaluate_saved(baseline: Path, output: Path, *, expected_root: Path,
-                   freeze: Path, service_baseline_root: Path | None = None, current_root: Path | None = None,
-                   workers: int = 1) -> Path:
+                   freeze: Path | None = None, service_baseline_root: Path | None = None,
+                   current_root: Path | None = None, workers: int = 16, diagnostic: bool = False) -> Path:
+    """Traverse all declared saved groups; publish only fully supported judgments.
+
+    Diagnostic mode needs no scoring freeze, withholds every numerical quality
+    result, and never claims that traversing the material completed evaluation.
+    """
     from .cli import (
         _require_formal_measurement_conditions,
         code_identity,
@@ -295,36 +243,41 @@ def evaluate_saved(baseline: Path, output: Path, *, expected_root: Path,
         snapshot_software,
     )
 
-    identity = code_identity()
-    frozen = read_scoring_freeze(freeze, identity)
-    if not 1 <= workers <= 16:
+    if type(workers) is not int or not 1 <= workers <= 16:
         raise ValueError("analysis workers must be between 1 and 16")
     if output.resolve().is_relative_to(expected_root.resolve()):
         raise ValueError("evaluation output must be outside the read-only expected directory")
+    identity = code_identity()
+    if diagnostic:
+        frozen = None
+    elif freeze is None:
+        raise ValueError("formal scoring requires the validated four-stage scoring freeze")
+    else:
+        frozen = read_scoring_freeze(freeze, identity)
     baseline = baseline.resolve()
     session = read_json(baseline / "run.json")
     _require_formal_measurement_conditions(baseline, session)
     if session.get("state") not in {"completed", "failed"}:
         raise ValueError("saved native run must have completed execution and restoration")
-    dataset = Path(session["dataset"])
-    if output.resolve().is_relative_to(dataset.resolve()):
+    dataset = Path(session["dataset"]).resolve()
+    if output.resolve().is_relative_to(dataset):
         raise ValueError("evaluation output must be outside the read-only dataset package")
     manifest = read_json(dataset / "manifest.json")
     samples = {sample["id"]: sample for sample in manifest["samples"]}
+    if len(samples) != len(manifest["samples"]):
+        raise ValueError("duplicate declared sample identities")
     cases = quality_cases(session)
-    by_pipeline = {p: {c["sample_id"]: c for c in cases if c["pipeline"] == p} for p in PIPELINES}
+    by_pipeline = {pipeline: {case["sample_id"]: case for case in cases if case["pipeline"] == pipeline}
+                   for pipeline in PIPELINES}
     if sum(len(items) for items in by_pipeline.values()) != len(cases):
         raise ValueError("duplicate or undeclared pipeline quality cases")
     sample_ids = set(by_pipeline[PIPELINES[0]])
     declared_samples = set(manifest.get("suites", {}).get("lite", samples))
-    if sample_ids != declared_samples:
+    if sample_ids != declared_samples or not sample_ids <= samples.keys():
         raise ValueError("quality comparison must cover the entire declared Lite selection")
-    if not sample_ids or any(set(by_pipeline[p]) != sample_ids for p in PIPELINES):
-        raise ValueError("all eight pipelines must be evaluated on the same declared quality samples")
-    output.mkdir(parents=True, exist_ok=False)
-    snapshot_software(output / "software", identity)
-    write_json(output / "scoring-freeze.json", frozen)
-    groups: dict[str, list[dict[str, Any]]] = {p: [] for p in PIPELINES}
+    if not sample_ids or any(set(by_pipeline[pipeline]) != sample_ids for pipeline in PIPELINES):
+        raise ValueError("all eight pipelines must cover the same declared quality samples")
+    groups: dict[str, list[dict[str, Any]]] = {pipeline: [] for pipeline in PIPELINES}
     service = {}
     for label, root in (("baseline", service_baseline_root), ("current", current_root)):
         if root is None:
@@ -332,99 +285,134 @@ def evaluate_saved(baseline: Path, output: Path, *, expected_root: Path,
         for pipeline in ("P07", "P08"):
             directory, run = _service_inputs(root, pipeline)
             if (Path(run["baseline_run"]).resolve() != baseline
-                    or Path(run["dataset"]).resolve() != dataset.resolve()
+                    or Path(run["dataset"]).resolve() != dataset
                     or run["native_pipeline"]["pipeline"] != pipeline):
-                raise ValueError("final output execution must declare the same baseline, dataset and native pipeline")
-            declared = {c["sample_id"]: c for c in quality_cases(run)}
-            if set(declared) != sample_ids:
-                raise ValueError("saved final outputs must cover the same quality samples as all native groups")
+                raise ValueError("final output must declare the same baseline, dataset and native pipeline")
+            declared_cases = quality_cases(run)
+            declared = {case["sample_id"]: case for case in declared_cases}
+            if len(declared) != len(declared_cases) or set(declared) != sample_ids:
+                raise ValueError("saved final outputs must cover the same quality samples without duplicates")
             for sample_id, case in declared.items():
                 if case["baseline_observation_source"] != by_pipeline[pipeline][sample_id]["observation"]:
                     raise ValueError("paired final output does not declare the same saved native input")
             key = f"{pipeline}-{label}"
             service[key] = (directory, declared, run)
             groups[key] = []
-    index: dict[str, Any] = {"state": "running", "protocol": PROTOCOL, "scoring_protocol": PROTOCOL,
-                            "score_id": output.name, "software": identity,
-                            "reference_freeze": manifest.get("freeze_record"),
-                            "baseline": str(baseline), "expected_root": str(expected_root.resolve()),
-                            "expected_comparison_complete": False, "results": [], "records": [], "coverage": [],
-                            "quality_suite": "quality800", "groups": list(groups),
-                            "analysis_workers": workers, "analysis_timing": "excluded_from_parser_and_postprocessing_costs",
-                            "validation": frozen["validation"],
-                            "native_readback": {"reader_version": READBACK_VERSION, "observations": []},
-                            "historical_adjudications": "not_read_or_applied"}
+    output.mkdir(parents=True, exist_ok=False)
+    snapshot_software(output / "software", identity)
+    if frozen is not None:
+        write_json(output / "scoring-freeze.json", frozen)
+    index: dict[str, Any] = {
+        "state": "running", "protocol": PROTOCOL, "scoring_protocol": PROTOCOL,
+        "score_id": output.name, "software": identity, "diagnostic_only": diagnostic,
+        "purpose": "software_support_diagnosis_no_quality_results" if diagnostic else "formal_three_layer_evaluation",
+        "reference_freeze": manifest.get("freeze_record"), "baseline": str(baseline),
+        "expected_root": str(expected_root.resolve()), "dataset": str(dataset),
+        "expected_comparison_complete": False, "records": [], "coverage": [], "groups": list(groups),
+        "quality_suite": "quality800", "analysis_workers": workers,
+        "analysis_timing": "excluded_from_parser_and_postprocessing_costs",
+        "validation": frozen["validation"] if frozen is not None else None,
+        "native_readback": {"reader_version": READBACK_VERSION, "observations": []},
+        "historical_adjudications": "not_read_or_applied", "blockers": [],
+        "comparisons": {"native": list(PIPELINES), "service_pairs": {
+            pipeline: {label: f"{pipeline}-{label}" for label in ("baseline", "current")
+                       if f"{pipeline}-{label}" in groups} for pipeline in ("P07", "P08")}},
+        "development_exposure": "saved Lite outputs and expected syntax used during development; no held-out claim",
+    }
     write_json(output / "execution-status.json", index)
-    reference_cache: dict[Path, Any] = {}
+    reference_cache = {}
     expected_by_sample = {}
     for sample_id in sorted(sample_ids):
-        expected_by_sample[sample_id] = read_expected(samples[sample_id], expected_root, cache=reference_cache)
-        if len(expected_by_sample) % 10 == 0:
-            print(json.dumps({"stage": "expected_readback", "samples_ready": len(expected_by_sample),
-                              "samples": len(sample_ids)}), flush=True)
-    print(json.dumps({"stage": "expected_readback_ready", "samples": len(expected_by_sample)}), flush=True)
+        try:
+            expected_by_sample[sample_id] = read_expected(samples[sample_id], expected_root, cache=reference_cache)
+        except (ValueError, IndexError, KeyError, TypeError, OSError) as error:
+            expected_by_sample[sample_id] = {
+                "sample_id": sample_id, "document_id": samples[sample_id]["document_id"],
+                "source_pages": samples[sample_id]["source_pages"], "scope": [], "targets": [],
+                "reader_blocker": {"side": "expected", "reason": "selected_expected_reader_failure",
+                                   "error": {"type": type(error).__name__, "message": str(error)}},
+            }
+    print(json.dumps({"stage": "expected_syntax_read", "samples": len(expected_by_sample)}), flush=True)
     tasks = []
     for sample_id in sorted(sample_ids):
         for pipeline in PIPELINES:
             tasks.append({"group": pipeline, "sample_id": sample_id, "expected": expected_by_sample[sample_id],
                           "directory": baseline, "case": by_pipeline[pipeline][sample_id], "output": output,
-                          "software_id": identity["software_id"]})
+                          "software_id": identity["software_id"], "diagnostic": diagnostic})
         for key, (directory, declared, execution) in service.items():
             tasks.append({"group": key, "sample_id": sample_id, "expected": expected_by_sample[sample_id],
                           "directory": directory, "case": declared[sample_id], "output": output,
-                          "software_id": identity["software_id"], "execution_id": execution["software"]["software_id"]})
-    completed: dict[tuple[str, str], dict[str, Any]] = {}
-    counts: Counter = Counter()
-    ready = 0
-    for row in _grade_tasks(tasks, workers):
-        completed[row["group"], row["sample_id"]] = row
-        counts[row["sample_id"]] += 1
-        if counts[row["sample_id"]] == len(groups):
-            ready += 1
-            print(json.dumps({"sample": row["sample_id"], "completed": ready, "samples": len(sample_ids)}), flush=True)
-            write_json(output / "execution-status.json", {"state": "running", "software_id": identity["software_id"],
-                "expected_comparison_complete": False, "completed_samples": ready, "declared_samples": len(sample_ids),
-                "latest_sample": row["sample_id"]})
+                          "software_id": identity["software_id"], "execution_id": execution["software"]["software_id"],
+                          "diagnostic": diagnostic})
+    completed = {}
+    for number, record in enumerate(_grade_tasks(tasks, workers), 1):
+        completed[record["group"], record["sample_id"]] = record
+        if number % max(1, len(groups)) == 0:
+            print(json.dumps({"stage": "saved_output_diagnosis" if diagnostic else "three_layer_comparison",
+                              "completed_records": number, "declared_records": len(tasks)}), flush=True)
     for sample_id in sorted(sample_ids):
         expected = expected_by_sample[sample_id]
         paired = []
         for key, members in groups.items():
-            row = completed[key, sample_id]
-            score = read_json(output / row["path"])
+            record = completed[key, sample_id]
+            score = read_json(output / record["path"])
             members.append(score)
             paired.append(score)
-            index["results"].append(row["path"])
-            index["records"].append({k: row[k] for k in ("group", "sample_id", "path")})
-            if row["readback"]:
-                provenance = row["readback"]
+            index["records"].append({name: record[name] for name in ("group", "sample_id", "path")})
+            index["blockers"].extend(_blocker_index(score, record))
+            if record["readback"]:
+                provenance = record["readback"]
                 index["native_readback"]["observations"].append({**provenance,
                     "observation": "private/" + provenance["observation"],
                     "diagnostics": "private/" + provenance["diagnostics"]})
-        require_paired_targets(paired)
-        index["coverage"].append({"sample_id": sample_id, "document_id": expected["document_id"],
-                                   "scope": expected["scope"], "expected_elements": len(expected["targets"]),
-                                   "content_coverage": paired[0]["content_coverage"],
-                                   "targets": paired[0]["targets"], "groups_graded": len(paired),
-                                   "reference": "canonical_expected_only"})
+        if all(score.get("publishable") for score in paired):
+            try:
+                require_paired_targets(paired)
+            except ValueError as error:
+                index["blockers"].append({"sample_id": sample_id, "side": "software",
+                                          "reason": "unequal_requirements_between_groups", "error": str(error)})
+        index["coverage"].append({
+            "sample_id": sample_id, "document_id": expected["document_id"], "scope": expected["scope"],
+            "layers": {layer: {"denominator": paired[0]["layers"][layer]["denominator"]} for layer in LAYERS},
+            "groups_traversed": len(paired),
+            "meaning": "partial_compilation_diagnostics_not_complete_semantic_coverage" if diagnostic or any(
+                not score.get("publishable") for score in paired) else "frozen_expected_requirements_compared",
+        })
     if code_identity()["software_id"] != identity["software_id"]:
-        raise ValueError("scoring software changed during the run; do not publish mixed identities")
-    summary = {key: summarize(members) for key, members in groups.items()}
-    changes = {p: paired_changes(groups[f"{p}-baseline"], groups[f"{p}-current"])
-               for p in ("P07", "P08") if f"{p}-baseline" in groups and f"{p}-current" in groups}
-    write_json(output / "private/paired-changes.json", changes)
-    costs = execution_costs(baseline, session, service)
-    preservation = {p: native_preservation(groups[p], groups[f"{p}-current"])
-                    for p in ("P07", "P08") if f"{p}-current" in groups}
-    write_json(output / "private/native-preservation.json", preservation)
-    index.update(state="completed", expected_comparison_complete=True, summary=summary, changes=_change_summary(changes),
-                 execution_costs=costs,
-                 native_preservation={p: {**{k: v for k, v in row.items() if k != "losses"},
-                                         "details": "private/native-preservation.json"}
-                                      for p, row in preservation.items()},
-                 adoption=adoption_status(changes, preservation),
-                 development_exposure="Lite outputs and expected syntax used for software development; no independent held-out claim")
+        index["blockers"].append({"side": "software", "reason": "software_changed_during_analysis"})
+    try:
+        index["execution_costs"] = execution_costs(baseline, session, service)
+    except (ValueError, IndexError, KeyError, TypeError, OSError) as error:
+        index["execution_costs"] = {"status": "unreadable_original_measurement", "error": str(error),
+                                    "policy": "no_missing_cost_filled_or_inferred"}
+    if index["blockers"]:
+        index.update(state="blocked", expected_comparison_complete=False,
+                     blocker_counts=dict(Counter(item["reason"] for item in index["blockers"])))
+    elif diagnostic:
+        index.update(state="diagnostic_completed", expected_comparison_complete=False,
+                     quality_scores_withheld=True, reader_review="pending_independent_text_diagnosis")
+    else:
+        try:
+            summary = {key: summarize_layers(members) for key, members in groups.items()}
+            pairs = {}
+            for pipeline in ("P07", "P08"):
+                pairs[pipeline] = {}
+                for label in ("baseline", "current"):
+                    key = f"{pipeline}-{label}"
+                    if key in groups:
+                        pairs[pipeline][f"native_to_{label}"] = paired_layers(groups[pipeline], groups[key])
+                if f"{pipeline}-baseline" in groups and f"{pipeline}-current" in groups:
+                    pairs[pipeline]["baseline_to_current"] = paired_layers(
+                        groups[f"{pipeline}-baseline"], groups[f"{pipeline}-current"])
+            write_json(output / "private/pairs.json", pairs)
+            index.update(state="completed", expected_comparison_complete=True, summary=summary,
+                         paired={pipeline: {kind: _pair_summary(pair) for kind, pair in comparisons.items()}
+                                 for pipeline, comparisons in pairs.items()}, paired_details="private/pairs.json")
+        except ValueError as error:
+            index.update(state="blocked", expected_comparison_complete=False,
+                         blockers=[{"side": "software", "reason": "layer_aggregation_invariant", "error": str(error)}])
     write_json(output / "index.json", index)
-    write_json(output / "execution-status.json", {key: value for key, value in index.items() if key != "results"})
+    write_json(output / "execution-status.json", index)
     return output / "index.json"
 
 
@@ -433,24 +421,27 @@ def main() -> int:
     parser.add_argument("--baseline", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--expected-root", type=Path, default=ROOT / "pdf_sample/parsing/expected")
-    parser.add_argument("--freeze", type=Path, required=True)
+    parser.add_argument("--freeze", type=Path)
     parser.add_argument("--service-baseline-root", type=Path)
     parser.add_argument("--current-root", type=Path)
-    parser.add_argument("--workers", type=int, default=1, help="analysis CPU processes; does not change scoring or processing times")
+    parser.add_argument("--workers", type=int, default=16, help="saved-output analysis processes; original execution costs unchanged")
+    parser.add_argument("--diagnostic", action="store_true", help="traverse saved materials without a freeze; publish no quality scores")
     parser.add_argument("--report-output", type=Path)
     args = parser.parse_args()
+    if not args.diagnostic and args.freeze is None:
+        parser.error("--freeze is required for formal scoring; --diagnostic never publishes quality results")
+    if args.diagnostic and args.report_output:
+        parser.error("diagnostic traversal cannot publish a formal report")
     index_path = evaluate_saved(args.baseline, args.output, expected_root=args.expected_root, freeze=args.freeze,
                                 service_baseline_root=args.service_baseline_root, current_root=args.current_root,
-                                workers=args.workers)
-    if index_path.resolve().is_relative_to(args.baseline.resolve()):
-        session = read_json(args.baseline / "run.json")
-        session["latest_scores"] = str(index_path.resolve().relative_to(args.baseline.resolve()))
-        write_json(args.baseline / "run.json", session)
+                                workers=args.workers, diagnostic=args.diagnostic)
     print(index_path)
-    if args.report_output:
-        from scripts.render_lite_report import render
-        render(index_path, args.report_output)
-    return 0
+    index = read_json(index_path)
+    if index["state"] == "completed" and not args.diagnostic:
+        if args.report_output:
+            from scripts.render_lite_report import render
+            render(index_path, args.report_output)
+    return 2 if index["state"] == "blocked" else 0
 
 
 if __name__ == "__main__":

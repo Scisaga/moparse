@@ -7,13 +7,12 @@ import pytest
 from app.models.parse_result import DocumentParseResult, PageParseResult, ParsePipeline
 from app.services.table_semantics_service import bind_table_view, render_semantic_view
 from app.services.table_service import TableCellFragment, TableFragment, render_gfm_rows
-from moparse_eval.matching import match_units, observation_candidates
-from moparse_eval.scoring import _score_records
 from moparse_eval.service_observation import (
     _inline_text,
     build_service_observation,
     read_final_observation,
 )
+from moparse_eval.three_layer import read_candidate
 
 
 def partial_result():
@@ -51,25 +50,18 @@ def partial_result():
     return result, fragment
 
 
-def score(observation, label, period, value):
-    unit = {"id": "authored-record", "kind": "table_record", "reference_text": label,
-            "pages": [1], "table": {"row_header_path": [label],
-            "fields": [{"column_header_path": [period], "value": value}]}}
-    return _score_records([unit], observation, True, match_units([unit], observation))
 
 
 def cells(observation):
-    return [item["cell"] for item in observation_candidates(observation) if "cell" in item]
+    return [cell for page in observation["pages"] for block in page["blocks"]
+            for cell in block.get("cells", [])]
 
 
 def test_internal_header_scopes_do_not_lend_columns_to_other_period_records():
     result, _fragment = partial_result()
     observation = build_service_observation(result, sample_id="synthetic")
     assert observation["errors"] == []
-    assert score(observation, "Revenue", "2023", "900")[1]["correct_fields"] == 0
-    assert score(observation, "Cost", "2024", "200")[1]["correct_fields"] == 0
-    assert score(observation, "Revenue", "2024", "900")[1]["correct_fields"] == 1
-    assert score(observation, "Cost", "2023", "200")[1]["correct_fields"] == 1
+    assert read_candidate(observation)["blockers"]
     actual = cells(observation)
     assert len([c for c in actual if c["text"] == "900"]) == 1
     assert len([c for c in actual if c["text"] == "200"]) == 1
@@ -85,19 +77,16 @@ def test_unshown_private_header_is_not_restored_or_used_as_a_column():
     next(c for c in fragment.cells if (c.row, c.column) == (4, 1)).text = "PRIVATE HEADER"
     observation = build_service_observation(result, sample_id="synthetic")
     assert all("PRIVATE" not in c["text"] for c in cells(observation))
-    assert score(observation, "Cost", "PRIVATE HEADER", "200")[1]["correct_fields"] == 0
+    assert read_candidate(observation)["blockers"]
     # A conflicting private header also cannot provide trusted scope geometry.
-    assert score(observation, "Cost", "2023", "200")[1]["correct_fields"] == 0
     assert any(c["text"] == "200" for c in cells(observation))
-    assert score(observation, "Revenue", "2024", "900")[1]["correct_fields"] == 1
 
 
 def test_conflicting_scope_membership_keeps_text_but_withholds_relations():
     result, fragment = partial_result()
     fragment.source_header_scopes[0]["body_rows"].extend([4, 5, 6])
     observation = build_service_observation(result, sample_id="synthetic")
-    assert score(observation, "Cost", "2023", "200")[1]["correct_fields"] == 0
-    assert score(observation, "Revenue", "2024", "900")[1]["correct_fields"] == 1
+    assert read_candidate(observation)["blockers"]
     cost = next(c for c in cells(observation) if c["text"] == "200")
     assert cost["service_grid_scope_state"] == "unknown" and "row" not in cost
     assert result.markdown == observation["service_output"]["final_markdown"]
@@ -107,7 +96,7 @@ def test_changed_final_value_does_not_recover_the_private_original():
     result, _fragment = partial_result()
     result.markdown = result.markdown.replace("200", "999")
     observation = build_service_observation(result, sample_id="synthetic")
-    assert score(observation, "Cost", "2023", "200")[1]["correct_fields"] == 0
+    assert read_candidate(observation)["blockers"]
     assert not any(c["text"] == "200" for c in cells(observation))
 
 
@@ -116,9 +105,7 @@ def test_saved_residual_without_an_empty_optional_context_list_is_read_from_its_
     result.markdown = result.markdown.replace(',"context_rows":[]', '')
     observation = build_service_observation(result, sample_id="authored")
     assert observation["errors"] == []
-    assert score(observation, "Revenue", "2024", "900")[1]["correct_fields"] == 1
-    assert score(observation, "Cost", "2023", "200")[1]["correct_fields"] == 1
-    assert score(observation, "Cost", "2024", "200")[1]["correct_fields"] == 0
+    assert read_candidate(observation)["blockers"]
 
 
 def test_empty_context_omission_does_not_permit_changed_residual_coordinates():
@@ -180,8 +167,7 @@ def test_isolated_unclassified_residual_retains_visible_grid_without_semantic_ro
     original = result.markdown
     observation = build_service_observation(result, sample_id="authored")
     assert observation["errors"] == []
-    assert score(observation, "Sales", "Current", "700")[1]["correct_fields"] == 1
-    assert score(observation, "Sales", "Prior", "600")[1]["correct_fields"] == 1
+    assert read_candidate(observation)["blockers"]
     retained = [cell for cell in cells(observation) if cell.get("service_evidence_state") == "retained"]
     assert retained and all(cell["service_grid_scope_state"] == "geometry_only_unclassified" for cell in retained)
     assert all("row" in cell and "col" in cell for cell in retained)
@@ -200,7 +186,7 @@ def test_invalid_declared_scope_cannot_be_treated_as_an_absent_scope():
     fragment.source_header_scopes[0]["body_rows"].append(1)
     result.markdown = render_semantic_view(result._semantic_tables[0], [fragment])
     observation = build_service_observation(result, sample_id="authored")
-    assert score(observation, "Sales", "Current", "700")[1]["correct_fields"] == 0
+    assert read_candidate(observation)["blockers"]
     actual = next(cell for cell in cells(observation) if cell["text"] == "700")
     assert actual["service_grid_scope_state"] == "unknown" and "row" not in actual
 

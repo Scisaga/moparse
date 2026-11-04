@@ -1,11 +1,9 @@
 """Direct processing costs remain independent of scoring and warm-up."""
 
-from moparse_eval.metrics import text_metrics
 from moparse_eval.reporting import native_performance, postprocessing_performance
 from scripts.render_lite_report import (
     memory_bytes,
     summarize_resource_samples,
-    text_diagnostics,
 )
 
 
@@ -112,27 +110,3 @@ def test_unknown_gpu_attribution_is_not_zero_consumption():
     result = summarize_resource_samples({"samples": [sample]})
     assert result["owned_gpu_peak_mib"] is None
     assert result["gpu_complete_samples"] == 0
-
-
-
-
-
-
-
-
-
-
-
-
-def test_strict_character_diagnostics_separate_missing_text_from_located_text():
-    result = text_diagnostics([{"outcomes": [
-        {"kind": "text", "candidate": "abX", "outcome": "incorrect", "text": text_metrics("abc", "abX")},
-        {"kind": "heading", "candidate": None, "outcome": "incorrect", "text": text_metrics("missing", "")},
-        {"kind": "business_field", "candidate": "999"},
-    ]}])
-    assert result["targets"] == 2
-    assert result["missing_targets"] == 1
-    assert result["aligned_reference_characters"] == 3
-    assert result["aligned"]["strict"]["distance"] == 1
-    assert result["aligned_strict_cer"] == 1 / 3
-    assert text_diagnostics([])["aligned_strict_cer"] is None

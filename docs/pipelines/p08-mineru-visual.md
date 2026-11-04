@@ -35,7 +35,7 @@ json2md(...) -> 已有块内容的 Markdown，不是 PDF-native ParseResult
 | 表格与正文 | 文字、公式及表格内容按实际返回处理；延续标志和块类型只是观测，不是完整表头或用途真值 |
 | Markdown 与媒体 | 原生 `json2md` 主要拼接已有内容，不自动组成完整 PDF、图片包或 MO-Parse 文档；图片块无文本不代表该图已经交付 |
 
-2026-10-27按正式worker镜像内固定2.0.7源码再次核实：`title`、`doc_title`、`paragraph_title`是标题角色，`header`是页眉；`ContentBlock`不提供标题level、父标题或文档标题树。该版`json2md`处理content与merge_prev，不因标题type添加Markdown的`#`。研究适配保留这些类型、内容和官方导出，不能将没有层级字段解释成没有识别标题，也不能自行补层级。当前按expected明确文字与候选顺序评价归属，不额外要求SDK没有提供的标题树；实际缺失或错误按[统一评分标准](../../benchmark/evaluation-tasks.md#43-上下文和顺序)保留分母判错；本轮不新增标题树恢复方法。
+2026-10-27按正式worker镜像内固定2.0.7源码再次核实：`title`、`doc_title`、`paragraph_title`是标题角色，`header`是页眉；`ContentBlock`不提供标题level、父标题或文档标题树。该版`json2md`处理content与merge_prev，不因标题type添加Markdown的`#`。研究适配保留这些类型、内容和官方导出，不能将没有层级字段解释成没有识别标题，也不能自行补层级。当前按expected明确文字与候选顺序评价归属，不额外要求SDK没有提供的标题树；实际缺失或错误按[统一评分标准](../../benchmark/evaluation-tasks.md#layout-relations)保留分母判错；本轮不新增标题树恢复方法。
 
 ### 2.2 标题请求、协议与参数边界
 

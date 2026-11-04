@@ -1,0 +1,88 @@
+{
+  "state": "blocked",
+  "quality_scores_withheld": true,
+  "expected_comparison_complete": false,
+  "diagnostic_only": true,
+  "software_id": "4aaf764ed80bd3bda7bfe7ccd5c14327bac5f962f2ff5c97e32156a596f7b8a6",
+  "analysis_workers": 16,
+  "source_index": "benchmark/runs/lite/diagnosis/three-layer-current/index.json",
+  "declared_samples_traversed": 173,
+  "saved_output_records_traversed": 2076,
+  "groups": {
+    "P01": 173,
+    "P02": 173,
+    "P03": 173,
+    "P04": 173,
+    "P05": 173,
+    "P06": 173,
+    "P07": 173,
+    "P08": 173,
+    "P07-baseline": 173,
+    "P08-baseline": 173,
+    "P07-current": 173,
+    "P08-current": 173
+  },
+  "blocked_output_records": 2076,
+  "blockers": {
+    "input_scope_context": {
+      "diagnostic_events": 203232,
+      "affected_output_records": 1632
+    },
+    "prose_relation_endpoint_alignment_unsupported": {
+      "diagnostic_events": 142643,
+      "affected_output_records": 2040
+    },
+    "unclassified_business_prose": {
+      "diagnostic_events": 60900,
+      "affected_output_records": 1931
+    },
+    "list_group_scope_interpretation_unsupported": {
+      "diagnostic_events": 17544,
+      "affected_output_records": 588
+    },
+    "untyped_grid_semantics": {
+      "diagnostic_events": 1783,
+      "affected_output_records": 446
+    },
+    "spanning_header_or_group_semantics_unsupported": {
+      "diagnostic_events": 708,
+      "affected_output_records": 291
+    },
+    "untyped_record_name": {
+      "diagnostic_events": 8148,
+      "affected_output_records": 104
+    },
+    "shared_header_text_restatement_unsupported": {
+      "diagnostic_events": 1482,
+      "affected_output_records": 952
+    },
+    "compact_multi_metric_requirement_unsupported": {
+      "diagnostic_events": 2309,
+      "affected_output_records": 174
+    },
+    "compound_header_semantics_unsupported": {
+      "diagnostic_events": 4489,
+      "affected_output_records": 57
+    },
+    "native_note_binding_interpretation_unsupported": {
+      "diagnostic_events": 9,
+      "affected_output_records": 7
+    },
+    "native_link_semantic_alignment_unsupported": {
+      "diagnostic_events": 31,
+      "affected_output_records": 31
+    },
+    "text_restatement_policy_unvalidated": {
+      "diagnostic_events": 2,
+      "affected_output_records": 2
+    }
+  },
+  "meaning": "Software capability diagnostics only. Repeated events, output records and declarations do not establish semantic coverage or candidate error rates. No quality grades or adoption decision.",
+  "saved_reader_or_grader_exceptions": 0,
+  "original_measurement_policy": "recorded_native_and_postprocessing_costs_separate_no_new_end_to_end_sum",
+  "validation": {
+    "scoped_regressions_passed": 589,
+    "cli_metadata_native_reader_regressions_passed": 55,
+    "meaning": "Independent software checks only; incomplete semantic support prevents scoring freeze."
+  }
+}

@@ -8,6 +8,7 @@ from app.models.table_semantics import TextRef
 from app.services.table_context_service import native_scopes
 from app.services.table_semantics_service import bind_table_view, render_semantic_view
 from app.services.table_service import TableCellFragment, TableFragment, render_gfm_rows
+from moparse_eval.three_layer import read_candidate
 
 
 def table(rows, name="native"):
@@ -748,8 +749,6 @@ def test_a_declared_table_metric_is_scope_even_when_values_already_print_percent
     assert f"范围：{intro}；Item：Net balance；2034：83%；2033：89%" in text
     assert "单位：" + intro not in text
     from app.models.parse_result import DocumentParseResult, PageParseResult, ParsePipeline
-    from moparse_eval.matching import match_units
-    from moparse_eval.scoring import _score_records
     from moparse_eval.service_observation import build_service_observation, read_final_observation
 
     published = DocumentParseResult(document_id="authored", filename="authored.pdf", mime_type="application/pdf",
@@ -758,20 +757,13 @@ def test_a_declared_table_metric_is_scope_even_when_values_already_print_percent
                                     pipeline=ParsePipeline(profile="accurate", primary="mineru"))
     published._table_fragments, published._semantic_tables = [f], [view]
     observed, _ = read_final_observation(build_service_observation(published, sample_id="authored"))
-    target = {"id": "scoped-ratio", "kind": "table_record", "pages": [1],
-              "table": {"row_header_path": ["Expense"], "fields": [
-                  {"column_header_path": ["2034"], "value": "17.0", "unit": "%"},
-                  {"column_header_path": ["2033"], "value": "11.0", "unit": "%"}]}}
-    _, metrics = _score_records([target], observed, True, match_units([target], observed))
-    assert metrics["target_fields"] == metrics["information_correct_fields"] == 2
+    assert read_candidate(observed)["blockers"]
 
 
 @pytest.mark.parametrize("intro", ["The committee discussed percentage changes.",
                                   "Percentage illustrations are mentioned elsewhere in this report."])
 def test_an_ordinary_printed_scope_cannot_supply_a_percentage_unit(intro):
     from app.models.parse_result import DocumentParseResult, PageParseResult, ParsePipeline
-    from moparse_eval.matching import match_units
-    from moparse_eval.scoring import _score_records
     from moparse_eval.service_observation import build_service_observation, read_final_observation
 
     f = table([["Item", "2034"], ["Expense", "17.0"]])
@@ -784,11 +776,11 @@ def test_an_ordinary_printed_scope_cannot_supply_a_percentage_unit(intro):
                                  pipeline=ParsePipeline(profile="accurate", primary="mineru"))
     result._table_fragments, result._semantic_tables = [f], [view]
     observed, _ = read_final_observation(build_service_observation(result, sample_id="authored"))
-    target = {"id": "unqualified-ratio", "kind": "table_record", "pages": [1],
-              "table": {"row_header_path": ["Expense"], "fields": [
-                  {"column_header_path": ["2034"], "value": "17.0", "unit": "%"}]}}
-    _, metrics = _score_records([target], observed, True, match_units([target], observed))
-    assert metrics["information_correct_fields"] == 0 and metrics["information_incorrect_fields"] == 1
+    actual = [cell for page in observed["pages"] for block in page["blocks"]
+              for cell in block.get("cells", []) if cell["text"] == "17.0"]
+    assert len(actual) == 1
+    assert actual[0].get("unit") != "%" and "%" not in actual[0].get("units", [])
+    assert read_candidate(observed)["blockers"]
 
 
 def test_retained_unnamed_row_cannot_borrow_a_section_after_its_explicit_close():
@@ -1035,8 +1027,6 @@ def test_complete_amount_and_currency_caption_keeps_its_exact_literal_payload():
 def test_a_literal_empty_amount_slot_keeps_its_unit_without_inventing_a_value():
     from app.models.parse_result import DocumentParseResult, PageParseResult, ParsePipeline
     from app.services.final_content_service import FinalContentService
-    from moparse_eval.matching import match_units
-    from moparse_eval.scoring import _score_records
     from moparse_eval.service_observation import build_service_observation, read_final_observation
 
     f = table([["Name", "贷款金额", "本期合计还款金额", "利率(%)", "备注", "序号"],
@@ -1061,11 +1051,7 @@ def test_a_literal_empty_amount_slot_keeps_its_unit_without_inventing_a_value():
     result._semantic_tables = [view]
     FinalContentService().apply(result)
     observation, _diagnostic = read_final_observation(build_service_observation(result, sample_id="authored"))
-    target = {"id": "blank-amount", "kind": "table_record", "pages": [1],
-              "table": {"row_header_path": ["Alpha"], "fields": [
-                  {"column_header_path": ["本期合计还款金额"], "value": "", "unit": "元"}]}}
-    _units, metrics = _score_records([target], observation, True, match_units([target], observation))
-    assert metrics["target_fields"] == metrics["information_correct_fields"] == 1
+    assert read_candidate(observation)["blockers"]
 
 
 def test_existing_source_scope_owns_amount_caption_when_native_headers_are_unclassified():

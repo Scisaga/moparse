@@ -48,7 +48,7 @@ predict(...) -> 页面结果对象序列
 
 先固定 Python 包、推理后端及 1.5 模型身份，再核对[本页字段说明](#21-paddleocr-vl-页结果)对应的真实包装和默认导出。保存原始 `parsing_res_list` 与可用图片，忠实导出已有内容；标签忽略设置造成的遗漏要从本组已有结构核对，不能从 PDF 原生文字补回。
 
-候选上下文读取保留原生`number`区域的文字。所检固定版pipeline将`number`与页眉、页脚列为默认Markdown忽略区域；本轮忠实读取不会丢弃这些文字，仅在表题范围读取时将该独立编号角色视为分页家具。`formula_number`等其他编号角色不作同样处理。共享列名读取规则及边界由[共同评测任务](../../benchmark/evaluation-tasks.md#43-上下文和顺序)维护，不从expected补列名。
+候选上下文读取保留原生`number`区域的文字。所检固定版pipeline将`number`与页眉、页脚列为默认Markdown忽略区域；本轮忠实读取不会丢弃这些文字，仅在表题范围读取时将该独立编号角色视为分页家具。`formula_number`等其他编号角色不作同样处理。共享列名读取规则及边界由[共同评测任务](../../benchmark/evaluation-tasks.md#layout-relations)维护，不从expected补列名。
 
 ## 4. MO-Parse 适配逻辑
 

@@ -18,6 +18,7 @@ from typing import Any
 from zoneinfo import ZoneInfo
 
 from .expected_scoring import PROTOCOL as EXPECTED_PROTOCOL
+from .layer_aggregation import require_validation
 from .packaging import inside, package_dataset, read_json, write_json
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -39,6 +40,7 @@ def read_scoring_freeze(path: Path, identity: Mapping[str, Any]) -> dict[str, An
         raise ValueError("scoring freeze must record passed engineering validation")
     if validation.get("known_reader_defects"):
         raise ValueError("known reader defects must be repaired before scoring")
+    require_validation(validation)
     return record
 
 

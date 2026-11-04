@@ -23,8 +23,7 @@ from app.services.table_service import (
     TableSourceView,
     render_gfm_rows,
 )
-from moparse_eval.matching import match_units, observation_candidates
-from moparse_eval.scoring import _score_records
+from moparse_eval.representations import visible_text
 from moparse_eval.service_observation import (
     SERVICE_OBSERVATION_VERSION,
     _inline_text,
@@ -32,6 +31,7 @@ from moparse_eval.service_observation import (
     read_final_observation,
     read_final_page_provenance,
 )
+from moparse_eval.three_layer import read_candidate
 
 
 def _published_list_with_unqualified_value(caption="（单位:%）", *, separator="", value="N/A", unit=None,
@@ -43,7 +43,7 @@ def _published_list_with_unqualified_value(caption="（单位:%）", *, separato
             "row_header_path": ["Liquidity"], "column_header_path": [column]}
     if unit is not None:
         cell["unit"] = unit
-    return {"input_page_count": 1, "pages": [{"page": 1, "blocks": [{
+    return {"sample_id": "synthetic", "input_page_count": 1, "pages": [{"page": 1, "blocks": [{
         "id": "actual-record", "kind": "table_body", "cells": [cell],
     }]}], "service_output": {"reader_version": SERVICE_OBSERVATION_VERSION,
         "final_markdown": body, "published_provenance": {"status": "bound"}, "semantic_views": []}}
@@ -51,13 +51,15 @@ def _published_list_with_unqualified_value(caption="（单位:%）", *, separato
 
 @pytest.mark.parametrize("value", ["N/A", "不适用", "17"])
 def test_published_shared_list_unit_covers_values_without_repeating_a_suffix(value):
-    from moparse_eval.information import qualifier_evidence
     observation = _published_list_with_unqualified_value(value=value)
     before = deepcopy(observation)
     derived, _diagnostic = read_final_observation(observation)
     assert observation == before
     cell = derived["pages"][0]["blocks"][0]["cells"][0]
-    assert qualifier_evidence({"unit": "%"}, cell, [])["unit"]["status"] == "correct"
+    assert cell["units"] == ["（单位:%）"]
+    a, b = cell["printed_list_unit_scope"]["caption_span"]
+    assert observation["service_output"]["final_markdown"][a:b] == "（单位:%）\n"
+    assert read_candidate(derived)["blockers"]
 
 
 @pytest.mark.parametrize("caption,separator", [
@@ -67,28 +69,30 @@ def test_published_shared_list_unit_covers_values_without_repeating_a_suffix(val
     ("（单位:%）", "- A different list.\n\nAn independent paragraph.\n\n"),
 ])
 def test_unrelated_or_ended_unit_scope_does_not_qualify_another_list(caption, separator):
-    from moparse_eval.information import qualifier_evidence
     derived, _diagnostic = read_final_observation(
         _published_list_with_unqualified_value(caption, separator=separator))
     cell = derived["pages"][0]["blocks"][0]["cells"][0]
-    assert qualifier_evidence({"unit": "%"}, cell, [])["unit"]["status"] == "incorrect"
+    assert "units" not in cell and "printed_list_unit_scope" not in cell
+    assert read_candidate(derived)["blockers"]
 
 
 def test_shared_list_unit_does_not_rescue_an_explicit_wrong_field_unit():
-    from moparse_eval.information import qualifier_evidence
     derived, _diagnostic = read_final_observation(_published_list_with_unqualified_value(unit="USD"))
     cell = derived["pages"][0]["blocks"][0]["cells"][0]
-    assert qualifier_evidence({"unit": "%"}, cell, [])["unit"]["status"] == "incorrect"
+    assert cell["unit"] == "USD" and "units" not in cell
+    assert read_candidate(derived)["blockers"]
 
 
 @pytest.mark.parametrize("column,correct", [("附注", False), ("Notes", False), ("Code", False),
                                            ("Notes receivable", True)])
 def test_shared_list_units_distinguish_reference_properties_from_whole_business_labels(column, correct):
-    from moparse_eval.information import qualifier_evidence
     derived, _diagnostic = read_final_observation(
         _published_list_with_unqualified_value("（单位:万元）", value="17", column=column))
     cell = derived["pages"][0]["blocks"][0]["cells"][0]
-    assert (qualifier_evidence({"unit": "万元"}, cell, [])["unit"]["status"] == "correct") is correct
+    assert bool(cell.get("units")) is correct
+    if correct:
+        assert cell["units"] == ["（单位:万元）"]
+    assert read_candidate(derived)["blockers"]
 
 
 def _fragment(rows=None, *, name="t1", page=1, headers=True):
@@ -163,11 +167,15 @@ def _converted(*, text="100", state="literal"):
 
 
 def _cells(observation):
-    return [
-        candidate["cell"]
-        for candidate in observation_candidates(observation)
-        if "cell" in candidate
-    ]
+    return [cell for page in observation["pages"] for block in page["blocks"]
+            for cell in block.get("cells", [])]
+
+
+def _visible_items(observation):
+    """Inspect the reader's actual fields without matching or scoring."""
+    return [{**item, "text": visible_text(item["text"], item.get("text_format", "plain"))}
+            for page in observation["pages"] for block in page["blocks"]
+            for item in (block.get("cells") or [block]) if item.get("text")]
 
 
 def test_clean_public_body_keeps_real_table_values_and_qualifier_evidence():
@@ -272,11 +280,6 @@ def test_parenthesized_unit_is_read_as_visible_scoped_text_not_an_invented_atomi
     observed = build_service_observation(result, sample_id="invented")
     cell = next(c for c in _cells(observed) if c["text"] == "100")
     assert cell["units"] == ["(万元)"] and "unit" not in cell
-    units = [{"id": "r", "kind": "table_record", "reference_text": "收入", "pages": [1],
-              "table": {"row_header_path": ["收入"], "fields": [{"column_header_path": ["金额"],
-              "value": "100", "unit": "万元"}]}}]
-    rows, _metrics = _score_records(units, observed, True, match_units(units, observed))
-    assert rows[0]["fields"][0]["information"]["status"] == "correct"
 
 
 def test_an_actual_record_title_unit_is_read_but_a_hidden_title_is_not():
@@ -291,8 +294,7 @@ def test_an_actual_record_title_unit_is_read_but_a_hidden_title_is_not():
     observed = build_service_observation(result, sample_id="invented")
     value = next(c for c in _cells(observed) if c["text"] == "100")
     assert value["units"] == [title]
-    from moparse_eval.information import qualifier_evidence
-    assert qualifier_evidence({"unit": "%"}, value, value["column_header_path"])["unit"]["status"] == "correct"
+    assert read_candidate(observed)["blockers"]
     result.markdown = result.markdown.replace(title, "")
     assert all(title not in c.get("units", []) for c in _cells(build_service_observation(result, sample_id="invented")))
 
@@ -339,13 +341,10 @@ def _named_record(*, identity_header="Name", group=None, duplicate=False, ordina
 def test_printed_named_identity_locates_the_same_record_including_its_ordinal(header, column, value):
     result = _named_record(identity_header=header)
     observed = build_service_observation(result, sample_id="invented")
-    unit = {"id": "r", "kind": "table_record", "reference_text": "Acme", "pages": [1],
-            "table": {"row_header_path": ["Acme"], "fields": [{"column_header_path": [column], "value": value}]}}
-    rows, metrics = _score_records([unit], observed, True, match_units([unit], observed))
-    assert metrics["information_correct_fields"] == 1
-    cell = next(c for c in _cells(observed) if c["id"] == rows[0]["fields"][0]["native_id"])
+    cell = next(c for c in _cells(observed) if c.get("column_header_path") == [column])
     start, end = cell["final_markdown_span"]
     assert result.markdown[start:end] == value
+    assert read_candidate(observed)["blockers"]
     result.markdown = result.markdown.replace("Acme", "Hidden")
     assert not _cells(build_service_observation(result, sample_id="invented"))
 
@@ -355,12 +354,12 @@ def test_printed_named_identity_locates_the_same_record_including_its_ordinal(he
     ({"group": "South"}, ["North", "Acme"]),
     ({"duplicate": True}, ["Acme"]),
 ])
-def test_record_identity_requires_business_labels_but_repeated_identical_assertions_agree(options, row):
+def test_record_identity_preserves_actual_labels_and_repetition_with_grading_blocked(options, row):
     observed = build_service_observation(_named_record(**options), sample_id="invented")
-    unit = {"id": "r", "kind": "table_record", "reference_text": "Acme", "pages": [1],
-            "table": {"row_header_path": row, "fields": [{"column_header_path": ["Amount"], "value": "17"}]}}
-    _rows, metrics = _score_records([unit], observed, True, match_units([unit], observed))
-    assert metrics["information_correct_fields"] == int(options.get("duplicate", False))
+    actual = [cell for cell in _cells(observed) if cell.get("column_header_path") == ["Amount"]]
+    assert len(actual) == (2 if options.get("duplicate") else 1)
+    assert [cell["text"] for cell in actual] == ["17"] * len(actual)
+    assert read_candidate(observed)["blockers"]
 
 
 @pytest.mark.parametrize("header,row,correct", [
@@ -370,10 +369,9 @@ def test_record_identity_requires_business_labels_but_repeated_identical_asserti
 ])
 def test_named_property_and_ordinal_are_read_as_printed_identifiers_not_inferred_parents(header, row, correct):
     observed = build_service_observation(_named_record(identity_header=header), sample_id="invented")
-    unit = {"id": "r", "kind": "table_record", "reference_text": "Acme", "pages": [1],
-            "table": {"row_header_path": row, "fields": [{"column_header_path": ["Amount"], "value": "17"}]}}
-    _rows, metrics = _score_records([unit], observed, True, match_units([unit], observed))
-    assert (metrics["information_correct_fields"] == 1) is correct
+    assert any(cell.get("column_header_path") == [header] and cell["text"] == "Acme" for cell in _cells(observed))
+    assert any(cell.get("column_header_path") == ["Amount"] and cell["text"] == "17" for cell in _cells(observed))
+    assert read_candidate(observed)["blockers"]
 
 
 @pytest.mark.parametrize('ordinal_header,group,row,correct', [
@@ -396,10 +394,10 @@ def test_identity_subject_and_printed_ordinal_property_keep_the_same_record_scop
     result._semantic_tables = [view]
     result.markdown = render_semantic_view(view, [fragment])
     observed = build_service_observation(result, sample_id='invented')
-    unit = {'id': 'r', 'kind': 'table_record', 'reference_text': 'Acme', 'pages': [1],
-            'table': {'row_header_path': row, 'fields': [{'column_header_path': ['Amount'], 'value': '17'}]}}
-    _rows, metrics = _score_records([unit], observed, True, match_units([unit], observed))
-    assert (metrics['information_correct_fields'] == 1) is correct
+    actual = next(cell for cell in _cells(observed) if cell.get("column_header_path") == ["Amount"])
+    assert actual["text"] == "17"
+    assert "Acme" in actual["row_header_path"]
+    assert read_candidate(observed)["blockers"]
 
 
 def _partial_result():
@@ -461,13 +459,6 @@ def test_partial_html_period_paths_are_supported_by_printed_spans_after_publicat
     observation, diagnostic = read_final_observation(build_service_observation(result, sample_id="sample"))
     assert observation["errors"] == []
     assert diagnostic["reader_version"] == "mo-parse-final-output-readback-v15"
-    unit = {"id": "beta", "kind": "table_record", "reference_text": "Beta", "pages": [1],
-            "table": {"row_header_path": ["Beta"], "fields": [
-                {"column_header_path": ["Year ended", "2034"], "value": "13", "period": "2034"},
-                {"column_header_path": ["Year ended", "2033"], "value": "5", "period": "2033"},
-            ]}}
-    _rows, metrics = _score_records([unit], observation, True, match_units([unit], observation))
-    assert metrics["information_correct_fields"] == metrics["target_fields"] == 2
     assert result.markdown.count("13") == 1
     value = next(c for c in _cells(observation) if c["text"] == "13")
     a, b = value["final_markdown_span"]
@@ -503,16 +494,9 @@ def test_partial_gfm_remains_readable_without_acquiring_unprinted_header_spans()
     assert any(c["text"] == "11" and c.get("column_header_path") == ["Year ended", "2034"]
                for c in _cells(observation))
     assert len([c for c in _cells(observation) if c["text"] == "13"]) == 1
-    unit = {"id": "beta", "kind": "table_record", "reference_text": "Beta", "pages": [1],
-            "table": {"row_header_path": ["Beta"], "fields": [
-                {"column_header_path": ["Year ended", "2034"], "value": "13"},
-                {"column_header_path": ["Year ended", "2033"], "value": "5"},
-            ]}}
-    _rows, metrics = _score_records([unit], observation, True, match_units([unit], observation))
-    assert metrics["correct_fields"] == 1
 
 
-def test_textual_math_label_note_is_read_from_actual_prose_with_unchanged_scoring():
+def test_textual_math_label_note_is_read_from_actual_prose_with_grading_blocked():
     from app.services.final_content_service import FinalContentService
     from app.services.table_context_service import native_scopes
 
@@ -529,12 +513,9 @@ def test_textual_math_label_note_is_read_from_actual_prose_with_unchanged_scorin
     observation, _ = read_final_observation(build_service_observation(result, sample_id="sample"))
     assert "Other Cash（附注标记：1）" in result.markdown
     assert observation["errors"] == []
-    unit = {"id": "other", "kind": "table_record", "reference_text": "Other Cash", "pages": [1],
-            "table": {"row_header_path": ["Other Cash"], "fields": [
-                {"column_header_path": ["2034"], "value": "17", "period": "2034", "notes": ["1"]},
-            ]}}
-    _rows, metrics = _score_records([unit], observation, True, match_units([unit], observation))
-    assert metrics["information_correct_fields"] == 1
+    actual = next(cell for cell in _cells(observation) if cell["text"] == "17")
+    assert actual["notes"] == [note]
+    assert read_candidate(observation)["blockers"]
 
 
 def test_partial_view_cannot_recover_a_value_hidden_by_a_changed_final_rendering():
@@ -578,11 +559,11 @@ def test_explicit_field_label_separator_is_not_duplicated_by_readback():
 def test_only_real_final_markdown_is_text_never_page_native_or_plain_fallback():
     result = _result("# Actual final\n\nActual final body.")
     observation = build_service_observation(result, sample_id="sample")
-    text = "\n".join(candidate["text"] for candidate in observation_candidates(observation))
+    text = "\n".join(candidate["text"] for candidate in _visible_items(observation))
     assert text == "Actual final\nActual final body."
     assert "HIDDEN" not in text
     result.markdown = ""
-    assert observation_candidates(build_service_observation(result, sample_id="sample")) == []
+    assert _visible_items(build_service_observation(result, sample_id="sample")) == []
 
 
 def test_converted_cells_are_actual_final_spans_with_explicit_refs_and_qualifiers():
@@ -610,9 +591,9 @@ def test_unrendered_or_changed_semantic_values_are_not_recovered_from_private_ce
     result.markdown = result.markdown.replace("100", "900")
     observation = build_service_observation(result, sample_id="sample")
     assert not _cells(observation)
-    assert "100" not in [candidate["text"] for candidate in observation_candidates(observation)]
+    assert "100" not in [candidate["text"] for candidate in _visible_items(observation)]
     assert "900" in "\n".join(
-        candidate["text"] for candidate in observation_candidates(observation)
+        candidate["text"] for candidate in _visible_items(observation)
     )
     assert observation["service_output"]["semantic_views"][0]["final_evidence"] == "unknown"
 
@@ -657,7 +638,7 @@ def test_actual_retained_owned_grid_is_available_without_claiming_conversion():
     state = observation["service_output"]["semantic_views"][0]
     assert state["status"] == "retained" and state["retained_grid_present"] is True
     assert state["final_evidence"] == "retained"
-    text = "\n".join(candidate["text"] for candidate in observation_candidates(observation))
+    text = "\n".join(candidate["text"] for candidate in _visible_items(observation))
     assert text.count("100") == 1 and "Before." in text and "After." in text
 
 
@@ -729,30 +710,13 @@ def test_multiple_qualifier_refs_are_not_invented_as_one_unit_or_note_marker():
     assert cell["units"] == ["万元", "2025年度"] and "unit" not in cell
 
 
-def test_existing_field_scorer_accepts_only_explicit_final_paths_synthetic():
+def test_printed_semantic_paths_are_retained_but_unimplemented_grading_is_blocked():
     result, _, _ = _converted()
     observation = build_service_observation(result, sample_id="sample")
-    unit = {
-        "id": "record",
-        "kind": "table_record",
-        "reference_text": "收入",
-        "pages": [1],
-        "table": {
-            "row_header_path": ["收入"],
-            "fields": [
-                {
-                    "column_header_path": ["金额"],
-                    "value": "100",
-                    "unit": "万元",
-                    "period": "2025年度",
-                }
-            ],
-        },
-    }
-    matching = match_units([unit], observation)
-    rows, metrics = _score_records([unit], observation, True, matching)
-    assert metrics["target_fields"] == 1 and metrics["correct_fields"] == 1
-    assert rows[0]["fields"][0]["binding"]["correct"] is True
+    actual = next(cell for cell in _cells(observation) if cell.get("column_header_path") == ["金额"])
+    assert actual["text"] == "100" and actual["row_header_path"] == ["收入"]
+    assert actual["unit"] == "万元" and actual["period"] == "2025年度"
+    assert read_candidate(observation)["blockers"]
 
 
 @pytest.mark.parametrize(('label', 'qualifier'), [('收入(万元)', '万元'), ('收益率(%)', '%')])
@@ -767,11 +731,6 @@ def test_qualifier_inside_a_header_is_not_misreported_as_an_explicit_unit_value(
     observation = build_service_observation(result, sample_id='invented')
     value = next(cell for cell in _cells(observation) if cell['text'] == '100')
     assert 'unit' not in value and value['units'] == [label]
-    unit = {'id': 'r', 'kind': 'table_record', 'pages': [1], 'reference_text': label,
-            'table': {'row_header_path': [label], 'fields': [
-                {'column_header_path': ['金额'], 'value': '100', 'unit': qualifier}]}}
-    rows, _metrics = _score_records([unit], observation, True, match_units([unit], observation))
-    assert rows[0]['fields'][0]['information']['status'] == 'correct'
 
 
 def test_explicit_wrong_unit_cannot_be_rescued_by_a_correct_unit_in_another_label():
@@ -780,11 +739,10 @@ def test_explicit_wrong_unit_cannot_be_rescued_by_a_correct_unit_in_another_labe
     fragment.cells[7].text = '美元'
     result.markdown = render_semantic_view(view, [fragment])
     observation = build_service_observation(result, sample_id='invented')
-    unit = {'id': 'r', 'kind': 'table_record', 'pages': [1], 'reference_text': '收入(万元)',
-            'table': {'row_header_path': ['收入(万元)'], 'fields': [
-                {'column_header_path': ['金额'], 'value': '100', 'unit': '万元'}]}}
-    rows, _metrics = _score_records([unit], observation, True, match_units([unit], observation))
-    assert rows[0]['fields'][0]['information']['status'] == 'incorrect'
+    actual = next(cell for cell in _cells(observation) if cell["text"] == "100")
+    assert actual["unit"] == "美元"
+    assert actual["row_header_path"] == ["收入(万元)"]
+    assert read_candidate(observation)["blockers"]
 
 
 def test_unrelated_ambiguous_cells_do_not_erase_valid_final_semantic_neighbors():
@@ -814,23 +772,12 @@ def test_literal_escaping_and_repeated_reference_qualifiers_come_from_final_char
     assert sum(cell["text"] == "金额" for cell in _cells(observation)) == 1
 
 
-def test_retained_grid_is_scored_by_existing_reader_without_semantic_conversion():
+def test_retained_grid_remains_readable_without_claiming_semantic_conversion():
     fragment = _fragment([["项目", "金额"], ["收入", "100"]])
     result = _result(fragment.rendered)
     result._table_fragments = [fragment]
     observation = build_service_observation(result, sample_id="sample")
-    unit = {
-        "id": "record",
-        "kind": "table_record",
-        "reference_text": "收入",
-        "pages": [1],
-        "table": {
-            "row_header_path": ["收入"],
-            "fields": [{"column_header_path": ["金额"], "value": "100"}],
-        },
-    }
-    _rows, metrics = _score_records([unit], observation, True, match_units([unit], observation))
-    assert metrics["target_fields"] == metrics["correct_fields"] == 1
+    assert {cell["text"] for cell in _cells(observation)} == {"项目", "金额", "收入", "100"}
     summary = observation["service_output"]["conversion_summary"]
     assert summary["final_converted_views"] == 0 and summary["final_retained_views"] == 1
 
@@ -851,10 +798,6 @@ def test_unknown_internal_classification_does_not_hide_an_actually_printed_gfm_g
     value = next(c for c in _cells(derived) if c["text"] == "100")
     assert (value["row"], value["col"]) == (1, 1)
     assert "row_header_path" not in value and not value.get("is_row_header")
-    unit = {"id": "record", "kind": "table_record", "reference_text": "收入", "pages": [1],
-            "table": {"row_header_path": ["收入"], "fields": [{"column_header_path": ["金额"], "value": "100"}]}}
-    _rows, metrics = _score_records([unit], derived, True, match_units([unit], derived))
-    assert metrics["correct_fields"] == 1
 
 
 def test_plain_text_or_headerless_fragment_cannot_acquire_geometry_from_hidden_metadata():
@@ -875,13 +818,9 @@ def test_final_page_comments_resolve_repeated_text_without_mutating_raw_or_timin
         metadata={"timing": {"processing_seconds": 12.3}},
     )
     before = deepcopy(observation)
-    units = [
-        {"id": f"u{page}", "kind": "text", "reference_text": "Repeated sentence.", "pages": [page]}
-        for page in (1, 2)
-    ]
-    assert not match_units(units, observation)["matches"]
+    assert [block.get("provenance_pages") for page in observation["pages"] for block in page["blocks"]] == [[1, 2], [1, 2]]
     derived, diagnostic = read_final_page_provenance(observation)
-    assert set(match_units(units, derived)["matches"]) == {"u1", "u2"}
+    assert [block["provenance_pages"] for page in derived["pages"] for block in page["blocks"]] == [[1], [2]]
     assert diagnostic["status"] == "completed" and diagnostic["updated_blocks"] == 2
     assert observation == before and derived["timing"] == before["timing"]
     for raw_page, final_page in zip(observation["pages"], derived["pages"], strict=True):
@@ -983,16 +922,12 @@ def test_real_join_pages_formfeed_preserves_all_text_and_explicit_page_identity(
     assert "\f" in final
     final = final.replace("\n", newline)
     observation = build_service_observation(_result(final, pages=2), sample_id="sample")
-    assert [candidate["text"] for candidate in observation_candidates(observation)] == [
+    assert [candidate["text"] for candidate in _visible_items(observation)] == [
         "Repeated sentence.",
         "Repeated sentence.",
     ]
     derived, diagnostic = read_final_observation(observation)
-    units = [
-        {"id": f"u{page}", "kind": "text", "reference_text": "Repeated sentence.", "pages": [page]}
-        for page in (1, 2)
-    ]
-    assert set(match_units(units, derived)["matches"]) == {"u1", "u2"}
+    assert [block["provenance_pages"] for page in derived["pages"] for block in page["blocks"]] == [[1], [2]]
     assert (
         diagnostic["status"] == "completed"
         and diagnostic["source_scope"] == "current_repaired_build_only"
@@ -1009,7 +944,7 @@ def test_real_formfeed_pages_keep_code_and_reject_code_fake_page_comments(code):
         preserve_page_breaks=True,
     )
     observation = build_service_observation(_result(final, pages=2), sample_id="sample")
-    assert [candidate["text"] for candidate in observation_candidates(observation)] == [
+    assert [candidate["text"] for candidate in _visible_items(observation)] == [
         "First.",
         "<!-- page: 3 -->",
         "Second.",
@@ -1049,8 +984,8 @@ def test_real_formfeed_pages_preserve_owned_retained_and_converted_cell_blocks(c
     else:
         assert table["provenance_pages"] == [2]
         assert next(cell for cell in table["cells"] if cell["text"] == "100")["page"] == 2
-    assert "100" in [candidate["text"] for candidate in observation_candidates(derived)]
-    assert "First." in [candidate["text"] for candidate in observation_candidates(derived)]
+    assert "100" in [candidate["text"] for candidate in _visible_items(derived)]
+    assert "First." in [candidate["text"] for candidate in _visible_items(derived)]
     assert diagnostic["status"] == "completed"
 
 
@@ -1112,25 +1047,16 @@ def test_retained_grid_markers_and_escaped_html_are_real_final_cell_text(value):
 
 
 @pytest.mark.parametrize("value", ["-", "*", "1.", "---", "<sup>4</sup>"])
-def test_converted_values_keep_inline_markers_and_same_scorer_field_correctness(value):
+def test_converted_values_keep_inline_markers_with_unimplemented_grading_blocked(value):
     result, _, _ = _converted(text=value)
     observation = build_service_observation(result, sample_id="sample")
     actual = next(
         cell for cell in _cells(observation) if cell.get("column_header_path") == ["金额"]
     )
     assert actual["text"] == value and actual["value_state"] == "literal"
-    unit = {
-        "id": "record",
-        "kind": "table_record",
-        "reference_text": "收入",
-        "pages": [1],
-        "table": {
-            "row_header_path": ["收入"],
-            "fields": [{"column_header_path": ["金额"], "value": value}],
-        },
-    }
-    _rows, metrics = _score_records([unit], observation, True, match_units([unit], observation))
-    assert metrics["correct_fields"] == metrics["compared_fields"] == 1
+    a, b = actual["final_markdown_span"]
+    assert _inline_text(result.markdown[a:b]) == value
+    assert read_candidate(observation)["blockers"]
 
 
 def test_inline_code_in_final_gfm_is_read_as_code_not_as_emphasis():

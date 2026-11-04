@@ -97,10 +97,9 @@ def test_native_body_survives_table_export_and_structured_handoff(
         assert pictures[-1].source_page_ref in exported_markdown
 
 
-async def test_real_page_join_preserves_second_page_code_and_exact_page_localization(tmp_path: Path):
+def test_real_page_join_preserves_second_page_code_and_exact_page_localization(tmp_path: Path):
     from app.models import ContentParseOptions
     from app.services.table_semantics_service import TableSemanticsService
-    from moparse_eval.matching import match_units
     from moparse_eval.service_observation import build_service_observation, read_final_observation
 
     repeated = "Identical sentence."
@@ -119,18 +118,19 @@ async def test_real_page_join_preserves_second_page_code_and_exact_page_localiza
         pipeline=ParsePipeline(profile="balanced", primary="authored-native"),
     )
     result.parse_result = DocumentIRService().build(result, source, {})
-    await TableSemanticsService().apply(result, ContentParseOptions())
+    # This is a content-handoff regression. Exercise the same CPU conversion
+    # core directly; asynchronous dispatch has separate lifecycle tests.
+    TableSemanticsService._apply_owned(result, ContentParseOptions(), None)
     result.markdown = result.parse_result.renderings.markdown
     result.plain_text = result.parse_result.renderings.plain_text
     raw = build_service_observation(result, sample_id="authored-multipage")
     raw["input_page_count"] = 2
     derived, _diagnostic = read_final_observation(raw)
-    matched = match_units([
-        {"id": "one", "kind": "text", "pages": [1], "reference_text": repeated},
-        {"id": "two", "kind": "text", "pages": [2], "reference_text": repeated},
-    ], derived)
 
-    assert set(matched["matches"]) == {"one", "two"}
+    repeated_blocks = [block for page in derived["pages"] for block in page["blocks"]
+                       if block["text"] == repeated]
+    assert len(repeated_blocks) == 2
+    assert [block["provenance_pages"] for block in repeated_blocks] == [[1], [2]]
     assert result.plain_text.count("<b>literal</b> &amp;") == 1
     assert result.plain_text.count(repeated) == 2
     assert "literal\n    literal" not in result.plain_text
