@@ -3,7 +3,7 @@
   "quality_scores_withheld": true,
   "expected_comparison_complete": false,
   "candidate_comparison_started": false,
-  "software_id": "7e65bc04eccd3afc4af3adf28d921b9d56cbc448c3423362a41458c94a8ab88c",
+  "software_id": "a6d6b2d73a73fda0e3f819e990f01075aa52b4ef4e592de006b501a2ebaa5e7b",
   "configured_analysis_workers": 16,
   "source_index": "benchmark/runs/lite/requirements/current/index.json",
   "source_compilation": {
@@ -32,5 +32,9 @@
     "pboc-macro-columns-p011-018",
     "pboc-policy-columns-p019-026"
   ],
-  "meaning": "Generated requirement views and source validation are software evidence, not corpus acceptance or quality grades. Semantic completion and actual delivery remain unfinished; original candidates, bodies and processing observations are preserved."
+  "meaning": "Generated requirement views and source validation are software evidence, not corpus acceptance or quality grades. Semantic completion and actual delivery remain unfinished; original candidates, bodies and processing observations are preserved.",
+  "implemented_source_families": [
+    "dated_enumeration_roles_and_member_boundaries",
+    "financial_statement_classification_unit_scope"
+  ]
 }

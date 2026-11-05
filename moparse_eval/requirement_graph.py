@@ -256,6 +256,14 @@ def _reference_business_disposition(entry, projected):
 
 def _not_applicable(entry, layer, projected, business_sources=()):
     kind, text = entry["kind"], entry["text"]
+    if layer == "B":
+        enumeration = next((context for context in projected.get("enumeration_contexts", [])
+                            if context["declaration"].get("lexical_complete") and context.get("members")
+                            and _cover(entry, context["source"])
+                            and context["declaration"]["introduction"]["text"] == text), None)
+        if enumeration:
+            return ("source_proven_enumeration_declaration", "The declaration binds independently interpreted members rather than adding a business assertion.",
+                    {"declaration": copy.deepcopy(enumeration["declaration"]), "boundary": copy.deepcopy(enumeration["boundary"])})
     if layer == "B" and (reference := _reference_business_disposition(entry, projected)):
         return reference
     controls = projected.get("text_projection", {}).get("controls", [])
@@ -701,6 +709,9 @@ def validate_requirement_graph(graph: dict[str, Any], *, expected: dict[str, Any
                        and _cover(origin, edge.get("source", {})) for edge in relations.values()):
                 raise ValueError("interpreted proposition lacks its source-bound semantic relation")
     _validate_semantic_sources(graph, nodes)
+    from .enumeration_binding import validate_enumeration_bindings
+
+    validate_enumeration_bindings(graph, nodes, lambda source: _semantic_literal(sources, source))
     if expected is not None:
         # Reinterpret the immutable external input to catch synchronized edits
         # of nodes, projections and dispositions. This is an omission/mutation

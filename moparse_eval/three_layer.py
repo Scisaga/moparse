@@ -23,9 +23,21 @@ from .cjk_narrative_requirements import read_cjk_narrative
 from .compact_requirements import read_compact_requirements, read_compact_schema
 from .context_evidence import read_contexts
 from .entity_requirements import read_entity_requirements
+from .enumeration_binding import (
+    bind_interpreted_members,
+    inherit_omitted_subject,
+    member_for_source,
+    plan_from_syntax,
+)
+from .enumeration_context import read_enumeration_intro
 from .expected_readback import _context_continues, elements
 from .explicit_reference_requirements import read_explicit_references
 from .field_sequence_requirements import read_field_sequence_requirements
+from .financial_group_context import (
+    bind_financial_group_facts,
+    financial_statement_kind,
+    read_financial_group_context,
+)
 from .header_path_requirements import read_header_path_requirements
 from .matrix_evidence import read_matrix
 from .measurement_evidence import read_measurement_label, read_measurement_literal, read_unit_token
@@ -345,6 +357,12 @@ class _Graph:
         self.data["text"].append({"id": identifier, "text": text.strip(), "role": role, "source": source,
                                   "syntax_kind": self.data["syntax"][-1]["kind"] if self.data["syntax"] else None,
                                   "continuity_segment": self.continuity_segment, "scope": list(self.headings)})
+        if self.data["syntax"]:
+            item_source = self.data["syntax"][-1].get("syntax_evidence", {}).get("item_source")
+            if item_source:
+                self.data["text"][-1]["list_item_source"] = copy.deepcopy(item_source)
+            if self.data["syntax"][-1].get("enumeration_declaration"):
+                self.data["text"][-1]["enumeration_declaration"] = True
         return identifier
 
     def relation(self, kind: str, left: Any, right: Any, source: dict[str, Any]) -> None:
@@ -399,6 +417,21 @@ class _Graph:
                    "layers": ["B", "L"]}
         self.data["blockers"].append(copy.deepcopy(pending))
         self.data.setdefault("pending_requirements", []).append(pending)
+
+    def financial_heading(self) -> dict[str, Any] | None:
+        actual = next((item for item in reversed(self.data["syntax"])
+                       if item["kind"] == "heading" and item["scope"] == self.headings
+                       and self.headings and item["text"] == self.headings[-1]), None)
+        return {"text": actual["text"], "source": copy.deepcopy(actual["source"])} if actual else None
+
+    def end_financial_unit_scope(self, text: str, source: dict[str, Any], kind: str, parents: list[str]) -> None:
+        if not financial_statement_kind(self.financial_heading()) or not self.qualifier_evidence.get("unit"):
+            return
+        self.unresolved_unit_boundary(text, source, kind, parents)
+        self.qualifiers = {}
+        self.qualifier_levels = {}
+        self.qualifier_evidence = {}
+        self.series_context = None
 
     def fact(self, attribute: str, value: str, source: dict[str, Any], *,
              subject: str | None = None, qualifiers: dict[str, str] | None = None,
@@ -575,14 +608,19 @@ class _Graph:
             | set(result.get("required_matcher_features", [])))
 
     def prose(self, text: str, source: dict[str, Any], kind: str = "text", parents: list[str] | None = None,
-              parent_evidence: list[dict[str, Any]] | None = None) -> None:
+              parent_evidence: list[dict[str, Any]] | None = None,
+              syntax_evidence: dict[str, Any] | None = None) -> None:
+        syntax_evidence = copy.deepcopy(syntax_evidence or {})
+        if syntax_evidence.get("kind", kind) in {"item", "list_item"} and "item_source" not in syntax_evidence:
+            syntax_evidence["item_source"] = copy.deepcopy(source)
+            syntax_evidence["item_text"] = text
         if kind not in {"heading", "parent_label", "image", "image_caption", "table_caption"}:
             plan = plan_mixed_source(text, source)
             if plan:
                 self.data.setdefault("source_interpretation_plans", []).append({"source": copy.deepcopy(source), **plan})
                 self.text_projections.append({"atoms": [], "controls": plan["controls"], "complete": True})
                 for fragment in plan["fragments"]:
-                    self.prose(fragment["text"], fragment["source"], kind, parents, parent_evidence)
+                    self.prose(fragment["text"], fragment["source"], kind, parents, parent_evidence, syntax_evidence)
                 return
         if kind == "heading":
             self.clear_heading_state()
@@ -590,13 +628,26 @@ class _Graph:
             self.continuity_segment += 1
         self.data["syntax"].append({"kind": kind, "text": text, "source": source,
                                     "scope": list(self.headings), "parents": list(parents or []),
-                                    "parent_evidence": copy.deepcopy(parent_evidence or [])})
+                                    "parent_evidence": copy.deepcopy(parent_evidence or []),
+                                    "syntax_evidence": copy.deepcopy(syntax_evidence or {})})
+        declaration = read_enumeration_intro(text, source, scope=self.headings) if kind not in {
+            "heading", "image", "image_caption", "table_caption"} else {"matched": False}
+        if declaration["matched"]:
+            self.unresolved_unit_boundary(text, source, kind, list(parents or []))
+            self.qualifiers, self.qualifier_levels, self.qualifier_evidence = {}, {}, {}
+            self.compact_schema, self.series_context = None, None
+            self.subject, self.identity_facets, self.record_id = "", {}, None
+            self.data["syntax"][-1].update(semantic_role="enumeration_declaration", enumeration_declaration=declaration)
+            self.literal(text, source)
+            return
         body = plan_field_body(text, source) if kind not in {"heading", "parent_label", "image", "image_caption", "table_caption"} else None
         if body:
+            self.end_financial_unit_scope(text, source, kind, list(parents or []))
             self.literal(body["label"], body["label_source"], "label")
             self.data["syntax"].append({"kind": "field_body", "text": body["body"], "source": body["body_source"],
                 "scope": list(self.headings), "parents": list(parents or []),
                 "parent_evidence": copy.deepcopy(parent_evidence or []),
+                "syntax_evidence": copy.deepcopy(syntax_evidence or {}),
                 "printed_label": body["label"], "label_source": copy.deepcopy(body["label_source"])})
             self.literal(body["body"], body["body_source"])
             self.text_projections.append({"atoms": [], "complete": True, "controls": body["controls"]})
@@ -616,10 +667,25 @@ class _Graph:
             return
         if re.search(r"续表|續表|\btable\s+continued\b|\bcontinued\s+table\b", text, re.I):
             self.block("cross_page_relation_interpretation_unsupported", source, text=text)
+        financial_parents = []
+        for parent in parents or []:
+            declared = next((item for item in parent_evidence or [] if item["text"] == parent), None)
+            actual = next((item for item in reversed(self.data["syntax"][:-1]) if item["text"] == parent
+                           and (declared is None or self.source_key(item["source"]) == self.source_key(declared["source"]))), None)
+            financial_parents.append({"text": parent, "source": copy.deepcopy(actual["source"]),
+                "financial_group_context": copy.deepcopy(actual.get("financial_group_context"))} if actual else {"text": parent})
+        financial_context = read_financial_group_context(text, source, kind=kind,
+            heading=self.financial_heading(), parents=financial_parents, unit=self.qualifier_evidence.get("unit"))
+        if kind == "parent_label" and financial_context["matched"]:
+            self.data["syntax"][-1].update(semantic_role="financial_statement_classification",
+                                           financial_group_context=copy.deepcopy(financial_context))
+            self.data.setdefault("financial_group_contexts", []).append(copy.deepcopy(financial_context))
+            self.literal(text, source, "locator")
+            return
         for parent in parents or []:
             parent_pairs = _pairs(parent)
-            if not parent_pairs or any(not (IDENTITY.fullmatch(key) or QUALIFIER.fullmatch(key))
-                                       for key, _ in parent_pairs):
+            if not financial_context["matched"] and (not parent_pairs or any(not (IDENTITY.fullmatch(key) or QUALIFIER.fullmatch(key))
+                                       for key, _ in parent_pairs)):
                 actual = next((item for item in reversed(self.data["syntax"][:-1]) if item["text"] == parent), None)
                 self.block("list_group_scope_interpretation_unsupported", source, parent=parent,
                            parent_source=copy.deepcopy(actual["source"]) if actual else None)
@@ -664,6 +730,8 @@ class _Graph:
                     self.qualifier_evidence[key] = {"text": value, "source": copy.deepcopy(context["qualifier_sources"][key]),
                                                     "level": "caption_shared"}
                 return
+        if not pairs and kind != "parent_label":
+            self.end_financial_unit_scope(text, source, kind, list(parents or []))
         if self.compact_schema and kind == "parent_label" and not _pairs(text):
             self.open_record(source)
             self.literal(text, source, "locator")
@@ -683,6 +751,7 @@ class _Graph:
                 qualifier_sources={key: proof["source"] for key, proof in self.qualifier_evidence.items()},
                 identity_facets=self.identity_facets, scope=self.headings)
             if series["matched"] and (series["facts"] or not compact["matched"]):
+                bind_financial_group_facts(series, financial_context)
                 self.ingest(series, series=True, record_source=source)
                 if series.get("parent_bindings"):
                     for binding in series["parent_bindings"]:
@@ -848,7 +917,19 @@ class _Graph:
                 if QUALIFIER.fullmatch(key):
                     pass  # The source-bound declaration above already stored its complete token.
                 elif value:
-                    self.fact(key, value, value_source, attribute_source=key_source)
+                    facets = copy.deepcopy(self.identity_facets)
+                    if financial_context["matched"]:
+                        facets["group"] = copy.deepcopy(financial_context["group_path"])
+                    fact = self.fact(key, value, value_source, attribute_source=key_source, identity_facets=facets)
+                    if financial_context["matched"]:
+                        if fact["role"] == "identity":
+                            binding: dict[str, Any] = {"facts": [fact]}
+                            bind_financial_group_facts(binding, financial_context)
+                            self.data["blockers"].extend(binding.get("blockers", []))
+                            self.data.setdefault("pending_requirements", []).extend(binding.get("pending_requirements", []))
+                        else:
+                            fact["row_evidence"] = copy.deepcopy(financial_context["row_evidence"])
+                            fact["role_basis"] = {"financial_group_context": copy.deepcopy(financial_context)}
                 elif kind != "parent_label":
                     # A colon alone is a scope label, not an empty fact.
                     pass
@@ -877,6 +958,9 @@ class _Graph:
 
 
 def _finish(graph: _Graph) -> dict[str, Any]:
+    enumerations = plan_from_syntax(graph.data["syntax"])
+    graph.data["blockers"].extend(copy.deepcopy(enumerations["blockers"]))
+    graph.data.setdefault("pending_requirements", []).extend(copy.deepcopy(enumerations["pending_requirements"]))
     # A shared monetary declaration inside an explicitly mixed record limits
     # its amount fields. An isolated unusual explicit field/record unit is
     # retained verbatim; generic type expectations cannot correct it.
@@ -968,6 +1052,7 @@ def _finish(graph: _Graph) -> dict[str, Any]:
     merged = []
     for item in sentence_units:
         if (merged and merged[-1]["role"] == item["role"] == "literal"
+                and merged[-1].get("list_item_source") == item.get("list_item_source")
                 and merged[-1].get("continuity_segment") == item.get("continuity_segment")
                 and merged[-1].get("scope") == item.get("scope")
                 and not merged[-1]["source"].get("cell") and not item["source"].get("cell")
@@ -984,10 +1069,13 @@ def _finish(graph: _Graph) -> dict[str, Any]:
             merged.append(item)
     graph.data["text"] = merged
     for item in merged:
+        if item.get("enumeration_declaration"):
+            continue
         if item["role"] != "literal" or item["source"].get("cell") or item.get("syntax_kind") in {
                 "heading", "image", "image_caption", "picture", "figure", "table_caption"}:
             continue
         source = copy.deepcopy(item["source"])
+        enumeration = member_for_source(enumerations, source)
         originals = item.get("source_fragments", [source])
         texts = item.get("source_fragment_texts", [item["text"]])
         if len(originals) > 1:
@@ -1092,7 +1180,9 @@ def _finish(graph: _Graph) -> dict[str, Any]:
         advanced = set(narrative.get("required_matcher_features", [])) - {"finite_tense", "coordination_scope", "modal_operator", "negation_scope"}
         prefer_narrative = narrative["complete"] and (bool(advanced) or narrative.get("syntax_language") == "zh")
         if family_claimed or not logical["facts"] or logical["blockers"] or re.search(r"\band\b", item["text"], re.I) or prefer_narrative:
-            proposition = read_propositions(item["text"], source, scope=item.get("scope", []))
+            proposition = read_propositions(item["text"], source, scope=item.get("scope", []),
+                subject=enumeration[1]["member_context"]["subject"] if enumeration else None)
+            inherit_omitted_subject(proposition, enumeration)
             selected = (narrative if prefer_narrative or family_claimed else proposition if proposition["complete"] and (not logical["facts"] or logical["blockers"]
                         or len(proposition["facts"]) > len(logical["facts"]))
                         else narrative if narrative["logic"] and (not logical["facts"] or logical["blockers"])
@@ -1132,6 +1222,7 @@ def _finish(graph: _Graph) -> dict[str, Any]:
                     "reference_owner_evidence": copy.deepcopy(item.get("reference_owner_evidence", [])),
                     "parents": copy.deepcopy(item.get("prose_parents", []))}
                    for item in merged if item["role"] == "literal" and not item["source"].get("cell")
+                   and not item.get("enumeration_declaration")
                    and not item.get("entity_assertion") and not item.get("unresolved_business_prose")]
     prose = read_prose_sequence(prose_units)
     graph.data["prose_endpoints"] = prose["endpoints"]
@@ -1144,6 +1235,7 @@ def _finish(graph: _Graph) -> dict[str, Any]:
     graph.data["blockers"].extend({**copy.deepcopy(blocker), "layers": ["L"]} for blocker in prose["blockers"])
     for edge in prose["relations"]:
         graph.data["relations"].append({**edge, "id": f"L:{len(graph.data['relations'])}"})
+    bind_interpreted_members(graph.data, enumerations)
     # Identity values are independently tested; they are not their own subject.
     for item in graph.data["business"]:
         if item["role"] == "identity" and canonical(item["value"]) == canonical(item["subject"]):
@@ -1220,7 +1312,9 @@ def compile_markdown(markdown: str, *, sample_id: str = "synthetic",
         elif element.cells:
             graph.table(element.cells, source)
         else:
-            graph.prose(element.text, source, "parent_label" if element.has_children else element.kind, list(element.parents))
+            graph.prose(element.text, source, "parent_label" if element.has_children else element.kind, list(element.parents),
+                        syntax_evidence={"kind": element.kind, "list_span": list(element.list_span) if element.list_span else None,
+                                         "list_lines": list(element.lines), "list_stream": path})
     return _finish(graph)
 
 
@@ -1324,7 +1418,10 @@ def read_candidate(observation: dict[str, Any]) -> dict[str, Any]:
                                 graph.enter_heading(element.text, level)
                             graph.prose(element.text, element_source,
                                         "heading" if declared_heading else "parent_label" if element.has_children else element.kind,
-                                        [*parent_labels, *list(element.parents)], own_parents)
+                                        [*parent_labels, *list(element.parents)], own_parents,
+                                        syntax_evidence={"kind": "heading" if declared_heading else element.kind,
+                                            "list_span": list(element.list_span) if element.list_span else None,
+                                            "list_lines": list(element.lines), "list_stream": source["path"]})
                 else:
                     if kind in {"heading", "section_header", "title", "doc_title"}:
                         level = block.get("heading_level", block.get("level", 1)) or 1
@@ -1332,7 +1429,11 @@ def read_candidate(observation: dict[str, Any]) -> dict[str, Any]:
                     graph.prose(visible_text(text, representation), source,
                                 "heading" if kind in {"heading", "section_header", "title", "doc_title"}
                                 else "parent_label" if block.get("public_has_children") else kind,
-                                [*parent_labels, *block.get("public_list_parents", [])], own_parents)
+                                [*parent_labels, *block.get("public_list_parents", [])], own_parents,
+                                syntax_evidence={"kind": block.get("public_syntax_kind", kind),
+                                    "list_span": copy.deepcopy(block.get("public_list_span")),
+                                    "list_lines": copy.deepcopy(block.get("public_lines")),
+                                    "list_stream": "delivered-markdown" if "public_syntax_kind" in block else source["path"]})
     explicit_scopes = {}
     heading_by_block = {event["source"].get("block"): event for event in contexts["heading_events"]}
     for block, record in contexts["by_block"].items():

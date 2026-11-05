@@ -69,7 +69,9 @@ def interpret_reference_sources(sample_id: str, units: tuple[SourceUnit, ...]) -
             reader.table(copy.deepcopy(target["cells"]), source)
         else:
             reader.prose(target.get("raw_text", target["text"]), source,
-                         "parent_label" if target.get("has_children") else target["kind"], list(unit.parents))
+                         "parent_label" if target.get("has_children") else target["kind"], list(unit.parents),
+                         syntax_evidence={"kind": target["kind"], "list_span": copy.deepcopy(target.get("list_span")),
+                                          "list_lines": copy.deepcopy(source.get("lines")), "list_stream": source["path"]})
     return _finish(reader)
 
 
