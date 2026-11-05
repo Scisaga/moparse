@@ -35,6 +35,6 @@ PYTHONPATH=. .venv/bin/python benchmark/diagnostics/paddle-color-probe.py
 
 ## 本轮执行状态
 
-当前工程预检02八组共88项任务完成，其中64项独立单页超时标定成功；范围、配置及实际Graph记录见[执行就绪证据](../runs/lite/preflight/execution-readiness.json)。本次[执行锁](../execution-lock.json)据此冻结后，P01—P08各完成800页一次及固定80页三轮，MO服务恢复通过，旧评分及报告结论已删除，当前共同程序重评及唯一报告已完成。质量、成本和未知仅由[当前报告](../reports/lite/report.md)呈现，不在诊断中复制成绩；TTS身份变化、活动或unknown只披露，先前撤回产物不接续、拼接或重建比较，权威状态见[评测索引](../reports/README.md)。
+当前工程预检02八组共88项任务完成，其中64项独立单页超时标定成功；范围、配置及实际Graph记录见[执行就绪证据](../runs/lite/preflight/execution-readiness.json)。本次[执行锁](../execution-lock.json)据此冻结后，P01—P08各完成800页一次及固定80页三轮，MO服务恢复通过。旧评分及报告结论已删除，三层评分正在用保存输出重建，完整质量成绩仍暂停；实际状态由[评测索引](../reports/README.md)维护。质量、成本和未知仅由[当前报告](../reports/lite/report.md)呈现，不在诊断中复制成绩；TTS身份变化、活动或unknown只披露，先前撤回产物不接续、拼接或重建比较。
 
 共同条件是受测后端共享16 GiB自有显存预算，TTS保持运行且负载不控制，评测不启动、停止、重启或改配置。受测进程自有显存、TTS和整卡余量分别记录，身份活动与未知如实披露，不宣称独占或TTS空闲；预检任务完成不证明语料正确、解析质量合格或完整长文档性能。环境观测策略变化不修改评分指标、匹配规则和分母。

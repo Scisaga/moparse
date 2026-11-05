@@ -1,0 +1,3260 @@
+{
+  "schema": "moparse-processing-cost-summary",
+  "purpose": "Original measured processing costs only; no quality grades or new inference; raw execution records remain local.",
+  "source_run": "benchmark/runs/lite/run.json",
+  "source_native_run_id": "20261026-lite-v3",
+  "original_native_execution_software_id": "c6e7f5c0cdcbb8801d17595c515fcbe7794111c396bfe58a6d0ab71a199db28e",
+  "current_scoring_time_included": false,
+  "new_inference_or_candidate_replay_performed": false,
+  "measurement_plan": {
+    "quality800": {
+      "measured_rounds": 1,
+      "pages_per_round": 800,
+      "sample_count": 173
+    },
+    "perf80": {
+      "measured_rounds": 3,
+      "pages_per_round": 80,
+      "sample_count": 28
+    }
+  },
+  "boundaries": {
+    "native": "direct worker processing to native result and faithful export ready; includes required native processing/render/export, excludes service semantic conversion and API assembly",
+    "service": "saved deterministic postprocessing wall time only; native JSON loading and final persistence/scoring/reporting timed separately",
+    "prohibited_sum": "historical native duration plus saved service replay time is not a newly measured end-to-end duration",
+    "rounds": "totals of original case processing durations; not whole-job start-to-finish wall time",
+    "repetitions": "perf80 repetitions are not independent documents"
+  },
+  "missing_policy": "null/unavailable remain unknown, never zero or estimated; observed subtotals are not complete totals",
+  "resource_policy": {
+    "allocation_is_not_usage": true,
+    "maxima_are_not_sums": true,
+    "worker_rss_is_process_sampling_not_inference_host_or_total_machine_memory": true,
+    "cgroup_lifetime_peak_is_not_per_document_incremental_usage": true,
+    "gpu_allocator_page_peaks_are_not_total_device_memory": true,
+    "unrecorded_gpu_residence_remains_unknown": true,
+    "warmup_and_initialization_excluded_from_measured_resource_summary": true,
+    "resource_observation_rows_omitted_from_report_data": true,
+    "native_nonmeasured_records_listed_once_per_pipeline": true
+  },
+  "tts_shared_observation": {
+    "policy": "keep_running_observe_only",
+    "co_resident": true,
+    "workload_controlled": false,
+    "exclusive_gpu_claim": false,
+    "tts_idle_claim": false,
+    "identity_status": "unchanged",
+    "declaration": "uncontrolled_observed_only",
+    "before": {
+      "active_job": false,
+      "persistent_active_jobs": [],
+      "job_count": 71
+    },
+    "after": {
+      "active_job": false,
+      "persistent_active_jobs": [],
+      "job_count": 76
+    },
+    "status": "observed_activity",
+    "observed_new_jobs": 5,
+    "reason": "active_or_new_jobs",
+    "limitation": "start/end health and persistent-job counters are not atomic admission control; short calls without a persistent job may be unobserved"
+  },
+  "native": {
+    "P01": {
+      "declared_allocation": {
+        "preprocessing_cpus": 8,
+        "preprocessing_memory_gib": 8,
+        "inference_cpus": 4,
+        "inference_memory_gib": 20,
+        "gpu_device": "1",
+        "gpu_memory_gib": 16,
+        "power_watts": 200,
+        "outer_concurrency": 1,
+        "client_concurrency": 4
+      },
+      "co_resident_services": {
+        "qwen3-tts-openai.service": {
+          "policy": "keep_running",
+          "observation_policy": "observe_only",
+          "inference_during_benchmark": "uncontrolled_observed_only",
+          "instruction_date": "2026-10-26"
+        }
+      },
+      "nonmeasured": {
+        "warmup": [
+          {
+            "sample_id": "vanke-interest-p001-002",
+            "run_id": "20261026-lite-v3",
+            "repetition": 1,
+            "status": "completed",
+            "processing_seconds": 2.2880721061956137,
+            "input_pages": 2
+          },
+          {
+            "sample_id": "spdb-cover-declaration-p001-002",
+            "run_id": "20261026-lite-v3",
+            "repetition": 1,
+            "status": "completed",
+            "processing_seconds": 4.701799998991191,
+            "input_pages": 2
+          },
+          {
+            "sample_id": "pingan-financials-p001-004",
+            "run_id": "20261026-lite-v3",
+            "repetition": 1,
+            "status": "completed",
+            "processing_seconds": 20.504097865894437,
+            "input_pages": 4
+          }
+        ],
+        "initialization": [
+          {
+            "run_id": "20261026-lite-v3",
+            "initialization_seconds": 7.728249937063083,
+            "scope": "persistent_sdk_worker_once"
+          }
+        ]
+      },
+      "quality800": {
+        "boundary": "direct_worker_processing_to_native_and_faithful_export_ready",
+        "scheduled_runs": 173,
+        "measured_runs": 173,
+        "successful_runs": 173,
+        "failed_runs": 0,
+        "rounds": [
+          {
+            "repetition": "1",
+            "measured_samples": 173,
+            "attempted_input_pages": 800,
+            "completed_input_pages": 800,
+            "processing_seconds_including_failures": 1565.3464858389925,
+            "observed_processing_seconds_subtotal": 1565.3464858389925,
+            "observed_processing_samples": 173,
+            "timing_complete": true,
+            "completed_pages_per_second_including_failure_cost": 0.51106895964392,
+            "seconds_per_attempted_input_page": 1.9566831072987407,
+            "all_samples_completed": true
+          }
+        ],
+        "round_duration_summary": {
+          "n": 1,
+          "median_seconds": 1565.3464858389925,
+          "min_seconds": 1565.3464858389925,
+          "max_seconds": 1565.3464858389925,
+          "sample_stdev_seconds": null,
+          "coefficient_of_variation": null,
+          "includes_failed_attempts": true,
+          "has_unavailable_duration_observations": false
+        },
+        "repetitions_are_not_independent_documents": true,
+        "measured_status_counts": {
+          "completed": 173
+        },
+        "failed_runs_definition": "scheduled status not in ok/success/completed/succeeded; raw statuses retained separately",
+        "resources": {
+          "scope": "measured_cases_only_warmup_and_initialization_excluded",
+          "measured_case_count": 173,
+          "observed_worker_allocations": [
+            {
+              "gpu_device": null,
+              "preprocessing_hard_memory_limit_separate": true,
+              "stage_isolation": "cpu_worker_remote_gpu",
+              "worker_cpus": 8,
+              "worker_memory": "8g"
+            }
+          ],
+          "observed_worker_limit_variants": [
+            {
+              "cpu.max": "800000 100000",
+              "cpu_quota_cpus": 8.0,
+              "cpu_quota_status": "observed",
+              "memory.max": "8589934592",
+              "memory_hard_limit_bytes": 8589934592,
+              "memory_limit_status": "observed"
+            }
+          ],
+          "preprocessing_peak_process_rss_bytes": {
+            "observed_samples": 173,
+            "total_samples": 173,
+            "missing_samples": 0,
+            "maximum": 5145485312
+          },
+          "worker_processing_peak_process_rss_bytes": {
+            "observed_samples": 173,
+            "total_samples": 173,
+            "missing_samples": 0,
+            "maximum": 5841670144
+          },
+          "worker_cgroup_lifetime_peak_memory_bytes": {
+            "observed_samples": 173,
+            "total_samples": 173,
+            "missing_samples": 0,
+            "maximum": 5961437184
+          },
+          "rss_samples": {
+            "observed_case_count": 173,
+            "recorded_sample_count": 71124
+          },
+          "preprocessing_memory_observation_status_counts": {
+            "process RSS sampled every 20 ms; not a separate hard cgroup limit": 173
+          },
+          "inference_gpu_observation": {
+            "scope": "saved_per_page_allocator_peaks_not_total_gpu_residence",
+            "attempted_input_pages": 800,
+            "page_runtime_entries": 0,
+            "gpu_peak_allocated_bytes": {
+              "observed_samples": 0,
+              "total_samples": 0,
+              "missing_samples": 0,
+              "maximum": null
+            },
+            "gpu_peak_reserved_bytes": {
+              "observed_samples": 0,
+              "total_samples": 0,
+              "missing_samples": 0,
+              "maximum": null
+            },
+            "unobserved_input_pages": 800,
+            "total_device_or_tts_residence_peak_bytes": null,
+            "missing_is_not_zero": true
+          },
+          "cuda_graph_status_counts": {
+            "real_preflight_completed_with_recorded_component_exceptions": 173
+          }
+        }
+      },
+      "perf80": {
+        "boundary": "direct_worker_processing_to_native_and_faithful_export_ready",
+        "scheduled_runs": 84,
+        "measured_runs": 84,
+        "successful_runs": 84,
+        "failed_runs": 0,
+        "rounds": [
+          {
+            "repetition": "1",
+            "measured_samples": 28,
+            "attempted_input_pages": 80,
+            "completed_input_pages": 80,
+            "processing_seconds_including_failures": 201.00379916280508,
+            "observed_processing_seconds_subtotal": 201.00379916280508,
+            "observed_processing_samples": 28,
+            "timing_complete": true,
+            "completed_pages_per_second_including_failure_cost": 0.3980024274824934,
+            "seconds_per_attempted_input_page": 2.5125474895350637,
+            "all_samples_completed": true
+          },
+          {
+            "repetition": "2",
+            "measured_samples": 28,
+            "attempted_input_pages": 80,
+            "completed_input_pages": 80,
+            "processing_seconds_including_failures": 199.89884769148193,
+            "observed_processing_seconds_subtotal": 199.89884769148193,
+            "observed_processing_samples": 28,
+            "timing_complete": true,
+            "completed_pages_per_second_including_failure_cost": 0.40020240698670595,
+            "seconds_per_attempted_input_page": 2.4987355961435243,
+            "all_samples_completed": true
+          },
+          {
+            "repetition": "3",
+            "measured_samples": 28,
+            "attempted_input_pages": 80,
+            "completed_input_pages": 80,
+            "processing_seconds_including_failures": 199.42380343098193,
+            "observed_processing_seconds_subtotal": 199.42380343098193,
+            "observed_processing_samples": 28,
+            "timing_complete": true,
+            "completed_pages_per_second_including_failure_cost": 0.4011557227554683,
+            "seconds_per_attempted_input_page": 2.492797542887274,
+            "all_samples_completed": true
+          }
+        ],
+        "round_duration_summary": {
+          "n": 3,
+          "median_seconds": 199.89884769148193,
+          "min_seconds": 199.42380343098193,
+          "max_seconds": 201.00379916280508,
+          "sample_stdev_seconds": 0.8106552201760971,
+          "coefficient_of_variation": 0.004051071978208934,
+          "includes_failed_attempts": true,
+          "has_unavailable_duration_observations": false
+        },
+        "repetitions_are_not_independent_documents": true,
+        "measured_status_counts": {
+          "completed": 84
+        },
+        "failed_runs_definition": "scheduled status not in ok/success/completed/succeeded; raw statuses retained separately",
+        "resources": {
+          "scope": "measured_cases_only_warmup_and_initialization_excluded",
+          "measured_case_count": 84,
+          "observed_worker_allocations": [
+            {
+              "gpu_device": null,
+              "preprocessing_hard_memory_limit_separate": true,
+              "stage_isolation": "cpu_worker_remote_gpu",
+              "worker_cpus": 8,
+              "worker_memory": "8g"
+            }
+          ],
+          "observed_worker_limit_variants": [
+            {
+              "cpu.max": "800000 100000",
+              "cpu_quota_cpus": 8.0,
+              "cpu_quota_status": "observed",
+              "memory.max": "8589934592",
+              "memory_hard_limit_bytes": 8589934592,
+              "memory_limit_status": "observed"
+            }
+          ],
+          "preprocessing_peak_process_rss_bytes": {
+            "observed_samples": 84,
+            "total_samples": 84,
+            "missing_samples": 0,
+            "maximum": 5511987200
+          },
+          "worker_processing_peak_process_rss_bytes": {
+            "observed_samples": 84,
+            "total_samples": 84,
+            "missing_samples": 0,
+            "maximum": 6221393920
+          },
+          "worker_cgroup_lifetime_peak_memory_bytes": {
+            "observed_samples": 84,
+            "total_samples": 84,
+            "missing_samples": 0,
+            "maximum": 6514311168
+          },
+          "rss_samples": {
+            "observed_case_count": 84,
+            "recorded_sample_count": 26379
+          },
+          "preprocessing_memory_observation_status_counts": {
+            "process RSS sampled every 20 ms; not a separate hard cgroup limit": 84
+          },
+          "inference_gpu_observation": {
+            "scope": "saved_per_page_allocator_peaks_not_total_gpu_residence",
+            "attempted_input_pages": 240,
+            "page_runtime_entries": 0,
+            "gpu_peak_allocated_bytes": {
+              "observed_samples": 0,
+              "total_samples": 0,
+              "missing_samples": 0,
+              "maximum": null
+            },
+            "gpu_peak_reserved_bytes": {
+              "observed_samples": 0,
+              "total_samples": 0,
+              "missing_samples": 0,
+              "maximum": null
+            },
+            "unobserved_input_pages": 240,
+            "total_device_or_tts_residence_peak_bytes": null,
+            "missing_is_not_zero": true
+          },
+          "cuda_graph_status_counts": {
+            "real_preflight_completed_with_recorded_component_exceptions": 84
+          }
+        }
+      }
+    },
+    "P02": {
+      "declared_allocation": {
+        "preprocessing_cpus": 8,
+        "preprocessing_memory_gib": 8,
+        "inference_cpus": 4,
+        "inference_memory_gib": 20,
+        "gpu_device": "1",
+        "gpu_memory_gib": 16,
+        "power_watts": 200,
+        "outer_concurrency": 1,
+        "client_concurrency": 4
+      },
+      "co_resident_services": {
+        "qwen3-tts-openai.service": {
+          "policy": "keep_running",
+          "observation_policy": "observe_only",
+          "inference_during_benchmark": "uncontrolled_observed_only",
+          "instruction_date": "2026-10-26"
+        }
+      },
+      "nonmeasured": {
+        "warmup": [
+          {
+            "sample_id": "vanke-interest-p001-002",
+            "run_id": "20261026-lite-v3",
+            "repetition": 1,
+            "status": "completed",
+            "processing_seconds": 2.318309146910906,
+            "input_pages": 2
+          },
+          {
+            "sample_id": "spdb-cover-declaration-p001-002",
+            "run_id": "20261026-lite-v3",
+            "repetition": 1,
+            "status": "completed",
+            "processing_seconds": 4.676176737062633,
+            "input_pages": 2
+          },
+          {
+            "sample_id": "pingan-financials-p001-004",
+            "run_id": "20261026-lite-v3",
+            "repetition": 1,
+            "status": "completed",
+            "processing_seconds": 15.646094913827255,
+            "input_pages": 4
+          }
+        ],
+        "initialization": [
+          {
+            "run_id": "20261026-lite-v3",
+            "initialization_seconds": 8.023209649836645,
+            "scope": "persistent_sdk_worker_once"
+          }
+        ]
+      },
+      "quality800": {
+        "boundary": "direct_worker_processing_to_native_and_faithful_export_ready",
+        "scheduled_runs": 173,
+        "measured_runs": 173,
+        "successful_runs": 173,
+        "failed_runs": 0,
+        "rounds": [
+          {
+            "repetition": "1",
+            "measured_samples": 173,
+            "attempted_input_pages": 800,
+            "completed_input_pages": 800,
+            "processing_seconds_including_failures": 1478.3034848573152,
+            "observed_processing_seconds_subtotal": 1478.3034848573152,
+            "observed_processing_samples": 173,
+            "timing_complete": true,
+            "completed_pages_per_second_including_failure_cost": 0.5411608700071592,
+            "seconds_per_attempted_input_page": 1.847879356071644,
+            "all_samples_completed": true
+          }
+        ],
+        "round_duration_summary": {
+          "n": 1,
+          "median_seconds": 1478.3034848573152,
+          "min_seconds": 1478.3034848573152,
+          "max_seconds": 1478.3034848573152,
+          "sample_stdev_seconds": null,
+          "coefficient_of_variation": null,
+          "includes_failed_attempts": true,
+          "has_unavailable_duration_observations": false
+        },
+        "repetitions_are_not_independent_documents": true,
+        "measured_status_counts": {
+          "completed": 173
+        },
+        "failed_runs_definition": "scheduled status not in ok/success/completed/succeeded; raw statuses retained separately",
+        "resources": {
+          "scope": "measured_cases_only_warmup_and_initialization_excluded",
+          "measured_case_count": 173,
+          "observed_worker_allocations": [
+            {
+              "gpu_device": null,
+              "preprocessing_hard_memory_limit_separate": true,
+              "stage_isolation": "cpu_worker_remote_gpu",
+              "worker_cpus": 8,
+              "worker_memory": "8g"
+            }
+          ],
+          "observed_worker_limit_variants": [
+            {
+              "cpu.max": "800000 100000",
+              "cpu_quota_cpus": 8.0,
+              "cpu_quota_status": "observed",
+              "memory.max": "8589934592",
+              "memory_hard_limit_bytes": 8589934592,
+              "memory_limit_status": "observed"
+            }
+          ],
+          "preprocessing_peak_process_rss_bytes": {
+            "observed_samples": 173,
+            "total_samples": 173,
+            "missing_samples": 0,
+            "maximum": 5281038336
+          },
+          "worker_processing_peak_process_rss_bytes": {
+            "observed_samples": 173,
+            "total_samples": 173,
+            "missing_samples": 0,
+            "maximum": 6419660800
+          },
+          "worker_cgroup_lifetime_peak_memory_bytes": {
+            "observed_samples": 173,
+            "total_samples": 173,
+            "missing_samples": 0,
+            "maximum": 6334656512
+          },
+          "rss_samples": {
+            "observed_case_count": 173,
+            "recorded_sample_count": 66829
+          },
+          "preprocessing_memory_observation_status_counts": {
+            "process RSS sampled every 20 ms; not a separate hard cgroup limit": 173
+          },
+          "inference_gpu_observation": {
+            "scope": "saved_per_page_allocator_peaks_not_total_gpu_residence",
+            "attempted_input_pages": 800,
+            "page_runtime_entries": 0,
+            "gpu_peak_allocated_bytes": {
+              "observed_samples": 0,
+              "total_samples": 0,
+              "missing_samples": 0,
+              "maximum": null
+            },
+            "gpu_peak_reserved_bytes": {
+              "observed_samples": 0,
+              "total_samples": 0,
+              "missing_samples": 0,
+              "maximum": null
+            },
+            "unobserved_input_pages": 800,
+            "total_device_or_tts_residence_peak_bytes": null,
+            "missing_is_not_zero": true
+          },
+          "cuda_graph_status_counts": {
+            "real_preflight_completed_with_recorded_component_exceptions": 173
+          }
+        }
+      },
+      "perf80": {
+        "boundary": "direct_worker_processing_to_native_and_faithful_export_ready",
+        "scheduled_runs": 84,
+        "measured_runs": 84,
+        "successful_runs": 84,
+        "failed_runs": 0,
+        "rounds": [
+          {
+            "repetition": "1",
+            "measured_samples": 28,
+            "attempted_input_pages": 80,
+            "completed_input_pages": 80,
+            "processing_seconds_including_failures": 186.26586437644437,
+            "observed_processing_seconds_subtotal": 186.26586437644437,
+            "observed_processing_samples": 28,
+            "timing_complete": true,
+            "completed_pages_per_second_including_failure_cost": 0.42949361799497277,
+            "seconds_per_attempted_input_page": 2.3283233047055547,
+            "all_samples_completed": true
+          },
+          {
+            "repetition": "2",
+            "measured_samples": 28,
+            "attempted_input_pages": 80,
+            "completed_input_pages": 80,
+            "processing_seconds_including_failures": 186.33224307745695,
+            "observed_processing_seconds_subtotal": 186.33224307745695,
+            "observed_processing_samples": 28,
+            "timing_complete": true,
+            "completed_pages_per_second_including_failure_cost": 0.42934061587368205,
+            "seconds_per_attempted_input_page": 2.329153038468212,
+            "all_samples_completed": true
+          },
+          {
+            "repetition": "3",
+            "measured_samples": 28,
+            "attempted_input_pages": 80,
+            "completed_input_pages": 80,
+            "processing_seconds_including_failures": 187.18763404642232,
+            "observed_processing_seconds_subtotal": 187.18763404642232,
+            "observed_processing_samples": 28,
+            "timing_complete": true,
+            "completed_pages_per_second_including_failure_cost": 0.4273786588923929,
+            "seconds_per_attempted_input_page": 2.339845425580279,
+            "all_samples_completed": true
+          }
+        ],
+        "round_duration_summary": {
+          "n": 3,
+          "median_seconds": 186.33224307745695,
+          "min_seconds": 186.26586437644437,
+          "max_seconds": 187.18763404642232,
+          "sample_stdev_seconds": 0.5140945383595773,
+          "coefficient_of_variation": 0.002755132009874246,
+          "includes_failed_attempts": true,
+          "has_unavailable_duration_observations": false
+        },
+        "repetitions_are_not_independent_documents": true,
+        "measured_status_counts": {
+          "completed": 84
+        },
+        "failed_runs_definition": "scheduled status not in ok/success/completed/succeeded; raw statuses retained separately",
+        "resources": {
+          "scope": "measured_cases_only_warmup_and_initialization_excluded",
+          "measured_case_count": 84,
+          "observed_worker_allocations": [
+            {
+              "gpu_device": null,
+              "preprocessing_hard_memory_limit_separate": true,
+              "stage_isolation": "cpu_worker_remote_gpu",
+              "worker_cpus": 8,
+              "worker_memory": "8g"
+            }
+          ],
+          "observed_worker_limit_variants": [
+            {
+              "cpu.max": "800000 100000",
+              "cpu_quota_cpus": 8.0,
+              "cpu_quota_status": "observed",
+              "memory.max": "8589934592",
+              "memory_hard_limit_bytes": 8589934592,
+              "memory_limit_status": "observed"
+            }
+          ],
+          "preprocessing_peak_process_rss_bytes": {
+            "observed_samples": 84,
+            "total_samples": 84,
+            "missing_samples": 0,
+            "maximum": 5708185600
+          },
+          "worker_processing_peak_process_rss_bytes": {
+            "observed_samples": 84,
+            "total_samples": 84,
+            "missing_samples": 0,
+            "maximum": 6576058368
+          },
+          "worker_cgroup_lifetime_peak_memory_bytes": {
+            "observed_samples": 84,
+            "total_samples": 84,
+            "missing_samples": 0,
+            "maximum": 6838734848
+          },
+          "rss_samples": {
+            "observed_case_count": 84,
+            "recorded_sample_count": 24245
+          },
+          "preprocessing_memory_observation_status_counts": {
+            "process RSS sampled every 20 ms; not a separate hard cgroup limit": 84
+          },
+          "inference_gpu_observation": {
+            "scope": "saved_per_page_allocator_peaks_not_total_gpu_residence",
+            "attempted_input_pages": 240,
+            "page_runtime_entries": 0,
+            "gpu_peak_allocated_bytes": {
+              "observed_samples": 0,
+              "total_samples": 0,
+              "missing_samples": 0,
+              "maximum": null
+            },
+            "gpu_peak_reserved_bytes": {
+              "observed_samples": 0,
+              "total_samples": 0,
+              "missing_samples": 0,
+              "maximum": null
+            },
+            "unobserved_input_pages": 240,
+            "total_device_or_tts_residence_peak_bytes": null,
+            "missing_is_not_zero": true
+          },
+          "cuda_graph_status_counts": {
+            "real_preflight_completed_with_recorded_component_exceptions": 84
+          }
+        }
+      }
+    },
+    "P03": {
+      "declared_allocation": {
+        "preprocessing_cpus": 8,
+        "preprocessing_memory_gib": 8,
+        "inference_cpus": 4,
+        "inference_memory_gib": 20,
+        "gpu_device": "1",
+        "gpu_memory_gib": 16,
+        "power_watts": 200,
+        "outer_concurrency": 1,
+        "client_concurrency": 4
+      },
+      "co_resident_services": {
+        "qwen3-tts-openai.service": {
+          "policy": "keep_running",
+          "observation_policy": "observe_only",
+          "inference_during_benchmark": "uncontrolled_observed_only",
+          "instruction_date": "2026-10-26"
+        }
+      },
+      "nonmeasured": {
+        "warmup": [
+          {
+            "sample_id": "vanke-interest-p001-002",
+            "run_id": "20261026-lite-v3",
+            "repetition": 1,
+            "status": "completed",
+            "processing_seconds": 21.356731621082872,
+            "input_pages": 2
+          },
+          {
+            "sample_id": "spdb-cover-declaration-p001-002",
+            "run_id": "20261026-lite-v3",
+            "repetition": 1,
+            "status": "completed",
+            "processing_seconds": 8.471062351949513,
+            "input_pages": 2
+          },
+          {
+            "sample_id": "pingan-financials-p001-004",
+            "run_id": "20261026-lite-v3",
+            "repetition": 1,
+            "status": "completed",
+            "processing_seconds": 73.18715218221769,
+            "input_pages": 4
+          }
+        ],
+        "initialization": [
+          {
+            "run_id": "20261026-lite-v3",
+            "initialization_seconds": 4.5576432049274445,
+            "scope": "persistent_sdk_worker_once"
+          }
+        ]
+      },
+      "quality800": {
+        "boundary": "direct_worker_processing_to_native_and_faithful_export_ready",
+        "scheduled_runs": 173,
+        "measured_runs": 173,
+        "successful_runs": 173,
+        "failed_runs": 0,
+        "rounds": [
+          {
+            "repetition": "1",
+            "measured_samples": 173,
+            "attempted_input_pages": 800,
+            "completed_input_pages": 800,
+            "processing_seconds_including_failures": 11576.992026767693,
+            "observed_processing_seconds_subtotal": 11576.992026767693,
+            "observed_processing_samples": 173,
+            "timing_complete": true,
+            "completed_pages_per_second_including_failure_cost": 0.069102578472049,
+            "seconds_per_attempted_input_page": 14.471240033459617,
+            "all_samples_completed": true
+          }
+        ],
+        "round_duration_summary": {
+          "n": 1,
+          "median_seconds": 11576.992026767693,
+          "min_seconds": 11576.992026767693,
+          "max_seconds": 11576.992026767693,
+          "sample_stdev_seconds": null,
+          "coefficient_of_variation": null,
+          "includes_failed_attempts": true,
+          "has_unavailable_duration_observations": false
+        },
+        "repetitions_are_not_independent_documents": true,
+        "measured_status_counts": {
+          "completed": 173
+        },
+        "failed_runs_definition": "scheduled status not in ok/success/completed/succeeded; raw statuses retained separately",
+        "resources": {
+          "scope": "measured_cases_only_warmup_and_initialization_excluded",
+          "measured_case_count": 173,
+          "observed_worker_allocations": [
+            {
+              "gpu_device": null,
+              "preprocessing_hard_memory_limit_separate": true,
+              "stage_isolation": "cpu_worker_remote_gpu",
+              "worker_cpus": 8,
+              "worker_memory": "8g"
+            }
+          ],
+          "observed_worker_limit_variants": [
+            {
+              "cpu.max": "800000 100000",
+              "cpu_quota_cpus": 8.0,
+              "cpu_quota_status": "observed",
+              "memory.max": "8589934592",
+              "memory_hard_limit_bytes": 8589934592,
+              "memory_limit_status": "observed"
+            }
+          ],
+          "preprocessing_peak_process_rss_bytes": {
+            "observed_samples": 173,
+            "total_samples": 173,
+            "missing_samples": 0,
+            "maximum": 1370370048
+          },
+          "worker_processing_peak_process_rss_bytes": {
+            "observed_samples": 173,
+            "total_samples": 173,
+            "missing_samples": 0,
+            "maximum": 1370464256
+          },
+          "worker_cgroup_lifetime_peak_memory_bytes": {
+            "observed_samples": 173,
+            "total_samples": 173,
+            "missing_samples": 0,
+            "maximum": 1455263744
+          },
+          "rss_samples": {
+            "observed_case_count": 173,
+            "recorded_sample_count": 564288
+          },
+          "preprocessing_memory_observation_status_counts": {
+            "process RSS sampled every 20 ms; not a separate hard cgroup limit": 173
+          },
+          "inference_gpu_observation": {
+            "scope": "saved_per_page_allocator_peaks_not_total_gpu_residence",
+            "attempted_input_pages": 800,
+            "page_runtime_entries": 800,
+            "gpu_peak_allocated_bytes": {
+              "observed_samples": 800,
+              "total_samples": 800,
+              "missing_samples": 0,
+              "maximum": 2314746368
+            },
+            "gpu_peak_reserved_bytes": {
+              "observed_samples": 800,
+              "total_samples": 800,
+              "missing_samples": 0,
+              "maximum": 3183476736
+            },
+            "unobserved_input_pages": 0,
+            "total_device_or_tts_residence_peak_bytes": null,
+            "missing_is_not_zero": true
+          },
+          "cuda_graph_status_counts": {
+            "real_preflight_completed_with_recorded_component_exceptions": 173
+          }
+        }
+      },
+      "perf80": {
+        "boundary": "direct_worker_processing_to_native_and_faithful_export_ready",
+        "scheduled_runs": 84,
+        "measured_runs": 84,
+        "successful_runs": 84,
+        "failed_runs": 0,
+        "rounds": [
+          {
+            "repetition": "1",
+            "measured_samples": 28,
+            "attempted_input_pages": 80,
+            "completed_input_pages": 80,
+            "processing_seconds_including_failures": 1001.9608269094024,
+            "observed_processing_seconds_subtotal": 1001.9608269094024,
+            "observed_processing_samples": 28,
+            "timing_complete": true,
+            "completed_pages_per_second_including_failure_cost": 0.07984344083267601,
+            "seconds_per_attempted_input_page": 12.52451033636753,
+            "all_samples_completed": true
+          },
+          {
+            "repetition": "2",
+            "measured_samples": 28,
+            "attempted_input_pages": 80,
+            "completed_input_pages": 80,
+            "processing_seconds_including_failures": 893.8748234345112,
+            "observed_processing_seconds_subtotal": 893.8748234345112,
+            "observed_processing_samples": 28,
+            "timing_complete": true,
+            "completed_pages_per_second_including_failure_cost": 0.08949798998993858,
+            "seconds_per_attempted_input_page": 11.17343529293139,
+            "all_samples_completed": true
+          },
+          {
+            "repetition": "3",
+            "measured_samples": 28,
+            "attempted_input_pages": 80,
+            "completed_input_pages": 80,
+            "processing_seconds_including_failures": 937.5070395867806,
+            "observed_processing_seconds_subtotal": 937.5070395867806,
+            "observed_processing_samples": 28,
+            "timing_complete": true,
+            "completed_pages_per_second_including_failure_cost": 0.08533269257931239,
+            "seconds_per_attempted_input_page": 11.718837994834757,
+            "all_samples_completed": true
+          }
+        ],
+        "round_duration_summary": {
+          "n": 3,
+          "median_seconds": 937.5070395867806,
+          "min_seconds": 893.8748234345112,
+          "max_seconds": 1001.9608269094024,
+          "sample_stdev_seconds": 54.37622816047822,
+          "coefficient_of_variation": 0.057574639686604555,
+          "includes_failed_attempts": true,
+          "has_unavailable_duration_observations": false
+        },
+        "repetitions_are_not_independent_documents": true,
+        "measured_status_counts": {
+          "completed": 84
+        },
+        "failed_runs_definition": "scheduled status not in ok/success/completed/succeeded; raw statuses retained separately",
+        "resources": {
+          "scope": "measured_cases_only_warmup_and_initialization_excluded",
+          "measured_case_count": 84,
+          "observed_worker_allocations": [
+            {
+              "gpu_device": null,
+              "preprocessing_hard_memory_limit_separate": true,
+              "stage_isolation": "cpu_worker_remote_gpu",
+              "worker_cpus": 8,
+              "worker_memory": "8g"
+            }
+          ],
+          "observed_worker_limit_variants": [
+            {
+              "cpu.max": "800000 100000",
+              "cpu_quota_cpus": 8.0,
+              "cpu_quota_status": "observed",
+              "memory.max": "8589934592",
+              "memory_hard_limit_bytes": 8589934592,
+              "memory_limit_status": "observed"
+            }
+          ],
+          "preprocessing_peak_process_rss_bytes": {
+            "observed_samples": 84,
+            "total_samples": 84,
+            "missing_samples": 0,
+            "maximum": 1651548160
+          },
+          "worker_processing_peak_process_rss_bytes": {
+            "observed_samples": 84,
+            "total_samples": 84,
+            "missing_samples": 0,
+            "maximum": 1651548160
+          },
+          "worker_cgroup_lifetime_peak_memory_bytes": {
+            "observed_samples": 84,
+            "total_samples": 84,
+            "missing_samples": 0,
+            "maximum": 2066661376
+          },
+          "rss_samples": {
+            "observed_case_count": 84,
+            "recorded_sample_count": 137797
+          },
+          "preprocessing_memory_observation_status_counts": {
+            "process RSS sampled every 20 ms; not a separate hard cgroup limit": 84
+          },
+          "inference_gpu_observation": {
+            "scope": "saved_per_page_allocator_peaks_not_total_gpu_residence",
+            "attempted_input_pages": 240,
+            "page_runtime_entries": 240,
+            "gpu_peak_allocated_bytes": {
+              "observed_samples": 240,
+              "total_samples": 240,
+              "missing_samples": 0,
+              "maximum": 2314746368
+            },
+            "gpu_peak_reserved_bytes": {
+              "observed_samples": 240,
+              "total_samples": 240,
+              "missing_samples": 0,
+              "maximum": 3183476736
+            },
+            "unobserved_input_pages": 0,
+            "total_device_or_tts_residence_peak_bytes": null,
+            "missing_is_not_zero": true
+          },
+          "cuda_graph_status_counts": {
+            "real_preflight_completed_with_recorded_component_exceptions": 84
+          }
+        }
+      }
+    },
+    "P04": {
+      "declared_allocation": {
+        "preprocessing_cpus": 8,
+        "preprocessing_memory_gib": 8,
+        "inference_cpus": 4,
+        "inference_memory_gib": 20,
+        "gpu_device": "1",
+        "gpu_memory_gib": 16,
+        "power_watts": 200,
+        "outer_concurrency": 1,
+        "client_concurrency": 4
+      },
+      "co_resident_services": {
+        "qwen3-tts-openai.service": {
+          "policy": "keep_running",
+          "observation_policy": "observe_only",
+          "inference_during_benchmark": "uncontrolled_observed_only",
+          "instruction_date": "2026-10-26"
+        }
+      },
+      "nonmeasured": {
+        "warmup": [
+          {
+            "sample_id": "vanke-interest-p001-002",
+            "run_id": "20261026-lite-v3",
+            "repetition": 1,
+            "status": "completed",
+            "processing_seconds": 21.513914037961513,
+            "input_pages": 2
+          },
+          {
+            "sample_id": "spdb-cover-declaration-p001-002",
+            "run_id": "20261026-lite-v3",
+            "repetition": 1,
+            "status": "completed",
+            "processing_seconds": 8.864882363937795,
+            "input_pages": 2
+          },
+          {
+            "sample_id": "pingan-financials-p001-004",
+            "run_id": "20261026-lite-v3",
+            "repetition": 1,
+            "status": "completed",
+            "processing_seconds": 75.37359763681889,
+            "input_pages": 4
+          }
+        ],
+        "initialization": [
+          {
+            "run_id": "20261026-lite-v3",
+            "initialization_seconds": 4.3483645499218255,
+            "scope": "persistent_sdk_worker_once"
+          }
+        ]
+      },
+      "quality800": {
+        "boundary": "direct_worker_processing_to_native_and_faithful_export_ready",
+        "scheduled_runs": 173,
+        "measured_runs": 173,
+        "successful_runs": 173,
+        "failed_runs": 0,
+        "rounds": [
+          {
+            "repetition": "1",
+            "measured_samples": 173,
+            "attempted_input_pages": 800,
+            "completed_input_pages": 800,
+            "processing_seconds_including_failures": 11826.903032033239,
+            "observed_processing_seconds_subtotal": 11826.903032033239,
+            "observed_processing_samples": 173,
+            "timing_complete": true,
+            "completed_pages_per_second_including_failure_cost": 0.06764239106663808,
+            "seconds_per_attempted_input_page": 14.783628790041549,
+            "all_samples_completed": true
+          }
+        ],
+        "round_duration_summary": {
+          "n": 1,
+          "median_seconds": 11826.903032033239,
+          "min_seconds": 11826.903032033239,
+          "max_seconds": 11826.903032033239,
+          "sample_stdev_seconds": null,
+          "coefficient_of_variation": null,
+          "includes_failed_attempts": true,
+          "has_unavailable_duration_observations": false
+        },
+        "repetitions_are_not_independent_documents": true,
+        "measured_status_counts": {
+          "completed": 173
+        },
+        "failed_runs_definition": "scheduled status not in ok/success/completed/succeeded; raw statuses retained separately",
+        "resources": {
+          "scope": "measured_cases_only_warmup_and_initialization_excluded",
+          "measured_case_count": 173,
+          "observed_worker_allocations": [
+            {
+              "gpu_device": null,
+              "preprocessing_hard_memory_limit_separate": true,
+              "stage_isolation": "cpu_worker_remote_gpu",
+              "worker_cpus": 8,
+              "worker_memory": "8g"
+            }
+          ],
+          "observed_worker_limit_variants": [
+            {
+              "cpu.max": "800000 100000",
+              "cpu_quota_cpus": 8.0,
+              "cpu_quota_status": "observed",
+              "memory.max": "8589934592",
+              "memory_hard_limit_bytes": 8589934592,
+              "memory_limit_status": "observed"
+            }
+          ],
+          "preprocessing_peak_process_rss_bytes": {
+            "observed_samples": 173,
+            "total_samples": 173,
+            "missing_samples": 0,
+            "maximum": 1319981056
+          },
+          "worker_processing_peak_process_rss_bytes": {
+            "observed_samples": 173,
+            "total_samples": 173,
+            "missing_samples": 0,
+            "maximum": 1319546880
+          },
+          "worker_cgroup_lifetime_peak_memory_bytes": {
+            "observed_samples": 173,
+            "total_samples": 173,
+            "missing_samples": 0,
+            "maximum": 1502830592
+          },
+          "rss_samples": {
+            "observed_case_count": 173,
+            "recorded_sample_count": 576736
+          },
+          "preprocessing_memory_observation_status_counts": {
+            "process RSS sampled every 20 ms; not a separate hard cgroup limit": 173
+          },
+          "inference_gpu_observation": {
+            "scope": "saved_per_page_allocator_peaks_not_total_gpu_residence",
+            "attempted_input_pages": 800,
+            "page_runtime_entries": 800,
+            "gpu_peak_allocated_bytes": {
+              "observed_samples": 800,
+              "total_samples": 800,
+              "missing_samples": 0,
+              "maximum": 2314746368
+            },
+            "gpu_peak_reserved_bytes": {
+              "observed_samples": 800,
+              "total_samples": 800,
+              "missing_samples": 0,
+              "maximum": 3183476736
+            },
+            "unobserved_input_pages": 0,
+            "total_device_or_tts_residence_peak_bytes": null,
+            "missing_is_not_zero": true
+          },
+          "cuda_graph_status_counts": {
+            "real_preflight_completed_with_recorded_component_exceptions": 173
+          }
+        }
+      },
+      "perf80": {
+        "boundary": "direct_worker_processing_to_native_and_faithful_export_ready",
+        "scheduled_runs": 84,
+        "measured_runs": 84,
+        "successful_runs": 84,
+        "failed_runs": 0,
+        "rounds": [
+          {
+            "repetition": "1",
+            "measured_samples": 28,
+            "attempted_input_pages": 80,
+            "completed_input_pages": 80,
+            "processing_seconds_including_failures": 778.1862981119193,
+            "observed_processing_seconds_subtotal": 778.1862981119193,
+            "observed_processing_samples": 28,
+            "timing_complete": true,
+            "completed_pages_per_second_including_failure_cost": 0.10280314648831602,
+            "seconds_per_attempted_input_page": 9.72732872639899,
+            "all_samples_completed": true
+          },
+          {
+            "repetition": "2",
+            "measured_samples": 28,
+            "attempted_input_pages": 80,
+            "completed_input_pages": 80,
+            "processing_seconds_including_failures": 967.766511595808,
+            "observed_processing_seconds_subtotal": 967.766511595808,
+            "observed_processing_samples": 28,
+            "timing_complete": true,
+            "completed_pages_per_second_including_failure_cost": 0.08266456737388363,
+            "seconds_per_attempted_input_page": 12.0970813949476,
+            "all_samples_completed": true
+          },
+          {
+            "repetition": "3",
+            "measured_samples": 28,
+            "attempted_input_pages": 80,
+            "completed_input_pages": 80,
+            "processing_seconds_including_failures": 778.3100642494392,
+            "observed_processing_seconds_subtotal": 778.3100642494392,
+            "observed_processing_samples": 28,
+            "timing_complete": true,
+            "completed_pages_per_second_including_failure_cost": 0.10278679882823788,
+            "seconds_per_attempted_input_page": 9.72887580311799,
+            "all_samples_completed": true
+          }
+        ],
+        "round_duration_summary": {
+          "n": 3,
+          "median_seconds": 778.3100642494392,
+          "min_seconds": 778.1862981119193,
+          "max_seconds": 967.766511595808,
+          "sample_stdev_seconds": 109.41847658093903,
+          "coefficient_of_variation": 0.1300401131472598,
+          "includes_failed_attempts": true,
+          "has_unavailable_duration_observations": false
+        },
+        "repetitions_are_not_independent_documents": true,
+        "measured_status_counts": {
+          "completed": 84
+        },
+        "failed_runs_definition": "scheduled status not in ok/success/completed/succeeded; raw statuses retained separately",
+        "resources": {
+          "scope": "measured_cases_only_warmup_and_initialization_excluded",
+          "measured_case_count": 84,
+          "observed_worker_allocations": [
+            {
+              "gpu_device": null,
+              "preprocessing_hard_memory_limit_separate": true,
+              "stage_isolation": "cpu_worker_remote_gpu",
+              "worker_cpus": 8,
+              "worker_memory": "8g"
+            }
+          ],
+          "observed_worker_limit_variants": [
+            {
+              "cpu.max": "800000 100000",
+              "cpu_quota_cpus": 8.0,
+              "cpu_quota_status": "observed",
+              "memory.max": "8589934592",
+              "memory_hard_limit_bytes": 8589934592,
+              "memory_limit_status": "observed"
+            }
+          ],
+          "preprocessing_peak_process_rss_bytes": {
+            "observed_samples": 84,
+            "total_samples": 84,
+            "missing_samples": 0,
+            "maximum": 1465393152
+          },
+          "worker_processing_peak_process_rss_bytes": {
+            "observed_samples": 84,
+            "total_samples": 84,
+            "missing_samples": 0,
+            "maximum": 1465495552
+          },
+          "worker_cgroup_lifetime_peak_memory_bytes": {
+            "observed_samples": 84,
+            "total_samples": 84,
+            "missing_samples": 0,
+            "maximum": 1838460928
+          },
+          "rss_samples": {
+            "observed_case_count": 84,
+            "recorded_sample_count": 122672
+          },
+          "preprocessing_memory_observation_status_counts": {
+            "process RSS sampled every 20 ms; not a separate hard cgroup limit": 84
+          },
+          "inference_gpu_observation": {
+            "scope": "saved_per_page_allocator_peaks_not_total_gpu_residence",
+            "attempted_input_pages": 240,
+            "page_runtime_entries": 240,
+            "gpu_peak_allocated_bytes": {
+              "observed_samples": 240,
+              "total_samples": 240,
+              "missing_samples": 0,
+              "maximum": 2314746368
+            },
+            "gpu_peak_reserved_bytes": {
+              "observed_samples": 240,
+              "total_samples": 240,
+              "missing_samples": 0,
+              "maximum": 3183476736
+            },
+            "unobserved_input_pages": 0,
+            "total_device_or_tts_residence_peak_bytes": null,
+            "missing_is_not_zero": true
+          },
+          "cuda_graph_status_counts": {
+            "real_preflight_completed_with_recorded_component_exceptions": 84
+          }
+        }
+      }
+    },
+    "P05": {
+      "declared_allocation": {
+        "preprocessing_cpus": 8,
+        "preprocessing_memory_gib": 8,
+        "inference_cpus": 4,
+        "inference_memory_gib": 20,
+        "gpu_device": "1",
+        "gpu_memory_gib": 16,
+        "power_watts": 200,
+        "outer_concurrency": 1,
+        "client_concurrency": 4
+      },
+      "co_resident_services": {
+        "qwen3-tts-openai.service": {
+          "policy": "keep_running",
+          "observation_policy": "observe_only",
+          "inference_during_benchmark": "uncontrolled_observed_only",
+          "instruction_date": "2026-10-26"
+        }
+      },
+      "nonmeasured": {
+        "warmup": [
+          {
+            "sample_id": "vanke-interest-p001-002",
+            "run_id": "20261026-lite-v3",
+            "repetition": 1,
+            "status": "completed",
+            "processing_seconds": 6.964439589064568,
+            "input_pages": 2
+          },
+          {
+            "sample_id": "spdb-cover-declaration-p001-002",
+            "run_id": "20261026-lite-v3",
+            "repetition": 1,
+            "status": "completed",
+            "processing_seconds": 4.440894896863028,
+            "input_pages": 2
+          },
+          {
+            "sample_id": "pingan-financials-p001-004",
+            "run_id": "20261026-lite-v3",
+            "repetition": 1,
+            "status": "completed",
+            "processing_seconds": 26.601969361072406,
+            "input_pages": 4
+          }
+        ],
+        "initialization": [
+          {
+            "run_id": "20261026-lite-v3",
+            "initialization_seconds": 5.405667201150209,
+            "scope": "persistent_sdk_worker_once"
+          }
+        ]
+      },
+      "quality800": {
+        "boundary": "direct_worker_processing_to_native_and_faithful_export_ready",
+        "scheduled_runs": 173,
+        "measured_runs": 173,
+        "successful_runs": 173,
+        "failed_runs": 0,
+        "rounds": [
+          {
+            "repetition": "1",
+            "measured_samples": 173,
+            "attempted_input_pages": 800,
+            "completed_input_pages": 800,
+            "processing_seconds_including_failures": 2908.116385015659,
+            "observed_processing_seconds_subtotal": 2908.116385015659,
+            "observed_processing_samples": 173,
+            "timing_complete": true,
+            "completed_pages_per_second_including_failure_cost": 0.2750921538498509,
+            "seconds_per_attempted_input_page": 3.6351454812695736,
+            "all_samples_completed": true
+          }
+        ],
+        "round_duration_summary": {
+          "n": 1,
+          "median_seconds": 2908.116385015659,
+          "min_seconds": 2908.116385015659,
+          "max_seconds": 2908.116385015659,
+          "sample_stdev_seconds": null,
+          "coefficient_of_variation": null,
+          "includes_failed_attempts": true,
+          "has_unavailable_duration_observations": false
+        },
+        "repetitions_are_not_independent_documents": true,
+        "measured_status_counts": {
+          "completed": 173
+        },
+        "failed_runs_definition": "scheduled status not in ok/success/completed/succeeded; raw statuses retained separately",
+        "resources": {
+          "scope": "measured_cases_only_warmup_and_initialization_excluded",
+          "measured_case_count": 173,
+          "observed_worker_allocations": [
+            {
+              "gpu_device": null,
+              "preprocessing_hard_memory_limit_separate": true,
+              "stage_isolation": "cpu_worker_remote_gpu",
+              "worker_cpus": 8,
+              "worker_memory": "8g"
+            }
+          ],
+          "observed_worker_limit_variants": [
+            {
+              "cpu.max": "800000 100000",
+              "cpu_quota_cpus": 8.0,
+              "cpu_quota_status": "observed",
+              "memory.max": "8589934592",
+              "memory_hard_limit_bytes": 8589934592,
+              "memory_limit_status": "observed"
+            }
+          ],
+          "preprocessing_peak_process_rss_bytes": {
+            "observed_samples": 173,
+            "total_samples": 173,
+            "missing_samples": 0,
+            "maximum": 3880820736
+          },
+          "worker_processing_peak_process_rss_bytes": {
+            "observed_samples": 173,
+            "total_samples": 173,
+            "missing_samples": 0,
+            "maximum": 4735971328
+          },
+          "worker_cgroup_lifetime_peak_memory_bytes": {
+            "observed_samples": 173,
+            "total_samples": 173,
+            "missing_samples": 0,
+            "maximum": 5346488320
+          },
+          "rss_samples": {
+            "observed_case_count": 173,
+            "recorded_sample_count": 138616
+          },
+          "preprocessing_memory_observation_status_counts": {
+            "process RSS sampled every 20 ms; not a separate hard cgroup limit": 173
+          },
+          "inference_gpu_observation": {
+            "scope": "saved_per_page_allocator_peaks_not_total_gpu_residence",
+            "attempted_input_pages": 800,
+            "page_runtime_entries": 0,
+            "gpu_peak_allocated_bytes": {
+              "observed_samples": 0,
+              "total_samples": 0,
+              "missing_samples": 0,
+              "maximum": null
+            },
+            "gpu_peak_reserved_bytes": {
+              "observed_samples": 0,
+              "total_samples": 0,
+              "missing_samples": 0,
+              "maximum": null
+            },
+            "unobserved_input_pages": 800,
+            "total_device_or_tts_residence_peak_bytes": null,
+            "missing_is_not_zero": true
+          },
+          "cuda_graph_status_counts": {
+            "real_preflight_completed_with_recorded_component_exceptions": 173
+          }
+        }
+      },
+      "perf80": {
+        "boundary": "direct_worker_processing_to_native_and_faithful_export_ready",
+        "scheduled_runs": 84,
+        "measured_runs": 84,
+        "successful_runs": 84,
+        "failed_runs": 0,
+        "rounds": [
+          {
+            "repetition": "1",
+            "measured_samples": 28,
+            "attempted_input_pages": 80,
+            "completed_input_pages": 80,
+            "processing_seconds_including_failures": 278.2327583548613,
+            "observed_processing_seconds_subtotal": 278.2327583548613,
+            "observed_processing_samples": 28,
+            "timing_complete": true,
+            "completed_pages_per_second_including_failure_cost": 0.2875290475249038,
+            "seconds_per_attempted_input_page": 3.477909479435766,
+            "all_samples_completed": true
+          },
+          {
+            "repetition": "2",
+            "measured_samples": 28,
+            "attempted_input_pages": 80,
+            "completed_input_pages": 80,
+            "processing_seconds_including_failures": 275.324763630284,
+            "observed_processing_seconds_subtotal": 275.324763630284,
+            "observed_processing_samples": 28,
+            "timing_complete": true,
+            "completed_pages_per_second_including_failure_cost": 0.29056594454186796,
+            "seconds_per_attempted_input_page": 3.44155954537855,
+            "all_samples_completed": true
+          },
+          {
+            "repetition": "3",
+            "measured_samples": 28,
+            "attempted_input_pages": 80,
+            "completed_input_pages": 80,
+            "processing_seconds_including_failures": 276.4646110511385,
+            "observed_processing_seconds_subtotal": 276.4646110511385,
+            "observed_processing_samples": 28,
+            "timing_complete": true,
+            "completed_pages_per_second_including_failure_cost": 0.28936795814782296,
+            "seconds_per_attempted_input_page": 3.4558076381392313,
+            "all_samples_completed": true
+          }
+        ],
+        "round_duration_summary": {
+          "n": 3,
+          "median_seconds": 276.4646110511385,
+          "min_seconds": 275.324763630284,
+          "max_seconds": 278.2327583548613,
+          "sample_stdev_seconds": 1.4652662072504214,
+          "coefficient_of_variation": 0.005296001692956187,
+          "includes_failed_attempts": true,
+          "has_unavailable_duration_observations": false
+        },
+        "repetitions_are_not_independent_documents": true,
+        "measured_status_counts": {
+          "completed": 84
+        },
+        "failed_runs_definition": "scheduled status not in ok/success/completed/succeeded; raw statuses retained separately",
+        "resources": {
+          "scope": "measured_cases_only_warmup_and_initialization_excluded",
+          "measured_case_count": 84,
+          "observed_worker_allocations": [
+            {
+              "gpu_device": null,
+              "preprocessing_hard_memory_limit_separate": true,
+              "stage_isolation": "cpu_worker_remote_gpu",
+              "worker_cpus": 8,
+              "worker_memory": "8g"
+            }
+          ],
+          "observed_worker_limit_variants": [
+            {
+              "cpu.max": "800000 100000",
+              "cpu_quota_cpus": 8.0,
+              "cpu_quota_status": "observed",
+              "memory.max": "8589934592",
+              "memory_hard_limit_bytes": 8589934592,
+              "memory_limit_status": "observed"
+            }
+          ],
+          "preprocessing_peak_process_rss_bytes": {
+            "observed_samples": 84,
+            "total_samples": 84,
+            "missing_samples": 0,
+            "maximum": 4184956928
+          },
+          "worker_processing_peak_process_rss_bytes": {
+            "observed_samples": 84,
+            "total_samples": 84,
+            "missing_samples": 0,
+            "maximum": 4889563136
+          },
+          "worker_cgroup_lifetime_peak_memory_bytes": {
+            "observed_samples": 84,
+            "total_samples": 84,
+            "missing_samples": 0,
+            "maximum": 5849513984
+          },
+          "rss_samples": {
+            "observed_case_count": 84,
+            "recorded_sample_count": 39327
+          },
+          "preprocessing_memory_observation_status_counts": {
+            "process RSS sampled every 20 ms; not a separate hard cgroup limit": 84
+          },
+          "inference_gpu_observation": {
+            "scope": "saved_per_page_allocator_peaks_not_total_gpu_residence",
+            "attempted_input_pages": 240,
+            "page_runtime_entries": 0,
+            "gpu_peak_allocated_bytes": {
+              "observed_samples": 0,
+              "total_samples": 0,
+              "missing_samples": 0,
+              "maximum": null
+            },
+            "gpu_peak_reserved_bytes": {
+              "observed_samples": 0,
+              "total_samples": 0,
+              "missing_samples": 0,
+              "maximum": null
+            },
+            "unobserved_input_pages": 240,
+            "total_device_or_tts_residence_peak_bytes": null,
+            "missing_is_not_zero": true
+          },
+          "cuda_graph_status_counts": {
+            "real_preflight_completed_with_recorded_component_exceptions": 84
+          }
+        }
+      }
+    },
+    "P06": {
+      "declared_allocation": {
+        "preprocessing_cpus": 8,
+        "preprocessing_memory_gib": 8,
+        "inference_cpus": 4,
+        "inference_memory_gib": 20,
+        "gpu_device": "1",
+        "gpu_memory_gib": 16,
+        "power_watts": 200,
+        "outer_concurrency": 1,
+        "client_concurrency": 4
+      },
+      "co_resident_services": {
+        "qwen3-tts-openai.service": {
+          "policy": "keep_running",
+          "observation_policy": "observe_only",
+          "inference_during_benchmark": "uncontrolled_observed_only",
+          "instruction_date": "2026-10-26"
+        }
+      },
+      "nonmeasured": {
+        "warmup": [
+          {
+            "sample_id": "vanke-interest-p001-002",
+            "run_id": "20261026-lite-v3",
+            "repetition": 1,
+            "status": "completed",
+            "processing_seconds": 5.277254435000941,
+            "input_pages": 2
+          },
+          {
+            "sample_id": "spdb-cover-declaration-p001-002",
+            "run_id": "20261026-lite-v3",
+            "repetition": 1,
+            "status": "completed",
+            "processing_seconds": 4.975482326000929,
+            "input_pages": 2
+          },
+          {
+            "sample_id": "pingan-financials-p001-004",
+            "run_id": "20261026-lite-v3",
+            "repetition": 1,
+            "status": "completed",
+            "processing_seconds": 5.898018103092909,
+            "input_pages": 4
+          }
+        ],
+        "initialization": [
+          {
+            "run_id": "20261026-lite-v3",
+            "initialization_seconds": 7.5399008630774915,
+            "scope": "persistent_sdk_worker_once"
+          }
+        ]
+      },
+      "quality800": {
+        "boundary": "direct_worker_processing_to_native_and_faithful_export_ready",
+        "scheduled_runs": 173,
+        "measured_runs": 173,
+        "successful_runs": 173,
+        "failed_runs": 0,
+        "rounds": [
+          {
+            "repetition": "1",
+            "measured_samples": 173,
+            "attempted_input_pages": 800,
+            "completed_input_pages": 800,
+            "processing_seconds_including_failures": 1619.3374621237163,
+            "observed_processing_seconds_subtotal": 1619.3374621237163,
+            "observed_processing_samples": 173,
+            "timing_complete": true,
+            "completed_pages_per_second_including_failure_cost": 0.49402920559302205,
+            "seconds_per_attempted_input_page": 2.024171827654645,
+            "all_samples_completed": true
+          }
+        ],
+        "round_duration_summary": {
+          "n": 1,
+          "median_seconds": 1619.3374621237163,
+          "min_seconds": 1619.3374621237163,
+          "max_seconds": 1619.3374621237163,
+          "sample_stdev_seconds": null,
+          "coefficient_of_variation": null,
+          "includes_failed_attempts": true,
+          "has_unavailable_duration_observations": false
+        },
+        "repetitions_are_not_independent_documents": true,
+        "measured_status_counts": {
+          "completed": 173
+        },
+        "failed_runs_definition": "scheduled status not in ok/success/completed/succeeded; raw statuses retained separately",
+        "resources": {
+          "scope": "measured_cases_only_warmup_and_initialization_excluded",
+          "measured_case_count": 173,
+          "observed_worker_allocations": [
+            {
+              "gpu_device": null,
+              "preprocessing_hard_memory_limit_separate": true,
+              "stage_isolation": "cpu_worker_remote_gpu",
+              "worker_cpus": 8,
+              "worker_memory": "8g"
+            }
+          ],
+          "observed_worker_limit_variants": [
+            {
+              "cpu.max": "800000 100000",
+              "cpu_quota_cpus": 8.0,
+              "cpu_quota_status": "observed",
+              "memory.max": "8589934592",
+              "memory_hard_limit_bytes": 8589934592,
+              "memory_limit_status": "observed"
+            }
+          ],
+          "preprocessing_peak_process_rss_bytes": {
+            "observed_samples": 173,
+            "total_samples": 173,
+            "missing_samples": 0,
+            "maximum": 5707894784
+          },
+          "worker_processing_peak_process_rss_bytes": {
+            "observed_samples": 173,
+            "total_samples": 173,
+            "missing_samples": 0,
+            "maximum": 6409822208
+          },
+          "worker_cgroup_lifetime_peak_memory_bytes": {
+            "observed_samples": 173,
+            "total_samples": 173,
+            "missing_samples": 0,
+            "maximum": 7629946880
+          },
+          "rss_samples": {
+            "observed_case_count": 173,
+            "recorded_sample_count": 71393
+          },
+          "preprocessing_memory_observation_status_counts": {
+            "process RSS sampled every 20 ms; not a separate hard cgroup limit": 173
+          },
+          "inference_gpu_observation": {
+            "scope": "saved_per_page_allocator_peaks_not_total_gpu_residence",
+            "attempted_input_pages": 800,
+            "page_runtime_entries": 0,
+            "gpu_peak_allocated_bytes": {
+              "observed_samples": 0,
+              "total_samples": 0,
+              "missing_samples": 0,
+              "maximum": null
+            },
+            "gpu_peak_reserved_bytes": {
+              "observed_samples": 0,
+              "total_samples": 0,
+              "missing_samples": 0,
+              "maximum": null
+            },
+            "unobserved_input_pages": 800,
+            "total_device_or_tts_residence_peak_bytes": null,
+            "missing_is_not_zero": true
+          },
+          "cuda_graph_status_counts": {
+            "real_preflight_completed_with_recorded_component_exceptions": 173
+          }
+        }
+      },
+      "perf80": {
+        "boundary": "direct_worker_processing_to_native_and_faithful_export_ready",
+        "scheduled_runs": 84,
+        "measured_runs": 84,
+        "successful_runs": 84,
+        "failed_runs": 0,
+        "rounds": [
+          {
+            "repetition": "1",
+            "measured_samples": 28,
+            "attempted_input_pages": 80,
+            "completed_input_pages": 80,
+            "processing_seconds_including_failures": 202.43531208485365,
+            "observed_processing_seconds_subtotal": 202.43531208485365,
+            "observed_processing_samples": 28,
+            "timing_complete": true,
+            "completed_pages_per_second_including_failure_cost": 0.3951879698067048,
+            "seconds_per_attempted_input_page": 2.5304414010606706,
+            "all_samples_completed": true
+          },
+          {
+            "repetition": "2",
+            "measured_samples": 28,
+            "attempted_input_pages": 80,
+            "completed_input_pages": 80,
+            "processing_seconds_including_failures": 202.1400690956507,
+            "observed_processing_seconds_subtotal": 202.1400690956507,
+            "observed_processing_samples": 28,
+            "timing_complete": true,
+            "completed_pages_per_second_including_failure_cost": 0.39576517588971827,
+            "seconds_per_attempted_input_page": 2.5267508636956335,
+            "all_samples_completed": true
+          },
+          {
+            "repetition": "3",
+            "measured_samples": 28,
+            "attempted_input_pages": 80,
+            "completed_input_pages": 80,
+            "processing_seconds_including_failures": 202.87228469038382,
+            "observed_processing_seconds_subtotal": 202.87228469038382,
+            "observed_processing_samples": 28,
+            "timing_complete": true,
+            "completed_pages_per_second_including_failure_cost": 0.39433676276724067,
+            "seconds_per_attempted_input_page": 2.5359035586297978,
+            "all_samples_completed": true
+          }
+        ],
+        "round_duration_summary": {
+          "n": 3,
+          "median_seconds": 202.43531208485365,
+          "min_seconds": 202.1400690956507,
+          "max_seconds": 202.87228469038382,
+          "sample_stdev_seconds": 0.3683868342353648,
+          "coefficient_of_variation": 0.0018193509742467165,
+          "includes_failed_attempts": true,
+          "has_unavailable_duration_observations": false
+        },
+        "repetitions_are_not_independent_documents": true,
+        "measured_status_counts": {
+          "completed": 84
+        },
+        "failed_runs_definition": "scheduled status not in ok/success/completed/succeeded; raw statuses retained separately",
+        "resources": {
+          "scope": "measured_cases_only_warmup_and_initialization_excluded",
+          "measured_case_count": 84,
+          "observed_worker_allocations": [
+            {
+              "gpu_device": null,
+              "preprocessing_hard_memory_limit_separate": true,
+              "stage_isolation": "cpu_worker_remote_gpu",
+              "worker_cpus": 8,
+              "worker_memory": "8g"
+            }
+          ],
+          "observed_worker_limit_variants": [
+            {
+              "cpu.max": "800000 100000",
+              "cpu_quota_cpus": 8.0,
+              "cpu_quota_status": "observed",
+              "memory.max": "8589934592",
+              "memory_hard_limit_bytes": 8589934592,
+              "memory_limit_status": "observed"
+            }
+          ],
+          "preprocessing_peak_process_rss_bytes": {
+            "observed_samples": 84,
+            "total_samples": 84,
+            "missing_samples": 0,
+            "maximum": 6939820032
+          },
+          "worker_processing_peak_process_rss_bytes": {
+            "observed_samples": 84,
+            "total_samples": 84,
+            "missing_samples": 0,
+            "maximum": 7641706496
+          },
+          "worker_cgroup_lifetime_peak_memory_bytes": {
+            "observed_samples": 84,
+            "total_samples": 84,
+            "missing_samples": 0,
+            "maximum": 8589934592
+          },
+          "rss_samples": {
+            "observed_case_count": 84,
+            "recorded_sample_count": 25341
+          },
+          "preprocessing_memory_observation_status_counts": {
+            "process RSS sampled every 20 ms; not a separate hard cgroup limit": 84
+          },
+          "inference_gpu_observation": {
+            "scope": "saved_per_page_allocator_peaks_not_total_gpu_residence",
+            "attempted_input_pages": 240,
+            "page_runtime_entries": 0,
+            "gpu_peak_allocated_bytes": {
+              "observed_samples": 0,
+              "total_samples": 0,
+              "missing_samples": 0,
+              "maximum": null
+            },
+            "gpu_peak_reserved_bytes": {
+              "observed_samples": 0,
+              "total_samples": 0,
+              "missing_samples": 0,
+              "maximum": null
+            },
+            "unobserved_input_pages": 240,
+            "total_device_or_tts_residence_peak_bytes": null,
+            "missing_is_not_zero": true
+          },
+          "cuda_graph_status_counts": {
+            "real_preflight_completed_with_recorded_component_exceptions": 84
+          }
+        }
+      }
+    },
+    "P07": {
+      "declared_allocation": {
+        "preprocessing_cpus": 8,
+        "preprocessing_memory_gib": 8,
+        "inference_cpus": 4,
+        "inference_memory_gib": 20,
+        "gpu_device": "1",
+        "gpu_memory_gib": 16,
+        "power_watts": 200,
+        "outer_concurrency": 1,
+        "client_concurrency": 4
+      },
+      "co_resident_services": {
+        "qwen3-tts-openai.service": {
+          "policy": "keep_running",
+          "observation_policy": "observe_only",
+          "inference_during_benchmark": "uncontrolled_observed_only",
+          "instruction_date": "2026-10-26"
+        }
+      },
+      "nonmeasured": {
+        "warmup": [
+          {
+            "sample_id": "vanke-interest-p001-002",
+            "run_id": "20261026-lite-v3",
+            "repetition": 1,
+            "status": "completed",
+            "processing_seconds": 8.98719214880839,
+            "input_pages": 2
+          },
+          {
+            "sample_id": "spdb-cover-declaration-p001-002",
+            "run_id": "20261026-lite-v3",
+            "repetition": 1,
+            "status": "completed",
+            "processing_seconds": 6.324331459123641,
+            "input_pages": 2
+          },
+          {
+            "sample_id": "pingan-financials-p001-004",
+            "run_id": "20261026-lite-v3",
+            "repetition": 1,
+            "status": "completed",
+            "processing_seconds": 16.11012820689939,
+            "input_pages": 4
+          }
+        ],
+        "initialization": [
+          {
+            "run_id": "20261026-lite-v3",
+            "initialization_seconds": 7.317869688151404,
+            "scope": "persistent_sdk_worker_once"
+          }
+        ]
+      },
+      "quality800": {
+        "boundary": "direct_worker_processing_to_native_and_faithful_export_ready",
+        "scheduled_runs": 173,
+        "measured_runs": 173,
+        "successful_runs": 173,
+        "failed_runs": 0,
+        "rounds": [
+          {
+            "repetition": "1",
+            "measured_samples": 173,
+            "attempted_input_pages": 800,
+            "completed_input_pages": 800,
+            "processing_seconds_including_failures": 2411.6955469599925,
+            "observed_processing_seconds_subtotal": 2411.6955469599925,
+            "observed_processing_samples": 173,
+            "timing_complete": true,
+            "completed_pages_per_second_including_failure_cost": 0.3317168292691097,
+            "seconds_per_attempted_input_page": 3.0146194336999907,
+            "all_samples_completed": true
+          }
+        ],
+        "round_duration_summary": {
+          "n": 1,
+          "median_seconds": 2411.6955469599925,
+          "min_seconds": 2411.6955469599925,
+          "max_seconds": 2411.6955469599925,
+          "sample_stdev_seconds": null,
+          "coefficient_of_variation": null,
+          "includes_failed_attempts": true,
+          "has_unavailable_duration_observations": false
+        },
+        "repetitions_are_not_independent_documents": true,
+        "measured_status_counts": {
+          "completed": 173
+        },
+        "failed_runs_definition": "scheduled status not in ok/success/completed/succeeded; raw statuses retained separately",
+        "resources": {
+          "scope": "measured_cases_only_warmup_and_initialization_excluded",
+          "measured_case_count": 173,
+          "observed_worker_allocations": [
+            {
+              "gpu_device": null,
+              "preprocessing_hard_memory_limit_separate": true,
+              "stage_isolation": "cpu_worker_remote_gpu",
+              "worker_cpus": 8,
+              "worker_memory": "8g"
+            }
+          ],
+          "observed_worker_limit_variants": [
+            {
+              "cpu.max": "800000 100000",
+              "cpu_quota_cpus": 8.0,
+              "cpu_quota_status": "observed",
+              "memory.max": "8589934592",
+              "memory_hard_limit_bytes": 8589934592,
+              "memory_limit_status": "observed"
+            }
+          ],
+          "preprocessing_peak_process_rss_bytes": {
+            "observed_samples": 173,
+            "total_samples": 173,
+            "missing_samples": 0,
+            "maximum": 5680951296
+          },
+          "worker_processing_peak_process_rss_bytes": {
+            "observed_samples": 173,
+            "total_samples": 173,
+            "missing_samples": 0,
+            "maximum": 6359076864
+          },
+          "worker_cgroup_lifetime_peak_memory_bytes": {
+            "observed_samples": 173,
+            "total_samples": 173,
+            "missing_samples": 0,
+            "maximum": 7050637312
+          },
+          "rss_samples": {
+            "observed_case_count": 173,
+            "recorded_sample_count": 110414
+          },
+          "preprocessing_memory_observation_status_counts": {
+            "process RSS sampled every 20 ms; not a separate hard cgroup limit": 173
+          },
+          "inference_gpu_observation": {
+            "scope": "saved_per_page_allocator_peaks_not_total_gpu_residence",
+            "attempted_input_pages": 800,
+            "page_runtime_entries": 0,
+            "gpu_peak_allocated_bytes": {
+              "observed_samples": 0,
+              "total_samples": 0,
+              "missing_samples": 0,
+              "maximum": null
+            },
+            "gpu_peak_reserved_bytes": {
+              "observed_samples": 0,
+              "total_samples": 0,
+              "missing_samples": 0,
+              "maximum": null
+            },
+            "unobserved_input_pages": 800,
+            "total_device_or_tts_residence_peak_bytes": null,
+            "missing_is_not_zero": true
+          },
+          "cuda_graph_status_counts": {
+            "real_preflight_completed_with_recorded_component_exceptions": 173
+          }
+        }
+      },
+      "perf80": {
+        "boundary": "direct_worker_processing_to_native_and_faithful_export_ready",
+        "scheduled_runs": 84,
+        "measured_runs": 84,
+        "successful_runs": 84,
+        "failed_runs": 0,
+        "rounds": [
+          {
+            "repetition": "1",
+            "measured_samples": 28,
+            "attempted_input_pages": 80,
+            "completed_input_pages": 80,
+            "processing_seconds_including_failures": 279.99178051995113,
+            "observed_processing_seconds_subtotal": 279.99178051995113,
+            "observed_processing_samples": 28,
+            "timing_complete": true,
+            "completed_pages_per_second_including_failure_cost": 0.28572267318504196,
+            "seconds_per_attempted_input_page": 3.499897256499389,
+            "all_samples_completed": true
+          },
+          {
+            "repetition": "2",
+            "measured_samples": 28,
+            "attempted_input_pages": 80,
+            "completed_input_pages": 80,
+            "processing_seconds_including_failures": 276.89699258399196,
+            "observed_processing_seconds_subtotal": 276.89699258399196,
+            "observed_processing_samples": 28,
+            "timing_complete": true,
+            "completed_pages_per_second_including_failure_cost": 0.2889161028924262,
+            "seconds_per_attempted_input_page": 3.4612124072998993,
+            "all_samples_completed": true
+          },
+          {
+            "repetition": "3",
+            "measured_samples": 28,
+            "attempted_input_pages": 80,
+            "completed_input_pages": 80,
+            "processing_seconds_including_failures": 274.57029026397504,
+            "observed_processing_seconds_subtotal": 274.57029026397504,
+            "observed_processing_samples": 28,
+            "timing_complete": true,
+            "completed_pages_per_second_including_failure_cost": 0.29136437129846454,
+            "seconds_per_attempted_input_page": 3.432128628299688,
+            "all_samples_completed": true
+          }
+        ],
+        "round_duration_summary": {
+          "n": 3,
+          "median_seconds": 276.89699258399196,
+          "min_seconds": 274.57029026397504,
+          "max_seconds": 279.99178051995113,
+          "sample_stdev_seconds": 2.719798174196458,
+          "coefficient_of_variation": 0.009813344856136191,
+          "includes_failed_attempts": true,
+          "has_unavailable_duration_observations": false
+        },
+        "repetitions_are_not_independent_documents": true,
+        "measured_status_counts": {
+          "completed": 84
+        },
+        "failed_runs_definition": "scheduled status not in ok/success/completed/succeeded; raw statuses retained separately",
+        "resources": {
+          "scope": "measured_cases_only_warmup_and_initialization_excluded",
+          "measured_case_count": 84,
+          "observed_worker_allocations": [
+            {
+              "gpu_device": null,
+              "preprocessing_hard_memory_limit_separate": true,
+              "stage_isolation": "cpu_worker_remote_gpu",
+              "worker_cpus": 8,
+              "worker_memory": "8g"
+            }
+          ],
+          "observed_worker_limit_variants": [
+            {
+              "cpu.max": "800000 100000",
+              "cpu_quota_cpus": 8.0,
+              "cpu_quota_status": "observed",
+              "memory.max": "8589934592",
+              "memory_hard_limit_bytes": 8589934592,
+              "memory_limit_status": "observed"
+            }
+          ],
+          "preprocessing_peak_process_rss_bytes": {
+            "observed_samples": 84,
+            "total_samples": 84,
+            "missing_samples": 0,
+            "maximum": 6423490560
+          },
+          "worker_processing_peak_process_rss_bytes": {
+            "observed_samples": 84,
+            "total_samples": 84,
+            "missing_samples": 0,
+            "maximum": 7126851584
+          },
+          "worker_cgroup_lifetime_peak_memory_bytes": {
+            "observed_samples": 84,
+            "total_samples": 84,
+            "missing_samples": 0,
+            "maximum": 8125374464
+          },
+          "rss_samples": {
+            "observed_case_count": 84,
+            "recorded_sample_count": 36529
+          },
+          "preprocessing_memory_observation_status_counts": {
+            "process RSS sampled every 20 ms; not a separate hard cgroup limit": 84
+          },
+          "inference_gpu_observation": {
+            "scope": "saved_per_page_allocator_peaks_not_total_gpu_residence",
+            "attempted_input_pages": 240,
+            "page_runtime_entries": 0,
+            "gpu_peak_allocated_bytes": {
+              "observed_samples": 0,
+              "total_samples": 0,
+              "missing_samples": 0,
+              "maximum": null
+            },
+            "gpu_peak_reserved_bytes": {
+              "observed_samples": 0,
+              "total_samples": 0,
+              "missing_samples": 0,
+              "maximum": null
+            },
+            "unobserved_input_pages": 240,
+            "total_device_or_tts_residence_peak_bytes": null,
+            "missing_is_not_zero": true
+          },
+          "cuda_graph_status_counts": {
+            "real_preflight_completed_with_recorded_component_exceptions": 84
+          }
+        }
+      }
+    },
+    "P08": {
+      "declared_allocation": {
+        "preprocessing_cpus": 8,
+        "preprocessing_memory_gib": 8,
+        "inference_cpus": 4,
+        "inference_memory_gib": 20,
+        "gpu_device": "1",
+        "gpu_memory_gib": 16,
+        "power_watts": 200,
+        "outer_concurrency": 1,
+        "client_concurrency": 4
+      },
+      "co_resident_services": {
+        "qwen3-tts-openai.service": {
+          "policy": "keep_running",
+          "observation_policy": "observe_only",
+          "inference_during_benchmark": "uncontrolled_observed_only",
+          "instruction_date": "2026-10-26"
+        }
+      },
+      "nonmeasured": {
+        "warmup": [
+          {
+            "sample_id": "vanke-interest-p001-002",
+            "run_id": "20261026-lite-v3",
+            "repetition": 1,
+            "status": "completed",
+            "processing_seconds": 8.202540470985696,
+            "input_pages": 2
+          },
+          {
+            "sample_id": "spdb-cover-declaration-p001-002",
+            "run_id": "20261026-lite-v3",
+            "repetition": 1,
+            "status": "completed",
+            "processing_seconds": 6.41592507599853,
+            "input_pages": 2
+          },
+          {
+            "sample_id": "pingan-financials-p001-004",
+            "run_id": "20261026-lite-v3",
+            "repetition": 1,
+            "status": "completed",
+            "processing_seconds": 21.56457357783802,
+            "input_pages": 4
+          }
+        ],
+        "initialization": [
+          {
+            "run_id": "20261026-lite-v3",
+            "initialization_seconds": 4.674814380938187,
+            "scope": "persistent_sdk_worker_once"
+          }
+        ]
+      },
+      "quality800": {
+        "boundary": "direct_worker_processing_to_native_and_faithful_export_ready",
+        "scheduled_runs": 173,
+        "measured_runs": 173,
+        "successful_runs": 173,
+        "failed_runs": 0,
+        "rounds": [
+          {
+            "repetition": "1",
+            "measured_samples": 173,
+            "attempted_input_pages": 800,
+            "completed_input_pages": 800,
+            "processing_seconds_including_failures": 3327.525034005288,
+            "observed_processing_seconds_subtotal": 3327.525034005288,
+            "observed_processing_samples": 173,
+            "timing_complete": true,
+            "completed_pages_per_second_including_failure_cost": 0.24041892752856406,
+            "seconds_per_attempted_input_page": 4.15940629250661,
+            "all_samples_completed": true
+          }
+        ],
+        "round_duration_summary": {
+          "n": 1,
+          "median_seconds": 3327.525034005288,
+          "min_seconds": 3327.525034005288,
+          "max_seconds": 3327.525034005288,
+          "sample_stdev_seconds": null,
+          "coefficient_of_variation": null,
+          "includes_failed_attempts": true,
+          "has_unavailable_duration_observations": false
+        },
+        "repetitions_are_not_independent_documents": true,
+        "measured_status_counts": {
+          "completed": 173
+        },
+        "failed_runs_definition": "scheduled status not in ok/success/completed/succeeded; raw statuses retained separately",
+        "resources": {
+          "scope": "measured_cases_only_warmup_and_initialization_excluded",
+          "measured_case_count": 173,
+          "observed_worker_allocations": [
+            {
+              "gpu_device": null,
+              "preprocessing_hard_memory_limit_separate": true,
+              "stage_isolation": "cpu_worker_remote_gpu",
+              "worker_cpus": 8,
+              "worker_memory": "8g"
+            }
+          ],
+          "observed_worker_limit_variants": [
+            {
+              "cpu.max": "800000 100000",
+              "cpu_quota_cpus": 8.0,
+              "cpu_quota_status": "observed",
+              "memory.max": "8589934592",
+              "memory_hard_limit_bytes": 8589934592,
+              "memory_limit_status": "observed"
+            }
+          ],
+          "preprocessing_peak_process_rss_bytes": {
+            "observed_samples": 173,
+            "total_samples": 173,
+            "missing_samples": 0,
+            "maximum": 1374478336
+          },
+          "worker_processing_peak_process_rss_bytes": {
+            "observed_samples": 173,
+            "total_samples": 173,
+            "missing_samples": 0,
+            "maximum": 1385742336
+          },
+          "worker_cgroup_lifetime_peak_memory_bytes": {
+            "observed_samples": 173,
+            "total_samples": 173,
+            "missing_samples": 0,
+            "maximum": 1448390656
+          },
+          "rss_samples": {
+            "observed_case_count": 173,
+            "recorded_sample_count": 160195
+          },
+          "preprocessing_memory_observation_status_counts": {
+            "process RSS sampled every 20 ms; not a separate hard cgroup limit": 173
+          },
+          "inference_gpu_observation": {
+            "scope": "saved_per_page_allocator_peaks_not_total_gpu_residence",
+            "attempted_input_pages": 800,
+            "page_runtime_entries": 0,
+            "gpu_peak_allocated_bytes": {
+              "observed_samples": 0,
+              "total_samples": 0,
+              "missing_samples": 0,
+              "maximum": null
+            },
+            "gpu_peak_reserved_bytes": {
+              "observed_samples": 0,
+              "total_samples": 0,
+              "missing_samples": 0,
+              "maximum": null
+            },
+            "unobserved_input_pages": 800,
+            "total_device_or_tts_residence_peak_bytes": null,
+            "missing_is_not_zero": true
+          },
+          "cuda_graph_status_counts": {
+            "real_preflight_completed_with_recorded_component_exceptions": 173
+          }
+        }
+      },
+      "perf80": {
+        "boundary": "direct_worker_processing_to_native_and_faithful_export_ready",
+        "scheduled_runs": 84,
+        "measured_runs": 84,
+        "successful_runs": 84,
+        "failed_runs": 0,
+        "rounds": [
+          {
+            "repetition": "1",
+            "measured_samples": 28,
+            "attempted_input_pages": 80,
+            "completed_input_pages": 80,
+            "processing_seconds_including_failures": 316.18072399590164,
+            "observed_processing_seconds_subtotal": 316.18072399590164,
+            "observed_processing_samples": 28,
+            "timing_complete": true,
+            "completed_pages_per_second_including_failure_cost": 0.25301985202942656,
+            "seconds_per_attempted_input_page": 3.9522590499487706,
+            "all_samples_completed": true
+          },
+          {
+            "repetition": "2",
+            "measured_samples": 28,
+            "attempted_input_pages": 80,
+            "completed_input_pages": 80,
+            "processing_seconds_including_failures": 310.5298639179673,
+            "observed_processing_seconds_subtotal": 310.5298639179673,
+            "observed_processing_samples": 28,
+            "timing_complete": true,
+            "completed_pages_per_second_including_failure_cost": 0.25762417498477247,
+            "seconds_per_attempted_input_page": 3.881623298974591,
+            "all_samples_completed": true
+          },
+          {
+            "repetition": "3",
+            "measured_samples": 28,
+            "attempted_input_pages": 80,
+            "completed_input_pages": 80,
+            "processing_seconds_including_failures": 311.49094247235917,
+            "observed_processing_seconds_subtotal": 311.49094247235917,
+            "observed_processing_samples": 28,
+            "timing_complete": true,
+            "completed_pages_per_second_including_failure_cost": 0.2568292977157722,
+            "seconds_per_attempted_input_page": 3.8936367809044894,
+            "all_samples_completed": true
+          }
+        ],
+        "round_duration_summary": {
+          "n": 3,
+          "median_seconds": 311.49094247235917,
+          "min_seconds": 310.5298639179673,
+          "max_seconds": 316.18072399590164,
+          "sample_stdev_seconds": 3.0235173321443702,
+          "coefficient_of_variation": 0.009668020891736394,
+          "includes_failed_attempts": true,
+          "has_unavailable_duration_observations": false
+        },
+        "repetitions_are_not_independent_documents": true,
+        "measured_status_counts": {
+          "completed": 84
+        },
+        "failed_runs_definition": "scheduled status not in ok/success/completed/succeeded; raw statuses retained separately",
+        "resources": {
+          "scope": "measured_cases_only_warmup_and_initialization_excluded",
+          "measured_case_count": 84,
+          "observed_worker_allocations": [
+            {
+              "gpu_device": null,
+              "preprocessing_hard_memory_limit_separate": true,
+              "stage_isolation": "cpu_worker_remote_gpu",
+              "worker_cpus": 8,
+              "worker_memory": "8g"
+            }
+          ],
+          "observed_worker_limit_variants": [
+            {
+              "cpu.max": "800000 100000",
+              "cpu_quota_cpus": 8.0,
+              "cpu_quota_status": "observed",
+              "memory.max": "8589934592",
+              "memory_hard_limit_bytes": 8589934592,
+              "memory_limit_status": "observed"
+            }
+          ],
+          "preprocessing_peak_process_rss_bytes": {
+            "observed_samples": 84,
+            "total_samples": 84,
+            "missing_samples": 0,
+            "maximum": 1587081216
+          },
+          "worker_processing_peak_process_rss_bytes": {
+            "observed_samples": 84,
+            "total_samples": 84,
+            "missing_samples": 0,
+            "maximum": 1586974720
+          },
+          "worker_cgroup_lifetime_peak_memory_bytes": {
+            "observed_samples": 84,
+            "total_samples": 84,
+            "missing_samples": 0,
+            "maximum": 1776037888
+          },
+          "rss_samples": {
+            "observed_case_count": 84,
+            "recorded_sample_count": 44939
+          },
+          "preprocessing_memory_observation_status_counts": {
+            "process RSS sampled every 20 ms; not a separate hard cgroup limit": 84
+          },
+          "inference_gpu_observation": {
+            "scope": "saved_per_page_allocator_peaks_not_total_gpu_residence",
+            "attempted_input_pages": 240,
+            "page_runtime_entries": 0,
+            "gpu_peak_allocated_bytes": {
+              "observed_samples": 0,
+              "total_samples": 0,
+              "missing_samples": 0,
+              "maximum": null
+            },
+            "gpu_peak_reserved_bytes": {
+              "observed_samples": 0,
+              "total_samples": 0,
+              "missing_samples": 0,
+              "maximum": null
+            },
+            "unobserved_input_pages": 240,
+            "total_device_or_tts_residence_peak_bytes": null,
+            "missing_is_not_zero": true
+          },
+          "cuda_graph_status_counts": {
+            "real_preflight_completed_with_recorded_component_exceptions": 84
+          }
+        }
+      }
+    }
+  },
+  "service": {
+    "P07-baseline": {
+      "source_run": "benchmark/runs/lite/service/baseline/p07/run.json",
+      "source_run_id": "p07",
+      "original_execution_software_id": "f5e9063bfd2ac64be79796389d4cdaf3ad3770a8820a0628a1b245fff05a8a03",
+      "environment": {
+        "image": "sha256:61ec8c75a6162ffda94cf42d24430d17c2b4ca276f5411d47342a92f43891a5b",
+        "cpus": 8,
+        "memory_bytes": 8589934592,
+        "network": "none",
+        "gpu_devices": [],
+        "outer_concurrency": 1,
+        "deployment_status": "not_deployed",
+        "tts_actions": [],
+        "observed_worker_limits": {
+          "cpu.max": "800000 100000",
+          "cpu_quota_cpus": 8.0,
+          "cpu_quota_status": "observed",
+          "memory.max": "8589934592",
+          "memory_hard_limit_bytes": 8589934592,
+          "memory_limit_status": "observed"
+        },
+        "observed_affinity_cpu_count": 72,
+        "worker_versions": {
+          "docvortex": "0.5.16",
+          "PyMuPDF": "1.28.2",
+          "Pillow": "12.3.0",
+          "docling-core": "2.101.1",
+          "markdown-it-py": "4.2.0"
+        }
+      },
+      "measurement_notes": [
+        "Saved valid P07 native candidates are replayed; no model inference is repeated.",
+        "P08 keeps visual-only source access; PDF text and vector-table supplementation are disabled.",
+        "PDF source supplementation is actual candidate service processing, not corpus review.",
+        "Reference materials are unavailable to the isolated candidate worker.",
+        "Postprocessing wall time includes bridge readback, source processing, export, IR, assets and semantics.",
+        "Native JSON loading and final result persistence/scoring/reporting are timed separately.",
+        "Asset writes internal to actual asset materialization remain in the measured stage.",
+        "Candidate stage snapshots are captured without references; capture CPU overhead stays inside postprocessing time and is recorded separately.",
+        "Stage snapshot persistence and all stage scoring are outside postprocessing time.",
+        "The historical native duration plus replay time is not a newly measured end-to-end duration."
+      ],
+      "quality800": {
+        "suite": "quality800",
+        "rounds": [
+          {
+            "repetition": 1,
+            "samples": 173,
+            "expected_samples": 173,
+            "input_pages": 800,
+            "postprocessing_seconds": 216.08729466283694,
+            "observed_seconds_subtotal": 216.08729466283694,
+            "missing_timing_samples": 0,
+            "timing_complete": true,
+            "status_counts": {
+              "completed": 126,
+              "partial": 31,
+              "completed_with_warnings": 16
+            },
+            "diagnostic_capture_seconds": 1.553255813429132
+          }
+        ],
+        "complete_timing_rounds": 1,
+        "median_postprocessing_seconds": 216.08729466283694,
+        "minimum_seconds": 216.08729466283694,
+        "maximum_seconds": 216.08729466283694,
+        "coefficient_of_variation": null,
+        "meaning": "postprocessing_only_not_new_end_to_end_parse_timing",
+        "measured_status_counts": {
+          "completed": 126,
+          "partial": 31,
+          "completed_with_warnings": 16
+        },
+        "literal_failed_status_count": 0,
+        "statuses_are_conversion_or_processing_states_not_quality_grades": true,
+        "resources": {
+          "scope": "saved_postprocessing_case_resources",
+          "measured_case_count": 173,
+          "peak_rss_bytes": {
+            "observed_samples": 173,
+            "total_samples": 173,
+            "missing_samples": 0,
+            "maximum": 876015616
+          },
+          "rss_sample_count": 3852,
+          "rss_samples_missing_cases": 0
+        }
+      },
+      "perf80": {
+        "suite": "perf80",
+        "rounds": [
+          {
+            "repetition": 1,
+            "samples": 28,
+            "expected_samples": 28,
+            "input_pages": 80,
+            "postprocessing_seconds": 28.396627821028233,
+            "observed_seconds_subtotal": 28.396627821028233,
+            "missing_timing_samples": 0,
+            "timing_complete": true,
+            "status_counts": {
+              "completed": 21,
+              "partial": 4,
+              "completed_with_warnings": 3
+            },
+            "diagnostic_capture_seconds": 0.2253653972875327
+          },
+          {
+            "repetition": 2,
+            "samples": 28,
+            "expected_samples": 28,
+            "input_pages": 80,
+            "postprocessing_seconds": 28.02058982872404,
+            "observed_seconds_subtotal": 28.02058982872404,
+            "missing_timing_samples": 0,
+            "timing_complete": true,
+            "status_counts": {
+              "completed": 21,
+              "partial": 4,
+              "completed_with_warnings": 3
+            },
+            "diagnostic_capture_seconds": 0.18280066340230405
+          },
+          {
+            "repetition": 3,
+            "samples": 28,
+            "expected_samples": 28,
+            "input_pages": 80,
+            "postprocessing_seconds": 27.742312064627185,
+            "observed_seconds_subtotal": 27.742312064627185,
+            "missing_timing_samples": 0,
+            "timing_complete": true,
+            "status_counts": {
+              "completed": 21,
+              "partial": 4,
+              "completed_with_warnings": 3
+            },
+            "diagnostic_capture_seconds": 0.18351547187194228
+          }
+        ],
+        "complete_timing_rounds": 3,
+        "median_postprocessing_seconds": 28.02058982872404,
+        "minimum_seconds": 27.742312064627185,
+        "maximum_seconds": 28.396627821028233,
+        "coefficient_of_variation": 0.009557394398444143,
+        "meaning": "postprocessing_only_not_new_end_to_end_parse_timing",
+        "measured_status_counts": {
+          "completed": 63,
+          "partial": 12,
+          "completed_with_warnings": 9
+        },
+        "literal_failed_status_count": 0,
+        "statuses_are_conversion_or_processing_states_not_quality_grades": true,
+        "resources": {
+          "scope": "saved_postprocessing_case_resources",
+          "measured_case_count": 84,
+          "peak_rss_bytes": {
+            "observed_samples": 84,
+            "total_samples": 84,
+            "missing_samples": 0,
+            "maximum": 983941120
+          },
+          "rss_sample_count": 1730,
+          "rss_samples_missing_cases": 0
+        }
+      },
+      "warmup": [
+        {
+          "case_id": "preflight8-r1-vanke-interest-p001-002",
+          "sample_id": "vanke-interest-p001-002",
+          "input_pages": 2,
+          "status": "completed",
+          "postprocessing_seconds": 0.4277774919755757,
+          "resources": {
+            "peak_rss_bytes": 113655808,
+            "rss_samples": 14
+          }
+        },
+        {
+          "case_id": "preflight8-r1-spdb-cover-declaration-p001-002",
+          "sample_id": "spdb-cover-declaration-p001-002",
+          "input_pages": 2,
+          "status": "completed",
+          "postprocessing_seconds": 0.5991626819595695,
+          "resources": {
+            "peak_rss_bytes": 205361152,
+            "rss_samples": 17
+          }
+        },
+        {
+          "case_id": "preflight8-r1-pingan-financials-p001-004",
+          "sample_id": "pingan-financials-p001-004",
+          "input_pages": 4,
+          "status": "partial",
+          "postprocessing_seconds": 1.0546735911630094,
+          "resources": {
+            "peak_rss_bytes": 202571776,
+            "rss_samples": 18
+          }
+        }
+      ]
+    },
+    "P08-baseline": {
+      "source_run": "benchmark/runs/lite/service/baseline/p08/run.json",
+      "source_run_id": "p08",
+      "original_execution_software_id": "f5e9063bfd2ac64be79796389d4cdaf3ad3770a8820a0628a1b245fff05a8a03",
+      "environment": {
+        "image": "sha256:61ec8c75a6162ffda94cf42d24430d17c2b4ca276f5411d47342a92f43891a5b",
+        "cpus": 8,
+        "memory_bytes": 8589934592,
+        "network": "none",
+        "gpu_devices": [],
+        "outer_concurrency": 1,
+        "deployment_status": "not_deployed",
+        "tts_actions": [],
+        "observed_worker_limits": {
+          "cpu.max": "800000 100000",
+          "cpu_quota_cpus": 8.0,
+          "cpu_quota_status": "observed",
+          "memory.max": "8589934592",
+          "memory_hard_limit_bytes": 8589934592,
+          "memory_limit_status": "observed"
+        },
+        "observed_affinity_cpu_count": 72,
+        "worker_versions": {
+          "docvortex": "0.5.16",
+          "PyMuPDF": "1.28.2",
+          "Pillow": "12.3.0",
+          "docling-core": "2.101.1",
+          "markdown-it-py": "4.2.0"
+        }
+      },
+      "measurement_notes": [
+        "Saved valid P08 native candidates are replayed; no model inference is repeated.",
+        "P08 keeps visual-only source access; PDF text and vector-table supplementation are disabled.",
+        "PDF source supplementation is actual candidate service processing, not corpus review.",
+        "Reference materials are unavailable to the isolated candidate worker.",
+        "Postprocessing wall time includes bridge readback, source processing, export, IR, assets and semantics.",
+        "Native JSON loading and final result persistence/scoring/reporting are timed separately.",
+        "Asset writes internal to actual asset materialization remain in the measured stage.",
+        "Candidate stage snapshots are captured without references; capture CPU overhead stays inside postprocessing time and is recorded separately.",
+        "Stage snapshot persistence and all stage scoring are outside postprocessing time.",
+        "The historical native duration plus replay time is not a newly measured end-to-end duration."
+      ],
+      "quality800": {
+        "suite": "quality800",
+        "rounds": [
+          {
+            "repetition": 1,
+            "samples": 173,
+            "expected_samples": 173,
+            "input_pages": 800,
+            "postprocessing_seconds": 194.04550682730041,
+            "observed_seconds_subtotal": 194.04550682730041,
+            "missing_timing_samples": 0,
+            "timing_complete": true,
+            "status_counts": {
+              "completed": 127,
+              "partial": 32,
+              "completed_with_warnings": 14
+            },
+            "diagnostic_capture_seconds": 0.8024115196894854
+          }
+        ],
+        "complete_timing_rounds": 1,
+        "median_postprocessing_seconds": 194.04550682730041,
+        "minimum_seconds": 194.04550682730041,
+        "maximum_seconds": 194.04550682730041,
+        "coefficient_of_variation": null,
+        "meaning": "postprocessing_only_not_new_end_to_end_parse_timing",
+        "measured_status_counts": {
+          "completed": 127,
+          "partial": 32,
+          "completed_with_warnings": 14
+        },
+        "literal_failed_status_count": 0,
+        "statuses_are_conversion_or_processing_states_not_quality_grades": true,
+        "resources": {
+          "scope": "saved_postprocessing_case_resources",
+          "measured_case_count": 173,
+          "peak_rss_bytes": {
+            "observed_samples": 173,
+            "total_samples": 173,
+            "missing_samples": 0,
+            "maximum": 845053952
+          },
+          "rss_sample_count": 2840,
+          "rss_samples_missing_cases": 0
+        }
+      },
+      "perf80": {
+        "suite": "perf80",
+        "rounds": [
+          {
+            "repetition": 1,
+            "samples": 28,
+            "expected_samples": 28,
+            "input_pages": 80,
+            "postprocessing_seconds": 29.269844939000905,
+            "observed_seconds_subtotal": 29.269844939000905,
+            "missing_timing_samples": 0,
+            "timing_complete": true,
+            "status_counts": {
+              "completed": 22,
+              "partial": 4,
+              "completed_with_warnings": 2
+            },
+            "diagnostic_capture_seconds": 0.11799620185047388
+          },
+          {
+            "repetition": 2,
+            "samples": 28,
+            "expected_samples": 28,
+            "input_pages": 80,
+            "postprocessing_seconds": 28.914666503435,
+            "observed_seconds_subtotal": 28.914666503435,
+            "missing_timing_samples": 0,
+            "timing_complete": true,
+            "status_counts": {
+              "completed": 22,
+              "partial": 4,
+              "completed_with_warnings": 2
+            },
+            "diagnostic_capture_seconds": 0.11930865026079118
+          },
+          {
+            "repetition": 3,
+            "samples": 28,
+            "expected_samples": 28,
+            "input_pages": 80,
+            "postprocessing_seconds": 28.820855932543054,
+            "observed_seconds_subtotal": 28.820855932543054,
+            "missing_timing_samples": 0,
+            "timing_complete": true,
+            "status_counts": {
+              "completed": 22,
+              "partial": 4,
+              "completed_with_warnings": 2
+            },
+            "diagnostic_capture_seconds": 0.11813994916155934
+          }
+        ],
+        "complete_timing_rounds": 3,
+        "median_postprocessing_seconds": 28.914666503435,
+        "minimum_seconds": 28.820855932543054,
+        "maximum_seconds": 29.269844939000905,
+        "coefficient_of_variation": 0.006667674821578998,
+        "meaning": "postprocessing_only_not_new_end_to_end_parse_timing",
+        "measured_status_counts": {
+          "completed": 66,
+          "partial": 12,
+          "completed_with_warnings": 6
+        },
+        "literal_failed_status_count": 0,
+        "statuses_are_conversion_or_processing_states_not_quality_grades": true,
+        "resources": {
+          "scope": "saved_postprocessing_case_resources",
+          "measured_case_count": 84,
+          "peak_rss_bytes": {
+            "observed_samples": 84,
+            "total_samples": 84,
+            "missing_samples": 0,
+            "maximum": 844382208
+          },
+          "rss_sample_count": 1371,
+          "rss_samples_missing_cases": 0
+        }
+      },
+      "warmup": [
+        {
+          "case_id": "preflight8-r1-vanke-interest-p001-002",
+          "sample_id": "vanke-interest-p001-002",
+          "input_pages": 2,
+          "status": "completed",
+          "postprocessing_seconds": 0.07750766607932746,
+          "resources": {
+            "peak_rss_bytes": 92200960,
+            "rss_samples": 3
+          }
+        },
+        {
+          "case_id": "preflight8-r1-spdb-cover-declaration-p001-002",
+          "sample_id": "spdb-cover-declaration-p001-002",
+          "input_pages": 2,
+          "status": "completed",
+          "postprocessing_seconds": 1.6988730479497463,
+          "resources": {
+            "peak_rss_bytes": 216567808,
+            "rss_samples": 20
+          }
+        },
+        {
+          "case_id": "preflight8-r1-pingan-financials-p001-004",
+          "sample_id": "pingan-financials-p001-004",
+          "input_pages": 4,
+          "status": "partial",
+          "postprocessing_seconds": 0.2978636990301311,
+          "resources": {
+            "peak_rss_bytes": 210776064,
+            "rss_samples": 6
+          }
+        }
+      ]
+    },
+    "P07-current": {
+      "source_run": "benchmark/runs/lite/service/current/p07/run.json",
+      "source_run_id": "p07",
+      "original_execution_software_id": "bcb3b2d3ac3a2546c0108f75a178a065c27d81aef8a8756afcbeabb51704a9f7",
+      "environment": {
+        "image": "sha256:61ec8c75a6162ffda94cf42d24430d17c2b4ca276f5411d47342a92f43891a5b",
+        "cpus": 8,
+        "memory_bytes": 8589934592,
+        "network": "none",
+        "gpu_devices": [],
+        "outer_concurrency": 1,
+        "deployment_status": "not_deployed",
+        "tts_actions": [],
+        "observed_worker_limits": {
+          "cpu.max": "800000 100000",
+          "cpu_quota_cpus": 8.0,
+          "cpu_quota_status": "observed",
+          "memory.max": "8589934592",
+          "memory_hard_limit_bytes": 8589934592,
+          "memory_limit_status": "observed"
+        },
+        "observed_affinity_cpu_count": 72,
+        "worker_versions": {
+          "docvortex": "0.5.16",
+          "PyMuPDF": "1.28.2",
+          "Pillow": "12.3.0",
+          "docling-core": "2.101.1",
+          "markdown-it-py": "4.2.0"
+        }
+      },
+      "measurement_notes": [
+        "Saved valid P07 native candidates are replayed; no model inference is repeated.",
+        "P08 keeps visual-only source access; PDF text and vector-table supplementation are disabled.",
+        "PDF source supplementation is actual candidate service processing, not corpus review.",
+        "Reference materials are unavailable to the isolated candidate worker.",
+        "Postprocessing wall time includes bridge readback, source processing, export, IR, assets and semantics.",
+        "Native JSON loading and final result persistence/scoring/reporting are timed separately.",
+        "Asset writes internal to actual asset materialization remain in the measured stage.",
+        "Candidate stage snapshots are captured without references; capture CPU overhead stays inside postprocessing time and is recorded separately.",
+        "Stage snapshot persistence and all stage scoring are outside postprocessing time.",
+        "The historical native duration plus replay time is not a newly measured end-to-end duration."
+      ],
+      "quality800": {
+        "suite": "quality800",
+        "rounds": [
+          {
+            "repetition": 1,
+            "samples": 173,
+            "expected_samples": 173,
+            "input_pages": 800,
+            "postprocessing_seconds": 216.83897743583657,
+            "observed_seconds_subtotal": 216.83897743583657,
+            "missing_timing_samples": 0,
+            "timing_complete": true,
+            "status_counts": {
+              "completed": 126,
+              "partial": 31,
+              "completed_with_warnings": 16
+            },
+            "diagnostic_capture_seconds": 1.689892875496298
+          }
+        ],
+        "complete_timing_rounds": 1,
+        "median_postprocessing_seconds": 216.83897743583657,
+        "minimum_seconds": 216.83897743583657,
+        "maximum_seconds": 216.83897743583657,
+        "coefficient_of_variation": null,
+        "meaning": "postprocessing_only_not_new_end_to_end_parse_timing",
+        "measured_status_counts": {
+          "completed": 126,
+          "partial": 31,
+          "completed_with_warnings": 16
+        },
+        "literal_failed_status_count": 0,
+        "statuses_are_conversion_or_processing_states_not_quality_grades": true,
+        "resources": {
+          "scope": "saved_postprocessing_case_resources",
+          "measured_case_count": 173,
+          "peak_rss_bytes": {
+            "observed_samples": 173,
+            "total_samples": 173,
+            "missing_samples": 0,
+            "maximum": 828878848
+          },
+          "rss_sample_count": 3844,
+          "rss_samples_missing_cases": 0
+        }
+      },
+      "perf80": {
+        "suite": "perf80",
+        "rounds": [
+          {
+            "repetition": 1,
+            "samples": 28,
+            "expected_samples": 28,
+            "input_pages": 80,
+            "postprocessing_seconds": 28.223642288940027,
+            "observed_seconds_subtotal": 28.223642288940027,
+            "missing_timing_samples": 0,
+            "timing_complete": true,
+            "status_counts": {
+              "completed": 21,
+              "partial": 4,
+              "completed_with_warnings": 3
+            },
+            "diagnostic_capture_seconds": 0.18530139070935547
+          },
+          {
+            "repetition": 2,
+            "samples": 28,
+            "expected_samples": 28,
+            "input_pages": 80,
+            "postprocessing_seconds": 27.9100121029187,
+            "observed_seconds_subtotal": 27.9100121029187,
+            "missing_timing_samples": 0,
+            "timing_complete": true,
+            "status_counts": {
+              "completed": 21,
+              "partial": 4,
+              "completed_with_warnings": 3
+            },
+            "diagnostic_capture_seconds": 0.1838695511687547
+          },
+          {
+            "repetition": 3,
+            "samples": 28,
+            "expected_samples": 28,
+            "input_pages": 80,
+            "postprocessing_seconds": 28.03575516003184,
+            "observed_seconds_subtotal": 28.03575516003184,
+            "missing_timing_samples": 0,
+            "timing_complete": true,
+            "status_counts": {
+              "completed": 21,
+              "partial": 4,
+              "completed_with_warnings": 3
+            },
+            "diagnostic_capture_seconds": 0.1818351885303855
+          }
+        ],
+        "complete_timing_rounds": 3,
+        "median_postprocessing_seconds": 28.03575516003184,
+        "minimum_seconds": 27.9100121029187,
+        "maximum_seconds": 28.223642288940027,
+        "coefficient_of_variation": 0.004593382282748044,
+        "meaning": "postprocessing_only_not_new_end_to_end_parse_timing",
+        "measured_status_counts": {
+          "completed": 63,
+          "partial": 12,
+          "completed_with_warnings": 9
+        },
+        "literal_failed_status_count": 0,
+        "statuses_are_conversion_or_processing_states_not_quality_grades": true,
+        "resources": {
+          "scope": "saved_postprocessing_case_resources",
+          "measured_case_count": 84,
+          "peak_rss_bytes": {
+            "observed_samples": 84,
+            "total_samples": 84,
+            "missing_samples": 0,
+            "maximum": 959967232
+          },
+          "rss_sample_count": 1704,
+          "rss_samples_missing_cases": 0
+        }
+      },
+      "warmup": [
+        {
+          "case_id": "preflight8-r1-vanke-interest-p001-002",
+          "sample_id": "vanke-interest-p001-002",
+          "input_pages": 2,
+          "status": "completed",
+          "postprocessing_seconds": 0.4669031740631908,
+          "resources": {
+            "peak_rss_bytes": 115122176,
+            "rss_samples": 15
+          }
+        },
+        {
+          "case_id": "preflight8-r1-spdb-cover-declaration-p001-002",
+          "sample_id": "spdb-cover-declaration-p001-002",
+          "input_pages": 2,
+          "status": "completed",
+          "postprocessing_seconds": 0.6650305760558695,
+          "resources": {
+            "peak_rss_bytes": 205426688,
+            "rss_samples": 20
+          }
+        },
+        {
+          "case_id": "preflight8-r1-pingan-financials-p001-004",
+          "sample_id": "pingan-financials-p001-004",
+          "input_pages": 4,
+          "status": "partial",
+          "postprocessing_seconds": 1.0903673130087554,
+          "resources": {
+            "peak_rss_bytes": 204357632,
+            "rss_samples": 18
+          }
+        }
+      ]
+    },
+    "P08-current": {
+      "source_run": "benchmark/runs/lite/service/current/p08/run.json",
+      "source_run_id": "p08",
+      "original_execution_software_id": "bcb3b2d3ac3a2546c0108f75a178a065c27d81aef8a8756afcbeabb51704a9f7",
+      "environment": {
+        "image": "sha256:61ec8c75a6162ffda94cf42d24430d17c2b4ca276f5411d47342a92f43891a5b",
+        "cpus": 8,
+        "memory_bytes": 8589934592,
+        "network": "none",
+        "gpu_devices": [],
+        "outer_concurrency": 1,
+        "deployment_status": "not_deployed",
+        "tts_actions": [],
+        "observed_worker_limits": {
+          "cpu.max": "800000 100000",
+          "cpu_quota_cpus": 8.0,
+          "cpu_quota_status": "observed",
+          "memory.max": "8589934592",
+          "memory_hard_limit_bytes": 8589934592,
+          "memory_limit_status": "observed"
+        },
+        "observed_affinity_cpu_count": 72,
+        "worker_versions": {
+          "docvortex": "0.5.16",
+          "PyMuPDF": "1.28.2",
+          "Pillow": "12.3.0",
+          "docling-core": "2.101.1",
+          "markdown-it-py": "4.2.0"
+        }
+      },
+      "measurement_notes": [
+        "Saved valid P08 native candidates are replayed; no model inference is repeated.",
+        "P08 keeps visual-only source access; PDF text and vector-table supplementation are disabled.",
+        "PDF source supplementation is actual candidate service processing, not corpus review.",
+        "Reference materials are unavailable to the isolated candidate worker.",
+        "Postprocessing wall time includes bridge readback, source processing, export, IR, assets and semantics.",
+        "Native JSON loading and final result persistence/scoring/reporting are timed separately.",
+        "Asset writes internal to actual asset materialization remain in the measured stage.",
+        "Candidate stage snapshots are captured without references; capture CPU overhead stays inside postprocessing time and is recorded separately.",
+        "Stage snapshot persistence and all stage scoring are outside postprocessing time.",
+        "The historical native duration plus replay time is not a newly measured end-to-end duration."
+      ],
+      "quality800": {
+        "suite": "quality800",
+        "rounds": [
+          {
+            "repetition": 1,
+            "samples": 173,
+            "expected_samples": 173,
+            "input_pages": 800,
+            "postprocessing_seconds": 181.99120295373723,
+            "observed_seconds_subtotal": 181.99120295373723,
+            "missing_timing_samples": 0,
+            "timing_complete": true,
+            "status_counts": {
+              "completed": 128,
+              "partial": 31,
+              "completed_with_warnings": 14
+            },
+            "diagnostic_capture_seconds": 0.7437993208877742
+          }
+        ],
+        "complete_timing_rounds": 1,
+        "median_postprocessing_seconds": 181.99120295373723,
+        "minimum_seconds": 181.99120295373723,
+        "maximum_seconds": 181.99120295373723,
+        "coefficient_of_variation": null,
+        "meaning": "postprocessing_only_not_new_end_to_end_parse_timing",
+        "measured_status_counts": {
+          "completed": 128,
+          "partial": 31,
+          "completed_with_warnings": 14
+        },
+        "literal_failed_status_count": 0,
+        "statuses_are_conversion_or_processing_states_not_quality_grades": true,
+        "resources": {
+          "scope": "saved_postprocessing_case_resources",
+          "measured_case_count": 173,
+          "peak_rss_bytes": {
+            "observed_samples": 173,
+            "total_samples": 173,
+            "missing_samples": 0,
+            "maximum": 1023807488
+          },
+          "rss_sample_count": 2602,
+          "rss_samples_missing_cases": 0
+        }
+      },
+      "perf80": {
+        "suite": "perf80",
+        "rounds": [
+          {
+            "repetition": 1,
+            "samples": 28,
+            "expected_samples": 28,
+            "input_pages": 80,
+            "postprocessing_seconds": 27.38608704134822,
+            "observed_seconds_subtotal": 27.38608704134822,
+            "missing_timing_samples": 0,
+            "timing_complete": true,
+            "status_counts": {
+              "completed": 22,
+              "partial": 4,
+              "completed_with_warnings": 2
+            },
+            "diagnostic_capture_seconds": 0.13919973839074373
+          },
+          {
+            "repetition": 2,
+            "samples": 28,
+            "expected_samples": 28,
+            "input_pages": 80,
+            "postprocessing_seconds": 27.175789882894605,
+            "observed_seconds_subtotal": 27.175789882894605,
+            "missing_timing_samples": 0,
+            "timing_complete": true,
+            "status_counts": {
+              "completed": 22,
+              "partial": 4,
+              "completed_with_warnings": 2
+            },
+            "diagnostic_capture_seconds": 0.11531628924421966
+          },
+          {
+            "repetition": 3,
+            "samples": 28,
+            "expected_samples": 28,
+            "input_pages": 80,
+            "postprocessing_seconds": 27.371211965335533,
+            "observed_seconds_subtotal": 27.371211965335533,
+            "missing_timing_samples": 0,
+            "timing_complete": true,
+            "status_counts": {
+              "completed": 22,
+              "partial": 4,
+              "completed_with_warnings": 2
+            },
+            "diagnostic_capture_seconds": 0.11395085253752768
+          }
+        ],
+        "complete_timing_rounds": 3,
+        "median_postprocessing_seconds": 27.371211965335533,
+        "minimum_seconds": 27.175789882894605,
+        "maximum_seconds": 27.38608704134822,
+        "coefficient_of_variation": 0.0035085299807141148,
+        "meaning": "postprocessing_only_not_new_end_to_end_parse_timing",
+        "measured_status_counts": {
+          "completed": 66,
+          "partial": 12,
+          "completed_with_warnings": 6
+        },
+        "literal_failed_status_count": 0,
+        "statuses_are_conversion_or_processing_states_not_quality_grades": true,
+        "resources": {
+          "scope": "saved_postprocessing_case_resources",
+          "measured_case_count": 84,
+          "peak_rss_bytes": {
+            "observed_samples": 84,
+            "total_samples": 84,
+            "missing_samples": 0,
+            "maximum": 1007951872
+          },
+          "rss_sample_count": 1346,
+          "rss_samples_missing_cases": 0
+        }
+      },
+      "warmup": [
+        {
+          "case_id": "preflight8-r1-vanke-interest-p001-002",
+          "sample_id": "vanke-interest-p001-002",
+          "input_pages": 2,
+          "status": "completed",
+          "postprocessing_seconds": 0.06571805407293141,
+          "resources": {
+            "peak_rss_bytes": 93437952,
+            "rss_samples": 2
+          }
+        },
+        {
+          "case_id": "preflight8-r1-spdb-cover-declaration-p001-002",
+          "sample_id": "spdb-cover-declaration-p001-002",
+          "input_pages": 2,
+          "status": "completed",
+          "postprocessing_seconds": 1.7048401781357825,
+          "resources": {
+            "peak_rss_bytes": 225071104,
+            "rss_samples": 20
+          }
+        },
+        {
+          "case_id": "preflight8-r1-pingan-financials-p001-004",
+          "sample_id": "pingan-financials-p001-004",
+          "input_pages": 4,
+          "status": "partial",
+          "postprocessing_seconds": 0.28443998703733087,
+          "resources": {
+            "peak_rss_bytes": 226463744,
+            "rss_samples": 6
+          }
+        }
+      ]
+    }
+  },
+  "duration_observation_field_note": "has_unavailable_duration_observations copies the original reader bool(unavailable); it describes presence of missing observations, not permission to fill them with zero. The original reader used the ambiguous label missing_durations_are_not_zero. Missing costs always remain unknown; recorded durations and round statistics are unchanged."
+}

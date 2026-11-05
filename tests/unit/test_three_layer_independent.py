@@ -334,16 +334,25 @@ def test_changing_only_explicit_header_references_separates_literal_and_relation
     assert bad["layers"]["B"]["score"] < 100
 
 
-def test_header_reference_changes_without_independent_data_identity_block_publication():
+def test_data_ids_are_not_required_when_logical_field_roles_are_explicit():
     reference = ('<table><tr><th id="revenue" scope="col">Revenue</th>'
                  '<th id="profit" scope="col">Profit</th></tr>'
                  '<tr><td headers="revenue">17</td><td headers="profit">5</td></tr></table>')
     changed = reference.replace('headers="revenue"', 'headers="temporary"').replace(
         'headers="profit"', 'headers="revenue"').replace('headers="temporary"', 'headers="profit"')
+    _, unchanged = score(reference, reference)
+    assert unchanged["publishable"] is True
+    assert unchanged["layers"]["L"]["denominator"] == 2
+    assert unchanged["layers"]["B"]["numerator"] == 2
     _, result = score(reference, changed)
-    assert result["publishable"] is False
-    assert result["score"] is None
-    assert result["blockers"]
+    assert result["layers"]["T"]["score"] == 100
+    assert result["layers"]["B"]["numerator"] == 0
+    # These source values have no independently retained cross-output object
+    # ids. We can report the two changed business values, but cannot infer
+    # whether their internal cause was recognition or binding. The preceding
+    # controlled test retains ids and independently detects a changed link.
+    assert result["layers"]["L"]["numerator"] == 2
+    assert result["blockers"] == []
 
 
 @pytest.mark.parametrize("remove", ["all", "one"])

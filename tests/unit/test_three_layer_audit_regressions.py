@@ -10,7 +10,6 @@ from __future__ import annotations
 
 import pytest
 
-from moparse_eval.expected_report import validate_evidence
 from moparse_eval.three_layer import (
     compile_markdown,
     grade_layers,
@@ -27,16 +26,10 @@ def _grade(reference, candidate):
     return grade_layers(_requirements(reference), read_candidate_markdown(candidate, sample_id="audit", pipeline="P08"))
 
 
-def _require_equal_text_or_explicit_text_block(score):
-    if score["publishable"]:
-        assert score["layers"]["T"]["score"] == 100
-    else:
-        assert score["score"] is None
-        assert any(blocker["reason"] in {
-            "shared_header_text_restatement_unsupported",
-            "text_restatement_interpretation_unsupported",
-            "text_restatement_policy_unvalidated",
-        } for blocker in score["blockers"])
+def _require_equal_text(score):
+    assert score["publishable"] is True, score["blockers"]
+    assert score["layers"]["T"]["complete"] is True
+    assert score["layers"]["T"]["score"] == 100
 
 
 @pytest.mark.parametrize("reference,candidate", [
@@ -46,13 +39,19 @@ def _require_equal_text_or_explicit_text_block(score):
 def test_report_rechecks_strict_source_fragments_without_rejecting_legal_text_blocks(reference, candidate):
     suffix = "\n\nName: Delta; Revenue: 17"
     score = _grade(reference + suffix, candidate + suffix)
-    assert score["publishable"] is True, score["blockers"]
+    if reference.startswith("The board approved"):
+        assert score["publishable"] is False
+        assert score["layers"]["B"]["complete"] is False
+    else:
+        assert score["publishable"] is True, score["blockers"]
     assert score["layers"]["T"]["score"] == 100
     row = next(row for row in score["outcomes"] if row["layer"] == "T" and row["expected"]["text"] == reference)
     assert len(row["actual"]["source_fragments"]) == 2
     assert "\n" in row["actual"]["strict_text"]
     assert sum(row["strict_edits"].values()) > 0
-    validate_evidence(score)
+    from moparse_eval.expected_report import _complete_text_trace
+
+    _complete_text_trace(score)
 
 
 @pytest.mark.parametrize("interruption", [
@@ -84,7 +83,7 @@ def test_shared_table_headers_are_not_false_missing_text_from_record_restatement
     assert len(requirements["business"]) == 4
     score = _grade(reference, candidate)
     assert score["layers"]["B"]["denominator"] == 4
-    _require_equal_text_or_explicit_text_block(score)
+    _require_equal_text(score)
 
 
 @pytest.mark.parametrize("reverse", [False, True])
@@ -96,7 +95,7 @@ def test_unit_schema_word_has_the_same_relation_syntax_policy_in_table_and_recor
     assert len(requirements["business"]) == 2
     score = _grade(reference, candidate)
     assert score["layers"]["B"]["denominator"] == 2
-    _require_equal_text_or_explicit_text_block(score)
+    _require_equal_text(score)
 
 
 def test_role_identity_attribute_does_not_change_the_subject_in_a_table():

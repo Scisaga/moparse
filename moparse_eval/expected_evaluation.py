@@ -10,9 +10,10 @@ from __future__ import annotations
 import argparse
 import json
 import multiprocessing
+import tempfile
 import time
-from collections import Counter
-from concurrent.futures import ProcessPoolExecutor, as_completed
+from collections import Counter, deque
+from concurrent.futures import FIRST_COMPLETED, ProcessPoolExecutor, wait
 from functools import wraps
 from pathlib import Path
 from typing import Any
@@ -152,6 +153,22 @@ def _blocked_score(expected: dict[str, Any], group: str, blocker: dict[str, Any]
     }
 
 
+def _write_compact_score(destination: Path, score: dict[str, Any]) -> None:
+    """Stream a complete trace before atomically replacing its destination."""
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    partial = None
+    try:
+        with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", dir=destination.parent,
+                                         prefix=destination.name + ".", suffix=".part", delete=False) as stream:
+            partial = Path(stream.name)
+            json.dump(score, stream, ensure_ascii=False, separators=(",", ":"))
+            stream.write("\n")
+        partial.replace(destination)
+    finally:
+        if partial is not None:
+            partial.unlink(missing_ok=True)
+
+
 def _grade_saved_group(task: dict[str, Any]) -> dict[str, Any]:
     """Read and diagnose one saved output, inside an analysis-only CPU process."""
     group, sample_id, expected = task["group"], task["sample_id"], task["expected"]
@@ -187,20 +204,42 @@ def _grade_saved_group(task: dict[str, Any]) -> dict[str, Any]:
             layer["score"], layer["numerator"] = None, None
             layer.pop("diagnostic_score", None)
     relative = f"private/scores/{group}/quality800-r1/{sample_id}.json"
-    write_json(output / relative, score)
+    # Complete traces repeat explicit source evidence; formatting them as
+    # indented JSON multiplies analysis storage without adding information.
+    destination = output / relative
+    _write_compact_score(destination, score)
     return {"group": group, "sample_id": sample_id, "path": relative,
             "readback": observation.get("scoring_readback")}
 
 
 def _grade_tasks(tasks: list[dict[str, Any]], workers: int):
+    pending_by_sample: dict[str, deque[dict[str, Any]]] = {}
+    for task in tasks:
+        pending_by_sample.setdefault(task["sample_id"], deque()).append(task)
+    ready = deque(pending_by_sample)
     if workers == 1:
-        yield from map(_grade_saved_group, tasks)
+        while ready:
+            sample = ready.popleft()
+            record = _grade_saved_group(pending_by_sample[sample].popleft())
+            if pending_by_sample[sample]:
+                ready.append(sample)
+            yield record
         return
     with ProcessPoolExecutor(max_workers=workers, mp_context=multiprocessing.get_context("spawn")) as executor:
-        futures = [executor.submit(_grade_saved_group, task) for task in tasks]
+        futures = {}
         try:
-            for future in as_completed(futures):
-                yield future.result()
+            while ready or futures:
+                while ready and len(futures) < workers:
+                    sample = ready.popleft()
+                    future = executor.submit(_grade_saved_group, pending_by_sample[sample].popleft())
+                    futures[future] = sample
+                done, _pending = wait(futures, return_when=FIRST_COMPLETED)
+                for future in done:
+                    sample = futures.pop(future)
+                    record = future.result()
+                    if pending_by_sample[sample]:
+                        ready.append(sample)
+                    yield record
         except BaseException:
             for future in futures:
                 future.cancel()
@@ -230,12 +269,20 @@ def _blocker_index(score: dict[str, Any], record: dict[str, Any]) -> list[dict[s
 @_record_failure
 def evaluate_saved(baseline: Path, output: Path, *, expected_root: Path,
                    freeze: Path | None = None, service_baseline_root: Path | None = None,
-                   current_root: Path | None = None, workers: int = 16, diagnostic: bool = False) -> Path:
+                   current_root: Path | None = None, workers: int = 16, diagnostic: bool = False,
+                   sample_ids: list[str] | None = None) -> Path:
     """Traverse all declared saved groups; publish only fully supported judgments.
 
-    Diagnostic mode needs no scoring freeze, withholds every numerical quality
-    result, and never claims that traversing the material completed evaluation.
+    Diagnostic mode permits an explicitly declared sample subset, needs no
+    scoring freeze, and withholds all quality results. Formal denominators
+    always retain the entire original declaration.
     """
+    if sample_ids is not None and not diagnostic:
+        raise ValueError("sample selection is diagnostic-only; formal scoring must retain the full declared scope")
+    if sample_ids is not None and (not isinstance(sample_ids, list) or not sample_ids
+                                   or any(not isinstance(item, str) or not item for item in sample_ids)
+                                   or len(set(sample_ids)) != len(sample_ids)):
+        raise ValueError("diagnostic sample selection must declare nonempty distinct sample identities")
     from .cli import (
         _require_formal_measurement_conditions,
         code_identity,
@@ -271,12 +318,16 @@ def evaluate_saved(baseline: Path, output: Path, *, expected_root: Path,
                    for pipeline in PIPELINES}
     if sum(len(items) for items in by_pipeline.values()) != len(cases):
         raise ValueError("duplicate or undeclared pipeline quality cases")
-    sample_ids = set(by_pipeline[PIPELINES[0]])
+    full_sample_ids = set(by_pipeline[PIPELINES[0]])
     declared_samples = set(manifest.get("suites", {}).get("lite", samples))
-    if sample_ids != declared_samples or not sample_ids <= samples.keys():
+    if full_sample_ids != declared_samples or not full_sample_ids <= samples.keys():
         raise ValueError("quality comparison must cover the entire declared Lite selection")
-    if not sample_ids or any(set(by_pipeline[pipeline]) != sample_ids for pipeline in PIPELINES):
+    if not full_sample_ids or any(set(by_pipeline[pipeline]) != full_sample_ids for pipeline in PIPELINES):
         raise ValueError("all eight pipelines must cover the same declared quality samples")
+    selected_sample_ids = set(sample_ids) if sample_ids is not None else full_sample_ids
+    if not selected_sample_ids <= full_sample_ids:
+        raise ValueError("diagnostic sample selection contains an unknown declared sample: "
+                         + ", ".join(sorted(selected_sample_ids - full_sample_ids)))
     groups: dict[str, list[dict[str, Any]]] = {pipeline: [] for pipeline in PIPELINES}
     service = {}
     for label, root in (("baseline", service_baseline_root), ("current", current_root)):
@@ -290,7 +341,7 @@ def evaluate_saved(baseline: Path, output: Path, *, expected_root: Path,
                 raise ValueError("final output must declare the same baseline, dataset and native pipeline")
             declared_cases = quality_cases(run)
             declared = {case["sample_id"]: case for case in declared_cases}
-            if len(declared) != len(declared_cases) or set(declared) != sample_ids:
+            if len(declared) != len(declared_cases) or set(declared) != full_sample_ids:
                 raise ValueError("saved final outputs must cover the same quality samples without duplicates")
             for sample_id, case in declared.items():
                 if case["baseline_observation_source"] != by_pipeline[pipeline][sample_id]["observation"]:
@@ -309,7 +360,18 @@ def evaluate_saved(baseline: Path, output: Path, *, expected_root: Path,
         "reference_freeze": manifest.get("freeze_record"), "baseline": str(baseline),
         "expected_root": str(expected_root.resolve()), "dataset": str(dataset),
         "expected_comparison_complete": False, "records": [], "coverage": [], "groups": list(groups),
+        "full_declared_samples": len(full_sample_ids),
+        "diagnostic_selected_samples": sorted(selected_sample_ids) if diagnostic else None,
+        "diagnostic_selection_requested": sample_ids is not None,
+        "full_scope_traversed": False,
         "quality_suite": "quality800", "analysis_workers": workers,
+        "analysis_scheduling": {
+            "policy": "sample_round_robin", "max_active_tasks": workers, "max_active_tasks_per_sample": 1,
+            "process_start_method": "spawn" if workers > 1 else "inline",
+            "sample_order": "first_declared_task_occurrence", "group_order": "declared_task_order_within_sample",
+            "completed_sample": "append_to_ready_queue_tail", "failure_policy": "fail_without_retry",
+            "declared_tasks": len(selected_sample_ids) * len(groups),
+        },
         "analysis_timing": "excluded_from_parser_and_postprocessing_costs",
         "validation": frozen["validation"] if frozen is not None else None,
         "native_readback": {"reader_version": READBACK_VERSION, "observations": []},
@@ -322,7 +384,7 @@ def evaluate_saved(baseline: Path, output: Path, *, expected_root: Path,
     write_json(output / "execution-status.json", index)
     reference_cache = {}
     expected_by_sample = {}
-    for sample_id in sorted(sample_ids):
+    for sample_id in sorted(selected_sample_ids):
         try:
             expected_by_sample[sample_id] = read_expected(samples[sample_id], expected_root, cache=reference_cache)
         except (ValueError, IndexError, KeyError, TypeError, OSError) as error:
@@ -334,7 +396,7 @@ def evaluate_saved(baseline: Path, output: Path, *, expected_root: Path,
             }
     print(json.dumps({"stage": "expected_syntax_read", "samples": len(expected_by_sample)}), flush=True)
     tasks = []
-    for sample_id in sorted(sample_ids):
+    for sample_id in sorted(selected_sample_ids):
         for pipeline in PIPELINES:
             tasks.append({"group": pipeline, "sample_id": sample_id, "expected": expected_by_sample[sample_id],
                           "directory": baseline, "case": by_pipeline[pipeline][sample_id], "output": output,
@@ -350,14 +412,21 @@ def evaluate_saved(baseline: Path, output: Path, *, expected_root: Path,
         if number % max(1, len(groups)) == 0:
             print(json.dumps({"stage": "saved_output_diagnosis" if diagnostic else "three_layer_comparison",
                               "completed_records": number, "declared_records": len(tasks)}), flush=True)
-    for sample_id in sorted(sample_ids):
+    for sample_id in sorted(selected_sample_ids):
         expected = expected_by_sample[sample_id]
         paired = []
         for key, members in groups.items():
             record = completed[key, sample_id]
             score = read_json(output / record["path"])
-            members.append(score)
-            paired.append(score)
+            if diagnostic:
+                # Keep only the frozen target view while indexing. Detailed
+                # source traces stay in their score files, one read at a time.
+                paired.append({"publishable": score.get("publishable"), "layers": score["layers"],
+                               "outcomes": [{name: row[name] for name in ("layer", "id", "role", "expected")}
+                                            for row in score["outcomes"]]})
+            else:
+                members.append(score)
+                paired.append(score)
             index["records"].append({name: record[name] for name in ("group", "sample_id", "path")})
             index["blockers"].extend(_blocker_index(score, record))
             if record["readback"]:
@@ -378,13 +447,21 @@ def evaluate_saved(baseline: Path, output: Path, *, expected_root: Path,
             "meaning": "partial_compilation_diagnostics_not_complete_semantic_coverage" if diagnostic or any(
                 not score.get("publishable") for score in paired) else "frozen_expected_requirements_compared",
         })
+    index["full_scope_traversed"] = selected_sample_ids == full_sample_ids
     if code_identity()["software_id"] != identity["software_id"]:
         index["blockers"].append({"side": "software", "reason": "software_changed_during_analysis"})
-    try:
-        index["execution_costs"] = execution_costs(baseline, session, service)
-    except (ValueError, IndexError, KeyError, TypeError, OSError) as error:
-        index["execution_costs"] = {"status": "unreadable_original_measurement", "error": str(error),
-                                    "policy": "no_missing_cost_filled_or_inferred"}
+    if diagnostic and selected_sample_ids != full_sample_ids:
+        index["execution_costs"] = {
+            "status": "not_aggregated_in_selected_diagnosis",
+            "policy": "original_measurements_unchanged_not_filled_or_inferred",
+            "scope": "selected_software_diagnosis_not_processing_cost_comparison",
+        }
+    else:
+        try:
+            index["execution_costs"] = execution_costs(baseline, session, service)
+        except (ValueError, IndexError, KeyError, TypeError, OSError) as error:
+            index["execution_costs"] = {"status": "unreadable_original_measurement", "error": str(error),
+                                        "policy": "no_missing_cost_filled_or_inferred"}
     if index["blockers"]:
         index.update(state="blocked", expected_comparison_complete=False,
                      blocker_counts=dict(Counter(item["reason"] for item in index["blockers"])))
@@ -426,15 +503,18 @@ def main() -> int:
     parser.add_argument("--current-root", type=Path)
     parser.add_argument("--workers", type=int, default=16, help="saved-output analysis processes; original execution costs unchanged")
     parser.add_argument("--diagnostic", action="store_true", help="traverse saved materials without a freeze; publish no quality scores")
+    parser.add_argument("--sample", action="append", help="explicit saved sample identity; diagnostic mode only")
     parser.add_argument("--report-output", type=Path)
     args = parser.parse_args()
+    if args.sample is not None and not args.diagnostic:
+        parser.error("--sample is diagnostic-only; formal scoring always uses the full declared scope")
     if not args.diagnostic and args.freeze is None:
         parser.error("--freeze is required for formal scoring; --diagnostic never publishes quality results")
     if args.diagnostic and args.report_output:
         parser.error("diagnostic traversal cannot publish a formal report")
     index_path = evaluate_saved(args.baseline, args.output, expected_root=args.expected_root, freeze=args.freeze,
                                 service_baseline_root=args.service_baseline_root, current_root=args.current_root,
-                                workers=args.workers, diagnostic=args.diagnostic)
+                                workers=args.workers, diagnostic=args.diagnostic, sample_ids=args.sample)
     print(index_path)
     index = read_json(index_path)
     if index["state"] == "completed" and not args.diagnostic:

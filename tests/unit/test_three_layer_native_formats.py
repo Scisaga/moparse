@@ -269,7 +269,7 @@ def test_first_td_row_is_not_turned_into_headers_without_a_declaration():
     assert all(not c.get("is_column_header") and not c.get("is_row_header") for c in cells)
     evidence = read_candidate(read)
     assert evidence["business"] == []
-    assert [b["reason"] for b in evidence["blockers"]] == ["untyped_grid_semantics"]
+    assert [b["reason"] for b in evidence["blockers"]] == ["matrix_data_roles_unproven"]
 
 
 def test_malformed_visual_sibling_does_not_hide_valid_business_text():

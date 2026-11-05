@@ -530,3 +530,207 @@ def test_actual_baseline_and_current_texts_pair_with_their_own_native_group(tmp_
         assert score["execution_software_id"] == f"original-{pipeline}-baseline"
     assert "adoption" not in index
     assert all(path.read_bytes() == content for path, content in originals.items())
+
+
+@pytest.mark.parametrize("selection", [[], ["synthetic"], ["unrecognized"]])
+def test_formal_selection_is_rejected_before_reading_any_material(tmp_path, monkeypatch, selection):
+    from moparse_eval import cli, expected_evaluation
+
+    def forbidden(*_args, **_kwargs):
+        pytest.fail("formal subset rejection must precede software identity or material reads")
+
+    monkeypatch.setattr(cli, "code_identity", forbidden)
+    monkeypatch.setattr(expected_evaluation, "read_json", forbidden)
+    with pytest.raises(ValueError, match="diagnostic-only.*full declared scope"):
+        expected_evaluation.evaluate_saved(tmp_path / "native", tmp_path / "output",
+            expected_root=tmp_path / "expected", sample_ids=selection)
+    assert not (tmp_path / "output").exists()
+
+
+@pytest.mark.parametrize("selection", [[], ["synthetic", "synthetic"], [""], [1]])
+def test_diagnostic_selection_requires_nonempty_distinct_explicit_identities(tmp_path, monkeypatch, selection):
+    from moparse_eval import cli, expected_evaluation
+
+    def forbidden(*_args, **_kwargs):
+        pytest.fail("invalid diagnostic selection must not read any material")
+
+    monkeypatch.setattr(cli, "code_identity", forbidden)
+    monkeypatch.setattr(expected_evaluation, "read_json", forbidden)
+    with pytest.raises(ValueError, match="nonempty distinct"):
+        expected_evaluation.evaluate_saved(tmp_path / "native", tmp_path / "output",
+            expected_root=tmp_path / "expected", sample_ids=selection, diagnostic=True)
+
+
+def selected_saved_run(tmp_path, monkeypatch):
+    from moparse_eval.expected_evaluation import PIPELINES
+    from moparse_eval.expected_readback import markdown_observation
+    from moparse_eval.packaging import read_json, write_json
+
+    run, dataset, expected, freeze = saved_run(tmp_path, monkeypatch)
+    session, manifest = read_json(run / "run.json"), read_json(dataset / "manifest.json")
+    bodies = {"synthetic": "Name: Delta; Revenue: 17; Profit: 5\n",
+              "second": "Name: Echo; Revenue: 29; Profit: 7\n",
+              "third": "Name: Theta; Revenue: 31; Profit: 9\n"}
+    input_paths = [expected / "invented/expected.md"]
+    for sample_id in ("second", "third"):
+        document = expected / sample_id
+        document.mkdir()
+        (document / "expected.md").write_text(bodies[sample_id])
+        write_json(document / "manifest.json", {"markdown": {"path": "expected.md"}, "source_map": {
+            "entries": [{"source_pages": [1], "markdown_lines": [1, 1]}]}})
+        input_paths.append(document / "expected.md")
+        manifest["samples"].append({"id": sample_id, "document_id": sample_id, "source_pages": [1]})
+        for pipeline in PIPELINES:
+            relative = f"artifacts/{pipeline}/quality800-r1/{sample_id}/observation.json"
+            write_json(run / relative, markdown_observation(bodies[sample_id], sample_id=sample_id, pipeline=pipeline, pages=[1]))
+            session["cases"].append({"pipeline": pipeline, "sample_id": sample_id, "suite": "quality800",
+                "phase": "measured", "repetition": 1, "observation": relative})
+    write_json(run / "run.json", session)
+    write_json(dataset / "manifest.json", manifest)
+    input_paths.extend([run / "run.json", dataset / "manifest.json"])
+    input_paths.extend(run / case["observation"] for case in session["cases"])
+    for label in ("baseline", "current"):
+        for pipeline in ("P07", "P08"):
+            directory = tmp_path / label / pipeline.lower()
+            cases = []
+            for source in (case for case in session["cases"] if case["pipeline"] == pipeline):
+                final_relative = f"candidate/{source['sample_id']}/final.md"
+                final = directory / final_relative
+                final.parent.mkdir(parents=True)
+                final.write_text(bodies[source["sample_id"]])
+                input_paths.append(final)
+                cases.append({**source, "final_markdown": final_relative, "input_pages": 1,
+                    "baseline_observation_source": source["observation"], "status": "success"})
+            write_json(directory / "run.json", {"state": "completed", "baseline_run": str(run),
+                "dataset": str(dataset), "native_pipeline": {"pipeline": pipeline}, "cases": cases,
+                "software": {"software_id": f"original-{pipeline}-{label}"}})
+            input_paths.append(directory / "run.json")
+    return run, expected, freeze, {path: path.read_bytes() for path in input_paths}
+
+
+def test_unknown_diagnostic_sample_is_rejected_before_candidate_or_reference_reading(tmp_path, monkeypatch):
+    from moparse_eval import expected_evaluation
+
+    run, _, expected, _ = saved_run(tmp_path, monkeypatch)
+
+    def forbidden(*_args, **_kwargs):
+        pytest.fail("unknown selection cannot read expected or candidate content")
+
+    monkeypatch.setattr(expected_evaluation, "read_expected", forbidden)
+    monkeypatch.setattr(expected_evaluation, "native_observation", forbidden)
+    with pytest.raises(ValueError, match="unknown declared sample: absent"):
+        expected_evaluation.evaluate_saved(run, tmp_path / "output", expected_root=expected,
+            diagnostic=True, sample_ids=["absent"])
+    assert not (tmp_path / "output").exists()
+
+
+def test_selected_diagnostic_uses_the_same_two_sample_scopes_across_all_twelve_groups(tmp_path, monkeypatch):
+    from moparse_eval import expected_evaluation
+    from moparse_eval.packaging import read_json
+
+    run, expected, _, originals = selected_saved_run(tmp_path, monkeypatch)
+    original_read, original_expected = expected_evaluation.read_json, expected_evaluation.read_expected
+    seen_expected = []
+
+    def read_selected_content_only(path):
+        assert not (path.name == "observation.json" and "third" in path.parts), "unselected candidate body was read"
+        return original_read(path)
+
+    def selected_expected(sample, *args, **kwargs):
+        assert sample["id"] in {"synthetic", "second"}
+        seen_expected.append(sample["id"])
+        return original_expected(sample, *args, **kwargs)
+
+    monkeypatch.setattr(expected_evaluation, "read_json", read_selected_content_only)
+    monkeypatch.setattr(expected_evaluation, "read_expected", selected_expected)
+    selection = ["synthetic", "second"]
+    index_path = expected_evaluation.evaluate_saved(run, tmp_path / "diagnosis", expected_root=expected,
+        service_baseline_root=tmp_path / "baseline", current_root=tmp_path / "current",
+        diagnostic=True, sample_ids=selection, workers=1)
+    index = read_json(index_path)
+    assert selection == ["synthetic", "second"]
+    assert sorted(seen_expected) == ["second", "synthetic"]
+    assert index["full_declared_samples"] == 3
+    assert index["diagnostic_selected_samples"] == ["second", "synthetic"]
+    assert index["full_scope_traversed"] is False
+    assert index["expected_comparison_complete"] is False
+    assert len(index["groups"]) == 12 and len(index["records"]) == 24
+    assert "summary" not in index and "paired" not in index
+    assert index["execution_costs"]["status"] == "not_aggregated_in_selected_diagnosis"
+    for sample_id in selection:
+        records = [record for record in index["records"] if record["sample_id"] == sample_id]
+        assert len(records) == 12
+        requirement_sets = []
+        for record in records:
+            score = read_json(index_path.parent / record["path"])
+            assert score["score"] is None
+            assert all(layer["score"] is None and layer["numerator"] is None for layer in score["layers"].values())
+            requirement_sets.append([(row["layer"], row["id"], row["expected"]) for row in score["outcomes"]])
+        assert requirement_sets[0]
+        assert all(items == requirement_sets[0] for items in requirement_sets)
+    assert all(path.read_bytes() == original for path, original in originals.items())
+
+
+def test_diagnostic_default_still_traverses_the_entire_declared_scope(tmp_path, monkeypatch):
+    from moparse_eval.expected_evaluation import evaluate_saved
+    from moparse_eval.packaging import read_json
+
+    run, _, expected, _ = saved_run(tmp_path, monkeypatch)
+    index = read_json(evaluate_saved(run, tmp_path / "diagnosis", expected_root=expected, diagnostic=True, workers=1))
+    assert index["full_declared_samples"] == 1
+    assert index["diagnostic_selected_samples"] == ["synthetic"]
+    assert index["full_scope_traversed"] is True
+    assert index["expected_comparison_complete"] is False
+    assert index["diagnostic_selection_requested"] is False
+    assert "summary" not in index
+
+
+def test_selected_diagnostic_cannot_bypass_a_declared_group_scope_mismatch(tmp_path, monkeypatch):
+    from moparse_eval.expected_evaluation import evaluate_saved
+    from moparse_eval.packaging import read_json, write_json
+
+    run, expected, _, _ = selected_saved_run(tmp_path, monkeypatch)
+    path = tmp_path / "current/p08/run.json"
+    execution = read_json(path)
+    execution["cases"] = [case for case in execution["cases"] if case["sample_id"] != "third"]
+    write_json(path, execution)
+    with pytest.raises(ValueError, match="same quality samples"):
+        evaluate_saved(run, tmp_path / "diagnosis", expected_root=expected,
+            service_baseline_root=tmp_path / "baseline", current_root=tmp_path / "current",
+            diagnostic=True, sample_ids=["synthetic", "second"], workers=1)
+    assert not (tmp_path / "diagnosis").exists()
+
+
+def test_cli_sample_selection_is_diagnostic_only_before_execution(tmp_path, monkeypatch):
+    from moparse_eval import expected_evaluation
+
+    def forbidden(*_args, **_kwargs):
+        pytest.fail("formal --sample must fail before saved execution")
+
+    monkeypatch.setattr(expected_evaluation, "evaluate_saved", forbidden)
+    monkeypatch.setattr("sys.argv", ["expected_evaluation", "--baseline", str(tmp_path / "native"),
+        "--output", str(tmp_path / "output"), "--sample", "synthetic"])
+    with pytest.raises(SystemExit) as error:
+        expected_evaluation.main()
+    assert error.value.code == 2
+
+
+def test_cli_repeated_sample_arguments_reach_only_diagnostic_traversal(tmp_path, monkeypatch):
+    from moparse_eval import expected_evaluation
+    from moparse_eval.packaging import write_json
+
+    calls = []
+
+    def saved_diagnosis(_baseline, output, **kwargs):
+        calls.append(kwargs)
+        write_json(output / "index.json", {"state": "diagnostic_completed"})
+        return output / "index.json"
+
+    monkeypatch.setattr(expected_evaluation, "evaluate_saved", saved_diagnosis)
+    monkeypatch.setattr("sys.argv", ["expected_evaluation", "--baseline", str(tmp_path / "native"),
+        "--output", str(tmp_path / "diagnosis"), "--diagnostic", "--sample", "first", "--sample", "second"])
+    assert expected_evaluation.main() == 0
+    assert len(calls) == 1
+    assert calls[0]["diagnostic"] is True
+    assert calls[0]["sample_ids"] == ["first", "second"]
+    assert calls[0]["workers"] == 16

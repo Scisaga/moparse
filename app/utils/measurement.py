@@ -41,6 +41,9 @@ def measurement_kind(labels: Sequence[str]) -> str | None:
         return "shares"
     if re.search(r"人数|人數|number of (?:people|employees)|headcount", text, re.I):
         return "people"
+    if any(re.fullmatch(r"Count|Quantity|数量|數量|总数|總數|个数|個數|件数|件數", label.strip(), re.I)
+           for label in labels):
+        return "count"
     if re.search(r"比例|比率|利率|占比|佔比|同比|\bpercent(?:age)?\b|\bratio\b|\brate\b|[（(]\s*[%‰]\s*[）)]", text, re.I):
         return "ratio"
     return None
@@ -51,6 +54,8 @@ def unit_applicable(unit: str, columns: Sequence[str], rows: Sequence[str] = ())
     if kind is None:
         return True
     actual = unit_kind(unit)
+    if kind == "count":
+        return actual != "money"
     # An explicitly percent-denominated amount is a share of an amount.
     # Literal percent declarations take precedence over a generic Amount
     # label; they do not authorize a currency unit on a ratio or count.

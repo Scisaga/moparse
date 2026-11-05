@@ -169,6 +169,25 @@ def _explicit_context(text: str) -> bool:
                 or re.match(r"^expressed\s+in\b", text, re.I))
 
 
+def _context_continues(element: Element) -> bool:
+    """A printed unit cannot jump across an image or unrelated prose.
+
+    Tables, list records and explicitly labelled records may still be in the
+    declaration's local scope. This does not assert their business meaning.
+    """
+    return (element.kind in {"table", "item"} or _explicit_context(element.text)
+            or element.kind == "text" and bool(re.match(r"^[^:：=\n]{1,100}[:：=]\s*\S", element.text)))
+
+
+def _context_kind(text: str) -> str:
+    key = re.split(r"[:：=]", text, maxsplit=1)[0].strip().casefold()
+    if re.fullmatch(r"units?|单位|單位|expressed\s+in.*", key):
+        return "unit"
+    if re.fullmatch(r"currency|币种|幣種", key):
+        return "currency"
+    return "period"
+
+
 def read_expected(sample: dict[str, Any], expected_root: Path, *,
                   cache: dict[Path, list[Element]] | None = None) -> dict[str, Any]:
     """Expose selected authored syntax, without compiling business answers.
@@ -199,6 +218,10 @@ def read_expected(sample: dict[str, Any], expected_root: Path, *,
                              if (heading.native_heading_level or 1) < level]
             heading_stack.append(element)
             prior_context = []
+        if not _context_continues(element):
+            prior_context = []
+        if _explicit_context(element.text):
+            prior_context = [old for old in prior_context if _context_kind(old.text) != _context_kind(element.text)]
         intervals = _intervals(element.lines, scopes)
         if not intervals:
             if _explicit_context(element.text):
@@ -242,6 +265,10 @@ def read_expected(sample: dict[str, Any], expected_root: Path, *,
                 "cells": copy.deepcopy(part.cells), "reference": reference,
                 "pages": sorted({page for scope in covering for page in scope["pages"]}),
                 "context": [*part.headings, part.text] if part.kind == "heading" else list(part.headings),
+                "selected_heading_context": [
+                    {"text": heading.text, "reference": {"path": str(source), "lines": list(heading.lines)}}
+                    for heading in heading_stack if _intervals(heading.lines, scopes)
+                ],
                 "parents": list(part.parents), "list_span": part.list_span,
                 "has_children": part.has_children,
                 "heading_level": part.native_heading_level if part.kind == "heading" else None,
