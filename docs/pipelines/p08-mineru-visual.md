@@ -4,6 +4,8 @@
 
 [全部管线](README.md) · [固定比较条件](../../benchmark/pipelines-to-test.md#主比较配置)
 
+离线service回放现与八组共用实际adapted至final阶段及edit ledger，继续只读本组视觉块和媒体声明；字层与矢量来源阶段明确为未适用，不制造标题树或历史before。既有baseline/current正文不覆盖，新执行及验证边界见[八管线服务适配](README.md#保存结果的八管线服务适配)。
+
 ## 1. 配置与执行边界
 
 全部 PDF 页面渲染成图像，经官方纯视觉 SDK 的 vLLM 路径处理；不读取原生文字层，不接 GLM 或其他解析器。

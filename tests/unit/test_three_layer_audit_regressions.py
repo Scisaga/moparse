@@ -40,10 +40,13 @@ def test_report_rechecks_strict_source_fragments_without_rejecting_legal_text_bl
     suffix = "\n\nName: Delta; Revenue: 17"
     score = _grade(reference + suffix, candidate + suffix)
     if reference.startswith("The board approved"):
-        assert score["publishable"] is False
-        assert score["layers"]["B"]["complete"] is False
-    else:
         assert score["publishable"] is True, score["blockers"]
+        claim = next(row for row in score["outcomes"] if row["layer"] == "B" and row["expected"]["attribute"] == "approve")
+        assert claim["outcome"] == "correct"
+    else:
+        assert score["publishable"] is False
+        assert any(row["reason"] == "narrative_predicate_unresolved" for row in score["blockers"])
+        assert score["layers"]["B"]["complete"] is False
     assert score["layers"]["T"]["score"] == 100
     row = next(row for row in score["outcomes"] if row["layer"] == "T" and row["expected"]["text"] == reference)
     assert len(row["actual"]["source_fragments"]) == 2

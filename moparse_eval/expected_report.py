@@ -15,15 +15,20 @@ from typing import Any
 from rapidfuzz.distance import Levenshtein
 
 from .business_correspondence import (
+    _family,
+    _qualifier_check,
+    _record_comparison,
+    _value_check,
     assertion_signature,
     identity_checks,
     query_for,
     record_vector,
     requirement_key,
 )
-from .layer_aggregation import LAYERS, paired_layers, require_validation, summarize_layers
+from .layer_aggregation import require_validation, summarize_layers
 from .packaging import inside, read_json
 from .relation_correspondence import (
+    logical_roles_decision,
     logical_roles_equal,
     relation_scope_verification,
     unchanged_binding,
@@ -339,32 +344,60 @@ def _business_trace(row: dict[str, Any], scope_options: dict[str, Any]) -> None:
         _source(item)
         if item != exposed[item["id"]]:
             raise ValueError("a compared business value differs from its actual recalled candidate")
+    comparisons = [{"id": item["id"], "value": _value_check(expected, item, canonical),
+                    "qualifiers": {dimension: _qualifier_check(expected, item, dimension, canonical)
+                                   for dimension in sorted(set(expected.get("qualifiers", {})) | set(item.get("qualifiers", {})))}}
+                   for item in actual]
+    if row.get("comparisons") != comparisons:
+        raise ValueError("business comparison equivalence differs from the shared final decision")
 
 
-def _record_trace(row: dict[str, Any]) -> bool:
+def _record_trace(row: dict[str, Any], replay: dict[str, Any] | None) -> bool:
     comparison = row.get("record_comparison")
     if comparison is None:
+        if replay is not None:
+            raise ValueError("a complete required record comparison is absent")
         return True
     if comparison.get("rule") != "complete_record_vector_multiset" or comparison.get("complete") is not True:
         raise ValueError("unsupported duplicate record provenance cannot provide a published business judgment")
+    if replay is None or replay.get("complete") is not True:
+        raise ValueError("record equivalence cannot be reconstructed from the complete business evidence")
+    mappings = comparison.get("field_equivalence")
+    expected_mappings = replay.get("field_equivalence", [])
+    if (not isinstance(mappings, list) or len({item.get("candidate_id") for item in mappings}) != len(mappings)
+            or {item.get("candidate_id"): item for item in mappings} != {item["candidate_id"]: item for item in expected_mappings}):
+        raise ValueError("record field equivalence differs from source-bound identity decisions")
+    labels = {item["candidate_id"]: item["required_attribute"] for item in expected_mappings}
     collections = []
     for side in ("required_records", "actual_records"):
         records = comparison.get(side)
         if not isinstance(records, list):
             raise ValueError("repeated business assertions require complete record vectors")
         seen = set()
+        fields_by_record = {}
         for record in records:
             if not record.get("record_id") or record["record_id"] in seen or not record.get("fields"):
                 raise ValueError("repeated record vectors require unique actual record identities")
             seen.add(record["record_id"])
+            fields_by_id = {}
             for item in record["fields"]:
                 _source(item)
                 if (item.get("record_id") or item["source"].get("record_id")) != record["record_id"]:
                     raise ValueError("a vector field is outside its declared actual source record")
-        collections.append(Counter(record_vector(record["fields"], canonical) for record in records))
+                if not item.get("id") or item["id"] in fields_by_id:
+                    raise ValueError("record fields require unique actual identities")
+                fields_by_id[item["id"]] = item
+            fields_by_record[record["record_id"]] = fields_by_id
+        expected_fields = {record["record_id"]: {item["id"]: item for item in record["fields"]} for record in replay[side]}
+        if fields_by_record != expected_fields:
+            raise ValueError("record comparison omitted or changed a field from its complete source-bound collection")
+        collections.append(Counter(record_vector(record["fields"], canonical,
+                                  attribute_labels=labels if side == "actual_records" else None) for record in records))
     equal = collections[0] == collections[1]
     if comparison.get("equal") != equal:
         raise ValueError("record-vector comparison differs from its complete field collections")
+    if comparison.get("equal") != replay["equal"] or comparison.get("reason") != replay["reason"]:
+        raise ValueError("record equivalence differs from the shared complete-record decision")
     required = [item for record in comparison["required_records"] for item in record["fields"]]
     if not any(item == row["expected"] for item in required):
         raise ValueError("a scored repeated requirement is absent from its full record comparison")
@@ -386,8 +419,11 @@ def _relation_trace(row: dict[str, Any], used: set[str], scope_options: dict[str
         if not isinstance(edge, dict) or edge.get("id") != hit["id"] or edge.get("source") != hit["source"]:
             raise ValueError("logical relation candidates must retain their actual complete endpoint evidence")
         proof = relation_scope_verification(expected, edge, canonical, **scope_options)
+        equivalence = logical_roles_decision(expected, edge, canonical, **scope_options)
+        if hit.get("equivalence") != equivalence:
+            raise ValueError("logical endpoint equivalence differs from the shared final decision")
         correct = ((unchanged_binding(expected, edge, canonical) and (proof is None or proof["correct"]))
-                   or logical_roles_equal(expected, edge, canonical, **scope_options))
+                   or equivalence["equivalent"])
         if hit["correct"] != correct or hit.get("scope_verification") != proof:
             raise ValueError("logical relation retrieval contradicts its actual scope and endpoint proof")
     selected = trace.get("selected")
@@ -433,6 +469,18 @@ def validate_evidence(score: dict[str, Any]) -> None:
     summarize_layers([score])
     scope_options = {key: score.get("scope_evidence", {}).get(key, None if key == "contexts" else ())
                      for key in ("contexts", "declared_paths", "context_labels")}
+    actual_facts = {}
+    families = defaultdict(list)
+    for row in business_rows:
+        family = _family(row["expected"], canonical)
+        families[family].append(row["expected"])
+        for hit in row.get("retrieval", {}).get("candidates", []):
+            item = hit["candidate"]
+            if item["id"] in actual_facts and actual_facts[item["id"]] != item:
+                raise ValueError("one actual business identity has inconsistent complete evidence")
+            actual_facts[item["id"]] = item
+    record_replays = {family: _record_comparison(members, list(actual_facts.values()), canonical, **scope_options)
+                      for family, members in families.items()}
     text = [row for row in score["outcomes"] if row["layer"] == "T"]
     totals, strict_totals = Counter(), Counter()
     denominator, located_chars, located, used = 0, 0, 0, set()
@@ -479,14 +527,10 @@ def validate_evidence(score: dict[str, Any]) -> None:
     for members in business.values():
         expected_set = Counter(assertion_signature(row["expected"], canonical) for row in members)
         actual_set = Counter(assertion_signature(item, canonical) for item in members[0]["actual"])
-        record_equal = [_record_trace(row) for row in members]
+        record_equal = [_record_trace(row, record_replays.get(_family(row["expected"], canonical))) for row in members]
         correct = expected_set == actual_set and all(record_equal)
         if any(row["actual"] != members[0]["actual"] or row["outcome"] != ("correct" if correct else "incorrect") for row in members):
             raise ValueError("business judgment contradicts the complete repeated assertion set")
-
-
-def _targets(score: dict[str, Any]) -> dict[Any, Any]:
-    return {(row["layer"], row["id"]): row["expected"] for row in score["outcomes"]}
 
 
 def text_layer_diagnostics(scores: list[dict[str, Any]]) -> dict[str, Any]:
@@ -506,13 +550,35 @@ def text_layer_diagnostics(scores: list[dict[str, Any]]) -> dict[str, Any]:
                 located_units += 1
                 located_chars += chars
         extras += len(score["layers"]["T"].get("unadjudicated_extra_units", []))
+        if score["outcomes"]:
+            del row
+        del score
     return {"required_units": units, "located_units": located_units, "required_characters": denominator,
             "located_characters": located_chars, "edits": dict(edits), "strict_edits": dict(strict_edits),
             "unadjudicated_extra_units": extras,
             "meaning": "full_expected_scope_text_consistency_not_original_pdf_ocr_accuracy"}
 
 
-def load_complete(index_path: Path) -> tuple[dict[str, Any], dict[str, list[dict[str, Any]]]]:
+class SavedScoreGroup:
+    """A reusable file-backed view; iteration never caches complete scores."""
+
+    def __init__(self, root: Path, records: list[dict[str, Any]]):
+        self.root, self.records = root, records
+
+    def __len__(self):
+        return len(self.records)
+
+    def __iter__(self):
+        from .trace_storage import read_score
+
+        for record in self.records:
+            yield read_score(inside(self.root, record["path"]))
+
+
+def load_complete(index_path: Path) -> tuple[dict[str, Any], dict[str, SavedScoreGroup]]:
+    from .streaming_aggregation import aggregate_score_files
+    from .trace_storage import read_score
+
     index = read_json(index_path)
     if (index.get("state") != "completed" or index.get("expected_comparison_complete") is not True
             or index.get("protocol") != PROTOCOL or index.get("blockers")):
@@ -521,56 +587,43 @@ def load_complete(index_path: Path) -> tuple[dict[str, Any], dict[str, list[dict
     software_id = index.get("software", {}).get("software_id")
     if not software_id:
         raise ValueError("formal results require a frozen software identity")
-    groups: dict[str, list[dict[str, Any]]] = defaultdict(list)
-    samples: dict[str, list[dict[str, Any]]] = defaultdict(list)
-    seen = set()
+    records_by_path, groups, seen = {}, defaultdict(list), set()
     for record in index["records"]:
-        score = read_json(inside(index_path.parent, record["path"]))
         key = record["group"], record["sample_id"]
-        if key in seen or score.get("sample_id") != record["sample_id"] or score.get("pipeline") != record["group"].split("-", 1)[0]:
-            raise ValueError("duplicate or mismatched evaluated sample/group")
+        path = inside(index_path.parent, record["path"])
+        if key in seen or path in records_by_path:
+            raise ValueError("duplicate evaluated sample/group or scoring file")
         seen.add(key)
-        if score.get("scoring_software_id") != software_id:
-            raise ValueError("mixed scoring software cannot be published")
-        validate_evidence(score)
-        groups[record["group"]].append(score)
-        samples[record["sample_id"]].append(score)
+        records_by_path[path] = record
+        groups[record["group"]].append(record)
     if not groups or set(groups) != set(index["groups"]) or len(index["groups"]) != len(groups):
         raise ValueError("declared comparison groups are missing or duplicated")
     coverage = {row["sample_id"]: row for row in index["coverage"]}
-    if set(coverage) != set(samples) or len(coverage) != len(index["coverage"]):
-        raise ValueError("declared expected scope and evaluated samples differ")
-    for sample, scores in samples.items():
-        if len(scores) != len(groups) or any(_targets(score) != _targets(scores[0]) for score in scores):
-            raise ValueError("all groups must compare the same complete expected requirements")
-        for layer in LAYERS:
-            declared = coverage[sample]["layers"][layer]
-            if any(score["layers"][layer]["denominator"] != declared["denominator"] for score in scores):
-                raise ValueError("a layer differs from the frozen expected denominator")
-    if set(index.get("summary", {})) != set(groups):
-        raise ValueError("every declared group requires its own three-layer summary")
-    for group, scores in groups.items():
-        computed = summarize_layers(scores)
-        if computed != index["summary"][group]:
-            raise ValueError("group summary differs from its actual layer decisions")
-        if not computed["publishable"]:
-            raise ValueError("global quality requires three legal nonzero layer denominators")
-    paired = {}
-    for pipeline in ("P07", "P08"):
-        if pipeline + "-baseline" in groups and pipeline + "-current" in groups:
-            comparisons = {
-                "native_to_baseline": (pipeline, pipeline + "-baseline"),
-                "native_to_current": (pipeline, pipeline + "-current"),
-                "baseline_to_current": (pipeline + "-baseline", pipeline + "-current"),
-            }
-            paired[pipeline] = {}
-            for name, (before, after) in comparisons.items():
-                pair = paired_layers(groups[before], groups[after])
-                paired[pipeline][name] = {
-                    layer: {"new_correct": row["new_correct"], "lost_correct": row["lost_correct"],
-                            "remaining_incorrect": row["remaining_defects"], "required_units": row["after"]["denominator"]}
-                    for layer, row in pair["layers"].items()
-                }
-    if index.get("paired", {}) != paired:
+    if len(coverage) != len(index["coverage"]):
+        raise ValueError("declared expected scope contains duplicate samples")
+
+    def validated_read(path):
+        record = records_by_path[path.resolve()]
+        score = read_score(path)
+        if (score.get("sample_id") != record["sample_id"]
+                or score.get("pipeline") != record["group"].split("-", 1)[0]):
+            raise ValueError("mismatched evaluated sample/group")
+        if score.get("scoring_software_id") != software_id:
+            raise ValueError("mixed scoring software cannot be published")
+        validate_evidence(score)
+        return score
+
+    # This also proves common targets and all layer denominators while only
+    # retaining one complete score and one sample's compact comparisons.
+    pooled = aggregate_score_files(index["records"], groups=index["groups"], base_dir=index_path.parent,
+                                   reader=validated_read, expected_sample_ids=coverage)
+    if pooled["summary"] != index.get("summary"):
+        raise ValueError("group summary differs from its actual layer decisions")
+    if not pooled["publishable"]:
+        raise ValueError("global quality requires three legal nonzero layer denominators")
+    for row in pooled["coverage"]:
+        if row["layers"] != coverage[row["sample_id"]]["layers"]:
+            raise ValueError("a layer differs from the frozen expected denominator")
+    if index.get("paired", {}) != pooled["paired"]:
         raise ValueError("paired layer summary differs from its actual same-target decisions")
-    return index, dict(groups)
+    return index, {name: SavedScoreGroup(index_path.parent, records) for name, records in groups.items()}

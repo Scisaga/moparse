@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import copy
+from dataclasses import asdict, is_dataclass
+from difflib import SequenceMatcher
 from typing import Any
 
 from app.models.parse_result import DocumentParseResult
@@ -20,6 +22,7 @@ def capture_stage(
     sample_id: str,
     pages_only: bool = False,
     pipeline: str = "P07",
+    applicability: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Project a stage's visible output now, before mutable service work continues.
 
@@ -49,6 +52,11 @@ def capture_stage(
     observed._table_fragments = saved["fragments"]
     observed._table_views = saved["views"]
     observed._semantic_tables = saved["semantics"]
+    observed._native_page_blocks = copy.deepcopy(result._native_page_blocks)
+    observed._source_verification = copy.deepcopy(result._source_verification)
+    observed._page_furniture = copy.deepcopy(result._page_furniture)
+    observed._source_regions = copy.deepcopy(result._source_regions)
+    observed._final_text_evidence = copy.deepcopy(result._final_text_evidence)
     observed.pages = [page.model_copy(update={"warnings": copy.deepcopy(page.warnings)})
                       for page in result.pages]
     observed.warnings = copy.deepcopy(result.warnings)
@@ -59,11 +67,13 @@ def capture_stage(
     return {
         "schema": STAGE_CAPTURE_VERSION,
         "stage": stage,
-        "scope": "diagnostic_page_export" if pages_only else "actual_document_rendering",
+        "scope": ("actual_adapter_page_rendering" if stage == "adapted" else "diagnostic_page_export")
+                 if pages_only else "actual_document_rendering",
         "markdown": observed.markdown,
         "candidate": observed,
         "sample_id": sample_id,
         "pipeline": pipeline,
+        "applicability": copy.deepcopy(applicability or {"applicable": True, "reason": "actual_emitted_stage"}),
     }
 
 
@@ -73,6 +83,34 @@ def materialize_stage(snapshot: dict[str, Any]) -> dict[str, Any]:
     observation = build_service_observation(
         observed, sample_id=snapshot["sample_id"], pipeline=f"{snapshot['pipeline']}+MO-Parse:{snapshot['stage']}",
     )
-    return {key: snapshot[key] for key in ("schema", "stage", "scope", "markdown")} | {
+    return {key: snapshot[key] for key in ("schema", "stage", "scope", "markdown", "applicability")} | {
         "observation": observation,
+        "source_audit": {"native_blocks": copy.deepcopy(observed._native_page_blocks),
+                         "table_fragments": [asdict(fragment) if is_dataclass(fragment) else copy.deepcopy(fragment)
+                                             for fragment in observed._table_fragments],
+                         "source_verification": copy.deepcopy(observed._source_verification),
+                         "final_text_evidence": copy.deepcopy(observed._final_text_evidence)},
     }
+
+
+def stage_edit_ledger(snapshots: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Describe actual stage string edits; never assign semantic correctness."""
+    ledger = []
+    for before, after in zip(snapshots, snapshots[1:], strict=False):
+        edits = []
+        prior, current = before["markdown"].splitlines(keepends=True), after["markdown"].splitlines(keepends=True)
+        prior_offsets, current_offsets = [0], [0]
+        for line in prior:
+            prior_offsets.append(prior_offsets[-1] + len(line))
+        for line in current:
+            current_offsets.append(current_offsets[-1] + len(line))
+        for operation, i, j, k, stop in SequenceMatcher(None, prior, current, autojunk=False).get_opcodes():
+            if operation != "equal":
+                a, b, c, d = prior_offsets[i], prior_offsets[j], current_offsets[k], current_offsets[stop]
+                edits.append({"operation": operation, "before_span": [a, b], "after_span": [c, d],
+                              "before": before["markdown"][a:b], "after": after["markdown"][c:d]})
+        ledger.append({"from_stage": before["stage"], "to_stage": after["stage"],
+                       "from_scope": before["scope"], "to_scope": after["scope"],
+                       "applicability": copy.deepcopy(after["applicability"]), "edits": edits,
+                       "judgment": "unjudged_actual_string_changes"})
+    return ledger

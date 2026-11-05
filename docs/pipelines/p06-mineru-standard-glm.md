@@ -4,6 +4,8 @@
 
 [全部管线](README.md) · [固定比较条件](../../benchmark/pipelines-to-test.md#主比较配置)
 
+离线服务bridge已按Standard身份接入保存的typed middle及GLM主视图，复用固定DocVortex投影而不重新解析PDF；同一源对象的caption、footnote、行内内容及续接声明保持可追溯。宿主未安装固定DocVortex，真实官方投影仍待固定环境预检，不能以P07或研究显示结果代替。阶段、页分支权限和执行门槛见[八管线服务适配](README.md#保存结果的八管线服务适配)。
+
 ## 1. 配置与执行边界
 
 原生页使用 MinerU 4.0.12 Standard/TXT，关闭 image_analysis；扫描和混合页使用共享 GLM SDK。

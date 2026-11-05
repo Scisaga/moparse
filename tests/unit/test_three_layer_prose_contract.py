@@ -256,20 +256,27 @@ def test_the_required_to_modal_is_not_reclassified_as_a_party_name():
     assert result["layers"]["L"]["score"] == 100
 
 
-@pytest.mark.parametrize("statement", ["Delta owns Kappa.", "The board approved the dividend.",
-                                       "Delta invested in new warehouses.", "The company reported higher revenue."])
+@pytest.mark.parametrize("statement,subject,predicate,obj", [
+    ("Delta owns Kappa.", "Delta", "own", "Kappa"),
+    ("The board approved the dividend.", "The board", "approve", "the dividend"),
+    ("Delta invested in new warehouses.", "Delta", "invest", "in new warehouses"),
+    ("The company reported higher revenue.", "The company", "report", "higher revenue"),
+])
 @pytest.mark.parametrize("anchor", ["", "Name:Anchor\n\n"], ids=["sole-business-claim", "independent-identity-also-present"])
-def test_an_unread_important_business_predicate_cannot_publish_a_smaller_business_contract(statement, anchor):
+def test_important_supported_predicates_supply_an_independent_source_bound_business_requirement(statement, subject, predicate, obj, anchor):
     reference = "# Governance\n\n" + anchor + statement
     requirement = compile_markdown(reference)
     expected_line = 5 if anchor else 3
+    [claim] = [f for f in requirement["business"] if f["role"] == "description"]
+    assert (claim["subject"], claim["attribute"], claim["value"]) == (subject, predicate, obj)
+    assert claim["source"]["path"] == "<markdown>" and claim["source"]["lines"] == [expected_line, expected_line]
+    assert len(requirement["business"]) == 1 + bool(anchor)
     for pipeline in ["P01", "P05", "P08"]:
         result = grade_layers(requirement, read_candidate_markdown(reference, pipeline=pipeline))
-        assert result["publishable"] is False
-        blockers = [b for b in result["blockers"] if "B" in b.get("layers", []) and b.get("text") == statement]
-        assert blockers
-        assert any(b["source"].get("path") == "<markdown>" and b["source"].get("lines") == [expected_line, expected_line]
-                   for b in blockers)
+        assert result["publishable"] is True and result["layers"]["B"]["score"] == 100
+        wrong = grade_layers(requirement, read_candidate_markdown(reference.replace(obj, "OtherObject"), pipeline=pipeline))
+        [row] = [row for row in b_rows(wrong) if row["expected"]["attribute"] == predicate]
+        assert row["outcome"] == "incorrect"
 
 
 @pytest.mark.parametrize("statement", [
@@ -570,8 +577,15 @@ def test_reported_modal_subject_cannot_swallow_an_unread_assertion_or_reporting_
         assert all(part not in subject for part in forbidden_subject)
     pending = [b for b in requirement["blockers"] if b.get("text") == text
                and b.get("source", {}).get("path") == "<markdown>" and b["source"].get("lines") == [3, 3]]
-    assert pending
-    assert {"B", "L"} <= {layer for b in pending for layer in b.get("layers", [])}
+    if text.startswith("The clerk reported") and requirement.get("logical_statements"):
+        [fact] = requirement["business"]
+        assert fact["subject"] == "the board" and fact["attribute"] == "pay"
+        assert fact["qualifiers"]["reporting"] == [{"subject": "The clerk", "attribute": "report", "polarity": "positive", "tense": "past"}]
+        assert score["publishable"] is False
+        assert any(b["reason"] == "narrative_comparison_features_not_validated" for b in score["blockers"])
+    else:
+        assert pending
+        assert {"B", "L"} <= {layer for b in pending for layer in b.get("layers", [])}
     assert score["publishable"] is False
 
 

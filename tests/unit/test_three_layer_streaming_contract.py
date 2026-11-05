@@ -12,6 +12,7 @@ from pathlib import Path
 import pytest
 
 from moparse_eval import expected_evaluation as evaluation
+from moparse_eval.trace_storage import read_score
 
 
 def score_document():
@@ -80,7 +81,7 @@ def test_saved_group_writes_the_entire_compact_unicode_record_and_withdraws_all_
 
 
 @pytest.mark.parametrize("existing", [False, True])
-def test_encoder_failure_after_streamed_prefix_preserves_previous_final_and_removes_partial(
+def test_encoder_failure_preserves_previous_final_and_removes_its_partial(
         tmp_path, monkeypatch, existing):
     score = score_document()
     score["prelude"] = "x" * 32768
@@ -99,7 +100,7 @@ def test_encoder_failure_after_streamed_prefix_preserves_previous_final_and_remo
     monkeypatch.setattr(json.JSONEncoder, "default", fail_encoding)
     with pytest.raises(TypeError, match="controlled_encoder_failure"):
         evaluation._grade_saved_group(task)
-    assert observed_partial_sizes and max(observed_partial_sizes) > 0
+    assert observed_partial_sizes  # failure may occur during lossless interning
     assert destination.read_bytes() == previous if existing else not destination.exists()
     assert_no_temporary_or_unexpected_files(task, destination, exists=existing)
 
@@ -183,11 +184,10 @@ def test_shared_large_trace_is_streamed_without_materializing_the_serialized_doc
         _, peak = tracemalloc.get_traced_memory()
     finally:
         tracemalloc.stop()
-    # The raw UTF-8 document exceeds 12 MiB, while only bounded encoder chunks
-    # may be live. The original json.dumps writer exceeds this 2 MiB budget.
-    # Loading the complete comparison happens only after tracing has stopped.
-    with destination.open() as handle:
-        assert json.load(handle) == expected
-    assert destination.stat().st_size > 12 * 1024 * 1024
+    # All 512 hits survive, with one shared source body instead of duplicating
+    # over 12 MiB of identical context. Expansion happens after tracing stops.
+    assert read_score(destination) == expected
+    assert len(read_score(destination)["complete_shared_traces"]) == 512
+    assert destination.stat().st_size < 128 * 1024
     assert peak < 2 * 1024 * 1024
     assert_no_temporary_or_unexpected_files(task, destination, exists=True)

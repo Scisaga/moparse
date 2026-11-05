@@ -4,6 +4,8 @@
 
 [全部管线](README.md) · [固定比较条件](../../benchmark/pipelines-to-test.md#主比较配置)
 
+离线service回放现与八组共用阶段审计和页分支来源守卫；本组原生页及GLM页分别获得其声明许可，GLM页不因属于P07而进入PDF字层或矢量服务。既有baseline/current正文及原始观测保留；新执行不覆盖它们，门槛与实际验证边界见[八管线服务适配](README.md#保存结果的八管线服务适配)。
+
 ## 1. 配置与执行边界
 
 原生页使用 MinerU 4.0.12 Advanced/TXT，关闭 image_analysis；扫描和混合页使用共享 GLM SDK。与 P06 仅改变 tier。

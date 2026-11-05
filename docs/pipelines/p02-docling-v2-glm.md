@@ -4,6 +4,8 @@
 
 [全部管线](README.md) · [固定比较条件](../../benchmark/pipelines-to-test.md#主比较配置)
 
+离线服务bridge已接入保存的V2文档树与本组GLM主视图，不重跑converter或借V1数据；原生cell、跨度、引用、媒体声明和转换状态独立保留。当前只完成受控及单份保存JSON读回，阶段、来源隔离和全量执行门槛见[八管线服务适配](README.md#保存结果的八管线服务适配)。
+
 ## 1. 配置与执行边界
 
 原生页使用 Docling 2.139.0 TableFormer V2；扫描和混合页使用共享 GLM SDK。与 P01 仅改变 TableFormer 模型。

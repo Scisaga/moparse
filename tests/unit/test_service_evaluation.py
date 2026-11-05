@@ -13,7 +13,7 @@ from moparse_eval.service_evaluation import (
 )
 
 
-@pytest.mark.parametrize('pipeline', ['P07', 'P08'])
+@pytest.mark.parametrize('pipeline', [f'P{number:02}' for number in range(1, 9)])
 def test_candidate_container_has_neither_references_network_nor_gpu(tmp_path: Path, pipeline: str):
     run = tmp_path / "run"
     run.mkdir()

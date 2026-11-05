@@ -145,11 +145,30 @@ def verify_scope(required: list[str], item: dict[str, Any], declared_paths: list
         actual = [event for event in events if event.get("source", {}).get("block") == source.get("block")
                   and event.get("source", {}).get("path") == source.get("path")]
         span = source.get("text_span")
-        proven = [event for event in actual if isinstance(span, list) and len(span) == 2
-                  and all(type(n) is int for n in span) and 0 <= span[0] < span[1] <= len(event.get("text", ""))
-                  and event["text"][span[0]:span[1]] == field.get("text")
-                  and re.fullmatch(r"\s*", event["text"][:span[0]])
-                  and re.match(r"\s*[:：]", event["text"][span[1]:])]
+        from .source_requirements import plan_mixed_source
+
+        proven = []
+        for event in actual:
+            text = event.get("text", "")
+            if not (isinstance(span, list) and len(span) == 2 and all(type(n) is int for n in span)
+                    and 0 <= span[0] < span[1] <= len(text) and text[slice(*span)] == field.get("text")):
+                continue
+            plan = plan_mixed_source(text, event.get("source", {}))
+            regions = [fragment["source"]["text_span"] for fragment in plan["fragments"]] if plan else [[0, len(text)]]
+            own_span = own.get("text_span")
+            for start, end in regions:
+                delimiter = re.match(r"\s*[:：]", text[span[1]:end])
+                component_sources = [item[key] for key in ("subject_source", "predicate_source", "object_source", "value_source")
+                                     if isinstance(item.get(key), dict)]
+                components_bound = all(component.get("block") == own.get("block")
+                    and component.get("path") == own.get("path") and isinstance(component.get("text_span"), list)
+                    and len(component["text_span"]) == 2
+                    and span[1] + (delimiter.end() if delimiter else 0) <= component["text_span"][0] <= component["text_span"][1] <= end
+                    for component in component_sources)
+                if (start <= span[0] < span[1] <= end and re.fullmatch(r"\s*", text[start:span[0]])
+                        and delimiter and isinstance(own_span, list) and len(own_span) == 2
+                        and span[1] + delimiter.end() <= own_span[0] <= own_span[1] <= end and components_bound):
+                    proven.append(event)
         if (field.get("role") != "printed_field_label" or not proven or source.get("block") != own.get("block")
                 or source.get("path") != own.get("path")):
             result["reason"] = "local_field_label_lacks_actual_prefix_source"

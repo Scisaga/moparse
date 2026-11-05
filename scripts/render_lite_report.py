@@ -20,7 +20,7 @@ from moparse_eval.expected_report import (  # noqa: E402
     load_complete,
     text_layer_diagnostics,
 )
-from moparse_eval.layer_aggregation import LAYERS, paired_layers  # noqa: E402
+from moparse_eval.layer_aggregation import LAYERS  # noqa: E402
 from moparse_eval.packaging import read_json, write_json  # noqa: E402
 
 
@@ -145,17 +145,21 @@ def render(index_path: Path, output: Path) -> list[str]:
     # Validate before creating output directories or touching an existing
     # maintained report. A diagnostic index cannot publish partial grades.
     index, groups = load_complete(index_path)
-    required = set(PIPELINES) | {f"{p}-{stage}" for p in ("P07", "P08") for stage in ("baseline", "current")}
+    required = set(PIPELINES) | {f"{p}-current" for p in PIPELINES} | {"P07-baseline", "P08-baseline"}
     if set(groups) != required:
-        raise ValueError("the Lite report requires all eight native and four saved-body comparison groups")
+        raise ValueError("the Lite report requires eight native, eight delivered and two genuine historical baseline groups")
     summary = index["summary"]
     pairs = {}
-    for pipeline in ("P07", "P08"):
-        pairs[pipeline] = {
-            "native_to_baseline": paired_layers(groups[pipeline], groups[pipeline + "-baseline"]),
-            "native_to_current": paired_layers(groups[pipeline], groups[pipeline + "-current"]),
-            "baseline_to_current": paired_layers(groups[pipeline + "-baseline"], groups[pipeline + "-current"]),
-        }
+    for pipeline, comparisons in index["paired"].items():
+        pairs[pipeline] = {}
+        for comparison, layers in comparisons.items():
+            before = pipeline + "-baseline" if comparison == "baseline_to_current" else pipeline
+            after = pipeline + ("-baseline" if comparison == "native_to_baseline" else "-current")
+            pairs[pipeline][comparison] = {"layers": {layer: {
+                "new_correct": row["new_correct"], "lost_correct": row["lost_correct"],
+                "remaining_defects": row["remaining_incorrect"],
+                "before": summary[before]["layers"][layer], "after": summary[after]["layers"][layer]}
+                for layer, row in layers.items()}}
     output.mkdir(parents=True, exist_ok=True)
     data = output / "data"
     data.mkdir(exist_ok=True)
@@ -177,6 +181,8 @@ def render(index_path: Path, output: Path) -> list[str]:
     write_json(data / "resources.json", resource)
     rows = []
     errors = []
+    business_examples = []
+    score_paths = {(record["group"], record["sample_id"]): record["path"] for record in index["records"]}
     for group, scores in groups.items():
         for score in scores:
             rows.append({"group": group, "sample_id": score["sample_id"], "document_id": score.get("document_id"),
@@ -186,13 +192,18 @@ def render(index_path: Path, output: Path) -> list[str]:
             for row in score["outcomes"]:
                 if row["outcome"] == "incorrect":
                     errors.append({"group": group, "sample_id": score["sample_id"], "layer": row["layer"],
-                                   "target": row["id"], "expected": row["expected"], "actual": row.get("actual"),
-                                   "root_cause": row.get("root_cause"), "retrieval": row.get("retrieval")})
+                                   "target": row["id"], "root_cause": row.get("root_cause"),
+                                   "score_path": score_paths[group, score["sample_id"]], "outcome_id": row["id"]})
+                    if row["layer"] == "B" and len(business_examples) < 8:
+                        business_examples.append({**errors[-1], "expected_literal": _literal(row["expected"]),
+                            "actual_literal": _literal(row.get("actual")), "source": row["expected"].get("source")})
+            if score["outcomes"]:
+                del row
+            del score
     _write_csv(data / "samples.csv", rows)
     # Evidence stays at the original scoring paths rather than copying entire
     # references or large candidates into a Git-visible report directory.
-    write_json(data / "errors.json", [{key: value for key, value in row.items() if key not in {"expected", "actual", "retrieval"}}
-                                      for row in errors])
+    write_json(data / "errors.json", errors)
     report = ["# MO-Parse Lite 三层统一评测", "",
         "T比较全部授权文字相对expected的一致性，按完整文字字符分母和S/D/I计分。业务字段中的标签和值继续参加T，文字出现按容量一对应；额外未确定可比较范围的文字单列诊断。该结果不是原PDF逐字OCR精度。", "",
         "L比较expected明确要求的顺序、归属、绑定和限定作用范围，每条逻辑关系一票；B比较按统一角色固定的重要实体、指标和逻辑要求，每条完整要求一票，单位、期间、条件及否定作为限定。三层分别汇总，质量总分固定为(T+L+B)/3，时间与资源不进入质量分。", "",
@@ -208,8 +219,13 @@ def render(index_path: Path, output: Path) -> list[str]:
         edits = "/".join(str(row["edits"].get(key, 0)) for key in ("S", "D", "I"))
         strict = "/".join(str(row["strict_edits"].get(key, 0)) for key in ("S", "D", "I"))
         report.append(f"| {pipeline} | {row['located_units']}/{row['required_units']} | {row['located_characters']}/{row['required_characters']} | {edits} | {strict} | {row['unadjudicated_extra_units']} |")
+    report.extend(["", "## 八组最终交付与原生增损", "",
+        "每组最终正文只与自己的同源原生结果配对；真实处理阶段和修改账本负责归因。评分器补读收益不计交付改善，缺失历史阶段保持不可归因。", "",
+        "| 组别 | T分数 (分子/字符分母) | L分数 (正确/关系) | B分数 (正确/要求) | 三层总分 |",
+        "| --- | ---: | ---: | ---: | ---: |"])
+    report.extend(_summary_row(pipeline + "-current", summary[pipeline + "-current"]) for pipeline in PIPELINES)
     report.extend(["", "## P07/P08 保存正文配对", "",
-        "以下逐层比较原生、唯一baseline和已有current的实际保存内容，不与八组原生横向混排。评分器补读收益不能称为交付改善，本次未重新运行管线或改写候选。", "",
+        "P07/P08另保留唯一真实baseline/current配对。P01-P06没有历史baseline，不虚构前后版本，也不与八组原生横向混排。", "",
         "| 组别 | T分数 (分子/字符分母) | L分数 (正确/关系) | B分数 (正确/要求) | 三层总分 |",
         "| --- | ---: | ---: | ---: | ---: |"])
     for pipeline in ("P07", "P08"):
@@ -224,14 +240,12 @@ def render(index_path: Path, output: Path) -> list[str]:
     report.extend(["", "T配对单元的二元变化仅说明完整文字单元是否完全正确，不能代替T字符主分变化。同一根因影响多层时，逐项证据保留共同根因，不能称为多个独立识别错误。完整配对证据见[配对数据](data/paired.json)。", "",
         "## 关键业务差异与原文", "",
         "以下片段来自程序已经比较的实际expected及候选文字，附原始来源；它们用于说明观察到的差异，不提供人工改分，也不推断解析器内部原因。"])
-    business_errors = [row for row in errors if row["layer"] == "B"]
-    if not business_errors:
+    if not business_examples:
         report.extend(["", "本次已覆盖的重要业务要求没有程序判错项；该结论限于声明范围和验证支持的表达。"])
-    for row in business_errors[:8]:
-        expected = row["expected"]
+    for row in business_examples:
         report.extend(["", f"**{_cell(row['group'])} / {_cell(row['sample_id'])} / {_cell(row['target'])}**", "",
-            f"expected来源：`{_cell(expected.get('source'))}`。共同根因：`{_cell(row['root_cause'])}`。", "",
-            "```text", _literal(expected), "```", "", "实际候选：", "", "```text", _literal(row["actual"]), "```"])
+            f"expected来源：`{_cell(row['source'])}`。共同根因：`{_cell(row['root_cause'])}`。", "",
+            "```text", row["expected_literal"], "```", "", "实际候选：", "", "```text", row["actual_literal"], "```"])
     report.extend(["", "质量总分较高不等于关键业务要求通过。完整错误索引见[错误数据](data/errors.json)，逐项原文与检索证据仍位于本地评分记录。", "",
         "## 原始成本、覆盖与限制", "",
         "处理时长及资源观测保持原执行记录，初始化、预热、质量执行、三轮性能重复和CPU后处理分别展示于[执行数据](data/execution.json)。评分时间不计入解析成本，也不将原生与后处理时长相加伪造端到端时间。", "",

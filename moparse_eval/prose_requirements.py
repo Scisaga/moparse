@@ -51,14 +51,22 @@ def _subject(value: str) -> str:
 
 def _sentence_spans(text: str) -> list[tuple[int, int]]:
     result, start = [], 0
-    for match in re.finditer(r"[.!?。！？](?:\s+|$)", text):
+    for match in re.finditer(r'''[.!?。！？]["”’」』）)\]]*''', text):
+        end = match.end()
+        if text[match.start()] in ".!?" and end < len(text) and not text[end].isspace():
+            continue
+        if _enclosed(text, end):
+            continue
         before = text[start:match.start() + 1]
         if re.search(r"(?:[A-Za-z]\.){2,}$|\b(?:Mr|Mrs|Ms|Dr|Prof|Inc|Corp|Ltd)\.$", before):
             continue
-        end = match.start() + 1
+        if re.search(r"\b[A-Z][a-z]+\s+[A-Z]\.$", before) and re.match(r"\s+[A-Z][a-z]+", text[end:]):
+            continue
         if text[start:end].strip():
             result.append((start, end))
-        start = match.end()
+        start = end
+        while start < len(text) and text[start].isspace():
+            start += 1
     if text[start:].strip():
         result.append((start, len(text)))
     return result
@@ -139,7 +147,7 @@ def _record_context(parents, source):
 def _enclosed(text: str, position: int) -> bool:
     quote = None
     depth = 0
-    closes = {"\"": "\"", "'": "'", "“": "”", "‘": "’"}
+    closes = {"\"": "\"", "'": "'", "“": "”", "‘": "’", "「": "」", "『": "』"}
     for index, character in enumerate(text[:position]):
         if character in {"'", "’"} and index and index + 1 < len(text) and text[index - 1].isalpha() and text[index + 1].isalpha():
             continue
@@ -209,7 +217,9 @@ def read_prose_requirements(text: str, source: dict[str, Any], *, label: str | N
                 q = {"polarity": "positive", "condition": text[condition_start:end], "condition_operator": connector[0].lower().replace(" ", "_")}
                 result["facts"].append({"subject": "", "attribute": action, "value": noun, "role": "description",
                     "qualifiers": q, "identity_facets": {}, "scope": list(scope), "source": _source(source, start, end),
-                    "value_source": _source(source, start, noun_end), "qualifier_sources": {"condition": _source(source, condition_start, end)},
+                    "value_source": _source(source, start, noun_end),
+                    "qualifier_sources": {"condition": _source(source, condition_start, end),
+                        "condition_operator": _source(source, start + connector.start(), start + connector.end())},
                     "printed_label": label, "logic": {"kind": "conditional_agenda_item", "operator": q["condition_operator"]}})
                 result["matched"] = True
             elif connectors:
@@ -411,7 +421,10 @@ def prose_endpoint(text: str, source: dict[str, Any], *, scope: tuple[str, ...] 
 
 def read_prose_sequence(units: list[dict[str, Any]], *, scope: tuple[str, ...] | list[str] = ()) -> dict[str, Any]:
     """Read ordinary prose sequence and explicit parent references in place."""
+    from .explicit_reference_requirements import read_explicit_references
+
     result = _result()
+    result.update(references=[], semantic_roles=[], source_dispositions=[], required_matcher_features=[])
     headings = {unit["id"]: unit for unit in units if unit.get("kind") == "heading" and unit.get("id")}
     previous = {}
     for index, unit in enumerate(units):
@@ -434,6 +447,36 @@ def read_prose_sequence(units: list[dict[str, Any]], *, scope: tuple[str, ...] |
                               label=unit.get("label", unit.get("printed_label")), label_source=unit.get("label_source"),
                               parents=unit.get("parents", ()))
         own_scope = node["scope"]
+        reference_owner = unit.get("reference_owner")
+        reference_owner_evidence = unit.get("reference_owner_evidence", ())
+        label = unit.get("label", unit.get("printed_label"))
+        label_source = unit.get("label_source")
+        if reference_owner is None and label and isinstance(label_source, dict):
+            reference_owner = {"identity": {"role": "printed_field", "attribute": label}, "scope": list(own_scope)}
+            reference_owner_evidence = [{"kind": "printed_field_label", "text": label, "source": copy.deepcopy(label_source)}]
+        references = read_explicit_references(unit["text"], unit["source"], scope=own_scope,
+                                              owner=reference_owner, owner_evidence=reference_owner_evidence)
+        if references["matched"]:
+            result["references"].extend(copy.deepcopy(references["references"]))
+            result["semantic_roles"].extend(copy.deepcopy(references["semantic_roles"]))
+            result["source_dispositions"].extend(copy.deepcopy(references["source_dispositions"]))
+            result["blockers"].extend(copy.deepcopy(references["blockers"]))
+            result["pending_requirements"].extend(copy.deepcopy(references["pending_requirements"]))
+            result["required_matcher_features"] = sorted(set(result["required_matcher_features"]) | set(references["required_matcher_features"]))
+            for relation in references["relations"]:
+                result["relations"].append({"id": f"L:prose_reference:{len(result['relations'])}", **copy.deepcopy(relation)})
+            spans = [reference["source"]["text_span"] for reference in references["references"]]
+            node["content_slots"] = [slot for slot in node["content_slots"]
+                                     if not any(a <= slot["source"]["text_span"][0] and slot["source"]["text_span"][1] <= b
+                                                for a, b in spans)]
+            if not references["residual_spans"]:
+                node["identity"] = {"role": "reference_directive",
+                                    "directive_kinds": [reference["directive_kind"] for reference in references["references"]]}
+                proofs = [reference["owner_proof"] for reference in references["references"]]
+                if proofs and all(proof and proof["owner"] == proofs[0]["owner"] for proof in proofs):
+                    node["identity"]["owner"] = copy.deepcopy(proofs[0]["owner"])
+            elif "lexical_anchor" in node["identity"]:
+                node["identity"]["lexical_anchor"] = _skeleton(" ".join(part["text"] for part in references["residual_spans"]))
         result["blockers"].extend(copy.deepcopy(node["context_blockers"]))
         result["endpoints"].append(node)
         endpoint = {"identity": copy.deepcopy(node["identity"]), "scope": own_scope}

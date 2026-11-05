@@ -16,9 +16,12 @@ _CURRENCY = re.compile(_CURRENCY_TEXT, re.I)
 _SYMBOL_TEXT = r"[$¥￥€£]"
 _SCALE = r"(?:十|百|千|万|萬|百万|百萬|千万|千萬|亿|億|十亿|十億|百亿|百億|万亿|萬億)"
 _ENGLISH_SCALE = r"(?:thousands?|millions?|billions?)"
+_MONEY_SHORT_SCALE = r"(?:mn|bn|k|m)"
+_MONEY_SCALE = rf"(?:{_ENGLISH_SCALE}|{_MONEY_SHORT_SCALE})"
 _COUNT = r"(?:股|人|件|吨|噸|户|戶|台|项|項|个|個|天|次|小时|小時|公里)"
-_MONEY = rf"(?:(?:{_CURRENCY_TEXT})\s*(?:{_SCALE}?元|{_ENGLISH_SCALE})?|{_SCALE}?元(?:\s*(?:{_CURRENCY_TEXT}))?|{_SYMBOL_TEXT}(?:\s*{_ENGLISH_SCALE})?)"
-_UNIT = re.compile(rf"(?:{_MONEY}(?:\s*/\s*{_COUNT})?|{_SCALE}?{_COUNT}|[%‰]|bps?)", re.I)
+_MONEY = rf"(?:(?:{_CURRENCY_TEXT})\s*(?:{_SCALE}?元|{_MONEY_SCALE})?|{_SCALE}?元(?:\s*(?:{_CURRENCY_TEXT}))?|{_MONEY_SHORT_SCALE}\s*(?:{_CURRENCY_TEXT})|{_SYMBOL_TEXT}(?:\s*{_MONEY_SCALE})?)"
+_RATIO_DELTA = r"(?:百分点|百分點|pp|percentage\s+points?|bps?|basis\s+points?|基点|基點)"
+_UNIT = re.compile(rf"(?:{_MONEY}(?:\s*/\s*{_COUNT})?|{_SCALE}?{_COUNT}|[%‰]|{_RATIO_DELTA})", re.I)
 _MAGNITUDE = r"(?:\d{1,3}(?:,\d{3})+|\d+)(?:\.\d+)?|\.\d+"
 _NUMBER = re.compile(rf"(?:\([+\-−]?(?:{_MAGNITUDE})\)|（[+\-−]?(?:{_MAGNITUDE})）|[+\-−]?(?:{_MAGNITUDE}))")
 

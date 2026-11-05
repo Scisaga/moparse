@@ -28,8 +28,8 @@ def _score(pipeline="P01", actual="Name: Delta; Revenue: 17; Profit: 5"):
 
 def _index(tmp_path):
     groups = {f"P{i:02}": [_score(f"P{i:02}")] for i in range(1, 9)}
-    for pipeline in ("P07", "P08"):
-        for label in ("baseline", "current"):
+    for pipeline in tuple(groups):
+        for label in (("baseline", "current") if pipeline in {"P07", "P08"} else ("current",)):
             groups[pipeline + "-" + label] = [_score(pipeline)]
     validation = {"status": "passed", "known_reader_defects": [],
                   **{stage: {"status": "passed", "evidence": ["invented test evidence"]} for stage in VALIDATION_STAGES}}
@@ -45,11 +45,13 @@ def _index(tmp_path):
                                                                     for layer in ("T", "L", "B")}}],
              "summary": {group: summarize_layers(scores) for group, scores in groups.items()}}
     index["paired"] = {}
-    for pipeline in ("P07", "P08"):
+    for pipeline in tuple(f"P{i:02}" for i in range(1, 9)):
         index["paired"][pipeline] = {}
         for name, before, after in (("native_to_baseline", pipeline, pipeline + "-baseline"),
                                     ("native_to_current", pipeline, pipeline + "-current"),
                                     ("baseline_to_current", pipeline + "-baseline", pipeline + "-current")):
+            if before not in groups or after not in groups:
+                continue
             pair = paired_layers(groups[before], groups[after])
             index["paired"][pipeline][name] = {
                 layer: {"new_correct": row["new_correct"], "lost_correct": row["lost_correct"],
@@ -71,9 +73,11 @@ def test_three_layers_render_from_decisions_with_separate_pairs_and_full_text_di
     assert report.index("T比较全部授权文字") < report.index("## P01–P08 原生输出")
     assert "全范围S/D/I" in report and "P07/P08 保存正文配对" in report
     assert "value_and_labels_correct" not in report
-    assert len(read_json(output / "data/results.json")) == 12
+    assert len(read_json(output / "data/results.json")) == 18
+    assert "八组最终交付与原生增损" in report
     pairs = read_json(output / "data/paired.json")
-    assert set(pairs) == {"P07", "P08"}
+    assert set(pairs) == {f"P{i:02}" for i in range(1, 9)}
+    assert all(set(pairs[f"P{i:02}"]) == {"native_to_current"} for i in range(1, 7))
     assert set(pairs["P07"]) == {"native_to_baseline", "native_to_current", "baseline_to_current"}
     assert pairs["P07"]["baseline_to_current"]["layers"]["B"]["lost_correct"] == 0
     assert "gains" not in pairs["P07"]["baseline_to_current"]["layers"]["B"]

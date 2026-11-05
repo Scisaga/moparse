@@ -8,7 +8,6 @@ typed blocks. No parser, model, transport, service, or asset extraction runs.
 from __future__ import annotations
 
 import copy
-import re
 from collections import defaultdict
 from collections.abc import Callable, Mapping
 from importlib import metadata
@@ -37,6 +36,15 @@ from app.parsers.mineru_native_remote import (
     render_mineru_page_evidence,
 )
 from app.utils.page_range import parse_page_range
+
+from .adapters import read_glm, read_mineru, read_visual
+from .service_native_adapters import (
+    PIPELINE_BACKENDS,
+    PIPELINE_BRANCHES,
+    attach_source_tables,
+    branch_capabilities,
+    render_saved_page,
+)
 
 MinerUProjector = Callable[[list[Any]], tuple[list[Any], list[dict[str, Any]]]]
 
@@ -138,7 +146,7 @@ def _asset_references(value: Any, pointer: str) -> list[dict[str, Any]]:
     if isinstance(value, Mapping):
         for key, child in value.items():
             path = pointer + "/" + str(key).replace("~", "~0").replace("/", "~1")
-            if key in {"research_asset", "research_assets", "image_files"}:
+            if key in {"research_asset", "research_assets", "research_region_media", "image_files"}:
                 values = child.values() if isinstance(child, Mapping) else child if isinstance(child, list) else [child]
                 for ref in values:
                     if isinstance(ref, str):
@@ -170,19 +178,19 @@ def replay_native(
     native: Mapping[str, Any], source: StoredSource, options: ContentParseOptions, *, document_id: str,
     mineru_projector: MinerUProjector | None = None,
 ) -> tuple[DocumentParseResult, dict[str, Any]]:
-    """Build service input from a frozen P07/P08 candidate, without source reads.
+    """Build service input from a saved declared branch, without source reads.
 
     ``source`` supplies identity/page-count metadata only. PDF inspection,
     asset extraction and service postprocessing remain the runner's work.
     """
     pipeline = native.get("pipeline")
-    if pipeline not in {"P07", "P08"}:
-        raise ValueError("service replay accepts frozen P07/P08 candidate artifacts only")
+    if pipeline not in PIPELINE_BRANCHES:
+        raise ValueError("service replay requires a declared P01-P08 candidate")
     selected = parse_page_range(options.page_range, source.page_count)
     result = DocumentParseResult(document_id=document_id, filename=source.filename, mime_type=source.mime_type,
                                  page_count=source.page_count, processed_pages=0,
                                  pipeline=ParsePipeline(profile=options.profile.value,
-                                                        primary="mineru-visual" if pipeline == "P08" else "mineru-advanced-txt"),
+                                                        primary=PIPELINE_BACKENDS[pipeline]),
                                  usage=ParseUsage(input_bytes=source.size_bytes))
     diagnostic: dict[str, Any] = {
         "schema": "offline-service-native-replay/1", "pipeline": pipeline, "pages": [], "errors": [],
@@ -216,6 +224,7 @@ def replay_native(
         if isinstance(item, Mapping) and type(item.get("page")) is int:
             processing[item["page"]] = item
     branches = []
+    emitted: set[str] = set()
     for number in selected:
         records = entries.get(number, [])
         warnings: list[PipelineWarning] = []
@@ -233,9 +242,44 @@ def replay_native(
             detail.update(branch=branch, native_page_position=position)
             raw = entry.get("raw")
             diagnostic["asset_references"].extend(_asset_references(raw, f"#/pages/{position}/raw"))
-            if branch == "visual" and pipeline == "P08" and isinstance(raw, list):
+            if branch not in PIPELINE_BRANCHES[pipeline]:
+                detail["error"] = "saved_branch_outside_declared_pipeline"
+            else:
+                detail["capabilities"] = branch_capabilities(pipeline, branch)
+            if branch not in PIPELINE_BRANCHES[pipeline]:
+                pass
+            elif branch in {"docling", "paddle"} and isinstance(raw, Mapping):
+                pointer = f"#/pages/{position}/raw"
+                if branch == "docling":
+                    pointer = raw.get("native_document")
+                    raw = _pointer(native, pointer)
+                if not isinstance(raw, Mapping) or not isinstance(pointer, str):
+                    detail["error"] = "declared_native_document_unavailable"
+                else:
+                    if branch == "docling":
+                        diagnostic["asset_references"].extend(_asset_references(raw, pointer))
+                    rendered = render_saved_page(raw, number, branch, pointer, emitted=emitted)
+                    result._native_page_blocks[number] = rendered["blocks"]
+                    result._table_fragments.extend(rendered["fragments"])
+                    result._picture_candidates.extend(rendered["pictures"])
+                    result._page_furniture.extend(rendered["furniture"])
+                    detail.update(native_page_pointer=pointer, native_containers=rendered["containers"],
+                                  local_read_errors=rendered["errors"], source_envelope=rendered["source_envelope"])
+                    for error in rendered["errors"]:
+                        warnings.append(_warning("saved_native_local_region_unreadable", number, branch, detail=error))
+                    producer_status = str(rendered["source_envelope"].get("status", "")).lower()
+                    if any(token in producer_status for token in ("partial", "fail", "error")):
+                        warnings.append(_warning("saved_native_producer_incomplete", number, branch,
+                                                 detail=rendered["source_envelope"]))
+                    page = PageParseResult(page_number=number, backend=PIPELINE_BACKENDS[pipeline], content=rendered["markdown"],
+                                           status=PageStatus.FAILED if warnings else PageStatus.COMPLETED,
+                                           warnings=warnings, diagnostics=PageDiagnostics(
+                                               source_kind=PageSourceKind.NATIVE if branch == "docling" else PageSourceKind.VISUAL,
+                                               selected_strategy=SelectionStrategy.DOCLING if branch == "docling" else SelectionStrategy.NATIVE_REPAIR))
+            elif branch == "visual" and pipeline == "P08" and isinstance(raw, list):
                 from app.parsers.mineru_visual_result import render_visual_page
                 markdown, fragments, pictures, furniture, projected = render_visual_page(raw, number, warnings=warnings)
+                attach_source_tables(fragments, read_visual(raw, number, f"#/pages/{position}/raw"))
                 result._native_page_blocks[number] = projected
                 result._table_fragments.extend(fragments)
                 result._picture_candidates.extend(pictures)
@@ -245,7 +289,7 @@ def replay_native(
                                        warnings=warnings, diagnostics=PageDiagnostics(
                                            source_kind=PageSourceKind.VISUAL,
                                            selected_strategy=SelectionStrategy.MINERU))
-            elif branch == "mineru" and pipeline == "P07":
+            elif branch == "mineru" and pipeline in {"P06", "P07"}:
                 blocks, identity = _mineru_source_page(native, entry, number)
                 detail.update(identity)
                 if blocks is not None:
@@ -256,6 +300,7 @@ def replay_native(
                         markdown, fragments, pictures, furniture = render_mineru_page_evidence(
                             projected_page, warnings=warnings,
                         )
+                        attach_source_tables(fragments, read_mineru({"blocks": projected}, number, detail["native_page_pointer"]))
                     except _NativeContentError as exc:
                         detail["error"] = "production_mineru_page_unreadable"
                         detail["exception_type"] = type(exc).__name__
@@ -264,12 +309,12 @@ def replay_native(
                         result._table_fragments.extend(fragments)
                         result._picture_candidates.extend(pictures)
                         result._page_furniture.extend(furniture)
-                        page = PageParseResult(page_number=number, backend="mineru-advanced-txt", content=markdown,
+                        page = PageParseResult(page_number=number, backend=PIPELINE_BACKENDS[pipeline], content=markdown,
                                                status=PageStatus.FAILED if warnings else PageStatus.COMPLETED,
                                                warnings=warnings, diagnostics=PageDiagnostics(
                                                    source_kind=PageSourceKind.NATIVE,
                                                    selected_strategy=SelectionStrategy.MINERU))
-            elif branch == "glm" and pipeline == "P07" and isinstance(raw, Mapping):
+            elif branch == "glm" and isinstance(raw, Mapping):
                 result.pipeline.ocr = "glm-sdk-remote"
                 if "json_result" not in raw:
                     detail["error"] = "glm_primary_json_result_missing"
@@ -278,12 +323,13 @@ def replay_native(
                         regions = GlmSdkRemoteParser._page_regions(raw["json_result"], warnings=warnings,
                                                                    page_number=number)
                         markdown, fragments = GlmSdkRemoteParser._render_regions(regions, number, warnings=warnings)
+                        source_blocks = read_glm(raw, number, f"#/pages/{position}/raw")
                     except (ValueError, TypeError) as exc:
                         detail["error"] = "glm_primary_view_unreadable"
                         detail["exception_type"] = type(exc).__name__
                     else:
-                        if not markdown and isinstance(raw.get("markdown_result"), str):
-                            markdown = re.sub(r"!\[[^\]]*\]\([^)]*\)", "<!-- image -->", raw["markdown_result"]).strip()
+                        result._native_page_blocks[number] = source_blocks
+                        attach_source_tables(fragments, source_blocks)
                         if not markdown:
                             warnings.append(_warning("offline_glm_empty_page", number, branch))
                         status = PageStatus.FAILED if warnings else PageStatus.COMPLETED
@@ -314,8 +360,13 @@ def replay_native(
         result.pages.append(page)
         result.warnings.extend(page.warnings)
     result.processed_pages = sum(page.status == PageStatus.COMPLETED for page in result.pages)
-    result.route_summary = RouteSummary(native_text_pages=branches.count("mineru"),
-                                        pages_with_ocr=sum(page.backend in {"glm-sdk-remote", "mineru-visual"} and page.status == PageStatus.COMPLETED
+    result.route_summary = RouteSummary(native_text_pages=sum(branch in {"docling", "mineru"} for branch in branches),
+                                        pages_with_ocr=sum(page.diagnostics is not None and page.diagnostics.source_kind != PageSourceKind.NATIVE and page.status == PageStatus.COMPLETED
                                                            for page in result.pages),
                                         failed_pages=sum(page.status == PageStatus.FAILED for page in result.pages))
+    result._source_verification["saved_native_bridge"] = {
+        "pipeline": pipeline, "pages": copy.deepcopy(diagnostic["pages"]),
+        "asset_references": copy.deepcopy(diagnostic["asset_references"]),
+        "source_policy": "actual_saved_branch_only_no_references_or_models",
+    }
     return result, diagnostic

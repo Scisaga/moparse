@@ -4,6 +4,8 @@
 
 [全部管线](README.md) · [固定比较条件](../../benchmark/pipelines-to-test.md#主比较配置)
 
+离线服务bridge已读取本组保存的res/parsing_res_list、HTML原格、nullable顺序及媒体声明，不调用Paddle推理或PDF字层补充；区域框不等分成源格边界。当前受控及单份JSON读回不代表全量service验收，阶段、来源隔离和执行门槛见[八管线服务适配](README.md#保存结果的八管线服务适配)。
+
 ## 1. 配置与执行边界
 
 全部页由 PaddleOCR-VL 模型 1.5 的完整管线处理，不接 GLM 分支；研究使用原生 Transformers 推理后端，Python 包与模型 revision 由各次配置及原生产物记录，正式运行前须完成新一轮预检冻结，工程验证边界见第 5 节。

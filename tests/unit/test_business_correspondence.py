@@ -102,7 +102,7 @@ def test_queries_never_include_the_correct_value_and_all_same_attribute_hits_are
 
 
 @pytest.mark.parametrize("dimension,expected,observed", [
-    ("period", "2027年", "2028年"), ("unit", "萬元", "千元"), ("currency", "USD", "CNY"),
+    ("period", "2027年", "2028年"), ("currency", "USD", "CNY"),
     ("scope", "excluding tax", "including tax"), ("from_period", "2026年", "2025年"),
     ("to_period", "2027年", "2028年"), ("period_basis", "year ended December", "quarter ended December"),
 ])
@@ -116,6 +116,22 @@ def test_unique_candidate_checks_every_explicit_position_dimension_before_values
     assert hit["decision"] == "rejected"
     assert hit["identity"]["qualifiers"]["checks"][dimension]["correct"] is False
     assert "conflict" in hit["reason"]
+
+
+def test_compatible_scale_locates_the_candidate_but_unchanged_number_is_the_wrong_quantity():
+    wanted = fact("r", qualifiers={"unit": "萬元"})
+    candidate = fact("c", qualifiers={"unit": "千元"})
+    layer, [row] = grade([wanted], [candidate])
+    assert layer["score"] == 0 and layer["denominator"] == 1
+    assert row["actual"] == [candidate]
+    [hit] = row["retrieval"]["candidates"]
+    assert hit["decision"] == "accepted"
+    assert hit["identity"]["qualifiers"]["checks"]["unit"]["correct"] is True
+    [comparison] = row["comparisons"]
+    assert comparison["value"]["required"] == comparison["value"]["actual"] == "17"
+    assert comparison["value"]["correct"] is False
+    assert comparison["value"]["equivalence"]["conflicts"] == ["quantity_value"]
+    assert "value" not in row["retrieval"]["query"]
 
 
 def test_wrong_group_is_not_rescued_by_a_matching_heading_elsewhere():
@@ -250,11 +266,15 @@ def test_an_exact_hit_in_the_wrong_scope_does_not_suppress_the_local_approximate
     literals = [{"id": "elsewhere", "text": "Revenue", "role": "label", "scope": ["South"], "source": {"path": "<south>"}},
                 {"id": "local", "text": "Revenuee", "role": "label", "scope": ["North"], "source": {"path": "<north>"}}]
     layer, [row] = grade([reference], actual, literals=literals)
-    assert layer["score"] == 0
+    assert layer["score"] == 100
+    assert row["actual"] == [actual[1]] and row["retrieval"]["accepted"] == ["local"]
     assert [hit["id"] for hit in row["retrieval"]["candidates"]] == ["other", "local"]
     assert [hit["id"] for hit in row["retrieval"]["textual_hits"]] == ["elsewhere", "local"]
     assert row["retrieval"]["candidates"][0]["identity"]["scope"]["correct"] is False
-    assert row["retrieval"]["candidates"][1]["identity"]["attribute"]["correct"] is False
+    local_attribute = row["retrieval"]["candidates"][1]["identity"]["attribute"]
+    assert local_attribute["correct"] is True
+    assert local_attribute["equivalence"]["rule_id"] == "label_one_edit_with_independent_context"
+    assert local_attribute["actual"] == "Revenuee"
 
 
 def test_a_plain_literal_label_without_a_data_role_cannot_supply_a_value():
@@ -309,16 +329,23 @@ def test_report_guard_cannot_accept_a_value_outside_its_original_recalled_fact()
 
 
 def test_report_guard_rechecks_record_vectors_instead_of_trusting_the_equal_flag():
+    from moparse_eval.business_correspondence import _record_comparison
     from moparse_eval.expected_report import _record_trace
+    from moparse_eval.three_layer import canonical as report_canonical
 
-    _, rows = grade(repeated_records(), repeated_records())
-    assert _record_trace(rows[0]) is True
+    reference, actual = repeated_records(), repeated_records()
+    _, rows = grade(reference, actual)
+    replay = _record_comparison(reference, actual, report_canonical)
+    assert _record_trace(rows[0], replay) is True
     rows[0]["record_comparison"]["actual_records"][0]["fields"][0]["value"] = "18"
-    with pytest.raises(ValueError, match="record-vector comparison differs"):
-        _record_trace(rows[0])
+    with pytest.raises(ValueError, match="record comparison omitted or changed a field"):
+        _record_trace(rows[0], replay)
 
 
 def relation_row(*, changed_header=False, typo=False):
+    from moparse_eval.relation_correspondence import logical_roles_decision
+    from moparse_eval.three_layer import canonical as report_canonical
+
     expected = {"id": "L-required", "type": "field_binding", "left": {"attribute": "Revenue"},
                 "right": {"subject": "Delta", "attribute": "Revenue", "scope": [], "identity_facets": {}},
                 "object_anchor": "independent-data-A", "header_anchors": ["independent-header-Revenue"],
@@ -335,6 +362,7 @@ def relation_row(*, changed_header=False, typo=False):
             "outcome": "correct" if correct else "incorrect", "root_cause": "declared-link",
             "retrieval": {"method": "independent_object_anchor", "candidates": [{
                 "id": actual["id"], "source": actual["source"], "evidence": copy.deepcopy(actual),
+                "equivalence": logical_roles_decision(expected, actual, report_canonical),
                 "scope_verification": None, "correct": correct,
                 "reason": "same_independent_objects_and_links" if correct else "explicit_binding_conflict"}],
                 "selected": actual["id"] if correct else None}}

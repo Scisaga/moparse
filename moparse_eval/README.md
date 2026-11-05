@@ -30,11 +30,19 @@
 
 `series_requirements.py`读取有明确属性、年度、单位和来源的时间序列。缺少属性的数字tuple、没有独立比较期说明的本年/上年增减不能按最大年度或列序补全。`toc_evidence.py`已接公共入口，读取明确目录角色、条目、页码slot和实际父路径；目录同名叶项不能跨父范围借页码，生成序号不充当独立对象锚点。已证明根目录使用空路径及实际root证据，未证明或损坏的父引用使用None及候选歧义，不能混为根。完整平面文字或Title/Page schema可以证明平面根，显式坏引用禁止回退；软件未支持的headers仍阻断，不从expected补树。独立受控验证不等于全部真实目录已经可靠解释。
 
-`three_layer.py`编译要求、读取候选证据并独立判定T/L/B；`expected_scoring.py`是同一实现的当前入口，没有旧算法回退。`layer_aggregation.py`分别汇总各层及配对。解释器的ledger用于检出调用期间的突变，不能证明业务语义覆盖；软件未支持不变成候选0分。
+`reference_compiler.py`先规划授权来源、已选标题和外部依赖，再调用共享读取组件解释语义，最后按事实的实际来源处理限定与输入范围依赖。正文事实不会因读取较晚而被提前判作缺失；外部声明始终不成为答案。`requirement_graph.py`检查覆盖并投影独立T/L/B，从同一对象输出JSON及XML；原段、原格和明确拆出的声明均有三层处置。
 
-`expected_evaluation.py`统一编排八组原生及P07/P08实际baseline/current正文，默认使用16个CPU spawn进程。任务按sample_id轮转，同一样本最多有一个组任务执行；各样本内部保留原声明组顺序，完成后其下一组加入就绪队尾，由其他已等待样本填充可用进程。全部声明样本和组保留，未捕获的任务异常直接使执行失败且不重试。该调度只改变保存输出分析，各管线和独立后处理的原始资源与计时保持原声明。
+`source_requirements.py`分离有证据的多字段序列及声明为正文的字段值，不拆开单个合法名称、时间、URL或依赖schema的数值tuple。Description中的独立SVO分别解释，原标签仅限定其实际正文；同名相邻字段不能互借主体、谓词或对象来源。`field_sequence_requirements.py`区分有来源的属性、主体列、期间选择器及未知前缀。`period_evidence.py`保留完整日期及期间粒度，不以年份替代完整财政日期。未知分句不能借同段另一个已读字段获得完整状态。
 
-每份完整评分轨迹通过`json.dump`流式写入同目录唯一`.part`文件，保持紧凑UTF-8 JSON和结尾换行；关闭成功后原子替换目标文件。编码、写入或替换异常清理本次临时文件，保留已有目标及其他工作进程的临时文件。`index.json`和`execution-status.json`的`analysis_scheduling`记录并行上限、每样本活动上限、启动方式、样本及组次序、完成后入队策略、失败不重试和声明任务总数。独立受控调度与写入验证不代表全范围遍历已完成，实际状态仍以当前执行记录为准。
+`explicit_reference_requirements.py`保留See/参见的引用身份及归属关系；完整导航文字不额外增加业务题，归属必须来自实际字段或标题，缺少归属与未知残余继续未决。有限组合语法保留条件、否定、模态、逻辑操作数及原词项来源。要求图的传输校验同时检查操作数、限定来源、已解释投影和必要SVO关系；与原expected重新编译核对用于检出同步突变，不替代独立语义样例。新组合语法的比较能力未验证前，B/L继续暂停。
+
+`equivalence.py`和`quantity.py`为B身份、数量、重复记录及L端点提供共享判定及证明。明确同量纲和币种条件下允许有理数精确换算；原字、单位和换算证明保留，不授权改写候选。受保护业务词、条件、否定、不同期间和货币冲突不能被文字相似度抵消。
+
+`three_layer.py`投影要求、读取候选证据并独立判定T/L/B；`expected_scoring.py`是同一实现的当前入口，没有旧算法回退。`layer_aggregation.py`分别汇总各层及配对。解释器的ledger用于检出调用期间的突变，不能证明业务语义覆盖；软件未支持不变成候选0分。
+
+`expected_evaluation.py`统一编排八组原生、八组实际current及P07/P08真实baseline，默认使用16个CPU spawn进程。current从一次原子激活的八组索引读取，不能混入六组缺失的旧执行；其余六组不虚构历史baseline。expected先编译一次，再由各组共用同一要求投影。任务按sample_id轮转，同一样本最多有一个组任务执行；各样本内部保留原声明组顺序，完成后其下一组加入就绪队尾，由其他已等待样本填充可用进程。全部声明样本和组保留，未捕获的任务异常直接使执行失败且不重试。该调度只改变保存输出分析，各管线和独立后处理的原始资源与计时保持原声明。
+
+`trace_storage.py`将重复上下文保存为共享引用；所有命中、重复、冲突及排除理由仍完整保留。`read_score`展开后才交给报告复核。每份完整评分轨迹流式写入同目录唯一`.part`文件，保持紧凑UTF-8 JSON和结尾换行；关闭成功后原子替换目标文件。编码、写入或替换异常清理本次临时文件，保留已有目标及其他工作进程的临时文件。`index.json`和`execution-status.json`的`analysis_scheduling`记录并行上限、每样本活动上限、启动方式、样本及组次序、完成后入队策略、失败不重试和声明任务总数。独立受控调度与写入验证不代表全范围遍历已完成，实际状态仍以当前执行记录为准。
 
 `expected_report.py`复核完整T manifest、原始来源、alias容量、正文拼接来源、逐项检索和关系证据，再复核分母、S/D/I及配对；报告器仅接受同版、完整、无软件阻塞的结果。这些证据检查仍不能替代独立正确要求和实际文字诊断。旧字段评分、普通文字评分、硬行列定位和旧报告入口已删除。`information_reading.py`只保留候选单位字面读取，供既有service readback使用。
 
@@ -62,30 +70,40 @@
 
 测试硬断言业务集合、角色、权重、限定、实际cell端点和排除理由，覆盖表示变化、Status误读、独立引用换绑、重复冲突、合法分块、父范围、条件/否定与L独立、实体漏项、时间序列、目录模块、来源容量及突变。它们使用受控数据，不读取语料或运行目录。此命令是回归入口，不能据命令存在或测试数填写passed；公共入口与保存输出的文字诊断仍须独立验证。
 
-## 保存输出软件诊断
+## 要求结构与保存输出软件诊断
+
+先执行只读要求编译，不读取候选或PDF，不产生质量成绩。输出目录须不存在，失效派生视图删除后重建，不归档为另一套参考。
+
+```bash
+.venv/bin/python -m moparse_eval.requirement_graph \
+  --baseline benchmark/runs/lite \
+  --output benchmark/runs/lite/requirements/current
+```
+
+结构尚有未知时，只能以显式样本做有界软件诊断，不能再次启动全范围候选匹配。以下入口的样本ID必须来自已保存声明；诊断不缩小正式分母。
 
 ```bash
 .venv/bin/python -m moparse_eval.expected_evaluation \
   --baseline benchmark/runs/lite \
   --service-baseline-root benchmark/runs/lite/service/baseline \
-  --current-root benchmark/runs/lite/service/current \
   --output benchmark/runs/lite/diagnosis/three-layer-current \
-  --diagnostic --workers 16
+  --diagnostic --sample '<实际保存样本ID>' --workers 16
 ```
 
 输出目录须不存在。诊断保存实际来源、全部命中、身份检查、排除理由及软件阻塞，不生成正式冻结或成绩。`--sample 样本ID`可重复使用，仅在`--diagnostic`下限制软件诊断样本；选中样本仍使用同一判定器遍历全部声明组。正式重评拒绝`--sample`，不能用抽样缩小正式分母或把局部范围冒充全量。`index.json`为`blocked`时进程返回2，表示存在必须修复的软件范围，并非候选失败率。部分要求数量不构成完整语义覆盖。主分和分子被清空，原始处理时间及资源单列，不重跑解析或CPU后处理，不更新原run.json。
 
-只保留`benchmark/runs/lite/diagnosis/three-layer-current/index.json`对应的当前全范围诊断；执行中查看同目录`execution-status.json`，只有完成索引才能说明实际遍历状态。旧选样、旧全范围及单项派生轨迹在源码变化后删除，不归档或继承。实际位置和剩余问题见[原生读取诊断](../benchmark/diagnostics/three-layer-native-readback.md)、[矩阵文字诊断](../benchmark/diagnostics/three-layer-matrix-readback.md)、[目录读回](../benchmark/diagnostics/three-layer-toc-readback.md)及[五个选段输入边界](../benchmark/diagnostics/three-layer-input-boundary.md)。这些边界不授权修改参考、包或输入范围。
+源码变化后失效的评分和诊断派生物删除，不归档或继承。当前结构缺口由`requirements/current/index.json`维护；诊断运行状态由本次`execution-status.json`说明。既有真实原生缺陷的定性来源可以辅助修软件，不能继承其旧分数或完整性结论。[五个选段输入边界](../benchmark/diagnostics/three-layer-input-boundary.md)按用户选择保持待确认，不授权修改参考、包或输入范围。
 
 ## 正式重评及报告
 
-只有独立反例、突变、实际格式及保存输出诊断均可靠且无已知缺陷时，才可生成正式冻结。冻结须匹配当前`cli.code_identity()`和`three_layer.PROTOCOL`。validation的`independent_counterexamples`、`mutations`、`native_formats`及`saved_output_diagnosis`四项分别包含`status: passed`和实际证据路径；这些字段本身不证明判分正确。
+只有要求结构、比较能力及八组真实交付门槛均可靠且无已知缺陷时，才可生成正式冻结。冻结须匹配当前`cli.code_identity()`和`three_layer.PROTOCOL`，并提供同版、有独立证据的`expected_structure_gate`。validation的`independent_counterexamples`、`mutations`、`native_formats`及`saved_output_diagnosis`四项分别包含`status: passed`和实际证据路径；这些字段本身不证明判分正确。
 
 ```bash
 .venv/bin/python -m moparse_eval.expected_evaluation \
   --baseline benchmark/runs/lite \
   --service-baseline-root benchmark/runs/lite/service/baseline \
-  --current-root benchmark/runs/lite/service/current \
+  --current-root benchmark/runs/lite/service/current/index.json \
+  --requirements benchmark/runs/lite/requirements/current/index.json \
   --freeze benchmark/runs/lite/scoring-freeze.json \
   --output benchmark/runs/lite/scores/current --workers 16
 .venv/bin/python scripts/render_lite_report.py \
@@ -93,10 +111,10 @@
   --output benchmark/reports/lite
 ```
 
-当前阻塞未解时不得执行正式重评或制造passed冻结。正式入口遇到软件阻塞会停止全部成绩汇总；报告器在覆盖报告前拒绝不完整结果。八组原生与P07/P08三种配对分别报告，不推导旧“零转换损失”或采用结论，不混排正文与原生成绩。
+当前阻塞未解时不得执行正式重评或制造passed冻结。正式入口遇到软件阻塞会停止全部成绩汇总；报告器在覆盖报告前拒绝不完整结果。八组原生、八组交付及P07/P08真实baseline/current配对分别报告，不推导旧“零转换损失”或采用结论，不混排正文与原生成绩。
 
 ## 保全与范围
 
-不打开PDF或图片，不运行渲染、OCR、视觉、裁判推理、Full或额外PDF；expected、原件、标注、映射、资产、数据包、候选正文和原始测量只读。既有执行及CPU后处理组件保留，本任务不调用它们，不操作GPU、TTS、服务或部署。
+评测不打开PDF或图片，不运行渲染、OCR、视觉、裁判推理、Full或额外PDF；expected、原件、标注、映射、资产、数据包、既存候选正文和原始测量只读。新八组CPU后处理获授权，在结构门槛后沿用8 CPU、8 GiB、外层串行、无网络和无GPU的隔离；候选worker不挂载expected，按实际页分支保留原来源权限。运行协议由[评测任务](../benchmark/evaluation-tasks.md)与[管线适配](../docs/pipelines/README.md)维护，不操作GPU、TTS、在线服务或部署。
 
 通用检查永久排除语料、datasets、benchmark/reference-decisions、benchmark/runs和benchmark/reports，包括显式路径。专项诊断不认证语料。仅提交本任务代码、正式文档与报告，运行资料、大候选和软件快照留本地。

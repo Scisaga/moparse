@@ -31,3 +31,20 @@ def test_document_snapshot_uses_the_actual_rendering_instead_of_page_text():
     snapshot = materialize_stage(capture_stage(result, stage="exported", sample_id="synthetic"))
     assert snapshot["markdown"] == "Actually rendered document."
     assert "Hidden old" not in str(snapshot["observation"])
+
+
+def test_stage_source_audit_does_not_observe_later_native_mutation():
+    result = DocumentParseResult(
+        document_id="synthetic", filename="unopened.pdf", mime_type="application/pdf",
+        page_count=1, processed_pages=1,
+        pages=[PageParseResult(page_number=1, content="Actual adapted page.")],
+        pipeline=ParsePipeline(profile="balanced", primary="synthetic"),
+    )
+    result._native_page_blocks = {1: [{"native_path": "#/own/0", "native_payload": {"parent": "#/own/root"}}]}
+    snapshot = capture_stage(result, stage="adapted", sample_id="synthetic", pages_only=True,
+                             applicability={"applicable": True, "reason": "actual_saved_adapter"})
+    result._native_page_blocks[1][0]["native_payload"]["parent"] = "#/another/root"
+    saved = materialize_stage(snapshot)
+    assert saved["scope"] == "actual_adapter_page_rendering"
+    assert saved["source_audit"]["native_blocks"][1][0]["native_payload"]["parent"] == "#/own/root"
+    assert saved["markdown"] == "<!-- page: 1 -->\n\nActual adapted page."

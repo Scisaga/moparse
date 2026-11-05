@@ -71,8 +71,8 @@ def test_a_required_bare_number_remains_unknown_instead_of_becoming_empty_covera
 
 
 def test_unread_actual_business_prose_is_not_relabelled_as_unbound_extra_numerals():
-    _, actual, score = grade("Revenue: 17\n", "Revenue: 17\n\nRevenue increased 17\n")
-    assert any(item["text"] == "Revenue increased 17" for item in actual["text"])
+    _, actual, score = grade("Revenue: 17\n", "Revenue: 17\n\nRevenue gyrated 17\n")
+    assert any(item["text"] == "Revenue gyrated 17" for item in actual["text"])
     assert any(b.get("side") == "candidate" and affects(b, "B") for b in score["blockers"])
     assert score["publishable"] is False
     assert score["layers"]["B"]["complete"] is False
@@ -80,11 +80,21 @@ def test_unread_actual_business_prose_is_not_relabelled_as_unbound_extra_numeral
 
 
 def test_unread_reference_business_prose_stays_a_required_software_blocker():
-    _, _, score = grade("Revenue increased 17\n", "Revenue increased 17\n")
+    _, _, score = grade("Revenue gyrated 17\n", "Revenue gyrated 17\n")
     assert any(b.get("side") == "expected" and affects(b, "B") for b in score["blockers"])
     assert score["publishable"] is False
     assert score["layers"]["B"]["complete"] is False
     assert score["layers"]["B"]["score"] is None
+
+
+def test_supported_increase_predicate_is_a_business_fact_and_its_wrong_amount_is_detected():
+    required, actual, score = grade("Revenue increased 17\n", "Revenue increased 18\n")
+    assert [(f["subject"], f["attribute"], f["value"], f["role"]) for f in required["business"]] == [
+        ("Revenue", "increase", "17", "description")]
+    assert actual["business"][0]["value"] == "18"
+    assert score["publishable"] is True
+    assert score["layers"]["B"]["denominator"] == 1 and score["layers"]["B"]["numerator"] == 0
+    assert score["layers"]["L"]["score"] == 100
 
 
 def test_a_native_picture_parent_proves_containment_without_inventing_a_property():

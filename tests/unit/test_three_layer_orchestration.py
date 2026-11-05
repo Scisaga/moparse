@@ -15,6 +15,7 @@ from moparse_eval.layer_aggregation import (
     require_validation,
     summarize_layers,
 )
+from moparse_eval.trace_storage import read_score
 
 
 def sample(identifier="one", *, text=(10, 10), logical=(2, 2), business=(3, 3)):
@@ -280,8 +281,14 @@ def saved_run(tmp_path, monkeypatch, *, text="Name: Delta; Revenue: 17; Profit: 
     monkeypatch.setattr(cli, "code_identity", lambda: identity)
     monkeypatch.setattr(cli, "snapshot_software", lambda *_: None)
     freeze = tmp_path / "freeze.json"
+    evidence = validation()
+    evidence["expected_structure_gate"] = {"status": "passed", "software_id": identity["software_id"],
+                                            "evidence": ["invented-independent-target-set"]}
     write_json(freeze, {"software_id": identity["software_id"], "protocol_id": cli.SCORING_PROTOCOL["id"],
-                        "validation": validation()})
+                        "validation": evidence})
+    from moparse_eval.requirement_graph import compile_saved_requirements
+
+    compile_saved_requirements(run, run / "requirements/current", expected_root=reference)
     return run, dataset, reference, freeze
 
 
@@ -334,21 +341,11 @@ def test_candidate_missing_output_preserves_the_same_denominators(tmp_path, monk
 
 def test_formal_software_blockers_withhold_the_entire_result_set(tmp_path, monkeypatch):
     from moparse_eval.expected_evaluation import evaluate_saved
-    from moparse_eval.packaging import read_json
 
-    run, _, expected, freeze = saved_run(tmp_path, monkeypatch, text="The total is 17.\n")
-    index = read_json(evaluate_saved(run, tmp_path / "scores", expected_root=expected, freeze=freeze, workers=1))
-    assert index["state"] == "blocked"
-    assert index["expected_comparison_complete"] is False
-    assert len(index["records"]) == 8
-    assert index["blockers"]
-    assert not {"summary", "paired", "adoption"} & index.keys()
-    assert index["blocker_counts"]["unclassified_business_prose"] >= 8
-    for record in index["records"]:
-        score = read_json(tmp_path / "scores" / record["path"])
-        assert score["quality_scores_withheld"] is True
-        assert all(layer["score"] is None and layer["numerator"] is None and "diagnostic_score" not in layer
-                   for layer in score["layers"].values())
+    run, _, expected, freeze = saved_run(tmp_path, monkeypatch, text="The total gyrated 17.\n")
+    with pytest.raises(ValueError, match="resolve every semantic requirement"):
+        evaluate_saved(run, tmp_path / "scores", expected_root=expected, freeze=freeze, workers=1)
+    assert not (tmp_path / "scores").exists()
 
 
 @pytest.mark.parametrize("supported", [True, False])
@@ -356,9 +353,10 @@ def test_diagnostic_traversal_needs_no_freeze_and_never_publishes_scores(tmp_pat
     from moparse_eval.expected_evaluation import evaluate_saved
     from moparse_eval.packaging import read_json
 
-    text = "Name: Delta; Revenue: 17; Profit: 5\n" if supported else "The total is 17.\n"
+    text = "Name: Delta; Revenue: 17; Profit: 5\n" if supported else "The total gyrated 17.\n"
     run, _, expected, _ = saved_run(tmp_path, monkeypatch, text=text)
-    index_path = evaluate_saved(run, tmp_path / "diagnosis", expected_root=expected, diagnostic=True, workers=1)
+    index_path = evaluate_saved(run, tmp_path / "diagnosis", expected_root=expected, diagnostic=True, workers=1,
+                               sample_ids=None if supported else ["synthetic"])
     index = read_json(index_path)
     assert index["state"] == ("diagnostic_completed" if supported else "blocked")
     assert index["diagnostic_only"] is True
@@ -366,7 +364,7 @@ def test_diagnostic_traversal_needs_no_freeze_and_never_publishes_scores(tmp_pat
     assert "summary" not in index and "adoption" not in index
     assert len(index["records"]) == 8
     for record in index["records"]:
-        score = read_json(index_path.parent / record["path"])
+        score = read_score(index_path.parent / record["path"])
         assert score["score"] is None
         assert score["quality_scores_withheld"] is True
         assert all(layer["score"] is None and layer["numerator"] is None for layer in score["layers"].values())
@@ -395,7 +393,7 @@ def test_debug_diagnostic_scores_never_escape_saved_blocked_records(tmp_path, mo
     assert index["state"] == "blocked"
     assert "summary" not in index
     for record in index["records"]:
-        score = read_json(index_path.parent / record["path"])
+        score = read_score(index_path.parent / record["path"])
         assert score["score"] is None and score["quality_scores_withheld"] is True
         assert all(layer["score"] is None and layer["numerator"] is None and "diagnostic_score" not in layer
                    for layer in score["layers"].values())
@@ -407,7 +405,8 @@ def test_missing_expected_syntax_blocks_without_becoming_candidate_zero(tmp_path
 
     run, _, expected, _ = saved_run(tmp_path, monkeypatch)
     (expected / "invented/expected.md").unlink()
-    index_path = evaluate_saved(run, tmp_path / "diagnosis", expected_root=expected, diagnostic=True, workers=1)
+    index_path = evaluate_saved(run, tmp_path / "diagnosis", expected_root=expected, diagnostic=True, workers=1,
+                               sample_ids=["synthetic"])
     index = read_json(index_path)
     assert index["state"] == "blocked"
     assert len(index["records"]) == 8
@@ -485,7 +484,7 @@ def test_sixteen_processes_match_serial_decisions_without_changing_original_cost
     assert serial["summary"] == parallel["summary"]
     assert serial["execution_costs"] == parallel["execution_costs"]
     for left, right in zip(serial["records"], parallel["records"], strict=True):
-        assert read_json(serial_path.parent / left["path"])["outcomes"] == read_json(parallel_path.parent / right["path"])["outcomes"]
+        assert read_score(serial_path.parent / left["path"])["outcomes"] == read_score(parallel_path.parent / right["path"])["outcomes"]
 
 
 def test_actual_baseline_and_current_texts_pair_with_their_own_native_group(tmp_path, monkeypatch):
@@ -496,7 +495,7 @@ def test_actual_baseline_and_current_texts_pair_with_their_own_native_group(tmp_
     native = read_json(run / "run.json")
     originals = {}
     for label, revenue in (("baseline", "19"), ("current", "17")):
-        for pipeline in ("P07", "P08"):
+        for pipeline in (("P07", "P08") if label == "baseline" else PIPELINES):
             directory = tmp_path / label / pipeline.lower()
             final = directory / "candidate/final.md"
             final.parent.mkdir(parents=True)
@@ -507,16 +506,22 @@ def test_actual_baseline_and_current_texts_pair_with_their_own_native_group(tmp_
                     "private_ir": {"Revenue": "17"}, "timing": {"processing_seconds": 0.25}}
             write_json(directory / "run.json", {"state": "completed", "baseline_run": str(run),
                 "dataset": str(dataset), "native_pipeline": {"pipeline": pipeline}, "cases": [case],
-                "software": {"software_id": f"original-{pipeline}-{label}"}})
+                "software": {"software_id": f"original-{pipeline}-{label}" if label == "baseline" else "eight-delivery-version"}})
             originals[final] = final.read_bytes()
             originals[directory / "run.json"] = (directory / "run.json").read_bytes()
+    write_json(tmp_path / "current/index.json", {"state": "active", "software_id": "eight-delivery-version",
+        "pipelines": {pipeline: {"run": str(tmp_path / "current" / pipeline.lower()),
+                                  "software_id": "eight-delivery-version"} for pipeline in PIPELINES}})
     index_path = evaluate_saved(run, tmp_path / "scores", expected_root=expected, freeze=freeze,
         service_baseline_root=tmp_path / "baseline", current_root=tmp_path / "current", workers=1)
     index = read_json(index_path)
     assert index["state"] == "completed"
-    assert len(index["records"]) == 12
+    assert len(index["records"]) == 18
     assert index["comparisons"]["native"] == list(PIPELINES)
     assert set(index["comparisons"]["service_pairs"]) == {"P07", "P08"}
+    assert set(index["comparisons"]["native_to_final"]) == set(PIPELINES)
+    assert all("native_to_current" in index["paired"][pipeline] for pipeline in PIPELINES)
+    assert all("native_to_baseline" not in index["paired"][pipeline] for pipeline in PIPELINES[:6])
     for pipeline in ("P07", "P08"):
         assert index["paired"][pipeline]["baseline_to_current"]["B"]["new_correct"] == 1
         assert index["paired"][pipeline]["baseline_to_current"]["B"]["lost_correct"] == 0
@@ -525,7 +530,7 @@ def test_actual_baseline_and_current_texts_pair_with_their_own_native_group(tmp_
         assert index["summary"][pipeline]["layers"]["B"]["score"] == 100
         assert index["summary"][pipeline + "-baseline"]["layers"]["B"]["score"] == pytest.approx(200 / 3)
         record = next(row for row in index["records"] if row["group"] == pipeline + "-baseline")
-        score = read_json(index_path.parent / record["path"])
+        score = read_score(index_path.parent / record["path"])
         assert score["candidate_source"].endswith("candidate/final.md")
         assert score["execution_software_id"] == f"original-{pipeline}-baseline"
     assert "adoption" not in index
@@ -590,7 +595,7 @@ def selected_saved_run(tmp_path, monkeypatch):
     input_paths.extend([run / "run.json", dataset / "manifest.json"])
     input_paths.extend(run / case["observation"] for case in session["cases"])
     for label in ("baseline", "current"):
-        for pipeline in ("P07", "P08"):
+        for pipeline in (("P07", "P08") if label == "baseline" else PIPELINES):
             directory = tmp_path / label / pipeline.lower()
             cases = []
             for source in (case for case in session["cases"] if case["pipeline"] == pipeline):
@@ -603,8 +608,13 @@ def selected_saved_run(tmp_path, monkeypatch):
                     "baseline_observation_source": source["observation"], "status": "success"})
             write_json(directory / "run.json", {"state": "completed", "baseline_run": str(run),
                 "dataset": str(dataset), "native_pipeline": {"pipeline": pipeline}, "cases": cases,
-                "software": {"software_id": f"original-{pipeline}-{label}"}})
+                "software": {"software_id": f"original-{pipeline}-{label}" if label == "baseline" else "eight-delivery-version"}})
             input_paths.append(directory / "run.json")
+    pointer = tmp_path / "current/index.json"
+    write_json(pointer, {"state": "active", "software_id": "eight-delivery-version",
+        "pipelines": {pipeline: {"run": str(tmp_path / "current" / pipeline.lower()),
+                                  "software_id": "eight-delivery-version"} for pipeline in PIPELINES}})
+    input_paths.append(pointer)
     return run, expected, freeze, {path: path.read_bytes() for path in input_paths}
 
 
@@ -624,7 +634,7 @@ def test_unknown_diagnostic_sample_is_rejected_before_candidate_or_reference_rea
     assert not (tmp_path / "output").exists()
 
 
-def test_selected_diagnostic_uses_the_same_two_sample_scopes_across_all_twelve_groups(tmp_path, monkeypatch):
+def test_selected_diagnostic_retains_all_eighteen_groups_and_same_two_sample_scopes(tmp_path, monkeypatch):
     from moparse_eval import expected_evaluation
     from moparse_eval.packaging import read_json
 
@@ -654,15 +664,15 @@ def test_selected_diagnostic_uses_the_same_two_sample_scopes_across_all_twelve_g
     assert index["diagnostic_selected_samples"] == ["second", "synthetic"]
     assert index["full_scope_traversed"] is False
     assert index["expected_comparison_complete"] is False
-    assert len(index["groups"]) == 12 and len(index["records"]) == 24
+    assert len(index["groups"]) == 18 and len(index["records"]) == 36
     assert "summary" not in index and "paired" not in index
     assert index["execution_costs"]["status"] == "not_aggregated_in_selected_diagnosis"
     for sample_id in selection:
         records = [record for record in index["records"] if record["sample_id"] == sample_id]
-        assert len(records) == 12
+        assert len(records) == 18
         requirement_sets = []
         for record in records:
-            score = read_json(index_path.parent / record["path"])
+            score = read_score(index_path.parent / record["path"])
             assert score["score"] is None
             assert all(layer["score"] is None and layer["numerator"] is None for layer in score["layers"].values())
             requirement_sets.append([(row["layer"], row["id"], row["expected"]) for row in score["outcomes"]])

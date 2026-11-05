@@ -42,7 +42,6 @@ def test_unknown_prefix_and_multiple_fields_remain_source_bound_pending_not_an_o
 
 
 @pytest.mark.parametrize("body,wanted", [
-    ("Narrative: Alpha; Beta", [("Narrative", "Alpha; Beta")]),
     ("Date and time: 9:00\n\nLocation: https://example.invalid/notice?id=2028",
      [("Date and time", "9:00"), ("Location", "https://example.invalid/notice?id=2028")]),
 ])
@@ -50,3 +49,11 @@ def test_a_semicolon_inside_one_legitimate_value_and_metadata_are_not_prefixed_s
     for graph in graphs(body):
         assert graph["blockers"] == [] and graph.get("pending_requirements", []) == []
         assert [(fact["attribute"], fact["value"]) for fact in graph["business"]] == [("Name", "Anchor"), *wanted]
+
+
+def test_narrative_enumeration_does_not_gain_an_uninterpreted_opaque_business_vote():
+    for graph in graphs("Narrative: Alpha; Beta"):
+        assert [(fact["attribute"], fact["value"]) for fact in graph["business"]] == [("Name", "Anchor")]
+        assert any("B" in item.get("layers", []) for item in graph["blockers"])
+        assert "Alpha; Beta" in " ".join(item["text"] for item in graph["text"])
+        assert not any(item.get("reason", "").startswith("field_sequence_") for item in graph["blockers"])

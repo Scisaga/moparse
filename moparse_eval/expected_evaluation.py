@@ -8,6 +8,7 @@ software blockers never become zero-valued candidate quality measurements.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import multiprocessing
 import tempfile
@@ -20,11 +21,12 @@ from typing import Any
 
 from .candidate_delivery import final_delivery, native_delivery
 from .expected_readback import markdown_observation, read_expected
-from .expected_scoring import PROTOCOL, grade_expected, require_paired_targets
-from .layer_aggregation import LAYERS, paired_layers, summarize_layers
+from .expected_scoring import PROTOCOL, grade_expected
+from .layer_aggregation import LAYERS
 from .native_readback import READBACK_VERSION, read_native_relations
 from .packaging import inside, read_json, write_json
 from .saved_native import read_saved_native
+from .trace_storage import read_score, share_evidence
 
 PIPELINES = tuple(f"P{i:02}" for i in range(1, 9))
 ROOT = Path(__file__).resolve().parent.parent
@@ -90,12 +92,55 @@ def quality_cases(run: dict[str, Any]) -> list[dict[str, Any]]:
     return [case for case in run["cases"] if case["phase"] == "measured" and case["suite"] == "quality800"]
 
 
-def _service_inputs(root: Path, pipeline: str) -> tuple[Path, dict[str, Any]]:
-    directory = root / pipeline.lower()
+def _service_inputs(root: Path, pipeline: str, *, current: bool = False) -> tuple[Path, dict[str, Any]]:
+    if current:
+        pointer = root if root.is_file() else root / "index.json"
+        index = read_json(pointer)
+        if index.get("state") != "active" or set(index.get("pipelines", {})) != set(PIPELINES):
+            raise ValueError("current delivery must atomically select all eight pipelines")
+        selected = index["pipelines"][pipeline]
+        directory = Path(selected["run"]).resolve()
+        if selected.get("software_id") != index.get("software_id"):
+            raise ValueError("current delivery index mixes execution software")
+    else:
+        directory = root / pipeline.lower()
     run = read_json(directory / "run.json")
     if run.get("state") != "completed":
         raise ValueError("finish candidate processing before evaluating its saved output")
+    if current and run.get("software", {}).get("software_id") != selected["software_id"]:
+        raise ValueError("current delivery run differs from its activated software")
     return directory, run
+
+
+def _frozen_requirements(path: Path, sample_ids: set[str], software_id: str,
+                         validation: dict[str, Any]) -> dict[str, dict[str, Any]]:
+    """Require the separate source-interpretation gate before any candidates."""
+    from .requirement_graph import (
+        evaluation_projection,
+        is_deferred_input_scope,
+        validate_requirement_graph,
+    )
+
+    gate = validation.get("expected_structure_gate", {})
+    if gate.get("status") != "passed" or gate.get("software_id") != software_id or not gate.get("evidence"):
+        raise ValueError("formal comparison requires the same-version independently evidenced expected structure gate")
+    index = read_json(path)
+    if index.get("software_id") != software_id or index.get("software_unchanged") is not True:
+        raise ValueError("expected requirement model was compiled by different or changing software")
+    records = {row["sample_id"]: row for row in index["records"]}
+    if len(records) != len(index["records"]) or set(records) != sample_ids:
+        raise ValueError("expected requirement model must retain the complete declared sample scope")
+    result = {}
+    for sample_id, row in records.items():
+        if row.get("semantic_complete") is not True or not row.get("json"):
+            raise ValueError("resolve every semantic requirement before full comparison")
+        graph = read_json(inside(path.parent, row["json"]))
+        validate_requirement_graph(graph)
+        if graph.get("sample_id") != sample_id or graph.get("semantic_complete") is not True or any(
+                not is_deferred_input_scope(sample_id, issue) for issue in graph["unresolved"]):
+            raise ValueError("uninterpreted semantics cannot enter full comparison")
+        result[sample_id] = evaluation_projection(graph)
+    return result
 
 
 def final_observation(source: Path, *, sample_id: str, pipeline: str, pages: list[int],
@@ -161,7 +206,7 @@ def _write_compact_score(destination: Path, score: dict[str, Any]) -> None:
         with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", dir=destination.parent,
                                          prefix=destination.name + ".", suffix=".part", delete=False) as stream:
             partial = Path(stream.name)
-            json.dump(score, stream, ensure_ascii=False, separators=(",", ":"))
+            json.dump(share_evidence(score), stream, ensure_ascii=False, separators=(",", ":"))
             stream.write("\n")
         partial.replace(destination)
     finally:
@@ -182,7 +227,7 @@ def _grade_saved_group(task: dict[str, Any]) -> dict[str, Any]:
         else:
             relative = case.get("final_markdown") or str(Path(case["observation"]).with_name("final.md"))
             source = inside(directory, relative)
-            observation = final_observation(source, sample_id=sample_id, pipeline=group,
+            observation = final_observation(source, sample_id=sample_id, pipeline=case["pipeline"],
                 pages=list(range(1, len(expected["source_pages"]) + 1)), metadata=case)
         if expected.get("reader_blocker"):
             score = _blocked_score(expected, group, expected["reader_blocker"])
@@ -246,12 +291,14 @@ def _grade_tasks(tasks: list[dict[str, Any]], workers: int):
             raise
 
 
-def _pair_summary(pair: dict[str, Any]) -> dict[str, Any]:
-    return {layer: {"new_correct": pair["layers"][layer]["new_correct"],
-                    "lost_correct": pair["layers"][layer]["lost_correct"],
-                    "remaining_incorrect": pair["layers"][layer]["remaining_defects"],
-                    "required_units": pair["layers"][layer]["after"]["denominator"]}
-            for layer in LAYERS}
+def _target_fingerprint(score: dict[str, Any]) -> str:
+    digest = hashlib.sha256()
+    encoder = json.JSONEncoder(ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+    for row in score["outcomes"]:
+        for chunk in encoder.iterencode({key: row.get(key) for key in ("layer", "id", "role", "expected", "reference")}):
+            digest.update(chunk.encode("utf-8"))
+        digest.update(b"\n")
+    return digest.hexdigest()
 
 
 def _blocker_index(score: dict[str, Any], record: dict[str, Any]) -> list[dict[str, Any]]:
@@ -270,7 +317,7 @@ def _blocker_index(score: dict[str, Any], record: dict[str, Any]) -> list[dict[s
 def evaluate_saved(baseline: Path, output: Path, *, expected_root: Path,
                    freeze: Path | None = None, service_baseline_root: Path | None = None,
                    current_root: Path | None = None, workers: int = 16, diagnostic: bool = False,
-                   sample_ids: list[str] | None = None) -> Path:
+                   sample_ids: list[str] | None = None, requirements: Path | None = None) -> Path:
     """Traverse all declared saved groups; publish only fully supported judgments.
 
     Diagnostic mode permits an explicitly declared sample subset, needs no
@@ -328,13 +375,18 @@ def evaluate_saved(baseline: Path, output: Path, *, expected_root: Path,
     if not selected_sample_ids <= full_sample_ids:
         raise ValueError("diagnostic sample selection contains an unknown declared sample: "
                          + ", ".join(sorted(selected_sample_ids - full_sample_ids)))
-    groups: dict[str, list[dict[str, Any]]] = {pipeline: [] for pipeline in PIPELINES}
+    frozen_requirements = None
+    if not diagnostic:
+        frozen_requirements = _frozen_requirements(
+            requirements or baseline / "requirements/current/index.json", full_sample_ids,
+            identity["software_id"], frozen["validation"])
+    groups = list(PIPELINES)
     service = {}
     for label, root in (("baseline", service_baseline_root), ("current", current_root)):
         if root is None:
             continue
-        for pipeline in ("P07", "P08"):
-            directory, run = _service_inputs(root, pipeline)
+        for pipeline in (PIPELINES if label == "current" else ("P07", "P08")):
+            directory, run = _service_inputs(root, pipeline, current=label == "current")
             if (Path(run["baseline_run"]).resolve() != baseline
                     or Path(run["dataset"]).resolve() != dataset
                     or run["native_pipeline"]["pipeline"] != pipeline):
@@ -348,7 +400,7 @@ def evaluate_saved(baseline: Path, output: Path, *, expected_root: Path,
                     raise ValueError("paired final output does not declare the same saved native input")
             key = f"{pipeline}-{label}"
             service[key] = (directory, declared, run)
-            groups[key] = []
+            groups.append(key)
     output.mkdir(parents=True, exist_ok=False)
     snapshot_software(output / "software", identity)
     if frozen is not None:
@@ -376,7 +428,8 @@ def evaluate_saved(baseline: Path, output: Path, *, expected_root: Path,
         "validation": frozen["validation"] if frozen is not None else None,
         "native_readback": {"reader_version": READBACK_VERSION, "observations": []},
         "historical_adjudications": "not_read_or_applied", "blockers": [],
-        "comparisons": {"native": list(PIPELINES), "service_pairs": {
+        "comparisons": {"native": list(PIPELINES), "native_to_final": {
+            pipeline: f"{pipeline}-current" for pipeline in PIPELINES if f"{pipeline}-current" in groups}, "service_pairs": {
             pipeline: {label: f"{pipeline}-{label}" for label in ("baseline", "current")
                        if f"{pipeline}-{label}" in groups} for pipeline in ("P07", "P08")}},
         "development_exposure": "saved Lite outputs and expected syntax used during development; no held-out claim",
@@ -386,7 +439,27 @@ def evaluate_saved(baseline: Path, output: Path, *, expected_root: Path,
     expected_by_sample = {}
     for sample_id in sorted(selected_sample_ids):
         try:
-            expected_by_sample[sample_id] = read_expected(samples[sample_id], expected_root, cache=reference_cache)
+            expected = read_expected(samples[sample_id], expected_root, cache=reference_cache)
+            if frozen_requirements is None:
+                from .three_layer import compile_expected
+
+                projection = compile_expected(expected)
+                projection.pop("requirement_model", None)
+            else:
+                from .requirement_graph import (
+                    compile_requirement_graph,
+                    evaluation_projection,
+                    validate_requirement_graph,
+                )
+
+                # Read-only binding to the authorized input. This is model
+                # transport integrity, never acceptance or repair of corpus.
+                graph = compile_requirement_graph(expected)
+                validate_requirement_graph(graph)
+                projection = evaluation_projection(graph)
+                if projection != frozen_requirements[sample_id]:
+                    raise ValueError("frozen requirement view differs from its read-only declared input")
+            expected_by_sample[sample_id] = {**expected, **projection}
         except (ValueError, IndexError, KeyError, TypeError, OSError) as error:
             expected_by_sample[sample_id] = {
                 "sample_id": sample_id, "document_id": samples[sample_id]["document_id"],
@@ -395,6 +468,10 @@ def evaluate_saved(baseline: Path, output: Path, *, expected_root: Path,
                                    "error": {"type": type(error).__name__, "message": str(error)}},
             }
     print(json.dumps({"stage": "expected_syntax_read", "samples": len(expected_by_sample)}), flush=True)
+    if diagnostic and sample_ids is None and any(
+            expected.get("reader_blocker") or any(issue.get("reason") != "input_scope_context"
+                for issue in expected.get("blockers", [])) for expected in expected_by_sample.values()):
+        raise ValueError("complete expected semantics before full saved-output diagnosis; use an explicit --sample for bounded software diagnosis")
     tasks = []
     for sample_id in sorted(selected_sample_ids):
         for pipeline in PIPELINES:
@@ -415,31 +492,23 @@ def evaluate_saved(baseline: Path, output: Path, *, expected_root: Path,
     for sample_id in sorted(selected_sample_ids):
         expected = expected_by_sample[sample_id]
         paired = []
-        for key, members in groups.items():
+        for key in groups:
             record = completed[key, sample_id]
-            score = read_json(output / record["path"])
-            if diagnostic:
-                # Keep only the frozen target view while indexing. Detailed
-                # source traces stay in their score files, one read at a time.
-                paired.append({"publishable": score.get("publishable"), "layers": score["layers"],
-                               "outcomes": [{name: row[name] for name in ("layer", "id", "role", "expected")}
-                                            for row in score["outcomes"]]})
-            else:
-                members.append(score)
-                paired.append(score)
+            score = read_score(output / record["path"])
+            paired.append({"publishable": score.get("publishable"),
+                           "layers": {layer: {"denominator": score["layers"][layer]["denominator"]} for layer in LAYERS},
+                           "requirements": _target_fingerprint(score)})
             index["records"].append({name: record[name] for name in ("group", "sample_id", "path")})
             index["blockers"].extend(_blocker_index(score, record))
+            del score
             if record["readback"]:
                 provenance = record["readback"]
                 index["native_readback"]["observations"].append({**provenance,
                     "observation": "private/" + provenance["observation"],
                     "diagnostics": "private/" + provenance["diagnostics"]})
-        if all(score.get("publishable") for score in paired):
-            try:
-                require_paired_targets(paired)
-            except ValueError as error:
-                index["blockers"].append({"sample_id": sample_id, "side": "software",
-                                          "reason": "unequal_requirements_between_groups", "error": str(error)})
+        if all(score.get("publishable") for score in paired) and len({score["requirements"] for score in paired}) != 1:
+            index["blockers"].append({"sample_id": sample_id, "side": "software",
+                                      "reason": "unequal_requirements_between_groups"})
         index["coverage"].append({
             "sample_id": sample_id, "document_id": expected["document_id"], "scope": expected["scope"],
             "layers": {layer: {"denominator": paired[0]["layers"][layer]["denominator"]} for layer in LAYERS},
@@ -470,21 +539,15 @@ def evaluate_saved(baseline: Path, output: Path, *, expected_root: Path,
                      quality_scores_withheld=True, reader_review="pending_independent_text_diagnosis")
     else:
         try:
-            summary = {key: summarize_layers(members) for key, members in groups.items()}
-            pairs = {}
-            for pipeline in ("P07", "P08"):
-                pairs[pipeline] = {}
-                for label in ("baseline", "current"):
-                    key = f"{pipeline}-{label}"
-                    if key in groups:
-                        pairs[pipeline][f"native_to_{label}"] = paired_layers(groups[pipeline], groups[key])
-                if f"{pipeline}-baseline" in groups and f"{pipeline}-current" in groups:
-                    pairs[pipeline]["baseline_to_current"] = paired_layers(
-                        groups[f"{pipeline}-baseline"], groups[f"{pipeline}-current"])
-            write_json(output / "private/pairs.json", pairs)
-            index.update(state="completed", expected_comparison_complete=True, summary=summary,
-                         paired={pipeline: {kind: _pair_summary(pair) for kind, pair in comparisons.items()}
-                                 for pipeline, comparisons in pairs.items()}, paired_details="private/pairs.json")
+            from .streaming_aggregation import aggregate_score_files
+
+            aggregated = aggregate_score_files(index["records"], groups=groups, base_dir=output,
+                                               expected_sample_ids=full_sample_ids)
+            if not aggregated["publishable"]:
+                raise ValueError("complete global quality requires all three nonzero layer denominators")
+            _write_compact_score(output / "private/pairs.json", aggregated["paired_details"])
+            index.update(state="completed", expected_comparison_complete=True, summary=aggregated["summary"],
+                         paired=aggregated["paired"], paired_details="private/pairs.json")
         except ValueError as error:
             index.update(state="blocked", expected_comparison_complete=False,
                          blockers=[{"side": "software", "reason": "layer_aggregation_invariant", "error": str(error)}])
@@ -501,6 +564,7 @@ def main() -> int:
     parser.add_argument("--freeze", type=Path)
     parser.add_argument("--service-baseline-root", type=Path)
     parser.add_argument("--current-root", type=Path)
+    parser.add_argument("--requirements", type=Path, help="independently validated expected requirement index; default saved run requirements/current/index.json")
     parser.add_argument("--workers", type=int, default=16, help="saved-output analysis processes; original execution costs unchanged")
     parser.add_argument("--diagnostic", action="store_true", help="traverse saved materials without a freeze; publish no quality scores")
     parser.add_argument("--sample", action="append", help="explicit saved sample identity; diagnostic mode only")
@@ -514,7 +578,8 @@ def main() -> int:
         parser.error("diagnostic traversal cannot publish a formal report")
     index_path = evaluate_saved(args.baseline, args.output, expected_root=args.expected_root, freeze=args.freeze,
                                 service_baseline_root=args.service_baseline_root, current_root=args.current_root,
-                                workers=args.workers, diagnostic=args.diagnostic, sample_ids=args.sample)
+                                workers=args.workers, diagnostic=args.diagnostic, sample_ids=args.sample,
+                                requirements=args.requirements)
     print(index_path)
     index = read_json(index_path)
     if index["state"] == "completed" and not args.diagnostic:

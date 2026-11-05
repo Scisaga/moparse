@@ -225,7 +225,22 @@ def _measurement_cell(result: dict[str, Any], obj: dict[str, Any], source: dict[
         unit = fact.get("qualifiers", {}).get("unit")
         unit_source = fact.get("qualifier_sources", {}).get("unit")
         if unit and unit_source:
-            parts.append(("unit", unit, unit_source))
+            if unit_source.get("cell") == own.get("cell"):
+                parts.append(("unit", unit, unit_source))
+            else:
+                # A header-owned unit is projected with its own source and
+                # bounded data aliases, never cut out of the numeric cell.
+                declared = [*fact.get("header_evidence", []), *fact.get("row_evidence", []),
+                            *fact.get("qualifier_provenance", {}).get("unit", {}).get("sources", [])]
+                span = unit_source.get("cell_text_span", unit_source.get("text_span"))
+                supported = any(
+                    all(proof.get("source", {}).get(key) == unit_source.get(key)
+                        for key in ("path", "cell", "lines"))
+                    and isinstance(span, (list, tuple)) and len(span) == 2
+                    and proof.get("text", "")[span[0]:span[1]] == unit
+                    for proof in declared)
+                if not supported:
+                    parts.append(("unit", unit, unit_source))  # retain the source mismatch guard
         local = []
         for role, text, proof in parts:
             span = proof.get("cell_text_span", proof.get("text_span"))
@@ -443,7 +458,22 @@ def project_compact_text(result: dict[str, Any], schema: dict[str, Any] | None, 
                     projection["blockers"].append({"reason": "compact_parent_declaration_source_unavailable",
                                                     "source": copy.deepcopy(origin_source)})
                     continue
-                _alias(projection, _origin(text, role, origin_source), obj)
+                origin = _origin(text, role, origin_source)
+                _alias(projection, origin, obj)
+                claimed.add(origin["id"])
+        for alias in fact.get("qualifier_aliases", []):
+            # The reader may retain both a schema declaration and an inline
+            # reiteration. Bind only the exact unit from this object's own
+            # declared column, never a similarly named neighboring column.
+            declaration = schema.get("schema", schema) if schema else {}
+            columns = [*declaration.get("columns", [])]
+            if declaration.get("change"):
+                columns.append(declaration["change"])
+            if (alias.get("role") == "unit" and alias.get("text") == fact.get("qualifiers", {}).get("unit")
+                    and any(column.get("source") == attribute_source == alias.get("column_source")
+                            and column.get("unit") == alias["text"] and column.get("unit_source") == alias.get("source")
+                            for column in columns)):
+                _alias(projection, _origin(alias["text"], "unit", alias["source"]), obj)
         # Inline reiterations retain their own source while sharing only the
         # declaration for this independently present value object.
         for atom in atoms:

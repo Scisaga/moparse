@@ -1,7 +1,8 @@
 """Finite spellings of the same printed metric role, never entity repair.
 
-Only complete attribute labels listed here are equivalent. Values, subjects,
-headings, conditions and ordinary text retain their actual spelling.
+These complete aliases are exact role declarations. The shared final engine
+separately checks bounded label differences against independent context.
+Values, subjects and source text retain their actual spelling.
 """
 
 import re

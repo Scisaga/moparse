@@ -11,6 +11,9 @@ import copy
 import re
 from typing import Any
 
+from .measurement_evidence import read_unit_token
+from .series_requirements import is_ordinary_scalar_field
+
 YEAR = r"(?:19|20)\d{2}年?"
 _YEAR = re.compile(YEAR)
 _PAIR = re.compile(r"^\s*([^:：=]+?)\s*[:：=]\s*(.*)$", re.S)
@@ -115,6 +118,15 @@ def _unit_after(text: str, end: int) -> tuple[str | None, tuple[int, int] | None
 def _currency(unit: str | None) -> str | None:
     match = _CURRENCY.search(unit or "")
     return match[0] if match else None
+
+
+def _unit_sources(unit: str | None, origin: dict[str, Any] | None) -> dict[str, Any]:
+    """Preserve the printed unit and its own currency subrange only."""
+    if not unit or not origin:
+        return {}
+    parsed = read_unit_token(unit, origin)
+    return {key: copy.deepcopy(parsed["sources"][key]) for key in ("unit", "currency")
+            if key in parsed["sources"]}
 
 
 def read_compact_schema(text: str, source: dict[str, Any], *,
@@ -304,21 +316,28 @@ def _row_evidence(scope: dict[str, Any], labels: list[dict[str, Any]], subject: 
 
 
 def _value(text: str, start: int, end: int, default_unit: str | None,
-           result: dict[str, Any], source: dict[str, Any]) -> tuple[str, str | None]:
+           result: dict[str, Any], source: dict[str, Any]) -> tuple[str, str | None, dict[str, Any]]:
     while start < end and text[start].isspace():
         start += 1
     while end > start and (text[end - 1].isspace() or text[end - 1] == "。"):
         end -= 1
+    original_start, original_end = start, end
     raw = text[start:end]
     unit = default_unit
+    qualifier_sources = {}
     suffix = re.search(r"[%‰]$|(?:人民[幣币]|美元)?(?:百萬|百万|千萬|千万|億|亿|萬|万|百|千)?元$", raw)
     if suffix:
         unit = suffix[0]
+        qualifier_sources = _unit_sources(unit, _source(source, [start + suffix.start(), end]))
         _atom(result, text, source, start + suffix.start(), end, "unit")
         end = start + suffix.start()
-        raw = text[start:end].strip()
+        while end > start and text[end - 1].isspace():
+            end -= 1
+        raw = text[start:end]
     _atom(result, text, source, start, end, "value")
-    return raw, unit
+    return raw, unit, {"raw_value": text[original_start:original_end],
+                       "source": _source(source, [original_start, original_end]),
+                       "value_source": _source(source, [start, end]), "qualifier_sources": qualifier_sources}
 
 
 def read_compact_requirements(text: str, source: dict[str, Any], *, schema: dict[str, Any] | None = None,
@@ -337,6 +356,8 @@ def read_compact_requirements(text: str, source: dict[str, Any], *, schema: dict
     result["scope"] = copy.deepcopy(scope)
     body_start = 0
     outer = _PAIR.fullmatch(text)
+    if schema is None and outer and is_ordinary_scalar_field(outer[1], outer[2]):
+        return _result()
     outer_label = None
     if outer and re.match(rf"^\s*{YEAR}", outer[2]) and not _YEAR.match(outer[1].strip()):
         outer_label = outer[1].strip()
@@ -421,7 +442,7 @@ def read_compact_requirements(text: str, source: dict[str, Any], *, schema: dict
                 while value_start < end and text[value_start] in " :：":
                     value_start += 1
                 if column is None:
-                    value, unit = _value(text, value_start, end, None, result, source)
+                    value, unit, _value_proof = _value(text, value_start, end, None, result, source)
                     pending = {"subject": row_subject, "attribute": change[0], "value": value,
                                "qualifiers": {"unit": unit} if unit else {}, "reason": "compact_change_column_undeclared",
                                "source": _source(source, [start, end]), "raw_value": text[value_start:end]}
@@ -439,7 +460,7 @@ def read_compact_requirements(text: str, source: dict[str, Any], *, schema: dict
                 _atom(result, text, source, start + pair.start(1), start + pair.end(1), "label")
                 values = [(start + pair.start(2), start + pair.end(2), bound[0])]
             for value_start, value_end, column in values:
-                value, unit = _value(text, value_start, value_end, column.get("unit"), result, source)
+                value, unit, value_proof = _value(text, value_start, value_end, column.get("unit"), result, source)
                 q = {**scope["qualifiers"], **schema.get("qualifiers", {})}
                 q.pop("unit", None)
                 if column.get("kind") == "change":
@@ -458,11 +479,28 @@ def read_compact_requirements(text: str, source: dict[str, Any], *, schema: dict
                 qualifier_sources = {**copy.deepcopy(schema.get("qualifier_sources", {})),
                                      **{key: copy.deepcopy(column.get(key + "_source")) for key in ("unit", "period")
                                         if column.get(key + "_source")}}
+                if column.get("kind") == "change":
+                    qualifier_sources.pop("period", None)
+                    for key, period in (("to_period", schema["periods"][0]), ("from_period", schema["periods"][1])):
+                        period_column = next((item for item in columns if item["period"] == period), None)
+                        if period_column and period_column.get("period_source"):
+                            qualifier_sources[key] = copy.deepcopy(period_column["period_source"])
+                qualifier_sources.update(value_proof["qualifier_sources"])
+                qualifier_sources.update(_unit_sources(unit, qualifier_sources.get("unit")))
+                qualifier_sources = {key: origin for key, origin in qualifier_sources.items() if key in q}
+                qualifier_aliases = []
+                if (unit and column.get("unit") == unit and column.get("unit_source")
+                        and column["unit_source"] != qualifier_sources.get("unit")):
+                    qualifier_aliases.append({"role": "unit", "text": unit,
+                        "source": copy.deepcopy(column["unit_source"]),
+                        "column_source": copy.deepcopy(column["source"])})
                 result["facts"].append({"subject": row_subject, "attribute": column["attribute"], "value": value,
+                    "raw_value": value_proof["raw_value"], "value_source": value_proof["value_source"],
                     "role": "metric", "qualifiers": q, "identity_facets": copy.deepcopy(facets),
                     "row_evidence": _row_evidence(scope, labels, row_subject, subject_source),
                     "qualifier_sources": copy.deepcopy(qualifier_sources),
-                    "source": {**_source(source, [value_start, value_end]), "attribute_source": copy.deepcopy(column["source"]),
+                    "qualifier_aliases": qualifier_aliases,
+                    "source": {**value_proof["source"], "attribute_source": copy.deepcopy(column["source"]),
                                "qualifier_sources": qualifier_sources},
                 })
         result["scope"].update(subject=row_subject, identity_facets=facets, labels=copy.deepcopy(labels))
@@ -497,7 +535,10 @@ def read_compact_requirements(text: str, source: dict[str, Any], *, schema: dict
         if not attribute:
             result["blockers"].append({"reason": "period_value_metric_unavailable", "source": copy.deepcopy(source)})
         q = dict(scope["qualifiers"])
+        qualifier_sources = {item["role"]: copy.deepcopy(item["source"]) for item in scope["evidence"]
+                             if item["role"] in q and item["text"] == q[item["role"]]}
         q["period"] = match[1]
+        qualifier_sources["period"] = _source(source, [start + match.start(1), start + match.end(1)])
         _atom(result, text, source, start + match.start(1), start + match.end(1), "period")
         if match[2]:
             selector = match[2].strip()
@@ -505,24 +546,34 @@ def read_compact_requirements(text: str, source: dict[str, Any], *, schema: dict
                 q["unit"] = selector
                 if _currency(selector):
                     q["currency"] = _currency(selector)
+                selector_start = start + match.start(2) + len(match[2]) - len(match[2].lstrip())
+                qualifier_sources.update(_unit_sources(selector, _source(source, [selector_start, selector_start + len(selector)])))
                 _atom(result, text, source, start + match.start(2), start + match.end(2), "unit")
             elif selector.endswith("列") and _CURRENCY.fullmatch(selector[:-1]):
                 q["column_currency"] = selector[:-1]
+                selector_start = start + match.start(2) + len(match[2]) - len(match[2].lstrip())
+                qualifier_sources["column_currency"] = _source(source, [selector_start, selector_start + len(selector) - 1])
                 _atom(result, text, source, start + match.start(2), start + match.end(2) - 1, "column_currency")
                 result["controls"].append({"span": [start + match.end(2) - 1, start + match.end(2)], "text": "列", "reason": "explicit_column_dimension",
                                            "source": _source(source, [start + match.end(2) - 1, start + match.end(2)])})
             else:
                 result["blockers"].append({"reason": "period_value_column_selector_unsupported", "source": _source(source, [start + match.start(2), start + match.end(2)]), "text": selector})
         value_start, value_end = start + match.start(3), start + match.end(3)
-        value, unit = _value(text, value_start, value_end, q.get("unit"), result, source)
+        value, unit, value_proof = _value(text, value_start, value_end, q.get("unit"), result, source)
         if unit:
             q["unit"] = unit
+        qualifier_sources.update(value_proof["qualifier_sources"])
         if unit in {"%", "‰"}:
             q.pop("currency", None)
+        qualifier_sources.update(_unit_sources(unit, qualifier_sources.get("unit")))
+        qualifier_sources = {key: origin for key, origin in qualifier_sources.items() if key in q}
         requirement = {"subject": leaf_subject, "attribute": attribute, "value": value,
+                       "raw_value": value_proof["raw_value"], "value_source": value_proof["value_source"],
                        "role": "metric", "qualifiers": q, "identity_facets": _groups(scope, labels),
-                       "source": {**_source(source, [value_start, value_end]),
+                       "qualifier_sources": copy.deepcopy(qualifier_sources),
+                       "source": {**value_proof["source"],
                                   "attribute_source": copy.deepcopy(attribute_source),
+                                  "qualifier_sources": copy.deepcopy(qualifier_sources),
                                   "parent_context_evidence": copy.deepcopy(scope["evidence"])}}
         if attribute:
             result["facts"].append(requirement)

@@ -166,7 +166,14 @@ def test_wrong_path_position_is_excluded_before_comparing_its_correct_numeric_li
     rows = business(score)
     target = rows if dimension == "identity_facets" else [r for r in rows if r["expected"]["attribute"] == "金額"
               and r["expected"]["qualifiers"]["period"] == "2027年"]
-    assert target and all(not row["retrieval"]["accepted"] for row in target)
+    assert target
+    if old == "金額人民幣千元：17" and new == "金額人民幣百萬元：17":
+        # Compatible dimensions establish the position; 17 thousand and
+        # 17 million then differ under the exact quantity comparison.
+        assert all(row["retrieval"]["accepted"] and row["outcome"] == "incorrect" for row in target)
+        assert score["layers"]["L"]["score"] == 100
+        return
+    assert all(not row["retrieval"]["accepted"] for row in target)
     for row in target:
         assert "17" not in repr(row["retrieval"]["query"]) and "11" not in repr(row["retrieval"]["query"])
         for hit in row["retrieval"]["candidates"]:

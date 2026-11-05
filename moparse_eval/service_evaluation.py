@@ -1,4 +1,4 @@
-"""Isolated CPU service replay over saved P07/P08 results.
+"""Isolated CPU service replay over saved P01-P08 results.
 
 The isolated worker receives input PDFs and native candidates, never expected
 materials. PDF access here is candidate service processing, not corpus review.
@@ -12,6 +12,7 @@ import asyncio
 import copy
 import json
 import subprocess
+import tempfile
 import time
 from dataclasses import asdict
 from datetime import datetime
@@ -20,27 +21,47 @@ from typing import Any, cast
 from zoneinfo import ZoneInfo
 
 from .packaging import inside, read_json, write_json
+from .service_native_adapters import PIPELINE_BRANCHES
 
 ROOT = Path(__file__).resolve().parent.parent
 WORKER_CASE_FIELDS = (
     "case_id", "sample_id", "suite", "phase", "repetition", "input_pages", "input", "native", "job_id",
 )
+CAPTURE_STAGES = ("adapted", "source_pages", "native_pages", "exported", "assets", "semantic", "final")
+
+
+class NoInference:
+    """The CPU replay has no model transport, including optional asset OCR."""
+
+    def __init__(self) -> None:
+        self.calls = 0
+
+    async def recognize_image(self, *args: Any, **kwargs: Any) -> Any:
+        self.calls += 1
+        raise RuntimeError("model inference is forbidden in service replay")
+
+    async def parse(self, *args: Any, **kwargs: Any) -> Any:
+        self.calls += 1
+        raise RuntimeError("parser execution is forbidden in service replay")
 
 
 def now() -> str:
     return datetime.now(ZoneInfo("Asia/Shanghai")).isoformat()
 
 
-def prepare_run(baseline: Path, destination: Path, service_config: Path, *, pipeline: str = "P07",
+def prepare_run(baseline: Path, destination: Path, service_config: Path, *, pipeline: str = "P07", validation: Path | None = None,
                 ) -> Path:
     """Use declared execution identities; do not validate dataset contents."""
     from .cli import code_identity, snapshot_software
 
-    if pipeline not in {"P07", "P08"}:
-        raise ValueError("service comparison supports P07 and P08")
+    if pipeline not in PIPELINE_BRANCHES:
+        raise ValueError("service comparison requires P01-P08")
     baseline = baseline.resolve()
     session = read_json(baseline / "run.json")
     identity = code_identity()
+    checks = read_json(validation) if validation is not None else None
+    if checks is not None:
+        _require_expected_gate(checks, identity["software_id"])
     dataset = Path(session["dataset"]).resolve()
     manifest = read_json(dataset / "manifest.json")
     samples = {sample["id"]: sample for sample in manifest["samples"]}
@@ -65,7 +86,8 @@ def prepare_run(baseline: Path, destination: Path, service_config: Path, *, pipe
     destination = destination.resolve()
     destination.mkdir(parents=True, exist_ok=False)
     configuration = read_json(service_config)
-    runtime = read_json(ROOT / "benchmark/execution-lock.json")["pipelines"]["P07"]["runtime"]
+    configuration["diagnostic_capture_stages"] = list(CAPTURE_STAGES)
+    runtime = read_json(ROOT / "benchmark/execution-lock.json")["pipelines"][pipeline]["runtime"]
     native_configuration = next(item for item in session["configurations"] if item["pipeline"] == pipeline)
     record = {
         "schema": "moparse-service-evaluation/1", "run_id": destination.name,
@@ -76,8 +98,9 @@ def prepare_run(baseline: Path, destination: Path, service_config: Path, *, pipe
         "software": identity,
         "native_pipeline": {**{key: copy.deepcopy(native_configuration.get(key)) for key in (
             "pipeline", "revisions", "native_view_policy", "source_policy", "inference_services",
-        )}, "versions": {key: value for key, value in native_configuration.get("versions", {}).items()
-                         if key in {"mineru", "mineru-vl-utils", "docvortex", "glmocr"}}},
+        )}, "versions": copy.deepcopy(native_configuration.get("versions", {}))},
+        "source_capability_policy": {"scope": "actual_saved_page_branch", "native_branches": ["docling", "mineru"],
+                                     "visual_branches": ["glm", "paddle", "visual"], "reference_access": False},
         "service_config": configuration, "options": {"describe_images": False, "scan_policy": "auto"},
         "execution_environment": {
             "image": runtime["image"], "cpus": 8, "memory_bytes": 8 * 1024 ** 3,
@@ -86,7 +109,7 @@ def prepare_run(baseline: Path, destination: Path, service_config: Path, *, pipe
         },
         "measurement_notes": [
             f"Saved valid {pipeline} native candidates are replayed; no model inference is repeated.",
-            "P08 keeps visual-only source access; PDF text and vector-table supplementation are disabled.",
+            "Every visual page branch rejects PDF text and vector supplementation, including mixed pipelines.",
             "PDF source supplementation is actual candidate service processing, not corpus review.",
             "Reference materials are unavailable to the isolated candidate worker.",
             "Postprocessing wall time includes bridge readback, source processing, export, IR, assets and semantics.",
@@ -97,15 +120,18 @@ def prepare_run(baseline: Path, destination: Path, service_config: Path, *, pipe
             "The historical native duration plus replay time is not a newly measured end-to-end duration.",
         ],
         "cases": cases,
+        **({"validation": copy.deepcopy(checks)} if checks is not None else {}),
     }
     write_json(destination / "run.json", record)
     snapshot_software(destination / "software", identity)
     write_json(destination / "candidate" / "worker-plan.json", {
         "run_id": record["run_id"], "dataset_name": record["dataset_name"],
+        "software_id": identity["software_id"],
         "pipeline": pipeline,
         "service_config": configuration, "options": record["options"],
         "cases": [{key: case[key] for key in WORKER_CASE_FIELDS}
                   for case in cases],
+        **({"expected_structure_gate": copy.deepcopy(checks["expected_structure_gate"])} if checks is not None else {}),
     })
     return destination
 
@@ -135,12 +161,14 @@ def launch(run: Path, phase: str) -> int:
     run = run.resolve()
     record = read_json(run / "run.json")
     name = f"moparse-service-{run.name}-{phase}".lower()
+    if phase == "warmup" and record.get("state") != "prepared":
+        raise ValueError("warmup requires a new prepared execution; completed artifacts are immutable")
     if phase == "measured" and record.get("state") != "frozen":
         raise ValueError("freeze the new service implementation after successful preflight first")
-    if phase == "measured":
-        from .cli import code_identity
-        if code_identity()["software_id"] != record["software"]["software_id"]:
-            raise ValueError("service implementation changed after freeze")
+    _require_expected_gate(record.get("validation", {}), record.get("software", {}).get("software_id", ""))
+    from .cli import code_identity
+    if code_identity()["software_id"] != record["software"]["software_id"]:
+        raise ValueError("service implementation changed after preparation or freeze")
     log_path = run / f"{phase}.log"
     command = docker_command(run, phase, name)
     write_json(run / f"{phase}-command.json", command)
@@ -167,10 +195,13 @@ def launch(run: Path, phase: str) -> int:
         relative = f"candidate/artifacts/{case['case_id']}/outcome.json"
         outcome = read_json(run / relative)
         case.update(outcome)
-        for key in ("observation", "final_markdown", "final_json"):
-            case[key] = "candidate/" + case[key]
+        for key in ("observation", "final_markdown", "final_json", "edit_ledger", "service_evidence"):
+            if key in case:
+                case[key] = "candidate/" + case[key]
         for stage in case.get("stage_outputs", []):
-            for key in ("observation", "markdown"):
+            for key in ("observation", "markdown", "audit"):
+                if key not in stage:
+                    continue
                 stage[key] = "candidate/" + stage[key]
         case["outcome"] = relative
         outcomes.append(outcome)
@@ -192,6 +223,7 @@ def freeze_run(run: Path, validation: Path) -> None:
     if checks.get("status") != "passed":
         raise ValueError("service freeze requires passed engineering validation")
     identity = code_identity()
+    _require_expected_gate(checks, identity["software_id"])
     if identity["software_id"] != record["software"]["software_id"]:
         raise ValueError("code changed after preflight; prepare and preflight the current implementation")
     record.update(state="frozen", frozen_at=now(), validation=checks)
@@ -200,7 +232,68 @@ def freeze_run(run: Path, validation: Path) -> None:
         "environment": record["execution_environment"], "validation": checks,
         "frozen_at": record["frozen_at"],
     })
+    plan_path = run / "candidate/worker-plan.json"
+    plan = read_json(plan_path)
+    plan["expected_structure_gate"] = copy.deepcopy(checks["expected_structure_gate"])
+    write_json(plan_path, plan)
     write_json(run / "run.json", record)
+
+
+def _require_expected_gate(validation: dict[str, Any], software_id: str) -> None:
+    gate = validation.get("expected_structure_gate", {})
+    if not isinstance(software_id, str) or not software_id.strip() or gate.get("status") != "passed" or gate.get("software_id") != software_id:
+        raise ValueError("the current expected structure gate must pass before service execution")
+
+
+def activate_executions(runs: list[Path], pointer: Path, validation: Path) -> None:
+    """Atomically select all eight immutable new executions, without moving outputs."""
+    from .cli import code_identity
+    identity = code_identity()
+    checks = read_json(validation)
+    if checks.get("status") != "passed":
+        raise ValueError("activation requires passed execution validation")
+    _require_expected_gate(checks, identity["software_id"])
+    selected, roots, sample_sets = {}, set(), set()
+    for path in runs:
+        path = path.resolve()
+        record = read_json(path / "run.json")
+        pipeline = record.get("native_pipeline", {}).get("pipeline")
+        if pipeline not in PIPELINE_BRANCHES or pipeline in selected:
+            raise ValueError("activation requires one distinct execution for every pipeline")
+        if record.get("state") != "completed" or record.get("software", {}).get("software_id") != identity["software_id"]:
+            raise ValueError("activation requires completed executions from the current software")
+        _require_expected_gate(record.get("validation", {}), identity["software_id"])
+        quality = [case for case in record["cases"] if case.get("suite") == "quality800" and case.get("phase") == "measured"]
+        ids = [case["sample_id"] for case in quality]
+        if not ids or len(set(ids)) != len(ids):
+            raise ValueError("activation requires distinct declared quality samples")
+        if any(not inside(path, case["final_markdown"]).is_file() for case in quality):
+            raise ValueError("a completed execution lacks an actual delivered Markdown")
+        sample_sets.add(tuple(sorted(ids)))
+        roots.add(path.parent)
+        selected[pipeline] = {"run": str(path), "software_id": identity["software_id"]}
+    if set(selected) != set(PIPELINE_BRANCHES) or len(roots) != 1 or len(sample_sets) != 1:
+        raise ValueError("activate all eight pipelines from one execution with identical quality scope")
+    record = {"schema": "moparse-service-current-selection/1", "state": "active", "created_at": now(),
+              "software_id": identity["software_id"], "execution": str(next(iter(roots))),
+              "pipelines": selected, "validation": checks}
+    pointer = pointer.resolve()
+    if pointer.name != "index.json" or pointer.parent.name != "current":
+        raise ValueError("activation may replace only the current/index.json selection")
+    if any(pointer.is_relative_to(path.resolve()) for path in runs):
+        raise ValueError("current selection must be outside immutable executions")
+    pointer.parent.mkdir(parents=True, exist_ok=True)
+    partial = None
+    try:
+        with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", dir=pointer.parent,
+                                         prefix=pointer.name + ".", suffix=".part", delete=False) as stream:
+            partial = Path(stream.name)
+            json.dump(record, stream, ensure_ascii=False, indent=2)
+            stream.write("\n")
+        partial.replace(pointer)
+    finally:
+        if partial is not None:
+            partial.unlink(missing_ok=True)
 
 
 def oriented_source(path: Path, native: dict[str, Any], destination: Path) -> Path:
@@ -235,14 +328,11 @@ async def execute_case(plan: dict[str, Any], case: dict[str, Any], output: Path)
 
     from app.models import ContentParseOptions, StoredSource
     from app.parsers.glm_ocr_remote import GlmOcrRemoteAdapter
-    from app.services.evidence_service import PageEvidenceService
     from app.services.export_service import ExportService
     from app.services.final_content_service import FinalContentService
     from app.services.ir_service import DocumentIRService
     from app.services.multimodal_service import MultimodalService
-    from app.services.native_text_service import NativeTextService
     from app.services.parser_service import ParserService
-    from app.services.pdf_table_evidence_service import PDFTableEvidenceService
     from app.services.quality_service import QualityService
     from app.services.storage_service import StorageService
     from app.services.table_semantics_service import TableSemanticsService
@@ -251,13 +341,8 @@ async def execute_case(plan: dict[str, Any], case: dict[str, Any], output: Path)
     from .runtime import MemoryObservation
     from .service_observation import build_service_observation
     from .service_replay_native import replay_native
-    from .service_stages import capture_stage, materialize_stage
-
-    class NoInference:
-        calls = 0
-        async def recognize_image(self, *args: Any, **kwargs: Any) -> Any:
-            self.calls += 1
-            raise RuntimeError("model inference is forbidden in service replay")
+    from .service_source_policy import apply_source_stages
+    from .service_stages import capture_stage, materialize_stage, stage_edit_ledger
 
     directory = output / "artifacts" / case["case_id"]
     directory.mkdir(parents=True, exist_ok=False)
@@ -273,6 +358,7 @@ async def execute_case(plan: dict[str, Any], case: dict[str, Any], output: Path)
     snapshots: list[dict[str, Any]] = []
     diagnostic_capture_seconds = 0.0
     pipeline = plan.get("pipeline", "P07")
+    applicability: dict[str, Any] = {}
 
     def capture(name: str, *, pages_only: bool = False) -> None:
         nonlocal diagnostic_capture_seconds
@@ -281,7 +367,7 @@ async def execute_case(plan: dict[str, Any], case: dict[str, Any], output: Path)
             return
         capture_started = time.perf_counter()
         snapshots.append(capture_stage(result, stage=name, sample_id=case["sample_id"], pages_only=pages_only,
-                                       pipeline=pipeline))
+                                       pipeline=pipeline, applicability=applicability.get(name)))
         diagnostic_capture_seconds += time.perf_counter() - capture_started
 
     started = time.perf_counter()
@@ -294,30 +380,23 @@ async def execute_case(plan: dict[str, Any], case: dict[str, Any], output: Path)
         stages["saved_orientation_seconds"] = time.perf_counter() - stage_start
         stage_start = time.perf_counter()
         result, bridge = replay_native(native, source, options, document_id=case["job_id"])
+        bridge["native_input"] = case["native"]
+        result._source_verification["saved_native_bridge"]["native_input"] = case["native"]
         try:
             require_replay_ready(bridge)
         except RuntimeError:
             write_json(directory / "replay-diagnostics.json", bridge)
             raise
         stages["native_bridge_seconds"] = time.perf_counter() - stage_start
-        capture("bridge_pages", pages_only=True)
+        capture("adapted", pages_only=True)
         # Calling these exact service stages avoids parser initialization or a
         # second model request. No replacement postprocessor is implemented.
-        stage_start = time.perf_counter()
-        evidence = (await asyncio.to_thread(PageEvidenceService(settings).inspect, source,
-                                            {page.page_number for page in result.pages})
-                    if pipeline == "P07" else {})
-        stages["page_evidence_seconds"] = time.perf_counter() - stage_start
-        stage_start = time.perf_counter()
-        if pipeline == "P07":
-            await PDFTableEvidenceService(settings).apply(result, source, options)
-        stages["table_source_seconds"] = time.perf_counter() - stage_start
-        capture("source_pages", pages_only=True)
-        stage_start = time.perf_counter()
-        if pipeline == "P07":
-            await NativeTextService().apply_async(result, evidence, options)
-        stages["native_text_seconds"] = time.perf_counter() - stage_start
-        capture("native_pages", pages_only=True)
+        def observe_source_stage(name, detail):
+            applicability[name] = detail
+            capture(name, pages_only=True)
+        evidence, source_timings, source_applicability = await apply_source_stages(
+            result, bridge, source, options, settings, on_stage=observe_source_stage)
+        stages.update(source_timings)
         stage_start = time.perf_counter()
         service = object.__new__(ParserService)
         service.settings, service.export_service = settings, ExportService()
@@ -338,7 +417,10 @@ async def execute_case(plan: dict[str, Any], case: dict[str, Any], output: Path)
         stage_start = time.perf_counter()
         if settings.semantic_table_output_enabled:
             await TableSemanticsService().apply(result, options)
+        applicability["semantic"] = {"applicable": bool(settings.semantic_table_output_enabled),
+                                     "reason": "configured_semantic_table_service" if settings.semantic_table_output_enabled else "disabled_by_configuration"}
         stages["semantics_seconds"] = time.perf_counter() - stage_start
+        capture("semantic")
         stage_start = time.perf_counter()
         FinalContentService().apply(result)
         stages["final_content_seconds"] = time.perf_counter() - stage_start
@@ -348,6 +430,9 @@ async def execute_case(plan: dict[str, Any], case: dict[str, Any], output: Path)
             raise RuntimeError("unexpected model request: service replay is invalid")
     result.usage.duration_ms = round(elapsed * 1000)
     result.parse_result.runtime.duration_ms = result.usage.duration_ms
+    ledger_started = time.perf_counter()
+    edit_ledger = stage_edit_ledger(snapshots)
+    edit_ledger_seconds = time.perf_counter() - ledger_started
     persist_start = time.perf_counter()
     await storage.write_result(case["job_id"], result)
     (directory / "final.md").write_text(result.markdown)
@@ -371,6 +456,7 @@ async def execute_case(plan: dict[str, Any], case: dict[str, Any], output: Path)
     observation["input_page_count"] = case["input_pages"]
     write_json(directory / "observation.json", observation)
     stage_outputs = []
+    write_json(directory / "stage-edit-ledger.json", {"entries": edit_ledger, "judgment": "unjudged_actual_stage_edits"})
     for captured in snapshots:
         snapshot = materialize_stage(captured)
         name = snapshot["stage"]
@@ -382,10 +468,13 @@ async def execute_case(plan: dict[str, Any], case: dict[str, Any], output: Path)
         markdown_path.write_text(snapshot["markdown"])
         observation_path = directory / "stages" / f"{name}.json"
         write_json(observation_path, snapshot["observation"])
+        audit_path = directory / "stages" / f"{name}.audit.json"
+        write_json(audit_path, snapshot["source_audit"])
         stage_outputs.append({
             "stage": name, "scope": snapshot["scope"],
             "markdown": str(markdown_path.relative_to(output)),
             "observation": str(observation_path.relative_to(output)),
+            "audit": str(audit_path.relative_to(output)), "applicability": snapshot["applicability"],
         })
     statuses = {page.status.value for page in result.pages}
     status = "partial" if "failed" in statuses or result.parse_result.status == "partial" else (
@@ -396,10 +485,14 @@ async def execute_case(plan: dict[str, Any], case: dict[str, Any], output: Path)
         "observation": str((directory / "observation.json").relative_to(output)),
         "final_markdown": str((directory / "final.md").relative_to(output)),
         "final_json": str((directory / "final.json").relative_to(output)),
+        "service_evidence": str((directory / "service-evidence.json").relative_to(output)),
         "timing": {"postprocessing_seconds": elapsed, "native_json_load_seconds": load_seconds,
                    "pure_persistence_and_observation_seconds": time.perf_counter() - persist_start,
                    "diagnostic_capture_seconds": diagnostic_capture_seconds, **stages},
         "stage_outputs": stage_outputs,
+        "stage_applicability": source_applicability,
+        "edit_ledger": str((directory / "stage-edit-ledger.json").relative_to(output)),
+        "diagnostic_edit_ledger_seconds": edit_ledger_seconds,
         "resources": {"peak_rss_bytes": memory.peak_bytes, "rss_samples": memory.sample_count},
         "conversion": {"total_views": len(views),
                        "converted": sum(view.status == "converted" for view in views),
@@ -418,6 +511,7 @@ async def execute_case(plan: dict[str, Any], case: dict[str, Any], output: Path)
 async def worker(plan_path: Path, phase: str) -> None:
     from .runtime import actual_worker_limits, package_versions
     plan = read_json(plan_path)
+    _require_expected_gate({"expected_structure_gate": plan.get("expected_structure_gate", {})}, plan.get("software_id", ""))
     output = plan_path.parent
     write_json(output / f"{phase}-environment.json", {
         "limits": actual_worker_limits(),
@@ -457,23 +551,30 @@ def main() -> int:
     prepare.add_argument("--baseline", required=True, type=Path)
     prepare.add_argument("--output", required=True, type=Path)
     prepare.add_argument("--service-config", required=True, type=Path)
-    prepare.add_argument("--pipeline", choices=["P07", "P08"], default="P07")
+    prepare.add_argument("--pipeline", choices=list(PIPELINE_BRANCHES), default="P07")
+    prepare.add_argument("--validation", type=Path, help="attach a passed current-source expected structure gate without executing")
     execute = commands.add_parser("run")
     execute.add_argument("--run", required=True, type=Path)
     execute.add_argument("--phase", choices=["warmup", "measured"], required=True)
     freeze = commands.add_parser("freeze")
     freeze.add_argument("--run", required=True, type=Path)
     freeze.add_argument("--validation", required=True, type=Path)
+    activate = commands.add_parser("activate")
+    activate.add_argument("--run", required=True, type=Path, action="append")
+    activate.add_argument("--pointer", required=True, type=Path)
+    activate.add_argument("--validation", required=True, type=Path)
     candidate = commands.add_parser("worker")
     candidate.add_argument("--plan", required=True, type=Path)
     candidate.add_argument("--phase", required=True, choices=["warmup", "measured"])
     args = parser.parse_args()
     if args.command == "prepare":
-        print(prepare_run(args.baseline, args.output, args.service_config, pipeline=args.pipeline))
+        print(prepare_run(args.baseline, args.output, args.service_config, pipeline=args.pipeline, validation=args.validation))
     elif args.command == "run":
         return launch(args.run, args.phase)
     elif args.command == "freeze":
         freeze_run(args.run, args.validation)
+    elif args.command == "activate":
+        activate_executions(args.run, args.pointer, args.validation)
     elif args.command == "worker":
         asyncio.run(worker(args.plan, args.phase))
     return 0

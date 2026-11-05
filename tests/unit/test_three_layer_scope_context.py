@@ -57,7 +57,11 @@ def test_external_unit_does_not_scope_a_new_prose_paragraph_without_a_data_role(
     expected = selected(tmp_path, "Unit: 万元\n\nA quiet passage.\n",
                         [entry(1, 1, 1), entry(2, 3, 3)], [2])
     assert expected["targets"][0]["outside_selection_context"] == []
-    assert compile_expected(expected)["blockers"] == []
+    graph = compile_expected(expected)
+    assert not [item for item in graph["blockers"] if item["reason"] == "input_scope_context"]
+    assert graph["business"] == []
+    assert graph["blockers"]
+    assert graph["requirement_model"]["dispositions"][0]["layers"]["B"]["status"] == "unresolved"
 
 
 def test_mixed_input_page_declaration_is_not_dismissed_as_an_external_heading(tmp_path):

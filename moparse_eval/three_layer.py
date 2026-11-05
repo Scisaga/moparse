@@ -19,19 +19,30 @@ from app.utils.measurement import unit_applicable, unit_kind
 
 from .business_correspondence import grade_business
 from .business_labels import is_amount_role
+from .cjk_narrative_requirements import read_cjk_narrative
 from .compact_requirements import read_compact_requirements, read_compact_schema
 from .context_evidence import read_contexts
 from .entity_requirements import read_entity_requirements
-from .expected_readback import _context_continues, _context_kind, _explicit_context, elements
+from .expected_readback import _context_continues, elements
+from .explicit_reference_requirements import read_explicit_references
+from .field_sequence_requirements import read_field_sequence_requirements
 from .header_path_requirements import read_header_path_requirements
 from .matrix_evidence import read_matrix
 from .measurement_evidence import read_measurement_label, read_measurement_literal, read_unit_token
 from .metrics import normalize_text
-from .prose_requirements import read_prose_requirements, read_prose_sequence
+from .narrative_requirements import read_narrative
+from .proposition_requirements import read_propositions
+from .prose_requirements import _sentence_spans, read_prose_requirements, read_prose_sequence
 from .relation_correspondence import grade_relations
 from .representations import visible_text
 from .scalar_evidence import validate_scalar_sources
-from .series_requirements import read_series_context, read_series_requirements
+from .scoring_evidence import evidence_session, snapshot_copy
+from .series_requirements import (
+    is_ordinary_scalar_field,
+    read_series_context,
+    read_series_requirements,
+)
+from .source_requirements import plan_field_body, plan_mixed_source
 from .text_projection import (
     combine_text_projections,
     project_compact_text,
@@ -80,6 +91,45 @@ def canonical(text: str) -> str:
     return text
 
 
+def _read_narrative(text, source, *, scope=()):
+    english = read_narrative(text, source, scope=scope)
+    english["syntax_language"] = "en"
+    if english["complete"]:
+        return english
+    cjk = read_cjk_narrative(text, source, scope=scope)
+    cjk["syntax_language"] = "zh"
+    if cjk["matched"] and (cjk["complete"] or len(cjk["logic"]) > len(english["logic"])):
+        return cjk
+    return english
+
+
+def _bind_field_body(result, label, label_source):
+    """Retain a printed body owner without replacing the asserted actors."""
+    if not label or not label_source:
+        return result
+    proof = {"text": label, "source": copy.deepcopy(label_source), "role": "printed_field_label"}
+
+    def bind(value):
+        if isinstance(value, dict):
+            if isinstance(value.get("scope"), list) and (not value["scope"] or value["scope"][-1] != label):
+                value["scope"].append(label)
+            for child in value.values():
+                bind(child)
+        elif isinstance(value, list):
+            for child in value:
+                bind(child)
+
+    # Sources contain no scope labels. Every semantic endpoint belongs to the
+    # same explicitly printed field, including its conditional operands.
+    bind(result)
+    for fact in [*result.get("facts", []), *result.get("semantic_operands", [])]:
+        fact.update(printed_label=label, label_source=copy.deepcopy(label_source),
+                    field_label_evidence=copy.deepcopy(proof))
+    for edge in [*result.get("relations", []), *result.get("semantic_operand_relations", [])]:
+        edge["field_label_evidence"] = copy.deepcopy(proof)
+    return result
+
+
 def _source(path: str, lines: list[int] | tuple[int, int], **extra: Any) -> dict[str, Any]:
     return {"path": path, "lines": list(lines), **extra}
 
@@ -125,8 +175,9 @@ def _pair_sources(text: str, source: dict[str, Any]) -> list[tuple[str, str, dic
         value_start = text.find(value, after) if value else after
         if value_start < 0:
             raise ValueError("explicit pair value has no source span")
-        key_source = {**source, "text_span": [start, start + len(key)]}
-        value_source = {**source, "text_span": [value_start, value_start + len(value)],
+        offset = source.get("text_span", [0])[0]
+        key_source = {**source, "text_span": [offset + start, offset + start + len(key)]}
+        value_source = {**source, "text_span": [offset + value_start, offset + value_start + len(value)],
                         "attribute_source": copy.deepcopy(key_source)}
         result.append((key, value, key_source, value_source))
         cursor = value_start + len(value)
@@ -354,10 +405,16 @@ class _Graph:
              identity: bool | None = None, role: str | None = None,
              identity_facets: dict[str, str] | None = None, inherit_qualifiers: bool = True,
              scope: list[str] | None = None, record_id: str | None = None,
-             attribute_source: dict[str, Any] | None = None) -> dict[str, Any]:
+             attribute_source: dict[str, Any] | None = None,
+             measurement_source: dict[str, Any] | None = None,
+             qualifier_sources: dict[str, dict[str, Any]] | None = None) -> dict[str, Any]:
         identity = bool(IDENTITY.fullmatch(attribute)) if identity is None else identity
         q = {**(self.qualifiers if inherit_qualifiers else {}), **(qualifiers or {})}
         provenance = copy.deepcopy(self.qualifier_evidence) if inherit_qualifiers else {}
+        for key, origin in (qualifier_sources or {}).items():
+            if (key in {"unit", "currency", "period", "period_basis", "from_period", "to_period", "column_currency"}
+                    and key in q and isinstance(origin, dict) and origin.get("path")):
+                provenance[key] = {"text": q[key], "source": copy.deepcopy(origin), "level": "source_explicit"}
         if inherit_qualifiers and (identity or (q.get("unit") and self.qualifier_levels.get("unit") != "record_explicit"
                                                and not unit_applicable(q["unit"], [attribute]))):
             q.pop("unit", None)
@@ -369,7 +426,9 @@ class _Graph:
                 if header[key]:
                     q[key] = header[key]
                     provenance[key] = {"text": header[key], "source": header["sources"][key], "level": "header_explicit"}
-        measurement = read_measurement_literal(value, source)
+        original_value = value
+        measured_source = measurement_source or source
+        measurement = read_measurement_literal(value, measured_source)
         if not identity and measurement["matched"]:
             value = measurement["value"]
             for key in ("unit", "currency"):
@@ -390,6 +449,12 @@ class _Graph:
                 "qualifier_provenance": {key: proof for key, proof in provenance.items() if key in q},
                 "record_id": record_id or self.record_id or self.open_record(source)}
         self.fact_serial += 1
+        if not identity and measurement["matched"]:
+            item["raw_value"] = original_value
+            item["value_source"] = copy.deepcopy(measurement["sources"]["value"])
+            item["source"] = copy.deepcopy(measured_source)
+            if measured_source != source:
+                item["statement_source"] = copy.deepcopy(source)
         if identity and canonical(item["value"]) == canonical(item["subject"]):
             item["subject"] = ""
         self.data["business"].append(item)
@@ -403,7 +468,8 @@ class _Graph:
         self.relation("field_binding", {"subject": item["subject"], "attribute": attribute}, endpoint, source)
         self.data["relations"][-1]["fact_id"] = item["id"]
         for key, literal in q.items():
-            self.relation("qualifier_scope", {"type": key, "text": literal}, endpoint, source)
+            origin = provenance.get(key, {}).get("source", source)
+            self.relation("qualifier_scope", {"type": key, "text": literal}, endpoint, origin)
             self.data["relations"][-1]["fact_id"] = item["id"]
         return item
 
@@ -438,20 +504,34 @@ class _Graph:
             if compact and self.headings and "group" not in facets:
                 facets["group"] = self.headings[-1]
             first_edge = len(self.data["relations"])
+            qualifier_sources = {key: proof["source"] for key, proof in fact.get("qualifier_provenance", {}).items()
+                                 if isinstance(proof, dict) and isinstance(proof.get("source"), dict)}
+            qualifier_sources.update(fact.get("source", {}).get("qualifier_sources", {}))
+            qualifier_sources.update(fact.get("qualifier_sources", {}))
             item = self.fact(fact["attribute"], fact["value"], fact["source"],
                              subject=fact["subject"], qualifiers=fact.get("qualifiers", {}),
                              identity=fact.get("role") == "identity", role=fact.get("role", "metric"),
                              identity_facets=facets, inherit_qualifiers=False,
                              scope=fact.get("scope"),
+                             measurement_source=fact.get("value_source") if "raw_value" not in fact else None,
+                             qualifier_sources=qualifier_sources,
                              record_id=fact.get("record_id") or (self.open_record(record_source) if record_source else None))
             if logical_prose or toc:
+                additional = [edge for edge in self.data["relations"][first_edge:] if logical_prose
+                              and edge["type"] == "qualifier_scope" and edge["left"]["type"] not in fact.get("qualifiers", {})]
                 del self.data["relations"][first_edge:]
+                for edge in additional:
+                    edge["id"] = f"L:{len(self.data['relations'])}"
+                    self.data["relations"].append(edge)
             for key in ("header_evidence", "row_evidence", "data_evidence", "row_path", "column_path", "raw_value", "role_basis", "issue_ids", "ambiguous_qualifiers", "qualifier_compositions", "qualifier_provenance"):
                 if key in fact:
-                    item[key] = copy.deepcopy(fact[key])
-            for key in ("logic", "qualifier_sources", "value_source", "attribute_source", "subject_source", "printed_label", "label_source",
+                    item[key] = ({**item.get(key, {}), **copy.deepcopy(fact[key])}
+                                 if key == "qualifier_provenance" else copy.deepcopy(fact[key]))
+            for key in ("logic", "qualifier_sources", "value_source", "attribute_source", "subject_source", "predicate", "object", "predicate_source", "object_source", "rule_id", "printed_label", "label_source",
                         "semantic_type", "directory_evidence", "field_label_evidence", "record_evidence"):
                 if key in fact:
+                    if key == "value_source" and item["value"] != fact["value"]:
+                        continue
                     item[key] = copy.deepcopy(fact[key])
             data = fact.get("data_evidence", {})
             for edge in self.data["relations"][first_edge:]:
@@ -486,8 +566,24 @@ class _Graph:
             self.literal(text, source)
             self.block("compact_text_projection_incomplete", source, layers=["T"])
 
+    def narrative(self, result: dict[str, Any], source: dict[str, Any]) -> None:
+        self.ingest(result, logical_prose=True, record_source=source)
+        self.data.setdefault("logical_statements", []).extend(copy.deepcopy(result["logic"]))
+        self.data.setdefault("semantic_operands", []).extend(copy.deepcopy(result.get("semantic_operands", [])))
+        self.data.setdefault("semantic_operand_relations", []).extend(copy.deepcopy(result.get("semantic_operand_relations", [])))
+        self.data["required_matcher_features"] = sorted(set(self.data.get("required_matcher_features", []))
+            | set(result.get("required_matcher_features", [])))
+
     def prose(self, text: str, source: dict[str, Any], kind: str = "text", parents: list[str] | None = None,
               parent_evidence: list[dict[str, Any]] | None = None) -> None:
+        if kind not in {"heading", "parent_label", "image", "image_caption", "table_caption"}:
+            plan = plan_mixed_source(text, source)
+            if plan:
+                self.data.setdefault("source_interpretation_plans", []).append({"source": copy.deepcopy(source), **plan})
+                self.text_projections.append({"atoms": [], "controls": plan["controls"], "complete": True})
+                for fragment in plan["fragments"]:
+                    self.prose(fragment["text"], fragment["source"], kind, parents, parent_evidence)
+                return
         if kind == "heading":
             self.clear_heading_state()
         if kind in {"heading", "table", "image", "picture", "figure", "unknown", "table_caption"}:
@@ -495,6 +591,29 @@ class _Graph:
         self.data["syntax"].append({"kind": kind, "text": text, "source": source,
                                     "scope": list(self.headings), "parents": list(parents or []),
                                     "parent_evidence": copy.deepcopy(parent_evidence or [])})
+        body = plan_field_body(text, source) if kind not in {"heading", "parent_label", "image", "image_caption", "table_caption"} else None
+        if body:
+            self.literal(body["label"], body["label_source"], "label")
+            self.data["syntax"].append({"kind": "field_body", "text": body["body"], "source": body["body_source"],
+                "scope": list(self.headings), "parents": list(parents or []),
+                "parent_evidence": copy.deepcopy(parent_evidence or []),
+                "printed_label": body["label"], "label_source": copy.deepcopy(body["label_source"])})
+            self.literal(body["body"], body["body_source"])
+            self.text_projections.append({"atoms": [], "complete": True, "controls": body["controls"]})
+            return
+        identity = next((fact for fact in reversed(self.data["business"])
+                         if fact["role"] == "identity" and fact["value"] == self.subject), None)
+        field_sequence = read_field_sequence_requirements(text, source, scope=self.headings,
+            subject=self.subject, subject_source=identity.get("source") if identity else None,
+            qualifiers=self.qualifiers, qualifier_sources={key: proof["source"] for key, proof in self.qualifier_evidence.items()},
+            identity_facets=self.identity_facets, record_id=self.record_id)
+        if field_sequence["matched"]:
+            self.ingest(field_sequence, record_source=source)
+            projection = project_header_path_text(field_sequence)
+            for atom in projection["atoms"]:
+                atom.update(continuity_segment=self.continuity_segment, scope=list(self.headings))
+            self.text_projections.append(projection)
+            return
         if re.search(r"续表|續表|\btable\s+continued\b|\bcontinued\s+table\b", text, re.I):
             self.block("cross_page_relation_interpretation_unsupported", source, text=text)
         for parent in parents or []:
@@ -559,12 +678,32 @@ class _Graph:
         if (not compact["facts"] and self.compact_schema is None
                 and not (pairs and all(QUALIFIER.fullmatch(key) or IDENTITY.fullmatch(key) for key, _ in pairs))):
             series = read_series_requirements(text, source, context=self.series_context, subject=self.subject,
-                parents=parents or [], qualifiers=self.qualifiers,
+                parents=parents or [], parent_declarations=parent_declarations,
+                subject_source=identity.get("source") if identity else None, qualifiers=self.qualifiers,
                 qualifier_sources={key: proof["source"] for key, proof in self.qualifier_evidence.items()},
                 identity_facets=self.identity_facets, scope=self.headings)
             if series["matched"] and (series["facts"] or not compact["matched"]):
                 self.ingest(series, series=True, record_source=source)
-                self.compact_projection(series, text, source)
+                if series.get("parent_bindings"):
+                    for binding in series["parent_bindings"]:
+                        parent = binding["parent"]
+                        parent_key = self.source_key(parent["source"])
+                        self.data["text"] = [atom for atom in self.data["text"] if not (
+                            self.source_key(atom["source"]) == parent_key
+                            and atom["text"].rstrip(":：").strip() == parent["text"])]
+                        for syntax in self.data["syntax"]:
+                            if self.source_key(syntax["source"]) == parent_key and syntax["text"].rstrip(":：").strip() == parent["text"]:
+                                syntax["semantic_role"] = "metric_declaration"
+                        self.data["blockers"] = [issue for issue in self.data["blockers"] if not (
+                            issue["reason"] == "list_group_scope_interpretation_unsupported" and issue.get("parent_source")
+                            and self.source_key(issue["parent_source"]) == parent_key)]
+                    projection = project_header_path_text(series)
+                    for atom in projection["atoms"]:
+                        atom.update(continuity_segment=self.continuity_segment, scope=list(self.headings))
+                    self.text_projections.append(projection)
+                    self.data.setdefault("parent_bindings", []).extend(copy.deepcopy(series["parent_bindings"]))
+                else:
+                    self.compact_projection(series, text, source)
                 return
         if compact["matched"]:
             for declaration in compact.get("metric_declarations", []):
@@ -662,7 +801,7 @@ class _Graph:
             self.qualifier_levels = {}
             self.qualifier_evidence = {}
             self.series_context = None
-        if pairs and (re.search(r"(?:19|20)\d{2}年[^;；]*[、][^;；]*[;；]", text)
+        if pairs and not all(is_ordinary_scalar_field(key, value) for key, value in pairs) and (re.search(r"(?:19|20)\d{2}年[^;；]*[、][^;；]*[;；]", text)
                       or re.search(r"[:：]\s*(?:19|20)\d{2}\s*[:：]", text)):
             self.block("compact_multi_metric_requirement_unsupported", source, text=text)
         if pairs:
@@ -718,11 +857,8 @@ class _Graph:
         if kind == "heading" and len(self.headings) > 1:
             self.relation("heading_parent", self.headings[-2], self.headings[-1], source)
             self.data["relations"][-1]["required_scope"] = list(self.headings)
-        if kind != "heading" and LOGICAL.search(text):
-            self.block("logical_prose_semantics_unsupported", source, text=text, layers=["B"])
-        elif kind in {"text", "paragraph", "item"} and (re.search(r"\d|金额|收入|利润|比例|数量|主体|期间|附注", text)
-                                                         or IMPORTANT_RELATION.search(text)):
-            self.block("unclassified_business_prose", source, text=text, layers=["B"])
+        # Prose is interpreted after legal source fragments are joined. Its
+        # business disposition must not depend on a keyword or digit hit.
         if parents:
             # Numeric sibling properties never become parent properties.
             labels = [p for p in parents if not _pairs(p) or any(IDENTITY.fullmatch(k) for k, _ in _pairs(p))]
@@ -791,15 +927,20 @@ def _finish(graph: _Graph) -> dict[str, Any]:
     # Stable semantic requirements; never inferred from candidate availability.
     # Delimiter labels for qualifiers are relational syntax, while their actual
     # literals remain text. A table's schema role labels are also syntax.
+    empty_context_sources = {graph.source_key(item["source"]) for item in graph.data["syntax"]
+                             if re.fullmatch(r"[^:：。.!?！？;；]+[:：]", item["text"].strip())}
     graph.data["text"] = [x for x in graph.data["text"] if not
-                          (x["role"] == "label" and QUALIFIER.fullmatch(x["text"]))]
+                          (x["role"] == "label" and QUALIFIER.fullmatch(x["text"])
+                           and graph.source_key(x["source"]) not in empty_context_sources)]
     projection = combine_text_projections([{"atoms": graph.data["text"], "complete": True}, *graph.text_projections])
     graph.data["text"] = projection["atoms"]
     graph.data["text_projection"] = {key: copy.deepcopy(projection.get(key, [])) for key in
                                      ("origins", "aliases", "controls", "complete", "source_cells", "source_fragments")}
-    graph.data["text_projection"]["source_fragments"].extend(
-        {"source": copy.deepcopy(item["source"]), "text": item["text"]} for item in graph.data["syntax"]
-        if item.get("semantic_role") != "toc")
+    fragments = graph.data["text_projection"]["source_fragments"]
+    for item in graph.data["syntax"]:
+        fragment = {"source": copy.deepcopy(item["source"]), "text": item["text"]}
+        if item.get("semantic_role") != "toc" and fragment not in fragments:
+            fragments.append(fragment)
     for blocker in projection["blockers"]:
         same = next((old for old in graph.data["blockers"] if old.get("reason") == blocker.get("reason")
                      and old.get("source") == blocker.get("source")), None)
@@ -812,7 +953,7 @@ def _finish(graph: _Graph) -> dict[str, Any]:
     # atoms, and never skip intervening material.
     sentence_units = []
     for item in graph.data["text"]:
-        parts = re.split(r"(?<=[。！？])\s*|(?<=[.!?])\s+(?=[A-Z])", item["text"]) if item["role"] == "literal" else [item["text"]]
+        parts = [item["text"][a:b] for a, b in _sentence_spans(item["text"])] if item["role"] == "literal" else [item["text"]]
         cursor = 0
         for i, text in enumerate(parts):
             if not text.strip():
@@ -830,7 +971,7 @@ def _finish(graph: _Graph) -> dict[str, Any]:
                 and merged[-1].get("continuity_segment") == item.get("continuity_segment")
                 and merged[-1].get("scope") == item.get("scope")
                 and not merged[-1]["source"].get("cell") and not item["source"].get("cell")
-                and not re.search(r"[。.!?！？;；:]$", merged[-1]["text"])
+                and not re.search(r'''[。.!?！？;；:：]["”’」』）)\]]*$''', merged[-1]["text"])
                 and not NUMERIC.fullmatch(merged[-1]["text"])
                 and not NUMERIC.fullmatch(item["text"])):
             previous = merged[-1]
@@ -860,8 +1001,12 @@ def _finish(graph: _Graph) -> dict[str, Any]:
                 cursor = start + len(text)
             else:
                 source["joined_fragments"] = fragments
-        matching = [syntax for syntax in graph.data["syntax"] if graph.source_key(syntax["source"]) == graph.source_key(item["source"])]
+        matching = [syntax for syntax in graph.data["syntax"] if graph.source_key(syntax["source"]) == graph.source_key(item["source"])
+                    and (not syntax["source"].get("text_span") or syntax["source"].get("text_span") == item["source"].get("text_span"))]
         syntax = matching[0] if matching else None
+        if syntax and syntax.get("semantic_propositions_complete"):
+            item["semantic_propositions_complete"] = True
+            continue
         if syntax and (syntax.get("unresolved_prose_preamble") or syntax.get("unresolved_business_prose")):
             item["unresolved_business_prose"] = True
             continue
@@ -876,18 +1021,99 @@ def _finish(graph: _Graph) -> dict[str, Any]:
         pairs = _pair_sources(syntax["text"], syntax["source"]) if syntax else _pair_sources(item["text"], source)
         label, label_source = (pairs[0][0], pairs[0][2]) if len(pairs) == 1 and not (
             IDENTITY.fullmatch(pairs[0][0]) or QUALIFIER.fullmatch(pairs[0][0])) else (None, None)
+        if syntax and syntax.get("kind") == "field_body":
+            label, label_source = syntax["printed_label"], syntax["label_source"]
         item.update(prose_label=label, prose_label_source=copy.deepcopy(label_source), prose_parents=copy.deepcopy(parents))
+        # A printed reference target cannot establish its own owner or add a
+        # business vote. Unread residual prose retains the ordinary fail-closed
+        # route instead of being declared navigation by keyword alone.
+        reference_label, reference_label_source = label, label_source
+        if reference_label is None:
+            bounds = source.get("text_span")
+            field = next((entry for entry in reversed(graph.data["syntax"])
+                          if entry.get("kind") == "field_body" and bounds
+                          and graph.source_key(entry["source"]) == graph.source_key(source)
+                          and entry["source"].get("text_span")
+                          and entry["source"]["text_span"][0] <= bounds[0] <= bounds[1] <= entry["source"]["text_span"][1]), None)
+            if field:
+                reference_label, reference_label_source = field["printed_label"], field["label_source"]
+        reference_owner, reference_owner_evidence = None, []
+        if reference_label and reference_label_source:
+            reference_owner = {"identity": {"role": "printed_field", "attribute": reference_label},
+                               "scope": list(item.get("scope", []))}
+            reference_owner_evidence = [{"kind": "printed_field_label", "text": reference_label,
+                                         "source": copy.deepcopy(reference_label_source)}]
+        elif item.get("scope"):
+            heading_proofs = []
+            for position, heading in enumerate(item["scope"]):
+                actual = next((entry for entry in reversed(prior)
+                               if entry.get("kind") == "heading" and entry["text"] == heading
+                               and entry.get("scope") == item["scope"][:position + 1]), None)
+                if actual is None:
+                    break
+                heading_proofs.append({"kind": "heading_scope", "text": heading,
+                                       "source": copy.deepcopy(actual["source"])})
+            if len(heading_proofs) == len(item["scope"]):
+                reference_owner = {"identity": {"role": "heading_scope"}, "scope": list(item["scope"])}
+                reference_owner_evidence = heading_proofs
+        references = read_explicit_references(item["text"], source, scope=item.get("scope", []),
+            owner=reference_owner, owner_evidence=reference_owner_evidence)
+        if references["references"] and not references["residual_spans"]:
+            item.update(explicit_reference_only=True, reference_owner=reference_owner,
+                        reference_owner_evidence=reference_owner_evidence, semantic_propositions_complete=True)
+            graph.data["blockers"] = [blocker for blocker in graph.data["blockers"] if not (
+                blocker["reason"] in {"unclassified_business_prose", "logical_prose_semantics_unsupported"}
+                and any(blocker["source"] == original for original in originals))]
+            continue
+        narrative = _read_narrative(item["text"], source, scope=item.get("scope", []))
+        family_claimed = (bool({"active_aspect_scope", "temporal_prose_scope", "quantity_comparison", "year_on_year_comparison"}
+                              & set(narrative.get("required_matcher_features", []))) or any(
+            issue.get("reason", "").startswith("active_aspect_") or issue.get("reason") in {
+                "narrative_enumeration_operator_scope_unresolved", "narrative_quantified_comparison_scope_unresolved"}
+            for issue in narrative.get("blockers", [])))
         entity = read_entity_requirements(item["text"], source, parents=parent_texts, scope=item.get("scope", []))
         if entity["matched"]:
-            graph.ingest(entity, record_source=source)
-            item["entity_assertion"] = True
+            advanced = set(narrative.get("required_matcher_features", [])) - {"finite_tense"} if entity["blockers"] else set()
+            if family_claimed or narrative["logic"] and advanced:
+                graph.narrative(_bind_field_body(narrative, label, label_source), source)
+                item["semantic_propositions_complete"] = narrative["complete"]
+                item["unresolved_business_prose"] = not narrative["complete"]
+            else:
+                if syntax and syntax.get("kind") == "field_body":
+                    _bind_field_body(entity, label, label_source)
+                graph.ingest(entity, record_source=source)
+                item["entity_assertion"] = True
             graph.data["blockers"] = [blocker for blocker in graph.data["blockers"] if not (
                 blocker["reason"] in {"unclassified_business_prose", "logical_prose_semantics_unsupported"}
                 and any(blocker["source"] == original for original in originals))]
             continue
         logical = read_prose_requirements(item["text"], source, label=label, label_source=label_source,
                                          parents=parents, scope=item.get("scope", []))
+        advanced = set(narrative.get("required_matcher_features", [])) - {"finite_tense", "coordination_scope", "modal_operator", "negation_scope"}
+        prefer_narrative = narrative["complete"] and (bool(advanced) or narrative.get("syntax_language") == "zh")
+        if family_claimed or not logical["facts"] or logical["blockers"] or re.search(r"\band\b", item["text"], re.I) or prefer_narrative:
+            proposition = read_propositions(item["text"], source, scope=item.get("scope", []))
+            selected = (narrative if prefer_narrative or family_claimed else proposition if proposition["complete"] and (not logical["facts"] or logical["blockers"]
+                        or len(proposition["facts"]) > len(logical["facts"]))
+                        else narrative if narrative["logic"] and (not logical["facts"] or logical["blockers"])
+                        else proposition if proposition["matched"] and (not logical["facts"] or logical["blockers"])
+                        else narrative if not logical["facts"] else None)
+            if selected:
+                _bind_field_body(selected, label, label_source)
+                if selected is narrative:
+                    graph.narrative(selected, source)
+                else:
+                    graph.ingest(selected, logical_prose=True, record_source=source)
+                item["semantic_propositions_complete"] = bool(selected["complete"])
+                item["unresolved_business_prose"] = not selected["complete"]
+                old_reasons = {"unclassified_business_prose", "logical_prose_semantics_unsupported",
+                               *(entry["reason"] for entry in logical["blockers"])}
+                graph.data["blockers"] = [blocker for blocker in graph.data["blockers"] if not (
+                    blocker["reason"] in old_reasons
+                    and any(blocker["source"] == original for original in originals))]
+                continue
         if logical["matched"]:
+            _bind_field_body(logical, label, label_source)
             graph.ingest(logical, logical_prose=True, record_source=source)
             field = next((fact.get("field_label_evidence") for fact in logical["facts"] if fact.get("field_label_evidence")), None)
             own_scope = item.get("scope", [])
@@ -902,11 +1128,19 @@ def _finish(graph: _Graph) -> dict[str, Any]:
     prose_units = [{"id": item["id"], "kind": "paragraph", "text": item["text"],
                     "source": copy.deepcopy(item["source"]), "scope": copy.deepcopy(item.get("scope", [])),
                     "label": item.get("prose_label"), "label_source": copy.deepcopy(item.get("prose_label_source")),
+                    "reference_owner": copy.deepcopy(item.get("reference_owner")),
+                    "reference_owner_evidence": copy.deepcopy(item.get("reference_owner_evidence", [])),
                     "parents": copy.deepcopy(item.get("prose_parents", []))}
                    for item in merged if item["role"] == "literal" and not item["source"].get("cell")
                    and not item.get("entity_assertion") and not item.get("unresolved_business_prose")]
     prose = read_prose_sequence(prose_units)
     graph.data["prose_endpoints"] = prose["endpoints"]
+    graph.data["explicit_references"] = copy.deepcopy(prose.get("references", []))
+    graph.data["reference_roles"] = copy.deepcopy(prose.get("semantic_roles", []))
+    graph.data["reference_dispositions"] = copy.deepcopy(prose.get("source_dispositions", []))
+    graph.data["required_matcher_features"] = sorted(set(graph.data.get("required_matcher_features", []))
+        | set(prose.get("required_matcher_features", [])))
+    graph.data.setdefault("pending_requirements", []).extend(copy.deepcopy(prose.get("pending_requirements", [])))
     graph.data["blockers"].extend({**copy.deepcopy(blocker), "layers": ["L"]} for blocker in prose["blockers"])
     for edge in prose["relations"]:
         graph.data["relations"].append({**edge, "id": f"L:{len(graph.data['relations'])}"})
@@ -991,59 +1225,23 @@ def compile_markdown(markdown: str, *, sample_id: str = "synthetic",
 
 
 def compile_expected(expected: dict[str, Any]) -> dict[str, Any]:
-    """Compile raw selected syntax, deliberately ignoring legacy record fields."""
-    if "business" in expected and "relations" in expected:
+    """Project a source-bound requirement graph, before reading candidates."""
+    from .requirement_graph import (
+        compile_requirement_graph,
+        evaluation_projection,
+        validate_requirement_graph,
+    )
+
+    if expected.get("standard") == "canonical_expected_derived_view":
+        model = copy.deepcopy(expected)
+    elif "business" in expected and "relations" in expected:
         return copy.deepcopy(expected)
-    graph = _Graph(expected["sample_id"])
-    toc_handled = graph.toc(read_toc(blocks=_toc_syntax_blocks(expected["targets"]), source={"path": "<selected-expected-syntax>"}))
-    selected_headings = {t["text"] for t in expected["targets"] if t["kind"] == "heading"}
-    for target in expected["targets"]:
-        source = target["reference"]
-        outside = target.get("outside_selection_context", [])
-        dependencies = [item for item in outside if item.get("kind") != "heading"]
-        graph.data["scope_context"].extend({"required": False, "target_source": source, **item}
-                                          for item in outside if item.get("kind") == "heading")
-        external = [name for name in target.get("context", []) if name not in selected_headings]
-        if external and not outside:
-            graph.data["scope_context"].append({"required": False, "target_source": source,
-                                               "kind": "heading", "text": external})
-        # Only selected, actually expressed headings may become obligations.
-        graph.headings = ([item["text"] for item in target["selected_heading_context"]]
-                          if "selected_heading_context" in target else
-                          [name for name in target.get("context", []) if name in selected_headings])
-        first_fact = len(graph.data["business"])
-        if target["id"] in toc_handled:
-            if target["kind"] == "heading":
-                graph.clear_heading_state()
-            graph.data["syntax"].append({"kind": target["kind"], "text": target["text"],
-                "source": {**source, "block": target["id"]}, "scope": list(graph.headings), "semantic_role": "toc"})
-        elif target.get("cells"):
-            graph.table(target["cells"], source)
-        else:
-            external_parents = {item.get("text") for item in outside if item.get("kind") == "list_parent"}
-            parents = [parent for parent in target.get("parents", []) if parent not in external_parents]
-            graph.prose(target.get("raw_text", target["text"]), source,
-                        "parent_label" if target.get("has_children") else target["kind"], parents)
-        local_facts = graph.data["business"][first_fact:]
-        unresolved = []
-        for dependency in dependencies:
-            if dependency.get("kind") != "explicit_unit_or_period":
-                unresolved.append(dependency)
-                continue
-            key = _context_kind(dependency["text"])
-            if _explicit_context(target["text"]):
-                continue  # A declaration is not a value depending on prior context.
-            relevant = [fact for fact in local_facts if not (key == "unit" and fact["role"] == "identity")]
-            if relevant and not all(key in fact["qualifiers"] for fact in relevant):
-                unresolved.append(dependency)
-            elif not local_facts and (target.get("cells") or any(char.isdigit() for char in target["text"])):
-                unresolved.append(dependency)
-        if unresolved:
-            layers = ["T", "L", "B"] if any(item.get("kind") in {"mixed_page_selection_declaration", "partial_syntax_selection"}
-                                                   for item in unresolved) else ["L", "B"]
-            graph.block("input_scope_context", source, layers=layers, outside_selection=unresolved)
-    graph.data.update({key: expected.get(key) for key in ("document_id", "family_id", "development_exposure", "source_pages")})
-    return _finish(graph)
+    else:
+        model = compile_requirement_graph(expected)
+    validate_requirement_graph(model)
+    result = evaluation_projection(model)
+    result["requirement_model"] = model
+    return result
 
 
 def read_candidate_markdown(markdown: str, *, sample_id: str = "synthetic", pipeline: str = "test") -> dict[str, Any]:
@@ -1239,9 +1437,9 @@ def _text_layer(reference: list[dict[str, Any]], candidate: list[dict[str, Any]]
         strict = _edit(item.get("strict_text", item["text"]), actual.get("strict_text", actual["text"]) if actual else "")
         totals.update(edit)
         located_characters += len(a) if actual else 0
-        rows.append({"id": item["id"], "layer": "T", "role": "literal", "expected": item,
-                     "actual": actual, "outcome": "correct" if a == b else "incorrect",
-                     "edits": edit, "strict_edits": strict, "source": item["source"],
+        rows.append({"id": item["id"], "layer": "T", "role": "literal", "expected": snapshot_copy(item),
+                     "actual": snapshot_copy(actual), "outcome": "correct" if a == b else "incorrect",
+                     "edits": edit, "strict_edits": strict, "source": snapshot_copy(item["source"]),
                      "root_cause": f"literal:{item['id']}"})
     denominator = sum(len(canonical(item["text"])) for item in reference)
     numerator = denominator - sum(totals.values())
@@ -1249,10 +1447,15 @@ def _text_layer(reference: list[dict[str, Any]], candidate: list[dict[str, Any]]
             "score": 100 * max(0, numerator) / denominator if denominator else None,
             "complete": True, **{key: totals[key] for key in ("S", "D", "I")},
             "located_units": len(matches), "required_units": len(reference),
-            "located_characters": located_characters, "unadjudicated_extra_units": [candidate[j] for j in sorted(available)],
+            "located_characters": located_characters, "unadjudicated_extra_units": snapshot_copy([candidate[j] for j in sorted(available)]),
             "full_scope_edit_rate": sum(totals.values()) / denominator if denominator else None}, rows
 
 def grade_layers(requirements: dict[str, Any], evidence: dict[str, Any]) -> dict[str, Any]:
+    with evidence_session():
+        return _grade_layers(requirements, evidence)
+
+
+def _grade_layers(requirements: dict[str, Any], evidence: dict[str, Any]) -> dict[str, Any]:
     if requirements["sample_id"] != evidence["sample_id"]:
         raise ValueError("expected and candidate sample identities differ")
     if requirements.get("requirement_ledger") != requirements["business"]:
@@ -1277,30 +1480,35 @@ def grade_layers(requirements: dict[str, Any], evidence: dict[str, Any]) -> dict
                     for issue in requirements.get("candidate_issues", []) if issue.get("category") in
                     {"candidate_ambiguity", "unadjudicated_extra_content", "software_unsupported"})
     blockers.extend({"side": "comparison", **blocker} for layer in layers.values() for blocker in layer.get("blockers", []))
+    for side, graph in (("expected", requirements), ("candidate", evidence)):
+        unsupported = sorted(set(graph.get("required_matcher_features", [])) - {"finite_tense"})
+        if unsupported:
+            blockers.append({"side": side, "reason": "narrative_comparison_features_not_validated", "layers": ["B", "L"],
+                             "required_features": unsupported})
     for key, layer in layers.items():
         affected = any(key in blocker.get("layers", ["L", "B"]) for blocker in blockers)
         layer["complete"] = not affected
         if affected:
             layer["score"] = None
-    return {"sample_id": requirements["sample_id"], "pipeline": evidence.get("pipeline"), "protocol": PROTOCOL,
+    return {"sample_id": requirements["sample_id"], "pipeline": evidence.get("pipeline"), "protocol": snapshot_copy(PROTOCOL),
             "layers": layers, "score": sum(layer["score"] for layer in layers.values()) / 3
             if not blockers and all(layer["denominator"] for layer in layers.values()) else None,
-            "publishable": not blockers, "blockers": blockers, "outcomes": rows,
-            "candidate_issues": copy.deepcopy(evidence.get("candidate_issues", [])),
-            "reference_interpretation_issues": copy.deepcopy(requirements.get("candidate_issues", [])),
-            "pending_requirements": {"expected": copy.deepcopy(requirements.get("pending_requirements", [])),
-                                     "candidate": copy.deepcopy(evidence.get("pending_requirements", []))},
-            "directory_evidence": {"required": copy.deepcopy(requirements.get("toc_evidence")),
-                                   "candidate": copy.deepcopy(evidence.get("toc_evidence"))},
-            "text_evidence": {"required_atoms": copy.deepcopy(requirements["text"]),
-                              "candidate_atoms": copy.deepcopy(evidence["text"]),
-                              "required_projection": copy.deepcopy(requirements.get("text_projection", {})),
-                              "candidate_projection": copy.deepcopy(evidence.get("text_projection", {}))},
-            "scope_evidence": {"contexts": copy.deepcopy(evidence.get("native_context")),
-                               "declared_paths": copy.deepcopy(scope_options["declared_paths"]),
-                               "context_labels": copy.deepcopy(scope_options["context_labels"])},
-            "status": evidence.get("status"), "timing": evidence.get("timing", {}),
-            **{key: requirements.get(key) for key in ("document_id", "family_id", "development_exposure")}}
+            "publishable": not blockers, "blockers": snapshot_copy(blockers), "outcomes": rows,
+            "candidate_issues": snapshot_copy(evidence.get("candidate_issues", [])),
+            "reference_interpretation_issues": snapshot_copy(requirements.get("candidate_issues", [])),
+            "pending_requirements": {"expected": snapshot_copy(requirements.get("pending_requirements", [])),
+                                     "candidate": snapshot_copy(evidence.get("pending_requirements", []))},
+            "directory_evidence": {"required": snapshot_copy(requirements.get("toc_evidence")),
+                                   "candidate": snapshot_copy(evidence.get("toc_evidence"))},
+            "text_evidence": {"required_atoms": snapshot_copy(requirements["text"]),
+                              "candidate_atoms": snapshot_copy(evidence["text"]),
+                              "required_projection": snapshot_copy(requirements.get("text_projection", {})),
+                              "candidate_projection": snapshot_copy(evidence.get("text_projection", {}))},
+            "scope_evidence": {"contexts": snapshot_copy(evidence.get("native_context")),
+                               "declared_paths": snapshot_copy(scope_options["declared_paths"]),
+                               "context_labels": snapshot_copy(scope_options["context_labels"])},
+            "status": evidence.get("status"), "timing": snapshot_copy(evidence.get("timing", {})),
+            **{key: snapshot_copy(requirements.get(key)) for key in ("document_id", "family_id", "development_exposure")}}
 
 
 def grade_expected(expected: dict[str, Any], observation: dict[str, Any]) -> dict[str, Any]:

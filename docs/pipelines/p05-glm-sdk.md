@@ -4,6 +4,8 @@
 
 [全部管线](README.md) · [固定比较条件](../../benchmark/pipelines-to-test.md#主比较配置)
 
+离线服务bridge已接入全页保存json_result主视图，空主视图不从raw_json_result或另一个显示视图择优补文；HTML原格、角色和引用留在来源审计，均分显示列框不作为源格。当前受控及单份JSON读回不代表全量service验收，阶段、视觉来源权限和执行门槛见[八管线服务适配](README.md#保存结果的八管线服务适配)。
+
 ## 1. 配置与执行边界
 
 全部页由 GLM-OCR SDK 完成布局和识别；不能用当前只处理扫描和混合页的服务分支代替。

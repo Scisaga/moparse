@@ -16,7 +16,10 @@ from typing import Any
 from rapidfuzz.distance import Levenshtein
 
 from .business_labels import role_label
+from .equivalence import decide_equivalence
+from .quantity import exact_number, normalize_quantity, ratio
 from .scope_correspondence import verify_scope
+from .scoring_evidence import snapshot_copy
 
 Canonicalize = Callable[[str], str]
 KNOWN_QUALIFIERS = frozenset({
@@ -24,26 +27,27 @@ KNOWN_QUALIFIERS = frozenset({
     "from_period", "to_period", "comparison_period", "condition", "exception", "note", "notes",
     "note_texts", "note_markers", "negation", "basis", "as_of", "date", "market",
     "modal", "modality", "polarity", "purpose", "condition_operator", "exception_operator",
+    "quantity_role", "tense",
 })
 POSITION_QUALIFIERS = frozenset({
     "unit", "currency", "period", "scope", "business_scope", "column_currency", "period_basis",
     "from_period", "to_period", "comparison_period", "basis", "as_of", "date", "market",
+    "quantity_role",
 })
 
 
 def freeze(value: Any, canonicalize: Canonicalize, *, dimension: str | None = None) -> Any:
     """Retain typed values, lists and dictionaries; never sort literal words."""
     if isinstance(value, dict):
-        return tuple(sorted((key, freeze(item, canonicalize, dimension=key)) for key, item in value.items()))
+        return tuple(sorted((key, freeze(decide_equivalence(
+            {"unit": item, "currency": value.get("currency"), "quantity_role": value.get("quantity_role")},
+            {"unit": item, "currency": value.get("currency"), "quantity_role": value.get("quantity_role")}, "unit")["canonical"]["required"], canonicalize)
+            if key == "unit" else freeze(item, canonicalize, dimension=key)) for key, item in value.items()))
     if isinstance(value, (list, tuple)):
         return tuple(freeze(item, canonicalize, dimension=dimension) for item in value)
     if isinstance(value, str):
-        value = canonicalize(value)
-        if dimension == "attribute":
-            value = role_label(value)
-        if dimension in {"period", "from_period", "to_period", "comparison_period"} and re.fullmatch(r"(?:19|20)\d{2}年?", value):
-            return value.removesuffix("年")
-        return value
+        normalized = decide_equivalence(value, value, dimension or "literal", context={"canonicalize": canonicalize})["canonical"]["required"]
+        return freeze(normalized, canonicalize) if isinstance(normalized, (dict, list, tuple)) else normalized
     return value
 
 
@@ -86,21 +90,26 @@ def query_for(item: dict[str, Any]) -> dict[str, Any]:
 
 
 def _check(required: Any, actual: Any, canonicalize: Canonicalize, *, key: str | None = None,
-           present: bool = True) -> dict[str, Any]:
-    correct = present and freeze(required, canonicalize, dimension=key) == freeze(actual, canonicalize, dimension=key)
-    return {"required": copy.deepcopy(required), "actual": copy.deepcopy(actual), "correct": bool(correct),
-            "status": "correct" if correct else "explicit_conflict" if present else "missing"}
+           present: bool = True, context=None, operands=None) -> dict[str, Any]:
+    decision = decide_equivalence(*(operands or (required, actual)), key or "literal",
+                                  context={"canonicalize": canonicalize, **(context or {})})
+    correct = present and decision["equivalent"]
+    result = {"required": copy.deepcopy(required), "actual": copy.deepcopy(actual), "correct": bool(correct),
+              "status": "correct" if correct else "explicit_conflict" if present else "missing"}
+    if key in {"attribute", "unit", "currency", "quantity", "period_basis"}:
+        result["equivalence"] = decision
+    return result
 
 
 def identity_checks(query: dict[str, Any], item: dict[str, Any], canonicalize: Canonicalize, *, contexts=None,
                     declared_paths=(), context_labels=()) -> dict[str, Any]:
-    checks = {key: _check(query[key], item.get(key, ""), canonicalize, key=key) for key in ("subject", "attribute")}
+    checks = {"subject": _check(query["subject"], item.get("subject", ""), canonicalize, key="entity")}
     own_context = item.get("context_evidence", {})
     if own_context:
         checks["candidate_context"] = {"correct": own_context.get("status") not in {"conflict", "ambiguous"},
                                        "status": own_context.get("status"),
-                                       "conflicts": copy.deepcopy(own_context.get("conflicts", [])),
-                                       "source": copy.deepcopy(own_context.get("source", {}))}
+                                       "conflicts": snapshot_copy(own_context.get("conflicts", [])),
+                                       "source": snapshot_copy(own_context.get("source", {}))}
     required_context, actual_context = logical_context(query, canonicalize), logical_context(item, canonicalize)
     options = context_options(item, canonicalize)
     matched = [path for path in options if _ends_with(path, required_context, canonicalize)]
@@ -115,7 +124,7 @@ def identity_checks(query: dict[str, Any], item: dict[str, Any], canonicalize: C
                        "correct": context_ok, "status": "correct" if context_ok else "explicit_conflict" if actual_context else "missing",
                        "basis": "candidate_printed_heading_or_explicit_group_context",
                        "candidate_paths": copy.deepcopy(options), "matched_paths": copy.deepcopy(matched),
-                       "context_evidence": copy.deepcopy(item.get("context_evidence", {}))}
+                       "context_evidence": snapshot_copy(item.get("context_evidence", {}))}
     if scope_verification is not None:
         checks["scope"]["verification"] = scope_verification
     wanted_facets, actual_facets = query["identity_facets"], item.get("identity_facets", {})
@@ -138,12 +147,21 @@ def identity_checks(query: dict[str, Any], item: dict[str, Any], canonicalize: C
                                 "checks": facet_checks, "correct": all(check["correct"] for check in facet_checks.values()),
                                 "status": "correct" if all(check["correct"] for check in facet_checks.values()) else "missing_or_conflicting_identity_facet"}
     wanted_q, actual_q = query["qualifiers"], item.get("qualifiers", {})
-    qualifier_checks = {key: _check(required, actual_q.get(key), canonicalize, key=key, present=key in actual_q)
+    qualifier_checks = {key: _check(required, actual_q.get(key), canonicalize, key=key, present=key in actual_q,
+                        operands=({"unit": required, "currency": wanted_q.get("currency"), "quantity_role": wanted_q.get("quantity_role")},
+                                  {"unit": actual_q.get(key), "currency": actual_q.get("currency"), "quantity_role": actual_q.get("quantity_role")})
+                        if key == "unit" else None)
                         for key, required in wanted_q.items()}
     checks["qualifiers"] = {"required": copy.deepcopy(wanted_q), "actual": copy.deepcopy(actual_q),
                             "checks": qualifier_checks, "correct": all(check["correct"] for check in qualifier_checks.values()),
                             "extra": {key: copy.deepcopy(value) for key, value in actual_q.items() if key not in wanted_q},
                             "status": "correct" if all(check["correct"] for check in qualifier_checks.values()) else "missing_or_conflicting_qualifier"}
+    independent = [{"dimension": "subject", "correct": checks["subject"]["correct"] and bool(query["subject"]), "source": item["source"]},
+                   {"dimension": "scope", "correct": context_ok and bool(required_context), "source": item["source"]}]
+    independent.extend({"dimension": dimension, "correct": check["correct"], "source": item["source"]}
+                       for dimension, check in qualifier_checks.items())
+    checks["attribute"] = _check(query["attribute"], item.get("attribute", ""), canonicalize, key="attribute",
+                                 context={"independent_checks": independent})
     return checks
 
 
@@ -160,7 +178,33 @@ def requirement_key(item: dict[str, Any], canonicalize: Canonicalize) -> tuple[A
 
 
 def assertion_signature(item: dict[str, Any], canonicalize: Canonicalize) -> tuple[Any, ...]:
-    return freeze(item["value"], canonicalize), freeze(item.get("qualifiers", {}), canonicalize)
+    q = item.get("qualifiers", {})
+    quantity = normalize_quantity({"value": item["value"], "unit": q.get("unit"), "currency": q.get("currency"),
+                                   "quantity_role": item.get("quantity_role", q.get("quantity_role"))})
+    number = exact_number(item["value"])
+    value = (quantity["value"] if quantity["matched"] else ratio(number) if number is not None else item["value"]
+             ) if item.get("role") != "identity" else item["value"]
+    return freeze(value, canonicalize), freeze(q, canonicalize)
+
+
+def _value_check(required, actual, canonicalize):
+    if (required.get("role") != "identity" and actual.get("role") != "identity"
+            and exact_number(required["value"]) is not None and exact_number(actual["value"]) is not None):
+        operands = tuple({"value": item["value"], "unit": item.get("qualifiers", {}).get("unit"),
+                          "currency": item.get("qualifiers", {}).get("currency"),
+                          "quantity_role": item.get("quantity_role", item.get("qualifiers", {}).get("quantity_role"))}
+                         for item in (required, actual))
+        return _check(required["value"], actual["value"], canonicalize, key="quantity", operands=operands)
+    return _check(required["value"], actual["value"], canonicalize)
+
+
+def _qualifier_check(required, actual, dimension, canonicalize):
+    wanted, found = required.get("qualifiers", {}), actual.get("qualifiers", {})
+    operands = tuple({"unit": q.get("unit"), "currency": q.get("currency"),
+                      "quantity_role": item.get("quantity_role", q.get("quantity_role"))}
+                     for item, q in ((required, wanted), (actual, found))) if dimension == "unit" else None
+    return _check(wanted.get(dimension), found.get(dimension), canonicalize, key=dimension,
+                  present=dimension in wanted and dimension in found, operands=operands)
 
 
 def _literal_hits(attribute: str, literals: list[dict[str, Any]], canonicalize: Canonicalize, *,
@@ -174,8 +218,8 @@ def _literal_hits(attribute: str, literals: list[dict[str, Any]], canonicalize: 
         if equivalent:
             positions = [[0, len(text)]]
         if positions:
-            hits.append({"id": item["id"], "source": copy.deepcopy(item["source"]), "text": item["text"],
-                         "scope": copy.deepcopy(item.get("scope", [])), "role": item.get("role", "literal"),
+            hits.append({"id": item["id"], "source": snapshot_copy(item["source"]), "text": item["text"],
+                         "scope": snapshot_copy(item.get("scope", [])), "role": item.get("role", "literal"),
                          "normalized_spans": positions, "recall": "declared_business_role_equivalence" if equivalent else "exact_or_declared_typographic_equivalence",
                          "decision": "literal_evidence_only", "reason": "literal_alone_does_not_prove_a_value_binding"})
     if not allow_approximate or not wanted:
@@ -186,8 +230,8 @@ def _literal_hits(attribute: str, literals: list[dict[str, Any]], canonicalize: 
         if item["id"] not in exact_ids and text and len(text) <= max(3 * len(wanted), 20):
             similarity = Levenshtein.normalized_similarity(wanted, text)
             if similarity >= 0.65:
-                hits.append({"id": item["id"], "source": copy.deepcopy(item["source"]), "text": item["text"],
-                             "scope": copy.deepcopy(item.get("scope", [])), "role": item.get("role", "literal"),
+                hits.append({"id": item["id"], "source": snapshot_copy(item["source"]), "text": item["text"],
+                             "scope": snapshot_copy(item.get("scope", [])), "role": item.get("role", "literal"),
                              "recall": "approximate_literal_with_retained_difference", "similarity": similarity,
                              "required_literal": attribute, "actual_literal": item["text"],
                              "decision": "literal_evidence_only", "reason": "literal_alone_does_not_prove_a_value_binding"})
@@ -198,27 +242,26 @@ def retrieve(query: dict[str, Any], candidates: list[dict[str, Any]], *, literal
              canonicalize: Canonicalize, contexts=None, declared_paths=(), context_labels=()) -> dict[str, Any]:
     scope_options = {"contexts": contexts, "declared_paths": declared_paths, "context_labels": context_labels}
     exact = [item for item in candidates if role_label(canonicalize(item["attribute"])) == role_label(canonicalize(query["attribute"]))]
-    qualified_exact = any(all(check["correct"] for check in identity_checks(query, item, canonicalize, **scope_options).values()) for item in exact)
-    recalled = exact + ([] if qualified_exact else [item for item in candidates if item not in exact and Levenshtein.normalized_similarity(
-        canonicalize(query["attribute"]), canonicalize(item["attribute"])) >= 0.65])
+    recalled = exact + [item for item in candidates if item not in exact and Levenshtein.normalized_similarity(
+        canonicalize(query["attribute"]), canonicalize(item["attribute"])) >= 0.65]
     hits = []
     for item in recalled:
         checks = identity_checks(query, item, canonicalize, **scope_options)
         accepted = all(check["correct"] for check in checks.values())
         conflicting = [key for key, check in checks.items() if not check["correct"]]
-        hits.append({"id": item["id"], "source": copy.deepcopy(item["source"]), "candidate": copy.deepcopy(item),
+        hits.append({"id": item["id"], "source": snapshot_copy(item["source"]), "candidate": snapshot_copy(item),
                      "identity": checks, "decision": "accepted" if accepted else "rejected",
                      "reason": "identity_and_context_verified_before_value_comparison" if accepted else "required_identity_missing_or_explicit_conflict",
                      "conflicting_dimensions": conflicting,
                      "recall": ("declared_business_role_equivalence" if item in exact and canonicalize(item["attribute"]) != canonicalize(query["attribute"])
                                 else "same_complete_attribute" if item in exact else "approximate_attribute_with_retained_difference"),
-                     "context_evidence": {"candidate_scope": copy.deepcopy(item.get("scope", [])),
-                                          "candidate_facets": copy.deepcopy(item.get("identity_facets", {})),
-                                          "row_evidence": copy.deepcopy(item.get("row_evidence", [])),
-                                          "header_evidence": copy.deepcopy(item.get("header_evidence", [])),
-                                          "source": copy.deepcopy(item["source"])}})
+                     "context_evidence": {"candidate_scope": snapshot_copy(item.get("scope", [])),
+                                          "candidate_facets": snapshot_copy(item.get("identity_facets", {})),
+                                          "row_evidence": snapshot_copy(item.get("row_evidence", [])),
+                                          "header_evidence": snapshot_copy(item.get("header_evidence", [])),
+                                          "source": snapshot_copy(item["source"])}})
     return {"query": copy.deepcopy(query), "candidates": hits,
-            "textual_hits": _literal_hits(query["attribute"], literals, canonicalize, allow_approximate=not qualified_exact),
+            "textual_hits": _literal_hits(query["attribute"], literals, canonicalize, allow_approximate=True),
             "accepted": [hit["id"] for hit in hits if hit["decision"] == "accepted"]}
 
 
@@ -231,8 +274,9 @@ def _record_id(item: dict[str, Any]) -> Any:
     return item.get("record_id") or item.get("source", {}).get("record_id")
 
 
-def record_vector(fields: list[dict[str, Any]], canonicalize: Canonicalize) -> Any:
-    return tuple(sorted(Counter((freeze(item["attribute"], canonicalize, dimension="attribute"),
+def record_vector(fields: list[dict[str, Any]], canonicalize: Canonicalize, *, attribute_labels=None) -> Any:
+    attribute_labels = attribute_labels or {}
+    return tuple(sorted(Counter((freeze(attribute_labels.get(item["id"], item["attribute"]), canonicalize, dimension="attribute"),
                                  assertion_signature(item, canonicalize)) for item in fields).items(), key=repr))
 
 
@@ -242,16 +286,24 @@ def _record_comparison(members: list[dict[str, Any]], candidates: list[dict[str,
     occurrences = Counter(requirement_key(item, canonicalize) for item in metric_members)
     if len(occurrences) < 2 or max(occurrences.values(), default=0) < 2:
         return None
-    query = query_for(metric_members[0])
-    query["qualifiers"] = {}
-    wanted_fields = {(freeze(item["attribute"], canonicalize, dimension="attribute"), freeze(item.get("qualifiers", {}), canonicalize))
-                     for item in metric_members}
-    relevant = []
+    relevant, labels, field_equivalence = [], {}, []
     for item in candidates:
-        check = identity_checks({**query, "attribute": item["attribute"]}, item, canonicalize, **scope_options)
-        if (item.get("role") != "identity" and all(part["correct"] for part in check.values())
-                and (freeze(item["attribute"], canonicalize, dimension="attribute"), freeze(item.get("qualifiers", {}), canonicalize)) in wanted_fields):
+        if item.get("role") == "identity":
+            continue
+        matched = []
+        for wanted in metric_members:
+            checks = identity_checks(query_for(wanted), item, canonicalize, **scope_options)
+            if all(part["correct"] for part in checks.values()):
+                matched.append((wanted, checks["attribute"].get("equivalence")))
+        attributes = {freeze(wanted["attribute"], canonicalize, dimension="attribute") for wanted, _ in matched}
+        if len(attributes) > 1:
+            return {"rule": "complete_record_vector_multiset", "complete": False, "equal": None,
+                    "reason": "duplicate_record_field_identity_ambiguous", "required_records": [], "actual_records": []}
+        if matched:
             relevant.append(item)
+            labels[item["id"]] = matched[0][0]["attribute"]
+            field_equivalence.append({"candidate_id": item["id"], "required_attribute": labels[item["id"]],
+                                      "equivalence": copy.deepcopy(matched[0][1])})
     if any(not _record_id(item) for item in [*metric_members, *relevant]):
         return {"rule": "complete_record_vector_multiset", "complete": False, "equal": None,
                 "reason": "duplicate_record_provenance_unsupported", "required_records": [], "actual_records": []}
@@ -259,15 +311,15 @@ def _record_comparison(members: list[dict[str, Any]], candidates: list[dict[str,
     for collection in (metric_members, relevant):
         records: dict[Any, list[dict[str, Any]]] = defaultdict(list)
         for item in collection:
-            if (freeze(item["attribute"], canonicalize, dimension="attribute"), freeze(item.get("qualifiers", {}), canonicalize)) in wanted_fields:
-                records[_record_id(item)].append(item)
+            records[_record_id(item)].append(item)
         by_record.append(records)
     equal = Counter(record_vector(fields, canonicalize) for fields in by_record[0].values()) == Counter(
-        record_vector(fields, canonicalize) for fields in by_record[1].values())
+        record_vector(fields, canonicalize, attribute_labels=labels) for fields in by_record[1].values())
     return {"rule": "complete_record_vector_multiset", "complete": True, "equal": equal,
             "reason": "complete_record_vectors_equal" if equal else "complete_record_vectors_differ",
-            "required_records": [{"record_id": key, "fields": copy.deepcopy(fields)} for key, fields in by_record[0].items()],
-            "actual_records": [{"record_id": key, "fields": copy.deepcopy(fields)} for key, fields in by_record[1].items()]}
+            "field_equivalence": field_equivalence,
+            "required_records": [{"record_id": key, "fields": snapshot_copy(fields)} for key, fields in by_record[0].items()],
+            "actual_records": [{"record_id": key, "fields": snapshot_copy(fields)} for key, fields in by_record[1].items()]}
 
 
 def grade_business(reference: list[dict[str, Any]], candidates: list[dict[str, Any]], *,
@@ -293,11 +345,23 @@ def grade_business(reference: list[dict[str, Any]], candidates: list[dict[str, A
         record = record_checks[_family(members[0], canonicalize)]
         unsupported_extra = sorted({extra for item in actual for extra in item.get("qualifiers", {})
                                     if extra not in members[0].get("qualifiers", {}) and extra not in KNOWN_QUALIFIERS})
-        unsupported = unsupported_extra or (record is not None and not record["complete"])
+        unresolved_units = []
+        for hit in trace["candidates"]:
+            checks = hit["identity"]
+            qualifier_checks = checks["qualifiers"]["checks"]
+            unresolved = qualifier_checks.get("unit", {}).get("equivalence", {}).get("status") == "unresolved"
+            if (unresolved and qualifier_checks["unit"]["status"] != "missing"
+                    and all(check["correct"] for dimension, check in checks.items() if dimension != "qualifiers")
+                    and all(check["correct"] for dimension, check in qualifier_checks.items() if dimension != "unit")):
+                unresolved_units.append(hit)
+        unsupported = unsupported_extra or unresolved_units or (record is not None and not record["complete"])
         if unsupported:
-            reason = "extra_qualifier_semantics_unsupported" if unsupported_extra else "duplicate_record_provenance_unsupported"
-            blockers.append({"reason": reason, "source": copy.deepcopy(members[0]["source"]), "layers": ["B"],
-                             "extra_qualifiers": unsupported_extra})
+            reason = ("extra_qualifier_semantics_unsupported" if unsupported_extra else "unit_equivalence_unsupported"
+                      if unresolved_units else record.get("reason", "duplicate_record_provenance_unsupported"))
+            blockers.append({"reason": reason, "source": snapshot_copy(members[0]["source"]), "layers": ["B"],
+                             "extra_qualifiers": unsupported_extra,
+                             "unit_decisions": [copy.deepcopy(hit["identity"]["qualifiers"]["checks"]["unit"]["equivalence"])
+                                                for hit in unresolved_units]})
         else:
             reason = ("complete_assertion_set_equal" if same else "missing_or_conflicting_identity_position" if not actual
                       else "complete_assertion_value_or_qualifier_set_different")
@@ -305,20 +369,18 @@ def grade_business(reference: list[dict[str, Any]], candidates: list[dict[str, A
             same = False
             reason = "complete_record_vector_multiset_different"
         for item in members:
-            row = {"id": item["id"], "layer": "B", "role": item["role"], "expected": copy.deepcopy(item),
-                   "actual": copy.deepcopy(actual), "outcome": "correct" if same and not unsupported else "incorrect",
-                   "retrieval": copy.deepcopy(trace), "reason": reason,
+            row = {"id": item["id"], "layer": "B", "role": item["role"], "expected": snapshot_copy(item),
+                   "actual": snapshot_copy(actual), "outcome": "correct" if same and not unsupported else "incorrect",
+                   "retrieval": snapshot_copy(trace), "reason": reason,
                    "comparisons": [{"id": candidate["id"],
-                                    "value": _check(item["value"], candidate["value"], canonicalize),
-                                    "qualifiers": {dimension: _check(item.get("qualifiers", {}).get(dimension),
-                                         candidate.get("qualifiers", {}).get(dimension), canonicalize, key=dimension,
-                                         present=dimension in item.get("qualifiers", {}) and dimension in candidate.get("qualifiers", {}))
+                                    "value": _value_check(item, candidate, canonicalize),
+                                    "qualifiers": {dimension: _qualifier_check(item, candidate, dimension, canonicalize)
                                          for dimension in sorted(set(item.get("qualifiers", {})) | set(candidate.get("qualifiers", {})))}}
                                    for candidate in actual],
                    "root_cause": ("record_family:" + repr(_family(item, canonicalize))
                                   if record and not record.get("equal") else "binding:" + repr(key))}
             if record:
-                row["record_comparison"] = copy.deepcopy(record)
+                row["record_comparison"] = snapshot_copy(record)
             if unsupported:
                 row["software_failure"] = True
             rows.append(row)

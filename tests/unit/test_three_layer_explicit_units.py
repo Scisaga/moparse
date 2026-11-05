@@ -59,3 +59,18 @@ def test_explicit_column_unit_remains_a_qualifier_despite_an_unusual_attribute_t
     assert actual["business"][0]["qualifiers"] == {"unit": "股"}
     score = grade_layers(reference, actual)
     assert score["publishable"] is True and score["layers"]["B"]["numerator"] == 1
+
+
+def test_a_series_currency_is_derived_from_its_actual_shared_unit_not_its_numeric_value():
+    text = "Unit: 人民币百万元\n\nRevenue:2028年137；2027年111"
+    graph = compile_markdown(text)
+    facts = graph["business"]
+    assert [(fact["value"], fact["qualifiers"]["period"]) for fact in facts] == [("137", "2028年"), ("111", "2027年")]
+    for fact in facts:
+        assert fact["qualifiers"]["unit"] == "人民币百万元"
+        assert fact["qualifiers"]["currency"] == "人民币"
+        proof = fact["qualifier_provenance"]["currency"]
+        assert proof["source"]["lines"] == [1, 1]
+        assert proof["source"]["text_span"] == [6, 9]
+        assert text.splitlines()[0][slice(*proof["source"]["text_span"])] == "人民币"
+        assert fact["source"]["lines"] == [3, 3]

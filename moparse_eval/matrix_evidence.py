@@ -17,6 +17,7 @@ from app.utils.measurement import unit_applicable, unit_kind
 
 from .business_labels import is_amount_role
 from .measurement_evidence import read_measurement_label, read_measurement_literal, read_unit_token
+from .period_evidence import read_period_label
 
 YEAR = re.compile(r"(?<![A-Za-z0-9])((?:19|20)\d{2})(年(?:度|末)?)?(?!\d)")
 UNIT = re.compile(r"(?:人民币|人民幣|美元|港元|港币|港幣|欧元|歐元)?[十百千万萬亿億]*元|人民币|人民幣|美元|港元|港币|港幣|欧元|歐元|(?:RMB|CNY|USD|HKD|EUR)\s*(?:millions?|thousands?|billions?)?|[%‰]|人|万股|萬股|股|吨|噸|件", re.I)
@@ -146,6 +147,9 @@ def _printed_qualifiers(text: str) -> tuple[dict[str, str], str, list[str]]:
     q: dict[str, str] = {}
     conflicts = []
     label = text.strip()
+    complete_period = read_period_label(label)
+    if complete_period["matched"]:
+        return complete_period["qualifiers"], complete_period["label"], []
     bases = list(dict.fromkeys(BASIS.findall(label)))
     if len(bases) == 1:
         q["period_basis"] = bases[0]
@@ -771,12 +775,23 @@ def read_matrix(cells: list[dict[str, Any]], *, source: dict[str, Any],
                 "data_evidence": _evidence(cell, source, "data_value"),
                 "identity_facets": facets, "row_path": row_labels,
                 "column_path": [_text(h) for h in headers], "role_basis": role_basis}
+        fact["qualifier_sources"] = {}
+        for header in headers:
+            header_origin = _evidence(header, source, "column_header")["source"]
+            period = read_period_label(header.get("text", ""), header_origin)
+            if period["matched"]:
+                for key, literal in period["qualifiers"].items():
+                    if q.get(key) == literal:
+                        fact["qualifier_sources"][key] = copy.deepcopy(period["qualifier_sources"][key])
+                        fact["qualifier_provenance"].setdefault(key, {
+                            "level": "header_explicit", "text": literal,
+                            "source": copy.deepcopy(period["qualifier_sources"][key])})
         if printed_value and printed_value["matched"]:
             fact["value_source"] = {**copy.deepcopy(printed_value["sources"]["value"]),
                                     "cell_text_span": list(printed_value["value_span"])}
-            fact["qualifier_sources"] = {key: {**copy.deepcopy(printed_value["sources"][key]),
+            fact["qualifier_sources"].update({key: {**copy.deepcopy(printed_value["sources"][key]),
                                                "cell_text_span": list(printed_value[key + "_span"])}
-                                         for key in ("unit", "currency") if key in printed_value["sources"]}
+                                         for key in ("unit", "currency") if key in printed_value["sources"]})
         result["facts"].append(fact)
         for issue in local_issues:
             issue.setdefault("affected_fact_ids", []).append(fact["id"])

@@ -25,6 +25,18 @@
 
 原生结构和媒体先保全，再据实际内容设计适配及共同组装。上游字段不足时记录缺失，现有 IR 不足时明确扩展需要，不把 GFM 或某个有限内部模型规定为所有候选的入口。实施依赖见[技术路线](../engineering/technical-route.md)，运行组件见[架构](../engineering/architecture.md)。
 
+## 保存结果的八管线服务适配
+
+工作区的[离线 bridge](../../moparse_eval/service_replay_native.py)现按已保存的实际页分支接入八组：P01/P02读取各自Docling文档树及GLM主视图，P03/P04读取各自Paddle页面区域，P05读取全页GLM主视图，P06/P07读取各自typed MinerU及GLM分支，P08读取视觉SDK块。这里没有重新运行converter、布局模型或识别模型，也不以raw审计视图补全主结果。后端原生对象仍独立保留；服务的表格和页面模型仅为消费投影，不能替代完整原生树、单元格引用、跨度、媒体、顺序及失败记录。
+
+[来源守卫](../../moparse_eval/service_source_policy.py)按每页实际分支限制PDF补充：Docling/MinerU原生分支保留声明的字层与矢量来源许可，GLM、Paddle和纯视觉分支不进入字层或矢量服务，包括混合配置中的GLM页。具体来源许可仍由[配置说明](../../benchmark/pipelines-to-test.md#各配置的信息许可)维护；候选worker不挂载expected、没有网络或GPU，模型调用由NoInference硬拒绝。独立后处理保持8 CPU、8 GiB及外层串行；保存输出分析的16进程不改变这些资源。
+
+[阶段审计](../../moparse_eval/service_stages.py)捕获实际adapted、source_pages、native_pages、exported、assets、semantic及final视图，保存各阶段的来源sidecar、适用页及未适用原因。adapted来自当时真实bridge页面，不是将faithful.md改名；相邻阶段的edit ledger保留实际字符串前后跨度及文字，只记录变换，不判断正确。未适用的来源阶段明确记录，不制造历史before。既有P07/P08 baseline/current实际正文不覆盖，P01-P06没有历史service baseline；新产物写入`service/executions/<执行身份>/pXX`，八组完成且同软件、同scope及结构门槛通过后，才可一次原子切换唯一`service/current/index.json`。
+
+本次实现验证包含受控格式、引用、来源许可及原子选择反例，以及只读同一保存单页的八组JSON诊断；P01/P02/P03/P04/P05/P08已在宿主读取到实际adapted阶段且原生JSON未改，P06/P07的声明middle对象与页指针可读，但宿主缺固定`docvortex==0.5.16`，官方typed投影仍为依赖准备缺口，不能以研究Markdown替代。未读取原PDF或图片、未执行新CPU全量回放或评分；这些工程观察不构成转换质量、完整覆盖或部署验收。实际执行须等待当前expected结构门槛及固定环境预检，不能沿用旧诊断状态充当passed gate。
+
+`prepare --validation <门槛文件>`可将同软件身份的`expected_structure_gate`写入新执行及worker plan，不启动候选；未提供门槛仍可准备工件，但不能实际warmup或measured。两种真实执行在启动容器前及worker入口都检查该门槛，warmup也不能使用已变化的软件；受控单函数测试不需要真实语料或容器。
+
 ## 核实状态
 
 已修复的研究执行问题包括共享 GLM 的 MRoPE 配对错误、Paddle 颜色交接错误、旋转坐标混用的来源路由，以及局部异常影响已有原生结果与导出的问题。源码审计和受控探针支持限定的机制结论；八组各自完成当前[工程预检02](../../benchmark/runs/lite/preflight/)同一清单的11个输入任务，实际配置与直接单页标定记录作为本次冻结依据。这些工程证据不能生成解析质量成绩或排名，生产路径也不能据此被认定已修复或验收；各组边界见对应专文和[执行层诊断](../../benchmark/diagnostics/README.md)。

@@ -20,11 +20,11 @@ def pending_contract(graph, body, metric, fields=FIELDS):
     assert [(fact["attribute"], fact["value"], fact["role"]) for fact in graph["business"]] == [
         ("Name", "Anchor", "identity")]
     [pending] = [item for item in graph.get("pending_requirements", [])
-                 if item.get("kind") == "compound_metric_series"]
+                 if item.get("reason") == "field_sequence_prefix_role_unresolved"]
     assert pending["text"] == body and pending["source"]["lines"] == [5, 5]
     assert pending["source"]["text_span"] == [0, len(body)]
-    assert pending["metric"]["text"] == metric
-    assert pending["metric"]["source"]["text_span"] == [0, len(metric)]
+    assert pending["prefix"]["text"] == metric
+    assert pending["prefix"]["source"]["text_span"] == [0, len(metric)]
     assert fields and len(pending["segments"]) == len(fields)
     assert [(part["label"], part["value"]) for part in pending["segments"]] == fields
     for part, (label, value) in zip(pending["segments"], fields, strict=True):
@@ -80,15 +80,24 @@ def test_unsupported_fiscal_scope_is_not_special_cased_to_exactly_two_periods_an
     ("Revenue:17; Profit:5", [("Revenue", "17"), ("Profit", "5")]),
     ("Date and time: 9:00\n\nLocation: https://example.invalid/notice?id=2028",
      [("Date and time", "9:00"), ("Location", "https://example.invalid/notice?id=2028")]),
-    ("Narrative: Phase 2; the operator recorded ready status.",
-     [("Narrative", "Phase 2; the operator recorded ready status.")]),
 ])
-def test_ordinary_fields_metadata_and_single_complex_values_keep_their_existing_exact_answers(body, wanted):
+def test_ordinary_fields_and_metadata_keep_their_existing_exact_answers(body, wanted):
     for graph in graphs("# Results\n\nName:Anchor\n\n" + body):
         assert graph["blockers"] == [] and graph.get("pending_requirements", []) == []
         assert [(fact["attribute"], fact["value"]) for fact in graph["business"]] == [("Name", "Anchor"), *wanted]
         assert len(graph["business"]) == 1 + len(wanted)
         assert [fact["qualifiers"] for fact in graph["business"]] == [{}] * (1 + len(wanted))
+
+
+def test_an_uninterpreted_narrative_body_is_preserved_without_becoming_one_metric():
+    text = "# Results\n\nName:Anchor\n\nNarrative: Phase 2; the operator recorded ready status."
+    required, actual = graphs(text)
+    for graph in (required, actual):
+        assert [(fact["attribute"], fact["value"]) for fact in graph["business"]] == [("Name", "Anchor")]
+        assert graph["blockers"] and any("B" in item.get("layers", []) for item in graph["blockers"])
+        assert "Phase 2; the operator recorded ready status." in " ".join(item["text"] for item in graph["text"])
+    score = grade_layers(required, actual)
+    assert score["layers"]["T"]["score"] == 100 and not score["layers"]["B"]["complete"]
 
 
 @pytest.mark.parametrize("with_change", [False, True])
