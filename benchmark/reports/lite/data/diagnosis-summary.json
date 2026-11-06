@@ -3,50 +3,2866 @@
   "quality_scores_withheld": true,
   "expected_comparison_complete": false,
   "candidate_comparison_started": false,
-  "software_id": "bafccbf659aeebc74e381b688a4a19aaad0621da0343c5b3086065fd22406916",
-  "git_head": "6000685719383c0af6366e7a906f766188c2eaa9",
+  "software_id": "2752505b1bca6fa146c875498e5c952fdea7daec66874e4f9c66fb67df2d01dd",
+  "git_head": "65af55b06484deb1f6087613844b9de0a4311cb5",
   "configured_analysis_workers": 16,
   "source_index": "benchmark/runs/lite/requirements/current/index.json",
-  "source_index_sha256": "01234f769f649a36874a4d604a86450dff0b6e10ce1a43fdee96f21dc17545b7",
+  "source_index_sha256": "2b175588797132e97a6f8e791271781e0abaf198048777bd80158bf3fa1aeae3",
   "source_compilation": {
+    "command": [
+      "/opt/moparse/.venv/bin/python",
+      "-m",
+      "moparse_eval.requirement_graph",
+      "--baseline",
+      "/opt/moparse/benchmark/runs/lite",
+      "--output",
+      "/opt/moparse/benchmark/runs/lite/requirements/.compiling-semantic-closure",
+      "--workers",
+      "16"
+    ],
+    "exit_code": 2,
+    "software_id": "2752505b1bca6fa146c875498e5c952fdea7daec66874e4f9c66fb67df2d01dd",
+    "software_unchanged": true,
+    "software_execution_seconds": 87.730639138259,
+    "temporary_output": "/opt/moparse/benchmark/runs/lite/requirements/.compiling-semantic-closure",
+    "analysis_workers": 16,
+    "candidate_read": false,
+    "pdf_or_image_read": false,
+    "canonical_expected_changed": false,
+    "state": "structure_blocked",
+    "records": 173,
     "declared_records": 173,
     "views_written": 173,
     "source_integrity_failures": 0,
-    "all_views_same_software_id": true,
     "source_obligation_inventory_complete": true,
-    "software_unchanged": true,
     "semantic_complete": false,
-    "analysis_workers": 16,
-    "scope": "authorized_expected_only_no_candidate_or_pdf",
-    "all_declared_views_written": true,
-    "inventory_validation": {
-      "status": "passed",
-      "scope": "source_integrity_not_semantic_oracle"
-    }
+    "final_index": "/opt/moparse/benchmark/runs/lite/requirements/current/index.json",
+    "index": "/opt/moparse/benchmark/runs/lite/requirements/current/index.json",
+    "index_sha256": "2b175588797132e97a6f8e791271781e0abaf198048777bd80158bf3fa1aeae3",
+    "all_views_same_software_id": true,
+    "purpose": "authorized_expected_source_only_export_not_quality_grades",
+    "output_replacement": "Validated temporary view installed as sole current; replaced generated views deleted, no archive retained."
   },
   "software_validation": {
-    "path": "benchmark/runs/lite/requirements/validation/software-validation.json",
-    "sha256": "29f241256108d0fb8ae6d619fc24ebb536b7c42a93bfe7d73c581c6cf2fd3700",
     "status": "passed",
-    "summary": "3864 passed in 78.12s",
-    "new_independent_test_cases_in_new_files": 95,
-    "scope": "Controlled authored expected plus synthetic candidate production chains; real work reads authorized expected sources only."
+    "summary": "3953 passed in 86.74s (0:01:26)",
+    "software_unchanged": true,
+    "tests_unchanged": true,
+    "path": "benchmark/runs/lite/requirements/validation/software-validation.json",
+    "sha256": "064cafa586d8291948cdaf4baa8f5c375ef467b71d80a1b05329c425e37ab439"
   },
   "actual_source_diagnosis": {
     "path": "benchmark/runs/lite/requirements/validation/actual-source-diagnosis.json",
-    "sha256": "a16ece0962494f933c9e6077cb0d6ddc0f38d3d37b3c18869565c6fb73462661"
+    "sha256": "28b40a7f0a339d4fb2685f64d68fc82ad690230eadb733276f4319892e5c6baa"
+  },
+  "source_preservation": {
+    "all_173_original_source_inventory_arrays_identical": true,
+    "all_173_authorized_selections_identical": true,
+    "all_five_scope_identities_unchanged": true,
+    "canonical_expected_changed": false,
+    "native_historical_or_original_costs_changed": false,
+    "generated_auxiliary_sources_arrays_identical": false,
+    "generated_auxiliary_source_view_changes": [
+      {
+        "sample_id": "huawei-business-review-p017",
+        "meaning": "Generated auxiliary fragments or interpretation flags changed; original inventory and selection are identical.",
+        "removed_auxiliary_entries": [],
+        "added_auxiliary_entries": [
+          {
+            "id": "source:32",
+            "kind": "fragment",
+            "text": "注",
+            "raw": "注",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-huawei-2024-annual/expected.md",
+              "lines": [
+                480,
+                480
+              ],
+              "text_span": [
+                0,
+                1
+              ]
+            },
+            "target_id": "expected:L480-480:32",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-huawei-2024-annual/expected.md",
+              "lines": [
+                480,
+                480
+              ]
+            },
+            "fragment_syntax": "field_label",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:33",
+            "kind": "fragment",
+            "text": "于2024年，云计算业务包含跨分部交易的收入金额为人民币68,801百万元。",
+            "raw": "于2024年，云计算业务包含跨分部交易的收入金额为人民币68,801百万元。",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-huawei-2024-annual/expected.md",
+              "lines": [
+                480,
+                480
+              ],
+              "text_span": [
+                2,
+                40
+              ]
+            },
+            "target_id": "expected:L480-480:32",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-huawei-2024-annual/expected.md",
+              "lines": [
+                480,
+                480
+              ]
+            },
+            "fragment_syntax": "field_body_sentence",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          }
+        ]
+      },
+      {
+        "sample_id": "nvidia-officers-risk-supply-p105-110",
+        "meaning": "Generated auxiliary fragments or interpretation flags changed; original inventory and selection are identical.",
+        "removed_auxiliary_entries": [
+          {
+            "id": "source:37",
+            "kind": "fragment",
+            "text": "The SEC’s website, http",
+            "raw": "The SEC’s website, http",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-nvidia-2025-annual/expected.md",
+              "lines": [
+                3282,
+                3282
+              ],
+              "text_span": [
+                500,
+                523
+              ]
+            },
+            "target_id": "expected:L3282-3282:13",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-nvidia-2025-annual/expected.md",
+              "lines": [
+                3282,
+                3282
+              ]
+            },
+            "fragment_syntax": "field_label",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:38",
+            "kind": "fragment",
+            "text": "//www.sec.gov, contains reports, proxy and information statements, and other information regarding issuers that file electronically with the SEC.",
+            "raw": "//www.sec.gov, contains reports, proxy and information statements, and other information regarding issuers that file electronically with the SEC.",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-nvidia-2025-annual/expected.md",
+              "lines": [
+                3282,
+                3282
+              ],
+              "text_span": [
+                524,
+                669
+              ]
+            },
+            "target_id": "expected:L3282-3282:13",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-nvidia-2025-annual/expected.md",
+              "lines": [
+                3282,
+                3282
+              ]
+            },
+            "fragment_syntax": "field_body_sentence",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          }
+        ],
+        "added_auxiliary_entries": [
+          {
+            "id": "source:37",
+            "kind": "fragment",
+            "text": "The SEC’s website, http://www.sec.gov, contains reports, proxy and information statements, and other information regarding issuers that file electronically with the SEC.",
+            "raw": "The SEC’s website, http://www.sec.gov, contains reports, proxy and information statements, and other information regarding issuers that file electronically with the SEC.",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-nvidia-2025-annual/expected.md",
+              "lines": [
+                3282,
+                3282
+              ],
+              "text_span": [
+                500,
+                669
+              ]
+            },
+            "target_id": "expected:L3282-3282:13",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-nvidia-2025-annual/expected.md",
+              "lines": [
+                3282,
+                3282
+              ]
+            },
+            "fragment_syntax": "sentence",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          }
+        ]
+      },
+      {
+        "sample_id": "pingan-business-highlights-p012-013",
+        "meaning": "Generated auxiliary fragments or interpretation flags changed; original inventory and selection are identical.",
+        "removed_auxiliary_entries": [
+          {
+            "id": "source:39",
+            "kind": "heading",
+            "text": "7. Integrated finance-enabled core competitive moat and customer development",
+            "raw": "### 7. Integrated finance-enabled core competitive moat and customer development\n",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-pingan-2024-annual/expected.md",
+              "lines": [
+                450,
+                450
+              ]
+            },
+            "target_id": "expected:L450-450:39",
+            "has_children": false,
+            "parents": [],
+            "contains_explicit_statement": true
+          }
+        ],
+        "added_auxiliary_entries": [
+          {
+            "id": "source:39",
+            "kind": "heading",
+            "text": "7. Integrated finance-enabled core competitive moat and customer development",
+            "raw": "### 7. Integrated finance-enabled core competitive moat and customer development\n",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-pingan-2024-annual/expected.md",
+              "lines": [
+                450,
+                450
+              ]
+            },
+            "target_id": "expected:L450-450:39",
+            "has_children": false,
+            "parents": [],
+            "contains_explicit_statement": false
+          }
+        ]
+      },
+      {
+        "sample_id": "sf-cashflow-assets-liabilities-p040-041",
+        "meaning": "Generated auxiliary fragments or interpretation flags changed; original inventory and selection are identical.",
+        "removed_auxiliary_entries": [
+          {
+            "id": "source:10",
+            "kind": "fragment",
+            "text": "**投資活動使用的現金淨額",
+            "raw": "**投資活動使用的現金淨額",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                912,
+                912
+              ],
+              "text_span": [
+                0,
+                13
+              ]
+            },
+            "target_id": "expected:L912-912:10",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                912,
+                912
+              ]
+            },
+            "fragment_syntax": "field_label",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:11",
+            "kind": "fragment",
+            "text": "**2024年本集團投資活動使用的現金淨額流出為人民幣120.5億元，相較2023年同期下降10.74%，主要由於本集團購買物業廠房設備淨現金流出減少、取得子公司及其他投資的淨現金流出減少，以及購買結構性存款淨現金流出增加等綜合影響。",
+            "raw": "**2024年本集團投資活動使用的現金淨額流出為人民幣120.5億元，相較2023年同期下降10.74%，主要由於本集團購買物業廠房設備淨現金流出減少、取得子公司及其他投資的淨現金流出減少，以及購買結構性存款淨現金流出增加等綜合影響。",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                912,
+                912
+              ],
+              "text_span": [
+                14,
+                131
+              ]
+            },
+            "target_id": "expected:L912-912:10",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                912,
+                912
+              ]
+            },
+            "fragment_syntax": "field_body_sentence",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:13",
+            "kind": "fragment",
+            "text": "**融資活動使用的現金淨額",
+            "raw": "**融資活動使用的現金淨額",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                914,
+                914
+              ],
+              "text_span": [
+                0,
+                13
+              ]
+            },
+            "target_id": "expected:L914-914:11",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                914,
+                914
+              ]
+            },
+            "fragment_syntax": "field_label",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:14",
+            "kind": "fragment",
+            "text": "**2024年本集團融資活動使用的現金淨額流出為人民幣279.8億元，相較2023年同期增長115.31%，主要由於本集團借款淨流出增加，分配股利淨流出增加，以及發行H股股份募集資金流入等綜合影響。",
+            "raw": "**2024年本集團融資活動使用的現金淨額流出為人民幣279.8億元，相較2023年同期增長115.31%，主要由於本集團借款淨流出增加，分配股利淨流出增加，以及發行H股股份募集資金流入等綜合影響。",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                914,
+                914
+              ],
+              "text_span": [
+                14,
+                113
+              ]
+            },
+            "target_id": "expected:L914-914:11",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                914,
+                914
+              ]
+            },
+            "fragment_syntax": "field_body_sentence",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:41",
+            "kind": "fragment",
+            "text": "**以公允價值計量且變動計入當期損益的金融資產",
+            "raw": "**以公允價值計量且變動計入當期損益的金融資產",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                946,
+                946
+              ],
+              "text_span": [
+                0,
+                23
+              ]
+            },
+            "target_id": "expected:L946-946:37",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                946,
+                946
+              ]
+            },
+            "fragment_syntax": "field_label",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:42",
+            "kind": "fragment",
+            "text": "**於2024年12月31日，本集團以公允價值計量且變動計入當期損益的金融資產為人民幣112.5億元，較2023年末增長65.15%，主要是結構性存款增加導致。",
+            "raw": "**於2024年12月31日，本集團以公允價值計量且變動計入當期損益的金融資產為人民幣112.5億元，較2023年末增長65.15%，主要是結構性存款增加導致。",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                946,
+                946
+              ],
+              "text_span": [
+                24,
+                104
+              ]
+            },
+            "target_id": "expected:L946-946:37",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                946,
+                946
+              ]
+            },
+            "fragment_syntax": "field_body_sentence",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:44",
+            "kind": "fragment",
+            "text": "**借款",
+            "raw": "**借款",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                948,
+                948
+              ],
+              "text_span": [
+                0,
+                4
+              ]
+            },
+            "target_id": "expected:L948-948:38",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                948,
+                948
+              ]
+            },
+            "fragment_syntax": "field_label",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:45",
+            "kind": "fragment",
+            "text": "**於2024年12月31日，本集團非流動負債中的借款為人民幣263.2億元，較2023年末下降13.41%，流動負債中的借款為人民幣183.7億元，較2023年末下降17.68%，主要是償還借款導致。",
+            "raw": "**於2024年12月31日，本集團非流動負債中的借款為人民幣263.2億元，較2023年末下降13.41%，流動負債中的借款為人民幣183.7億元，較2023年末下降17.68%，主要是償還借款導致。",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                948,
+                948
+              ],
+              "text_span": [
+                5,
+                106
+              ]
+            },
+            "target_id": "expected:L948-948:38",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                948,
+                948
+              ]
+            },
+            "fragment_syntax": "field_body_sentence",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:47",
+            "kind": "fragment",
+            "text": "**庫存股",
+            "raw": "**庫存股",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                950,
+                950
+              ],
+              "text_span": [
+                0,
+                5
+              ]
+            },
+            "target_id": "expected:L950-950:39",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                950,
+                950
+              ]
+            },
+            "fragment_syntax": "field_label",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:48",
+            "kind": "fragment",
+            "text": "**於2024年12月31日，本集團庫存股為人民幣7.6億元，較2023年末下降70.57%，主要是註銷本公司購回股份導致。",
+            "raw": "**於2024年12月31日，本集團庫存股為人民幣7.6億元，較2023年末下降70.57%，主要是註銷本公司購回股份導致。",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                950,
+                950
+              ],
+              "text_span": [
+                6,
+                68
+              ]
+            },
+            "target_id": "expected:L950-950:39",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                950,
+                950
+              ]
+            },
+            "fragment_syntax": "field_body_sentence",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          }
+        ],
+        "added_auxiliary_entries": [
+          {
+            "id": "source:9",
+            "kind": "fragment",
+            "text": "經營活動產生的現金淨額",
+            "raw": "經營活動產生的現金淨額",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                910,
+                910
+              ],
+              "text_span": [
+                2,
+                13
+              ]
+            },
+            "target_id": "expected:L910-910:9",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                910,
+                910
+              ]
+            },
+            "fragment_syntax": "field_label",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:10",
+            "kind": "fragment",
+            "text": "2024年本集團經營活動產生的現金淨額為人民幣321.9億元，相較2023年同期增長21.14%，主要由於本集團盈利增長，以及優化經營性現金流管理綜合影響所致。",
+            "raw": "2024年本集團經營活動產生的現金淨額為人民幣321.9億元，相較2023年同期增長21.14%，主要由於本集團盈利增長，以及優化經營性現金流管理綜合影響所致。",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                910,
+                910
+              ],
+              "text_span": [
+                16,
+                96
+              ]
+            },
+            "target_id": "expected:L910-910:9",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                910,
+                910
+              ]
+            },
+            "fragment_syntax": "field_body_sentence",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:11",
+            "kind": "fragment",
+            "text": "本集團2024年經營活動產生的現金淨額與淨利潤之間的差異說明請詳見合併財務報表附註34(a)。",
+            "raw": "本集團2024年經營活動產生的現金淨額與淨利潤之間的差異說明請詳見合併財務報表附註34(a)。",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                910,
+                910
+              ],
+              "text_span": [
+                96,
+                143
+              ]
+            },
+            "target_id": "expected:L910-910:9",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                910,
+                910
+              ]
+            },
+            "fragment_syntax": "field_body_sentence",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:13",
+            "kind": "fragment",
+            "text": "投資活動使用的現金淨額",
+            "raw": "投資活動使用的現金淨額",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                912,
+                912
+              ],
+              "text_span": [
+                2,
+                13
+              ]
+            },
+            "target_id": "expected:L912-912:10",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                912,
+                912
+              ]
+            },
+            "fragment_syntax": "field_label",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:14",
+            "kind": "fragment",
+            "text": "2024年本集團投資活動使用的現金淨額流出為人民幣120.5億元，相較2023年同期下降10.74%，主要由於本集團購買物業廠房設備淨現金流出減少、取得子公司及其他投資的淨現金流出減少，以及購買結構性存款淨現金流出增加等綜合影響。",
+            "raw": "2024年本集團投資活動使用的現金淨額流出為人民幣120.5億元，相較2023年同期下降10.74%，主要由於本集團購買物業廠房設備淨現金流出減少、取得子公司及其他投資的淨現金流出減少，以及購買結構性存款淨現金流出增加等綜合影響。",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                912,
+                912
+              ],
+              "text_span": [
+                16,
+                131
+              ]
+            },
+            "target_id": "expected:L912-912:10",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                912,
+                912
+              ]
+            },
+            "fragment_syntax": "field_body_sentence",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:16",
+            "kind": "fragment",
+            "text": "融資活動使用的現金淨額",
+            "raw": "融資活動使用的現金淨額",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                914,
+                914
+              ],
+              "text_span": [
+                2,
+                13
+              ]
+            },
+            "target_id": "expected:L914-914:11",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                914,
+                914
+              ]
+            },
+            "fragment_syntax": "field_label",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:17",
+            "kind": "fragment",
+            "text": "2024年本集團融資活動使用的現金淨額流出為人民幣279.8億元，相較2023年同期增長115.31%，主要由於本集團借款淨流出增加，分配股利淨流出增加，以及發行H股股份募集資金流入等綜合影響。",
+            "raw": "2024年本集團融資活動使用的現金淨額流出為人民幣279.8億元，相較2023年同期增長115.31%，主要由於本集團借款淨流出增加，分配股利淨流出增加，以及發行H股股份募集資金流入等綜合影響。",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                914,
+                914
+              ],
+              "text_span": [
+                16,
+                113
+              ]
+            },
+            "target_id": "expected:L914-914:11",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                914,
+                914
+              ]
+            },
+            "fragment_syntax": "field_body_sentence",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:43",
+            "kind": "fragment",
+            "text": "合同資產",
+            "raw": "合同資產",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                944,
+                944
+              ],
+              "text_span": [
+                2,
+                6
+              ]
+            },
+            "target_id": "expected:L944-944:36",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                944,
+                944
+              ]
+            },
+            "fragment_syntax": "field_label",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:44",
+            "kind": "fragment",
+            "text": "於2024年12月31日，本集團合同資產為人民幣27.4億元，較2023年末增長67.88%，主要由於本集團業務增長所致。",
+            "raw": "於2024年12月31日，本集團合同資產為人民幣27.4億元，較2023年末增長67.88%，主要由於本集團業務增長所致。",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                944,
+                944
+              ],
+              "text_span": [
+                9,
+                70
+              ]
+            },
+            "target_id": "expected:L944-944:36",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                944,
+                944
+              ]
+            },
+            "fragment_syntax": "field_body_sentence",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:46",
+            "kind": "fragment",
+            "text": "以公允價值計量且變動計入當期損益的金融資產",
+            "raw": "以公允價值計量且變動計入當期損益的金融資產",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                946,
+                946
+              ],
+              "text_span": [
+                2,
+                23
+              ]
+            },
+            "target_id": "expected:L946-946:37",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                946,
+                946
+              ]
+            },
+            "fragment_syntax": "field_label",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:47",
+            "kind": "fragment",
+            "text": "於2024年12月31日，本集團以公允價值計量且變動計入當期損益的金融資產為人民幣112.5億元，較2023年末增長65.15%，主要是結構性存款增加導致。",
+            "raw": "於2024年12月31日，本集團以公允價值計量且變動計入當期損益的金融資產為人民幣112.5億元，較2023年末增長65.15%，主要是結構性存款增加導致。",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                946,
+                946
+              ],
+              "text_span": [
+                26,
+                104
+              ]
+            },
+            "target_id": "expected:L946-946:37",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                946,
+                946
+              ]
+            },
+            "fragment_syntax": "field_body_sentence",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:49",
+            "kind": "fragment",
+            "text": "借款",
+            "raw": "借款",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                948,
+                948
+              ],
+              "text_span": [
+                2,
+                4
+              ]
+            },
+            "target_id": "expected:L948-948:38",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                948,
+                948
+              ]
+            },
+            "fragment_syntax": "field_label",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:50",
+            "kind": "fragment",
+            "text": "於2024年12月31日，本集團非流動負債中的借款為人民幣263.2億元，較2023年末下降13.41%，流動負債中的借款為人民幣183.7億元，較2023年末下降17.68%，主要是償還借款導致。",
+            "raw": "於2024年12月31日，本集團非流動負債中的借款為人民幣263.2億元，較2023年末下降13.41%，流動負債中的借款為人民幣183.7億元，較2023年末下降17.68%，主要是償還借款導致。",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                948,
+                948
+              ],
+              "text_span": [
+                7,
+                106
+              ]
+            },
+            "target_id": "expected:L948-948:38",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                948,
+                948
+              ]
+            },
+            "fragment_syntax": "field_body_sentence",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:52",
+            "kind": "fragment",
+            "text": "庫存股",
+            "raw": "庫存股",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                950,
+                950
+              ],
+              "text_span": [
+                2,
+                5
+              ]
+            },
+            "target_id": "expected:L950-950:39",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                950,
+                950
+              ]
+            },
+            "fragment_syntax": "field_label",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:53",
+            "kind": "fragment",
+            "text": "於2024年12月31日，本集團庫存股為人民幣7.6億元，較2023年末下降70.57%，主要是註銷本公司購回股份導致。",
+            "raw": "於2024年12月31日，本集團庫存股為人民幣7.6億元，較2023年末下降70.57%，主要是註銷本公司購回股份導致。",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                950,
+                950
+              ],
+              "text_span": [
+                8,
+                68
+              ]
+            },
+            "target_id": "expected:L950-950:39",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                950,
+                950
+              ]
+            },
+            "fragment_syntax": "field_body_sentence",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          }
+        ]
+      },
+      {
+        "sample_id": "sf-industry-business-review-p017-024",
+        "meaning": "Generated auxiliary fragments or interpretation flags changed; original inventory and selection are identical.",
+        "removed_auxiliary_entries": [
+          {
+            "id": "source:100",
+            "kind": "fragment",
+            "text": "**加快拓展航空大件市場",
+            "raw": "**加快拓展航空大件市場",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                458,
+                458
+              ],
+              "text_span": [
+                0,
+                12
+              ]
+            },
+            "target_id": "expected:L458-458:29",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                458,
+                458
+              ]
+            },
+            "fragment_syntax": "field_label",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:101",
+            "kind": "fragment",
+            "text": "**公司的高時效服務從「小件快遞」向「大件物流」領域延伸，為客戶提供跨省最快7小時達的大件空運服務。",
+            "raw": "**公司的高時效服務從「小件快遞」向「大件物流」領域延伸，為客戶提供跨省最快7小時達的大件空運服務。",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                458,
+                458
+              ],
+              "text_span": [
+                13,
+                63
+              ]
+            },
+            "target_id": "expected:L458-458:29",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                458,
+                458
+              ]
+            },
+            "fragment_syntax": "field_body_sentence",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:108",
+            "kind": "fragment",
+            "text": "**鄂州樞紐築高護城河",
+            "raw": "**鄂州樞紐築高護城河",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                464,
+                464
+              ],
+              "text_span": [
+                0,
+                11
+              ]
+            },
+            "target_id": "expected:L464-464:32",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                464,
+                464
+              ]
+            },
+            "fragment_syntax": "field_label",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:109",
+            "kind": "fragment",
+            "text": "**公司憑藉鄂州樞紐觸達全國、鏈接全球的優勢，為客戶提供倉儲+轉運一體化服務，最快「晚發晨到」的極致時效，助力客戶打造高效供應鏈。",
+            "raw": "**公司憑藉鄂州樞紐觸達全國、鏈接全球的優勢，為客戶提供倉儲+轉運一體化服務，最快「晚發晨到」的極致時效，助力客戶打造高效供應鏈。",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                464,
+                464
+              ],
+              "text_span": [
+                12,
+                77
+              ]
+            },
+            "target_id": "expected:L464-464:32",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                464,
+                464
+              ]
+            },
+            "fragment_syntax": "field_body_sentence",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:118",
+            "kind": "fragment",
+            "text": "**倉配一體化覆蓋更多行業場景",
+            "raw": "**倉配一體化覆蓋更多行業場景",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                472,
+                472
+              ],
+              "text_span": [
+                0,
+                15
+              ]
+            },
+            "target_id": "expected:L472-472:36",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                472,
+                472
+              ]
+            },
+            "fragment_syntax": "field_label",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:119",
+            "kind": "fragment",
+            "text": "**公司依託全國性倉網布局、倉配一體標準化產品及解決方案、專業運營團隊及全流程系統部署能力，為客戶提供高性價比的倉配一體化服務。",
+            "raw": "**公司依託全國性倉網布局、倉配一體標準化產品及解決方案、專業運營團隊及全流程系統部署能力，為客戶提供高性價比的倉配一體化服務。",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                472,
+                472
+              ],
+              "text_span": [
+                16,
+                80
+              ]
+            },
+            "target_id": "expected:L472-472:36",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                472,
+                472
+              ]
+            },
+            "fragment_syntax": "field_body_sentence",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:134",
+            "kind": "fragment",
+            "text": "**構築中高端陸運大包裹配送市場的競爭壁壘",
+            "raw": "**構築中高端陸運大包裹配送市場的競爭壁壘",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                482,
+                482
+              ],
+              "text_span": [
+                0,
+                21
+              ]
+            },
+            "target_id": "expected:L482-482:41",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                482,
+                482
+              ]
+            },
+            "fragment_syntax": "field_label",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:135",
+            "kind": "fragment",
+            "text": "**公司建立快且準的產品時效分層保障體系，對超過400條核心流向線路時效提速，優化末端收派能力，將單件包裹收寄標準重量放寬至1噸；並構建差異化包裝與送裝能力，在家電家居汽車等多個細分行業場景沉澱專業物流解決方案。",
+            "raw": "**公司建立快且準的產品時效分層保障體系，對超過400條核心流向線路時效提速，優化末端收派能力，將單件包裹收寄標準重量放寬至1噸；並構建差異化包裝與送裝能力，在家電家居汽車等多個細分行業場景沉澱專業物流解決方案。",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                482,
+                482
+              ],
+              "text_span": [
+                22,
+                128
+              ]
+            },
+            "target_id": "expected:L482-482:41",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                482,
+                482
+              ]
+            },
+            "fragment_syntax": "field_body_sentence",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:138",
+            "kind": "fragment",
+            "text": "**打造適配工業生產領域的優質物流零擔網絡",
+            "raw": "**打造適配工業生產領域的優質物流零擔網絡",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                484,
+                484
+              ],
+              "text_span": [
+                0,
+                21
+              ]
+            },
+            "target_id": "expected:L484-484:42",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                484,
+                484
+              ]
+            },
+            "fragment_syntax": "field_label",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:139",
+            "kind": "fragment",
+            "text": "**公司持續優化運營模式與資源配置，構建更加適配生產行業零擔發運、少中轉及低成本要求的優質物流零擔網絡，快速拓展工業大件市場。",
+            "raw": "**公司持續優化運營模式與資源配置，構建更加適配生產行業零擔發運、少中轉及低成本要求的優質物流零擔網絡，快速拓展工業大件市場。",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                484,
+                484
+              ],
+              "text_span": [
+                22,
+                85
+              ]
+            },
+            "target_id": "expected:L484-484:42",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                484,
+                484
+              ]
+            },
+            "fragment_syntax": "field_body_sentence",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:145",
+            "kind": "fragment",
+            "text": "**加盟網絡加速拓展下沉市場",
+            "raw": "**加盟網絡加速拓展下沉市場",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                486,
+                486
+              ],
+              "text_span": [
+                0,
+                14
+              ]
+            },
+            "target_id": "expected:L486-486:43",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                486,
+                486
+              ]
+            },
+            "fragment_syntax": "field_label",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:146",
+            "kind": "fragment",
+            "text": "**2024年順心捷達加盟網絡加速拓展下沉市場，網點總數突破20,000個，鄉鎮派送覆蓋率達85.3%，貨量市佔率穩居加盟型快運市場前三。",
+            "raw": "**2024年順心捷達加盟網絡加速拓展下沉市場，網點總數突破20,000個，鄉鎮派送覆蓋率達85.3%，貨量市佔率穩居加盟型快運市場前三。",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                486,
+                486
+              ],
+              "text_span": [
+                15,
+                84
+              ]
+            },
+            "target_id": "expected:L486-486:43",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                486,
+                486
+              ]
+            },
+            "fragment_syntax": "field_body_sentence",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:187",
+            "kind": "fragment",
+            "text": "**深化合作與服務升級，驅動商家及消費者規模雙線增長",
+            "raw": "**深化合作與服務升級，驅動商家及消費者規模雙線增長",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                516,
+                516
+              ],
+              "text_span": [
+                0,
+                26
+              ]
+            },
+            "target_id": "expected:L516-516:58",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                516,
+                516
+              ]
+            },
+            "fragment_syntax": "field_label",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:188",
+            "kind": "fragment",
+            "text": "**在商家合作方面，順豐同城鞏固及深化與KA客戶的合作，依託穩定的履約服務質量，保持市佔率領先並持續擴大合作的連鎖品牌數量，2024年新增與KA客戶合作的門店超過7,500家。",
+            "raw": "**在商家合作方面，順豐同城鞏固及深化與KA客戶的合作，依託穩定的履約服務質量，保持市佔率領先並持續擴大合作的連鎖品牌數量，2024年新增與KA客戶合作的門店超過7,500家。",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                516,
+                516
+              ],
+              "text_span": [
+                27,
+                115
+              ]
+            },
+            "target_id": "expected:L516-516:58",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                516,
+                516
+              ]
+            },
+            "fragment_syntax": "field_body_sentence",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:197",
+            "kind": "fragment",
+            "text": "**加速全國服務網絡覆蓋，以全場景配送能力實現市場快速拓展",
+            "raw": "**加速全國服務網絡覆蓋，以全場景配送能力實現市場快速拓展",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                518,
+                518
+              ],
+              "text_span": [
+                0,
+                29
+              ]
+            },
+            "target_id": "expected:L518-518:59",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                518,
+                518
+              ]
+            },
+            "fragment_syntax": "field_label",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:198",
+            "kind": "fragment",
+            "text": "**在服務場景方面，順豐同城聚焦重點品類優化產品服務，2024年在茶飲、商超便利、美妝、醫藥、母嬰等品類的配送業務均取得高雙位數增長，特別是茶飲配送收入同比增長73%，以及與全國性頭部及區域性連鎖商超客戶的合作實現突破性進展。",
+            "raw": "**在服務場景方面，順豐同城聚焦重點品類優化產品服務，2024年在茶飲、商超便利、美妝、醫藥、母嬰等品類的配送業務均取得高雙位數增長，特別是茶飲配送收入同比增長73%，以及與全國性頭部及區域性連鎖商超客戶的合作實現突破性進展。",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                518,
+                518
+              ],
+              "text_span": [
+                30,
+                143
+              ]
+            },
+            "target_id": "expected:L518-518:59",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                518,
+                518
+              ]
+            },
+            "fragment_syntax": "field_body_sentence",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:209",
+            "kind": "fragment",
+            "text": "**加碼端到端國際網絡建設",
+            "raw": "**加碼端到端國際網絡建設",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                526,
+                526
+              ],
+              "text_span": [
+                0,
+                13
+              ]
+            },
+            "target_id": "expected:L526-526:63",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                526,
+                526
+              ]
+            },
+            "fragment_syntax": "field_label",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:210",
+            "kind": "fragment",
+            "text": "**公司持續織密航空幹線網絡，2024年全貨機國際航班超過9,100架次，同比增長19%，形成以鄂州樞紐為核心連通歐美、深圳樞紐為輔助連通東南亞及日韓的全球航網布局。",
+            "raw": "**公司持續織密航空幹線網絡，2024年全貨機國際航班超過9,100架次，同比增長19%，形成以鄂州樞紐為核心連通歐美、深圳樞紐為輔助連通東南亞及日韓的全球航網布局。",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                526,
+                526
+              ],
+              "text_span": [
+                14,
+                97
+              ]
+            },
+            "target_id": "expected:L526-526:63",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                526,
+                526
+              ]
+            },
+            "fragment_syntax": "field_body_sentence",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          }
+        ],
+        "added_auxiliary_entries": [
+          {
+            "id": "source:100",
+            "kind": "fragment",
+            "text": "加快拓展航空大件市場",
+            "raw": "加快拓展航空大件市場",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                458,
+                458
+              ],
+              "text_span": [
+                2,
+                12
+              ]
+            },
+            "target_id": "expected:L458-458:29",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                458,
+                458
+              ]
+            },
+            "fragment_syntax": "field_label",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:101",
+            "kind": "fragment",
+            "text": "公司的高時效服務從「小件快遞」向「大件物流」領域延伸，為客戶提供跨省最快7小時達的大件空運服務。",
+            "raw": "公司的高時效服務從「小件快遞」向「大件物流」領域延伸，為客戶提供跨省最快7小時達的大件空運服務。",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                458,
+                458
+              ],
+              "text_span": [
+                15,
+                63
+              ]
+            },
+            "target_id": "expected:L458-458:29",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                458,
+                458
+              ]
+            },
+            "fragment_syntax": "field_body_sentence",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:108",
+            "kind": "fragment",
+            "text": "鄂州樞紐築高護城河",
+            "raw": "鄂州樞紐築高護城河",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                464,
+                464
+              ],
+              "text_span": [
+                2,
+                11
+              ]
+            },
+            "target_id": "expected:L464-464:32",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                464,
+                464
+              ]
+            },
+            "fragment_syntax": "field_label",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:109",
+            "kind": "fragment",
+            "text": "公司憑藉鄂州樞紐觸達全國、鏈接全球的優勢，為客戶提供倉儲+轉運一體化服務，最快「晚發晨到」的極致時效，助力客戶打造高效供應鏈。",
+            "raw": "公司憑藉鄂州樞紐觸達全國、鏈接全球的優勢，為客戶提供倉儲+轉運一體化服務，最快「晚發晨到」的極致時效，助力客戶打造高效供應鏈。",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                464,
+                464
+              ],
+              "text_span": [
+                14,
+                77
+              ]
+            },
+            "target_id": "expected:L464-464:32",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                464,
+                464
+              ]
+            },
+            "fragment_syntax": "field_body_sentence",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:118",
+            "kind": "fragment",
+            "text": "倉配一體化覆蓋更多行業場景",
+            "raw": "倉配一體化覆蓋更多行業場景",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                472,
+                472
+              ],
+              "text_span": [
+                2,
+                15
+              ]
+            },
+            "target_id": "expected:L472-472:36",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                472,
+                472
+              ]
+            },
+            "fragment_syntax": "field_label",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:119",
+            "kind": "fragment",
+            "text": "公司依託全國性倉網布局、倉配一體標準化產品及解決方案、專業運營團隊及全流程系統部署能力，為客戶提供高性價比的倉配一體化服務。",
+            "raw": "公司依託全國性倉網布局、倉配一體標準化產品及解決方案、專業運營團隊及全流程系統部署能力，為客戶提供高性價比的倉配一體化服務。",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                472,
+                472
+              ],
+              "text_span": [
+                18,
+                80
+              ]
+            },
+            "target_id": "expected:L472-472:36",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                472,
+                472
+              ]
+            },
+            "fragment_syntax": "field_body_sentence",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:134",
+            "kind": "fragment",
+            "text": "構築中高端陸運大包裹配送市場的競爭壁壘",
+            "raw": "構築中高端陸運大包裹配送市場的競爭壁壘",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                482,
+                482
+              ],
+              "text_span": [
+                2,
+                21
+              ]
+            },
+            "target_id": "expected:L482-482:41",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                482,
+                482
+              ]
+            },
+            "fragment_syntax": "field_label",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:135",
+            "kind": "fragment",
+            "text": "公司建立快且準的產品時效分層保障體系，對超過400條核心流向線路時效提速，優化末端收派能力，將單件包裹收寄標準重量放寬至1噸；並構建差異化包裝與送裝能力，在家電家居汽車等多個細分行業場景沉澱專業物流解決方案。",
+            "raw": "公司建立快且準的產品時效分層保障體系，對超過400條核心流向線路時效提速，優化末端收派能力，將單件包裹收寄標準重量放寬至1噸；並構建差異化包裝與送裝能力，在家電家居汽車等多個細分行業場景沉澱專業物流解決方案。",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                482,
+                482
+              ],
+              "text_span": [
+                24,
+                128
+              ]
+            },
+            "target_id": "expected:L482-482:41",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                482,
+                482
+              ]
+            },
+            "fragment_syntax": "field_body_sentence",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:138",
+            "kind": "fragment",
+            "text": "打造適配工業生產領域的優質物流零擔網絡",
+            "raw": "打造適配工業生產領域的優質物流零擔網絡",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                484,
+                484
+              ],
+              "text_span": [
+                2,
+                21
+              ]
+            },
+            "target_id": "expected:L484-484:42",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                484,
+                484
+              ]
+            },
+            "fragment_syntax": "field_label",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:139",
+            "kind": "fragment",
+            "text": "公司持續優化運營模式與資源配置，構建更加適配生產行業零擔發運、少中轉及低成本要求的優質物流零擔網絡，快速拓展工業大件市場。",
+            "raw": "公司持續優化運營模式與資源配置，構建更加適配生產行業零擔發運、少中轉及低成本要求的優質物流零擔網絡，快速拓展工業大件市場。",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                484,
+                484
+              ],
+              "text_span": [
+                24,
+                85
+              ]
+            },
+            "target_id": "expected:L484-484:42",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                484,
+                484
+              ]
+            },
+            "fragment_syntax": "field_body_sentence",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:145",
+            "kind": "fragment",
+            "text": "加盟網絡加速拓展下沉市場",
+            "raw": "加盟網絡加速拓展下沉市場",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                486,
+                486
+              ],
+              "text_span": [
+                2,
+                14
+              ]
+            },
+            "target_id": "expected:L486-486:43",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                486,
+                486
+              ]
+            },
+            "fragment_syntax": "field_label",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:146",
+            "kind": "fragment",
+            "text": "2024年順心捷達加盟網絡加速拓展下沉市場，網點總數突破20,000個，鄉鎮派送覆蓋率達85.3%，貨量市佔率穩居加盟型快運市場前三。",
+            "raw": "2024年順心捷達加盟網絡加速拓展下沉市場，網點總數突破20,000個，鄉鎮派送覆蓋率達85.3%，貨量市佔率穩居加盟型快運市場前三。",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                486,
+                486
+              ],
+              "text_span": [
+                17,
+                84
+              ]
+            },
+            "target_id": "expected:L486-486:43",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                486,
+                486
+              ]
+            },
+            "fragment_syntax": "field_body_sentence",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:187",
+            "kind": "fragment",
+            "text": "深化合作與服務升級，驅動商家及消費者規模雙線增長",
+            "raw": "深化合作與服務升級，驅動商家及消費者規模雙線增長",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                516,
+                516
+              ],
+              "text_span": [
+                2,
+                26
+              ]
+            },
+            "target_id": "expected:L516-516:58",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                516,
+                516
+              ]
+            },
+            "fragment_syntax": "field_label",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:188",
+            "kind": "fragment",
+            "text": "在商家合作方面，順豐同城鞏固及深化與KA客戶的合作，依託穩定的履約服務質量，保持市佔率領先並持續擴大合作的連鎖品牌數量，2024年新增與KA客戶合作的門店超過7,500家。",
+            "raw": "在商家合作方面，順豐同城鞏固及深化與KA客戶的合作，依託穩定的履約服務質量，保持市佔率領先並持續擴大合作的連鎖品牌數量，2024年新增與KA客戶合作的門店超過7,500家。",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                516,
+                516
+              ],
+              "text_span": [
+                29,
+                115
+              ]
+            },
+            "target_id": "expected:L516-516:58",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                516,
+                516
+              ]
+            },
+            "fragment_syntax": "field_body_sentence",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:197",
+            "kind": "fragment",
+            "text": "加速全國服務網絡覆蓋，以全場景配送能力實現市場快速拓展",
+            "raw": "加速全國服務網絡覆蓋，以全場景配送能力實現市場快速拓展",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                518,
+                518
+              ],
+              "text_span": [
+                2,
+                29
+              ]
+            },
+            "target_id": "expected:L518-518:59",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                518,
+                518
+              ]
+            },
+            "fragment_syntax": "field_label",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:198",
+            "kind": "fragment",
+            "text": "在服務場景方面，順豐同城聚焦重點品類優化產品服務，2024年在茶飲、商超便利、美妝、醫藥、母嬰等品類的配送業務均取得高雙位數增長，特別是茶飲配送收入同比增長73%，以及與全國性頭部及區域性連鎖商超客戶的合作實現突破性進展。",
+            "raw": "在服務場景方面，順豐同城聚焦重點品類優化產品服務，2024年在茶飲、商超便利、美妝、醫藥、母嬰等品類的配送業務均取得高雙位數增長，特別是茶飲配送收入同比增長73%，以及與全國性頭部及區域性連鎖商超客戶的合作實現突破性進展。",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                518,
+                518
+              ],
+              "text_span": [
+                32,
+                143
+              ]
+            },
+            "target_id": "expected:L518-518:59",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                518,
+                518
+              ]
+            },
+            "fragment_syntax": "field_body_sentence",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:209",
+            "kind": "fragment",
+            "text": "加碼端到端國際網絡建設",
+            "raw": "加碼端到端國際網絡建設",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                526,
+                526
+              ],
+              "text_span": [
+                2,
+                13
+              ]
+            },
+            "target_id": "expected:L526-526:63",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                526,
+                526
+              ]
+            },
+            "fragment_syntax": "field_label",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:210",
+            "kind": "fragment",
+            "text": "公司持續織密航空幹線網絡，2024年全貨機國際航班超過9,100架次，同比增長19%，形成以鄂州樞紐為核心連通歐美、深圳樞紐為輔助連通東南亞及日韓的全球航網布局。",
+            "raw": "公司持續織密航空幹線網絡，2024年全貨機國際航班超過9,100架次，同比增長19%，形成以鄂州樞紐為核心連通歐美、深圳樞紐為輔助連通東南亞及日韓的全球航網布局。",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                526,
+                526
+              ],
+              "text_span": [
+                16,
+                97
+              ]
+            },
+            "target_id": "expected:L526-526:63",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                526,
+                526
+              ]
+            },
+            "fragment_syntax": "field_body_sentence",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          }
+        ]
+      },
+      {
+        "sample_id": "sf-supply-chain-operating-efficiency-p025-026",
+        "meaning": "Generated auxiliary fragments or interpretation flags changed; original inventory and selection are identical.",
+        "removed_auxiliary_entries": [
+          {
+            "id": "source:11",
+            "kind": "fragment",
+            "text": "**建設高效的中轉網絡",
+            "raw": "**建設高效的中轉網絡",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                548,
+                548
+              ],
+              "text_span": [
+                0,
+                11
+              ]
+            },
+            "target_id": "expected:L548-548:5",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                548,
+                548
+              ]
+            },
+            "fragment_syntax": "field_label",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:12",
+            "kind": "fragment",
+            "text": "**公司持續推動骨幹網絡精簡和優化，聚合建設多功能大型場地，減少中轉場數量22個。",
+            "raw": "**公司持續推動骨幹網絡精簡和優化，聚合建設多功能大型場地，減少中轉場數量22個。",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                548,
+                548
+              ],
+              "text_span": [
+                12,
+                53
+              ]
+            },
+            "target_id": "expected:L548-548:5",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                548,
+                548
+              ]
+            },
+            "fragment_syntax": "field_body_sentence",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:16",
+            "kind": "fragment",
+            "text": "**提高中轉場經營效益",
+            "raw": "**提高中轉場經營效益",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                550,
+                550
+              ],
+              "text_span": [
+                0,
+                11
+              ]
+            },
+            "target_id": "expected:L550-550:6",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                550,
+                550
+              ]
+            },
+            "fragment_syntax": "field_label",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:17",
+            "kind": "fragment",
+            "text": "**中轉場向經營中心轉型，提高自主經營能力與意識，提升場地資源利用率。",
+            "raw": "**中轉場向經營中心轉型，提高自主經營能力與意識，提升場地資源利用率。",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                550,
+                550
+              ],
+              "text_span": [
+                12,
+                47
+              ]
+            },
+            "target_id": "expected:L550-550:6",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                550,
+                550
+              ]
+            },
+            "fragment_syntax": "field_body_sentence",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:23",
+            "kind": "fragment",
+            "text": "**打造行業首個無人化快件容器轉運中心",
+            "raw": "**打造行業首個無人化快件容器轉運中心",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                552,
+                552
+              ],
+              "text_span": [
+                0,
+                19
+              ]
+            },
+            "target_id": "expected:L552-552:7",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                552,
+                552
+              ]
+            },
+            "fragment_syntax": "field_label",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:24",
+            "kind": "fragment",
+            "text": "**公司正式投運首個可實現快件以容器集裝並轉運的無人化智能轉運中心，是行業內首創的全新無人化轉運模式，實現局部「熄燈工廠」作業。",
+            "raw": "**公司正式投運首個可實現快件以容器集裝並轉運的無人化智能轉運中心，是行業內首創的全新無人化轉運模式，實現局部「熄燈工廠」作業。",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                552,
+                552
+              ],
+              "text_span": [
+                20,
+                84
+              ]
+            },
+            "target_id": "expected:L552-552:7",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                552,
+                552
+              ]
+            },
+            "fragment_syntax": "field_body_sentence",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:29",
+            "kind": "fragment",
+            "text": "**優化陸網線路規劃",
+            "raw": "**優化陸網線路規劃",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                556,
+                556
+              ],
+              "text_span": [
+                0,
+                10
+              ]
+            },
+            "target_id": "expected:L556-556:9",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                556,
+                556
+              ]
+            },
+            "fragment_syntax": "field_label",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:30",
+            "kind": "fragment",
+            "text": "**結合中轉場的整合建設，以及大小件運輸線路融通，持續調優轉運模式和路由規劃，實現最大化集約發貨與拉直線路，2024年實現寄件地與目的地的城市之間直發線路新增近440條，提升城市連通率，快件平均中轉次數下降。",
+            "raw": "**結合中轉場的整合建設，以及大小件運輸線路融通，持續調優轉運模式和路由規劃，實現最大化集約發貨與拉直線路，2024年實現寄件地與目的地的城市之間直發線路新增近440條，提升城市連通率，快件平均中轉次數下降。",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                556,
+                556
+              ],
+              "text_span": [
+                11,
+                115
+              ]
+            },
+            "target_id": "expected:L556-556:9",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                556,
+                556
+              ]
+            },
+            "fragment_syntax": "field_body_sentence",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:33",
+            "kind": "fragment",
+            "text": "**調優運力資源結構",
+            "raw": "**調優運力資源結構",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                558,
+                558
+              ],
+              "text_span": [
+                0,
+                10
+              ]
+            },
+            "target_id": "expected:L558-558:10",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                558,
+                558
+              ]
+            },
+            "fragment_syntax": "field_label",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:34",
+            "kind": "fragment",
+            "text": "**幹線運輸方面，通過結合貨量及場景匹配最優運力資源，長期合作及運價穩定的運力資源（包括自營運力、按年合作的外包運力等）所承運任務佔比超過95%，確保運力資源價格穩定",
+            "raw": "**幹線運輸方面，通過結合貨量及場景匹配最優運力資源，長期合作及運價穩定的運力資源（包括自營運力、按年合作的外包運力等）所承運任務佔比超過95%，確保運力資源價格穩定",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                558,
+                558
+              ],
+              "text_span": [
+                11,
+                94
+              ]
+            },
+            "target_id": "expected:L558-558:10",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                558,
+                558
+              ]
+            },
+            "fragment_syntax": "field_body_sentence",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:39",
+            "kind": "fragment",
+            "text": "**提高網點效率",
+            "raw": "**提高網點效率",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                562,
+                562
+              ],
+              "text_span": [
+                0,
+                8
+              ]
+            },
+            "target_id": "expected:L562-562:12",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                562,
+                562
+              ]
+            },
+            "fragment_syntax": "field_label",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:40",
+            "kind": "fragment",
+            "text": "**公司推行的「中轉場直接分揀+容器集裝並直接發運至末端小哥收派區域」的營運模式變革，截至2024年底累計推廣至超過3,400個網點和超過9,600個終端小站點。",
+            "raw": "**公司推行的「中轉場直接分揀+容器集裝並直接發運至末端小哥收派區域」的營運模式變革，截至2024年底累計推廣至超過3,400個網點和超過9,600個終端小站點。",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                562,
+                562
+              ],
+              "text_span": [
+                9,
+                90
+              ]
+            },
+            "target_id": "expected:L562-562:12",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                562,
+                562
+              ]
+            },
+            "fragment_syntax": "field_body_sentence",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:47",
+            "kind": "fragment",
+            "text": "**提升小哥效率",
+            "raw": "**提升小哥效率",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                566,
+                566
+              ],
+              "text_span": [
+                0,
+                8
+              ]
+            },
+            "target_id": "expected:L566-566:14",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                566,
+                566
+              ]
+            },
+            "fragment_syntax": "field_label",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:48",
+            "kind": "fragment",
+            "text": "**公司不斷創新和迭代小哥的收派作業工具，助力提高收派效率，降低小哥勞動強度，2024年小件收派效能同比提升7.8%，大件收派效能同比提升9.1%。",
+            "raw": "**公司不斷創新和迭代小哥的收派作業工具，助力提高收派效率，降低小哥勞動強度，2024年小件收派效能同比提升7.8%，大件收派效能同比提升9.1%。",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                566,
+                566
+              ],
+              "text_span": [
+                9,
+                83
+              ]
+            },
+            "target_id": "expected:L566-566:14",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                566,
+                566
+              ]
+            },
+            "fragment_syntax": "field_body_sentence",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          }
+        ],
+        "added_auxiliary_entries": [
+          {
+            "id": "source:11",
+            "kind": "fragment",
+            "text": "建設高效的中轉網絡",
+            "raw": "建設高效的中轉網絡",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                548,
+                548
+              ],
+              "text_span": [
+                2,
+                11
+              ]
+            },
+            "target_id": "expected:L548-548:5",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                548,
+                548
+              ]
+            },
+            "fragment_syntax": "field_label",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:12",
+            "kind": "fragment",
+            "text": "公司持續推動骨幹網絡精簡和優化，聚合建設多功能大型場地，減少中轉場數量22個。",
+            "raw": "公司持續推動骨幹網絡精簡和優化，聚合建設多功能大型場地，減少中轉場數量22個。",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                548,
+                548
+              ],
+              "text_span": [
+                14,
+                53
+              ]
+            },
+            "target_id": "expected:L548-548:5",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                548,
+                548
+              ]
+            },
+            "fragment_syntax": "field_body_sentence",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:16",
+            "kind": "fragment",
+            "text": "提高中轉場經營效益",
+            "raw": "提高中轉場經營效益",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                550,
+                550
+              ],
+              "text_span": [
+                2,
+                11
+              ]
+            },
+            "target_id": "expected:L550-550:6",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                550,
+                550
+              ]
+            },
+            "fragment_syntax": "field_label",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:17",
+            "kind": "fragment",
+            "text": "中轉場向經營中心轉型，提高自主經營能力與意識，提升場地資源利用率。",
+            "raw": "中轉場向經營中心轉型，提高自主經營能力與意識，提升場地資源利用率。",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                550,
+                550
+              ],
+              "text_span": [
+                14,
+                47
+              ]
+            },
+            "target_id": "expected:L550-550:6",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                550,
+                550
+              ]
+            },
+            "fragment_syntax": "field_body_sentence",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:23",
+            "kind": "fragment",
+            "text": "打造行業首個無人化快件容器轉運中心",
+            "raw": "打造行業首個無人化快件容器轉運中心",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                552,
+                552
+              ],
+              "text_span": [
+                2,
+                19
+              ]
+            },
+            "target_id": "expected:L552-552:7",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                552,
+                552
+              ]
+            },
+            "fragment_syntax": "field_label",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:24",
+            "kind": "fragment",
+            "text": "公司正式投運首個可實現快件以容器集裝並轉運的無人化智能轉運中心，是行業內首創的全新無人化轉運模式，實現局部「熄燈工廠」作業。",
+            "raw": "公司正式投運首個可實現快件以容器集裝並轉運的無人化智能轉運中心，是行業內首創的全新無人化轉運模式，實現局部「熄燈工廠」作業。",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                552,
+                552
+              ],
+              "text_span": [
+                22,
+                84
+              ]
+            },
+            "target_id": "expected:L552-552:7",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                552,
+                552
+              ]
+            },
+            "fragment_syntax": "field_body_sentence",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:29",
+            "kind": "fragment",
+            "text": "優化陸網線路規劃",
+            "raw": "優化陸網線路規劃",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                556,
+                556
+              ],
+              "text_span": [
+                2,
+                10
+              ]
+            },
+            "target_id": "expected:L556-556:9",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                556,
+                556
+              ]
+            },
+            "fragment_syntax": "field_label",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:30",
+            "kind": "fragment",
+            "text": "結合中轉場的整合建設，以及大小件運輸線路融通，持續調優轉運模式和路由規劃，實現最大化集約發貨與拉直線路，2024年實現寄件地與目的地的城市之間直發線路新增近440條，提升城市連通率，快件平均中轉次數下降。",
+            "raw": "結合中轉場的整合建設，以及大小件運輸線路融通，持續調優轉運模式和路由規劃，實現最大化集約發貨與拉直線路，2024年實現寄件地與目的地的城市之間直發線路新增近440條，提升城市連通率，快件平均中轉次數下降。",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                556,
+                556
+              ],
+              "text_span": [
+                13,
+                115
+              ]
+            },
+            "target_id": "expected:L556-556:9",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                556,
+                556
+              ]
+            },
+            "fragment_syntax": "field_body_sentence",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:33",
+            "kind": "fragment",
+            "text": "調優運力資源結構",
+            "raw": "調優運力資源結構",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                558,
+                558
+              ],
+              "text_span": [
+                2,
+                10
+              ]
+            },
+            "target_id": "expected:L558-558:10",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                558,
+                558
+              ]
+            },
+            "fragment_syntax": "field_label",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:34",
+            "kind": "fragment",
+            "text": "幹線運輸方面，通過結合貨量及場景匹配最優運力資源，長期合作及運價穩定的運力資源（包括自營運力、按年合作的外包運力等）所承運任務佔比超過95%，確保運力資源價格穩定",
+            "raw": "幹線運輸方面，通過結合貨量及場景匹配最優運力資源，長期合作及運價穩定的運力資源（包括自營運力、按年合作的外包運力等）所承運任務佔比超過95%，確保運力資源價格穩定",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                558,
+                558
+              ],
+              "text_span": [
+                13,
+                94
+              ]
+            },
+            "target_id": "expected:L558-558:10",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                558,
+                558
+              ]
+            },
+            "fragment_syntax": "field_body_sentence",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:39",
+            "kind": "fragment",
+            "text": "提高網點效率",
+            "raw": "提高網點效率",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                562,
+                562
+              ],
+              "text_span": [
+                2,
+                8
+              ]
+            },
+            "target_id": "expected:L562-562:12",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                562,
+                562
+              ]
+            },
+            "fragment_syntax": "field_label",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:40",
+            "kind": "fragment",
+            "text": "公司推行的「中轉場直接分揀+容器集裝並直接發運至末端小哥收派區域」的營運模式變革，截至2024年底累計推廣至超過3,400個網點和超過9,600個終端小站點。",
+            "raw": "公司推行的「中轉場直接分揀+容器集裝並直接發運至末端小哥收派區域」的營運模式變革，截至2024年底累計推廣至超過3,400個網點和超過9,600個終端小站點。",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                562,
+                562
+              ],
+              "text_span": [
+                11,
+                90
+              ]
+            },
+            "target_id": "expected:L562-562:12",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                562,
+                562
+              ]
+            },
+            "fragment_syntax": "field_body_sentence",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:47",
+            "kind": "fragment",
+            "text": "提升小哥效率",
+            "raw": "提升小哥效率",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                566,
+                566
+              ],
+              "text_span": [
+                2,
+                8
+              ]
+            },
+            "target_id": "expected:L566-566:14",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                566,
+                566
+              ]
+            },
+            "fragment_syntax": "field_label",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          },
+          {
+            "id": "source:48",
+            "kind": "fragment",
+            "text": "公司不斷創新和迭代小哥的收派作業工具，助力提高收派效率，降低小哥勞動強度，2024年小件收派效能同比提升7.8%，大件收派效能同比提升9.1%。",
+            "raw": "公司不斷創新和迭代小哥的收派作業工具，助力提高收派效率，降低小哥勞動強度，2024年小件收派效能同比提升7.8%，大件收派效能同比提升9.1%。",
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                566,
+                566
+              ],
+              "text_span": [
+                11,
+                83
+              ]
+            },
+            "target_id": "expected:L566-566:14",
+            "fragment_of": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+              "lines": [
+                566,
+                566
+              ]
+            },
+            "fragment_syntax": "field_body_sentence",
+            "interpretation_rule": "printed_field_body_source_inventory"
+          }
+        ]
+      }
+    ],
+    "meaning": "Source-view transport conservation only; no corpus content review or acceptance."
+  },
+  "input_scope_pending": [
+    {
+      "sample_id": "alibaba-strategies-p009-010",
+      "source": {
+        "path": "/opt/moparse/pdf_sample/parsing/expected/complex-alibaba-2025-annual/expected.md",
+        "lines": [
+          230,
+          230
+        ]
+      },
+      "text": "We believe our ecosystem offers the most comprehensive range of products and services among global commerce platforms to meet the diverse demands of our massive and diversified consumer base across different segments. We have developed a digital commerce infrastructure that offers an upgraded consumer experience by seamlessly integrating online and offline capabilities for our marketplaces and direct sales businesses. Leveraging our product and supply chain capabilities, consumers can enjoy a broad variety of quality products, such as branded products, imported goods, products sourced directly from manufacturers and farms as well as idle goods. We have also developed logistics expertise and capabilities that allow us to offer a full range of high-frequency fulfillment services to satisfy consumer demand. Our comprehensive delivery options include on-demand delivery, half-day delivery, same-or-next-day delivery and next-day pick-up services, which capture the varying needs of consumers living in large cities and less-developed areas. Our key businesses are:",
+      "outside_selection": [
+        {
+          "kind": "mixed_page_selection_declaration",
+          "reference": {
+            "path": "/opt/moparse/pdf_sample/parsing/expected/complex-alibaba-2025-annual/expected.md",
+            "lines": [
+              230,
+              230
+            ]
+          },
+          "declared_source_pages": [
+            10,
+            11
+          ],
+          "outside_source_pages": [
+            11
+          ]
+        }
+      ]
+    },
+    {
+      "sample_id": "pboc-policy-columns-p019-026",
+      "source": {
+        "path": "/opt/moparse/pdf_sample/parsing/expected/complex-pboc-stability-2024/expected.md",
+        "lines": [
+          252,
+          252
+        ]
+      },
+      "text": "物价水平根本上是由实体经济供需关系决定的，CPI和PPI是反映宏观物价水平的主要指标。2023年，受国内外多重因素影响，我国物价水平出现阶段性回落；但核心CPI仍保持温和上涨，物价变化具有明显结构性特征。",
+      "outside_selection": [
+        {
+          "kind": "mixed_page_selection_declaration",
+          "reference": {
+            "path": "/opt/moparse/pdf_sample/parsing/expected/complex-pboc-stability-2024/expected.md",
+            "lines": [
+              252,
+              252
+            ]
+          },
+          "declared_source_pages": [
+            18,
+            19
+          ],
+          "outside_source_pages": [
+            18
+          ]
+        }
+      ]
+    },
+    {
+      "sample_id": "pboc-macro-columns-p011-018",
+      "source": {
+        "path": "/opt/moparse/pdf_sample/parsing/expected/complex-pboc-stability-2024/expected.md",
+        "lines": [
+          252,
+          252
+        ]
+      },
+      "text": "物价水平根本上是由实体经济供需关系决定的，CPI和PPI是反映宏观物价水平的主要指标。2023年，受国内外多重因素影响，我国物价水平出现阶段性回落；但核心CPI仍保持温和上涨，物价变化具有明显结构性特征。",
+      "outside_selection": [
+        {
+          "kind": "mixed_page_selection_declaration",
+          "reference": {
+            "path": "/opt/moparse/pdf_sample/parsing/expected/complex-pboc-stability-2024/expected.md",
+            "lines": [
+              252,
+              252
+            ]
+          },
+          "declared_source_pages": [
+            18,
+            19
+          ],
+          "outside_source_pages": [
+            19
+          ]
+        }
+      ]
+    },
+    {
+      "sample_id": "midea-strategy-p025-036",
+      "source": {
+        "path": "/opt/moparse/pdf_sample/parsing/expected/complex-midea-2024-annual/expected.md",
+        "lines": [
+          417,
+          417
+        ]
+      },
+      "text": "在绿色能源领域，2024年科陆电子在海外储能市场从设备供应商转型为系统集成商，从产品制造向EP Package全生命周期整站解决方案服务升级，为客户提供从产品选型、站级规划设计、整站安装调试、全栈数据监测优化、统一运维和售后服务的储能整体一站式解决方案。在北美市场实现突破性进展，充分展现其产品实力，新一代储能系统Aqua-C2.5取得成功的商用实践；在南美市场获得在智利、阿根廷等多个国家的储能项目合同，实现EP Package全生命周期整站服务在海外市场全方位落地；科陆电子荣登全球知名研究机构彭博新能源财经（BNEF）公布的2024年全球Tier1储能厂商榜单和Tier1光伏逆变器和储能PCS厂商榜单。在产品端，Aqua C系列储能产品获得国际权威认证机构DEKRA德凯签发的全球首个储能系统级MTBF（Mean Time Between Failure，平均故障间隔时间）第三方认证，科陆电子在2024年EESA储能展会还发布Aqua E系列工商业储能产品。",
+      "outside_selection": [
+        {
+          "kind": "mixed_page_selection_declaration",
+          "reference": {
+            "path": "/opt/moparse/pdf_sample/parsing/expected/complex-midea-2024-annual/expected.md",
+            "lines": [
+              417,
+              417
+            ]
+          },
+          "declared_source_pages": [
+            36,
+            37
+          ],
+          "outside_source_pages": [
+            37
+          ]
+        }
+      ]
+    },
+    {
+      "sample_id": "pboc-banking-columns-p029-040",
+      "source": {
+        "path": "/opt/moparse/pdf_sample/parsing/expected/complex-pboc-stability-2024/expected.md",
+        "lines": [
+          540,
+          540
+        ]
+      },
+      "text": "金融稳定理事会统计数据显示，国外全球系统重要性银行在2019年达标前一年发行TLAC工具3600亿美元，其中600亿美元为资本工具，其余3000亿美元为TLAC债券。截至2023年末，24家国外全球系统重要性银行平均核心一级资本充足率为13.4%，资本充足率为16.9%，TLAC风险加权比率为30.1%。分区域看，美国、加拿大和英国全球系统重要性银行的平均TLAC风险加权比率均超过30%。日本的TLAC风险加权比率最低，为25.8%。",
+      "outside_selection": [
+        {
+          "kind": "mixed_page_selection_declaration",
+          "reference": {
+            "path": "/opt/moparse/pdf_sample/parsing/expected/complex-pboc-stability-2024/expected.md",
+            "lines": [
+              540,
+              540
+            ]
+          },
+          "declared_source_pages": [
+            40,
+            41
+          ],
+          "outside_source_pages": [
+            41
+          ]
+        }
+      ]
+    }
+  ],
+  "projection_changes": {
+    "before": {
+      "T": 30536,
+      "L": 18392,
+      "B": 7796
+    },
+    "current": {
+      "T": 30545,
+      "L": 17792,
+      "B": 7446
+    },
+    "changed_samples": 106,
+    "source_change_records": 1611,
+    "formal_denominators_frozen": false
   },
   "expected_structure_gate": {
     "status": "not_passed",
-    "reason": "All 173 source views have valid unchanged authorized provenance; 171 retain non-deferred semantic gaps."
+    "reason": "Complete authorized prose and relations still contain non-deferred software gaps."
   },
   "comparison_capability_gate": {
     "status": "not_passed",
-    "reason": "Twenty-eight bounded feature families have controlled executable evidence; complete authorized semantics and real-format comparison acceptance remain outstanding."
+    "reason": "Controlled regressions passed; full expected semantics and independent real-format acceptance remain incomplete."
   },
   "delivery_conversion_gate": {
     "status": "not_passed",
-    "reason": "No actual candidate comparison or native-to-final replay was executed in this task; all eight delivery chains remain unaccepted."
+    "reason": "Actual candidate comparisons and all eight real replays are outside this stage."
   },
   "completion_status": {
     "software_complete": false,
@@ -54,937 +2870,53 @@
     "quality_score_publication_ready": false,
     "five_input_scopes_confirmed": false,
     "controlled_software_validation_passed": true,
-    "source_transport_and_binding_passed": false,
-    "full_expected_semantic_acceptance_passed": false,
-    "comparison_independent_complete_acceptance_passed": false,
-    "eight_real_delivery_chains_accepted": false,
-    "source_transport_passed": true,
     "source_integrity_passed": true,
-    "typed_business_binding_complete": false,
-    "source_binding_limit": "All source records and transport are retained; unresolved typed semantic and relation obligations still prevent complete business binding acceptance."
+    "full_expected_semantic_acceptance_passed": false,
+    "newly_complete_previously_blocked_samples": 0
   },
-  "input_scope_pending": [
-    {
-      "sample_id": "alibaba-strategies-p009-010",
-      "issue": {
-        "reason": "input_scope_context",
-        "source": {
-          "path": "/opt/moparse/pdf_sample/parsing/expected/complex-alibaba-2025-annual/expected.md",
-          "lines": [
-            230,
-            230
-          ]
-        },
-        "layers": [
-          "T",
-          "L",
-          "B"
-        ],
-        "outside_selection": [
-          {
-            "kind": "mixed_page_selection_declaration",
-            "reference": {
-              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-alibaba-2025-annual/expected.md",
-              "lines": [
-                230,
-                230
-              ]
-            },
-            "declared_source_pages": [
-              10,
-              11
-            ],
-            "outside_source_pages": [
-              11
-            ]
-          }
-        ],
-        "source_id": "source:87",
-        "text": "We believe our ecosystem offers the most comprehensive range of products and services among global commerce platforms to meet the diverse demands of our massive and diversified consumer base across different segments. We have developed a digital commerce infrastructure that offers an upgraded consumer experience by seamlessly integrating online and offline capabilities for our marketplaces and direct sales businesses. Leveraging our product and supply chain capabilities, consumers can enjoy a broad variety of quality products, such as branded products, imported goods, products sourced directly from manufacturers and farms as well as idle goods. We have also developed logistics expertise and capabilities that allow us to offer a full range of high-frequency fulfillment services to satisfy consumer demand. Our comprehensive delivery options include on-demand delivery, half-day delivery, same-or-next-day delivery and next-day pick-up services, which capture the varying needs of consumers living in large cities and less-developed areas. Our key businesses are:",
-        "id": "unresolved:80",
-        "source_obligation_ids": [
-          "obligation:505"
-        ]
-      }
-    },
-    {
-      "sample_id": "midea-strategy-p025-036",
-      "issue": {
-        "reason": "input_scope_context",
-        "source": {
-          "path": "/opt/moparse/pdf_sample/parsing/expected/complex-midea-2024-annual/expected.md",
-          "lines": [
-            417,
-            417
-          ]
-        },
-        "layers": [
-          "T",
-          "L",
-          "B"
-        ],
-        "outside_selection": [
-          {
-            "kind": "mixed_page_selection_declaration",
-            "reference": {
-              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-midea-2024-annual/expected.md",
-              "lines": [
-                417,
-                417
-              ]
-            },
-            "declared_source_pages": [
-              36,
-              37
-            ],
-            "outside_source_pages": [
-              37
-            ]
-          }
-        ],
-        "source_id": "source:99",
-        "text": "在绿色能源领域，2024年科陆电子在海外储能市场从设备供应商转型为系统集成商，从产品制造向EP Package全生命周期整站解决方案服务升级，为客户提供从产品选型、站级规划设计、整站安装调试、全栈数据监测优化、统一运维和售后服务的储能整体一站式解决方案。在北美市场实现突破性进展，充分展现其产品实力，新一代储能系统Aqua-C2.5取得成功的商用实践；在南美市场获得在智利、阿根廷等多个国家的储能项目合同，实现EP Package全生命周期整站服务在海外市场全方位落地；科陆电子荣登全球知名研究机构彭博新能源财经（BNEF）公布的2024年全球Tier1储能厂商榜单和Tier1光伏逆变器和储能PCS厂商榜单。在产品端，Aqua C系列储能产品获得国际权威认证机构DEKRA德凯签发的全球首个储能系统级MTBF（Mean Time Between Failure，平均故障间隔时间）第三方认证，科陆电子在2024年EESA储能展会还发布Aqua E系列工商业储能产品。",
-        "id": "unresolved:246",
-        "source_obligation_ids": [
-          "obligation:603"
-        ]
-      }
-    },
-    {
-      "sample_id": "pboc-banking-columns-p029-040",
-      "issue": {
-        "reason": "input_scope_context",
-        "source": {
-          "path": "/opt/moparse/pdf_sample/parsing/expected/complex-pboc-stability-2024/expected.md",
-          "lines": [
-            540,
-            540
-          ]
-        },
-        "layers": [
-          "T",
-          "L",
-          "B"
-        ],
-        "outside_selection": [
-          {
-            "kind": "mixed_page_selection_declaration",
-            "reference": {
-              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-pboc-stability-2024/expected.md",
-              "lines": [
-                540,
-                540
-              ]
-            },
-            "declared_source_pages": [
-              40,
-              41
-            ],
-            "outside_source_pages": [
-              41
-            ]
-          }
-        ],
-        "source_id": "source:262",
-        "text": "金融稳定理事会统计数据显示，国外全球系统重要性银行在2019年达标前一年发行TLAC工具3600亿美元，其中600亿美元为资本工具，其余3000亿美元为TLAC债券。截至2023年末，24家国外全球系统重要性银行平均核心一级资本充足率为13.4%，资本充足率为16.9%，TLAC风险加权比率为30.1%。分区域看，美国、加拿大和英国全球系统重要性银行的平均TLAC风险加权比率均超过30%。日本的TLAC风险加权比率最低，为25.8%。",
-        "id": "unresolved:186",
-        "source_obligation_ids": [
-          "obligation:869"
-        ]
-      }
-    },
-    {
-      "sample_id": "pboc-macro-columns-p011-018",
-      "issue": {
-        "reason": "input_scope_context",
-        "source": {
-          "path": "/opt/moparse/pdf_sample/parsing/expected/complex-pboc-stability-2024/expected.md",
-          "lines": [
-            252,
-            252
-          ]
-        },
-        "layers": [
-          "T",
-          "L",
-          "B"
-        ],
-        "outside_selection": [
-          {
-            "kind": "mixed_page_selection_declaration",
-            "reference": {
-              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-pboc-stability-2024/expected.md",
-              "lines": [
-                252,
-                252
-              ]
-            },
-            "declared_source_pages": [
-              18,
-              19
-            ],
-            "outside_source_pages": [
-              19
-            ]
-          }
-        ],
-        "source_id": "source:185",
-        "text": "物价水平根本上是由实体经济供需关系决定的，CPI和PPI是反映宏观物价水平的主要指标。2023年，受国内外多重因素影响，我国物价水平出现阶段性回落；但核心CPI仍保持温和上涨，物价变化具有明显结构性特征。",
-        "id": "unresolved:101",
-        "source_obligation_ids": [
-          "obligation:701"
-        ]
-      }
-    },
-    {
-      "sample_id": "pboc-policy-columns-p019-026",
-      "issue": {
-        "reason": "input_scope_context",
-        "source": {
-          "path": "/opt/moparse/pdf_sample/parsing/expected/complex-pboc-stability-2024/expected.md",
-          "lines": [
-            252,
-            252
-          ]
-        },
-        "layers": [
-          "T",
-          "L",
-          "B"
-        ],
-        "outside_selection": [
-          {
-            "kind": "mixed_page_selection_declaration",
-            "reference": {
-              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-pboc-stability-2024/expected.md",
-              "lines": [
-                252,
-                252
-              ]
-            },
-            "declared_source_pages": [
-              18,
-              19
-            ],
-            "outside_source_pages": [
-              18
-            ]
-          }
-        ],
-        "source_id": "source:2",
-        "text": "物价水平根本上是由实体经济供需关系决定的，CPI和PPI是反映宏观物价水平的主要指标。2023年，受国内外多重因素影响，我国物价水平出现阶段性回落；但核心CPI仍保持温和上涨，物价变化具有明显结构性特征。",
-        "id": "unresolved:133",
-        "source_obligation_ids": [
-          "obligation:11"
-        ]
-      }
-    }
-  ],
-  "dependency_freeze_passed": false,
   "real_candidate_cpu_replay_started": false,
-  "meaning": "A/B/C source ranges and controlled production comparison repaired; full expected semantic acceptance and quality publication remain incomplete.",
-  "implemented_source_families": [
-    "bounded_shared_np_pp_and_local_relation_ownership",
-    "dated_enumeration_roles_and_member_boundaries",
-    "directed_ratio_and_ratio_delta_measurements",
-    "document_composition_and_page_relations",
-    "financial_statement_classification_unit_scope",
-    "independent_authorized_raw_source_obligations",
-    "quoted_and_fronted_nominal_scope",
-    "recursive_four_state_compositional_comparison",
-    "sentence_local_bilingual_reading",
-    "source_bound_collection_declarations",
-    "source_bound_discourse_purpose_and_object_control",
-    "source_consistent_fact_ast_and_report_replay",
-    "typed_assertive_nominal_and_unknown_source_obligations",
-    "typed_toc_source_ownership"
-  ],
-  "object_ledger": {
-    "implementation": "source_bound_object_references_and_exact_source_partitions",
-    "actual_delivery_acceptance": "not_run",
-    "requirement_level_eight_way_attribution": "not_complete"
-  },
-  "controlled_ast_comparison_features": [
-    "ability_operator",
-    "active_aspect_scope",
-    "alternative_membership",
-    "condition_operands",
-    "contrast_scope",
-    "controlled_infinitive_scope",
-    "coordination_scope",
-    "discourse_scope",
-    "finite_tense",
-    "fronted_nominal_context",
-    "modal_operator",
-    "negation_scope",
-    "nested_operator_scopes",
-    "noun_phrase_composition",
-    "prepositional_attachment",
-    "purpose_scope",
-    "quantity_comparison",
-    "restrictive_relative",
-    "scoped_reporting",
-    "temporal_prose_scope"
-  ],
-  "unvalidated_features_in_authorized_views": [
-    "document_composition",
-    "enumeration_context_scope",
-    "explicit_reference_binding",
-    "page_reference_binding",
-    "quoted_nominal_scope",
-    "same_subject_relative_clause",
-    "shared_period_scope",
-    "year_on_year_comparison",
-    "compact_column_binding",
-    "quantity_assertion"
-  ],
+  "formal_scoring_or_replay": false,
   "semantic_diagnosis": {
-    "views_without_non_deferred_pending": 2,
     "views_with_non_deferred_pending": 171,
-    "pending_family_count": 109,
-    "non_deferred_annotation_records_before": 33571,
-    "non_deferred_annotation_records_current": 33238,
-    "top_families": [
-      {
-        "family": "source_obligation_pending:relation",
-        "unique_source_occurrences": 9439,
-        "affected_samples": 166,
-        "annotation_records": 10306,
-        "starting_unique_source_occurrences": 9552
-      },
-      {
-        "family": "narrative_predicate_unresolved",
-        "unique_source_occurrences": 4750,
-        "affected_samples": 163,
-        "annotation_records": 4752,
-        "starting_unique_source_occurrences": 4783
-      },
-      {
-        "family": "source_obligation_pending:semantic_content",
-        "unique_source_occurrences": 3863,
-        "affected_samples": 162,
-        "annotation_records": 3863,
-        "starting_unique_source_occurrences": 3952
-      },
-      {
-        "family": "source_obligation_pending:proposition",
-        "unique_source_occurrences": 2296,
-        "affected_samples": 127,
-        "annotation_records": 2296,
-        "starting_unique_source_occurrences": 2297
-      },
-      {
-        "family": "source_obligation_pending:qualifier",
-        "unique_source_occurrences": 2080,
-        "affected_samples": 108,
-        "annotation_records": 2080,
-        "starting_unique_source_occurrences": 2080
-      },
-      {
-        "family": "list_group_scope_interpretation_unsupported",
-        "unique_source_occurrences": 937,
-        "affected_samples": 45,
-        "annotation_records": 937,
-        "starting_unique_source_occurrences": 937
-      },
-      {
-        "family": "prose_clause_semantics_unsupported",
-        "unique_source_occurrences": 907,
-        "affected_samples": 56,
-        "annotation_records": 907,
-        "starting_unique_source_occurrences": 908
-      },
-      {
-        "family": "quoted_nominal_lexical_role_unresolved",
-        "unique_source_occurrences": 844,
-        "affected_samples": 114,
-        "annotation_records": 844,
-        "starting_unique_source_occurrences": 844
-      },
-      {
-        "family": "source_has_no_supported_semantic_disposition",
-        "unique_source_occurrences": 648,
-        "affected_samples": 121,
-        "annotation_records": 1232,
-        "starting_unique_source_occurrences": 651
-      },
-      {
-        "family": "narrative_prepositional_attachment_unresolved",
-        "unique_source_occurrences": 519,
-        "affected_samples": 61,
-        "annotation_records": 519,
-        "starting_unique_source_occurrences": 521
-      },
-      {
-        "family": "cjk_narrative_predicate_unresolved",
-        "unique_source_occurrences": 481,
-        "affected_samples": 53,
-        "annotation_records": 481,
-        "starting_unique_source_occurrences": 476
-      },
-      {
-        "family": "narrative_subject_boundary_unresolved",
-        "unique_source_occurrences": 384,
-        "affected_samples": 58,
-        "annotation_records": 384,
-        "starting_unique_source_occurrences": 384
-      }
-    ],
-    "meaning": "Annotation counts are not business units or independent defect counts."
+    "pending_family_count": 111
   },
-  "implementation_changes": [
-    "Ordered compact columns and independently audited record slots, including multiple change columns and own record identities.",
-    "Actual CJK amount assertions, split currency/magnitude sources, bounded year prefixes and immediate metric-local YoY binding.",
-    "Finite shared attributive coordination, explicit nominal compounds and distinct predicate/nominal beneficiary attachments.",
-    "Own-source runtime readback of compact and amount representations, including final B/L and report replay guards."
-  ],
-  "new_test_files": [
-    "tests/unit/test_compact_multichange_production.py",
-    "tests/unit/test_cjk_assertion_production.py",
-    "tests/unit/test_shared_modifier_production.py"
-  ],
-  "obsolete_test_removed": {
-    "case": "comma-free year was moved from unsupported to supported production coverage",
-    "independent_semantic_oracles_weakened": false
+  "remaining_baseline_interpretation_defects": {
+    "old_svos": 12,
+    "still_emitted": 0,
+    "scope_rows_with_other_pending": 9
   },
-  "comparison_validation": "benchmark/runs/lite/requirements/validation/comparison-validation.json",
-  "oracle_validation": "benchmark/runs/lite/requirements/validation/oracle-validation.json",
-  "mutation_validation": "benchmark/runs/lite/requirements/validation/mutations-validation.json",
-  "regression_status": {
-    "controlled_test_failures": 0,
-    "source_integrity_failures": 0,
-    "newly_complete_previously_blocked_samples": [],
-    "all_authorized_source_records_unchanged": true,
-    "all_sample_projection_counts_unchanged": true,
-    "newly_exposed_pending_is_not_automatic_parser_regression": true,
-    "newly_exposed_scopes_by_family": {
-      "source_obligation_pending:relation": 7
-    }
-  },
-  "changed_files": [
-    "benchmark/reports/lite/data/diagnosis-summary.json",
-    "benchmark/reports/lite/report.md",
-    "moparse_eval/action_forms.py",
-    "moparse_eval/active_aspect_requirements.py",
-    "moparse_eval/cjk_measurement_requirements.py",
-    "moparse_eval/document_composition_requirements.py",
-    "moparse_eval/enumeration_context.py",
-    "moparse_eval/expected_report.py",
-    "moparse_eval/narrative_requirements.py",
-    "moparse_eval/nominal_syntax.py",
-    "moparse_eval/proposition_requirements.py",
-    "moparse_eval/prose_requirements.py",
-    "moparse_eval/represented_feature_comparison.py",
-    "moparse_eval/requirement_ast.py",
-    "moparse_eval/semantic_layer_comparison.py",
-    "moparse_eval/source_obligations.py",
-    "moparse_eval/three_layer.py",
-    "tests/unit/test_action_source_audit_integration.py",
-    "tests/unit/test_cjk_measurement_requirements.py",
-    "tests/unit/test_cjk_period_identity_production.py",
-    "tests/unit/test_collection_declaration_ownership.py",
-    "tests/unit/test_nested_nominal_production_path.py",
-    "tests/unit/test_represented_feature_production.py",
-    "tests/unit/test_represented_feature_source_guard_audit.py",
-    "tests/unit/test_semantic_positive_responsibility.py",
-    "tests/unit/test_three_layer_explicit_reference_contract.py",
-    "tests/unit/test_three_layer_proposition_boundaries.py"
-  ],
-  "local_generated_evidence": [
-    "benchmark/runs/lite/requirements/current/index.json",
-    "benchmark/runs/lite/requirements/current/samples/*.json",
-    "benchmark/runs/lite/requirements/current/samples/*.xml",
-    "benchmark/runs/lite/requirements/validation/actual-source-diagnosis.json",
-    "benchmark/runs/lite/requirements/validation/software-validation.json",
-    "benchmark/runs/lite/requirements/validation/oracle-validation.json",
-    "benchmark/runs/lite/requirements/validation/mutations-validation.json",
-    "benchmark/runs/lite/requirements/validation/comparison-validation.json",
-    "benchmark/runs/lite/requirements/validation/source-export.json"
-  ],
-  "source_preservation": {
-    "basis": "Exact comparison of generated authorized source records and explicit input-scope obligations; not corpus correctness review.",
-    "all_173_source_record_arrays_unchanged": true,
-    "generated_source_records_compared": 18668,
-    "all_five_input_scope_targets_unchanged": true,
-    "input_scope_identity_ignores_temporary_issue_ids": true,
-    "all_sample_projection_counts_unchanged": true,
-    "projection_count_changes": [],
-    "before": {
-      "T": 30090,
-      "L": 18030,
-      "B": 7731
-    },
-    "current": {
-      "T": 30090,
-      "L": 18030,
-      "B": 7731
-    },
-    "canonical_expected_or_selection_edited": false,
-    "formal_denominators_frozen": false
-  },
-  "controlled_comparison_feature_families": [
-    "ability_operator",
-    "active_aspect_scope",
-    "alternative_membership",
-    "condition_operands",
-    "contrast_scope",
-    "controlled_infinitive_scope",
-    "coordination_scope",
-    "discourse_scope",
-    "document_composition",
-    "enumeration_context_scope",
-    "explicit_reference_binding",
-    "finite_tense",
-    "fronted_nominal_context",
-    "modal_operator",
-    "negation_scope",
-    "nested_operator_scopes",
-    "noun_phrase_composition",
-    "page_reference_binding",
-    "prepositional_attachment",
-    "purpose_scope",
-    "quantity_comparison",
-    "quoted_nominal_scope",
-    "restrictive_relative",
-    "same_subject_relative_clause",
-    "scoped_reporting",
-    "shared_period_scope",
-    "temporal_prose_scope",
-    "year_on_year_comparison"
-  ],
-  "existing_representation_feature_stages": {
-    "explicit_reference_binding": {
-      "implementation_available": true,
-      "independent_controlled_production_path": "passed",
-      "real_format_complete_acceptance": "not_passed",
-      "evidence": [
-        "tests.unit.test_explicit_reference_requirements::test_reference_target_cannot_supply_its_own_owner_proof",
-        "tests.unit.test_represented_feature_production::test_relation_only_features_reach_final_votes_without_fabricating_ast[# North\\n\\nLumen owns Kappa.\\n\\nSee Note 03 for more information.\\n-explicit_reference_binding-oracle0]",
-        "tests.unit.test_represented_feature_production::test_relation_only_features_reach_final_votes_without_fabricating_ast[- 2028\\u5e74\\uff0cLumen\\u7684\\u5408\\u4f5c\\u8fdb\\u5c55\\u5305\\u62ec\\uff1a\\n  - \\u6279\\u51c6Kappa\\u3002\\n  - \\u62ab\\u9732Sigma\\u3002\\n-enumeration_context_scope-oracle1]",
-        "tests.unit.test_represented_feature_production::test_supported_surface_changes_keep_relation_and_business_votes[# North\\n\\nLumen owns Kappa.\\n\\nSee Note 03 for more information.\\n-# North\\n\\nLumen owns Kappa.\\n\\nSee NOTE 03 for more information.\\n]",
-        "tests.unit.test_represented_feature_production::test_supported_surface_changes_keep_relation_and_business_votes[- 2028\\u5e74\\uff0cLumen\\u7684\\u5408\\u4f5c\\u8fdb\\u5c55\\u5305\\u62ec\\uff1a\\n  - \\u6279\\u51c6Kappa\\u3002\\n  - \\u62ab\\u9732Sigma\\u3002\\n-- 2028\\u5e74\\uff0cLumen\\u7684\\u5408\\u4f5c\\u8fdb\\u5c55\\u5305\\u62ec\\uff1a\\n    - \\u6279\\u51c6Kappa\\u3002\\n    - \\u62ab\\u9732Sigma\\u3002\\n]",
-        "tests.unit.test_represented_feature_production::test_reference_target_owner_and_omitted_reference_are_actual_relation_losses[# North\\n\\nLumen owns Kappa.\\n\\nSee Note 04 for more information.\\n]",
-        "tests.unit.test_represented_feature_production::test_reference_target_owner_and_omitted_reference_are_actual_relation_losses[# South\\n\\nLumen owns Kappa.\\n\\nSee Note 03 for more information.\\n]",
-        "tests.unit.test_represented_feature_production::test_reference_target_owner_and_omitted_reference_are_actual_relation_losses[# North\\n\\nLumen owns Kappa.\\n\\n]",
-        "tests.unit.test_represented_feature_production::test_representation_mutations_block_even_when_flat_text_survives[feature_deleted-# North\\n\\nLumen owns Kappa.\\n\\nSee Note 03 for more information.\\n-explicit_reference_binding-explicit_reference_target]",
-        "tests.unit.test_represented_feature_production::test_representation_mutations_block_even_when_flat_text_survives[feature_deleted-- 2028\\u5e74\\uff0cLumen\\u7684\\u5408\\u4f5c\\u8fdb\\u5c55\\u5305\\u62ec\\uff1a\\n  - \\u6279\\u51c6Kappa\\u3002\\n  - \\u62ab\\u9732Sigma\\u3002\\n-enumeration_context_scope-enumeration_membership]",
-        "tests.unit.test_represented_feature_production::test_representation_mutations_block_even_when_flat_text_survives[relation_kind_changed-# North\\n\\nLumen owns Kappa.\\n\\nSee Note 03 for more information.\\n-explicit_reference_binding-explicit_reference_target]",
-        "tests.unit.test_represented_feature_production::test_representation_mutations_block_even_when_flat_text_survives[relation_kind_changed-- 2028\\u5e74\\uff0cLumen\\u7684\\u5408\\u4f5c\\u8fdb\\u5c55\\u5305\\u62ec\\uff1a\\n  - \\u6279\\u51c6Kappa\\u3002\\n  - \\u62ab\\u9732Sigma\\u3002\\n-enumeration_context_scope-enumeration_membership]",
-        "tests.unit.test_represented_feature_production::test_representation_mutations_block_even_when_flat_text_survives[relation_deleted-# North\\n\\nLumen owns Kappa.\\n\\nSee Note 03 for more information.\\n-explicit_reference_binding-explicit_reference_target]",
-        "tests.unit.test_represented_feature_production::test_representation_mutations_block_even_when_flat_text_survives[relation_deleted-- 2028\\u5e74\\uff0cLumen\\u7684\\u5408\\u4f5c\\u8fdb\\u5c55\\u5305\\u62ec\\uff1a\\n  - \\u6279\\u51c6Kappa\\u3002\\n  - \\u62ab\\u9732Sigma\\u3002\\n-enumeration_context_scope-enumeration_membership]",
-        "tests.unit.test_represented_feature_production::test_representation_mutations_block_even_when_flat_text_survives[borrowed_source-# North\\n\\nLumen owns Kappa.\\n\\nSee Note 03 for more information.\\n-explicit_reference_binding-explicit_reference_target]",
-        "tests.unit.test_represented_feature_production::test_representation_mutations_block_even_when_flat_text_survives[borrowed_source-- 2028\\u5e74\\uff0cLumen\\u7684\\u5408\\u4f5c\\u8fdb\\u5c55\\u5305\\u62ec\\uff1a\\n  - \\u6279\\u51c6Kappa\\u3002\\n  - \\u62ab\\u9732Sigma\\u3002\\n-enumeration_context_scope-enumeration_membership]"
-      ]
-    },
-    "enumeration_context_scope": {
-      "implementation_available": true,
-      "independent_controlled_production_path": "passed",
-      "real_format_complete_acceptance": "not_passed",
-      "evidence": [
-        "tests.unit.test_represented_feature_production::test_relation_only_features_reach_final_votes_without_fabricating_ast[# North\\n\\nLumen owns Kappa.\\n\\nSee Note 03 for more information.\\n-explicit_reference_binding-oracle0]",
-        "tests.unit.test_represented_feature_production::test_relation_only_features_reach_final_votes_without_fabricating_ast[- 2028\\u5e74\\uff0cLumen\\u7684\\u5408\\u4f5c\\u8fdb\\u5c55\\u5305\\u62ec\\uff1a\\n  - \\u6279\\u51c6Kappa\\u3002\\n  - \\u62ab\\u9732Sigma\\u3002\\n-enumeration_context_scope-oracle1]",
-        "tests.unit.test_represented_feature_production::test_supported_surface_changes_keep_relation_and_business_votes[# North\\n\\nLumen owns Kappa.\\n\\nSee Note 03 for more information.\\n-# North\\n\\nLumen owns Kappa.\\n\\nSee NOTE 03 for more information.\\n]",
-        "tests.unit.test_represented_feature_production::test_supported_surface_changes_keep_relation_and_business_votes[- 2028\\u5e74\\uff0cLumen\\u7684\\u5408\\u4f5c\\u8fdb\\u5c55\\u5305\\u62ec\\uff1a\\n  - \\u6279\\u51c6Kappa\\u3002\\n  - \\u62ab\\u9732Sigma\\u3002\\n-- 2028\\u5e74\\uff0cLumen\\u7684\\u5408\\u4f5c\\u8fdb\\u5c55\\u5305\\u62ec\\uff1a\\n    - \\u6279\\u51c6Kappa\\u3002\\n    - \\u62ab\\u9732Sigma\\u3002\\n]",
-        "tests.unit.test_represented_feature_production::test_collection_period_owner_and_member_loss_do_not_disappear_from_denominators[- 2029\\u5e74\\uff0cLumen\\u7684\\u5408\\u4f5c\\u8fdb\\u5c55\\u5305\\u62ec\\uff1a\\n  - \\u6279\\u51c6Kappa\\u3002\\n  - \\u62ab\\u9732Sigma\\u3002\\n]",
-        "tests.unit.test_represented_feature_production::test_collection_period_owner_and_member_loss_do_not_disappear_from_denominators[- 2028\\u5e74\\uff0cVega\\u7684\\u5408\\u4f5c\\u8fdb\\u5c55\\u5305\\u62ec\\uff1a\\n  - \\u6279\\u51c6Kappa\\u3002\\n  - \\u62ab\\u9732Sigma\\u3002\\n]",
-        "tests.unit.test_represented_feature_production::test_collection_period_owner_and_member_loss_do_not_disappear_from_denominators[- 2028\\u5e74\\uff0cLumen\\u7684\\u5408\\u4f5c\\u8fdb\\u5c55\\u5305\\u62ec\\uff1a\\n  - \\u6279\\u51c6Kappa\\u3002\\n]",
-        "tests.unit.test_represented_feature_production::test_representation_mutations_block_even_when_flat_text_survives[feature_deleted-# North\\n\\nLumen owns Kappa.\\n\\nSee Note 03 for more information.\\n-explicit_reference_binding-explicit_reference_target]",
-        "tests.unit.test_represented_feature_production::test_representation_mutations_block_even_when_flat_text_survives[feature_deleted-- 2028\\u5e74\\uff0cLumen\\u7684\\u5408\\u4f5c\\u8fdb\\u5c55\\u5305\\u62ec\\uff1a\\n  - \\u6279\\u51c6Kappa\\u3002\\n  - \\u62ab\\u9732Sigma\\u3002\\n-enumeration_context_scope-enumeration_membership]",
-        "tests.unit.test_represented_feature_production::test_representation_mutations_block_even_when_flat_text_survives[relation_kind_changed-# North\\n\\nLumen owns Kappa.\\n\\nSee Note 03 for more information.\\n-explicit_reference_binding-explicit_reference_target]",
-        "tests.unit.test_represented_feature_production::test_representation_mutations_block_even_when_flat_text_survives[relation_kind_changed-- 2028\\u5e74\\uff0cLumen\\u7684\\u5408\\u4f5c\\u8fdb\\u5c55\\u5305\\u62ec\\uff1a\\n  - \\u6279\\u51c6Kappa\\u3002\\n  - \\u62ab\\u9732Sigma\\u3002\\n-enumeration_context_scope-enumeration_membership]",
-        "tests.unit.test_represented_feature_production::test_representation_mutations_block_even_when_flat_text_survives[relation_deleted-# North\\n\\nLumen owns Kappa.\\n\\nSee Note 03 for more information.\\n-explicit_reference_binding-explicit_reference_target]",
-        "tests.unit.test_represented_feature_production::test_representation_mutations_block_even_when_flat_text_survives[relation_deleted-- 2028\\u5e74\\uff0cLumen\\u7684\\u5408\\u4f5c\\u8fdb\\u5c55\\u5305\\u62ec\\uff1a\\n  - \\u6279\\u51c6Kappa\\u3002\\n  - \\u62ab\\u9732Sigma\\u3002\\n-enumeration_context_scope-enumeration_membership]",
-        "tests.unit.test_represented_feature_production::test_representation_mutations_block_even_when_flat_text_survives[borrowed_source-# North\\n\\nLumen owns Kappa.\\n\\nSee Note 03 for more information.\\n-explicit_reference_binding-explicit_reference_target]",
-        "tests.unit.test_represented_feature_production::test_representation_mutations_block_even_when_flat_text_survives[borrowed_source-- 2028\\u5e74\\uff0cLumen\\u7684\\u5408\\u4f5c\\u8fdb\\u5c55\\u5305\\u62ec\\uff1a\\n  - \\u6279\\u51c6Kappa\\u3002\\n  - \\u62ab\\u9732Sigma\\u3002\\n-enumeration_context_scope-enumeration_membership]"
-      ]
-    },
-    "document_composition": {
-      "implementation_available": true,
-      "independent_controlled_production_path": "passed",
-      "real_format_complete_acceptance": "not_passed",
-      "evidence": [
-        "tests.unit.test_represented_feature_production::test_native_document_composition_and_page_range_reach_final_votes[Notes on pages 21 to 34 are part of this statement.\\n-oracle0]",
-        "tests.unit.test_represented_feature_production::test_native_document_composition_and_page_range_reach_final_votes[\\u7b2c21\\u9875\\u81f3\\u7b2c34\\u9875\\u6240\\u8f7d\\u7684\\u9644\\u6ce8\\u4e3a\\u672c\\u8d22\\u52a1\\u62a5\\u8868\\u7684\\u7ec4\\u6210\\u90e8\\u5206\\u3002\\n-oracle1]",
-        "tests.unit.test_represented_feature_production::test_composition_spacing_variation_preserves_page_endpoints_and_owner",
-        "tests.unit.test_represented_feature_production::test_composition_changed_identity_scope_or_omitted_range_never_passes[endpoints_reversed]",
-        "tests.unit.test_represented_feature_production::test_composition_changed_identity_scope_or_omitted_range_never_passes[document]",
-        "tests.unit.test_represented_feature_production::test_composition_changed_identity_scope_or_omitted_range_never_passes[component]",
-        "tests.unit.test_represented_feature_production::test_composition_changed_identity_scope_or_omitted_range_never_passes[missing_range]",
-        "tests.unit.test_represented_feature_production::test_composition_changed_identity_scope_or_omitted_range_never_passes[condition]",
-        "tests.unit.test_represented_feature_production::test_document_composition_retained_text_cannot_hide_missing_or_borrowed_structure[dependency]",
-        "tests.unit.test_represented_feature_production::test_document_composition_retained_text_cannot_hide_missing_or_borrowed_structure[kind]",
-        "tests.unit.test_represented_feature_production::test_document_composition_retained_text_cannot_hide_missing_or_borrowed_structure[endpoint_source]",
-        "tests.unit.test_represented_feature_production::test_document_composition_retained_text_cannot_hide_missing_or_borrowed_structure[document_source]",
-        "tests.unit.test_represented_feature_production::test_document_composition_retained_text_cannot_hide_missing_or_borrowed_structure[relation]",
-        "tests.unit.test_represented_feature_source_guard_audit::test_retained_composition_pending_is_not_a_comparable_semantic_feature[if the board approves]",
-        "tests.unit.test_represented_feature_source_guard_audit::test_retained_composition_pending_is_not_a_comparable_semantic_feature[unless a separate report is issued]"
-      ]
-    },
-    "page_reference_binding": {
-      "implementation_available": true,
-      "independent_controlled_production_path": "passed",
-      "real_format_complete_acceptance": "not_passed",
-      "evidence": [
-        "tests.unit.test_represented_feature_production::test_native_document_composition_and_page_range_reach_final_votes[Notes on pages 21 to 34 are part of this statement.\\n-oracle0]",
-        "tests.unit.test_represented_feature_production::test_native_document_composition_and_page_range_reach_final_votes[\\u7b2c21\\u9875\\u81f3\\u7b2c34\\u9875\\u6240\\u8f7d\\u7684\\u9644\\u6ce8\\u4e3a\\u672c\\u8d22\\u52a1\\u62a5\\u8868\\u7684\\u7ec4\\u6210\\u90e8\\u5206\\u3002\\n-oracle1]",
-        "tests.unit.test_represented_feature_production::test_composition_spacing_variation_preserves_page_endpoints_and_owner",
-        "tests.unit.test_represented_feature_production::test_composition_changed_identity_scope_or_omitted_range_never_passes[endpoints_reversed]",
-        "tests.unit.test_represented_feature_production::test_composition_changed_identity_scope_or_omitted_range_never_passes[document]",
-        "tests.unit.test_represented_feature_production::test_composition_changed_identity_scope_or_omitted_range_never_passes[component]",
-        "tests.unit.test_represented_feature_production::test_composition_changed_identity_scope_or_omitted_range_never_passes[missing_range]",
-        "tests.unit.test_represented_feature_production::test_composition_changed_identity_scope_or_omitted_range_never_passes[condition]",
-        "tests.unit.test_represented_feature_production::test_document_composition_retained_text_cannot_hide_missing_or_borrowed_structure[dependency]",
-        "tests.unit.test_represented_feature_production::test_document_composition_retained_text_cannot_hide_missing_or_borrowed_structure[kind]",
-        "tests.unit.test_represented_feature_production::test_document_composition_retained_text_cannot_hide_missing_or_borrowed_structure[endpoint_source]",
-        "tests.unit.test_represented_feature_production::test_document_composition_retained_text_cannot_hide_missing_or_borrowed_structure[document_source]",
-        "tests.unit.test_represented_feature_production::test_document_composition_retained_text_cannot_hide_missing_or_borrowed_structure[relation]",
-        "tests.unit.test_represented_feature_source_guard_audit::test_retained_composition_pending_is_not_a_comparable_semantic_feature[if the board approves]",
-        "tests.unit.test_represented_feature_source_guard_audit::test_retained_composition_pending_is_not_a_comparable_semantic_feature[unless a separate report is issued]"
-      ]
-    },
-    "quoted_nominal_scope": {
-      "implementation_available": true,
-      "independent_controlled_production_path": "passed",
-      "real_format_complete_acceptance": "not_passed",
-      "evidence": [
-        "tests.unit.test_represented_feature_production::test_existing_nominal_and_measurement_representations_own_final_judgments[Lumen owns \"Kappa and Sigma\".\\n-oracle0-features0]",
-        "tests.unit.test_represented_feature_production::test_existing_nominal_and_measurement_representations_own_final_judgments[2028\\u5e74\\uff0c\\u5de5\\u4e1a\\u4ea7\\u503c\\u8d85\\u8fc7137\\u4e07\\u5143\\uff0c\\u540c\\u6bd4\\u589e\\u957f4.3%\\u3002\\n-oracle1-features1]",
-        "tests.unit.test_represented_feature_production::test_nominal_spacing_and_exact_measurement_scale_equivalence_reach_final_votes[Lumen owns \"Kappa and Sigma\".\\n-Lumen owns \"Kappa  and Sigma\".\\n]",
-        "tests.unit.test_represented_feature_production::test_nominal_spacing_and_exact_measurement_scale_equivalence_reach_final_votes[2028\\u5e74\\uff0c\\u5de5\\u4e1a\\u4ea7\\u503c\\u8d85\\u8fc7137\\u4e07\\u5143\\uff0c\\u540c\\u6bd4\\u589e\\u957f4.3%\\u3002\\n-2028\\u5e74\\uff0c\\u5de5\\u4e1a\\u4ea7\\u503c\\u8d85\\u8fc71370000\\u5143\\uff0c\\u540c\\u6bd4\\u589e\\u957f43\\u2030\\u3002\\n]",
-        "tests.unit.test_represented_feature_production::test_quoted_nominal_owner_content_attachment_and_delimiter_loss_do_not_pass[Lumen owns \"Kappa or Sigma\".\\n-B]",
-        "tests.unit.test_represented_feature_production::test_quoted_nominal_owner_content_attachment_and_delimiter_loss_do_not_pass[Vega owns \"Kappa and Sigma\".\\n-B]",
-        "tests.unit.test_represented_feature_production::test_quoted_nominal_owner_content_attachment_and_delimiter_loss_do_not_pass[\"Kappa and Sigma\" owns Lumen.\\n-L]",
-        "tests.unit.test_represented_feature_production::test_quoted_nominal_owner_content_attachment_and_delimiter_loss_do_not_pass[Lumen owns Kappa and Sigma.\\n-B]",
-        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[feature_deleted-quoted_nominal_scope]",
-        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[feature_deleted-shared_period_scope]",
-        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[feature_deleted-same_subject_relative_clause]",
-        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[feature_deleted-year_on_year_comparison]",
-        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[relation_kind-quoted_nominal_scope]",
-        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[relation_kind-shared_period_scope]",
-        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[relation_kind-same_subject_relative_clause]",
-        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[relation_kind-year_on_year_comparison]",
-        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[relation_deleted-quoted_nominal_scope]",
-        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[relation_deleted-shared_period_scope]",
-        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[relation_deleted-same_subject_relative_clause]",
-        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[relation_deleted-year_on_year_comparison]",
-        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[neighbor_source-quoted_nominal_scope]",
-        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[neighbor_source-shared_period_scope]",
-        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[neighbor_source-same_subject_relative_clause]",
-        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[neighbor_source-year_on_year_comparison]"
-      ]
-    },
-    "shared_period_scope": {
-      "implementation_available": true,
-      "independent_controlled_production_path": "passed",
-      "real_format_complete_acceptance": "not_passed",
-      "evidence": [
-        "tests.unit.test_represented_feature_production::test_existing_nominal_and_measurement_representations_own_final_judgments[Lumen owns \"Kappa and Sigma\".\\n-oracle0-features0]",
-        "tests.unit.test_represented_feature_production::test_existing_nominal_and_measurement_representations_own_final_judgments[2028\\u5e74\\uff0c\\u5de5\\u4e1a\\u4ea7\\u503c\\u8d85\\u8fc7137\\u4e07\\u5143\\uff0c\\u540c\\u6bd4\\u589e\\u957f4.3%\\u3002\\n-oracle1-features1]",
-        "tests.unit.test_represented_feature_production::test_nominal_spacing_and_exact_measurement_scale_equivalence_reach_final_votes[Lumen owns \"Kappa and Sigma\".\\n-Lumen owns \"Kappa  and Sigma\".\\n]",
-        "tests.unit.test_represented_feature_production::test_nominal_spacing_and_exact_measurement_scale_equivalence_reach_final_votes[2028\\u5e74\\uff0c\\u5de5\\u4e1a\\u4ea7\\u503c\\u8d85\\u8fc7137\\u4e07\\u5143\\uff0c\\u540c\\u6bd4\\u589e\\u957f4.3%\\u3002\\n-2028\\u5e74\\uff0c\\u5de5\\u4e1a\\u4ea7\\u503c\\u8d85\\u8fc71370000\\u5143\\uff0c\\u540c\\u6bd4\\u589e\\u957f43\\u2030\\u3002\\n]",
-        "tests.unit.test_represented_feature_production::test_cjk_scope_basis_member_and_value_changes_keep_their_own_layer_losses[2028\\u5e74\\uff0c\\u5de5\\u4e1a\\u4ea7\\u503c\\u8d85\\u8fc7138\\u4e07\\u5143\\uff0c\\u540c\\u6bd4\\u589e\\u957f4.3%\\u3002\\n-B]",
-        "tests.unit.test_represented_feature_production::test_cjk_scope_basis_member_and_value_changes_keep_their_own_layer_losses[2029\\u5e74\\uff0c\\u5de5\\u4e1a\\u4ea7\\u503c\\u8d85\\u8fc7137\\u4e07\\u5143\\uff0c\\u540c\\u6bd4\\u589e\\u957f4.3%\\u3002\\n-L]",
-        "tests.unit.test_represented_feature_production::test_cjk_scope_basis_member_and_value_changes_keep_their_own_layer_losses[\\u5de5\\u4e1a\\u4ea7\\u503c\\u8d85\\u8fc7137\\u4e07\\u5143\\uff0c\\u540c\\u6bd4\\u589e\\u957f4.3%\\u3002\\n-L]",
-        "tests.unit.test_represented_feature_production::test_cjk_scope_basis_member_and_value_changes_keep_their_own_layer_losses[2028\\u5e74\\uff0c\\u5de5\\u4e1a\\u4ea7\\u503c\\u8d85\\u8fc7137\\u4e07\\u5143\\u3002\\n-B]",
-        "tests.unit.test_represented_feature_production::test_cjk_scope_basis_member_and_value_changes_keep_their_own_layer_losses[2028\\u5e74\\uff0c\\u5de5\\u4e1a\\u4ea7\\u503c\\u8d85\\u8fc7137\\u4e07\\u5143\\uff0c\\u6e2f\\u53e3\\u541e\\u5410\\u91cf\\u540c\\u6bd4\\u589e\\u957f4.3%\\u3002\\n-L]",
-        "tests.unit.test_represented_feature_production::test_cjk_scope_basis_member_and_value_changes_keep_their_own_layer_losses[2028\\u5e74\\uff0c\\u5de5\\u4e1a\\u4ea7\\u503c\\u8d85\\u8fc7137\\u4e07\\u5143\\uff0c\\u73af\\u6bd4\\u589e\\u957f4.3%\\u3002\\n-B]",
-        "tests.unit.test_represented_feature_production::test_cjk_scope_basis_member_and_value_changes_keep_their_own_layer_losses[2028\\u5e74\\uff0c\\u5de5\\u4e1a\\u4ea7\\u503c\\u8d85\\u8fc7137\\u4e07\\u5143\\uff0c\\u540c\\u6bd4\\u589e\\u957f4.3\\u4e2a\\u767e\\u5206\\u70b9\\u3002\\n-B]",
-        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[feature_deleted-quoted_nominal_scope]",
-        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[feature_deleted-shared_period_scope]",
-        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[feature_deleted-same_subject_relative_clause]",
-        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[feature_deleted-year_on_year_comparison]",
-        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[relation_kind-quoted_nominal_scope]",
-        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[relation_kind-shared_period_scope]",
-        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[relation_kind-same_subject_relative_clause]",
-        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[relation_kind-year_on_year_comparison]",
-        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[relation_deleted-quoted_nominal_scope]",
-        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[relation_deleted-shared_period_scope]",
-        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[relation_deleted-same_subject_relative_clause]",
-        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[relation_deleted-year_on_year_comparison]",
-        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[neighbor_source-quoted_nominal_scope]",
-        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[neighbor_source-shared_period_scope]",
-        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[neighbor_source-same_subject_relative_clause]",
-        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[neighbor_source-year_on_year_comparison]"
-      ]
-    },
-    "same_subject_relative_clause": {
-      "implementation_available": true,
-      "independent_controlled_production_path": "passed",
-      "real_format_complete_acceptance": "not_passed",
-      "evidence": [
-        "tests.unit.test_represented_feature_production::test_existing_nominal_and_measurement_representations_own_final_judgments[Lumen owns \"Kappa and Sigma\".\\n-oracle0-features0]",
-        "tests.unit.test_represented_feature_production::test_existing_nominal_and_measurement_representations_own_final_judgments[2028\\u5e74\\uff0c\\u5de5\\u4e1a\\u4ea7\\u503c\\u8d85\\u8fc7137\\u4e07\\u5143\\uff0c\\u540c\\u6bd4\\u589e\\u957f4.3%\\u3002\\n-oracle1-features1]",
-        "tests.unit.test_represented_feature_production::test_nominal_spacing_and_exact_measurement_scale_equivalence_reach_final_votes[Lumen owns \"Kappa and Sigma\".\\n-Lumen owns \"Kappa  and Sigma\".\\n]",
-        "tests.unit.test_represented_feature_production::test_nominal_spacing_and_exact_measurement_scale_equivalence_reach_final_votes[2028\\u5e74\\uff0c\\u5de5\\u4e1a\\u4ea7\\u503c\\u8d85\\u8fc7137\\u4e07\\u5143\\uff0c\\u540c\\u6bd4\\u589e\\u957f4.3%\\u3002\\n-2028\\u5e74\\uff0c\\u5de5\\u4e1a\\u4ea7\\u503c\\u8d85\\u8fc71370000\\u5143\\uff0c\\u540c\\u6bd4\\u589e\\u957f43\\u2030\\u3002\\n]",
-        "tests.unit.test_represented_feature_production::test_cjk_scope_basis_member_and_value_changes_keep_their_own_layer_losses[2028\\u5e74\\uff0c\\u5de5\\u4e1a\\u4ea7\\u503c\\u8d85\\u8fc7138\\u4e07\\u5143\\uff0c\\u540c\\u6bd4\\u589e\\u957f4.3%\\u3002\\n-B]",
-        "tests.unit.test_represented_feature_production::test_cjk_scope_basis_member_and_value_changes_keep_their_own_layer_losses[2029\\u5e74\\uff0c\\u5de5\\u4e1a\\u4ea7\\u503c\\u8d85\\u8fc7137\\u4e07\\u5143\\uff0c\\u540c\\u6bd4\\u589e\\u957f4.3%\\u3002\\n-L]",
-        "tests.unit.test_represented_feature_production::test_cjk_scope_basis_member_and_value_changes_keep_their_own_layer_losses[\\u5de5\\u4e1a\\u4ea7\\u503c\\u8d85\\u8fc7137\\u4e07\\u5143\\uff0c\\u540c\\u6bd4\\u589e\\u957f4.3%\\u3002\\n-L]",
-        "tests.unit.test_represented_feature_production::test_cjk_scope_basis_member_and_value_changes_keep_their_own_layer_losses[2028\\u5e74\\uff0c\\u5de5\\u4e1a\\u4ea7\\u503c\\u8d85\\u8fc7137\\u4e07\\u5143\\u3002\\n-B]",
-        "tests.unit.test_represented_feature_production::test_cjk_scope_basis_member_and_value_changes_keep_their_own_layer_losses[2028\\u5e74\\uff0c\\u5de5\\u4e1a\\u4ea7\\u503c\\u8d85\\u8fc7137\\u4e07\\u5143\\uff0c\\u6e2f\\u53e3\\u541e\\u5410\\u91cf\\u540c\\u6bd4\\u589e\\u957f4.3%\\u3002\\n-L]",
-        "tests.unit.test_represented_feature_production::test_cjk_scope_basis_member_and_value_changes_keep_their_own_layer_losses[2028\\u5e74\\uff0c\\u5de5\\u4e1a\\u4ea7\\u503c\\u8d85\\u8fc7137\\u4e07\\u5143\\uff0c\\u73af\\u6bd4\\u589e\\u957f4.3%\\u3002\\n-B]",
-        "tests.unit.test_represented_feature_production::test_cjk_scope_basis_member_and_value_changes_keep_their_own_layer_losses[2028\\u5e74\\uff0c\\u5de5\\u4e1a\\u4ea7\\u503c\\u8d85\\u8fc7137\\u4e07\\u5143\\uff0c\\u540c\\u6bd4\\u589e\\u957f4.3\\u4e2a\\u767e\\u5206\\u70b9\\u3002\\n-B]",
-        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[feature_deleted-quoted_nominal_scope]",
-        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[feature_deleted-shared_period_scope]",
-        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[feature_deleted-same_subject_relative_clause]",
-        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[feature_deleted-year_on_year_comparison]",
-        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[relation_kind-quoted_nominal_scope]",
-        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[relation_kind-shared_period_scope]",
-        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[relation_kind-same_subject_relative_clause]",
-        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[relation_kind-year_on_year_comparison]",
-        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[relation_deleted-quoted_nominal_scope]",
-        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[relation_deleted-shared_period_scope]",
-        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[relation_deleted-same_subject_relative_clause]",
-        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[relation_deleted-year_on_year_comparison]",
-        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[neighbor_source-quoted_nominal_scope]",
-        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[neighbor_source-shared_period_scope]",
-        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[neighbor_source-same_subject_relative_clause]",
-        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[neighbor_source-year_on_year_comparison]"
-      ]
-    },
-    "year_on_year_comparison": {
-      "implementation_available": true,
-      "independent_controlled_production_path": "passed",
-      "real_format_complete_acceptance": "not_passed",
-      "evidence": [
-        "tests.unit.test_represented_feature_production::test_existing_nominal_and_measurement_representations_own_final_judgments[Lumen owns \"Kappa and Sigma\".\\n-oracle0-features0]",
-        "tests.unit.test_represented_feature_production::test_existing_nominal_and_measurement_representations_own_final_judgments[2028\\u5e74\\uff0c\\u5de5\\u4e1a\\u4ea7\\u503c\\u8d85\\u8fc7137\\u4e07\\u5143\\uff0c\\u540c\\u6bd4\\u589e\\u957f4.3%\\u3002\\n-oracle1-features1]",
-        "tests.unit.test_represented_feature_production::test_nominal_spacing_and_exact_measurement_scale_equivalence_reach_final_votes[Lumen owns \"Kappa and Sigma\".\\n-Lumen owns \"Kappa  and Sigma\".\\n]",
-        "tests.unit.test_represented_feature_production::test_nominal_spacing_and_exact_measurement_scale_equivalence_reach_final_votes[2028\\u5e74\\uff0c\\u5de5\\u4e1a\\u4ea7\\u503c\\u8d85\\u8fc7137\\u4e07\\u5143\\uff0c\\u540c\\u6bd4\\u589e\\u957f4.3%\\u3002\\n-2028\\u5e74\\uff0c\\u5de5\\u4e1a\\u4ea7\\u503c\\u8d85\\u8fc71370000\\u5143\\uff0c\\u540c\\u6bd4\\u589e\\u957f43\\u2030\\u3002\\n]",
-        "tests.unit.test_represented_feature_production::test_cjk_scope_basis_member_and_value_changes_keep_their_own_layer_losses[2028\\u5e74\\uff0c\\u5de5\\u4e1a\\u4ea7\\u503c\\u8d85\\u8fc7138\\u4e07\\u5143\\uff0c\\u540c\\u6bd4\\u589e\\u957f4.3%\\u3002\\n-B]",
-        "tests.unit.test_represented_feature_production::test_cjk_scope_basis_member_and_value_changes_keep_their_own_layer_losses[2029\\u5e74\\uff0c\\u5de5\\u4e1a\\u4ea7\\u503c\\u8d85\\u8fc7137\\u4e07\\u5143\\uff0c\\u540c\\u6bd4\\u589e\\u957f4.3%\\u3002\\n-L]",
-        "tests.unit.test_represented_feature_production::test_cjk_scope_basis_member_and_value_changes_keep_their_own_layer_losses[\\u5de5\\u4e1a\\u4ea7\\u503c\\u8d85\\u8fc7137\\u4e07\\u5143\\uff0c\\u540c\\u6bd4\\u589e\\u957f4.3%\\u3002\\n-L]",
-        "tests.unit.test_represented_feature_production::test_cjk_scope_basis_member_and_value_changes_keep_their_own_layer_losses[2028\\u5e74\\uff0c\\u5de5\\u4e1a\\u4ea7\\u503c\\u8d85\\u8fc7137\\u4e07\\u5143\\u3002\\n-B]",
-        "tests.unit.test_represented_feature_production::test_cjk_scope_basis_member_and_value_changes_keep_their_own_layer_losses[2028\\u5e74\\uff0c\\u5de5\\u4e1a\\u4ea7\\u503c\\u8d85\\u8fc7137\\u4e07\\u5143\\uff0c\\u6e2f\\u53e3\\u541e\\u5410\\u91cf\\u540c\\u6bd4\\u589e\\u957f4.3%\\u3002\\n-L]",
-        "tests.unit.test_represented_feature_production::test_cjk_scope_basis_member_and_value_changes_keep_their_own_layer_losses[2028\\u5e74\\uff0c\\u5de5\\u4e1a\\u4ea7\\u503c\\u8d85\\u8fc7137\\u4e07\\u5143\\uff0c\\u73af\\u6bd4\\u589e\\u957f4.3%\\u3002\\n-B]",
-        "tests.unit.test_represented_feature_production::test_cjk_scope_basis_member_and_value_changes_keep_their_own_layer_losses[2028\\u5e74\\uff0c\\u5de5\\u4e1a\\u4ea7\\u503c\\u8d85\\u8fc7137\\u4e07\\u5143\\uff0c\\u540c\\u6bd4\\u589e\\u957f4.3\\u4e2a\\u767e\\u5206\\u70b9\\u3002\\n-B]",
-        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[feature_deleted-quoted_nominal_scope]",
-        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[feature_deleted-shared_period_scope]",
-        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[feature_deleted-same_subject_relative_clause]",
-        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[feature_deleted-year_on_year_comparison]",
-        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[relation_kind-quoted_nominal_scope]",
-        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[relation_kind-shared_period_scope]",
-        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[relation_kind-same_subject_relative_clause]",
-        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[relation_kind-year_on_year_comparison]",
-        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[relation_deleted-quoted_nominal_scope]",
-        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[relation_deleted-shared_period_scope]",
-        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[relation_deleted-same_subject_relative_clause]",
-        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[relation_deleted-year_on_year_comparison]",
-        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[neighbor_source-quoted_nominal_scope]",
-        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[neighbor_source-shared_period_scope]",
-        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[neighbor_source-same_subject_relative_clause]",
-        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[neighbor_source-year_on_year_comparison]"
-      ]
-    }
-  },
-  "unvalidated_features_meaning": "Implementation and bounded independent controlled fixtures passed; complete real-format acceptance has not passed.",
-  "matcher_features_missing_runtime_comparator": [],
-  "causal_source_closure_summary": {
-    "T_empty_field_terminal_delimiter": 148,
-    "T_field_role_delimiter_bridge": 96,
-    "all_T_obligations_verified_explained": 244,
-    "real_action_scopes_rechecked": 2,
-    "real_action_scopes_fully_closed": 1,
-    "real_nominal_owner_structures_rechecked": 2,
-    "nominal_pending_closure_claimed": false,
-    "newly_complete_previously_blocked_samples": [],
-    "actual_candidate_output_gain_claimed": false,
-    "T_empty_field_affected_samples": 59,
-    "T_field_role_bridge_affected_samples": 32,
-    "T_affected_samples_union": 72
-  },
-  "remaining_causal_source_blockers": [
-    {
-      "sample_id": "pingan-strategy-cards-p008-011",
-      "source": {
-        "path": "/opt/moparse/pdf_sample/parsing/expected/complex-pingan-2024-annual/expected.md",
-        "lines": [
-          298,
-          298
-        ],
-        "text_span": [
-          0,
-          76
-        ]
-      },
-      "text": "We build a one-stop financial and daily-life service platform for customers.",
-      "first_failure_function": "nominal_syntax.predicate_complements/_role",
-      "root_cause": "The existing FOR beneficiary frame omits build; the object also contains coordinated attributes sharing a service-platform head.",
-      "cascading_events": [
-        "preposition_role_unresolved",
-        "main_proposition_not_emitted",
-        "relation_and_source_obligation_pending"
-      ],
-      "already_correct": "The original actor, finite action, complete platform description and customers text remain available.",
-      "minimal_next_fix": "Bind the source-printed build/FOR beneficiary role and separately establish the shared-head attributive coordination; revalidate the entire selected sentence.",
-      "ambiguity_or_limit": "Do not replace the entire platform description with an opaque object or presume that adding build alone closes the source.",
-      "classification": "implementation_gap_with_explicit_remaining_scope_limits",
-      "five_authorized_input_scope_target": false,
-      "manual_formal_answer_or_grade_supplied": false
-    },
-    {
-      "sample_id": "huawei-operating-results-p062-063",
-      "source": {
-        "path": "/opt/moparse/pdf_sample/parsing/expected/complex-huawei-2024-annual/expected.md",
-        "lines": [
-          1586,
-          1586
-        ],
-        "text_span": [
-          0,
-          52
-        ]
-      },
-      "text": "2024年实现销售收入人民币862,072百万元，同比增长22.4%。净利润为人民币62,574百万元。",
-      "first_failure_function": "cjk_measurement_requirements.read_cjk_measurements/_PERIOD",
-      "root_cause": "The finite measurement reader expects a comparison first clause, and its period prefix requires a comma; printed 实现 and 为 scalar assertions are not handled.",
-      "cascading_events": [
-        "initial_metric_quantity_assertion_not_emitted",
-        "year_on_year_clause_has_no_bound_antecedent",
-        "subsequent_net_profit_predicate_unresolved"
-      ],
-      "already_correct": "The printed sales-revenue quantity/currency/unit/year, immediate year-on-year percentage, and net-profit quantity/currency/unit are retained literally.",
-      "minimal_next_fix": "Extend the existing finite scalar assertion path and immediate-metric antecedent binding, rather than separately fixing each downstream pending.",
-      "ambiguity_or_limit": "The net-profit sentence must not silently borrow 2024; any cross-sentence shared year needs an independently supported scope relation.",
-      "classification": "implementation_gap_with_explicit_remaining_scope_limits",
-      "five_authorized_input_scope_target": false,
-      "manual_formal_answer_or_grade_supplied": false
-    },
-    {
-      "sample_id": "sf-cashflow-assets-liabilities-p040-041",
-      "source": {
-        "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
-        "lines": [
-          920,
-          920
-        ],
-        "text_span": [
-          0,
-          71
-        ]
-      },
-      "text": "於12月31日，金額單位：人民幣千元。各項分別列示2024年金額、佔總資產比，2023年金額、佔總資產比，金額同比變動、佔總資產比重同比增減。",
-      "first_failure_function": "compact_requirements.read_compact_schema/_controls",
-      "root_cause": "The existing schema accepts four annual amount/share columns and one amount-change column, but lacks the common month/day basis and a second share-change declaration.",
-      "cascading_events": [
-        "unconsumed_date_prefix_and_share_change_tail",
-        "compact_text_projection_incomplete",
-        "narrative_fallback_pending"
-      ],
-      "already_correct": "Both printed years, four amount/share roles, amount currency/unit and the first amount-change declaration are already represented.",
-      "minimal_next_fix": "Extend the existing schema representation for the printed common date basis and second change column; preserve all literal pieces and their owning columns.",
-      "ambiguity_or_limit": "The share-change declaration alone does not print its unit or whether its values are percentage points; obtain that from authorized text where explicit or retain unknown.",
-      "classification": "implementation_gap_with_explicit_remaining_scope_limits",
-      "five_authorized_input_scope_target": false,
-      "manual_formal_answer_or_grade_supplied": false
-    }
-  ],
-  "work_packages": [
-    {
-      "package": "A",
-      "sample_id": "sf-cashflow-assets-liabilities-p040-041",
-      "source": {
-        "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
-        "lines": [
-          920,
-          942
-        ]
-      },
-      "business_requirement_count": 96,
-      "scope_status": "source_interpretation_closed_not_quality_acceptance",
-      "owning_sample_complete": false,
-      "production_tests": "tests/unit/test_compact_multichange_production.py"
-    },
-    {
-      "package": "B",
-      "sample_id": "huawei-operating-results-p062-063",
-      "source": {
-        "path": "/opt/moparse/pdf_sample/parsing/expected/complex-huawei-2024-annual/expected.md",
-        "lines": [
-          1586,
-          1586
-        ],
-        "text_span": [
-          0,
-          52
-        ]
-      },
-      "business_requirement_count": 3,
-      "scope_status": "source_interpretation_closed_not_quality_acceptance",
-      "owning_sample_complete": false,
-      "production_tests": "tests/unit/test_cjk_assertion_production.py"
-    },
-    {
-      "package": "C",
-      "sample_id": "pingan-strategy-cards-p008-011",
-      "source": {
-        "path": "/opt/moparse/pdf_sample/parsing/expected/complex-pingan-2024-annual/expected.md",
-        "lines": [
-          298,
-          298
-        ],
-        "text_span": [
-          0,
-          76
-        ]
-      },
-      "business_requirement_count": 1,
-      "scope_status": "source_interpretation_closed_not_quality_acceptance",
-      "owning_sample_complete": false,
-      "production_tests": "tests/unit/test_shared_modifier_production.py"
-    }
-  ],
-  "projection_changes": {
-    "before": {
-      "T": 30090,
-      "L": 18030,
-      "B": 7731
-    },
-    "current": {
-      "T": 30536,
-      "L": 18392,
-      "B": 7796
-    },
-    "changed_samples": 21,
-    "all_173_sources_preserved": true,
-    "newly_complete_samples": [],
-    "formal_denominators_frozen": false
+  "meaning": "Software and source-only diagnostic evidence; no whole-sample acceptance or quality publication inferred from counts.",
+  "baseline_preservation": {
+    "path": "benchmark/runs/lite/requirements/validation/baseline-preservation.json",
+    "sha256": "95704fbd30eb3ad4b575e487c7c187066eed930b92a60d254eb190795a97e28e",
+    "status": "passed",
+    "meaning": "A/B/C generated facts and owned first-sentence relations unchanged; no whole-sample acceptance inferred."
   },
   "repository_checks": {
-    "ruff_changed_python_files": {
+    "ruff": {
       "status": "passed",
-      "file_count": 19
+      "scoped_changed_python_files": 22
     },
     "markdown_policy": {
       "status": "passed",
-      "maintained_files": 61,
+      "non_corpus_files": 61,
       "violations": 0
     },
     "diff_whitespace": {
       "status": "passed",
-      "excludes": [
-        "pdf_sample",
-        "datasets",
-        "benchmark/runs",
-        "benchmark/reports",
-        "benchmark/reference-decisions"
+      "excluded_paths": [
+        "pdf_sample/",
+        "datasets/",
+        "benchmark/runs/",
+        "benchmark/reports/",
+        "benchmark/reference-decisions/"
       ]
     },
-    "scope": "Software and non-corpus documentation checks only, never corpus or expected-content acceptance."
-  },
-  "remaining_baseline_interpretation_defects": {
-    "literal_only_refinements": 12,
-    "all_svo_semantics_repaired": false,
-    "source_audit_under_reporting_observed": true,
-    "formal_views_manually_changed": false
-  },
-  "delivery_verification": {
-    "software_and_tests_still_match_regression": true,
-    "all_173_records_same_software": true,
-    "current_index_and_evidence_hashes_match": true,
-    "all_three_compact_scopes_audited": true,
-    "original_report_cost_section_preserved_verbatim": true,
-    "full_semantic_and_quality_acceptance": false,
-    "real_candidate_comparison_or_replay": false,
-    "committed_or_pushed": false
+    "sole_report_consistency": {
+      "status": "passed",
+      "original_cost_table_rows_unchanged": true,
+      "all_projection_changes_have_original_source_context": true
+    },
+    "execution_boundary": "Controlled synthetic tests and authorized expected source-only compilation; no actual candidate, PDF/image, model, replay or service activity."
   }
 }

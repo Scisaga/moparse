@@ -27,7 +27,11 @@ def test_an_unrelated_numeric_tail_cannot_take_over_a_supported_neighbor():
 @pytest.mark.parametrize("period", ["2029年末", "2029年初", "2029年度", "2029年6月30日"])
 def test_a_bare_year_reader_does_not_swallow_an_uninterpreted_period_suffix(period):
     parsed = read_cjk_measurements(period + "净利润为人民币42万元。", {"path": "<invented-period-boundary>", "lines": [1, 1]})
-    assert not parsed["complete"] and not parsed["facts"]
+    if period in {"2029年末", "2029年6月30日"}:
+        assert parsed["complete"]
+        assert parsed["facts"][0]["qualifiers"]["period"] == period
+    else:
+        assert not parsed["complete"] and not parsed["facts"]
 
 
 @pytest.mark.parametrize("variation", [TEXT, TEXT.replace("2029年实现", "2029年，实现"),

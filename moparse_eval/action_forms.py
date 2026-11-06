@@ -44,6 +44,10 @@ for _base, _forms in {
     "sharpen": ("sharpens", "sharpened"),
     "help": ("helps", "helped"), "leverage": ("leverages", "leveraged"),
     "engage": ("engages", "engaged"), "capture": ("captures", "captured"),
+    "integrate": ("integrates", "integrated"), "improve": ("improves", "improved"),
+    "reduce": ("reduces", "reduced"), "implement": ("implements", "implemented"),
+    "achieve": ("achieves", "achieved"), "optimize": ("optimizes", "optimized"),
+    "advance": ("advances", "advanced"),
 }.items():
     NARRATIVE_ACTION_FORMS[_base] = _base
     NARRATIVE_ACTION_FORMS.update(dict.fromkeys(_forms, _base))

@@ -19,7 +19,7 @@ from .prose_requirements import _sentence_spans
 
 _ACTIONS = dict(NARRATIVE_ACTION_FORMS)
 _PAST = set(NARRATIVE_PAST_FORMS)
-_VERB = re.compile(r"\b(?:" + "|".join(sorted(_ACTIONS, key=len, reverse=True)) + r")\b", re.I)
+_VERB = re.compile(r"(?<![\w-])(?:" + "|".join(sorted(_ACTIONS, key=len, reverse=True)) + r")(?![\w-])", re.I)
 _PRIMARY = re.compile(r"\b(?:is\s+(?:not\s+)?able\s+to|are\s+(?:not\s+)?able\s+to|"
                       r"was\s+(?:not\s+)?able\s+to|were\s+(?:not\s+)?able\s+to|"
                       r"cannot|shall|must|may|can|will|should|could|would|is|are|was|were)\b", re.I)
@@ -122,6 +122,8 @@ class _Reader:
             raise _Unknown("narrative_subject_scope_unresolved")
         if actor and value.lower() in {'there', 'here'}:
             raise _Unknown('narrative_existential_subject_unresolved')
+        if actor and value.strip().lower() in {'a', 'an', 'the', 'our', 'their', 'its', 'my', 'your', 'this', 'these', 'those'}:
+            raise _Unknown('narrative_subject_head_unresolved')
         return start, end
 
     def parse(self, start: int, end: int, actor=None, depth=0):
@@ -136,8 +138,12 @@ class _Reader:
         discourse = read_discourse_scope(self, start, end, actor, depth)
         if discourse is not None:
             return discourse
-        from .fronted_nominal_context import read_fronted_nominal_context
+        from .fronted_nominal_context import read_fronted_nominal_context, read_fronted_operation
         from .temporal_prose_requirements import read_temporal_prefix
+
+        operation = read_fronted_operation(self, start, end, actor, depth)
+        if operation is not None:
+            return operation
 
         temporal = read_temporal_prefix(self.syntax, self.source, start, end)
         fronted = None if temporal else read_fronted_nominal_context(
@@ -474,7 +480,7 @@ class _Reader:
                 'object_phrase': None if intransitive else nominal_phrase(self, x, y),
                 'prepositional_complements': copy.deepcopy(complements),
                 'role': 'entity_description' if attribute == 'be' and re.match(r'(?:a|an|the)\s+', self.text[x:y], re.I) else 'description',
-                'span': [min(actor[0], statement_start), max(statement_end, y)]}
+                'span': [min(actor[0], statement_start), max(actor[1], statement_end, y)]}
             if finite:
                 leaf['tense'], leaf['tense_span'] = finite
             children.append(leaf)
@@ -711,6 +717,13 @@ class _Reader:
             return
         if kind == 'fronted_context':
             self.features.add('fronted_nominal_context')
+            if 'operation' in node:
+                operand_context = copy.deepcopy(context)
+                operand_context['semantic_operand'] = True
+                operand_context['assertion_context'] = node['role'] + '_operand'
+                operand_context['contexts'].append(operand_context['assertion_context'])
+                operand_context['fronted_control'] = node
+                self.emit(node['operation'], operand_context)
             context.setdefault('fronted_nodes', []).append(node)
             self.emit(node['child'], context)
             return
@@ -794,7 +807,7 @@ class _Reader:
         if 'tense' in q:
             self.features.add('finite_tense')
         if context['assertion_context'] in {'condition_operand', 'restrictive_relative', 'reported', 'alternative_member', 'alternative_group',
-                                            'purpose_operand', 'controlled_infinitive_operand'}:
+                                            'purpose_operand', 'controlled_infinitive_operand', 'means_operand'}:
             q['assertion_context'] = context['assertion_context']
         if len(context['contexts']) > 1:
             q['assertion_contexts'] = list(context['contexts'])
@@ -814,6 +827,10 @@ class _Reader:
                       'assertion_context': context['assertion_context'], 'operator_path': context['operators'],
                       **({'tree': copy.deepcopy(node['tree'])} if kind == 'logical_group' else {})},
             'rule_id': 'explicit_narrative_logical_group' if kind == 'logical_group' else 'explicit_narrative_proposition'}
+        if 'fronted_control' in context:
+            owner = context['fronted_control']
+            fact['subject_binding_evidence'] = {**copy.deepcopy(owner['control']), 'kind': 'fronted_operation_controller',
+                'operator_source': self.source_at(*owner['operator_span'])}
         from .quoted_nominal import quoted_role_evidence
 
         quoted_roles = []

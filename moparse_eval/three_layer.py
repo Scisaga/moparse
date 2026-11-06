@@ -495,6 +495,16 @@ class _Graph:
         proof = self.qualifier_evidence.get("unit")
         if not proof:
             return
+        reading = _read_narrative(text, source, scope=self.headings) if not parents and kind in {"text", "field_body"} else None
+        explicit = bool(reading and reading.get("facts") and all(fact.get("qualifier_sources", {}).get("unit")
+            for fact in reading["facts"]) and (reading["complete"] or all(
+                not re.search(r"\d", fragment.get("text", "")) for issue in reading.get("unresolved", [])
+                for fragment in issue.get("fragments", [issue]))))
+        if explicit:
+            self.data.setdefault("unit_scope_terminations", []).append({"declaration": copy.deepcopy(proof),
+                "boundary": {"kind": kind, "text": text, "source": copy.deepcopy(source)},
+                "rule_id": "independent_prose_inline_units_end_the_table_default"})
+            return
         original = next((item for item in reversed(self.data["syntax"][:-1])
                          if self.source_key(item["source"]) == self.source_key(proof["source"])), None)
         printed = read_unit_token(proof["text"], proof["source"])
@@ -882,6 +892,11 @@ class _Graph:
                 qualifier_sources={key: proof["source"] for key, proof in self.qualifier_evidence.items()},
                 identity_facets=self.identity_facets, scope=self.headings)
             if series["matched"] and (series["facts"] or not compact["matched"]):
+                if series.get("series_membership"):
+                    parent = series["series_membership"]["parent"]
+                    self.data["blockers"] = [issue for issue in self.data["blockers"] if not (
+                        issue.get("reason") == "list_group_scope_interpretation_unsupported" and issue.get("source") == source
+                        and issue.get("parent_source") == parent["source"])]
                 attribution_context = read_financial_attribution_context(series, heading=self.financial_heading(),
                     syntax=self.data["syntax"], pending=self.data.get("pending_requirements", []), parents=financial_parents)
                 if attribution_context["matched"]:
@@ -1268,9 +1283,12 @@ def _finish(graph: _Graph) -> dict[str, Any]:
                 cursor = start + len(text)
             else:
                 source["joined_fragments"] = fragments
+        bounds = item['source'].get('text_span')
         matching = [syntax for syntax in graph.data["syntax"] if graph.source_key(syntax["source"]) == graph.source_key(item["source"])
-                    and (not syntax["source"].get("text_span") or syntax["source"].get("text_span") == item["source"].get("text_span"))]
-        syntax = matching[0] if matching else None
+                    and (not syntax["source"].get("text_span") or bounds and
+                         syntax['source']['text_span'][0] <= bounds[0] <= bounds[1] <= syntax['source']['text_span'][1])]
+        syntax = min(matching, key=lambda own: own['source']['text_span'][1] - own['source']['text_span'][0]
+                     if own['source'].get('text_span') else float('inf')) if matching else None
         if syntax and syntax.get("semantic_propositions_complete"):
             item["semantic_propositions_complete"] = True
             continue

@@ -48,7 +48,7 @@ _POSTPREDICATE_SCOPE = re.compile(
     r"at|before|behind|below|beneath|beside|between|beyond|by|despite|during|for|from|in|inside|into|near|off|"
     r"of|to|on|onto|outside|over|past|pending|per|regarding|since|through|throughout|till|toward|towards|under|"
     r"underneath|until|upon|via|versus|with|within|without)\b", re.I)
-_DECLARATION = re.compile(r"(?:Units?|Currency|Period|Year|单位|單位|币种|幣種|期间|期間|年度)\s*[:：=]\s*[^。.!?！？;；]+[。.]?", re.I)
+_DECLARATION = re.compile(r"(?:Units?|Currency|Period|Year|(?:金[額额])?(?:单位|單位)|币种|幣種|期间|期間|年度)\s*[:：=]\s*[^。.!?！？;；]+[。.]?", re.I)
 _SCHEMA_CONTROL = re.compile(r"Attribute|Property|Field|Value|Metric|Item|Record|Group|Section|属性|屬性|字段|值|指标|指標|项目|項目|分组|分組", re.I)
 _ACTION_MEANING = dict(AUDITED_ACTION_FORMS)
 _PUNCTUATION = set(":：=;；,.。!?！？()（）[]【】{}\"“”'‘’、，/\\|-–—")
@@ -220,6 +220,12 @@ def build_source_obligation_inventory(expected: dict[str, Any]) -> dict[str, Any
                 and parent["reference"]["lines"][1] < reference["lines"][0]]
             sources.append(entry)
             add("text", entry, 0, len(text), ("T",), "all_selected_literal_text")
+            if entry['parents'] and re.match(r'[^:：;；\n]+[:：]\s*(?:19|20)\d{2}年', text):
+                parents = [parent for parent in entry['declared_parent_sources'] if parent['text'] == entry['parents'][-1]]
+                if len(parents) == 1 and (parent_label := re.match(r'(?P<label>[^:：;；\n]+)[:：]\s*(?:19|20)\d{2}年', parents[0]['text'])):
+                    add('relation', entry, 0, len(text), ('B', 'L'), 'printed_series_list_member_requires_actual_parent',
+                        binding_role='series_parent', expected_roles=['parent_metric', 'member', 'membership_scope'],
+                        required_parent={'text': parent_label['label'], 'source': _origin(parents[0]['source'], *parent_label.span('label'))})
             if entry["heading_scope"] and target["kind"] != "heading" and text.strip():
                 add("relation", entry, 0, len(text), ("L",), "selected_heading_owns_its_original_content",
                     binding_role="heading_scope", required_scope=copy.deepcopy(entry["heading_scope"]))
@@ -259,6 +265,12 @@ def build_source_obligation_inventory(expected: dict[str, Any]) -> dict[str, Any
                 elif not na:
                     add("relation", entry, start, end, ("L",), "each_semantic_fragment_requires_its_own_binding",
                         binding_role="semantic_binding")
+                operation = re.match(r"\s*(?P<marker>By|Through|In order to|For the purpose of)\s+(?P<verb>[A-Za-z]+)\b", fragment, re.I)
+                if operation and (operation['marker'].lower() == 'in order to' or operation['verb'].lower().endswith('ing')):
+                    add("relation", entry, start + operation.start('marker'), start + operation.end('marker'), ("B", "L"),
+                        "printed_nonfinite_operation_requires_its_own_controller_operand_and_main_scope",
+                        binding_role="fronted_operation", statement_source=_origin(entry['source'], start, end),
+                        expected_roles=["operator", "main_proposition", "operation", "controller", "attachment"])
             mask = _semantic_syntax(text)
             for match in _PREDICATE.finditer(mask):
                 add("relation", entry, *match.span(), ("B", "L"), "printed_predicate_requires_bound_roles")
@@ -335,8 +347,12 @@ def build_source_obligation_inventory(expected: dict[str, Any]) -> dict[str, Any
 def _same_source(outer, inner):
     if outer.get("path") != inner.get("path") or outer.get("cell") != inner.get("cell"):
         return False
-    a, b = outer.get("lines", [0, 0])
-    c, d = inner.get("lines", [0, 0])
+    outer_lines, inner_lines = outer.get('lines', [0, 0]), inner.get('lines', [0, 0])
+    if len(outer_lines) != 2 or len(inner_lines) != 2:
+        return bool(outer.get('joined_fragments') and outer.get('joined_fragments') == inner.get('joined_fragments')
+                    and all(outer.get(key) == inner.get(key) for key in ('block', 'native_path')))
+    a, b = outer_lines
+    c, d = inner_lines
     return a <= c <= d <= b
 
 
@@ -402,10 +418,65 @@ def _ranges(entry, source):
     return [span] if span is not None else []
 
 
+def proposition_role_conflicts(entry, fact):
+    """Reject opaque roles from their literal syntax, independently of tags.
+
+    A source span proves where words came from, not that a nominal is an
+    actor/object. In particular an embedded assertion or causal operator may
+    not be paid for by the surrounding S/O string. This guard deliberately
+    does not decide the missing interpretation; the inventory retains it.
+    """
+    predicate = _range(entry, fact.get("predicate_source", {}))
+    if not fact.get("predicate") or predicate is None:
+        return []
+    if fact['predicate'].strip().lower() in {'and', 'or'} and entry['text'][slice(*predicate)].lower() == fact['predicate'].lower():
+        return []  # Its structured leaves, not the group surface, prove roles.
+    conflicts = []
+    for role in ("subject", "object"):
+        bounds = _range(entry, fact.get(role + "_source", {}))
+        if bounds is None:
+            continue  # Source-bearing parent/control contracts are audited separately.
+        raw = entry["text"][slice(*bounds)]
+        syntax = _syntax_mask(raw)
+        reason = None
+        if len(list(_segments(raw))) > 1 or re.search(r"[。！？!?；;]", syntax):
+            reason = "proposition_role_contains_another_statement"
+        elif re.search(r"主要[歸归]因[於于]|[由因][於于为為]|因[为為]|[为為]了|以便|"
+                       r"\b(?:because|therefore|so that|in order to|for the purpose of|unless|if)\b", syntax, re.I):
+            reason = "proposition_role_contains_unbound_scope"
+        elif role == "subject" and re.search(
+                r"(?:[为為]|[实實][现現])[^，,；;。]*\d|同比|(?:相[較较]|[較较比])(?:上年|\d{4}年)", syntax):
+            reason = "proposition_subject_contains_measurement_or_comparison"
+        elif "，" in syntax or re.search(r",(?!\d{3}(?:\D|$))", syntax) and _PREDICATE.search(syntax):
+            reason = "proposition_role_contains_embedded_action"
+        elif re.search(r'(?:并且|並且|并|並|且|以及|和|或)(?:提供|支持|批准|持有|拥有|擁有|支付|保存|存储|存儲|披露|公布|发布|發布)', syntax):
+            reason = 'proposition_role_contains_coordinated_action'
+        elif re.search(r'\b(?:and|or)\b', syntax, re.I) and any(
+                match.start() > 0 and syntax[match.end():].strip() and not re.match(
+                    r'\s*(?:of|for|in|on|by|with|from)\b', syntax[match.end():], re.I)
+                for match in _PREDICATE.finditer(syntax)):
+            reason = 'proposition_role_contains_coordinated_clause'
+        # A finite English clause inside a role must have its own proposition,
+        # even if there is no comma. A final nominal 'report' is not a clause.
+        elif re.search(r"\b(?:is|are|was|were|has|have|had|shall|must|will|can)\s+\S+", syntax, re.I):
+            reason = "proposition_role_contains_embedded_clause"
+        if reason:
+            conflicts.append({"reason": reason, "role": role, "source": _origin(entry["source"], *bounds), "text": raw})
+    # Literal words from a neighboring sentence cannot establish this actor.
+    subject = _range(entry, fact.get("subject_source", {}))
+    if subject and subject[0] < subject[1] and not any(a <= subject[0] < subject[1] <= b and a <= predicate[0] < predicate[1] <= b
+                           for a, b in _segments(entry["text"])):
+        conflicts.append({"reason": "proposition_subject_borrowed_across_statement", "role": "subject",
+                          "source": copy.deepcopy(fact["subject_source"]), "text": fact.get("subject")})
+    return conflicts
+
+
 def _role_evidence(entry, facts, *, materials=()):
     """Only explicit role literals count; whole node/source spans never do."""
     evidence = []
     for fact in facts:
+        if proposition_role_conflicts(entry, fact):
+            continue
         predicate = _range(entry, fact.get("predicate_source", {}))
         if fact.get("predicate", "").strip().casefold() in {"or", "and"}:
             # A logical group's full surface string is not an opaque
@@ -414,15 +485,26 @@ def _role_evidence(entry, facts, *, materials=()):
         if predicate:
             subject = _range(entry, fact.get("subject_source", {}))
             obj = _range(entry, fact.get("object_source", {}))
+            control = fact.get("subject_binding_evidence", {})
+            marker = _range(entry, control.get("operator_source", {}))
+            controlled = (control.get("kind") == "fronted_operation_controller" and marker
+                and entry["text"][slice(*marker)].lower() in {'by', 'through', 'in order to', 'for the purpose of'}
+                and control.get("controller_source") == fact.get("subject_source")
+                and any(other.get("subject_source") == control.get("controller_source")
+                        and other.get("predicate_source") == control.get("main_predicate_source") for other in facts))
             realized = (fact.get("logic", {}).get("kind") == "quantity_assertion"
                         and fact.get("logic", {}).get("assertion_operator") == "realize"
                         and entry["text"][slice(*predicate)] in {"实现", "實現"}
                         and subject and subject[0] == predicate[1])
-            if (subject and subject[1] > predicate[0] and not realized) or (obj and obj[0] < predicate[1]):
+            if (subject and subject[1] > predicate[0] and not (realized or controlled)) or (obj and obj[0] < predicate[1]):
                 continue  # Source-preserving S/O reversal is still incorrect.
             raw_predicate = entry["text"][predicate[0]:predicate[1]].strip().casefold()
             meaning = _ACTION_MEANING.get(raw_predicate, raw_predicate)
             attribute = fact.get("attribute", "").casefold()
+            if controlled:
+                from .active_aspect_requirements import active_forms
+
+                meaning = active_forms()[1].get(raw_predicate, meaning)
             if attribute != meaning and fact.get("qualifiers", {}).get("aspect") in {"perfect", "progressive"}:
                 # Source obligations remain independent of reader coverage.
                 # Auditing an already interpreted verb may reuse the owning
@@ -438,6 +520,28 @@ def _role_evidence(entry, facts, *, materials=()):
             if attribute != meaning and not composition:
                 continue  # Printed "owns" never proves the action "acquire".
         value_range = _range(entry, fact.get("value_source", {}))
+        if (value_range and not entry.get('cell') and not fact.get('compact_column') and not fact.get('header_evidence')
+                and not fact.get('predicate') and re.fullmatch(
+                r'(?:金[額额])?同比[變变][動动]|YoY(?:\s+change)?', fact.get('attribute', ''), re.I)):
+            valid_periods = True
+            for dimension, label in (('from_period', '上年'), ('to_period', '本年')):
+                value = fact.get('qualifiers', {}).get(dimension)
+                if value is None:
+                    continue
+                origin = fact.get('qualifier_sources', {}).get(dimension, {})
+                bounds = _range(entry, origin)
+                local = bounds is not None and any(annual.get('attribute') == fact.get('subject')
+                    and annual.get('record_id') == fact.get('record_id')
+                    and annual.get('qualifier_sources', {}).get('period') == origin
+                    and annual.get('qualifiers', {}).get('period') == value
+                    and _range(entry, annual.get('value_source', {})) is not None for annual in facts)
+                declared = any(material['text'][slice(*cut)] == value and re.search(
+                    r'(?:^|[;；。])\s*' + label + r'\s*[:：]\s*$', material['text'][:cut[0]])
+                    for material in materials if (cut := _range(material, origin)) is not None)
+                if not (local or declared):
+                    valid_periods = False
+            if not valid_periods:
+                continue
         period_source = fact.get("qualifier_sources", {}).get("period") or fact.get("qualifier_provenance", {}).get("period", {}).get("source", {})
         period_range = _range(entry, period_source)
         if not fact.get("predicate") and value_range and period_range and not entry.get("cell"):
@@ -478,8 +582,12 @@ def _role_evidence(entry, facts, *, materials=()):
                     continue
                 origin = actor
             tail = entry["text"][origin[1]:]
+            direct_change = bool(value_range and re.fullmatch(
+                r"(?:金[額额])?同比[變变][動动]|YoY(?:\s+change)?|增[減减](?:幅度)?", fact.get("attribute", ""), re.I)
+                and re.fullmatch(r"\s*(?:[:：]\s*)?(?:增长|增長|增加|上升|下降|减少|減少)?\s*",
+                                 entry["text"][origin[1]:value_range[0]]))
             if not re.match(r"\s*[:：=]", tail) and not re.match(
-                    r"\s*;\s*(?:Year Ended|As of|As at|For the year|年度|截至)", tail, re.I):
+                    r"\s*;\s*(?:Year Ended|As of|As at|For the year|年度|截至)", tail, re.I) and not direct_change:
                 continue
             if value_range and not any(a <= origin[0] < origin[1] <= value_range[0] < value_range[1] <= b
                                        for a, b in _segments(entry["text"])) and period_range is None:
@@ -493,7 +601,14 @@ def _role_evidence(entry, facts, *, materials=()):
                     evidence.append({"span": [a, b], "requirement": fact["id"], "role": key})
         # Qualifier sources are checked by the graph's literal/operator guard;
         # they cover only their explicitly bound spans, not the fact's source.
-        for value in _walk([fact.get("qualifier_sources", {}), fact.get("qualifier_provenance", {})]):
+        qualifier_evidence = copy.deepcopy(fact.get("qualifier_sources", {}))
+        for fronted in qualifier_evidence.get("fronted_contexts", []):
+            bounds = _range(entry, fronted.get("context_source", {}))
+            if bounds and re.match(r"[A-Za-z]+ing\b|[A-Za-z]+\s+", entry["text"][slice(*bounds)], re.I) and _range(entry, fronted.get("preposition_source", {})):
+                marker_bounds = _range(entry, fronted["preposition_source"])
+                if entry["text"][slice(*marker_bounds)].lower() in {'by', 'through', 'in order to', 'for the purpose of'}:
+                    fronted.pop("context_source", None)  # Its structured operation must explain these words.
+        for value in _walk([qualifier_evidence, fact.get("qualifier_provenance", {})]):
             if isinstance(value.get("path"), str):
                 evidence.extend({"span": list(span), "requirement": fact["id"], "role": "qualifier"}
                                 for span in _ranges(entry, value))
@@ -1111,6 +1226,20 @@ def _structural_evidence(entry, graph, bound_relations):
     """Explain finite printed syntax only when its graph bindings still exist."""
     text, source = entry["text"], entry["source"]
     evidence = []
+    emphasis = re.match(r'\s*(?P<open>\*\*|__)[^:：=\n*]+[:：=](?P<close>\*\*|__)\s*\S', text)
+    if emphasis and emphasis['open'] == emphasis['close']:
+        evidence.extend({'span': list(emphasis.span(key)), 'role': 'balanced_field_label_emphasis'} for key in ('open', 'close'))
+    for fact in graph['nodes']:
+        label = fact.get('field_label_evidence', {})
+        bounds = _range(entry, label.get('source', {}))
+        if not bounds or text[slice(*bounds)] != label.get('text') or (fact.get('scope') or [None])[-1] != label.get('text'):
+            continue
+        edges = [edge for edge in bound_relations(fact) if edge.get('type') == 'field_binding'
+                 and (edge.get('right', {}).get('scope') or [None])[-1] == label['text']]
+        if edges:
+            evidence.append({'span': list(bounds), 'role': 'source_bound_printed_field_owner',
+                             'requirement': fact['id'], 'relations': [edge['id'] if 'id' in edge else
+                                f"operand-edge:{graph.get('operand_relations', []).index(edge)}" for edge in edges]})
     if entry["has_children"] and re.fullmatch(
             r"[^:：;；。！？!?\n]+?(?:\s+attributable\s+to|[归歸][属屬][于於])\s*[:：]?", text.strip(), re.I):
         declared = [binding for binding in graph.get("context", {}).get("parent_bindings", [])
@@ -1222,8 +1351,11 @@ def _structural_evidence(entry, graph, bound_relations):
 def _text_syntax_evidence(entry):
     """Only delimiters proved by the original printed field/header syntax."""
     text, evidence = entry["text"], []
+    emphasis = re.match(r'\s*(?P<open>\*\*|__)[^:：=\n*]+[:：=](?P<close>\*\*|__)\s*\S', text)
+    if emphasis and emphasis['open'] == emphasis['close']:
+        evidence.extend({'span': list(emphasis.span(key)), 'role': 'balanced_field_label_emphasis'} for key in ('open', 'close'))
     if _DECLARATION.fullmatch(text.strip()):
-        label = re.match(r"\s*(?:Units?|Currency|Period|Year|单位|單位|币种|幣種|期间|期間|年度)\s*[:：=]", text, re.I)
+        label = re.match(r"\s*(?:Units?|Currency|Period|Year|(?:金[額额])?(?:单位|單位)|币种|幣種|期间|期間|年度)\s*[:：=]", text, re.I)
         if label:
             evidence.append({"span": list(label.span()), "role": "printed_qualifier_declaration_key"})
     if re.fullmatch(r"(?:Note|Notes|附注|附註|注)\s*[:：]", text.strip(), re.I):
@@ -1511,6 +1643,11 @@ def audit_source_obligations(inventory: dict[str, Any], graph: dict[str, Any]) -
     facts = [nodes[ident] for ident in graph["projections"]["B"]]
     operands = [node for node in graph["nodes"] if node.get("kind") == "semantic_operand"]
     relations = [*graph["relations"], *graph.get("operand_relations", [])]
+    role_conflicts = {entry["id"]: {fact["id"]: conflicts for fact in [*facts, *operands]
+                     if (conflicts := proposition_role_conflicts(entry, fact))} for entry in inventory["sources"]}
+    rejected = {ident for local in role_conflicts.values() for ident in local}
+    facts = [fact for fact in facts if fact["id"] not in rejected]
+    operands = [fact for fact in operands if fact["id"] not in rejected]
     fact_by_id = {fact["id"]: fact for fact in [*facts, *operands]}
     attachment_obligations = defaultdict(list)
     for item in inventory["obligations"]:
@@ -1631,6 +1768,52 @@ def audit_source_obligations(inventory: dict[str, Any], graph: dict[str, Any]) -
                 elif not _residue(entry["text"], span, evidence, literal=True):
                     status, proof, reason = "explained", evidence, "literal_source_ranges_retained_by_T"
             elif obligation["kind"] == "relation":
+                if obligation.get('binding_role') == 'series_parent':
+                    parent = obligation['required_parent']
+                    owners = [fact for fact in facts if _range(entry, fact.get('value_source', {})) is not None]
+                    complete = owners and all(fact.get('qualifiers', {}).get('parent_metric') == parent['text']
+                        and fact.get('qualifier_sources', {}).get('parent_metric') == parent['source']
+                        and fact.get('identity_facets', {}).get('group') == parent['text']
+                        and any(edge.get('type') == 'qualifier_scope' and edge.get('left', {}).get('type') == 'parent_metric'
+                                for edge in bound_relations(fact)) for fact in owners)
+                    if complete:
+                        status, reason = 'explained', 'series_member_has_its_actual_source_bound_parent_metric'
+                        proof = [{'requirement': fact['id'], 'parent': copy.deepcopy(parent)} for fact in owners]
+                    rows.append({'obligation_id': obligation['id'], 'status': status, 'layers': obligation['layers'],
+                        'interpretation_rule': obligation['interpretation_rule'], 'reason': reason, 'source_basis': obligation['source_basis'],
+                        'evidence': proof, 'unexplained_character_positions': []})
+                    continue
+                if obligation.get("binding_role") == "fronted_operation":
+                    from .fronted_nominal_context import validate_fronted_operation
+                    from .infinitival_syntax import _main_leaves
+
+                    for node in _walk(graph.get("logic", [])):
+                        if node.get("kind") != "fronted_context" or _range(entry, node.get("operator_source", {})) != span:
+                            continue
+                        def local_literal(origin, label, entry=entry):
+                            bounds = _range(entry, origin or {})
+                            return entry['text'][slice(*bounds)] if bounds else None
+                        try:
+                            validate_fronted_operation(node, local_literal)
+                        except (ValueError, KeyError, TypeError):
+                            continue
+                        leaves = _main_leaves(node.get('operation', {'kind': 'unknown'}))
+                        main = _main_leaves(node.get('child', {'kind': 'unknown'}))
+                        def owns(leaf, bank):
+                            return [fact for fact in bank if all(fact.get(key) == leaf.get(key) for key in
+                                ('subject_source', 'predicate_source', 'object_source')) and bound_relations(fact)]
+                        operand_facts = [fact for leaf in leaves for fact in owns(leaf, operands)]
+                        main_facts = [fact for leaf in main for fact in owns(leaf, facts)]
+                        edges = [edge for fact in main_facts for edge in bound_relations(fact)
+                                 if edge.get('type') == 'narrative_fronted_context_scope' and edge.get('source') == node['operator_source']]
+                        if leaves and main and len(operand_facts) == len(leaves) and len(main_facts) == len(main) and edges:
+                            status, reason = 'explained', 'printed_nonfinite_operation_has_independent_operand_main_and_controller'
+                            proof = [{'requirement': fact['id']} for fact in [*main_facts, *operand_facts]]
+                            proof.extend({'relation': edge['id']} for edge in edges)
+                    rows.append({'obligation_id': obligation['id'], 'status': status, 'layers': obligation['layers'],
+                        'interpretation_rule': obligation['interpretation_rule'], 'reason': reason, 'source_basis': obligation['source_basis'],
+                        'evidence': proof, 'unexplained_character_positions': list(range(*span)) if status == 'pending' else []})
+                    continue
                 if obligation.get("binding_role") == "heading_scope":
                     declared = obligation["required_scope"]
                     names = [heading["text"] for heading in declared]
@@ -1653,6 +1836,13 @@ def audit_source_obligations(inventory: dict[str, Any], graph: dict[str, Any]) -
                             return False
                         if absolute:
                             if list(scope) == names:
+                                return True
+                            group = (fact or {}).get('identity_facets', {}).get('group', [])
+                            group = [group] if isinstance(group, str) else group
+                            if (group and (fact or {}).get('scope') == names and list(scope) == [*names, *group]
+                                    and all(any(row.get('text') == label and any(material['text'][slice(*bounds)] == label
+                                        for material in sources.values() if (bounds := _range(material, row.get('source', {}))))
+                                        for row in (fact or {}).get('row_evidence', [])) for label in group)):
                                 return True
                             label = (fact or {}).get("field_label_evidence") or {}
                             bounds = _range(entry, label.get("source", {}))
@@ -1827,6 +2017,16 @@ def audit_source_obligations(inventory: dict[str, Any], graph: dict[str, Any]) -
                 for fact in [*facts, *operands]:
                     predicate = _range(entry, fact.get("predicate_source", {}))
                     bound = [edge for edge in bound_relations(fact) if edge.get("type") == "field_binding"]
+                    scalar_proof = [item for item in role_evidence if item.get("requirement") == fact["id"]]
+                    if (bound and predicate is None and scalar_proof and obligation.get("binding_role") == "semantic_binding"
+                            and not _residue(entry["text"], span, scalar_proof)):
+                        proof.append({"requirement": fact["id"], "role": "source_bound_scalar_fragment",
+                                      "relations": [edge["id"] for edge in bound]})
+                    direction = _range(entry, fact.get("qualifier_sources", {}).get("change_direction", {}))
+                    if bound and direction == span and any(edge.get("type") == "qualifier_scope"
+                            and edge.get("left", {}).get("type") == "change_direction" for edge in bound_relations(fact)):
+                        proof.append({"requirement": fact["id"], "role": "printed_change_direction",
+                                      "relations": [edge["id"] for edge in bound]})
                     if obligation.get("binding_role") == "field_binding":
                         labels = _ranges(entry, fact.get("attribute_source", {}))
                         if fact.get("attribute") in entry["parents"]:
@@ -1948,9 +2148,15 @@ def audit_source_obligations(inventory: dict[str, Any], graph: dict[str, Any]) -
         if status == "pending" and entry is not None and obligation["kind"] in {"text", "proposition", "semantic_content"}:
             missing = _residue(entry["text"], _range(entry, obligation["source"]), [item for item in proof if "span" in item],
                                literal=obligation["kind"] == "text")
+        conflicts = [{"requirement": ident, **conflict} for ident, issues in role_conflicts.get(obligation["source_id"], {}).items()
+                     for conflict in issues if _same_source(obligation["source"], conflict["source"])
+                     or _same_source(conflict["source"], obligation["source"])] if obligation["kind"] != "text" else []
+        if status == "pending" and conflicts:
+            reason = "opaque_proposition_roles_do_not_explain_independent_semantics"
         rows.append({"obligation_id": obligation["id"], "status": status, "layers": obligation["layers"],
             "interpretation_rule": obligation["interpretation_rule"], "reason": reason,
-            "source_basis": obligation["source_basis"], "evidence": proof, "unexplained_character_positions": missing})
+            "source_basis": obligation["source_basis"], "evidence": proof, "unexplained_character_positions": missing,
+            **({"role_conflicts": conflicts} if conflicts else {})})
     for item in inventory["authorized_raw_inventory"]["obligations"]:
         rows.append({"obligation_id": item["id"], "status": item["status"], "layers": ["T", "L", "B"],
             "interpretation_rule": item["interpretation_rule"], "reason": item["reason"],

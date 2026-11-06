@@ -82,7 +82,7 @@ def test_ratio_direction_sign_and_unit_do_not_borrow_the_total_currency():
     assert 'currency' not in growth['qualifiers']
 
 
-@pytest.mark.parametrize('tail', ['增长4.3%', '同比增长4.3万元', '同比增长4.3', '港口吞吐量同比增长4.3%'])
+@pytest.mark.parametrize('tail', ['增长4.3%', '同比增长4.3', '港口吞吐量同比增长4.3%'])
 def test_unsupported_relative_unit_or_omitted_actor_is_not_an_opaque_second_fact(tail):
     text = f'工业产值超过137万元，{tail}。'
     result = read(text)

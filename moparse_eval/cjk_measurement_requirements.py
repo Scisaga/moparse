@@ -13,6 +13,7 @@ import re
 from typing import Any
 
 from .measurement_evidence import read_measurement_literal
+from .period_evidence import read_period_label
 
 _COMPARISONS = {'不超过': 'lte', '不超過': 'lte', '不高于': 'lte', '不高於': 'lte',
                 '不低于': 'gte', '不低於': 'gte', '不少于': 'gte', '不少於': 'gte',
@@ -21,13 +22,16 @@ _COMPARISONS = {'不超过': 'lte', '不超過': 'lte', '不高于': 'lte', '不
 _COMPARISON = re.compile('|'.join(sorted(_COMPARISONS, key=len, reverse=True)))
 _CHANGES = {'同比增长': 'increase', '同比增長': 'increase', '同比增加': 'increase', '同比上升': 'increase',
             '同比下降': 'decrease', '同比减少': 'decrease', '同比減少': 'decrease'}
-_CHANGE = re.compile('|'.join(sorted(_CHANGES, key=len, reverse=True)))
-_PERIOD = re.compile(r'\s*(?P<period>(?:19|20)\d{2}年)(?!度|末|初|底|中|[内內前后後]|以[来來]|[\d一二三四五六七八九十]+月)\s*(?:[，,]\s*)?')
+_CHANGE = re.compile(r'(?P<basis>同比|(?:相[較较]|[較较比])(?P<baseline>(?:19|20)\d{2}年(?:同期|末))|比上年末)'
+                     r'(?P<direction>增长|增長|增加|上升|下降|减少|減少)')
+_PERIOD = re.compile(r'\s*(?P<prefix>於|于|截至)?(?P<period>(?:19|20)\d{2}年(?:\d{1,2}月\d{1,2}日|末|底)?)'
+                     r'(?!度|初|中|[内內前后後]|以[来來]|[\d一二三四五六七八九十]+月)\s*(?:[，,]\s*)?')
 _PREFIX = re.compile(r'如果|若|只有|除非|因为|因為|由于|由於|据|據|截至|面向|在|为|為|今年|去年|本年|上年|当年|當年|\d{4}年')
-_METRIC = re.compile(r'(?:值|量|额|額|收入|支出|利润|利潤|余额|餘額|资产|資產|负债|負債|人数|人數|指数|指數|率|规模|規模)(?:\s*[（(][A-Za-z][A-Za-z0-9 -]*[）)])?$')
-_SUBJECT_SCOPE = re.compile(r'[，,；;:：。！？!?“”"\'‘’]|的|和|与|與|及|或|并|並|同比|如果|除非|因为|因為|由于|由於|表示|认为|認為')
+_METRIC = re.compile(r'(?:值|量|额|額|收入|支出|利润|利潤|余额|餘額|资产|資產|负债|負債|人数|人數|指数|指數|率|规模|規模|费用|費用|损益|損益|权益|權益|借款|庫存股|库存股|存貨|存货)(?:流出|流入)?(?:\s*[（(][A-Za-z][A-Za-z0-9 -]*[）)])?$')
+_SUBJECT_SCOPE = re.compile(r'[，,；;:：。！？!?“”"\'‘’]|中的|或|并|並|同比|比上年|如果|除非|因为|因為|由于|由於|表示|认为|認為')
 _NON_ACTUAL = re.compile(r'目标|目標|预计|預計|预期|預期|预测|預測|计划|計劃|预算|預算|拟|擬|将|將|未(?:实现|實現|达|達)|不(?:为|為|是)|没有|沒有|如果|若|除非|假设|假設')
-_ASSERTION = re.compile(r'实现|實現|为|為')
+_ASSERTION = re.compile(r'实现|實現|为|為|达到|達到')
+_ACTOR = re.compile(r'(?P<actor>本公司|本集[团團]|[该該]事[业業]部)(?:的)?')
 
 
 def _source(source, a, b):
@@ -43,24 +47,45 @@ def _trim(text, a, b):
     return a, b
 
 
+def _valid_metric(metric):
+    if not _METRIC.search(metric) or _PREFIX.match(metric) or _SUBJECT_SCOPE.search(metric) or _NON_ACTUAL.search(metric) or re.match(r'\*|__', metric):
+        return False
+    # A fixed compound label may contain conjunctions. Two independently
+    # complete metric labels do not jointly own a single unallocated amount.
+    return not any(_METRIC.search(metric[:join.start()]) and _METRIC.search(metric[join.end():])
+                   for join in re.finditer(r'和|与|與|及|以及', metric))
+
+
 def _assertion_candidates(text, source, a, b):
     """Source cuts for the two assertion frames, before reader dispatch."""
-    realized = re.match(r'实现|實現', text[a:b])
-    equality = re.search(r'为|為', text[a:b]) if not realized else None
+    actor = _ACTOR.match(text, a, b)
+    body = actor.end() if actor else a
+    realized = re.match(r'实现|實現', text[body:b])
+    equality = re.search(r'为|為|达到|達到', text[body:b]) if not realized else None
     candidates = []
     if realized:
-        sa = a + realized.end()
+        sa = body + realized.end()
         for sb in range(sa + 1, b):
             if _METRIC.search(text[sa:sb].strip()):
-                measurement = read_measurement_literal(text[sb:b], _source(source, sb, b))
+                link = re.match(r'为|為', text[sb:b])
+                value_start = sb + link.end() if link else sb
+                measurement = read_measurement_literal(text[value_start:b], _source(source, value_start, b))
                 if measurement['matched']:
-                    candidates.append((sa, sb, a, a + realized.end(), measurement))
+                    if link:
+                        measurement['assertion_link'] = {'text': link[0], 'source': _source(source, sb, value_start)}
+                    candidates.append((sa, sb, body, body + realized.end(), measurement))
     elif equality:
-        sa, sb = _trim(text, a, a + equality.start())
-        qa, qb = a + equality.start(), a + equality.end()
+        sa, sb = _trim(text, body, body + equality.start())
+        qa, qb = body + equality.start(), body + equality.end()
         measurement = read_measurement_literal(text[qb:b], _source(source, qb, b))
         if measurement['matched']:
             candidates.append((sa, sb, qa, qb, measurement))
+    if actor:
+        for *_, measurement in candidates:
+            measurement['actor'] = {'text': actor['actor'], 'source': _source(source, *actor.span('actor'))}
+            if actor.end() > actor.end('actor'):
+                measurement['actor_link'] = {'text': text[actor.end('actor'):actor.end()],
+                    'source': _source(source, actor.end('actor'), actor.end())}
     return candidates, bool(realized)
 
 
@@ -83,6 +108,7 @@ def read_cjk_measurements(text: str, source: dict[str, Any], *, scope=()) -> dic
     period_text = period['period'] if period else None
     period_source = _source(source, period.start('period'), period.end('period')) if period else None
     body_start = period.end() if period else start
+    invalid_period = bool(period_text and '月' in period_text and not read_period_label(period_text)['matched'])
     parts, cursor = [], body_start
     for separator in re.finditer(r'，|(?<!\d),(?!\d)', text[body_start:end]):
         a, b = _trim(text, cursor, body_start + separator.start())
@@ -93,8 +119,8 @@ def read_cjk_measurements(text: str, source: dict[str, Any], *, scope=()) -> dic
     if len(candidates) == 1:
         sa, sb, _qa, _qb, _measurement = candidates[0]
         metric = text[sa:sb].strip()
-        result['matched'] |= bool(_METRIC.search(metric) and not _PREFIX.match(metric)
-                                  and not _SUBJECT_SCOPE.search(metric) and not _NON_ACTUAL.search(metric))
+        result['matched'] |= _valid_metric(metric)
+    result['matched'] |= bool(re.match(r'(?:其中)?[^，,。]+占[^，,。]+的\d', text[body_start:end]))
     if not result['matched']:
         return result
     result['text_atoms'] = [{'text': text, 'role': 'literal', 'source': _source(source, 0, len(text))}]
@@ -116,8 +142,13 @@ def read_cjk_measurements(text: str, source: dict[str, Any], *, scope=()) -> dic
              **({'currency': measurement['currency']} if measurement['currency'] else {})}
         qs = {**qualifier_sources, **{key: copy.deepcopy(measurement['sources'][key])
                                       for key in ('unit', 'currency', 'currency_symbol') if key in measurement['sources']}}
+        for key in ('actor', 'actor_link', 'assertion_link'):
+            if measurement.get(key):
+                q[key], qs[key] = measurement[key]['text'], copy.deepcopy(measurement[key]['source'])
         if period:
             q['period'], qs['period'] = period_text, copy.deepcopy(period_source)
+            if period['prefix']:
+                q['period_operator'], qs['period_operator'] = period['prefix'], _source(source, *period.span('prefix'))
             features.add('shared_period_scope')
         fact = {'id': f'cjk_measurement:{len(result["facts"])}', 'subject': subject, 'attribute': attribute,
                 'predicate': attribute, 'object': measurement['value'], 'value': measurement['value'],
@@ -147,6 +178,9 @@ def read_cjk_measurements(text: str, source: dict[str, Any], *, scope=()) -> dic
 
     antecedent = None
     for part_index, (a, b) in enumerate(parts):
+        if invalid_period:
+            fail(a, b, 'cjk_measurement_calendar_period_unresolved')
+            continue
         comparison = _COMPARISON.search(text, a, b)
         change = _CHANGE.match(text, a, b)
         if text.rstrip().endswith(('?', '？')):
@@ -159,16 +193,25 @@ def read_cjk_measurements(text: str, source: dict[str, Any], *, scope=()) -> dic
                 continue
             subject, subject_source = antecedent['subject'], antecedent['subject_source']
             measurement = read_measurement_literal(text[change.end():b], _source(source, change.end(), b))
-            if measurement['matched'] and measurement['unit'] in {'%', '‰'}:
+            if measurement['matched'] and measurement['unit']:
                 predicate_source = _source(source, change.start(), change.end())
-                basis_source, direction_source = _source(source, change.start(), change.start() + 2), _source(source, change.start() + 2, change.end())
+                basis_source, direction_source = _source(source, *change.span('basis')), _source(source, *change.span('direction'))
+                basis = 'year_on_year' if change['basis'] == '同比' else change['basis']
+                direction = 'decrease' if change['direction'] in {'下降', '减少', '減少'} else 'increase'
                 logic = {'kind': 'year_on_year_change', 'subject': subject, 'subject_source': subject_source,
-                         'operator_text': change[0], 'operator_source': predicate_source, 'basis': 'year_on_year',
-                         'direction': _CHANGES[change[0]], 'baseline_period': None, 'value_source': measurement['sources']['value'],
+                         'operator_text': change[0], 'operator_source': predicate_source, 'basis': basis,
+                         'direction': direction, 'baseline_period': change['baseline'], 'value_source': measurement['sources']['value'],
                          'unit_source': measurement['sources']['unit'], 'source': _source(source, a, b)}
+                qualifiers = {'comparison_basis': basis, 'change_direction': direction}
+                qualifier_sources = {'comparison_basis': basis_source, 'change_direction': direction_source}
+                if change['baseline']:
+                    qualifiers['from_period'] = change['baseline']
+                    qualifier_sources['from_period'] = _source(source, *change.span('baseline'))
+                if antecedent.get('qualifiers', {}).get('actor'):
+                    qualifiers['actor'] = antecedent['qualifiers']['actor']
+                    qualifier_sources['actor'] = copy.deepcopy(antecedent['qualifier_sources']['actor'])
                 fact = emit(subject, subject_source, change[0], predicate_source, measurement, _source(source, a, b),
-                            {'comparison_basis': 'year_on_year', 'change_direction': _CHANGES[change[0]]},
-                            {'comparison_basis': basis_source, 'change_direction': direction_source}, logic)
+                            qualifiers, qualifier_sources, logic)
                 fact['subject_binding_evidence'] = {'kind': 'immediate_printed_year_on_year_antecedent',
                     'antecedent_source': copy.deepcopy(subject_source), 'relative_operator_source': basis_source,
                     'scope': list(scope)}
@@ -183,11 +226,35 @@ def read_cjk_measurements(text: str, source: dict[str, Any], *, scope=()) -> dic
             antecedent = None
             continue
         antecedent = None
+        ratio = re.fullmatch(r'(?P<scope>其中)?(?P<subject>[^，,。]+?)占(?P<denominator>[^，,。]+?)的(?P<measurement>.+)', text[a:b])
+        if ratio:
+            measurement = read_measurement_literal(ratio['measurement'], _source(source, a + ratio.start('measurement'), b))
+            if not (_valid_metric(ratio['subject']) and _valid_metric(ratio['denominator'])
+                    and measurement['matched'] and measurement['unit'] in {'%', '‰'}):
+                fail(a, b, 'cjk_ratio_roles_unresolved')
+                continue
+            subject_source = _source(source, a + ratio.start('subject'), a + ratio.end('subject'))
+            predicate_source = _source(source, a + ratio.end('subject'), a + ratio.end('subject') + 1)
+            denominator_source = _source(source, a + ratio.start('denominator'), a + ratio.end('denominator'))
+            qualifiers = {'denominator': ratio['denominator'], 'ratio_link': '的'}
+            qualifier_sources = {'denominator': denominator_source,
+                'ratio_link': _source(source, a + ratio.end('denominator'), a + ratio.end('denominator') + 1)}
+            if ratio['scope']:
+                qualifiers['membership_operator'] = ratio['scope']
+                qualifier_sources['membership_operator'] = _source(source, a + ratio.start('scope'), a + ratio.end('scope'))
+            logic = {'kind': 'quantity_assertion', 'subject': ratio['subject'], 'subject_source': subject_source,
+                'predicate': '占', 'predicate_source': predicate_source, 'assertion_operator': 'share',
+                'denominator': ratio['denominator'], 'denominator_source': denominator_source,
+                'assertion_mode': 'actual', 'right_role': 'asserted_value', 'value_source': measurement['sources']['value'],
+                'unit_source': measurement['sources']['unit'], 'source': _source(source, a, b)}
+            antecedent = emit(ratio['subject'], subject_source, '占', predicate_source, measurement,
+                _source(source, a, b), qualifiers, qualifier_sources, logic)
+            features.add('quantity_assertion')
+            continue
         if comparison:
             sa, sb = _trim(text, a, comparison.start())
             subject = text[sa:sb]
-            metric_ok = bool(subject and _METRIC.search(subject) and not _PREFIX.match(subject)
-                             and not _SUBJECT_SCOPE.search(subject) and not _NON_ACTUAL.search(subject))
+            metric_ok = _valid_metric(subject)
             measurement = read_measurement_literal(text[comparison.end():b], _source(source, comparison.end(), b))
             if metric_ok and measurement['matched']:
                 subject_source = _source(source, sa, sb)
@@ -209,14 +276,14 @@ def read_cjk_measurements(text: str, source: dict[str, Any], *, scope=()) -> dic
         if len(candidates) == 1:
             sa, sb, qa, qb, measurement = candidates[0]
             subject = text[sa:sb].strip()
-            if (not _METRIC.search(subject) or _PREFIX.match(subject) or _SUBJECT_SCOPE.search(subject)
+            if (not _valid_metric(subject)
                     or _NON_ACTUAL.search(text[a:measurement['sources']['value']['text_span'][0] - source.get('text_span', [0])[0]])):
                 fail(a, b, 'cjk_metric_assertion_scope_unresolved')
                 continue
             subject_source, predicate_source = _source(source, sa, sb), _source(source, qa, qb)
             logic = {'kind': 'quantity_assertion', 'subject': subject, 'subject_source': subject_source,
                      'predicate': text[qa:qb], 'predicate_source': predicate_source,
-                     'assertion_operator': 'realize' if realized else 'equal',
+                     'assertion_operator': 'realize' if realized else 'reach' if text[qa:qb] in {'达到', '達到'} else 'equal',
                      'assertion_mode': 'actual', 'right_role': 'asserted_value',
                      'value_source': measurement['sources']['value'], 'unit_source': measurement['sources'].get('unit'),
                      'source': _source(source, a, b)}

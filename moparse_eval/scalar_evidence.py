@@ -8,6 +8,7 @@ used to check a claimed raw value and its numeric subrange.
 from __future__ import annotations
 
 import json
+import re
 from collections import defaultdict
 from collections.abc import Callable, Iterable
 from typing import Any
@@ -38,6 +39,7 @@ def validate_scalar_sources(facts: Iterable[dict[str, Any]], projection: dict[st
     precise ``value_source``. Logical predicates, non-scalars and undeclared
     provenance contracts retain their existing guards.
     """
+    facts = list(facts)
     snapshots: dict[str, list[tuple[str, int]]] | None = None
     checked = set()
     for fact in facts:
@@ -76,3 +78,38 @@ def validate_scalar_sources(facts: Iterable[dict[str, Any]], projection: dict[st
                 break
         if not proven:
             raise ValueError("source-bound scalar differs from its original raw value or value subrange")
+    # A correct year string from a neighboring record is still the wrong
+    # comparison source. Closed-row YoY must refer to that row's own annual
+    # fields; a separate declaration must actually label 本年/上年.
+    for fact in facts:
+        if (not re.fullmatch(r'(?:金[額额])?同比[變变][動动]|YoY(?:\s+change)?', fact.get('attribute', ''), re.I)
+                or fact.get('compact_column') or fact.get('header_evidence')
+                or _location(fact.get('attribute_source', {})) != _location(fact.get('source', {}))):
+            continue
+        for dimension, label in (('from_period', '上年'), ('to_period', '本年')):
+            period = fact.get('qualifiers', {}).get(dimension)
+            if period is None:
+                continue
+            origin = fact.get('qualifier_sources', {}).get(dimension, {})
+            local = _location(origin) == _location(fact['source'])
+            valid = False
+            if local:
+                for annual in facts:
+                    if (annual.get('attribute') != fact.get('subject') or annual.get('record_id') != fact.get('record_id')
+                            or _location(annual.get('source', {})) != _location(fact['source'])
+                            or annual.get('qualifiers', {}).get('period') != period
+                            or annual.get('qualifier_sources', {}).get('period') != origin):
+                        continue
+                    for text, offset in (snapshots or {}).get(_location(origin), []):
+                        bounds = _bounds(origin, offset, len(text))
+                        value = _bounds(annual.get('value_source', {}), offset, len(text))
+                        if bounds and value and bounds[1] <= value[0] and text[bounds[0] - offset:bounds[1] - offset] == period:
+                            valid = True
+            else:
+                for text, offset in (snapshots or {}).get(_location(origin), []):
+                    bounds = _bounds(origin, offset, len(text))
+                    if (bounds and text[bounds[0] - offset:bounds[1] - offset] == period
+                            and re.search(r'(?:^|[;；。])\s*' + label + r'\s*[:：]\s*$', text[:bounds[0] - offset])):
+                        valid = True
+            if not valid:
+                raise ValueError('source-bound series comparison period is outside its own row or explicit declaration')

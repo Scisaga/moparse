@@ -209,15 +209,34 @@ def _check_quoted_roles(graph, resolve):
 def _measurement_sources(graph):
     from .prose_requirements import _sentence_spans
     from .quoted_nominal import _source
+    from .source_requirements import plan_field_body
+    from .three_layer import _bind_field_body
 
     sources = {}
+    frames = {}
+    envelopes = set()
+    for item in graph.get('syntax', []):
+        if item.get('kind') == 'field_body':
+            continue
+        frame = plan_field_body(item.get('text', ''), item.get('source', {}))
+        if frame and any(child.get('kind') == 'field_body' and child.get('source') == frame['body_source']
+                         and child.get('text') == frame['body'] for child in graph.get('syntax', [])):
+            frames[_key(frame['body_source'])] = frame
+            envelopes.add(_key(item['source']))
     for item in graph.get("syntax", []):
         text, source = item.get("text"), item.get("source")
         if not isinstance(text, str) or not isinstance(source, dict):
             continue
+        if item.get('kind') != 'field_body' and _key(source) in envelopes:
+            continue
         for start, end in _sentence_spans(text):
             origin = _source(source, start, end)
             readback = read_cjk_measurements(text[start:end], origin, scope=item.get("scope", []))
+            if item.get('kind') == 'field_body':
+                frame = frames.get(_key(source))
+                if frame is None or item.get('printed_label') != frame['label'] or item.get('label_source') != frame['label_source']:
+                    raise ValueError('measurement body lost its independently printed field owner')
+                _bind_field_body(readback, frame['label'], frame['label_source'])
             if readback["matched"]:
                 sources[_key(origin)] = readback
     return list(sources.values())

@@ -49,8 +49,8 @@ def test_directed_change_conflict_or_unread_tail_never_becomes_a_complete_scalar
     assert material["blockers"] and material["pending_requirements"]
 
 
-def test_direction_does_not_invent_a_year_from_two_neighboring_year_values():
-    material = read_series_requirements("Margin：2028年40.58%；2027年40.93%；同比變動下降0.35個百分點。", SOURCE)
+def test_generic_change_does_not_invent_a_year_from_two_neighboring_year_values():
+    material = read_series_requirements("Margin：2028年40.58%；2027年40.93%；增減下降0.35個百分點。", SOURCE)
     assert len(material["facts"]) == 3
     change = material["facts"][-1]
     assert "from_period" not in change["qualifiers"] and "to_period" not in change["qualifiers"]

@@ -243,6 +243,14 @@ def _source_checks(node, side, path, context):
         token("negative", node.get("operator_source"), "polarity", path + ".operator")
     elif kind in {"condition", "exception", "fronted_context"}:
         token(node.get("operator"), node.get("operator_source"), "operator", path + ".operator")
+        if kind == "fronted_context":
+            from .fronted_nominal_context import validate_fronted_operation
+
+            try:
+                validate_fronted_operation(node, lambda origin, label: resolver(side, origin))
+            except (ValueError, KeyError, TypeError) as error:
+                checks.append(_result("unresolved", path, reason="fronted_operation_not_bound_to_source",
+                                      proof={"side": side, "detail": str(error)}))
     elif kind == "quantity_comparison" and (node.get("operator") != "eq" or node.get("operator_source")):
         token(node.get("operator"), node.get("operator_source"), "comparison_operator", path + ".operator")
     if kind == "conditions":
@@ -377,6 +385,20 @@ def compare_requirement_ast(required: Any, actual: Any, context: dict[str, Any] 
                         first_keys.discard(surface_role)
                         second_keys.discard(surface_role)
                         delegated.append(surface_role)
+            if kinds[0] == 'fronted_context' and first.get('operation') and second.get('operation') and context.get('source_resolver'):
+                # Raw adjunct wording remains source/T evidence. The complete
+                # controlled operation owns semantic comparison, as a bound
+                # noun phrase already owns its surface subject/object.
+                from .fronted_nominal_context import validate_fronted_operation
+
+                try:
+                    for side, node in (('required', first), ('actual', second)):
+                        validate_fronted_operation(node, lambda origin, label, side=side: context['source_resolver'](side, origin))
+                except (ValueError, KeyError, TypeError):
+                    pass
+                else:
+                    first_keys.discard('context')
+                    second_keys.discard('context')
             for field in sorted((first_keys | second_keys) - skip):
                 if field == "scope" and context.get("contexts") is not None and first.get("scope"):
                     scope = verify_scope(first["scope"], second, list(context.get("declared_paths", [])),

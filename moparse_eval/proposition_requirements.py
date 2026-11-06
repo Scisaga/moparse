@@ -11,9 +11,8 @@ import copy
 import re
 from typing import Any
 
-from .prose_requirements import _sentence_spans, prose_role_relations
-
 from .action_forms import PROPOSITION_ACTION_FORMS
+from .prose_requirements import _sentence_spans, prose_role_relations
 
 VERBS = dict(PROPOSITION_ACTION_FORMS)
 _VERB = re.compile(r"\b(" + "|".join(sorted(VERBS, key=len, reverse=True)) + r")\b", re.I)
@@ -114,6 +113,8 @@ def read_propositions(text: str, source: dict[str, Any], *, scope=(), subject: s
             verb = _CJK_VERB.search(text, body_start, body_end)
             cjk = verb is not None
             modal = _CJK_MODAL.search(text, body_start, verb.start()) if verb else None
+            if modal and text[modal.end():verb.start()].strip() not in {'', '不'}:
+                modal = None  # 應佔權益 is a nominal, not a distant modal action.
         if verb is None:
             continue
         result["matched"] = True
@@ -274,6 +275,12 @@ def read_propositions(text: str, source: dict[str, Any], *, scope=(), subject: s
                         "object_source": _source(source, object_start, object_end),
                         "logic": {"kind": "proposition", "action": action, "conditions": copy.deepcopy(conditions)},
                         "rule_id": "source_bound_subject_predicate_object"}
+                from .source_obligations import proposition_role_conflicts
+
+                conflicts = proposition_role_conflicts({"text": text, "source": source}, fact)
+                if conflicts:
+                    _pending(result, text, source, start, end, "proposition_role_semantics_unresolved", role_conflicts=conflicts)
+                    continue
                 result["facts"].append(fact)
                 result["relations"].append({"type": "field_binding", "left": {
                     "subject": printed_subject, "attribute": action}, "right": {

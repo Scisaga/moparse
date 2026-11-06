@@ -465,8 +465,13 @@ def _validate_flat_evidence(score: dict[str, Any]) -> None:
     evidence = score["text_evidence"]
     business_rows = [row for row in score["outcomes"] if row["layer"] == "B"]
     validate_scalar_sources((row["expected"] for row in business_rows), evidence["required_projection"], canonicalize=canonical)
-    validate_scalar_sources((hit["candidate"] for row in business_rows for hit in row.get("retrieval", {}).get("candidates", [])),
-                            evidence["candidate_projection"], canonicalize=canonical)
+    # Annual comparison ownership needs the complete candidate bank. A
+    # correctly rejected metric can be absent from retrieval hits while its
+    # own source still proves the candidate's local year binding.
+    candidate_bank = score.get('semantic_comparison', {}).get('inputs', {}).get('actual', {}).get('business')
+    if not isinstance(candidate_bank, list):
+        raise ValueError('scalar source replay lacks its complete candidate business bank')
+    validate_scalar_sources(candidate_bank, evidence["candidate_projection"], canonicalize=canonical)
     summarize_layers([score])
     scope_options = {key: score.get("scope_evidence", {}).get(key, None if key == "contexts" else ())
                      for key in ("contexts", "declared_paths", "context_labels")}

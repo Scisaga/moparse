@@ -63,16 +63,16 @@ def test_adjacent_full_valid_calendar_selectors_are_not_truncated_to_a_year(offs
     assert signatures(result) == [
         ("Assets", "17", {"unit": "CNYm", "currency": "CNY", "period": "2028年3月31日"}),
         ("Assets", "11", {"unit": "CNYm", "currency": "CNY", "period": "2027年3月31日"}),
-        ("同比变动", "5", {"unit": "%"}),
+        ("同比变动", "5", {"unit": "%", "from_period": "2027年3月31日", "to_period": "2028年3月31日"}),
     ]
     for f, period in zip(result["facts"][:2], ("2028年3月31日", "2027年3月31日"), strict=True):
         a, b = f["qualifier_sources"]["period"]["text_span"]
         assert text[a - offset:b - offset] == period
         assert f["role_basis"]["period_selector"]["kind"] == "calendar_day"
         assert "period_basis" not in f["qualifiers"]
-    assert any(p["text"] == "同比变动5%" for p in result["pending_requirements"])
-    assert any(b["reason"] == "series_comparison_periods_unresolved" for b in result["blockers"])
-    assert not any("from_period" in f["qualifiers"] or "to_period" in f["qualifiers"] for f in result["facts"])
+    assert not result["pending_requirements"] and not result["blockers"]
+    assert result["facts"][-1]["qualifier_sources"]["from_period"] == result["facts"][1]["qualifier_sources"]["period"]
+    assert result["facts"][-1]["qualifier_sources"]["to_period"] == result["facts"][0]["qualifier_sources"]["period"]
     validate_scalar_sources(result["facts"], {"source_fragments": [{"source": origin, "text": text}]}, canonicalize=str.strip)
 
 

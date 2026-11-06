@@ -418,6 +418,91 @@ def _read_growth_scalar(text: str, source: dict[str, Any], start: int, end: int,
     return parsed
 
 
+def _closed_yoy_periods(facts, label, attribute):
+    """Bind explicit YoY to a closed two-position series of this metric.
+
+    The printed comparison operator, complete row membership, consecutive
+    calendar years and identical remaining date/basis are all necessary.
+    Mere neighboring years, a third position or a generic change label do not
+    select a pair. No missing year or change amount is calculated.
+    """
+    if not re.fullmatch(r"(?:金[額额])?同比[變变][動动]|YoY(?:\s+change)?", label, re.I):
+        return {}
+    if len(facts) != 2 or any(fact.get("attribute") != attribute for fact in facts):
+        return {}
+    positions = []
+    for fact in facts:
+        raw = fact.get("qualifiers", {}).get("period", "")
+        match = re.fullmatch(r"((?:19|20)\d{2})(年(?:度|末|初|\d{1,2}月\d{1,2}日)?|)", raw)
+        origin = fact.get("qualifier_sources", {}).get("period")
+        if match is None or not origin:
+            return {}
+        positions.append((int(match[1]), match[2], raw, origin))
+    positions.sort(key=lambda item: item[0])
+    before, current = positions
+    if current[0] - before[0] != 1 or before[1] != current[1]:
+        return {}
+    return {key: {"value": position[2], "source": copy.deepcopy(position[3])}
+            for key, position in (("from_period", before), ("to_period", current))}
+
+
+def _bind_printed_series_parent(result, text, source, parents, declarations, context, qualifiers, qualifier_sources, scope):
+    """A printed 其中 member refers to its actual list parent metric label.
+
+    Read the parent independently without its children or their answers. Its
+    label supplies membership only, never a year, amount, currency or unit.
+    """
+    cue = re.match(r"\s*(其中)[，,]\s*", text)
+    if (cue is None and not parents) or result["blockers"] or not result["facts"]:
+        return
+    def pending():
+        if cue:
+            _block(result, "series_membership_parent_unresolved", text, source, *cue.span(1), layers=["B", "L"])
+
+    if not parents or len(parents) != 1 or not declarations:
+        pending()
+        return
+    parent = declarations[-1]
+    if not isinstance(parent, dict) or parent.get("text") != parents[-1]:
+        pending()
+        return
+    origin = parent.get("source", {})
+    if (origin.get("path") != source.get("path") or not origin.get("lines") or not source.get("lines")
+            or origin["lines"][1] >= source["lines"][0]):
+        pending()
+        return
+    parsed = read_series_requirements(parent["text"], origin, context=context,
+        qualifiers=qualifiers, qualifier_sources=qualifier_sources, scope=scope)
+    annual = [fact for fact in parsed["facts"] if "period" in fact["qualifiers"]]
+    if not parsed["matched"] or parsed["blockers"] or not annual or len({fact["attribute"] for fact in annual}) != 1:
+        pending()
+        return
+    owner = annual[0]
+    old_label = result["facts"][0]["attribute"]
+    prefix_end = cue.end() if cue else 0
+    if cue and not old_label.startswith(text[:prefix_end]):
+        return
+    label = old_label[prefix_end:]
+    for fact in result["facts"]:
+        if fact["attribute"] == old_label:
+            fact["attribute"] = label
+            fact["attribute_source"] = _source(source, prefix_end, prefix_end + len(label))
+            fact["source"]["attribute_source"] = copy.deepcopy(fact["attribute_source"])
+        elif fact["subject"] == old_label:
+            fact["subject"] = label
+        fact["identity_facets"]["group"] = owner["attribute"]
+        fact["row_evidence"] = [{"role": "row_group", "text": owner["attribute"], "source": copy.deepcopy(owner["attribute_source"])}]
+        fact["qualifiers"].update(parent_metric=owner["attribute"])
+        fact["qualifier_sources"].update(parent_metric=copy.deepcopy(owner["attribute_source"]))
+        if cue:
+            fact["qualifiers"]["membership_operator"] = cue[1]
+            fact["qualifier_sources"]["membership_operator"] = _source(source, *cue.span(1))
+        fact["source"]["qualifier_sources"] = copy.deepcopy(fact["qualifier_sources"])
+    result["series_membership"] = {"parent": copy.deepcopy(parent), "metric": owner["attribute"],
+        "metric_source": copy.deepcopy(owner["attribute_source"]), "member": label,
+        **({"operator_source": _source(source, *cue.span(1))} if cue else {})}
+
+
 def read_series_requirements(text: str, source: dict[str, Any], *, context: dict[str, Any] | None = None,
                               subject: str = "", attribute: str | None = None,
                               subject_source: dict[str, Any] | None = None,
@@ -613,7 +698,7 @@ def read_series_requirements(text: str, source: dict[str, Any], *, context: dict
                     "raw_value": text[value_start:value_end]}
             elif _GROWTH.fullmatch(field_attribute):
                 parsed = _read_growth_scalar(text, source, value_start, end, result, q, sources)
-                comparison = context.get("comparison_periods", {})
+                comparison = context.get("comparison_periods", {}) or _closed_yoy_periods(result["facts"], field_attribute, attribute)
                 if {"from_period", "to_period"} <= comparison.keys():
                     if parsed:
                         for key in ("from_period", "to_period"):
@@ -647,6 +732,7 @@ def read_series_requirements(text: str, source: dict[str, Any], *, context: dict
                     "parent": copy.deepcopy(attribution["parent"]), "child": copy.deepcopy(attribution["child"])}
                 if attribution.get("record_evidence"):
                     fact["record_evidence"] = copy.deepcopy(attribution["record_evidence"])
+    _bind_printed_series_parent(result, text, source, parents, parent_declarations, context, qualifiers, qualifier_sources, scope)
     _project(result, text, source)
     if attribution:
         _attribution_projection(result, text, source, attribution)

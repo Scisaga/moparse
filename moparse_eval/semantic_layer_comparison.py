@@ -351,11 +351,18 @@ def compare_semantic_layers(required, actual, rows, layers, *, canonicalize, sco
         if inconsistent:
             blockers.append({"side": side, "reason": "semantic_fact_ast_evidence_inconsistent", "layers": ["B", "L"],
                              "evidence": inconsistent})
+        from .fronted_nominal_context import validate_fronted_operation_graph
+
+        try:
+            validate_fronted_operation_graph(graph, lambda source, own=own: resolve(own, source))
+        except (ValueError, TypeError, KeyError) as error:
+            blockers.append({"side": side, "reason": "fronted_operation_evidence_inconsistent", "layers": ["B", "L"],
+                             "evidence": str(error)})
     for side, graph in (("expected", required), ("candidate", actual)):
         trees = graph.get("logical_statements", [])
         missing_features = []
         resolver_side = "required" if side == "expected" else "actual"
-        represented = represented_feature_checks(graph, lambda source: resolve(resolver_side, source))
+        represented = represented_feature_checks(graph, lambda source, side=resolver_side: resolve(side, source))
         checks[side] = represented["checks"]
         features = set(graph.get("required_matcher_features", [])) | set(represented["features"])
         for feature in sorted(features - {"finite_tense"}):

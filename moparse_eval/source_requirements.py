@@ -36,6 +36,17 @@ def plan_field_body(text: str, source: dict[str, Any]) -> dict[str, Any] | None:
     if match is None:
         return None
     label, body = match[1].strip(), match[2].strip()
+    la = match.start(1) + len(match[1]) - len(match[1].lstrip())
+    va = match.start(2) + len(match[2]) - len(match[2].lstrip())
+    opening = None
+    for marker in ('**', '__'):
+        if label.startswith(marker) and body.startswith(marker) and marker not in label[len(marker):]:
+            opening = (la, la + len(marker))
+            label, la = label[len(marker):], la + len(marker)
+            body, va = body[len(marker):].lstrip(), va + len(marker) + len(body[len(marker):]) - len(body[len(marker):].lstrip())
+            break
+    if body.startswith('//'):
+        return None  # A URI scheme colon cannot create a narrative field.
     references = read_explicit_references(body, source)
     reference_body = references["matched"] and bool(references["consumed_spans"] or references["unresolved"])
     if not body or _ATOMIC_ROLE.fullmatch(label) or _ASSERTED_LABEL.search(label) or (is_ordinary_scalar_field(label, body) and not reference_body):
@@ -51,17 +62,18 @@ def plan_field_body(text: str, source: dict[str, Any]) -> dict[str, Any] | None:
     if not (_BODY_ROLE.fullmatch(label) or read_propositions(body, source)["matched"]
             or read_narrative(body, source)["logic"] or read_cjk_narrative(body, source)["logic"] or reference_body):
         return None
-    la = match.start(1) + len(match[1]) - len(match[1].lstrip())
-    va = match.start(2) + len(match[2]) - len(match[2].lstrip())
     offset = source.get("text_span", [0])[0]
 
     def origin(a, b):
         return {**copy.deepcopy(source), "text_span": [offset + a, offset + b]}
 
+    controls = [{"text": text[la + len(label):va], "source": origin(la + len(label), va),
+                 "reason": "explicit_field_delimiter"}]
+    if opening:
+        controls.insert(0, {'text': text[slice(*opening)], 'source': origin(*opening), 'reason': 'balanced_field_label_emphasis'})
     return {"label": label, "body": body, "label_source": origin(la, la + len(label)),
             "body_source": origin(va, va + len(body)), "rule_id": "printed_compositional_field_body",
-            "controls": [{"text": text[la + len(label):va], "source": origin(la + len(label), va),
-                          "reason": "explicit_field_delimiter"}]}
+            "controls": controls}
 
 
 def plan_mixed_source(text: str, source: dict[str, Any]) -> dict[str, Any] | None:

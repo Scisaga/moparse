@@ -591,12 +591,19 @@ def _validate_semantic_sources(graph, nodes):
         if node.get("kind") == "reporting" and "predicate_source" in node:
             token(node["attribute"], node["predicate_source"], "reporting_action")
         if node.get("kind") == "year_on_year_change":
-            from .cjk_measurement_requirements import _CHANGES
+            from .cjk_measurement_requirements import _CHANGE
 
             raw_operator = literal(node.get("operator_source"), "year-on-year operator")
-            if (raw_operator != node.get("operator_text") or _CHANGES.get(raw_operator) != node.get("direction")
-                    or node.get("basis") != "year_on_year"):
+            change = _CHANGE.fullmatch(raw_operator)
+            direction = ('decrease' if change and change['direction'] in {'下降', '减少', '減少'} else 'increase')
+            basis = 'year_on_year' if change and change['basis'] == '同比' else change['basis'] if change else None
+            if (raw_operator != node.get("operator_text") or not change or direction != node.get("direction")
+                    or node.get("basis") != basis or node.get("baseline_period") != change['baseline']):
                 raise ValueError("year-on-year logical operator differs from its complete printed source")
+        if node.get("kind") == "fronted_context":
+            from .fronted_nominal_context import validate_fronted_operation
+
+            validate_fronted_operation(node, literal)
         if node.get("kind") == "relative" and "marker_source" in node:
             if literal(node["marker_source"], "relative marker").strip().casefold() not in {"that", "which", "who"}:
                 raise ValueError("relative operator differs from its printed source")
