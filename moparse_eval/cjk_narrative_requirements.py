@@ -34,6 +34,7 @@ _PREFIX = re.compile(r'从|從|面向|针对|針對|在|截至|据|據|于|於|\
 _CONSEQUENCE = re.compile(r'^(?:则|則|否则|否則|那么|那麼|就|才)')
 _ASPECT = re.compile(r'(?:将|將|已|曾|仍|还|還|会|會|正|再|未|本来|本來|一直|持续|持續)$')
 _PRONOUN = re.compile(r'^(?:其|他们|他們|她们|她們|它们|它們|我们|我們|本公司|本集团|本集團|该公司|該公司|他|她|它|我)')
+_LOCAL_SUBJECT = {'我们', '我們', '本公司', '本集团', '本集團'}
 _PREDICATIVE = {'有效的', '无效的', '無效的', '可靠的', '安全的', '不安全的', '公开的', '公開的', '可用的'}
 _NOUN_SUFFIX = re.compile(r'^(?:服务|服務|工具|系统|系統|平台|设备|設備|器|商|方案|功能|业务|業務)$')
 
@@ -68,7 +69,7 @@ class _CJKReader(_Reader):
         if any(word in value for word in _CONDITIONS) or _CONTEXT.search(value):
             raise _Unknown('cjk_narrative_embedded_scope_unresolved')
         if actor:
-            if _PRONOUN.match(value):
+            if _PRONOUN.match(value) and value not in _LOCAL_SUBJECT:
                 raise _Unknown('cjk_narrative_pronoun_identity_unresolved')
             if _PREFIX.match(value) or re.search(r'和|与|與|及|或|并|並|不再|没有|沒有|已经|已經|正在|曾经|曾經|必须|必須|应当|應當', value):
                 raise _Unknown('cjk_narrative_subject_boundary_unresolved')
@@ -254,11 +255,17 @@ def read_cjk_narrative(text: str, source: dict[str, Any], *, scope=()) -> dict[s
         fragment = text[start:end]
         measurements = read_cjk_measurements(fragment, reader.source_at(start, end), scope=scope)
         if measurements['matched']:
+            identifiers = {}
             for fact in measurements['facts']:
                 item = copy.deepcopy(fact)
                 item['id'] = f'cjk_measurement:{len(reader.facts)}'
+                identifiers[fact['id']] = item['id']
                 reader.facts.append(item)
-            reader.relations.extend(copy.deepcopy(measurements['relations']))
+            for edge in measurements['relations']:
+                item = copy.deepcopy(edge)
+                if item.get('fact_id') in identifiers:
+                    item['fact_id'] = identifiers[item['fact_id']]
+                reader.relations.append(item)
             reader.features.update(measurements['required_matcher_features'])
             result['logic'].extend(copy.deepcopy(measurements['logic']))
             for key in ('unresolved', 'blockers', 'pending_requirements', 'issues'):

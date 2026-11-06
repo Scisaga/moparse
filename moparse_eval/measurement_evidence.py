@@ -81,7 +81,7 @@ def read_measurement_literal(text: str, source: dict[str, Any] | None = None) ->
     """Read one complete numeric literal and its own optional unit token.
 
     No arithmetic, default currency, expected context or amount equivalence is
-    applied. A prefix and suffix with two units stay unsupported.
+    applied. A currency prefix and monetary scale suffix retain separate roles.
     """
     result = _empty(text, source, "not_a_complete_printed_measurement")
     start, end = _bounds(text)
@@ -98,12 +98,25 @@ def read_measurement_literal(text: str, source: dict[str, Any] | None = None) ->
         value_start, value_end = start + number.start(), start + number.end()
     else:
         number = _NUMBER.search(payload)
-        if number is None or payload[number.end():].strip():
+        if number is None:
             return result
+        suffix = payload[number.end():]
         prefix = read_unit_token(payload[:number.start()])
         if not prefix["matched"] or not (prefix["currency"] or prefix["currency_symbol"]):
             return result
-        unit = _shift(prefix, start, source)
+        if suffix.strip():
+            # 人民币 137 百万元 prints a currency and a monetary magnitude
+            # around one number. Neither source is a fabricated contiguous
+            # "人民币百万元" token, and two conflicting currencies stay invalid.
+            if not _CURRENCY.fullmatch(payload[:number.start()].strip()) or not re.fullmatch(rf"\s*{_SCALE}?元\s*", suffix):
+                return result
+            parsed = read_unit_token(suffix)
+            unit = _shift(parsed, start + number.end(), source)
+            currency = _shift(prefix, start, source)
+            unit["currency"], unit["currency_span"] = currency["currency"], currency["currency_span"]
+            unit["sources"]["currency"] = currency["sources"]["currency"]
+        else:
+            unit = _shift(prefix, start, source)
         value_start, value_end = start + number.start(), start + number.end()
     result.update(matched=True, reason=None, value=text[value_start:value_end], value_span=[value_start, value_end])
     result["sources"]["value"] = _source(source, value_start, value_end)
@@ -111,7 +124,9 @@ def read_measurement_literal(text: str, source: dict[str, Any] | None = None) ->
         for role in ("unit", "currency", "currency_symbol"):
             result[role], result[role + "_span"] = unit[role], unit[role + "_span"]
         result["sources"].update(copy.deepcopy(unit["sources"]))
-    owned = [result["value_span"], *([result["unit_span"]] if result["unit_span"] else [])]
+    owned = [result["value_span"], *([result["unit_span"]] if result["unit_span"] else []),
+             *([result["currency_span"]] if result["currency_span"] and not (result["unit_span"]
+                 and result["unit_span"][0] <= result["currency_span"][0] <= result["currency_span"][1] <= result["unit_span"][1]) else [])]
     cursor = 0
     for a, b in sorted(owned):
         if cursor < a:

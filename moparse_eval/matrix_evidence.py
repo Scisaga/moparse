@@ -786,6 +786,31 @@ def read_matrix(cells: list[dict[str, Any]], *, source: dict[str, Any],
                         fact["qualifier_provenance"].setdefault(key, {
                             "level": "header_explicit", "text": literal,
                             "source": copy.deepcopy(period["qualifier_sources"][key])})
+        # Combined metric/year headers and comparison columns retain the
+        # actual year token, rather than an unsourced normalized period.
+        for header in evidence:
+            header_origin, header_text = header["source"], header.get("text", "")
+            locations = list(re.finditer(re.escape(attribute), header_text)) if attribute else []
+            if len(locations) == 1 and "attribute_source" not in fact and header.get("role") in {"column_header", "row_header"}:
+                match = locations[0]
+                offset = header_origin.get("text_span", [0])[0]
+                fact["attribute_source"] = {**copy.deepcopy(header_origin),
+                    "text_span": [offset + match.start(), offset + match.end()]}
+            for match in YEAR.finditer(header_text):
+                period = match[1] + (match[2] or "年")
+                for key in ("period", "from_period", "to_period"):
+                    if q.get(key) != period or key in fact["qualifier_sources"]:
+                        continue
+                    if key != "period" and header.get("role") != "comparison_period":
+                        continue
+                    offset = header_origin.get("text_span", [0])[0]
+                    fact["qualifier_sources"][key] = {**copy.deepcopy(header_origin),
+                        "text_span": [offset + match.start(), offset + match.end()]}
+            labelled = read_measurement_label(header_text, header_origin)
+            if labelled["matched"]:
+                for key in ("unit", "currency"):
+                    if labelled[key] and q.get(key) == labelled[key] and key not in fact["qualifier_sources"]:
+                        fact["qualifier_sources"][key] = copy.deepcopy(labelled["sources"][key])
         if printed_value and printed_value["matched"]:
             fact["value_source"] = {**copy.deepcopy(printed_value["sources"]["value"]),
                                     "cell_text_span": list(printed_value["value_span"])}

@@ -1,54 +1,67 @@
-# MO-Parse Lite：集成修复与真实 expected 来源诊断
+# MO-Parse Lite：紧凑表、中文计量及共享中心词生产链修复
 
-完整任务仍未完成，质量成绩继续撤回。本轮修复既有读取器、来源审计、要求投影和最终判定之间的不一致，并以授权 expected 文字重新编译全部173份派生视图；没有运行真实候选比较或后处理回放。canonical expected、输入映射、原生结果、历史交付正文及原始成本没有写入。
+本轮A/B/C已完成指定来源范围的语义读取、要求图、独立来源审计、T/L/B投影及合成候选最终判定。顺丰三段紧凑表的声明及41条受辖记录共221项计量要求闭合；华为L1586的金额与同比关系、平安L298首句也已闭合。整体软件仍未完成，没有原先blocked的真实样本新增整体通过；完整质量成绩继续撤回。本轮未执行实际候选比较、真实后处理回放、模型、GPU、TTS、服务操作、部署或公开API修改，未提交或推送。
 
-开始时 HEAD 为 `2bc7a6f6322d3625fde1d32d92e1f08e765cdc53`，工作区干净；修复验证阶段没有回退。Git交付按后续独立用户指令执行。最终评测源码身份为 `b9e1499220f0b6ddcdce0099f526702ec080c7a3834d3d249ed73a5d30c15d9e`。[唯一要求索引](../../runs/lite/requirements/current/index.json)及173个worker均绑定该源码，索引 SHA256 为 `d1c4fee3f8ba51eccb78d283c54055ea4b04973d067b7507a230feb774e6a39e`。16个spawn分析进程完成source-only编译，来源完整性失败为0；退出码2表示语义仍未完成，不能解释成编译崩溃或通过验收。
+开始时HEAD为`6000685719383c0af6366e7a906f766188c2eaa9`，工作区干净；现有动作词形审计、嵌套名词、AST正向责任分配及完整expected入口修复作为基线保留。本轮源码身份为`bafccbf659aeebc74e381b688a4a19aaad0621da0343c5b3086065fd22406916`；[唯一要求索引](../../runs/lite/requirements/current/index.json)摘要为`01234f769f649a36874a4d604a86450dff0b6e10ce1a43fdee96f21dc17545b7`。canonical expected、原始映射、选段、页包、有效native、历史交付正文及原始成本均只读，未访问PDF、图片、字层或OCR。
 
-[完整受控回归](../../runs/lite/requirements/validation/software-validation.json)为3770 passed in 62.02s，源码和测试在运行期间保持不变；[Oracle](../../runs/lite/requirements/validation/oracle-validation.json)、[Mutation](../../runs/lite/requirements/validation/mutations-validation.json)和[比较证据](../../runs/lite/requirements/validation/comparison-validation.json)均已绑定相同源码。测试只使用独立合成材料和受控结构；真实部分仅作expected来源编译与诊断。测试数量、空pending或源码身份不建立完整expected语义验收。
+[完整软件回归](../../runs/lite/requirements/validation/software-validation.json)为3864 passed in 78.12s，源码及测试文件在命令期间均保持不变；新三个文件包含95个受控用例。随后16个分析进程按同一源码写出全部173份JSON/XML，来源完整性失败为0，source-only耗时74.97秒。退出码2对应structure_blocked，不能解释为worker失败或验收通过；[实际命令和替换过程](../../runs/lite/requirements/validation/source-export.json)保留临时编译目录安装为唯一current后的路径，不保留平行索引。
 
-## 已复现并修复的生产路径问题
+## 实际闭合范围
 
-附件要求优先验证的四项均真实存在。六句 help、leverage、engage、capture 词形能被reader完整解释，却被独立来源审计拒绝；嵌套NP换序受raw object重复比较及共享所有者错置影响；完整AST判等未能纠正普通命题或关系的最终flat误拒；部分原有集成测试只经过 `compile_markdown`，没有覆盖完整expected入口。新增回归从临时原始expected和明确manifest选择进入 `read_expected → compile_requirement_graph → source obligation audit → validate_requirement_graph → evaluation_projection → 合成候选读取 → grade_layers → validate_evidence`，不预填business或semantic_complete。
-
-| 位置 | 实际修复及边界 |
-| --- | --- |
-| action_forms.py；narrative、proposition、active_aspect；source_obligations._role_evidence | 抽取有限声明词形，解释与审计同义；未知词形仍未知，owns被伪造成acquire仍拒绝。来源义务仍独立枚举。 |
-| nominal_syntax.nominal_phrase；requirement_ast.compare_requirement_ast | 共享determiner归属名词集合；仅在完整角色来源和全部词项闭合时，由结构承接raw object比较；原文继续用于来源校验和T。 |
-| semantic_layer_comparison._business_responsibility、_relation_responsibility | 完整语义判等能改变本项最终B或L票。先验证独立身份、位置、scope、qualifiers、identity_facets、容量及记录约束；标量继续按既有精确数量契约判定。 |
-| expected_report.validate_evidence | 从原flat证据和保留的源绑定语义输入重放相同责任分配，检查最终outcomes、分子和阻断，拒绝伪造正向结论。 |
-| three_layer._Graph.prose；source_obligations._text_field_delimiters | 空标签保留末尾冒号或等号；已有准确label/value与attribute_source可证明中间delimiter。不得借邻源、丢文字或将数字当control。 |
-| source_obligations.audit_source_obligations | 引用字段的label、directive、target分别按自己的来源桥接，验证实际owner及两条关系；没有真实同类来源收益，只有受控生产缺陷修复。 |
-| represented_feature_comparison；enumeration_context；document_composition_requirements | 已有枚举、引用、文档组成和页码关系接入各自表示；来源路径留在binding证据，不作为另一文件必须相等的业务答案。 |
-| cjk_measurement_requirements.emit；three_layer._Graph.ingest | 保留原已识别的数量、单位、币种及同比主体绑定证据，不增加业务事实或猜测期间。 |
-| prose_requirements.prose_endpoint；requirement_ast._identity | 同指标不同年度按各自有来源的打印期间定位，保留逐候选拒绝trace；值和单位不参与选位置，无法确认期间来源时保持unresolved。 |
-
-两组要求中的完整正例现在都得到最终B/L全票：`assets of its subsidiaries and affiliates`的内部成员换序，以及`two core businesses of e-commerce and cloud`换序。T保留字面差异。AND改OR、数量变化、成员缺失、所有者更换、附着变化、名词并列变成两个动作、缺事实或关系、缩短结构来源、额外身份限定、错期间或单位、重复和容量不足均不能靠AST正向判等恢复。
-
-多年度受控例还验证：跨年交换全部数值时B为0而L保持100；句序倒置时B保持100、L为20/21。B/L各自使用完整要求，原文差异仍归T。以上均为软件用例结果，不是实际管线质量分数或交付改善。
-
-## 真实来源已闭合的范围
-
-[完整实际来源诊断](../../runs/lite/requirements/validation/actual-source-diagnosis.json)保存确切path、授权行段、格位和字符跨度、原文、修前证据、首个失败函数、连带pending及最终义务处置。按稳定来源比较，不依赖重编译后的临时节点ID。两类T问题合计244处、涉及72个实际样本；它们的T义务全部闭合，不能扩大解释成这些段落的B/L也已完成。
-
-| 实际范围 | 首因及已确认结果 | 仍保留内容 |
+| 工作包与授权来源 | 完整范围及已恢复语义 | 完整生产证据 |
 | --- | --- | --- |
-| 148处空标签，59个样本；例如Alibaba expected L176 `[0,83]` | 空字段分支丢弃末尾delimiter；最终148/148原文字义务均explained。 | B/L未知继续保留，未删难段或缩小选段。 |
-| 96处已有label/value的文字桥接，32个样本；例如BYD L52 | 名词Report触发动作词检查，使准确文字之间的delimiter无法审计；最终96/96义务均explained。 | 只承接已保留的局部T原子，不替业务解释判等。 |
-| 平安 expected L368 `[145,272]` | 已读出的leverages没有统一审计词义；该目标业务句局部pending由1变0，来源范围闭合。 | 所属样本其他语义仍blocked。 |
-| 平安 L339 `[0,229]` | 相同词形审计修复了承接，局部pending由6变5。 | with和creating等附着仍未解释，整句没有闭合。 |
-| Alibaba L114 `[303,328]`；NVIDIA L3203 `[92,120]` | their users and customers、our principles and practices的共享所有者已归属完整集合。 | 两样本仍blocked，不能把结构细化称为整个范围或样本验收。 |
+| A：顺丰L920声明，L922–L942分组及记录 | 16条记录各有两年金额、两年占比、金额变化和占比变化，共96项B要求；第二变化列补回16项。於12月31日保留为时点基础。每列保留自己的标签、角色、年份及单位来源。 | 同一有序columns清单贯通read_compact_schema、记录、来源审计、T别名、B/L和报告重放；六列合成列表、GFM、HTML和显式Group/Item转置保留相同6项业务要求。 |
+| A同类：顺丰L742及L781五列声明 | 分别19条和6条记录，共95及30项要求；修复连接词“及”等已被读取却无法独立审计的问题，声明及实际记录均闭合。附注正文仍单独保留。 | 四、五、六列、显式标签换序和固定tuple均经生产expected入口；独立反例拒绝缺列、借邻列/单位来源和完整邻记录补缺。 |
+| B：华为L1586完整计量范围 | 销售收入实现数值、对应同比增长及净利润数值分为3项。币种与百万元数量级分别来自实际片段；2024年仅限定第一句及其同比，净利润未补年度或公司实名。 | read_expected至validate_evidence完整链；精确数量换算与千分位、会计负数通过，数值错仍保留正确L，错指标/同比基础/方向/单位/期间及越界承接不能通过。 |
+| C：平安L298字符0–76首句 | 只建立一个build命题和一个平台对象；one-stop修饰、financial/daily-life定语AND、service/platform组合及customers受益关系分别保留。该行后续句未闭合。 | 独立定语换序最终B/L等价、T保留字面差异；两个完整名词短语、独立宾语和动作并列不并成一个对象；删除结构、错owner、AND/OR和数量变化不被AST恢复。 |
 
-全部173份视图的原始sources数组逐项保持一致；五个输入范围的sample、source、text及outside_selection保持一致。173个样本各自的T/L/B投影数量均未变化，总计仍为30090/18030/7731；它们是当前解释节点数，正式分母仍未冻结。没有通过删要求、改零、裁选段、移除未知或将剩余业务文字变成长字符串取得通过。
+[actual-source-diagnosis](../../runs/lite/requirements/validation/actual-source-diagnosis.json)逐范围保存原始授权来源、修前首个失败及连带pending、当前facts/relations、所属样本全部residual_issues和同类实际来源。范围闭合指expected语义及受控比较，不是某条真实管线的交付已验收。
 
-独立source扫描补入已受支持动作的有限词形后，20条semantic_content诊断转为proposition诊断，并暴露16条关系诊断记录。来源义务的类型和数量可因纠正漏建而合法变化；这些新增义务继续保留。当前非延期诊断记录33799变为33571，仍有109种reason/kind族，T pending由651变为407。诊断记录及族数不是业务题数或独立缺陷工作量，不得用净pending变化代替上述逐来源闭合证据。
+日期、单位和主体均保持保守：时点不等同年度区间；变化声明没印单位时保持未声明，记录自己打印的%仍按原文保留，不改成百分点，也不由年度数值反算变化。明确标题年度作为有来源的scope，本句无年度时不自动借前句。保留“本公司”“我们”等本句词面主体，不建立跨记录真实实体同指。目标、预计、否定和条件不作为已发生金额；未解释的表达继续未决。
 
-没有原先blocked的实际样本整体新通过。仍有2份视图没有非延期语义pending，171份保留实际解释缺口；这2份也不能替代独立完整expected Oracle或真实交付验收。
+同类核验覆盖3段紧凑声明、31个“为/实现”的实际计量断言和1个共享定语命题。31个断言中仍有23个所在范围保留其他未决内容，不能把读出一个金额称为整段通过；三段紧凑声明及其记录当前均无同范围残余。完整JSON保留每处的实际限定和scope问题，不按公司名、样本ID或正确数值设规则。
 
-## 既有特征比较的验收范围
+## 生产链中的统一修复
 
-本轮八类均已接入实际表示：document_composition、page_reference_binding使用现有typed文档结构及专用关系；explicit_reference_binding、enumeration_context_scope使用已有关系；quoted_nominal_scope使用名词角色proof和scope关系；shared_period_scope、same_subject_relative_clause、year_on_year_comparison使用已有计量结构、限定及同比主体绑定。未为满足门槛伪造narrative AST。
+金额入口先证明指标和完整计量边界，避免“为”及别处数字抢占普通叙事或文档组成；年后逗号可选，但年末、年度和完整月日不会被裸年度入口吞掉。同比只承接紧邻的当前指标，新指标更新承接对象，未知插入或句/列表/表格边界终止承接。金额币种前置、数量级后置时分别保留实际来源；B/L沿用既有有理数精确换算，T保留原字。
 
-它们的“实现可用”和“有限独立生产链正反例通过”已经记录；完整真实格式和完整实际expected语义验收继续未通过。运行自比较只检查输入可被消费，不证明答案正确。独立复核还修复了将“未知组成条件仍保留pending”误标成feature就绪，以及将候选未解释的额外identity_facets用AST恢复正确的问题。受控支持不授权绕过后续门槛。
+紧凑记录使用各自的来源身份；有来源父记录可以承接分开的字段，完整邻记录不能代填另一记录缺列。固定tuple只接收完整计量值或明确缺值标记，含顿号的附注交还正文读取。单位关系保留自己的statement/qualifier桥接，矩阵表头中的年份、指标和单位也保留精确片段。compact_column_binding和quantity_assertion在最终比较及报告复核中重新检查自己的源结构，删除依赖标签或同步改派生字段不能绕过。
+
+共享名词处理只支持可验证的有限定语类别和名词组合；共同head、定语协调与名词组合分别有实际来源。for的谓词受益关系与名词内部用途保留不同owner，其他时间、价格及未知附着继续未决。完整AST能把合法定语换序传到最终B/L，原字符串继续负责来源和T；身份、记录容量、限定或未解释语义冲突仍阻断。当前支持范围见[计分合同](../../evaluation-tasks.md#three-layer-evaluation)。
+
+## 投影变化及回归复核
+
+173份视图的sources数组逐项与接手时一致，五个输入范围的sample/source/text/outside_selection也一致。当前投影从T/L/B的30090/18030/7731变为30536/18392/7796，影响21份视图；正式分母尚未冻结。T增加446个投影单元来自六列表由不完整整行保留转为完整列标签、日期和实际数据对象的有界别名；L增加362条已表达的作用范围和绑定；B净增65项，包含第二变化列、实际计量和本句命题。共享单位和期间没有新增B票。
+
+80项原有六列表事实保留原指标及数值并补上原已打印的时点基础，新增第二变化列16项；另12项已有SVO仅将原金额字串拆为数值、币种和数量级，主体、同比及原因解释并未因此修复。另1项Vanke目的正文的过宽SVO由实际金额阈值解释替代，其目的及其他关系继续未决。这93项变化及每段原文、修前内容、当前facts和pending均在business_interpretation_refinements中保留；不是删除来源或把未知改成不适用。没有样本的B投影净减少，这不证明原有语义正确或无损。
+
+完整回归保持前轮四项集成修复。新增用例均由临时授权expected经read_expected、compile_requirement_graph、来源审计、validate_requirement_graph、evaluation_projection、合成候选读取、grade_layers及validate_evidence进入最终结果，没有预填business或semantic_complete。Oracle、Mutation及比较证据均已重绑同源码；结构遗漏、关系删除、作用域错绑、同字面邻源借用、同步修改派生标签和记录容量均有独立反例。测试数、可复现性和图生成不替代完整expected语义验收。
+
+全范围差异检查实际检出并修复过宽金额分派、文档组成抢占、附注被当数值tuple及五列表连接词审计遗漏。最终三段表的全部受辖记录重新核验；未知附注没有被吞成控制语法或空值。部分样本新增了更具体的pending，逐样本变化保留，不以净减少诊断记录声称零损失。
+
+## 当前阶段与具体剩余阻塞
+
+没有原先blocked的样本新增整体通过。仍有171份保留非延期语义缺口，另2份无此pending；这2份也未建立独立完整expected或真实交付验收。当前109种reason/kind族、33238条诊断记录是软件诊断，不是业务题数或独立缺陷工作量。
+
+| 固定样本 | 本轮范围以外的实际剩余内容 |
+| --- | --- |
+| sf-cashflow-assets-liabilities-p040-041 | 7条现金流同比期间解释、后续金额原因正文及局部来源义务，共55条诊断记录；L920六列表及16条记录没有残余。 |
+| huawei-operating-results-p062-063 | 多年度序列、列表归属、单位止境及其他复合计量/说明，共140条诊断记录；L1586三项关系完整。 |
+| pingan-strategy-cards-p008-011 | 同行By integrating引言及后续句、其他引号名词、附着与局部关系，共155条诊断记录；首句0–76已闭合。 |
+
+主要阻塞仍是独立实现缺口，包括同比期间/父范围、复合中文正文、非限定引言及其他名词/介词附着，不应笼统说成原文不可判定。上述12项SVO中仍可见金额前句或原因文字混入主体；Sinopec L860及L864甚至没有同范围pending，说明现有来源审计仍可能漏报复合正文义务，不能把无pending当完整语义验收。具体来源、旧值拆解及未修复主体保存在remaining_baseline_interpretation_defects，不增加五个输入范围，也不手改要求图的状态。原文未印单位、年度或实名时，字段未声明不构成软件失败；原文已经印出而未解释、真正附着歧义和候选丢失表达仍分别保留。
+
+存在一个具体证据边界：Alibaba expected L2353的“investments in cloud computing and artificial intelligence (AI) infrastructure”允许infrastructure共同限定cloud computing与AI，也允许只有AI带此head；二者产生不同的投资对象及L附着要求，当前文字没有重复head或限定词作唯一选择。capture目的仍是operand，不变成已实现收益。如果后续要求每处必须唯一闭合，最小合同提议是允许该范围的显式多解释要求/等价集合并补独立Oracle；这会改变语义验收门槛，当前未批准、未执行，也未并入五个输入范围。本轮三个工作包无需额外授权。
+
+| 阶段 | 当前状态 |
+| --- | --- |
+| 来源传输和完整性 | 173份写出，来源失败0；sources及五个输入范围保持。 |
+| 本轮A/B/C限定生产链 | 指定范围及合成最终比较已完成；同类表的声明和41条记录已审计。 |
+| 完整expected语义及独立Oracle | 未通过，171份仍有非延期缺口。 |
+| 完整比较能力及八组交付链 | 未通过，真实native→final验收未启动；P07/P08历史配对保留。 |
+| 保存输出统一评分及真实CPU回放 | 未执行。 |
+| 完整质量发布 | 继续撤回，无完整成绩、排名或采用结论。 |
+| 五个输入范围 | 全部保留，继续待确认，不删、不计零。 |
 
 ## 原始处理成本
 
@@ -76,28 +89,4 @@
 
 原生配置的CPU预处理分配为8核及8GiB内存、推理进程分配为4核及20GiB内存，自有评测GPU显存预算16GiB；原服务后处理为8核及8GiB内存、无GPU、并发1。原始执行存在TTS共驻和未受控制的活动：起止持久任务计数71至76，观测到5个新增任务；短调用可能没有被这些观测捕捉。不得据此宣称GPU独占或TTS空闲。数据分别保存分配与实测使用、RSS/cgroup峰值及观测覆盖；未记录的GPU指标保持未知，单页allocator峰值不等于整个设备占用。当前16个CPU评分进程不改变这些原执行资源与时长。
 
-## 当前阶段与具体剩余阻塞
-
-| 阶段 | 当前状态 |
-| --- | --- |
-| 来源传输及绑定 | 173份视图传输完整；全部局部业务关系绑定尚未完成。 |
-| expected语义解释 | 未完成，171份仍blocked；244处T义务及L368局部闭合不能代表完整语义完成。 |
-| 比较能力独立验收 | 既有28类有限受控证据可执行；完整比较能力验收未通过。 |
-| 八组真实native到final交付链 | 未执行本轮真实验收；P07/P08历史配对保留，P01-P06不制造历史baseline。 |
-| 统一评测执行 | 未启动全范围实际候选比较或保存输出重评分。 |
-| 完整质量发布 | 继续撤回，无完整成绩或排名。 |
-| 五个输入范围 | 全部目标保留，继续待确认，不删、不计零。 |
-
-以下具体来源说明仍需解决的首个失败阶段；它们是授权expected文字的软件诊断，不是人工正式答案，也不是五个输入范围的新增延期。
-
-| 授权文字及位置 | 首个失败与连带影响 | 下一处实现位置及约束 |
-| --- | --- | --- |
-| 平安 L298 `[0,76]`：We build a one-stop financial and daily-life service platform for customers. | build的for受益关系无argument frame；对象内financial and daily-life共head附着也未完整恢复，随后无事实、无边、义务pending。 | nominal_syntax._role和nominal_phrase的定语并列；须同时保全平台和受益者，不能仅加介词名单或opaque object。 |
-| 华为 L1586 `[0,52]`：2024年实现销售收入人民币862,072百万元，同比增长22.4%。净利润为人民币62,574百万元。 | 现有有限计量reader只支持比较词起句，年后强制逗号；首个收入事实未建导致同比无先行指标，后句“为”也未解释。 | cjk_measurement_requirements._PERIOD/read_cjk_measurements及CJK谓词框架。净利润跨句是否共享年度须独立证明，不能静默借2024。 |
-| 顺丰 L920 `[0,71]`：於12月31日，金額單位：人民幣千元。各項分別列示2024年金額、佔總資產比，2023年金額、佔總資產比，金額同比變動、佔總資產比重同比增減。 | compact已保存两年4列及金额变化，但日期和末尾比重变化未消费，继而T projection incomplete与叙事兜底pending。 | compact_requirements.read_compact_schema/_controls。保留月日basis和第二变化列；该句未印比重变化单位，不得猜百分点。 |
-
-这些问题继续区分文字投影、reader与audit不一致、关系承接、真正缺失语义、已有解释未接比较及授权文字歧义。实际Alibaba L2353的共享名词head歧义仍保留原文和候选解释，未用PDF或强制附着选答案；同一分句的根因和随后无事实、无关系、无disposition不会当作多个独立语法任务。
-
-最小复现入口是 `software-validation.json` 内记录的完整pytest命令，以及 `source-export.json` 内的16进程source-only编译命令。编译器拒绝覆盖现存派生目录；本轮仅在保留修前诊断快照后重建唯一current目录，成功写出全部173份后移除临时旧派生目录，没有保留平行索引或归档错误评分产品。
-
-继续工作应从以上确切来源和首个失败函数修复通用实现，再沿完整expected生产链回到全部同类范围。所有非授权未决语义和相应独立比较验收真正通过后，才按原批准计划进入八组真实交付链、16进程保存输出评分及受限CPU后处理回放；阶段限制不代表以后永久禁止回放。本轮没有执行真实候选比较、真实回放、模型、GPU、TTS、服务操作、部署或公开API修改。Git交付按后续独立用户指令执行。
+当前修改留在工作区，未提交或推送。后续入口见[续做提示](../../../docs/engineering/prompts/expected-output-optimization.md)，从固定样本的完整residual_issues继续；完整结构、比较及执行门槛未通过前，不启动实际候选比较或回放。原始成本与新增软件验证耗时分别保留。

@@ -11,7 +11,7 @@ import copy
 import re
 from typing import Any
 
-from .measurement_evidence import read_unit_token
+from .measurement_evidence import read_measurement_literal, read_unit_token
 from .series_requirements import is_ordinary_scalar_field
 
 YEAR = r"(?:19|20)\d{2}年?"
@@ -20,10 +20,10 @@ _PAIR = re.compile(r"^\s*([^:：=]+?)\s*[:：=]\s*(.*)$", re.S)
 _INTRO = re.compile(r"各[項项]分[別别]列示|列[說说]明\s*[:：]|Columns?\s*[:：]", re.I)
 _AMOUNT = re.compile(r"金[額额]|Amount", re.I)
 _SHARE = re.compile(r"[佔占][^、;；。\n（）()]*?比|[佔占]比|Share|Ratio|Percentage|比例", re.I)
-_CHANGE = re.compile(r"金[額额](?:同比|按年)(?:[變变][動动]|[變变]化|增[減减])|(?:Amount\s+)?(?:YoY|year.on.year)(?:\s+change)?", re.I)
+_CHANGE = re.compile(r"(?:金[額额]|[佔占][^、，,;；。\n（）():：]*?比(?:重)?)(?:同比|按年)(?:[變变][動动]|[變变]化|增[減减])|(?:Amount\s+)?(?:YoY|year.on.year)(?:\s+change)?", re.I)
 _UNIT_CAPTION = re.compile(r"(?:(?:金[額额])?(?:單位|单位)|Units?)\s*[:：=]\s*([^。;；\n]+)", re.I)
-_BASIS = re.compile(r"截至[^。;；\n]*?(?:止年度|年度)")
-_UNIT = re.compile(r"(?:人民[幣币]|美元|港元|港[幣币]|歐元|欧元|日元|RMB|CNY|USD|HKD|EUR|JPY)?\s*(?:百萬|百万|千萬|千万|億|亿|萬|万|百|千)?(?:元|股|人|件|噸|吨)|[%‰]|萬元|万元", re.I)
+_BASIS = re.compile(r"截至[^。;；\n]*?(?:止年度|年度)|[於于]\d{1,2}月\d{1,2}日")
+_UNIT = re.compile(r"(?:人民[幣币]|美元|港元|港[幣币]|歐元|欧元|日元|RMB|CNY|USD|HKD|EUR|JPY)?\s*(?:百萬|百万|千萬|千万|億|亿|萬|万|百|千)?(?:元|股|人|件|噸|吨)|[%‰]|[個个]?百分[點点]|percentage\s+points?|萬元|万元", re.I)
 _CURRENCY = re.compile(r"人民[幣币]|美元|港元|港[幣币]|歐元|欧元|日元|RMB|CNY|USD|HKD|EUR|JPY", re.I)
 _PRIMARY = re.compile(r"Name|Entity|Company|Subject|名称|名稱|姓名|主体|主體|公司名称|公司名稱", re.I)
 _FACET = re.compile(r"Type|Market|Region|Category|Role|类型|類型|市场|市場|地区|地區|类别|類別|职务|職務", re.I)
@@ -80,10 +80,10 @@ def _controls(result: dict[str, Any], text: str, source: dict[str, Any], *, sche
                 break
             if schema and re.fullmatch(r"及|和|and", match[0], re.I):
                 declaration = result.get("schema") or {}
-                columns, change = declaration.get("columns", []), declaration.get("change")
+                columns = declaration.get("columns", [])
                 last_column = max((proof["text_span"][1] for column in columns
                                    for proof in (column.get("source"), column.get("unit_source")) if proof), default=0)
-                declaration_end = change["source"]["text_span"][0] if change else last_column
+                declaration_end = last_column
                 parent = source.get("text_span")
                 offset = parent[0] if isinstance(parent, (tuple, list)) and len(parent) == 2 and type(parent[0]) is int else 0
                 if (not columns or not columns[0]["period_source"]["text_span"][0] - offset
@@ -131,7 +131,7 @@ def _unit_sources(unit: str | None, origin: dict[str, Any] | None) -> dict[str, 
 
 def read_compact_schema(text: str, source: dict[str, Any], *,
                         qualifiers: dict[str, Any] | None = None) -> dict[str, Any]:
-    """Read two-period amount/share columns and an optional printed change."""
+    """Read one ordered inventory of printed amount, share and change columns."""
     result = _result()
     result["schema"] = None
     intro = _INTRO.search(text)
@@ -157,7 +157,8 @@ def read_compact_schema(text: str, source: dict[str, Any], *,
         q_sources["period_basis"] = _source(source, [basis.start(), basis.end()])
         _atom(result, text, source, basis.start(), basis.end(), "period_basis")
     years = list(_YEAR.finditer(text, intro.end()))
-    change = _CHANGE.search(text, intro.end())
+    changes = list(_CHANGE.finditer(text, intro.end()))
+    change = changes[0] if changes else None
     if len(years) != 2:
         result["blockers"].append({"reason": "compact_column_schema_incomplete", "source": copy.deepcopy(source),
                                    "periods": [match[0] for match in years]})
@@ -190,22 +191,24 @@ def read_compact_schema(text: str, source: dict[str, Any], *,
                             "period_source": _source(source, [year.start(), year.end()]),
                             "unit_source": _source(source, unit_span) if unit_span else (
                                 _source(source, [unit_caption.start(1), unit_caption.end(1)]) if unit_caption and role == "amount" else None)})
-    change_column = None
-    if change:
+    if len(columns) == 4:
+        if columns[0]["attribute"] != columns[2]["attribute"] or columns[1]["attribute"] != columns[3]["attribute"]:
+            result["blockers"].append({"reason": "compact_year_columns_have_different_roles", "source": copy.deepcopy(source)})
+    for change in changes:
         _atom(result, text, source, change.start(), change.end(), "label")
         change_unit, change_unit_span = _unit_after(text, change.end())
         if change_unit_span:
             _atom(result, text, source, *change_unit_span, "unit")
-        change_column = {"attribute": change[0], "kind": "change", "unit": change_unit,
+        columns.append({"attribute": change[0], "kind": "change", "unit": change_unit,
+                         "period": None,
                          "source": _source(source, [change.start(), change.end()]),
-                         "unit_source": _source(source, change_unit_span) if change_unit_span else None}
-    if len(columns) == 4:
-        if columns[0]["attribute"] != columns[2]["attribute"] or columns[1]["attribute"] != columns[3]["attribute"]:
-            result["blockers"].append({"reason": "compact_year_columns_have_different_roles", "source": copy.deepcopy(source)})
+                         "unit_source": _source(source, change_unit_span) if change_unit_span else None})
+    if len(columns) - len(changes) == 4:
+        for index, column in enumerate(columns):
+            column["id"] = f"column:{index}"
         result["schema"] = {
             "columns": columns,
             "periods": [year[0] for year in years],
-            "change": change_column,
             "qualifiers": {key: value for key, value in q.items() if key != "unit"},
             "qualifier_sources": q_sources,
             "source": copy.deepcopy(source),
@@ -325,7 +328,7 @@ def _value(text: str, start: int, end: int, default_unit: str | None,
     raw = text[start:end]
     unit = default_unit
     qualifier_sources = {}
-    suffix = re.search(r"[%‰]$|(?:人民[幣币]|美元)?(?:百萬|百万|千萬|千万|億|亿|萬|万|百|千)?元$", raw)
+    suffix = re.search(r"[%‰]$|[個个]?百分[點点]$|percentage\s+points?$|(?:人民[幣币]|美元)?(?:百萬|百万|千萬|千万|億|亿|萬|万|百|千)?元$", raw, re.I)
     if suffix:
         unit = suffix[0]
         qualifier_sources = _unit_sources(unit, _source(source, [start + suffix.start(), end]))
@@ -346,7 +349,7 @@ def read_compact_requirements(text: str, source: dict[str, Any], *, schema: dict
                               identity_facets: dict[str, Any] | None = None) -> dict[str, Any]:
     """Read compact rows and explicitly qualified metric leaves.
 
-    Five measurements arise from a declared two-year amount/share/change row,
+    Measurements arise from the complete declared amount/share/change inventory,
     never from a file name, particular value or the count of parent list levels.
     """
     result = _result()
@@ -359,7 +362,12 @@ def read_compact_requirements(text: str, source: dict[str, Any], *, schema: dict
     if schema is None and outer and is_ordinary_scalar_field(outer[1], outer[2]):
         return _result()
     outer_label = None
-    if outer and re.match(rf"^\s*{YEAR}", outer[2]) and not _YEAR.match(outer[1].strip()):
+    fixed_tuple = bool(schema and outer and not _YEAR.match(outer[1].strip())
+                       and "、" in outer[2] and not _YEAR.match(outer[2].strip())
+                       and ";" not in outer[2] and "；" not in outer[2]
+                       and all(read_measurement_literal(piece.strip().rstrip("。"))["matched"]
+                               or piece.strip().rstrip("。") in {"—", "–", "-"} for piece in outer[2].split("、")))
+    if outer and (re.match(rf"^\s*{YEAR}", outer[2]) or fixed_tuple) and not _YEAR.match(outer[1].strip()):
         outer_label = outer[1].strip()
         body_start = outer.start(2)
         _atom(result, text, source, outer.start(1), outer.end(1), "locator")
@@ -372,11 +380,11 @@ def read_compact_requirements(text: str, source: dict[str, Any], *, schema: dict
             end -= 1
         if start < end:
             clauses.append((start, end))
-    compact = bool(schema and any(_YEAR.match(text[start:end]) or _CHANGE.match(text[start:end])
+    compact = bool(schema and (fixed_tuple or any(_YEAR.match(text[start:end]) or _CHANGE.match(text[start:end])
                                  or (scope["qualifiers"].get("period") and _PAIR.fullmatch(text[start:end])
                                      and any(column["attribute"] == _PAIR.fullmatch(text[start:end])[1].strip()
                                              for column in schema["columns"]))
-                                 for start, end in clauses))
+                                 for start, end in clauses)))
     leaf = bool(len(clauses) == 1 and re.match(rf"^{YEAR}(?:[，,].*?)?\s*[:：]", text[clauses[0][0]:clauses[0][1]]))
     if not compact and not leaf:
         if outer and re.match(rf"^\s*{YEAR}", outer[2]) and "、" in outer[2]:
@@ -404,17 +412,26 @@ def read_compact_requirements(text: str, source: dict[str, Any], *, schema: dict
         facets = _groups(scope, labels)
         active_period = scope["qualifiers"].get("period")
         columns = schema["columns"]
+        consumed_columns = set()
         for start, end in clauses:
             fragment = text[start:end]
             year = _YEAR.match(fragment)
             change = _CHANGE.match(fragment)
-            if year:
+            if fixed_tuple:
+                pieces = list(re.finditer(r"[^、]+", fragment))
+                if len(pieces) != len(columns):
+                    result["blockers"].append({"reason": "compact_value_arity_ambiguous", "source": _source(source, [start, end]),
+                                               "declared_columns": len(columns), "printed_values": len(pieces)})
+                    continue
+                values = [(start + piece.start(), start + piece.end(), column)
+                          for piece, column in zip(pieces, columns, strict=True)]
+            elif year:
                 active_period = year[0]
                 _atom(result, text, source, start, start + year.end(), "period")
                 rest_start = start + year.end()
                 while rest_start < end and text[rest_start] in " :：，,":
                     rest_start += 1
-                selected = [column for column in columns if column["period"] == active_period]
+                selected = [column for column in columns if column.get("period") == active_period and column["kind"] != "change"]
                 # Printed attributes make an independently split field; two
                 # bare tuple entries use the declaration's explicit order.
                 attribute = _PAIR.fullmatch(text[rest_start:end])
@@ -436,7 +453,8 @@ def read_compact_requirements(text: str, source: dict[str, Any], *, schema: dict
                     values = [(rest_start + piece.start(), rest_start + piece.end(), column)
                               for piece, column in zip(pieces, selected, strict=True)]
             elif change:
-                column = schema.get("change")
+                bound = [column for column in columns if column["kind"] == "change" and column["attribute"] == change[0]]
+                column = bound[0] if len(bound) == 1 else None
                 _atom(result, text, source, start, start + change.end(), "label")
                 value_start = start + change.end()
                 while value_start < end and text[value_start] in " :：":
@@ -461,8 +479,13 @@ def read_compact_requirements(text: str, source: dict[str, Any], *, schema: dict
                 values = [(start + pair.start(2), start + pair.end(2), bound[0])]
             for value_start, value_end, column in values:
                 value, unit, value_proof = _value(text, value_start, value_end, column.get("unit"), result, source)
+                consumed_columns.add(column["id"])
+                if not value:
+                    result["blockers"].append({"reason": "compact_declared_value_unavailable", "source": value_proof["source"],
+                                               "column": column["id"]})
                 q = {**scope["qualifiers"], **schema.get("qualifiers", {})}
                 q.pop("unit", None)
+                q.pop("currency", None)
                 if column.get("kind") == "change":
                     # This is the declared comparison order, not the maximum
                     # year and never a direction selected by a matching value.
@@ -474,15 +497,13 @@ def read_compact_requirements(text: str, source: dict[str, Any], *, schema: dict
                     q["unit"] = unit
                 if _currency(unit) or column.get("currency"):
                     q["currency"] = _currency(unit) or column["currency"]
-                if column["kind"] in {"share", "change"} and not unit:
-                    result["blockers"].append({"reason": "compact_ratio_unit_unavailable", "source": _source(source, [value_start, value_end])})
                 qualifier_sources = {**copy.deepcopy(schema.get("qualifier_sources", {})),
                                      **{key: copy.deepcopy(column.get(key + "_source")) for key in ("unit", "period")
                                         if column.get(key + "_source")}}
                 if column.get("kind") == "change":
                     qualifier_sources.pop("period", None)
                     for key, period in (("to_period", schema["periods"][0]), ("from_period", schema["periods"][1])):
-                        period_column = next((item for item in columns if item["period"] == period), None)
+                        period_column = next((item for item in columns if item.get("period") == period), None)
                         if period_column and period_column.get("period_source"):
                             qualifier_sources[key] = copy.deepcopy(period_column["period_source"])
                 qualifier_sources.update(value_proof["qualifier_sources"])
@@ -495,6 +516,9 @@ def read_compact_requirements(text: str, source: dict[str, Any], *, schema: dict
                         "source": copy.deepcopy(column["unit_source"]),
                         "column_source": copy.deepcopy(column["source"])})
                 result["facts"].append({"subject": row_subject, "attribute": column["attribute"], "value": value,
+                    "attribute_source": copy.deepcopy(column["source"]),
+                    "column_id": column["id"],
+                    "compact_column": {"id": column["id"], "schema_source": copy.deepcopy(schema["source"])},
                     "raw_value": value_proof["raw_value"], "value_source": value_proof["value_source"],
                     "role": "metric", "qualifiers": q, "identity_facets": copy.deepcopy(facets),
                     "row_evidence": _row_evidence(scope, labels, row_subject, subject_source),
@@ -503,7 +527,14 @@ def read_compact_requirements(text: str, source: dict[str, Any], *, schema: dict
                     "source": {**value_proof["source"], "attribute_source": copy.deepcopy(column["source"]),
                                "qualifier_sources": qualifier_sources},
                 })
+        if fixed_tuple or outer_label:
+            missing = [column for column in columns if column["id"] not in consumed_columns]
+            if missing:
+                result["blockers"].append({"reason": "compact_declared_columns_missing", "source": copy.deepcopy(source),
+                                           "columns": copy.deepcopy(missing)})
         result["scope"].update(subject=row_subject, identity_facets=facets, labels=copy.deepcopy(labels))
+        if subject_source:
+            result["record_source"] = copy.deepcopy(source if outer_label else subject_source)
     else:
         start, end = clauses[0]
         match = re.fullmatch(rf"({YEAR})(?:[，,]\s*([^:：]+))?\s*[:：]\s*(.*)", text[start:end], re.S)

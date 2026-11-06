@@ -467,8 +467,6 @@ def project_compact_text(result: dict[str, Any], schema: dict[str, Any] | None, 
             # declared column, never a similarly named neighboring column.
             declaration = schema.get("schema", schema) if schema else {}
             columns = [*declaration.get("columns", [])]
-            if declaration.get("change"):
-                columns.append(declaration["change"])
             if (alias.get("role") == "unit" and alias.get("text") == fact.get("qualifiers", {}).get("unit")
                     and any(column.get("source") == attribute_source == alias.get("column_source")
                             and column.get("unit") == alias["text"] and column.get("unit_source") == alias.get("source")

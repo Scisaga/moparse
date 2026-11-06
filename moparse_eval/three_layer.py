@@ -598,6 +598,8 @@ class _Graph:
             origin = provenance.get(key, {}).get("source", source)
             self.relation("qualifier_scope", {"type": key, "text": literal}, endpoint, origin)
             self.data["relations"][-1]["fact_id"] = item["id"]
+            self.data["relations"][-1]["binding_evidence"] = {
+                "statement_source": copy.deepcopy(source), "qualifier_source": copy.deepcopy(origin)}
         return item
 
     def ingest(self, result: dict[str, Any], *, compact: bool = False, logical_prose: bool = False, toc: bool = False,
@@ -661,7 +663,7 @@ class _Graph:
                                  if key == "qualifier_provenance" else copy.deepcopy(fact[key]))
             for key in ("logic", "qualifier_sources", "value_source", "attribute_source", "subject_source", "predicate", "object", "predicate_source", "object_source", "rule_id", "printed_label", "label_source",
                         "semantic_type", "semantic_role", "directory_evidence", "field_label_evidence", "record_evidence", "quoted_nominals", "subject_binding_evidence",
-                        "statement_source", "subject_phrase", "object_phrase", "prepositional_complements"):
+                        "statement_source", "subject_phrase", "object_phrase", "prepositional_complements", "compact_column"):
                 if key in fact:
                     if key == "value_source" and item["value"] != fact["value"]:
                         continue
@@ -671,7 +673,7 @@ class _Graph:
                 edge.update(object_anchor=data.get("native_id"),
                             header_anchors=[h["native_id"] for h in fact.get("header_evidence", []) if h.get("native_id")],
                             row_anchors=[h["native_id"] for h in fact.get("row_evidence", []) if h.get("native_id")],
-                            binding_evidence={"data": copy.deepcopy(data), "headers": copy.deepcopy(fact.get("header_evidence", [])),
+                            binding_evidence={**edge.get("binding_evidence", {}), "data": copy.deepcopy(data), "headers": copy.deepcopy(fact.get("header_evidence", [])),
                                               "rows": copy.deepcopy(fact.get("row_evidence", []))})
         if logical_prose or toc:
             for edge in result["relations"]:
@@ -817,6 +819,10 @@ class _Graph:
         schema = read_compact_schema(text, source, qualifiers=self.qualifiers)
         if schema["matched"]:
             self.compact_schema = schema.get("schema")
+            if self.compact_schema:
+                self.data.setdefault("compact_schemas", []).append({"text": text, "schema": copy.deepcopy(self.compact_schema)})
+                if "compact_column_binding" not in self.data.setdefault("required_matcher_features", []):
+                    self.data["required_matcher_features"].append("compact_column_binding")
             self.ingest(schema)
             self.compact_projection(schema, text, source)
             return
@@ -950,8 +956,8 @@ class _Graph:
             self.data["blockers"] = [blocker for blocker in self.data["blockers"] if not (
                 compact.get("facts") and blocker["reason"] == "list_group_scope_interpretation_unsupported"
                 and blocker.get("parent_source") and self.source_key(blocker["parent_source"]) in proven_sources)]
-            record_source = source
-            for parent in reversed(parents or []):
+            record_source = compact.get("record_source", source)
+            for parent in reversed(parents or []) if not compact.get("record_source") else []:
                 if QUALIFIER.fullmatch(parent.split(":", 1)[0].strip()):
                     continue
                 matching = [item for item in self.data["syntax"][:-1] if item["text"] == parent]
@@ -1117,6 +1123,20 @@ class _Graph:
 
 
 def _finish(graph: _Graph) -> dict[str, Any]:
+    # A complete neighboring record cannot satisfy the declared slots of a
+    # partial split record. Record identity follows its own actual locator.
+    for declaration in graph.data.get("compact_schemas", []):
+        schema = declaration["schema"]
+        records = {}
+        for fact in graph.data["business"]:
+            binding = fact.get("compact_column", {})
+            if binding.get("schema_source") == schema["source"]:
+                records.setdefault((fact["record_id"], fact["subject"]), []).append(fact)
+        for members in records.values():
+            missing = [c for c in schema["columns"] if c["id"] not in {f["compact_column"]["id"] for f in members}]
+            if missing:
+                graph.block("compact_declared_columns_missing", members[0]["source"],
+                            layers=["B", "L"], columns=copy.deepcopy(missing), record_id=members[0]["record_id"])
     enumerations = plan_from_syntax(graph.data["syntax"])
     graph.data["blockers"].extend(copy.deepcopy(enumerations["blockers"]))
     graph.data.setdefault("pending_requirements", []).extend(copy.deepcopy(enumerations["pending_requirements"]))

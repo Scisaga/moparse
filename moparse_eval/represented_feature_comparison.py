@@ -9,20 +9,23 @@ from __future__ import annotations
 
 import json
 
+from .cjk_measurement_requirements import read_cjk_measurements
+from .document_composition_requirements import (
+    read_document_composition,
+    validate_document_compositions,
+)
 from .enumeration_binding import member_for_source, plan_from_syntax, validate_enumeration_bindings
 from .explicit_reference_requirements import read_explicit_references
-from .document_composition_requirements import read_document_composition, validate_document_compositions
 from .quoted_nominal import scan_quoted_nominals
 from .quoted_nominal_validation import validate_quoted_nominals
-from .cjk_measurement_requirements import read_cjk_measurements
-
 
 REPRESENTED_FEATURES = frozenset({"explicit_reference_binding", "enumeration_context_scope",
                                   "document_composition", "page_reference_binding", "quoted_nominal_scope",
-                                  "shared_period_scope", "same_subject_relative_clause", "year_on_year_comparison"})
+                                  "shared_period_scope", "same_subject_relative_clause", "year_on_year_comparison",
+                                  "quantity_assertion", "compact_column_binding"})
 REPRESENTED_INPUT_KEYS = (
     "syntax", "enumeration_contexts", "relations", "explicit_references", "reference_roles", "reference_dispositions",
-    "semantic_operands", "semantic_operand_relations",
+    "semantic_operands", "semantic_operand_relations", "compact_schemas",
 )
 
 
@@ -248,6 +251,27 @@ def _check_measurements(graph, resolve, readings, feature):
             "comparison_owner": "native_measurement_ast_and_grade_business_and_grade_relations", "business_votes_added": 0}
 
 
+def _check_compact_sources(graph):
+    from .source_obligations import _bound_relations, _compact_source_bindings, _residue
+
+    entries = [{"id": f"syntax:{i}", "text": item["text"], "source": item["source"],
+                "source_kind": item["kind"]} for i, item in enumerate(graph.get("syntax", []))]
+    view = {"nodes": graph.get("business", []), "projections": {"B": [f["id"] for f in graph.get("business", [])]},
+            "context": {"compact_schemas": graph.get("compact_schemas", [])}}
+    evidence = _compact_source_bindings({"sources": entries}, view, lambda f: _bound_relations(f, graph.get("relations", [])))
+    required = {f["id"] for f in graph.get("business", []) if f.get("compact_column")}
+    proved = {p["requirement"] for proofs in evidence.values() for p in proofs if p.get("role") == "source_bound_compact_value"}
+    if not required or required != proved:
+        raise ValueError("compact facts do not retain their own printed column/value sources")
+    for entry in entries:
+        if entry["id"] in evidence and _residue(entry["text"], (0, len(entry["text"])), evidence[entry["id"]]):
+            raise ValueError("compact record contains unbound printed content")
+    for declaration in graph.get("compact_schemas", []):
+        if not any(e["source"] == declaration["schema"]["source"] and e["id"] in evidence for e in entries):
+            raise ValueError("a declared compact column has no independently bound record")
+    return {"fact_count": len(proved), "source_count": len(evidence), "comparison_owner": "printed_columns_and_scalar_B_L"}
+
+
 def represented_feature_checks(graph, resolve):
     """Return runtime source checks, never certify independent acceptance.
 
@@ -261,6 +285,8 @@ def represented_feature_checks(graph, resolve):
     compositions = _composition_sources(graph)
     measurements = _measurement_sources(graph)
     features = declared & REPRESENTED_FEATURES
+    if graph.get("compact_schemas") or any(f.get("compact_column") for f in graph.get("business", [])):
+        features.add("compact_column_binding")
     if discovered or graph.get("explicit_references") or any(edge.get("type") in {
             "explicit_reference_target", "reference_directive_scope"} for edge in graph.get("relations", [])):
         features.add("explicit_reference_binding")
@@ -284,8 +310,10 @@ def represented_feature_checks(graph, resolve):
                 proof = _check_enumerations(graph, resolve, planned)
             elif feature == "quoted_nominal_scope":
                 proof = _check_quoted_roles(graph, resolve)
-            elif feature in {"shared_period_scope", "same_subject_relative_clause", "year_on_year_comparison"}:
+            elif feature in {"shared_period_scope", "same_subject_relative_clause", "year_on_year_comparison", "quantity_assertion"}:
                 proof = _check_measurements(graph, resolve, measurements, feature)
+            elif feature == "compact_column_binding":
+                proof = _check_compact_sources(graph)
             else:
                 proof = _check_compositions(graph, resolve, compositions)
             check = {"equivalent": True, "status": "equivalent", "reason": "source_bound_relation_inputs_complete",

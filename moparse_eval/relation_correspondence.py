@@ -25,7 +25,8 @@ def _freeze(value, canonicalize, *, dimension=None):
         return tuple(sorted((key, _freeze(decide_equivalence(
             {"unit": item, "currency": value.get("currency"), "quantity_role": value.get("quantity_role")},
             {"unit": item, "currency": value.get("currency"), "quantity_role": value.get("quantity_role")}, "unit")["canonical"]["required"], canonicalize)
-            if key == "unit" else _freeze(item, canonicalize, dimension=value.get("type")
+            if key == "unit" else _freeze({"unit": item, "currency": value.get("currency")}, canonicalize)
+            if key == "text" and value.get("type") == "unit" else _freeze(item, canonicalize, dimension=value.get("type")
                                          if key == "text" and value.get("type") in {
                                              "unit", "currency", "period_basis", "period", "from_period", "to_period", "comparison_period"} else key))
                             for key, item in value.items()))

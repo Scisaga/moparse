@@ -485,6 +485,10 @@ class _Reader:
     def objects(self, start, end):
         if start == end:
             raise _Unknown('narrative_object_unresolved')
+        from .nominal_syntax import shared_modifier_phrase
+
+        if re.search(r'\s+(?:and|or)\s+', self.syntax[start:end], re.I) and shared_modifier_phrase(self, start, end) is not None:
+            return [(start, end)], None, []
         # A conjunction inside an OF complement belongs to that nominal head,
         # never to multiple direct objects of the predicate.
         if re.search(r'\bof\b', self.syntax[start:end], re.I):
@@ -889,11 +893,15 @@ class _Reader:
                 self.edge('narrative_quantity_scope', {
                     key: value[key] for key in ('operator', 'value', 'unit', 'quantity_role')},
                     fact, value['source'], quantity_source=value['source'], value_source=value['value_source'])
-            if value.get('kind') == 'coordination' and value.get('mode') == 'nominal_members':
+            if value.get('kind') == 'nominal_compound':
+                self.features.add('noun_phrase_composition')
+                self.edge('narrative_nominal_compound_scope', {key: value[key] for key in ('modifier', 'head', 'relation')},
+                    fact, value['source'], compound_logic=value, head_source=value['head_source'], modifier_source=value['modifier_source'])
+            if value.get('kind') == 'coordination' and value.get('mode') in {'nominal_members', 'nominal_modifiers'}:
                 self.features.add('noun_phrase_composition')
                 for source in value['operator_sources']:
                     self.edge('narrative_nominal_coordination_scope', {
-                        'operator': value['operator'], 'mode': 'nominal_members', 'member_count': len(value['children'])},
+                        'operator': value['operator'], 'mode': value['mode'], 'member_count': len(value['children'])},
                         fact, source, operator_source=source, coordination_logic=value)
             for child in value.values():
                 if isinstance(child, (dict, list)):

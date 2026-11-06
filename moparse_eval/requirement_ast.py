@@ -36,8 +36,11 @@ _SCHEMAS = {
     "discourse_scope": {"operator", "role", "marker", "child"},
     "logical_group": {"tree"},
     "noun_phrase": {"head", "determiner", "quantifier", "modifiers", "prepositional_complements", "coordination"},
+    "nominal_modifier": {"text", "role"},
+    "nominal_compound": {"modifier", "head", "relation"},
     "prepositional_complement": {"preposition", "semantic_role", "attachment", "complement"},
     "quantity_comparison": {"operator", "value"},
+    "quantity_assertion": {"subject", "predicate", "assertion_mode", "right_role", "value", "unit"},
     "quantity": {"value", "unit"},
     "relation": {"type", "left", "right", "direction"},
     # Attachment descriptors are semantic nodes inside a source-bound PP.
@@ -352,7 +355,7 @@ def compare_requirement_ast(required: Any, actual: Any, context: dict[str, Any] 
                         or node.get("unresolved") or node.get("pending")):
                     children.append(_result("unresolved", path, reason="ast_interpretation_incomplete", proof={"side": side}))
             skip = set()
-            if kinds[0] in {"quantity", "quantity_comparison", "year_on_year_change"} and "value" in first and "value" in second:
+            if kinds[0] in {"quantity", "quantity_assertion", "quantity_comparison", "year_on_year_change"} and "value" in first and "value" in second:
                 scalar_count = kinds[0] == "quantity_comparison" and role == "asserted_quantifier" and first.get("operator") == second.get("operator") == "eq"
                 quantity = decide_equivalence(first, second, "unit" if context.get("layer") == "L" and (kinds[0] == "quantity" or scalar_count or first.get("sequence_source")) else "quantity", context=context)
                 status = "equivalent" if quantity["equivalent"] else "unresolved" if quantity["status"] == "unresolved" else "conflict"

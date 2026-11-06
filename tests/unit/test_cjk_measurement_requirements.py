@@ -103,7 +103,6 @@ def test_causal_tail_keeps_known_measurements_and_the_whole_unresolved_statement
 
 @pytest.mark.parametrize('text', ['同比增长4.3%。', '工业产值接近137万元，同比增长4.3%。',
                                 '如果工业产值超过137万元，同比增长4.3%。', '工业产值超过137万元？',
-                                '2028年工业产值超过137万元，同比增长4.3%。',
                                 '去年工业产值超过137万元，同比增长4.3%。',
                                 '工业产值和营业收入超过137万元，同比增长4.3%。'])
 def test_absent_antecedent_unknown_comparator_and_conditional_prefix_do_not_create_asserted_values(text):

@@ -49,7 +49,7 @@ _POSTPREDICATE_SCOPE = re.compile(
     r"of|to|on|onto|outside|over|past|pending|per|regarding|since|through|throughout|till|toward|towards|under|"
     r"underneath|until|upon|via|versus|with|within|without)\b", re.I)
 _DECLARATION = re.compile(r"(?:Units?|Currency|Period|Year|单位|單位|币种|幣種|期间|期間|年度)\s*[:：=]\s*[^。.!?！？;；]+[。.]?", re.I)
-_SCHEMA_CONTROL = re.compile(r"Attribute|Property|Field|Value|Metric|属性|屬性|字段|值|指标|指標|项目|項目", re.I)
+_SCHEMA_CONTROL = re.compile(r"Attribute|Property|Field|Value|Metric|Item|Record|Group|Section|属性|屬性|字段|值|指标|指標|项目|項目|分组|分組", re.I)
 _ACTION_MEANING = dict(AUDITED_ACTION_FORMS)
 _PUNCTUATION = set(":：=;；,.。!?！？()（）[]【】{}\"“”'‘’、，/\\|-–—")
 _METADATA = re.compile(r"\s*(?:Name|Entity|Company|Subject|Identifier|ID|Code|Ticker|Role|Type|Market|Region|Location|URL|URI|Website|Address|Date and time|DateTime|Timestamp|Date|Time|名称|姓名|主体|公司名称|证券代码|证券简称|类型|职务|市场|地区|地址|日期|时间)\s*[:：=]", re.I)
@@ -366,7 +366,10 @@ def _fragment_owns_fact(obligation, fact):
         return True
     if outer.get("cell") is not None:
         return any(_same_source(outer, fact.get(name, {}))
-                   for name in ("attribute_source", "value_source", "subject_source"))
+                   for name in ("attribute_source", "value_source", "subject_source")) or any(
+                       _same_source(outer, row.get("source", {})) and (row.get("text") == fact.get("subject")
+                           or row.get("text") == fact.get("identity_facets", {}).get("group"))
+                       for row in fact.get("row_evidence", []))
     return False
 
 
@@ -399,7 +402,7 @@ def _ranges(entry, source):
     return [span] if span is not None else []
 
 
-def _role_evidence(entry, facts):
+def _role_evidence(entry, facts, *, materials=()):
     """Only explicit role literals count; whole node/source spans never do."""
     evidence = []
     for fact in facts:
@@ -411,7 +414,11 @@ def _role_evidence(entry, facts):
         if predicate:
             subject = _range(entry, fact.get("subject_source", {}))
             obj = _range(entry, fact.get("object_source", {}))
-            if (subject and subject[1] > predicate[0]) or (obj and obj[0] < predicate[1]):
+            realized = (fact.get("logic", {}).get("kind") == "quantity_assertion"
+                        and fact.get("logic", {}).get("assertion_operator") == "realize"
+                        and entry["text"][slice(*predicate)] in {"实现", "實現"}
+                        and subject and subject[0] == predicate[1])
+            if (subject and subject[1] > predicate[0] and not realized) or (obj and obj[0] < predicate[1]):
                 continue  # Source-preserving S/O reversal is still incorrect.
             raw_predicate = entry["text"][predicate[0]:predicate[1]].strip().casefold()
             meaning = _ACTION_MEANING.get(raw_predicate, raw_predicate)
@@ -490,6 +497,21 @@ def _role_evidence(entry, facts):
             if isinstance(value.get("path"), str):
                 evidence.extend({"span": list(span), "requirement": fact["id"], "role": "qualifier"}
                                 for span in _ranges(entry, value))
+        if entry.get("cell") and not fact.get("predicate"):
+            from .text_projection import _covers
+
+            data = fact.get("data_evidence", {}).get("source", {})
+            for row in fact.get("row_evidence", []):
+                span = _range(entry, row.get("source", {}))
+                group = (row.get("role") in {"row_group", "row_group_value"}
+                         and row.get("text") == fact.get("identity_facets", {}).get("group")
+                         and any(header.get("cell") and header["target_id"] == entry["target_id"]
+                             and re.fullmatch(r"Group|分组|分組|组别|組別", header["text"], re.I)
+                             and _covers(header["cell"], entry["cell"], "column_header") for header in materials))
+                if (span and row.get("text") == entry["text"][slice(*span)]
+                        and (row.get("text") == fact.get("subject") or group)
+                        and data.get("row") is not None and _covers(entry["cell"], data, "row_header" if group else row.get("role", ""))):
+                    evidence.append({"span": list(span), "requirement": fact["id"], "role": "explicit_native_record_locator"})
     return evidence
 
 
@@ -1217,8 +1239,13 @@ def _text_syntax_evidence(entry):
                              "role": "printed_field_delimiter"})
         if fragment.endswith((";", "；")):
             evidence.append({"span": [b - 1, b], "role": "printed_fragment_separator"})
-    if entry.get("cell", {}).get("is_column_header"):
-        for match in re.finditer(r"[（(](?:万[元股]|萬[元股]|百万元|百萬元|亿元|億元|%|USD million|CNY million)[）)]", text):
+    if entry.get("cell") and any(entry["cell"].get(key) for key in
+            ("is_column_header", "column_header", "is_row_header", "row_header", "native_header_tag")):
+        from .measurement_evidence import read_unit_token
+
+        for match in re.finditer(r"[（(]([^()（）]+)[）)]", text):
+            if not read_unit_token(match[1])["matched"]:
+                continue
             evidence.extend({"span": [index, index + 1], "role": "printed_header_qualifier_delimiter"}
                             for index in (match.start(), match.end() - 1))
     return evidence
@@ -1229,6 +1256,10 @@ def _text_node_evidence(entry, node):
     for a, b in _ranges(entry, node.get("source", {})):
         if entry["text"][a:b] == node["text"]:
             evidence.append({"span": [a, b], "requirement": node["id"], "role": "text"})
+    for origin in node.get("origins", []):
+        for a, b in _ranges(entry, origin.get("source", {})):
+            if entry["text"][a:b] == origin.get("text") == node["text"]:
+                evidence.append({"span": [a, b], "requirement": node["id"], "role": "retained_literal_origin"})
     originals, texts = node.get("source_fragments", []), node.get("source_fragment_texts", [])
     if originals and len(originals) == len(texts):
         cursor = 0
@@ -1274,6 +1305,204 @@ def _text_field_delimiters(entry, text_nodes):
     return evidence
 
 
+def _compact_source_bindings(inventory, graph, bound_relations):
+    """Audit printed columns against their actual record slots, independently.
+
+    Reader success and column IDs are not proof. Every label, year, unit and
+    value must occupy its declared slot in the original text and own an edge.
+    This is a finite schema/record audit, never a narrative-text exemption.
+    """
+    from .measurement_evidence import read_measurement_literal, read_unit_token
+
+    entries = inventory["sources"]
+    facts = [node for node in graph["nodes"] if node["id"] in graph["projections"]["B"]]
+    result = defaultdict(list)
+    for declaration in graph.get("context", {}).get("compact_schemas", []):
+        schema, text = declaration["schema"], declaration["text"]
+        own = next((e for e in entries if _range(e, schema["source"]) == (0, len(text)) and e["text"] == text), None)
+        if own is None:
+            continue
+        intro = re.search(r"各[項项]分[別别]列示|列[說说]明\s*[:：]|Columns?\s*[:：]", text, re.I)
+        if not intro:
+            continue
+        columns, header, valid = schema.get("columns", []), [], True
+        years = list(re.finditer(r"(?:19|20)\d{2}年?", text[intro.end():]))
+        if len(years) != 2 or [m[0] for m in years] != schema.get("periods"):
+            continue
+        previous = intro.end()
+        for index, column in enumerate(columns):
+            bounds = _range(own, column.get("source", {}))
+            label = column.get("attribute", "")
+            patterns = {"amount": r"金[額额]|Amount", "share": r"[佔占][^、，,;；。\n（）()]*?比|Share|Ratio|Percentage|比例",
+                        "change": r"(?:金[額额]|[佔占][^、，,;；。\n（）()]*?比重?)(?:同比|按年)(?:[變变][動动]|[變变]化|增[減减])|(?:Amount\s+)?(?:YoY|year.on.year)(?:\s+change)?"}
+            if (not bounds or bounds[0] < previous or column.get("id") != f"column:{index}"
+                    or text[slice(*bounds)] != label or not re.fullmatch(patterns.get(column.get("kind"), r"(?!)"), label, re.I)):
+                valid = False
+                break
+            previous = bounds[1]
+            header.append({"span": list(bounds), "role": "declared_column_label"})
+            if column["kind"] != "change":
+                year = _range(own, column.get("period_source", {}))
+                preceding = [m for m in re.finditer(r"(?:19|20)\d{2}年?", text[:bounds[0]]) if m.start() >= intro.end()]
+                if not year or text[slice(*year)] != column.get("period") or not preceding or year != preceding[-1].span():
+                    valid = False
+                    break
+                header.append({"span": list(year), "role": "declared_column_period"})
+            if column.get("unit"):
+                unit = _range(own, column.get("unit_source", {}))
+                if not unit or text[slice(*unit)] != column["unit"] or not read_unit_token(column["unit"])["matched"]:
+                    valid = False
+                    break
+                if unit[0] < intro.start():
+                    caption = re.search(r"(?:(?:金[額额])?(?:單位|单位)|Units?)\s*[:：=]\s*", text[:intro.start()], re.I)
+                    if column["kind"] != "amount" or not caption or unit[0] != caption.end():
+                        valid = False
+                        break
+                elif (not re.fullmatch(r"\s*[（(]\s*", text[bounds[1]:unit[0]])
+                      or not re.match(r"\s*[)）]", text[unit[1]:])):
+                    valid = False
+                    break
+                else:
+                    header.extend({"span": [i, i + 1], "role": "bound_unit_bracket", "control": True}
+                                  for i in range(bounds[1], unit[0]) if text[i] in "(（")
+                    close = re.match(r"\s*[)）]", text[unit[1]:])
+                    header.append({"span": [unit[1], unit[1] + close.end()], "role": "bound_unit_bracket", "control": True})
+                header.append({"span": list(unit), "role": "declared_column_unit"})
+        if not valid or len(columns) < 4:
+            continue
+        for left, right in zip(columns, columns[1:], strict=False):
+            end = _range(own, left['source'])[1]
+            unit = _range(own, left.get('unit_source', {}))
+            if unit and unit[0] >= end:
+                end = unit[1]
+            begin = _range(own, right['source'])[0]
+            period = _range(own, right.get('period_source', {}))
+            if period and period[0] >= end:
+                begin = period[0]
+            gap = text[end:begin]
+            if re.fullmatch(r'[\s，,、;；()（）.。]*(?:及|和|and)[\s，,、;；()（）.。]*', gap, re.I):
+                for connector in re.finditer(r'及|和|and', gap, re.I):
+                    header.append({'span': [end + connector.start(), end + connector.end()],
+                                   'role': 'bound_column_connector', 'control': True})
+        header.append({"span": list(intro.span()), "role": "bound_column_introduction", "control": True})
+        for key, value in schema.get("qualifiers", {}).items():
+            bounds = _range(own, schema.get("qualifier_sources", {}).get(key, {}))
+            if not bounds or text[slice(*bounds)] != value:
+                valid = False
+                break
+            header.append({"span": list(bounds), "role": "declared_column_" + key})
+        caption = re.search(r"(?:(?:金[額额])?(?:單位|单位)|Units?)\s*[:：=]\s*", text[:intro.start()], re.I)
+        if caption:
+            header.append({"span": list(caption.span()), "role": "bound_unit_declaration_key", "control": True})
+        if not valid or _residue(text, (0, len(text)), header):
+            continue
+        covered_columns, record_proofs = set(), defaultdict(list)
+        for fact in facts:
+            binding = fact.get("compact_column", {})
+            if binding.get("schema_source") != schema["source"]:
+                continue
+            column = next((c for c in columns if c["id"] == binding.get("id")), None)
+            if column is None or fact.get("attribute") != column["attribute"] or fact.get("attribute_source") != column["source"]:
+                continue
+            edges = bound_relations(fact)
+            if not any(edge["type"] == "field_binding" for edge in edges):
+                continue
+            row = next((e for e in entries if _range(e, fact.get("source", {})) and e["source_kind"] != "fragment"), None)
+            if row is None:
+                continue
+            raw = row["text"]
+            value = _range(row, fact.get("source", {}))
+            slots, syntax = [], []
+            for a, b in _segments(raw):
+                segment = raw[a:b].rstrip(";；。.")
+                offset = a
+                label = re.match(r"([^:：]+)[:：]\s*(?=(?:19|20)\d{2}年?)", segment)
+                if label:
+                    syntax.append({"span": [offset, offset + label.end(1)], "role": "printed_record_subject"})
+                    offset += label.end()
+                    segment = segment[label.end():]
+                period = re.match(r"((?:19|20)\d{2}年?)\s*[:：，,]?\s*", segment)
+                selected = []
+                if period:
+                    syntax.append({"span": [offset, offset + period.end(1)], "role": "printed_record_period"})
+                    selected = [c for c in columns if c.get("period") == period[1] and c["kind"] != "change"]
+                    offset += period.end()
+                    segment = segment[period.end():]
+                else:
+                    changed = next((c for c in columns if c["kind"] == "change" and segment.startswith(c["attribute"])), None)
+                    if changed:
+                        syntax.append({"span": [offset, offset + len(changed["attribute"])], "role": "printed_record_change"})
+                        offset += len(changed["attribute"])
+                        segment = segment[len(changed["attribute"]):]
+                        selected = [changed]
+                    elif len(list(_segments(raw))) == 1 and "、" in segment:
+                        locator = re.match(r"[^:：]+[:：]\s*", segment)
+                        if locator:
+                            syntax.append({"span": [offset, offset + locator.end() - 1], "role": "printed_record_subject"})
+                            offset += locator.end()
+                            segment = segment[locator.end():]
+                            selected = columns
+                field = re.fullmatch(r"\s*([^:：]+)[:：]\s*(.*)", segment)
+                if field:
+                    selected = [c for c in selected if c["attribute"] == field[1].strip()]
+                    syntax.append({"span": [offset + field.start(1), offset + field.end(1)], "role": "printed_record_label"})
+                    offset += field.start(2)
+                    segment = field[2]
+                else:
+                    spaces = re.match(r"\s*[:：]?\s*", segment).end()
+                    offset += spaces
+                    segment = segment[spaces:]
+                pieces = list(re.finditer(r"[^、]+", segment))
+                if len(selected) == len(pieces):
+                    for c, piece in zip(selected, pieces, strict=True):
+                        left = offset + piece.start() + len(piece[0]) - len(piece[0].lstrip())
+                        right = offset + piece.end() - (len(piece[0]) - len(piece[0].rstrip()))
+                        slots.append((c, (left, right)))
+            if not any(c["id"] == column["id"] and span == value for c, span in slots):
+                continue
+            printed = read_measurement_literal(raw[slice(*value)], fact["source"])
+            if not printed["matched"] or printed["value"] != fact["value"]:
+                continue
+            required = dict(schema.get("qualifiers", {}))
+            origins = dict(schema.get("qualifier_sources", {}))
+            if column["kind"] == "change":
+                for key, period in zip(("to_period", "from_period"), schema["periods"], strict=True):
+                    required[key] = period
+                    origins[key] = next(c["period_source"] for c in columns if c.get("period") == period)
+            else:
+                required["period"], origins["period"] = column["period"], column["period_source"]
+            unit = printed["unit"] or column.get("unit")
+            if unit:
+                unit_origin = printed["sources"].get("unit") or column["unit_source"]
+                unit_info = read_unit_token(unit, unit_origin)
+                required["unit"], origins["unit"] = unit, unit_origin
+                if unit_info["currency"]:
+                    required["currency"], origins["currency"] = unit_info["currency"], unit_info["sources"]["currency"]
+            if any(fact.get("qualifiers", {}).get(k) != v
+                   or not _same_source(fact.get("qualifier_sources", {}).get(k, {}), origins[k])
+                   or fact.get("qualifier_sources", {}).get(k, {}).get("text_span") != origins[k].get("text_span")
+                   or not any(e["type"] == "qualifier_scope" and e.get("left") == {"type": k, "text": v} for e in edges)
+                   for k, v in required.items()):
+                continue
+            if any(k in fact.get("qualifiers", {}) and k not in required for k in
+                   ("unit", "currency", "period", "period_basis", "from_period", "to_period")):
+                continue
+            covered_columns.add(column["id"])
+            proof = {"span": list(value), "role": "source_bound_compact_value", "requirement": fact["id"],
+                     "relations": [e["id"] for e in edges]}
+            record_proofs[row["id"]].extend([proof, *syntax])
+            for item in fact.get("row_evidence", []):
+                for entry in entries:
+                    span = _range(entry, item.get("source", {}))
+                    if span and entry["text"][slice(*span)] == item["text"]:
+                        record_proofs[entry["id"]].append({"span": list(span), "role": "source_bound_compact_row", "requirement": fact["id"]})
+        for ident, evidence in record_proofs.items():
+            result[ident].extend(evidence)
+        if covered_columns == {c["id"] for c in columns}:
+            result[own["id"]].extend(header)
+    return result
+
+
 def audit_source_obligations(inventory: dict[str, Any], graph: dict[str, Any]) -> dict[str, Any]:
     """Explain each independent obligation or retain precise pending evidence."""
     sources = {entry["id"]: entry for entry in inventory["sources"]}
@@ -1295,6 +1524,8 @@ def audit_source_obligations(inventory: dict[str, Any], graph: dict[str, Any]) -
         if key not in bound_cache:
             bound_cache[key] = _bound_relations(fact, relations)
         return bound_cache[key]
+
+    compact_bindings = _compact_source_bindings(inventory, graph, bound_relations)
 
     def operator_binding(edge):
         if edge.get("type") == "proposition_coordination_scope":
@@ -1362,7 +1593,7 @@ def audit_source_obligations(inventory: dict[str, Any], graph: dict[str, Any]) -
         else:
             span = _range(entry, obligation["source"])
             if entry["id"] not in role_cache:
-                role_cache[entry["id"]] = [*_role_evidence(entry, [*facts, *operands]),
+                role_cache[entry["id"]] = [*_role_evidence(entry, [*facts, *operands], materials=inventory["sources"]),
                     *_prepositional_role_evidence(entry, [*facts, *operands], relations)]
                 for attachment in attachment_obligations[entry["id"]]:
                     bindings = _infinitive_bindings(attachment, [*facts, *operands], relations, graph.get("logic", []))
@@ -1371,26 +1602,31 @@ def audit_source_obligations(inventory: dict[str, Any], graph: dict[str, Any]) -
                             "requirement": binding["requirement"], "relation": binding["relation"],
                             "role": "source_bound_infinitival_marker"})
                 structural_cache[entry["id"]] = [*_structural_evidence(entry, graph, bound_relations),
-                                                  *toc_bindings.get(entry["id"], [])]
+                                                  *toc_bindings.get(entry["id"], []),
+                                                  *compact_bindings.get(entry["id"], [])]
             role_evidence = role_cache[entry["id"]]
             structural = structural_cache[entry["id"]]
             if obligation["kind"] == "text":
                 evidence = [*_text_syntax_evidence(entry), *_text_field_delimiters(entry, text_nodes)]
                 for node in text_nodes:
                     evidence.extend(_text_node_evidence(entry, node))
+                evidence.extend(item for item in compact_bindings.get(entry["id"], []) if item.get("control"))
                 for control in graph.get("context", {}).get("text_projection", {}).get("controls", []):
                     for a, b in _ranges(entry, control.get("source", {})):
                         raw = entry["text"][a:b]
                         # A control label cannot hide a number, sign, decimal
                         # point, percent or accounting parentheses from T.
-                        if raw == control.get("text") and (re.fullmatch(r"[\s:：=;；,，|]*", raw)
-                                or raw in {".", "。"} and b == len(entry["text"])):
-                            evidence.append({"span": [a, b], "role": "printed_format_control"})
+                        if raw == control.get("text"):
+                            for position in range(a, b):
+                                character = entry["text"][position]
+                                if character.isspace() or character in ":：=;；,，、。|" or character == "." and position + 1 == len(entry["text"]):
+                                    evidence.append({"span": [position, position + 1], "role": "printed_format_control"})
                 proof = evidence
                 toc_control = [item for item in toc_bindings.get(entry["id"], []) if item.get("schema_control")]
                 if toc_control:
                     status, proof, reason = "explicitly_not_applicable", toc_control, "actual_toc_schema_control_has_bound_records"
-                elif entry.get("printed_schema_control") or entry.get("cell", {}).get("is_column_header") and _SCHEMA_CONTROL.fullmatch(entry["text"].strip()):
+                elif entry.get("printed_schema_control") or any(entry.get("cell", {}).get(key) for key in
+                        ("is_column_header", "column_header")) and _SCHEMA_CONTROL.fullmatch(entry["text"].strip()):
                     status, reason = "explicitly_not_applicable", "printed_property_value_schema_control"
                 elif not _residue(entry["text"], span, evidence, literal=True):
                     status, proof, reason = "explained", evidence, "literal_source_ranges_retained_by_T"
@@ -1510,7 +1746,9 @@ def audit_source_obligations(inventory: dict[str, Any], graph: dict[str, Any]) -
                         and edge.get("left", {}).get("text") == obligation["text"].strip()]
                     exceptional = [item for item in structural if item.get("relations")
                                    and item["span"][0] <= span[0] and span[1] <= item["span"][1]]
-                    if qualifier_edges:
+                    if (compact_bindings.get(entry["id"]) and not _residue(entry["text"], span, compact_bindings[entry["id"]])):
+                        status, proof, reason = "explained", compact_bindings[entry["id"]], "printed_compact_slots_have_their_own_bindings"
+                    elif qualifier_edges:
                         status, reason = "explained", "fragment_has_its_own_qualifier_owner_relation"
                         proof = [{"relation": edge["id"]} for edge in qualifier_edges]
                     elif exceptional or owners and all(bindings.values()):
@@ -1633,6 +1871,9 @@ def audit_source_obligations(inventory: dict[str, Any], graph: dict[str, Any]) -
                 if not proof and obligation.get("binding_role") == "field_binding" and any(
                         item["role"] == "source_bound_toc_protocol" for item in structural):
                     proof.extend(structural)
+                if (not proof and obligation.get("binding_role") in {None, "field_binding", "semantic_binding"}
+                        and compact_bindings.get(entry["id"]) and not _residue(entry["text"], span, compact_bindings[entry["id"]])):
+                    proof.extend(compact_bindings[entry["id"]])
                 if proof:
                     status, reason = "explained", "printed_predicate_has_its_own_role_binding"
                 elif obligation.get("binding_role") is None:

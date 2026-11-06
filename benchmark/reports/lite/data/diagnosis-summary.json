@@ -3,11 +3,11 @@
   "quality_scores_withheld": true,
   "expected_comparison_complete": false,
   "candidate_comparison_started": false,
-  "software_id": "b9e1499220f0b6ddcdce0099f526702ec080c7a3834d3d249ed73a5d30c15d9e",
-  "git_head": "2bc7a6f6322d3625fde1d32d92e1f08e765cdc53",
+  "software_id": "bafccbf659aeebc74e381b688a4a19aaad0621da0343c5b3086065fd22406916",
+  "git_head": "6000685719383c0af6366e7a906f766188c2eaa9",
   "configured_analysis_workers": 16,
   "source_index": "benchmark/runs/lite/requirements/current/index.json",
-  "source_index_sha256": "d1c4fee3f8ba51eccb78d283c54055ea4b04973d067b7507a230feb774e6a39e",
+  "source_index_sha256": "01234f769f649a36874a4d604a86450dff0b6e10ce1a43fdee96f21dc17545b7",
   "source_compilation": {
     "declared_records": 173,
     "views_written": 173,
@@ -17,7 +17,7 @@
     "software_unchanged": true,
     "semantic_complete": false,
     "analysis_workers": 16,
-    "scope": "declared_lite_expected_only",
+    "scope": "authorized_expected_only_no_candidate_or_pdf",
     "all_declared_views_written": true,
     "inventory_validation": {
       "status": "passed",
@@ -26,16 +26,15 @@
   },
   "software_validation": {
     "path": "benchmark/runs/lite/requirements/validation/software-validation.json",
-    "sha256": "c093dd16279e98854e74424cf68f465cbbd15c8ee18f3132deab7f23fc89ddf7",
+    "sha256": "29f241256108d0fb8ae6d619fc24ebb536b7c42a93bfe7d73c581c6cf2fd3700",
     "status": "passed",
-    "summary": "3770 passed in 62.02s (0:01:02)",
-    "new_independent_test_cases_in_new_files": 151,
-    "scope": "controlled_cases_only_not_complete_expected_acceptance",
-    "precommit_import_formatting_verified": true
+    "summary": "3864 passed in 78.12s",
+    "new_independent_test_cases_in_new_files": 95,
+    "scope": "Controlled authored expected plus synthetic candidate production chains; real work reads authorized expected sources only."
   },
   "actual_source_diagnosis": {
     "path": "benchmark/runs/lite/requirements/validation/actual-source-diagnosis.json",
-    "sha256": "b21dc45e91e0252b6b636cbbe251fde657a92a02d63f898dff043dbae9386e2d"
+    "sha256": "a16ece0962494f933c9e6077cb0d6ddc0f38d3d37b3c18869565c6fb73462661"
   },
   "expected_structure_gate": {
     "status": "not_passed",
@@ -274,7 +273,7 @@
         ],
         "source_id": "source:2",
         "text": "物价水平根本上是由实体经济供需关系决定的，CPI和PPI是反映宏观物价水平的主要指标。2023年，受国内外多重因素影响，我国物价水平出现阶段性回落；但核心CPI仍保持温和上涨，物价变化具有明显结构性特征。",
-        "id": "unresolved:125",
+        "id": "unresolved:133",
         "source_obligation_ids": [
           "obligation:11"
         ]
@@ -283,7 +282,7 @@
   ],
   "dependency_freeze_passed": false,
   "real_candidate_cpu_replay_started": false,
-  "meaning": "Source-bound integration repairs and independent controlled final-vote evidence; no complete expected acceptance, actual candidate comparison, real replay or quality publication.",
+  "meaning": "A/B/C source ranges and controlled production comparison repaired; full expected semantic acceptance and quality publication remain incomplete.",
   "implemented_source_families": [
     "bounded_shared_np_pp_and_local_relation_ownership",
     "dated_enumeration_roles_and_member_boundaries",
@@ -335,248 +334,118 @@
     "quoted_nominal_scope",
     "same_subject_relative_clause",
     "shared_period_scope",
-    "year_on_year_comparison"
+    "year_on_year_comparison",
+    "compact_column_binding",
+    "quantity_assertion"
   ],
   "semantic_diagnosis": {
     "views_without_non_deferred_pending": 2,
     "views_with_non_deferred_pending": 171,
     "pending_family_count": 109,
-    "non_deferred_annotation_records_before": 33799,
-    "non_deferred_annotation_records_current": 33571,
+    "non_deferred_annotation_records_before": 33571,
+    "non_deferred_annotation_records_current": 33238,
     "top_families": [
       {
         "family": "source_obligation_pending:relation",
-        "unique_source_occurrences": 9552,
+        "unique_source_occurrences": 9439,
         "affected_samples": 166,
-        "annotation_records": 10427,
-        "previous_unique_source_occurrences": 9536,
-        "previous_affected_samples": 166,
-        "original_scopes_without_current_overlapping_pending": 0,
-        "newly_exposed_scopes": 7
+        "annotation_records": 10306,
+        "starting_unique_source_occurrences": 9552
       },
       {
         "family": "narrative_predicate_unresolved",
-        "unique_source_occurrences": 4783,
-        "affected_samples": 164,
-        "annotation_records": 4785,
-        "previous_unique_source_occurrences": 4783,
-        "previous_affected_samples": 164,
-        "original_scopes_without_current_overlapping_pending": 0,
-        "newly_exposed_scopes": 0
+        "unique_source_occurrences": 4750,
+        "affected_samples": 163,
+        "annotation_records": 4752,
+        "starting_unique_source_occurrences": 4783
       },
       {
         "family": "source_obligation_pending:semantic_content",
-        "unique_source_occurrences": 3952,
+        "unique_source_occurrences": 3863,
         "affected_samples": 162,
-        "annotation_records": 3952,
-        "previous_unique_source_occurrences": 3972,
-        "previous_affected_samples": 162,
-        "original_scopes_without_current_overlapping_pending": 1,
-        "newly_exposed_scopes": 0
+        "annotation_records": 3863,
+        "starting_unique_source_occurrences": 3952
       },
       {
         "family": "source_obligation_pending:proposition",
-        "unique_source_occurrences": 2297,
+        "unique_source_occurrences": 2296,
         "affected_samples": 127,
-        "annotation_records": 2297,
-        "previous_unique_source_occurrences": 2277,
-        "previous_affected_samples": 127,
-        "original_scopes_without_current_overlapping_pending": 0,
-        "newly_exposed_scopes": 0
+        "annotation_records": 2296,
+        "starting_unique_source_occurrences": 2297
       },
       {
         "family": "source_obligation_pending:qualifier",
         "unique_source_occurrences": 2080,
         "affected_samples": 108,
         "annotation_records": 2080,
-        "previous_unique_source_occurrences": 2080,
-        "previous_affected_samples": 108,
-        "original_scopes_without_current_overlapping_pending": 0,
-        "newly_exposed_scopes": 0
+        "starting_unique_source_occurrences": 2080
       },
       {
         "family": "list_group_scope_interpretation_unsupported",
         "unique_source_occurrences": 937,
         "affected_samples": 45,
         "annotation_records": 937,
-        "previous_unique_source_occurrences": 937,
-        "previous_affected_samples": 45,
-        "original_scopes_without_current_overlapping_pending": 0,
-        "newly_exposed_scopes": 0
+        "starting_unique_source_occurrences": 937
       },
       {
         "family": "prose_clause_semantics_unsupported",
-        "unique_source_occurrences": 908,
+        "unique_source_occurrences": 907,
         "affected_samples": 56,
-        "annotation_records": 908,
-        "previous_unique_source_occurrences": 908,
-        "previous_affected_samples": 56,
-        "original_scopes_without_current_overlapping_pending": 0,
-        "newly_exposed_scopes": 0
+        "annotation_records": 907,
+        "starting_unique_source_occurrences": 908
       },
       {
         "family": "quoted_nominal_lexical_role_unresolved",
         "unique_source_occurrences": 844,
         "affected_samples": 114,
         "annotation_records": 844,
-        "previous_unique_source_occurrences": 844,
-        "previous_affected_samples": 114,
-        "original_scopes_without_current_overlapping_pending": 0,
-        "newly_exposed_scopes": 0
+        "starting_unique_source_occurrences": 844
       },
       {
         "family": "source_has_no_supported_semantic_disposition",
-        "unique_source_occurrences": 651,
+        "unique_source_occurrences": 648,
         "affected_samples": 121,
-        "annotation_records": 1238,
-        "previous_unique_source_occurrences": 651,
-        "previous_affected_samples": 121,
-        "original_scopes_without_current_overlapping_pending": 0,
-        "newly_exposed_scopes": 0
+        "annotation_records": 1232,
+        "starting_unique_source_occurrences": 651
       },
       {
         "family": "narrative_prepositional_attachment_unresolved",
-        "unique_source_occurrences": 521,
+        "unique_source_occurrences": 519,
         "affected_samples": 61,
-        "annotation_records": 521,
-        "previous_unique_source_occurrences": 521,
-        "previous_affected_samples": 61,
-        "original_scopes_without_current_overlapping_pending": 0,
-        "newly_exposed_scopes": 0
+        "annotation_records": 519,
+        "starting_unique_source_occurrences": 521
       },
       {
         "family": "cjk_narrative_predicate_unresolved",
-        "unique_source_occurrences": 476,
+        "unique_source_occurrences": 481,
         "affected_samples": 53,
-        "annotation_records": 476,
-        "previous_unique_source_occurrences": 476,
-        "previous_affected_samples": 53,
-        "original_scopes_without_current_overlapping_pending": 0,
-        "newly_exposed_scopes": 0
-      },
-      {
-        "family": "source_obligation_pending:text",
-        "unique_source_occurrences": 407,
-        "affected_samples": 40,
-        "annotation_records": 407,
-        "previous_unique_source_occurrences": 651,
-        "previous_affected_samples": 90,
-        "original_scopes_without_current_overlapping_pending": 21,
-        "newly_exposed_scopes": 0
+        "annotation_records": 481,
+        "starting_unique_source_occurrences": 476
       },
       {
         "family": "narrative_subject_boundary_unresolved",
         "unique_source_occurrences": 384,
         "affected_samples": 58,
         "annotation_records": 384,
-        "previous_unique_source_occurrences": 384,
-        "previous_affected_samples": 58,
-        "original_scopes_without_current_overlapping_pending": 0,
-        "newly_exposed_scopes": 0
-      },
-      {
-        "family": "cjk_measurement_sequence_incomplete",
-        "unique_source_occurrences": 340,
-        "affected_samples": 54,
-        "annotation_records": 340,
-        "previous_unique_source_occurrences": 340,
-        "previous_affected_samples": 54,
-        "original_scopes_without_current_overlapping_pending": 0,
-        "newly_exposed_scopes": 0
-      },
-      {
-        "family": "series_independent_field_role_unsupported",
-        "unique_source_occurrences": 328,
-        "affected_samples": 7,
-        "annotation_records": 328,
-        "previous_unique_source_occurrences": 328,
-        "previous_affected_samples": 7,
-        "original_scopes_without_current_overlapping_pending": 0,
-        "newly_exposed_scopes": 0
+        "starting_unique_source_occurrences": 384
       }
     ],
-    "root_cause_groups": [
-      {
-        "root_cause_group": "local_relation_ownership",
-        "unique_source_occurrences": 9552,
-        "affected_samples": 166
-      },
-      {
-        "root_cause_group": "clause_predicate_and_compositional_scope",
-        "unique_source_occurrences": 7137,
-        "affected_samples": 165
-      },
-      {
-        "root_cause_group": "assertive_and_nominal_interpretation",
-        "unique_source_occurrences": 6249,
-        "affected_samples": 163
-      },
-      {
-        "root_cause_group": "logical_qualifier_scope",
-        "unique_source_occurrences": 2080,
-        "affected_samples": 108
-      },
-      {
-        "root_cause_group": "quoted_fronted_temporal_aspect_context",
-        "unique_source_occurrences": 1500,
-        "affected_samples": 132
-      },
-      {
-        "root_cause_group": "structured_fields_header_period_unit",
-        "unique_source_occurrences": 1067,
-        "affected_samples": 43
-      },
-      {
-        "root_cause_group": "enumeration_declaration_and_member_ownership",
-        "unique_source_occurrences": 987,
-        "affected_samples": 66
-      },
-      {
-        "root_cause_group": "noun_phrase_coordination_and_attachment",
-        "unique_source_occurrences": 978,
-        "affected_samples": 63
-      },
-      {
-        "root_cause_group": "cjk_clauses_and_measurements",
-        "unique_source_occurrences": 935,
-        "affected_samples": 68
-      },
-      {
-        "root_cause_group": "unsupported_semantic_disposition",
-        "unique_source_occurrences": 925,
-        "affected_samples": 137
-      },
-      {
-        "root_cause_group": "literal_projection_binding",
-        "unique_source_occurrences": 407,
-        "affected_samples": 40
-      },
-      {
-        "root_cause_group": "navigation_and_document_relations",
-        "unique_source_occurrences": 2,
-        "affected_samples": 2
-      }
-    ]
+    "meaning": "Annotation counts are not business units or independent defect counts."
   },
   "implementation_changes": [
-    "Share explicitly declared action forms across narrative interpretation and independent source-role auditing; retain independent source obligation enumeration.",
-    "Preserve empty-field terminal literals and audit only the exact delimiter between independently retained label/value roles.",
-    "Bind a sole coordinated nominal determiner to its whole collection; delegate raw role comparison only to a fully source-closed nominal interpretation.",
-    "Assign existing B/L votes to complete source-bound owners after identity, record, qualifiers, identity facets and capacity checks; reports replay the same responsibility.",
-    "Consume existing explicit reference, enumeration, document/page, quoted nominal and CJK relation/qualifier representations with source guards; retained unknowns never certify equivalence.",
-    "Include independently printed periods in repeated CJK metric endpoint and AST identity binding before any scalar comparison."
+    "Ordered compact columns and independently audited record slots, including multiple change columns and own record identities.",
+    "Actual CJK amount assertions, split currency/magnitude sources, bounded year prefixes and immediate metric-local YoY binding.",
+    "Finite shared attributive coordination, explicit nominal compounds and distinct predicate/nominal beneficiary attachments.",
+    "Own-source runtime readback of compact and amount representations, including final B/L and report replay guards."
   ],
   "new_test_files": [
-    "tests/unit/test_action_source_audit_integration.py",
-    "tests/unit/test_cjk_period_identity_production.py",
-    "tests/unit/test_nested_nominal_production_path.py",
-    "tests/unit/test_represented_feature_production.py",
-    "tests/unit/test_represented_feature_source_guard_audit.py",
-    "tests/unit/test_semantic_positive_responsibility.py"
+    "tests/unit/test_compact_multichange_production.py",
+    "tests/unit/test_cjk_assertion_production.py",
+    "tests/unit/test_shared_modifier_production.py"
   ],
   "obsolete_test_removed": {
-    "none": true,
-    "existing_test_expectation_corrected": "An obsolete quoted-feature blocker assertion now verifies final B/L success and retains an AND/OR semantic counterexample."
+    "case": "comma-free year was moved from unsupported to supported production coverage",
+    "independent_semantic_oracles_weakened": false
   },
   "comparison_validation": "benchmark/runs/lite/requirements/validation/comparison-validation.json",
   "oracle_validation": "benchmark/runs/lite/requirements/validation/oracle-validation.json",
@@ -1008,5 +877,114 @@
       "five_authorized_input_scope_target": false,
       "manual_formal_answer_or_grade_supplied": false
     }
-  ]
+  ],
+  "work_packages": [
+    {
+      "package": "A",
+      "sample_id": "sf-cashflow-assets-liabilities-p040-041",
+      "source": {
+        "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+        "lines": [
+          920,
+          942
+        ]
+      },
+      "business_requirement_count": 96,
+      "scope_status": "source_interpretation_closed_not_quality_acceptance",
+      "owning_sample_complete": false,
+      "production_tests": "tests/unit/test_compact_multichange_production.py"
+    },
+    {
+      "package": "B",
+      "sample_id": "huawei-operating-results-p062-063",
+      "source": {
+        "path": "/opt/moparse/pdf_sample/parsing/expected/complex-huawei-2024-annual/expected.md",
+        "lines": [
+          1586,
+          1586
+        ],
+        "text_span": [
+          0,
+          52
+        ]
+      },
+      "business_requirement_count": 3,
+      "scope_status": "source_interpretation_closed_not_quality_acceptance",
+      "owning_sample_complete": false,
+      "production_tests": "tests/unit/test_cjk_assertion_production.py"
+    },
+    {
+      "package": "C",
+      "sample_id": "pingan-strategy-cards-p008-011",
+      "source": {
+        "path": "/opt/moparse/pdf_sample/parsing/expected/complex-pingan-2024-annual/expected.md",
+        "lines": [
+          298,
+          298
+        ],
+        "text_span": [
+          0,
+          76
+        ]
+      },
+      "business_requirement_count": 1,
+      "scope_status": "source_interpretation_closed_not_quality_acceptance",
+      "owning_sample_complete": false,
+      "production_tests": "tests/unit/test_shared_modifier_production.py"
+    }
+  ],
+  "projection_changes": {
+    "before": {
+      "T": 30090,
+      "L": 18030,
+      "B": 7731
+    },
+    "current": {
+      "T": 30536,
+      "L": 18392,
+      "B": 7796
+    },
+    "changed_samples": 21,
+    "all_173_sources_preserved": true,
+    "newly_complete_samples": [],
+    "formal_denominators_frozen": false
+  },
+  "repository_checks": {
+    "ruff_changed_python_files": {
+      "status": "passed",
+      "file_count": 19
+    },
+    "markdown_policy": {
+      "status": "passed",
+      "maintained_files": 61,
+      "violations": 0
+    },
+    "diff_whitespace": {
+      "status": "passed",
+      "excludes": [
+        "pdf_sample",
+        "datasets",
+        "benchmark/runs",
+        "benchmark/reports",
+        "benchmark/reference-decisions"
+      ]
+    },
+    "scope": "Software and non-corpus documentation checks only, never corpus or expected-content acceptance."
+  },
+  "remaining_baseline_interpretation_defects": {
+    "literal_only_refinements": 12,
+    "all_svo_semantics_repaired": false,
+    "source_audit_under_reporting_observed": true,
+    "formal_views_manually_changed": false
+  },
+  "delivery_verification": {
+    "software_and_tests_still_match_regression": true,
+    "all_173_records_same_software": true,
+    "current_index_and_evidence_hashes_match": true,
+    "all_three_compact_scopes_audited": true,
+    "original_report_cost_section_preserved_verbatim": true,
+    "full_semantic_and_quality_acceptance": false,
+    "real_candidate_comparison_or_replay": false,
+    "committed_or_pushed": false
+  }
 }

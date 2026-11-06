@@ -17,6 +17,54 @@ _PP = re.compile(r'\b(?:subject\s+to|in\s+comparison\s+with|because\s+of|in\s+or
 _TEMPORAL = re.compile(r'(?:(?:the\s+)?(?:year|period|quarter|month)\s+)?(?:\d{4}(?:[-–]\d{4})?|'
                        r'(?:January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{4})$', re.I)
 _NOMINAL_PP_FRAMES = {'in': {'investment', 'investments', 'interest', 'interests', 'stake', 'stakes', 'participation', 'membership'}}
+# Bounded attributive categories and explicitly recognized noun compounds.
+# A final word alone never licenses shared-head reconstruction.
+_ATTRIBUTIVE = {'financial', 'daily-life', 'digital', 'physical', 'online', 'offline', 'commercial', 'industrial',
+                'domestic', 'international', 'public', 'private', 'retail', 'corporate', 'technical',
+                'operational', 'educational', 'medical', 'urban', 'rural', 'regional', 'national'}
+_COMPOUNDS = {('service', head) for head in ('platform', 'platforms', 'system', 'systems', 'network', 'networks', 'provider', 'providers')}
+_SHARED_HEADS = {'platform', 'platforms', 'system', 'systems', 'services', 'products'}
+_COMMON_MODIFIERS = {'one-stop', 'integrated', 'new', 'core', 'global', 'secure', 'mobile'}
+_NOMINAL_BENEFICIARY_HEADS = {'platform', 'platforms', 'service', 'services', 'tool', 'tools', 'product', 'products'}
+
+
+def shared_modifier_phrase(reader, start, end, *, depth=0):
+    """One shared nominal head after two explicitly attributive categories."""
+    raw = reader.syntax[start:end]
+    joins = list(re.finditer(r'\s+(and|or)\s+', raw, re.I))
+    if len(joins) != 1 or ',' in raw:
+        return None
+    join = joins[0]
+    left = nominal_phrase(reader, start, start + join.start(), depth=depth + 1, coordinated=False)
+    if left['head'].lower() not in _ATTRIBUTIVE:
+        return None
+    lo, hi = reader.trim(start + join.end(), end)
+    words = list(_WORD.finditer(reader.syntax[lo:hi]))
+    if words and words[0][0].lower() in _DETERMINERS:
+        _unknown('narrative_shared_head_ellipsis_unresolved', span=[start, end])
+    pair = tuple(word[0].lower() for word in words[-2:])
+    compound = pair in _COMPOUNDS
+    head_length = 2 if compound else 1
+    if len(words) != head_length + 1 or words[0][0].lower() not in _ATTRIBUTIVE:
+        _unknown('narrative_shared_nominal_head_unresolved', span=[start, end])
+    if not compound and words[-1][0].lower() not in _SHARED_HEADS:
+        _unknown('narrative_shared_nominal_head_unresolved', span=[start, end])
+    if any(modifier.lower() not in _COMMON_MODIFIERS for modifier in left['modifiers']):
+        _unknown('narrative_shared_modifier_scope_unresolved', span=[start, end])
+    first_span, second_span = list(left['head_span']), [lo + words[0].start(), lo + words[0].end()]
+    left.update(head=reader.text[lo + words[-1].start():lo + words[-1].end()],
+                head_span=[lo + words[-1].start(), lo + words[-1].end()], span=[start, end],
+                coordination={'kind': 'coordination', 'operator': join[1].lower(), 'mode': 'nominal_modifiers',
+                    'children': [{'kind': 'nominal_modifier', 'text': reader.text[slice(*span)],
+                                  'role': 'attributive', 'span': span} for span in (first_span, second_span)],
+                    'operator_spans': [[start + join.start(1), start + join.end(1)]],
+                    'span': [first_span[0], second_span[1]]})
+    if compound:
+        left['compound'] = {'kind': 'nominal_compound', 'modifier': reader.text[lo + words[-2].start():lo + words[-2].end()],
+            'modifier_span': [lo + words[-2].start(), lo + words[-2].end()], 'head': left['head'],
+            'head_span': list(left['head_span']), 'relation': 'classification',
+            'span': [lo + words[-2].start(), lo + words[-1].end()]}
+    return left
 
 
 def _unknown(reason, *, span=None):
@@ -40,7 +88,7 @@ def nominal_phrase(reader, start, end, *, depth=0, coordinated=True):
         return {'kind': 'noun_phrase', 'head': text[start:end], 'head_span': [start, end],
                 'determiner': None, 'quantifier': None, 'modifiers': [],
                 'prepositional_complements': [], 'coordination': None, 'span': [start, end]}
-    of = re.search(r'\b(?:of|in)\b', raw, re.I)
+    of = re.search(r'\b(?:of|in|for)\b', raw, re.I)
     if of:
         marker_start, marker_end = start + of.start(), start + of.end()
         base = nominal_phrase(reader, start, marker_start, depth=depth + 1)
@@ -49,17 +97,22 @@ def nominal_phrase(reader, start, end, *, depth=0, coordinated=True):
             # coordinated nominal. No source syntactic cue settles that here.
             _unknown('narrative_nominal_shared_complement_attachment_unresolved')
         preposition = text[marker_start:marker_end].lower()
-        if preposition != 'of' and base['head'].lower() not in _NOMINAL_PP_FRAMES.get(preposition, set()):
+        nominal_beneficiary = (preposition == 'for' and base['head'].lower() in _NOMINAL_BENEFICIARY_HEADS
+                               and re.search(r'\b(?:customers?|clients?|users?|beneficiaries?)$', text[marker_end:end].strip(), re.I))
+        if preposition != 'of' and not nominal_beneficiary and base['head'].lower() not in _NOMINAL_PP_FRAMES.get(preposition, set()):
             _unknown('narrative_nominal_preposition_attachment_unresolved')
         complement = nominal_phrase(reader, marker_end, end, depth=depth + 1)
         base['prepositional_complements'].append({'kind': 'prepositional_complement', 'preposition': text[marker_start:marker_end],
-            'semantic_role': 'complement', 'attachment': {'kind': 'nominal', 'head': base['head']},
+            'semantic_role': 'intended_beneficiary' if nominal_beneficiary else 'complement', 'attachment': {'kind': 'nominal', 'head': base['head']},
             'head_span': list(base['head_span']), 'preposition_span': [marker_start, marker_end],
             'complement': complement, 'complement_span': list(complement['span']), 'span': [marker_start, end]})
         base['span'] = [start, end]
         return base
     joins = list(re.finditer(r'\s+(and|or)\s+', raw, re.I))
     if joins:
+        shared = shared_modifier_phrase(reader, start, end, depth=depth)
+        if shared is not None:
+            return shared
         operators = {match[1].lower() for match in joins}
         if len(operators) != 1:
             _unknown('narrative_mixed_nominal_coordination_unresolved')
@@ -150,6 +203,14 @@ def nominal_phrase(reader, start, end, *, depth=0, coordinated=True):
     if determiner is not None:
         result['determiner_source'] = reader.source_at(start + words[0].start(), start + words[0].end())
     result['modifier_sources'] = [reader.source_at(start + word.start(), start + word.end()) for word in words[cursor:-1]]
+    if len(words) - cursor >= 2 and tuple(word[0].lower() for word in words[-2:]) in _COMPOUNDS:
+        modifier = words[-2]
+        result['modifiers'].pop()
+        result['modifier_sources'].pop()
+        result['compound'] = {'kind': 'nominal_compound', 'modifier': text[start + modifier.start():start + modifier.end()],
+            'modifier_span': [start + modifier.start(), start + modifier.end()], 'head': result['head'],
+            'head_span': list(result['head_span']), 'relation': 'classification',
+            'span': [start + modifier.start(), start + head.end()]}
     return result
 
 
@@ -161,7 +222,7 @@ def _role(preposition, attribute, complement):
         return 'restriction'
     if prep == 'within' and re.fullmatch(r'(?:the\s+)?(?:approved|permitted|specified)\s+(?:range|limit|limits)', complement.strip(), re.I):
         return 'restriction'
-    if prep == 'for' and attribute in {'provide', 'offer', 'deliver', 'serve', 'develop'} and re.search(r'\b(?:customers?|clients?|users?|beneficiaries?)$', complement.strip(), re.I):
+    if prep == 'for' and attribute in {'provide', 'offer', 'deliver', 'serve', 'develop', 'build'} and re.search(r'\b(?:customers?|clients?|users?|beneficiaries?)$', complement.strip(), re.I):
         return 'beneficiary'
     if prep == 'to' and attribute in {'provide', 'deliver', 'pay', 'sell', 'offer'}:
         return 'recipient'
@@ -247,8 +308,10 @@ def validate_nominal_sources(graph, nodes, literal):
             raise ValueError('nominal PP attachment owner differs from actual head')
         if expected_kind == 'nominal':
             prep = node.get('preposition', '').lower()
-            if (node.get('semantic_role') != 'complement' or prep != 'of'
-                    and owner.get('head', '').lower() not in _NOMINAL_PP_FRAMES.get(prep, set())):
+            beneficiary = (prep == 'for' and owner.get('head', '').lower() in _NOMINAL_BENEFICIARY_HEADS
+                           and re.search(r'\b(?:customers?|clients?|users?|beneficiaries?)$', literal(node['complement_source'], 'nominal beneficiary').strip(), re.I))
+            if (node.get('semantic_role') != ('intended_beneficiary' if beneficiary else 'complement') or prep != 'of'
+                    and not beneficiary and owner.get('head', '').lower() not in _NOMINAL_PP_FRAMES.get(prep, set())):
                 raise ValueError('nominal PP relation does not match OF attachment')
         else:
             complement = literal(node['complement_source'], 'PP complement')
@@ -281,6 +344,26 @@ def validate_nominal_sources(graph, nodes, literal):
         if not isinstance(node, dict):
             return
         kind = node.get('kind')
+        if kind == 'nominal_modifier':
+            cut(node.get('source'), node.get('text'), 'coordinated attributive modifier')
+            if node.get('role') != 'attributive' or node.get('text', '').lower() not in _ATTRIBUTIVE:
+                raise ValueError('shared nominal modifier has no attributive category evidence')
+            return
+        if kind == 'nominal_compound':
+            cut(node.get('head_source'), node.get('head'), 'compound head')
+            cut(node.get('modifier_source'), node.get('modifier'), 'compound modifier')
+            if (node.get('relation') != 'classification' or (node.get('modifier', '').lower(), node.get('head', '').lower()) not in _COMPOUNDS
+                    or not isinstance(owner, dict) or owner.get('head') != node.get('head')
+                    or owner.get('head_source') != node.get('head_source')):
+                raise ValueError('compound relation lacks its actual nominal head')
+            raw = literal(node.get('source'), 'nominal compound')
+            if not isinstance(raw, str) or not re.fullmatch(re.escape(node['modifier']) + r'\s+' + re.escape(node['head']), raw):
+                raise ValueError('compound source does not preserve its printed noun order')
+            if 'relations' in graph and not any(edge.get('type') == 'narrative_nominal_compound_scope'
+                    and edge.get('binding_evidence', {}).get('compound_logic') == node
+                    for edge in [*graph.get('relations', []), *graph.get('operand_relations', [])]):
+                raise ValueError('compound source has no classification relation')
+            return
         if kind == 'prepositional_complement':
             pp(node, owner or {})
             return
@@ -298,7 +381,11 @@ def validate_nominal_sources(graph, nodes, literal):
                 raise ValueError('nominal modifier sources are incomplete')
             for modifier, source in zip(modifiers, origins, strict=True):
                 cut(source, modifier, 'nominal modifier')
-            for child in [node.get('quantifier'), node.get('coordination'), *node.get('prepositional_complements', [])]:
+            coordination = node.get('coordination')
+            if isinstance(coordination, dict) and coordination.get('mode') == 'nominal_modifiers':
+                if not node.get('head') or any(child.get('kind') != 'nominal_modifier' for child in node['coordination'].get('children', [])):
+                    raise ValueError('shared modifiers have no single nominal head')
+            for child in [node.get('quantifier'), node.get('coordination'), node.get('compound'), *node.get('prepositional_complements', [])]:
                 walk(child, node)
             # A preserved raw object string is not evidence that its nominal
             # modifiers, quantity or attachment were interpreted. Every
@@ -306,6 +393,8 @@ def validate_nominal_sources(graph, nodes, literal):
             pieces = [node.get('head_source'), node.get('determiner_source'), *origins]
             if node.get('quantifier'):
                 pieces.append(node['quantifier'].get('source'))
+            if node.get('compound'):
+                pieces.append(node['compound'].get('source'))
             for relation in node.get('prepositional_complements', []):
                 pieces.append(relation.get('source'))
             coordination = node.get('coordination')

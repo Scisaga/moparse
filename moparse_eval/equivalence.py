@@ -123,6 +123,9 @@ def decide_equivalence(required: Any, actual: Any, dimension: str, *, context: d
                 if key == "unit":
                     first = {"unit": first, "currency": required.get("currency"), "quantity_role": required.get("quantity_role")}
                     second = {"unit": second, "currency": actual.get("currency"), "quantity_role": actual.get("quantity_role")}
+                elif key == "text" and child_dimension == "unit":
+                    first = {"unit": first, "currency": required.get("currency")}
+                    second = {"unit": second, "currency": actual.get("currency")}
                 decisions[key] = decide_equivalence(first, second, child_dimension, context=context, evidence=evidence)
                 if key not in required or key not in actual:
                     decisions[key].update(equivalent=False, status="mismatch", conflicts=["missing_structural_field"])

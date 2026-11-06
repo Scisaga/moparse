@@ -38,6 +38,10 @@
 
 `nominal_syntax.py`为中英文共享AST提供有界名词短语、内部AND/OR、数量词、OF补足和谓词介词附着；`narrative_requirements.py`保留动作/宾语并列、条件、否定、模态、时态及组合路径。未知附着和否定AND继续未决。`three_layer.py`按独立句分派中英文读取器，保留双方已读事实及局部pending；只有完整、角色及来源一致的解释才能给既有字段添加比较AST，不能覆盖不同解释或丢失字段及命名父记录身份。
 
+`compact_requirements.py`使用单一有序columns清单承接四列、五列及多个变化列，日期基础、列角色和局部单位分别保留。`source_obligations.py`按原声明和记录slot独立审计，`represented_feature_comparison.py`在最终比较和报告重放时复核自己的列、数值及来源，删除依赖标签不能绕过。JSON/XML继续来自同一图，不维护单变化列兼容入口。未印单位保持未声明，缺少已声明的记录值及未知额外列仍未决。
+
+`cjk_measurement_requirements.py`增加quantity_assertion，将实现/为的已发生计量与quantity_comparison阈值、year_on_year_change相对变化区分。`measurement_evidence.py`保存币种前置和数量级后置的独立来源，不另建数量换算；B/L复用有理数精确等价，T保留原字。紧邻同比随当前指标更新，句界及未知分句终止承接，后句无年份时不借前句。名词结构增加有限nominal_modifiers协调和nominal_compound组合，保留一个共同head及其明确来源；未知共享head仍未决。具体解释边界由[计分合同](../benchmark/evaluation-tasks.md#three-layer-evaluation)维护。
+
 `requirement_ast.py`提供递归四态比较与不使用答案值的语句检索。`semantic_layer_comparison.py`将实际执行的AST判定绑定到既有B/L票，不新增或减少分母；特征注册表、实际AST及来源证据缺一不可。B比较完整值及组合语义，L独立检查关系、角色、作用域和附着，直接断言的标量答案另由B比较。共享数量及期间等价规则继续由`equivalence.py`维护。`expected_report.py`重放原有检索及递归证明，拒绝删节点、伪造来源或删除阻断。受控比较通过不代表全部真实expected或候选表达已经获得支持。
 
 `source_requirements.py`分离有证据的多字段序列及声明为正文的字段值，不拆开单个合法名称、时间、URL或依赖schema的数值tuple。Description中的独立SVO分别解释，原标签仅限定其实际正文；同名相邻字段不能互借主体、谓词或对象来源。`field_sequence_requirements.py`区分有来源的属性、主体列、期间选择器及未知前缀。`period_evidence.py`保留完整日期及期间粒度，不以年份替代完整财政日期。未知分句不能借同段另一个已读字段获得完整状态。
@@ -78,6 +82,8 @@
   tests/unit/test_prose_multi_clause_contract.py \
   tests/unit/test_entity_requirements.py tests/unit/test_series_requirements.py \
   tests/unit/test_measurement_evidence.py tests/unit/test_measurement_reader_drift.py \
+  tests/unit/test_compact_multichange_production.py tests/unit/test_cjk_assertion_production.py \
+  tests/unit/test_shared_modifier_production.py \
   tests/unit/test_toc_evidence.py tests/unit/test_toc_parentage_contract.py tests/unit/test_business_correspondence.py \
   tests/unit/test_business_label_equivalence.py tests/unit/test_expected_syntax_selection.py \
   tests/unit/test_moparse_eval_scoring_freeze.py tests/unit/test_moparse_eval_report_resources.py \

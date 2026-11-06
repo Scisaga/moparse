@@ -39,11 +39,11 @@ def test_declared_columns_are_four_measurements_and_one_comparison():
     result = read_compact_schema(SCHEMA_TEXT, SCHEMA_SOURCE)
     actual = result["schema"]
     assert result["matched"] is True and result["blockers"] == []
-    assert [(item["period"], item["attribute"], item["unit"]) for item in actual["columns"]] == [
+    assert [(item["period"], item["attribute"], item["unit"]) for item in actual["columns"] if item["kind"] != "change"] == [
         ("2027年", "金額", "萬元"), ("2027年", "佔總收入比", "%"),
         ("2026年", "金額", "萬元"), ("2026年", "佔總收入比", "%"),
     ]
-    assert actual["change"]["attribute"] == "金額同比變動"
+    assert [item["attribute"] for item in actual["columns"] if item["kind"] == "change"] == ["金額同比變動"]
     assert actual["periods"] == ["2027年", "2026年"]
     assert actual["source"] == SCHEMA_SOURCE
     assert result["text_projection_complete"] is True
@@ -56,7 +56,7 @@ def test_four_explicit_columns_do_not_require_an_unprinted_comparison_column():
         ("2027年", "金額", "人民幣千元"), ("2027年", "佔總收入比", "%"),
         ("2026年", "金額", "人民幣千元"), ("2026年", "佔總收入比", "%"),
     ]
-    assert result["schema"]["change"] is None
+    assert not any(column["kind"] == "change" for column in result["schema"]["columns"])
     assert result["schema"]["qualifier_sources"]["period_basis"] == {**SCHEMA_SOURCE, "text_span": [0, 11]}
     assert result["text_projection_complete"] is True
 
@@ -85,7 +85,7 @@ def test_a_four_column_record_keeps_the_fixed_measurements_group_axis_and_shared
 def test_four_columns_without_comparison_have_no_implied_descending_year_direction():
     text = "列说明：2026年金額（萬元）、佔總收入比（%）；2027年金額（萬元）、佔總收入比（%）。"
     result = read_compact_schema(text, SCHEMA_SOURCE)
-    assert result["blockers"] == [] and result["schema"]["change"] is None
+    assert result["blockers"] == [] and not any(column["kind"] == "change" for column in result["schema"]["columns"])
     assert result["schema"]["periods"] == ["2026年", "2027年"]
     row = read_compact_requirements("Delta：2026年11、55%；2027年17、60%", ROW_SOURCE, schema=result["schema"])
     assert row["blockers"] == []
