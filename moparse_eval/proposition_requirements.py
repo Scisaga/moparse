@@ -157,6 +157,16 @@ def read_propositions(text: str, source: dict[str, Any], *, scope=(), subject: s
         if re.search(r"\b(?:said|announced|believe|believes|reported)\b|宣布|表示|认为|認為", prefix, re.I):
             _pending(result, text, source, sentence_start, sentence_end, "proposition_reported_scope_unresolved", conditions=conditions)
             continue
+        if not cjk:
+            from .narrative_requirements import _ACTIONS, _Reader
+
+            syntax = _Reader(text, source, scope).syntax
+            if any(match[1].lower() in _ACTIONS for match in re.finditer(r"\bto\s+([A-Za-z]+)\b", syntax[verb.end():body_end], re.I)):
+                # This finite reader has no control/attachment grammar. A
+                # separate owning Narrative AST must interpret the infinitive
+                # instead of distributing its words as ordinary AND objects.
+                _pending(result, text, source, sentence_start, sentence_end, "proposition_infinitival_scope_unresolved")
+                continue
         q: dict[str, Any] = {}
         q_sources = {}
         if year_prefix:
@@ -226,6 +236,15 @@ def read_propositions(text: str, source: dict[str, Any], *, scope=(), subject: s
                     continue
             object_spans = [(a, b)]
             joins = list(_COORDINATOR.finditer(text, a, b))
+            nominal_of = re.search(r"\bof\b", text[a:b], re.I) if not cjk else None
+            if nominal_of is not None and any(a + nominal_of.start() < join.start() for join in joins):
+                # OF introduces a nominal complement. Its internal AND/OR
+                # cannot become additional direct objects of this predicate.
+                # This finite reader has no NP attachment tree; the bounded
+                # nominal reader must own the full source or retain pending.
+                _pending(result, text, source, sentence_start, sentence_end,
+                         "proposition_nominal_coordination_attachment_unresolved")
+                continue
             if joins and len(predicates) == 1 and not any(_VERB.search(text[m.end():b]) for m in joins):
                 object_spans = []
                 cursor = a
@@ -236,6 +255,11 @@ def read_propositions(text: str, source: dict[str, Any], *, scope=(), subject: s
             action = current[0] if cjk else VERBS[current[0].lower()]
             object_fact_start = len(result["facts"])
             for object_start, object_end in object_spans:
+                if not cjk and re.match(r"(?:do|does|did|is|are|was|were|may|must|shall|will|can)\s+(?:not\s+)?[A-Za-z]+\b",
+                                        text[object_start:object_end], re.I):
+                    _pending(result, text, source, object_start, object_end,
+                             "proposition_embedded_auxiliary_clause_unresolved")
+                    continue
                 own_q = copy.deepcopy(q)
                 own_q_sources = copy.deepcopy(q_sources)
                 if not modal and not cjk:
@@ -269,7 +293,10 @@ def read_propositions(text: str, source: dict[str, Any], *, scope=(), subject: s
                     "subject": printed_subject, "attribute": action}, "right": {
                     "subject": printed_subject, "attribute": action, "scope": list(scope),
                     "qualifiers": copy.deepcopy(own_q), "identity_facets": {}},
-                    "source": copy.deepcopy(fact["source"]), "rule_id": "explicit_proposition_binding"})
+                    "source": copy.deepcopy(fact["source"]), "rule_id": "explicit_proposition_binding",
+                    "binding_evidence": {name: copy.deepcopy(fact[key]) for name, key in (
+                        ("statement_source", "source"), ("subject_source", "subject_source"),
+                        ("predicate_source", "predicate_source"), ("object_source", "object_source"))}})
                 result["relations"].extend(edge for edge in prose_role_relations(fact)
                                            if edge["type"] == "qualifier_scope")
                 endpoint = {"subject": printed_subject, "action": action, "scope": list(scope)}

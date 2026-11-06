@@ -63,7 +63,7 @@ def test_single_printed_negation_and_a_reporter_keep_their_actual_scopes():
 @pytest.mark.parametrize("text", [
     "Kappa is acquired by Lumen.", "Lumen is approved.", "Lumen has florped cargo.",
     "Lumen is florping cargo.", "Lumen had acquired shares.", "Lumen was storing records.",
-    "Lumen is making investments in research.", "Lumen has acquired shares to expand sales.",
+    "Lumen has acquired shares to expand sales.",
     "Lumen is making tools which store records.", "Lumen has acquired shares and approving Budget.",
 ])
 def test_passive_unknown_forms_and_unproved_embedded_scope_are_whole_source_unknowns(text):
@@ -100,7 +100,7 @@ def test_public_source_graph_keeps_aspect_sources_and_declares_the_unvalidated_m
     validate_requirement_graph(graph)
 
 
-@pytest.mark.parametrize("raw", ["Lumen is making investments in research.", "Kappa is acquired by Lumen.",
+@pytest.mark.parametrize("raw", ["Kappa is acquired by Lumen.",
                                   "Lumen has florped cargo."])
 def test_public_source_graph_does_not_fall_back_to_an_opaque_have_or_be_answer(raw):
     material = source_graph(raw)

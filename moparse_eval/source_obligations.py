@@ -34,17 +34,16 @@ _PREDICATE = re.compile(
     r"投资|投資|增加|增长|增長|减少|減少|下降|组成部分|組成部分", re.I)
 _OPERATORS = re.compile(
     r"\b(?:only if|unless|except when|except if|except|if|not|never|cannot|shall|"
-    r"must|may|can|will|should|could|would|and|or|when|until|because|although|while|whereas|whether|"
+    r"must|may|can|will|should|could|would|and|or|but|when|until|because|although|while|whereas|whether|"
     r"once|whenever|provided that|in case|as long as|as soon as|despite|since)\b|"
     r"只有|如果|除非|不得|不能|不可以|必须|必須|应当|應當|可以|并且|並且|以及", re.I)
-# An unhandled post-predicate PP is a scope obligation, not more opaque
-# object text. This is a conservative closed-class boundary, not a new
-# interpreter for the relation. Quoted names and atomic metadata are masked
-# before it runs; actual admitted operator edges still have to prove scope.
+# A PP is an attachment obligation. Its preposition alone cannot determine
+# whether it is an argument, nominal complement or qualifier. The independent
+# scanner records that question; only a source-bound interpretation answers it.
 _POSTPREDICATE_SCOPE = re.compile(
-    r"\b(?:subject to|according to|as long as|as soon as|about|above|across|after|against|along|amid|among|around|"
+    r"\b(?:subject\s+to|according\s+to|in\s+comparison\s+with|in\s+order\s+to|because\s+of|as long as|as soon as|about|above|across|after|against|along|amid|among|around|"
     r"at|before|behind|below|beneath|beside|between|beyond|by|despite|during|for|from|in|inside|into|near|off|"
-    r"on|onto|outside|over|past|pending|per|regarding|since|through|throughout|till|toward|towards|under|"
+    r"of|to|on|onto|outside|over|past|pending|per|regarding|since|through|throughout|till|toward|towards|under|"
     r"underneath|until|upon|via|versus|with|within|without)\b", re.I)
 _DECLARATION = re.compile(r"(?:Units?|Currency|Period|Year|单位|單位|币种|幣種|期间|期間|年度)\s*[:：=]\s*[^。.!?！？;；]+[。.]?", re.I)
 _SCHEMA_CONTROL = re.compile(r"Attribute|Property|Field|Value|Metric|属性|屬性|字段|值|指标|指標|项目|項目", re.I)
@@ -67,6 +66,45 @@ _LEGAL_NAME_CONTINUATION = re.compile(
 _NAVIGATION = re.compile(r"\s*(?:(?:[^:：=\n]{1,160})[:：=]\s*)?(?:"
     r"(?:See(?: also)?|Refer to)\s+(?:[\"“][^\"”]+[\"”]|Note\s+\d+)(?:\s+for more information)?[.]?"
     r"|(?:参见|參見|详见|詳見)\s*(?:《[^》]+》|[\"“][^\"”]+[\"”]|(?:附注|附註)\s*\d+)[。.]?)\s*", re.I)
+
+SEMANTIC_OBLIGATION_TYPES = frozenset({
+    "assertive_proposition", "structured_field", "logical_relation", "qualifier",
+    "nominal_label", "enumeration_member", "navigation_reference",
+    "document_composition", "non_assertive_content", "unknown",
+})
+
+
+def _fragment_contract(fragment, entry, target, non_applicability_rule, navigation):
+    """Classify source syntax without taking a reader's success as evidence.
+
+    A predicate hit is positive assertion evidence, never a completeness test.
+    A lack of hits therefore leaves business-looking prose unknown. Explicit
+    headings, table cells, fields and list membership have their own contracts.
+    """
+    if navigation:
+        return "navigation_reference", ["owner", "target"]
+    if non_applicability_rule == "printed_qualifier_declaration":
+        return "qualifier", ["dimension", "value", "scope"]
+    if non_applicability_rule:
+        return "nominal_label", ["label", "structural_owner"]
+    field = re.match(r"\s*(?P<label>[^:：=\n]{1,160})[:：=]\s*(?P<body>\S.*)", fragment, re.S)
+    if field and not re.fullmatch(r"Description|Statement|Narrative|Policy|Requirement|描述|说明|說明|陈述|陳述|政策|要求",
+                                  field["label"].strip(), re.I):
+        return "structured_field", ["label", "value", "binding"]
+    if re.fullmatch(r"\s*(?:19|20)\d{2}年\s*[，,]\s*[^。！？!?\n]+?(?:包括|包含|如下)\s*[:：]\s*", fragment) or re.fullmatch(
+            r"\s*(?:In\s+)?(?:19|20)\d{2}\s*,\s*[^:;!?]+(?:'s|’s)\s+[^:;!?]+\s+includes?\s*:\s*", fragment, re.I):
+        return "logical_relation", ["subject", "period", "collection", "operator", "member_scope"]
+    if _PREDICATE.search(_syntax_mask(fragment)):
+        if re.search(r"组成部分|組成部分|\bpart of\b", fragment, re.I):
+            return "document_composition", ["document", "part", "direction"]
+        return "assertive_proposition", ["subject", "predicate", "object_or_complement", "scope"]
+    if entry.get("cell"):
+        return "structured_field", ["cell_value", "row_or_column_binding"]
+    if target.get("list_span") or entry.get("parents"):
+        return "enumeration_member", ["member", "group", "operator"]
+    # Bare nominal business content still requires interpretation. It is not
+    # a non-assertion exemption merely because a finite verb was not found.
+    return "unknown", ["semantic_interpretation"]
 
 
 def source_selection(expected: dict[str, Any]) -> dict[str, Any]:
@@ -134,12 +172,21 @@ def build_source_obligation_inventory(expected: dict[str, Any]) -> dict[str, Any
 
     raw_inventory = plan_authorized_source_inventory(expected.get("authorized_raw_segments"), expected["targets"])
     sources, obligations = [], []
+    obligation_keys = set()
 
     def add(kind, entry, start, end, layers, rule, **detail):
-        obligations.append({"id": f"obligation:{len(obligations)}", "kind": kind,
+        semantic_type = detail.pop("semantic_type", "logical_relation" if kind == "relation"
+            else "qualifier" if kind == "qualifier" else "unknown")
+        key = (kind, entry["id"], start, end, semantic_type, rule,
+               detail.get("binding_role"), json.dumps(detail.get("required_scope"), sort_keys=True, ensure_ascii=False))
+        if key in obligation_keys:
+            return
+        obligation_keys.add(key)
+        obligations.append({"id": f"obligation:{len(obligations)}", "kind": kind, "semantic_type": semantic_type,
             "source_id": entry["id"], "source": _origin(entry["source"], start, end),
             "text": entry["text"][start:end], "layers": list(layers),
-            "interpretation_rule": rule, "source_basis": "authorized_expected_literal_and_syntax", **detail})
+            "interpretation_rule": rule, "expected_roles": detail.pop("expected_roles", []),
+            "source_basis": "authorized_expected_literal_and_syntax", **detail})
 
     for target in expected.get("targets", []):
         reference = copy.deepcopy(target["reference"])
@@ -200,20 +247,24 @@ def build_source_obligation_inventory(expected: dict[str, Any]) -> dict[str, Any
                 navigation = bool(_NAVIGATION.fullmatch(fragment))
                 if navigation:
                     na = "printed_navigation_has_no_independent_business_assertion"
-                add("proposition", entry, start, end, ("B",) if navigation else ("B", "L"), "each_printed_semantic_fragment",
+                semantic_type, roles = _fragment_contract(fragment, entry, target, na, navigation)
+                add("proposition" if semantic_type in {"assertive_proposition", "document_composition"} else "semantic_content",
+                    entry, start, end, ("B",) if navigation else ("B", "L"), "each_printed_semantic_fragment",
+                    semantic_type=semantic_type, expected_roles=roles,
                     **({"non_applicability_rule": na} if na else {}))
                 if navigation:
                     add("relation", entry, start, end, ("L",), "printed_navigation_requires_its_actual_owner_and_target",
                         binding_role="navigation")
-                if not na:
-                    add("relation", entry, start, end, ("L",), "each_semantic_fragment_requires_its_own_binding",
-                        binding_role="semantic_binding")
                 field = re.match(r"\s*([^:：=\n]{1,160})\s*[:：=]\s*\S", fragment)
-                if not na and field and not re.fullmatch(
+                scalar_field = bool(not na and field and not re.fullmatch(
                         r"Description|Statement|Narrative|Policy|Requirement|描述|说明|說明|陈述|陳述|政策|要求", field[1].strip(), re.I) and not re.match(
-                            r"Year Ended\b|As of\b|As at\b|For the year\b|截至|年度", field[1].strip(), re.I):
+                            r"Year Ended\b|As of\b|As at\b|For the year\b|截至|年度", field[1].strip(), re.I))
+                if scalar_field:
                     add("relation", entry, start, end, ("L",), "printed_field_requires_label_value_binding",
                         binding_role="field_binding")
+                elif not na:
+                    add("relation", entry, start, end, ("L",), "each_semantic_fragment_requires_its_own_binding",
+                        binding_role="semantic_binding")
             mask = _semantic_syntax(text)
             for match in _PREDICATE.finditer(mask):
                 add("relation", entry, *match.span(), ("B", "L"), "printed_predicate_requires_bound_roles")
@@ -225,11 +276,25 @@ def build_source_obligation_inventory(expected: dict[str, Any]) -> dict[str, Any
                 predicates = list(_PREDICATE.finditer(segment))
                 for match in _POSTPREDICATE_SCOPE.finditer(segment):
                     bounds = (start + match.start(), start + match.end())
+                    if match[0].casefold() == "at" and re.match(r"\s+(?:least|most)\b", segment[match.end():], re.I):
+                        continue  # A threshold operator is not a PP head.
                     if bounds not in operator_spans and any(predicate.end() <= match.start() for predicate in predicates):
-                        add("qualifier", entry, *bounds, ("B", "L"), "uninterpreted_postpredicate_scope_requires_its_own_relation")
+                        ambiguous_to = re.sub(r"\s+", " ", match[0].casefold()) in {"to", "in order to"}
+                        add("relation", entry, *bounds, ("B", "L"), "printed_preposition_requires_source_bound_attachment",
+                            semantic_type="logical_relation", binding_role="attachment" if ambiguous_to else "prepositional_attachment",
+                            **({"attachment_candidates": ["prepositional_complement", "infinitival_marker"]} if ambiguous_to else {}),
+                            statement_source=_origin(entry["source"], start, end),
+                            statement_text=text[start:end],
+                            expected_roles=["preposition", "head", "complement", "attachment", "semantic_role"])
+                for match in re.finditer(r"\b(?:at\s+least|at\s+most|more\s+than|less\s+than)\s+\d+(?:\.\d+)?%?", segment, re.I):
+                    add("relation", entry, start + match.start(), start + match.end(), ("B", "L"),
+                        "printed_quantity_comparison_requires_bound_set_and_boundary", binding_role="quantity_comparison",
+                        expected_roles=["operator", "quantity", "unit", "set", "scope"],
+                        statement_source=_origin(entry["source"], start, end), statement_text=text[start:end])
         for declaration in target.get("outside_selection_context", []):
             obligations.append({"id": f"obligation:{len(obligations)}", "kind": "authorization_dependency",
                 "source_id": None, "source": copy.deepcopy(reference), "text": declaration.get("text", ""),
+                "semantic_type": "unknown", "expected_roles": ["authorized_scope_resolution"],
                 "layers": ["L", "B"], "interpretation_rule": "retain_external_scope_dependency",
                 "source_basis": "existing_authorized_selection_declaration", "declaration": copy.deepcopy(declaration)})
     # Raw heading ownership survives an upstream omission of selected heading
@@ -289,6 +354,28 @@ def _same_statement(outer, inner):
     return (other is not None and span[0] <= other[0] <= other[1] <= span[1]) if span else True
 
 
+def _fragment_owns_fact(obligation, fact):
+    outer = obligation.get("statement_source", obligation["source"])
+    statement = fact.get("statement_source", fact.get("source", {}))
+    if _same_statement(outer, statement):
+        return True
+    if not fact.get("predicate") and _same_statement(outer, fact.get("attribute_source", {})):
+        # A printed scalar label may govern a following dated series. Literal
+        # label/delimiter ownership is established by _role_evidence first;
+        # the fact and its edge still require their own identity and source.
+        return True
+    # Joined prose retains explicit original fragments. An obligation on one
+    # fragment may consume the same joined assertion through that exact bridge.
+    if any(_same_source(outer, part.get("source", {}))
+           and part.get("source", {}).get("lines") == outer.get("lines")
+           for part in statement.get("joined_fragments", [])):
+        return True
+    if outer.get("cell") is not None:
+        return any(_same_source(outer, fact.get(name, {}))
+                   for name in ("attribute_source", "value_source", "subject_source"))
+    return False
+
+
 def _range(entry, source):
     if not isinstance(source, dict) or not _same_source(entry["source"], source):
         return None
@@ -335,6 +422,16 @@ def _role_evidence(entry, facts):
             raw_predicate = entry["text"][predicate[0]:predicate[1]].strip().casefold()
             meaning = _ACTION_MEANING.get(raw_predicate, raw_predicate)
             attribute = fact.get("attribute", "").casefold()
+            if attribute != meaning and fact.get("qualifiers", {}).get("aspect") in {"perfect", "progressive"}:
+                # Source obligations remain independent of reader coverage.
+                # Auditing an already interpreted verb may reuse the owning
+                # lossless inflection vocabulary, without guessing a stem or
+                # converting an absent predicate into a non-applicable item.
+                from .active_aspect_requirements import active_forms
+
+                perfect, progressive = active_forms()
+                forms = perfect if fact["qualifiers"]["aspect"] == "perfect" else progressive
+                meaning = forms.get(raw_predicate, meaning)
             composition = (attribute in {"组成部分", "組成部分", "part of"}
                            and raw_predicate in {"为", "為", "乃", "is", "are"})
             if attribute != meaning and not composition:
@@ -412,24 +509,354 @@ def _residue(text, span, evidence, *, literal=False):
             and not text[index].isspace() and (literal or text[index] not in _PUNCTUATION)]
 
 
+def validate_relation_binding(obligation, fact, relation):
+    """Verify an edge against its particular fact, never entry-wide role hits.
+
+    Source location, both endpoints and direction are independent checks. A
+    positive lexical overlap is not enough to bind an edge. The structured
+    result intentionally distinguishes missing proof from explicit conflicts.
+    """
+    proof, conflicts, missing, unresolved = [], [], [], []
+    kind = relation.get("type")
+    if not kind:
+        missing.append("relation_type")
+    role = (obligation or {}).get("binding_role")
+    if role in {"semantic_binding", "field_binding"} and kind is not None and kind != "field_binding":
+        conflicts.append({"dimension": "relation_type", "required": "field_binding", "actual": kind})
+    if role == "prepositional_attachment" and kind is not None and kind != "narrative_prepositional_attachment":
+        conflicts.append({"dimension": "relation_type", "required": "narrative_prepositional_attachment", "actual": kind})
+    if role == "attachment" and kind is not None and kind not in {
+            "narrative_prepositional_attachment", "narrative_purpose_scope", "narrative_controlled_infinitive_scope"}:
+        conflicts.append({"dimension": "relation_type", "required": "source_bound_prepositional_or_infinitival_attachment", "actual": kind})
+    ident = relation.get("fact_id")
+    if ident is not None and ident != fact.get("id"):
+        conflicts.append({"dimension": "fact_id", "required": fact.get("id"), "actual": ident})
+
+    endpoint = relation.get("right")
+    if not isinstance(endpoint, dict):
+        missing.append("right_endpoint")
+        endpoint = {}
+    for name in ("subject", "attribute"):
+        actual = endpoint.get(name, endpoint.get("action") if name == "attribute" else None)
+        if actual is None:
+            missing.append("right_" + name)
+        elif actual != fact.get(name):
+            conflicts.append({"dimension": "right_" + name, "required": fact.get(name), "actual": actual})
+        else:
+            proof.append({"dimension": "right_" + name, "value": actual})
+    for name in ("object", "value"):
+        if name in endpoint and endpoint[name] != fact.get(name, {} if name in {"qualifiers", "identity_facets"} else [] if name == "scope" else None):
+            conflicts.append({"dimension": "right_" + name, "required": fact.get(name), "actual": endpoint[name]})
+    if "scope" in endpoint:
+        from .business_correspondence import logical_context
+
+        # Row groups are the same explicit context whether stored under scope
+        # or identity_facets. Use the owning shared position contract.
+        if logical_context(endpoint, lambda value: value) != logical_context(fact, lambda value: value):
+            conflicts.append({"dimension": "right_scope", "required": logical_context(fact, lambda value: value),
+                              "actual": logical_context(endpoint, lambda value: value)})
+    else:
+        missing.append("right_scope")
+    # Graph normalization may add implicit positive polarity/assertion context
+    # after a reader emitted its edge. Every explicit endpoint qualifier must
+    # still agree; source-printed qualifiers have separate scope obligations.
+    for name in ("qualifiers", "identity_facets"):
+        for dimension, value in endpoint.get(name, {}).items():
+            actual_value = fact.get(name, {}).get(dimension)
+            if name == "qualifiers" and dimension == "currency":
+                from .quantity import canonical_currency
+
+                equivalent = canonical_currency(value) is not None and canonical_currency(value) == canonical_currency(actual_value)
+            else:
+                equivalent = actual_value == value
+            if not equivalent:
+                conflicts.append({"dimension": "right_" + name + "." + dimension,
+                                  "required": fact.get(name, {}).get(dimension), "actual": value})
+
+    left = relation.get("left")
+    if not isinstance(left, dict):
+        missing.append("left_endpoint")
+        left = {}
+    if kind == "field_binding":
+        for name in ("subject", "attribute"):
+            if name not in left:
+                missing.append("left_" + name)
+            elif left[name] != fact.get(name):
+                conflicts.append({"dimension": "left_" + name, "required": fact.get(name), "actual": left.get(name)})
+            else:
+                proof.append({"dimension": "left_" + name, "value": left[name]})
+
+    binding = relation.get("binding_evidence", {})
+    statement = fact.get("statement_source", fact.get("source", {}))
+    own = binding.get("statement_source", relation.get("source", {}))
+    if not statement or not own:
+        missing.append("statement_source")
+    elif not _same_statement(statement, own):
+        conflicts.append({"dimension": "statement_source", "required": statement, "actual": own})
+    elif "statement_source" in binding and not _same_statement(own, statement):
+        conflicts.append({"dimension": "statement_scope", "required": statement, "actual": own})
+    elif "statement_source" not in binding and own != statement:
+        # A predicate-only edge needs an explicit statement bridge. A source
+        # span from a different local clause may not borrow the whole line.
+        unresolved.append("relation_has_no_exact_statement_bridge")
+    else:
+        proof.append({"dimension": "statement_source", "source": own})
+
+    if obligation and obligation.get("source"):
+        outer = obligation.get("statement_source", obligation["source"])
+        # Fragment obligations own all their facts. Token obligations instead
+        # own a role within the fact and are checked by their caller below.
+        if role in {"semantic_binding", "field_binding", "prepositional_attachment", "attachment"} and not _fragment_owns_fact(obligation, fact):
+            conflicts.append({"dimension": "obligation_statement", "required": outer, "actual": statement})
+    for name in (("subject_source", "predicate_source", "object_source", "attribute_source", "value_source")
+                 if kind == "field_binding" else ()):
+        if name in binding and name in fact and binding[name] != fact[name]:
+            conflicts.append({"dimension": name, "required": fact[name], "actual": binding[name]})
+    if kind == "field_binding" and fact.get("predicate"):
+        for name in ("subject_source", "predicate_source", "object_source"):
+            if name in fact and name not in binding:
+                missing.append(name)
+    if kind == "field_binding" and not fact.get("predicate") and ident is None:
+        missing.append("fact_id")
+
+    qualifiers = fact.get("qualifiers", {})
+    if kind == "qualifier_scope" and left.get("type") in qualifiers:
+        dimension, value = left["type"], left.get("text")
+        expected_value = qualifiers[dimension]
+        if dimension == "currency":
+            from .quantity import canonical_currency
+
+            agrees = canonical_currency(value) is not None and canonical_currency(value) == canonical_currency(expected_value)
+        else:
+            agrees = value == expected_value
+        if not agrees:
+            conflicts.append({"dimension": "qualifier_value", "required": expected_value, "actual": value})
+        origin = fact.get("qualifier_sources", {}).get(dimension) or fact.get("qualifier_provenance", {}).get(dimension, {}).get("source")
+        if isinstance(origin, dict):
+            bridges = [binding.get("qualifier_source", {}),
+                       *[header.get("source", {}) for header in binding.get("headers", [])]]
+            if relation.get("source") != origin and not any(_same_statement(bridge, origin) for bridge in bridges if bridge):
+                conflicts.append({"dimension": "qualifier_source", "required": origin, "actual": relation.get("source")})
+    if kind in {"condition_scope", "exception_scope"}:
+        dimension = "condition" if kind == "condition_scope" else "exception"
+        if qualifiers.get(dimension) != binding.get("qualifier_text"):
+            conflicts.append({"dimension": "qualifier_text", "required": qualifiers.get(dimension),
+                              "actual": binding.get("qualifier_text")})
+        if fact.get("qualifier_sources", {}).get(dimension) != binding.get("qualifier_source"):
+            conflicts.append({"dimension": "qualifier_source", "required": fact.get("qualifier_sources", {}).get(dimension),
+                              "actual": binding.get("qualifier_source")})
+    if kind == "narrative_modality_scope" and (left.get("operator") != qualifiers.get("modality")
+            or left.get("polarity") != qualifiers.get("modal_polarity", "positive")):
+        conflicts.append({"dimension": "modality", "required": qualifiers.get("modality"), "actual": left})
+    if kind == "narrative_modality_scope" and relation.get("source") != fact.get("qualifier_sources", {}).get("modality"):
+        conflicts.append({"dimension": "modality_source", "required": fact.get("qualifier_sources", {}).get("modality"),
+                          "actual": relation.get("source")})
+    if kind == "narrative_negation_scope":
+        dimension = "modal_polarity" if left.get("target") == "modality" else "polarity"
+        if qualifiers.get(dimension) != "negative":
+            conflicts.append({"dimension": "negation", "required": "negative", "actual": qualifiers.get(dimension)})
+        if relation.get("source") != fact.get("qualifier_sources", {}).get(dimension):
+            conflicts.append({"dimension": "negation_source", "required": fact.get("qualifier_sources", {}).get(dimension),
+                              "actual": relation.get("source")})
+
+    if kind == "narrative_prepositional_attachment":
+        for name in ("preposition_source", "head_source", "complement_source", "attachment_source"):
+            origin = binding.get(name)
+            if not isinstance(origin, dict) or not origin:
+                missing.append(name)
+            elif not _same_statement(statement, origin):
+                conflicts.append({"dimension": name, "required": statement, "actual": origin})
+        if not left.get("preposition") or not left.get("semantic_role") or not left.get("attachment"):
+            missing.append("prepositional_attachment_roles")
+        pp = binding.get("preposition_source", {})
+        if obligation and obligation.get("source") != pp:
+            conflicts.append({"dimension": "preposition_source", "required": obligation.get("source"), "actual": pp})
+        # Require a matching interpreted PP rather than accepting a standalone
+        # fabricated relation carrying the right preposition token.
+        attached = [node for node in _walk([fact.get("prepositional_complements", []),
+                                           fact.get("object_phrase", {}), fact.get("subject_phrase", {})])
+                    if node.get("kind") == "prepositional_complement"]
+        matches = [node for node in attached if node.get("preposition_source") == pp
+                   and node.get("preposition") == left.get("preposition")
+                   and node.get("semantic_role") == left.get("semantic_role")
+                   and node.get("attachment") == left.get("attachment")
+                   and node.get("head_source") == binding.get("head_source")]
+        if not matches:
+            missing.append("fact_prepositional_complement")
+        elif not any(node.get("complement", {}).get("source") == binding.get("complement_source") for node in matches):
+            conflicts.append({"dimension": "complement_source", "actual": binding.get("complement_source")})
+        if obligation and isinstance(obligation.get("statement_text"), str):
+            origin = obligation["statement_source"]
+            base = origin.get("text_span", [0, 0])[0]
+            for key, expected in (("preposition_source", left.get("preposition")),
+                                  ("head_source", left.get("attachment", {}).get("head")),
+                                  ("complement_source", left.get("complement"))):
+                own_origin = binding.get(key, {})
+                bounds = own_origin.get("text_span")
+                raw = obligation["statement_text"][bounds[0] - base:bounds[1] - base] if bounds and _same_statement(origin, own_origin) else None
+                if raw != expected:
+                    conflicts.append({"dimension": key + "_literal", "required": raw, "actual": expected})
+
+    status = "conflict" if conflicts else "missing" if missing else "unresolved" if unresolved else "equivalent"
+    return {"status": status, "equivalent": status == "equivalent", "conflict": status == "conflict",
+            "unresolved": status == "unresolved", "missing": status == "missing", "proof": proof,
+            "conflicts": conflicts, "missing_evidence": missing, "unresolved_evidence": unresolved}
+
+
 def _bound_relations(fact, relations):
     result = []
     for edge in relations:
         endpoint = edge.get("right", {})
-        statement = edge.get("binding_evidence", {}).get("statement_source", edge.get("source", {}))
-        if (isinstance(endpoint, dict)
-                and endpoint.get("subject") == fact.get("subject")
-                and endpoint.get("attribute") == fact.get("attribute")
-                and _same_statement(fact.get("statement_source", fact.get("source", {})), statement)):
+        if not isinstance(endpoint, dict) or endpoint.get("subject") != fact.get("subject") or endpoint.get("attribute") != fact.get("attribute"):
+            continue
+        if edge.get("fact_id") is not None and edge["fact_id"] != fact.get("id"):
+            continue
+        if validate_relation_binding(None, fact, edge)["equivalent"]:
             result.append(edge)
     return result
 
 
+def _prepositional_role_evidence(entry, facts, relations):
+    """Only a verified attachment can explain the words beyond a direct object."""
+    evidence = []
+    relations = [edge for edge in relations if edge.get("type") == "narrative_prepositional_attachment"
+                 and _range(entry, edge.get("binding_evidence", {}).get("preposition_source", {}))]
+    if not relations:
+        return evidence
+    for fact in facts:
+        for edge in relations:
+            if edge.get("fact_id") is not None and edge["fact_id"] != fact.get("id"):
+                continue
+            if not validate_relation_binding(None, fact, edge)["equivalent"]:
+                continue
+            binding, left = edge["binding_evidence"], edge["left"]
+            for key, expected in (("preposition_source", left.get("preposition")),
+                                  ("head_source", left.get("attachment", {}).get("head")),
+                                  ("complement_source", left.get("complement"))):
+                bounds = _range(entry, binding.get(key, {}))
+                if bounds and entry["text"][bounds[0]:bounds[1]] == expected:
+                    evidence.append({"span": list(bounds), "requirement": fact["id"],
+                                     "relation": edge.get("id"), "role": key})
+    return evidence
+
+
+def _controller_binding(obligation, node, fact, facts, relations):
+    control = node.get("control", {})
+    expected_control = {"purpose_scope": ("subject_control", "purpose"),
+                        "controlled_infinitive_scope": ("object_control", "complement")}.get(node.get("kind"))
+    if expected_control != (control.get("kind"), node.get("operator")):
+        return None
+    role = "subject" if control.get("kind") == "subject_control" else "object" if control.get("kind") == "object_control" else None
+    if role is None:
+        return None
+    group = node.get("child", {})
+    object_group = role == "object" and group.get("kind") == "coordination" and group.get("mode") == "objects"
+    if not object_group and control.get("controller") == fact.get(role) and control.get("controller_source") == fact.get(role + "_source"):
+        return {"kind": "single_" + role, "requirement": fact["id"], "source": copy.deepcopy(fact[role + "_source"])}
+    if role != "object" or group.get("kind") != "coordination" or group.get("mode") != "objects" or group.get("operator") != "and":
+        return None
+    leaves = group.get("children", [])
+    if len(leaves) < 2 or any(leaf.get("kind") != "proposition" for leaf in leaves):
+        return None
+    origin = control.get("controller_source", {})
+    statement = obligation.get("statement_source", {})
+    text = obligation.get("statement_text")
+    if not isinstance(text, str) or not _same_statement(statement, origin) or not origin.get("text_span"):
+        return None
+    base = statement.get("text_span", [0, 0])[0]
+    start, end = origin["text_span"]
+    if text[start - base:end - base] != control.get("controller"):
+        return None
+    covered, previous, members = set(), start, []
+    for leaf in leaves:
+        own = leaf.get("object_source", {})
+        bounds = own.get("text_span")
+        if (not bounds or not _same_statement(origin, own) or bounds[0] < previous
+                or text[bounds[0] - base:bounds[1] - base] != leaf.get("object")
+                or any(leaf.get(key) != fact.get(key) for key in ("subject", "attribute", "subject_source", "predicate_source"))):
+            return None
+        previous = bounds[1]
+        matches = [member for member in facts if all(member.get(key) == leaf.get(key)
+                   for key in ("subject", "attribute", "object", "subject_source", "predicate_source", "object_source"))]
+        if len(matches) != 1:
+            return None
+        member = matches[0]
+        own_edges = [edge for edge in relations if edge.get("type") == "field_binding"
+                     and (edge.get("fact_id") is None or edge.get("fact_id") == member["id"])
+                     and validate_relation_binding(None, member, edge)["equivalent"]]
+        if not own_edges:
+            return None
+        members.append({"requirement": member["id"], "object": leaf["object"], "source": copy.deepcopy(own)})
+        covered.update(range(bounds[0], bounds[1]))
+    if leaves[0]["object_source"]["text_span"][0] != start or previous != end or fact["id"] not in {item["requirement"] for item in members}:
+        return None
+    operators = group.get("operator_sources", [])
+    if not operators:
+        return None
+    explicit_and = False
+    for operator in operators:
+        bounds = operator.get("text_span")
+        if not bounds or not _same_statement(origin, operator):
+            return None
+        raw = text[bounds[0] - base:bounds[1] - base]
+        if re.fullmatch(r"\s*(?:,|and|,\s*and)\s*", raw, re.I) is None:
+            return None
+        explicit_and |= bool(re.search(r"\band\b", raw, re.I))
+        covered.update(range(bounds[0], bounds[1]))
+    if not explicit_and or any(index not in covered and not text[index - base].isspace() for index in range(start, end)):
+        return None
+    return {"kind": "coordinated_objects", "operator": "and", "source": copy.deepcopy(origin), "members": members}
+
+
+def _infinitive_bindings(obligation, facts, relations, logic):
+    """A TO token needs its actual syntactic controller and scoped operand."""
+    if obligation.get("binding_role") != "attachment":
+        return []
+    wrappers = [node for node in _walk(logic)
+        if node.get("kind") in {"purpose_scope", "controlled_infinitive_scope"}
+        and node.get("operator_source") == obligation["source"]]
+    if not wrappers:
+        return []
+    proof = []
+    for edge in relations:
+        if edge.get("type") not in {"narrative_purpose_scope", "narrative_controlled_infinitive_scope"}:
+            continue
+        binding = edge.get("binding_evidence", {})
+        if binding.get("operator_source") != obligation["source"]:
+            continue
+        for fact in facts:
+            if edge.get("fact_id") is not None and edge["fact_id"] != fact.get("id"):
+                continue
+            check = validate_relation_binding(obligation, fact, edge)
+            if not check["equivalent"]:
+                continue
+            for node in wrappers:
+                control, operand = node.get("control", {}), node.get("operand", {})
+                expected_kind = "narrative_purpose_scope" if node["kind"] == "purpose_scope" else "narrative_controlled_infinitive_scope"
+                controller_binding = _controller_binding(obligation, node, fact, facts, relations)
+                if controller_binding is None:
+                    continue
+                if (edge["type"] == expected_kind and binding.get("operand_logic") == operand
+                        and binding.get("operand_source") == operand.get("source")
+                        and binding.get("controller_source") == control.get("controller_source")
+                        and edge.get("left", {}).get("controller") == control.get("controller")
+                        and edge.get("left", {}).get("operator") == node.get("operator")
+                        and edge.get("left", {}).get("control_kind") == control.get("kind")
+                        and any(_same_statement(child.get("source", {}), fact.get("statement_source", fact.get("source", {})))
+                                for child in _walk(node.get("child", {})) if child.get("kind") == "proposition")):
+                    proof.append({"requirement": fact["id"], "relation": edge.get("id"),
+                                  "binding": check, "control": copy.deepcopy(control), "controller_binding": controller_binding})
+    return proof
+
+
 def _operator_edges(raw, relations):
     token = raw.strip().casefold()
-    if token in {"and", "or", "并且", "並且", "以及"}:
+    if token in {"and", "or", "but", "并且", "並且", "以及"}:
+        expected_operator = "and" if token in {"并且", "並且", "以及"} else token
         return [edge for edge in relations if edge.get("type") in {
-            "proposition_coordination_scope", "narrative_coordination_scope", "narrative_logical_group", "narrative_alternative_scope"}]
+            "proposition_coordination_scope", "narrative_coordination_scope", "narrative_logical_group", "narrative_alternative_scope",
+            "narrative_nominal_coordination_scope"}
+            and edge.get("left", {}).get("operator", expected_operator) == expected_operator]
     if token in {"not", "never"}:
         return [edge for edge in relations if edge.get("type") == "narrative_negation_scope"
                 or edge.get("type") == "qualifier_scope" and edge.get("left", {}).get("type") in {"polarity", "modal_polarity"}]
@@ -681,19 +1108,28 @@ def _structural_evidence(entry, graph, bound_relations):
             evidence.append({"span": [0, len(text)], "role": "printed_attribution_parent_declaration",
                              "relations": [edge["id"] for edge in edges]})
     targets = graph.get("source_obligation_inventory", {}).get("selection", {}).get("targets", [])
-    # A dated inclusion introduction declares the actual following list; its
-    # business members each retain their own independent source obligations.
-    intro = re.fullmatch(r"\s*(?:19|20)\d{2}年\s*[，,]\s*[^，,:：;；]+?(?:的|在)[^，,:：;；]+?(?:包括|包含|如下)\s*[:：]\s*", text)
-    if intro and entry["has_children"]:
-        contexts = [context for context in graph.get("context", {}).get("enumeration_contexts", [])
-                    if context.get("declaration", {}).get("introduction", {}).get("text") == text
-                    and _same_source(source, context.get("source", {}))]
-        for context in contexts:
-            edges = [edge for edge in graph["relations"] if edge.get("type") == "enumeration_membership"
-                     and edge.get("binding_evidence", {}).get("introduction_source") == context["source"]]
-            if edges and context["declaration"].get("lexical_complete"):
-                evidence.append({"span": [0, len(text)], "role": "printed_enumeration_declaration",
-                                 "relations": [edge["id"] for edge in edges]})
+    # The declaration owns its source roles and raw collection scope even
+    # when a child's business syntax is unknown. It never proves that child's
+    # fact-to-collection endpoint; those obligations remain independently pending.
+    from .enumeration_context import enumeration_declaration
+
+    for context in graph.get("context", {}).get("enumeration_contexts", []):
+        declaration = context.get("declaration", {})
+        if (declaration.get("introduction", {}).get("text") != text
+                or _range(entry, context.get("source", {})) != (0, len(text))
+                or not declaration.get("lexical_complete")
+                or not context.get("members")):
+            continue
+        roles = declaration.get("roles", {})
+        if not all((bounds := _range(entry, item.get("source", {}))) is not None
+                   and text[bounds[0]:bounds[1]] == item.get("text") for item in roles.values()):
+            continue
+        required = enumeration_declaration(context)
+        edges = [edge for edge in graph["relations"] if edge.get("type") == "enumeration_declaration"
+                 and all(edge.get(key) == required[key] for key in ("left", "right", "source", "binding_evidence"))]
+        if edges:
+            evidence.append({"span": [0, len(text)], "role": "printed_enumeration_declaration",
+                             "relations": [edge["id"] for edge in edges]})
     # Composition glue is limited to the actual syntax between already bound
     # page/component/document roles. No whole statement is exempted.
     composition = re.fullmatch(r"第\d+[页頁]至第\d+[页頁](?P<glue>所[载載][的之])"
@@ -740,6 +1176,29 @@ def _structural_evidence(entry, graph, bound_relations):
                  if edge.get("type") == "field_binding"]
         if position_heading and edges:
             evidence.append({"span": [0, len(text)], "role": "printed_financial_classification_parent",
+                             "relations": [edge["id"] for edge in edges]})
+    for node in _walk(graph.get("logic", [])):
+        if node.get("kind") != "discourse_scope":
+            continue
+        bounds = _range(entry, node.get("marker_source", {}))
+        if bounds is None or text[bounds[0]:bounds[1]] != node.get("marker"):
+            continue
+        literal_operator = re.sub(r"\s+", "_", node["marker"].casefold())
+        literal_roles = {"for_example": "example", "for_instance": "example", "however": "contrast",
+                         "moreover": "addition", "in_addition": "addition", "in_particular": "focus"}
+        if literal_operator != node.get("operator") or node.get("role") != literal_roles.get(literal_operator):
+            continue
+        edges = [edge for edge in [*graph["relations"], *graph.get("operand_relations", [])]
+                 if edge.get("type") == "narrative_discourse_scope"
+                 and edge.get("left", {}).get("operator") == node["operator"]
+                 and edge.get("left", {}).get("role") == node.get("role")
+                 and edge.get("binding_evidence", {}).get("marker_source") == node["marker_source"]
+                 and any(validate_relation_binding(None, fact, edge)["equivalent"]
+                         and any(_same_statement(child.get("source", {}), fact.get("statement_source", fact.get("source", {})))
+                                 for child in _walk(node.get("child", {})) if child.get("kind") == "proposition")
+                         for fact in graph["nodes"] if fact["id"] in graph["projections"]["B"])]
+        if edges:
+            evidence.append({"span": list(bounds), "role": "source_bound_discourse_marker",
                              "relations": [edge["id"] for edge in edges]})
     return evidence
 
@@ -798,6 +1257,11 @@ def audit_source_obligations(inventory: dict[str, Any], graph: dict[str, Any]) -
     facts = [nodes[ident] for ident in graph["projections"]["B"]]
     operands = [node for node in graph["nodes"] if node.get("kind") == "semantic_operand"]
     relations = [*graph["relations"], *graph.get("operand_relations", [])]
+    fact_by_id = {fact["id"]: fact for fact in [*facts, *operands]}
+    attachment_obligations = defaultdict(list)
+    for item in inventory["obligations"]:
+        if item.get("binding_role") == "attachment":
+            attachment_obligations[item.get("source_id")].append(item)
     toc_bindings = _toc_source_bindings(inventory, graph)
     bound_cache, role_cache, structural_cache, heading_cache, fact_source_cache = {}, {}, {}, {}, {}
 
@@ -806,6 +1270,22 @@ def audit_source_obligations(inventory: dict[str, Any], graph: dict[str, Any]) -
         if key not in bound_cache:
             bound_cache[key] = _bound_relations(fact, relations)
         return bound_cache[key]
+
+    def operator_binding(edge):
+        if edge.get("type") == "proposition_coordination_scope":
+            members = edge.get("binding_evidence", {}).get("members", [])
+            return len(members) >= 2 and all(any(
+                all(member.get(key) == fact.get(key) for key in ("subject_source", "predicate_source", "object_source"))
+                and any(own.get("type") == "field_binding" for own in bound_relations(fact))
+                for fact in [*facts, *operands]) for member in members)
+        if edge.get("fact_id") is not None:
+            owners = [fact_by_id[edge["fact_id"]]] if edge["fact_id"] in fact_by_id else []
+        else:
+            endpoint = edge.get("right", {})
+            owners = [fact for fact in [*facts, *operands] if isinstance(endpoint, dict)
+                      and endpoint.get("subject") == fact.get("subject")
+                      and endpoint.get("attribute", endpoint.get("action")) == fact.get("attribute")]
+        return any(validate_relation_binding(None, fact, edge)["equivalent"] for fact in owners)
 
     rows = []
     for obligation in inventory["obligations"]:
@@ -857,7 +1337,14 @@ def audit_source_obligations(inventory: dict[str, Any], graph: dict[str, Any]) -
         else:
             span = _range(entry, obligation["source"])
             if entry["id"] not in role_cache:
-                role_cache[entry["id"]] = _role_evidence(entry, [*facts, *operands])
+                role_cache[entry["id"]] = [*_role_evidence(entry, [*facts, *operands]),
+                    *_prepositional_role_evidence(entry, [*facts, *operands], relations)]
+                for attachment in attachment_obligations[entry["id"]]:
+                    bindings = _infinitive_bindings(attachment, [*facts, *operands], relations, graph.get("logic", []))
+                    for binding in bindings:
+                        role_cache[entry["id"]].append({"span": list(_range(entry, attachment["source"])),
+                            "requirement": binding["requirement"], "relation": binding["relation"],
+                            "role": "source_bound_infinitival_marker"})
                 structural_cache[entry["id"]] = [*_structural_evidence(entry, graph, bound_relations),
                                                   *toc_bindings.get(entry["id"], [])]
             role_evidence = role_cache[entry["id"]]
@@ -954,13 +1441,26 @@ def audit_source_obligations(inventory: dict[str, Any], graph: dict[str, Any]) -
                         "source_basis": obligation["source_basis"], "evidence": proof, "unexplained_character_positions": []})
                     continue
                 if obligation.get("binding_role") == "semantic_binding":
-                    ids = {item.get("requirement") for item in role_evidence}
-                    owners = [fact for fact in [*facts, *operands] if fact["id"] in ids]
+                    local_roles = [item for item in role_evidence if "span" in item
+                                   and max(item["span"][0], span[0]) < min(item["span"][1], span[1])]
+                    ids = {item.get("requirement") for item in local_roles}
+                    owners = [fact for fact in [*facts, *operands] if fact["id"] in ids
+                              and _fragment_owns_fact(obligation, fact)]
                     bindings = {fact["id"]: [edge for edge in bound_relations(fact)
-                                             if edge.get("type") == "field_binding"] for fact in owners}
+                                             if edge.get("type") == "field_binding"
+                                             and validate_relation_binding(obligation, fact, edge)["equivalent"]] for fact in owners}
+                    qualifier_owners = [fact for fact in [*facts, *operands] if fact["id"] in ids and fact not in owners]
+                    qualifier_edges = [edge for fact in qualifier_owners for edge in bound_relations(fact)
+                        if edge.get("type") == "qualifier_scope" and any(
+                            _range(entry, origin) == span for origin in _walk(edge.get("binding_evidence", {}))
+                            if isinstance(origin.get("path"), str))
+                        and edge.get("left", {}).get("text") == obligation["text"].strip()]
                     exceptional = [item for item in structural if item.get("relations")
                                    and item["span"][0] <= span[0] and span[1] <= item["span"][1]]
-                    if exceptional or owners and all(bindings.values()):
+                    if qualifier_edges:
+                        status, reason = "explained", "fragment_has_its_own_qualifier_owner_relation"
+                        proof = [{"relation": edge["id"]} for edge in qualifier_edges]
+                    elif exceptional or owners and all(bindings.values()):
                         status, reason = "explained", "fragment_has_its_own_business_or_declaration_relations"
                         proof = exceptional or [{"requirement": ident, "relations": [edge.get("id", f"operand-edge:{relations.index(edge)}")
                                   for edge in edges]} for ident, edges in bindings.items()]
@@ -975,6 +1475,63 @@ def audit_source_obligations(inventory: dict[str, Any], graph: dict[str, Any]) -
                     rows.append({"obligation_id": obligation["id"], "status": status, "layers": obligation["layers"],
                         "interpretation_rule": obligation["interpretation_rule"], "reason": reason,
                         "source_basis": obligation["source_basis"], "evidence": proof, "unexplained_character_positions": []})
+                    continue
+                if obligation.get("binding_role") in {"prepositional_attachment", "attachment"}:
+                    checks = [(fact, edge, validate_relation_binding(obligation, fact, edge))
+                              for fact in [*facts, *operands] for edge in relations
+                              if edge.get("type") == "narrative_prepositional_attachment"
+                              and (edge.get("fact_id") is None or edge.get("fact_id") == fact["id"])
+                              and edge.get("binding_evidence", {}).get("preposition_source") == obligation["source"]]
+                    equivalent = [(fact, edge, check) for fact, edge, check in checks if check["equivalent"]]
+                    infinitives = _infinitive_bindings(obligation, [*facts, *operands], relations, graph.get("logic", []))
+                    if equivalent:
+                        status, reason = "explained", "printed_preposition_has_its_own_head_complement_attachment"
+                        proof = [{"requirement": fact["id"], "relation": edge.get("id"), "binding": check}
+                                 for fact, edge, check in equivalent]
+                    elif infinitives:
+                        status, reason = "explained", "printed_infinitival_marker_has_its_own_controller_and_operand"
+                        proof = infinitives
+                    else:
+                        proof = [{"requirement": fact["id"], "relation": edge.get("id"), "binding": check}
+                                 for fact, edge, check in checks]
+                        reason = "prepositional_attachment_missing_or_unresolved"
+                        composition = [edge for edge in relations if edge.get("type") == "document_part_of"
+                            and any(a <= span[0] < span[1] <= b for a, b in _ranges(entry,
+                                edge.get("binding_evidence", {}).get("attribute_source", {})))
+                            and _same_statement(obligation["statement_source"], edge.get("binding_evidence", {}).get("statement_source", {}))
+                            and any(fact.get("subject") == edge.get("left", {}).get("text")
+                                and fact.get("object") == edge.get("right", {}).get("text")
+                                and all(fact.get(key) == edge.get("binding_evidence", {}).get(key)
+                                        for key in ("subject_source", "predicate_source", "object_source", "attribute_source"))
+                                for fact in facts)]
+                        if composition:
+                            status, reason = "explained", "printed_part_of_has_its_own_component_document_direction"
+                            proof = [{"relation": edge["id"]} for edge in composition]
+                    rows.append({"obligation_id": obligation["id"], "status": status, "layers": obligation["layers"],
+                        "interpretation_rule": obligation["interpretation_rule"], "reason": reason,
+                        "source_basis": obligation["source_basis"], "evidence": proof,
+                        "unexplained_character_positions": list(range(*span)) if status == "pending" else []})
+                    continue
+                if obligation.get("binding_role") == "quantity_comparison":
+                    for fact in [*facts, *operands]:
+                        for edge in bound_relations(fact):
+                            if edge.get("type") != "narrative_quantity_scope":
+                                continue
+                            binding = edge.get("binding_evidence", {})
+                            if _range(entry, binding.get("quantity_source", {})) != span:
+                                continue
+                            quantities = [node for node in _walk([fact.get("object_phrase", {}), fact.get("subject_phrase", {}),
+                                          fact.get("prepositional_complements", [])]) if node.get("kind") == "quantity_comparison"]
+                            if any(node.get("source") == binding.get("quantity_source") and all(
+                                node.get(key) == edge.get("left", {}).get(key) for key in ("operator", "value", "unit", "quantity_role"))
+                                for node in quantities):
+                                proof.append({"requirement": fact["id"], "relation": edge.get("id")})
+                    if proof:
+                        status, reason = "explained", "printed_quantity_boundary_has_its_own_nominal_scope"
+                    rows.append({"obligation_id": obligation["id"], "status": status, "layers": obligation["layers"],
+                        "interpretation_rule": obligation["interpretation_rule"], "reason": reason,
+                        "source_basis": obligation["source_basis"], "evidence": proof,
+                        "unexplained_character_positions": list(range(*span)) if status == "pending" else []})
                     continue
                 for fact in [*facts, *operands]:
                     predicate = _range(entry, fact.get("predicate_source", {}))
@@ -1000,6 +1557,11 @@ def audit_source_obligations(inventory: dict[str, Any], graph: dict[str, Any]) -
                                 if a <= span[0] < span[1] <= b:
                                     proof.append({"requirement": fact["id"], "role": key,
                                                   "relations": [edge.get("id", f"operand-edge:{relations.index(edge)}") for edge in bound]})
+                        for item in role_evidence:
+                            if (item.get("requirement") == fact["id"] and item.get("relation")
+                                    and item["span"][0] <= span[0] < span[1] <= item["span"][1]):
+                                proof.append({"requirement": fact["id"], "role": item["role"],
+                                              "relations": [item["relation"]]})
                     for key, origin in fact.get("qualifier_sources", {}).items():
                         if key not in {"condition", "exception"} or not isinstance(origin, dict):
                             continue
@@ -1054,7 +1616,7 @@ def audit_source_obligations(inventory: dict[str, Any], graph: dict[str, Any]) -
                             offset = node["source"].get("text_span", [0, 0])[0] - node["span"][0]
                             origins.extend({**node["source"], "text_span": [offset + a, offset + b]}
                                            for a, b in node["operator_spans"])
-                edges = [edge for edge in scoped if any(a <= span[0] < span[1] <= b
+                edges = [edge for edge in scoped if operator_binding(edge) and any(a <= span[0] < span[1] <= b
                           for origin in [edge.get("source", {}), *[v for node in _walk(edge.get("binding_evidence", {}))
                               for k, v in node.items() if k.endswith("_source") and isinstance(v, dict)]]
                           for a, b in _ranges(entry, origin))]
@@ -1089,7 +1651,7 @@ def audit_source_obligations(inventory: dict[str, Any], graph: dict[str, Any]) -
                 if (role_evidence or structural) and not _residue(entry["text"], span, proof):
                     status, reason = "explained", "all_fragment_words_have_explicit_business_roles"
         missing = []
-        if status == "pending" and entry is not None and obligation["kind"] in {"text", "proposition"}:
+        if status == "pending" and entry is not None and obligation["kind"] in {"text", "proposition", "semantic_content"}:
             missing = _residue(entry["text"], _range(entry, obligation["source"]), [item for item in proof if "span" in item],
                                literal=obligation["kind"] == "text")
         rows.append({"obligation_id": obligation["id"], "status": status, "layers": obligation["layers"],
@@ -1100,6 +1662,28 @@ def audit_source_obligations(inventory: dict[str, Any], graph: dict[str, Any]) -
             "interpretation_rule": item["interpretation_rule"], "reason": item["reason"],
             "source_basis": "canonical_authorized_raw_expected_text", "evidence": copy.deepcopy(item["evidence"]),
             "unexplained_character_positions": []})
+    # Interpretation and disposition are separate from the immutable inventory.
+    # Each carries its local evidence and exact remaining original cuts.
+    by_obligation = {item["id"]: item for item in inventory["obligations"]}
+    for row in rows:
+        item = by_obligation.get(row["obligation_id"])
+        if item is None:
+            continue
+        row["semantic_type"] = item["semantic_type"]
+        row["expected_roles"] = copy.deepcopy(item.get("expected_roles", []))
+        row["source"] = copy.deepcopy(item["source"])
+        row["text"] = item["text"]
+        row["unexplained_ranges"] = []
+        positions = row["unexplained_character_positions"]
+        if positions:
+            entry = sources[item["source_id"]]
+            start, previous = positions[0], positions[0]
+            for index in [*positions[1:], None]:
+                if index is None or index != previous + 1:
+                    row["unexplained_ranges"].append({"source": _origin(entry["source"], start, previous + 1),
+                        "text": entry["text"][start:previous + 1]})
+                    start = index
+                previous = index
     return {"source_complete": inventory["source_complete"], "semantic_complete": all(row["status"] != "pending" for row in rows),
         "dispositions": rows, "status_counts": dict(Counter(row["status"] for row in rows))}
 

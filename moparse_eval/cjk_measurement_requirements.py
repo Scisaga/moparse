@@ -96,9 +96,12 @@ def read_cjk_measurements(text: str, source: dict[str, Any], *, scope=()) -> dic
         result['facts'].append(fact)
         endpoint = {'subject': subject, 'attribute': attribute, 'scope': list(scope)}
         result['relations'].append({'type': 'field_binding', 'left': copy.deepcopy(endpoint), 'right': copy.deepcopy(endpoint),
-                                    'source': copy.deepcopy(own_source), 'object_anchor': None,
+                                    'source': copy.deepcopy(own_source), 'object_anchor': None, 'fact_id': fact['id'],
                                     'binding_evidence': {'subject_source': copy.deepcopy(subject_source),
-                                        'predicate_source': copy.deepcopy(predicate_source), 'value_source': copy.deepcopy(fact['value_source'])}})
+                                        'statement_source': copy.deepcopy(own_source),
+                                        'predicate_source': copy.deepcopy(predicate_source),
+                                        'object_source': copy.deepcopy(fact['object_source']),
+                                        'value_source': copy.deepcopy(fact['value_source'])}})
         for key, value in q.items():
             result['relations'].append({'type': 'qualifier_scope', 'left': {'type': key, 'text': value},
                 'right': copy.deepcopy(endpoint), 'source': copy.deepcopy(qs[key]), 'object_anchor': None,

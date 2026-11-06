@@ -14,7 +14,7 @@ from moparse_eval.source_obligations import audit_source_obligations
 
 PATH = "<invented-nominal-tail-scope>"
 TAILS = [("after approval", "after"), ("before approval", "before"), ("upon approval", "upon"),
-         ("pending approval", "pending"), ("subject to approval", "subject to"),
+         ("pending approval", "pending"),
          ("under the contract", "under"), ("on approval", "on")]
 
 
@@ -34,7 +34,9 @@ def business(graph):
 
 def scope_pending(graph, marker):
     [obligation] = [row for row in graph["source_obligation_inventory"]["obligations"]
-                    if row["kind"] == "qualifier" and row["text"] == marker]
+                    if row.get("binding_role") == "prepositional_attachment" and row["text"] == marker]
+    assert obligation["kind"] == "relation" and obligation["semantic_type"] == "logical_relation"
+    assert obligation["expected_roles"] == ["preposition", "head", "complement", "attachment", "semantic_role"]
     [coverage] = [row for row in graph["source_obligation_coverage"]["dispositions"]
                   if row["obligation_id"] == obligation["id"]]
     assert coverage["status"] == "pending"
@@ -82,6 +84,25 @@ def test_supported_fronted_under_context_retains_its_real_scope_relation():
     assert any(edge["type"] == "narrative_fronted_context_scope" for edge in graph["relations"])
     assert graph["semantic_complete"] is True
     validate_requirement_graph(graph)
+
+
+def test_explicit_subject_to_restriction_has_a_real_head_complement_and_is_not_an_opaque_object_tail():
+    text = "Lumen owns Kappa subject to approval."
+    graph = compile_requirement_graph(expected(text))
+    [fact] = business(graph)
+    assert (fact["subject"], fact["attribute"], fact["object"]) == ("Lumen", "own", "Kappa")
+    [edge] = [row for row in graph["relations"] if row["type"] == "narrative_prepositional_attachment"]
+    assert edge["left"] == {"preposition": "subject to", "semantic_role": "restriction",
+                           "attachment": {"kind": "predicate", "head": "owns", "attribute": "own"},
+                           "complement": "approval"}
+    for key, raw in (("head_source", "owns"), ("preposition_source", "subject to"), ("complement_source", "approval")):
+        lo, hi = edge["binding_evidence"][key]["text_span"]
+        assert text[lo:hi] == raw
+    assert graph["semantic_complete"] is True
+    validate_requirement_graph(graph)
+    graph["relations"].remove(edge)
+    graph["source_obligation_coverage"] = audit_source_obligations(graph["source_obligation_inventory"], graph)
+    scope_pending(graph, "subject to")
 
 
 @pytest.mark.parametrize("text,actor,action,value", [("Lumen owns Kappa.", "Lumen", "own", "Kappa"),

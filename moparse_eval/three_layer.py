@@ -105,6 +105,45 @@ def canonical(text: str) -> str:
 
 
 def _read_narrative(text, source, *, scope=()):
+    sentences = _sentence_spans(text)
+    if len(sentences) > 1 and re.search(r"[\u3400-\u9fff]", text):
+        # Language dispatch belongs to an independent statement. Selecting
+        # the reader with the most leaves over a whole bilingual paragraph
+        # silently discarded valid statements read by the other language.
+        parts = []
+        offset = source.get("text_span", [0])[0]
+        for ordinal, (start, end) in enumerate(sentences):
+            origin = {**copy.deepcopy(source), "text_span": [offset + start, offset + end]}
+            part = _read_narrative(text[start:end], origin, scope=scope)
+            identifiers = {fact["id"]: f"statement:{ordinal}:{fact['id']}"
+                           for key in ("facts", "semantic_operands") for fact in part.get(key, []) if fact.get("id")}
+
+            def rebind(value, local_ids=identifiers):
+                if isinstance(value, dict):
+                    for key, child in value.items():
+                        if key in {"id", "fact_id"} and isinstance(child, str) and child in local_ids:
+                            value[key] = local_ids[child]
+                        else:
+                            rebind(child)
+                elif isinstance(value, list):
+                    for child in value:
+                        rebind(child)
+
+            rebind(part)
+            parts.append(part)
+        result = copy.deepcopy(parts[0])
+        for key in ("facts", "relations", "logic", "semantic_operands", "semantic_operand_relations",
+                    "unresolved", "blockers", "pending_requirements", "issues", "controls"):
+            result[key] = [copy.deepcopy(item) for part in parts for item in part.get(key, [])]
+        result["required_matcher_features"] = sorted({feature for part in parts for feature in part.get("required_matcher_features", [])})
+        origin = {**copy.deepcopy(source), "text_span": [offset, offset + len(text)]}
+        result.update(source=copy.deepcopy(source), raw_text=text, syntax_language="mixed",
+                      matched=any(part["matched"] for part in parts),
+                      complete=all(part["complete"] for part in parts),
+                      semantic_complete=all(part["complete"] for part in parts),
+                      text_atoms=[{"text": text, "role": "literal", "source": origin}],
+                      consumed_spans=[{"text": text, "role": "literal", "span": [0, len(text)], "source": origin}])
+        return result
     english = read_narrative(text, source, scope=scope)
     english["syntax_language"] = "en"
     if english["complete"]:
@@ -126,6 +165,8 @@ def _bind_field_body(result, label, label_source):
         if isinstance(value, dict):
             if isinstance(value.get("scope"), list) and (not value["scope"] or value["scope"][-1] != label):
                 value["scope"].append(label)
+            if value.get("kind") == "proposition":
+                value["field_label_evidence"] = copy.deepcopy(proof)
             for child in value.values():
                 bind(child)
         elif isinstance(value, list):
@@ -141,6 +182,58 @@ def _bind_field_body(result, label, label_source):
     for edge in [*result.get("relations", []), *result.get("semantic_operand_relations", [])]:
         edge["field_label_evidence"] = copy.deepcopy(proof)
     return result
+
+
+def _adopt_comparison_tree(result, narrative):
+    """Add a complete AST only when independently read role sources agree."""
+    if not narrative["complete"] or result.get("blockers"):
+        return result
+    roles = ("attribute", "object", "subject_source", "predicate_source", "object_source")
+
+    def signature(fact):
+        return repr([str(fact.get("subject", "")).casefold(), *[fact.get(key) for key in roles]])
+
+    facts = result.get("facts", [])
+    if Counter(map(signature, facts)) != Counter(map(signature, narrative["facts"])):
+        return result
+    for key in ("logic", "semantic_operands", "semantic_operand_relations"):
+        result[key] = copy.deepcopy(narrative.get(key, []))
+
+    def bind(node):
+        if isinstance(node, dict):
+            if node.get("kind") == "proposition":
+                matching = [fact for fact in facts if signature(fact) == signature(node)]
+                if len(matching) == 1:
+                    fact = matching[0]
+                    node["identity_facets"] = copy.deepcopy(fact.get("identity_facets", {}))
+                    if fact.get("record_evidence"):
+                        node["record_evidence"] = copy.deepcopy(fact["record_evidence"])
+            for value in node.values():
+                bind(value)
+        elif isinstance(node, list):
+            for value in node:
+                bind(value)
+
+    bind(result["logic"])
+    result["required_matcher_features"] = sorted(set(result.get("required_matcher_features", []))
+        | set(narrative.get("required_matcher_features", [])))
+    return result
+
+
+def _discharge_superseded_clause_pending(data, text, source):
+    """Close only the exact clause a later complete source reading explained."""
+    def superseded(issue):
+        if issue.get("reason") != "prose_clause_semantics_unsupported":
+            return False
+        own = issue.get("source", {})
+        if any(own.get(key) != source.get(key) for key in ("path", "lines", "cell", "block")):
+            return False
+        outer, inner = source.get("text_span"), own.get("text_span")
+        return bool(outer and inner and outer[0] <= inner[0] <= inner[1] <= outer[1]
+                    and canonical(issue.get("text", "")).rstrip(".!?。！？") == canonical(text).rstrip(".!?。！？"))
+
+    for key in ("blockers", "pending_requirements"):
+        data[key] = [issue for issue in data.get(key, []) if not superseded(issue)]
 
 
 def _source(path: str, lines: list[int] | tuple[int, int], **extra: Any) -> dict[str, Any]:
@@ -510,6 +603,8 @@ class _Graph:
     def ingest(self, result: dict[str, Any], *, compact: bool = False, logical_prose: bool = False, toc: bool = False,
                series: bool = False,
                record_source: dict[str, Any] | None = None) -> None:
+        imported_facts = []
+        fact_ids = {}
         self.data.setdefault("pending_requirements", []).extend(copy.deepcopy(result.get("pending_requirements", [])))
         for blocker in result.get("blockers", []):
             self.data["blockers"].append(copy.deepcopy(blocker))
@@ -550,6 +645,9 @@ class _Graph:
                              measurement_source=fact.get("value_source") if "raw_value" not in fact else None,
                              qualifier_sources=qualifier_sources,
                              record_id=fact.get("record_id") or (self.open_record(record_source) if record_source else None))
+            imported_facts.append(item)
+            if fact.get("id"):
+                fact_ids[fact["id"]] = item["id"]
             if logical_prose or toc:
                 additional = [edge for edge in self.data["relations"][first_edge:] if logical_prose
                               and edge["type"] == "qualifier_scope" and edge["left"]["type"] not in fact.get("qualifiers", {})]
@@ -562,7 +660,8 @@ class _Graph:
                     item[key] = ({**item.get(key, {}), **copy.deepcopy(fact[key])}
                                  if key == "qualifier_provenance" else copy.deepcopy(fact[key]))
             for key in ("logic", "qualifier_sources", "value_source", "attribute_source", "subject_source", "predicate", "object", "predicate_source", "object_source", "rule_id", "printed_label", "label_source",
-                        "semantic_type", "directory_evidence", "field_label_evidence", "record_evidence", "quoted_nominals"):
+                        "semantic_type", "semantic_role", "directory_evidence", "field_label_evidence", "record_evidence", "quoted_nominals",
+                        "statement_source", "subject_phrase", "object_phrase", "prepositional_complements"):
                 if key in fact:
                     if key == "value_source" and item["value"] != fact["value"]:
                         continue
@@ -576,7 +675,23 @@ class _Graph:
                                               "rows": copy.deepcopy(fact.get("row_evidence", []))})
         if logical_prose or toc:
             for edge in result["relations"]:
-                self.data["relations"].append({**copy.deepcopy(edge), "id": f"L:{len(self.data['relations'])}"})
+                copied = {**copy.deepcopy(edge), "id": f"L:{len(self.data['relations'])}"}
+                if copied.get("fact_id") in fact_ids:
+                    copied["fact_id"] = fact_ids[copied["fact_id"]]
+                elif copied["type"] == "field_binding":
+                    # A reader's local IDs are not global graph identities. In
+                    # readers without IDs, exact role origins identify a fact;
+                    # repeated words or a shared S/P endpoint alone do not.
+                    binding = copied.get("binding_evidence", {})
+                    matches = [fact for fact in imported_facts
+                               if all(binding.get(name) == fact.get(name) for name in
+                                      ("subject_source", "predicate_source", "object_source"))
+                               and binding.get("statement_source") == fact.get("statement_source", fact["source"])
+                               and all(copied.get("right", {}).get(name) == fact.get(name)
+                                       for name in ("subject", "attribute"))]
+                    if len(matches) == 1:
+                        copied["fact_id"] = matches[0]["id"]
+                self.data["relations"].append(copied)
         self.data.setdefault("candidate_issues", []).extend(copy.deepcopy(result.get("issues", [])))
 
     def toc(self, result: dict[str, Any]) -> set[str]:
@@ -603,8 +718,17 @@ class _Graph:
     def narrative(self, result: dict[str, Any], source: dict[str, Any]) -> None:
         self.ingest(result, logical_prose=True, record_source=source)
         self.data.setdefault("logical_statements", []).extend(copy.deepcopy(result["logic"]))
-        self.data.setdefault("semantic_operands", []).extend(copy.deepcopy(result.get("semantic_operands", [])))
-        self.data.setdefault("semantic_operand_relations", []).extend(copy.deepcopy(result.get("semantic_operand_relations", [])))
+        operands = self.data.setdefault("semantic_operands", [])
+        imported = copy.deepcopy(result.get("semantic_operands", []))
+        identities = {item["id"]: f"operand:{len(operands) + index}" for index, item in enumerate(imported)}
+        for item in imported:
+            item["id"] = identities[item["id"]]
+        operands.extend(imported)
+        edges = copy.deepcopy(result.get("semantic_operand_relations", []))
+        for edge in edges:
+            if edge.get("fact_id") in identities:
+                edge["fact_id"] = identities[edge["fact_id"]]
+        self.data.setdefault("semantic_operand_relations", []).extend(edges)
         self.data["required_matcher_features"] = sorted(set(self.data.get("required_matcher_features", []))
             | set(result.get("required_matcher_features", [])))
 
@@ -1182,10 +1306,12 @@ def _finish(graph: _Graph) -> dict[str, Any]:
             continue
         narrative = _read_narrative(item["text"], source, scope=item.get("scope", []))
         family_claimed = (bool({"active_aspect_scope", "temporal_prose_scope", "quantity_comparison", "year_on_year_comparison",
-                               "quoted_nominal_scope", "fronted_nominal_context", "document_composition", "page_reference_binding"}
+                               "quoted_nominal_scope", "fronted_nominal_context", "document_composition", "page_reference_binding",
+                               "discourse_scope", "purpose_scope", "controlled_infinitive_scope"}
                               & set(narrative.get("required_matcher_features", []))) or any(
             issue.get("reason", "").startswith("active_aspect_") or issue.get("reason") in {
                 "narrative_enumeration_operator_scope_unresolved", "narrative_quantified_comparison_scope_unresolved"}
+                or issue.get("reason") == "narrative_nominal_token_boundary_unresolved"
             for issue in narrative.get("blockers", [])))
         entity = read_entity_requirements(item["text"], source, parents=parent_texts, scope=item.get("scope", []))
         if entity["matched"]:
@@ -1205,7 +1331,14 @@ def _finish(graph: _Graph) -> dict[str, Any]:
             continue
         logical = read_prose_requirements(item["text"], source, label=label, label_source=label_source,
                                          parents=parents, scope=item.get("scope", []))
-        advanced = set(narrative.get("required_matcher_features", [])) - {"finite_tense", "coordination_scope", "modal_operator", "negation_scope"}
+        if (logical["facts"] and not logical["blockers"] and "noun_phrase_composition" in narrative.get("required_matcher_features", [])
+                and not (set(narrative.get("required_matcher_features", [])) & {
+                    "active_aspect_scope", "temporal_prose_scope", "year_on_year_comparison", "quoted_nominal_scope",
+                    "fronted_nominal_context", "document_composition", "page_reference_binding", "prepositional_attachment",
+                    "discourse_scope", "purpose_scope", "controlled_infinitive_scope"})):
+            family_claimed = False
+        advanced = set(narrative.get("required_matcher_features", [])) - {
+            "finite_tense", "coordination_scope", "modal_operator", "negation_scope", "noun_phrase_composition", "quantity_comparison"}
         prefer_narrative = narrative["complete"] and (bool(advanced) or narrative.get("syntax_language") == "zh")
         if family_claimed or not logical["facts"] or logical["blockers"] or re.search(r"\band\b", item["text"], re.I) or prefer_narrative:
             proposition = read_propositions(item["text"], source, scope=item.get("scope", []),
@@ -1217,8 +1350,10 @@ def _finish(graph: _Graph) -> dict[str, Any]:
                         else proposition if proposition["matched"] and (not logical["facts"] or logical["blockers"])
                         else narrative if not logical["facts"] else None)
             if selected:
+                if selected is not narrative:
+                    _adopt_comparison_tree(selected, narrative)
                 _bind_field_body(selected, label, label_source)
-                if selected is narrative:
+                if selected is narrative or selected.get("logic"):
                     graph.narrative(selected, source)
                 else:
                     graph.ingest(selected, logical_prose=True, record_source=source)
@@ -1226,6 +1361,8 @@ def _finish(graph: _Graph) -> dict[str, Any]:
                     | set(selected.get("required_matcher_features", [])))
                 item["semantic_propositions_complete"] = bool(selected["complete"])
                 item["unresolved_business_prose"] = not selected["complete"]
+                if selected["complete"]:
+                    _discharge_superseded_clause_pending(graph.data, item["text"], source)
                 old_reasons = {"unclassified_business_prose", "logical_prose_semantics_unsupported",
                                *(entry["reason"] for entry in logical["blockers"])}
                 graph.data["blockers"] = [blocker for blocker in graph.data["blockers"] if not (
@@ -1233,8 +1370,14 @@ def _finish(graph: _Graph) -> dict[str, Any]:
                     and any(blocker["source"] == original for original in originals))]
                 continue
         if logical["matched"]:
+            _adopt_comparison_tree(logical, narrative)
             _bind_field_body(logical, label, label_source)
-            graph.ingest(logical, logical_prose=True, record_source=source)
+            if logical.get("logic"):
+                graph.narrative(logical, source)
+            else:
+                graph.ingest(logical, logical_prose=True, record_source=source)
+            if narrative["complete"] and not logical["blockers"]:
+                _discharge_superseded_clause_pending(graph.data, item["text"], source)
             field = next((fact.get("field_label_evidence") for fact in logical["facts"] if fact.get("field_label_evidence")), None)
             own_scope = item.get("scope", [])
             if field and own_scope and own_scope[-1] != field["text"]:
@@ -1611,11 +1754,11 @@ def _grade_layers(requirements: dict[str, Any], evidence: dict[str, Any]) -> dic
                     for issue in requirements.get("candidate_issues", []) if issue.get("category") in
                     {"candidate_ambiguity", "unadjudicated_extra_content", "software_unsupported"})
     blockers.extend({"side": "comparison", **blocker} for layer in layers.values() for blocker in layer.get("blockers", []))
-    for side, graph in (("expected", requirements), ("candidate", evidence)):
-        unsupported = sorted(set(graph.get("required_matcher_features", [])) - {"finite_tense"})
-        if unsupported:
-            blockers.append({"side": side, "reason": "narrative_comparison_features_not_validated", "layers": ["B", "L"],
-                             "required_features": unsupported})
+    from .semantic_layer_comparison import compare_semantic_layers
+
+    semantic_comparison = compare_semantic_layers(requirements, evidence, rows, layers,
+                                                   canonicalize=canonical, scope_options=scope_options)
+    blockers.extend(semantic_comparison["blockers"])
     for key, layer in layers.items():
         affected = any(key in blocker.get("layers", ["L", "B"]) for blocker in blockers)
         layer["complete"] = not affected
@@ -1625,6 +1768,7 @@ def _grade_layers(requirements: dict[str, Any], evidence: dict[str, Any]) -> dic
             "layers": layers, "score": sum(layer["score"] for layer in layers.values()) / 3
             if not blockers and all(layer["denominator"] for layer in layers.values()) else None,
             "publishable": not blockers, "blockers": snapshot_copy(blockers), "outcomes": rows,
+            "semantic_comparison": snapshot_copy(semantic_comparison),
             "candidate_issues": snapshot_copy(evidence.get("candidate_issues", [])),
             "reference_interpretation_issues": snapshot_copy(requirements.get("candidate_issues", [])),
             "pending_requirements": {"expected": snapshot_copy(requirements.get("pending_requirements", [])),

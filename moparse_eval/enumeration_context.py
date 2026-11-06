@@ -233,6 +233,32 @@ def plan_enumeration_scopes(blocks: list[dict[str, Any]], *, selection_end=None)
     return result
 
 
+def enumeration_declaration(context):
+    """Represent printed collection roles without claiming child meanings.
+
+    The relation owns the declared syntax interval and every raw member source.
+    Separate membership edges still require interpreted facts; an unknown child
+    cannot become accepted through this declaration.
+    """
+    declaration = context["declaration"]
+    roles = declaration["roles"]
+    if not declaration.get("lexical_complete") or not all(key in roles for key in ("subject", "period", "collection", "operator")):
+        raise ValueError("collection declaration lacks source-bound roles")
+    left = {"subject": roles["subject"]["text"], "attribute": roles["collection"]["text"],
+            "scope": copy.deepcopy(context.get("scope", [])), "qualifiers": copy.deepcopy(declaration["qualifiers"])}
+    if "domain" in roles:
+        left["domain"] = roles["domain"]["text"]
+    members = [{"ordinal": index, "source": copy.deepcopy(member["source"]), "text": member["text"]}
+               for index, member in enumerate(context["members"])]
+    return {"type": "enumeration_declaration", "left": left,
+        "right": {"role": "declared_collection_scope", "operator": roles["operator"]["text"],
+                  "members": copy.deepcopy(members)},
+        "source": copy.deepcopy(declaration["source"]),
+        "binding_evidence": {"introduction_source": copy.deepcopy(declaration["source"]),
+            "roles": copy.deepcopy(roles), "member_sources": members, "end_boundary": copy.deepcopy(context["boundary"])},
+        "rule_id": "printed_collection_declaration_with_separate_member_semantics"}
+
+
 def enumeration_membership(context, member, fact):
     """Attach one already interpreted claim to its own proven list member."""
     if not any(item["id"] == member["id"] and item["source"] == member["source"] for item in context["members"]):

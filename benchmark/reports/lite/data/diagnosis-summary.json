@@ -3,11 +3,11 @@
   "quality_scores_withheld": true,
   "expected_comparison_complete": false,
   "candidate_comparison_started": false,
-  "software_id": "18b8634ea419e379db63be7c420e8596b77e1ca8b9812762430281bac7467194",
-  "git_head": "895857fcb355a1d86c3c98e3f597ba016ed4bc74",
+  "software_id": "c913ef5f15b001372a52574e92c8fa662ebea9239d7ef6d5ab44db3e538b36d9",
+  "git_head": "49be1e75c26e9a77e82541067b0dd06d67be7a2d",
   "configured_analysis_workers": 16,
   "source_index": "benchmark/runs/lite/requirements/current/index.json",
-  "source_index_sha256": "990dc2b8a2d70e1130a2d3c5f4c97f9e6777cd895474f0910bc90aabcc404a82",
+  "source_index_sha256": "9b2556a429840d78776a715aa858449a8b45aa1f5eb9e2ab7b740a15bde6c755",
   "source_compilation": {
     "scope": "declared_lite_expected_only",
     "declared_records": 173,
@@ -20,23 +20,26 @@
       "scope": "source_integrity_not_semantic_oracle"
     },
     "software_unchanged": true,
+    "all_views_same_software_id": true,
+    "analysis_workers": 16,
     "semantic_complete": false
   },
   "software_validation": {
     "path": "benchmark/runs/lite/requirements/validation/software-validation.json",
-    "sha256": "421de09d195ebb87bfdf3d93053452e14522ab2ddca14095e69c52e3bdd50e36",
+    "sha256": "f678549b321881e8758e1ae80420ab0c47d51ed94f33d34db8b60453ff4ecab0",
     "status": "passed",
-    "summary": "1948 passed in 31.17s",
+    "summary": "3619 passed in 58.64s",
+    "new_independent_test_cases_in_new_files": 444,
     "scope": "controlled_cases_only_not_complete_expected_acceptance"
   },
   "actual_source_diagnosis": "benchmark/runs/lite/requirements/validation/actual-source-diagnosis.json",
   "expected_structure_gate": {
     "status": "not_passed",
-    "reason": "Actual authorized expected business propositions and relationships remain unresolved; transport integrity is not independent semantic acceptance."
+    "reason": "All 173 source views retain valid provenance; complete actual expected semantics and independent full-scope acceptance remain unresolved."
   },
   "comparison_capability_gate": {
     "status": "not_passed",
-    "reason": "Complete four-state B/L and new compositional AST comparison are not independently accepted."
+    "reason": "Twenty compositional features have executable controlled evidence. Remaining features and actual candidate/format coverage are not independently accepted."
   },
   "delivery_conversion_gate": {
     "status": "not_passed",
@@ -46,7 +49,9 @@
     "software_complete": false,
     "evaluation_execution_complete": false,
     "quality_score_publication_ready": false,
-    "five_input_scopes_confirmed": false
+    "five_input_scopes_confirmed": false,
+    "controlled_software_validation_passed": true,
+    "full_expected_semantic_acceptance_passed": false
   },
   "input_scope_pending": [
     "alibaba-strategies-p009-010",
@@ -59,17 +64,472 @@
   "real_candidate_cpu_replay_started": false,
   "meaning": "Source-only views and controlled tests are software evidence. Actual candidate comparison, delivered-output gains, complete semantics, and publication readiness are not established. Original saved candidates, bodies, and costs remain preserved.",
   "implemented_source_families": [
-    "independent_authorized_raw_source_obligations",
-    "quoted_and_fronted_nominal_scope",
-    "document_composition_and_page_relations",
+    "bounded_shared_np_pp_and_local_relation_ownership",
     "dated_enumeration_roles_and_member_boundaries",
     "directed_ratio_and_ratio_delta_measurements",
+    "document_composition_and_page_relations",
     "financial_statement_classification_unit_scope",
+    "independent_authorized_raw_source_obligations",
+    "quoted_and_fronted_nominal_scope",
+    "recursive_four_state_compositional_comparison",
+    "sentence_local_bilingual_reading",
+    "source_bound_collection_declarations",
+    "source_bound_discourse_purpose_and_object_control",
+    "source_consistent_fact_ast_and_report_replay",
+    "typed_assertive_nominal_and_unknown_source_obligations",
     "typed_toc_source_ownership"
   ],
   "object_ledger": {
     "implementation": "source_bound_object_references_and_exact_source_partitions",
     "actual_delivery_acceptance": "not_run",
     "requirement_level_eight_way_attribution": "not_complete"
-  }
+  },
+  "controlled_ast_comparison_features": [
+    "ability_operator",
+    "active_aspect_scope",
+    "alternative_membership",
+    "condition_operands",
+    "contrast_scope",
+    "controlled_infinitive_scope",
+    "coordination_scope",
+    "discourse_scope",
+    "finite_tense",
+    "fronted_nominal_context",
+    "modal_operator",
+    "negation_scope",
+    "nested_operator_scopes",
+    "noun_phrase_composition",
+    "prepositional_attachment",
+    "purpose_scope",
+    "quantity_comparison",
+    "restrictive_relative",
+    "scoped_reporting",
+    "temporal_prose_scope"
+  ],
+  "unvalidated_features_in_authorized_views": [
+    "document_composition",
+    "enumeration_context_scope",
+    "explicit_reference_binding",
+    "page_reference_binding",
+    "quoted_nominal_scope",
+    "same_subject_relative_clause",
+    "shared_period_scope",
+    "year_on_year_comparison"
+  ],
+  "semantic_diagnosis": {
+    "views_without_non_deferred_pending": 2,
+    "views_with_non_deferred_pending": 171,
+    "pending_family_count": 109,
+    "top_families": [
+      {
+        "family": "source_obligation_pending:relation",
+        "unique_source_occurrences": 9536,
+        "affected_samples": 166,
+        "original_scopes_without_current_overlapping_pending": 3,
+        "newly_exposed_scopes": 598
+      },
+      {
+        "family": "narrative_predicate_unresolved",
+        "unique_source_occurrences": 4783,
+        "affected_samples": 164,
+        "original_scopes_without_current_overlapping_pending": 1,
+        "newly_exposed_scopes": 3
+      },
+      {
+        "family": "source_obligation_pending:semantic_content",
+        "unique_source_occurrences": 3972,
+        "affected_samples": 162,
+        "original_scopes_without_current_overlapping_pending": 0,
+        "newly_exposed_scopes": 4
+      },
+      {
+        "family": "source_obligation_pending:proposition",
+        "unique_source_occurrences": 2277,
+        "affected_samples": 127,
+        "original_scopes_without_current_overlapping_pending": 12,
+        "newly_exposed_scopes": 8
+      },
+      {
+        "family": "source_obligation_pending:qualifier",
+        "unique_source_occurrences": 2080,
+        "affected_samples": 108,
+        "original_scopes_without_current_overlapping_pending": 16,
+        "newly_exposed_scopes": 27
+      },
+      {
+        "family": "list_group_scope_interpretation_unsupported",
+        "unique_source_occurrences": 937,
+        "affected_samples": 45,
+        "original_scopes_without_current_overlapping_pending": 0,
+        "newly_exposed_scopes": 0
+      },
+      {
+        "family": "prose_clause_semantics_unsupported",
+        "unique_source_occurrences": 908,
+        "affected_samples": 56,
+        "original_scopes_without_current_overlapping_pending": 15,
+        "newly_exposed_scopes": 0
+      },
+      {
+        "family": "quoted_nominal_lexical_role_unresolved",
+        "unique_source_occurrences": 844,
+        "affected_samples": 114,
+        "original_scopes_without_current_overlapping_pending": 0,
+        "newly_exposed_scopes": 0
+      },
+      {
+        "family": "source_has_no_supported_semantic_disposition",
+        "unique_source_occurrences": 651,
+        "affected_samples": 121,
+        "original_scopes_without_current_overlapping_pending": 0,
+        "newly_exposed_scopes": 0
+      },
+      {
+        "family": "source_obligation_pending:text",
+        "unique_source_occurrences": 651,
+        "affected_samples": 90,
+        "original_scopes_without_current_overlapping_pending": 0,
+        "newly_exposed_scopes": 0
+      },
+      {
+        "family": "narrative_prepositional_attachment_unresolved",
+        "unique_source_occurrences": 521,
+        "affected_samples": 61,
+        "original_scopes_without_current_overlapping_pending": 0,
+        "newly_exposed_scopes": 0
+      },
+      {
+        "family": "cjk_narrative_predicate_unresolved",
+        "unique_source_occurrences": 476,
+        "affected_samples": 53,
+        "original_scopes_without_current_overlapping_pending": 0,
+        "newly_exposed_scopes": 0
+      },
+      {
+        "family": "narrative_subject_boundary_unresolved",
+        "unique_source_occurrences": 384,
+        "affected_samples": 58,
+        "original_scopes_without_current_overlapping_pending": 2,
+        "newly_exposed_scopes": 0
+      },
+      {
+        "family": "cjk_measurement_sequence_incomplete",
+        "unique_source_occurrences": 340,
+        "affected_samples": 54,
+        "original_scopes_without_current_overlapping_pending": 0,
+        "newly_exposed_scopes": 0
+      },
+      {
+        "family": "series_independent_field_role_unsupported",
+        "unique_source_occurrences": 328,
+        "affected_samples": 7,
+        "original_scopes_without_current_overlapping_pending": 0,
+        "newly_exposed_scopes": 0
+      }
+    ],
+    "root_cause_groups": [
+      {
+        "root_cause_group": "local_relation_ownership",
+        "unique_source_occurrences": 9536,
+        "affected_samples": 166
+      },
+      {
+        "root_cause_group": "clause_predicate_and_compositional_scope",
+        "unique_source_occurrences": 7137,
+        "affected_samples": 165
+      },
+      {
+        "root_cause_group": "assertive_and_nominal_interpretation",
+        "unique_source_occurrences": 6249,
+        "affected_samples": 163
+      },
+      {
+        "root_cause_group": "logical_qualifier_scope",
+        "unique_source_occurrences": 2080,
+        "affected_samples": 108
+      },
+      {
+        "root_cause_group": "quoted_fronted_temporal_aspect_context",
+        "unique_source_occurrences": 1500,
+        "affected_samples": 132
+      },
+      {
+        "root_cause_group": "structured_fields_header_period_unit",
+        "unique_source_occurrences": 1067,
+        "affected_samples": 43
+      },
+      {
+        "root_cause_group": "enumeration_declaration_and_member_ownership",
+        "unique_source_occurrences": 987,
+        "affected_samples": 66
+      },
+      {
+        "root_cause_group": "noun_phrase_coordination_and_attachment",
+        "unique_source_occurrences": 978,
+        "affected_samples": 63
+      },
+      {
+        "root_cause_group": "cjk_clauses_and_measurements",
+        "unique_source_occurrences": 935,
+        "affected_samples": 68
+      },
+      {
+        "root_cause_group": "unsupported_semantic_disposition",
+        "unique_source_occurrences": 925,
+        "affected_samples": 137
+      },
+      {
+        "root_cause_group": "literal_projection_binding",
+        "unique_source_occurrences": 651,
+        "affected_samples": 90
+      },
+      {
+        "root_cause_group": "navigation_and_document_relations",
+        "unique_source_occurrences": 2,
+        "affected_samples": 2
+      }
+    ]
+  },
+  "implementation_changes": [
+    {
+      "file": "moparse_eval/active_aspect_requirements.py",
+      "changed_functions": [
+        "read_active_aspect_clause"
+      ]
+    },
+    {
+      "file": "moparse_eval/cjk_measurement_requirements.py",
+      "changed_functions": [
+        "read_cjk_measurements"
+      ]
+    },
+    {
+      "file": "moparse_eval/enumeration_binding.py",
+      "changed_functions": [
+        "inherit_omitted_subject",
+        "bind_interpreted_members",
+        "validate_enumeration_bindings"
+      ]
+    },
+    {
+      "file": "moparse_eval/enumeration_context.py",
+      "changed_functions": [
+        "enumeration_declaration"
+      ]
+    },
+    {
+      "file": "moparse_eval/expected_report.py",
+      "changed_functions": [
+        "_validate_flat_evidence",
+        "validate_evidence"
+      ]
+    },
+    {
+      "file": "moparse_eval/infinitival_syntax.py",
+      "changed_functions": [
+        "_main_leaves",
+        "read_discourse_scope",
+        "_unknown_node",
+        "_infinitive",
+        "read_infinitival_scope",
+        "validate_infinitival_sources"
+      ]
+    },
+    {
+      "file": "moparse_eval/narrative_requirements.py",
+      "changed_functions": [
+        "_Unknown.__init__",
+        "_Reader.__init__",
+        "_Reader.interpret",
+        "_Reader.nominal",
+        "_Reader.parse",
+        "_Reader.clause",
+        "_Reader.predicate",
+        "_Reader.predicate_objects",
+        "_Reader.objects",
+        "_Reader.summary",
+        "_Reader.annotate_sources",
+        "_Reader.endpoint",
+        "_Reader.edge",
+        "_Reader.emit",
+        "read_narrative"
+      ]
+    },
+    {
+      "file": "moparse_eval/nominal_syntax.py",
+      "changed_functions": [
+        "_unknown",
+        "nominal_phrase",
+        "_role",
+        "predicate_complements",
+        "validate_nominal_sources"
+      ]
+    },
+    {
+      "file": "moparse_eval/proposition_requirements.py",
+      "changed_functions": [
+        "read_propositions"
+      ]
+    },
+    {
+      "file": "moparse_eval/prose_requirements.py",
+      "changed_functions": [
+        "_action"
+      ]
+    },
+    {
+      "file": "moparse_eval/requirement_ast.py",
+      "changed_functions": [
+        "_canonical",
+        "_result",
+        "_combine",
+        "_provenance_key",
+        "_semantic_keys",
+        "_source_checks",
+        "_scalar",
+        "compare_requirement_ast",
+        "_walk",
+        "_feature_present",
+        "compare_feature_ast",
+        "_identity",
+        "compare_requirement_ast_collections"
+      ]
+    },
+    {
+      "file": "moparse_eval/requirement_graph.py",
+      "changed_functions": [
+        "_cover",
+        "_semantic_token_matches",
+        "_validate_semantic_sources",
+        "validate_requirement_graph",
+        "_compile_saved_requirement_view",
+        "compile_saved_requirements",
+        "main"
+      ]
+    },
+    {
+      "file": "moparse_eval/semantic_layer_comparison.py",
+      "changed_functions": [
+        "_owns",
+        "_has_unresolved",
+        "_main_assertions",
+        "_role_key",
+        "_affected_assertions",
+        "_target_affected",
+        "_fact_ast_consistency",
+        "compare_semantic_layers"
+      ]
+    },
+    {
+      "file": "moparse_eval/source_obligations.py",
+      "changed_functions": [
+        "_fragment_contract",
+        "build_source_obligation_inventory",
+        "_fragment_owns_fact",
+        "_role_evidence",
+        "validate_relation_binding",
+        "_bound_relations",
+        "_prepositional_role_evidence",
+        "_controller_binding",
+        "_infinitive_bindings",
+        "_operator_edges",
+        "_structural_evidence",
+        "audit_source_obligations"
+      ]
+    },
+    {
+      "file": "moparse_eval/three_layer.py",
+      "changed_functions": [
+        "_read_narrative",
+        "_bind_field_body",
+        "_adopt_comparison_tree",
+        "_discharge_superseded_clause_pending",
+        "_Graph.ingest",
+        "_Graph.narrative",
+        "_finish",
+        "_grade_layers"
+      ]
+    }
+  ],
+  "new_test_files": [
+    "tests/unit/test_collection_declaration_ownership.py",
+    "tests/unit/test_compositional_layer_integration.py",
+    "tests/unit/test_infinitival_source_semantics.py",
+    "tests/unit/test_narrative_nominal_composition.py",
+    "tests/unit/test_proposition_nominal_owner.py",
+    "tests/unit/test_requirement_ast_comparator.py",
+    "tests/unit/test_requirement_source_parallel_compile.py",
+    "tests/unit/test_semantic_transport_contract.py",
+    "tests/unit/test_source_obligation_typed_contract.py"
+  ],
+  "obsolete_test_removed": "tests/unit/test_unicode_infix_matching.py only imported the retired missing matcher; no compatibility implementation restored.",
+  "comparison_validation": "benchmark/runs/lite/requirements/validation/comparison-validation.json",
+  "oracle_validation": "benchmark/runs/lite/requirements/validation/oracle-validation.json",
+  "mutation_validation": "benchmark/runs/lite/requirements/validation/mutations-validation.json",
+  "regression_status": {
+    "controlled_test_failures": 0,
+    "source_integrity_failures": 0,
+    "real_source_compile_exceptions_repaired": 3,
+    "repaired_samples": [
+      "iea-inference-energy-boxes-p043-048",
+      "nvidia-business-manufacturing-people-p096-104",
+      "pingan-business-highlights-p012-013"
+    ],
+    "newly_exposed_scopes_are_not_automatically_parser_regressions": true
+  },
+  "changed_files": [
+    "AGENTS.md",
+    "benchmark/evaluation-tasks.md",
+    "benchmark/reports/lite/data/diagnosis-summary.json",
+    "benchmark/reports/lite/report.md",
+    "docs/engineering/prompts/expected-output-optimization.md",
+    "moparse_eval/README.md",
+    "moparse_eval/active_aspect_requirements.py",
+    "moparse_eval/cjk_measurement_requirements.py",
+    "moparse_eval/enumeration_binding.py",
+    "moparse_eval/enumeration_context.py",
+    "moparse_eval/expected_report.py",
+    "moparse_eval/infinitival_syntax.py",
+    "moparse_eval/narrative_requirements.py",
+    "moparse_eval/nominal_syntax.py",
+    "moparse_eval/proposition_requirements.py",
+    "moparse_eval/prose_requirements.py",
+    "moparse_eval/requirement_ast.py",
+    "moparse_eval/requirement_graph.py",
+    "moparse_eval/semantic_layer_comparison.py",
+    "moparse_eval/source_obligations.py",
+    "moparse_eval/three_layer.py",
+    "tests/unit/test_active_aspect_requirements.py",
+    "tests/unit/test_collection_declaration_ownership.py",
+    "tests/unit/test_compositional_layer_integration.py",
+    "tests/unit/test_infinitival_source_semantics.py",
+    "tests/unit/test_measurement_reader_drift.py",
+    "tests/unit/test_narrative_nominal_composition.py",
+    "tests/unit/test_proposition_nominal_owner.py",
+    "tests/unit/test_prose_field_context.py",
+    "tests/unit/test_prose_multi_clause_contract.py",
+    "tests/unit/test_requirement_ast_comparator.py",
+    "tests/unit/test_requirement_graph_contract.py",
+    "tests/unit/test_requirement_graph_source_coverage.py",
+    "tests/unit/test_requirement_source_parallel_compile.py",
+    "tests/unit/test_semantic_transport_contract.py",
+    "tests/unit/test_source_obligation_nominal_tail_scope.py",
+    "tests/unit/test_source_obligation_oracle.py",
+    "tests/unit/test_source_obligation_typed_contract.py",
+    "tests/unit/test_three_layer_narrative_integration.py",
+    "tests/unit/test_three_layer_preamble_contract.py",
+    "tests/unit/test_three_layer_prose_contract.py",
+    "tests/unit/test_unicode_infix_matching.py"
+  ],
+  "local_generated_evidence": [
+    "benchmark/runs/lite/requirements/current/index.json",
+    "benchmark/runs/lite/requirements/current/samples/*.json",
+    "benchmark/runs/lite/requirements/current/samples/*.xml",
+    "benchmark/runs/lite/requirements/validation/actual-source-diagnosis.json",
+    "benchmark/runs/lite/requirements/validation/software-validation.json",
+    "benchmark/runs/lite/requirements/validation/oracle-validation.json",
+    "benchmark/runs/lite/requirements/validation/mutations-validation.json",
+    "benchmark/runs/lite/requirements/validation/comparison-validation.json",
+    "benchmark/runs/lite/requirements/validation/source-export.json"
+  ]
 }

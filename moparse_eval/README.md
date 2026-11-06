@@ -34,6 +34,12 @@
 
 `authorized_source_inventory.py`从语法解析前保留的授权原始行段独立核对文字和GFM格位，不能用target.raw存在代替正文或单元格保全。`source_obligations.py`在业务解释前建立Source Obligation Inventory，随后按实际角色、句内位置、年度和单位邻接、限定及关系来源解释每项义务；未解释部分和部分证明均保留。复杂或不支持的原始语法保持pending。仅提供target的合成夹具明确标记受控范围，不声称canonical来源完整。来源完整、语义完整和独立Oracle验证是不同状态。
 
+来源义务具有独立的`semantic_type`、预期角色、语句来源和生命周期；字段、名词标签、枚举成员、导航、文档组成和未知片段不再无条件生成业务命题。普通介词形成有head、补足语、角色及原token来源的附着义务，不能统称条件限定。`validate_relation_binding`返回equivalent、conflict、missing或unresolved及证明，核对实际fact、两端、语句、作用域和角色来源，不能借相邻分句的关系完成当前义务。
+
+`nominal_syntax.py`为中英文共享AST提供有界名词短语、内部AND/OR、数量词、OF补足和谓词介词附着；`narrative_requirements.py`保留动作/宾语并列、条件、否定、模态、时态及组合路径。未知附着和否定AND继续未决。`three_layer.py`按独立句分派中英文读取器，保留双方已读事实及局部pending；只有完整、角色及来源一致的解释才能给既有字段添加比较AST，不能覆盖不同解释或丢失字段及命名父记录身份。
+
+`requirement_ast.py`提供递归四态比较与不使用答案值的语句检索。`semantic_layer_comparison.py`将实际执行的AST判定绑定到既有B/L票，不新增或减少分母；特征注册表、实际AST及来源证据缺一不可。B比较完整值及组合语义，L独立检查关系、角色、作用域和附着，直接断言的标量答案另由B比较。共享数量及期间等价规则继续由`equivalence.py`维护。`expected_report.py`重放原有检索及递归证明，拒绝删节点、伪造来源或删除阻断。受控比较通过不代表全部真实expected或候选表达已经获得支持。
+
 `source_requirements.py`分离有证据的多字段序列及声明为正文的字段值，不拆开单个合法名称、时间、URL或依赖schema的数值tuple。Description中的独立SVO分别解释，原标签仅限定其实际正文；同名相邻字段不能互借主体、谓词或对象来源。`field_sequence_requirements.py`区分有来源的属性、主体列、期间选择器及未知前缀。`period_evidence.py`保留完整日期及期间粒度，不以年份替代完整财政日期。未知分句不能借同段另一个已读字段获得完整状态。
 
 `explicit_reference_requirements.py`保留See/参见的引用身份及归属关系；完整导航文字不额外增加业务题，归属必须来自实际字段或标题，缺少归属与未知残余继续未决。有限组合语法保留条件、否定、模态、逻辑操作数及原词项来源。要求图的传输校验同时检查操作数、限定来源、已解释投影和必要SVO关系；与原expected重新编译核对用于检出同步突变，不替代独立语义样例。新组合语法的比较能力未验证前，B/L继续暂停。
@@ -91,10 +97,11 @@
 ```bash
 .venv/bin/python -m moparse_eval.requirement_graph \
   --baseline benchmark/runs/lite \
-  --output benchmark/runs/lite/requirements/current
+  --output benchmark/runs/lite/requirements/current \
+  --workers 16
 ```
 
-结构尚有未知时，只能以显式严格子集做有界软件诊断，不能再次启动全范围候选匹配。全范围diagnostic须提供同版冻结及独立结构证据，实际使用重新绑定canonical的冻结投影；显式列全ID同样受限。以下入口的样本ID必须来自已保存声明；诊断不缩小正式分母。
+这里的16个spawn进程仅编译独立expected文字视图，不读取候选或PDF，不改变管线资源；API默认workers=1。父进程与每项视图分别核对源码身份，所有失败样本保留在排序后的唯一索引中，不缩小声明范围。结构尚有未知时，只能以显式严格子集做有界软件诊断，不能再次启动全范围候选匹配。全范围diagnostic须提供同版冻结及独立结构证据，实际使用重新绑定canonical的冻结投影；显式列全ID同样受限。以下入口的样本ID必须来自已保存声明；诊断不缩小正式分母。
 
 ```bash
 .venv/bin/python -m moparse_eval.expected_evaluation \

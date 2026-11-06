@@ -6,6 +6,7 @@ independent validation and real-format diagnosis gates remain separate.
 
 from __future__ import annotations
 
+import copy
 import json
 import re
 from collections import Counter, defaultdict
@@ -455,7 +456,7 @@ def _relation_trace(row: dict[str, Any], used: set[str], scope_options: dict[str
         raise ValueError("an incorrect located binding requires the same independent data object")
 
 
-def validate_evidence(score: dict[str, Any]) -> None:
+def _validate_flat_evidence(score: dict[str, Any]) -> None:
     """Independently read back edits, occurrences, relation endpoints and traces."""
     if score.get("protocol") != PROTOCOL:
         raise ValueError("mixed scoring protocols cannot be published")
@@ -531,6 +532,57 @@ def validate_evidence(score: dict[str, Any]) -> None:
         correct = expected_set == actual_set and all(record_equal)
         if any(row["actual"] != members[0]["actual"] or row["outcome"] != ("correct" if correct else "incorrect") for row in members):
             raise ValueError("business judgment contradicts the complete repeated assertion set")
+
+
+def validate_evidence(score: dict[str, Any]) -> None:
+    """Replay both flat evidence and any compositional decision that changed it."""
+    semantic = score.get("semantic_comparison")
+    if semantic is None:
+        raise ValueError("semantic comparison evidence is required by the current scoring contract")
+    from .semantic_layer_comparison import compare_semantic_layers
+
+    inputs = semantic.get("inputs", {})
+    if set(inputs) != {"required", "actual"}:
+        raise ValueError("semantic comparison lacks its independently retained inputs")
+    text = score.get("text_evidence", {})
+    if any(inputs[side].get("text_projection") != text.get(key) for side, key in
+           (("required", "required_projection"), ("actual", "candidate_projection"))):
+        raise ValueError("semantic sources differ from actual retained text evidence")
+    flat = copy.deepcopy(score)
+    for row in flat["outcomes"]:
+        if "flat_outcome" in row:
+            row["outcome"] = row.pop("flat_outcome")
+        row.pop("ast_comparisons", None)
+        row.pop("semantic_comparison_status", None)
+    for layer in ("B", "L"):
+        own = flat["layers"][layer]
+        own["numerator"] = sum(row["outcome"] == "correct" for row in flat["outcomes"] if row["layer"] == layer)
+        own["score"] = 100 * own["numerator"] / own["denominator"] if own["denominator"] else None
+    flat["score"] = sum(layer["score"] for layer in flat["layers"].values()) / 3 if all(
+        layer["score"] is not None for layer in flat["layers"].values()) else None
+    _validate_flat_evidence(flat)
+    business_rows = [row for row in score["outcomes"] if row["layer"] == "B"]
+    required_owners = {fact["id"]: fact for fact in inputs["required"].get("business", [])}
+    if (len(required_owners) != len(business_rows)
+            or required_owners != {row["expected"]["id"]: row["expected"] for row in business_rows}):
+        raise ValueError("semantic target owners differ from the complete business requirements")
+    actual_owners = {fact["id"]: fact for fact in inputs["actual"].get("business", [])}
+    if len(actual_owners) != len(inputs["actual"].get("business", [])) or any(
+            actual_owners.get(hit["candidate"]["id"]) != hit["candidate"]
+            for row in business_rows for hit in row.get("retrieval", {}).get("candidates", [])):
+        raise ValueError("semantic candidate owners differ from actual retrieved business evidence")
+    scope_options = {key: score.get("scope_evidence", {}).get(key, None if key == "contexts" else ())
+                     for key in ("contexts", "declared_paths", "context_labels")}
+    replay = compare_semantic_layers(inputs["required"], inputs["actual"], flat["outcomes"], flat["layers"],
+                                     canonicalize=canonical, scope_options=scope_options)
+    if replay != semantic or flat["outcomes"] != score["outcomes"]:
+        raise ValueError("semantic comparison differs from its source-bound recursive replay")
+    if any(blocker not in score.get("blockers", []) for blocker in replay["blockers"]):
+        raise ValueError("semantic comparison blockers were omitted from the publication decision")
+    for layer in ("B", "L"):
+        if flat["layers"][layer]["numerator"] != score["layers"][layer]["numerator"]:
+            raise ValueError("semantic layer aggregate differs from its unchanged target votes")
+    summarize_layers([score])
 
 
 def text_layer_diagnostics(scores: list[dict[str, Any]]) -> dict[str, Any]:

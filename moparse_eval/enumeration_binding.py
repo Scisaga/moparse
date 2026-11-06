@@ -4,7 +4,11 @@ from __future__ import annotations
 
 import copy
 
-from .enumeration_context import enumeration_membership, plan_enumeration_scopes
+from .enumeration_context import (
+    enumeration_declaration,
+    enumeration_membership,
+    plan_enumeration_scopes,
+)
 from .equivalence import decide_equivalence
 
 
@@ -65,6 +69,21 @@ def inherit_omitted_subject(result, binding):
         bounds = origin.get("text_span")
         if bounds and bounds[0] == bounds[1] and fact["subject"] == inherited["subject"]:
             fact["subject_source"] = copy.deepcopy(inherited["subject_source"])
+            # Role sources are part of the same source-bound interpretation.
+            # Moving the absent actor slot to its printed introduction must
+            # also bind the edge to that actor, rather than leaving a phantom
+            # empty source behind in the otherwise complete field relation.
+            def rebind(value, original=origin):
+                if isinstance(value, dict):
+                    if value.get("subject_source") == original:
+                        value["subject_source"] = copy.deepcopy(inherited["subject_source"])
+                    for child in value.values():
+                        rebind(child)
+                elif isinstance(value, list):
+                    for child in value:
+                        rebind(child)
+
+            rebind(result.get("relations", []))
 
 
 def _issue(reason, context, member=None, *, layers=("L",), **proof):
@@ -80,6 +99,9 @@ def bind_interpreted_members(data, plan):
         ({"enumeration_context_scope"} if plan["contexts"] else set()))
     for context in plan["contexts"]:
         roles = context["declaration"]["roles"]
+        declaration = enumeration_declaration(context)
+        declaration["id"] = f"L:{len(data['relations'])}"
+        data["relations"].append(declaration)
         for member in context["members"]:
             # A syntactic parent is resolved only by this actual declaration.
             data["blockers"] = [issue for issue in data["blockers"] if not (
@@ -162,6 +184,11 @@ def validate_enumeration_bindings(graph, nodes, source_literal):
         for member in context["members"]:
             if source_literal(member["source"]) != member["text"]:
                 raise ValueError("enumeration member differs from its original source")
+        required = enumeration_declaration(context)
+        if not any(edge.get("type") == "enumeration_declaration" and all(
+                edge.get(key) == required[key] for key in ("left", "right", "source", "binding_evidence"))
+                for edge in graph["relations"]):
+            raise ValueError("enumeration declaration lacks its own source-bound collection relation")
     for ident in graph["projections"]["B"]:
         fact = nodes[ident]
         evidence = fact.get("enumeration_evidence")

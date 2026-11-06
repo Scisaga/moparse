@@ -110,10 +110,20 @@ def _cover(entry: dict[str, Any], source: dict[str, Any]) -> bool:
         return own.get("cell") == source["cell"]
     if own.get("cell"):
         return False
-    a, b = own.get("lines", [0, 0])
-    c, d = source.get("lines", [0, 0])
-    if not a <= c <= d <= b:
-        return False
+    outer_lines, inner_lines = own.get("lines"), source.get("lines")
+    if (isinstance(outer_lines, (list, tuple)) and isinstance(inner_lines, (list, tuple))
+            and len(outer_lines) == len(inner_lines) == 2):
+        a, b = outer_lines
+        c, d = inner_lines
+        if not a <= c <= d <= b:
+            return False
+    else:
+        # Native blocks can have no physical Markdown lines. Their actual
+        # producer identity still owns a literal; an absent line range alone
+        # never proves ownership or permits borrowing from another block.
+        anchors = [key for key in ("block", "native_path") if own.get(key) is not None]
+        if not anchors or outer_lines != inner_lines or any(own[key] != source.get(key) for key in anchors):
+            return False
     if own.get("text_span"):
         bounds = source.get("text_span")
         return bool(bounds and own["text_span"][0] <= bounds[0] <= bounds[1] <= own["text_span"][1])
@@ -505,6 +515,8 @@ def _semantic_token_matches(dimension, claimed, literal):
         return canonical_currency(claimed) == canonical_currency(literal)
     if dimension in {"operator", "comparison_operator"} and raw in _COMPARISONS:
         return _COMPARISONS[raw] == wanted
+    if dimension in {"operator", "comparison_operator"} and raw in {"at least", "at most", "more than", "less than"}:
+        return {"at least": "ge", "at most": "le", "more than": "gt", "less than": "lt"}[raw] == wanted
     if dimension == "comparison_basis":
         return wanted == "year on year" and raw == "同比"
     if dimension == "change_direction":
@@ -567,7 +579,7 @@ def _validate_semantic_sources(graph, nodes):
         for name in ("subject", "predicate", "object", "speaker", "antecedent"):
             if name in node and node[name] and name + "_source" in node:
                 cut(node[name], node[name + "_source"], "logic " + name)
-        if node.get("operator_source") and "operator" in node:
+        if node.get("operator_source") and "operator" in node and node.get("kind") not in {"purpose_scope", "controlled_infinitive_scope"}:
             dimension = "modality" if node.get("kind") == "modality" else "operator"
             token(node["operator"], node["operator_source"], dimension)
         if node.get("kind") == "negation" and node.get("operator_source"):
@@ -639,6 +651,8 @@ def _validate_semantic_sources(graph, nodes):
                         capacity["reported" if kind == "reporting" else "restrictive_relative"] += 1
                     elif kind == "conditions" and field.get("semantic_role") == "operand":
                         capacity["condition_operand"] += 1
+                    elif kind in {"purpose_scope", "controlled_infinitive_scope"} and field.get("kind") == "semantic_operand":
+                        capacity["purpose_operand" if kind == "purpose_scope" else "controlled_infinitive_operand"] += 1
                     elif kind == "modality":
                         actual = [node for node in tree_nodes if node.get("kind") == kind and "operator" in node
                                   and node.get("source") == entry.get("source")
@@ -762,13 +776,21 @@ def validate_requirement_graph(graph: dict[str, Any], *, expected: dict[str, Any
             # An interpreted SVO proposition owns its binding even if every
             # printed word is also retained by T. Numeric payload is not used
             # to locate that binding.
-            origin = {"source": fact.get("statement_source", fact["source"])}
+            from .source_obligations import validate_relation_binding
+
             if not any(edge.get("type") == "field_binding"
-                       and edge.get("right", {}).get("subject") == fact["subject"]
-                       and edge.get("right", {}).get("attribute") == fact["attribute"]
-                       and _cover(origin, edge.get("source", {})) for edge in relations.values()):
+                       and validate_relation_binding(None, fact, edge)["equivalent"]
+                       and all(edge.get("binding_evidence", {}).get(role) == fact.get(role)
+                               for role in ("subject_source", "predicate_source", "object_source"))
+                       for edge in relations.values()):
                 raise ValueError("interpreted proposition lacks its source-bound semantic relation")
     _validate_semantic_sources(graph, nodes)
+    from .nominal_syntax import validate_nominal_sources
+
+    validate_nominal_sources(graph, nodes, lambda origin, label: _semantic_literal(graph["sources"], origin))
+    from .infinitival_syntax import validate_infinitival_sources
+
+    validate_infinitival_sources(graph, nodes, lambda origin, label: _semantic_literal(graph["sources"], origin))
     from .quoted_nominal_validation import validate_quoted_nominals
 
     validate_quoted_nominals(graph,
@@ -829,12 +851,66 @@ def write_requirement_graph(graph: dict[str, Any], json_path: Path, xml_path: Pa
     ET.ElementTree(root).write(xml_path, encoding="utf-8", xml_declaration=True)
 
 
-def compile_saved_requirements(baseline: Path, output: Path, *, expected_root: Path | None = None) -> Path:
+_SAVED_REQUIREMENT_SOURCE_CACHE: dict[Path, Any] = {}
+
+
+def _compile_saved_requirement_view(job, *, cache=None):
+    """Compile one authorized source view; worker failures retain its identity."""
+    from .cli import code_identity
+    from .expected_readback import read_expected
+
+    sample, expected_root, output, software_id = job
+    sample_id = sample["id"]
+    output = Path(output)
+    json_path, xml_path = output / "samples" / f"{sample_id}.json", output / "samples" / f"{sample_id}.xml"
+    before = code_identity()["software_id"]
+
+    def failed(error, reason):
+        return ({"sample_id": sample_id, "semantic_complete": False,
+            "graph_written": json_path.exists() and xml_path.exists(),
+            "error": {"type": type(error).__name__, "message": str(error)},
+            "software_id": before, "worker_software_unchanged": before == software_id == code_identity()["software_id"],
+            "disposition": "software_source_integrity_failure" if reason == "compiler_source_integrity_failure" else "software_compilation_failure"},
+            {reason: 1})
+
+    if before != software_id:
+        return failed(ValueError("worker software identity differs from the compilation freeze"), "compiler_software_identity_failure")
+    try:
+        expected = read_expected(sample, Path(expected_root), cache=_SAVED_REQUIREMENT_SOURCE_CACHE if cache is None else cache)
+        graph = compile_requirement_graph(expected)
+        validate_requirement_graph(graph, expected=expected)
+        write_requirement_graph(graph, json_path, xml_path)
+    except Exception as error:
+        reason = "compiler_source_integrity_failure" if isinstance(error, (ValueError, OSError)) else "compiler_software_failure"
+        return failed(error, reason)
+    after = code_identity()["software_id"]
+    if after != software_id:
+        return failed(ValueError("worker software identity changed while compiling a source view"), "compiler_software_identity_failure")
+    semantic = [issue for issue in graph["unresolved"] if not is_deferred_input_scope(sample_id, issue)]
+    scopes = [issue for issue in graph["unresolved"] if is_deferred_input_scope(sample_id, issue)]
+    return ({"sample_id": sample_id, "json": str(json_path.relative_to(output)),
+        "xml": str(xml_path.relative_to(output)), "semantic_complete": not semantic,
+        "software_id": before, "worker_software_unchanged": True,
+        "generated_view_sha256": hashlib.sha256(json_path.read_bytes()).hexdigest(),
+        "xml_projection_sha256": hashlib.sha256(xml_path.read_bytes()).hexdigest(),
+        "source_obligation_inventory_complete": graph["source_obligation_inventory"]["source_complete"],
+        "source_obligation_status": graph["source_obligation_coverage"]["status_counts"],
+        "inventory_validation": {"status": "passed" if graph["source_obligation_inventory"]["source_complete"] else "not_passed",
+                                 "scope": "source_integrity_not_semantic_oracle"},
+        "authorized_raw_source_status": graph["source_obligation_inventory"]["authorized_raw_inventory"]["status_counts"],
+        "unresolved_semantics": len(semantic), "input_scope_pending": len(scopes),
+        "disposition": "interpreted" if not semantic else "unresolved",
+        "layers": {layer: len(graph["projections"][layer]) for layer in LAYERS}},
+        dict(Counter(issue["reason"] for issue in semantic)))
+
+
+def compile_saved_requirements(baseline: Path, output: Path, *, expected_root: Path | None = None, workers: int = 1) -> Path:
     """Compile declared Lite scope only; never read any candidate or PDF."""
     from .cli import ROOT, code_identity
-    from .expected_readback import read_expected
     from .packaging import read_json
 
+    if type(workers) is not int or not 1 <= workers <= 16:
+        raise ValueError("expected source compilation workers must be an integer from 1 to 16")
     baseline, output = Path(baseline).resolve(), Path(output).resolve()
     if not output.is_relative_to(baseline / "requirements"):
         raise ValueError("requirement artifacts must stay in the saved run's local requirements directory")
@@ -862,36 +938,50 @@ def compile_saved_requirements(baseline: Path, output: Path, *, expected_root: P
         "records": [], "semantic_complete": False, "quality_scores_withheld": True,
         "source_obligation_inventory_complete": False,
         "inventory_validation": {"status": "not_passed", "scope": "source_integrity_not_semantic_oracle"}}
-    cache = {}
+    index["analysis_workers"] = workers
+    index["declared_view_count"] = len(declared)
+    jobs = [(samples[sample_id], expected_root, output, identity["software_id"]) for sample_id in sorted(declared)]
     reasons = Counter()
-    for sample_id in sorted(declared):
-        expected = read_expected(samples[sample_id], expected_root, cache=cache)
-        json_path, xml_path = output / "samples" / f"{sample_id}.json", output / "samples" / f"{sample_id}.xml"
-        try:
-            graph = compile_requirement_graph(expected)
-            validate_requirement_graph(graph, expected=expected)
-            write_requirement_graph(graph, json_path, xml_path)
-        except ValueError as error:
-            reasons["compiler_source_integrity_failure"] += 1
-            index["records"].append({"sample_id": sample_id, "semantic_complete": False,
-                "graph_written": False, "error": {"type": type(error).__name__, "message": str(error)},
-                "disposition": "software_source_integrity_failure"})
-            continue
-        semantic = [issue for issue in graph["unresolved"] if not is_deferred_input_scope(sample_id, issue)]
-        scopes = [issue for issue in graph["unresolved"] if is_deferred_input_scope(sample_id, issue)]
-        reasons.update(issue["reason"] for issue in semantic)
-        index["records"].append({"sample_id": sample_id, "json": str(json_path.relative_to(output)),
-            "xml": str(xml_path.relative_to(output)), "semantic_complete": not semantic,
-            "generated_view_sha256": hashlib.sha256(json_path.read_bytes()).hexdigest(),
-            "xml_projection_sha256": hashlib.sha256(xml_path.read_bytes()).hexdigest(),
-            "source_obligation_inventory_complete": graph["source_obligation_inventory"]["source_complete"],
-            "source_obligation_status": graph["source_obligation_coverage"]["status_counts"],
-            "inventory_validation": {"status": "passed" if graph["source_obligation_inventory"]["source_complete"] else "not_passed",
-                                     "scope": "source_integrity_not_semantic_oracle"},
-            "authorized_raw_source_status": graph["source_obligation_inventory"]["authorized_raw_inventory"]["status_counts"],
-            "unresolved_semantics": len(semantic), "input_scope_pending": len(scopes),
-            "disposition": "interpreted" if not semantic else "unresolved",
-            "layers": {layer: len(graph["projections"][layer]) for layer in LAYERS}})
+
+    def collect(results):
+        for record, unresolved in results:
+            index["records"].append(record)
+            reasons.update(unresolved)
+
+    if workers == 1:
+        cache = {}
+        collect(_compile_saved_requirement_view(job, cache=cache) for job in jobs)
+    else:
+        import multiprocessing
+        from concurrent.futures import ProcessPoolExecutor
+
+        # Only independent expected-text view compilation is parallelized.
+        # Candidate execution, replay, scoring and pipeline resources are untouched.
+        with ProcessPoolExecutor(max_workers=workers, mp_context=multiprocessing.get_context("spawn")) as pool:
+            submitted = []
+            for job in jobs:
+                try:
+                    submitted.append((job, pool.submit(_compile_saved_requirement_view, job), None))
+                except Exception as error:
+                    submitted.append((job, None, error))
+            for job, future, error in submitted:
+                try:
+                    if error is not None:
+                        raise error
+                    collect([future.result()])
+                except Exception as error:
+                    # A failed process is a failed view, never an omitted
+                    # sample or a reason to shorten the declared denominator.
+                    index["records"].append({"sample_id": job[0]["id"], "semantic_complete": False,
+                        "graph_written": False, "software_id": identity["software_id"],
+                        "worker_software_unchanged": False,
+                        "error": {"type": type(error).__name__, "message": str(error)},
+                        "disposition": "software_compilation_failure"})
+                    reasons["compiler_worker_failure"] += 1
+    index["completed_view_count"] = len(index["records"])
+    index["software_unchanged"] = code_identity()["software_id"] == identity["software_id"]
+    if not index["software_unchanged"] or any(not row.get("worker_software_unchanged") for row in index["records"]):
+        reasons["compiler_software_identity_failure"] += 1
     index["unresolved_reasons"] = dict(reasons)
     index["semantic_complete"] = not reasons
     index["source_obligation_inventory_complete"] = all(
@@ -899,7 +989,6 @@ def compile_saved_requirements(baseline: Path, output: Path, *, expected_root: P
     index["inventory_validation"]["status"] = "passed" if index["source_obligation_inventory_complete"] else "not_passed"
     index["state"] = "structure_compiled_pending_independent_semantic_validation" if not reasons else "structure_blocked"
     index["validation"] = {"status": "not_passed", "reason": "Source integrity and empty pending do not replace independent semantic validation."}
-    index["software_unchanged"] = code_identity()["software_id"] == identity["software_id"]
     path = output / "index.json"
     path.write_text(json.dumps(index, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     return path
@@ -909,8 +998,9 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Compile the authorized expected-only requirement view, without scoring candidates.")
     parser.add_argument("--baseline", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--workers", type=int, default=1, help="Expected-text analysis processes (1-16); pipeline resources are unchanged.")
     args = parser.parse_args()
-    path = compile_saved_requirements(args.baseline, args.output)
+    path = compile_saved_requirements(args.baseline, args.output, workers=args.workers)
     index = json.loads(path.read_text())
     print(json.dumps({"index": str(path), "state": index["state"], "semantic_complete": index["semantic_complete"],
                       "unresolved_reasons": index["unresolved_reasons"]}, ensure_ascii=False))

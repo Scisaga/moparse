@@ -93,6 +93,10 @@ def _action(predicate: str) -> str | None:
     if first is None:
         return None
     action = first[1].lower()
+    if action == "also":
+        # Additive scope needs its own syntax. It is not the verb governing
+        # the following object, even in an otherwise clear modal clause.
+        return None
     if action == "be" and first[2]:
         action += " " + first[2].lower()
     following = re.match(r"\s+and\s+([A-Za-z]+)\b", predicate[len(action):], re.I)

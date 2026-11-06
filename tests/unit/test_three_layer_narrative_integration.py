@@ -47,16 +47,27 @@ def _compare_same_text(text):
     return grade_layers(required, actual)
 
 
-def _comparison_remains_unvalidated(text):
+def _comparison_is_validated_against_an_independent_opposite(text, opposite):
     result = _compare_same_text(text)
     assert result["layers"]["T"]["score"] == 100
     assert result["layers"]["T"]["complete"] is True
     for layer in ("B", "L"):
-        assert result["layers"][layer]["score"] is None
-        assert result["layers"][layer]["complete"] is False
-    assert result["score"] is None and result["publishable"] is False
-    assert any(item["reason"] == "narrative_comparison_features_not_validated"
-               and {"B", "L"} <= set(item["layers"]) for item in result["blockers"])
+        assert result["layers"][layer]["score"] == 100
+        assert result["layers"][layer]["complete"] is True
+        decision = result["semantic_comparison"]["decisions"][layer]
+        assert decision["equivalent"] is True
+        assert decision["proof"]["capacity_one"] is True
+        assert decision["proof"]["rows"]
+    assert result["score"] == 100 and result["publishable"] is True
+    assert result["semantic_comparison"]["unsupported_features"] == {"expected": [], "candidate": []}
+    assert all(check["equivalent"] for checks in result["semantic_comparison"]["feature_checks"].values()
+               for check in checks.values())
+    required = compile_expected(_expected(text))
+    observation = markdown_observation(opposite, sample_id="invented-narrative-integration", pipeline="test", pages=[1])
+    changed = grade_layers(required, read_candidate(observation))
+    for layer in ("B", "L"):
+        assert changed["semantic_comparison"]["decisions"][layer]["status"] in {"conflict", "missing"}
+        assert changed["layers"][layer]["numerator"] < changed["layers"][layer]["denominator"]
 
 
 def test_two_conditions_are_operands_of_one_main_business_requirement_with_independent_sources():
@@ -84,7 +95,8 @@ def test_two_conditions_are_operands_of_one_main_business_requirement_with_indep
     _span(main["value_source"], [31, 34], text, "Fee")
     assert len(graph["operand_relations"]) == 2
     assert {edge["right"]["subject"] for edge in graph["operand_relations"]} == {"Gate", "Permit"}
-    _comparison_remains_unvalidated(text)
+    _comparison_is_validated_against_an_independent_opposite(text,
+        "If Gate is open, Board may pay Fee unless Permit is invalid.")
 
 
 def test_compound_condition_keeps_outer_if_and_inner_and_as_separate_operators():
@@ -105,7 +117,8 @@ def test_compound_condition_keeps_outer_if_and_inner_and_as_separate_operators()
     _span(main["value_source"], [51, 54], text, "Fee")
     [condition_edge] = [edge for edge in graph["relations"] if edge["type"] == "narrative_condition_scope"]
     assert condition_edge["left"]["operator"] == "if", "an operand's AND cannot replace its enclosing IF"
-    _comparison_remains_unvalidated(text)
+    _comparison_is_validated_against_an_independent_opposite(text,
+        "If Gate is open or Permit is valid, Board may pay Fee.")
 
 
 def test_reported_negative_child_is_one_qualified_requirement_with_separate_reporter_and_child_sources():
@@ -128,7 +141,8 @@ def test_reported_negative_child_is_one_qualified_requirement_with_separate_repo
     _span(main["qualifier_sources"]["tense"], [28, 30], text, "is")
     _span(main["qualifier_sources"]["polarity"], [31, 34], text, "not")
     _span(main["value_source"], [35, 42], text, "solvent")
-    _comparison_remains_unvalidated(text)
+    _comparison_is_validated_against_an_independent_opposite(text,
+        "Auditor reported that Lumen is solvent.")
 
 
 def test_or_is_one_logical_group_with_two_members_while_and_has_two_independent_requirements():
@@ -147,9 +161,9 @@ def test_or_is_one_logical_group_with_two_members_while_and_has_two_independent_
     assert [(node["subject"], node["attribute"], node["value"]) for node in _business(conjuncts)] == [
         ("Lumen", "own", "Kappa"), ("Lumen", "own", "Sigma")]
     assert _operands(conjuncts) == []
-    _comparison_remains_unvalidated(disjunction)
-    # The explicit AND relation now declares its own comparison dependency.
-    # Syntax admission alone does not validate the downstream group matcher.
+    _comparison_is_validated_against_an_independent_opposite(disjunction, conjunction)
+    # Syntax admission and the executed recursive comparison retain separate
+    # evidence. AND/OR remain independently opposed in both directions.
     compared = _compare_same_text(conjunction)
     assert compared["layers"]["B"]["denominator"] == compared["layers"]["B"]["numerator"] == 2
-    _comparison_remains_unvalidated(conjunction)
+    _comparison_is_validated_against_an_independent_opposite(conjunction, disjunction)

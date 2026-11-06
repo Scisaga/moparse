@@ -581,12 +581,17 @@ def test_reported_modal_subject_cannot_swallow_an_unread_assertion_or_reporting_
         [fact] = requirement["business"]
         assert fact["subject"] == "the board" and fact["attribute"] == "pay"
         assert fact["qualifiers"]["reporting"] == [{"subject": "The clerk", "attribute": "report", "polarity": "positive", "tense": "past"}]
-        assert score["publishable"] is False
-        assert any(b["reason"] == "narrative_comparison_features_not_validated" for b in score["blockers"])
+        assert score["publishable"] is True
+        assert score["semantic_comparison"]["decisions"]["B"]["equivalent"]
+        # Reporting is an executable scope, not part of the child actor. A
+        # close modal mutation must fail after the same identity is located.
+        opposite = grade_layers(requirement, read_candidate_markdown(reference.replace("shall", "may")))
+        assert opposite["semantic_comparison"]["decisions"]["B"]["conflict"]
+        assert opposite["layers"]["B"]["numerator"] == 0
     else:
         assert pending
         assert {"B", "L"} <= {layer for b in pending for layer in b.get("layers", [])}
-    assert score["publishable"] is False
+        assert score["publishable"] is False
 
 
 def test_short_direct_modal_actor_remains_a_complete_supported_assertion():

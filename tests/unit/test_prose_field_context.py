@@ -27,9 +27,31 @@ def test_actual_printed_field_label_is_business_scope_with_its_own_source():
                                   "condition": "registered by 4 directors", "condition_operator": "only_if"}
     assert fact["field_label_evidence"] == {"text": "Admission", "source": {**SOURCE, "text_span": [0, 9]},
                                              "role": "printed_field_label"}
-    [condition] = result["relations"]
+    [condition] = [edge for edge in result["relations"] if edge["type"] == "condition_scope"]
     assert condition["left"] == {"role": "condition", "lexical_anchor": ["registered", "by", "directors"]}
     assert condition["right"] == {"subject": "you", "action": "need", "scope": ["Meeting", "Admission"]}
+    [binding] = [edge for edge in result["relations"] if edge["type"] == "field_binding"]
+    [modal] = [edge for edge in result["relations"] if edge["type"] == "qualifier_scope"]
+    assert binding["left"] == {"subject": "you", "attribute": "need"}
+    assert binding["right"] == modal["right"] == {
+        "subject": "you", "attribute": "need", "scope": ["Meeting", "Admission"], "identity_facets": {}}
+    expected_roles = {}
+    for role, literal in (("subject", "You"), ("predicate", "need"), ("object", "Control")):
+        start = text.index(literal)
+        expected_roles[role + "_source"] = {**SOURCE, "text_span": [start, start + len(literal)]}
+    statement = {**SOURCE, "text_span": [text.index("You"), len(text.rstrip("."))]}
+    assert binding["binding_evidence"] == {"statement_source": statement, **expected_roles}
+    assert binding["source"] == expected_roles["predicate_source"]
+    start = text.index("will")
+    modal_source = {**SOURCE, "text_span": [start, start + len("will")]}
+    assert modal["left"] == {"type": "modality", "text": "will"}
+    assert modal["source"] == modal["operator_source"] == modal_source
+    assert modal["binding_evidence"] == {
+        "statement_source": statement, **expected_roles, "operator": "will", "operator_source": modal_source}
+    assert all(edge["field_label_evidence"] == {
+        "text": "Admission", "source": {**SOURCE, "text_span": [0, 9]}, "role": "printed_field_label"}
+        for edge in (condition, binding, modal))
+    assert len(result["relations"]) == 3
 
 
 def test_later_sentence_uses_its_actual_original_field_label_source_without_a_fake_prefix():

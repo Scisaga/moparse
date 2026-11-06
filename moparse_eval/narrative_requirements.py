@@ -36,6 +36,8 @@ for _base, _forms in {
     "participate": ("participates", "participated"), "access": ("accesses", "accessed"),
     "deliver": ("delivers", "delivered"), "enable": ("enables", "enabled"),
     "sharpen": ("sharpens", "sharpened"),
+    "help": ("helps", "helped"), "leverage": ("leverages", "leveraged"),
+    "engage": ("engages", "engaged"), "capture": ("captures", "captured"),
 }.items():
     _ACTIONS[_base] = _base
     _ACTIONS.update(dict.fromkeys(_forms, _base))
@@ -59,10 +61,14 @@ _REPORT_ACTIONS = {"say": "say", "says": "say", "said": "say", "report": "report
                    "reported": "report", "state": "state", "states": "state", "stated": "state"}
 _REPORT_PAST = {'said', 'reported', 'stated'}
 _CLAUSE_JOIN = re.compile(r'\b(?P<operator>and|or)\b', re.I)
+_CONTRAST = re.compile(r'\bbut\b', re.I)
+_SHARED_AUXILIARY_JOIN = re.compile(r'\b(?P<operator>and|or)\b\s+(?=(?:do|does|did)\b)', re.I)
 
 
 class _Unknown(ValueError):
-    pass
+    def __init__(self, reason, *, span=None):
+        super().__init__(reason)
+        self.span = span
 
 
 class _Reader:
@@ -80,6 +86,7 @@ class _Reader:
         self.relations: list[dict[str, Any]] = []
         self.operands: list[dict[str, Any]] = []
         self.operand_relations: list[dict[str, Any]] = []
+        self.unknown_nodes: list[dict[str, Any]] = []
         self.record = ""
 
     def source_at(self, start: int, end: int) -> dict[str, Any]:
@@ -94,7 +101,7 @@ class _Reader:
         example a quoted CJK role in a shared emitter. Keep valid neighbors,
         but never leak the first leaf of a failed compound clause as a fact.
         """
-        banks = (self.facts, self.relations, self.operands, self.operand_relations)
+        banks = (self.facts, self.relations, self.operands, self.operand_relations, self.unknown_nodes)
         lengths = [len(bank) for bank in banks]
         try:
             tree = self.parse(start, end)
@@ -125,8 +132,16 @@ class _Reader:
             raise _Unknown("narrative_nominal_boundary_unresolved")
         if re.search(r"\b(?:to\s+[A-Za-z]+|do|does|did|not|never)\b", value, re.I):
             raise _Unknown("narrative_embedded_predicate_unresolved")
-        if actor and re.search(r"[,，]|\b(?:and|or|reported|reports|said|says)\b", value, re.I):
+        if actor and re.search(r"[,，]|\b(?:reported|reports|said|says)\b", value, re.I):
             raise _Unknown("narrative_subject_boundary_unresolved")
+        if actor and re.search(r'\b(?:and|or)\b', value, re.I):
+            from .nominal_syntax import nominal_phrase
+
+            # Coordination belongs to a bounded subject NP. Do not distribute
+            # one assertion into multiple inferred actors or opaque text.
+            phrase = nominal_phrase(self, start, end)
+            if not phrase.get('coordination') or phrase.get('prepositional_complements'):
+                raise _Unknown('narrative_subject_coordination_attachment_unresolved')
         if actor and (re.match(r"(?:How|Why|When|What|Whether|In|Under|During|After|Before|From|According)\b", value, re.I)
                       or re.search(r"\bto\b", value, re.I)):
             raise _Unknown("narrative_subject_scope_unresolved")
@@ -141,6 +156,11 @@ class _Reader:
         if start == end:
             raise _Unknown("narrative_empty_clause")
         fragment = self.syntax[start:end]
+        from .infinitival_syntax import read_discourse_scope
+
+        discourse = read_discourse_scope(self, start, end, actor, depth)
+        if discourse is not None:
+            return discourse
         from .fronted_nominal_context import read_fronted_nominal_context
         from .temporal_prose_requirements import read_temporal_prefix
 
@@ -187,6 +207,30 @@ class _Reader:
             if has_fronted(child):
                 raise _Unknown('fronted_nominal_nested_scope_unresolved')
             return {key: value for key, value in fronted.items() if key not in {'matched', 'complete', 'body_start'}} | {'child': child}
+        contrasts = list(_CONTRAST.finditer(self.syntax, start, end))
+        if contrasts:
+            if len(contrasts) != 1:
+                raise _Unknown('narrative_contrast_scope_unresolved')
+            marker = contrasts[0]
+            left = self.parse(start, marker.start(), actor, depth + 1)
+            right_start, _ = self.trim(marker.end(), end)
+            inherited = actor
+            # An auxiliary following BUT explicitly shares the subject of
+            # the first clause. It does not introduce an implicit new actor.
+            if re.match(r'(?:does|do|did)\b', self.syntax[right_start:end], re.I):
+                main = left
+                while main['kind'] not in {'proposition', 'coordination'}:
+                    main = main['child']
+                if main['kind'] == 'coordination':
+                    actors = {tuple(child['subject_span']) for child in main['children'] if child['kind'] == 'proposition'}
+                    if len(actors) != 1:
+                        raise _Unknown('narrative_contrast_subject_unresolved')
+                    inherited = next(iter(actors))
+                else:
+                    inherited = tuple(main['subject_span'])
+            right = self.parse(right_start, end, inherited, depth + 1)
+            return {'kind': 'coordination', 'operator': 'but', 'mode': 'contrast', 'children': [left, right],
+                    'operator_spans': [[marker.start(), marker.end()]], 'span': [start, end]}
         leading = _CONDITION.match(self.syntax, start, end)
         if leading:
             comma = self.syntax.find(',', leading.end(), end)
@@ -244,6 +288,32 @@ class _Reader:
                 operand = self.parse(operator.end(), limit, depth=depth + 1)
                 bindings.append(self.condition(operator, operand))
             return {'kind': 'conditions', 'bindings': bindings, 'child': child, 'span': [start, end]}
+        from .infinitival_syntax import read_infinitival_scope
+
+        infinitive = read_infinitival_scope(self, start, end, actor, depth)
+        if infinitive is not None:
+            return infinitive
+        shared_joins = list(_SHARED_AUXILIARY_JOIN.finditer(self.syntax, start, end))
+        if shared_joins:
+            if len({join['operator'].lower() for join in shared_joins}) != 1:
+                raise _Unknown('narrative_mixed_clause_coordination_unresolved')
+            marker = shared_joins[0]
+            left = self.parse(start, marker.start(), actor, depth + 1)
+
+            def subjects(node):
+                if node['kind'] == 'proposition':
+                    return {tuple(node['subject_span'])}
+                if node['kind'] == 'coordination':
+                    return set().union(*(subjects(child) for child in node['children']))
+                return subjects(node['child'])
+
+            owners = subjects(left)
+            if len(owners) != 1:
+                raise _Unknown('narrative_shared_subject_coordination_unresolved')
+            right = self.parse(marker.end(), end, next(iter(owners)), depth + 1)
+            return {'kind': 'coordination', 'operator': marker['operator'].lower(), 'mode': 'clauses',
+                    'children': [left, right], 'operator_spans': [[marker.start('operator'), marker.end('operator')]],
+                    'span': [start, end]}
         if actor is None:
             coordinated = self.full_clause_coordination(start, end)
             if coordinated is not None:
@@ -305,6 +375,12 @@ class _Reader:
             vp = boundary.start()
         else:
             vp, negative = start, None
+            auxiliary = re.match(r'(do|does|did)\b\s*(?:(not|never)\b\s*)?', self.syntax[vp:end], re.I)
+            if auxiliary:
+                auxiliary_span = [vp + auxiliary.start(1), vp + auxiliary.end(1)]
+                if auxiliary[2]:
+                    negative = [vp + auxiliary.start(2), vp + auxiliary.end(2)]
+                vp += auxiliary.end()
         modality = _ABILITY.match(self.syntax, vp, end) or _MODAL.match(self.syntax, vp, end)
         modal_value, modal_negative = None, None
         if modality:
@@ -330,7 +406,7 @@ class _Reader:
             negative = [vp, vp + len(local_neg[0].rstrip())]
             vp += local_neg.end()
         joins = list(_ACTION_JOIN.finditer(self.syntax, vp, end))
-        if joins and (negative or modal_negative):
+        if joins and (negative or modal_negative) and any(match['operator'].lower() != 'or' for match in joins):
             raise _Unknown('narrative_negated_coordination_scope_unresolved')
         if joins:
             operators = {match['operator'].lower() for match in joins}
@@ -383,34 +459,67 @@ class _Reader:
         complement = _VERB.match(self.syntax, a, b)
         if _ACTIONS[verb] in {'have', 'be'} and complement and complement[0].lower() in _PAST:
             raise _Unknown('narrative_perfect_or_passive_unresolved')
-        spans, operator, separators = self.objects(a, b)
+        return self.predicate_objects(actor, predicate[0], _ACTIONS[verb], [predicate.start(), predicate.end()], a, b,
+            statement_start=start, statement_end=end, finite=finite or (('past' if verb in _PAST else 'present', [predicate.start(), predicate.end()]) if not governed else None),
+            operator_span=operator_span)
+
+    def predicate_objects(self, actor, printed, attribute, predicate_span, a, b, *, statement_start,
+                          statement_end, finite=None, operator_span=None):
+        from .nominal_syntax import nominal_phrase, predicate_complements
+
+        self.pending_clause_context = {'actor': actor, 'attribute': attribute,
+            'predicate_span': list(predicate_span), 'span': [statement_start, statement_end]}
+        if re.search(r'\bor\s+(?:more|fewer|less)\b', self.syntax[a:b], re.I):
+            # Establish comparative scope before an unrelated unsupported PP
+            # can obscure the reason and enable an opaque OR fallback.
+            raise _Unknown('narrative_quantified_comparison_scope_unresolved')
+        direct_end, complements = predicate_complements(self, a, b, attribute, predicate_span)
+        a, direct_end = self.trim(a, direct_end)
+        intransitive = a == direct_end and attribute in {'increase', 'decrease', 'operate', 'engage'} and complements
+        if a == direct_end and not intransitive:
+            raise _Unknown('narrative_object_unresolved')
+        spans, operator, separators = ([(a, a)], None, []) if intransitive else self.objects(a, direct_end)
         if operator and operator_span:
             raise _Unknown('narrative_negated_coordination_scope_unresolved')
-        if operator and _ACTIONS[verb] == 'be':
+        if operator and attribute == 'be':
             members = [self.text[slice(*self.trim(x, y))] for x, y in spans]
             if any(re.search(r'\s', member) for member in members) and not all(
                     re.match(r'(?:a|an|the)\s+', member, re.I) for member in members):
                 raise _Unknown('narrative_nominal_coordination_unresolved')
         children = []
         for x, y in spans:
-            self.nominal(x, y)
+            if not intransitive:
+                self.nominal(x, y)
             if re.search(r'\b(?:owned|acquired|operated|managed|produced)\s+by\b', self.syntax[x:y], re.I):
                 raise _Unknown('narrative_passive_agent_scope_unresolved')
             leaf = {'kind': 'proposition', 'subject': self.text[slice(*actor)], 'subject_span': list(actor),
-                'predicate': predicate[0], 'predicate_span': [predicate.start(), predicate.end()],
-                'attribute': _ACTIONS[predicate[0].lower()], 'object': self.text[x:y], 'object_span': [x, y],
-                'role': 'entity_description' if _ACTIONS[predicate[0].lower()] == 'be' and re.match(r'(?:a|an|the)\s+', self.text[x:y], re.I) else 'description',
-                'span': [min(actor[0], start), max(end, y)]}
-            if finite or not governed:
-                leaf['tense'], leaf['tense_span'] = finite or ('past' if verb in _PAST else 'present', [predicate.start(), predicate.end()])
+                'predicate': printed, 'predicate_span': list(predicate_span),
+                'attribute': attribute, 'object': self.text[x:y], 'object_span': [x, y],
+                'subject_phrase': nominal_phrase(self, *actor),
+                'object_phrase': None if intransitive else nominal_phrase(self, x, y),
+                'prepositional_complements': copy.deepcopy(complements),
+                'role': 'entity_description' if attribute == 'be' and re.match(r'(?:a|an|the)\s+', self.text[x:y], re.I) else 'description',
+                'span': [min(actor[0], statement_start), max(statement_end, y)]}
+            if finite:
+                leaf['tense'], leaf['tense_span'] = finite
             children.append(leaf)
         node = children[0] if len(children) == 1 else {'kind': 'coordination', 'operator': operator,
-            'mode': 'objects', 'children': children, 'operator_spans': separators, 'span': [start, end]}
-        return {'kind': 'negation', 'operator_span': operator_span, 'child': node, 'span': [start, end]} if operator_span else node
+            'mode': 'objects', 'children': children, 'operator_spans': separators, 'span': [statement_start, statement_end]}
+        return {'kind': 'negation', 'operator_span': operator_span, 'child': node, 'span': [statement_start, statement_end]} if operator_span else node
 
     def objects(self, start, end):
         if start == end:
             raise _Unknown('narrative_object_unresolved')
+        # A conjunction inside an OF complement belongs to that nominal head,
+        # never to multiple direct objects of the predicate.
+        if re.search(r'\bof\b', self.syntax[start:end], re.I):
+            return [(start, end)], None, []
+        from .nominal_syntax import _NOMINAL_PP_FRAMES
+
+        for preposition, heads in _NOMINAL_PP_FRAMES.items():
+            marker = re.search(r'\b' + re.escape(preposition) + r'\b', self.syntax[start:end], re.I)
+            if marker and re.search(r'\b(?:' + '|'.join(heads) + r')\s*$', self.syntax[start:start + marker.start()], re.I):
+                return [(start, end)], None, []
         if re.search(r'\bor\s+(?:more|fewer|less)\b', self.syntax[start:end], re.I):
             # A printed comparative quantity is not a disjunction between a
             # number and a noun phrase. Its threshold role needs its own reader.
@@ -453,6 +562,13 @@ class _Reader:
     @staticmethod
     def summary(node):
         kind = node['kind']
+        if kind == 'unknown':
+            return {'kind': kind, 'status': 'unresolved', 'reason': node['reason'], 'text': node['text']}
+        if kind in {'purpose_scope', 'controlled_infinitive_scope'}:
+            return {'kind': kind, 'operator': node['operator'], 'control': copy.deepcopy(node['control']),
+                    'child': _Reader.summary(node['child']), 'operand': _Reader.summary(node['operand'])}
+        if kind == 'discourse_scope':
+            return {'kind': kind, 'operator': node['operator'], 'role': node['role'], 'child': _Reader.summary(node['child'])}
         if kind == 'proposition':
             return {'subject': node['subject'], 'attribute': node['attribute'], 'value': node['object'],
                     'polarity': 'positive', **({'tense': node['tense']} if 'tense' in node else {})}
@@ -490,6 +606,16 @@ class _Reader:
             for child in node:
                 self.annotate_sources(child)
         elif isinstance(node, dict):
+            if node.get('kind') == 'proposition':
+                node.setdefault('scope', list(self.scope))
+            if node.get('kind') == 'proposition' and 'subject_phrase' not in node:
+                from .nominal_syntax import nominal_phrase
+
+                # Both language readers expose exactly the same NP node
+                # schema; their own nominal grammar supplies the boundaries.
+                node['subject_phrase'] = nominal_phrase(self, *node['subject_span'])
+                node['object_phrase'] = nominal_phrase(self, *node['object_span'])
+                node['prepositional_complements'] = []
             for name, value in list(node.items()):
                 if (name == 'span' or name.endswith('_span') and name not in {'text_span', 'cell_text_span', 'joined_span'}) and isinstance(value, list) and len(value) == 2:
                     node['source' if name == 'span' else name[:-5] + '_source'] = self.source_at(*value)
@@ -501,6 +627,13 @@ class _Reader:
     @staticmethod
     def endpoint(node):
         """Logical labels exclude object/value payload and serialization ids."""
+        if node['kind'] == 'unknown':
+            return {'role': 'unresolved', 'reason': node['reason']}
+        if node['kind'] in {'purpose_scope', 'controlled_infinitive_scope'}:
+            return {'role': node['kind'], 'operator': node['operator'], 'control': copy.deepcopy(node['control']),
+                    'child': _Reader.endpoint(node['child']), 'operand': _Reader.endpoint(node['operand'])}
+        if node['kind'] == 'discourse_scope':
+            return {'role': 'discourse_scope', 'operator': node['operator'], 'child': _Reader.endpoint(node['child'])}
         if node['kind'] == 'proposition':
             return {'subject': node['subject'], 'attribute': node['attribute'],
                     **({'tense': node['tense']} if 'tense' in node else {})}
@@ -532,7 +665,7 @@ class _Reader:
 
     def edge(self, kind, left, fact, source, **evidence):
         edges = self.operand_relations if fact['semantic_role'] == 'operand' else self.relations
-        edges.append({'type': kind, 'left': copy.deepcopy(left),
+        edges.append({'type': kind, 'left': copy.deepcopy(left), 'fact_id': fact['id'],
             'right': {'subject': fact['subject'], 'attribute': fact['attribute'], 'scope': list(self.scope),
                       **({'qualifiers': {'tense': fact['qualifiers']['tense']}} if 'tense' in fact['qualifiers'] else {})},
             'source': copy.deepcopy(source), 'object_anchor': None,
@@ -568,6 +701,24 @@ class _Reader:
         context['operators'].append({'kind': kind, 'source': self.source_at(*node['span'])})
         if 'operator_span' in node:
             context['operators'][-1]['operator_source'] = self.source_at(*node['operator_span'])
+        if kind == 'unknown':
+            self.unknown_nodes.append(copy.deepcopy(node))
+            return
+        if kind == 'discourse_scope':
+            self.features.add('discourse_scope')
+            context.setdefault('discourse_nodes', []).append(node)
+            self.emit(node['child'], context)
+            return
+        if kind in {'purpose_scope', 'controlled_infinitive_scope'}:
+            self.features.add(kind)
+            operand_context = copy.deepcopy(context)
+            operand_context['assertion_context'] = 'purpose_operand' if kind == 'purpose_scope' else 'controlled_infinitive_operand'
+            operand_context['contexts'].append(operand_context['assertion_context'])
+            operand_context['semantic_operand'] = True
+            self.emit(node['operand'], operand_context)
+            context.setdefault('infinitival_bindings', []).append(node)
+            self.emit(node['child'], context)
+            return
         if kind == 'temporal_scope':
             self.features.add('temporal_prose_scope')
             context['temporal'] = node
@@ -637,8 +788,9 @@ class _Reader:
             self.emit(node['child'], context)
             return
         if kind == 'coordination':
-            self.features.add('alternative_membership' if node['operator'] == 'or' else 'coordination_scope')
+            self.features.add('alternative_membership' if node['operator'] == 'or' else 'contrast_scope' if node['operator'] == 'but' else 'coordination_scope')
             context['coordination_source_node'] = node
+            context.setdefault('coordination_nodes', []).append(node)
             if node['operator'] == 'or':
                 operand_context = copy.deepcopy(context)
                 operand_context['assertion_context'] = 'alternative_member'
@@ -662,7 +814,8 @@ class _Reader:
             q['tense'] = node['tense']
         if 'tense' in q:
             self.features.add('finite_tense')
-        if context['assertion_context'] in {'condition_operand', 'restrictive_relative', 'reported', 'alternative_member', 'alternative_group'}:
+        if context['assertion_context'] in {'condition_operand', 'restrictive_relative', 'reported', 'alternative_member', 'alternative_group',
+                                            'purpose_operand', 'controlled_infinitive_operand'}:
             q['assertion_context'] = context['assertion_context']
         if len(context['contexts']) > 1:
             q['assertion_contexts'] = list(context['contexts'])
@@ -677,6 +830,7 @@ class _Reader:
             'subject_source': self.source_at(*node['subject_span']) if node['subject_span'] is not None else None,
             'predicate_source': self.source_at(*node['predicate_span']), 'attribute_source': self.source_at(*node['predicate_span']),
             'value_source': self.source_at(*node['object_span']), 'object_source': self.source_at(*node['object_span']),
+            **{key: copy.deepcopy(node[key]) for key in ('subject_phrase', 'object_phrase', 'prepositional_complements') if key in node},
             'logic': {'kind': 'logical_group' if kind == 'logical_group' else 'narrative_leaf',
                       'assertion_context': context['assertion_context'], 'operator_path': context['operators'],
                       **({'tree': copy.deepcopy(node['tree'])} if kind == 'logical_group' else {})},
@@ -739,6 +893,48 @@ class _Reader:
         self.edge('field_binding', {'subject': fact['subject'], 'attribute': fact['attribute'],
                   **({'qualifiers': {'tense': q['tense']}} if 'tense' in q else {})}, fact, fact['source'],
                   subject_source=fact['subject_source'], predicate_source=fact['predicate_source'], object_source=fact['object_source'])
+        def nominal_relations(value):
+            if isinstance(value, list):
+                for item in value:
+                    nominal_relations(item)
+                return
+            if not isinstance(value, dict):
+                return
+            if value.get('kind') == 'prepositional_complement':
+                self.features.update({'prepositional_attachment', 'noun_phrase_composition'})
+                prep_source = value['preposition_source']
+                self.edge('narrative_prepositional_attachment', {
+                    'preposition': value['preposition'], 'semantic_role': value['semantic_role'],
+                    'attachment': value['attachment'], 'complement': self.text[slice(*value['complement_span'])]},
+                    fact, prep_source, preposition_source=prep_source,
+                    head_source=value['head_source'], attachment_source=value['head_source'],
+                    complement_source=value['complement_source'])
+            if value.get('kind') == 'quantity_comparison':
+                self.features.update({'quantity_comparison', 'noun_phrase_composition'})
+                self.edge('narrative_quantity_scope', {
+                    key: value[key] for key in ('operator', 'value', 'unit', 'quantity_role')},
+                    fact, value['source'], quantity_source=value['source'], value_source=value['value_source'])
+            if value.get('kind') == 'coordination' and value.get('mode') == 'nominal_members':
+                self.features.add('noun_phrase_composition')
+                for source in value['operator_sources']:
+                    self.edge('narrative_nominal_coordination_scope', {
+                        'operator': value['operator'], 'mode': 'nominal_members', 'member_count': len(value['children'])},
+                        fact, source, operator_source=source, coordination_logic=value)
+            for child in value.values():
+                if isinstance(child, (dict, list)):
+                    nominal_relations(child)
+
+        nominal_relations([fact.get('subject_phrase'), fact.get('object_phrase'), fact.get('prepositional_complements', [])])
+        for binding in context.get('infinitival_bindings', []):
+            self.edge('narrative_' + binding['kind'], {
+                'operator': binding['operator'], 'controller': binding['control']['controller'],
+                'control_kind': binding['control']['kind'], 'operand': self.endpoint(binding['operand'])},
+                fact, binding['operator_source'], operator_source=binding['operator_source'],
+                controller_source=binding['control']['controller_source'],
+                operand_source=binding['operand']['source'], operand_logic=binding['operand'])
+        for discourse in context.get('discourse_nodes', []):
+            self.edge('narrative_discourse_scope', {'operator': discourse['operator'], 'role': discourse['role']},
+                fact, discourse['marker_source'], marker_source=discourse['marker_source'])
         for quoted in quoted_roles:
             self.edge('narrative_quoted_nominal_scope', {'role': 'quoted_nominal', 'nominal_role': quoted['role'],
                       'attachment': quoted['attachment']}, fact, quoted['source'], quoted_nominal=quoted)
@@ -759,8 +955,11 @@ class _Reader:
             self.edge('narrative_alternative_scope', {'operator': 'or',
                       'members': [self.endpoint(child) for child in node['tree']['children']]}, fact,
                       fact['predicate_source'], operand_logic=node['tree'])
-        if 'coordination_node' in context:
-            coordination = context['coordination_node']
+        # Each nested composition keeps its own operator owner. An inner
+        # object list must not erase the outer clause contrast or conjunction.
+        for coordination in context.get('coordination_nodes', []):
+            if coordination['operator'] == 'or':
+                continue  # OR membership has its explicit alternative group.
             for position, span in enumerate(coordination['operator_spans']):
                 a, b = self.trim(*span)
                 if a == b:
@@ -852,6 +1051,14 @@ def read_narrative(text: str, source: dict[str, Any], *, scope=()) -> dict[str, 
             result['pending_requirements'].append(copy.deepcopy(item))
             continue
         result['logic'].append(tree)
+        for unknown in reader.unknown_nodes:
+            pending_span = unknown.get('unresolved_span', unknown['span'])
+            item = {'kind': 'narrative', 'reason': unknown['reason'], 'text': reader.text[slice(*pending_span)],
+                    'source': reader.source_at(*pending_span), 'scope': list(scope), 'layers': ['B', 'L'],
+                    'category': 'software_unsupported'}
+            if item not in result['unresolved']:
+                for key in ('unresolved', 'blockers', 'pending_requirements'):
+                    result[key].append(copy.deepcopy(item))
     result['complete'] = result['semantic_complete'] = bool(result['logic']) and not result['unresolved']
     result['required_matcher_features'] = sorted(reader.features)
     return result

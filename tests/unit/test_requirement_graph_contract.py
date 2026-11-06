@@ -188,7 +188,7 @@ def test_partial_contract_preserves_condition_negation_and_obligation_without_cl
     assert len([e for e in _projected(graph, "L") if e["type"] == "condition_scope"]) == 1
     assert graph["semantic_complete"] is False
     assert [(issue["text"], issue.get("interpretation_rule")) for issue in graph["unresolved"]] == [
-        ("by", "uninterpreted_postpredicate_scope_requires_its_own_relation")]
+        ("by", "printed_preposition_requires_source_bound_attachment")]
 
 
 def test_partial_contract_keeps_exception_distinct_while_its_inner_comparison_remains_pending():
@@ -201,7 +201,7 @@ def test_partial_contract_keeps_exception_distinct_while_its_inner_comparison_re
     assert len([e for e in _projected(graph, "L") if e["type"] == "exception_scope"]) == 1
     assert graph["semantic_complete"] is False
     assert [(issue["text"], issue.get("interpretation_rule")) for issue in graph["unresolved"]] == [
-        ("below", "uninterpreted_postpredicate_scope_requires_its_own_relation")]
+        ("below", "printed_preposition_requires_source_bound_attachment")]
 
 
 @pytest.mark.parametrize("text,role,literal,edge_type", [
@@ -305,7 +305,7 @@ def test_partial_contract_adjacent_sentence_fragments_keep_both_original_sources
     assert [part["source"]["lines"] for part in fragments] == [[1, 1], [2, 2]]
     assert graph["semantic_complete"] is False
     assert [(issue["text"], issue.get("interpretation_rule")) for issue in graph["unresolved"]] == [
-        ("by", "uninterpreted_postpredicate_scope_requires_its_own_relation")]
+        ("by", "printed_preposition_requires_source_bound_attachment")]
 
 
 def _delete_requirement(graph, ident):

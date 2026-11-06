@@ -68,6 +68,21 @@ def test_a_dollar_symbol_stays_an_explicit_unit_without_becoming_a_currency_name
 
 @pytest.mark.parametrize("reader", [matrix, series])
 def test_identity_strings_ending_in_currency_words_are_not_rewritten_as_amounts(reader):
+    if reader is series:
+        # This helper prints a complete YYYY-year-prefixed identity literal.
+        # A Name field does not authorize splitting it into period and amount.
+        from moparse_eval.three_layer import compile_markdown
+
+        text = "Name:2027年17美元"
+        result = read_series_requirements(text, SOURCE)
+        assert result["matched"] is False
+        assert result["facts"] == result["blockers"] == result["pending_requirements"] == []
+        graph = compile_markdown(text, sample_id="invented-year-prefixed-identity")
+        [fact] = graph["business"]
+        assert (fact["attribute"], fact["role"], fact["value"], fact["qualifiers"]) == ("Name", "identity", "2027年17美元", {})
+        assert graph["blockers"] == []
+        assert text[fact["source"]["text_span"][0]:fact["source"]["text_span"][1]] == "2027年17美元"
+        return
     result = reader("Name", "17美元")
     assert result["blockers"] == [] and len(result["facts"]) == 1
     fact = result["facts"][0]

@@ -116,19 +116,12 @@ def read_active_aspect_clause(reader, start, end, actor=None):
             lo, hi = shared
         if lo == hi:
             raise _Unknown("active_aspect_object_unresolved")
-        if _EMBEDDED.search(text[lo:hi]) or _AUXILIARY.search(text, lo, hi):
+        if _AUXILIARY.search(text, lo, hi):
             raise _Unknown("active_aspect_embedded_scope_unresolved")
-        spans, operator, separators = reader.objects(lo, hi)
-        if operator == "or" or (negative_span and operator):
-            raise _Unknown("active_aspect_object_coordination_unresolved")
-        children = []
-        for x, y in spans:
-            reader.nominal(x, y)
-            children.append({"kind": "proposition", "subject": text[slice(*actor)], "subject_span": list(actor),
-                "predicate": word[0], "predicate_span": [word.start(), word.end()], "attribute": forms[word[0].casefold()],
-                "object": text[x:y], "object_span": [x, y], "role": "description", "span": [min(actor[0], a), max(b, y)]})
-        return children[0] if len(children) == 1 else {"kind": "coordination", "operator": "and", "mode": "objects",
-            "children": children, "operator_spans": separators, "span": [a, b]}
+        # Reuse the ordinary source-bound nominal/PP contract. Unsupported
+        # infinitives, relative clauses and ambiguous PP remain unresolved.
+        return reader.predicate_objects(actor, word[0], forms[word[0].casefold()],
+            [word.start(), word.end()], lo, hi, statement_start=a, statement_end=b)
 
     last = predicate(*chunks[-1])
     shared = last["object_span"] if last["kind"] == "proposition" else None

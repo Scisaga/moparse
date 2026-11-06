@@ -411,7 +411,7 @@ def test_independent_partial_policy_oracle_keeps_outer_scope_without_claiming_an
                                   "condition_operator": "unless"}
     assert graph["semantic_complete"] is False
     assert [(issue["text"], issue.get("interpretation_rule")) for issue in graph["unresolved"]] == [
-        ("by", "uninterpreted_postpredicate_scope_requires_its_own_relation")]
+        ("by", "printed_preposition_requires_source_bound_attachment")]
     validate_requirement_graph(graph)
 
 

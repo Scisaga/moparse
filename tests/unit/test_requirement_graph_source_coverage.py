@@ -171,7 +171,7 @@ def test_partial_contract_joined_prose_keeps_sources_and_the_uninterpreted_inner
         assert fact["id"] in disposition["B"]["requirements"]
     assert graph["semantic_complete"] is False
     assert [(issue["text"], issue.get("interpretation_rule")) for issue in graph["unresolved"]] == [
-        ("by", "uninterpreted_postpredicate_scope_requires_its_own_relation")]
+        ("by", "printed_preposition_requires_source_bound_attachment")]
 
 
 def test_failure_closed_contract_heading_boundary_cannot_supply_an_orphan_fragment_business_role():
