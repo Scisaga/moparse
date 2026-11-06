@@ -660,7 +660,7 @@ class _Graph:
                     item[key] = ({**item.get(key, {}), **copy.deepcopy(fact[key])}
                                  if key == "qualifier_provenance" else copy.deepcopy(fact[key]))
             for key in ("logic", "qualifier_sources", "value_source", "attribute_source", "subject_source", "predicate", "object", "predicate_source", "object_source", "rule_id", "printed_label", "label_source",
-                        "semantic_type", "semantic_role", "directory_evidence", "field_label_evidence", "record_evidence", "quoted_nominals",
+                        "semantic_type", "semantic_role", "directory_evidence", "field_label_evidence", "record_evidence", "quoted_nominals", "subject_binding_evidence",
                         "statement_source", "subject_phrase", "object_phrase", "prepositional_complements"):
                 if key in fact:
                     if key == "value_source" and item["value"] != fact["value"]:
@@ -1049,7 +1049,15 @@ class _Graph:
                                           record=bool(self.subject) or any(not QUALIFIER.fullmatch(k) for k, _ in pairs))
             for key, value, key_source, value_source in pair_sources:
                 header = read_measurement_label(key, key_source)
-                if not IDENTITY.fullmatch(key) and header["matched"]:
+                if not value:
+                    # An empty field is an actual printed label, not a
+                    # key/value serialization. Keep its terminal delimiter in
+                    # T; it cannot disappear merely because PAIR matched it.
+                    offset = source.get("text_span", [0])[0]
+                    start, end = key_source["text_span"][0], value_source["text_span"][0]
+                    self.literal(text[start - offset:end - offset],
+                                 {**copy.deepcopy(key_source), "text_span": [start, end]}, "label")
+                elif not IDENTITY.fullmatch(key) and header["matched"]:
                     self.literal(header["label"], header["sources"]["label"], "label")
                     self.literal(header["unit"], header["sources"]["unit"], "unit")
                 else:

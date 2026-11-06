@@ -108,12 +108,13 @@ def test_quoted_and_is_not_decomposed_into_two_independent_ownership_objects():
     assert quote["closing_source"]["text_span"] == [27, 28]
     assert not any(node["kind"] == "semantic_operand" for node in graph["nodes"])
     assert "coordination_scope" not in graph["required_matcher_features"]
-    # Literal admission preserves the single name; matcher validation remains
-    # independent and cannot be inferred from successful source compilation.
+    # The independently validated nominal comparator now consumes this one
+    # quoted name. Its internal AND still cannot manufacture a second fact.
     score = grade_layers(compile_markdown(text), read_candidate_markdown(text))
     assert score["layers"]["T"]["score"] == 100
     for layer in ("B", "L"):
-        assert score["layers"][layer]["score"] is None and score["layers"][layer]["complete"] is False
-    assert score["publishable"] is False and score["score"] is None
-    assert any(issue["reason"] == "narrative_comparison_features_not_validated"
-               and "quoted_nominal_scope" in issue["required_features"] for issue in score["blockers"])
+        assert score["layers"][layer]["score"] == 100 and score["layers"][layer]["complete"] is True
+    assert score["layers"]["B"]["denominator"] == 1
+    assert score["publishable"] is True and score["score"] == 100
+    changed = grade_layers(compile_markdown(text), read_candidate_markdown(text.replace("and", "or")))
+    assert changed["layers"]["B"]["numerator"] == 0

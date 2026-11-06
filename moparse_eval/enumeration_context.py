@@ -252,7 +252,7 @@ def enumeration_declaration(context):
                for index, member in enumerate(context["members"])]
     return {"type": "enumeration_declaration", "left": left,
         "right": {"role": "declared_collection_scope", "operator": roles["operator"]["text"],
-                  "members": copy.deepcopy(members)},
+                  "members": [{"ordinal": member["ordinal"], "text": member["text"]} for member in members]},
         "source": copy.deepcopy(declaration["source"]),
         "binding_evidence": {"introduction_source": copy.deepcopy(declaration["source"]),
             "roles": copy.deepcopy(roles), "member_sources": members, "end_boundary": copy.deepcopy(context["boundary"])},

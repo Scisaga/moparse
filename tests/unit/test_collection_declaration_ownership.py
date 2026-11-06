@@ -58,8 +58,11 @@ def test_positive_collection_roles_and_scope_are_interpreted_without_accepting_u
     assert declaration["right"]["operator"] == "包括"
     assert [
         (row["ordinal"], row["text"], row["source"]["lines"])
-        for row in declaration["right"]["members"]
+        for row in declaration["binding_evidence"]["member_sources"]
     ] == [(0, UNKNOWN, [4, 4]), (1, material["targets"][2]["text"], [5, 5])]
+    assert declaration["right"]["members"] == [
+        {"ordinal": 0, "text": UNKNOWN}, {"ordinal": 1, "text": material["targets"][2]["text"]}
+    ]
     for role, literal in (
         ("period", "2029年"),
         ("subject", "Vega"),
@@ -127,7 +130,7 @@ def test_declaration_audit_cannot_borrow_roles_or_lose_original_raw_members(muta
         declaration["left"]["domain"] = "业务合作"
     elif mutation == "role_source":
         declaration["binding_evidence"]["roles"]["subject"]["source"] = deepcopy(
-            declaration["right"]["members"][0]["source"]
+            declaration["binding_evidence"]["member_sources"][0]["source"]
         )
     elif mutation == "member_delete":
         declaration["right"]["members"].pop(0)
@@ -141,7 +144,7 @@ def test_declaration_audit_cannot_borrow_roles_or_lose_original_raw_members(muta
             "natural_end_proved": True,
         }
     else:
-        declaration["source"] = deepcopy(declaration["right"]["members"][0]["source"])
+        declaration["source"] = deepcopy(declaration["binding_evidence"]["member_sources"][0]["source"])
     coverage = audit_source_obligations(graph["source_obligation_inventory"], graph)
     assert any(row["status"] == "pending" for row in introduction_dispositions(graph, coverage))
     with pytest.raises(

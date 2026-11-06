@@ -78,6 +78,11 @@ def read_cjk_measurements(text: str, source: dict[str, Any], *, scope=()) -> dic
         unknown.append({'reason': reason, 'text': text[a:b], 'source': _source(source, a, b)})
 
     def emit(subject, subject_source, attribute, predicate_source, measurement, own_source, qualifiers, qualifier_sources, logic):
+        # The native clause is already interpreted here. Retain the payload
+        # alongside its source cuts so the existing recursive comparator does
+        # not see a value-less quantity node. B/L still own separate votes.
+        logic.update(value=measurement['value'], unit=measurement['unit'],
+                     currency=measurement['currency'], sequence_source=copy.deepcopy(tree['source']))
         q = {**qualifiers, **({'unit': measurement['unit']} if measurement['unit'] else {}),
              **({'currency': measurement['currency']} if measurement['currency'] else {})}
         qs = {**qualifier_sources, **{key: copy.deepcopy(measurement['sources'][key])

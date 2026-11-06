@@ -62,8 +62,10 @@ def test_complete_navigation_has_no_business_vote_and_keeps_actual_heading_owner
     result = grade_layers(required, candidate)
     assert result['layers']['T']['score'] == 100
     assert result['layers']['B']['denominator'] == 0
-    assert result['layers']['L']['score'] is None and not result['publishable']
-    assert any('explicit_reference_binding' in issue.get('required_features', []) for issue in result['blockers'])
+    assert result['layers']['L']['score'] == 100 and result['layers']['L']['complete']
+    assert result['publishable'] and result['score'] is None, "zero B denominator cannot produce a total quality grade"
+    assert result['semantic_comparison']['feature_checks']['expected']['explicit_reference_binding']['equivalent']
+    assert not result['blockers']
 
 
 def test_ownerless_navigation_has_positive_nonbusiness_disposition_but_pending_relation_scope():
@@ -88,8 +90,11 @@ def test_field_owners_are_independent_of_swapped_reference_numbers():
     assert numbered(actual) == [('Revenue', '4'), ('Cost', '3')]
     assert Counter(''.join(item['text'] for item in first['text'])) == Counter(''.join(item['text'] for item in actual['text']))
     result = grade_layers(first, actual)
-    assert result['layers']['L']['score'] is None and not result['layers']['L']['complete']
-    assert not result['publishable']
+    assert result['layers']['L']['complete']
+    assert result['layers']['L']['numerator'] < result['layers']['L']['denominator']
+    target_rows = [row for row in result['outcomes'] if row['layer'] == 'L' and row['role'] == 'explicit_reference_target']
+    assert len(target_rows) == 2 and all(row['outcome'] == 'incorrect' for row in target_rows)
+    assert result['publishable'] and result['score'] is None
 
 
 def test_unknown_neighbor_cannot_be_declared_navigation_nonbusiness():

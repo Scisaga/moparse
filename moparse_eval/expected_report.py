@@ -554,6 +554,7 @@ def validate_evidence(score: dict[str, Any]) -> None:
             row["outcome"] = row.pop("flat_outcome")
         row.pop("ast_comparisons", None)
         row.pop("semantic_comparison_status", None)
+        row.pop("semantic_responsibility", None)
     for layer in ("B", "L"):
         own = flat["layers"][layer]
         own["numerator"] = sum(row["outcome"] == "correct" for row in flat["outcomes"] if row["layer"] == layer)

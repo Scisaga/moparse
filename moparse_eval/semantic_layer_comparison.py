@@ -7,9 +7,11 @@ import json
 import re
 
 from .equivalence import decide_equivalence
+from .represented_feature_comparison import REPRESENTED_INPUT_KEYS, represented_feature_checks
 from .requirement_ast import (
     AST_FEATURE_COMPARATORS,
     compare_feature_ast,
+    compare_requirement_ast,
     compare_requirement_ast_collections,
 )
 
@@ -48,6 +50,134 @@ def _main_assertions(node):
 def _role_key(node):
     origins = [node.get(key) for key in ("subject_source", "predicate_source", "object_source")]
     return json.dumps(origins, sort_keys=True, ensure_ascii=False) if all(isinstance(origin, dict) for origin in origins) else None
+
+
+def _walk_nodes(value):
+    if isinstance(value, dict):
+        yield value
+        for child in value.values():
+            yield from _walk_nodes(child)
+    elif isinstance(value, list):
+        for child in value:
+            yield from _walk_nodes(child)
+
+
+def _tree_complete(graph, tree):
+    """A local interpretation gap cannot be repaired by an equal subtree."""
+    source = tree.get("source", {})
+    return not any(_owns(source, issue.get("source", {})) or _owns(issue.get("source", {}), source)
+                   for issue in graph.get("blockers", []))
+
+
+def _business_responsibility(row, tree, own_tree, context):
+    """Transfer one complete assertion after value-independent capacity binding."""
+    target, located = row["expected"], row.get("actual", [])
+    trace = row.get("retrieval", {})
+    if (row.get("software_failure") or len(located) != 1
+            or trace.get("capacity", {}).get("required_occurrences") != 1
+            or located[0]["id"] not in trace.get("accepted", [])
+            or row.get("record_comparison", {}).get("equal", True) is not True):
+        return None
+    candidate = located[0]
+    if not decide_equivalence(target.get("identity_facets", {}), candidate.get("identity_facets", {}),
+                              "structure", context=context)["equivalent"]:
+        return None
+    # Logical OR is one existing business target; other narrative targets own
+    # exactly one assertion, never the conditions or purposes around it.
+    if target.get("role") == candidate.get("role") == "logical_group":
+        if not ((_owns(tree.get("source", {}), target.get("source", {}))
+                 or _owns(target.get("source", {}), tree.get("source", {})))
+                and (_owns(own_tree.get("source", {}), candidate.get("source", {}))
+                     or _owns(candidate.get("source", {}), own_tree.get("source", {})))
+                and target.get("logic", {}).get("tree") == tree
+                and candidate.get("logic", {}).get("tree") == own_tree):
+            return None
+    elif target.get("role") == candidate.get("role") == "description":
+        leaves = [leaf for leaf in _main_assertions(tree) if _role_key(leaf) == _role_key(target)]
+        own_leaves = [leaf for leaf in _main_assertions(own_tree) if _role_key(leaf) == _role_key(candidate)]
+        if len(leaves) != 1 or len(own_leaves) != 1:
+            return None
+        for fact, leaf in ((target, leaves[0]), (candidate, own_leaves[0])):
+            if (fact.get("value") != leaf.get("object") or fact.get("object") != leaf.get("object")
+                    or fact.get("attribute") != leaf.get("attribute") or fact.get("subject") != leaf.get("subject")):
+                return None
+        if not compare_requirement_ast(leaves[0], own_leaves[0], context=context)["equivalent"]:
+            return None
+    else:
+        return None  # Scalars keep the exact quantity/value contract.
+    if not decide_equivalence(target.get("qualifiers", {}), candidate.get("qualifiers", {}),
+                              "structure", context=context)["equivalent"]:
+        return None
+    return {"owner": "complete_source_bound_statement", "required_id": target["id"],
+            "actual_id": candidate["id"], "identity_before_value": True,
+            "capacity": copy.deepcopy(trace["capacity"])}
+
+
+def _relation_node(edge, graph, tree, side, resolve):
+    """Bind only the two represented nominal edge kinds to their complete AST."""
+    from .source_obligations import validate_relation_binding
+
+    fact = next((fact for fact in graph.get("business", []) if fact["id"] == edge.get("fact_id")), None)
+    if fact is None or not validate_relation_binding(None, fact, edge)["equivalent"]:
+        return None
+    leaves = [leaf for leaf in _main_assertions(tree) if _role_key(leaf) == _role_key(fact)]
+    if len(leaves) != 1:
+        return None
+    binding, left = edge.get("binding_evidence", {}), edge.get("left", {})
+    nodes = list(_walk_nodes(leaves[0]))
+    if edge["type"] == "narrative_prepositional_attachment":
+        matches = [node for node in nodes if node.get("kind") == "prepositional_complement"
+                   and node.get("preposition_source") == binding.get("preposition_source")
+                   and node.get("head_source") == binding.get("head_source")
+                   and node.get("complement_source") == binding.get("complement_source")
+                   and node.get("preposition") == left.get("preposition")
+                   and node.get("attachment") == left.get("attachment")
+                   and node.get("semantic_role") == left.get("semantic_role")
+                   and edge.get("source") == binding.get("preposition_source")
+                   and resolve(side, binding.get("complement_source", {})) == left.get("complement")]
+    elif edge["type"] == "narrative_nominal_coordination_scope":
+        matches = [node for node in nodes if node.get("kind") == "coordination"
+                   and node == binding.get("coordination_logic")
+                   and edge.get("source") in node.get("operator_sources", [])
+                   and left == {"operator": node.get("operator"), "mode": node.get("mode"),
+                                "member_count": len(node.get("children", []))}]
+    else:
+        return None
+    return matches[0] if len(matches) == 1 else None
+
+
+def _relation_responsibility(row, required, actual, tree, own_tree, context, used, resolve):
+    target = row["expected"]
+    node = _relation_node(target, required, tree, "required", resolve)
+    if node is None:
+        return None
+    hits = []
+    for candidate in actual.get("relations", []):
+        if candidate["type"] != target["type"] or candidate["id"] in used:
+            continue
+        own_node = _relation_node(candidate, actual, own_tree, "actual", resolve)
+        if own_node is None:
+            continue
+        # Establish the assertion owner and scope independently of its value.
+        if not decide_equivalence(target["right"], candidate["right"], "structure", context=context)["equivalent"]:
+            continue
+        # Preposition/attachment name the relation slot. Its complement is
+        # the answer and cannot select one of several eligible occurrences.
+        if target["type"] == "narrative_prepositional_attachment":
+            identity = ("preposition", "semantic_role", "attachment")
+            if any(target["left"].get(key) != candidate["left"].get(key) for key in identity):
+                continue
+        hits.append((candidate, own_node))
+    if len(hits) != 1:
+        return None
+    candidate, own_node = hits[0]
+    decision = compare_requirement_ast(node, own_node, context=context)
+    if not decision["equivalent"]:
+        return None
+    used.add(candidate["id"])
+    return {"owner": "complete_source_bound_relation", "required_id": target["id"],
+            "actual_id": candidate["id"], "identity_before_value": True,
+            "capacity": 1, "decision": decision}
 
 
 def _affected_assertions(tree, decision):
@@ -154,6 +284,10 @@ def _fact_ast_consistency(graph, side, resolve):
     for fact in graph.get("business", []):
         if not fact.get("predicate"):
             continue
+        value_literal = resolve(side, fact.get("value_source", {}))
+        if fact.get("role") == "description" and value_literal != fact.get("value"):
+            errors.append({"fact_id": fact["id"], "dimension": "value", "claimed": fact.get("value"),
+                           "source_literal": value_literal, "status": "conflict"})
         for name in ("subject", "predicate", "object"):
             origin = fact.get(name + "_source")
             if not isinstance(origin, dict):
@@ -195,11 +329,10 @@ def _fact_ast_consistency(graph, side, resolve):
 
 
 def compare_semantic_layers(required, actual, rows, layers, *, canonicalize, scope_options):
-    """Require an executed AST decision in addition to flat readback evidence.
+    """Assign existing votes to complete source-bound comparison owners.
 
-    A failed AST can invalidate an existing vote, never introduce a new one or
-    repair a candidate field. An unresolved interpretation blocks its layer.
-    Scope and quantity contracts remain owned by the shared comparator.
+    Scalar, identity, scope and capacity checks remain independent prerequisites.
+    A complete AST may resolve a surface-only mismatch for its own requirement.
     """
     from .requirement_graph import _semantic_literal
 
@@ -221,14 +354,20 @@ def compare_semantic_layers(required, actual, rows, layers, *, canonicalize, sco
     for side, graph in (("expected", required), ("candidate", actual)):
         trees = graph.get("logical_statements", [])
         missing_features = []
-        checks[side] = {}
-        for feature in sorted(set(graph.get("required_matcher_features", [])) - {"finite_tense"}):
+        resolver_side = "required" if side == "expected" else "actual"
+        represented = represented_feature_checks(graph, lambda source: resolve(resolver_side, source))
+        checks[side] = represented["checks"]
+        features = set(graph.get("required_matcher_features", [])) | set(represented["features"])
+        for feature in sorted(features - {"finite_tense"}):
+            if feature in represented["checks"]:
+                if not represented["checks"][feature]["equivalent"]:
+                    missing_features.append(feature)
+                continue
             if feature not in AST_FEATURE_COMPARATORS or not trees:
                 missing_features.append(feature)
                 continue
             # This is a runtime availability check, not the independent
             # oracle that establishes a comparator's semantic correctness.
-            resolver_side = "required" if side == "expected" else "actual"
             decision = compare_feature_ast(feature, trees, trees, context={
                 "canonicalize": canonicalize,
                 "source_resolver": lambda _side, source, own=resolver_side: resolve(own, source)})
@@ -241,6 +380,8 @@ def compare_semantic_layers(required, actual, rows, layers, *, canonicalize, sco
                              "required_features": missing_features})
 
     decisions = {}
+    used_relations = {row["actual"]["id"] for row in rows
+                      if row["layer"] == "L" and row.get("actual") is not None}
     trees = required.get("logical_statements", [])
     if trees:
         for row in rows:
@@ -268,24 +409,24 @@ def compare_semantic_layers(required, actual, rows, layers, *, canonicalize, sco
                     row.setdefault("ast_comparisons", []).append(copy.deepcopy(item))
                     if decision["status"] in {"conflict", "missing"} and _target_affected(target, layer, affected, required):
                         row.update(outcome="incorrect", semantic_comparison_status=decision["status"])
-                    elif layer == "B" and target.get("role") == "logical_group" and decision["equivalent"]:
-                        located = row.get("actual", [])
+                    elif decision["equivalent"] and not blockers:
                         own_tree = actual.get("logical_statements", [])[item["actual_index"]]
-                        if (len(located) == 1 and located[0].get("role") == "logical_group"
-                                and located[0]["id"] in row.get("retrieval", {}).get("accepted", [])
-                                and (_owns(own_tree.get("source", {}), located[0].get("source", {}))
-                                     or _owns(located[0].get("source", {}), own_tree.get("source", {})))
-                                and decide_equivalence(target.get("qualifiers", {}), located[0].get("qualifiers", {}),
-                                                       "structure", context={"canonicalize": canonicalize})["equivalent"]):
-                            # An OR is one business group. Its complete AST,
-                            # not the raw sentence order, states that group's
-                            # answer after its independent identity is bound.
-                            row.update(outcome="correct", semantic_comparison_status="equivalent")
+                        if not (_tree_complete(required, tree) and _tree_complete(actual, own_tree)):
+                            continue
+                        responsibility = None
+                        if layer == "B":
+                            responsibility = _business_responsibility(row, tree, own_tree, context)
+                        elif row["outcome"] != "correct":
+                            responsibility = _relation_responsibility(
+                                row, required, actual, tree, own_tree, context, used_relations, resolve)
+                        if responsibility is not None:
+                            row.update(outcome="correct", semantic_comparison_status="equivalent",
+                                       semantic_responsibility=responsibility)
             layers[layer]["numerator"] = sum(row["outcome"] == "correct" for row in rows if row["layer"] == layer)
             denominator = layers[layer]["denominator"]
             layers[layer]["score"] = 100 * layers[layer]["numerator"] / denominator if denominator else None
     return {"decisions": decisions, "feature_checks": checks, "unsupported_features": unsupported,
             "blockers": blockers, "denominators_changed": False,
             "inputs": {side: {key: copy.deepcopy(graph.get(key, [] if key != "text_projection" else {}))
-                              for key in ("logical_statements", "required_matcher_features", "text_projection", "business")}
+                              for key in dict.fromkeys(("logical_statements", "required_matcher_features", "text_projection", "business", "relations", "blockers", *REPRESENTED_INPUT_KEYS))}
                        for side, graph in (("required", required), ("actual", actual))}}

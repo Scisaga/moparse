@@ -30,7 +30,9 @@ _EXTRA_FORMS = {
 
 def active_forms():
     """Return fixed verb forms shared with the ordinary narrative vocabulary."""
-    from .narrative_requirements import _ACTIONS, _PAST
+    from .action_forms import NARRATIVE_ACTION_FORMS, NARRATIVE_PAST_FORMS
+
+    _ACTIONS, _PAST = NARRATIVE_ACTION_FORMS, NARRATIVE_PAST_FORMS
 
     perfect = {word: base for word, base in _ACTIONS.items() if word in _PAST and base not in {"be", "have"}}
     progressive = {}

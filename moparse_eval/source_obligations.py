@@ -16,6 +16,8 @@ import re
 from collections import Counter, defaultdict
 from typing import Any
 
+from .action_forms import AUDITED_ACTION_FORMS
+
 _PREDICATE = re.compile(
     r"\b(?:is|are|was|were|be|owns?|owned|holds?|held|acquires?|acquired|"
     r"approves?|approved|reviews?|reviewed|pays?|paid|publishes?|published|"
@@ -29,7 +31,8 @@ _PREDICATE = re.compile(
     r"serves?|served|develops?|developed|builds?|built|enhances?|enhanced|"
     r"maintains?|maintained|uses?|used|has|have|had|needs?|needed|attends?|attended|"
     r"votes?|voted|participates?|participated|accesses?|accessed|delivers?|delivered|"
-    r"enables?|enabled|sharpens?|sharpened|says?|said|states?|stated)\b|"
+    r"enables?|enabled|sharpens?|sharpened|helps?|helped|leverages?|leveraged|"
+    r"engages?|engaged|captures?|captured|says?|said|states?|stated)\b|"
     r"持有|拥有|擁有|收购|收購|批准|审批|審批|审阅|審閱|披露|支付|偿还|償還|"
     r"投资|投資|增加|增长|增長|减少|減少|下降|组成部分|組成部分", re.I)
 _OPERATORS = re.compile(
@@ -47,16 +50,7 @@ _POSTPREDICATE_SCOPE = re.compile(
     r"underneath|until|upon|via|versus|with|within|without)\b", re.I)
 _DECLARATION = re.compile(r"(?:Units?|Currency|Period|Year|单位|單位|币种|幣種|期间|期間|年度)\s*[:：=]\s*[^。.!?！？;；]+[。.]?", re.I)
 _SCHEMA_CONTROL = re.compile(r"Attribute|Property|Field|Value|Metric|属性|屬性|字段|值|指标|指標|项目|項目", re.I)
-_ACTION_BASES = (
-    "own hold acquire approve review pay publish disclose submit invest increase decrease report declare require retain exceed provide repay guarantee sell "
-    "store retrieve release delete include comprise support operate design offer connect create manage produce serve develop build enhance maintain use have need "
-    "attend vote participate access deliver enable sharpen say state"
-).split()
-_ACTION_MEANING = {form: base for base in _ACTION_BASES for form in (
-    base, base + "s", (base[:-1] if base.endswith("e") else base) + "ed")}
-_ACTION_MEANING.update({"is": "be", "are": "be", "was": "be", "were": "be", "be": "be",
-    "held": "hold", "paid": "pay", "sold": "sell", "built": "build", "has": "have", "had": "have", "said": "say",
-    "repaid": "repay", "accesses": "access"})
+_ACTION_MEANING = dict(AUDITED_ACTION_FORMS)
 _PUNCTUATION = set(":：=;；,.。!?！？()（）[]【】{}\"“”'‘’、，/\\|-–—")
 _METADATA = re.compile(r"\s*(?:Name|Entity|Company|Subject|Identifier|ID|Code|Ticker|Role|Type|Market|Region|Location|URL|URI|Website|Address|Date and time|DateTime|Timestamp|Date|Time|名称|姓名|主体|公司名称|证券代码|证券简称|类型|职务|市场|地区|地址|日期|时间)\s*[:：=]", re.I)
 _NAME_FIELD = re.compile(r"\s*(?:Name|Entity|Company|名称|公司名称)\s*[:：=]", re.I)
@@ -1249,6 +1243,37 @@ def _text_node_evidence(entry, node):
     return evidence
 
 
+def _text_field_delimiters(entry, text_nodes):
+    """Bridge only syntax between two exact, independently retained T roles.
+
+    A lexical word such as "Report" in a field label does not invalidate its
+    original delimiter. This proof neither interprets that label's business
+    meaning nor discharges any B/L obligation.
+    """
+    labels = []
+    for node in text_nodes:
+        span = _range(entry, node.get("source", {}))
+        if node.get("role") == "label" and span and entry["text"][slice(*span)] == node["text"]:
+            labels.append((node, span))
+    evidence = []
+    for value in text_nodes:
+        origin = value.get("source", {})
+        span = _range(entry, origin)
+        label_span = _range(entry, origin.get("attribute_source", {}))
+        if (value.get("role") != "value" or not span or not label_span
+                or entry["text"][slice(*span)] != value["text"] or label_span[1] > span[0]):
+            continue
+        for label, retained_span in labels:
+            if retained_span != label_span:
+                continue
+            delimiter = entry["text"][label_span[1]:span[0]]
+            if re.fullmatch(r"\s*[:：=]\s*", delimiter):
+                evidence.append({"span": [label_span[1], span[0]], "role": "printed_field_delimiter",
+                                 "requirements": [label["id"], value["id"]]})
+                break
+    return evidence
+
+
 def audit_source_obligations(inventory: dict[str, Any], graph: dict[str, Any]) -> dict[str, Any]:
     """Explain each independent obligation or retain precise pending evidence."""
     sources = {entry["id"]: entry for entry in inventory["sources"]}
@@ -1350,7 +1375,7 @@ def audit_source_obligations(inventory: dict[str, Any], graph: dict[str, Any]) -
             role_evidence = role_cache[entry["id"]]
             structural = structural_cache[entry["id"]]
             if obligation["kind"] == "text":
-                evidence = _text_syntax_evidence(entry)
+                evidence = [*_text_syntax_evidence(entry), *_text_field_delimiters(entry, text_nodes)]
                 for node in text_nodes:
                     evidence.extend(_text_node_evidence(entry, node))
                 for control in graph.get("context", {}).get("text_projection", {}).get("controls", []):
@@ -1427,11 +1452,39 @@ def audit_source_obligations(inventory: dict[str, Any], graph: dict[str, Any]) -
                         "source_basis": obligation["source_basis"], "evidence": proof, "unexplained_character_positions": []})
                     continue
                 if obligation.get("binding_role") == "navigation":
-                    references = [item for item in graph.get("explicit_references", []) if item.get("text") == obligation["text"].strip()
-                                  and _range(entry, item.get("source", {})) == span and item.get("owner_proof")]
+                    # A printed field owns its directive through its separate
+                    # label source. The reference reader faithfully keeps only
+                    # the directive in reference.source; requiring the whole
+                    # field there rejects a complete, correctly bound result.
+                    field = re.fullmatch(r"\s*(?P<label>[^:：=\n]{1,160})[:：=]\s*(?P<body>\S.*?)\s*",
+                                         obligation["text"], re.S)
+                    reference_span = (span[0] + field.start("body"), span[0] + field.end("body")) if field else span
+                    references = [item for item in graph.get("explicit_references", [])
+                                  if item.get("text") == entry["text"][slice(*reference_span)]
+                                  and _range(entry, item.get("source", {})) == reference_span and item.get("owner_proof")]
+                    if field:
+                        label = field["label"].strip()
+                        label_start = span[0] + field.start("label") + len(field["label"]) - len(field["label"].lstrip())
+                        label_span = (label_start, label_start + len(label))
+                        references = [item for item in references
+                            if item["owner_proof"].get("owner", {}).get("identity") == {
+                                "role": "printed_field", "attribute": label}
+                            and any(proof.get("kind") == "printed_field_label" and proof.get("text") == label
+                                    and _range(entry, proof.get("source", {})) == label_span
+                                    for proof in item["owner_proof"].get("evidence", []))
+                            and any(edge.get("type") == "reference_directive_scope"
+                                    and edge.get("left") == item["owner_proof"]["owner"]
+                                    and edge.get("right", {}).get("owner") == item["owner_proof"]["owner"]
+                                    and edge.get("binding_evidence", {}).get("owner_proof") == item["owner_proof"]
+                                    and edge.get("binding_evidence", {}).get("directive_source") == item.get("directive_source")
+                                    and _range(entry, edge.get("source", {})) == _range(entry, item.get("directive_source", {}))
+                                    for edge in relations)]
                     edges = [edge for edge in relations if edge.get("type") == "explicit_reference_target"
-                             and _range(entry, edge.get("source", {})) == span
+                             and _range(entry, edge.get("source", {})) == reference_span
                              and any(edge.get("right") == item.get("target") and edge.get("left", {}).get("owner") == item["owner_proof"]["owner"]
+                                     and (not field or edge.get("binding_evidence", {}).get("owner_proof") == item["owner_proof"]
+                                          and edge.get("binding_evidence", {}).get("directive_source") == item.get("directive_source")
+                                          and edge.get("binding_evidence", {}).get("target_source") == item.get("target_source"))
                                      for item in references)]
                     if references and edges:
                         status, reason = "explained", "printed_navigation_keeps_its_own_owner_target_binding"

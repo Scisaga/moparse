@@ -89,11 +89,16 @@ def read_document_composition(text, source, *, scope=()):
         **{role + "_source": copy.deepcopy(sources[role]) for role in ("subject", "predicate", "attribute", "object")}}
     result["facts"] = [fact]
     result["logic"] = [tree]
+    # Source paths and cuts prove each side independently. They are not a
+    # second answer that must equal another file's physical serialization.
+    document_endpoint = {key: copy.deepcopy(document[key]) for key in ("text", "resolution")}
+    pages_endpoint = {"role": pages["role"], "text": pages["text"],
+                      "start": {"id": pages["start"]["id"]}, "end": {"id": pages["end"]["id"]}}
     result["relations"] = [
-        {"type": "document_part_of", "left": component, "right": copy.deepcopy(document),
+        {"type": "document_part_of", "left": component, "right": document_endpoint,
          "source": sources["attribute"], "object_anchor": None, "binding_evidence": copy.deepcopy(binding),
          "rule_id": "printed_component_to_named_document"},
-        {"type": "page_reference_scope", "left": copy.deepcopy(pages), "right": assertion,
+        {"type": "page_reference_scope", "left": pages_endpoint, "right": assertion,
          "source": sources["pages"], "object_anchor": None, "binding_evidence": copy.deepcopy(binding),
          "rule_id": "printed_page_range_to_component_identity"}]
     result["complete"] = result["semantic_complete"] = True

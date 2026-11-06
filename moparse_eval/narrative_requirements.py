@@ -14,36 +14,11 @@ import copy
 import re
 from typing import Any
 
-from .proposition_requirements import VERBS
+from .action_forms import NARRATIVE_ACTION_FORMS, NARRATIVE_PAST_FORMS
 from .prose_requirements import _sentence_spans
 
-_ACTIONS = dict(VERBS)
-_PAST = {word for word, base in _ACTIONS.items()
-         if word != base and (word.endswith('ed') or word in {'held', 'paid', 'sold'})}
-for _base, _forms in {
-    "store": ("stores", "stored"), "retrieve": ("retrieves", "retrieved"),
-    "release": ("releases", "released"), "delete": ("deletes", "deleted"),
-    "include": ("includes", "included"), "comprise": ("comprises", "comprised"),
-    "support": ("supports", "supported"), "operate": ("operates", "operated"),
-    "design": ("designs", "designed"), "offer": ("offers", "offered"),
-    "connect": ("connects", "connected"), "create": ("creates", "created"),
-    "manage": ("manages", "managed"), "produce": ("produces", "produced"),
-    "serve": ("serves", "served"), "develop": ("develops", "developed"),
-    "build": ("builds", "built"), "enhance": ("enhances", "enhanced"),
-    "maintain": ("maintains", "maintained"), "use": ("uses", "used"),
-    "have": ("has", "had"), "need": ("needs", "needed"),
-    "attend": ("attends", "attended"), "vote": ("votes", "voted"),
-    "participate": ("participates", "participated"), "access": ("accesses", "accessed"),
-    "deliver": ("delivers", "delivered"), "enable": ("enables", "enabled"),
-    "sharpen": ("sharpens", "sharpened"),
-    "help": ("helps", "helped"), "leverage": ("leverages", "leveraged"),
-    "engage": ("engages", "engaged"), "capture": ("captures", "captured"),
-}.items():
-    _ACTIONS[_base] = _base
-    _ACTIONS.update(dict.fromkeys(_forms, _base))
-    _PAST.add(_forms[-1])
-_ACTIONS.update(dict.fromkeys(("be", "is", "are", "was", "were"), "be"))
-_PAST.update({'was', 'were'})
+_ACTIONS = dict(NARRATIVE_ACTION_FORMS)
+_PAST = set(NARRATIVE_PAST_FORMS)
 _VERB = re.compile(r"\b(?:" + "|".join(sorted(_ACTIONS, key=len, reverse=True)) + r")\b", re.I)
 _PRIMARY = re.compile(r"\b(?:is\s+(?:not\s+)?able\s+to|are\s+(?:not\s+)?able\s+to|"
                       r"was\s+(?:not\s+)?able\s+to|were\s+(?:not\s+)?able\s+to|"

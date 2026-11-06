@@ -13,23 +13,9 @@ from typing import Any
 
 from .prose_requirements import _sentence_spans, prose_role_relations
 
-VERBS = {
-    "own": "own", "owns": "own", "owned": "own", "hold": "hold", "holds": "hold", "held": "hold",
-    "acquire": "acquire", "acquires": "acquire", "acquired": "acquire",
-    "approve": "approve", "approves": "approve", "approved": "approve",
-    "review": "review", "reviews": "review", "reviewed": "review",
-    "pay": "pay", "pays": "pay", "paid": "pay", "publish": "publish", "publishes": "publish",
-    "disclose": "disclose", "discloses": "disclose", "submit": "submit", "submits": "submit",
-    "invest": "invest", "invests": "invest", "invested": "invest",
-    "increase": "increase", "increases": "increase", "increased": "increase",
-    "decrease": "decrease", "decreases": "decrease", "decreased": "decrease",
-    "report": "report", "reports": "report", "reported": "report",
-    "declare": "declare", "declares": "declare", "declared": "declare",
-    "require": "require", "requires": "require", "retain": "retain", "retains": "retain",
-    "exceed": "exceed", "exceeds": "exceed", "exceeded": "exceed",
-    "provide": "provide", "provides": "provide", "repay": "repay", "repays": "repay",
-    "guarantee": "guarantee", "guarantees": "guarantee", "sell": "sell", "sells": "sell", "sold": "sell",
-}
+from .action_forms import PROPOSITION_ACTION_FORMS
+
+VERBS = dict(PROPOSITION_ACTION_FORMS)
 _VERB = re.compile(r"\b(" + "|".join(sorted(VERBS, key=len, reverse=True)) + r")\b", re.I)
 _MODAL = re.compile(r"\b(shall|must|may|can|cannot|will|should)\b", re.I)
 _CONDITION = re.compile(r"\b(only if|unless|except(?: when| that| for)?|if)\b", re.I)

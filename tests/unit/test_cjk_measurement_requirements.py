@@ -135,7 +135,7 @@ def test_parent_offsets_t_text_and_inputs_are_preserved_without_quantity_convers
     assert result['controls'] == []
 
 
-def test_cjk_dispatch_and_public_controlled_chain_keep_two_facts_but_withhold_unvalidated_comparison():
+def test_cjk_dispatch_and_public_controlled_chain_keep_two_facts_and_execute_native_comparison():
     parsed = read_cjk_narrative(TEXT, SOURCE)
     assert parsed['complete'] and len(parsed['facts']) == 2
     required = compile_markdown(TEXT, sample_id='invented-cjk-quantities')
@@ -144,9 +144,10 @@ def test_cjk_dispatch_and_public_controlled_chain_keep_two_facts_but_withhold_un
     result = grade_layers(required, candidate)
     assert result['layers']['T']['score'] == 100
     assert result['layers']['B']['denominator'] == 2
-    assert result['layers']['B']['score'] is None and result['layers']['L']['score'] is None
-    assert not result['publishable']
-    assert any('quantity_comparison' in item.get('required_features', []) for item in result['blockers'])
+    assert result['layers']['B']['score'] == result['layers']['L']['score'] == 100
+    assert result['publishable'] and not result['blockers']
+    assert result['semantic_comparison']['decisions']['B']['equivalent']
+    assert result['semantic_comparison']['decisions']['L']['equivalent']
 
 
 def test_expected_requirement_graph_keeps_two_measurements_and_their_relation_sources():

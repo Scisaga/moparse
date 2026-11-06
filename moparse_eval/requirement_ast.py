@@ -45,6 +45,9 @@ _SCHEMAS = {
     "predicate": {"head"},
     "subject_control": {"controller"},
     "object_control": {"controller"},
+    "document_composition": {"subject", "attribute", "object", "page_reference", "document_identity"},
+    "cjk_measurement_sequence": {"clauses", "period"},
+    "year_on_year_change": {"subject", "basis", "direction", "baseline_period", "value", "unit"},
 }
 _UNSOURCED_DESCRIPTORS = {"nominal", "predicate", "subject_control", "object_control"}
 _PROVENANCE = {"id", "rule_id", "record_id", "source", "source_id", "sources", "span", "text_span", "cell_text_span", "joined_span",
@@ -98,6 +101,39 @@ def _semantic_keys(node):
     return keys
 
 
+def _nominal_role_closed(node, role):
+    """Verify a decomposed role covers its entire retained surface literal.
+
+    This independent constituent audit does not parse the literal again. It
+    binds every interpreted constituent to the original role's exact slice,
+    preventing a shorter or forged phrase from replacing an unhandled suffix.
+    """
+    from .nominal_syntax import validate_nominal_sources
+
+    phrase, origin, raw = node.get(role + "_phrase"), node.get(role + "_source"), node.get(role)
+    if (not isinstance(phrase, dict) or phrase.get("kind") != "noun_phrase"
+            or not isinstance(origin, dict) or phrase.get("source") != origin or not isinstance(raw, str)):
+        return False
+    span = origin.get("text_span")
+    if not (isinstance(span, (list, tuple)) and len(span) == 2 and span[1] - span[0] == len(raw)):
+        return False
+
+    def literal(source, _label):
+        if (not isinstance(source, dict) or any(source.get(key) != origin.get(key)
+                for key in ("path", "lines", "cell", "block", "native_path"))):
+            return None
+        cut = source.get("text_span")
+        if not (isinstance(cut, (list, tuple)) and len(cut) == 2 and span[0] <= cut[0] <= cut[1] <= span[1]):
+            return None
+        return raw[cut[0] - span[0]:cut[1] - span[0]]
+
+    try:
+        validate_nominal_sources({"logic": [phrase]}, {}, literal)
+    except (ValueError, KeyError, TypeError, IndexError):
+        return False
+    return True
+
+
 def _source_checks(node, side, path, context):
     if node.get("kind") in _UNSOURCED_DESCRIPTORS:
         return []
@@ -114,6 +150,21 @@ def _source_checks(node, side, path, context):
     literal = resolver(side, copy.deepcopy(source))
     if not isinstance(literal, str) or not literal:
         return [_result("unresolved", path, reason="ast_node_source_unavailable", proof={"side": side, "source": copy.deepcopy(source)})]
+    if node.get("kind") == "cjk_measurement_sequence" or node.get("sequence_source"):
+        from .cjk_measurement_requirements import read_cjk_measurements
+
+        sequence_source = node.get("sequence_source", source)
+        whole = resolver(side, copy.deepcopy(sequence_source))
+        readback = read_cjk_measurements(whole, sequence_source) if isinstance(whole, str) else None
+        expected = None
+        if readback is not None and readback["complete"]:
+            tree = readback["logic"][0]
+            expected = tree if node.get("kind") == "cjk_measurement_sequence" else next(
+                (clause for clause in tree["clauses"] if clause["source"] == source), None)
+        if expected is None or node != expected:
+            return [_result("unresolved", path, reason="measurement_sequence_not_bound_to_complete_source",
+                            proof={"side": side, "source": copy.deepcopy(source), "sequence_source": copy.deepcopy(sequence_source)})]
+        return []
     checks = []
 
     def local_origin(origin, *, empty=False):
@@ -216,6 +267,14 @@ def _source_checks(node, side, path, context):
         except (ValueError, KeyError, TypeError) as error:
             checks.append(_result("unresolved", path, reason="ast_control_or_discourse_not_bound_to_source",
                                   proof={"side": side, "detail": str(error)}))
+    if kind == "document_composition":
+        from .document_composition_requirements import read_document_composition
+
+        own = read_document_composition(literal, source)
+        interpreted = own["logic"][0] if own["complete"] else None
+        if interpreted is None or any(node.get(key) != value for key, value in interpreted.items()):
+            checks.append(_result("unresolved", path, reason="document_composition_not_bound_to_complete_source",
+                                  proof={"side": side, "source": copy.deepcopy(source)}))
     return checks
 
 
@@ -293,13 +352,28 @@ def compare_requirement_ast(required: Any, actual: Any, context: dict[str, Any] 
                         or node.get("unresolved") or node.get("pending")):
                     children.append(_result("unresolved", path, reason="ast_interpretation_incomplete", proof={"side": side}))
             skip = set()
-            if kinds[0] in {"quantity", "quantity_comparison"} and "value" in first and "value" in second:
+            if kinds[0] in {"quantity", "quantity_comparison", "year_on_year_change"} and "value" in first and "value" in second:
                 scalar_count = kinds[0] == "quantity_comparison" and role == "asserted_quantifier" and first.get("operator") == second.get("operator") == "eq"
-                quantity = decide_equivalence(first, second, "unit" if context.get("layer") == "L" and (kinds[0] == "quantity" or scalar_count) else "quantity", context=context)
+                quantity = decide_equivalence(first, second, "unit" if context.get("layer") == "L" and (kinds[0] == "quantity" or scalar_count or first.get("sequence_source")) else "quantity", context=context)
                 status = "equivalent" if quantity["equivalent"] else "unresolved" if quantity["status"] == "unresolved" else "conflict"
                 children.append(_result(status, path + ".quantity", reason=quantity["rule_id"], proof={"equivalence": quantity}, conflicts=quantity["conflicts"]))
                 skip.update({"value", "unit", "currency", "quantity_role"})
             first_keys, second_keys = _semantic_keys(first), _semantic_keys(second)
+            delegated = []
+            if kinds[0] == "proposition":
+                for surface_role in ("object", "subject"):
+                    closed = [_nominal_role_closed(node, surface_role) for node in (first, second)]
+                    # A supplied role origin makes closure enforceable even
+                    # without an external resolver. Legacy hand-authored AST
+                    # fixtures without role evidence retain scalar comparison.
+                    for side, node, complete in zip(("required", "actual"), (first, second), closed, strict=True):
+                        if isinstance(node.get(surface_role + "_source"), dict) and node.get(surface_role + "_phrase") is not None and not complete:
+                            children.append(_result("unresolved", path + "." + surface_role + "_phrase",
+                                reason="ast_nominal_role_not_source_closed", proof={"side": side}))
+                    if all(closed):
+                        first_keys.discard(surface_role)
+                        second_keys.discard(surface_role)
+                        delegated.append(surface_role)
             for field in sorted((first_keys | second_keys) - skip):
                 if field == "scope" and context.get("contexts") is not None and first.get("scope"):
                     scope = verify_scope(first["scope"], second, list(context.get("declared_paths", [])),
@@ -328,6 +402,7 @@ def compare_requirement_ast(required: Any, actual: Any, context: dict[str, Any] 
                         child_role = "temporal" if first.get("semantic_role") == "temporal_scope" else "identity"
                     children.append(compare(first.get(field, _MISSING), second.get(field, _MISSING), path + "." + field, field, depth + 1, child_role))
             return _combine(children, path, sources=source_proof, kind=kinds[0],
+                            source_closed_nominal_roles=delegated,
                             **{evidence_key: {"required": copy.deepcopy(first.get(evidence_key)),
                                               "actual": copy.deepcopy(second.get(evidence_key))}
                                for evidence_key in ("record_evidence", "field_label_evidence")
@@ -450,14 +525,17 @@ AST_FEATURE_COMPARATORS = {feature: compare_feature_ast for feature in (
 )}
 
 
-def _identity(tree, canonicalize):
+def _identity(tree, canonicalize, *, context=None, side=None):
     # Object/quantity values, modality and condition answers are deliberately
     # absent. They can establish a comparison only after identity retrieval.
     def main_leaves(node):
         if not isinstance(node, dict):
             return []
-        if node.get("kind") == "proposition":
+        if node.get("kind") in {"proposition", "document_composition"}:
             return [node]
+        if node.get("kind") == "cjk_measurement_sequence":
+            return [{"subject": clause.get("subject"), "attribute": clause.get("operator_text", clause.get("kind"))}
+                    for clause in node.get("clauses", []) if isinstance(clause, dict)]
         if node.get("kind") == "coordination":
             return [leaf for child in node.get("children", []) for leaf in main_leaves(child)]
         if node.get("kind") == "logical_group":
@@ -483,6 +561,25 @@ def _identity(tree, canonicalize):
     if facets:
         unique = {repr(facet): facet for facet in facets}
         result["identity_facets"] = [unique[key] for key in sorted(unique)]
+    if isinstance(tree, dict) and tree.get("kind") == "cjk_measurement_sequence":
+        result["periods"] = []
+        period = tree.get("period")
+        owner = tree.get("source") if isinstance(tree.get("source"), dict) else {}
+        if isinstance(period, dict):
+            origin = period.get("source") if isinstance(period.get("source"), dict) else {}
+            outer, local = owner.get("text_span"), origin.get("text_span")
+            resolver = (context or {}).get("source_resolver")
+            valid_spans = all(isinstance(span, (list, tuple)) and len(span) == 2
+                              and all(type(value) is int for value in span) for span in (outer, local))
+            own_source = (owner.get("path") == origin.get("path") and owner.get("lines") == origin.get("lines")
+                and all(owner.get(key) == origin.get(key) for key in ("cell", "block", "native_path"))
+                and valid_spans and outer[0] <= local[0] < local[1] <= outer[1])
+            literal = resolver(side, copy.deepcopy(origin)) if resolver and own_source else None
+            if literal == period.get("text") and isinstance(literal, str):
+                result["periods"] = [decide_equivalence(literal, literal, "period",
+                    context={"canonicalize": canonicalize})["canonical"]["required"]]
+            else:
+                result["period_identity_source_unresolved"] = True
     return result
 
 
@@ -497,11 +594,11 @@ def compare_requirement_ast_collections(required, actual, context=None):
         return _result("unresolved", "$", reason="no_interpreted_requirement_ast",
                        proof={"rows": [], "unadjudicated_extra_indices": list(range(len(actual))), "capacity_one": True})
     canonicalize = context["canonicalize"]
-    identities = [_identity(tree, canonicalize) for tree in actual]
+    identities = [_identity(tree, canonicalize, context=context, side="actual") for tree in actual]
     available = set(range(len(actual)))
     rows = []
     for index, tree in enumerate(required):
-        wanted = _identity(tree, canonicalize)
+        wanted = _identity(tree, canonicalize, context=context, side="required")
         trace, accepted, rejected_conflicts = [], [], []
         for candidate_index, own in enumerate(identities):
             shared_predicates = set(wanted["predicates"]) & set(own["predicates"])
@@ -516,6 +613,10 @@ def compare_requirement_ast_collections(required, actual, context=None):
                 conflicts.append("scope_identity")
             if wanted.get("identity_facets", []) != own.get("identity_facets", []):
                 conflicts.append("record_or_facet_identity")
+            if wanted.get("periods", []) != own.get("periods", []):
+                conflicts.append("printed_period_identity")
+            if wanted.get("period_identity_source_unresolved") or own.get("period_identity_source_unresolved"):
+                conflicts.append("printed_period_source_unresolved")
             reusable = candidate_index in available
             valid = hit and not conflicts and reusable
             trace.append({"candidate_index": candidate_index, "textual_role_hit": hit,
@@ -534,8 +635,11 @@ def compare_requirement_ast_collections(required, actual, context=None):
             decision = _result("unresolved", f"$[{index}]", reason="ast_statement_identity_ambiguous")
         else:
             chosen = None
-            decision = _result("conflict" if rejected_conflicts else "missing", f"$[{index}]",
-                               reason="ast_statement_identity_conflict" if rejected_conflicts else "ast_statement_missing")
+            unknown_period = wanted.get("period_identity_source_unresolved") or any(
+                hit["textual_role_hit"] and "printed_period_source_unresolved" in hit["conflicts"] for hit in trace)
+            decision = _result("unresolved" if unknown_period else "conflict" if rejected_conflicts else "missing", f"$[{index}]",
+                               reason="ast_statement_period_source_unresolved" if unknown_period
+                               else "ast_statement_identity_conflict" if rejected_conflicts else "ast_statement_missing")
         rows.append({"required_index": index, "actual_index": chosen, "decision": decision,
                      "retrieval": {"query": wanted, "candidates": trace, "value_used": False}})
     result = _combine([row["decision"] for row in rows], "$", rows=rows,

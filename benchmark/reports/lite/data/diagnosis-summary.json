@@ -3,47 +3,51 @@
   "quality_scores_withheld": true,
   "expected_comparison_complete": false,
   "candidate_comparison_started": false,
-  "software_id": "c913ef5f15b001372a52574e92c8fa662ebea9239d7ef6d5ab44db3e538b36d9",
-  "git_head": "49be1e75c26e9a77e82541067b0dd06d67be7a2d",
+  "software_id": "b9e1499220f0b6ddcdce0099f526702ec080c7a3834d3d249ed73a5d30c15d9e",
+  "git_head": "2bc7a6f6322d3625fde1d32d92e1f08e765cdc53",
   "configured_analysis_workers": 16,
   "source_index": "benchmark/runs/lite/requirements/current/index.json",
-  "source_index_sha256": "9b2556a429840d78776a715aa858449a8b45aa1f5eb9e2ab7b740a15bde6c755",
+  "source_index_sha256": "d1c4fee3f8ba51eccb78d283c54055ea4b04973d067b7507a230feb774e6a39e",
   "source_compilation": {
-    "scope": "declared_lite_expected_only",
     "declared_records": 173,
     "views_written": 173,
-    "all_declared_views_written": true,
     "source_integrity_failures": 0,
+    "all_views_same_software_id": true,
     "source_obligation_inventory_complete": true,
+    "software_unchanged": true,
+    "semantic_complete": false,
+    "analysis_workers": 16,
+    "scope": "declared_lite_expected_only",
+    "all_declared_views_written": true,
     "inventory_validation": {
       "status": "passed",
       "scope": "source_integrity_not_semantic_oracle"
-    },
-    "software_unchanged": true,
-    "all_views_same_software_id": true,
-    "analysis_workers": 16,
-    "semantic_complete": false
+    }
   },
   "software_validation": {
     "path": "benchmark/runs/lite/requirements/validation/software-validation.json",
-    "sha256": "f678549b321881e8758e1ae80420ab0c47d51ed94f33d34db8b60453ff4ecab0",
+    "sha256": "c093dd16279e98854e74424cf68f465cbbd15c8ee18f3132deab7f23fc89ddf7",
     "status": "passed",
-    "summary": "3619 passed in 58.64s",
-    "new_independent_test_cases_in_new_files": 444,
-    "scope": "controlled_cases_only_not_complete_expected_acceptance"
+    "summary": "3770 passed in 62.02s (0:01:02)",
+    "new_independent_test_cases_in_new_files": 151,
+    "scope": "controlled_cases_only_not_complete_expected_acceptance",
+    "precommit_import_formatting_verified": true
   },
-  "actual_source_diagnosis": "benchmark/runs/lite/requirements/validation/actual-source-diagnosis.json",
+  "actual_source_diagnosis": {
+    "path": "benchmark/runs/lite/requirements/validation/actual-source-diagnosis.json",
+    "sha256": "b21dc45e91e0252b6b636cbbe251fde657a92a02d63f898dff043dbae9386e2d"
+  },
   "expected_structure_gate": {
     "status": "not_passed",
-    "reason": "All 173 source views retain valid provenance; complete actual expected semantics and independent full-scope acceptance remain unresolved."
+    "reason": "All 173 source views have valid unchanged authorized provenance; 171 retain non-deferred semantic gaps."
   },
   "comparison_capability_gate": {
     "status": "not_passed",
-    "reason": "Twenty compositional features have executable controlled evidence. Remaining features and actual candidate/format coverage are not independently accepted."
+    "reason": "Twenty-eight bounded feature families have controlled executable evidence; complete authorized semantics and real-format comparison acceptance remain outstanding."
   },
   "delivery_conversion_gate": {
     "status": "not_passed",
-    "reason": "Source-bound object ledger has controlled evidence; eight-pipeline actual replay and eight-way requirement attribution have not completed."
+    "reason": "No actual candidate comparison or native-to-final replay was executed in this task; all eight delivery chains remain unaccepted."
   },
   "completion_status": {
     "software_complete": false,
@@ -51,18 +55,235 @@
     "quality_score_publication_ready": false,
     "five_input_scopes_confirmed": false,
     "controlled_software_validation_passed": true,
-    "full_expected_semantic_acceptance_passed": false
+    "source_transport_and_binding_passed": false,
+    "full_expected_semantic_acceptance_passed": false,
+    "comparison_independent_complete_acceptance_passed": false,
+    "eight_real_delivery_chains_accepted": false,
+    "source_transport_passed": true,
+    "source_integrity_passed": true,
+    "typed_business_binding_complete": false,
+    "source_binding_limit": "All source records and transport are retained; unresolved typed semantic and relation obligations still prevent complete business binding acceptance."
   },
   "input_scope_pending": [
-    "alibaba-strategies-p009-010",
-    "midea-strategy-p025-036",
-    "pboc-banking-columns-p029-040",
-    "pboc-macro-columns-p011-018",
-    "pboc-policy-columns-p019-026"
+    {
+      "sample_id": "alibaba-strategies-p009-010",
+      "issue": {
+        "reason": "input_scope_context",
+        "source": {
+          "path": "/opt/moparse/pdf_sample/parsing/expected/complex-alibaba-2025-annual/expected.md",
+          "lines": [
+            230,
+            230
+          ]
+        },
+        "layers": [
+          "T",
+          "L",
+          "B"
+        ],
+        "outside_selection": [
+          {
+            "kind": "mixed_page_selection_declaration",
+            "reference": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-alibaba-2025-annual/expected.md",
+              "lines": [
+                230,
+                230
+              ]
+            },
+            "declared_source_pages": [
+              10,
+              11
+            ],
+            "outside_source_pages": [
+              11
+            ]
+          }
+        ],
+        "source_id": "source:87",
+        "text": "We believe our ecosystem offers the most comprehensive range of products and services among global commerce platforms to meet the diverse demands of our massive and diversified consumer base across different segments. We have developed a digital commerce infrastructure that offers an upgraded consumer experience by seamlessly integrating online and offline capabilities for our marketplaces and direct sales businesses. Leveraging our product and supply chain capabilities, consumers can enjoy a broad variety of quality products, such as branded products, imported goods, products sourced directly from manufacturers and farms as well as idle goods. We have also developed logistics expertise and capabilities that allow us to offer a full range of high-frequency fulfillment services to satisfy consumer demand. Our comprehensive delivery options include on-demand delivery, half-day delivery, same-or-next-day delivery and next-day pick-up services, which capture the varying needs of consumers living in large cities and less-developed areas. Our key businesses are:",
+        "id": "unresolved:80",
+        "source_obligation_ids": [
+          "obligation:505"
+        ]
+      }
+    },
+    {
+      "sample_id": "midea-strategy-p025-036",
+      "issue": {
+        "reason": "input_scope_context",
+        "source": {
+          "path": "/opt/moparse/pdf_sample/parsing/expected/complex-midea-2024-annual/expected.md",
+          "lines": [
+            417,
+            417
+          ]
+        },
+        "layers": [
+          "T",
+          "L",
+          "B"
+        ],
+        "outside_selection": [
+          {
+            "kind": "mixed_page_selection_declaration",
+            "reference": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-midea-2024-annual/expected.md",
+              "lines": [
+                417,
+                417
+              ]
+            },
+            "declared_source_pages": [
+              36,
+              37
+            ],
+            "outside_source_pages": [
+              37
+            ]
+          }
+        ],
+        "source_id": "source:99",
+        "text": "在绿色能源领域，2024年科陆电子在海外储能市场从设备供应商转型为系统集成商，从产品制造向EP Package全生命周期整站解决方案服务升级，为客户提供从产品选型、站级规划设计、整站安装调试、全栈数据监测优化、统一运维和售后服务的储能整体一站式解决方案。在北美市场实现突破性进展，充分展现其产品实力，新一代储能系统Aqua-C2.5取得成功的商用实践；在南美市场获得在智利、阿根廷等多个国家的储能项目合同，实现EP Package全生命周期整站服务在海外市场全方位落地；科陆电子荣登全球知名研究机构彭博新能源财经（BNEF）公布的2024年全球Tier1储能厂商榜单和Tier1光伏逆变器和储能PCS厂商榜单。在产品端，Aqua C系列储能产品获得国际权威认证机构DEKRA德凯签发的全球首个储能系统级MTBF（Mean Time Between Failure，平均故障间隔时间）第三方认证，科陆电子在2024年EESA储能展会还发布Aqua E系列工商业储能产品。",
+        "id": "unresolved:246",
+        "source_obligation_ids": [
+          "obligation:603"
+        ]
+      }
+    },
+    {
+      "sample_id": "pboc-banking-columns-p029-040",
+      "issue": {
+        "reason": "input_scope_context",
+        "source": {
+          "path": "/opt/moparse/pdf_sample/parsing/expected/complex-pboc-stability-2024/expected.md",
+          "lines": [
+            540,
+            540
+          ]
+        },
+        "layers": [
+          "T",
+          "L",
+          "B"
+        ],
+        "outside_selection": [
+          {
+            "kind": "mixed_page_selection_declaration",
+            "reference": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-pboc-stability-2024/expected.md",
+              "lines": [
+                540,
+                540
+              ]
+            },
+            "declared_source_pages": [
+              40,
+              41
+            ],
+            "outside_source_pages": [
+              41
+            ]
+          }
+        ],
+        "source_id": "source:262",
+        "text": "金融稳定理事会统计数据显示，国外全球系统重要性银行在2019年达标前一年发行TLAC工具3600亿美元，其中600亿美元为资本工具，其余3000亿美元为TLAC债券。截至2023年末，24家国外全球系统重要性银行平均核心一级资本充足率为13.4%，资本充足率为16.9%，TLAC风险加权比率为30.1%。分区域看，美国、加拿大和英国全球系统重要性银行的平均TLAC风险加权比率均超过30%。日本的TLAC风险加权比率最低，为25.8%。",
+        "id": "unresolved:186",
+        "source_obligation_ids": [
+          "obligation:869"
+        ]
+      }
+    },
+    {
+      "sample_id": "pboc-macro-columns-p011-018",
+      "issue": {
+        "reason": "input_scope_context",
+        "source": {
+          "path": "/opt/moparse/pdf_sample/parsing/expected/complex-pboc-stability-2024/expected.md",
+          "lines": [
+            252,
+            252
+          ]
+        },
+        "layers": [
+          "T",
+          "L",
+          "B"
+        ],
+        "outside_selection": [
+          {
+            "kind": "mixed_page_selection_declaration",
+            "reference": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-pboc-stability-2024/expected.md",
+              "lines": [
+                252,
+                252
+              ]
+            },
+            "declared_source_pages": [
+              18,
+              19
+            ],
+            "outside_source_pages": [
+              19
+            ]
+          }
+        ],
+        "source_id": "source:185",
+        "text": "物价水平根本上是由实体经济供需关系决定的，CPI和PPI是反映宏观物价水平的主要指标。2023年，受国内外多重因素影响，我国物价水平出现阶段性回落；但核心CPI仍保持温和上涨，物价变化具有明显结构性特征。",
+        "id": "unresolved:101",
+        "source_obligation_ids": [
+          "obligation:701"
+        ]
+      }
+    },
+    {
+      "sample_id": "pboc-policy-columns-p019-026",
+      "issue": {
+        "reason": "input_scope_context",
+        "source": {
+          "path": "/opt/moparse/pdf_sample/parsing/expected/complex-pboc-stability-2024/expected.md",
+          "lines": [
+            252,
+            252
+          ]
+        },
+        "layers": [
+          "T",
+          "L",
+          "B"
+        ],
+        "outside_selection": [
+          {
+            "kind": "mixed_page_selection_declaration",
+            "reference": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-pboc-stability-2024/expected.md",
+              "lines": [
+                252,
+                252
+              ]
+            },
+            "declared_source_pages": [
+              18,
+              19
+            ],
+            "outside_source_pages": [
+              18
+            ]
+          }
+        ],
+        "source_id": "source:2",
+        "text": "物价水平根本上是由实体经济供需关系决定的，CPI和PPI是反映宏观物价水平的主要指标。2023年，受国内外多重因素影响，我国物价水平出现阶段性回落；但核心CPI仍保持温和上涨，物价变化具有明显结构性特征。",
+        "id": "unresolved:125",
+        "source_obligation_ids": [
+          "obligation:11"
+        ]
+      }
+    }
   ],
   "dependency_freeze_passed": false,
   "real_candidate_cpu_replay_started": false,
-  "meaning": "Source-only views and controlled tests are software evidence. Actual candidate comparison, delivered-output gains, complete semantics, and publication readiness are not established. Original saved candidates, bodies, and costs remain preserved.",
+  "meaning": "Source-bound integration repairs and independent controlled final-vote evidence; no complete expected acceptance, actual candidate comparison, real replay or quality publication.",
   "implemented_source_families": [
     "bounded_shared_np_pp_and_local_relation_ownership",
     "dated_enumeration_roles_and_member_boundaries",
@@ -120,46 +341,66 @@
     "views_without_non_deferred_pending": 2,
     "views_with_non_deferred_pending": 171,
     "pending_family_count": 109,
+    "non_deferred_annotation_records_before": 33799,
+    "non_deferred_annotation_records_current": 33571,
     "top_families": [
       {
         "family": "source_obligation_pending:relation",
-        "unique_source_occurrences": 9536,
+        "unique_source_occurrences": 9552,
         "affected_samples": 166,
-        "original_scopes_without_current_overlapping_pending": 3,
-        "newly_exposed_scopes": 598
+        "annotation_records": 10427,
+        "previous_unique_source_occurrences": 9536,
+        "previous_affected_samples": 166,
+        "original_scopes_without_current_overlapping_pending": 0,
+        "newly_exposed_scopes": 7
       },
       {
         "family": "narrative_predicate_unresolved",
         "unique_source_occurrences": 4783,
         "affected_samples": 164,
-        "original_scopes_without_current_overlapping_pending": 1,
-        "newly_exposed_scopes": 3
+        "annotation_records": 4785,
+        "previous_unique_source_occurrences": 4783,
+        "previous_affected_samples": 164,
+        "original_scopes_without_current_overlapping_pending": 0,
+        "newly_exposed_scopes": 0
       },
       {
         "family": "source_obligation_pending:semantic_content",
-        "unique_source_occurrences": 3972,
+        "unique_source_occurrences": 3952,
         "affected_samples": 162,
-        "original_scopes_without_current_overlapping_pending": 0,
-        "newly_exposed_scopes": 4
+        "annotation_records": 3952,
+        "previous_unique_source_occurrences": 3972,
+        "previous_affected_samples": 162,
+        "original_scopes_without_current_overlapping_pending": 1,
+        "newly_exposed_scopes": 0
       },
       {
         "family": "source_obligation_pending:proposition",
-        "unique_source_occurrences": 2277,
+        "unique_source_occurrences": 2297,
         "affected_samples": 127,
-        "original_scopes_without_current_overlapping_pending": 12,
-        "newly_exposed_scopes": 8
+        "annotation_records": 2297,
+        "previous_unique_source_occurrences": 2277,
+        "previous_affected_samples": 127,
+        "original_scopes_without_current_overlapping_pending": 0,
+        "newly_exposed_scopes": 0
       },
       {
         "family": "source_obligation_pending:qualifier",
         "unique_source_occurrences": 2080,
         "affected_samples": 108,
-        "original_scopes_without_current_overlapping_pending": 16,
-        "newly_exposed_scopes": 27
+        "annotation_records": 2080,
+        "previous_unique_source_occurrences": 2080,
+        "previous_affected_samples": 108,
+        "original_scopes_without_current_overlapping_pending": 0,
+        "newly_exposed_scopes": 0
       },
       {
         "family": "list_group_scope_interpretation_unsupported",
         "unique_source_occurrences": 937,
         "affected_samples": 45,
+        "annotation_records": 937,
+        "previous_unique_source_occurrences": 937,
+        "previous_affected_samples": 45,
         "original_scopes_without_current_overlapping_pending": 0,
         "newly_exposed_scopes": 0
       },
@@ -167,13 +408,19 @@
         "family": "prose_clause_semantics_unsupported",
         "unique_source_occurrences": 908,
         "affected_samples": 56,
-        "original_scopes_without_current_overlapping_pending": 15,
+        "annotation_records": 908,
+        "previous_unique_source_occurrences": 908,
+        "previous_affected_samples": 56,
+        "original_scopes_without_current_overlapping_pending": 0,
         "newly_exposed_scopes": 0
       },
       {
         "family": "quoted_nominal_lexical_role_unresolved",
         "unique_source_occurrences": 844,
         "affected_samples": 114,
+        "annotation_records": 844,
+        "previous_unique_source_occurrences": 844,
+        "previous_affected_samples": 114,
         "original_scopes_without_current_overlapping_pending": 0,
         "newly_exposed_scopes": 0
       },
@@ -181,13 +428,9 @@
         "family": "source_has_no_supported_semantic_disposition",
         "unique_source_occurrences": 651,
         "affected_samples": 121,
-        "original_scopes_without_current_overlapping_pending": 0,
-        "newly_exposed_scopes": 0
-      },
-      {
-        "family": "source_obligation_pending:text",
-        "unique_source_occurrences": 651,
-        "affected_samples": 90,
+        "annotation_records": 1238,
+        "previous_unique_source_occurrences": 651,
+        "previous_affected_samples": 121,
         "original_scopes_without_current_overlapping_pending": 0,
         "newly_exposed_scopes": 0
       },
@@ -195,6 +438,9 @@
         "family": "narrative_prepositional_attachment_unresolved",
         "unique_source_occurrences": 521,
         "affected_samples": 61,
+        "annotation_records": 521,
+        "previous_unique_source_occurrences": 521,
+        "previous_affected_samples": 61,
         "original_scopes_without_current_overlapping_pending": 0,
         "newly_exposed_scopes": 0
       },
@@ -202,20 +448,39 @@
         "family": "cjk_narrative_predicate_unresolved",
         "unique_source_occurrences": 476,
         "affected_samples": 53,
+        "annotation_records": 476,
+        "previous_unique_source_occurrences": 476,
+        "previous_affected_samples": 53,
         "original_scopes_without_current_overlapping_pending": 0,
+        "newly_exposed_scopes": 0
+      },
+      {
+        "family": "source_obligation_pending:text",
+        "unique_source_occurrences": 407,
+        "affected_samples": 40,
+        "annotation_records": 407,
+        "previous_unique_source_occurrences": 651,
+        "previous_affected_samples": 90,
+        "original_scopes_without_current_overlapping_pending": 21,
         "newly_exposed_scopes": 0
       },
       {
         "family": "narrative_subject_boundary_unresolved",
         "unique_source_occurrences": 384,
         "affected_samples": 58,
-        "original_scopes_without_current_overlapping_pending": 2,
+        "annotation_records": 384,
+        "previous_unique_source_occurrences": 384,
+        "previous_affected_samples": 58,
+        "original_scopes_without_current_overlapping_pending": 0,
         "newly_exposed_scopes": 0
       },
       {
         "family": "cjk_measurement_sequence_incomplete",
         "unique_source_occurrences": 340,
         "affected_samples": 54,
+        "annotation_records": 340,
+        "previous_unique_source_occurrences": 340,
+        "previous_affected_samples": 54,
         "original_scopes_without_current_overlapping_pending": 0,
         "newly_exposed_scopes": 0
       },
@@ -223,6 +488,9 @@
         "family": "series_independent_field_role_unsupported",
         "unique_source_occurrences": 328,
         "affected_samples": 7,
+        "annotation_records": 328,
+        "previous_unique_source_occurrences": 328,
+        "previous_affected_samples": 7,
         "original_scopes_without_current_overlapping_pending": 0,
         "newly_exposed_scopes": 0
       }
@@ -230,7 +498,7 @@
     "root_cause_groups": [
       {
         "root_cause_group": "local_relation_ownership",
-        "unique_source_occurrences": 9536,
+        "unique_source_occurrences": 9552,
         "affected_samples": 166
       },
       {
@@ -280,8 +548,8 @@
       },
       {
         "root_cause_group": "literal_projection_binding",
-        "unique_source_occurrences": 651,
-        "affected_samples": 90
+        "unique_source_occurrences": 407,
+        "affected_samples": 40
       },
       {
         "root_cause_group": "navigation_and_document_relations",
@@ -291,235 +559,67 @@
     ]
   },
   "implementation_changes": [
-    {
-      "file": "moparse_eval/active_aspect_requirements.py",
-      "changed_functions": [
-        "read_active_aspect_clause"
-      ]
-    },
-    {
-      "file": "moparse_eval/cjk_measurement_requirements.py",
-      "changed_functions": [
-        "read_cjk_measurements"
-      ]
-    },
-    {
-      "file": "moparse_eval/enumeration_binding.py",
-      "changed_functions": [
-        "inherit_omitted_subject",
-        "bind_interpreted_members",
-        "validate_enumeration_bindings"
-      ]
-    },
-    {
-      "file": "moparse_eval/enumeration_context.py",
-      "changed_functions": [
-        "enumeration_declaration"
-      ]
-    },
-    {
-      "file": "moparse_eval/expected_report.py",
-      "changed_functions": [
-        "_validate_flat_evidence",
-        "validate_evidence"
-      ]
-    },
-    {
-      "file": "moparse_eval/infinitival_syntax.py",
-      "changed_functions": [
-        "_main_leaves",
-        "read_discourse_scope",
-        "_unknown_node",
-        "_infinitive",
-        "read_infinitival_scope",
-        "validate_infinitival_sources"
-      ]
-    },
-    {
-      "file": "moparse_eval/narrative_requirements.py",
-      "changed_functions": [
-        "_Unknown.__init__",
-        "_Reader.__init__",
-        "_Reader.interpret",
-        "_Reader.nominal",
-        "_Reader.parse",
-        "_Reader.clause",
-        "_Reader.predicate",
-        "_Reader.predicate_objects",
-        "_Reader.objects",
-        "_Reader.summary",
-        "_Reader.annotate_sources",
-        "_Reader.endpoint",
-        "_Reader.edge",
-        "_Reader.emit",
-        "read_narrative"
-      ]
-    },
-    {
-      "file": "moparse_eval/nominal_syntax.py",
-      "changed_functions": [
-        "_unknown",
-        "nominal_phrase",
-        "_role",
-        "predicate_complements",
-        "validate_nominal_sources"
-      ]
-    },
-    {
-      "file": "moparse_eval/proposition_requirements.py",
-      "changed_functions": [
-        "read_propositions"
-      ]
-    },
-    {
-      "file": "moparse_eval/prose_requirements.py",
-      "changed_functions": [
-        "_action"
-      ]
-    },
-    {
-      "file": "moparse_eval/requirement_ast.py",
-      "changed_functions": [
-        "_canonical",
-        "_result",
-        "_combine",
-        "_provenance_key",
-        "_semantic_keys",
-        "_source_checks",
-        "_scalar",
-        "compare_requirement_ast",
-        "_walk",
-        "_feature_present",
-        "compare_feature_ast",
-        "_identity",
-        "compare_requirement_ast_collections"
-      ]
-    },
-    {
-      "file": "moparse_eval/requirement_graph.py",
-      "changed_functions": [
-        "_cover",
-        "_semantic_token_matches",
-        "_validate_semantic_sources",
-        "validate_requirement_graph",
-        "_compile_saved_requirement_view",
-        "compile_saved_requirements",
-        "main"
-      ]
-    },
-    {
-      "file": "moparse_eval/semantic_layer_comparison.py",
-      "changed_functions": [
-        "_owns",
-        "_has_unresolved",
-        "_main_assertions",
-        "_role_key",
-        "_affected_assertions",
-        "_target_affected",
-        "_fact_ast_consistency",
-        "compare_semantic_layers"
-      ]
-    },
-    {
-      "file": "moparse_eval/source_obligations.py",
-      "changed_functions": [
-        "_fragment_contract",
-        "build_source_obligation_inventory",
-        "_fragment_owns_fact",
-        "_role_evidence",
-        "validate_relation_binding",
-        "_bound_relations",
-        "_prepositional_role_evidence",
-        "_controller_binding",
-        "_infinitive_bindings",
-        "_operator_edges",
-        "_structural_evidence",
-        "audit_source_obligations"
-      ]
-    },
-    {
-      "file": "moparse_eval/three_layer.py",
-      "changed_functions": [
-        "_read_narrative",
-        "_bind_field_body",
-        "_adopt_comparison_tree",
-        "_discharge_superseded_clause_pending",
-        "_Graph.ingest",
-        "_Graph.narrative",
-        "_finish",
-        "_grade_layers"
-      ]
-    }
+    "Share explicitly declared action forms across narrative interpretation and independent source-role auditing; retain independent source obligation enumeration.",
+    "Preserve empty-field terminal literals and audit only the exact delimiter between independently retained label/value roles.",
+    "Bind a sole coordinated nominal determiner to its whole collection; delegate raw role comparison only to a fully source-closed nominal interpretation.",
+    "Assign existing B/L votes to complete source-bound owners after identity, record, qualifiers, identity facets and capacity checks; reports replay the same responsibility.",
+    "Consume existing explicit reference, enumeration, document/page, quoted nominal and CJK relation/qualifier representations with source guards; retained unknowns never certify equivalence.",
+    "Include independently printed periods in repeated CJK metric endpoint and AST identity binding before any scalar comparison."
   ],
   "new_test_files": [
-    "tests/unit/test_collection_declaration_ownership.py",
-    "tests/unit/test_compositional_layer_integration.py",
-    "tests/unit/test_infinitival_source_semantics.py",
-    "tests/unit/test_narrative_nominal_composition.py",
-    "tests/unit/test_proposition_nominal_owner.py",
-    "tests/unit/test_requirement_ast_comparator.py",
-    "tests/unit/test_requirement_source_parallel_compile.py",
-    "tests/unit/test_semantic_transport_contract.py",
-    "tests/unit/test_source_obligation_typed_contract.py"
+    "tests/unit/test_action_source_audit_integration.py",
+    "tests/unit/test_cjk_period_identity_production.py",
+    "tests/unit/test_nested_nominal_production_path.py",
+    "tests/unit/test_represented_feature_production.py",
+    "tests/unit/test_represented_feature_source_guard_audit.py",
+    "tests/unit/test_semantic_positive_responsibility.py"
   ],
-  "obsolete_test_removed": "tests/unit/test_unicode_infix_matching.py only imported the retired missing matcher; no compatibility implementation restored.",
+  "obsolete_test_removed": {
+    "none": true,
+    "existing_test_expectation_corrected": "An obsolete quoted-feature blocker assertion now verifies final B/L success and retains an AND/OR semantic counterexample."
+  },
   "comparison_validation": "benchmark/runs/lite/requirements/validation/comparison-validation.json",
   "oracle_validation": "benchmark/runs/lite/requirements/validation/oracle-validation.json",
   "mutation_validation": "benchmark/runs/lite/requirements/validation/mutations-validation.json",
   "regression_status": {
     "controlled_test_failures": 0,
     "source_integrity_failures": 0,
-    "real_source_compile_exceptions_repaired": 3,
-    "repaired_samples": [
-      "iea-inference-energy-boxes-p043-048",
-      "nvidia-business-manufacturing-people-p096-104",
-      "pingan-business-highlights-p012-013"
-    ],
-    "newly_exposed_scopes_are_not_automatically_parser_regressions": true
+    "newly_complete_previously_blocked_samples": [],
+    "all_authorized_source_records_unchanged": true,
+    "all_sample_projection_counts_unchanged": true,
+    "newly_exposed_pending_is_not_automatic_parser_regression": true,
+    "newly_exposed_scopes_by_family": {
+      "source_obligation_pending:relation": 7
+    }
   },
   "changed_files": [
-    "AGENTS.md",
-    "benchmark/evaluation-tasks.md",
     "benchmark/reports/lite/data/diagnosis-summary.json",
     "benchmark/reports/lite/report.md",
-    "docs/engineering/prompts/expected-output-optimization.md",
-    "moparse_eval/README.md",
+    "moparse_eval/action_forms.py",
     "moparse_eval/active_aspect_requirements.py",
     "moparse_eval/cjk_measurement_requirements.py",
-    "moparse_eval/enumeration_binding.py",
+    "moparse_eval/document_composition_requirements.py",
     "moparse_eval/enumeration_context.py",
     "moparse_eval/expected_report.py",
-    "moparse_eval/infinitival_syntax.py",
     "moparse_eval/narrative_requirements.py",
     "moparse_eval/nominal_syntax.py",
     "moparse_eval/proposition_requirements.py",
     "moparse_eval/prose_requirements.py",
+    "moparse_eval/represented_feature_comparison.py",
     "moparse_eval/requirement_ast.py",
-    "moparse_eval/requirement_graph.py",
     "moparse_eval/semantic_layer_comparison.py",
     "moparse_eval/source_obligations.py",
     "moparse_eval/three_layer.py",
-    "tests/unit/test_active_aspect_requirements.py",
+    "tests/unit/test_action_source_audit_integration.py",
+    "tests/unit/test_cjk_measurement_requirements.py",
+    "tests/unit/test_cjk_period_identity_production.py",
     "tests/unit/test_collection_declaration_ownership.py",
-    "tests/unit/test_compositional_layer_integration.py",
-    "tests/unit/test_infinitival_source_semantics.py",
-    "tests/unit/test_measurement_reader_drift.py",
-    "tests/unit/test_narrative_nominal_composition.py",
-    "tests/unit/test_proposition_nominal_owner.py",
-    "tests/unit/test_prose_field_context.py",
-    "tests/unit/test_prose_multi_clause_contract.py",
-    "tests/unit/test_requirement_ast_comparator.py",
-    "tests/unit/test_requirement_graph_contract.py",
-    "tests/unit/test_requirement_graph_source_coverage.py",
-    "tests/unit/test_requirement_source_parallel_compile.py",
-    "tests/unit/test_semantic_transport_contract.py",
-    "tests/unit/test_source_obligation_nominal_tail_scope.py",
-    "tests/unit/test_source_obligation_oracle.py",
-    "tests/unit/test_source_obligation_typed_contract.py",
-    "tests/unit/test_three_layer_narrative_integration.py",
-    "tests/unit/test_three_layer_preamble_contract.py",
-    "tests/unit/test_three_layer_prose_contract.py",
-    "tests/unit/test_unicode_infix_matching.py"
+    "tests/unit/test_nested_nominal_production_path.py",
+    "tests/unit/test_represented_feature_production.py",
+    "tests/unit/test_represented_feature_source_guard_audit.py",
+    "tests/unit/test_semantic_positive_responsibility.py",
+    "tests/unit/test_three_layer_explicit_reference_contract.py",
+    "tests/unit/test_three_layer_proposition_boundaries.py"
   ],
   "local_generated_evidence": [
     "benchmark/runs/lite/requirements/current/index.json",
@@ -531,5 +631,382 @@
     "benchmark/runs/lite/requirements/validation/mutations-validation.json",
     "benchmark/runs/lite/requirements/validation/comparison-validation.json",
     "benchmark/runs/lite/requirements/validation/source-export.json"
+  ],
+  "source_preservation": {
+    "basis": "Exact comparison of generated authorized source records and explicit input-scope obligations; not corpus correctness review.",
+    "all_173_source_record_arrays_unchanged": true,
+    "generated_source_records_compared": 18668,
+    "all_five_input_scope_targets_unchanged": true,
+    "input_scope_identity_ignores_temporary_issue_ids": true,
+    "all_sample_projection_counts_unchanged": true,
+    "projection_count_changes": [],
+    "before": {
+      "T": 30090,
+      "L": 18030,
+      "B": 7731
+    },
+    "current": {
+      "T": 30090,
+      "L": 18030,
+      "B": 7731
+    },
+    "canonical_expected_or_selection_edited": false,
+    "formal_denominators_frozen": false
+  },
+  "controlled_comparison_feature_families": [
+    "ability_operator",
+    "active_aspect_scope",
+    "alternative_membership",
+    "condition_operands",
+    "contrast_scope",
+    "controlled_infinitive_scope",
+    "coordination_scope",
+    "discourse_scope",
+    "document_composition",
+    "enumeration_context_scope",
+    "explicit_reference_binding",
+    "finite_tense",
+    "fronted_nominal_context",
+    "modal_operator",
+    "negation_scope",
+    "nested_operator_scopes",
+    "noun_phrase_composition",
+    "page_reference_binding",
+    "prepositional_attachment",
+    "purpose_scope",
+    "quantity_comparison",
+    "quoted_nominal_scope",
+    "restrictive_relative",
+    "same_subject_relative_clause",
+    "scoped_reporting",
+    "shared_period_scope",
+    "temporal_prose_scope",
+    "year_on_year_comparison"
+  ],
+  "existing_representation_feature_stages": {
+    "explicit_reference_binding": {
+      "implementation_available": true,
+      "independent_controlled_production_path": "passed",
+      "real_format_complete_acceptance": "not_passed",
+      "evidence": [
+        "tests.unit.test_explicit_reference_requirements::test_reference_target_cannot_supply_its_own_owner_proof",
+        "tests.unit.test_represented_feature_production::test_relation_only_features_reach_final_votes_without_fabricating_ast[# North\\n\\nLumen owns Kappa.\\n\\nSee Note 03 for more information.\\n-explicit_reference_binding-oracle0]",
+        "tests.unit.test_represented_feature_production::test_relation_only_features_reach_final_votes_without_fabricating_ast[- 2028\\u5e74\\uff0cLumen\\u7684\\u5408\\u4f5c\\u8fdb\\u5c55\\u5305\\u62ec\\uff1a\\n  - \\u6279\\u51c6Kappa\\u3002\\n  - \\u62ab\\u9732Sigma\\u3002\\n-enumeration_context_scope-oracle1]",
+        "tests.unit.test_represented_feature_production::test_supported_surface_changes_keep_relation_and_business_votes[# North\\n\\nLumen owns Kappa.\\n\\nSee Note 03 for more information.\\n-# North\\n\\nLumen owns Kappa.\\n\\nSee NOTE 03 for more information.\\n]",
+        "tests.unit.test_represented_feature_production::test_supported_surface_changes_keep_relation_and_business_votes[- 2028\\u5e74\\uff0cLumen\\u7684\\u5408\\u4f5c\\u8fdb\\u5c55\\u5305\\u62ec\\uff1a\\n  - \\u6279\\u51c6Kappa\\u3002\\n  - \\u62ab\\u9732Sigma\\u3002\\n-- 2028\\u5e74\\uff0cLumen\\u7684\\u5408\\u4f5c\\u8fdb\\u5c55\\u5305\\u62ec\\uff1a\\n    - \\u6279\\u51c6Kappa\\u3002\\n    - \\u62ab\\u9732Sigma\\u3002\\n]",
+        "tests.unit.test_represented_feature_production::test_reference_target_owner_and_omitted_reference_are_actual_relation_losses[# North\\n\\nLumen owns Kappa.\\n\\nSee Note 04 for more information.\\n]",
+        "tests.unit.test_represented_feature_production::test_reference_target_owner_and_omitted_reference_are_actual_relation_losses[# South\\n\\nLumen owns Kappa.\\n\\nSee Note 03 for more information.\\n]",
+        "tests.unit.test_represented_feature_production::test_reference_target_owner_and_omitted_reference_are_actual_relation_losses[# North\\n\\nLumen owns Kappa.\\n\\n]",
+        "tests.unit.test_represented_feature_production::test_representation_mutations_block_even_when_flat_text_survives[feature_deleted-# North\\n\\nLumen owns Kappa.\\n\\nSee Note 03 for more information.\\n-explicit_reference_binding-explicit_reference_target]",
+        "tests.unit.test_represented_feature_production::test_representation_mutations_block_even_when_flat_text_survives[feature_deleted-- 2028\\u5e74\\uff0cLumen\\u7684\\u5408\\u4f5c\\u8fdb\\u5c55\\u5305\\u62ec\\uff1a\\n  - \\u6279\\u51c6Kappa\\u3002\\n  - \\u62ab\\u9732Sigma\\u3002\\n-enumeration_context_scope-enumeration_membership]",
+        "tests.unit.test_represented_feature_production::test_representation_mutations_block_even_when_flat_text_survives[relation_kind_changed-# North\\n\\nLumen owns Kappa.\\n\\nSee Note 03 for more information.\\n-explicit_reference_binding-explicit_reference_target]",
+        "tests.unit.test_represented_feature_production::test_representation_mutations_block_even_when_flat_text_survives[relation_kind_changed-- 2028\\u5e74\\uff0cLumen\\u7684\\u5408\\u4f5c\\u8fdb\\u5c55\\u5305\\u62ec\\uff1a\\n  - \\u6279\\u51c6Kappa\\u3002\\n  - \\u62ab\\u9732Sigma\\u3002\\n-enumeration_context_scope-enumeration_membership]",
+        "tests.unit.test_represented_feature_production::test_representation_mutations_block_even_when_flat_text_survives[relation_deleted-# North\\n\\nLumen owns Kappa.\\n\\nSee Note 03 for more information.\\n-explicit_reference_binding-explicit_reference_target]",
+        "tests.unit.test_represented_feature_production::test_representation_mutations_block_even_when_flat_text_survives[relation_deleted-- 2028\\u5e74\\uff0cLumen\\u7684\\u5408\\u4f5c\\u8fdb\\u5c55\\u5305\\u62ec\\uff1a\\n  - \\u6279\\u51c6Kappa\\u3002\\n  - \\u62ab\\u9732Sigma\\u3002\\n-enumeration_context_scope-enumeration_membership]",
+        "tests.unit.test_represented_feature_production::test_representation_mutations_block_even_when_flat_text_survives[borrowed_source-# North\\n\\nLumen owns Kappa.\\n\\nSee Note 03 for more information.\\n-explicit_reference_binding-explicit_reference_target]",
+        "tests.unit.test_represented_feature_production::test_representation_mutations_block_even_when_flat_text_survives[borrowed_source-- 2028\\u5e74\\uff0cLumen\\u7684\\u5408\\u4f5c\\u8fdb\\u5c55\\u5305\\u62ec\\uff1a\\n  - \\u6279\\u51c6Kappa\\u3002\\n  - \\u62ab\\u9732Sigma\\u3002\\n-enumeration_context_scope-enumeration_membership]"
+      ]
+    },
+    "enumeration_context_scope": {
+      "implementation_available": true,
+      "independent_controlled_production_path": "passed",
+      "real_format_complete_acceptance": "not_passed",
+      "evidence": [
+        "tests.unit.test_represented_feature_production::test_relation_only_features_reach_final_votes_without_fabricating_ast[# North\\n\\nLumen owns Kappa.\\n\\nSee Note 03 for more information.\\n-explicit_reference_binding-oracle0]",
+        "tests.unit.test_represented_feature_production::test_relation_only_features_reach_final_votes_without_fabricating_ast[- 2028\\u5e74\\uff0cLumen\\u7684\\u5408\\u4f5c\\u8fdb\\u5c55\\u5305\\u62ec\\uff1a\\n  - \\u6279\\u51c6Kappa\\u3002\\n  - \\u62ab\\u9732Sigma\\u3002\\n-enumeration_context_scope-oracle1]",
+        "tests.unit.test_represented_feature_production::test_supported_surface_changes_keep_relation_and_business_votes[# North\\n\\nLumen owns Kappa.\\n\\nSee Note 03 for more information.\\n-# North\\n\\nLumen owns Kappa.\\n\\nSee NOTE 03 for more information.\\n]",
+        "tests.unit.test_represented_feature_production::test_supported_surface_changes_keep_relation_and_business_votes[- 2028\\u5e74\\uff0cLumen\\u7684\\u5408\\u4f5c\\u8fdb\\u5c55\\u5305\\u62ec\\uff1a\\n  - \\u6279\\u51c6Kappa\\u3002\\n  - \\u62ab\\u9732Sigma\\u3002\\n-- 2028\\u5e74\\uff0cLumen\\u7684\\u5408\\u4f5c\\u8fdb\\u5c55\\u5305\\u62ec\\uff1a\\n    - \\u6279\\u51c6Kappa\\u3002\\n    - \\u62ab\\u9732Sigma\\u3002\\n]",
+        "tests.unit.test_represented_feature_production::test_collection_period_owner_and_member_loss_do_not_disappear_from_denominators[- 2029\\u5e74\\uff0cLumen\\u7684\\u5408\\u4f5c\\u8fdb\\u5c55\\u5305\\u62ec\\uff1a\\n  - \\u6279\\u51c6Kappa\\u3002\\n  - \\u62ab\\u9732Sigma\\u3002\\n]",
+        "tests.unit.test_represented_feature_production::test_collection_period_owner_and_member_loss_do_not_disappear_from_denominators[- 2028\\u5e74\\uff0cVega\\u7684\\u5408\\u4f5c\\u8fdb\\u5c55\\u5305\\u62ec\\uff1a\\n  - \\u6279\\u51c6Kappa\\u3002\\n  - \\u62ab\\u9732Sigma\\u3002\\n]",
+        "tests.unit.test_represented_feature_production::test_collection_period_owner_and_member_loss_do_not_disappear_from_denominators[- 2028\\u5e74\\uff0cLumen\\u7684\\u5408\\u4f5c\\u8fdb\\u5c55\\u5305\\u62ec\\uff1a\\n  - \\u6279\\u51c6Kappa\\u3002\\n]",
+        "tests.unit.test_represented_feature_production::test_representation_mutations_block_even_when_flat_text_survives[feature_deleted-# North\\n\\nLumen owns Kappa.\\n\\nSee Note 03 for more information.\\n-explicit_reference_binding-explicit_reference_target]",
+        "tests.unit.test_represented_feature_production::test_representation_mutations_block_even_when_flat_text_survives[feature_deleted-- 2028\\u5e74\\uff0cLumen\\u7684\\u5408\\u4f5c\\u8fdb\\u5c55\\u5305\\u62ec\\uff1a\\n  - \\u6279\\u51c6Kappa\\u3002\\n  - \\u62ab\\u9732Sigma\\u3002\\n-enumeration_context_scope-enumeration_membership]",
+        "tests.unit.test_represented_feature_production::test_representation_mutations_block_even_when_flat_text_survives[relation_kind_changed-# North\\n\\nLumen owns Kappa.\\n\\nSee Note 03 for more information.\\n-explicit_reference_binding-explicit_reference_target]",
+        "tests.unit.test_represented_feature_production::test_representation_mutations_block_even_when_flat_text_survives[relation_kind_changed-- 2028\\u5e74\\uff0cLumen\\u7684\\u5408\\u4f5c\\u8fdb\\u5c55\\u5305\\u62ec\\uff1a\\n  - \\u6279\\u51c6Kappa\\u3002\\n  - \\u62ab\\u9732Sigma\\u3002\\n-enumeration_context_scope-enumeration_membership]",
+        "tests.unit.test_represented_feature_production::test_representation_mutations_block_even_when_flat_text_survives[relation_deleted-# North\\n\\nLumen owns Kappa.\\n\\nSee Note 03 for more information.\\n-explicit_reference_binding-explicit_reference_target]",
+        "tests.unit.test_represented_feature_production::test_representation_mutations_block_even_when_flat_text_survives[relation_deleted-- 2028\\u5e74\\uff0cLumen\\u7684\\u5408\\u4f5c\\u8fdb\\u5c55\\u5305\\u62ec\\uff1a\\n  - \\u6279\\u51c6Kappa\\u3002\\n  - \\u62ab\\u9732Sigma\\u3002\\n-enumeration_context_scope-enumeration_membership]",
+        "tests.unit.test_represented_feature_production::test_representation_mutations_block_even_when_flat_text_survives[borrowed_source-# North\\n\\nLumen owns Kappa.\\n\\nSee Note 03 for more information.\\n-explicit_reference_binding-explicit_reference_target]",
+        "tests.unit.test_represented_feature_production::test_representation_mutations_block_even_when_flat_text_survives[borrowed_source-- 2028\\u5e74\\uff0cLumen\\u7684\\u5408\\u4f5c\\u8fdb\\u5c55\\u5305\\u62ec\\uff1a\\n  - \\u6279\\u51c6Kappa\\u3002\\n  - \\u62ab\\u9732Sigma\\u3002\\n-enumeration_context_scope-enumeration_membership]"
+      ]
+    },
+    "document_composition": {
+      "implementation_available": true,
+      "independent_controlled_production_path": "passed",
+      "real_format_complete_acceptance": "not_passed",
+      "evidence": [
+        "tests.unit.test_represented_feature_production::test_native_document_composition_and_page_range_reach_final_votes[Notes on pages 21 to 34 are part of this statement.\\n-oracle0]",
+        "tests.unit.test_represented_feature_production::test_native_document_composition_and_page_range_reach_final_votes[\\u7b2c21\\u9875\\u81f3\\u7b2c34\\u9875\\u6240\\u8f7d\\u7684\\u9644\\u6ce8\\u4e3a\\u672c\\u8d22\\u52a1\\u62a5\\u8868\\u7684\\u7ec4\\u6210\\u90e8\\u5206\\u3002\\n-oracle1]",
+        "tests.unit.test_represented_feature_production::test_composition_spacing_variation_preserves_page_endpoints_and_owner",
+        "tests.unit.test_represented_feature_production::test_composition_changed_identity_scope_or_omitted_range_never_passes[endpoints_reversed]",
+        "tests.unit.test_represented_feature_production::test_composition_changed_identity_scope_or_omitted_range_never_passes[document]",
+        "tests.unit.test_represented_feature_production::test_composition_changed_identity_scope_or_omitted_range_never_passes[component]",
+        "tests.unit.test_represented_feature_production::test_composition_changed_identity_scope_or_omitted_range_never_passes[missing_range]",
+        "tests.unit.test_represented_feature_production::test_composition_changed_identity_scope_or_omitted_range_never_passes[condition]",
+        "tests.unit.test_represented_feature_production::test_document_composition_retained_text_cannot_hide_missing_or_borrowed_structure[dependency]",
+        "tests.unit.test_represented_feature_production::test_document_composition_retained_text_cannot_hide_missing_or_borrowed_structure[kind]",
+        "tests.unit.test_represented_feature_production::test_document_composition_retained_text_cannot_hide_missing_or_borrowed_structure[endpoint_source]",
+        "tests.unit.test_represented_feature_production::test_document_composition_retained_text_cannot_hide_missing_or_borrowed_structure[document_source]",
+        "tests.unit.test_represented_feature_production::test_document_composition_retained_text_cannot_hide_missing_or_borrowed_structure[relation]",
+        "tests.unit.test_represented_feature_source_guard_audit::test_retained_composition_pending_is_not_a_comparable_semantic_feature[if the board approves]",
+        "tests.unit.test_represented_feature_source_guard_audit::test_retained_composition_pending_is_not_a_comparable_semantic_feature[unless a separate report is issued]"
+      ]
+    },
+    "page_reference_binding": {
+      "implementation_available": true,
+      "independent_controlled_production_path": "passed",
+      "real_format_complete_acceptance": "not_passed",
+      "evidence": [
+        "tests.unit.test_represented_feature_production::test_native_document_composition_and_page_range_reach_final_votes[Notes on pages 21 to 34 are part of this statement.\\n-oracle0]",
+        "tests.unit.test_represented_feature_production::test_native_document_composition_and_page_range_reach_final_votes[\\u7b2c21\\u9875\\u81f3\\u7b2c34\\u9875\\u6240\\u8f7d\\u7684\\u9644\\u6ce8\\u4e3a\\u672c\\u8d22\\u52a1\\u62a5\\u8868\\u7684\\u7ec4\\u6210\\u90e8\\u5206\\u3002\\n-oracle1]",
+        "tests.unit.test_represented_feature_production::test_composition_spacing_variation_preserves_page_endpoints_and_owner",
+        "tests.unit.test_represented_feature_production::test_composition_changed_identity_scope_or_omitted_range_never_passes[endpoints_reversed]",
+        "tests.unit.test_represented_feature_production::test_composition_changed_identity_scope_or_omitted_range_never_passes[document]",
+        "tests.unit.test_represented_feature_production::test_composition_changed_identity_scope_or_omitted_range_never_passes[component]",
+        "tests.unit.test_represented_feature_production::test_composition_changed_identity_scope_or_omitted_range_never_passes[missing_range]",
+        "tests.unit.test_represented_feature_production::test_composition_changed_identity_scope_or_omitted_range_never_passes[condition]",
+        "tests.unit.test_represented_feature_production::test_document_composition_retained_text_cannot_hide_missing_or_borrowed_structure[dependency]",
+        "tests.unit.test_represented_feature_production::test_document_composition_retained_text_cannot_hide_missing_or_borrowed_structure[kind]",
+        "tests.unit.test_represented_feature_production::test_document_composition_retained_text_cannot_hide_missing_or_borrowed_structure[endpoint_source]",
+        "tests.unit.test_represented_feature_production::test_document_composition_retained_text_cannot_hide_missing_or_borrowed_structure[document_source]",
+        "tests.unit.test_represented_feature_production::test_document_composition_retained_text_cannot_hide_missing_or_borrowed_structure[relation]",
+        "tests.unit.test_represented_feature_source_guard_audit::test_retained_composition_pending_is_not_a_comparable_semantic_feature[if the board approves]",
+        "tests.unit.test_represented_feature_source_guard_audit::test_retained_composition_pending_is_not_a_comparable_semantic_feature[unless a separate report is issued]"
+      ]
+    },
+    "quoted_nominal_scope": {
+      "implementation_available": true,
+      "independent_controlled_production_path": "passed",
+      "real_format_complete_acceptance": "not_passed",
+      "evidence": [
+        "tests.unit.test_represented_feature_production::test_existing_nominal_and_measurement_representations_own_final_judgments[Lumen owns \"Kappa and Sigma\".\\n-oracle0-features0]",
+        "tests.unit.test_represented_feature_production::test_existing_nominal_and_measurement_representations_own_final_judgments[2028\\u5e74\\uff0c\\u5de5\\u4e1a\\u4ea7\\u503c\\u8d85\\u8fc7137\\u4e07\\u5143\\uff0c\\u540c\\u6bd4\\u589e\\u957f4.3%\\u3002\\n-oracle1-features1]",
+        "tests.unit.test_represented_feature_production::test_nominal_spacing_and_exact_measurement_scale_equivalence_reach_final_votes[Lumen owns \"Kappa and Sigma\".\\n-Lumen owns \"Kappa  and Sigma\".\\n]",
+        "tests.unit.test_represented_feature_production::test_nominal_spacing_and_exact_measurement_scale_equivalence_reach_final_votes[2028\\u5e74\\uff0c\\u5de5\\u4e1a\\u4ea7\\u503c\\u8d85\\u8fc7137\\u4e07\\u5143\\uff0c\\u540c\\u6bd4\\u589e\\u957f4.3%\\u3002\\n-2028\\u5e74\\uff0c\\u5de5\\u4e1a\\u4ea7\\u503c\\u8d85\\u8fc71370000\\u5143\\uff0c\\u540c\\u6bd4\\u589e\\u957f43\\u2030\\u3002\\n]",
+        "tests.unit.test_represented_feature_production::test_quoted_nominal_owner_content_attachment_and_delimiter_loss_do_not_pass[Lumen owns \"Kappa or Sigma\".\\n-B]",
+        "tests.unit.test_represented_feature_production::test_quoted_nominal_owner_content_attachment_and_delimiter_loss_do_not_pass[Vega owns \"Kappa and Sigma\".\\n-B]",
+        "tests.unit.test_represented_feature_production::test_quoted_nominal_owner_content_attachment_and_delimiter_loss_do_not_pass[\"Kappa and Sigma\" owns Lumen.\\n-L]",
+        "tests.unit.test_represented_feature_production::test_quoted_nominal_owner_content_attachment_and_delimiter_loss_do_not_pass[Lumen owns Kappa and Sigma.\\n-B]",
+        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[feature_deleted-quoted_nominal_scope]",
+        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[feature_deleted-shared_period_scope]",
+        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[feature_deleted-same_subject_relative_clause]",
+        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[feature_deleted-year_on_year_comparison]",
+        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[relation_kind-quoted_nominal_scope]",
+        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[relation_kind-shared_period_scope]",
+        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[relation_kind-same_subject_relative_clause]",
+        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[relation_kind-year_on_year_comparison]",
+        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[relation_deleted-quoted_nominal_scope]",
+        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[relation_deleted-shared_period_scope]",
+        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[relation_deleted-same_subject_relative_clause]",
+        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[relation_deleted-year_on_year_comparison]",
+        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[neighbor_source-quoted_nominal_scope]",
+        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[neighbor_source-shared_period_scope]",
+        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[neighbor_source-same_subject_relative_clause]",
+        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[neighbor_source-year_on_year_comparison]"
+      ]
+    },
+    "shared_period_scope": {
+      "implementation_available": true,
+      "independent_controlled_production_path": "passed",
+      "real_format_complete_acceptance": "not_passed",
+      "evidence": [
+        "tests.unit.test_represented_feature_production::test_existing_nominal_and_measurement_representations_own_final_judgments[Lumen owns \"Kappa and Sigma\".\\n-oracle0-features0]",
+        "tests.unit.test_represented_feature_production::test_existing_nominal_and_measurement_representations_own_final_judgments[2028\\u5e74\\uff0c\\u5de5\\u4e1a\\u4ea7\\u503c\\u8d85\\u8fc7137\\u4e07\\u5143\\uff0c\\u540c\\u6bd4\\u589e\\u957f4.3%\\u3002\\n-oracle1-features1]",
+        "tests.unit.test_represented_feature_production::test_nominal_spacing_and_exact_measurement_scale_equivalence_reach_final_votes[Lumen owns \"Kappa and Sigma\".\\n-Lumen owns \"Kappa  and Sigma\".\\n]",
+        "tests.unit.test_represented_feature_production::test_nominal_spacing_and_exact_measurement_scale_equivalence_reach_final_votes[2028\\u5e74\\uff0c\\u5de5\\u4e1a\\u4ea7\\u503c\\u8d85\\u8fc7137\\u4e07\\u5143\\uff0c\\u540c\\u6bd4\\u589e\\u957f4.3%\\u3002\\n-2028\\u5e74\\uff0c\\u5de5\\u4e1a\\u4ea7\\u503c\\u8d85\\u8fc71370000\\u5143\\uff0c\\u540c\\u6bd4\\u589e\\u957f43\\u2030\\u3002\\n]",
+        "tests.unit.test_represented_feature_production::test_cjk_scope_basis_member_and_value_changes_keep_their_own_layer_losses[2028\\u5e74\\uff0c\\u5de5\\u4e1a\\u4ea7\\u503c\\u8d85\\u8fc7138\\u4e07\\u5143\\uff0c\\u540c\\u6bd4\\u589e\\u957f4.3%\\u3002\\n-B]",
+        "tests.unit.test_represented_feature_production::test_cjk_scope_basis_member_and_value_changes_keep_their_own_layer_losses[2029\\u5e74\\uff0c\\u5de5\\u4e1a\\u4ea7\\u503c\\u8d85\\u8fc7137\\u4e07\\u5143\\uff0c\\u540c\\u6bd4\\u589e\\u957f4.3%\\u3002\\n-L]",
+        "tests.unit.test_represented_feature_production::test_cjk_scope_basis_member_and_value_changes_keep_their_own_layer_losses[\\u5de5\\u4e1a\\u4ea7\\u503c\\u8d85\\u8fc7137\\u4e07\\u5143\\uff0c\\u540c\\u6bd4\\u589e\\u957f4.3%\\u3002\\n-L]",
+        "tests.unit.test_represented_feature_production::test_cjk_scope_basis_member_and_value_changes_keep_their_own_layer_losses[2028\\u5e74\\uff0c\\u5de5\\u4e1a\\u4ea7\\u503c\\u8d85\\u8fc7137\\u4e07\\u5143\\u3002\\n-B]",
+        "tests.unit.test_represented_feature_production::test_cjk_scope_basis_member_and_value_changes_keep_their_own_layer_losses[2028\\u5e74\\uff0c\\u5de5\\u4e1a\\u4ea7\\u503c\\u8d85\\u8fc7137\\u4e07\\u5143\\uff0c\\u6e2f\\u53e3\\u541e\\u5410\\u91cf\\u540c\\u6bd4\\u589e\\u957f4.3%\\u3002\\n-L]",
+        "tests.unit.test_represented_feature_production::test_cjk_scope_basis_member_and_value_changes_keep_their_own_layer_losses[2028\\u5e74\\uff0c\\u5de5\\u4e1a\\u4ea7\\u503c\\u8d85\\u8fc7137\\u4e07\\u5143\\uff0c\\u73af\\u6bd4\\u589e\\u957f4.3%\\u3002\\n-B]",
+        "tests.unit.test_represented_feature_production::test_cjk_scope_basis_member_and_value_changes_keep_their_own_layer_losses[2028\\u5e74\\uff0c\\u5de5\\u4e1a\\u4ea7\\u503c\\u8d85\\u8fc7137\\u4e07\\u5143\\uff0c\\u540c\\u6bd4\\u589e\\u957f4.3\\u4e2a\\u767e\\u5206\\u70b9\\u3002\\n-B]",
+        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[feature_deleted-quoted_nominal_scope]",
+        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[feature_deleted-shared_period_scope]",
+        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[feature_deleted-same_subject_relative_clause]",
+        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[feature_deleted-year_on_year_comparison]",
+        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[relation_kind-quoted_nominal_scope]",
+        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[relation_kind-shared_period_scope]",
+        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[relation_kind-same_subject_relative_clause]",
+        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[relation_kind-year_on_year_comparison]",
+        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[relation_deleted-quoted_nominal_scope]",
+        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[relation_deleted-shared_period_scope]",
+        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[relation_deleted-same_subject_relative_clause]",
+        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[relation_deleted-year_on_year_comparison]",
+        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[neighbor_source-quoted_nominal_scope]",
+        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[neighbor_source-shared_period_scope]",
+        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[neighbor_source-same_subject_relative_clause]",
+        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[neighbor_source-year_on_year_comparison]"
+      ]
+    },
+    "same_subject_relative_clause": {
+      "implementation_available": true,
+      "independent_controlled_production_path": "passed",
+      "real_format_complete_acceptance": "not_passed",
+      "evidence": [
+        "tests.unit.test_represented_feature_production::test_existing_nominal_and_measurement_representations_own_final_judgments[Lumen owns \"Kappa and Sigma\".\\n-oracle0-features0]",
+        "tests.unit.test_represented_feature_production::test_existing_nominal_and_measurement_representations_own_final_judgments[2028\\u5e74\\uff0c\\u5de5\\u4e1a\\u4ea7\\u503c\\u8d85\\u8fc7137\\u4e07\\u5143\\uff0c\\u540c\\u6bd4\\u589e\\u957f4.3%\\u3002\\n-oracle1-features1]",
+        "tests.unit.test_represented_feature_production::test_nominal_spacing_and_exact_measurement_scale_equivalence_reach_final_votes[Lumen owns \"Kappa and Sigma\".\\n-Lumen owns \"Kappa  and Sigma\".\\n]",
+        "tests.unit.test_represented_feature_production::test_nominal_spacing_and_exact_measurement_scale_equivalence_reach_final_votes[2028\\u5e74\\uff0c\\u5de5\\u4e1a\\u4ea7\\u503c\\u8d85\\u8fc7137\\u4e07\\u5143\\uff0c\\u540c\\u6bd4\\u589e\\u957f4.3%\\u3002\\n-2028\\u5e74\\uff0c\\u5de5\\u4e1a\\u4ea7\\u503c\\u8d85\\u8fc71370000\\u5143\\uff0c\\u540c\\u6bd4\\u589e\\u957f43\\u2030\\u3002\\n]",
+        "tests.unit.test_represented_feature_production::test_cjk_scope_basis_member_and_value_changes_keep_their_own_layer_losses[2028\\u5e74\\uff0c\\u5de5\\u4e1a\\u4ea7\\u503c\\u8d85\\u8fc7138\\u4e07\\u5143\\uff0c\\u540c\\u6bd4\\u589e\\u957f4.3%\\u3002\\n-B]",
+        "tests.unit.test_represented_feature_production::test_cjk_scope_basis_member_and_value_changes_keep_their_own_layer_losses[2029\\u5e74\\uff0c\\u5de5\\u4e1a\\u4ea7\\u503c\\u8d85\\u8fc7137\\u4e07\\u5143\\uff0c\\u540c\\u6bd4\\u589e\\u957f4.3%\\u3002\\n-L]",
+        "tests.unit.test_represented_feature_production::test_cjk_scope_basis_member_and_value_changes_keep_their_own_layer_losses[\\u5de5\\u4e1a\\u4ea7\\u503c\\u8d85\\u8fc7137\\u4e07\\u5143\\uff0c\\u540c\\u6bd4\\u589e\\u957f4.3%\\u3002\\n-L]",
+        "tests.unit.test_represented_feature_production::test_cjk_scope_basis_member_and_value_changes_keep_their_own_layer_losses[2028\\u5e74\\uff0c\\u5de5\\u4e1a\\u4ea7\\u503c\\u8d85\\u8fc7137\\u4e07\\u5143\\u3002\\n-B]",
+        "tests.unit.test_represented_feature_production::test_cjk_scope_basis_member_and_value_changes_keep_their_own_layer_losses[2028\\u5e74\\uff0c\\u5de5\\u4e1a\\u4ea7\\u503c\\u8d85\\u8fc7137\\u4e07\\u5143\\uff0c\\u6e2f\\u53e3\\u541e\\u5410\\u91cf\\u540c\\u6bd4\\u589e\\u957f4.3%\\u3002\\n-L]",
+        "tests.unit.test_represented_feature_production::test_cjk_scope_basis_member_and_value_changes_keep_their_own_layer_losses[2028\\u5e74\\uff0c\\u5de5\\u4e1a\\u4ea7\\u503c\\u8d85\\u8fc7137\\u4e07\\u5143\\uff0c\\u73af\\u6bd4\\u589e\\u957f4.3%\\u3002\\n-B]",
+        "tests.unit.test_represented_feature_production::test_cjk_scope_basis_member_and_value_changes_keep_their_own_layer_losses[2028\\u5e74\\uff0c\\u5de5\\u4e1a\\u4ea7\\u503c\\u8d85\\u8fc7137\\u4e07\\u5143\\uff0c\\u540c\\u6bd4\\u589e\\u957f4.3\\u4e2a\\u767e\\u5206\\u70b9\\u3002\\n-B]",
+        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[feature_deleted-quoted_nominal_scope]",
+        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[feature_deleted-shared_period_scope]",
+        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[feature_deleted-same_subject_relative_clause]",
+        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[feature_deleted-year_on_year_comparison]",
+        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[relation_kind-quoted_nominal_scope]",
+        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[relation_kind-shared_period_scope]",
+        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[relation_kind-same_subject_relative_clause]",
+        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[relation_kind-year_on_year_comparison]",
+        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[relation_deleted-quoted_nominal_scope]",
+        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[relation_deleted-shared_period_scope]",
+        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[relation_deleted-same_subject_relative_clause]",
+        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[relation_deleted-year_on_year_comparison]",
+        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[neighbor_source-quoted_nominal_scope]",
+        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[neighbor_source-shared_period_scope]",
+        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[neighbor_source-same_subject_relative_clause]",
+        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[neighbor_source-year_on_year_comparison]"
+      ]
+    },
+    "year_on_year_comparison": {
+      "implementation_available": true,
+      "independent_controlled_production_path": "passed",
+      "real_format_complete_acceptance": "not_passed",
+      "evidence": [
+        "tests.unit.test_represented_feature_production::test_existing_nominal_and_measurement_representations_own_final_judgments[Lumen owns \"Kappa and Sigma\".\\n-oracle0-features0]",
+        "tests.unit.test_represented_feature_production::test_existing_nominal_and_measurement_representations_own_final_judgments[2028\\u5e74\\uff0c\\u5de5\\u4e1a\\u4ea7\\u503c\\u8d85\\u8fc7137\\u4e07\\u5143\\uff0c\\u540c\\u6bd4\\u589e\\u957f4.3%\\u3002\\n-oracle1-features1]",
+        "tests.unit.test_represented_feature_production::test_nominal_spacing_and_exact_measurement_scale_equivalence_reach_final_votes[Lumen owns \"Kappa and Sigma\".\\n-Lumen owns \"Kappa  and Sigma\".\\n]",
+        "tests.unit.test_represented_feature_production::test_nominal_spacing_and_exact_measurement_scale_equivalence_reach_final_votes[2028\\u5e74\\uff0c\\u5de5\\u4e1a\\u4ea7\\u503c\\u8d85\\u8fc7137\\u4e07\\u5143\\uff0c\\u540c\\u6bd4\\u589e\\u957f4.3%\\u3002\\n-2028\\u5e74\\uff0c\\u5de5\\u4e1a\\u4ea7\\u503c\\u8d85\\u8fc71370000\\u5143\\uff0c\\u540c\\u6bd4\\u589e\\u957f43\\u2030\\u3002\\n]",
+        "tests.unit.test_represented_feature_production::test_cjk_scope_basis_member_and_value_changes_keep_their_own_layer_losses[2028\\u5e74\\uff0c\\u5de5\\u4e1a\\u4ea7\\u503c\\u8d85\\u8fc7138\\u4e07\\u5143\\uff0c\\u540c\\u6bd4\\u589e\\u957f4.3%\\u3002\\n-B]",
+        "tests.unit.test_represented_feature_production::test_cjk_scope_basis_member_and_value_changes_keep_their_own_layer_losses[2029\\u5e74\\uff0c\\u5de5\\u4e1a\\u4ea7\\u503c\\u8d85\\u8fc7137\\u4e07\\u5143\\uff0c\\u540c\\u6bd4\\u589e\\u957f4.3%\\u3002\\n-L]",
+        "tests.unit.test_represented_feature_production::test_cjk_scope_basis_member_and_value_changes_keep_their_own_layer_losses[\\u5de5\\u4e1a\\u4ea7\\u503c\\u8d85\\u8fc7137\\u4e07\\u5143\\uff0c\\u540c\\u6bd4\\u589e\\u957f4.3%\\u3002\\n-L]",
+        "tests.unit.test_represented_feature_production::test_cjk_scope_basis_member_and_value_changes_keep_their_own_layer_losses[2028\\u5e74\\uff0c\\u5de5\\u4e1a\\u4ea7\\u503c\\u8d85\\u8fc7137\\u4e07\\u5143\\u3002\\n-B]",
+        "tests.unit.test_represented_feature_production::test_cjk_scope_basis_member_and_value_changes_keep_their_own_layer_losses[2028\\u5e74\\uff0c\\u5de5\\u4e1a\\u4ea7\\u503c\\u8d85\\u8fc7137\\u4e07\\u5143\\uff0c\\u6e2f\\u53e3\\u541e\\u5410\\u91cf\\u540c\\u6bd4\\u589e\\u957f4.3%\\u3002\\n-L]",
+        "tests.unit.test_represented_feature_production::test_cjk_scope_basis_member_and_value_changes_keep_their_own_layer_losses[2028\\u5e74\\uff0c\\u5de5\\u4e1a\\u4ea7\\u503c\\u8d85\\u8fc7137\\u4e07\\u5143\\uff0c\\u73af\\u6bd4\\u589e\\u957f4.3%\\u3002\\n-B]",
+        "tests.unit.test_represented_feature_production::test_cjk_scope_basis_member_and_value_changes_keep_their_own_layer_losses[2028\\u5e74\\uff0c\\u5de5\\u4e1a\\u4ea7\\u503c\\u8d85\\u8fc7137\\u4e07\\u5143\\uff0c\\u540c\\u6bd4\\u589e\\u957f4.3\\u4e2a\\u767e\\u5206\\u70b9\\u3002\\n-B]",
+        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[feature_deleted-quoted_nominal_scope]",
+        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[feature_deleted-shared_period_scope]",
+        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[feature_deleted-same_subject_relative_clause]",
+        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[feature_deleted-year_on_year_comparison]",
+        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[relation_kind-quoted_nominal_scope]",
+        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[relation_kind-shared_period_scope]",
+        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[relation_kind-same_subject_relative_clause]",
+        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[relation_kind-year_on_year_comparison]",
+        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[relation_deleted-quoted_nominal_scope]",
+        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[relation_deleted-shared_period_scope]",
+        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[relation_deleted-same_subject_relative_clause]",
+        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[relation_deleted-year_on_year_comparison]",
+        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[neighbor_source-quoted_nominal_scope]",
+        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[neighbor_source-shared_period_scope]",
+        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[neighbor_source-same_subject_relative_clause]",
+        "tests.unit.test_represented_feature_production::test_nominal_and_cjk_source_mutations_cannot_bypass_feature_checks[neighbor_source-year_on_year_comparison]"
+      ]
+    }
+  },
+  "unvalidated_features_meaning": "Implementation and bounded independent controlled fixtures passed; complete real-format acceptance has not passed.",
+  "matcher_features_missing_runtime_comparator": [],
+  "causal_source_closure_summary": {
+    "T_empty_field_terminal_delimiter": 148,
+    "T_field_role_delimiter_bridge": 96,
+    "all_T_obligations_verified_explained": 244,
+    "real_action_scopes_rechecked": 2,
+    "real_action_scopes_fully_closed": 1,
+    "real_nominal_owner_structures_rechecked": 2,
+    "nominal_pending_closure_claimed": false,
+    "newly_complete_previously_blocked_samples": [],
+    "actual_candidate_output_gain_claimed": false,
+    "T_empty_field_affected_samples": 59,
+    "T_field_role_bridge_affected_samples": 32,
+    "T_affected_samples_union": 72
+  },
+  "remaining_causal_source_blockers": [
+    {
+      "sample_id": "pingan-strategy-cards-p008-011",
+      "source": {
+        "path": "/opt/moparse/pdf_sample/parsing/expected/complex-pingan-2024-annual/expected.md",
+        "lines": [
+          298,
+          298
+        ],
+        "text_span": [
+          0,
+          76
+        ]
+      },
+      "text": "We build a one-stop financial and daily-life service platform for customers.",
+      "first_failure_function": "nominal_syntax.predicate_complements/_role",
+      "root_cause": "The existing FOR beneficiary frame omits build; the object also contains coordinated attributes sharing a service-platform head.",
+      "cascading_events": [
+        "preposition_role_unresolved",
+        "main_proposition_not_emitted",
+        "relation_and_source_obligation_pending"
+      ],
+      "already_correct": "The original actor, finite action, complete platform description and customers text remain available.",
+      "minimal_next_fix": "Bind the source-printed build/FOR beneficiary role and separately establish the shared-head attributive coordination; revalidate the entire selected sentence.",
+      "ambiguity_or_limit": "Do not replace the entire platform description with an opaque object or presume that adding build alone closes the source.",
+      "classification": "implementation_gap_with_explicit_remaining_scope_limits",
+      "five_authorized_input_scope_target": false,
+      "manual_formal_answer_or_grade_supplied": false
+    },
+    {
+      "sample_id": "huawei-operating-results-p062-063",
+      "source": {
+        "path": "/opt/moparse/pdf_sample/parsing/expected/complex-huawei-2024-annual/expected.md",
+        "lines": [
+          1586,
+          1586
+        ],
+        "text_span": [
+          0,
+          52
+        ]
+      },
+      "text": "2024年实现销售收入人民币862,072百万元，同比增长22.4%。净利润为人民币62,574百万元。",
+      "first_failure_function": "cjk_measurement_requirements.read_cjk_measurements/_PERIOD",
+      "root_cause": "The finite measurement reader expects a comparison first clause, and its period prefix requires a comma; printed 实现 and 为 scalar assertions are not handled.",
+      "cascading_events": [
+        "initial_metric_quantity_assertion_not_emitted",
+        "year_on_year_clause_has_no_bound_antecedent",
+        "subsequent_net_profit_predicate_unresolved"
+      ],
+      "already_correct": "The printed sales-revenue quantity/currency/unit/year, immediate year-on-year percentage, and net-profit quantity/currency/unit are retained literally.",
+      "minimal_next_fix": "Extend the existing finite scalar assertion path and immediate-metric antecedent binding, rather than separately fixing each downstream pending.",
+      "ambiguity_or_limit": "The net-profit sentence must not silently borrow 2024; any cross-sentence shared year needs an independently supported scope relation.",
+      "classification": "implementation_gap_with_explicit_remaining_scope_limits",
+      "five_authorized_input_scope_target": false,
+      "manual_formal_answer_or_grade_supplied": false
+    },
+    {
+      "sample_id": "sf-cashflow-assets-liabilities-p040-041",
+      "source": {
+        "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sf-2024-annual/expected.md",
+        "lines": [
+          920,
+          920
+        ],
+        "text_span": [
+          0,
+          71
+        ]
+      },
+      "text": "於12月31日，金額單位：人民幣千元。各項分別列示2024年金額、佔總資產比，2023年金額、佔總資產比，金額同比變動、佔總資產比重同比增減。",
+      "first_failure_function": "compact_requirements.read_compact_schema/_controls",
+      "root_cause": "The existing schema accepts four annual amount/share columns and one amount-change column, but lacks the common month/day basis and a second share-change declaration.",
+      "cascading_events": [
+        "unconsumed_date_prefix_and_share_change_tail",
+        "compact_text_projection_incomplete",
+        "narrative_fallback_pending"
+      ],
+      "already_correct": "Both printed years, four amount/share roles, amount currency/unit and the first amount-change declaration are already represented.",
+      "minimal_next_fix": "Extend the existing schema representation for the printed common date basis and second change column; preserve all literal pieces and their owning columns.",
+      "ambiguity_or_limit": "The share-change declaration alone does not print its unit or whether its values are percentage points; obtain that from authorized text where explicit or retain unknown.",
+      "classification": "implementation_gap_with_explicit_remaining_scope_limits",
+      "five_authorized_input_scope_target": false,
+      "manual_formal_answer_or_grade_supplied": false
+    }
   ]
 }

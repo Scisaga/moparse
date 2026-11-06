@@ -79,11 +79,23 @@ def nominal_phrase(reader, start, end, *, depth=0, coordinated=True):
         # whole coordinated nominal (research and development provider).
         if not commas and any(member['modifiers'] and not member['determiner'] for member in members):
             _unknown('narrative_nominal_coordination_unresolved', span=[start, end])
-        return {'kind': 'noun_phrase', 'head': '', 'head_span': [start, start], 'determiner': None,
+        # A sole leading determiner owns the coordinated nominal: "its
+        # subsidiaries and affiliates" keeps the same owner when members
+        # are reordered. Independently repeated determiners remain local.
+        determiner, determiner_source = None, None
+        if members[0].get('determiner') and all(not member.get('determiner') for member in members[1:]):
+            determiner = members[0]['determiner']
+            determiner_source = members[0]['determiner_source']
+            first_start = determiner_source['text_span'][1] - reader.source.get('text_span', [0, 0])[0]
+            members[0] = nominal_phrase(reader, first_start, members[0]['span'][1], depth=depth + 1, coordinated=False)
+        result = {'kind': 'noun_phrase', 'head': '', 'head_span': [start, start], 'determiner': determiner,
                 'quantifier': None, 'modifiers': [], 'prepositional_complements': [],
                 'coordination': {'kind': 'coordination', 'operator': next(iter(operators)), 'mode': 'nominal_members',
                     'children': members, 'operator_spans': [[start + m.start(1), start + m.end(1)] for m in joins],
                     'span': [start, end]}, 'span': [start, end]}
+        if determiner_source is not None:
+            result['determiner_source'] = determiner_source
+        return result
     if any(not (marker[0].lower() == 'at' and re.match(r'\s+(?:least|most)\b', raw[marker.end():], re.I))
            for marker in _PP.finditer(raw)):
         _unknown('narrative_nominal_preposition_attachment_unresolved')

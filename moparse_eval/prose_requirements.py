@@ -463,11 +463,27 @@ def prose_endpoint(text: str, source: dict[str, Any], *, scope: tuple[str, ...] 
         scope = item["scope"]
     else:
         identity = {"lexical_anchor": _skeleton(body), "ordinal": (ordinal[1] or ordinal[2]) if ordinal else None}
+    # The finite measurement reader already binds the printed period to all
+    # clauses in this one sequence. Removing every numeral for a prose anchor
+    # erased that independent identity and collided across different years.
+    # Reuse its complete local interpretation; tested quantities and units do
+    # not choose a prose endpoint or enter this identity.
+    from .cjk_measurement_requirements import read_cjk_measurements
+
+    measurements = read_cjk_measurements(body, body_source, scope=scope)
+    period_evidence = None
+    if measurements["complete"] and (period := measurements["logic"][0].get("period")):
+        identity = {"metric_roles": [
+            {"subject": clause["subject"], "predicate_kind": clause["kind"]}
+            for clause in measurements["logic"][0]["clauses"]],
+            "period": period["text"], "ordinal": (ordinal[1] or ordinal[2]) if ordinal else None}
+        period_evidence = copy.deepcopy(period)
     return {"id": identifier, "identity": identity, "scope": list(scope), "text": text,
             "source": copy.deepcopy(source), "content_slots": [{"span": [match.start() + (ordinal.end() if ordinal else 0), match.end() + (ordinal.end() if ordinal else 0)],
                                                                  "text": match[0], "source": _source(body_source, match.start(), match.end())}
                                                                  for match in _QUANTITY.finditer(body)],
             "context_blockers": [copy.deepcopy(item) for item in parsed["blockers"] if item["reason"].startswith("prose_context_")],
+            **({"period_identity_evidence": period_evidence} if period_evidence else {}),
             **{key: copy.deepcopy(facts[0][key]) for key in ("field_label_evidence", "record_evidence")
                if len(facts) == 1 and key in facts[0]}}
 
