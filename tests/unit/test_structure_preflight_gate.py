@@ -1,7 +1,7 @@
 """Stage order and common-model guards over an entirely invented saved run."""
 
 import pytest
-from test_three_layer_orchestration import saved_run
+from test_three_layer_orchestration import saved_run, selected_saved_run
 
 from moparse_eval import expected_evaluation as evaluation
 from moparse_eval.packaging import read_json, write_json
@@ -49,7 +49,7 @@ def test_a_current_index_cannot_mix_an_old_two_group_execution_with_six_missing_
 def test_expected_is_compiled_once_before_the_eight_group_tasks(tmp_path, monkeypatch):
     from moparse_eval import reference_compiler
 
-    run, _, expected, _ = saved_run(tmp_path, monkeypatch)
+    run, expected, _, _ = selected_saved_run(tmp_path, monkeypatch)
     original, calls = reference_compiler.compile_reference_semantics, []
 
     def count(reference):
@@ -57,6 +57,7 @@ def test_expected_is_compiled_once_before_the_eight_group_tasks(tmp_path, monkey
         return original(reference)
 
     monkeypatch.setattr(reference_compiler, "compile_reference_semantics", count)
-    path = evaluation.evaluate_saved(run, tmp_path / "diagnosis", expected_root=expected, diagnostic=True, workers=1)
+    path = evaluation.evaluate_saved(run, tmp_path / "diagnosis", expected_root=expected, diagnostic=True,
+                                     sample_ids=["synthetic"], workers=1)
     assert calls == ["synthetic"]
     assert len(read_json(path)["records"]) == 8

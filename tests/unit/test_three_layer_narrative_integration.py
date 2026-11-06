@@ -148,11 +148,8 @@ def test_or_is_one_logical_group_with_two_members_while_and_has_two_independent_
         ("Lumen", "own", "Kappa"), ("Lumen", "own", "Sigma")]
     assert _operands(conjuncts) == []
     _comparison_remains_unvalidated(disjunction)
-    # The ordinary positive AND path predates the new nested/OR matcher. Its
-    # independent assertions stay comparable under the existing validation.
+    # The explicit AND relation now declares its own comparison dependency.
+    # Syntax admission alone does not validate the downstream group matcher.
     compared = _compare_same_text(conjunction)
     assert compared["layers"]["B"]["denominator"] == compared["layers"]["B"]["numerator"] == 2
-    for layer in ("T", "B", "L"):
-        assert compared["layers"][layer]["score"] == 100
-        assert compared["layers"][layer]["complete"] is True
-    assert compared["publishable"] is True
+    _comparison_remains_unvalidated(conjunction)

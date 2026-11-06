@@ -1,0 +1,187 @@
+{
+  "name": "moparse-dataset-v1-preflight",
+  "kind": "lite",
+  "state": "preflight_only",
+  "created_at": "2026-10-24T07:05:51.182979+08:00",
+  "declared_input_pages": 8,
+  "review_record": {
+    "reviewer": "visual-a",
+    "status": "confirmed_for_preflight_only",
+    "note": "实际逐页打开万科10726562物理1–2、浦发1200454112物理1–2、平安1200694562物理1–4并直接对照当前expected；详见各评分索引的实际页记录。root回收已保存的手写索引，不用程序映射或计数建立确认。仅8页工程预检，800页尚未完成，不形成正式排名。"
+  },
+  "freeze_record": {
+    "scope": "preflight8",
+    "reviewer": "visual-a",
+    "coordinator": "root",
+    "policy": "mo-parse-eval-text-v1",
+    "note": "预检参考由视觉任务逐页确认，正式800页参考尚未冻结。"
+  },
+  "preflight_confirmed": true,
+  "documents": [
+    {
+      "document_id": "10726562",
+      "reference_dir": "references/10726562",
+      "source_metadata": {
+        "filename": "10726562.pdf",
+        "sha256": "806be3c98eb71db56dffc24f63736c3673ef918f777a0a66fbcc8458a5a10923",
+        "pages": 2
+      },
+      "family_id": "vanke-short-disclosure",
+      "tags": [
+        "zh",
+        "short-disclosure",
+        "single-column",
+        "cross-page-prose"
+      ],
+      "review_status": "historical_reference",
+      "review_record": {
+        "reviewer": "visual-a",
+        "status": "confirmed_for_preflight_only",
+        "note": "实际逐页打开万科10726562物理1–2、浦发1200454112物理1–2、平安1200694562物理1–4并直接对照当前expected；详见各评分索引的实际页记录。root回收已保存的手写索引，不用程序映射或计数建立确认。仅8页工程预检，800页尚未完成，不形成正式排名。"
+      }
+    },
+    {
+      "document_id": "1200454112",
+      "reference_dir": "references/1200454112",
+      "source_metadata": {
+        "filename": "1200454112.pdf",
+        "sha256": "02feb89fa1bfe7802aed33dc47155f9377ca68e01a2782db101c134921ac88c2",
+        "pages": 23
+      },
+      "family_id": "spdb-preferred-share-prospectus",
+      "tags": [
+        "zh",
+        "prospectus",
+        "scan-like-cover",
+        "seal",
+        "layout-grid",
+        "single-column"
+      ],
+      "review_status": "historical_reference",
+      "review_record": {
+        "reviewer": "visual-a",
+        "status": "confirmed_for_preflight_only",
+        "note": "实际逐页打开万科10726562物理1–2、浦发1200454112物理1–2、平安1200694562物理1–4并直接对照当前expected；详见各评分索引的实际页记录。root回收已保存的手写索引，不用程序映射或计数建立确认。仅8页工程预检，800页尚未完成，不形成正式排名。"
+      }
+    },
+    {
+      "document_id": "1200694562",
+      "reference_dir": "references/1200694562",
+      "source_metadata": {
+        "filename": "1200694562.pdf",
+        "sha256": "2472b083ab953d82255cb07b064c742bf1c20eaa72e40aefefb47a391f068ccf",
+        "pages": 19
+      },
+      "family_id": "pingan-bank-annual-summary",
+      "tags": [
+        "zh",
+        "annual-summary",
+        "data-table",
+        "cross-page-table",
+        "multi-level-header",
+        "checkbox",
+        "mixed-units"
+      ],
+      "review_status": "historical_reference",
+      "review_record": {
+        "reviewer": "visual-a",
+        "status": "confirmed_for_preflight_only",
+        "note": "实际逐页打开万科10726562物理1–2、浦发1200454112物理1–2、平安1200694562物理1–4并直接对照当前expected；详见各评分索引的实际页记录。root回收已保存的手写索引，不用程序映射或计数建立确认。仅8页工程预检，800页尚未完成，不形成正式排名。"
+      }
+    }
+  ],
+  "samples": [
+    {
+      "id": "vanke-interest-p001-002",
+      "document_id": "10726562",
+      "source_pages": [
+        1,
+        2
+      ],
+      "tags": [
+        "zh",
+        "short-disclosure",
+        "single-column",
+        "cross-page-prose"
+      ],
+      "family_id": "vanke-short-disclosure",
+      "suites": [
+        "lite",
+        "perf80",
+        "preflight8"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/vanke-interest-p001-002.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/10726562",
+      "evaluation": "evaluation/vanke-interest-p001-002.json"
+    },
+    {
+      "id": "spdb-cover-declaration-p001-002",
+      "document_id": "1200454112",
+      "source_pages": [
+        1,
+        2
+      ],
+      "tags": [
+        "zh",
+        "prospectus",
+        "scan-like-cover",
+        "seal",
+        "layout-grid",
+        "single-column"
+      ],
+      "family_id": "spdb-preferred-share-prospectus",
+      "suites": [
+        "lite",
+        "perf80",
+        "preflight8"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/spdb-cover-declaration-p001-002.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/1200454112",
+      "evaluation": "evaluation/spdb-cover-declaration-p001-002.json"
+    },
+    {
+      "id": "pingan-financials-p001-004",
+      "document_id": "1200694562",
+      "source_pages": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "tags": [
+        "zh",
+        "annual-summary",
+        "data-table",
+        "cross-page-table",
+        "multi-level-header",
+        "checkbox",
+        "mixed-units"
+      ],
+      "family_id": "pingan-bank-annual-summary",
+      "suites": [
+        "lite",
+        "perf80",
+        "preflight8"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/pingan-financials-p001-004.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/1200694562",
+      "evaluation": "evaluation/pingan-financials-p001-004.json"
+    }
+  ],
+  "suites": {
+    "preflight8": [
+      "vanke-interest-p001-002",
+      "spdb-cover-declaration-p001-002",
+      "pingan-financials-p001-004"
+    ]
+  },
+  "scoring_policy": "mo-parse-eval-text-v1",
+  "reference_scope": "three_visually_read_samples_only_not_quality800",
+  "corpus_acceptance": "not_performed_by_packaging"
+}

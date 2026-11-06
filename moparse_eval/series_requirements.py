@@ -21,6 +21,10 @@ _PAIR = re.compile(r"^\s*([^:：;；\n]+?)\s*[:：]\s*(.*)$", re.S)
 _CURRENCY_TEXT = r"人民币|人民幣|美元|港元|港币|港幣|欧元|歐元|日元|USD|RMB|CNY|HKD|EUR|JPY|[$€£¥]"
 _CURRENCY = re.compile(_CURRENCY_TEXT, re.I)
 _GROWTH = re.compile(r"本年比上年增[減减]|較上年同期增[減减]|较上年同期增[減减]|金[額额]同比[變变][動动]|同比[變变][動动]|增[減减](?:幅度)?|YoY(?:\s+change)?", re.I)
+_CHANGE_DIRECTIONS = {"增长": "increase", "增長": "increase", "增加": "increase", "上升": "increase",
+                      "下降": "decrease", "减少": "decrease", "減少": "decrease"}
+_DIRECTED_CHANGE = re.compile("|".join(_CHANGE_DIRECTIONS))
+_UNSIGNED_MAGNITUDE = re.compile(r"(?:\d{1,3}(?:,\d{3})+|\d+)(?:\.\d+)?|\.\d+")
 _CAUSE = re.compile(r"(?:报告期内变动的主要原因|報告期內變動的主要原因|变动原因|變動原因|主要原因|原因|Reason|Cause)", re.I)
 _BASIS = re.compile(r"(?:截至|於|于)[^。;；\n，,]{1,35}(?:止年度|止期间|止期間|年度)|(?:於|于)\d{1,2}月\d{1,2}日")
 _NONANNUAL = re.compile(r"[一二三四1234]季度|全年|(?:月均|年末)(?:余额|餘額|金[額额])|(?:Q[1-4]|Quarter\s+[1-4])", re.I)
@@ -372,6 +376,48 @@ def _read_scalar(text: str, source: dict[str, Any], start: int, end: int, result
                               "raw_source": _source(source, start, end), "raw_value": text[start:end]}
 
 
+def _read_growth_scalar(text: str, source: dict[str, Any], start: int, end: int, result: dict[str, Any],
+                        q: dict[str, Any], sources: dict[str, Any]
+                        ) -> tuple[str, dict[str, Any], dict[str, Any], dict[str, Any]] | None:
+    """Keep a printed ratio-change direction separate from unsigned magnitude.
+
+    This finite form does not turn a direction into a numeric sign, infer a
+    unit from the annual values, or resolve comparison years. A named shared
+    unit is usable only with its own actual source declaration.
+    """
+    start, end = _trim(text, start, end)
+    direction = _DIRECTED_CHANGE.match(text, start, end)
+    if direction is None:
+        return _read_scalar(text, source, start, end, result, q, sources)
+    magnitude_start = direction.end()
+    while magnitude_start < end and text[magnitude_start].isspace():
+        magnitude_start += 1
+    payload = text[magnitude_start:end]
+    printed = read_measurement_literal(payload, _source(source, magnitude_start, end))
+    if not printed["matched"] and payload.endswith("."):
+        printed = read_measurement_literal(payload[:-1], _source(source, magnitude_start, end - 1))
+    if not printed["matched"] or _UNSIGNED_MAGNITUDE.fullmatch(printed["value"]) is None:
+        _block(result, "series_directed_change_magnitude_unsupported", text, source, start, end)
+        return None
+    unit = printed["unit"] or q.get("unit")
+    unit_source = printed["sources"].get("unit") if printed["unit"] else sources.get("unit")
+    if (not unit or normalize_unit(unit)["dimension"] not in {"ratio", "ratio_delta"}
+            or not isinstance(unit_source, dict) or not unit_source.get("path")):
+        _block(result, "series_directed_change_ratio_unit_unresolved", text, source, start, end)
+        return None
+    parsed = _read_scalar(text, source, magnitude_start, end, result, q, sources)
+    if parsed:
+        parsed[1]["change_direction"] = _CHANGE_DIRECTIONS[direction[0]]
+        parsed[2]["change_direction"] = _source(source, direction.start(), direction.end())
+        _atom(result, text, source, direction.start(), direction.end(), "change_direction")
+        # Preserve the complete printed payload while retaining an exact,
+        # separate source span for the unsigned numeric token itself.
+        raw_end = magnitude_start + len(parsed[3]["raw_value"])
+        parsed[3]["raw_source"] = _source(source, start, raw_end)
+        parsed[3]["raw_value"] = text[start:raw_end]
+    return parsed
+
+
 def read_series_requirements(text: str, source: dict[str, Any], *, context: dict[str, Any] | None = None,
                               subject: str = "", attribute: str | None = None,
                               subject_source: dict[str, Any] | None = None,
@@ -566,7 +612,7 @@ def read_series_requirements(text: str, source: dict[str, Any], *, context: dict
                     "value_source": _source(source, value_start, value_end), "raw_source": _source(source, value_start, value_end),
                     "raw_value": text[value_start:value_end]}
             elif _GROWTH.fullmatch(field_attribute):
-                parsed = _read_scalar(text, source, value_start, end, result, q, sources)
+                parsed = _read_growth_scalar(text, source, value_start, end, result, q, sources)
                 comparison = context.get("comparison_periods", {})
                 if {"from_period", "to_period"} <= comparison.keys():
                     if parsed:

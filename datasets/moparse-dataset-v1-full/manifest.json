@@ -1,0 +1,3186 @@
+{
+  "name": "moparse-dataset-v1-full",
+  "kind": "full",
+  "state": "frozen_snapshot",
+  "created_at": "2026-10-24T06:45:35.480978+08:00",
+  "declared_input_pages": 7070,
+  "review_record": {
+    "status": "historical_reference_not_new_gold_acceptance",
+    "source": "provenance/review-findings.md",
+    "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+  },
+  "freeze_record": null,
+  "preflight_confirmed": false,
+  "documents": [
+    {
+      "document_id": "complex-cmb-2024-annual",
+      "reference_dir": "references/complex-cmb-2024-annual",
+      "source_metadata": {
+        "filename": "complex-cmb-2024-annual.pdf",
+        "sha256": "a76642357d98c3ffc81408a663eb33e4525c5dc61b87e5a8805cf80b9707360a",
+        "pages": 363
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "complex-xiaomi-2024-annual",
+      "reference_dir": "references/complex-xiaomi-2024-annual",
+      "source_metadata": {
+        "filename": "complex-xiaomi-2024-annual.pdf",
+        "sha256": "2becc8b3f13c005759300afda10b96048f6e8eb5ebedc74c4cf7f1ef5991b5af",
+        "pages": 379
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "complex-pingan-2024-annual",
+      "reference_dir": "references/complex-pingan-2024-annual",
+      "source_metadata": {
+        "filename": "complex-pingan-2024-annual.pdf",
+        "pages": 364,
+        "sha256": "62a5bd793ef9a787cc95750d65e52803aa58fa424b01d94e754ea0120d5be8a3"
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "complex-byd-2024-annual",
+      "reference_dir": "references/complex-byd-2024-annual",
+      "source_metadata": {
+        "filename": "complex-byd-2024-annual.pdf",
+        "sha256": "8972fd9652e6b681250a70b17b4ccbc0e9173e527e6003e3edd0dfdb7191342c",
+        "pages": 374
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "complex-catl-2025-prospectus",
+      "reference_dir": "references/complex-catl-2025-prospectus",
+      "source_metadata": {
+        "filename": "complex-catl-2025-prospectus.pdf",
+        "sha256": "70469df49d5ab82965210e9d26f6bb30095b1563014a9dd5fe1b21ad26f09b5b",
+        "pages": 626
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "complex-guotai-haitong-2024-merger",
+      "reference_dir": "references/complex-guotai-haitong-2024-merger",
+      "source_metadata": {
+        "filename": "complex-guotai-haitong-2024-merger.pdf",
+        "sha256": "bea551c53507b287df1842e253550acbc6b58266d524ef35229ef42e269c5371",
+        "pages": 428
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "10726562",
+      "reference_dir": "references/10726562",
+      "source_metadata": {
+        "filename": "10726562.pdf",
+        "sha256": "806be3c98eb71db56dffc24f63736c3673ef918f777a0a66fbcc8458a5a10923",
+        "pages": 2
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "1200454112",
+      "reference_dir": "references/1200454112",
+      "source_metadata": {
+        "filename": "1200454112.pdf",
+        "sha256": "02feb89fa1bfe7802aed33dc47155f9377ca68e01a2782db101c134921ac88c2",
+        "pages": 23
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "1200467021",
+      "reference_dir": "references/1200467021",
+      "source_metadata": {
+        "filename": "1200467021.pdf",
+        "sha256": "09ffc548a67fc6c98aa595c7c57c6caa956d553e503221840d104ca791d3ac7c",
+        "pages": 6
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "1200694562",
+      "reference_dir": "references/1200694562",
+      "source_metadata": {
+        "filename": "1200694562.pdf",
+        "sha256": "2472b083ab953d82255cb07b064c742bf1c20eaa72e40aefefb47a391f068ccf",
+        "pages": 19
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "1200694910",
+      "reference_dir": "references/1200694910",
+      "source_metadata": {
+        "filename": "1200694910.pdf",
+        "sha256": "0298166f2d1fca82a618d16aa9c9779974553a29436a5a93f5976374c1a25de8",
+        "pages": 3
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "1200707112",
+      "reference_dir": "references/1200707112",
+      "source_metadata": {
+        "filename": "1200707112.pdf",
+        "sha256": "2c8c8258212d9f658824b9319ce93fdc307c0ce2eaa5777982b36be06fc4b461",
+        "pages": 31
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "1200716038",
+      "reference_dir": "references/1200716038",
+      "source_metadata": {
+        "filename": "1200716038.pdf",
+        "sha256": "298bfe661f5fa03b0cb961a90cb56f31db760a6af3de4b92cd99724af122cfac",
+        "pages": 17
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "1200767518",
+      "reference_dir": "references/1200767518",
+      "source_metadata": {
+        "filename": "1200767518.pdf",
+        "sha256": "170af76e1775265010e273c5b353f084e112d2f7f74afc3a555f6eeb45e92303",
+        "pages": 4
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "1200767576",
+      "reference_dir": "references/1200767576",
+      "source_metadata": {
+        "filename": "1200767576.pdf",
+        "sha256": "183d584cd425e0d2c1890cf769a0abcba734fb19110b68adf90f2e944253950e",
+        "pages": 1
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "1200778318",
+      "reference_dir": "references/1200778318",
+      "source_metadata": {
+        "filename": "1200778318.pdf",
+        "sha256": "e291049b78a25e071d270e375cdf7cb00e834206d65279d23f9e7058f1d1553f",
+        "pages": 17
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "1200799174",
+      "reference_dir": "references/1200799174",
+      "source_metadata": {
+        "filename": "1200799174.pdf",
+        "sha256": "444d76955a37072cd4741d5c080102d276262fff456f3631586673f9b5cd618a",
+        "pages": 1
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "1200800787",
+      "reference_dir": "references/1200800787",
+      "source_metadata": {
+        "filename": "1200800787.pdf",
+        "sha256": "0468b0ae35bcf2c5c17dc8efbf3ec40da715f0327a21b23933e4ff88b10e2710",
+        "pages": 1
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "1200838381",
+      "reference_dir": "references/1200838381",
+      "source_metadata": {
+        "filename": "1200838381.pdf",
+        "sha256": "0ed5ab6edc00216ba0bfef39b194847eb0c6bdf1095672b8dc8d2094c9075d11",
+        "pages": 5
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "1200838391",
+      "reference_dir": "references/1200838391",
+      "source_metadata": {
+        "filename": "1200838391.pdf",
+        "sha256": "08b850b465da46065adf4cf1d96c4c8a6e6cc03868ce1f7e7d118e8f893bff23",
+        "pages": 11
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "1200838888",
+      "reference_dir": "references/1200838888",
+      "source_metadata": {
+        "filename": "1200838888.pdf",
+        "sha256": "2d4132f74eb85e4bde6eb405cbb9c5727f895d9eebd2fcfee63f02965437d851",
+        "pages": 10
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "1200921575",
+      "reference_dir": "references/1200921575",
+      "source_metadata": {
+        "filename": "1200921575.pdf",
+        "sha256": "1aa586cf79ac49ee069a9b3b389f33c1fa647e86f0e3e9753b45ee6de725fc83",
+        "pages": 4
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "1200921577",
+      "reference_dir": "references/1200921577",
+      "source_metadata": {
+        "filename": "1200921577.pdf",
+        "sha256": "15113ab83854a9439c9094486eb0c5d1100aa7cf31c48331f9bf7583620503b7",
+        "pages": 5
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "1200930858",
+      "reference_dir": "references/1200930858",
+      "source_metadata": {
+        "filename": "1200930858.pdf",
+        "sha256": "034041b95528210e945a0f74d96b501066662b070028410fb174eeffa34879f2",
+        "pages": 6
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "1200933975",
+      "reference_dir": "references/1200933975",
+      "source_metadata": {
+        "filename": "1200933975.pdf",
+        "sha256": "2103e48efbb70dd219727bb9ace9bb78b42ed6988b5c66fe96dea6e12863893a",
+        "pages": 2
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "1200967992",
+      "reference_dir": "references/1200967992",
+      "source_metadata": {
+        "filename": "1200967992.pdf",
+        "sha256": "3bf175d9c0adba1d956a6ad4fc9b4fe2120ce16148044e871bca453c294792f3",
+        "pages": 43
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "1200968001",
+      "reference_dir": "references/1200968001",
+      "source_metadata": {
+        "filename": "1200968001.pdf",
+        "sha256": "01b8be3d25e41686faed5c4cf03e6b3010796b8eddc21b68a93eeb2fe147cadf",
+        "pages": 74
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "1200975009",
+      "reference_dir": "references/1200975009",
+      "source_metadata": {
+        "filename": "1200975009.pdf",
+        "sha256": "0102c95d0c06e64d39550b96d2e253287f8faa68edbd4684655399a34bb55d77",
+        "pages": 2
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "1201786046",
+      "reference_dir": "references/1201786046",
+      "source_metadata": {
+        "filename": "1201786046.pdf",
+        "sha256": "08db41c28b42de3d8be9dfb7655677bf5b281a40173a6c91c45e6481927ab3ae",
+        "pages": 2
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "1201791349",
+      "reference_dir": "references/1201791349",
+      "source_metadata": {
+        "filename": "1201791349.pdf",
+        "sha256": "068f13734091e8d1f52f5b18e260eb403894b35f699baf5733593e9ccb4ac9ff",
+        "pages": 2
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "1201816142",
+      "reference_dir": "references/1201816142",
+      "source_metadata": {
+        "filename": "1201816142.pdf",
+        "sha256": "0e10ece9cf9c409f0a310b36a88d10e7b7d0a71a4d45b00b492252b134191bd6",
+        "pages": 3
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "1201830493",
+      "reference_dir": "references/1201830493",
+      "source_metadata": {
+        "filename": "1201830493.pdf",
+        "sha256": "55ca9154c141713360cd6decf54dede2f0840ec138d34ae874daa84931f009a5",
+        "pages": 2
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "1201860324",
+      "reference_dir": "references/1201860324",
+      "source_metadata": {
+        "filename": "1201860324.pdf",
+        "sha256": "418e040b3360a3e7547d15d717b1be2d2057239c508dc254e0759ecbe3c9d37e",
+        "pages": 1
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "1201917092",
+      "reference_dir": "references/1201917092",
+      "source_metadata": {
+        "filename": "1201917092.pdf",
+        "sha256": "1333c0558226e7a2ada45ed5491cab1d077696a45d6e7f9d1204b275eed1db35",
+        "pages": 3
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "1202033380",
+      "reference_dir": "references/1202033380",
+      "source_metadata": {
+        "filename": "1202033380.pdf",
+        "sha256": "0469899490e15c3a7c6baeba26cf480dcf029360b9a9b4a02f8e53fdc59819d5",
+        "pages": 8
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "1202164176",
+      "reference_dir": "references/1202164176",
+      "source_metadata": {
+        "filename": "1202164176.pdf",
+        "sha256": "0b366404c27ca0db31eddd3c1fd693255624c0e6d2826d1a1df3662e2cb8e63d",
+        "pages": 8
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "1202180643",
+      "reference_dir": "references/1202180643",
+      "source_metadata": {
+        "filename": "1202180643.pdf",
+        "sha256": "087f57b1aa5647f34b51c7912602128c605efc41c94fcedfba2b5382c4576433",
+        "pages": 10
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "1202194188",
+      "reference_dir": "references/1202194188",
+      "source_metadata": {
+        "filename": "1202194188.pdf",
+        "sha256": "289b4329ed607fb34c6be77fb434471a762241ebb62ab93bb10dc32a1e57e7aa",
+        "pages": 4
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "1202194191",
+      "reference_dir": "references/1202194191",
+      "source_metadata": {
+        "filename": "1202194191.pdf",
+        "sha256": "2193315370540af6a551658c0daa6ae56d8f0bb798c1420cf56a651388fa2bf2",
+        "pages": 3
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "1202202591",
+      "reference_dir": "references/1202202591",
+      "source_metadata": {
+        "filename": "1202202591.pdf",
+        "sha256": "cdbba1a46f39ce152d8dea41604760f1e7fc924e1abec28261fb0870510b9321",
+        "pages": 16
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "1202506196",
+      "reference_dir": "references/1202506196",
+      "source_metadata": {
+        "filename": "1202506196.pdf",
+        "sha256": "2d90a2eb5a8d2f7382c00eb904ea63eaecb57ca504f39b7075f0630eeae3a63d",
+        "pages": 2
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "1202524093",
+      "reference_dir": "references/1202524093",
+      "source_metadata": {
+        "filename": "1202524093.pdf",
+        "sha256": "0d1e21838218979aeb778c004c6f07c64f1556253e92e012c6fa05999b0ec996",
+        "pages": 10
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "1202650764",
+      "reference_dir": "references/1202650764",
+      "source_metadata": {
+        "filename": "1202650764.pdf",
+        "sha256": "131869646bdde80f873db84ab39b7d37ab9738c824cfdde67291581803cbd6a5",
+        "pages": 13
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "1202668810",
+      "reference_dir": "references/1202668810",
+      "source_metadata": {
+        "filename": "1202668810.pdf",
+        "sha256": "085fee2354f5deb97ddc782882de4ca5ba7089bf6c8a813de74f47c2b947419b",
+        "pages": 4
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "1202854267",
+      "reference_dir": "references/1202854267",
+      "source_metadata": {
+        "filename": "1202854267.pdf",
+        "sha256": "261475ec7ed6c0f60b5c7765b4a50f8d30608c42077d1bcaf06322c6f5f56057",
+        "pages": 6
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "1202969650",
+      "reference_dir": "references/1202969650",
+      "source_metadata": {
+        "filename": "1202969650.pdf",
+        "sha256": "2975d56b140183bd3ac851fbc9aa9c613d78a2486e3473501bef0d2dd70c6f05",
+        "pages": 2
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "1203209331",
+      "reference_dir": "references/1203209331",
+      "source_metadata": {
+        "filename": "1203209331.pdf",
+        "sha256": "02db0a29cb972d743acff9199641d775448bc0e944359df073d12b896a7d7a47",
+        "pages": 3
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "1203248188",
+      "reference_dir": "references/1203248188",
+      "source_metadata": {
+        "filename": "1203248188.pdf",
+        "sha256": "e2a7b94315afe2802244f41807db0d2e3cd992b9903ff3b96d0c6f3d1a460e17",
+        "pages": 9
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "1203531870",
+      "reference_dir": "references/1203531870",
+      "source_metadata": {
+        "filename": "1203531870.pdf",
+        "sha256": "aeea44d38896319de19d54aa2a20362cced5357ce4c00c3ae07ad2c909f41cf3",
+        "pages": 17
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "1203588693",
+      "reference_dir": "references/1203588693",
+      "source_metadata": {
+        "filename": "1203588693.pdf",
+        "sha256": "020b6aeff4dd6464e8259dec58013fd042b1c95055cdd8ac14719fbbdfe46d07",
+        "pages": 10
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "1203617015",
+      "reference_dir": "references/1203617015",
+      "source_metadata": {
+        "filename": "1203617015.pdf",
+        "sha256": "0b6aad395a465e82513107b9b1ab45da92cdcf6bf5e553f40293e836ea251c7c",
+        "pages": 2
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "1203675121",
+      "reference_dir": "references/1203675121",
+      "source_metadata": {
+        "filename": "1203675121.pdf",
+        "sha256": "055ee8949e34c6720b3c0e8ae179bf4ceda73458cc32ee0a6ca07708b4d63b6d",
+        "pages": 4
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "1203675127",
+      "reference_dir": "references/1203675127",
+      "source_metadata": {
+        "filename": "1203675127.pdf",
+        "sha256": "04ff2b575705436c2ca3c167f86597f4a03ae9439b2f5ec4bbe7c37ef33ca498",
+        "pages": 68
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "1203694667",
+      "reference_dir": "references/1203694667",
+      "source_metadata": {
+        "filename": "1203694667.pdf",
+        "sha256": "0334657c9c736c10b355d5363ea1b4b0c8c8c7a7f8c236e2bfab9cc51c3c7286",
+        "pages": 23
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "1204887329",
+      "reference_dir": "references/1204887329",
+      "source_metadata": {
+        "filename": "1204887329.pdf",
+        "sha256": "17eb3ca603ac91132b0098475e6219936f87800e4999ad88f8c12c44419c3470",
+        "pages": 10
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "1206396628",
+      "reference_dir": "references/1206396628",
+      "source_metadata": {
+        "filename": "1206396628.pdf",
+        "sha256": "340b8800469119486b2cc08f17d9a962719662c6e33de75367fe8332a27e8458",
+        "pages": 7
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "1207153364",
+      "reference_dir": "references/1207153364",
+      "source_metadata": {
+        "filename": "1207153364.pdf",
+        "sha256": "4e9b54518abf4ecde6f5010ed6ceecefbd453c57f3a63dc35ffcfc68dbfb7c45",
+        "pages": 5
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "1207353786",
+      "reference_dir": "references/1207353786",
+      "source_metadata": {
+        "filename": "1207353786.pdf",
+        "sha256": "8c05de04719839bbca7bdc256911fa3127444a20f90e7b5cc02562731b9eed6c",
+        "pages": 10
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "1207353803",
+      "reference_dir": "references/1207353803",
+      "source_metadata": {
+        "filename": "1207353803.pdf",
+        "sha256": "3d7a5a9d4d673298e047a9b3674bec081148deaec667432a6ef2e014ae3674a1",
+        "pages": 2
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "1210860446",
+      "reference_dir": "references/1210860446",
+      "source_metadata": {
+        "filename": "1210860446.pdf",
+        "sha256": "3abc446078329a684f22da643ae578a32f1f68a4509c5449936e9be80673f667",
+        "pages": 6
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "1211290753",
+      "reference_dir": "references/1211290753",
+      "source_metadata": {
+        "filename": "1211290753.pdf",
+        "sha256": "84401aa91f072bd934b12c1742c6d92fbfee19018269f32c9b7f6faa5198cef4",
+        "pages": 3
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "1216072184",
+      "reference_dir": "references/1216072184",
+      "source_metadata": {
+        "filename": "1216072184.pdf",
+        "sha256": "04fd7e83df0edfdfb84942b9c2f53532c6b6cd1d2380c1a2dbd20fc49c9b1e41",
+        "pages": 4
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "1217156345",
+      "reference_dir": "references/1217156345",
+      "source_metadata": {
+        "filename": "1217156345.pdf",
+        "sha256": "04879955cd830037ffd79c1e9145cd2be9b894750de2c81c4a15ea3dce0c0d99",
+        "pages": 5
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "1217156349",
+      "reference_dir": "references/1217156349",
+      "source_metadata": {
+        "filename": "1217156349.pdf",
+        "sha256": "1a2e2e9fdcb187fa0be8ab141f908861ccf2dcdc11398aa7b0366f92b33cc73d",
+        "pages": 7
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "1217451893",
+      "reference_dir": "references/1217451893",
+      "source_metadata": {
+        "filename": "1217451893.pdf",
+        "sha256": "206aed5d2ce9271af50b43eaa80c33ef4aa4a0ed9f17f5212f4ddce1479cbd40",
+        "pages": 3
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "1219858186",
+      "reference_dir": "references/1219858186",
+      "source_metadata": {
+        "filename": "1219858186.pdf",
+        "sha256": "1c21b0402e57812823bfe4b28feac6fc0517c828a18f8c862e8dccdc3543de89",
+        "pages": 15
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "1225464761",
+      "reference_dir": "references/1225464761",
+      "source_metadata": {
+        "filename": "1225464761.pdf",
+        "sha256": "c89a153d22d9bef37caa74a0140b75ceba6834fafcd03e124c9aed51194b27be",
+        "pages": 2
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "1225473526",
+      "reference_dir": "references/1225473526",
+      "source_metadata": {
+        "filename": "1225473526.pdf",
+        "sha256": "787297535ba74a4170cc859ae68f15f946f6dfd0bfc14a1e1fa0e6d068ba2b19",
+        "pages": 27
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "1225474139",
+      "reference_dir": "references/1225474139",
+      "source_metadata": {
+        "filename": "1225474139.pdf",
+        "sha256": "dc69826976c576302ee4156642039b790693202a611922dda647eb006e6d5c18",
+        "pages": 36
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "1225474693",
+      "reference_dir": "references/1225474693",
+      "source_metadata": {
+        "filename": "1225474693.pdf",
+        "sha256": "dc7f5b3bfdc5a5c69b9cf4b2a9e0d28e2f9ee0b2464770fb8a910fea688ee775",
+        "pages": 4
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "1225474739",
+      "reference_dir": "references/1225474739",
+      "source_metadata": {
+        "filename": "1225474739.pdf",
+        "pages": 134,
+        "sha256": "1c99c450a8efefe77c9ca02a6f670c958298f661e5ad8d30d6ba01aa0742cda9"
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "1225475333",
+      "reference_dir": "references/1225475333",
+      "source_metadata": {
+        "filename": "1225475333.pdf",
+        "sha256": "bdb4210e0cd5dc000e8278d2438937b61ae9042969f100289c0d4cab4537e62b",
+        "pages": 28
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "1225475375",
+      "reference_dir": "references/1225475375",
+      "source_metadata": {
+        "filename": "1225475375.pdf",
+        "sha256": "5eef30b5c544d76df917d56df76a665ed13b5e6ffebdc54ab0eea0a47b7589d6",
+        "pages": 119
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "1225475642",
+      "reference_dir": "references/1225475642",
+      "source_metadata": {
+        "filename": "1225475642.pdf",
+        "sha256": "e2a184bb017930ca6306a56391a7248c2954a5ae212c2966104fad2104c4a24d",
+        "pages": 130
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "43433155",
+      "reference_dir": "references/43433155",
+      "source_metadata": {
+        "filename": "43433155.pdf",
+        "sha256": "03e47d551943671ad14716e2b4715b69166eb70554b60445fc22dea038d434e0",
+        "pages": 47
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "bse-08b17aa6c5295fc4",
+      "reference_dir": "references/bse-08b17aa6c5295fc4",
+      "source_metadata": {
+        "filename": "bse-08b17aa6c5295fc4.pdf",
+        "sha256": "08b17aa6c5295fc4cb4a241c4e33fd1d949050f576579a39d7638d27bd19fc87",
+        "pages": 3
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "bse-13beac4ea1e02995",
+      "reference_dir": "references/bse-13beac4ea1e02995",
+      "source_metadata": {
+        "filename": "bse-13beac4ea1e02995.pdf",
+        "sha256": "13beac4ea1e029958e9b32ef87b707bb88c1594e625cd57cf6ad6a1d295b33ba",
+        "pages": 4
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "bse-1e65d2587f60a402",
+      "reference_dir": "references/bse-1e65d2587f60a402",
+      "source_metadata": {
+        "filename": "bse-1e65d2587f60a402.pdf",
+        "sha256": "1e65d2587f60a40209803d12e174433920539e2772a38a457ae121dce31abecc",
+        "pages": 5
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "bse-1fcecd9347e71a8e",
+      "reference_dir": "references/bse-1fcecd9347e71a8e",
+      "source_metadata": {
+        "filename": "bse-1fcecd9347e71a8e.pdf",
+        "sha256": "1fcecd9347e71a8eac655e15ec8117a4a82ba17dad6cb90d89f167ba94dfb9dc",
+        "pages": 56
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "complex-alibaba-2025-annual",
+      "reference_dir": "references/complex-alibaba-2025-annual",
+      "source_metadata": {
+        "filename": "complex-alibaba-2025-annual.pdf",
+        "sha256": "c7806bf5da28032e1b15dbe9a334011d65f5d69efe3bf11a9d212f64f07ca9b2",
+        "pages": 324
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "complex-bis-economic-2024",
+      "reference_dir": "references/complex-bis-economic-2024",
+      "source_metadata": {
+        "filename": "complex-bis-economic-2024.pdf",
+        "pages": 150,
+        "sha256": "142204f9cbc4107d799e5e9f9009f6b0872a9787b55ab249007284debbf1a80b"
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "complex-china-mobile-2024-annual",
+      "reference_dir": "references/complex-china-mobile-2024-annual",
+      "source_metadata": {
+        "filename": "complex-china-mobile-2024-annual.pdf",
+        "pages": 180,
+        "sha256": "2f4ca6b6480b58880ce41e0587629319a8e92de6a52df91925929db75f6a6e76"
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "complex-hkex-2024-annual",
+      "reference_dir": "references/complex-hkex-2024-annual",
+      "source_metadata": {
+        "filename": "complex-hkex-2024-annual.pdf",
+        "pages": 240,
+        "sha256": "3d1c9bdc9a00ec4911f673b586f20f6778f26f70d771c36036573514c869e356"
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "complex-huawei-2024-annual",
+      "reference_dir": "references/complex-huawei-2024-annual",
+      "source_metadata": {
+        "filename": "complex-huawei-2024-annual.pdf",
+        "sha256": "525ba4ed4cb5aabdacb18abf2d8bc3a03ae5808365e1c3b20ab49486d1667d44",
+        "pages": 148
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "complex-huaweitech-2024-096",
+      "reference_dir": "references/complex-huaweitech-2024-096",
+      "source_metadata": {
+        "filename": "complex-huaweitech-2024-096.pdf",
+        "sha256": "21db14d8285744db740a150d14be987f4dc4aa014a09a07f55692fd5ad810e3d",
+        "pages": 58
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "complex-iea-energy-ai-2025",
+      "reference_dir": "references/complex-iea-energy-ai-2025",
+      "source_metadata": {
+        "filename": "complex-iea-energy-ai-2025.pdf",
+        "sha256": "3956b80152d4aac6b659a09d0cd7671a4bd53efeeb067e4d50df4230701b33e4",
+        "pages": 304
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "complex-midea-2024-annual",
+      "reference_dir": "references/complex-midea-2024-annual",
+      "source_metadata": {
+        "filename": "complex-midea-2024-annual.pdf",
+        "sha256": "b17a9b9b84bca1d2a4e4a3cadc5dd5ba5c85e3f1fd2d758acd3315b5b040ecd9",
+        "pages": 295
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "complex-moutai-2024-annual",
+      "reference_dir": "references/complex-moutai-2024-annual",
+      "source_metadata": {
+        "filename": "complex-moutai-2024-annual.pdf",
+        "sha256": "5299f4940e2ce4e91084b73dc457d558b9d335fa76fbfee6227e4254eb7f4a30",
+        "pages": 143
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "complex-nvidia-2025-annual",
+      "reference_dir": "references/complex-nvidia-2025-annual",
+      "source_metadata": {
+        "filename": "complex-nvidia-2025-annual.pdf",
+        "sha256": "757b344ab62ba282f6e44e0702e8ce5f190d88fb23b5e0a2beaf4cb277a395cc",
+        "pages": 181
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "complex-pboc-stability-2024",
+      "reference_dir": "references/complex-pboc-stability-2024",
+      "source_metadata": {
+        "filename": "complex-pboc-stability-2024.pdf",
+        "sha256": "f72c45fe00031753b846b8fe404d7cac5ed0722c1d477bea9079a81e7dbcd69e",
+        "pages": 120
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "complex-sf-2024-annual",
+      "reference_dir": "references/complex-sf-2024-annual",
+      "source_metadata": {
+        "filename": "complex-sf-2024-annual.pdf",
+        "sha256": "8355c52cbe962c76d83175b602560f27f8f3705b6c0d0b5e44222f070fc18258",
+        "pages": 190
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "complex-sinopec-2024-annual",
+      "reference_dir": "references/complex-sinopec-2024-annual",
+      "source_metadata": {
+        "filename": "complex-sinopec-2024-annual.pdf",
+        "sha256": "fb103dc4eb6c6fe67de6d18b179d3c7c83b427d6d238ce6b29a89e77ecd55daa",
+        "pages": 222
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "complex-tencent-2025-bond-programme",
+      "reference_dir": "references/complex-tencent-2025-bond-programme",
+      "source_metadata": {
+        "filename": "complex-tencent-2025-bond-programme.pdf",
+        "sha256": "a1ddbb930f4ba40ddd521fe97210510a355a5c223b5784ef32a3835eb186f404",
+        "pages": 705
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "sse-10e39be0f06bd59f",
+      "reference_dir": "references/sse-10e39be0f06bd59f",
+      "source_metadata": {
+        "filename": "sse-10e39be0f06bd59f.pdf",
+        "sha256": "10e39be0f06bd59f35ae8b34910a5c5e22e01abc075050e301f285fd611cc8b5",
+        "pages": 5
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "sse-13df676e3995fb86",
+      "reference_dir": "references/sse-13df676e3995fb86",
+      "source_metadata": {
+        "filename": "sse-13df676e3995fb86.pdf",
+        "sha256": "13df676e3995fb864c0bba355fc0c94a04ee491216976aa4228a5807aff1b5c3",
+        "pages": 5
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "sse-444ec1bf344edea0",
+      "reference_dir": "references/sse-444ec1bf344edea0",
+      "source_metadata": {
+        "filename": "sse-444ec1bf344edea0.pdf",
+        "sha256": "444ec1bf344edea097d435e645b8e3a93049dc7543d1fe36e64c1ab5479f2f37",
+        "pages": 4
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "szse-0f5d6dd27e224832",
+      "reference_dir": "references/szse-0f5d6dd27e224832",
+      "source_metadata": {
+        "filename": "szse-0f5d6dd27e224832.pdf",
+        "sha256": "0f5d6dd27e224832b6952a5b6f4a1732ea22a20201be864a21cd6ce08fef18c9",
+        "pages": 8
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "szse-1031f1efdd7da997",
+      "reference_dir": "references/szse-1031f1efdd7da997",
+      "source_metadata": {
+        "filename": "szse-1031f1efdd7da997.pdf",
+        "sha256": "1031f1efdd7da997f440c219db715556dabaa86a20795e46286c7869f5a2f6ca",
+        "pages": 2
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "szse-134dc729c2ee29bc",
+      "reference_dir": "references/szse-134dc729c2ee29bc",
+      "source_metadata": {
+        "filename": "szse-134dc729c2ee29bc.pdf",
+        "sha256": "134dc729c2ee29bcf44e723129235fdb6cc7af96edf8992e56332e791e1fb82a",
+        "pages": 6
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "szse-623c57cdfb6048cc",
+      "reference_dir": "references/szse-623c57cdfb6048cc",
+      "source_metadata": {
+        "filename": "szse-623c57cdfb6048cc.pdf",
+        "sha256": "623c57cdfb6048ccd9f051af03672bed7fb1015efe50d28dfc0c742910d38799",
+        "pages": 3
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "collection-cn-1207461295",
+      "reference_dir": "references/collection-cn-1207461295",
+      "source_metadata": {
+        "filename": "collection-cn-1207461295.pdf",
+        "sha256": "9734a54eb1b09c474cfd4222a8db492a2b5d4b3afb50075c5ea68515bfd7d65c",
+        "pages": 2
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "collection-cn-1208675667",
+      "reference_dir": "references/collection-cn-1208675667",
+      "source_metadata": {
+        "filename": "collection-cn-1208675667.pdf",
+        "sha256": "250585cbc9549dbafe6672187319489942ddcccf391f8710ab9dc49f1e2b33a3",
+        "pages": 3
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "collection-cn-1209142176",
+      "reference_dir": "references/collection-cn-1209142176",
+      "source_metadata": {
+        "filename": "collection-cn-1209142176.pdf",
+        "sha256": "2152d49e1ca32fb69f1d238617f9a4837487d48b41a6c221e9ce242d905c5efb",
+        "pages": 3
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "collection-cn-1217139160",
+      "reference_dir": "references/collection-cn-1217139160",
+      "source_metadata": {
+        "filename": "collection-cn-1217139160.pdf",
+        "sha256": "04bdf1b6036663a77fe1d53e976b9dc6e1ef4f292a0621983a68ed366de95da9",
+        "pages": 2
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "collection-cn-1217635706",
+      "reference_dir": "references/collection-cn-1217635706",
+      "source_metadata": {
+        "filename": "collection-cn-1217635706.pdf",
+        "sha256": "6c5936e59a9ac9c8132cb9e0954e5fe5af91b25b9074773cf5bf5559b44255d2",
+        "pages": 6
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "collection-cn-1222944784",
+      "reference_dir": "references/collection-cn-1222944784",
+      "source_metadata": {
+        "filename": "collection-cn-1222944784.pdf",
+        "sha256": "b02bde44313c5dc947cd3852bc43c2e8fa7c4bc9ca1f0d2b71e321b781662810",
+        "pages": 7
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "collection-cn-1224066007",
+      "reference_dir": "references/collection-cn-1224066007",
+      "source_metadata": {
+        "filename": "collection-cn-1224066007.pdf",
+        "sha256": "a259af01a647558d80a904a067e421eb4768778bccf6b8c7a9383d27e355e9ad",
+        "pages": 5
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "collection-cn-1225415718",
+      "reference_dir": "references/collection-cn-1225415718",
+      "source_metadata": {
+        "filename": "collection-cn-1225415718.pdf",
+        "sha256": "70d3064af3ce8d1ce4a3959d420672c00769588f283cc7071a74e847174883d2",
+        "pages": 4
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "collection-cn-37183712",
+      "reference_dir": "references/collection-cn-37183712",
+      "source_metadata": {
+        "filename": "collection-cn-37183712.pdf",
+        "sha256": "4571f9fd4c3b53b722912c0f0e3c28097db5c3dab3a815152e7ff02610a1e97f",
+        "pages": 3
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "collection-cn-59270407",
+      "reference_dir": "references/collection-cn-59270407",
+      "source_metadata": {
+        "filename": "collection-cn-59270407.pdf",
+        "sha256": "6b6efdb39028de24a19b65e3a65d28d23acd948d18828bef2bad61b659700483",
+        "pages": 2
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "collection-cn-60579841",
+      "reference_dir": "references/collection-cn-60579841",
+      "source_metadata": {
+        "filename": "collection-cn-60579841.pdf",
+        "sha256": "06ffb6d0e7281f48e05a213863b0cbc24450e39a31254dacf2ea4ddc59871f36",
+        "pages": 3
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "collection-hk-1224811245",
+      "reference_dir": "references/collection-hk-1224811245",
+      "source_metadata": {
+        "filename": "collection-hk-1224811245.pdf",
+        "sha256": "d2f8fa749577b7dd83751ea2c0f51c5a640d2297c1b80a02603604560da057ae",
+        "pages": 4
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    },
+    {
+      "document_id": "collection-hk-1224998551",
+      "reference_dir": "references/collection-hk-1224998551",
+      "source_metadata": {
+        "filename": "collection-hk-1224998551.pdf",
+        "sha256": "202466a0e9221450f4065a0c5aa11ad220bb64c598b55fc70c45b6280b578874",
+        "pages": 5
+      },
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "review_record": {
+        "status": "historical_reference_not_new_gold_acceptance",
+        "source": "provenance/review-findings.md",
+        "note": "2026-10-24人工照读现有README资料目录逐项声明包装对象；113份和7070页沿用作者记录，不是程序盘点或本轮全文重新验收。保留既有局部复核、历史误改恢复和原件未知限制。"
+      }
+    }
+  ],
+  "samples": [
+    {
+      "id": "complex-cmb-2024-annual",
+      "document_id": "complex-cmb-2024-annual",
+      "input": "inputs/complex-cmb-2024-annual.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/complex-cmb-2024-annual",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "complex-xiaomi-2024-annual",
+      "document_id": "complex-xiaomi-2024-annual",
+      "input": "inputs/complex-xiaomi-2024-annual.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/complex-xiaomi-2024-annual",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "complex-pingan-2024-annual",
+      "document_id": "complex-pingan-2024-annual",
+      "input": "inputs/complex-pingan-2024-annual.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/complex-pingan-2024-annual",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "complex-byd-2024-annual",
+      "document_id": "complex-byd-2024-annual",
+      "input": "inputs/complex-byd-2024-annual.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/complex-byd-2024-annual",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "complex-catl-2025-prospectus",
+      "document_id": "complex-catl-2025-prospectus",
+      "input": "inputs/complex-catl-2025-prospectus.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/complex-catl-2025-prospectus",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "complex-guotai-haitong-2024-merger",
+      "document_id": "complex-guotai-haitong-2024-merger",
+      "input": "inputs/complex-guotai-haitong-2024-merger.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/complex-guotai-haitong-2024-merger",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "10726562",
+      "document_id": "10726562",
+      "input": "inputs/10726562.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/10726562",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "1200454112",
+      "document_id": "1200454112",
+      "input": "inputs/1200454112.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/1200454112",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "1200467021",
+      "document_id": "1200467021",
+      "input": "inputs/1200467021.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/1200467021",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "1200694562",
+      "document_id": "1200694562",
+      "input": "inputs/1200694562.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/1200694562",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "1200694910",
+      "document_id": "1200694910",
+      "input": "inputs/1200694910.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/1200694910",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "1200707112",
+      "document_id": "1200707112",
+      "input": "inputs/1200707112.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/1200707112",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "1200716038",
+      "document_id": "1200716038",
+      "input": "inputs/1200716038.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/1200716038",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "1200767518",
+      "document_id": "1200767518",
+      "input": "inputs/1200767518.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/1200767518",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "1200767576",
+      "document_id": "1200767576",
+      "input": "inputs/1200767576.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/1200767576",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "1200778318",
+      "document_id": "1200778318",
+      "input": "inputs/1200778318.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/1200778318",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "1200799174",
+      "document_id": "1200799174",
+      "input": "inputs/1200799174.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/1200799174",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "1200800787",
+      "document_id": "1200800787",
+      "input": "inputs/1200800787.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/1200800787",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "1200838381",
+      "document_id": "1200838381",
+      "input": "inputs/1200838381.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/1200838381",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "1200838391",
+      "document_id": "1200838391",
+      "input": "inputs/1200838391.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/1200838391",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "1200838888",
+      "document_id": "1200838888",
+      "input": "inputs/1200838888.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/1200838888",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "1200921575",
+      "document_id": "1200921575",
+      "input": "inputs/1200921575.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/1200921575",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "1200921577",
+      "document_id": "1200921577",
+      "input": "inputs/1200921577.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/1200921577",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "1200930858",
+      "document_id": "1200930858",
+      "input": "inputs/1200930858.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/1200930858",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "1200933975",
+      "document_id": "1200933975",
+      "input": "inputs/1200933975.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/1200933975",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "1200967992",
+      "document_id": "1200967992",
+      "input": "inputs/1200967992.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/1200967992",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "1200968001",
+      "document_id": "1200968001",
+      "input": "inputs/1200968001.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/1200968001",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "1200975009",
+      "document_id": "1200975009",
+      "input": "inputs/1200975009.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/1200975009",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "1201786046",
+      "document_id": "1201786046",
+      "input": "inputs/1201786046.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/1201786046",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "1201791349",
+      "document_id": "1201791349",
+      "input": "inputs/1201791349.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/1201791349",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "1201816142",
+      "document_id": "1201816142",
+      "input": "inputs/1201816142.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/1201816142",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "1201830493",
+      "document_id": "1201830493",
+      "input": "inputs/1201830493.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/1201830493",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "1201860324",
+      "document_id": "1201860324",
+      "input": "inputs/1201860324.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/1201860324",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "1201917092",
+      "document_id": "1201917092",
+      "input": "inputs/1201917092.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/1201917092",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "1202033380",
+      "document_id": "1202033380",
+      "input": "inputs/1202033380.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/1202033380",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "1202164176",
+      "document_id": "1202164176",
+      "input": "inputs/1202164176.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/1202164176",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "1202180643",
+      "document_id": "1202180643",
+      "input": "inputs/1202180643.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/1202180643",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "1202194188",
+      "document_id": "1202194188",
+      "input": "inputs/1202194188.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/1202194188",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "1202194191",
+      "document_id": "1202194191",
+      "input": "inputs/1202194191.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/1202194191",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "1202202591",
+      "document_id": "1202202591",
+      "input": "inputs/1202202591.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/1202202591",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "1202506196",
+      "document_id": "1202506196",
+      "input": "inputs/1202506196.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/1202506196",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "1202524093",
+      "document_id": "1202524093",
+      "input": "inputs/1202524093.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/1202524093",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "1202650764",
+      "document_id": "1202650764",
+      "input": "inputs/1202650764.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/1202650764",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "1202668810",
+      "document_id": "1202668810",
+      "input": "inputs/1202668810.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/1202668810",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "1202854267",
+      "document_id": "1202854267",
+      "input": "inputs/1202854267.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/1202854267",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "1202969650",
+      "document_id": "1202969650",
+      "input": "inputs/1202969650.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/1202969650",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "1203209331",
+      "document_id": "1203209331",
+      "input": "inputs/1203209331.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/1203209331",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "1203248188",
+      "document_id": "1203248188",
+      "input": "inputs/1203248188.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/1203248188",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "1203531870",
+      "document_id": "1203531870",
+      "input": "inputs/1203531870.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/1203531870",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "1203588693",
+      "document_id": "1203588693",
+      "input": "inputs/1203588693.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/1203588693",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "1203617015",
+      "document_id": "1203617015",
+      "input": "inputs/1203617015.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/1203617015",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "1203675121",
+      "document_id": "1203675121",
+      "input": "inputs/1203675121.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/1203675121",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "1203675127",
+      "document_id": "1203675127",
+      "input": "inputs/1203675127.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/1203675127",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "1203694667",
+      "document_id": "1203694667",
+      "input": "inputs/1203694667.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/1203694667",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "1204887329",
+      "document_id": "1204887329",
+      "input": "inputs/1204887329.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/1204887329",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "1206396628",
+      "document_id": "1206396628",
+      "input": "inputs/1206396628.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/1206396628",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "1207153364",
+      "document_id": "1207153364",
+      "input": "inputs/1207153364.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/1207153364",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "1207353786",
+      "document_id": "1207353786",
+      "input": "inputs/1207353786.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/1207353786",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "1207353803",
+      "document_id": "1207353803",
+      "input": "inputs/1207353803.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/1207353803",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "1210860446",
+      "document_id": "1210860446",
+      "input": "inputs/1210860446.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/1210860446",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "1211290753",
+      "document_id": "1211290753",
+      "input": "inputs/1211290753.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/1211290753",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "1216072184",
+      "document_id": "1216072184",
+      "input": "inputs/1216072184.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/1216072184",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "1217156345",
+      "document_id": "1217156345",
+      "input": "inputs/1217156345.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/1217156345",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "1217156349",
+      "document_id": "1217156349",
+      "input": "inputs/1217156349.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/1217156349",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "1217451893",
+      "document_id": "1217451893",
+      "input": "inputs/1217451893.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/1217451893",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "1219858186",
+      "document_id": "1219858186",
+      "input": "inputs/1219858186.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/1219858186",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "1225464761",
+      "document_id": "1225464761",
+      "input": "inputs/1225464761.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/1225464761",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "1225473526",
+      "document_id": "1225473526",
+      "input": "inputs/1225473526.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/1225473526",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "1225474139",
+      "document_id": "1225474139",
+      "input": "inputs/1225474139.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/1225474139",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "1225474693",
+      "document_id": "1225474693",
+      "input": "inputs/1225474693.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/1225474693",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "1225474739",
+      "document_id": "1225474739",
+      "input": "inputs/1225474739.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/1225474739",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "1225475333",
+      "document_id": "1225475333",
+      "input": "inputs/1225475333.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/1225475333",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "1225475375",
+      "document_id": "1225475375",
+      "input": "inputs/1225475375.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/1225475375",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "1225475642",
+      "document_id": "1225475642",
+      "input": "inputs/1225475642.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/1225475642",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "43433155",
+      "document_id": "43433155",
+      "input": "inputs/43433155.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/43433155",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "bse-08b17aa6c5295fc4",
+      "document_id": "bse-08b17aa6c5295fc4",
+      "input": "inputs/bse-08b17aa6c5295fc4.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/bse-08b17aa6c5295fc4",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "bse-13beac4ea1e02995",
+      "document_id": "bse-13beac4ea1e02995",
+      "input": "inputs/bse-13beac4ea1e02995.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/bse-13beac4ea1e02995",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "bse-1e65d2587f60a402",
+      "document_id": "bse-1e65d2587f60a402",
+      "input": "inputs/bse-1e65d2587f60a402.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/bse-1e65d2587f60a402",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "bse-1fcecd9347e71a8e",
+      "document_id": "bse-1fcecd9347e71a8e",
+      "input": "inputs/bse-1fcecd9347e71a8e.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/bse-1fcecd9347e71a8e",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "complex-alibaba-2025-annual",
+      "document_id": "complex-alibaba-2025-annual",
+      "input": "inputs/complex-alibaba-2025-annual.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/complex-alibaba-2025-annual",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "complex-bis-economic-2024",
+      "document_id": "complex-bis-economic-2024",
+      "input": "inputs/complex-bis-economic-2024.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/complex-bis-economic-2024",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "complex-china-mobile-2024-annual",
+      "document_id": "complex-china-mobile-2024-annual",
+      "input": "inputs/complex-china-mobile-2024-annual.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/complex-china-mobile-2024-annual",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "complex-hkex-2024-annual",
+      "document_id": "complex-hkex-2024-annual",
+      "input": "inputs/complex-hkex-2024-annual.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/complex-hkex-2024-annual",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "complex-huawei-2024-annual",
+      "document_id": "complex-huawei-2024-annual",
+      "input": "inputs/complex-huawei-2024-annual.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/complex-huawei-2024-annual",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "complex-huaweitech-2024-096",
+      "document_id": "complex-huaweitech-2024-096",
+      "input": "inputs/complex-huaweitech-2024-096.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/complex-huaweitech-2024-096",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "complex-iea-energy-ai-2025",
+      "document_id": "complex-iea-energy-ai-2025",
+      "input": "inputs/complex-iea-energy-ai-2025.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/complex-iea-energy-ai-2025",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "complex-midea-2024-annual",
+      "document_id": "complex-midea-2024-annual",
+      "input": "inputs/complex-midea-2024-annual.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/complex-midea-2024-annual",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "complex-moutai-2024-annual",
+      "document_id": "complex-moutai-2024-annual",
+      "input": "inputs/complex-moutai-2024-annual.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/complex-moutai-2024-annual",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "complex-nvidia-2025-annual",
+      "document_id": "complex-nvidia-2025-annual",
+      "input": "inputs/complex-nvidia-2025-annual.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/complex-nvidia-2025-annual",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "complex-pboc-stability-2024",
+      "document_id": "complex-pboc-stability-2024",
+      "input": "inputs/complex-pboc-stability-2024.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/complex-pboc-stability-2024",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "complex-sf-2024-annual",
+      "document_id": "complex-sf-2024-annual",
+      "input": "inputs/complex-sf-2024-annual.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/complex-sf-2024-annual",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "complex-sinopec-2024-annual",
+      "document_id": "complex-sinopec-2024-annual",
+      "input": "inputs/complex-sinopec-2024-annual.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/complex-sinopec-2024-annual",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "complex-tencent-2025-bond-programme",
+      "document_id": "complex-tencent-2025-bond-programme",
+      "input": "inputs/complex-tencent-2025-bond-programme.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/complex-tencent-2025-bond-programme",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "sse-10e39be0f06bd59f",
+      "document_id": "sse-10e39be0f06bd59f",
+      "input": "inputs/sse-10e39be0f06bd59f.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/sse-10e39be0f06bd59f",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "sse-13df676e3995fb86",
+      "document_id": "sse-13df676e3995fb86",
+      "input": "inputs/sse-13df676e3995fb86.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/sse-13df676e3995fb86",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "sse-444ec1bf344edea0",
+      "document_id": "sse-444ec1bf344edea0",
+      "input": "inputs/sse-444ec1bf344edea0.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/sse-444ec1bf344edea0",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "szse-0f5d6dd27e224832",
+      "document_id": "szse-0f5d6dd27e224832",
+      "input": "inputs/szse-0f5d6dd27e224832.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/szse-0f5d6dd27e224832",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "szse-1031f1efdd7da997",
+      "document_id": "szse-1031f1efdd7da997",
+      "input": "inputs/szse-1031f1efdd7da997.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/szse-1031f1efdd7da997",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "szse-134dc729c2ee29bc",
+      "document_id": "szse-134dc729c2ee29bc",
+      "input": "inputs/szse-134dc729c2ee29bc.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/szse-134dc729c2ee29bc",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "szse-623c57cdfb6048cc",
+      "document_id": "szse-623c57cdfb6048cc",
+      "input": "inputs/szse-623c57cdfb6048cc.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/szse-623c57cdfb6048cc",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "collection-cn-1207461295",
+      "document_id": "collection-cn-1207461295",
+      "input": "inputs/collection-cn-1207461295.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/collection-cn-1207461295",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "collection-cn-1208675667",
+      "document_id": "collection-cn-1208675667",
+      "input": "inputs/collection-cn-1208675667.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/collection-cn-1208675667",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "collection-cn-1209142176",
+      "document_id": "collection-cn-1209142176",
+      "input": "inputs/collection-cn-1209142176.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/collection-cn-1209142176",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "collection-cn-1217139160",
+      "document_id": "collection-cn-1217139160",
+      "input": "inputs/collection-cn-1217139160.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/collection-cn-1217139160",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "collection-cn-1217635706",
+      "document_id": "collection-cn-1217635706",
+      "input": "inputs/collection-cn-1217635706.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/collection-cn-1217635706",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "collection-cn-1222944784",
+      "document_id": "collection-cn-1222944784",
+      "input": "inputs/collection-cn-1222944784.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/collection-cn-1222944784",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "collection-cn-1224066007",
+      "document_id": "collection-cn-1224066007",
+      "input": "inputs/collection-cn-1224066007.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/collection-cn-1224066007",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "collection-cn-1225415718",
+      "document_id": "collection-cn-1225415718",
+      "input": "inputs/collection-cn-1225415718.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/collection-cn-1225415718",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "collection-cn-37183712",
+      "document_id": "collection-cn-37183712",
+      "input": "inputs/collection-cn-37183712.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/collection-cn-37183712",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "collection-cn-59270407",
+      "document_id": "collection-cn-59270407",
+      "input": "inputs/collection-cn-59270407.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/collection-cn-59270407",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "collection-cn-60579841",
+      "document_id": "collection-cn-60579841",
+      "input": "inputs/collection-cn-60579841.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/collection-cn-60579841",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "collection-hk-1224811245",
+      "document_id": "collection-hk-1224811245",
+      "input": "inputs/collection-hk-1224811245.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/collection-hk-1224811245",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    },
+    {
+      "id": "collection-hk-1224998551",
+      "document_id": "collection-hk-1224998551",
+      "input": "inputs/collection-hk-1224998551.pdf",
+      "input_scope": "complete_original",
+      "reference_dir": "references/collection-hk-1224998551",
+      "family_id": null,
+      "tags": [],
+      "review_status": "historical_reference",
+      "evaluation": null
+    }
+  ],
+  "suites": {},
+  "scoring_policy": "mo-parse-eval-text-v1",
+  "reference_scope": "existing_authored_reference_documents_only",
+  "corpus_acceptance": "not_performed_by_packaging"
+}

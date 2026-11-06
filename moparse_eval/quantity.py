@@ -87,7 +87,8 @@ def normalize_unit(raw_unit: str | None, currency: str | None = None,
             result["conflicts"].append("ratio_literal_is_not_a_percentage_point_literal")
             return result
         return finish("ratio", "ratio", Fraction(1, 1000 if text == "‰" else 100), own_role="ratio")
-    if folded in {"百分点", "百分點", "pp", "percentage point", "percentage points"}:
+    if folded in {"百分点", "百分點", "个百分点", "個百分點", "个百分點", "個百分点",
+                  "pp", "percentage point", "percentage points"}:
         if role not in {None, "absolute_ratio_change"}:
             result["conflicts"].append("percentage_point_role_conflict")
             return result

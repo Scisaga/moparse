@@ -5,6 +5,7 @@ from __future__ import annotations
 import copy
 
 from .enumeration_context import enumeration_membership, plan_enumeration_scopes
+from .equivalence import decide_equivalence
 
 
 def owns_source(outer, inner):
@@ -93,6 +94,14 @@ def bind_interpreted_members(data, plan):
             for fact in facts:
                 if fact["role"] == "identity":
                     data["blockers"].append(_issue("enumeration_identity_membership_unresolved", context, member))
+                    data["blockers"].append(_issue("enumeration_membership_endpoint_unresolved", context))
+                    continue
+                own_period = fact.get("qualifiers", {}).get("period")
+                period = roles["period"]["text"]
+                if own_period is not None and not decide_equivalence(own_period, period, "period")["equivalent"]:
+                    data["blockers"].append(_issue("enumeration_member_period_scope_unresolved", context, member,
+                        layers=("B", "L"), own_period=own_period, introduction_period=copy.deepcopy(roles["period"])))
+                    data["blockers"].append(_issue("enumeration_membership_endpoint_unresolved", context))
                     continue
                 previous_subject = fact["subject"]
                 if not previous_subject and fact["role"] == "metric":
@@ -100,16 +109,12 @@ def bind_interpreted_members(data, plan):
                     if not attribute_source or not owns_source(member["source"], attribute_source):
                         data["blockers"].append(_issue("enumeration_metric_subject_scope_unresolved", context, member,
                                                       layers=("B", "L")))
+                        data["blockers"].append(_issue("enumeration_membership_endpoint_unresolved", context))
                         continue
                     fact["subject"] = roles["subject"]["text"]
                     fact["subject_source"] = copy.deepcopy(roles["subject"]["source"])
-                own_period = fact.get("qualifiers", {}).get("period")
-                period = roles["period"]["text"]
-                if own_period is not None and own_period != period:
-                    data["blockers"].append(_issue("enumeration_member_period_scope_unresolved", context, member,
-                        layers=("B", "L"), own_period=own_period, introduction_period=copy.deepcopy(roles["period"])))
-                    continue
-                fact.setdefault("qualifiers", {})["period"] = period
+                effective_period = period if own_period is None else own_period
+                fact.setdefault("qualifiers", {})["period"] = effective_period
                 if own_period is None:
                     fact.setdefault("qualifier_sources", {})["period"] = copy.deepcopy(roles["period"]["source"])
                 identity = {key: roles[key]["text"] for key in ("subject", "collection", "domain") if key in roles}
@@ -125,7 +130,7 @@ def bind_interpreted_members(data, plan):
                         right["subject"] = fact["subject"]
                         if isinstance(edge.get("left"), dict) and edge["left"].get("subject") == previous_subject:
                             edge["left"]["subject"] = fact["subject"]
-                        right.setdefault("qualifiers", {})["period"] = period
+                        right.setdefault("qualifiers", {})["period"] = effective_period
                         right.setdefault("identity_facets", {})["enumeration"] = copy.deepcopy(identity)
                 edge = enumeration_membership(context, member, fact)
                 edge.update(id=f"L:{len(data['relations'])}", fact_id=fact["id"])
@@ -175,7 +180,7 @@ def validate_enumeration_bindings(graph, nodes, source_literal):
         if fact.get("identity_facets", {}).get("enumeration") != identity:
             raise ValueError("enumeration fact identity differs from its source-bound collection")
         period_source = fact.get("qualifier_sources", {}).get("period")
-        if fact.get("qualifiers", {}).get("period") != roles["period"]["text"] or not (
+        if not decide_equivalence(fact.get("qualifiers", {}).get("period"), roles["period"]["text"], "period")["equivalent"] or not (
                 period_source == roles["period"]["source"] or period_source and owns_source(member["source"], period_source)):
             raise ValueError("enumeration period source belongs to another scope")
         expected = enumeration_membership(context, member, fact)

@@ -20,7 +20,13 @@ from pathlib import Path
 from typing import Any, cast
 from zoneinfo import ZoneInfo
 
+from .expected_readback import read_expected
 from .packaging import inside, read_json, write_json
+from .requirement_gate import (
+    replay_gate_receipt,
+    validate_expected_structure_gate,
+    validate_replay_gate_receipt,
+)
 from .service_native_adapters import PIPELINE_BRANCHES
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -49,6 +55,29 @@ def now() -> str:
     return datetime.now(ZoneInfo("Asia/Shanghai")).isoformat()
 
 
+def _authorized_expected(baseline: Path, scope: set[str]) -> dict[str, dict[str, Any]]:
+    """Read only the saved Lite authorization and its selected expected text."""
+    try:
+        session = read_json(baseline / "run.json")
+        manifest = read_json(Path(session["dataset"]) / "manifest.json")
+        quality = [case for case in session["cases"]
+                   if case.get("suite") == "quality800" and case.get("phase") == "measured"]
+        declared = {case["sample_id"] for case in quality}
+        samples = {sample["id"]: sample for sample in manifest["samples"]}
+        lite = manifest.get("suites", {}).get("lite", list(samples))
+        occurrences = [(case.get("pipeline"), case["sample_id"]) for case in quality]
+        if (not scope or scope != declared or len(samples) != len(manifest["samples"])
+                or not isinstance(lite, list) or any(not isinstance(ident, str) for ident in lite)
+                or len(lite) != len(set(lite)) or declared != set(lite)
+                or not declared <= samples.keys() or len(occurrences) != len(set(occurrences))):
+            raise ValueError("replay must retain the complete declared Lite quality selection without duplicate sample identities")
+        cache = {}
+        return {sample_id: read_expected(samples[sample_id], ROOT / "pdf_sample/parsing/expected", cache=cache)
+                for sample_id in sorted(scope)}
+    except (KeyError, OSError, TypeError, ValueError) as error:
+        raise ValueError(f"expected structure gate: authorized read-only expected is unavailable: {error}") from error
+
+
 def prepare_run(baseline: Path, destination: Path, service_config: Path, *, pipeline: str = "P07", validation: Path | None = None,
                 ) -> Path:
     """Use declared execution identities; do not validate dataset contents."""
@@ -60,8 +89,6 @@ def prepare_run(baseline: Path, destination: Path, service_config: Path, *, pipe
     session = read_json(baseline / "run.json")
     identity = code_identity()
     checks = read_json(validation) if validation is not None else None
-    if checks is not None:
-        _require_expected_gate(checks, identity["software_id"])
     dataset = Path(session["dataset"]).resolve()
     manifest = read_json(dataset / "manifest.json")
     samples = {sample["id"]: sample for sample in manifest["samples"]}
@@ -83,6 +110,9 @@ def prepare_run(baseline: Path, destination: Path, service_config: Path, *, pipe
                 "document_id", "family_id", "tags", "development_exposure", "source_category",
             )},
         })
+    gate_scope = {case["sample_id"] for case in cases if case["suite"] == "quality800" and case["phase"] == "measured"}
+    receipt = replay_gate_receipt(checks, identity["software_id"], scope=gate_scope,
+        expected_by_sample=_authorized_expected(baseline, gate_scope)) if checks is not None else None
     destination = destination.resolve()
     destination.mkdir(parents=True, exist_ok=False)
     configuration = read_json(service_config)
@@ -131,7 +161,7 @@ def prepare_run(baseline: Path, destination: Path, service_config: Path, *, pipe
         "service_config": configuration, "options": record["options"],
         "cases": [{key: case[key] for key in WORKER_CASE_FIELDS}
                   for case in cases],
-        **({"expected_structure_gate": copy.deepcopy(checks["expected_structure_gate"])} if checks is not None else {}),
+        **({"replay_gate_receipt": receipt} if receipt is not None else {}),
     })
     return destination
 
@@ -165,10 +195,16 @@ def launch(run: Path, phase: str) -> int:
         raise ValueError("warmup requires a new prepared execution; completed artifacts are immutable")
     if phase == "measured" and record.get("state") != "frozen":
         raise ValueError("freeze the new service implementation after successful preflight first")
-    _require_expected_gate(record.get("validation", {}), record.get("software", {}).get("software_id", ""))
     from .cli import code_identity
     if code_identity()["software_id"] != record["software"]["software_id"]:
         raise ValueError("service implementation changed after preparation or freeze")
+    scope = {case["sample_id"] for case in record.get("cases", [])
+             if case.get("suite") == "quality800" and case.get("phase") == "measured"}
+    receipt = replay_gate_receipt(record.get("validation", {}), record["software"]["software_id"], scope=scope,
+        expected_by_sample=_authorized_expected(Path(record.get("baseline_run", "<missing-replay-baseline>")), scope))
+    plan = read_json(run / "candidate/worker-plan.json")
+    if plan.get("replay_gate_receipt") != receipt:
+        raise ValueError("expected structure gate: worker receipt differs from current host validation")
     log_path = run / f"{phase}.log"
     command = docker_command(run, phase, name)
     write_json(run / f"{phase}-command.json", command)
@@ -223,7 +259,10 @@ def freeze_run(run: Path, validation: Path) -> None:
     if checks.get("status") != "passed":
         raise ValueError("service freeze requires passed engineering validation")
     identity = code_identity()
-    _require_expected_gate(checks, identity["software_id"])
+    scope = {case["sample_id"] for case in record.get("cases", [])
+             if case.get("suite") == "quality800" and case.get("phase") == "measured"}
+    receipt = replay_gate_receipt(checks, identity["software_id"], scope=scope,
+        expected_by_sample=_authorized_expected(Path(record.get("baseline_run", "<missing-replay-baseline>")), scope))
     if identity["software_id"] != record["software"]["software_id"]:
         raise ValueError("code changed after preflight; prepare and preflight the current implementation")
     record.update(state="frozen", frozen_at=now(), validation=checks)
@@ -234,15 +273,14 @@ def freeze_run(run: Path, validation: Path) -> None:
     })
     plan_path = run / "candidate/worker-plan.json"
     plan = read_json(plan_path)
-    plan["expected_structure_gate"] = copy.deepcopy(checks["expected_structure_gate"])
+    plan.pop("expected_structure_gate", None)
+    plan["replay_gate_receipt"] = receipt
     write_json(plan_path, plan)
     write_json(run / "run.json", record)
 
 
-def _require_expected_gate(validation: dict[str, Any], software_id: str) -> None:
-    gate = validation.get("expected_structure_gate", {})
-    if not isinstance(software_id, str) or not software_id.strip() or gate.get("status") != "passed" or gate.get("software_id") != software_id:
-        raise ValueError("the current expected structure gate must pass before service execution")
+def _require_expected_gate(validation: dict[str, Any], software_id: str, *, expected_by_sample=None) -> None:
+    validate_expected_structure_gate(validation, software_id, expected_by_sample=expected_by_sample)
 
 
 def activate_executions(runs: list[Path], pointer: Path, validation: Path) -> None:
@@ -262,11 +300,13 @@ def activate_executions(runs: list[Path], pointer: Path, validation: Path) -> No
             raise ValueError("activation requires one distinct execution for every pipeline")
         if record.get("state") != "completed" or record.get("software", {}).get("software_id") != identity["software_id"]:
             raise ValueError("activation requires completed executions from the current software")
-        _require_expected_gate(record.get("validation", {}), identity["software_id"])
         quality = [case for case in record["cases"] if case.get("suite") == "quality800" and case.get("phase") == "measured"]
         ids = [case["sample_id"] for case in quality]
         if not ids or len(set(ids)) != len(ids):
             raise ValueError("activation requires distinct declared quality samples")
+        canonical = _authorized_expected(Path(record.get("baseline_run", "<missing-replay-baseline>")), set(ids))
+        _require_expected_gate(record.get("validation", {}), identity["software_id"], expected_by_sample=canonical)
+        _require_expected_gate(checks, identity["software_id"], expected_by_sample=canonical)
         if any(not inside(path, case["final_markdown"]).is_file() for case in quality):
             raise ValueError("a completed execution lacks an actual delivered Markdown")
         sample_sets.add(tuple(sorted(ids)))
@@ -511,7 +551,9 @@ async def execute_case(plan: dict[str, Any], case: dict[str, Any], output: Path)
 async def worker(plan_path: Path, phase: str) -> None:
     from .runtime import actual_worker_limits, package_versions
     plan = read_json(plan_path)
-    _require_expected_gate({"expected_structure_gate": plan.get("expected_structure_gate", {})}, plan.get("software_id", ""))
+    scope = {case["sample_id"] for case in plan.get("cases", [])
+             if case.get("suite") == "quality800" and case.get("phase") == "measured"}
+    validate_replay_gate_receipt(plan.get("replay_gate_receipt"), plan.get("software_id", ""), scope=scope)
     output = plan_path.parent
     write_json(output / f"{phase}-environment.json", {
         "limits": actual_worker_limits(),

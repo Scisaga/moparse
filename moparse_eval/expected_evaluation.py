@@ -113,20 +113,22 @@ def _service_inputs(root: Path, pipeline: str, *, current: bool = False) -> tupl
 
 
 def _frozen_requirements(path: Path, sample_ids: set[str], software_id: str,
-                         validation: dict[str, Any]) -> dict[str, dict[str, Any]]:
+                         validation: dict[str, Any], *,
+                         expected_by_sample: dict[str, dict[str, Any]]) -> dict[str, dict[str, Any]]:
     """Require the separate source-interpretation gate before any candidates."""
+    from .requirement_gate import validate_expected_structure_gate
     from .requirement_graph import (
         evaluation_projection,
-        is_deferred_input_scope,
         validate_requirement_graph,
     )
 
     gate = validation.get("expected_structure_gate", {})
-    if gate.get("status") != "passed" or gate.get("software_id") != software_id or not gate.get("evidence"):
-        raise ValueError("formal comparison requires the same-version independently evidenced expected structure gate")
-    index = read_json(path)
-    if index.get("software_id") != software_id or index.get("software_unchanged") is not True:
-        raise ValueError("expected requirement model was compiled by different or changing software")
+    index = validate_expected_structure_gate(validation, software_id, scope=sample_ids,
+                                             expected_by_sample=expected_by_sample)
+    if Path(gate["requirement_index"]["path"]).resolve() != path.resolve():
+        raise ValueError("expected structure gate must bind the actual requested requirement index")
+    if set(expected_by_sample) != sample_ids:
+        raise ValueError("formal requirement loading needs every authorized read-only expected selection")
     records = {row["sample_id"]: row for row in index["records"]}
     if len(records) != len(index["records"]) or set(records) != sample_ids:
         raise ValueError("expected requirement model must retain the complete declared sample scope")
@@ -135,10 +137,7 @@ def _frozen_requirements(path: Path, sample_ids: set[str], software_id: str,
         if row.get("semantic_complete") is not True or not row.get("json"):
             raise ValueError("resolve every semantic requirement before full comparison")
         graph = read_json(inside(path.parent, row["json"]))
-        validate_requirement_graph(graph)
-        if graph.get("sample_id") != sample_id or graph.get("semantic_complete") is not True or any(
-                not is_deferred_input_scope(sample_id, issue) for issue in graph["unresolved"]):
-            raise ValueError("uninterpreted semantics cannot enter full comparison")
+        validate_requirement_graph(graph, expected=expected_by_sample[sample_id])
         result[sample_id] = evaluation_projection(graph)
     return result
 
@@ -320,9 +319,10 @@ def evaluate_saved(baseline: Path, output: Path, *, expected_root: Path,
                    sample_ids: list[str] | None = None, requirements: Path | None = None) -> Path:
     """Traverse all declared saved groups; publish only fully supported judgments.
 
-    Diagnostic mode permits an explicitly declared sample subset, needs no
-    scoring freeze, and withholds all quality results. Formal denominators
-    always retain the entire original declaration.
+    Diagnostic mode permits an explicitly declared strict subset without a
+    scoring freeze and withholds all quality results. A full diagnostic still
+    requires the same current validated freeze and canonical structure gate.
+    Formal denominators always retain the entire original declaration.
     """
     if sample_ids is not None and not diagnostic:
         raise ValueError("sample selection is diagnostic-only; formal scoring must retain the full declared scope")
@@ -376,10 +376,14 @@ def evaluate_saved(baseline: Path, output: Path, *, expected_root: Path,
         raise ValueError("diagnostic sample selection contains an unknown declared sample: "
                          + ", ".join(sorted(selected_sample_ids - full_sample_ids)))
     frozen_requirements = None
+    authorized_expected = {}
     if not diagnostic:
+        cache = {}
+        authorized_expected = {sample_id: read_expected(samples[sample_id], expected_root, cache=cache)
+                               for sample_id in sorted(full_sample_ids)}
         frozen_requirements = _frozen_requirements(
             requirements or baseline / "requirements/current/index.json", full_sample_ids,
-            identity["software_id"], frozen["validation"])
+            identity["software_id"], frozen["validation"], expected_by_sample=authorized_expected)
     groups = list(PIPELINES)
     service = {}
     for label, root in (("baseline", service_baseline_root), ("current", current_root)):
@@ -439,26 +443,17 @@ def evaluate_saved(baseline: Path, output: Path, *, expected_root: Path,
     expected_by_sample = {}
     for sample_id in sorted(selected_sample_ids):
         try:
-            expected = read_expected(samples[sample_id], expected_root, cache=reference_cache)
+            expected = (authorized_expected[sample_id] if frozen_requirements is not None
+                        else read_expected(samples[sample_id], expected_root, cache=reference_cache))
+            if diagnostic and selected_sample_ids == full_sample_ids:
+                authorized_expected[sample_id] = expected
             if frozen_requirements is None:
                 from .three_layer import compile_expected
 
                 projection = compile_expected(expected)
                 projection.pop("requirement_model", None)
             else:
-                from .requirement_graph import (
-                    compile_requirement_graph,
-                    evaluation_projection,
-                    validate_requirement_graph,
-                )
-
-                # Read-only binding to the authorized input. This is model
-                # transport integrity, never acceptance or repair of corpus.
-                graph = compile_requirement_graph(expected)
-                validate_requirement_graph(graph)
-                projection = evaluation_projection(graph)
-                if projection != frozen_requirements[sample_id]:
-                    raise ValueError("frozen requirement view differs from its read-only declared input")
+                projection = frozen_requirements[sample_id]
             expected_by_sample[sample_id] = {**expected, **projection}
         except (ValueError, IndexError, KeyError, TypeError, OSError) as error:
             expected_by_sample[sample_id] = {
@@ -468,10 +463,24 @@ def evaluate_saved(baseline: Path, output: Path, *, expected_root: Path,
                                    "error": {"type": type(error).__name__, "message": str(error)}},
             }
     print(json.dumps({"stage": "expected_syntax_read", "samples": len(expected_by_sample)}), flush=True)
-    if diagnostic and sample_ids is None and any(
-            expected.get("reader_blocker") or any(issue.get("reason") != "input_scope_context"
+    from .requirement_graph import is_deferred_input_scope
+
+    if diagnostic and selected_sample_ids == full_sample_ids and any(
+            expected.get("reader_blocker") or any(not is_deferred_input_scope(expected["sample_id"], issue)
                 for issue in expected.get("blockers", [])) for expected in expected_by_sample.values()):
         raise ValueError("complete expected semantics before full saved-output diagnosis; use an explicit --sample for bounded software diagnosis")
+    if diagnostic and selected_sample_ids == full_sample_ids:
+        if freeze is None:
+            raise ValueError("full saved-output diagnosis requires the validated four-stage scoring freeze and current expected structure gate; use a strict sample subset for bounded software diagnosis")
+        frozen = read_scoring_freeze(freeze, identity)
+        frozen_requirements = _frozen_requirements(
+            requirements or baseline / "requirements/current/index.json", full_sample_ids,
+            identity["software_id"], frozen["validation"], expected_by_sample=authorized_expected)
+        expected_by_sample = {sample_id: {**authorized_expected[sample_id], **frozen_requirements[sample_id]}
+                              for sample_id in sorted(full_sample_ids)}
+        index["validation"] = frozen["validation"]
+        write_json(output / "scoring-freeze.json", frozen)
+        write_json(output / "execution-status.json", index)
     tasks = []
     for sample_id in sorted(selected_sample_ids):
         for pipeline in PIPELINES:
@@ -566,14 +575,14 @@ def main() -> int:
     parser.add_argument("--current-root", type=Path)
     parser.add_argument("--requirements", type=Path, help="independently validated expected requirement index; default saved run requirements/current/index.json")
     parser.add_argument("--workers", type=int, default=16, help="saved-output analysis processes; original execution costs unchanged")
-    parser.add_argument("--diagnostic", action="store_true", help="traverse saved materials without a freeze; publish no quality scores")
+    parser.add_argument("--diagnostic", action="store_true", help="diagnose a strict sample subset without a freeze; full traversal requires a validated freeze; publish no quality scores")
     parser.add_argument("--sample", action="append", help="explicit saved sample identity; diagnostic mode only")
     parser.add_argument("--report-output", type=Path)
     args = parser.parse_args()
     if args.sample is not None and not args.diagnostic:
         parser.error("--sample is diagnostic-only; formal scoring always uses the full declared scope")
     if not args.diagnostic and args.freeze is None:
-        parser.error("--freeze is required for formal scoring; --diagnostic never publishes quality results")
+        parser.error("--freeze is required for formal scoring; unfrozen diagnostics must select a strict sample subset")
     if args.diagnostic and args.report_output:
         parser.error("diagnostic traversal cannot publish a formal report")
     index_path = evaluate_saved(args.baseline, args.output, expected_root=args.expected_root, freeze=args.freeze,

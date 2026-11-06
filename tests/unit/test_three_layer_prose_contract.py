@@ -83,7 +83,7 @@ def test_complete_sentence_blocks_and_merged_paragraph_have_the_same_full_requir
     result = grade_layers(requirement, read_candidate(typed(*pieces, parent="north")))
     assert result["publishable"] is True and result["score"] == 100
     assert result["layers"]["B"]["denominator"] == 2
-    assert result["layers"]["L"]["denominator"] == 5
+    assert result["layers"]["L"]["denominator"] == 9
     validate_evidence(result)
 
 
@@ -181,7 +181,7 @@ def test_content_quantity_condition_and_negation_do_not_change_independent_logic
     result = grade_layers(compile_markdown(reference), read_candidate_markdown(reference.replace(before, after, 1)))
     assert result["publishable"] is True
     assert result["layers"]["B"]["numerator"] == 1 and result["layers"]["B"]["denominator"] == 2
-    assert result["layers"]["L"]["numerator"] == result["layers"]["L"]["denominator"] == 5
+    assert result["layers"]["L"]["numerator"] == result["layers"]["L"]["denominator"] == 9
     [pay] = [r for r in b_rows(result) if r["expected"]["attribute"] == "pay"]
     assert "17" not in repr(pay["retrieval"]["query"]) and "4 directors" not in repr(pay["retrieval"]["query"])
     assert pay["retrieval"]["accepted"]
@@ -201,7 +201,7 @@ def test_different_condition_roles_rebound_to_the_other_action_are_not_same_bind
     result = grade_layers(requirement, read_candidate_markdown(moved))
     scope_rows = [r for r in result["outcomes"] if r["layer"] == "L" and r["role"] == "condition_scope"]
     assert len(scope_rows) == 2 and all(r["outcome"] == "incorrect" for r in scope_rows)
-    assert result["layers"]["L"]["numerator"] == 3 and result["layers"]["L"]["denominator"] == 5
+    assert result["layers"]["L"]["numerator"] == 7 and result["layers"]["L"]["denominator"] == 9
     assert result["layers"]["B"]["numerator"] == 0 and result["layers"]["B"]["denominator"] == 2
     validate_evidence(result)
 

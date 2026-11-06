@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import argparse
 import copy
+import hashlib
 import json
 import re
 import xml.etree.ElementTree as ET
@@ -256,6 +257,11 @@ def _reference_business_disposition(entry, projected):
 
 def _not_applicable(entry, layer, projected, business_sources=()):
     kind, text = entry["kind"], entry["text"]
+    if layer == "T":
+        from .source_obligations import toc_schema_control
+
+        if control := toc_schema_control(entry, projected):
+            return ("source_proven_toc_schema_control", "The original TOC header control binds actual navigation records.", control)
     if layer == "B":
         enumeration = next((context for context in projected.get("enumeration_contexts", [])
                             if context["declaration"].get("lexical_complete") and context.get("members")
@@ -314,7 +320,9 @@ def _not_applicable(entry, layer, projected, business_sources=()):
 def compile_requirement_graph(expected: dict[str, Any]) -> dict[str, Any]:
     """Compile one selected reference before any candidate is read."""
     from .reference_compiler import compile_reference_semantics
+    from .source_obligations import audit_source_obligations, build_source_obligation_inventory
 
+    inventory = build_source_obligation_inventory(expected)
     sources = _sources(expected)
     projected = compile_reference_semantics(expected)
     text_nodes = [{**copy.deepcopy(item), "kind": "text"} for item in projected["text"]]
@@ -376,9 +384,50 @@ def compile_requirement_graph(expected: dict[str, Any]) -> dict[str, Any]:
                                "rule_id": "unknown_source_is_not_nonbusiness", "reason": "No positive interpretation or non-applicability rule exists."}
             dispositions[layer] = disposition
         graph["dispositions"].append({"source_id": entry["id"], "layers": dispositions})
+    graph["source_obligation_inventory"] = inventory
+    coverage = audit_source_obligations(inventory, graph)
+    graph["source_obligation_coverage"] = coverage
+    obligations = {item["id"]: item for item in inventory["obligations"]}
+    obligations.update({item["id"]: {**item, "layers": ["T", "L", "B"]}
+                        for item in inventory["authorized_raw_inventory"]["obligations"]})
+    for row in coverage["dispositions"]:
+        if row["status"] != "pending":
+            continue
+        obligation = obligations[row["obligation_id"]]
+        # A retained external dependency keeps its exact user-authorized
+        # identity. New software gaps never become one of the five deferrals.
+        retained = [item for item in unresolved if item["id"] in {
+            proof.get("unresolved") for proof in row["evidence"]}]
+        if not retained:
+            retained = [item for item in unresolved if _cover({"source": item.get("source", {})}, obligation["source"])
+                        and set(obligation["layers"]) <= set(item.get("layers", []))
+                        and item.get("reason") not in {"source_obligation_pending", "input_scope_context"}]
+        if retained:
+            for item in retained:
+                item.setdefault("source_obligation_ids", []).append(obligation["id"])
+            continue
+        unresolved.append({"id": f"unresolved:{len(unresolved)}", "kind": "source_obligation",
+            "reason": "source_obligation_pending", "obligation_id": obligation["id"],
+            "obligation_kind": obligation["kind"], "source": copy.deepcopy(obligation["source"]),
+            "text": obligation["text"], "layers": obligation["layers"],
+            "interpretation_rule": obligation["interpretation_rule"], "explanation": row["reason"]})
+    # The source-level summary cannot claim interpretation when the independent
+    # inventory retained an unexplained part of that very source. Requirements
+    # already recovered from it remain present alongside the missing meaning.
+    by_source = {entry["id"]: entry for entry in sources}
+    for row in graph["dispositions"]:
+        entry = by_source[row["source_id"]]
+        for layer, disposition in row["layers"].items():
+            issues = [item for item in unresolved if layer in item["layers"] and _cover(entry, item["source"])]
+            if issues:
+                disposition.update(status="unresolved", unresolved=[item["id"] for item in issues],
+                    rule_id="independent_source_obligation_incomplete",
+                    reason="Recovered requirements do not explain every independently inventoried source obligation.")
     graph["complete"] = not unresolved
     graph["semantic_complete"] = not any(not is_deferred_input_scope(expected["sample_id"], item) for item in unresolved)
-    return graph
+    # The in-memory model has the same JSON types as its sole authoritative
+    # serialization; XML never supplies a second editable representation.
+    return json.loads(json.dumps(graph, ensure_ascii=False))
 
 
 def evaluation_projection(graph: dict[str, Any]) -> dict[str, Any]:
@@ -542,8 +591,11 @@ def _validate_semantic_sources(graph, nodes):
         if node.get("kind") == "coordination" and "operator" in node:
             own, span = node.get("source", {}), node.get("span", [0, 0])
             offset = own.get("text_span", [0, 0])[0] - span[0]
-            printed = [literal({**own, "text_span": [offset + a, offset + b]}, "coordination operator").strip().casefold()
+            origins = [{**copy.deepcopy(own), "text_span": [offset + a, offset + b]}
                        for a, b in node.get("operator_spans", [])]
+            if node.get("operator_sources") != origins:
+                raise ValueError("coordination operator sources differ from their original spans")
+            printed = [literal(origin, "coordination operator").strip().casefold() for origin in origins]
             joins = {"and": {"and", "和", "与", "與", "及", "并", "並", "且", "并且", "並且", "以及"},
                      "or": {"or", "或"}}
             allowed = joins.get(node.get("operator"), set())
@@ -602,9 +654,13 @@ def _validate_semantic_sources(graph, nodes):
             if name == "coordination":
                 paths = [item.get("source") for item in field.get("logic", {}).get("operator_path", [])
                          if item.get("kind") == "coordination"]
-                if not any(item.get("kind") == "coordination" and item.get("operator") == value
-                           and item.get("source") in paths for item in tree_nodes):
+                owners = [item for item in tree_nodes if item.get("kind") == "coordination"
+                          and "operator" in item and paths and item.get("source") == paths[-1]]
+                if not any(item.get("operator") == value for item in owners):
                     raise ValueError("coordination qualifier differs from its source-bound operator logic")
+                if not isinstance(origin, list) or not origin or not any(
+                        origin == owner.get("operator_sources") for owner in owners if owner.get("operator") == value):
+                    raise ValueError("coordination qualifier sources differ from their authoritative operator scope")
                 continue
             if name == "conditions":
                 if not isinstance(origin, list) or len(origin) != len(value):
@@ -687,6 +743,10 @@ def validate_requirement_graph(graph: dict[str, Any], *, expected: dict[str, Any
             if any(not any(_cover(by_source[row["source_id"]], origin) for origin in actual_sources[ident])
                    for ident in item["requirements"]):
                 raise ValueError("source disposition borrows an obligation from another actual source")
+            issues = {issue["id"] for issue in graph["unresolved"] if layer in issue["layers"]
+                      and _cover(by_source[row["source_id"]], issue["source"])}
+            if issues and (item["status"] != "unresolved" or set(item.get("unresolved", [])) != issues):
+                raise ValueError("source disposition omits independent unresolved source obligations")
     for ident in graph["projections"]["B"]:
         fact = nodes[ident]
         for field, literal in (("value_source", fact["value"]), ("predicate_source", fact.get("predicate")),
@@ -709,16 +769,33 @@ def validate_requirement_graph(graph: dict[str, Any], *, expected: dict[str, Any
                        and _cover(origin, edge.get("source", {})) for edge in relations.values()):
                 raise ValueError("interpreted proposition lacks its source-bound semantic relation")
     _validate_semantic_sources(graph, nodes)
+    from .quoted_nominal_validation import validate_quoted_nominals
+
+    validate_quoted_nominals(graph,
+        [nodes[ident] for ident in graph["projections"]["B"]]
+        + [node for node in nodes.values() if node.get("kind") == "semantic_operand"],
+        lambda source: _semantic_literal(sources, source))
+    from .document_composition_requirements import validate_document_compositions
+
+    validate_document_compositions(graph, [nodes[ident] for ident in graph["projections"]["B"]],
+                                   lambda source: _semantic_literal(sources, source))
+    from .proposition_requirements import validate_proposition_coordinations
+
+    validate_proposition_coordinations(graph, [nodes[ident] for ident in graph["projections"]["B"]],
+                                      lambda source: _semantic_literal(sources, source))
     from .enumeration_binding import validate_enumeration_bindings
 
     validate_enumeration_bindings(graph, nodes, lambda source: _semantic_literal(sources, source))
+    from .source_obligations import validate_source_obligations
+
+    validate_source_obligations(graph, expected=expected)
     if expected is not None:
         # Reinterpret the immutable external input to catch synchronized edits
         # of nodes, projections and dispositions. This is an omission/mutation
         # guard, not independent proof that the interpreter understood prose.
         rebuilt = compile_requirement_graph(expected)
         for key in ("sources", "nodes", "relations", "projections", "dispositions", "unresolved", "logic", "operand_relations", "required_matcher_features",
-                    "explicit_references", "reference_roles", "reference_dispositions"):
+                    "explicit_references", "reference_roles", "reference_dispositions", "source_obligation_inventory", "source_obligation_coverage"):
             if graph[key] != rebuilt[key]:
                 raise ValueError(f"requirement graph changed or omitted source semantics: {key}")
 
@@ -765,26 +842,34 @@ def compile_saved_requirements(baseline: Path, output: Path, *, expected_root: P
         raise ValueError("requirement output already exists; do not overwrite an active or retained artifact")
     session = read_json(baseline / "run.json")
     manifest = read_json(Path(session["dataset"]) / "manifest.json")
-    declared = {case["sample_id"] for case in session["cases"]
-                if case["phase"] == "measured" and case["suite"] == "quality800"}
+    quality = [case for case in session["cases"]
+               if case.get("phase") == "measured" and case.get("suite") == "quality800"]
+    declared = {case["sample_id"] for case in quality}
     samples = {sample["id"]: sample for sample in manifest["samples"]}
-    if not declared or not declared <= samples.keys():
-        raise ValueError("saved quality scope is unavailable")
+    lite = manifest.get("suites", {}).get("lite", list(samples))
+    occurrences = [(case.get("pipeline"), case["sample_id"]) for case in quality]
+    if (not declared or len(samples) != len(manifest["samples"])
+            or not isinstance(lite, list) or any(not isinstance(ident, str) for ident in lite)
+            or len(lite) != len(set(lite)) or declared != set(lite)
+            or not declared <= samples.keys() or len(occurrences) != len(set(occurrences))):
+        raise ValueError("saved quality scope must match the complete declared Lite selection without duplicate sample identities")
     expected_root = Path(expected_root or ROOT / "pdf_sample/parsing/expected")
     identity = code_identity()
     output.mkdir(parents=True)
     index: dict[str, Any] = {"purpose": "expected_output_requirements_not_corpus_review", "state": "compiling",
         "software_id": identity["software_id"], "candidate_read": False, "pdf_or_image_read": False,
         "canonical_expected_changed": False, "reference_is_an_editable_answer": False,
-        "records": [], "semantic_complete": False, "quality_scores_withheld": True}
+        "records": [], "semantic_complete": False, "quality_scores_withheld": True,
+        "source_obligation_inventory_complete": False,
+        "inventory_validation": {"status": "not_passed", "scope": "source_integrity_not_semantic_oracle"}}
     cache = {}
     reasons = Counter()
     for sample_id in sorted(declared):
         expected = read_expected(samples[sample_id], expected_root, cache=cache)
-        graph = compile_requirement_graph(expected)
         json_path, xml_path = output / "samples" / f"{sample_id}.json", output / "samples" / f"{sample_id}.xml"
         try:
-            validate_requirement_graph(graph)
+            graph = compile_requirement_graph(expected)
+            validate_requirement_graph(graph, expected=expected)
             write_requirement_graph(graph, json_path, xml_path)
         except ValueError as error:
             reasons["compiler_source_integrity_failure"] += 1
@@ -797,11 +882,21 @@ def compile_saved_requirements(baseline: Path, output: Path, *, expected_root: P
         reasons.update(issue["reason"] for issue in semantic)
         index["records"].append({"sample_id": sample_id, "json": str(json_path.relative_to(output)),
             "xml": str(xml_path.relative_to(output)), "semantic_complete": not semantic,
+            "generated_view_sha256": hashlib.sha256(json_path.read_bytes()).hexdigest(),
+            "xml_projection_sha256": hashlib.sha256(xml_path.read_bytes()).hexdigest(),
+            "source_obligation_inventory_complete": graph["source_obligation_inventory"]["source_complete"],
+            "source_obligation_status": graph["source_obligation_coverage"]["status_counts"],
+            "inventory_validation": {"status": "passed" if graph["source_obligation_inventory"]["source_complete"] else "not_passed",
+                                     "scope": "source_integrity_not_semantic_oracle"},
+            "authorized_raw_source_status": graph["source_obligation_inventory"]["authorized_raw_inventory"]["status_counts"],
             "unresolved_semantics": len(semantic), "input_scope_pending": len(scopes),
             "disposition": "interpreted" if not semantic else "unresolved",
             "layers": {layer: len(graph["projections"][layer]) for layer in LAYERS}})
     index["unresolved_reasons"] = dict(reasons)
     index["semantic_complete"] = not reasons
+    index["source_obligation_inventory_complete"] = all(
+        row.get("source_obligation_inventory_complete") is True for row in index["records"])
+    index["inventory_validation"]["status"] = "passed" if index["source_obligation_inventory_complete"] else "not_passed"
     index["state"] = "structure_compiled_pending_independent_semantic_validation" if not reasons else "structure_blocked"
     index["validation"] = {"status": "not_passed", "reason": "Source integrity and empty pending do not replace independent semantic validation."}
     index["software_unchanged"] = code_identity()["software_id"] == identity["software_id"]

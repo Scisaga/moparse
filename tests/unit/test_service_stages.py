@@ -46,5 +46,5 @@ def test_stage_source_audit_does_not_observe_later_native_mutation():
     result._native_page_blocks[1][0]["native_payload"]["parent"] = "#/another/root"
     saved = materialize_stage(snapshot)
     assert saved["scope"] == "actual_adapter_page_rendering"
-    assert saved["source_audit"]["native_blocks"][1][0]["native_payload"]["parent"] == "#/own/root"
+    assert saved["source_audit"]["native_blocks"]["1"][0]["native_payload"]["parent"] == "#/own/root"
     assert saved["markdown"] == "<!-- page: 1 -->\n\nActual adapted page."

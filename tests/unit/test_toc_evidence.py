@@ -565,7 +565,7 @@ def test_public_same_leaf_and_page_cannot_cross_root_and_explicit_parent_identit
     from moparse_eval.three_layer import compile_expected, grade_layers, read_candidate
 
     child = '# Contents\n\n- North\n  - Results: Page 17\n'
-    root = '# Contents\n\n| Title | Page |\n|---|---|\n| Results | 17 |\n\nNorth\n'
+    root = '# Contents\n\n| Title | Page |\n|---|---|\n| Results | 17 |\n\n# North\n'
     reference, candidate = (child, root) if expected_child else (root, child)
     directory = tmp_path / 'reference' / 'controlled-toc'
     directory.mkdir(parents=True)

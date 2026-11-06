@@ -162,7 +162,6 @@ def test_or_membership_remains_alternative_membership_not_a_conjunction():
     'Lumen cannot not store records.',
     'There is a supplier.',
     'Lumen never owns Alpha.',
-    'Lumen includes "Research and Development".',
     'Lumen is a research and development provider.',
     'The Board shall not review and approve Report.',
 ])

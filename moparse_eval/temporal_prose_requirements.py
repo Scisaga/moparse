@@ -6,7 +6,7 @@ import re
 
 from .period_evidence import _MONTH_PATTERN, read_period_label
 
-_MONTH_PERIOD = re.compile(rf"(?P<operator>In|During)\s+(?P<period>{_MONTH_PATTERN}\s+(?:19|20)\d{{2}})", re.I)
+_MONTH_PERIOD = re.compile(rf"(?P<operator>In|During)\s+(?P<period>(?:{_MONTH_PATTERN}\s+)?(?:19|20)\d{{2}})", re.I)
 _PREFIX = re.compile(r"As\s+(?:of|at)\b|At\b|(?:For\s+)?(?:the\s+)?(?:fiscal\s+)?"
                      r"(?:(?:one|two|three|four|six|nine|twelve|\d+)\s+)?"
                      r"(?:years?|periods?|quarters?|months?|weeks?)\s+ended\b", re.I)

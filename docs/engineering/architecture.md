@@ -160,16 +160,21 @@ GFM 语法要求分隔线之前有一行表头。来源首行角色未知时，�
 
 [moparse_eval](../../moparse_eval/README.md)提供授权的本地入口，不增加公开API。数据包和评分标准由[评测任务](../../benchmark/evaluation-tasks.md)维护。存在执行缺陷的比较及旧执行锁已撤销；修复并冻结新配置后，实际模型、镜像、资源和参数由新锁及各次运行快照记录。打包只执行人工清单，评分参考对解析worker不可见；服务转换仍是独立工程。
 
+`authorized_source_inventory`独立承接语法读取前保留的授权expected原始行段，`source_obligations`在业务解释前列出来源义务，再审计要求图的实际角色与关系；未知内容保留pending。`requirement_gate`在回放主机和正式评分入口重新绑定canonical、完整Lite声明与独立证据，隔离候选只接收无答案回执。来源完整、语义完整和独立验收分别记录，派生JSON是唯一模型，XML仅作投影。
+
+`service_stages`冻结候选实际阶段，按已记录的原生路径、格位和来源引用建立对象账本；无可证明对应、原因或渲染位置时保留unknown，不按相似文字补来源。对象审计与最终交付判断分开，实际八组回放及交付增损验收仍受上述门槛约束。
+
 | 模块 | 职责 |
 | --- | --- |
 | cli、packaging | package/run/score/report编排；复制人工资料清单和提取声明页对象 |
 | preparation、runtime、executors | 固定依赖、隔离worker、完整SDK执行与直接处理时钟；SDK跨样本保留，初始化与预热单列 |
 | adapters、native_relations | 忠实读取已有原生字段、顺序、格位、媒体和关系，不接收expected |
 | native_readback | 评分侧从已有原生产物补读明确关系，独立保存派生观察与分析耗时，不修改执行产物或解析时间 |
-| expected_readback、expected_scoring、scoring、matching、metrics | 直接读取只读canonical expected，定位实际内容并比较业务字段；每项只判正确或错误，不读取人工排除 |
+| expected_readback、reference_compiler、requirement_graph | 读取只读canonical expected，规划来源、解释有限语义并投影T/L/B；未知义务保留阻塞 |
+| expected_scoring、three_layer、business_correspondence、relation_correspondence、equivalence | 读取候选并核对实际上下文、身份、数量、关系及作用域；不按管线选择不同答案或排除 |
 | expected_evaluation、expected_report | 同版评测全部组，从逐项结果核对覆盖、采用门槛及报告 |
 | reporting、report_figures | 保存原生与后处理的直接计时口径，以及共同图件的字体和颜色；不包含旧评分或旧报告分支 |
-| maintenance、request_control、cuda_graphs | 授权GPU 1维护窗口及恢复、在途所有权、预算内图捕获与真实例外记录 |
+| maintenance、request_control、cuda_graphs | 原执行的维护恢复、在途所有权、预算内图捕获及真实例外记录；当前保存输出任务不调用GPU或服务操作 |
 
 评分软件和执行软件分别保存身份及源码快照；修复评分读取后统一重评已有八组产物，不将分析耗时回填worker主耗时。实现验证使用合成材料，正式质量与服务恢复状态以[新运行记录](../../benchmark/reports/README.md)为准。
 

@@ -4,8 +4,10 @@ import json
 from types import SimpleNamespace
 
 import pytest
+from requirement_gate_fixture import controlled_expected, controlled_gate, controlled_source_run
 
 from moparse_eval.packaging import read_json, write_json
+from moparse_eval.requirement_gate import replay_gate_receipt
 from moparse_eval.service_evaluation import (
     _require_expected_gate,
     activate_executions,
@@ -16,8 +18,10 @@ from moparse_eval.service_evaluation import (
 
 def prepare(tmp_path, monkeypatch):
     monkeypatch.setattr('moparse_eval.cli.code_identity', lambda: {'software_id': 'controlled-source'})
-    checks = {'status': 'passed', 'expected_structure_gate': {'status': 'passed', 'software_id': 'controlled-source',
-                                                           'allowed_input_scope_context': ['explicit pending boundary']}}
+    checks = controlled_gate(tmp_path / 'gate')
+    baseline = controlled_source_run(tmp_path / 'source')
+    monkeypatch.setattr('moparse_eval.service_evaluation.read_expected',
+                        lambda sample, _root, **_kwargs: controlled_expected(sample['id']))
     validation = tmp_path / 'validation.json'
     write_json(validation, checks)
     runs = []
@@ -27,7 +31,7 @@ def prepare(tmp_path, monkeypatch):
         path.mkdir(parents=True)
         (path / 'final.md').write_text('An actual controlled rendering.\n')
         write_json(path / 'run.json', {'state': 'completed', 'native_pipeline': {'pipeline': pipeline},
-            'software': {'software_id': 'controlled-source'}, 'validation': checks,
+            'software': {'software_id': 'controlled-source'}, 'validation': checks, 'baseline_run': str(baseline),
             'cases': [{'sample_id': 'fixture', 'suite': 'quality800', 'phase': 'measured', 'final_markdown': 'final.md'}]})
         runs.append(path)
     pointer = tmp_path / 'current' / 'index.json'
@@ -97,9 +101,15 @@ def test_runner_records_new_audit_paths_under_the_actual_candidate_root(tmp_path
         data = [{'State': {'Running': False}}] if command[:2] == ['docker', 'inspect'] else {}
         return SimpleNamespace(returncode=0, stdout=json.dumps(data))
     monkeypatch.setattr('moparse_eval.service_evaluation.subprocess.run', controlled_process)
-    checks = {'expected_structure_gate': {'status': 'passed', 'software_id': 'controlled-source'}}
+    checks = controlled_gate(tmp_path / 'gate')
+    baseline = controlled_source_run(tmp_path / 'source')
+    monkeypatch.setattr('moparse_eval.service_evaluation.read_expected',
+                        lambda sample, _root, **_kwargs: controlled_expected(sample['id']))
     write_json(tmp_path / 'run.json', {'state': 'frozen', 'software': {'software_id': 'controlled-source'},
-        'validation': checks, 'execution_environment': {}, 'cases': [{'case_id': 'fixture', 'phase': 'measured'}]})
+        'validation': checks, 'baseline_run': str(baseline), 'execution_environment': {}, 'cases': [{'case_id': 'fixture', 'phase': 'measured',
+            'sample_id': 'fixture', 'suite': 'quality800'}]})
+    write_json(tmp_path / 'candidate/worker-plan.json', {
+        'replay_gate_receipt': replay_gate_receipt(checks, 'controlled-source', scope={'fixture'})})
     outcome = {'observation': 'artifacts/fixture/observation.json', 'final_markdown': 'artifacts/fixture/final.md',
                'final_json': 'artifacts/fixture/final.json', 'edit_ledger': 'artifacts/fixture/stage-edit-ledger.json',
                'service_evidence': 'artifacts/fixture/service-evidence.json',

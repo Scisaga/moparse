@@ -36,6 +36,7 @@ from .field_sequence_requirements import read_field_sequence_requirements
 from .financial_group_context import (
     bind_financial_group_facts,
     financial_statement_kind,
+    read_financial_attribution_context,
     read_financial_group_context,
 )
 from .header_path_requirements import read_header_path_requirements
@@ -561,7 +562,7 @@ class _Graph:
                     item[key] = ({**item.get(key, {}), **copy.deepcopy(fact[key])}
                                  if key == "qualifier_provenance" else copy.deepcopy(fact[key]))
             for key in ("logic", "qualifier_sources", "value_source", "attribute_source", "subject_source", "predicate", "object", "predicate_source", "object_source", "rule_id", "printed_label", "label_source",
-                        "semantic_type", "directory_evidence", "field_label_evidence", "record_evidence"):
+                        "semantic_type", "directory_evidence", "field_label_evidence", "record_evidence", "quoted_nominals"):
                 if key in fact:
                     if key == "value_source" and item["value"] != fact["value"]:
                         continue
@@ -751,6 +752,32 @@ class _Graph:
                 qualifier_sources={key: proof["source"] for key, proof in self.qualifier_evidence.items()},
                 identity_facets=self.identity_facets, scope=self.headings)
             if series["matched"] and (series["facts"] or not compact["matched"]):
+                attribution_context = read_financial_attribution_context(series, heading=self.financial_heading(),
+                    syntax=self.data["syntax"], pending=self.data.get("pending_requirements", []), parents=financial_parents)
+                if attribution_context["matched"]:
+                    unit_proof = attribution_context["unit"]
+                    self.qualifiers["unit"] = unit_proof["text"]
+                    self.qualifier_levels["unit"] = "caption_shared"
+                    self.qualifier_evidence["unit"] = copy.deepcopy(unit_proof)
+                    series = read_series_requirements(text, source, context=self.series_context, subject=self.subject,
+                        parents=parents or [], parent_declarations=parent_declarations,
+                        subject_source=identity.get("source") if identity else None, qualifiers=self.qualifiers,
+                        qualifier_sources={key: proof["source"] for key, proof in self.qualifier_evidence.items()},
+                        identity_facets=self.identity_facets, scope=self.headings)
+                    for collection in ("blockers", "pending_requirements"):
+                        self.data[collection] = [issue for issue in self.data.get(collection, []) if not (
+                            issue.get("reason") == "unit_scope_boundary_unresolved"
+                            and issue.get("boundary") == attribution_context["boundary"]
+                            and issue.get("source") == attribution_context["pending_source"])]
+                    self.data.setdefault("financial_attribution_contexts", []).append(copy.deepcopy(attribution_context))
+                    financial_context = attribution_context["outer_group_context"]
+                    if financial_context["matched"]:
+                        proven_parents = {self.source_key(row["source"]) for row in financial_context["row_evidence"]}
+                        bound_sources = {self.source_key(source), self.source_key(attribution_context["boundary"]["source"])}
+                        self.data["blockers"] = [issue for issue in self.data["blockers"] if not (
+                            issue.get("reason") == "list_group_scope_interpretation_unsupported"
+                            and self.source_key(issue.get("source", {})) in bound_sources
+                            and self.source_key(issue.get("parent_source") or {}) in proven_parents)]
                 bind_financial_group_facts(series, financial_context)
                 self.ingest(series, series=True, record_source=source)
                 if series.get("parent_bindings"):
@@ -1154,7 +1181,8 @@ def _finish(graph: _Graph) -> dict[str, Any]:
                 and any(blocker["source"] == original for original in originals))]
             continue
         narrative = _read_narrative(item["text"], source, scope=item.get("scope", []))
-        family_claimed = (bool({"active_aspect_scope", "temporal_prose_scope", "quantity_comparison", "year_on_year_comparison"}
+        family_claimed = (bool({"active_aspect_scope", "temporal_prose_scope", "quantity_comparison", "year_on_year_comparison",
+                               "quoted_nominal_scope", "fronted_nominal_context", "document_composition", "page_reference_binding"}
                               & set(narrative.get("required_matcher_features", []))) or any(
             issue.get("reason", "").startswith("active_aspect_") or issue.get("reason") in {
                 "narrative_enumeration_operator_scope_unresolved", "narrative_quantified_comparison_scope_unresolved"}
@@ -1194,6 +1222,8 @@ def _finish(graph: _Graph) -> dict[str, Any]:
                     graph.narrative(selected, source)
                 else:
                     graph.ingest(selected, logical_prose=True, record_source=source)
+                graph.data["required_matcher_features"] = sorted(set(graph.data.get("required_matcher_features", []))
+                    | set(selected.get("required_matcher_features", [])))
                 item["semantic_propositions_complete"] = bool(selected["complete"])
                 item["unresolved_business_prose"] = not selected["complete"]
                 old_reasons = {"unclassified_business_prose", "logical_prose_semantics_unsupported",

@@ -11,7 +11,7 @@ import copy
 import re
 from typing import Any
 
-from .prose_requirements import _sentence_spans
+from .prose_requirements import _sentence_spans, prose_role_relations
 
 VERBS = {
     "own": "own", "owns": "own", "owned": "own", "hold": "hold", "holds": "hold", "held": "hold",
@@ -83,9 +83,28 @@ def _conditions(text, source, start, end):
     return body_start, body_end, conditions, all(c["text"] for c in conditions)
 
 
+def _coordination_relations(facts, operators, *, mode):
+    """Retain each admitted AND token and its complete original member cuts."""
+    if not facts or not operators:
+        return []
+    first = facts[0]
+    members = [{"ordinal": index, **{key: copy.deepcopy(fact[key]) for key in (
+        "subject_source", "predicate_source", "object_source")}} for index, fact in enumerate(facts)]
+    return [{"type": "proposition_coordination_scope",
+        "left": {"operator": "and", "mode": mode, "position": index},
+        "right": {"subject": first["subject"], "attribute": first["attribute"] if mode == "objects" else "coordinated_actions",
+                  "scope": list(first["scope"]), "member_count": len(facts)},
+        "source": copy.deepcopy(origin), "operator_source": copy.deepcopy(origin),
+        "binding_evidence": {"statement_source": copy.deepcopy(first["source"]), "mode": mode,
+            "operator_sources": copy.deepcopy(operators), "members": copy.deepcopy(members)},
+        "rule_id": "source_bound_proposition_and_members"}
+        for index, origin in enumerate(operators)]
+
+
 def read_propositions(text: str, source: dict[str, Any], *, scope=(), subject: str | None = None) -> dict[str, Any]:
     result: dict[str, Any] = {"matched": False, "complete": False, "facts": [], "relations": [],
-                              "blockers": [], "pending_requirements": [], "issues": [], "clauses": []}
+                              "blockers": [], "pending_requirements": [], "issues": [], "clauses": [],
+                              "required_matcher_features": []}
     sentences = _sentence_spans(text)
     if not sentences:
         return result
@@ -170,6 +189,7 @@ def read_propositions(text: str, source: dict[str, Any], *, scope=(), subject: s
                 q["condition"] = [{"operator": c["operator"], "text": c["text"]} for c in conditions]
                 q["condition_operator"] = "multiple_explicit_scopes"
         predicates = [(verb, verb.end(), body_end)]
+        action_operators = []
         disjunctive_actions = False
         remaining = list((_CJK_VERB if cjk else _VERB).finditer(text, verb.end(), body_end))
         for following in remaining:
@@ -178,6 +198,13 @@ def read_propositions(text: str, source: dict[str, Any], *, scope=(), subject: s
             if join:
                 disjunctive_actions |= join[0].strip().lower() in {"or", "或"}
                 previous, value_start, _ = predicates[-1]
+                join_start = previous.end() + join.start()
+                join_end = previous.end() + join.end()
+                while join_start < join_end and text[join_start].isspace():
+                    join_start += 1
+                while join_end > join_start and text[join_end - 1].isspace():
+                    join_end -= 1
+                action_operators.append(_source(source, join_start, join_end))
                 predicates[-1] = (previous, value_start, previous.end() + join.start())
                 predicates.append((following, following.end(), body_end))
         if disjunctive_actions:
@@ -187,6 +214,7 @@ def read_propositions(text: str, source: dict[str, Any], *, scope=(), subject: s
             continue
         # Two verbs sharing a final object use that object's actual source.
         last_a, last_b = _trim(text, predicates[-1][1], predicates[-1][2])
+        action_fact_start = len(result["facts"])
         for current, value_start, value_end in predicates:
             a, b = _trim(text, value_start, value_end)
             if a == b and len(predicates) > 1:
@@ -206,6 +234,7 @@ def read_propositions(text: str, source: dict[str, Any], *, scope=(), subject: s
                     cursor = join.end()
                 object_spans.append(_trim(text, cursor, b))
             action = current[0] if cjk else VERBS[current[0].lower()]
+            object_fact_start = len(result["facts"])
             for object_start, object_end in object_spans:
                 own_q = copy.deepcopy(q)
                 own_q_sources = copy.deepcopy(q_sources)
@@ -241,6 +270,8 @@ def read_propositions(text: str, source: dict[str, Any], *, scope=(), subject: s
                     "subject": printed_subject, "attribute": action, "scope": list(scope),
                     "qualifiers": copy.deepcopy(own_q), "identity_facets": {}},
                     "source": copy.deepcopy(fact["source"]), "rule_id": "explicit_proposition_binding"})
+                result["relations"].extend(edge for edge in prose_role_relations(fact)
+                                           if edge["type"] == "qualifier_scope")
                 endpoint = {"subject": printed_subject, "action": action, "scope": list(scope)}
                 for condition in conditions:
                     kind = "exception" if condition["operator"].startswith("except") else "condition"
@@ -252,6 +283,15 @@ def read_propositions(text: str, source: dict[str, Any], *, scope=(), subject: s
                 result["clauses"].append({"subject": printed_subject, "predicate": current[0],
                     "object": text[object_start:object_end], "source": copy.deepcopy(fact["source"]),
                     "operator_sources": [copy.deepcopy(c["operator_source"]) for c in conditions]})
+            if len(object_spans) > 1 and not any(match[1].lower() == "or" for match in joins):
+                operators = [_source(source, *join.span(1)) for join in joins]
+                result["relations"].extend(_coordination_relations(
+                    result["facts"][object_fact_start:], operators, mode="objects"))
+                result["required_matcher_features"] = ["coordination_scope"]
+        if len(predicates) > 1:
+            result["relations"].extend(_coordination_relations(
+                result["facts"][action_fact_start:], action_operators, mode="actions"))
+            result["required_matcher_features"] = ["coordination_scope"]
     result["complete"] = result["matched"] and not result["blockers"] and len(result["clauses"]) > 0
     # A successfully read later sentence cannot hide an earlier unhandled one.
     if result["matched"]:
@@ -268,3 +308,63 @@ def read_propositions(text: str, source: dict[str, Any], *, scope=(), subject: s
                     _pending(result, text, source, a, b, "proposition_sentence_not_interpreted")
         result["complete"] = not result["blockers"]
     return result
+
+
+def validate_proposition_coordinations(graph, fields, literal):
+    """Rebuild finite AND ownership from source, independent of derived tags."""
+
+    def explicitly_pending(origin):
+        # A source rejected by its owning interpretation stays an unknown,
+        # rather than being forced through this alternate reader. The full
+        # clause must remain a literal-bound B/L obligation. The five input
+        # scope declarations cannot excuse an unrelated software omission.
+        for issue in graph.get("unresolved", []):
+            source = issue.get("source", {})
+            if (issue.get("reason") == "input_scope_context" or not {"B", "L"} <= set(issue.get("layers", []))
+                    or not isinstance(issue.get("text"), str) or not issue["text"]):
+                continue
+            if source.get("path") != origin.get("path") or source.get("cell") != origin.get("cell"):
+                continue
+            a, b = source.get("lines", [0, 0])
+            c, d = origin.get("lines", [0, 0])
+            bounds, own = source.get("text_span"), origin.get("text_span")
+            if (a <= c <= d <= b and (bounds is None or own is not None
+                    and bounds[0] <= own[0] <= own[1] <= bounds[1])
+                    and literal(source) == issue.get("text")):
+                return True
+        return False
+
+    seen = set()
+    for entry in graph["sources"]:
+        for a, b in _sentence_spans(entry["text"]):
+            text, origin = entry["text"][a:b], _source(entry["source"], a, b)
+            key = (str(origin), text)
+            if key in seen:
+                continue
+            seen.add(key)
+            read = read_propositions(text, origin)
+            groups = [edge for edge in read["relations"] if edge["type"] == "proposition_coordination_scope"]
+            if not read["complete"] or not groups:
+                continue
+            if literal(origin) != text:
+                raise ValueError("proposition coordination differs from its actual source")
+            actual_fields = [field for field in fields if any(field.get("source") == fact["source"] for fact in read["facts"])]
+            scopes = {tuple(field.get("scope", [])) for field in actual_fields}
+            interpreted_edges = [edge for edge in graph["relations"] if edge.get("type") == "proposition_coordination_scope"
+                and any(edge.get("binding_evidence", {}).get("statement_source") == fact["source"] for fact in read["facts"])]
+            if not actual_fields and not interpreted_edges and explicitly_pending(origin):
+                continue
+            if not actual_fields or len(scopes) != 1:
+                raise ValueError("proposition coordination has no complete source-bound member scope")
+            scoped = read_propositions(text, origin, scope=next(iter(scopes)))
+            required = [edge for edge in scoped["relations"] if edge["type"] == "proposition_coordination_scope"]
+            member_keys = ("subject", "attribute", "predicate", "object", "subject_source", "predicate_source", "object_source")
+            if any(not any(all(actual.get(key) == fact[key] for key in member_keys) for actual in actual_fields)
+                   for fact in scoped["facts"]):
+                raise ValueError("proposition coordination lost an original semantic member")
+            if "coordination_scope" not in graph["required_matcher_features"]:
+                raise ValueError("proposition coordination lost its comparison dependency")
+            for edge in required:
+                keys = ("type", "left", "right", "source", "operator_source", "binding_evidence")
+                if not any(all(actual.get(key) == edge[key] for key in keys) for actual in graph["relations"]):
+                    raise ValueError("proposition coordination lost its actual operator or member source binding")

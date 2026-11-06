@@ -213,3 +213,98 @@ def test_plain_grid_fallback_requires_unique_complete_display_mapping():
     assert not _isolated_unclassified_grid(part, fragment)
     part["source_to_display_rows"] = {0: 1, 1: 2}
     assert not _isolated_unclassified_grid(part, fragment)
+
+
+def test_public_partial_grid_readback_keeps_unlocated_visible_words_and_valid_neighbor_metrics():
+    result, _fragment = partial_result()
+    observation = build_service_observation(result, sample_id="synthetic")
+    graph = read_candidate(observation)
+    literals = [entry["text"] for entry in graph["text"]]
+    assert all(literal in literals for literal in ("Item", "Good", "2024", "111", "900", "200"))
+    assert literals.count("900") == literals.count("200") == 1
+    assert not any(edge["type"].startswith("toc_") for edge in graph["relations"])
+    assert {(fact["attribute"], fact["value"]) for fact in graph["business"]} == {("Revenue", "900"), ("Cost", "200")}
+    [unlocated] = [entry for entry in graph["text"] if entry["text"] == "111"]
+    assert unlocated["source"].get("row") is None and unlocated["source"].get("col") is None
+    assert any(issue["reason"] == "matrix_cell_position_unavailable" for issue in graph["blockers"])
+
+
+@pytest.mark.parametrize("geometry", [{}, {"row": False, "col": 0}, {"row": 1, "col": "0"}])
+def test_toc_probe_retains_unlocated_cell_text_without_inventing_a_directory_or_positions(geometry):
+    from copy import deepcopy
+
+    from moparse_eval.toc_evidence import read_toc
+
+    raw = [{"id": "literal", "native_path": "#/actual/cell", "text": "Revenue", **geometry}]
+    before = deepcopy(raw)
+    result = read_toc(cells=raw, source={"path": "#/actual/table"})
+    assert raw == before
+    assert result["matched"] is False and not result["facts"] and not result["relations"]
+    assert [item["text"] for item in result["text_atoms"]] == ["Revenue"]
+    [pending] = result["unresolved"]
+    assert pending["raw_cell"] == raw[0]
+    assert not any(item["source"].get("row") == 0 for item in result["text_atoms"])
+    assert pending["source"]["cell_position"] == 0
+
+
+@pytest.mark.parametrize("scope", ["unknown", "geometry_only_unclassified"])
+def test_printed_title_page_words_in_an_unclassified_service_grid_do_not_become_navigation(scope):
+    from moparse_eval.toc_evidence import read_toc
+
+    raw = [{"id": f"c{row}{col}", "row": row, "col": col, "text": text,
+            "service_evidence_state": "retained", "service_grid_scope_state": scope}
+           for row, values in enumerate((("Title", "Page"), ("Results", "17"))) for col, text in enumerate(values)]
+    result = read_toc(cells=raw, source={"path": "#/unknown-service-grid"})
+    assert result["matched"] is False and result["entries"] == result["facts"] == result["relations"] == []
+    assert [item["text"] for item in result["text_atoms"]] == ["Title", "Page", "Results", "17"]
+    assert len(result["unresolved"]) == 4
+
+
+@pytest.mark.parametrize("bad", [{"id": "unknown", "text": "Unknown"},
+                                 {"id": "unknown", "row": False, "col": 0, "text": "Unknown"}])
+def test_explicit_navigation_keeps_its_valid_neighbor_but_withholds_unlocated_cell_relations(bad):
+    from moparse_eval.toc_evidence import read_toc
+
+    raw = [{"id": f"c{row}{col}", "row": row, "col": col, "text": text}
+           for row, values in enumerate((("Title", "Page"), ("Results", "17"))) for col, text in enumerate(values)]
+    result = read_toc(cells=[*raw, bad], source={"path": "#/declared-title-page"})
+    assert [(fact["subject"], fact["value"]) for fact in result["facts"]] == [("Results", "17")]
+    assert result["matched"] and not result["complete"]
+    assert any(atom["text"] == "Unknown" for atom in result["text_atoms"])
+    assert any(issue["reason"] == "toc_cell_position_or_scope_unavailable" for issue in result["blockers"])
+    assert not any("Unknown" in repr(edge) for edge in result["relations"])
+
+
+def test_duplicate_toc_positions_do_not_borrow_a_title_and_do_not_erase_other_rows():
+    from moparse_eval.toc_evidence import read_toc
+
+    raw = [{"id": f"c{row}{col}", "row": row, "col": col, "text": text}
+           for row, values in enumerate((("Title", "Page"), ("Results", "17"), ("Appendix", "23")))
+           for col, text in enumerate(values)]
+    raw.append({"id": "conflict", "row": 1, "col": 0, "text": "Conflicting title"})
+    result = read_toc(cells=raw, source={"path": "#/duplicate-grid"})
+    assert [(fact["subject"], fact["value"]) for fact in result["facts"]] == [("Appendix", "23")]
+    assert {atom["text"] for atom in result["text_atoms"]} >= {"Results", "Conflicting title", "17", "Appendix", "23"}
+    assert result["blockers"] and not result["complete"]
+
+
+def test_unclosed_service_html_is_not_repaired_and_does_not_hide_a_valid_navigation_neighbor():
+    from copy import deepcopy
+
+    from moparse_eval.toc_evidence import read_toc
+
+    broken = '<table><tr><td>Unknown visible value</td></tr>'
+    blocks = [{"id": "contents", "kind": "heading", "text": "Contents"},
+        {"id": "broken", "kind": "table", "text": broken, "text_format": "html",
+         "cells": [{"id": "unknown", "text": "Unknown visible value"}]},
+        {"id": "known", "kind": "table", "cells": [
+            {"id": f"c{row}{col}", "row": row, "col": col, "text": text}
+            for row, values in enumerate((("Title", "Page"), ("Results", "17"))) for col, text in enumerate(values)]}]
+    original = deepcopy(blocks)
+    result = read_toc(blocks=blocks, source={"path": "#/declared-source"})
+    assert blocks == original
+    assert [(fact["subject"], fact["value"]) for fact in result["facts"]] == [("Results", "17")]
+    assert any(issue["text"] == broken for issue in result["unresolved"])
+    assert any(atom["text"] == "Unknown visible value" for atom in result["text_atoms"])
+    assert any(issue["reason"] == "toc_embedded_table_boundary_unavailable" for issue in result["blockers"])
+    assert not result["text_projection_complete"]

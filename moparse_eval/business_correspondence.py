@@ -281,7 +281,7 @@ def record_vector(fields: list[dict[str, Any]], canonicalize: Canonicalize, *, a
 
 
 def _record_comparison(members: list[dict[str, Any]], candidates: list[dict[str, Any]],
-                       canonicalize: Canonicalize, **scope_options) -> dict[str, Any] | None:
+                       canonicalize: Canonicalize, *, identity_owners=None, **scope_options) -> dict[str, Any] | None:
     metric_members = [item for item in members if item.get("role") != "identity"]
     occurrences = Counter(requirement_key(item, canonicalize) for item in metric_members)
     if len(occurrences) < 2 or max(occurrences.values(), default=0) < 2:
@@ -292,6 +292,8 @@ def _record_comparison(members: list[dict[str, Any]], candidates: list[dict[str,
             continue
         matched = []
         for wanted in metric_members:
+            if identity_owners is not None and identity_owners.get(item["id"]) != requirement_key(wanted, canonicalize):
+                continue
             checks = identity_checks(query_for(wanted), item, canonicalize, **scope_options)
             if all(part["correct"] for part in checks.values()):
                 matched.append((wanted, checks["attribute"].get("equivalence")))
@@ -322,6 +324,58 @@ def _record_comparison(members: list[dict[str, Any]], candidates: list[dict[str,
             "actual_records": [{"record_id": key, "fields": snapshot_copy(fields)} for key, fields in by_record[1].items()]}
 
 
+def _bind_candidate_capacity(groups, traces, canonicalize):
+    """Give an actual occurrence at most one answer-independent identity owner.
+
+    Exact declared labels outrank the controlled typo rule. More specific
+    printed position constraints outrank a broader compatible position. A tie
+    remains insufficient; neither expected values nor iteration order choose
+    between indistinguishable positions. Repeated identical requirements keep
+    their multiset comparison within one group and still require occurrences.
+    """
+    eligibility = defaultdict(list)
+    for key in groups:
+        query = traces[key]["query"]
+        scope = logical_context(query, canonicalize)
+        specificity = (len(scope), len(query["identity_facets"]), len(query["qualifiers"]))
+        for hit in traces[key]["candidates"]:
+            if hit["decision"] != "accepted":
+                continue
+            exact_label = hit["recall"] != "approximate_attribute_with_retained_difference"
+            eligibility[hit["id"]].append((key, (int(exact_label), *specificity)))
+    owners, proofs = {}, {}
+    for ident, options in eligibility.items():
+        best = max(rank for _key, rank in options)
+        preferred = [key for key, rank in options if rank == best]
+        owner = preferred[0] if len(preferred) == 1 else None
+        owners[ident] = owner
+        proofs[ident] = {
+            "candidate_id": ident,
+            "eligible_requirement_groups": [groups[key][0]["id"] for key, _rank in options],
+            "best_identity_groups": [groups[key][0]["id"] for key in preferred],
+            "owner_requirement_group": groups[owner][0]["id"] if owner is not None else None,
+            "status": "bound" if owner is not None else "insufficient",
+            "identity_rank": list(best), "values_used": False,
+        }
+    for key, trace in traces.items():
+        trace["identity_accepted"] = list(trace["accepted"])
+        evidence = []
+        for hit in trace["candidates"]:
+            if hit["decision"] != "accepted":
+                continue
+            proof = proofs[hit["id"]]
+            evidence.append(copy.deepcopy(proof))
+            hit["capacity"] = copy.deepcopy(proof)
+            if owners[hit["id"]] != key:
+                hit["decision"] = "rejected"
+                hit["reason"] = ("candidate_identity_capacity_insufficient" if owners[hit["id"]] is None
+                                 else "candidate_occurrence_owned_by_another_requirement")
+        trace["accepted"] = [hit["id"] for hit in trace["candidates"] if hit["decision"] == "accepted"]
+        trace["capacity"] = {"rule": "single_actual_occurrence_owner_before_values",
+                             "required_occurrences": len(groups[key]), "evidence": evidence}
+    return owners
+
+
 def grade_business(reference: list[dict[str, Any]], candidates: list[dict[str, Any]], *,
                    literals: list[dict[str, Any]], canonicalize: Canonicalize,
                    contexts=None, declared_paths=(), context_labels=()) -> tuple[dict[str, Any], list[dict[str, Any]]]:
@@ -334,10 +388,14 @@ def grade_business(reference: list[dict[str, Any]], candidates: list[dict[str, A
     candidate_ids = [item["id"] for item in candidates]
     if len(candidate_ids) != len(set(candidate_ids)):
         raise ValueError("candidate business objects require unique actual identities")
-    record_checks = {key: _record_comparison(members, candidates, canonicalize, **scope_options) for key, members in families.items()}
+    traces = {key: retrieve(query_for(members[0]), candidates, literals=literals, canonicalize=canonicalize, **scope_options)
+              for key, members in groups.items()}
+    owners = _bind_candidate_capacity(groups, traces, canonicalize)
+    record_checks = {key: _record_comparison(members, candidates, canonicalize, identity_owners=owners, **scope_options)
+                     for key, members in families.items()}
     rows, blockers = [], []
     for key, members in groups.items():
-        trace = retrieve(query_for(members[0]), candidates, literals=literals, canonicalize=canonicalize, **scope_options)
+        trace = traces[key]
         accepted = set(trace["accepted"])
         actual = [item for item in candidates if item["id"] in accepted]
         same = Counter(assertion_signature(item, canonicalize) for item in members) == Counter(

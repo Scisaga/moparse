@@ -156,7 +156,7 @@ def test_failure_closed_contract_unproven_grid_keeps_every_literal_and_unknown_r
         assert disposition["B"]["status"] == "unresolved"
 
 
-def test_complete_contract_joined_prose_covers_each_actual_fragment_without_invented_sources():
+def test_partial_contract_joined_prose_keeps_sources_and_the_uninterpreted_inner_agent():
     first, second = "the board shall pay ", "17 credits only if approved by 4 directors."
     expected = _expected(_target(first, 1), _target(second, 2))
     graph = compile_requirement_graph(expected)
@@ -166,9 +166,12 @@ def test_complete_contract_joined_prose_covers_each_actual_fragment_without_inve
     assert [fragment["text"] for fragment in fact["source"]["joined_fragments"]] == [first, second]
     for text in (first, second):
         disposition = _disposition(graph, _source(graph, text))
-        assert disposition["T"]["status"] == disposition["B"]["status"] == "interpreted"
+        assert disposition["T"]["status"] == "interpreted"
+        assert disposition["B"]["status"] == ("interpreted" if text == first else "unresolved")
         assert fact["id"] in disposition["B"]["requirements"]
-    assert not graph["unresolved"]
+    assert graph["semantic_complete"] is False
+    assert [(issue["text"], issue.get("interpretation_rule")) for issue in graph["unresolved"]] == [
+        ("by", "uninterpreted_postpredicate_scope_requires_its_own_relation")]
 
 
 def test_failure_closed_contract_heading_boundary_cannot_supply_an_orphan_fragment_business_role():

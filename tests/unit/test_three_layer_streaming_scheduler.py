@@ -151,26 +151,11 @@ def test_real_spawned_pool_preserves_sample_exclusion_and_complete_task_identity
 
 
 def test_failed_execution_status_keeps_the_declared_analysis_scheduling_policy(tmp_path, monkeypatch):
-    from moparse_eval import cli
-    from moparse_eval.packaging import read_json, write_json
+    from test_three_layer_orchestration import saved_run
 
-    expected = tmp_path / "expected"
-    document = expected / "invented"
-    document.mkdir(parents=True)
-    (document / "expected.md").write_text("Revenue: 17\n", encoding="utf-8")
-    write_json(document / "manifest.json", {"markdown": {"path": "expected.md"}, "source_map": {
-        "entries": [{"source_pages": [1], "markdown_lines": [1, 1]}]}})
-    dataset = tmp_path / "dataset"
-    write_json(dataset / "manifest.json", {"samples": [{
-        "id": "synthetic", "document_id": "invented", "source_pages": [1], "family_id": "family",
-    }]})
-    run = tmp_path / "native"
-    write_json(run / "run.json", {"state": "completed", "dataset": str(dataset),
-        "development_experiment": True, "experiment_id": "controlled-scheduler-probe", "cases": [
-            {"pipeline": pipeline, "sample_id": "synthetic", "suite": "quality800", "phase": "measured",
-             "repetition": 1, "observation": f"unused/{pipeline}.json"} for pipeline in evaluation.PIPELINES]})
-    monkeypatch.setattr(cli, "code_identity", lambda: {"software_id": "controlled-scheduler-version"})
-    monkeypatch.setattr(cli, "snapshot_software", lambda *_args: None)
+    from moparse_eval.packaging import read_json
+
+    run, _, expected, freeze = saved_run(tmp_path, monkeypatch)
 
     def failed_tasks(_tasks, _workers):
         raise RuntimeError("controlled execution stop")
@@ -178,7 +163,7 @@ def test_failed_execution_status_keeps_the_declared_analysis_scheduling_policy(t
     monkeypatch.setattr(evaluation, "_grade_tasks", failed_tasks)
     output = tmp_path / "diagnosis"
     with pytest.raises(RuntimeError, match="controlled execution stop"):
-        evaluation.evaluate_saved(run, output, expected_root=expected, diagnostic=True, workers=16)
+        evaluation.evaluate_saved(run, output, expected_root=expected, diagnostic=True, freeze=freeze, workers=16)
     index, status = read_json(output / "index.json"), read_json(output / "execution-status.json")
     assert index == status
     assert index["state"] == "failed" and index["expected_comparison_complete"] is False

@@ -24,7 +24,13 @@ def test_two_actions_and_condition_have_independent_business_and_relation_requir
     score = grade(REFERENCE)
     assert score["publishable"] is True
     assert score["layers"]["B"]["denominator"] == score["layers"]["B"]["numerator"] == 2
-    assert score["layers"]["L"]["denominator"] == score["layers"]["L"]["numerator"] == 4
+    # Each admitted action now owns an explicit predicate binding and modal
+    # binding, alongside the condition, heading memberships and order edge.
+    assert [edge["left"] for edge in graph["relations"] if edge["type"] == "field_binding"] == [
+        {"subject": "the board", "attribute": "pay"}, {"subject": "the clerk", "attribute": "publish"}]
+    assert [edge["left"] for edge in graph["relations"] if edge["type"] == "qualifier_scope"] == [
+        {"type": "modality", "text": "shall"}, {"type": "modality", "text": "must"}]
+    assert score["layers"]["L"]["denominator"] == score["layers"]["L"]["numerator"] == 8
     assert score["score"] == 100
 
 
@@ -34,7 +40,7 @@ def test_content_changes_do_not_destroy_independently_expressed_prose_bindings(b
     score = grade(REFERENCE.replace(before, after))
     assert score["publishable"] is True
     assert score["layers"]["B"]["numerator"] == 1
-    assert score["layers"]["L"]["numerator"] == score["layers"]["L"]["denominator"] == 4
+    assert score["layers"]["L"]["numerator"] == score["layers"]["L"]["denominator"] == 8
     assert score["layers"]["T"]["score"] < 100
     row = next(r for r in score["outcomes"] if r["layer"] == "B" and r["expected"]["attribute"] == "pay")
     assert "17" not in repr(row["retrieval"]["query"])
@@ -45,7 +51,7 @@ def test_reversing_two_complete_actions_retains_text_and_business_but_changes_or
     score = grade("## Policy\n\n" + SECOND + "\n\n" + FIRST)
     assert score["publishable"] is True
     assert score["layers"]["T"]["score"] == score["layers"]["B"]["score"] == 100
-    assert score["layers"]["L"]["numerator"] == 3 and score["layers"]["L"]["denominator"] == 4
+    assert score["layers"]["L"]["numerator"] == 7 and score["layers"]["L"]["denominator"] == 8
 
 
 def test_a_locally_conflicting_condition_is_not_hidden_by_the_exact_condition():

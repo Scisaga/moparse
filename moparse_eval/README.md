@@ -32,6 +32,8 @@
 
 `reference_compiler.py`先规划授权来源、已选标题和外部依赖，再调用共享读取组件解释语义，最后按事实的实际来源处理限定与输入范围依赖。正文事实不会因读取较晚而被提前判作缺失；外部声明始终不成为答案。`requirement_graph.py`检查覆盖并投影独立T/L/B，从同一对象输出JSON及XML；原段、原格和明确拆出的声明均有三层处置。
 
+`authorized_source_inventory.py`从语法解析前保留的授权原始行段独立核对文字和GFM格位，不能用target.raw存在代替正文或单元格保全。`source_obligations.py`在业务解释前建立Source Obligation Inventory，随后按实际角色、句内位置、年度和单位邻接、限定及关系来源解释每项义务；未解释部分和部分证明均保留。复杂或不支持的原始语法保持pending。仅提供target的合成夹具明确标记受控范围，不声称canonical来源完整。来源完整、语义完整和独立Oracle验证是不同状态。
+
 `source_requirements.py`分离有证据的多字段序列及声明为正文的字段值，不拆开单个合法名称、时间、URL或依赖schema的数值tuple。Description中的独立SVO分别解释，原标签仅限定其实际正文；同名相邻字段不能互借主体、谓词或对象来源。`field_sequence_requirements.py`区分有来源的属性、主体列、期间选择器及未知前缀。`period_evidence.py`保留完整日期及期间粒度，不以年份替代完整财政日期。未知分句不能借同段另一个已读字段获得完整状态。
 
 `explicit_reference_requirements.py`保留See/参见的引用身份及归属关系；完整导航文字不额外增加业务题，归属必须来自实际字段或标题，缺少归属与未知残余继续未决。有限组合语法保留条件、否定、模态、逻辑操作数及原词项来源。要求图的传输校验同时检查操作数、限定来源、已解释投影和必要SVO关系；与原expected重新编译核对用于检出同步突变，不替代独立语义样例。新组合语法的比较能力未验证前，B/L继续暂停。
@@ -42,9 +44,17 @@
 
 `equivalence.py`和`quantity.py`为B身份、数量、重复记录及L端点提供共享判定及证明。明确同量纲和币种条件下允许有理数精确换算；原字、单位和换算证明保留，不授权改写候选。受保护业务词、条件、否定、不同期间和货币冲突不能被文字相似度抵消。
 
+`business_correspondence.py`先完成不使用答案数值的身份检索和候选归属，再比较值；不同要求不能无限复用同一候选事实。相同身份优先级无法区分时保留Insufficient，重复要求仍按实际出现次数比较。组合AST的最终B/L能力尚未全部验证，不能由要求编译成功推定。
+
+`requirement_gate.py`核对要求索引、逐样本JSON摘要和独立验证案例，正式入口另与当前canonical选段核对。回放主机在prepare、launch、freeze和activation阶段核验真实证据，隔离worker只接收无答案的摘要回执；单个passed字段不能启动实际回放。JSON视图是唯一程序模型，XML仅从同一对象生成。
+
+原始授权Markdown的ATX标题归属独立传到正文和具体格位；业务owner及其绑定都须保持实际scope，正文membership不能掩盖错绑。原子metadata不屏蔽后续无标签叙事，未解释的后置介词范围保留独立pending。合法input_scope_context只承接原授权依赖；要求导出与回放主机同时校验manifest完整Lite集合，拒绝缩小或重复的声明。
+
 `three_layer.py`投影要求、读取候选证据并独立判定T/L/B；`expected_scoring.py`是同一实现的当前入口，没有旧算法回退。`layer_aggregation.py`分别汇总各层及配对。解释器的ledger用于检出调用期间的突变，不能证明业务语义覆盖；软件未支持不变成候选0分。
 
 `expected_evaluation.py`统一编排八组原生、八组实际current及P07/P08真实baseline，默认使用16个CPU spawn进程。current从一次原子激活的八组索引读取，不能混入六组缺失的旧执行；其余六组不虚构历史baseline。expected先编译一次，再由各组共用同一要求投影。任务按sample_id轮转，同一样本最多有一个组任务执行；各样本内部保留原声明组顺序，完成后其下一组加入就绪队尾，由其他已等待样本填充可用进程。全部声明样本和组保留，未捕获的任务异常直接使执行失败且不重试。该调度只改变保存输出分析，各管线和独立后处理的原始资源与计时保持原声明。
+
+`service_stages.py`深拷贝实际阶段的页、IR、原生对象、格位及媒体描述，保留文字edits并生成对象账本。输入/输出用实际审计JSON pointer和摘要定位；重排及合并/拆分仅由声明身份、来源或精确来源分区建立，不按相似文字配对。缺失对应、来源、渲染跨度或原因明确记为unknown、unmatched或unrecorded；原producer编辑须精确回放后才引用其原因。畸形局部对象保留原JSON并隔离，媒体描述符审计不验证资产文件。审计对象保留不能证明最终交付，逐要求的八类增损归因及真实八组验收尚未完成。
 
 `trace_storage.py`将重复上下文保存为共享引用；所有命中、重复、冲突及排除理由仍完整保留。`read_score`展开后才交给报告复核。每份完整评分轨迹流式写入同目录唯一`.part`文件，保持紧凑UTF-8 JSON和结尾换行；关闭成功后原子替换目标文件。编码、写入或替换异常清理本次临时文件，保留已有目标及其他工作进程的临时文件。`index.json`和`execution-status.json`的`analysis_scheduling`记录并行上限、每样本活动上限、启动方式、样本及组次序、完成后入队策略、失败不重试和声明任务总数。独立受控调度与写入验证不代表全范围遍历已完成，实际状态仍以当前执行记录为准。
 
@@ -84,7 +94,7 @@
   --output benchmark/runs/lite/requirements/current
 ```
 
-结构尚有未知时，只能以显式样本做有界软件诊断，不能再次启动全范围候选匹配。以下入口的样本ID必须来自已保存声明；诊断不缩小正式分母。
+结构尚有未知时，只能以显式严格子集做有界软件诊断，不能再次启动全范围候选匹配。全范围diagnostic须提供同版冻结及独立结构证据，实际使用重新绑定canonical的冻结投影；显式列全ID同样受限。以下入口的样本ID必须来自已保存声明；诊断不缩小正式分母。
 
 ```bash
 .venv/bin/python -m moparse_eval.expected_evaluation \

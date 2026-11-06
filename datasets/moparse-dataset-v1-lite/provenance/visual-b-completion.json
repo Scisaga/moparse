@@ -1,0 +1,29 @@
+{
+  "reviewer":"visual-b",
+  "status":"selected_scope_visually_reviewed",
+  "selection_file":"datasets/authoring/visual-b/selection.json",
+  "manual_ledger":{
+    "lite_pages":200,"perf_pages":20,"preflight_pages":0,
+    "documents":[
+      {"document_id":"complex-huawei-2024-annual","lite_source_ranges":[[2,66],[68,70]],"lite_pages":68,"perf_source_ranges":[[2,3],[7,7],[66,66],[68,70]],"perf_pages":7},
+      {"document_id":"complex-huaweitech-2024-096","lite_source_ranges":[[1,2],[4,30]],"lite_pages":29,"perf_source_ranges":[[1,2]],"perf_pages":2},
+      {"document_id":"complex-hkex-2024-annual","lite_source_ranges":[[3,3],[5,11],[17,30],[74,80],[105,117],[137,141]],"lite_pages":47,"perf_source_ranges":[[7,11]],"perf_pages":5},
+      {"document_id":"complex-alibaba-2025-annual","lite_source_ranges":[[3,10],[105,124]],"lite_pages":28,"perf_source_ranges":[[3,5]],"perf_pages":3},
+      {"document_id":"complex-pingan-2024-annual","lite_source_ranges":[[1,1],[4,30]],"lite_pages":28,"perf_source_ranges":[[1,1],[4,5]],"perf_pages":3}
+    ],
+    "basis":"以上为按本轮实际阅读及显式selection逐批手写的物理页账，不是程序计数或映射验收。杂志每个横向PDF物理页作为一页，不按画面中的两个印刷页虚增。"
+  },
+  "completion_statement":"所选200个物理页全部由visual-b实际打开渲染图逐页视觉阅读，并直接阅读当前expected相应完整段落或完整语义行作对照；各样本索引均为直接手写，保存后已重新打开其每个原始物理页逐页回看。当前参考正文、原件、资产均未改写；没有使用PDF文字层、OCR、任何解析器、字符或数字匹配、计数、哈希、格式、路径、链接或来源映射机械验收。已达到最终B200页配额，停止新候选阅读。五份完整文档保留historical_reference状态，不声称本轮已全篇核定。",
+  "coverage_limits":[
+    "全部样本的来源类别保持source-unknown，未从渲染像素、文字层或被测管线输出反推native/scan/mixed。",
+    "confirmed声明属于实际视觉读清的来源和引用范围，不能据此声称所有管线或所有条目都可自动评分；每项仍按文字、字段、关系和原生定位能力单独报告coverage及NA。",
+    "早期Huawei财务摘要及三张财务报表、PingAn财务摘要等只细标部分关键字段；完整table_record引用不是整行内容准确率的证明，未标字段仍为not_annotated。后续已精标的数值表按实际所有可见列、单位、期间和空白保留。",
+    "目录、KPI、带人工栏目名前缀等整理形式的参考明示text_comparison:not_applicable；label_only不能冒称整个条目或其值正确。KPI及本轮HKEX目录的清楚来源绑定以独立field_scope保留，原生作用域缺失不删Gold目标分母。",
+    "HKEX审计事项及定性风险描述保留完整引用和人工确认来源，部分描述因整理前缀不进行整段ED；缓解措施原文列表仍完整引用。共同栏目或原格位没有完整细标时结构评分保留不足，不造格位跨度。",
+    "所有图片、图表、组织图及流程图只评图片保全与实际原题/说明，不解图；图内文字、图像像素忠实度及来源未细标部分不冒称已完成验收。APN6现有图内路由说明明确out_of_scope。",
+    "Huawei审计页参考1733行的破折号码点、Huawei行业趋势320行的措辞标点、HuaweiTech253行的10~20显示、Alibaba风险2272行的标点以及Alibaba230行在输入以外的续文，均保留已有pending，不自动修正文或算模型错误。",
+    "HKEX数据表未标标签的小计行保留真实源无标签的row_binding未决，不借expected里的Subtotal补出来源标题。",
+    "未声明任何B样本的exhaustive_output_scope，也未声明relations穷尽；不能将合法但未纳入标注的其余输出直接当作假阳性。",
+    "未选导航页、仅渲染未实际打开页以及五份文档其他未选内容均未纳入本轮确认页数。"
+  ]
+}

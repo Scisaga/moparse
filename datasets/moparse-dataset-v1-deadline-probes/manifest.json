@@ -1,0 +1,204 @@
+{
+  "name": "moparse-dataset-v1-deadline-probes",
+  "kind": "lite",
+  "state": "engineering_probes_only",
+  "created_at": "2026-10-24T07:55:22.060750+08:00",
+  "declared_input_pages": 8,
+  "review_record": {
+    "reviewer": "visual-a",
+    "coordinator": "root",
+    "status": "previously_visually_confirmed_source_pages_reused_for_engineering",
+    "note": "仅使用原8页预检已实际目视确认的源页：10726562物理1、2；1200454112物理1、2；1200694562物理1、2、3、4。按此人工列表分别包装单页，以直接测量成功单页耗时。不从两页或四页耗时平均估计，不建立新的质量评分范围；全部属于开发暴露。"
+  },
+  "freeze_record": null,
+  "preflight_confirmed": true,
+  "documents": [
+    {
+      "document_id": "10726562",
+      "reference_dir": "references/10726562",
+      "source_metadata": {
+        "filename": "10726562.pdf",
+        "sha256": "806be3c98eb71db56dffc24f63736c3673ef918f777a0a66fbcc8458a5a10923",
+        "pages": 2
+      },
+      "family_id": "vanke-short-disclosure",
+      "tags": [
+        "zh",
+        "short-disclosure",
+        "single-column",
+        "cross-page-prose"
+      ],
+      "review_status": "historical_reference",
+      "review_record": {
+        "reviewer": "visual-a",
+        "coordinator": "root",
+        "status": "previously_visually_confirmed_source_pages_reused_for_engineering",
+        "note": "仅使用原8页预检已实际目视确认的源页：10726562物理1、2；1200454112物理1、2；1200694562物理1、2、3、4。按此人工列表分别包装单页，以直接测量成功单页耗时。不从两页或四页耗时平均估计，不建立新的质量评分范围；全部属于开发暴露。"
+      }
+    },
+    {
+      "document_id": "1200454112",
+      "reference_dir": "references/1200454112",
+      "source_metadata": {
+        "filename": "1200454112.pdf",
+        "sha256": "02feb89fa1bfe7802aed33dc47155f9377ca68e01a2782db101c134921ac88c2",
+        "pages": 23
+      },
+      "family_id": "spdb-preferred-share-prospectus",
+      "tags": [
+        "zh",
+        "prospectus",
+        "scan-like-cover",
+        "seal",
+        "layout-grid",
+        "single-column"
+      ],
+      "review_status": "historical_reference",
+      "review_record": {
+        "reviewer": "visual-a",
+        "coordinator": "root",
+        "status": "previously_visually_confirmed_source_pages_reused_for_engineering",
+        "note": "仅使用原8页预检已实际目视确认的源页：10726562物理1、2；1200454112物理1、2；1200694562物理1、2、3、4。按此人工列表分别包装单页，以直接测量成功单页耗时。不从两页或四页耗时平均估计，不建立新的质量评分范围；全部属于开发暴露。"
+      }
+    },
+    {
+      "document_id": "1200694562",
+      "reference_dir": "references/1200694562",
+      "source_metadata": {
+        "filename": "1200694562.pdf",
+        "sha256": "2472b083ab953d82255cb07b064c742bf1c20eaa72e40aefefb47a391f068ccf",
+        "pages": 19
+      },
+      "family_id": "pingan-bank-annual-summary",
+      "tags": [
+        "zh",
+        "annual-summary",
+        "data-table",
+        "cross-page-table",
+        "multi-level-header",
+        "checkbox",
+        "mixed-units"
+      ],
+      "review_status": "historical_reference",
+      "review_record": {
+        "reviewer": "visual-a",
+        "coordinator": "root",
+        "status": "previously_visually_confirmed_source_pages_reused_for_engineering",
+        "note": "仅使用原8页预检已实际目视确认的源页：10726562物理1、2；1200454112物理1、2；1200694562物理1、2、3、4。按此人工列表分别包装单页，以直接测量成功单页耗时。不从两页或四页耗时平均估计，不建立新的质量评分范围；全部属于开发暴露。"
+      }
+    }
+  ],
+  "samples": [
+    {
+      "id": "probe-vanke-p001",
+      "document_id": "10726562",
+      "source_pages": [
+        1
+      ],
+      "development_exposure": "engineering_preflight",
+      "input": "inputs/probe-vanke-p001.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/10726562",
+      "evaluation": null
+    },
+    {
+      "id": "probe-vanke-p002",
+      "document_id": "10726562",
+      "source_pages": [
+        2
+      ],
+      "development_exposure": "engineering_preflight",
+      "input": "inputs/probe-vanke-p002.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/10726562",
+      "evaluation": null
+    },
+    {
+      "id": "probe-spdb-p001",
+      "document_id": "1200454112",
+      "source_pages": [
+        1
+      ],
+      "development_exposure": "engineering_preflight",
+      "input": "inputs/probe-spdb-p001.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/1200454112",
+      "evaluation": null
+    },
+    {
+      "id": "probe-spdb-p002",
+      "document_id": "1200454112",
+      "source_pages": [
+        2
+      ],
+      "development_exposure": "engineering_preflight",
+      "input": "inputs/probe-spdb-p002.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/1200454112",
+      "evaluation": null
+    },
+    {
+      "id": "probe-pingan-p001",
+      "document_id": "1200694562",
+      "source_pages": [
+        1
+      ],
+      "development_exposure": "engineering_preflight",
+      "input": "inputs/probe-pingan-p001.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/1200694562",
+      "evaluation": null
+    },
+    {
+      "id": "probe-pingan-p002",
+      "document_id": "1200694562",
+      "source_pages": [
+        2
+      ],
+      "development_exposure": "engineering_preflight",
+      "input": "inputs/probe-pingan-p002.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/1200694562",
+      "evaluation": null
+    },
+    {
+      "id": "probe-pingan-p003",
+      "document_id": "1200694562",
+      "source_pages": [
+        3
+      ],
+      "development_exposure": "engineering_preflight",
+      "input": "inputs/probe-pingan-p003.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/1200694562",
+      "evaluation": null
+    },
+    {
+      "id": "probe-pingan-p004",
+      "document_id": "1200694562",
+      "source_pages": [
+        4
+      ],
+      "development_exposure": "engineering_preflight",
+      "input": "inputs/probe-pingan-p004.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/1200694562",
+      "evaluation": null
+    }
+  ],
+  "suites": {
+    "preflight8": [
+      "probe-vanke-p001",
+      "probe-vanke-p002",
+      "probe-spdb-p001",
+      "probe-spdb-p002",
+      "probe-pingan-p001",
+      "probe-pingan-p002",
+      "probe-pingan-p003",
+      "probe-pingan-p004"
+    ]
+  },
+  "scoring_policy": "mo-parse-eval-text-v1",
+  "reference_scope": "no_quality_scoring_single_page_timing_probes",
+  "corpus_acceptance": "not_performed_by_packaging"
+}

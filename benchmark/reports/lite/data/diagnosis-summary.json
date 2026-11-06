@@ -3,27 +3,50 @@
   "quality_scores_withheld": true,
   "expected_comparison_complete": false,
   "candidate_comparison_started": false,
-  "software_id": "a6d6b2d73a73fda0e3f819e990f01075aa52b4ef4e592de006b501a2ebaa5e7b",
+  "software_id": "18b8634ea419e379db63be7c420e8596b77e1ca8b9812762430281bac7467194",
+  "git_head": "895857fcb355a1d86c3c98e3f597ba016ed4bc74",
   "configured_analysis_workers": 16,
   "source_index": "benchmark/runs/lite/requirements/current/index.json",
+  "source_index_sha256": "990dc2b8a2d70e1130a2d3c5f4c97f9e6777cd895474f0910bc90aabcc404a82",
   "source_compilation": {
     "scope": "declared_lite_expected_only",
+    "declared_records": 173,
+    "views_written": 173,
     "all_declared_views_written": true,
     "source_integrity_failures": 0,
+    "source_obligation_inventory_complete": true,
+    "inventory_validation": {
+      "status": "passed",
+      "scope": "source_integrity_not_semantic_oracle"
+    },
     "software_unchanged": true,
     "semantic_complete": false
   },
+  "software_validation": {
+    "path": "benchmark/runs/lite/requirements/validation/software-validation.json",
+    "sha256": "421de09d195ebb87bfdf3d93053452e14522ab2ddca14095e69c52e3bdd50e36",
+    "status": "passed",
+    "summary": "1948 passed in 31.17s",
+    "scope": "controlled_cases_only_not_complete_expected_acceptance"
+  },
+  "actual_source_diagnosis": "benchmark/runs/lite/requirements/validation/actual-source-diagnosis.json",
   "expected_structure_gate": {
     "status": "not_passed",
-    "reason": "Actual expected semantics remain unresolved."
+    "reason": "Actual authorized expected business propositions and relationships remain unresolved; transport integrity is not independent semantic acceptance."
   },
   "comparison_capability_gate": {
     "status": "not_passed",
-    "reason": "New compositional matcher features are not validated."
+    "reason": "Complete four-state B/L and new compositional AST comparison are not independently accepted."
   },
   "delivery_conversion_gate": {
     "status": "not_passed",
-    "reason": "Eight-pipeline actual replay has not run."
+    "reason": "Source-bound object ledger has controlled evidence; eight-pipeline actual replay and eight-way requirement attribution have not completed."
+  },
+  "completion_status": {
+    "software_complete": false,
+    "evaluation_execution_complete": false,
+    "quality_score_publication_ready": false,
+    "five_input_scopes_confirmed": false
   },
   "input_scope_pending": [
     "alibaba-strategies-p009-010",
@@ -32,9 +55,21 @@
     "pboc-macro-columns-p011-018",
     "pboc-policy-columns-p019-026"
   ],
-  "meaning": "Generated requirement views and source validation are software evidence, not corpus acceptance or quality grades. Semantic completion and actual delivery remain unfinished; original candidates, bodies and processing observations are preserved.",
+  "dependency_freeze_passed": false,
+  "real_candidate_cpu_replay_started": false,
+  "meaning": "Source-only views and controlled tests are software evidence. Actual candidate comparison, delivered-output gains, complete semantics, and publication readiness are not established. Original saved candidates, bodies, and costs remain preserved.",
   "implemented_source_families": [
+    "independent_authorized_raw_source_obligations",
+    "quoted_and_fronted_nominal_scope",
+    "document_composition_and_page_relations",
     "dated_enumeration_roles_and_member_boundaries",
-    "financial_statement_classification_unit_scope"
-  ]
+    "directed_ratio_and_ratio_delta_measurements",
+    "financial_statement_classification_unit_scope",
+    "typed_toc_source_ownership"
+  ],
+  "object_ledger": {
+    "implementation": "source_bound_object_references_and_exact_source_partitions",
+    "actual_delivery_acceptance": "not_run",
+    "requirement_level_eight_way_attribution": "not_complete"
+  }
 }

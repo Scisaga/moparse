@@ -96,11 +96,24 @@ def test_infinitive_how_to_phrase_is_not_an_asserted_actor():
 def test_quoted_and_is_not_decomposed_into_two_independent_ownership_objects():
     text = "Lumen owns 'Kappa and Sigma'."
     graph = _source_graph(text)
-    assert len(_facts(graph)) <= 1
-    if graph["semantic_complete"]:
-        [fact] = _facts(graph)
-        assert (fact["subject"], fact["attribute"], fact["value"]) == ("Lumen", "own", "Kappa and Sigma")
-        assert fact["value_source"]["text_span"] == [12, 27]
-        assert not any(node["kind"] == "semantic_operand" for node in graph["nodes"])
-    else:
-        _unresolved(graph, text)
+    assert graph["semantic_complete"] is True and not graph["unresolved"]
+    [fact] = _facts(graph)
+    assert (fact["subject"], fact["attribute"], fact["value"]) == ("Lumen", "own", "'Kappa and Sigma'")
+    assert fact["value_source"]["text_span"] == [11, 28]
+    [quote] = fact["quoted_nominals"]
+    assert (quote["role"], quote["content"], quote["attachment"]) == ("object", "Kappa and Sigma", "whole_nominal")
+    assert quote["source"]["text_span"] == [11, 28]
+    assert quote["content_source"]["text_span"] == [12, 27]
+    assert quote["opening_source"]["text_span"] == [11, 12]
+    assert quote["closing_source"]["text_span"] == [27, 28]
+    assert not any(node["kind"] == "semantic_operand" for node in graph["nodes"])
+    assert "coordination_scope" not in graph["required_matcher_features"]
+    # Literal admission preserves the single name; matcher validation remains
+    # independent and cannot be inferred from successful source compilation.
+    score = grade_layers(compile_markdown(text), read_candidate_markdown(text))
+    assert score["layers"]["T"]["score"] == 100
+    for layer in ("B", "L"):
+        assert score["layers"][layer]["score"] is None and score["layers"][layer]["complete"] is False
+    assert score["publishable"] is False and score["score"] is None
+    assert any(issue["reason"] == "narrative_comparison_features_not_validated"
+               and "quoted_nominal_scope" in issue["required_features"] for issue in score["blockers"])

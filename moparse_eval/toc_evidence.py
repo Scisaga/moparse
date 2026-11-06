@@ -215,7 +215,20 @@ class _Reader:
                 self.issue("multiple_embedded_toc_tables_not_separated", source, category="software_unsupported")
                 self.unresolved(text, source, "embedded_table_boundaries_unread")
                 return
-            before, body, after = re.split(r"(<table\b.*?</table\s*>)", text, maxsplit=1, flags=re.I | re.S)
+            parts = re.split(r"(<table\b.*?</table\s*>)", text, maxsplit=1, flags=re.I | re.S)
+            if len(parts) != 3:
+                if native_cells_present:
+                    self.result["unresolved"].append({"text": text, "source": copy.deepcopy(source),
+                        "reason": "embedded_table_boundaries_unread"})
+                else:
+                    self.unresolved(text, source, "embedded_table_boundaries_unread")
+                if self.active or kind in {"document_index", "toc"}:
+                    self.result["matched"] = True
+                    self.handled(source)
+                    self.result["text_projection_complete"] = False
+                    self.issue("toc_embedded_table_boundary_unavailable", source, category="software_unsupported", layers=["T", "L", "B"])
+                return
+            before, body, after = parts
             for outside in [before, after]:
                 literal = visible_text(outside, "html").strip()
                 if literal:
@@ -387,36 +400,84 @@ class _Reader:
 
     def cells(self, cells: list[dict[str, Any]], source: dict[str, Any], *, native_index: bool = False) -> None:
         def literal(cell):
-            return str(cell.get("text", "")).strip()
+            value = cell.get("text", "")
+            return value.strip() if isinstance(value, str) else ""
+
+        if not isinstance(cells, list):
+            self.result["unresolved"].append({"text": "", "source": copy.deepcopy(source),
+                "reason": "toc_cell_collection_unsupported", "raw_cells": copy.deepcopy(cells)})
+            if self.active or native_index:
+                self.result["matched"] = True
+                self.handled(source)
+                self.issue("toc_cell_collection_unsupported", source, category="software_unsupported")
+            return
+        indexed = [(index, copy.deepcopy(cell)) for index, cell in enumerate(cells)]
+        positions = {id(cell): index for index, cell in indexed if isinstance(cell, dict)}
+
+        def located(cell):
+            return (all(type(cell.get(key)) is int and cell[key] >= 0 for key in ("row", "col"))
+                    and all(type(cell.get(key, 1)) is int and cell.get(key, 1) > 0 for key in ("row_span", "col_span")))
 
         def evidence(cell, role):
-            origin = {**copy.deepcopy(source), "cell": cell.get("id", cell.get("native_path")), "row": cell["row"], "col": cell["col"]}
+            origin = {**copy.deepcopy(source), "cell": cell.get("id", cell.get("native_path"))}
+            origin.update({key: cell[key] for key in ("row", "col") if type(cell.get(key)) is int and cell[key] >= 0})
+            if not located(cell) or origin["cell"] is None:
+                origin["cell_position"] = positions[id(cell)]
             if "text_span" in origin:
                 origin["container_text_span"] = origin.pop("text_span")
-            raw = str(cell.get("text", ""))
+            raw = cell.get("text", "") if isinstance(cell.get("text", ""), str) else ""
             origin.update(text_span=[len(raw) - len(raw.lstrip()), len(raw.rstrip())], text_span_basis="native_cell_text")
             return {"text": literal(cell), "source": origin, "role": role, "native_id": cell.get("native_id"),
-                    "native_attributes": copy.deepcopy(cell.get("native_attributes", {}))}
+                    "native_attributes": copy.deepcopy(cell.get("native_attributes")) if isinstance(cell.get("native_attributes"), dict) else {}}
 
         if not cells:
             return
-        for cell in cells:
+        valid, unknown = [], []
+        counts = {}
+        for _index, cell in indexed:
+            if isinstance(cell, dict) and located(cell):
+                counts[cell["row"], cell["col"]] = counts.get((cell["row"], cell["col"]), 0) + 1
+        for index, cell in indexed:
+            if not isinstance(cell, dict):
+                origin = {**copy.deepcopy(source), "cell_position": index}
+                unknown.append(origin)
+                self.result["source_cells"].append({"source": origin, "text": "", "raw_cell": copy.deepcopy(cell)})
+                self.result["unresolved"].append({"text": "", "source": origin,
+                    "reason": "toc_cell_object_unsupported", "raw_cell": copy.deepcopy(cell)})
+                continue
             origin = evidence(cell, "literal")["source"]
             snapshot_source = {key: copy.deepcopy(value) for key, value in origin.items() if key not in {"text_span", "cell_text_span"}}
-            self.result["source_cells"].append({"source": snapshot_source, "text": str(cell.get("text", "")),
+            self.result["source_cells"].append({"source": snapshot_source, "text": cell.get("text", "") if isinstance(cell.get("text", ""), str) else "",
                 "row_span": cell.get("row_span", 1), "col_span": cell.get("col_span", 1),
                 "native_declarations": copy.deepcopy(cell.get("native_attributes", {}))})
             self.atom(literal(cell), origin, "literal")
+            if (not located(cell) or counts.get((cell.get("row"), cell.get("col")), 0) != 1
+                    or cell.get("service_grid_scope_state") in {"unknown", "geometry_only_unclassified"}
+                    or not isinstance(cell.get("native_attributes", {}), dict)
+                    or not isinstance(cell.get("text", ""), str)):
+                unknown.append(origin)
+                self.result["unresolved"].append({"text": literal(cell), "source": origin,
+                    "reason": "toc_cell_position_or_scope_unavailable", "raw_cell": copy.deepcopy(cell)})
+                continue
+            valid.append(cell)
+        cells = valid
+        if not cells:
+            if unknown and (self.active or native_index):
+                self.result["matched"] = True
+                self.handled(source)
+                self.issue("toc_cell_position_or_scope_unavailable", source, category="software_unsupported",
+                           affected_data_sources=unknown)
+            return
         rows = sorted({cell["row"] for cell in cells})
         headers = [cell for cell in cells if cell.get("is_column_header") or cell.get("column_header")
                    or cell.get("native_attributes", {}).get("role") == "columnheader"
                    or cell.get("native_attributes", {}).get("scope") in {"col", "colgroup"}]
         first = [cell for cell in cells if cell["row"] == rows[0]]
         if any(_PAGE_LABEL.fullmatch(literal(cell)) for cell in first) and any(_TITLE_LABEL.fullmatch(literal(cell)) for cell in first):
-            headers = list({cell["id"]: cell for cell in [*headers, *first]}.values())
+            headers = list({id(cell): cell for cell in [*headers, *first]}.values())
         elif (self.active or native_index) and sum(bool(_PAGE_LABEL.fullmatch(literal(cell))) for cell in first) == 1 and all(
                 not literal(cell) or _PAGE_LABEL.fullmatch(literal(cell)) for cell in first):
-            headers = list({cell["id"]: cell for cell in [*headers, *first]}.values())
+            headers = list({id(cell): cell for cell in [*headers, *first]}.values())
         page_headers = [cell for cell in headers if _PAGE_LABEL.fullmatch(literal(cell))]
         title_headers = [cell for cell in headers if _TITLE_LABEL.fullmatch(literal(cell)) and not _PARENT_LABEL.fullmatch(literal(cell))]
         if not title_headers:
@@ -429,6 +490,9 @@ class _Reader:
             return
         self.result["matched"] = True
         self.handled(source)
+        if unknown:
+            self.issue("toc_cell_position_or_scope_unavailable", source, category="software_unsupported",
+                       affected_data_sources=unknown)
         page_header = page_headers[0] if len(page_headers) == 1 else None
         if page_header:
             page_col = page_header["col"]

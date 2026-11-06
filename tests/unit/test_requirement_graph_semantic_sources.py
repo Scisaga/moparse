@@ -29,6 +29,35 @@ def operand(material):
     return next(n for n in material["nodes"] if n.get("kind") == "semantic_operand" and n["subject"] == "Delta")
 
 
+@pytest.mark.parametrize("mutation", ["content", "opening", "closing", "role", "missing", "edge", "feature"])
+def test_quoted_nominal_roles_require_their_actual_delimiters_and_scope(mutation):
+    material = graph('Lumen owns "Kappa and Sigma".')
+    fact = business(material)
+    assert fact["value"] == '"Kappa and Sigma"'
+    assert fact["quoted_nominals"][0]["content"] == "Kappa and Sigma"
+    validate_requirement_graph(material)
+    proof = fact["quoted_nominals"][0]
+    if mutation == "content":
+        proof["content"] = "Kappa and Omega"
+    elif mutation in {"opening", "closing"}:
+        proof[mutation + "_source"]["text_span"] = [12, 13]
+    elif mutation == "role":
+        proof["role"] = "subject"
+    elif mutation == "missing":
+        fact.pop("quoted_nominals")
+    elif mutation == "feature":
+        material["required_matcher_features"].remove("quoted_nominal_scope")
+    else:
+        material["relations"] = [edge for edge in material["relations"]
+                                 if edge["type"] != "narrative_quoted_nominal_scope"]
+        material["projections"]["L"] = [edge["id"] for edge in material["relations"]]
+        for disposition in material["dispositions"]:
+            disposition["layers"]["L"]["requirements"] = [ident for ident in
+                disposition["layers"]["L"]["requirements"] if ident in material["projections"]["L"]]
+    with pytest.raises(ValueError, match="quoted nominal"):
+        validate_requirement_graph(material)
+
+
 @pytest.mark.parametrize("text", [POLICY, NARRATIVE, "Board must review Report and Budget.",
     "The device is not able to store records.", "The auditor reported that the device stores records.",
     "董事会不得支付款项。", "如果条件是有效的，董事会可以公布报告。"])
@@ -165,4 +194,52 @@ def test_comparison_and_change_codes_are_proved_by_their_actual_complete_operato
     validate_requirement_graph(material)
     fact["qualifiers"]["comparison_operator"] = "gte" if code == "gt" else "lt"
     with pytest.raises(ValueError, match="source|operator|qualifier"):
+        validate_requirement_graph(material)
+
+
+def semantic_dicts(value):
+    if isinstance(value, dict):
+        yield value
+        for child in value.values():
+            yield from semantic_dicts(child)
+    elif isinstance(value, list):
+        for child in value:
+            yield from semantic_dicts(child)
+
+
+@pytest.mark.parametrize("operator", ["and", "or"])
+@pytest.mark.parametrize("mutation", ["missing_ast_sources", "wrong_ast_source", "missing_qualifier_source",
+                                     "wrong_qualifier_source", "synchronized_sources"])
+def test_coordination_sources_must_match_the_actual_operator_spans_even_after_synchronized_mutation(operator, mutation):
+    material = graph(f'Lumen owns "Kappa and Sigma" {operator} "Omega".')
+    validate_requirement_graph(material)
+    fields = [node for node in material["nodes"] if node["id"] in material["projections"]["B"]
+              or node.get("kind") == "semantic_operand"]
+    assert all(field["qualifier_sources"].get("coordination") for field in fields)
+    forged = {"path": PATH, "lines": [1, 1], "text_span": [12, 17]}
+    if mutation in {"missing_ast_sources", "wrong_ast_source", "synchronized_sources"}:
+        for node in semantic_dicts(material):
+            if node.get("kind") == "coordination" and "operator" in node:
+                if mutation == "missing_ast_sources":
+                    node.pop("operator_sources")
+                else:
+                    node["operator_sources"] = [deepcopy(forged)]
+    if mutation in {"missing_qualifier_source", "wrong_qualifier_source", "synchronized_sources"}:
+        for field in fields:
+            if mutation == "missing_qualifier_source":
+                field["qualifier_sources"].pop("coordination")
+            else:
+                field["qualifier_sources"]["coordination"] = [deepcopy(forged)]
+    with pytest.raises(ValueError, match="coordination.*source"):
+        validate_requirement_graph(material)
+
+
+def test_a_valid_repeated_and_token_in_the_next_statement_cannot_qualify_this_group():
+    material = graph('Lumen owns "Kappa" and "Sigma". Vega owns "Tau" and "Omega".')
+    validate_requirement_graph(material)
+    first = [node for node in material["nodes"] if node["id"] in material["projections"]["B"] and node["subject"] == "Lumen"]
+    [other, *_] = [node for node in material["nodes"] if node["id"] in material["projections"]["B"] and node["subject"] == "Vega"]
+    for field in first:
+        field["qualifier_sources"]["coordination"] = deepcopy(other["qualifier_sources"]["coordination"])
+    with pytest.raises(ValueError, match="coordination.*source"):
         validate_requirement_graph(material)

@@ -1,0 +1,24 @@
+{
+  "id": "20261031-unnamed-summary-rows-manual",
+  "status": "frozen_after_direct_source_and_candidate_reading",
+  "record": "unnamed-summary-rows.md",
+  "candidate_run": "benchmark/reports/20261031-table-loss-repair-02",
+  "pipeline_scope": ["P07", "P08"],
+  "source_pages": [
+    {"sample_id": "hkex-key-tables-p011", "input_page": 1, "physical_page": 11, "printed_page": "09"},
+    {"sample_id": "hkex-quarterly-results-p074", "input_page": 1, "physical_page": 74, "printed_page": "72"}
+  ],
+  "targets_per_pipeline": 11,
+  "criteria": ["printed_values_and_periods_preserved", "explicit_summary_business_relation_in_continuous_final_prose"],
+  "authored_result_per_pipeline": {
+    "printed_values_and_periods_preserved": {"correct": 11, "incorrect": 0},
+    "explicit_summary_business_relation_in_continuous_final_prose": {"correct": 0, "incorrect": 11}
+  },
+  "main_target_count_unchanged": 1726,
+  "main_reference_materials_changed": false,
+  "source_fact_recalculation": false,
+  "unseen_test_claim": false,
+  "whole_lite_content_acceptance": false,
+  "gold_acceptance": false,
+  "scope": "Independent manual supplementary service-conversion acceptance only; no source or reference corpus acceptance and no addition to the automated main score."
+}

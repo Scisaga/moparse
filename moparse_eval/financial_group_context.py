@@ -123,3 +123,59 @@ def bind_financial_group_facts(result: dict[str, Any], context: dict[str, Any]) 
         facets["group"] = copy.deepcopy(context["group_path"])
         fact.setdefault("row_evidence", []).extend(copy.deepcopy(context["row_evidence"]))
         fact.setdefault("role_basis", {})["financial_group_context"] = copy.deepcopy(context)
+
+
+def _same_object(left: dict[str, Any], right: dict[str, Any]) -> bool:
+    return bool(left.get("path") and all(left.get(key) == right.get(key)
+                                        for key in ("path", "lines", "cell", "block", "block_lines")))
+
+
+def read_financial_attribution_context(series: dict[str, Any], *, heading: dict[str, Any] | None,
+                                       syntax: list[dict[str, Any]], pending: list[dict[str, Any]],
+                                       parents: list[dict[str, Any]]) -> dict[str, Any]:
+    """Resolve a deferred Unit only through a complete existing reader proof.
+
+    No metric or attribution keyword is read here. The existing series reader
+    must have bound every scalar to an actual parent and recipient. Its first
+    child must directly follow the deferred structural parent, so ordinary
+    prose, an unknown ancestor, a new heading, or an image cannot be bypassed.
+    """
+    result: dict[str, Any] = {"matched": False}
+    bindings = series.get("parent_bindings", [])
+    if not financial_statement_kind(heading) or len(bindings) != 1 or not parents or len(syntax) < 2:
+        return result
+    binding = bindings[0]
+    parent = binding.get("parent", {})
+    facts = series.get("facts", [])
+    if (binding.get("kind") != "attribution" or binding.get("rule_id") != "printed_attribution_parent_and_recipient"
+            or not facts or {item.get("id") for item in facts} != {item.get("fact_id") for item in binding.get("facts", [])}
+            or not _same_object(parent.get("source", {}), parents[-1].get("source", {}))
+            or not _same_object(binding.get("child", {}).get("source", {}), syntax[-1].get("source", {}))
+            or any(not _same_object(fact.get("source", {}), syntax[-1].get("source", {})) for fact in facts)
+            or any(fact.get("role_basis", {}).get("attribution", {}).get("parent") != parent for fact in facts)):
+        return result
+    previous = syntax[-2]
+    if (previous.get("kind") != "parent_label" or not _same_object(previous.get("source", {}), parent.get("source", {}))
+            or previous.get("text", "").strip().rstrip(":：").rstrip() != parent.get("text")
+            or previous.get("scope") != syntax[-1].get("scope")
+            or previous.get("parents", []) != [item["text"] for item in parents[:-1]]):
+        return result
+    for issue in pending:
+        boundary = issue.get("boundary", {})
+        if (issue.get("reason") != "unit_scope_boundary_unresolved" or boundary.get("kind") != "parent_label"
+                or not _same_object(boundary.get("source", {}), parent.get("source", {}))
+                or boundary.get("text") != previous["text"] or issue.get("scope") != previous.get("scope")):
+            continue
+        unit = {"text": issue["unit"], "source": copy.deepcopy(issue["unit_source"]), "level": "caption_shared"}
+        if not read_unit_token(unit["text"], unit["source"])["matched"]:
+            continue
+        outer = read_financial_group_context("", syntax[-1]["source"], kind="field", heading=heading,
+                                              parents=parents[:-1], unit=unit)
+        if parents[:-1] and not outer["matched"]:
+            continue
+        result.update(matched=True, unit=unit, parent_binding=copy.deepcopy(binding),
+                      boundary=copy.deepcopy(boundary), pending_source=copy.deepcopy(issue["source"]),
+                      outer_group_context=outer,
+                      rule_id="statement_unit_resumed_by_source_bound_parent_recipient_proof")
+        return result
+    return result

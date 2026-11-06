@@ -282,13 +282,14 @@ def saved_run(tmp_path, monkeypatch, *, text="Name: Delta; Revenue: 17; Profit: 
     monkeypatch.setattr(cli, "snapshot_software", lambda *_: None)
     freeze = tmp_path / "freeze.json"
     evidence = validation()
-    evidence["expected_structure_gate"] = {"status": "passed", "software_id": identity["software_id"],
-                                            "evidence": ["invented-independent-target-set"]}
-    write_json(freeze, {"software_id": identity["software_id"], "protocol_id": cli.SCORING_PROTOCOL["id"],
-                        "validation": evidence})
+    from requirement_gate_fixture import controlled_evidence
+
     from moparse_eval.requirement_graph import compile_saved_requirements
 
-    compile_saved_requirements(run, run / "requirements/current", expected_root=reference)
+    index = compile_saved_requirements(run, run / "requirements/current", expected_root=reference)
+    evidence.update(controlled_evidence(tmp_path / "controlled-gate", index, identity["software_id"]))
+    write_json(freeze, {"software_id": identity["software_id"], "protocol_id": cli.SCORING_PROTOCOL["id"],
+                        "validation": evidence})
     return run, dataset, reference, freeze
 
 
@@ -343,20 +344,20 @@ def test_formal_software_blockers_withhold_the_entire_result_set(tmp_path, monke
     from moparse_eval.expected_evaluation import evaluate_saved
 
     run, _, expected, freeze = saved_run(tmp_path, monkeypatch, text="The total gyrated 17.\n")
-    with pytest.raises(ValueError, match="resolve every semantic requirement"):
+    with pytest.raises(ValueError, match="incomplete source obligations or semantics"):
         evaluate_saved(run, tmp_path / "scores", expected_root=expected, freeze=freeze, workers=1)
     assert not (tmp_path / "scores").exists()
 
 
 @pytest.mark.parametrize("supported", [True, False])
-def test_diagnostic_traversal_needs_no_freeze_and_never_publishes_scores(tmp_path, monkeypatch, supported):
+def test_bounded_diagnostic_traversal_needs_no_freeze_and_never_publishes_scores(tmp_path, monkeypatch, supported):
     from moparse_eval.expected_evaluation import evaluate_saved
     from moparse_eval.packaging import read_json
 
     text = "Name: Delta; Revenue: 17; Profit: 5\n" if supported else "The total gyrated 17.\n"
-    run, _, expected, _ = saved_run(tmp_path, monkeypatch, text=text)
+    run, expected, _, _ = selected_saved_run(tmp_path, monkeypatch, text=text)
     index_path = evaluate_saved(run, tmp_path / "diagnosis", expected_root=expected, diagnostic=True, workers=1,
-                               sample_ids=None if supported else ["synthetic"])
+                               sample_ids=["synthetic"])
     index = read_json(index_path)
     assert index["state"] == ("diagnostic_completed" if supported else "blocked")
     assert index["diagnostic_only"] is True
@@ -403,7 +404,7 @@ def test_missing_expected_syntax_blocks_without_becoming_candidate_zero(tmp_path
     from moparse_eval.expected_evaluation import evaluate_saved
     from moparse_eval.packaging import read_json
 
-    run, _, expected, _ = saved_run(tmp_path, monkeypatch)
+    run, expected, _, _ = selected_saved_run(tmp_path, monkeypatch)
     (expected / "invented/expected.md").unlink()
     index_path = evaluate_saved(run, tmp_path / "diagnosis", expected_root=expected, diagnostic=True, workers=1,
                                sample_ids=["synthetic"])
@@ -566,14 +567,14 @@ def test_diagnostic_selection_requires_nonempty_distinct_explicit_identities(tmp
             expected_root=tmp_path / "expected", sample_ids=selection, diagnostic=True)
 
 
-def selected_saved_run(tmp_path, monkeypatch):
+def selected_saved_run(tmp_path, monkeypatch, *, text="Name: Delta; Revenue: 17; Profit: 5\n"):
     from moparse_eval.expected_evaluation import PIPELINES
     from moparse_eval.expected_readback import markdown_observation
     from moparse_eval.packaging import read_json, write_json
 
-    run, dataset, expected, freeze = saved_run(tmp_path, monkeypatch)
+    run, dataset, expected, freeze = saved_run(tmp_path, monkeypatch, text=text)
     session, manifest = read_json(run / "run.json"), read_json(dataset / "manifest.json")
-    bodies = {"synthetic": "Name: Delta; Revenue: 17; Profit: 5\n",
+    bodies = {"synthetic": text,
               "second": "Name: Echo; Revenue: 29; Profit: 7\n",
               "third": "Name: Theta; Revenue: 31; Profit: 9\n"}
     input_paths = [expected / "invented/expected.md"]
@@ -685,14 +686,89 @@ def test_diagnostic_default_still_traverses_the_entire_declared_scope(tmp_path, 
     from moparse_eval.expected_evaluation import evaluate_saved
     from moparse_eval.packaging import read_json
 
-    run, _, expected, _ = saved_run(tmp_path, monkeypatch)
-    index = read_json(evaluate_saved(run, tmp_path / "diagnosis", expected_root=expected, diagnostic=True, workers=1))
+    run, _, expected, freeze = saved_run(tmp_path, monkeypatch)
+    index = read_json(evaluate_saved(run, tmp_path / "diagnosis", expected_root=expected, diagnostic=True,
+                                    freeze=freeze, workers=1))
     assert index["full_declared_samples"] == 1
     assert index["diagnostic_selected_samples"] == ["synthetic"]
     assert index["full_scope_traversed"] is True
     assert index["expected_comparison_complete"] is False
     assert index["diagnostic_selection_requested"] is False
     assert "summary" not in index
+    assert index["validation"] == read_json(freeze)["validation"]
+    assert read_json(tmp_path / "diagnosis/scoring-freeze.json") == read_json(freeze)
+
+
+@pytest.mark.parametrize("selection", [None, ["synthetic"]])
+def test_semantically_supported_full_diagnosis_still_requires_independent_frozen_evidence(tmp_path, monkeypatch, selection):
+    from moparse_eval import expected_evaluation
+    from moparse_eval.packaging import read_json
+
+    run, _, expected, _ = saved_run(tmp_path, monkeypatch)
+    assert read_json(run / "run.json")["development_experiment"] is True
+    monkeypatch.setattr(expected_evaluation, "_grade_saved_group", lambda *_a, **_k: pytest.fail("full diagnosis reached candidates without an independent gate"))
+    with pytest.raises(ValueError, match="full saved-output diagnosis requires.*freeze.*expected structure gate"):
+        expected_evaluation.evaluate_saved(run, tmp_path / "diagnosis", expected_root=expected,
+            diagnostic=True, sample_ids=selection, workers=1)
+    status = read_json(tmp_path / "diagnosis/execution-status.json")
+    assert status["state"] == "failed" and status["records"] == []
+
+
+@pytest.mark.parametrize("mutation", ["missing_gate", "old_software", "no_evidence"])
+def test_full_diagnosis_cannot_accept_an_unbound_or_unevidenced_structure_gate(tmp_path, monkeypatch, mutation):
+    from moparse_eval import expected_evaluation
+    from moparse_eval.packaging import read_json, write_json
+
+    run, _, expected, freeze = saved_run(tmp_path, monkeypatch)
+    record = read_json(freeze)
+    gate = record["validation"]["expected_structure_gate"]
+    if mutation == "missing_gate":
+        record["validation"].pop("expected_structure_gate")
+    elif mutation == "old_software":
+        gate["software_id"] = "a-different-source-version"
+    else:
+        gate.pop("evidence")
+    write_json(freeze, record)
+    monkeypatch.setattr(expected_evaluation, "_grade_saved_group", lambda *_a, **_k: pytest.fail("invalid full-diagnosis gate reached candidates"))
+    with pytest.raises(ValueError, match="expected structure gate"):
+        expected_evaluation.evaluate_saved(run, tmp_path / "diagnosis", expected_root=expected,
+            diagnostic=True, freeze=freeze, workers=1)
+
+
+def test_full_diagnosis_gate_binds_current_canonical_text_before_candidate_judgments(tmp_path, monkeypatch):
+    from moparse_eval import expected_evaluation
+
+    run, _, expected, freeze = saved_run(tmp_path, monkeypatch)
+    (expected / "invented/expected.md").write_text("Name: Echo; Revenue: 17; Profit: 5\n")
+    monkeypatch.setattr(expected_evaluation, "_grade_saved_group", lambda *_a, **_k: pytest.fail("changed canonical input reached full candidate judgments"))
+    with pytest.raises(ValueError, match="source|semantics"):
+        expected_evaluation.evaluate_saved(run, tmp_path / "diagnosis", expected_root=expected,
+            diagnostic=True, freeze=freeze, workers=1)
+
+
+@pytest.mark.parametrize("selection", [None, ["synthetic"]])
+@pytest.mark.parametrize("reason", ["source_obligation_pending", "input_scope_context"])
+def test_explicit_all_sample_ids_cannot_bypass_full_diagnosis_semantic_guards(tmp_path, monkeypatch, selection, reason):
+    from moparse_eval import expected_evaluation, three_layer
+
+    run, _, expected, _ = saved_run(tmp_path, monkeypatch)
+    original = three_layer.compile_expected
+
+    def incomplete(reference):
+        projection = original(reference)
+        projection["blockers"].append({"id": "unresolved:injected", "reason": reason,
+            "source": {"path": "<independent-unresolved-source>", "lines": [2, 2]},
+            "layers": ["B", "L"], "text": "Unexplained scope"})
+        return projection
+
+    def forbidden(*_args, **_kwargs):
+        pytest.fail("full diagnosis with unresolved semantics must stop before candidate scoring")
+
+    monkeypatch.setattr(three_layer, "compile_expected", incomplete)
+    monkeypatch.setattr(expected_evaluation, "_grade_saved_group", forbidden)
+    with pytest.raises(ValueError, match="complete expected semantics before full saved-output diagnosis"):
+        expected_evaluation.evaluate_saved(run, tmp_path / "diagnosis", expected_root=expected,
+            diagnostic=True, sample_ids=selection, workers=1)
 
 
 def test_selected_diagnostic_cannot_bypass_a_declared_group_scope_mismatch(tmp_path, monkeypatch):

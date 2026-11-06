@@ -171,18 +171,53 @@ def prose_scope_relations(fact: dict[str, Any]) -> list[dict[str, Any]]:
         if literal is None:
             continue
         source = copy.deepcopy(fact.get("qualifier_sources", {}).get(role, fact["source"]))
+        operator_source = copy.deepcopy(fact.get("qualifier_sources", {}).get(role + "_operator"))
         result.append({"id": f"L:prose_scope:{role}", "type": role + "_scope",
                        "left": {"role": role, "lexical_anchor": _skeleton(literal)},
                        "right": {"subject": fact["subject"], "action": fact["attribute"], "scope": list(fact.get("scope", []))},
                        "source": source,
+                       "operator_source": operator_source,
                        "binding_evidence": {"qualifier_text": literal, "qualifier_source": source,
                                             "statement_source": copy.deepcopy(fact["source"]),
-                                            "operator_source": copy.deepcopy(fact.get("qualifier_sources", {}).get(role + "_operator"))}})
+                                            "operator_source": operator_source}})
         if fact.get("identity_facets"):
             result[-1]["right"]["identity_facets"] = copy.deepcopy(fact["identity_facets"])
         for key in ("field_label_evidence", "record_evidence"):
             if fact.get(key):
                 result[-1][key] = copy.deepcopy(fact[key])
+    return result
+
+
+def prose_role_relations(fact: dict[str, Any]) -> list[dict[str, Any]]:
+    """Bind admitted modal-clause roles and explicit operators separately.
+
+    The object literal remains audit evidence rather than a location key. A
+    value change therefore does not erase a correctly retained logical link.
+    Unmarked positive polarity has no invented token or extra scope edge.
+    """
+    if not fact.get("predicate_source"):
+        return []
+    endpoint = {"subject": fact["subject"], "attribute": fact["attribute"],
+                "scope": list(fact.get("scope", [])), "identity_facets": copy.deepcopy(fact.get("identity_facets", {}))}
+    binding = {"statement_source": copy.deepcopy(fact["source"]),
+               **{key: copy.deepcopy(fact[key]) for key in ("subject_source", "predicate_source", "object_source")}}
+    result = [{"type": "field_binding", "left": {"subject": fact["subject"], "attribute": fact["attribute"]},
+               "right": copy.deepcopy(endpoint), "source": copy.deepcopy(fact["predicate_source"]),
+               "binding_evidence": copy.deepcopy(binding), "rule_id": "source_bound_modal_prose_binding"}]
+    for role in ("modality", "polarity"):
+        origin = fact.get("qualifier_sources", {}).get(role)
+        value = fact.get("qualifiers", {}).get(role)
+        if not origin or value is None:
+            continue
+        result.append({"type": "qualifier_scope", "left": {"type": role, "text": value},
+            "right": copy.deepcopy(endpoint), "source": copy.deepcopy(origin),
+            "operator_source": copy.deepcopy(origin),
+            "binding_evidence": {**copy.deepcopy(binding), "operator": value, "operator_source": copy.deepcopy(origin)},
+            "rule_id": "source_bound_modal_prose_" + role})
+    for edge in result:
+        for key in ("field_label_evidence", "record_evidence"):
+            if fact.get(key):
+                edge[key] = copy.deepcopy(fact[key])
     return result
 
 
@@ -240,6 +275,7 @@ def read_prose_requirements(text: str, source: dict[str, Any], *, label: str | N
         if purpose:
             q["purpose"] = purpose[1].strip()
             q_sources["purpose"] = _source(source, start + purpose.start(1), start + purpose.end(1))
+            q_sources["purpose_operator"] = _source(source, start + purpose.start(), start + purpose.start() + 2)
             body_start = start + purpose.end()
         elif leading:
             comma = text.rfind(",", start + leading.end(), start + modal.start())
@@ -348,10 +384,23 @@ def read_prose_requirements(text: str, source: dict[str, Any], *, label: str | N
         if action is None:
             result["blockers"].append({"reason": "prose_predicate_role_unsupported", "source": _source(source, predicate_start, predicate_end), "text": predicate})
             continue
+        action_match = re.match(r"\s+".join(re.escape(word) for word in action.split()) + r"\b", predicate, re.I)
+        if action_match is None:
+            result["blockers"].append({"reason": "prose_predicate_source_unsupported",
+                "source": _source(source, predicate_start, predicate_end), "text": predicate})
+            continue
+        action_end = predicate_start + action_match.end()
+        object_start = action_end
+        while object_start < predicate_end and text[object_start].isspace():
+            object_start += 1
         fact = {"subject": _subject(printed_subject), "attribute": action, "value": predicate, "role": "description",
                 "qualifiers": q, "identity_facets": {}, "scope": list(scope), "source": _source(source, start, end),
                 "value_source": _source(source, predicate_start, predicate_end), "qualifier_sources": q_sources,
                 "subject_source": _source(source, subject_start, subject_end), "printed_label": label,
+                "predicate": text[predicate_start:action_end],
+                "predicate_source": _source(source, predicate_start, action_end),
+                "attribute_source": _source(source, predicate_start, action_end),
+                "object": text[object_start:predicate_end], "object_source": _source(source, object_start, predicate_end),
                 "logic": {"kind": "modal_assertion", "action": action,
                           "coordination": "and" if " and " in action else None}}
         result["facts"].append(fact)
@@ -385,7 +434,7 @@ def read_prose_requirements(text: str, source: dict[str, Any], *, label: str | N
         if record:
             fact["identity_facets"]["record"] = copy.deepcopy(record)
             fact["record_evidence"] = copy.deepcopy(record_evidence)
-        for relation in prose_scope_relations(fact):
+        for relation in [*prose_scope_relations(fact), *prose_role_relations(fact)]:
             relation["id"] = f"L:prose_scope:{len(result['relations'])}"
             result["relations"].append(relation)
     result["text_spans"] = [{"text": text, "span": [0, len(text)], "role": "original_prose", "source": _source(source, 0, len(text))}]

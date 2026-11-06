@@ -35,6 +35,7 @@ for _base, _forms in {
     "attend": ("attends", "attended"), "vote": ("votes", "voted"),
     "participate": ("participates", "participated"), "access": ("accesses", "accessed"),
     "deliver": ("delivers", "delivered"), "enable": ("enables", "enabled"),
+    "sharpen": ("sharpens", "sharpened"),
 }.items():
     _ACTIONS[_base] = _base
     _ACTIONS.update(dict.fromkeys(_forms, _base))
@@ -58,7 +59,6 @@ _REPORT_ACTIONS = {"say": "say", "says": "say", "said": "say", "report": "report
                    "reported": "report", "state": "state", "states": "state", "stated": "state"}
 _REPORT_PAST = {'said', 'reported', 'stated'}
 _CLAUSE_JOIN = re.compile(r'\b(?P<operator>and|or)\b', re.I)
-_QUOTE = re.compile(r'["“”‘]|(?<!\w)[\'’]|[\'’](?!\w)')
 
 
 class _Unknown(ValueError):
@@ -67,8 +67,15 @@ class _Unknown(ValueError):
 
 class _Reader:
     def __init__(self, text: str, source: dict[str, Any], scope):
+        from .quoted_nominal import scan_quoted_nominals
+
         self.text, self.source, self.scope = text, copy.deepcopy(source), list(scope)
         self.features: set[str] = set()
+        self.quoted = scan_quoted_nominals(text, source)
+        self.syntax = self.quoted['syntax_text']
+        self.fronted_scopes = []
+        if self.quoted['matched']:
+            self.features.add('quoted_nominal_scope')
         self.facts: list[dict[str, Any]] = []
         self.relations: list[dict[str, Any]] = []
         self.operands: list[dict[str, Any]] = []
@@ -80,6 +87,25 @@ class _Reader:
         offset = parent[0] if isinstance(parent, (list, tuple)) and len(parent) == 2 else 0
         return {**copy.deepcopy(self.source), "text_span": [offset + start, offset + end]}
 
+    def interpret(self, start: int, end: int):
+        """Commit a clause only after all of its role evidence was emitted.
+
+        Source-role checks can discover unsupported syntax after parsing, for
+        example a quoted CJK role in a shared emitter. Keep valid neighbors,
+        but never leak the first leaf of a failed compound clause as a fact.
+        """
+        banks = (self.facts, self.relations, self.operands, self.operand_relations)
+        lengths = [len(bank) for bank in banks]
+        try:
+            tree = self.parse(start, end)
+            self.annotate_sources(tree)
+            self.emit(tree)
+        except _Unknown:
+            for bank, length in zip(banks, lengths, strict=True):
+                del bank[length:]
+            raise
+        return tree
+
     def trim(self, start: int, end: int) -> tuple[int, int]:
         while start < end and self.text[start].isspace():
             start += 1
@@ -88,8 +114,13 @@ class _Reader:
         return start, end
 
     def nominal(self, start: int, end: int, *, actor=False) -> tuple[int, int]:
+        from .quoted_nominal import quoted_role_evidence
+
         start, end = self.trim(start, end)
-        value = self.text[start:end]
+        _, reason = quoted_role_evidence(self.text, start, end, self.quoted, role='subject' if actor else 'object')
+        if reason:
+            raise _Unknown(reason)
+        value = self.syntax[start:end]
         if not value or _UNSUPPORTED.search(value) or _PRIMARY.search(value) or _RELATIVE.search(value):
             raise _Unknown("narrative_nominal_boundary_unresolved")
         if re.search(r"\b(?:to\s+[A-Za-z]+|do|does|did|not|never)\b", value, re.I):
@@ -109,14 +140,27 @@ class _Reader:
         start, end = self.trim(start, end)
         if start == end:
             raise _Unknown("narrative_empty_clause")
-        fragment = self.text[start:end]
-        if fragment.count('"') % 2 or fragment.count('“') != fragment.count('”'):
-            raise _Unknown("narrative_quote_boundary_unresolved")
-        if _QUOTE.search(fragment):
-            raise _Unknown("narrative_quoted_scope_unresolved")
+        fragment = self.syntax[start:end]
+        from .fronted_nominal_context import read_fronted_nominal_context
         from .temporal_prose_requirements import read_temporal_prefix
 
-        temporal = read_temporal_prefix(self.text, self.source, start, end)
+        temporal = read_temporal_prefix(self.syntax, self.source, start, end)
+        fronted = None if temporal else read_fronted_nominal_context(
+            self.text, self.source, start, end, syntax_text=self.syntax, quoted=self.quoted)
+        if temporal:
+            self.features.add('temporal_prose_scope')
+        if fronted is not None:
+            # A known family remains claimed even when its original child or
+            # nominal boundary is unresolved; no opaque fallback may erase it.
+            self.features.add('fronted_nominal_context')
+            self.fronted_scopes.append({**copy.deepcopy(fronted), 'source': self.source_at(start, end)})
+        errors = [item for item in self.quoted['errors'] if item['span'][0] < end and item['span'][1] > start]
+        if errors:
+            raise _Unknown(errors[0]['reason'])
+        unknown_quotes = [item for item in self.quoted['scopes'] if item['span'][0] < end and item['span'][1] > start
+                          and not item['nominal_complete']]
+        if unknown_quotes:
+            raise _Unknown(unknown_quotes[0]['reason'])
         if temporal:
             self.features.add('temporal_prose_scope')
             child = self.parse(temporal["body_start"], end, actor, depth + 1)
@@ -130,9 +174,22 @@ class _Reader:
                 raise _Unknown("narrative_multiple_temporal_scopes_unresolved")
             return {"kind": "temporal_scope", **{key: value for key, value in temporal.items() if key != "body_start"},
                     "child": child, "span": [start, end]}
-        leading = _CONDITION.match(self.text, start, end)
+        if fronted is not None:
+            if not fronted['complete']:
+                raise _Unknown(fronted['reason'])
+            child = self.parse(fronted['body_start'], end, actor, depth + 1)
+
+            def has_fronted(value):
+                if isinstance(value, dict):
+                    return value.get('kind') == 'fronted_context' or any(has_fronted(item) for item in value.values())
+                return isinstance(value, list) and any(has_fronted(item) for item in value)
+
+            if has_fronted(child):
+                raise _Unknown('fronted_nominal_nested_scope_unresolved')
+            return {key: value for key, value in fronted.items() if key not in {'matched', 'complete', 'body_start'}} | {'child': child}
+        leading = _CONDITION.match(self.syntax, start, end)
         if leading:
-            comma = self.text.find(',', leading.end(), end)
+            comma = self.syntax.find(',', leading.end(), end)
             if comma < 0:
                 raise _Unknown("narrative_condition_boundary_unresolved")
             operand = self.parse(leading.end(), comma, depth=depth + 1)
@@ -162,13 +219,13 @@ class _Reader:
             if reporting['negative']:
                 node['negation_span'] = [start + reporting.start('negative'), start + reporting.start('negative') + 3]
             return node
-        relatives = list(_RELATIVE.finditer(self.text, start, end))
+        relatives = list(_RELATIVE.finditer(self.syntax, start, end))
         if relatives:
             if len(relatives) != 1 or actor is not None:
                 raise _Unknown("narrative_relative_scope_unresolved")
             marker = relatives[0]
             a, b = self.nominal(start, marker.start(), actor=True)
-            boundaries = list(_PRIMARY.finditer(self.text, marker.end(), end))
+            boundaries = list(_PRIMARY.finditer(self.syntax, marker.end(), end))
             if not boundaries:
                 raise _Unknown("narrative_relative_main_predicate_unresolved")
             boundary = boundaries[-1]
@@ -178,7 +235,7 @@ class _Reader:
             return {'kind': 'relative', 'antecedent': self.text[a:b], 'antecedent_span': [a, b],
                     'marker_span': [marker.start(), marker.end()], 'restriction': restriction,
                     'child': child, 'span': [start, end]}
-        trailing = list(_CONDITION.finditer(self.text, start, end))
+        trailing = list(_CONDITION.finditer(self.syntax, start, end))
         if trailing:
             child = self.parse(start, trailing[0].start(), actor, depth + 1)
             bindings = []
@@ -204,7 +261,7 @@ class _Reader:
         parsers. This step neither supplies an actor nor distributes negation
         from one chunk to another. Mixed operator precedence remains unknown.
         """
-        joins = list(_CLAUSE_JOIN.finditer(self.text, start, end))
+        joins = list(_CLAUSE_JOIN.finditer(self.syntax, start, end))
         if not joins or len(joins) > 16:
             return None
         children, cursor = [], start
@@ -230,12 +287,12 @@ class _Reader:
         if active is not None:
             return active
         auxiliary_span = None
-        boundary = (_PRIMARY.search(self.text, start, end) or _VERB.search(self.text, start, end)) if actor is None else None
+        boundary = (_PRIMARY.search(self.syntax, start, end) or _VERB.search(self.syntax, start, end)) if actor is None else None
         if actor is None:
             if boundary is None:
                 raise _Unknown('narrative_predicate_unresolved')
             a, b = self.trim(start, boundary.start())
-            auxiliary = re.search(r'\s+(?P<finite>do|does|did)(?:\s+(?:not|never))?\s*$', self.text[a:b], re.I)
+            auxiliary = re.search(r'\s+(?P<finite>do|does|did)(?:\s+(?:not|never))?\s*$', self.syntax[a:b], re.I)
             negative = None
             if auxiliary:
                 auxiliary_span = [a + auxiliary.start('finite'), a + auxiliary.end('finite')]
@@ -248,7 +305,7 @@ class _Reader:
             vp = boundary.start()
         else:
             vp, negative = start, None
-        modality = _ABILITY.match(self.text, vp, end) or _MODAL.match(self.text, vp, end)
+        modality = _ABILITY.match(self.syntax, vp, end) or _MODAL.match(self.syntax, vp, end)
         modal_value, modal_negative = None, None
         if modality:
             if auxiliary_span is not None:
@@ -266,13 +323,13 @@ class _Reader:
         governed = modality is not None or auxiliary_span is not None
         while vp < end and self.text[vp].isspace():
             vp += 1
-        local_neg = re.match(r'(?:not|never)\b\s*', self.text[vp:end], re.I)
+        local_neg = re.match(r'(?:not|never)\b\s*', self.syntax[vp:end], re.I)
         if local_neg:
             if negative or modal_negative:
                 raise _Unknown('narrative_multiple_negation_scope_unresolved')
             negative = [vp, vp + len(local_neg[0].rstrip())]
             vp += local_neg.end()
-        joins = list(_ACTION_JOIN.finditer(self.text, vp, end))
+        joins = list(_ACTION_JOIN.finditer(self.syntax, vp, end))
         if joins and (negative or modal_negative):
             raise _Unknown('narrative_negated_coordination_scope_unresolved')
         if joins:
@@ -309,7 +366,7 @@ class _Reader:
 
     def predicate(self, actor, start, end, *, shared=None, governed=False, finite=None):
         start, end = self.trim(start, end)
-        predicate = _VERB.match(self.text, start, end)
+        predicate = _VERB.match(self.syntax, start, end)
         if predicate is None:
             raise _Unknown('narrative_predicate_unresolved')
         verb = predicate[0].lower()
@@ -318,12 +375,12 @@ class _Reader:
         a, b = self.trim(predicate.end(), end)
         if a == b and shared is not None:
             a, b = shared
-        negative = re.match(r'(?:not|never)\b\s*', self.text[a:b], re.I)
+        negative = re.match(r'(?:not|never)\b\s*', self.syntax[a:b], re.I)
         operator_span = None
         if negative:
             operator_span = [a, a + len(negative[0].rstrip())]
             a += negative.end()
-        complement = _VERB.match(self.text, a, b)
+        complement = _VERB.match(self.syntax, a, b)
         if _ACTIONS[verb] in {'have', 'be'} and complement and complement[0].lower() in _PAST:
             raise _Unknown('narrative_perfect_or_passive_unresolved')
         spans, operator, separators = self.objects(a, b)
@@ -337,7 +394,7 @@ class _Reader:
         children = []
         for x, y in spans:
             self.nominal(x, y)
-            if re.search(r'\b(?:owned|acquired|operated|managed|produced)\s+by\b', self.text[x:y], re.I):
+            if re.search(r'\b(?:owned|acquired|operated|managed|produced)\s+by\b', self.syntax[x:y], re.I):
                 raise _Unknown('narrative_passive_agent_scope_unresolved')
             leaf = {'kind': 'proposition', 'subject': self.text[slice(*actor)], 'subject_span': list(actor),
                 'predicate': predicate[0], 'predicate_span': [predicate.start(), predicate.end()],
@@ -354,12 +411,12 @@ class _Reader:
     def objects(self, start, end):
         if start == end:
             raise _Unknown('narrative_object_unresolved')
-        if re.search(r'\bor\s+(?:more|fewer|less)\b', self.text[start:end], re.I):
+        if re.search(r'\bor\s+(?:more|fewer|less)\b', self.syntax[start:end], re.I):
             # A printed comparative quantity is not a disjunction between a
             # number and a noun phrase. Its threshold role needs its own reader.
             raise _Unknown('narrative_quantified_comparison_scope_unresolved')
-        commas = list(re.finditer(r'(?<!\d),(?!\d)', self.text[start:end]))
-        joins = list(re.finditer(r'\s+(and|or)\s+', self.text[start:end], re.I))
+        commas = list(re.finditer(r'(?<!\d),(?!\d)', self.syntax[start:end]))
+        joins = list(re.finditer(r'\s+(and|or)\s+', self.syntax[start:end], re.I))
         if not joins:
             if commas:
                 raise _Unknown('narrative_enumeration_boundary_unresolved')
@@ -421,6 +478,9 @@ class _Reader:
             return {'kind': kind, 'qualifiers': copy.deepcopy(node['qualifiers']), 'child': _Reader.summary(node['child'])}
         if kind == 'active_aspect':
             return {'kind': kind, 'aspect': node['aspect'], 'tense': node['tense'], 'child': _Reader.summary(node['child'])}
+        if kind == 'fronted_context':
+            return {'kind': kind, **{key: node[key] for key in ('preposition', 'operator', 'role', 'context')},
+                    'child': _Reader.summary(node['child'])}
         return {'kind': kind, 'bindings': [{'operator': item['operator'], 'operand': _Reader.summary(item['operand'])}
                                          for item in node['bindings']], 'child': _Reader.summary(node['child'])}
 
@@ -433,6 +493,8 @@ class _Reader:
             for name, value in list(node.items()):
                 if (name == 'span' or name.endswith('_span') and name not in {'text_span', 'cell_text_span', 'joined_span'}) and isinstance(value, list) and len(value) == 2:
                     node['source' if name == 'span' else name[:-5] + '_source'] = self.source_at(*value)
+                elif name == 'operator_spans':
+                    node['operator_sources'] = [self.source_at(*span) for span in value]
                 elif isinstance(value, (dict, list)):
                     self.annotate_sources(value)
 
@@ -462,6 +524,9 @@ class _Reader:
         if node['kind'] == 'active_aspect':
             return {'role': 'active_aspect', 'aspect': node['aspect'], 'tense': node['tense'],
                     'child': _Reader.endpoint(node['child'])}
+        if node['kind'] == 'fronted_context':
+            return {'role': 'fronted_context', 'operator': node['operator'], 'context_role': node['role'],
+                    'context': node['context'], 'child': _Reader.endpoint(node['child'])}
         return {'role': 'conditions', 'bindings': [{'operator': item['operator'], 'operand': _Reader.endpoint(item['operand'])}
                                                  for item in node['bindings']], 'child': _Reader.endpoint(node['child'])}
 
@@ -512,6 +577,11 @@ class _Reader:
             self.features.add('active_aspect_scope')
             context['aspect'], context['aspect_node'] = node['aspect'], node
             context['tense'], context['tense_span'] = node['tense'], node['tense_span']
+            self.emit(node['child'], context)
+            return
+        if kind == 'fronted_context':
+            self.features.add('fronted_nominal_context')
+            context.setdefault('fronted_nodes', []).append(node)
             self.emit(node['child'], context)
             return
         if kind == 'conditions':
@@ -568,6 +638,7 @@ class _Reader:
             return
         if kind == 'coordination':
             self.features.add('alternative_membership' if node['operator'] == 'or' else 'coordination_scope')
+            context['coordination_source_node'] = node
             if node['operator'] == 'or':
                 operand_context = copy.deepcopy(context)
                 operand_context['assertion_context'] = 'alternative_member'
@@ -610,7 +681,28 @@ class _Reader:
                       'assertion_context': context['assertion_context'], 'operator_path': context['operators'],
                       **({'tree': copy.deepcopy(node['tree'])} if kind == 'logical_group' else {})},
             'rule_id': 'explicit_narrative_logical_group' if kind == 'logical_group' else 'explicit_narrative_proposition'}
+        from .quoted_nominal import quoted_role_evidence
+
+        quoted_roles = []
+        for role, span in (('subject', node['subject_span']), ('object', node['object_span'])):
+            if span is not None and not (kind == 'logical_group' and role == 'object'):
+                evidence, reason = quoted_role_evidence(self.text, *span, self.quoted, role=role)
+                if reason:
+                    raise _Unknown(reason)
+                quoted_roles.extend(evidence)
+        if quoted_roles:
+            fact['quoted_nominals'] = quoted_roles
         fact['qualifier_sources'] = {}
+        if 'coordination_source_node' in context:
+            fact['qualifier_sources']['coordination'] = copy.deepcopy(context['coordination_source_node']['operator_sources'])
+        if 'fronted_nodes' in context:
+            fact['qualifiers']['fronted_contexts'] = [{
+                'preposition': item['preposition'], 'operator': item['operator'],
+                'role': item['role'], 'text': item['context']} for item in context['fronted_nodes']]
+            fact['qualifier_sources']['fronted_contexts'] = [{
+                key: self.source_at(*item[key[:-7] + '_span'])
+                for key in ('preposition_source', 'context_source', 'separator_source')}
+                for item in context['fronted_nodes']]
         if 'temporal' in context:
             temporal = context['temporal']
             fact['qualifiers'].update(copy.deepcopy(temporal['qualifiers']))
@@ -647,6 +739,15 @@ class _Reader:
         self.edge('field_binding', {'subject': fact['subject'], 'attribute': fact['attribute'],
                   **({'qualifiers': {'tense': q['tense']}} if 'tense' in q else {})}, fact, fact['source'],
                   subject_source=fact['subject_source'], predicate_source=fact['predicate_source'], object_source=fact['object_source'])
+        for quoted in quoted_roles:
+            self.edge('narrative_quoted_nominal_scope', {'role': 'quoted_nominal', 'nominal_role': quoted['role'],
+                      'attachment': quoted['attachment']}, fact, quoted['source'], quoted_nominal=quoted)
+        for fronted in context.get('fronted_nodes', []):
+            self.edge('narrative_fronted_context_scope', {'operator': fronted['operator'], 'role': fronted['role'],
+                      'context': fronted['context']}, fact, self.source_at(*fronted['preposition_span']),
+                      context_source=self.source_at(*fronted['context_span']),
+                      separator_source=self.source_at(*fronted['separator_span']),
+                      **({'quoted_nominals': fronted['quoted_nominals']} if 'quoted_nominals' in fronted else {}))
         if 'temporal' in context:
             for key, value in context['temporal']['qualifiers'].items():
                 self.edge('qualifier_scope', {'type': key, 'text': value}, fact,
@@ -658,6 +759,16 @@ class _Reader:
             self.edge('narrative_alternative_scope', {'operator': 'or',
                       'members': [self.endpoint(child) for child in node['tree']['children']]}, fact,
                       fact['predicate_source'], operand_logic=node['tree'])
+        if 'coordination_node' in context:
+            coordination = context['coordination_node']
+            for position, span in enumerate(coordination['operator_spans']):
+                a, b = self.trim(*span)
+                if a == b:
+                    continue  # Commas delimit members without becoming AND tokens.
+                self.edge('narrative_coordination_scope', {'operator': coordination['operator'],
+                          'mode': coordination['mode'], 'position': position,
+                          'member_count': len(coordination['children'])}, fact, self.source_at(a, b),
+                          operator_source=self.source_at(a, b), coordination_logic=coordination)
         for binding in context.get('condition_bindings', []):
             self.edge('narrative_condition_scope', {'operator': binding['operator'], 'operand': self.endpoint(binding['operand'])}, fact,
                 self.source_at(*binding['operator_span']), operand_logic=copy.deepcopy(binding['operand']))
@@ -708,19 +819,39 @@ def read_narrative(text: str, source: dict[str, Any], *, scope=()) -> dict[str, 
     result['consumed_spans'] = [{'text': text, 'role': 'literal', 'span': [0, len(text)], 'source': reader.source_at(0, len(text))}]
     for ordinal, (start, end) in enumerate(_sentence_spans(text)):
         reader.record = f"{source.get('path')}:{source.get('lines', [])}:{source.get('block')}:{source.get('text_span')}:narrative:{ordinal}"
+        from .document_composition_requirements import read_document_composition
+
+        composition = read_document_composition(text[start:end], reader.source_at(start, end), scope=scope)
+        if composition['matched']:
+            for fact in composition['facts']:
+                fact['id'] = f'composition:{ordinal}'
+                fact['record_id'] = reader.record
+            reader.facts.extend(composition['facts'])
+            reader.relations.extend(composition['relations'])
+            result['logic'].extend(composition['logic'])
+            for key in ('unresolved', 'blockers', 'pending_requirements'):
+                result[key].extend(composition[key])
+            reader.features.update(composition['required_matcher_features'])
+            continue
         try:
-            tree = reader.parse(start, end)
+            tree = reader.interpret(start, end)
         except _Unknown as error:
             item = {'kind': 'narrative', 'reason': str(error), 'text': text[start:end],
                     'source': reader.source_at(start, end), 'scope': list(scope), 'layers': ['B', 'L'],
                     'category': 'software_unsupported'}
+            quoted_scopes = [{key: copy.deepcopy(value) for key, value in quoted.items() if key != 'span'}
+                             for quoted in reader.quoted['scopes'] if quoted['span'][0] < end and quoted['span'][1] > start]
+            if quoted_scopes:
+                item['quoted_scopes'] = quoted_scopes
+            fronted_scopes = [copy.deepcopy(fronted) for fronted in reader.fronted_scopes
+                              if start <= fronted['span'][0] < fronted['span'][1] <= end]
+            if fronted_scopes:
+                item['fronted_scopes'] = fronted_scopes
             result['unresolved'].append(item)
             result['blockers'].append(copy.deepcopy(item))
             result['pending_requirements'].append(copy.deepcopy(item))
             continue
-        reader.annotate_sources(tree)
         result['logic'].append(tree)
-        reader.emit(tree)
     result['complete'] = result['semantic_complete'] = bool(result['logic']) and not result['unresolved']
     result['required_matcher_features'] = sorted(reader.features)
     return result

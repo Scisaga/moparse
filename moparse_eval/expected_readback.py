@@ -39,10 +39,42 @@ class Element:
     list_span: tuple[int, int] | None = None
     part_index: int | None = None
     native_heading_level: int | None = None
+    inline_references: list[dict[str, Any]] = field(default_factory=list)
+
+
+def _inline_tokens(tokens: list[Any]) -> str:
+    """Render existing inline roles without reparsing their text as blocks."""
+    parts = []
+    for token in tokens:
+        if token.type in {"text", "code_inline"}:
+            parts.append(token.content)
+        elif token.type in {"softbreak", "hardbreak"}:
+            parts.append("\n")
+        elif token.type == "html_inline":
+            parts.append(visible_text(token.content, "html"))
+        elif token.children:
+            parts.append(_inline_tokens(token.children))
+    return "".join(parts)
+
+
+def _inline_references(tokens: list[Any]) -> list[dict[str, Any]]:
+    refs = []
+    for index, token in enumerate(tokens):
+        if token.type == "image":
+            refs.append({"kind": "image", "destination": token.attrGet("src"),
+                         "text": _inline_tokens(token.children or []), "title": token.attrGet("title")})
+        elif token.type == "link_open":
+            close = next((stop for stop in range(index + 1, len(tokens)) if tokens[stop].type == "link_close"), None)
+            if close is not None:
+                refs.append({"kind": "link", "destination": token.attrGet("href"),
+                             "text": _inline_tokens(tokens[index + 1:close]), "title": token.attrGet("title")})
+        elif token.children:
+            refs.extend(_inline_references(token.children))
+    return refs
 
 
 def inline_text(text: str) -> str:
-    return visible_text(text, "markdown").strip()
+    return _inline_tokens(MARKDOWN.parseInline(text)).strip()
 
 
 def elements(markdown: str) -> list[Element]:
@@ -54,6 +86,7 @@ def elements(markdown: str) -> list[Element]:
     items: list[dict[str, Any]] = []
     lists: list[tuple[int, int]] = []
     table_depth = 0
+    table_cell_index = 0
     for index, token in enumerate(tokens):
         if token.type == "table_open":
             table_depth += 1
@@ -63,9 +96,15 @@ def elements(markdown: str) -> list[Element]:
             raw = "".join(lines[a:b])
             result.append(Element("table", "", (a + 1, b), raw,
                                   tuple(t for _, t in headings), cells=markdown_cells(raw, f"markdown:L{a + 1}")))
+            table_cell_index = 0
         elif token.type == "table_close":
             table_depth -= 1
         elif table_depth:
+            if token.type == "inline" and table_cell_index < len(result[-1].cells):
+                cell = result[-1].cells[table_cell_index]
+                cell["text"] = _inline_tokens(token.children or [])
+                cell["inline_references"] = _inline_references(token.children or [])
+                table_cell_index += 1
             continue
         elif token.type in {"bullet_list_open", "ordered_list_open"}:
             if token.map is None:
@@ -83,7 +122,7 @@ def elements(markdown: str) -> list[Element]:
             previous = tokens[index - 1]
             a, b = token.map
             raw = "".join(lines[a:b])
-            text = inline_text(token.content)
+            text = _inline_tokens(token.children or []).strip()
             if not text and token.children and any(c.type == "image" for c in token.children):
                 text = " ".join(c.content for c in token.children if c.type == "image")
             parents = tuple(item["element"].text for item in items[:-1] if item["element"])
@@ -100,6 +139,7 @@ def elements(markdown: str) -> list[Element]:
                 if items and items[-1]["element"] is None:
                     items[-1]["element"] = element
             result.append(element)
+            element.inline_references = _inline_references(token.children or [])
             element.list_span = lists[0] if lists else None
         elif token.type in {"fence", "code_block", "html_block"} and token.map:
             a, b = token.map
@@ -201,6 +241,14 @@ def read_expected(sample: dict[str, Any], expected_root: Path, *,
     lines = content.splitlines(keepends=True)
     if any(scope["lines"][1] > len(lines) for scope in scopes):
         raise ExpectedReadError("declared expected line range cannot be read")
+    # This source stream is selected directly from the existing declarations,
+    # before Markdown elements or table adapters can omit any raw content.
+    raw_segments = [{"id": f"authorized-raw:{index}",
+                     "source": {"path": str(source), "lines": [start, end]},
+                     "raw": "".join(lines[start - 1:end]),
+                     "declarations": [copy.deepcopy(scope) for scope in scopes
+                                      if scope["lines"][0] <= end and start <= scope["lines"][1]]}
+                    for index, (start, end) in enumerate(_intervals((1, len(lines)), scopes))]
     if cache is not None and source in cache:
         document = cache[source]
     else:
@@ -272,6 +320,7 @@ def read_expected(sample: dict[str, Any], expected_root: Path, *,
                 "parents": list(part.parents), "list_span": part.list_span,
                 "has_children": part.has_children,
                 "heading_level": part.native_heading_level if part.kind == "heading" else None,
+                "inline_references": copy.deepcopy(part.inline_references),
                 "outside_selection_context": copy.deepcopy(external),
             }
             selected.append(target)
@@ -284,7 +333,8 @@ def read_expected(sample: dict[str, Any], expected_root: Path, *,
     return {"sample_id": sample["id"], "document_id": sample["document_id"],
             **{key: copy.deepcopy(sample.get(key)) for key in (
                 "family_id", "source_pages", "tags", "development_exposure", "source_category")},
-            "scope": scopes, "targets": selected, "standard": "expected_only"}
+            "scope": scopes, "targets": selected, "authorized_raw_segments": raw_segments,
+            "standard": "expected_only"}
 
 
 def markdown_observation(markdown: str, *, sample_id: str, pipeline: str, pages: list[int]) -> dict[str, Any]:

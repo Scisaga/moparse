@@ -1,0 +1,30 @@
+{
+  "id": "20261024-lite-source-adjudications-01",
+  "scope": "all_configurations_and_repetitions",
+  "date": "2026-10-24",
+  "evidence_base": "run_directory",
+  "frozen_reference_and_index_preserved": true,
+  "method": "Human direct viewing of the original physical page and its enlargement, followed by direct reading of the cited frozen authored paragraph. No automated corpus review or answer replacement.",
+  "decisions": [
+    {
+      "id": "spdb-declaration-reading-source-discrepancy",
+      "sample_id": "spdb-cover-declaration-p001-002",
+      "unit_id": "declaration-reading",
+      "action": "exclude_unit_pending",
+      "reviewers": [
+        "acceptance_design",
+        "root"
+      ],
+      "source_document_id": "1200454112",
+      "physical_page": 2,
+      "frozen_reference_location": "references/1200454112/expected.md, line 23",
+      "source_visual_reading": "本概览的编制主是为了方便投资者快速浏览",
+      "frozen_authored_reading": "本概览的编制主要是为了方便投资者快速浏览",
+      "reason": "The original page visibly reads 编制主是; the frozen paragraph contains an additional 要. This source-backed discrepancy cannot be charged as a candidate deletion. Exclude the entire evaluation unit and its dependent reference relations uniformly, retain the original freeze and record the reduced scoring coverage. This decision neither replaces the frozen answer nor accepts other content.",
+      "evidence": [
+        "evidence/review-P01-1200454112-p2.png",
+        "evidence/review-P01-spdb-p2-last-paragraph.png"
+      ]
+    }
+  ]
+}

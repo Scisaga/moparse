@@ -275,7 +275,7 @@ def read_cjk_narrative(text: str, source: dict[str, Any], *, scope=()) -> dict[s
         for a, b in pieces:
             reader.record = f'{source}:{ordinal}:{a}'
             try:
-                tree = reader.parse(a, b)
+                tree = reader.interpret(a, b)
             except _Unknown as error:
                 item = {'kind': 'cjk_narrative', 'reason': str(error), 'text': text[a:b],
                         'source': reader.source_at(a, b), 'scope': list(scope), 'layers': ['B', 'L'],
@@ -284,9 +284,7 @@ def read_cjk_narrative(text: str, source: dict[str, Any], *, scope=()) -> dict[s
                 result['blockers'].append(copy.deepcopy(item))
                 result['pending_requirements'].append(copy.deepcopy(item))
                 continue
-            reader.annotate_sources(tree)
             result['logic'].append(tree)
-            reader.emit(tree)
     result['complete'] = result['semantic_complete'] = bool(result['logic']) and not result['unresolved']
     result['required_matcher_features'] = sorted(reader.features)
     return result

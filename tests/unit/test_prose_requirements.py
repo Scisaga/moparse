@@ -67,7 +67,7 @@ def test_exception_is_preserved_separately_from_a_condition_or_missing_text():
         {"modality": "must", "polarity": "positive", "exception": "transfers below 5 credits", "exception_operator": "except"},
         "description",
     )
-    [relation] = result["relations"]
+    [relation] = [edge for edge in result["relations"] if edge["type"] == "exception_scope"]
     assert relation["type"] == "exception_scope"
     assert relation["left"] == {"role": "exception", "lexical_anchor": ["transfers", "below"]}
 
@@ -167,9 +167,12 @@ def test_content_changes_do_not_automatically_destroy_proved_prose_order_or_pare
 def test_condition_attachment_keeps_its_independently_identified_roles_when_content_changes(before, after):
     a = read_prose_requirements(POLICY, SOURCE)
     b = read_prose_requirements(POLICY.replace(before, after), SOURCE)
-    assert len(a["relations"]) == len(b["relations"]) == 1
-    assert edges(a) == edges(b)
-    [relation] = a["relations"]
+    before = [edge for edge in a["relations"] if edge["type"] == "condition_scope"]
+    after = [edge for edge in b["relations"] if edge["type"] == "condition_scope"]
+    assert len(before) == len(after) == 1
+    assert [(edge["type"], edge["left"], edge["right"]) for edge in before] == [
+        (edge["type"], edge["left"], edge["right"]) for edge in after]
+    [relation] = before
     assert relation["left"] == {"role": "condition", "lexical_anchor": ["approved", "by", "directors"]}
     assert relation["right"] == {"subject": "the board", "action": "pay", "scope": []}
     assert "17" not in repr(relation["left"]) + repr(relation["right"])
@@ -182,7 +185,8 @@ def test_swapping_only_the_printed_condition_bindings_changes_the_logical_scope_
     second = "The board shall pay 17 credits if registered. The clerk must publish the notice if approved."
     a, b = read_prose_requirements(first, SOURCE), read_prose_requirements(second, SOURCE)
     assert a["blockers"] == b["blockers"] == []
-    assert len(a["relations"]) == len(b["relations"]) == 2
+    assert len([edge for edge in a["relations"] if edge["type"] == "condition_scope"]) == 2
+    assert len([edge for edge in b["relations"] if edge["type"] == "condition_scope"]) == 2
     assert edges(a) != edges(b)
     assert a["relations"][0]["left"]["lexical_anchor"] == ["approved"]
     assert b["relations"][0]["left"]["lexical_anchor"] == ["registered"]

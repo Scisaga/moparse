@@ -176,7 +176,7 @@ def test_complete_contract_explicit_and_preserves_each_action_or_object(statemen
 POLICY = "the board shall not pay 17 credits unless approved by 4 directors."
 
 
-def test_complete_contract_condition_negation_and_obligation_are_in_one_business_assertion():
+def test_partial_contract_preserves_condition_negation_and_obligation_without_claiming_the_inner_agent():
     graph = compile_requirement_graph(_expected(_target(POLICY)))
     [fact] = _business(graph)
     assert (fact["subject"], fact["attribute"], fact["value"], fact["role"]) == (
@@ -186,10 +186,12 @@ def test_complete_contract_condition_negation_and_obligation_are_in_one_business
     assert _span_literal(graph, fact["qualifier_sources"]["condition"]) == "approved by 4 directors"
     assert _span_literal(graph, fact["qualifier_sources"]["polarity"]) == "not"
     assert len([e for e in _projected(graph, "L") if e["type"] == "condition_scope"]) == 1
-    assert not graph["unresolved"]
+    assert graph["semantic_complete"] is False
+    assert [(issue["text"], issue.get("interpretation_rule")) for issue in graph["unresolved"]] == [
+        ("by", "uninterpreted_postpredicate_scope_requires_its_own_relation")]
 
 
-def test_complete_contract_exception_is_not_relabelled_as_condition():
+def test_partial_contract_keeps_exception_distinct_while_its_inner_comparison_remains_pending():
     text = "the board must report every transfer except transfers below 5 credits."
     graph = compile_requirement_graph(_expected(_target(text)))
     [fact] = _business(graph)
@@ -197,7 +199,24 @@ def test_complete_contract_exception_is_not_relabelled_as_condition():
                                   "exception": "transfers below 5 credits", "exception_operator": "except"}
     assert "condition" not in fact["qualifiers"]
     assert len([e for e in _projected(graph, "L") if e["type"] == "exception_scope"]) == 1
-    assert not graph["unresolved"]
+    assert graph["semantic_complete"] is False
+    assert [(issue["text"], issue.get("interpretation_rule")) for issue in graph["unresolved"]] == [
+        ("below", "uninterpreted_postpredicate_scope_requires_its_own_relation")]
+
+
+@pytest.mark.parametrize("text,role,literal,edge_type", [
+    ("the board shall not pay 17 credits unless approved.", "condition", "approved", "condition_scope"),
+    ("the board must report every transfer except refunds.", "exception", "refunds", "exception_scope"),
+])
+def test_admitted_atomic_condition_or_exception_still_has_complete_outer_scope(text, role, literal, edge_type):
+    reference = _expected(_target(text))
+    graph = compile_requirement_graph(reference)
+    [fact] = _business(graph)
+    assert fact["subject"] == "the board"
+    assert fact["qualifiers"][role] == literal
+    assert len([edge for edge in _projected(graph, "L") if edge["type"] == edge_type]) == 1
+    assert graph["semantic_complete"] is True and not graph["unresolved"]
+    validate_requirement_graph(graph, expected=reference)
 
 
 @pytest.mark.parametrize("statement,operands", [
@@ -274,7 +293,7 @@ def test_complete_contract_toc_repeated_leaf_keeps_parent_page_and_two_requireme
     assert len(_projected(graph, "L")) == 4 and not graph["unresolved"]
 
 
-def test_complete_contract_adjacent_sentence_fragments_keep_both_original_sources():
+def test_partial_contract_adjacent_sentence_fragments_keep_both_original_sources_and_inner_pending():
     first, second = "the board shall pay ", "17 credits only if approved by 4 directors."
     expected = _expected(_target(first, line=1), _target(second, line=2))
     graph = compile_requirement_graph(expected)
@@ -284,7 +303,9 @@ def test_complete_contract_adjacent_sentence_fragments_keep_both_original_source
     fragments = fact["source"]["joined_fragments"]
     assert [part["text"] for part in fragments] == [first, second]
     assert [part["source"]["lines"] for part in fragments] == [[1, 1], [2, 2]]
-    assert not graph["unresolved"]
+    assert graph["semantic_complete"] is False
+    assert [(issue["text"], issue.get("interpretation_rule")) for issue in graph["unresolved"]] == [
+        ("by", "uninterpreted_postpredicate_scope_requires_its_own_relation")]
 
 
 def _delete_requirement(graph, ident):

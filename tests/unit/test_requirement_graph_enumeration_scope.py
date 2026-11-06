@@ -181,3 +181,48 @@ def test_explicit_field_members_keep_intro_owner_and_their_own_attribute_value_s
     assert graph["semantic_complete"] is True and not graph["unresolved"]
     assert "enumeration_context_scope" in graph["required_matcher_features"]
     validate_requirement_graph(graph)
+
+
+def test_conflicting_own_metric_period_cannot_leave_business_and_field_binding_with_different_subjects():
+    child = "Revenue:2027年17"
+    graph = compile_requirement_graph(expected(
+        target(INTRO, 1, children=True, list_span=[1, 2]),
+        target(child, 2, parents=[INTRO], list_span=[1, 2])))
+    [fact] = facts(graph)
+    assert (fact["attribute"], fact["value"], fact["qualifiers"]["period"]) == ("Revenue", "17", "2027年")
+    own(fact["qualifier_sources"]["period"], 2, [8, 13])
+    bindings = [edge for edge in graph["relations"] if edge["type"] == "field_binding"
+                and edge["source"].get("lines") == [2, 2] and edge["right"].get("attribute") == "Revenue"]
+    assert len(bindings) == 1
+    assert bindings[0]["right"]["subject"] == fact["subject"], "a rejected context must not half-rebind the B fact"
+    assert graph["semantic_complete"] is False
+    assert any(issue["source"]["lines"] == [2, 2] and {"B", "L"} <= set(issue["layers"])
+               for issue in graph["unresolved"])
+    validate_requirement_graph(graph)
+
+
+@pytest.mark.parametrize("year", ["2028", "2027"])
+def test_own_calendar_year_keeps_its_printed_literal_and_scope_agrees_only_for_the_same_year(year):
+    child = f"In {year}, Lumen holds 17万元."
+    graph = compile_requirement_graph(expected(
+        target(INTRO, 1, children=True, list_span=[1, 2]),
+        target(child, 2, parents=[INTRO], list_span=[1, 2])))
+    [fact] = facts(graph)
+    assert (fact["subject"], fact["attribute"], fact["value"]) == ("Lumen", "hold", "17")
+    assert fact["qualifiers"]["period"] == year, "enum context must not overwrite an explicitly printed member period"
+    own(fact["qualifier_sources"]["period"], 2, [3, 7])
+    own(fact["subject_source"], 2, [9, 14])
+    own(fact["value_source"], 2, [21, 23])
+    assert any(source["text"] == INTRO for source in graph["sources"])
+    assert any(source["text"] == child for source in graph["sources"])
+    if year == "2028":
+        assert graph["semantic_complete"] is True and not graph["unresolved"]
+        [membership] = [edge for edge in graph["relations"] if edge["type"] == "enumeration_membership"]
+        own(membership["binding_evidence"]["period_source"], 1, [0, 5])
+        assert membership["left"]["qualifiers"]["period"] == "2028年"
+        assert "enumeration_context_scope" in graph["required_matcher_features"]
+    else:
+        assert graph["semantic_complete"] is False
+        assert any(issue["source"]["lines"] == [2, 2] and {"B", "L"} <= set(issue["layers"])
+                   for issue in graph["unresolved"])
+    validate_requirement_graph(graph)

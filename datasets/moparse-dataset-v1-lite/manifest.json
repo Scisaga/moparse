@@ -1,0 +1,6157 @@
+{
+  "name": "moparse-dataset-v1-lite",
+  "kind": "lite",
+  "state": "frozen",
+  "created_at": "2026-10-24T09:17:02.274660+08:00",
+  "declared_input_pages": 800,
+  "review_record": "All 800 selected physical input pages were actually read against the originals and current expected by visual-a (400), visual-b (200), visual-c (200). Only explicitly confirmed annotation scopes are frozen; unseen and unannotated material is not accepted.",
+  "freeze_record": {
+    "frozen_at": "2026-10-24T09:11:51.252394+08:00",
+    "coordinator": "root",
+    "reviewers": [
+      "visual-a",
+      "visual-b",
+      "visual-c"
+    ],
+    "manual_page_ledger": {
+      "visual-a": 400,
+      "visual-b": 200,
+      "visual-c": 200,
+      "lite": 800,
+      "performance": 80,
+      "preflight": 8
+    },
+    "basis": "Direct author handoffs after actual page reading and comparison; no automatic inventory, count, hash, mapping, text or content acceptance.",
+    "author_handoffs": [
+      "provenance/visual-a-handoff.md",
+      "provenance/visual-b-completion.json",
+      "provenance/visual-c-handoff.md"
+    ],
+    "protocol": "provenance/evaluation-tasks.md",
+    "formal_candidate_outputs_seen": false,
+    "known_limits": [
+      "source categories remain unknown without independent evidence",
+      "annotation scopes are partial; no closed output precision scope",
+      "nonliteral references and formula typography have explicit NA scopes",
+      "known image references need visual output identity; filenames are not answer identities",
+      "no new Full corpus acceptance"
+    ],
+    "development_exposure": "Preflight and performance members, all source-document/family authoring exposure, and additionally viewed navigation pages are disclosed in sample records and handoffs; Lite is not an unseen independent-document test split."
+  },
+  "preflight_confirmed": true,
+  "documents": [
+    {
+      "document_id": "10726562",
+      "reference_dir": "references/10726562",
+      "source_metadata": {
+        "filename": "10726562.pdf",
+        "sha256": "806be3c98eb71db56dffc24f63736c3673ef918f777a0a66fbcc8458a5a10923",
+        "pages": 2
+      },
+      "family_id": "vanke-short-disclosure",
+      "tags": [
+        "zh",
+        "short-disclosure",
+        "single-column",
+        "cross-page-prose"
+      ],
+      "review_status": "historical_reference",
+      "review_record": "All 800 selected physical input pages were actually read against the originals and current expected by visual-a (400), visual-b (200), visual-c (200). Only explicitly confirmed annotation scopes are frozen; unseen and unannotated material is not accepted."
+    },
+    {
+      "document_id": "1200454112",
+      "reference_dir": "references/1200454112",
+      "source_metadata": {
+        "filename": "1200454112.pdf",
+        "sha256": "02feb89fa1bfe7802aed33dc47155f9377ca68e01a2782db101c134921ac88c2",
+        "pages": 23
+      },
+      "family_id": "spdb-preferred-share-prospectus",
+      "tags": [
+        "zh",
+        "prospectus",
+        "scan-like-cover",
+        "seal",
+        "layout-grid",
+        "single-column"
+      ],
+      "review_status": "historical_reference",
+      "review_record": "All 800 selected physical input pages were actually read against the originals and current expected by visual-a (400), visual-b (200), visual-c (200). Only explicitly confirmed annotation scopes are frozen; unseen and unannotated material is not accepted."
+    },
+    {
+      "document_id": "1200694562",
+      "reference_dir": "references/1200694562",
+      "source_metadata": {
+        "filename": "1200694562.pdf",
+        "sha256": "2472b083ab953d82255cb07b064c742bf1c20eaa72e40aefefb47a391f068ccf",
+        "pages": 19
+      },
+      "family_id": "pingan-bank-annual-summary",
+      "tags": [
+        "zh",
+        "annual-summary",
+        "data-table",
+        "cross-page-table",
+        "multi-level-header",
+        "checkbox",
+        "mixed-units"
+      ],
+      "review_status": "historical_reference",
+      "review_record": "All 800 selected physical input pages were actually read against the originals and current expected by visual-a (400), visual-b (200), visual-c (200). Only explicitly confirmed annotation scopes are frozen; unseen and unannotated material is not accepted."
+    },
+    {
+      "document_id": "1200767576",
+      "reference_dir": "references/1200767576",
+      "source_metadata": {
+        "filename": "1200767576.pdf",
+        "sha256": "183d584cd425e0d2c1890cf769a0abcba734fb19110b68adf90f2e944253950e",
+        "pages": 1
+      },
+      "family_id": "midea-short-disclosure",
+      "tags": [
+        "zh",
+        "single-page",
+        "short-disclosure",
+        "boxed-prose"
+      ],
+      "review_status": "historical_reference",
+      "review_record": "All 800 selected physical input pages were actually read against the originals and current expected by visual-a (400), visual-b (200), visual-c (200). Only explicitly confirmed annotation scopes are frozen; unseen and unannotated material is not accepted."
+    },
+    {
+      "document_id": "1200767518",
+      "reference_dir": "references/1200767518",
+      "source_metadata": {
+        "filename": "1200767518.pdf",
+        "sha256": "170af76e1775265010e273c5b353f084e112d2f7f74afc3a555f6eeb45e92303",
+        "pages": 4
+      },
+      "family_id": "midea-short-disclosure",
+      "tags": [
+        "zh",
+        "short-report",
+        "single-column",
+        "cross-page-prose",
+        "nested-headings"
+      ],
+      "review_status": "historical_reference",
+      "review_record": "All 800 selected physical input pages were actually read against the originals and current expected by visual-a (400), visual-b (200), visual-c (200). Only explicitly confirmed annotation scopes are frozen; unseen and unannotated material is not accepted."
+    },
+    {
+      "document_id": "1200694910",
+      "reference_dir": "references/1200694910",
+      "source_metadata": {
+        "filename": "1200694910.pdf",
+        "sha256": "0298166f2d1fca82a618d16aa9c9779974553a29436a5a93f5976374c1a25de8",
+        "pages": 3
+      },
+      "family_id": "zhenye-bond-disclosure",
+      "tags": [
+        "zh",
+        "short-disclosure",
+        "mixed-visual-appearance",
+        "seal",
+        "handwriting"
+      ],
+      "review_status": "historical_reference",
+      "review_record": "All 800 selected physical input pages were actually read against the originals and current expected by visual-a (400), visual-b (200), visual-c (200). Only explicitly confirmed annotation scopes are frozen; unseen and unannotated material is not accepted."
+    },
+    {
+      "document_id": "1200467021",
+      "reference_dir": "references/1200467021",
+      "source_metadata": {
+        "filename": "1200467021.pdf",
+        "sha256": "09ffc548a67fc6c98aa595c7c57c6caa956d553e503221840d104ca791d3ac7c",
+        "pages": 6
+      },
+      "family_id": "tgood-shareholder-meeting",
+      "tags": [
+        "zh",
+        "meeting-notice",
+        "single-column",
+        "cross-page-prose",
+        "data-table",
+        "blank-form",
+        "boxed-prose"
+      ],
+      "review_status": "historical_reference",
+      "review_record": "All 800 selected physical input pages were actually read against the originals and current expected by visual-a (400), visual-b (200), visual-c (200). Only explicitly confirmed annotation scopes are frozen; unseen and unannotated material is not accepted."
+    },
+    {
+      "document_id": "complex-nvidia-2025-annual",
+      "reference_dir": "references/complex-nvidia-2025-annual",
+      "source_metadata": {
+        "filename": "complex-nvidia-2025-annual.pdf",
+        "sha256": "757b344ab62ba282f6e44e0702e8ce5f190d88fb23b5e0a2beaf4cb277a395cc",
+        "pages": 181
+      },
+      "family_id": "nvidia-annual-review",
+      "tags": [
+        "en",
+        "annual-review",
+        "landscape-spread",
+        "dark-background",
+        "image-preservation",
+        "layout-grid"
+      ],
+      "review_status": "historical_reference",
+      "review_record": "All 800 selected physical input pages were actually read against the originals and current expected by visual-a (400), visual-b (200), visual-c (200). Only explicitly confirmed annotation scopes are frozen; unseen and unannotated material is not accepted."
+    },
+    {
+      "document_id": "complex-iea-energy-ai-2025",
+      "reference_dir": "references/complex-iea-energy-ai-2025",
+      "source_metadata": {
+        "filename": "complex-iea-energy-ai-2025.pdf",
+        "sha256": "3956b80152d4aac6b659a09d0cd7671a4bd53efeeb067e4d50df4230701b33e4",
+        "pages": 304
+      },
+      "family_id": "iea-special-report",
+      "tags": [
+        "en",
+        "research-report",
+        "image-preservation",
+        "cross-page-prose",
+        "boxed-prose",
+        "figure-notes"
+      ],
+      "review_status": "historical_reference",
+      "review_record": "All 800 selected physical input pages were actually read against the originals and current expected by visual-a (400), visual-b (200), visual-c (200). Only explicitly confirmed annotation scopes are frozen; unseen and unannotated material is not accepted."
+    },
+    {
+      "document_id": "complex-bis-economic-2024",
+      "reference_dir": "references/complex-bis-economic-2024",
+      "source_metadata": {
+        "filename": "complex-bis-economic-2024.pdf",
+        "pages": 150,
+        "sha256": "142204f9cbc4107d799e5e9f9009f6b0872a9787b55ab249007284debbf1a80b"
+      },
+      "family_id": "bis-annual-economic-report",
+      "tags": [
+        "en",
+        "economic-report",
+        "image-preservation",
+        "cross-page-prose",
+        "figure-notes",
+        "superscripts"
+      ],
+      "review_status": "historical_reference",
+      "review_record": "All 800 selected physical input pages were actually read against the originals and current expected by visual-a (400), visual-b (200), visual-c (200). Only explicitly confirmed annotation scopes are frozen; unseen and unannotated material is not accepted."
+    },
+    {
+      "document_id": "1200707112",
+      "reference_dir": "references/1200707112",
+      "source_metadata": {
+        "filename": "1200707112.pdf",
+        "sha256": "2c8c8258212d9f658824b9319ce93fdc307c0ce2eaa5777982b36be06fc4b461",
+        "pages": 31
+      },
+      "family_id": "brilliance-bank-credit-rating",
+      "tags": [
+        "zh",
+        "credit-report",
+        "scan-like-page",
+        "two-column",
+        "data-table",
+        "seal",
+        "superscripts"
+      ],
+      "review_status": "historical_reference",
+      "review_record": "All 800 selected physical input pages were actually read against the originals and current expected by visual-a (400), visual-b (200), visual-c (200). Only explicitly confirmed annotation scopes are frozen; unseen and unannotated material is not accepted."
+    },
+    {
+      "document_id": "1200778318",
+      "reference_dir": "references/1200778318",
+      "source_metadata": {
+        "filename": "1200778318.pdf",
+        "sha256": "e291049b78a25e071d270e375cdf7cb00e834206d65279d23f9e7058f1d1553f",
+        "pages": 17
+      },
+      "family_id": "cms-bond-trustee-report",
+      "tags": [
+        "zh",
+        "bond-trustee-report",
+        "single-column",
+        "cross-page-prose",
+        "data-table",
+        "source-inconsistency",
+        "contents"
+      ],
+      "review_status": "historical_reference",
+      "review_record": "All 800 selected physical input pages were actually read against the originals and current expected by visual-a (400), visual-b (200), visual-c (200). Only explicitly confirmed annotation scopes are frozen; unseen and unannotated material is not accepted."
+    },
+    {
+      "document_id": "1200799174",
+      "reference_dir": "references/1200799174",
+      "source_metadata": {
+        "filename": "1200799174.pdf",
+        "sha256": "444d76955a37072cd4741d5c080102d276262fff456f3631586673f9b5cd618a",
+        "pages": 1
+      },
+      "family_id": "zhenye-bond-disclosure",
+      "tags": [
+        "zh",
+        "single-page",
+        "short-disclosure",
+        "correction-notice",
+        "quoted-error"
+      ],
+      "review_status": "historical_reference",
+      "review_record": "All 800 selected physical input pages were actually read against the originals and current expected by visual-a (400), visual-b (200), visual-c (200). Only explicitly confirmed annotation scopes are frozen; unseen and unannotated material is not accepted."
+    },
+    {
+      "document_id": "1200800787",
+      "reference_dir": "references/1200800787",
+      "source_metadata": {
+        "filename": "1200800787.pdf",
+        "sha256": "0468b0ae35bcf2c5c17dc8efbf3ec40da715f0327a21b23933e4ff88b10e2710",
+        "pages": 1
+      },
+      "family_id": "vanke-short-disclosure",
+      "tags": [
+        "zh",
+        "single-page",
+        "short-disclosure",
+        "financial-prose",
+        "qualified-values"
+      ],
+      "review_status": "historical_reference",
+      "review_record": "All 800 selected physical input pages were actually read against the originals and current expected by visual-a (400), visual-b (200), visual-c (200). Only explicitly confirmed annotation scopes are frozen; unseen and unannotated material is not accepted."
+    },
+    {
+      "document_id": "1200716038",
+      "reference_dir": "references/1200716038",
+      "source_metadata": {
+        "filename": "1200716038.pdf",
+        "sha256": "298bfe661f5fa03b0cb961a90cb56f31db760a6af3de4b92cd99724af122cfac",
+        "pages": 17
+      },
+      "family_id": "spdb-annual-summary",
+      "tags": [
+        "zh",
+        "annual-summary",
+        "data-table",
+        "cross-page-table",
+        "audit-scope",
+        "mixed-units",
+        "blank-cells"
+      ],
+      "review_status": "historical_reference",
+      "review_record": "All 800 selected physical input pages were actually read against the originals and current expected by visual-a (400), visual-b (200), visual-c (200). Only explicitly confirmed annotation scopes are frozen; unseen and unannotated material is not accepted."
+    },
+    {
+      "document_id": "1200838381",
+      "reference_dir": "references/1200838381",
+      "source_metadata": {
+        "filename": "1200838381.pdf",
+        "sha256": "0ed5ab6edc00216ba0bfef39b194847eb0c6bdf1095672b8dc8d2094c9075d11",
+        "pages": 5
+      },
+      "family_id": "tangshan-port-disclosure",
+      "tags": [
+        "zh",
+        "accounting-policy-report",
+        "source-unknown",
+        "scan-like-pages",
+        "certification-sticker",
+        "shared-table-note"
+      ],
+      "review_status": "historical_reference",
+      "review_record": "All 800 selected physical input pages were actually read against the originals and current expected by visual-a (400), visual-b (200), visual-c (200). Only explicitly confirmed annotation scopes are frozen; unseen and unannotated material is not accepted."
+    },
+    {
+      "document_id": "1200968001",
+      "reference_dir": "references/1200968001",
+      "source_metadata": {
+        "filename": "1200968001.pdf",
+        "sha256": "01b8be3d25e41686faed5c4cf03e6b3010796b8eddc21b68a93eeb2fe147cadf",
+        "pages": 74
+      },
+      "family_id": "tgood-chuankai-acquisition",
+      "tags": [
+        "zh",
+        "conditional-asset-purchase-agreement",
+        "numbered-clauses",
+        "formula",
+        "cross-page-prose"
+      ],
+      "review_status": "historical_reference",
+      "review_record": "All 800 selected physical input pages were actually read against the originals and current expected by visual-a (400), visual-b (200), visual-c (200). Only explicitly confirmed annotation scopes are frozen; unseen and unannotated material is not accepted."
+    },
+    {
+      "document_id": "1201816142",
+      "reference_dir": "references/1201816142",
+      "source_metadata": {
+        "filename": "1201816142.pdf",
+        "sha256": "0e10ece9cf9c409f0a310b36a88d10e7b7d0a71a4d45b00b492252b134191bd6",
+        "pages": 3
+      },
+      "family_id": "beijing-media-hk-disclosure",
+      "tags": [
+        "zh-Hant",
+        "hong-kong-disclosure",
+        "boxed-prose",
+        "director-biography"
+      ],
+      "review_status": "historical_reference",
+      "review_record": "All 800 selected physical input pages were actually read against the originals and current expected by visual-a (400), visual-b (200), visual-c (200). Only explicitly confirmed annotation scopes are frozen; unseen and unannotated material is not accepted."
+    },
+    {
+      "document_id": "1201791349",
+      "reference_dir": "references/1201791349",
+      "source_metadata": {
+        "filename": "1201791349.pdf",
+        "sha256": "068f13734091e8d1f52f5b18e260eb403894b35f699baf5733593e9ccb4ac9ff",
+        "pages": 2
+      },
+      "family_id": "wuliangye-litigation-disclosure",
+      "tags": [
+        "zh",
+        "litigation-disclosure",
+        "quoted-ruling",
+        "cross-page-heading"
+      ],
+      "review_status": "historical_reference",
+      "review_record": "All 800 selected physical input pages were actually read against the originals and current expected by visual-a (400), visual-b (200), visual-c (200). Only explicitly confirmed annotation scopes are frozen; unseen and unannotated material is not accepted."
+    },
+    {
+      "document_id": "1200975009",
+      "reference_dir": "references/1200975009",
+      "source_metadata": {
+        "filename": "1200975009.pdf",
+        "sha256": "0102c95d0c06e64d39550b96d2e253287f8faa68edbd4684655399a34bb55d77",
+        "pages": 2
+      },
+      "family_id": "tangshan-port-disclosure",
+      "tags": [
+        "zh",
+        "source-unknown",
+        "director-opinion",
+        "signature-preservation"
+      ],
+      "review_status": "historical_reference",
+      "review_record": "All 800 selected physical input pages were actually read against the originals and current expected by visual-a (400), visual-b (200), visual-c (200). Only explicitly confirmed annotation scopes are frozen; unseen and unannotated material is not accepted."
+    },
+    {
+      "document_id": "1201786046",
+      "reference_dir": "references/1201786046",
+      "source_metadata": {
+        "filename": "1201786046.pdf",
+        "sha256": "08db41c28b42de3d8be9dfb7655677bf5b281a40173a6c91c45e6481927ab3ae",
+        "pages": 2
+      },
+      "family_id": "spdb-acquisition-disclosure",
+      "tags": [
+        "zh",
+        "source-unknown",
+        "regulatory-approval",
+        "quoted-prose",
+        "identifier-layout"
+      ],
+      "review_status": "historical_reference",
+      "review_record": "All 800 selected physical input pages were actually read against the originals and current expected by visual-a (400), visual-b (200), visual-c (200). Only explicitly confirmed annotation scopes are frozen; unseen and unannotated material is not accepted."
+    },
+    {
+      "document_id": "1200838391",
+      "reference_dir": "references/1200838391",
+      "source_metadata": {
+        "filename": "1200838391.pdf",
+        "sha256": "08b850b465da46065adf4cf1d96c4c8a6e6cc03868ce1f7e7d118e8f893bff23",
+        "pages": 11
+      },
+      "family_id": "tangshan-port-disclosure",
+      "tags": [
+        "zh",
+        "director-nomination",
+        "scan-like-pages",
+        "source-unknown"
+      ],
+      "review_status": "historical_reference",
+      "review_record": "All 800 selected physical input pages were actually read against the originals and current expected by visual-a (400), visual-b (200), visual-c (200). Only explicitly confirmed annotation scopes are frozen; unseen and unannotated material is not accepted."
+    },
+    {
+      "document_id": "1200967992",
+      "reference_dir": "references/1200967992",
+      "source_metadata": {
+        "filename": "1200967992.pdf",
+        "sha256": "3bf175d9c0adba1d956a6ad4fc9b4fe2120ce16148044e871bca453c294792f3",
+        "pages": 43
+      },
+      "family_id": "tgood-chuankai-acquisition",
+      "tags": [
+        "zh",
+        "equity-change-report",
+        "agreements",
+        "source-unknown"
+      ],
+      "review_status": "historical_reference",
+      "review_record": "All 800 selected physical input pages were actually read against the originals and current expected by visual-a (400), visual-b (200), visual-c (200). Only explicitly confirmed annotation scopes are frozen; unseen and unannotated material is not accepted."
+    },
+    {
+      "document_id": "1201830493",
+      "reference_dir": "references/1201830493",
+      "source_metadata": {
+        "filename": "1201830493.pdf",
+        "sha256": "55ca9154c141713360cd6decf54dede2f0840ec138d34ae874daa84931f009a5",
+        "pages": 2
+      },
+      "family_id": "vanke-short-disclosure",
+      "tags": [
+        "zh",
+        "guarantee-disclosure",
+        "source-unknown"
+      ],
+      "review_status": "historical_reference",
+      "review_record": "All 800 selected physical input pages were actually read against the originals and current expected by visual-a (400), visual-b (200), visual-c (200). Only explicitly confirmed annotation scopes are frozen; unseen and unannotated material is not accepted."
+    },
+    {
+      "document_id": "1201860324",
+      "reference_dir": "references/1201860324",
+      "source_metadata": {
+        "filename": "1201860324.pdf",
+        "sha256": "418e040b3360a3e7547d15d717b1be2d2057239c508dc254e0759ecbe3c9d37e",
+        "pages": 1
+      },
+      "family_id": "wuliangye-litigation-disclosure",
+      "tags": [
+        "zh",
+        "litigation-disclosure",
+        "source-unknown"
+      ],
+      "review_status": "historical_reference",
+      "review_record": "All 800 selected physical input pages were actually read against the originals and current expected by visual-a (400), visual-b (200), visual-c (200). Only explicitly confirmed annotation scopes are frozen; unseen and unannotated material is not accepted."
+    },
+    {
+      "document_id": "1201917092",
+      "reference_dir": "references/1201917092",
+      "source_metadata": {
+        "filename": "1201917092.pdf",
+        "sha256": "1333c0558226e7a2ada45ed5491cab1d077696a45d6e7f9d1204b275eed1db35",
+        "pages": 3
+      },
+      "family_id": "vanke-short-disclosure",
+      "tags": [
+        "zh",
+        "share-repurchase",
+        "data-table",
+        "source-unknown"
+      ],
+      "review_status": "historical_reference",
+      "review_record": "All 800 selected physical input pages were actually read against the originals and current expected by visual-a (400), visual-b (200), visual-c (200). Only explicitly confirmed annotation scopes are frozen; unseen and unannotated material is not accepted."
+    },
+    {
+      "document_id": "1202194191",
+      "reference_dir": "references/1202194191",
+      "source_metadata": {
+        "filename": "1202194191.pdf",
+        "sha256": "2193315370540af6a551658c0daa6ae56d8f0bb798c1420cf56a651388fa2bf2",
+        "pages": 3
+      },
+      "family_id": "nhu-related-party-disclosure",
+      "tags": [
+        "zh",
+        "guarantee-disclosure",
+        "source-unknown"
+      ],
+      "review_status": "historical_reference",
+      "review_record": "All 800 selected physical input pages were actually read against the originals and current expected by visual-a (400), visual-b (200), visual-c (200). Only explicitly confirmed annotation scopes are frozen; unseen and unannotated material is not accepted."
+    },
+    {
+      "document_id": "1202164176",
+      "reference_dir": "references/1202164176",
+      "source_metadata": {
+        "filename": "1202164176.pdf",
+        "sha256": "0b366404c27ca0db31eddd3c1fd693255624c0e6d2826d1a1df3662e2cb8e63d",
+        "pages": 8
+      },
+      "family_id": "beijing-media-hk-disclosure",
+      "tags": [
+        "zh-Hant",
+        "major-transaction",
+        "data-table",
+        "ownership-images",
+        "source-unknown"
+      ],
+      "review_status": "historical_reference",
+      "review_record": "All 800 selected physical input pages were actually read against the originals and current expected by visual-a (400), visual-b (200), visual-c (200). Only explicitly confirmed annotation scopes are frozen; unseen and unannotated material is not accepted."
+    },
+    {
+      "document_id": "1202033380",
+      "reference_dir": "references/1202033380",
+      "source_metadata": {
+        "filename": "1202033380.pdf",
+        "sha256": "0469899490e15c3a7c6baeba26cf480dcf029360b9a9b4a02f8e53fdc59819d5",
+        "pages": 8
+      },
+      "family_id": "pingan-bank-fundraising-assurance",
+      "tags": [
+        "zh",
+        "assurance-report",
+        "fundraising",
+        "landscape-table"
+      ],
+      "review_status": "historical_reference",
+      "review_record": "All 800 selected physical input pages were actually read against the originals and current expected by visual-a (400), visual-b (200), visual-c (200). Only explicitly confirmed annotation scopes are frozen; unseen and unannotated material is not accepted."
+    },
+    {
+      "document_id": "1202180643",
+      "reference_dir": "references/1202180643",
+      "source_metadata": {
+        "filename": "1202180643.pdf",
+        "sha256": "087f57b1aa5647f34b51c7912602128c605efc41c94fcedfba2b5382c4576433",
+        "pages": 10
+      },
+      "family_id": "peoples-network-fundraising-disclosure",
+      "tags": [
+        "zh",
+        "fundraising",
+        "bank-account",
+        "financial-table"
+      ],
+      "review_status": "historical_reference",
+      "review_record": "All 800 selected physical input pages were actually read against the originals and current expected by visual-a (400), visual-b (200), visual-c (200). Only explicitly confirmed annotation scopes are frozen; unseen and unannotated material is not accepted."
+    },
+    {
+      "document_id": "1202194188",
+      "reference_dir": "references/1202194188",
+      "source_metadata": {
+        "filename": "1202194188.pdf",
+        "sha256": "289b4329ed607fb34c6be77fb434471a762241ebb62ab93bb10dc32a1e57e7aa",
+        "pages": 4
+      },
+      "family_id": "nhu-related-party-disclosure",
+      "tags": [
+        "zh",
+        "audit-report",
+        "related-party"
+      ],
+      "review_status": "historical_reference",
+      "review_record": "All 800 selected physical input pages were actually read against the originals and current expected by visual-a (400), visual-b (200), visual-c (200). Only explicitly confirmed annotation scopes are frozen; unseen and unannotated material is not accepted."
+    },
+    {
+      "document_id": "complex-tencent-2025-bond-programme",
+      "reference_dir": "references/complex-tencent-2025-bond-programme",
+      "source_metadata": {
+        "filename": "complex-tencent-2025-bond-programme.pdf",
+        "sha256": "a1ddbb930f4ba40ddd521fe97210510a355a5c223b5784ef32a3835eb186f404",
+        "pages": 705
+      },
+      "family_id": "tencent-global-note-programme",
+      "tags": [
+        "en",
+        "bond-programme",
+        "legal-conditions",
+        "layout-fields",
+        "corporate-structure-image"
+      ],
+      "review_status": "historical_reference",
+      "review_record": "All 800 selected physical input pages were actually read against the originals and current expected by visual-a (400), visual-b (200), visual-c (200). Only explicitly confirmed annotation scopes are frozen; unseen and unannotated material is not accepted."
+    },
+    {
+      "document_id": "complex-sf-2024-annual",
+      "reference_dir": "references/complex-sf-2024-annual",
+      "source_metadata": {
+        "filename": "complex-sf-2024-annual.pdf",
+        "sha256": "8355c52cbe962c76d83175b602560f27f8f3705b6c0d0b5e44222f070fc18258",
+        "pages": 190
+      },
+      "family_id": "sf-hongkong-annual-report",
+      "tags": [
+        "zh-Hant",
+        "two-column",
+        "annual-report",
+        "infographic",
+        "audit-report"
+      ],
+      "review_status": "historical_reference",
+      "review_record": "All 800 selected physical input pages were actually read against the originals and current expected by visual-a (400), visual-b (200), visual-c (200). Only explicitly confirmed annotation scopes are frozen; unseen and unannotated material is not accepted."
+    },
+    {
+      "document_id": "complex-catl-2025-prospectus",
+      "reference_dir": "references/complex-catl-2025-prospectus",
+      "source_metadata": {
+        "filename": "complex-catl-2025-prospectus.pdf",
+        "sha256": "70469df49d5ab82965210e9d26f6bb30095b1563014a9dd5fe1b21ad26f09b5b",
+        "pages": 626
+      },
+      "family_id": "catl-h-share-prospectus",
+      "tags": [
+        "zh-Hant",
+        "prospectus",
+        "corporate-structure-image",
+        "industry-report",
+        "charts"
+      ],
+      "review_status": "historical_reference",
+      "review_record": "All 800 selected physical input pages were actually read against the originals and current expected by visual-a (400), visual-b (200), visual-c (200). Only explicitly confirmed annotation scopes are frozen; unseen and unannotated material is not accepted."
+    },
+    {
+      "document_id": "complex-huawei-2024-annual",
+      "reference_dir": "references/complex-huawei-2024-annual",
+      "source_metadata": {
+        "filename": "complex-huawei-2024-annual.pdf",
+        "sha256": "525ba4ed4cb5aabdacb18abf2d8bc3a03ae5808365e1c3b20ab49486d1667d44",
+        "pages": 148
+      },
+      "family_id": "huawei-annual-report",
+      "tags": [
+        "zh",
+        "annual-report",
+        "multi-column",
+        "data-table",
+        "mixed-currency",
+        "business-footnote",
+        "image"
+      ],
+      "review_status": "historical_reference",
+      "review_record": "All 800 selected physical input pages were actually read against the originals and current expected by visual-a (400), visual-b (200), visual-c (200). Only explicitly confirmed annotation scopes are frozen; unseen and unannotated material is not accepted."
+    },
+    {
+      "document_id": "complex-huaweitech-2024-096",
+      "reference_dir": "references/complex-huaweitech-2024-096",
+      "source_metadata": {
+        "filename": "complex-huaweitech-2024-096.pdf",
+        "sha256": "21db14d8285744db740a150d14be987f4dc4aa014a09a07f55692fd5ad810e3d",
+        "pages": 58
+      },
+      "family_id": "huaweitech-magazine",
+      "tags": [
+        "zh-en",
+        "periodical",
+        "landscape-spread",
+        "multi-column",
+        "layout-prose",
+        "image"
+      ],
+      "review_status": "historical_reference",
+      "review_record": "All 800 selected physical input pages were actually read against the originals and current expected by visual-a (400), visual-b (200), visual-c (200). Only explicitly confirmed annotation scopes are frozen; unseen and unannotated material is not accepted."
+    },
+    {
+      "document_id": "complex-hkex-2024-annual",
+      "reference_dir": "references/complex-hkex-2024-annual",
+      "source_metadata": {
+        "filename": "complex-hkex-2024-annual.pdf",
+        "pages": 240,
+        "sha256": "3d1c9bdc9a00ec4911f673b586f20f6778f26f70d771c36036573514c869e356"
+      },
+      "family_id": "hkex-annual-report",
+      "tags": [
+        "en",
+        "annual-report",
+        "multi-column",
+        "timeline",
+        "layout-grid",
+        "data-table",
+        "business-footnote",
+        "image"
+      ],
+      "review_status": "historical_reference",
+      "review_record": "All 800 selected physical input pages were actually read against the originals and current expected by visual-a (400), visual-b (200), visual-c (200). Only explicitly confirmed annotation scopes are frozen; unseen and unannotated material is not accepted."
+    },
+    {
+      "document_id": "complex-alibaba-2025-annual",
+      "reference_dir": "references/complex-alibaba-2025-annual",
+      "source_metadata": {
+        "filename": "complex-alibaba-2025-annual.pdf",
+        "sha256": "c7806bf5da28032e1b15dbe9a334011d65f5d69efe3bf11a9d212f64f07ca9b2",
+        "pages": 324
+      },
+      "family_id": "alibaba-annual-report",
+      "tags": [
+        "en",
+        "annual-report",
+        "ordinary-prose",
+        "bulleted-prose",
+        "parallel-signatories"
+      ],
+      "review_status": "historical_reference",
+      "review_record": "All 800 selected physical input pages were actually read against the originals and current expected by visual-a (400), visual-b (200), visual-c (200). Only explicitly confirmed annotation scopes are frozen; unseen and unannotated material is not accepted."
+    },
+    {
+      "document_id": "complex-pingan-2024-annual",
+      "reference_dir": "references/complex-pingan-2024-annual",
+      "source_metadata": {
+        "filename": "complex-pingan-2024-annual.pdf",
+        "pages": 364,
+        "sha256": "62a5bd793ef9a787cc95750d65e52803aa58fa424b01d94e754ea0120d5be8a3"
+      },
+      "family_id": "pingan-group-annual-report",
+      "tags": [
+        "en-zh",
+        "annual-results-announcement",
+        "annual-report",
+        "data-table",
+        "mixed-units",
+        "business-footnote",
+        "image"
+      ],
+      "review_status": "historical_reference",
+      "review_record": "All 800 selected physical input pages were actually read against the originals and current expected by visual-a (400), visual-b (200), visual-c (200). Only explicitly confirmed annotation scopes are frozen; unseen and unannotated material is not accepted."
+    },
+    {
+      "document_id": "complex-pboc-stability-2024",
+      "reference_dir": "references/complex-pboc-stability-2024",
+      "source_metadata": {
+        "filename": "complex-pboc-stability-2024.pdf",
+        "sha256": "f72c45fe00031753b846b8fe404d7cac5ed0722c1d477bea9079a81e7dbcd69e",
+        "pages": 120
+      },
+      "family_id": "pboc-financial-stability",
+      "tags": [
+        "zh",
+        "bilingual-cover",
+        "public-financial-report",
+        "ordinary-prose",
+        "business-footnote",
+        "directory-layout"
+      ],
+      "review_status": "historical_reference",
+      "review_record": "All 800 selected physical input pages were actually read against the originals and current expected by visual-a (400), visual-b (200), visual-c (200). Only explicitly confirmed annotation scopes are frozen; unseen and unannotated material is not accepted."
+    },
+    {
+      "document_id": "complex-moutai-2024-annual",
+      "reference_dir": "references/complex-moutai-2024-annual",
+      "source_metadata": {
+        "filename": "complex-moutai-2024-annual.pdf",
+        "sha256": "5299f4940e2ce4e91084b73dc457d558b9d335fa76fbfee6227e4254eb7f4a30",
+        "pages": 143
+      },
+      "family_id": "moutai-annual",
+      "tags": [
+        "zh",
+        "annual-report",
+        "grid-layout",
+        "data-table",
+        "ordinary-prose"
+      ],
+      "review_status": "historical_reference",
+      "review_record": "All 800 selected physical input pages were actually read against the originals and current expected by visual-a (400), visual-b (200), visual-c (200). Only explicitly confirmed annotation scopes are frozen; unseen and unannotated material is not accepted."
+    },
+    {
+      "document_id": "complex-byd-2024-annual",
+      "reference_dir": "references/complex-byd-2024-annual",
+      "source_metadata": {
+        "filename": "complex-byd-2024-annual.pdf",
+        "sha256": "8972fd9652e6b681250a70b17b4ccbc0e9173e527e6003e3edd0dfdb7191342c",
+        "pages": 374
+      },
+      "family_id": "byd-annual",
+      "tags": [
+        "zh-Hant",
+        "en",
+        "bilingual",
+        "mixed-region",
+        "business-images",
+        "data-table"
+      ],
+      "review_status": "historical_reference",
+      "review_record": "All 800 selected physical input pages were actually read against the originals and current expected by visual-a (400), visual-b (200), visual-c (200). Only explicitly confirmed annotation scopes are frozen; unseen and unannotated material is not accepted."
+    },
+    {
+      "document_id": "complex-midea-2024-annual",
+      "reference_dir": "references/complex-midea-2024-annual",
+      "source_metadata": {
+        "filename": "complex-midea-2024-annual.pdf",
+        "sha256": "b17a9b9b84bca1d2a4e4a3cadc5dd5ba5c85e3f1fd2d758acd3315b5b040ecd9",
+        "pages": 295
+      },
+      "family_id": "midea-annual",
+      "tags": [
+        "zh",
+        "annual-report",
+        "ordinary-prose",
+        "data-table",
+        "grid-layout"
+      ],
+      "review_status": "historical_reference",
+      "review_record": "All 800 selected physical input pages were actually read against the originals and current expected by visual-a (400), visual-b (200), visual-c (200). Only explicitly confirmed annotation scopes are frozen; unseen and unannotated material is not accepted."
+    },
+    {
+      "document_id": "complex-sinopec-2024-annual",
+      "reference_dir": "references/complex-sinopec-2024-annual",
+      "source_metadata": {
+        "filename": "complex-sinopec-2024-annual.pdf",
+        "sha256": "fb103dc4eb6c6fe67de6d18b179d3c7c83b427d6d238ce6b29a89e77ecd55daa",
+        "pages": 222
+      },
+      "family_id": "sinopec-annual",
+      "tags": [
+        "zh-Hant",
+        "three-column",
+        "data-table",
+        "multi-level-headers",
+        "images"
+      ],
+      "review_status": "historical_reference",
+      "review_record": "All 800 selected physical input pages were actually read against the originals and current expected by visual-a (400), visual-b (200), visual-c (200). Only explicitly confirmed annotation scopes are frozen; unseen and unannotated material is not accepted."
+    }
+  ],
+  "samples": [
+    {
+      "id": "vanke-interest-p001-002",
+      "document_id": "10726562",
+      "source_pages": [
+        1,
+        2
+      ],
+      "tags": [
+        "zh",
+        "short-disclosure",
+        "single-column",
+        "cross-page-prose"
+      ],
+      "family_id": "vanke-short-disclosure",
+      "suites": [
+        "lite",
+        "perf80",
+        "preflight8"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/vanke-interest-p001-002.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/10726562",
+      "evaluation": "evaluation/vanke-interest-p001-002.json"
+    },
+    {
+      "id": "spdb-cover-declaration-p001-002",
+      "document_id": "1200454112",
+      "source_pages": [
+        1,
+        2
+      ],
+      "source_category": "source-unknown",
+      "tags": [
+        "zh",
+        "prospectus",
+        "scan-like-cover",
+        "seal",
+        "layout-grid",
+        "single-column"
+      ],
+      "family_id": "spdb-preferred-share-prospectus",
+      "suites": [
+        "lite",
+        "perf80",
+        "preflight8"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/spdb-cover-declaration-p001-002.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/1200454112",
+      "evaluation": "evaluation/spdb-cover-declaration-p001-002.json"
+    },
+    {
+      "id": "pingan-financials-p001-004",
+      "document_id": "1200694562",
+      "source_pages": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "tags": [
+        "zh",
+        "annual-summary",
+        "data-table",
+        "cross-page-table",
+        "multi-level-header",
+        "checkbox",
+        "mixed-units"
+      ],
+      "family_id": "pingan-bank-annual-summary",
+      "suites": [
+        "lite",
+        "perf80",
+        "preflight8"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/pingan-financials-p001-004.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/1200694562",
+      "evaluation": "evaluation/pingan-financials-p001-004.json"
+    },
+    {
+      "id": "midea-resumption-p001",
+      "document_id": "1200767576",
+      "source_pages": [
+        1
+      ],
+      "tags": [
+        "zh",
+        "single-page",
+        "short-disclosure",
+        "boxed-prose"
+      ],
+      "family_id": "midea-short-disclosure",
+      "suites": [
+        "lite",
+        "perf80"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/midea-resumption-p001.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/1200767576",
+      "evaluation": "evaluation/midea-resumption-p001.json"
+    },
+    {
+      "id": "midea-fx-derivatives-p001-004",
+      "document_id": "1200767518",
+      "source_pages": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "tags": [
+        "zh",
+        "short-report",
+        "single-column",
+        "cross-page-prose",
+        "nested-headings"
+      ],
+      "family_id": "midea-short-disclosure",
+      "suites": [
+        "lite",
+        "perf80"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/midea-fx-derivatives-p001-004.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/1200767518",
+      "evaluation": "evaluation/midea-fx-derivatives-p001-004.json"
+    },
+    {
+      "id": "zhenye-coupon-seals-p001-003",
+      "document_id": "1200694910",
+      "source_pages": [
+        1,
+        2,
+        3
+      ],
+      "tags": [
+        "zh",
+        "short-disclosure",
+        "mixed-visual-appearance",
+        "seal",
+        "handwriting"
+      ],
+      "family_id": "zhenye-bond-disclosure",
+      "suites": [
+        "lite",
+        "perf80"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/zhenye-coupon-seals-p001-003.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/1200694910",
+      "evaluation": "evaluation/zhenye-coupon-seals-p001-003.json"
+    },
+    {
+      "id": "tgood-meeting-p001-006",
+      "document_id": "1200467021",
+      "source_pages": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "tags": [
+        "zh",
+        "meeting-notice",
+        "single-column",
+        "cross-page-prose",
+        "data-table",
+        "blank-form",
+        "boxed-prose"
+      ],
+      "family_id": "tgood-shareholder-meeting",
+      "suites": [
+        "lite",
+        "perf80"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/tgood-meeting-p001-006.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/1200467021",
+      "evaluation": "evaluation/tgood-meeting-p001-006.json"
+    },
+    {
+      "id": "nvidia-illustrated-review-p002-009",
+      "document_id": "complex-nvidia-2025-annual",
+      "source_pages": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "tags": [
+        "en",
+        "annual-review",
+        "landscape-spread",
+        "dark-background",
+        "image-preservation",
+        "layout-grid"
+      ],
+      "family_id": "nvidia-annual-review",
+      "suites": [
+        "lite",
+        "perf80"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/nvidia-illustrated-review-p002-009.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-nvidia-2025-annual",
+      "evaluation": "evaluation/nvidia-illustrated-review-p002-009.json"
+    },
+    {
+      "id": "iea-rise-ai-p021-024",
+      "document_id": "complex-iea-energy-ai-2025",
+      "source_pages": [
+        21,
+        22,
+        23,
+        24
+      ],
+      "tags": [
+        "en",
+        "research-report",
+        "image-preservation",
+        "cross-page-prose",
+        "boxed-prose",
+        "figure-notes"
+      ],
+      "family_id": "iea-special-report",
+      "suites": [
+        "lite",
+        "perf80"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/iea-rise-ai-p021-024.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-iea-energy-ai-2025",
+      "evaluation": "evaluation/iea-rise-ai-p021-024.json"
+    },
+    {
+      "id": "bis-economic-review-p022-025",
+      "document_id": "complex-bis-economic-2024",
+      "source_pages": [
+        22,
+        23,
+        24,
+        25
+      ],
+      "tags": [
+        "en",
+        "economic-report",
+        "image-preservation",
+        "cross-page-prose",
+        "figure-notes",
+        "superscripts"
+      ],
+      "family_id": "bis-annual-economic-report",
+      "suites": [
+        "lite",
+        "perf80"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/bis-economic-review-p022-025.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-bis-economic-2024",
+      "evaluation": "evaluation/bis-economic-review-p022-025.json"
+    },
+    {
+      "id": "spdb-credit-overview-p001-004",
+      "document_id": "1200707112",
+      "source_pages": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "tags": [
+        "zh",
+        "credit-report",
+        "scan-like-page",
+        "two-column",
+        "data-table",
+        "seal",
+        "superscripts"
+      ],
+      "family_id": "brilliance-bank-credit-rating",
+      "suites": [
+        "lite",
+        "perf80"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/spdb-credit-overview-p001-004.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/1200707112",
+      "evaluation": "evaluation/spdb-credit-overview-p001-004.json"
+    },
+    {
+      "id": "fiyta-terms-financials-p001-010",
+      "document_id": "1200778318",
+      "source_pages": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "tags": [
+        "zh",
+        "bond-trustee-report",
+        "single-column",
+        "cross-page-prose",
+        "data-table",
+        "source-inconsistency",
+        "contents"
+      ],
+      "family_id": "cms-bond-trustee-report",
+      "suites": [
+        "lite",
+        "perf80"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/fiyta-terms-financials-p001-010.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/1200778318",
+      "evaluation": "evaluation/fiyta-terms-financials-p001-010.json"
+    },
+    {
+      "id": "fiyta-bond-followup-p011-017",
+      "document_id": "1200778318",
+      "source_pages": [
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17
+      ],
+      "tags": [
+        "zh",
+        "bond-trustee-report",
+        "single-column",
+        "negative-statements",
+        "source-inconsistency",
+        "signature-page"
+      ],
+      "family_id": "cms-bond-trustee-report",
+      "suites": [
+        "lite",
+        "perf80"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/fiyta-bond-followup-p011-017.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/1200778318",
+      "evaluation": "evaluation/fiyta-bond-followup-p011-017.json"
+    },
+    {
+      "id": "zhenye-correction-p001",
+      "document_id": "1200799174",
+      "source_pages": [
+        1
+      ],
+      "tags": [
+        "zh",
+        "single-page",
+        "short-disclosure",
+        "correction-notice",
+        "quoted-error"
+      ],
+      "family_id": "zhenye-bond-disclosure",
+      "suites": [
+        "lite",
+        "perf80"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/zhenye-correction-p001.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/1200799174",
+      "evaluation": "evaluation/zhenye-correction-p001.json"
+    },
+    {
+      "id": "vanke-sales-projects-p001",
+      "document_id": "1200800787",
+      "source_pages": [
+        1
+      ],
+      "tags": [
+        "zh",
+        "single-page",
+        "short-disclosure",
+        "financial-prose",
+        "qualified-values"
+      ],
+      "family_id": "vanke-short-disclosure",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/vanke-sales-projects-p001.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/1200800787",
+      "evaluation": "evaluation/vanke-sales-projects-p001.json"
+    },
+    {
+      "id": "spdb-summary-financials-p001-004",
+      "document_id": "1200716038",
+      "source_pages": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "tags": [
+        "zh",
+        "annual-summary",
+        "data-table",
+        "cross-page-table",
+        "audit-scope",
+        "mixed-units",
+        "blank-cells"
+      ],
+      "family_id": "spdb-annual-summary",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/spdb-summary-financials-p001-004.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/1200716038",
+      "evaluation": "evaluation/spdb-summary-financials-p001-004.json"
+    },
+    {
+      "id": "nvidia-ceo-letter-p010-014",
+      "document_id": "complex-nvidia-2025-annual",
+      "source_pages": [
+        10,
+        11,
+        12,
+        13,
+        14
+      ],
+      "tags": [
+        "en",
+        "annual-review",
+        "six-column-reading-order",
+        "cross-page-paragraph",
+        "small-print",
+        "image-preservation"
+      ],
+      "family_id": "nvidia-annual-review",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/nvidia-ceo-letter-p010-014.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-nvidia-2025-annual",
+      "evaluation": "evaluation/nvidia-ceo-letter-p010-014.json"
+    },
+    {
+      "id": "nvidia-meeting-notice-toc-p015-016",
+      "document_id": "complex-nvidia-2025-annual",
+      "source_pages": [
+        15,
+        16
+      ],
+      "tags": [
+        "en",
+        "meeting-notice",
+        "layout-fields",
+        "toc",
+        "small-print",
+        "signature-image"
+      ],
+      "family_id": "nvidia-annual-review",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/nvidia-meeting-notice-toc-p015-016.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-nvidia-2025-annual",
+      "evaluation": "evaluation/nvidia-meeting-notice-toc-p015-016.json"
+    },
+    {
+      "id": "nvidia-definitions-p017",
+      "document_id": "complex-nvidia-2025-annual",
+      "source_pages": [
+        17
+      ],
+      "tags": [
+        "en",
+        "glossary",
+        "striped-key-value-layout"
+      ],
+      "family_id": "nvidia-annual-review",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/nvidia-definitions-p017.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-nvidia-2025-annual",
+      "evaluation": "evaluation/nvidia-definitions-p017.json"
+    },
+    {
+      "id": "nvidia-business-overview-p018-019",
+      "document_id": "complex-nvidia-2025-annual",
+      "source_pages": [
+        18,
+        19
+      ],
+      "tags": [
+        "en",
+        "financial-highlights",
+        "column-oriented-data",
+        "mixed-grid",
+        "image-preservation"
+      ],
+      "family_id": "nvidia-annual-review",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/nvidia-business-overview-p018-019.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-nvidia-2025-annual",
+      "evaluation": "evaluation/nvidia-business-overview-p018-019.json"
+    },
+    {
+      "id": "nvidia-proxy-summary-p020-024",
+      "document_id": "complex-nvidia-2025-annual",
+      "source_pages": [
+        20,
+        21,
+        22,
+        23,
+        24
+      ],
+      "tags": [
+        "en",
+        "proxy-summary",
+        "voting-table",
+        "checkbox-table",
+        "multi-level-header",
+        "mixed-prose-table"
+      ],
+      "family_id": "nvidia-annual-review",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/nvidia-proxy-summary-p020-024.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-nvidia-2025-annual",
+      "evaluation": "evaluation/nvidia-proxy-summary-p020-024.json"
+    },
+    {
+      "id": "tangshan-accounting-policy-p001-005",
+      "document_id": "1200838381",
+      "source_pages": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "source_category": "source-unknown",
+      "tags": [
+        "zh",
+        "accounting-policy-report",
+        "source-unknown",
+        "scan-like-pages",
+        "bilingual-letterhead",
+        "shared-table-note",
+        "cross-page-paragraph",
+        "seal-preservation"
+      ],
+      "family_id": "tangshan-port-disclosure",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/tangshan-accounting-policy-p001-005.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/1200838381",
+      "evaluation": "evaluation/tangshan-accounting-policy-p001-005.json"
+    },
+    {
+      "id": "tgood-acquisition-terms-p009-019",
+      "document_id": "1200968001",
+      "source_pages": [
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ],
+      "tags": [
+        "zh",
+        "conditional-agreement",
+        "numbered-clauses",
+        "cross-page-prose",
+        "source-inconsistency",
+        "funding-table"
+      ],
+      "family_id": "tgood-chuankai-acquisition",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/tgood-acquisition-terms-p009-019.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/1200968001",
+      "evaluation": "evaluation/tgood-acquisition-terms-p009-019.json"
+    },
+    {
+      "id": "beijing-media-director-p001-003",
+      "document_id": "1201816142",
+      "source_pages": [
+        1,
+        2,
+        3
+      ],
+      "tags": [
+        "zh-Hant",
+        "hong-kong-disclosure",
+        "boxed-prose",
+        "repeated-business-prose",
+        "director-biography"
+      ],
+      "family_id": "beijing-media-hk-disclosure",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/beijing-media-director-p001-003.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/1201816142",
+      "evaluation": "evaluation/beijing-media-director-p001-003.json"
+    },
+    {
+      "id": "wuliangye-litigation-ruling-p001-002",
+      "document_id": "1201791349",
+      "source_pages": [
+        1,
+        2
+      ],
+      "tags": [
+        "zh",
+        "litigation-disclosure",
+        "quoted-ruling",
+        "cross-page-heading",
+        "mixed-numeral-units"
+      ],
+      "family_id": "wuliangye-litigation-disclosure",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/wuliangye-litigation-ruling-p001-002.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/1201791349",
+      "evaluation": "evaluation/wuliangye-litigation-ruling-p001-002.json"
+    },
+    {
+      "id": "bis-policy-boxes-p026-034",
+      "document_id": "complex-bis-economic-2024",
+      "source_pages": [
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34
+      ],
+      "tags": [
+        "en",
+        "economic-report",
+        "cross-page-box",
+        "interrupted-prose",
+        "footnotes",
+        "chart-preservation"
+      ],
+      "family_id": "bis-annual-economic-report",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/bis-policy-boxes-p026-034.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-bis-economic-2024",
+      "evaluation": "evaluation/bis-policy-boxes-p026-034.json"
+    },
+    {
+      "id": "bis-financial-risk-boxes-p035-041",
+      "document_id": "complex-bis-economic-2024",
+      "source_pages": [
+        35,
+        36,
+        37,
+        38,
+        39,
+        40,
+        41
+      ],
+      "tags": [
+        "en",
+        "economic-report",
+        "cross-page-box",
+        "interrupted-prose",
+        "small-footnotes",
+        "chart-preservation"
+      ],
+      "family_id": "bis-annual-economic-report",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/bis-financial-risk-boxes-p035-041.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-bis-economic-2024",
+      "evaluation": "evaluation/bis-financial-risk-boxes-p035-041.json"
+    },
+    {
+      "id": "iea-adoption-ai-types-p025-031",
+      "document_id": "complex-iea-energy-ai-2025",
+      "source_pages": [
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31
+      ],
+      "source_category": "source-unknown",
+      "tags": [
+        "en",
+        "source-unknown",
+        "technical-report",
+        "cross-page-paragraph",
+        "bulleted-prose",
+        "chart-preservation"
+      ],
+      "family_id": "iea-special-report",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/iea-adoption-ai-types-p025-031.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-iea-energy-ai-2025",
+      "evaluation": "evaluation/iea-adoption-ai-types-p025-031.json"
+    },
+    {
+      "id": "iea-infrastructure-capabilities-p032-036",
+      "document_id": "complex-iea-energy-ai-2025",
+      "source_pages": [
+        32,
+        33,
+        34,
+        35,
+        36
+      ],
+      "source_category": "source-unknown",
+      "tags": [
+        "en",
+        "source-unknown",
+        "technical-report",
+        "dense-text-table",
+        "cross-page-paragraph",
+        "diagram-preservation",
+        "chart-preservation"
+      ],
+      "family_id": "iea-special-report",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/iea-infrastructure-capabilities-p032-036.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-iea-energy-ai-2025",
+      "evaluation": "evaluation/iea-infrastructure-capabilities-p032-036.json"
+    },
+    {
+      "id": "iea-energy-manufacturing-p037-040",
+      "document_id": "complex-iea-energy-ai-2025",
+      "source_pages": [
+        37,
+        38,
+        39,
+        40
+      ],
+      "source_category": "source-unknown",
+      "tags": [
+        "en",
+        "source-unknown",
+        "technical-report",
+        "cross-page-paragraph",
+        "units-and-superscripts",
+        "map-preservation",
+        "chart-preservation"
+      ],
+      "family_id": "iea-special-report",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/iea-energy-manufacturing-p037-040.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-iea-energy-ai-2025",
+      "evaluation": "evaluation/iea-energy-manufacturing-p037-040.json"
+    },
+    {
+      "id": "iea-training-energy-p041-042",
+      "document_id": "complex-iea-energy-ai-2025",
+      "source_pages": [
+        41,
+        42
+      ],
+      "source_category": "source-unknown",
+      "tags": [
+        "en",
+        "source-unknown",
+        "technical-report",
+        "cross-page-list",
+        "technical-footnote",
+        "chart-preservation"
+      ],
+      "family_id": "iea-special-report",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/iea-training-energy-p041-042.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-iea-energy-ai-2025",
+      "evaluation": "evaluation/iea-training-energy-p041-042.json"
+    },
+    {
+      "id": "iea-inference-energy-boxes-p043-048",
+      "document_id": "complex-iea-energy-ai-2025",
+      "source_pages": [
+        43,
+        44,
+        45,
+        46,
+        47,
+        48
+      ],
+      "source_category": "source-unknown",
+      "tags": [
+        "en",
+        "source-unknown",
+        "technical-report",
+        "cross-page-box",
+        "cross-page-paragraph",
+        "bulleted-prose",
+        "technical-footnotes",
+        "chart-preservation"
+      ],
+      "family_id": "iea-special-report",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/iea-inference-energy-boxes-p043-048.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-iea-energy-ai-2025",
+      "evaluation": "evaluation/iea-inference-energy-boxes-p043-048.json"
+    },
+    {
+      "id": "tangshan-directors-opinion-p001-002",
+      "document_id": "1200975009",
+      "source_pages": [
+        1,
+        2
+      ],
+      "source_category": "source-unknown",
+      "tags": [
+        "zh",
+        "source-unknown",
+        "director-opinion",
+        "scan-like-pages",
+        "signature-preservation"
+      ],
+      "family_id": "tangshan-port-disclosure",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/tangshan-directors-opinion-p001-002.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/1200975009",
+      "evaluation": "evaluation/tangshan-directors-opinion-p001-002.json"
+    },
+    {
+      "id": "spdb-acquisition-approval-p001-002",
+      "document_id": "1201786046",
+      "source_pages": [
+        1,
+        2
+      ],
+      "source_category": "source-unknown",
+      "tags": [
+        "zh",
+        "source-unknown",
+        "regulatory-approval",
+        "quoted-prose",
+        "identifier-layout",
+        "precise-share-amounts"
+      ],
+      "family_id": "spdb-acquisition-disclosure",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/spdb-acquisition-approval-p001-002.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/1201786046",
+      "evaluation": "evaluation/spdb-acquisition-approval-p001-002.json"
+    },
+    {
+      "id": "spdb-prospectus-risk-tax-p013-020",
+      "document_id": "1200454112",
+      "source_pages": [
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ],
+      "source_category": "source-unknown",
+      "tags": [
+        "zh",
+        "source-unknown",
+        "prospectus",
+        "layout-grid-prose",
+        "cross-page-paragraph",
+        "cross-page-grid",
+        "hierarchical-clauses",
+        "tax-conditions"
+      ],
+      "family_id": "spdb-preferred-share-prospectus",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/spdb-prospectus-risk-tax-p013-020.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/1200454112",
+      "evaluation": "evaluation/spdb-prospectus-risk-tax-p013-020.json"
+    },
+    {
+      "id": "spdb-prospectus-financials-seal-p021-023",
+      "document_id": "1200454112",
+      "source_pages": [
+        21,
+        22,
+        23
+      ],
+      "source_category": "source-unknown",
+      "tags": [
+        "zh",
+        "financial-table",
+        "multiple-periods",
+        "cross-page-table",
+        "seal",
+        "source-unknown"
+      ],
+      "family_id": "spdb-preferred-share-prospectus",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/spdb-prospectus-financials-seal-p021-023.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/1200454112",
+      "evaluation": "evaluation/spdb-prospectus-financials-seal-p021-023.json"
+    },
+    {
+      "id": "spdb-prospectus-issuer-terms-p006-012",
+      "document_id": "1200454112",
+      "source_pages": [
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "source_category": "source-unknown",
+      "tags": [
+        "zh",
+        "layout-grid-prose",
+        "nested-clauses",
+        "cross-page-paragraph",
+        "formula",
+        "source-unknown"
+      ],
+      "family_id": "spdb-preferred-share-prospectus",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/spdb-prospectus-issuer-terms-p006-012.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/1200454112",
+      "evaluation": "evaluation/spdb-prospectus-issuer-terms-p006-012.json"
+    },
+    {
+      "id": "tangshan-rong-nomination-p001-002",
+      "document_id": "1200838391",
+      "source_pages": [
+        1,
+        2
+      ],
+      "source_category": "source-unknown",
+      "tags": [
+        "zh",
+        "scan-like-pages",
+        "nested-clauses",
+        "seal",
+        "source-unknown"
+      ],
+      "family_id": "tangshan-port-disclosure",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/tangshan-rong-nomination-p001-002.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/1200838391",
+      "evaluation": "evaluation/tangshan-rong-nomination-p001-002.json"
+    },
+    {
+      "id": "tangshan-li-nomination-p009-011",
+      "document_id": "1200838391",
+      "source_pages": [
+        9,
+        10,
+        11
+      ],
+      "source_category": "source-unknown",
+      "tags": [
+        "zh",
+        "scan-like-pages",
+        "nested-clauses",
+        "seal",
+        "continuation",
+        "source-unknown"
+      ],
+      "family_id": "tangshan-port-disclosure",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/tangshan-li-nomination-p009-011.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/1200838391",
+      "evaluation": "evaluation/tangshan-li-nomination-p009-011.json"
+    },
+    {
+      "id": "tgood-compensation-subscription-p022-028",
+      "document_id": "1200967992",
+      "source_pages": [
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28
+      ],
+      "source_category": "source-unknown",
+      "tags": [
+        "zh",
+        "nested-clauses",
+        "formula",
+        "cross-page-paragraph",
+        "data-table",
+        "source-unknown"
+      ],
+      "family_id": "tgood-chuankai-acquisition",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/tgood-compensation-subscription-p022-028.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/1200967992",
+      "evaluation": "evaluation/tgood-compensation-subscription-p022-028.json"
+    },
+    {
+      "id": "nvidia-business-manufacturing-people-p096-104",
+      "document_id": "complex-nvidia-2025-annual",
+      "source_pages": [
+        96,
+        97,
+        98,
+        99,
+        100,
+        101,
+        102,
+        103,
+        104
+      ],
+      "source_category": "source-unknown",
+      "tags": [
+        "en",
+        "dense-prose",
+        "nested-headings",
+        "bullet-lists",
+        "cross-page-paragraph",
+        "source-unknown"
+      ],
+      "family_id": "nvidia-annual-review",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/nvidia-business-manufacturing-people-p096-104.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-nvidia-2025-annual",
+      "evaluation": "evaluation/nvidia-business-manufacturing-people-p096-104.json"
+    },
+    {
+      "id": "nvidia-officers-risk-supply-p105-110",
+      "document_id": "complex-nvidia-2025-annual",
+      "source_pages": [
+        105,
+        106,
+        107,
+        108,
+        109,
+        110
+      ],
+      "source_category": "source-unknown",
+      "tags": [
+        "en",
+        "dense-prose",
+        "data-table",
+        "cross-page-paragraph",
+        "bullet-lists",
+        "source-unknown"
+      ],
+      "family_id": "nvidia-annual-review",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/nvidia-officers-risk-supply-p105-110.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-nvidia-2025-annual",
+      "evaluation": "evaluation/nvidia-officers-risk-supply-p105-110.json"
+    },
+    {
+      "id": "nvidia-global-regulatory-risks-p111-120",
+      "document_id": "complex-nvidia-2025-annual",
+      "source_pages": [
+        111,
+        112,
+        113,
+        114,
+        115,
+        116,
+        117,
+        118,
+        119,
+        120
+      ],
+      "source_category": "source-unknown",
+      "tags": [
+        "en",
+        "dense-prose",
+        "bullet-lists",
+        "cross-page-paragraph",
+        "source-unknown"
+      ],
+      "family_id": "nvidia-annual-review",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/nvidia-global-regulatory-risks-p111-120.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-nvidia-2025-annual",
+      "evaluation": "evaluation/nvidia-global-regulatory-risks-p111-120.json"
+    },
+    {
+      "id": "vanke-acquisition-guarantee-p001-002",
+      "document_id": "1201830493",
+      "source_pages": [
+        1,
+        2
+      ],
+      "source_category": "source-unknown",
+      "tags": [
+        "zh",
+        "en-entity-names",
+        "boxed-prose",
+        "source-unknown"
+      ],
+      "family_id": "vanke-short-disclosure",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/vanke-acquisition-guarantee-p001-002.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/1201830493",
+      "evaluation": "evaluation/vanke-acquisition-guarantee-p001-002.json"
+    },
+    {
+      "id": "wuliangye-appeal-progress-p001",
+      "document_id": "1201860324",
+      "source_pages": [
+        1
+      ],
+      "source_category": "source-unknown",
+      "tags": [
+        "zh",
+        "single-page",
+        "litigation",
+        "source-unknown"
+      ],
+      "family_id": "wuliangye-litigation-disclosure",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/wuliangye-appeal-progress-p001.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/1201860324",
+      "evaluation": "evaluation/wuliangye-appeal-progress-p001.json"
+    },
+    {
+      "id": "vanke-repurchase-share-changes-p001-003",
+      "document_id": "1201917092",
+      "source_pages": [
+        1,
+        2,
+        3
+      ],
+      "source_category": "source-unknown",
+      "tags": [
+        "zh",
+        "multi-level-table-header",
+        "real-blank-cells",
+        "source-unknown"
+      ],
+      "family_id": "vanke-short-disclosure",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/vanke-repurchase-share-changes-p001-003.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/1201917092",
+      "evaluation": "evaluation/vanke-repurchase-share-changes-p001-003.json"
+    },
+    {
+      "id": "nhu-subsidiary-guarantees-p001-003",
+      "document_id": "1202194191",
+      "source_pages": [
+        1,
+        2,
+        3
+      ],
+      "source_category": "source-unknown",
+      "tags": [
+        "zh",
+        "numbered-prose-records",
+        "cross-page-paragraph",
+        "greek-letters",
+        "source-unknown"
+      ],
+      "family_id": "nhu-related-party-disclosure",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/nhu-subsidiary-guarantees-p001-003.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/1202194191",
+      "evaluation": "evaluation/nhu-subsidiary-guarantees-p001-003.json"
+    },
+    {
+      "id": "beijing-media-disposal-p001-008",
+      "document_id": "1202164176",
+      "source_pages": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "source_category": "source-unknown",
+      "tags": [
+        "zh-Hant",
+        "boxed-prose",
+        "label-value-layout",
+        "data-table",
+        "ownership-images",
+        "glossary",
+        "source-unknown"
+      ],
+      "family_id": "beijing-media-hk-disclosure",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/beijing-media-disposal-p001-008.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/1202164176",
+      "evaluation": "evaluation/beijing-media-disposal-p001-008.json"
+    },
+    {
+      "id": "pingan-fundraising-assurance-p003-007",
+      "document_id": "1202033380",
+      "source_pages": [
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "source_category": "source-unknown",
+      "tags": [
+        "zh",
+        "assurance-report",
+        "prose",
+        "landscape-table",
+        "multi-level-table-header",
+        "dash-values"
+      ],
+      "family_id": "pingan-bank-fundraising-assurance",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/pingan-fundraising-assurance-p003-007.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/1202033380",
+      "evaluation": "evaluation/pingan-fundraising-assurance-p003-007.json"
+    },
+    {
+      "id": "peoples-network-fundraising-p001-003",
+      "document_id": "1202180643",
+      "source_pages": [
+        1,
+        2,
+        3
+      ],
+      "source_category": "source-unknown",
+      "tags": [
+        "zh",
+        "fundraising",
+        "prose",
+        "bank-account",
+        "financial-table",
+        "cross-page-paragraph"
+      ],
+      "family_id": "peoples-network-fundraising-disclosure",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/peoples-network-fundraising-p001-003.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/1202180643",
+      "evaluation": "evaluation/peoples-network-fundraising-p001-003.json"
+    },
+    {
+      "id": "nhu-related-party-audit-p002-003",
+      "document_id": "1202194188",
+      "source_pages": [
+        2,
+        3
+      ],
+      "source_category": "source-unknown",
+      "tags": [
+        "zh",
+        "audit-report",
+        "prose",
+        "related-party"
+      ],
+      "family_id": "nhu-related-party-disclosure",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/nhu-related-party-audit-p002-003.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/1202194188",
+      "evaluation": "evaluation/nhu-related-party-audit-p002-003.json"
+    },
+    {
+      "id": "tencent-issuer-summary-p024-026",
+      "document_id": "complex-tencent-2025-bond-programme",
+      "source_pages": [
+        24,
+        25,
+        26
+      ],
+      "source_category": "source-unknown",
+      "tags": [
+        "en",
+        "issuer-summary",
+        "prose",
+        "corporate-structure-image",
+        "footnotes"
+      ],
+      "family_id": "tencent-global-note-programme",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/tencent-issuer-summary-p024-026.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-tencent-2025-bond-programme",
+      "evaluation": "evaluation/tencent-issuer-summary-p024-026.json"
+    },
+    {
+      "id": "tencent-programme-summary-p027-033",
+      "document_id": "complex-tencent-2025-bond-programme",
+      "source_pages": [
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33
+      ],
+      "source_category": "source-unknown",
+      "tags": [
+        "en",
+        "layout-fields",
+        "legal-conditions",
+        "cross-page-field",
+        "bond-programme"
+      ],
+      "family_id": "tencent-global-note-programme",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/tencent-programme-summary-p027-033.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-tencent-2025-bond-programme",
+      "evaluation": "evaluation/tencent-programme-summary-p027-033.json"
+    },
+    {
+      "id": "tencent-conditions-definitions-formulas-p102-107",
+      "document_id": "complex-tencent-2025-bond-programme",
+      "source_pages": [
+        102,
+        103,
+        104,
+        105,
+        106,
+        107
+      ],
+      "source_category": "source-unknown",
+      "tags": [
+        "en",
+        "legal-conditions",
+        "nested-lists",
+        "formula",
+        "subscripts",
+        "cross-page-definition"
+      ],
+      "family_id": "tencent-global-note-programme",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/tencent-conditions-definitions-formulas-p102-107.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-tencent-2025-bond-programme",
+      "evaluation": "evaluation/tencent-conditions-definitions-formulas-p102-107.json"
+    },
+    {
+      "id": "tencent-conditions-entity-payment-definitions-p108-114",
+      "document_id": "complex-tencent-2025-bond-programme",
+      "source_pages": [
+        108,
+        109,
+        110,
+        111,
+        112,
+        113,
+        114
+      ],
+      "source_category": "source-unknown",
+      "tags": [
+        "en",
+        "legal-definitions",
+        "nested-lists",
+        "cross-page-definition",
+        "source-inconsistency"
+      ],
+      "family_id": "tencent-global-note-programme",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/tencent-conditions-entity-payment-definitions-p108-114.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-tencent-2025-bond-programme",
+      "evaluation": "evaluation/tencent-conditions-entity-payment-definitions-p108-114.json"
+    },
+    {
+      "id": "sf-supply-chain-operating-efficiency-p025-026",
+      "document_id": "complex-sf-2024-annual",
+      "source_pages": [
+        25,
+        26
+      ],
+      "source_category": "source-unknown",
+      "tags": [
+        "zh-Hant",
+        "two-column",
+        "prose",
+        "cross-column-paragraph"
+      ],
+      "family_id": "sf-hongkong-annual-report",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/sf-supply-chain-operating-efficiency-p025-026.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-sf-2024-annual",
+      "evaluation": "evaluation/sf-supply-chain-operating-efficiency-p025-026.json"
+    },
+    {
+      "id": "sf-network-infographics-p027-031",
+      "document_id": "complex-sf-2024-annual",
+      "source_pages": [
+        27,
+        28,
+        29,
+        30,
+        31
+      ],
+      "source_category": "source-unknown",
+      "tags": [
+        "zh-Hant",
+        "infographic",
+        "map-image",
+        "two-column-notes",
+        "image-preservation"
+      ],
+      "family_id": "sf-hongkong-annual-report",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/sf-network-infographics-p027-031.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-sf-2024-annual",
+      "evaluation": "evaluation/sf-network-infographics-p027-031.json"
+    },
+    {
+      "id": "catl-listing-ownership-diagrams-p178-180",
+      "document_id": "complex-catl-2025-prospectus",
+      "source_pages": [
+        178,
+        179,
+        180
+      ],
+      "source_category": "source-unknown",
+      "tags": [
+        "zh-Hant",
+        "prospectus",
+        "corporate-structure-image",
+        "footnotes",
+        "before-after-images"
+      ],
+      "family_id": "catl-h-share-prospectus",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/catl-listing-ownership-diagrams-p178-180.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-catl-2025-prospectus",
+      "evaluation": "evaluation/catl-listing-ownership-diagrams-p178-180.json"
+    },
+    {
+      "id": "catl-nev-battery-markets-p127-132",
+      "document_id": "complex-catl-2025-prospectus",
+      "source_pages": [
+        127,
+        128,
+        129,
+        130,
+        131,
+        132
+      ],
+      "source_category": "source-unknown",
+      "tags": [
+        "zh-Hant",
+        "industry-report",
+        "chart-with-inset-table",
+        "forecast-periods",
+        "cross-page-paragraph",
+        "image-preservation"
+      ],
+      "family_id": "catl-h-share-prospectus",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/catl-nev-battery-markets-p127-132.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-catl-2025-prospectus",
+      "evaluation": "evaluation/catl-nev-battery-markets-p127-132.json"
+    },
+    {
+      "id": "catl-power-market-materials-drivers-p133-136",
+      "document_id": "complex-catl-2025-prospectus",
+      "source_pages": [
+        133,
+        134,
+        135,
+        136
+      ],
+      "source_category": "source-unknown",
+      "tags": [
+        "zh-Hant",
+        "industry-report",
+        "chart-with-inset-table",
+        "forecast-periods",
+        "negative-parentheses",
+        "prose"
+      ],
+      "family_id": "catl-h-share-prospectus",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/catl-power-market-materials-drivers-p133-136.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-catl-2025-prospectus",
+      "evaluation": "evaluation/catl-power-market-materials-drivers-p133-136.json"
+    },
+    {
+      "id": "catl-storage-renewables-markets-p137-143",
+      "document_id": "complex-catl-2025-prospectus",
+      "source_pages": [
+        137,
+        138,
+        139,
+        140,
+        141,
+        142,
+        143
+      ],
+      "source_category": "source-unknown",
+      "tags": [
+        "zh-Hant",
+        "industry-report",
+        "chart-with-inset-table",
+        "forecast-periods",
+        "not-applicable-values",
+        "image-preservation"
+      ],
+      "family_id": "catl-h-share-prospectus",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/catl-storage-renewables-markets-p137-143.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-catl-2025-prospectus",
+      "evaluation": "evaluation/catl-storage-renewables-markets-p137-143.json"
+    },
+    {
+      "id": "catl-recycling-emerging-entry-barriers-p144-147",
+      "document_id": "complex-catl-2025-prospectus",
+      "source_pages": [
+        144,
+        145,
+        146,
+        147
+      ],
+      "source_category": "source-unknown",
+      "tags": [
+        "zh-Hant",
+        "industry-report",
+        "chart-with-inset-table",
+        "forecast-periods",
+        "prose"
+      ],
+      "family_id": "catl-h-share-prospectus",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/catl-recycling-emerging-entry-barriers-p144-147.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-catl-2025-prospectus",
+      "evaluation": "evaluation/catl-recycling-emerging-entry-barriers-p144-147.json"
+    },
+    {
+      "id": "tencent-title-transfer-status-p115-117",
+      "document_id": "complex-tencent-2025-bond-programme",
+      "source_pages": [
+        115,
+        116,
+        117
+      ],
+      "source_category": "source-unknown",
+      "tags": [
+        "en",
+        "legal-conditions",
+        "nested-lists",
+        "cross-page-list",
+        "italic-prose"
+      ],
+      "family_id": "tencent-global-note-programme",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/tencent-title-transfer-status-p115-117.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-tencent-2025-bond-programme",
+      "evaluation": "evaluation/tencent-title-transfer-status-p115-117.json"
+    },
+    {
+      "id": "tencent-covenants-interest-conditions-p118-123",
+      "document_id": "complex-tencent-2025-bond-programme",
+      "source_pages": [
+        118,
+        119,
+        120,
+        121,
+        122,
+        123
+      ],
+      "source_category": "source-unknown",
+      "tags": [
+        "en",
+        "legal-conditions",
+        "nested-lists",
+        "cross-page-prose",
+        "interest-terms"
+      ],
+      "family_id": "tencent-global-note-programme",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/tencent-covenants-interest-conditions-p118-123.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-tencent-2025-bond-programme",
+      "evaluation": "evaluation/tencent-covenants-interest-conditions-p118-123.json"
+    },
+    {
+      "id": "tencent-sofr-formulas-benchmark-replacement-p124-134",
+      "document_id": "complex-tencent-2025-bond-programme",
+      "source_pages": [
+        124,
+        125,
+        126,
+        127,
+        128,
+        129,
+        130,
+        131,
+        132,
+        133,
+        134
+      ],
+      "source_category": "source-unknown",
+      "tags": [
+        "en",
+        "legal-conditions",
+        "nested-lists",
+        "mathematical-formula",
+        "cross-page-definition"
+      ],
+      "family_id": "tencent-global-note-programme",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/tencent-sofr-formulas-benchmark-replacement-p124-134.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-tencent-2025-bond-programme",
+      "evaluation": "evaluation/tencent-sofr-formulas-benchmark-replacement-p124-134.json"
+    },
+    {
+      "id": "tencent-redemption-bearer-payments-p135-140",
+      "document_id": "complex-tencent-2025-bond-programme",
+      "source_pages": [
+        135,
+        136,
+        137,
+        138,
+        139,
+        140
+      ],
+      "source_category": "source-unknown",
+      "tags": [
+        "en",
+        "legal-conditions",
+        "nested-lists",
+        "italic-prose",
+        "redemption-payment"
+      ],
+      "family_id": "tencent-global-note-programme",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/tencent-redemption-bearer-payments-p135-140.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-tencent-2025-bond-programme",
+      "evaluation": "evaluation/tencent-redemption-bearer-payments-p135-140.json"
+    },
+    {
+      "id": "tencent-registered-tax-default-trustee-p141-148",
+      "document_id": "complex-tencent-2025-bond-programme",
+      "source_pages": [
+        141,
+        142,
+        143,
+        144,
+        145,
+        146,
+        147,
+        148
+      ],
+      "source_category": "source-unknown",
+      "tags": [
+        "en",
+        "legal-conditions",
+        "nested-lists",
+        "cross-page-prose",
+        "taxation-default"
+      ],
+      "family_id": "tencent-global-note-programme",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/tencent-registered-tax-default-trustee-p141-148.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-tencent-2025-bond-programme",
+      "evaluation": "evaluation/tencent-registered-tax-default-trustee-p141-148.json"
+    },
+    {
+      "id": "tencent-enforcement-notices-jurisdiction-p149-151",
+      "document_id": "complex-tencent-2025-bond-programme",
+      "source_pages": [
+        149,
+        150,
+        151
+      ],
+      "source_category": "source-unknown",
+      "tags": [
+        "en",
+        "legal-conditions",
+        "nested-lists",
+        "italic-prose",
+        "notices-jurisdiction"
+      ],
+      "family_id": "tencent-global-note-programme",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/tencent-enforcement-notices-jurisdiction-p149-151.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-tencent-2025-bond-programme",
+      "evaluation": "evaluation/tencent-enforcement-notices-jurisdiction-p149-151.json"
+    },
+    {
+      "id": "sf-industry-business-review-p017-024",
+      "document_id": "complex-sf-2024-annual",
+      "source_pages": [
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24
+      ],
+      "source_category": "source-unknown",
+      "tags": [
+        "zh-Hant",
+        "two-column",
+        "cross-page-prose",
+        "column-continuation",
+        "business-review"
+      ],
+      "family_id": "sf-hongkong-annual-report",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/sf-industry-business-review-p017-024.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-sf-2024-annual",
+      "evaluation": "evaluation/sf-industry-business-review-p017-024.json"
+    },
+    {
+      "id": "sf-brand-award-callouts-p034",
+      "document_id": "complex-sf-2024-annual",
+      "source_pages": [
+        34
+      ],
+      "source_category": "source-unknown",
+      "tags": [
+        "zh-Hant",
+        "two-column",
+        "typographic-callouts",
+        "nonliteral-reference"
+      ],
+      "family_id": "sf-hongkong-annual-report",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/sf-brand-award-callouts-p034.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-sf-2024-annual",
+      "evaluation": "evaluation/sf-brand-award-callouts-p034.json"
+    },
+    {
+      "id": "sf-revenue-operating-cost-tables-p035-036",
+      "document_id": "complex-sf-2024-annual",
+      "source_pages": [
+        35,
+        36
+      ],
+      "source_category": "source-unknown",
+      "tags": [
+        "zh-Hant",
+        "data-table",
+        "multilevel-header",
+        "repeated-row-label",
+        "table-notes",
+        "mixed-units"
+      ],
+      "family_id": "sf-hongkong-annual-report",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/sf-revenue-operating-cost-tables-p035-036.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-sf-2024-annual",
+      "evaluation": "evaluation/sf-revenue-operating-cost-tables-p035-036.json"
+    },
+    {
+      "id": "sf-margin-profit-ebitda-p037-039",
+      "document_id": "complex-sf-2024-annual",
+      "source_pages": [
+        37,
+        38,
+        39
+      ],
+      "source_category": "source-unknown",
+      "tags": [
+        "zh-Hant",
+        "data-table",
+        "multilevel-header",
+        "mixed-units",
+        "two-column",
+        "non-ifrs"
+      ],
+      "family_id": "sf-hongkong-annual-report",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/sf-margin-profit-ebitda-p037-039.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-sf-2024-annual",
+      "evaluation": "evaluation/sf-margin-profit-ebitda-p037-039.json"
+    },
+    {
+      "id": "sf-cashflow-assets-liabilities-p040-041",
+      "document_id": "complex-sf-2024-annual",
+      "source_pages": [
+        40,
+        41
+      ],
+      "source_category": "source-unknown",
+      "tags": [
+        "zh-Hant",
+        "data-table",
+        "multilevel-header",
+        "mixed-units",
+        "negative-values",
+        "repeated-row-label"
+      ],
+      "family_id": "sf-hongkong-annual-report",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/sf-cashflow-assets-liabilities-p040-041.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-sf-2024-annual",
+      "evaluation": "evaluation/sf-cashflow-assets-liabilities-p040-041.json"
+    },
+    {
+      "id": "sf-auditor-grid-prose-responsibilities-p087-088",
+      "document_id": "complex-sf-2024-annual",
+      "source_pages": [
+        87,
+        88
+      ],
+      "source_category": "source-unknown",
+      "tags": [
+        "zh-Hant",
+        "two-column",
+        "layout-grid-prose",
+        "mixed-layout",
+        "audit-report"
+      ],
+      "family_id": "sf-hongkong-annual-report",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/sf-auditor-grid-prose-responsibilities-p087-088.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-sf-2024-annual",
+      "evaluation": "evaluation/sf-auditor-grid-prose-responsibilities-p087-088.json"
+    },
+    {
+      "id": "catl-industry-market-overseas-risks-p053-057",
+      "document_id": "complex-catl-2025-prospectus",
+      "source_pages": [
+        53,
+        54,
+        55,
+        56,
+        57
+      ],
+      "source_category": "source-unknown",
+      "tags": [
+        "zh-Hant",
+        "boxed-prose",
+        "hierarchical-headings",
+        "cross-page-list",
+        "risk-disclosure"
+      ],
+      "family_id": "catl-h-share-prospectus",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/catl-industry-market-overseas-risks-p053-057.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-catl-2025-prospectus",
+      "evaluation": "evaluation/catl-industry-market-overseas-risks-p053-057.json"
+    },
+    {
+      "id": "catl-ip-newbusiness-finance-risks-p058-063",
+      "document_id": "complex-catl-2025-prospectus",
+      "source_pages": [
+        58,
+        59,
+        60,
+        61,
+        62,
+        63
+      ],
+      "source_category": "source-unknown",
+      "tags": [
+        "zh-Hant",
+        "hierarchical-headings",
+        "cross-page-list",
+        "cross-page-prose",
+        "numeric-prose",
+        "risk-disclosure"
+      ],
+      "family_id": "catl-h-share-prospectus",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/catl-ip-newbusiness-finance-risks-p058-063.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-catl-2025-prospectus",
+      "evaluation": "evaluation/catl-ip-newbusiness-finance-risks-p058-063.json"
+    },
+    {
+      "id": "catl-impairment-investment-debt-risks-p064-066",
+      "document_id": "complex-catl-2025-prospectus",
+      "source_pages": [
+        64,
+        65,
+        66
+      ],
+      "source_category": "source-unknown",
+      "tags": [
+        "zh-Hant",
+        "hierarchical-headings",
+        "numeric-prose",
+        "inline-enumeration",
+        "risk-disclosure"
+      ],
+      "family_id": "catl-h-share-prospectus",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/catl-impairment-investment-debt-risks-p064-066.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-catl-2025-prospectus",
+      "evaluation": "evaluation/catl-impairment-investment-debt-risks-p064-066.json"
+    },
+    {
+      "id": "iea-data-centre-definitions-history-p049-061",
+      "document_id": "complex-iea-energy-ai-2025",
+      "source_pages": [
+        49,
+        50,
+        51,
+        52,
+        53,
+        54,
+        55,
+        56,
+        57,
+        58,
+        59,
+        60,
+        61
+      ],
+      "source_category": "source-unknown",
+      "tags": [
+        "en",
+        "chapter-summary",
+        "cross-page-prose",
+        "cross-page-list",
+        "boxed-prose",
+        "technical-definitions",
+        "image-preservation"
+      ],
+      "family_id": "iea-special-report",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/iea-data-centre-definitions-history-p049-061.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-iea-energy-ai-2025",
+      "evaluation": "evaluation/iea-data-centre-definitions-history-p049-061.json"
+    },
+    {
+      "id": "iea-outlook-computing-rating-table-p062-070",
+      "document_id": "complex-iea-energy-ai-2025",
+      "source_pages": [
+        62,
+        63,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70
+      ],
+      "source_category": "source-unknown",
+      "tags": [
+        "en",
+        "cross-page-prose",
+        "cross-page-list",
+        "boxed-prose",
+        "ordinal-symbol-table",
+        "data-table",
+        "image-preservation"
+      ],
+      "family_id": "iea-special-report",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/iea-outlook-computing-rating-table-p062-070.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-iea-energy-ai-2025",
+      "evaluation": "evaluation/iea-outlook-computing-rating-table-p062-070.json"
+    },
+    {
+      "id": "bis-fiscal-productivity-policy-p042-051",
+      "document_id": "complex-bis-economic-2024",
+      "source_pages": [
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51
+      ],
+      "source_category": "source-unknown",
+      "tags": [
+        "en",
+        "boxed-prose",
+        "interrupted-main-text",
+        "cross-page-prose",
+        "footnotes",
+        "image-preservation"
+      ],
+      "family_id": "bis-annual-economic-report",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/bis-fiscal-productivity-policy-p042-051.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-bis-economic-2024",
+      "evaluation": "evaluation/bis-fiscal-productivity-policy-p042-051.json"
+    },
+    {
+      "id": "bis-endnotes-technical-annex-p052-057",
+      "document_id": "complex-bis-economic-2024",
+      "source_pages": [
+        52,
+        53,
+        54,
+        55,
+        56,
+        57
+      ],
+      "source_category": "source-unknown",
+      "tags": [
+        "en",
+        "endnotes",
+        "superscripts",
+        "technical-annex",
+        "country-code-lists",
+        "inline-formula"
+      ],
+      "family_id": "bis-annual-economic-report",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/bis-endnotes-technical-annex-p052-057.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-bis-economic-2024",
+      "evaluation": "evaluation/bis-endnotes-technical-annex-p052-057.json"
+    },
+    {
+      "id": "nvidia-regulatory-governance-equity-p121-127",
+      "document_id": "complex-nvidia-2025-annual",
+      "source_pages": [
+        121,
+        122,
+        123,
+        124,
+        125,
+        126,
+        127
+      ],
+      "source_category": "source-unknown",
+      "tags": [
+        "en",
+        "dense-prose",
+        "cross-page-prose",
+        "data-table",
+        "mixed-units",
+        "blank-cells",
+        "image-preservation"
+      ],
+      "family_id": "nvidia-annual-review",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/nvidia-regulatory-governance-equity-p121-127.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-nvidia-2025-annual",
+      "evaluation": "evaluation/nvidia-regulatory-governance-equity-p121-127.json"
+    },
+    {
+      "id": "nvidia-management-estimates-ratio-table-p128-132",
+      "document_id": "complex-nvidia-2025-annual",
+      "source_pages": [
+        128,
+        129,
+        130,
+        131,
+        132
+      ],
+      "source_category": "source-unknown",
+      "tags": [
+        "en",
+        "dense-prose",
+        "cross-page-prose",
+        "data-table",
+        "multilevel-header",
+        "mixed-units",
+        "accounting-estimates"
+      ],
+      "family_id": "nvidia-annual-review",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/nvidia-management-estimates-ratio-table-p128-132.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-nvidia-2025-annual",
+      "evaluation": "evaluation/nvidia-management-estimates-ratio-table-p128-132.json"
+    },
+    {
+      "source_category": "source-unknown",
+      "id": "huawei-front-p002-003",
+      "document_id": "complex-huawei-2024-annual",
+      "source_pages": [
+        2,
+        3
+      ],
+      "tags": [
+        "zh",
+        "annual-report",
+        "multi-column",
+        "cross-page-prose",
+        "contents",
+        "ordinary-prose"
+      ],
+      "family_id": "huawei-annual-report",
+      "suites": [
+        "lite",
+        "perf80"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/huawei-front-p002-003.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-huawei-2024-annual",
+      "evaluation": "evaluation/huawei-front-p002-003.json"
+    },
+    {
+      "source_category": "source-unknown",
+      "id": "huawei-address-p004-005",
+      "document_id": "complex-huawei-2024-annual",
+      "source_pages": [
+        4,
+        5
+      ],
+      "tags": [
+        "zh",
+        "annual-report",
+        "multi-column",
+        "cross-page-prose",
+        "portrait",
+        "signature",
+        "ordinary-prose"
+      ],
+      "family_id": "huawei-annual-report",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/huawei-address-p004-005.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-huawei-2024-annual",
+      "evaluation": "evaluation/huawei-address-p004-005.json"
+    },
+    {
+      "source_category": "source-unknown",
+      "id": "huawei-progress-p006",
+      "document_id": "complex-huawei-2024-annual",
+      "source_pages": [
+        6
+      ],
+      "tags": [
+        "zh",
+        "annual-report",
+        "single-page",
+        "multi-column",
+        "bulleted-prose",
+        "ordinary-prose"
+      ],
+      "family_id": "huawei-annual-report",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/huawei-progress-p006.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-huawei-2024-annual",
+      "evaluation": "evaluation/huawei-progress-p006.json"
+    },
+    {
+      "source_category": "source-unknown",
+      "id": "huawei-financial-summary-p007",
+      "document_id": "complex-huawei-2024-annual",
+      "source_pages": [
+        7
+      ],
+      "tags": [
+        "zh",
+        "annual-report",
+        "single-page",
+        "data-table",
+        "multi-level-header",
+        "mixed-currency",
+        "percentage",
+        "financial-footnote",
+        "chart-image"
+      ],
+      "family_id": "huawei-annual-report",
+      "suites": [
+        "lite",
+        "perf80"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/huawei-financial-summary-p007.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-huawei-2024-annual",
+      "evaluation": "evaluation/huawei-financial-summary-p007.json"
+    },
+    {
+      "source_category": "source-unknown",
+      "id": "huawei-audit-p066",
+      "document_id": "complex-huawei-2024-annual",
+      "source_pages": [
+        66
+      ],
+      "tags": [
+        "zh",
+        "annual-report",
+        "single-page",
+        "multi-column",
+        "audit-report",
+        "business-page-references",
+        "ordinary-prose"
+      ],
+      "family_id": "huawei-annual-report",
+      "suites": [
+        "lite",
+        "perf80"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/huawei-audit-p066.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-huawei-2024-annual",
+      "evaluation": "evaluation/huawei-audit-p066.json"
+    },
+    {
+      "source_category": "source-unknown",
+      "id": "huawei-statements-p068-070",
+      "document_id": "complex-huawei-2024-annual",
+      "source_pages": [
+        68,
+        69,
+        70
+      ],
+      "tags": [
+        "zh",
+        "annual-report",
+        "data-table",
+        "financial-statements",
+        "hierarchical-row-groups",
+        "parenthesized-negative",
+        "mixed-periods",
+        "repeated-row-labels",
+        "financial-footnote"
+      ],
+      "family_id": "huawei-annual-report",
+      "suites": [
+        "lite",
+        "perf80"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/huawei-statements-p068-070.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-huawei-2024-annual",
+      "evaluation": "evaluation/huawei-statements-p068-070.json"
+    },
+    {
+      "source_category": "source-unknown",
+      "id": "huaweitech-cover-p001",
+      "document_id": "complex-huaweitech-2024-096",
+      "source_pages": [
+        1
+      ],
+      "tags": [
+        "zh-en",
+        "periodical",
+        "single-page",
+        "cover-layout",
+        "image",
+        "qr-code",
+        "layout-prose"
+      ],
+      "family_id": "huaweitech-magazine",
+      "suites": [
+        "lite",
+        "perf80"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/huaweitech-cover-p001.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-huaweitech-2024-096",
+      "evaluation": "evaluation/huaweitech-cover-p001.json"
+    },
+    {
+      "source_category": "source-unknown",
+      "id": "huaweitech-editorial-spread-p002",
+      "document_id": "complex-huaweitech-2024-096",
+      "source_pages": [
+        2
+      ],
+      "tags": [
+        "zh-en",
+        "periodical",
+        "single-page",
+        "landscape-spread",
+        "multi-column",
+        "poster-image",
+        "portrait",
+        "signature",
+        "ordinary-prose"
+      ],
+      "family_id": "huaweitech-magazine",
+      "suites": [
+        "lite",
+        "perf80"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/huaweitech-editorial-spread-p002.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-huaweitech-2024-096",
+      "evaluation": "evaluation/huaweitech-editorial-spread-p002.json"
+    },
+    {
+      "source_category": "source-unknown",
+      "id": "hkex-strategic-message-p007",
+      "document_id": "complex-hkex-2024-annual",
+      "source_pages": [
+        7
+      ],
+      "tags": [
+        "en",
+        "annual-report",
+        "single-page",
+        "ordinary-prose",
+        "background-layout",
+        "signatory"
+      ],
+      "family_id": "hkex-annual-report",
+      "suites": [
+        "lite",
+        "perf80"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/hkex-strategic-message-p007.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-hkex-2024-annual",
+      "evaluation": "evaluation/hkex-strategic-message-p007.json"
+    },
+    {
+      "source_category": "source-unknown",
+      "id": "hkex-operational-timeline-p008-009",
+      "document_id": "complex-hkex-2024-annual",
+      "source_pages": [
+        8,
+        9
+      ],
+      "tags": [
+        "en",
+        "annual-report",
+        "multi-column",
+        "cross-page-prose",
+        "timeline",
+        "repeated-dates",
+        "photograph",
+        "layout-prose"
+      ],
+      "family_id": "hkex-annual-report",
+      "suites": [
+        "lite",
+        "perf80"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/hkex-operational-timeline-p008-009.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-hkex-2024-annual",
+      "evaluation": "evaluation/hkex-operational-timeline-p008-009.json"
+    },
+    {
+      "source_category": "source-unknown",
+      "id": "hkex-financial-cards-p010",
+      "document_id": "complex-hkex-2024-annual",
+      "source_pages": [
+        10
+      ],
+      "tags": [
+        "en",
+        "annual-report",
+        "single-page",
+        "layout-grid",
+        "ordinary-prose",
+        "repeated-percentages",
+        "business-footnote"
+      ],
+      "family_id": "hkex-annual-report",
+      "suites": [
+        "lite",
+        "perf80"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/hkex-financial-cards-p010.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-hkex-2024-annual",
+      "evaluation": "evaluation/hkex-financial-cards-p010.json"
+    },
+    {
+      "source_category": "source-unknown",
+      "id": "hkex-key-tables-p011",
+      "document_id": "complex-hkex-2024-annual",
+      "source_pages": [
+        11
+      ],
+      "tags": [
+        "en",
+        "annual-report",
+        "single-page",
+        "data-table",
+        "mixed-units",
+        "percentage",
+        "parenthesized-negative",
+        "footnote-markers",
+        "adjacent-distinct-tables"
+      ],
+      "family_id": "hkex-annual-report",
+      "suites": [
+        "lite",
+        "perf80"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/hkex-key-tables-p011.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-hkex-2024-annual",
+      "evaluation": "evaluation/hkex-key-tables-p011.json"
+    },
+    {
+      "source_category": "source-unknown",
+      "id": "alibaba-mission-values-p003",
+      "document_id": "complex-alibaba-2025-annual",
+      "source_pages": [
+        3
+      ],
+      "tags": [
+        "en",
+        "annual-report",
+        "single-page",
+        "ordinary-prose",
+        "bulleted-prose",
+        "inline-emphasis",
+        "mixed-script"
+      ],
+      "family_id": "alibaba-annual-report",
+      "suites": [
+        "lite",
+        "perf80"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/alibaba-mission-values-p003.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-alibaba-2025-annual",
+      "evaluation": "evaluation/alibaba-mission-values-p003.json"
+    },
+    {
+      "source_category": "source-unknown",
+      "id": "alibaba-shareholder-letter-p004-005",
+      "document_id": "complex-alibaba-2025-annual",
+      "source_pages": [
+        4,
+        5
+      ],
+      "tags": [
+        "en",
+        "annual-report",
+        "ordinary-prose",
+        "cross-page-section",
+        "business-qualifiers",
+        "parallel-signatories"
+      ],
+      "family_id": "alibaba-annual-report",
+      "suites": [
+        "lite",
+        "perf80"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/alibaba-shareholder-letter-p004-005.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-alibaba-2025-annual",
+      "evaluation": "evaluation/alibaba-shareholder-letter-p004-005.json"
+    },
+    {
+      "source_category": "source-unknown",
+      "id": "pingan-results-announcement-p001",
+      "document_id": "complex-pingan-2024-annual",
+      "source_pages": [
+        1
+      ],
+      "tags": [
+        "en-zh",
+        "annual-results-announcement",
+        "single-page",
+        "ordinary-prose",
+        "legal-disclaimer",
+        "business-date",
+        "signatory",
+        "mixed-fonts"
+      ],
+      "family_id": "pingan-group-annual-report",
+      "suites": [
+        "lite",
+        "perf80"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/pingan-results-announcement-p001.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-pingan-2024-annual",
+      "evaluation": "evaluation/pingan-results-announcement-p001.json"
+    },
+    {
+      "source_category": "source-unknown",
+      "id": "pingan-summary-and-profile-p004-005",
+      "document_id": "complex-pingan-2024-annual",
+      "source_pages": [
+        4,
+        5
+      ],
+      "tags": [
+        "en",
+        "annual-report",
+        "data-table",
+        "five-year-comparison",
+        "mixed-units",
+        "not-applicable-values",
+        "parenthesized-negative",
+        "business-footnote",
+        "photograph",
+        "ordinary-prose"
+      ],
+      "family_id": "pingan-group-annual-report",
+      "suites": [
+        "lite",
+        "perf80"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/pingan-summary-and-profile-p004-005.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-pingan-2024-annual",
+      "evaluation": "evaluation/pingan-summary-and-profile-p004-005.json"
+    },
+    {
+      "source_category": "source-unknown",
+      "id": "huawei-chairman-p008-010",
+      "document_id": "complex-huawei-2024-annual",
+      "source_pages": [
+        8,
+        9,
+        10
+      ],
+      "tags": [
+        "zh",
+        "annual-report",
+        "multi-column",
+        "cross-page-paragraph",
+        "portrait",
+        "signature",
+        "ordinary-prose",
+        "business-qualifiers"
+      ],
+      "family_id": "huawei-annual-report",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/huawei-chairman-p008-010.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-huawei-2024-annual",
+      "evaluation": "evaluation/huawei-chairman-p008-010.json"
+    },
+    {
+      "source_category": "source-unknown",
+      "id": "huawei-industry-trends-p011-013",
+      "document_id": "complex-huawei-2024-annual",
+      "source_pages": [
+        11,
+        12,
+        13
+      ],
+      "tags": [
+        "zh",
+        "annual-report",
+        "multi-column",
+        "cross-column-paragraph",
+        "layout-prose",
+        "industry-review",
+        "source-reference-pending"
+      ],
+      "family_id": "huawei-annual-report",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/huawei-industry-trends-p011-013.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-huawei-2024-annual",
+      "evaluation": "evaluation/huawei-industry-trends-p011-013.json"
+    },
+    {
+      "source_category": "source-unknown",
+      "id": "huawei-research-quality-p048-050",
+      "document_id": "complex-huawei-2024-annual",
+      "source_pages": [
+        48,
+        49,
+        50
+      ],
+      "tags": [
+        "zh",
+        "annual-report",
+        "multi-column",
+        "cross-column-paragraph",
+        "layout-grid-prose",
+        "technical-bullets",
+        "photo-caption"
+      ],
+      "family_id": "huawei-annual-report",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/huawei-research-quality-p048-050.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-huawei-2024-annual",
+      "evaluation": "evaluation/huawei-research-quality-p048-050.json"
+    },
+    {
+      "source_category": "source-unknown",
+      "id": "huaweitech-intelligence-address-p004-006",
+      "document_id": "complex-huaweitech-2024-096",
+      "source_pages": [
+        4,
+        5,
+        6
+      ],
+      "tags": [
+        "zh",
+        "magazine",
+        "landscape-spread",
+        "multi-column",
+        "drop-cap",
+        "cross-page-paragraph",
+        "background-image",
+        "portrait",
+        "pull-quote"
+      ],
+      "family_id": "huaweitech-magazine",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/huaweitech-intelligence-address-p004-006.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-huaweitech-2024-096",
+      "evaluation": "evaluation/huaweitech-intelligence-address-p004-006.json"
+    },
+    {
+      "source_category": "source-unknown",
+      "id": "huaweitech-5ga-p007-009",
+      "document_id": "complex-huaweitech-2024-096",
+      "source_pages": [
+        7,
+        8,
+        9
+      ],
+      "tags": [
+        "zh",
+        "magazine",
+        "landscape-spread",
+        "section-divider",
+        "multi-column",
+        "cross-page-paragraph",
+        "nested-list",
+        "superscript",
+        "source-reference-pending"
+      ],
+      "family_id": "huaweitech-magazine",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/huaweitech-5ga-p007-009.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-huaweitech-2024-096",
+      "evaluation": "evaluation/huaweitech-5ga-p007-009.json"
+    },
+    {
+      "source_category": "source-unknown",
+      "id": "alibaba-company-overview-p006-008",
+      "document_id": "complex-alibaba-2025-annual",
+      "source_pages": [
+        6,
+        7,
+        8
+      ],
+      "tags": [
+        "en",
+        "annual-report",
+        "single-column",
+        "dense-prose",
+        "cross-page-paragraph",
+        "image-preservation",
+        "hierarchical-headings"
+      ],
+      "family_id": "alibaba-annual-report",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/alibaba-company-overview-p006-008.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-alibaba-2025-annual",
+      "evaluation": "evaluation/alibaba-company-overview-p006-008.json"
+    },
+    {
+      "source_category": "source-unknown",
+      "id": "alibaba-strategies-p009-010",
+      "document_id": "complex-alibaba-2025-annual",
+      "source_pages": [
+        9,
+        10
+      ],
+      "tags": [
+        "en",
+        "annual-report",
+        "single-column",
+        "dense-prose",
+        "cross-page-paragraph",
+        "hierarchical-headings",
+        "boundary-pending"
+      ],
+      "family_id": "alibaba-annual-report",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/alibaba-strategies-p009-010.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-alibaba-2025-annual",
+      "evaluation": "evaluation/alibaba-strategies-p009-010.json"
+    },
+    {
+      "source_category": "source-unknown",
+      "id": "pingan-mission-opportunities-p006-007",
+      "document_id": "complex-pingan-2024-annual",
+      "source_pages": [
+        6,
+        7
+      ],
+      "tags": [
+        "en",
+        "annual-report",
+        "layout-grid-prose",
+        "three-column-cards",
+        "kpi-callouts",
+        "business-footnotes",
+        "photo-background"
+      ],
+      "family_id": "pingan-group-annual-report",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/pingan-mission-opportunities-p006-007.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-pingan-2024-annual",
+      "evaluation": "evaluation/pingan-mission-opportunities-p006-007.json"
+    },
+    {
+      "source_category": "source-unknown",
+      "id": "pingan-strategy-cards-p008-011",
+      "document_id": "complex-pingan-2024-annual",
+      "source_pages": [
+        8,
+        9,
+        10,
+        11
+      ],
+      "tags": [
+        "en",
+        "annual-report",
+        "layout-grid-prose",
+        "kpi-callouts",
+        "mixed-layout",
+        "image-preservation",
+        "colored-background"
+      ],
+      "family_id": "pingan-group-annual-report",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/pingan-strategy-cards-p008-011.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-pingan-2024-annual",
+      "evaluation": "evaluation/pingan-strategy-cards-p008-011.json"
+    },
+    {
+      "source_category": "source-unknown",
+      "id": "hkex-chairman-statement-p017-020",
+      "document_id": "complex-hkex-2024-annual",
+      "source_pages": [
+        17,
+        18,
+        19,
+        20
+      ],
+      "tags": [
+        "en",
+        "annual-report",
+        "two-column",
+        "pull-quote",
+        "portrait",
+        "business-date",
+        "signatory",
+        "complete-section"
+      ],
+      "family_id": "hkex-annual-report",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/hkex-chairman-statement-p017-020.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-hkex-2024-annual",
+      "evaluation": "evaluation/hkex-chairman-statement-p017-020.json"
+    },
+    {
+      "source_category": "source-unknown",
+      "id": "hkex-ceo-review-p021-027",
+      "document_id": "complex-hkex-2024-annual",
+      "source_pages": [
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27
+      ],
+      "tags": [
+        "en",
+        "annual-report",
+        "two-column",
+        "full-width-list",
+        "hierarchical-headings",
+        "pull-quote",
+        "portrait",
+        "business-date",
+        "signatory",
+        "complete-section"
+      ],
+      "family_id": "hkex-annual-report",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/hkex-ceo-review-p021-027.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-hkex-2024-annual",
+      "evaluation": "evaluation/hkex-ceo-review-p021-027.json"
+    },
+    {
+      "source_category": "source-unknown",
+      "id": "alibaba-risk-summary-p105-108",
+      "document_id": "complex-alibaba-2025-annual",
+      "source_pages": [
+        105,
+        106,
+        107,
+        108
+      ],
+      "tags": [
+        "en",
+        "annual-report",
+        "single-column",
+        "dense-legal-prose",
+        "long-list",
+        "cross-page-list-item",
+        "inline-emphasis",
+        "source-reference-pending"
+      ],
+      "family_id": "alibaba-annual-report",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/alibaba-risk-summary-p105-108.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-alibaba-2025-annual",
+      "evaluation": "evaluation/alibaba-risk-summary-p105-108.json"
+    },
+    {
+      "source_category": "source-unknown",
+      "id": "alibaba-business-risks-p109-112",
+      "document_id": "complex-alibaba-2025-annual",
+      "source_pages": [
+        109,
+        110,
+        111,
+        112
+      ],
+      "tags": [
+        "en",
+        "annual-report",
+        "single-column",
+        "dense-legal-prose",
+        "long-paragraph",
+        "cross-page-paragraph",
+        "bulleted-prose",
+        "inline-emphasis"
+      ],
+      "family_id": "alibaba-annual-report",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/alibaba-business-risks-p109-112.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-alibaba-2025-annual",
+      "evaluation": "evaluation/alibaba-business-risks-p109-112.json"
+    },
+    {
+      "source_category": "source-unknown",
+      "id": "alibaba-trade-sanction-risks-p113-116",
+      "document_id": "complex-alibaba-2025-annual",
+      "source_pages": [
+        113,
+        114,
+        115,
+        116
+      ],
+      "tags": [
+        "en",
+        "annual-report",
+        "single-column",
+        "dense-legal-prose",
+        "long-paragraph",
+        "cross-page-paragraph",
+        "inline-numbering",
+        "inline-emphasis"
+      ],
+      "family_id": "alibaba-annual-report",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/alibaba-trade-sanction-risks-p113-116.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-alibaba-2025-annual",
+      "evaluation": "evaluation/alibaba-trade-sanction-risks-p113-116.json"
+    },
+    {
+      "source_category": "source-unknown",
+      "id": "hkex-organisation-photo-p028-029",
+      "document_id": "complex-hkex-2024-annual",
+      "source_pages": [
+        28,
+        29
+      ],
+      "tags": [
+        "en",
+        "annual-report",
+        "section-divider",
+        "photo-spread",
+        "image-dominant",
+        "minimal-text"
+      ],
+      "family_id": "hkex-annual-report",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/hkex-organisation-photo-p028-029.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-hkex-2024-annual",
+      "evaluation": "evaluation/hkex-organisation-photo-p028-029.json"
+    },
+    {
+      "source_category": "source-unknown",
+      "id": "hkex-board-portraits-p030",
+      "document_id": "complex-hkex-2024-annual",
+      "source_pages": [
+        30
+      ],
+      "tags": [
+        "en",
+        "annual-report",
+        "single-page",
+        "portrait-gallery",
+        "image-caption",
+        "layout-grid",
+        "parallel-labels"
+      ],
+      "family_id": "hkex-annual-report",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/hkex-board-portraits-p030.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-hkex-2024-annual",
+      "evaluation": "evaluation/hkex-board-portraits-p030.json"
+    },
+    {
+      "source_category": "source-unknown",
+      "id": "huawei-compliance-management-p051-053",
+      "document_id": "complex-huawei-2024-annual",
+      "source_pages": [
+        51,
+        52,
+        53
+      ],
+      "tags": [
+        "zh",
+        "annual-report",
+        "multi-column",
+        "nested-list",
+        "cross-page-paragraph",
+        "cross-column-paragraph"
+      ],
+      "family_id": "huawei-annual-report",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/huawei-compliance-management-p051-053.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-huawei-2024-annual",
+      "evaluation": "evaluation/huawei-compliance-management-p051-053.json"
+    },
+    {
+      "source_category": "source-unknown",
+      "id": "huawei-cybersecurity-p054-057",
+      "document_id": "complex-huawei-2024-annual",
+      "source_pages": [
+        54,
+        55,
+        56,
+        57
+      ],
+      "tags": [
+        "zh",
+        "annual-report",
+        "multi-column",
+        "nested-list",
+        "cross-page-paragraph",
+        "cross-column-paragraph",
+        "photo-caption"
+      ],
+      "family_id": "huawei-annual-report",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/huawei-cybersecurity-p054-057.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-huawei-2024-annual",
+      "evaluation": "evaluation/huawei-cybersecurity-p054-057.json"
+    },
+    {
+      "source_category": "source-unknown",
+      "id": "huawei-open-ecosystem-p058-061",
+      "document_id": "complex-huawei-2024-annual",
+      "source_pages": [
+        58,
+        59,
+        60,
+        61
+      ],
+      "tags": [
+        "zh",
+        "annual-report",
+        "multi-column",
+        "cross-column-paragraph",
+        "technical-bullets",
+        "photo-caption"
+      ],
+      "family_id": "huawei-annual-report",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/huawei-open-ecosystem-p058-061.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-huawei-2024-annual",
+      "evaluation": "evaluation/huawei-open-ecosystem-p058-061.json"
+    },
+    {
+      "source_category": "source-unknown",
+      "id": "huawei-operating-results-p062-063",
+      "document_id": "complex-huawei-2024-annual",
+      "source_pages": [
+        62,
+        63
+      ],
+      "tags": [
+        "zh",
+        "annual-report",
+        "financial-table",
+        "mixed-units",
+        "negative-parentheses",
+        "period-binding",
+        "prose-and-table"
+      ],
+      "family_id": "huawei-annual-report",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/huawei-operating-results-p062-063.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-huawei-2024-annual",
+      "evaluation": "evaluation/huawei-operating-results-p062-063.json"
+    },
+    {
+      "source_category": "source-unknown",
+      "id": "huawei-cash-and-risk-p064-065",
+      "document_id": "complex-huawei-2024-annual",
+      "source_pages": [
+        64,
+        65
+      ],
+      "tags": [
+        "zh",
+        "annual-report",
+        "financial-table",
+        "multi-level-column-header",
+        "mixed-units",
+        "negative-parentheses",
+        "blank-cells",
+        "prose-and-table"
+      ],
+      "family_id": "huawei-annual-report",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/huawei-cash-and-risk-p064-065.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-huawei-2024-annual",
+      "evaluation": "evaluation/huawei-cash-and-risk-p064-065.json"
+    },
+    {
+      "source_category": "source-unknown",
+      "id": "pingan-business-highlights-p012-013",
+      "document_id": "complex-pingan-2024-annual",
+      "source_pages": [
+        12,
+        13
+      ],
+      "tags": [
+        "en",
+        "annual-report",
+        "kpi-cards",
+        "label-value-pairs",
+        "layout-grid-prose",
+        "photo-background",
+        "business-notes"
+      ],
+      "family_id": "pingan-group-annual-report",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/pingan-business-highlights-p012-013.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-pingan-2024-annual",
+      "evaluation": "evaluation/pingan-business-highlights-p012-013.json"
+    },
+    {
+      "source_category": "source-unknown",
+      "id": "pingan-chairman-p014-019",
+      "document_id": "complex-pingan-2024-annual",
+      "source_pages": [
+        14,
+        15,
+        16,
+        17,
+        18,
+        19
+      ],
+      "tags": [
+        "en",
+        "annual-report",
+        "multi-column",
+        "cross-page-paragraph",
+        "cross-column-paragraph",
+        "inline-emphasis",
+        "photo-caption",
+        "signature-date"
+      ],
+      "family_id": "pingan-group-annual-report",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/pingan-chairman-p014-019.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-pingan-2024-annual",
+      "evaluation": "evaluation/pingan-chairman-p014-019.json"
+    },
+    {
+      "source_category": "source-unknown",
+      "id": "pingan-honors-p020",
+      "document_id": "complex-pingan-2024-annual",
+      "source_pages": [
+        20
+      ],
+      "tags": [
+        "en",
+        "annual-report",
+        "multi-column",
+        "icon-list",
+        "photo-background"
+      ],
+      "family_id": "pingan-group-annual-report",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/pingan-honors-p020.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-pingan-2024-annual",
+      "evaluation": "evaluation/pingan-honors-p020.json"
+    },
+    {
+      "source_category": "source-unknown",
+      "id": "pingan-integrated-finance-p021",
+      "document_id": "complex-pingan-2024-annual",
+      "source_pages": [
+        21
+      ],
+      "tags": [
+        "en",
+        "annual-report",
+        "photo-caption",
+        "layout-grid-prose",
+        "inline-emphasis",
+        "business-footnote"
+      ],
+      "family_id": "pingan-group-annual-report",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/pingan-integrated-finance-p021.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-pingan-2024-annual",
+      "evaluation": "evaluation/pingan-integrated-finance-p021.json"
+    },
+    {
+      "source_category": "source-unknown",
+      "id": "huaweitech-odn-p010-015",
+      "document_id": "complex-huaweitech-2024-096",
+      "source_pages": [
+        10,
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "tags": [
+        "zh",
+        "technical-magazine",
+        "landscape-spread",
+        "multi-column",
+        "cross-page-paragraph",
+        "cross-column-paragraph",
+        "fraction-formula",
+        "diagram-preservation",
+        "portrait-author",
+        "pull-quote"
+      ],
+      "family_id": "huaweitech-magazine",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/huaweitech-odn-p010-015.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-huaweitech-2024-096",
+      "evaluation": "evaluation/huaweitech-odn-p010-015.json"
+    },
+    {
+      "source_category": "source-unknown",
+      "id": "huaweitech-metro-p016-019",
+      "document_id": "complex-huaweitech-2024-096",
+      "source_pages": [
+        16,
+        17,
+        18,
+        19
+      ],
+      "tags": [
+        "zh",
+        "technical-magazine",
+        "landscape-spread",
+        "multi-column",
+        "cross-page-paragraph",
+        "cross-column-paragraph",
+        "merged-row-header",
+        "blank-cells",
+        "diagram-preservation",
+        "portrait-author",
+        "pull-quote"
+      ],
+      "family_id": "huaweitech-magazine",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/huaweitech-metro-p016-019.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-huaweitech-2024-096",
+      "evaluation": "evaluation/huaweitech-metro-p016-019.json"
+    },
+    {
+      "source_category": "source-unknown",
+      "id": "huawei-management-toc-p014",
+      "document_id": "complex-huawei-2024-annual",
+      "source_pages": [
+        14
+      ],
+      "tags": [
+        "zh",
+        "annual-report",
+        "section-toc",
+        "photo-background",
+        "layout-prose"
+      ],
+      "family_id": "huawei-annual-report",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/huawei-management-toc-p014.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-huawei-2024-annual",
+      "evaluation": "evaluation/huawei-management-toc-p014.json"
+    },
+    {
+      "source_category": "source-unknown",
+      "id": "huawei-vision-p015-016",
+      "document_id": "complex-huawei-2024-annual",
+      "source_pages": [
+        15,
+        16
+      ],
+      "tags": [
+        "zh",
+        "annual-report",
+        "multi-column",
+        "cross-column-paragraph",
+        "diagram-preservation"
+      ],
+      "family_id": "huawei-annual-report",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/huawei-vision-p015-016.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-huawei-2024-annual",
+      "evaluation": "evaluation/huawei-vision-p015-016.json"
+    },
+    {
+      "source_category": "source-unknown",
+      "id": "huawei-business-review-p017",
+      "document_id": "complex-huawei-2024-annual",
+      "source_pages": [
+        17
+      ],
+      "tags": [
+        "zh",
+        "annual-report",
+        "financial-table",
+        "mixed-units",
+        "prose-and-table",
+        "chart-preservation"
+      ],
+      "family_id": "huawei-annual-report",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/huawei-business-review-p017.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-huawei-2024-annual",
+      "evaluation": "evaluation/huawei-business-review-p017.json"
+    },
+    {
+      "source_category": "source-unknown",
+      "id": "huawei-carrier-business-p018-022",
+      "document_id": "complex-huawei-2024-annual",
+      "source_pages": [
+        18,
+        19,
+        20,
+        21,
+        22
+      ],
+      "tags": [
+        "zh",
+        "annual-report",
+        "multi-column",
+        "nested-list",
+        "cross-page-paragraph",
+        "cross-column-paragraph",
+        "technical-business-prose",
+        "photo"
+      ],
+      "family_id": "huawei-annual-report",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/huawei-carrier-business-p018-022.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-huawei-2024-annual",
+      "evaluation": "evaluation/huawei-carrier-business-p018-022.json"
+    },
+    {
+      "source_category": "source-unknown",
+      "id": "huawei-enterprise-business-p023-027",
+      "document_id": "complex-huawei-2024-annual",
+      "source_pages": [
+        23,
+        24,
+        25,
+        26,
+        27
+      ],
+      "tags": [
+        "zh",
+        "annual-report",
+        "multi-column",
+        "nested-list",
+        "cross-page-paragraph",
+        "cross-column-paragraph",
+        "technical-business-prose",
+        "photo"
+      ],
+      "family_id": "huawei-annual-report",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/huawei-enterprise-business-p023-027.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-huawei-2024-annual",
+      "evaluation": "evaluation/huawei-enterprise-business-p023-027.json"
+    },
+    {
+      "source_category": "source-unknown",
+      "id": "hkex-quarterly-results-p074",
+      "document_id": "complex-hkex-2024-annual",
+      "source_pages": [
+        74
+      ],
+      "tags": [
+        "en",
+        "annual-report",
+        "single-page",
+        "data-table",
+        "quarter-and-year",
+        "parenthesized-negative",
+        "unlabelled-subtotal",
+        "adjacent-distinct-tables"
+      ],
+      "family_id": "hkex-annual-report",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/hkex-quarterly-results-p074.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-hkex-2024-annual",
+      "evaluation": "evaluation/hkex-quarterly-results-p074.json"
+    },
+    {
+      "source_category": "source-unknown",
+      "id": "hkex-investment-and-resources-p075-080",
+      "document_id": "complex-hkex-2024-annual",
+      "source_pages": [
+        75,
+        76,
+        77,
+        78,
+        79,
+        80
+      ],
+      "tags": [
+        "en",
+        "annual-report",
+        "continuous-pages",
+        "data-table",
+        "multi-level-column-headers",
+        "cross-column-paragraph",
+        "mixed-units",
+        "dash-values",
+        "chart-preservation",
+        "business-footnotes"
+      ],
+      "family_id": "hkex-annual-report",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/hkex-investment-and-resources-p075-080.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-hkex-2024-annual",
+      "evaluation": "evaluation/hkex-investment-and-resources-p075-080.json"
+    },
+    {
+      "source_category": "source-unknown",
+      "id": "alibaba-international-and-data-risks-p117-124",
+      "document_id": "complex-alibaba-2025-annual",
+      "source_pages": [
+        117,
+        118,
+        119,
+        120,
+        121,
+        122,
+        123,
+        124
+      ],
+      "tags": [
+        "en",
+        "annual-report",
+        "continuous-pages",
+        "dense-prose",
+        "nested-lists",
+        "cross-page-paragraph",
+        "long-heading",
+        "risk-disclosure"
+      ],
+      "family_id": "alibaba-annual-report",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/alibaba-international-and-data-risks-p117-124.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-alibaba-2025-annual",
+      "evaluation": "evaluation/alibaba-international-and-data-risks-p117-124.json"
+    },
+    {
+      "source_category": "source-unknown",
+      "id": "huawei-services-connection-computing-p028-032",
+      "document_id": "complex-huawei-2024-annual",
+      "source_pages": [
+        28,
+        29,
+        30,
+        31,
+        32
+      ],
+      "tags": [
+        "zh",
+        "annual-report",
+        "continuous-pages",
+        "multi-column",
+        "cross-column-paragraph",
+        "nested-lists",
+        "mixed-script",
+        "photo-preservation"
+      ],
+      "family_id": "huawei-annual-report",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/huawei-services-connection-computing-p028-032.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-huawei-2024-annual",
+      "evaluation": "evaluation/huawei-services-connection-computing-p028-032.json"
+    },
+    {
+      "source_category": "source-unknown",
+      "id": "huawei-cloud-business-p033-036",
+      "document_id": "complex-huawei-2024-annual",
+      "source_pages": [
+        33,
+        34,
+        35,
+        36
+      ],
+      "tags": [
+        "zh",
+        "annual-report",
+        "continuous-pages",
+        "multi-column",
+        "cross-column-paragraph",
+        "full-width-heading",
+        "captioned-photo",
+        "mixed-script"
+      ],
+      "family_id": "huawei-annual-report",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/huawei-cloud-business-p033-036.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-huawei-2024-annual",
+      "evaluation": "evaluation/huawei-cloud-business-p033-036.json"
+    },
+    {
+      "source_category": "source-unknown",
+      "id": "huawei-digital-energy-p037-040",
+      "document_id": "complex-huawei-2024-annual",
+      "source_pages": [
+        37,
+        38,
+        39,
+        40
+      ],
+      "tags": [
+        "zh",
+        "annual-report",
+        "continuous-pages",
+        "multi-column",
+        "cross-column-paragraph",
+        "captioned-photo",
+        "business-footnote",
+        "mixed-script"
+      ],
+      "family_id": "huawei-annual-report",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/huawei-digital-energy-p037-040.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-huawei-2024-annual",
+      "evaluation": "evaluation/huawei-digital-energy-p037-040.json"
+    },
+    {
+      "source_category": "source-unknown",
+      "id": "huawei-terminal-business-p041-046",
+      "document_id": "complex-huawei-2024-annual",
+      "source_pages": [
+        41,
+        42,
+        43,
+        44,
+        45,
+        46
+      ],
+      "tags": [
+        "zh",
+        "annual-report",
+        "continuous-pages",
+        "multi-column",
+        "cross-column-paragraph",
+        "product-photo",
+        "captioned-photo",
+        "business-footnotes",
+        "mixed-script"
+      ],
+      "family_id": "huawei-annual-report",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/huawei-terminal-business-p041-046.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-huawei-2024-annual",
+      "evaluation": "evaluation/huawei-terminal-business-p041-046.json"
+    },
+    {
+      "source_category": "source-unknown",
+      "id": "huawei-automotive-p047",
+      "document_id": "complex-huawei-2024-annual",
+      "source_pages": [
+        47
+      ],
+      "tags": [
+        "zh",
+        "annual-report",
+        "single-page",
+        "multi-column",
+        "mixed-script",
+        "prose",
+        "hierarchical-headings"
+      ],
+      "family_id": "huawei-annual-report",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/huawei-automotive-p047.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-huawei-2024-annual",
+      "evaluation": "evaluation/huawei-automotive-p047.json"
+    },
+    {
+      "source_category": "source-unknown",
+      "id": "huaweitech-network-divider-p020",
+      "document_id": "complex-huaweitech-2024-096",
+      "source_pages": [
+        20
+      ],
+      "tags": [
+        "zh",
+        "technical-magazine",
+        "single-page",
+        "landscape-spread",
+        "chapter-divider",
+        "display-type"
+      ],
+      "family_id": "huaweitech-magazine",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/huaweitech-network-divider-p020.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-huaweitech-2024-096",
+      "evaluation": "evaluation/huaweitech-network-divider-p020.json"
+    },
+    {
+      "source_category": "source-unknown",
+      "id": "huaweitech-middle-east-p021-023",
+      "document_id": "complex-huaweitech-2024-096",
+      "source_pages": [
+        21,
+        22,
+        23
+      ],
+      "tags": [
+        "zh",
+        "technical-magazine",
+        "continuous-pages",
+        "landscape-spread",
+        "multi-column",
+        "floating-quotation",
+        "references",
+        "mixed-script",
+        "background-photo"
+      ],
+      "family_id": "huaweitech-magazine",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/huaweitech-middle-east-p021-023.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-huaweitech-2024-096",
+      "evaluation": "evaluation/huaweitech-middle-east-p021-023.json"
+    },
+    {
+      "source_category": "source-unknown",
+      "id": "huaweitech-future-optical-p024-026",
+      "document_id": "complex-huaweitech-2024-096",
+      "source_pages": [
+        24,
+        25,
+        26
+      ],
+      "tags": [
+        "zh",
+        "technical-magazine",
+        "continuous-pages",
+        "landscape-spread",
+        "multi-column",
+        "cross-page-paragraph",
+        "cross-column-paragraph",
+        "technical-units",
+        "diagram-preservation",
+        "floating-quotation"
+      ],
+      "family_id": "huaweitech-magazine",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/huaweitech-future-optical-p024-026.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-huaweitech-2024-096",
+      "evaluation": "evaluation/huaweitech-future-optical-p024-026.json"
+    },
+    {
+      "source_category": "source-unknown",
+      "id": "huaweitech-apn6-p027-030",
+      "document_id": "complex-huaweitech-2024-096",
+      "source_pages": [
+        27,
+        28,
+        29,
+        30
+      ],
+      "tags": [
+        "zh",
+        "technical-magazine",
+        "continuous-pages",
+        "landscape-spread",
+        "multi-column",
+        "cross-page-paragraph",
+        "cross-column-paragraph",
+        "diagram-preservation",
+        "floating-quotation",
+        "mixed-script"
+      ],
+      "family_id": "huaweitech-magazine",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/huaweitech-apn6-p027-030.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-huaweitech-2024-096",
+      "evaluation": "evaluation/huaweitech-apn6-p027-030.json"
+    },
+    {
+      "source_category": "source-unknown",
+      "id": "pingan-integrated-finance-p022-024",
+      "document_id": "complex-pingan-2024-annual",
+      "source_pages": [
+        22,
+        23,
+        24
+      ],
+      "tags": [
+        "en",
+        "annual-report",
+        "layout-grid-prose",
+        "kpi-label-value",
+        "chart-preservation",
+        "business-footnote"
+      ],
+      "family_id": "pingan-group-annual-report",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/pingan-integrated-finance-p022-024.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-pingan-2024-annual",
+      "evaluation": "evaluation/pingan-integrated-finance-p022-024.json"
+    },
+    {
+      "source_category": "source-unknown",
+      "id": "pingan-health-senior-care-p025-030",
+      "document_id": "complex-pingan-2024-annual",
+      "source_pages": [
+        25,
+        26,
+        27,
+        28,
+        29,
+        30
+      ],
+      "tags": [
+        "en",
+        "annual-report",
+        "layout-grid-prose",
+        "kpi-label-value",
+        "chart-preservation",
+        "business-footnote",
+        "multi-page-section"
+      ],
+      "family_id": "pingan-group-annual-report",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/pingan-health-senior-care-p025-030.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-pingan-2024-annual",
+      "evaluation": "evaluation/pingan-health-senior-care-p025-030.json"
+    },
+    {
+      "source_category": "source-unknown",
+      "id": "hkex-nomination-governance-p105-108",
+      "document_id": "complex-hkex-2024-annual",
+      "source_pages": [
+        105,
+        106,
+        107,
+        108
+      ],
+      "tags": [
+        "en",
+        "annual-report",
+        "multi-column",
+        "layout-grid-prose",
+        "nested-headings",
+        "business-list",
+        "signature-date"
+      ],
+      "family_id": "hkex-annual-report",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/hkex-nomination-governance-p105-108.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-hkex-2024-annual",
+      "evaluation": "evaluation/hkex-nomination-governance-p105-108.json"
+    },
+    {
+      "source_category": "source-unknown",
+      "id": "hkex-audit-committee-p109-111",
+      "document_id": "complex-hkex-2024-annual",
+      "source_pages": [
+        109,
+        110,
+        111
+      ],
+      "tags": [
+        "en",
+        "annual-report",
+        "multi-column",
+        "layout-grid-prose",
+        "data-table",
+        "year-columns",
+        "business-list",
+        "signature-date"
+      ],
+      "family_id": "hkex-annual-report",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/hkex-audit-committee-p109-111.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-hkex-2024-annual",
+      "evaluation": "evaluation/hkex-audit-committee-p109-111.json"
+    },
+    {
+      "source_category": "source-unknown",
+      "id": "hkex-risk-committee-p112-117",
+      "document_id": "complex-hkex-2024-annual",
+      "source_pages": [
+        112,
+        113,
+        114,
+        115,
+        116,
+        117
+      ],
+      "tags": [
+        "en",
+        "annual-report",
+        "multi-column",
+        "qualitative-table",
+        "nested-list",
+        "diagram-preservation",
+        "signature-date"
+      ],
+      "family_id": "hkex-annual-report",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/hkex-risk-committee-p112-117.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-hkex-2024-annual",
+      "evaluation": "evaluation/hkex-risk-committee-p112-117.json"
+    },
+    {
+      "source_category": "source-unknown",
+      "id": "hkex-independent-auditor-p137-141",
+      "document_id": "complex-hkex-2024-annual",
+      "source_pages": [
+        137,
+        138,
+        139,
+        140,
+        141
+      ],
+      "tags": [
+        "en",
+        "annual-report",
+        "multi-column",
+        "nested-headings",
+        "numbered-list",
+        "dense-prose",
+        "signature-date"
+      ],
+      "family_id": "hkex-annual-report",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/hkex-independent-auditor-p137-141.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-hkex-2024-annual",
+      "evaluation": "evaluation/hkex-independent-auditor-p137-141.json"
+    },
+    {
+      "source_category": "source-unknown",
+      "id": "hkex-contents-p003",
+      "document_id": "complex-hkex-2024-annual",
+      "source_pages": [
+        3
+      ],
+      "tags": [
+        "en",
+        "annual-report",
+        "contents",
+        "page-reference",
+        "photo-background",
+        "label-value"
+      ],
+      "family_id": "hkex-annual-report",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/hkex-contents-p003.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-hkex-2024-annual",
+      "evaluation": "evaluation/hkex-contents-p003.json"
+    },
+    {
+      "source_category": "source-unknown",
+      "id": "hkex-overview-photo-p005-006",
+      "document_id": "complex-hkex-2024-annual",
+      "source_pages": [
+        5,
+        6
+      ],
+      "tags": [
+        "en",
+        "annual-report",
+        "section-divider",
+        "full-page-photo",
+        "image-preservation"
+      ],
+      "family_id": "hkex-annual-report",
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/hkex-overview-photo-p005-006.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-hkex-2024-annual",
+      "evaluation": "evaluation/hkex-overview-photo-p005-006.json"
+    },
+    {
+      "id": "pboc-cover-p001",
+      "document_id": "complex-pboc-stability-2024",
+      "source_pages": [
+        1
+      ],
+      "source_category": "source-unknown",
+      "family_id": "pboc-financial-stability",
+      "tags": [
+        "zh",
+        "en",
+        "bilingual-cover",
+        "large-title",
+        "publisher"
+      ],
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/pboc-cover-p001.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-pboc-stability-2024",
+      "evaluation": "evaluation/pboc-cover-p001.json"
+    },
+    {
+      "id": "pboc-committees-p002-003",
+      "document_id": "complex-pboc-stability-2024",
+      "source_pages": [
+        2,
+        3
+      ],
+      "source_category": "source-unknown",
+      "family_id": "pboc-financial-stability",
+      "tags": [
+        "zh",
+        "aligned-name-layout",
+        "role-value-binding",
+        "multi-line-list",
+        "editorial-credits"
+      ],
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/pboc-committees-p002-003.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-pboc-stability-2024",
+      "evaluation": "evaluation/pboc-committees-p002-003.json"
+    },
+    {
+      "id": "pboc-overview-p004-006",
+      "document_id": "complex-pboc-stability-2024",
+      "source_pages": [
+        4,
+        5,
+        6
+      ],
+      "source_category": "source-unknown",
+      "family_id": "pboc-financial-stability",
+      "tags": [
+        "zh",
+        "ordinary-prose",
+        "cross-page-paragraph",
+        "business-footnote",
+        "numbers-and-units",
+        "business-qualifiers"
+      ],
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/pboc-overview-p004-006.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-pboc-stability-2024",
+      "evaluation": "evaluation/pboc-overview-p004-006.json"
+    },
+    {
+      "id": "pboc-contents-p007-008",
+      "document_id": "complex-pboc-stability-2024",
+      "source_pages": [
+        7,
+        8
+      ],
+      "source_category": "source-unknown",
+      "family_id": "pboc-financial-stability",
+      "tags": [
+        "zh",
+        "directory-layout",
+        "aligned-navigation",
+        "cross-page-list",
+        "business-page-references"
+      ],
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/pboc-contents-p007-008.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-pboc-stability-2024",
+      "evaluation": "evaluation/pboc-contents-p007-008.json"
+    },
+    {
+      "id": "pboc-macro-columns-p011-018",
+      "document_id": "complex-pboc-stability-2024",
+      "source_pages": [
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18
+      ],
+      "source_category": "source-unknown",
+      "family_id": "pboc-financial-stability",
+      "tags": [
+        "zh",
+        "two-column",
+        "cross-page-paragraph",
+        "business-images",
+        "image-captions",
+        "boxed-prose",
+        "mixed-region",
+        "business-footnote",
+        "numbers-and-units"
+      ],
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/pboc-macro-columns-p011-018.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-pboc-stability-2024",
+      "evaluation": "evaluation/pboc-macro-columns-p011-018.json"
+    },
+    {
+      "id": "pboc-policy-columns-p019-026",
+      "document_id": "complex-pboc-stability-2024",
+      "source_pages": [
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26
+      ],
+      "source_category": "source-unknown",
+      "family_id": "pboc-financial-stability",
+      "tags": [
+        "zh",
+        "two-column",
+        "cross-page-paragraph",
+        "boxed-prose",
+        "business-images",
+        "numbers-and-units"
+      ],
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/pboc-policy-columns-p019-026.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-pboc-stability-2024",
+      "evaluation": "evaluation/pboc-policy-columns-p019-026.json"
+    },
+    {
+      "id": "pboc-statistical-tables-p101-108",
+      "document_id": "complex-pboc-stability-2024",
+      "source_pages": [
+        101,
+        102,
+        103,
+        104,
+        105,
+        106,
+        107,
+        108
+      ],
+      "source_category": "source-unknown",
+      "family_id": "pboc-financial-stability",
+      "tags": [
+        "zh",
+        "data-table",
+        "nested-row-label",
+        "year-columns",
+        "quarter-columns",
+        "negative-values",
+        "mixed-units",
+        "table-notes"
+      ],
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/pboc-statistical-tables-p101-108.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-pboc-stability-2024",
+      "evaluation": "evaluation/pboc-statistical-tables-p101-108.json"
+    },
+    {
+      "id": "moutai-introduction-p001-008",
+      "document_id": "complex-moutai-2024-annual",
+      "source_pages": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "source_category": "source-unknown",
+      "family_id": "moutai-annual",
+      "tags": [
+        "zh",
+        "cover",
+        "directory-layout",
+        "grid-layout",
+        "business-disclaimer",
+        "data-table",
+        "cross-page-table",
+        "ordinary-prose",
+        "negative-values"
+      ],
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/moutai-introduction-p001-008.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-moutai-2024-annual",
+      "evaluation": "evaluation/moutai-introduction-p001-008.json"
+    },
+    {
+      "id": "moutai-governance-p018-029",
+      "document_id": "complex-moutai-2024-annual",
+      "source_pages": [
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29
+      ],
+      "source_category": "source-unknown",
+      "family_id": "moutai-annual",
+      "tags": [
+        "zh",
+        "landscape-page",
+        "ordinary-prose",
+        "cross-page-paragraph",
+        "grid-layout",
+        "cross-page-table",
+        "business-notes"
+      ],
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/moutai-governance-p018-029.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-moutai-2024-annual",
+      "evaluation": "evaluation/moutai-governance-p018-029.json"
+    },
+    {
+      "id": "byd-bilingual-front-p001-012",
+      "document_id": "complex-byd-2024-annual",
+      "source_pages": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "source_category": "source-unknown",
+      "family_id": "byd-annual",
+      "tags": [
+        "zh-Hant",
+        "en",
+        "bilingual",
+        "spread-page",
+        "business-images",
+        "data-table",
+        "footnote",
+        "card-layout",
+        "ordinary-prose"
+      ],
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/byd-bilingual-front-p001-012.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-byd-2024-annual",
+      "evaluation": "evaluation/byd-bilingual-front-p001-012.json"
+    },
+    {
+      "id": "midea-front-p001-012",
+      "document_id": "complex-midea-2024-annual",
+      "source_pages": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "source_category": "source-unknown",
+      "family_id": "midea-annual",
+      "tags": [
+        "zh",
+        "cover",
+        "ordinary-prose",
+        "cross-page-paragraph",
+        "grid-layout",
+        "data-table",
+        "multi-level-headers",
+        "negative-values",
+        "blank-cell"
+      ],
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/midea-front-p001-012.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-midea-2024-annual",
+      "evaluation": "evaluation/midea-front-p001-012.json"
+    },
+    {
+      "id": "sinopec-front-p001-012",
+      "document_id": "complex-sinopec-2024-annual",
+      "source_pages": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12
+      ],
+      "source_category": "source-unknown",
+      "family_id": "sinopec-annual",
+      "tags": [
+        "zh-Hant",
+        "cover",
+        "three-column",
+        "ordinary-prose",
+        "data-table",
+        "multi-level-headers",
+        "negative-parentheses",
+        "images"
+      ],
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/sinopec-front-p001-012.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-sinopec-2024-annual",
+      "evaluation": "evaluation/sinopec-front-p001-012.json"
+    },
+    {
+      "id": "pboc-banking-columns-p029-040",
+      "document_id": "complex-pboc-stability-2024",
+      "source_pages": [
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39,
+        40
+      ],
+      "source_category": "source-unknown",
+      "family_id": "pboc-financial-stability",
+      "tags": [
+        "zh",
+        "two-column",
+        "ordinary-prose",
+        "cross-page-paragraph",
+        "boxed-prose",
+        "footnote"
+      ],
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/pboc-banking-columns-p029-040.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-pboc-stability-2024",
+      "evaluation": "evaluation/pboc-banking-columns-p029-040.json"
+    },
+    {
+      "id": "midea-business-p013-024",
+      "document_id": "complex-midea-2024-annual",
+      "source_pages": [
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24
+      ],
+      "source_category": "source-unknown",
+      "family_id": "midea-annual",
+      "tags": [
+        "zh",
+        "ordinary-prose",
+        "cross-page-paragraph",
+        "cross-page-table-header",
+        "data-table",
+        "percent-units",
+        "technical-latin-text"
+      ],
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/midea-business-p013-024.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-midea-2024-annual",
+      "evaluation": "evaluation/midea-business-p013-024.json"
+    },
+    {
+      "id": "byd-bilingual-review-p013-024",
+      "document_id": "complex-byd-2024-annual",
+      "source_pages": [
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24
+      ],
+      "source_category": "source-unknown",
+      "family_id": "byd-annual",
+      "tags": [
+        "zh-Hant",
+        "en",
+        "parallel-bilingual",
+        "cross-page-paragraph",
+        "ordinary-prose",
+        "full-page-image"
+      ],
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/byd-bilingual-review-p013-024.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-byd-2024-annual",
+      "evaluation": "evaluation/byd-bilingual-review-p013-024.json"
+    },
+    {
+      "id": "moutai-governance-environment-p030-039",
+      "document_id": "complex-moutai-2024-annual",
+      "source_pages": [
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37,
+        38,
+        39
+      ],
+      "source_category": "source-unknown",
+      "family_id": "moutai-annual",
+      "tags": [
+        "zh",
+        "ordinary-prose",
+        "hierarchical-table",
+        "cross-page-table",
+        "business-notes",
+        "units"
+      ],
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/moutai-governance-environment-p030-039.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-moutai-2024-annual",
+      "evaluation": "evaluation/moutai-governance-environment-p030-039.json"
+    },
+    {
+      "id": "sinopec-operations-p013-024",
+      "document_id": "complex-sinopec-2024-annual",
+      "source_pages": [
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24
+      ],
+      "source_category": "source-unknown",
+      "family_id": "sinopec-annual",
+      "tags": [
+        "zh-Hant",
+        "multi-column",
+        "hierarchical-table",
+        "units",
+        "negative-values",
+        "ordinary-prose",
+        "business-notes"
+      ],
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/sinopec-operations-p013-024.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-sinopec-2024-annual",
+      "evaluation": "evaluation/sinopec-operations-p013-024.json"
+    },
+    {
+      "id": "midea-strategy-p025-036",
+      "document_id": "complex-midea-2024-annual",
+      "source_pages": [
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36
+      ],
+      "source_category": "source-unknown",
+      "family_id": "midea-annual",
+      "tags": [
+        "zh",
+        "ordinary-prose",
+        "cross-page-paragraph",
+        "mixed-latin",
+        "business-headings"
+      ],
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/midea-strategy-p025-036.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-midea-2024-annual",
+      "evaluation": "evaluation/midea-strategy-p025-036.json"
+    },
+    {
+      "id": "byd-product-cards-p025-036",
+      "document_id": "complex-byd-2024-annual",
+      "source_pages": [
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36
+      ],
+      "source_category": "source-unknown",
+      "family_id": "byd-annual",
+      "tags": [
+        "zh-Hant",
+        "en",
+        "parallel-bilingual",
+        "grid-layout",
+        "image-preservation",
+        "ordinary-prose",
+        "business-headings"
+      ],
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/byd-product-cards-p025-036.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-byd-2024-annual",
+      "evaluation": "evaluation/byd-product-cards-p025-036.json"
+    },
+    {
+      "id": "byd-outlook-finance-p037-044",
+      "document_id": "complex-byd-2024-annual",
+      "source_pages": [
+        37,
+        38,
+        39,
+        40,
+        41,
+        42,
+        43,
+        44
+      ],
+      "source_category": "source-unknown",
+      "family_id": "byd-annual",
+      "tags": [
+        "zh-Hant",
+        "en",
+        "parallel-bilingual",
+        "ordinary-prose",
+        "image-preservation",
+        "business-headings"
+      ],
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/byd-outlook-finance-p037-044.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-byd-2024-annual",
+      "evaluation": "evaluation/byd-outlook-finance-p037-044.json"
+    },
+    {
+      "id": "moutai-transactions-p040-049",
+      "document_id": "complex-moutai-2024-annual",
+      "source_pages": [
+        40,
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49
+      ],
+      "source_category": "source-unknown",
+      "family_id": "moutai-annual",
+      "tags": [
+        "zh",
+        "ordinary-prose",
+        "hierarchical-table",
+        "cross-page-table",
+        "source-blank",
+        "business-notes",
+        "units"
+      ],
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/moutai-transactions-p040-049.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-moutai-2024-annual",
+      "evaluation": "evaluation/moutai-transactions-p040-049.json"
+    },
+    {
+      "id": "sinopec-finance-governance-p025-036",
+      "document_id": "complex-sinopec-2024-annual",
+      "source_pages": [
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36
+      ],
+      "source_category": "source-unknown",
+      "family_id": "sinopec-annual",
+      "tags": [
+        "zh-traditional",
+        "multi-column",
+        "ordinary-prose",
+        "cross-column-reading",
+        "cross-page-prose",
+        "hierarchical-table",
+        "units",
+        "negative-values",
+        "image-preservation"
+      ],
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/sinopec-finance-governance-p025-036.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-sinopec-2024-annual",
+      "evaluation": "evaluation/sinopec-finance-governance-p025-036.json"
+    }
+  ],
+  "suites": {
+    "lite": [
+      "vanke-interest-p001-002",
+      "spdb-cover-declaration-p001-002",
+      "pingan-financials-p001-004",
+      "midea-resumption-p001",
+      "midea-fx-derivatives-p001-004",
+      "zhenye-coupon-seals-p001-003",
+      "tgood-meeting-p001-006",
+      "nvidia-illustrated-review-p002-009",
+      "iea-rise-ai-p021-024",
+      "bis-economic-review-p022-025",
+      "spdb-credit-overview-p001-004",
+      "fiyta-terms-financials-p001-010",
+      "fiyta-bond-followup-p011-017",
+      "zhenye-correction-p001",
+      "vanke-sales-projects-p001",
+      "spdb-summary-financials-p001-004",
+      "nvidia-ceo-letter-p010-014",
+      "nvidia-meeting-notice-toc-p015-016",
+      "nvidia-definitions-p017",
+      "nvidia-business-overview-p018-019",
+      "nvidia-proxy-summary-p020-024",
+      "tangshan-accounting-policy-p001-005",
+      "tgood-acquisition-terms-p009-019",
+      "beijing-media-director-p001-003",
+      "wuliangye-litigation-ruling-p001-002",
+      "bis-policy-boxes-p026-034",
+      "bis-financial-risk-boxes-p035-041",
+      "iea-adoption-ai-types-p025-031",
+      "iea-infrastructure-capabilities-p032-036",
+      "iea-energy-manufacturing-p037-040",
+      "iea-training-energy-p041-042",
+      "iea-inference-energy-boxes-p043-048",
+      "tangshan-directors-opinion-p001-002",
+      "spdb-acquisition-approval-p001-002",
+      "spdb-prospectus-risk-tax-p013-020",
+      "spdb-prospectus-financials-seal-p021-023",
+      "spdb-prospectus-issuer-terms-p006-012",
+      "tangshan-rong-nomination-p001-002",
+      "tangshan-li-nomination-p009-011",
+      "tgood-compensation-subscription-p022-028",
+      "nvidia-business-manufacturing-people-p096-104",
+      "nvidia-officers-risk-supply-p105-110",
+      "nvidia-global-regulatory-risks-p111-120",
+      "vanke-acquisition-guarantee-p001-002",
+      "wuliangye-appeal-progress-p001",
+      "vanke-repurchase-share-changes-p001-003",
+      "nhu-subsidiary-guarantees-p001-003",
+      "beijing-media-disposal-p001-008",
+      "pingan-fundraising-assurance-p003-007",
+      "peoples-network-fundraising-p001-003",
+      "nhu-related-party-audit-p002-003",
+      "tencent-issuer-summary-p024-026",
+      "tencent-programme-summary-p027-033",
+      "tencent-conditions-definitions-formulas-p102-107",
+      "tencent-conditions-entity-payment-definitions-p108-114",
+      "sf-supply-chain-operating-efficiency-p025-026",
+      "sf-network-infographics-p027-031",
+      "catl-listing-ownership-diagrams-p178-180",
+      "catl-nev-battery-markets-p127-132",
+      "catl-power-market-materials-drivers-p133-136",
+      "catl-storage-renewables-markets-p137-143",
+      "catl-recycling-emerging-entry-barriers-p144-147",
+      "tencent-title-transfer-status-p115-117",
+      "tencent-covenants-interest-conditions-p118-123",
+      "tencent-sofr-formulas-benchmark-replacement-p124-134",
+      "tencent-redemption-bearer-payments-p135-140",
+      "tencent-registered-tax-default-trustee-p141-148",
+      "tencent-enforcement-notices-jurisdiction-p149-151",
+      "sf-industry-business-review-p017-024",
+      "sf-brand-award-callouts-p034",
+      "sf-revenue-operating-cost-tables-p035-036",
+      "sf-margin-profit-ebitda-p037-039",
+      "sf-cashflow-assets-liabilities-p040-041",
+      "sf-auditor-grid-prose-responsibilities-p087-088",
+      "catl-industry-market-overseas-risks-p053-057",
+      "catl-ip-newbusiness-finance-risks-p058-063",
+      "catl-impairment-investment-debt-risks-p064-066",
+      "iea-data-centre-definitions-history-p049-061",
+      "iea-outlook-computing-rating-table-p062-070",
+      "bis-fiscal-productivity-policy-p042-051",
+      "bis-endnotes-technical-annex-p052-057",
+      "nvidia-regulatory-governance-equity-p121-127",
+      "nvidia-management-estimates-ratio-table-p128-132",
+      "huawei-front-p002-003",
+      "huawei-address-p004-005",
+      "huawei-progress-p006",
+      "huawei-financial-summary-p007",
+      "huawei-audit-p066",
+      "huawei-statements-p068-070",
+      "huaweitech-cover-p001",
+      "huaweitech-editorial-spread-p002",
+      "hkex-strategic-message-p007",
+      "hkex-operational-timeline-p008-009",
+      "hkex-financial-cards-p010",
+      "hkex-key-tables-p011",
+      "alibaba-mission-values-p003",
+      "alibaba-shareholder-letter-p004-005",
+      "pingan-results-announcement-p001",
+      "pingan-summary-and-profile-p004-005",
+      "huawei-chairman-p008-010",
+      "huawei-industry-trends-p011-013",
+      "huawei-research-quality-p048-050",
+      "huaweitech-intelligence-address-p004-006",
+      "huaweitech-5ga-p007-009",
+      "alibaba-company-overview-p006-008",
+      "alibaba-strategies-p009-010",
+      "pingan-mission-opportunities-p006-007",
+      "pingan-strategy-cards-p008-011",
+      "hkex-chairman-statement-p017-020",
+      "hkex-ceo-review-p021-027",
+      "alibaba-risk-summary-p105-108",
+      "alibaba-business-risks-p109-112",
+      "alibaba-trade-sanction-risks-p113-116",
+      "hkex-organisation-photo-p028-029",
+      "hkex-board-portraits-p030",
+      "huawei-compliance-management-p051-053",
+      "huawei-cybersecurity-p054-057",
+      "huawei-open-ecosystem-p058-061",
+      "huawei-operating-results-p062-063",
+      "huawei-cash-and-risk-p064-065",
+      "pingan-business-highlights-p012-013",
+      "pingan-chairman-p014-019",
+      "pingan-honors-p020",
+      "pingan-integrated-finance-p021",
+      "huaweitech-odn-p010-015",
+      "huaweitech-metro-p016-019",
+      "huawei-management-toc-p014",
+      "huawei-vision-p015-016",
+      "huawei-business-review-p017",
+      "huawei-carrier-business-p018-022",
+      "huawei-enterprise-business-p023-027",
+      "hkex-quarterly-results-p074",
+      "hkex-investment-and-resources-p075-080",
+      "alibaba-international-and-data-risks-p117-124",
+      "huawei-services-connection-computing-p028-032",
+      "huawei-cloud-business-p033-036",
+      "huawei-digital-energy-p037-040",
+      "huawei-terminal-business-p041-046",
+      "huawei-automotive-p047",
+      "huaweitech-network-divider-p020",
+      "huaweitech-middle-east-p021-023",
+      "huaweitech-future-optical-p024-026",
+      "huaweitech-apn6-p027-030",
+      "pingan-integrated-finance-p022-024",
+      "pingan-health-senior-care-p025-030",
+      "hkex-nomination-governance-p105-108",
+      "hkex-audit-committee-p109-111",
+      "hkex-risk-committee-p112-117",
+      "hkex-independent-auditor-p137-141",
+      "hkex-contents-p003",
+      "hkex-overview-photo-p005-006",
+      "pboc-cover-p001",
+      "pboc-committees-p002-003",
+      "pboc-overview-p004-006",
+      "pboc-contents-p007-008",
+      "pboc-macro-columns-p011-018",
+      "pboc-policy-columns-p019-026",
+      "pboc-statistical-tables-p101-108",
+      "moutai-introduction-p001-008",
+      "moutai-governance-p018-029",
+      "byd-bilingual-front-p001-012",
+      "midea-front-p001-012",
+      "sinopec-front-p001-012",
+      "pboc-banking-columns-p029-040",
+      "midea-business-p013-024",
+      "byd-bilingual-review-p013-024",
+      "moutai-governance-environment-p030-039",
+      "sinopec-operations-p013-024",
+      "midea-strategy-p025-036",
+      "byd-product-cards-p025-036",
+      "byd-outlook-finance-p037-044",
+      "moutai-transactions-p040-049",
+      "sinopec-finance-governance-p025-036"
+    ],
+    "perf80": [
+      "vanke-interest-p001-002",
+      "spdb-cover-declaration-p001-002",
+      "pingan-financials-p001-004",
+      "midea-resumption-p001",
+      "midea-fx-derivatives-p001-004",
+      "zhenye-coupon-seals-p001-003",
+      "tgood-meeting-p001-006",
+      "nvidia-illustrated-review-p002-009",
+      "iea-rise-ai-p021-024",
+      "bis-economic-review-p022-025",
+      "spdb-credit-overview-p001-004",
+      "fiyta-terms-financials-p001-010",
+      "fiyta-bond-followup-p011-017",
+      "zhenye-correction-p001",
+      "huawei-front-p002-003",
+      "huawei-financial-summary-p007",
+      "huawei-audit-p066",
+      "huawei-statements-p068-070",
+      "huaweitech-cover-p001",
+      "huaweitech-editorial-spread-p002",
+      "hkex-strategic-message-p007",
+      "hkex-operational-timeline-p008-009",
+      "hkex-financial-cards-p010",
+      "hkex-key-tables-p011",
+      "alibaba-mission-values-p003",
+      "alibaba-shareholder-letter-p004-005",
+      "pingan-results-announcement-p001",
+      "pingan-summary-and-profile-p004-005"
+    ],
+    "preflight8": [
+      "vanke-interest-p001-002",
+      "spdb-cover-declaration-p001-002",
+      "pingan-financials-p001-004"
+    ]
+  },
+  "scoring_policy": "mo-parse-eval-text-v1",
+  "reference_scope": "manually_selected_visually_reviewed_page_units",
+  "corpus_acceptance": "not_performed_by_packaging"
+}

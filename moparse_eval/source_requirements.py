@@ -30,7 +30,7 @@ def plan_field_body(text: str, source: dict[str, Any]) -> dict[str, Any] | None:
     from .explicit_reference_requirements import read_explicit_references
     from .narrative_requirements import read_narrative
     from .proposition_requirements import read_propositions
-    from .series_requirements import is_ordinary_scalar_field
+    from .series_requirements import is_ordinary_scalar_field, read_series_requirements
 
     match = _PAIR.fullmatch(text)
     if match is None:
@@ -39,6 +39,11 @@ def plan_field_body(text: str, source: dict[str, Any]) -> dict[str, Any] | None:
     references = read_explicit_references(body, source)
     reference_body = references["matched"] and bool(references["consumed_spans"] or references["unresolved"])
     if not body or _ATOMIC_ROLE.fullmatch(label) or _ASSERTED_LABEL.search(label) or (is_ordinary_scalar_field(label, body) and not reference_body):
+        return None
+    # Explicit period/scalar syntax is owned by the series reader even when a
+    # printed change direction is also a finite narrative verb. Route by that
+    # source schema, never by the vocabulary of a particular direction token.
+    if not _BODY_ROLE.fullmatch(label) and read_series_requirements(text, source)["matched"]:
         return None
     # A multi-field record must be split by the balanced sequence planner.
     if re.search(r"[;；]\s*[^:：=;；]+[:：=]", body):
