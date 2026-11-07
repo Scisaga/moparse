@@ -82,7 +82,7 @@ def test_ratio_direction_sign_and_unit_do_not_borrow_the_total_currency():
     assert 'currency' not in growth['qualifiers']
 
 
-@pytest.mark.parametrize('tail', ['增长4.3%', '同比增长4.3', '港口吞吐量同比增长4.3%'])
+@pytest.mark.parametrize('tail', ['增长4.3%', '同比增长4.3'])
 def test_unsupported_relative_unit_or_omitted_actor_is_not_an_opaque_second_fact(tail):
     text = f'工业产值超过137万元，{tail}。'
     result = read(text)
@@ -91,6 +91,15 @@ def test_unsupported_relative_unit_or_omitted_actor_is_not_an_opaque_second_fact
     [pending] = result['pending_requirements']
     assert pending['text'] == text and pending['layers'] == ['B', 'L']
     assert pending['source'] == {**SOURCE, 'text_span': [0, len(text)]}
+
+
+def test_explicit_second_metric_change_keeps_its_printed_subject_instead_of_the_previous_metric():
+    result = read('工业产值超过137万元，港口吞吐量同比增长4.3%。')
+    assert result['complete']
+    assert [(f['subject'], f['attribute'], f['value']) for f in result['facts']] == [
+        ('工业产值', '超过', '137'), ('港口吞吐量', '同比增长', '4.3')]
+    assert result['facts'][1]['subject_binding_evidence']['kind'] == 'explicit_local_metric'
+    assert not any(e['type'] == 'cjk_year_on_year_subject_binding' for e in result['relations'])
 
 
 def test_causal_tail_keeps_known_measurements_and_the_whole_unresolved_statement():

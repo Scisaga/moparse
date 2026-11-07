@@ -547,6 +547,10 @@ class _Reader:
     @staticmethod
     def summary(node):
         kind = node['kind']
+        if kind == 'circumstance_scope':
+            return {'kind': kind, 'operator': node['operator'], 'direction': node['direction'],
+                    'degree': node['degree'], 'simultaneous': node['simultaneous'],
+                    'operand': _Reader.summary(node['operand']), 'child': _Reader.summary(node['child'])}
         if kind == 'unknown':
             return {'kind': kind, 'status': 'unresolved', 'reason': node['reason'], 'text': node['text']}
         if kind in {'purpose_scope', 'controlled_infinitive_scope'}:
@@ -556,7 +560,17 @@ class _Reader:
             return {'kind': kind, 'operator': node['operator'], 'role': node['role'], 'child': _Reader.summary(node['child'])}
         if kind == 'proposition':
             return {'subject': node['subject'], 'attribute': node['attribute'], 'value': node['object'],
-                    'polarity': 'positive', **({'tense': node['tense']} if 'tense' in node else {})}
+                    'polarity': 'positive', **node.get('lexical_qualifiers', {}),
+                    **({'tense': node['tense']} if 'tense' in node else {})}
+        if kind == 'cjk_measurement_sequence':
+            return {'kind': kind, 'clauses': [{key: copy.deepcopy(value) for key, value in clause.items()
+                if key in {'kind', 'subject', 'value', 'unit', 'direction', 'basis', 'baseline_period'}}
+                for clause in node['clauses']]}
+        if kind == 'cjk_nominal':
+            return {'kind': kind, 'head': node['head'], 'parts': [_Reader.summary(part) for part in node['parts']],
+                    **({'quantifier': node['quantifier']} if 'quantifier' in node else {})}
+        if kind == 'cjk_dependency':
+            return {'kind': kind, 'role': node['role'], 'marker': node['marker'], 'child': _Reader.summary(node['child'])}
         if kind == 'negation':
             result = _Reader.summary(node['child'])
             if 'polarity' in result:
@@ -604,14 +618,19 @@ class _Reader:
             for name, value in list(node.items()):
                 if (name == 'span' or name.endswith('_span') and name not in {'text_span', 'cell_text_span', 'joined_span'}) and isinstance(value, list) and len(value) == 2:
                     node['source' if name == 'span' else name[:-5] + '_source'] = self.source_at(*value)
-                elif name == 'operator_spans':
-                    node['operator_sources'] = [self.source_at(*span) for span in value]
+                elif name in {'operator_spans', 'link_spans'}:
+                    node[name[:-6] + '_sources'] = [self.source_at(*span) for span in value]
+                elif name == 'lexical_qualifier_spans':
+                    node['lexical_qualifier_sources'] = {key: self.source_at(*span) for key, span in value.items()}
                 elif isinstance(value, (dict, list)):
                     self.annotate_sources(value)
 
     @staticmethod
     def endpoint(node):
         """Logical labels exclude object/value payload and serialization ids."""
+        if node['kind'] == 'circumstance_scope':
+            return {'role': 'circumstance_scope', 'operator': node['operator'],
+                    'operand': _Reader.endpoint(node['operand']), 'child': _Reader.endpoint(node['child'])}
         if node['kind'] == 'unknown':
             return {'role': 'unresolved', 'reason': node['reason']}
         if node['kind'] in {'purpose_scope', 'controlled_infinitive_scope'}:
@@ -688,6 +707,11 @@ class _Reader:
             context['operators'][-1]['operator_source'] = self.source_at(*node['operator_span'])
         if kind == 'unknown':
             self.unknown_nodes.append(copy.deepcopy(node))
+            return
+        if kind == 'circumstance_scope':
+            from .cjk_circumstances import emit_circumstance
+
+            emit_circumstance(self, node, context)
             return
         if kind == 'discourse_scope':
             self.features.add('discourse_scope')
@@ -801,13 +825,14 @@ class _Reader:
                 self.emit(child, context)
             return
         q = {key: copy.deepcopy(context[key]) for key in ('modality', 'modal_polarity', 'polarity', 'coordination', 'reporting', 'conditions', 'subject_restriction', 'tense', 'aspect') if key in context}
+        q.update(copy.deepcopy(node.get('lexical_qualifiers', {})))
         tense_span = node.get('tense_span', context.get('tense_span'))
         if 'tense' in node:
             q['tense'] = node['tense']
         if 'tense' in q:
             self.features.add('finite_tense')
         if context['assertion_context'] in {'condition_operand', 'restrictive_relative', 'reported', 'alternative_member', 'alternative_group',
-                                            'purpose_operand', 'controlled_infinitive_operand', 'means_operand'}:
+                                            'purpose_operand', 'controlled_infinitive_operand', 'means_operand', 'background_operand', 'cause_operand'}:
             q['assertion_context'] = context['assertion_context']
         if len(context['contexts']) > 1:
             q['assertion_contexts'] = list(context['contexts'])
@@ -843,6 +868,15 @@ class _Reader:
         if quoted_roles:
             fact['quoted_nominals'] = quoted_roles
         fact['qualifier_sources'] = {}
+        for key, span in node.get('lexical_qualifier_spans', {}).items():
+            fact['qualifier_sources'][key] = self.source_at(*span)
+        if context.get('circumstance_nodes'):
+            from .cjk_circumstances import circumstance_descriptor
+
+            fact['qualifiers']['circumstances'] = [circumstance_descriptor(self, item) for item in context['circumstance_nodes']]
+            fact['qualifier_sources']['circumstances'] = [
+                {key: copy.deepcopy(item[key]) for key in ('operator_source', 'simultaneous_source', 'degree_source', 'suffix_source')
+                 if key in item} for item in context['circumstance_nodes']]
         if 'coordination_source_node' in context:
             fact['qualifier_sources']['coordination'] = copy.deepcopy(context['coordination_source_node']['operator_sources'])
         if 'fronted_nodes' in context:
@@ -889,6 +923,15 @@ class _Reader:
         self.edge('field_binding', {'subject': fact['subject'], 'attribute': fact['attribute'],
                   **({'qualifiers': {'tense': q['tense']}} if 'tense' in q else {})}, fact, fact['source'],
                   subject_source=fact['subject_source'], predicate_source=fact['predicate_source'], object_source=fact['object_source'])
+        for key, span in node.get('lexical_qualifier_spans', {}).items():
+            if key in q:
+                self.edge('qualifier_scope', {'type': key, 'text': q[key]}, fact, self.source_at(*span))
+        for circumstance in context.get('circumstance_nodes', []):
+            self.edge('narrative_circumstance_scope', {
+                'operator': circumstance['operator'], 'direction': circumstance['direction'],
+                'degree': circumstance['degree'], 'simultaneous': circumstance['simultaneous'],
+                'operand': self.endpoint(circumstance['operand'])}, fact, circumstance['operator_source'],
+                operator_source=circumstance['operator_source'], operand_logic=circumstance['operand'])
         def nominal_relations(value):
             if isinstance(value, list):
                 for item in value:
@@ -905,6 +948,13 @@ class _Reader:
                     fact, prep_source, preposition_source=prep_source,
                     head_source=value['head_source'], attachment_source=value['head_source'],
                     complement_source=value['complement_source'])
+            if value.get('kind') == 'cjk_dependency':
+                self.features.add('noun_phrase_composition')
+                self.edge('narrative_cjk_nominal_scope', self.summary(value), fact,
+                          value.get('marker_source', value['source']), nominal_logic=value)
+            if value.get('kind') == 'cjk_nominal' and value.get('quantifier'):
+                self.edge('narrative_cjk_quantifier_scope', {'quantifier': value['quantifier']}, fact,
+                          value['quantifier_source'], nominal_logic=value)
             if value.get('kind') == 'quantity_comparison':
                 self.features.update({'quantity_comparison', 'noun_phrase_composition'})
                 self.edge('narrative_quantity_scope', {

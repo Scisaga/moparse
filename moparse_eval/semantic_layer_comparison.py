@@ -40,6 +40,10 @@ def _main_assertions(node):
         return []
     if node.get("kind") == "proposition":
         return [node]
+    if node.get('kind') in {'quantity_assertion', 'year_on_year_change', 'quantity_comparison'}:
+        return [node]
+    if node.get('kind') == 'cjk_measurement_sequence':
+        return node['clauses']
     if node.get("kind") == "coordination":
         return [leaf for child in node.get("children", []) for leaf in _main_assertions(child)]
     if node.get("kind") == "logical_group":
@@ -48,8 +52,11 @@ def _main_assertions(node):
 
 
 def _role_key(node):
-    origins = [node.get(key) for key in ("subject_source", "predicate_source", "object_source")]
-    return json.dumps(origins, sort_keys=True, ensure_ascii=False) if all(isinstance(origin, dict) for origin in origins) else None
+    origins = [node.get('subject_source'), node.get('predicate_source', node.get('operator_source')),
+               node.get('object_source', node.get('value_source'))]
+    return json.dumps(origins, sort_keys=True, ensure_ascii=False) if (
+        (isinstance(origins[0], dict) or node.get('subject') == '')
+        and all(isinstance(origin, dict) for origin in origins[1:])) else None
 
 
 def _walk_nodes(value):
@@ -105,7 +112,14 @@ def _business_responsibility(row, tree, own_tree, context):
             return None
     else:
         return None  # Scalars keep the exact quantity/value contract.
-    if not decide_equivalence(target.get("qualifiers", {}), candidate.get("qualifiers", {}),
+    first_q, second_q = copy.deepcopy(target.get('qualifiers', {})), copy.deepcopy(candidate.get('qualifiers', {}))
+    if first_q.get('circumstances') and second_q.get('circumstances'):
+        # The complete equal AST already compared these source-validated
+        # operands. Their raw nominal summaries may differ in punctuation or
+        # member order; other qualifiers still have their own contract.
+        first_q.pop('circumstances')
+        second_q.pop('circumstances')
+    if not decide_equivalence(first_q, second_q,
                               "structure", context=context)["equivalent"]:
         return None
     return {"owner": "complete_source_bound_statement", "required_id": target["id"],
@@ -141,6 +155,11 @@ def _relation_node(edge, graph, tree, side, resolve):
                    and edge.get("source") in node.get("operator_sources", [])
                    and left == {"operator": node.get("operator"), "mode": node.get("mode"),
                                 "member_count": len(node.get("children", []))}]
+    elif edge['type'] == 'narrative_circumstance_scope':
+        matches = [node for node in _walk_nodes(tree) if node.get('kind') == 'circumstance_scope'
+                   and node.get('operator_source') == edge.get('source')
+                   and node.get('operand') == binding.get('operand_logic')
+                   and all(node.get(k) == left.get(k) for k in ('operator', 'direction', 'degree', 'simultaneous'))]
     else:
         return None
     return matches[0] if len(matches) == 1 else None
@@ -202,10 +221,11 @@ def _affected_assertions(tree, decision):
     for owner, field in chain:
         if (isinstance(owner, dict) and owner.get("kind") in {
                 "conditions", "condition", "exception", "relative", "restrictive_relative", "reporting",
-                "purpose_scope", "controlled_infinitive_scope"} and field != "child"):
-            return _main_assertions(owner.get("child"))
+                "purpose_scope", "controlled_infinitive_scope", "circumstance_scope"} and field != "child"):
+            leaves = _main_assertions(owner.get("child"))
+            return [leaf for leaf in leaves if leaf.get('source') == owner['target_source']] if owner.get('target_source') else leaves
     for owner in [node, *[owner for owner, _field in reversed(chain)]]:
-        if isinstance(owner, dict) and owner.get("kind") == "proposition":
+        if isinstance(owner, dict) and owner.get("kind") in {"proposition", 'quantity_assertion', 'quantity_comparison', 'year_on_year_change'}:
             return [owner]
     for owner in [node, *[owner for owner, _field in reversed(chain)]]:
         if isinstance(owner, dict) and owner.get("kind"):
@@ -252,6 +272,10 @@ def _fact_ast_consistency(graph, side, resolve):
         kind = node.get("kind")
         if kind == "modality":
             q.update(modality=node["operator"], modal_polarity=node["polarity"])
+        elif kind == 'circumstance_scope':
+            from .cjk_circumstances import circumstance_descriptor
+
+            q.setdefault('circumstances', []).append(circumstance_descriptor(_Reader, node))
         elif kind == "negation":
             q["polarity"] = "negative"
         elif kind == "active_aspect":
@@ -267,6 +291,7 @@ def _fact_ast_consistency(graph, side, resolve):
             q.setdefault("reporting", []).append({"subject": node["speaker"], "attribute": node["attribute"],
                                                   "polarity": node["polarity"], "tense": node["tense"]})
         if kind == "proposition":
+            q.update(node.get('lexical_qualifiers', {}))
             if node.get("tense") is not None:
                 q["tense"] = node["tense"]
             expectations[_role_key(node)] = q
@@ -351,9 +376,11 @@ def compare_semantic_layers(required, actual, rows, layers, *, canonicalize, sco
         if inconsistent:
             blockers.append({"side": side, "reason": "semantic_fact_ast_evidence_inconsistent", "layers": ["B", "L"],
                              "evidence": inconsistent})
+        from .cjk_circumstances import validate_circumstance_graph
         from .fronted_nominal_context import validate_fronted_operation_graph
 
         try:
+            validate_circumstance_graph(graph, lambda source, label, own=own: resolve(own, source))
             validate_fronted_operation_graph(graph, lambda source, own=own: resolve(own, source))
         except (ValueError, TypeError, KeyError) as error:
             blockers.append({"side": side, "reason": "fronted_operation_evidence_inconsistent", "layers": ["B", "L"],

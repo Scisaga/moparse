@@ -51,6 +51,9 @@ _SCHEMAS = {
     "document_composition": {"subject", "attribute", "object", "page_reference", "document_identity"},
     "cjk_measurement_sequence": {"clauses", "period"},
     "year_on_year_change": {"subject", "basis", "direction", "baseline_period", "value", "unit"},
+    "circumstance_scope": {"operator", "direction", "degree", "simultaneous", "operand", "child"},
+    "cjk_nominal": {"head", "parts"},
+    "cjk_dependency": {"role", "marker", "child"},
 }
 _UNSOURCED_DESCRIPTORS = {"nominal", "predicate", "subject_control", "object_control"}
 _PROVENANCE = {"id", "rule_id", "record_id", "source", "source_id", "sources", "span", "text_span", "cell_text_span", "joined_span",
@@ -67,6 +70,7 @@ _OPERATORS = {
     "purpose_scope": {"purpose"},
     "controlled_infinitive_scope": {"complement"},
     "discourse_scope": {"for_example", "for_instance", "however", "moreover", "in_addition", "in_particular"},
+    "circumstance_scope": {"means", "background", "cause", "purpose", "condition"},
 }
 
 
@@ -114,7 +118,7 @@ def _nominal_role_closed(node, role):
     from .nominal_syntax import validate_nominal_sources
 
     phrase, origin, raw = node.get(role + "_phrase"), node.get(role + "_source"), node.get(role)
-    if (not isinstance(phrase, dict) or phrase.get("kind") != "noun_phrase"
+    if (not isinstance(phrase, dict) or phrase.get("kind") not in {"noun_phrase", "cjk_nominal"}
             or not isinstance(origin, dict) or phrase.get("source") != origin or not isinstance(raw, str)):
         return False
     span = origin.get("text_span")
@@ -131,7 +135,12 @@ def _nominal_role_closed(node, role):
         return raw[cut[0] - span[0]:cut[1] - span[0]]
 
     try:
-        validate_nominal_sources({"logic": [phrase]}, {}, literal)
+        if phrase['kind'] == 'cjk_nominal':
+            from .cjk_circumstances import validate_cjk_nominal
+
+            validate_cjk_nominal(phrase, literal)
+        else:
+            validate_nominal_sources({"logic": [phrase]}, {}, literal)
     except (ValueError, KeyError, TypeError, IndexError):
         return False
     return True
@@ -185,9 +194,9 @@ def _source_checks(node, side, path, context):
             continue
         original = resolver(side, copy.deepcopy(origin))
         empty_object = key == "object" and node[key] == "" and node.get("object_phrase") is None
-        empty_group_head = (key == "head" and node[key] == "" and node.get("kind") == "noun_phrase"
-                            and isinstance(node.get("coordination"), dict)
-                            and len(node["coordination"].get("children", [])) >= 2)
+        empty_group_head = (key == "head" and node[key] == "" and (
+            node.get('kind') == 'cjk_nominal' and bool(node.get('parts')) or node.get("kind") == "noun_phrase"
+            and isinstance(node.get("coordination"), dict) and len(node["coordination"].get("children", [])) >= 2))
         local = local_origin(origin, empty=empty_object or empty_group_head)
         if original != node[key] or not local:
             checks.append(_result("unresolved", path + "." + key, reason="ast_role_not_bound_to_own_source",
@@ -241,7 +250,7 @@ def _source_checks(node, side, path, context):
                                   proof={"side": side, "literal": raw, "polarity": node.get("polarity")}))
     elif kind == "negation":
         token("negative", node.get("operator_source"), "polarity", path + ".operator")
-    elif kind in {"condition", "exception", "fronted_context"}:
+    elif kind in {"condition", "exception", "fronted_context", "circumstance_scope"}:
         token(node.get("operator"), node.get("operator_source"), "operator", path + ".operator")
         if kind == "fronted_context":
             from .fronted_nominal_context import validate_fronted_operation
@@ -270,6 +279,14 @@ def _source_checks(node, side, path, context):
         except (ValueError, KeyError, TypeError) as error:
             checks.append(_result("unresolved", path, reason="ast_nominal_evidence_not_bound_to_source",
                                   proof={"side": side, "detail": str(error)}))
+    if kind == 'cjk_nominal':
+        from .cjk_circumstances import validate_cjk_nominal
+
+        try:
+            validate_cjk_nominal(node, lambda origin, label: resolver(side, origin))
+        except (ValueError, KeyError, TypeError) as error:
+            checks.append(_result('unresolved', path, reason='ast_cjk_nominal_not_bound_to_source',
+                                  proof={'side': side, 'detail': str(error)}))
     if kind in {"purpose_scope", "controlled_infinitive_scope", "discourse_scope"}:
         from .infinitival_syntax import validate_infinitival_sources
 
@@ -515,13 +532,17 @@ def _feature_present(feature, statements):
         "active_aspect_scope": "active_aspect", "fronted_nominal_context": "fronted_context",
         "noun_phrase_composition": "noun_phrase", "prepositional_attachment": "prepositional_complement",
         "quantity_comparison": "quantity_comparison",
+        "circumstance_scope": "circumstance_scope",
         "purpose_scope": "purpose_scope", "controlled_infinitive_scope": "controlled_infinitive_scope", "discourse_scope": "discourse_scope",
     }
     if feature == "finite_tense":
         return any(isinstance(node.get("tense"), str) and node["tense"] for node in nodes)
+    if feature == 'noun_phrase_composition' and 'cjk_nominal' in kinds:
+        return True
     if feature == "nested_operator_scopes":
-        wrappers = {"negation", "modality", "conditions", "relative", "reporting", "temporal_scope", "active_aspect", "fronted_context"}
-        return any(node.get("kind") in wrappers and any(child.get("kind") in wrappers for child in _walk(node.get("child"))) for node in nodes)
+        wrappers = {"negation", "modality", "conditions", "relative", "reporting", "temporal_scope", "active_aspect", "fronted_context", "circumstance_scope"}
+        return any(node.get("kind") in wrappers and any(child.get("kind") in wrappers for child in
+            _walk([node.get('child'), node.get('operand')])) for node in nodes)
     if feature == "negation_scope" and any(node.get("kind") == "modality" and node.get("polarity") == "negative" for node in nodes):
         return True
     operators = {"coordination_scope": "and", "alternative_membership": "or", "contrast_scope": "but"}
@@ -547,6 +568,7 @@ AST_FEATURE_COMPARATORS = {feature: compare_feature_ast for feature in (
     "active_aspect_scope", "fronted_nominal_context", "nested_operator_scopes", "noun_phrase_composition",
     "prepositional_attachment", "quantity_comparison",
     "purpose_scope", "controlled_infinitive_scope", "discourse_scope",
+    "circumstance_scope",
 )}
 
 

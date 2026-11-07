@@ -27,6 +27,7 @@ KNOWN_QUALIFIERS = frozenset({
     "from_period", "to_period", "comparison_period", "condition", "exception", "note", "notes",
     "note_texts", "note_markers", "negation", "basis", "as_of", "date", "market",
     "modal", "modality", "polarity", "purpose", "condition_operator", "exception_operator",
+    "conditions", "circumstances", "manner",
     "quantity_role", "tense",
 })
 POSITION_QUALIFIERS = frozenset({

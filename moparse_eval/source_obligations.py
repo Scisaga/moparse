@@ -39,7 +39,7 @@ _OPERATORS = re.compile(
     r"\b(?:only if|unless|except when|except if|except|if|not|never|cannot|shall|"
     r"must|may|can|will|should|could|would|and|or|but|when|until|because|although|while|whereas|whether|"
     r"once|whenever|provided that|in case|as long as|as soon as|despite|since)\b|"
-    r"只有|如果|除非|不得|不能|不可以|必须|必須|应当|應當|可以|并且|並且|以及", re.I)
+    r"只有|如果|除非|不得|不能|不可以|必须|必須|应当|應當|可以|并且|並且|以及|借助|随着|通过|受益于|由于|因为|为了", re.I)
 # A PP is an attachment obligation. Its preposition alone cannot determine
 # whether it is an argument, nominal complement or qualifier. The independent
 # scanner records that question; only a source-bound interpretation answers it.
@@ -447,6 +447,11 @@ def proposition_role_conflicts(entry, fact):
         elif role == "subject" and re.search(
                 r"(?:[为為]|[实實][现現])[^，,；;。]*\d|同比|(?:相[較较]|[較较比])(?:上年|\d{4}年)", syntax):
             reason = "proposition_subject_contains_measurement_or_comparison"
+        elif (role == 'subject' and fact.get('logic', {}).get('kind') not in {
+                'quantity_assertion', 'quantity_comparison', 'year_on_year_change'}
+              and (re.match(r'借助|通过|随着|让', syntax)
+                   or syntax.strip() in {'加速', '快速', '逐步', '持续'})):
+            reason = 'proposition_subject_contains_unbound_introduction_or_action_modifier'
         elif "，" in syntax or re.search(r",(?!\d{3}(?:\D|$))", syntax) and _PREDICATE.search(syntax):
             reason = "proposition_role_contains_embedded_action"
         elif re.search(r'(?:并且|並且|并|並|且|以及|和|或)(?:提供|支持|批准|持有|拥有|擁有|支付|保存|存储|存儲|披露|公布|发布|發布)', syntax):
@@ -982,6 +987,11 @@ def _infinitive_bindings(obligation, facts, relations, logic):
 
 def _operator_edges(raw, relations):
     token = raw.strip().casefold()
+    from .cjk_circumstances import CIRCUMSTANCE_MARKERS
+
+    if token in CIRCUMSTANCE_MARKERS and token != '如果':
+        return [edge for edge in relations if edge.get('type') == 'narrative_circumstance_scope'
+                and edge.get('left', {}).get('operator') == CIRCUMSTANCE_MARKERS[token]]
     if token in {"and", "or", "but", "并且", "並且", "以及"}:
         expected_operator = "and" if token in {"并且", "並且", "以及"} else token
         return [edge for edge in relations if edge.get("type") in {
@@ -2018,6 +2028,19 @@ def audit_source_obligations(inventory: dict[str, Any], graph: dict[str, Any]) -
                     predicate = _range(entry, fact.get("predicate_source", {}))
                     bound = [edge for edge in bound_relations(fact) if edge.get("type") == "field_binding"]
                     scalar_proof = [item for item in role_evidence if item.get("requirement") == fact["id"]]
+                    # A printed calendar series binds its nominal metric
+                    # before ':' to multiple independently dated values. A
+                    # lexical action inside that proven label is a noun use;
+                    # it is not an additional asserted investment/action.
+                    role_basis = fact.get('role_basis')
+                    if bound and predicate is None and isinstance(role_basis, dict) and role_basis.get('period_selector'):
+                        label = _range(entry, fact.get('attribute_source', {}))
+                        if (label and label[0] <= span[0] < span[1] <= label[1]
+                                and re.match(r'\s*[:：]', entry['text'][label[1]:])
+                                and any(item['span'][0] <= span[0] < span[1] <= item['span'][1]
+                                        and item.get('role') == 'attribute' for item in scalar_proof)):
+                            proof.append({'requirement': fact['id'], 'role': 'calendar_series_nominal_metric',
+                                          'relations': [edge['id'] for edge in bound]})
                     if (bound and predicate is None and scalar_proof and obligation.get("binding_role") == "semantic_binding"
                             and not _residue(entry["text"], span, scalar_proof)):
                         proof.append({"requirement": fact["id"], "role": "source_bound_scalar_fragment",

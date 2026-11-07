@@ -496,10 +496,10 @@ class _Graph:
         if not proof:
             return
         reading = _read_narrative(text, source, scope=self.headings) if not parents and kind in {"text", "field_body"} else None
-        explicit = bool(reading and reading.get("facts") and all(fact.get("qualifier_sources", {}).get("unit")
+        explicit = bool(reading and reading.get("facts") and (reading['complete'] and not re.search(r'\d', text) or all(fact.get("qualifier_sources", {}).get("unit")
             for fact in reading["facts"]) and (reading["complete"] or all(
                 not re.search(r"\d", fragment.get("text", "")) for issue in reading.get("unresolved", [])
-                for fragment in issue.get("fragments", [issue]))))
+                for fragment in issue.get("fragments", [issue])))))
         if explicit:
             self.data.setdefault("unit_scope_terminations", []).append({"declaration": copy.deepcopy(proof),
                 "boundary": {"kind": kind, "text": text, "source": copy.deepcopy(source)},

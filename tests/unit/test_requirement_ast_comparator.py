@@ -67,6 +67,8 @@ def fixtures():
         "controlled_infinitive_scope": node("controlled_infinitive_scope", operator="complement", child=proposition(attribute="enable", obj="developers"),
                                             operand=proposition("developers", "build", "platforms"), control={"kind": "object_control", "controller": "developers"}),
         "discourse_scope": node("discourse_scope", operator="for_example", role="example", marker="For example", child=atom),
+        "circumstance_scope": node('circumstance_scope', operator='cause', direction='operand_to_child', degree='主要',
+                                   simultaneous=False, operand=proposition('Efficiency', 'improve', ''), child=atom),
     }
 
 
@@ -88,7 +90,7 @@ def test_registered_feature_executes_independently_authored_structure_and_reject
            "temporal_prose_scope": "qualifiers", "active_aspect_scope": "aspect", "fronted_nominal_context": "context",
            "nested_operator_scopes": "child", "noun_phrase_composition": "head", "prepositional_attachment": "complement",
            "quantity_comparison": "value", "purpose_scope": "operand", "controlled_infinitive_scope": "control",
-           "discourse_scope": "child"}[feature]
+           "discourse_scope": "child", 'circumstance_scope': 'operand'}[feature]
     del mutated[key]
     assert compare_feature_ast(feature, required, mutated)["status"] == "missing"
     # A source mutation is a distinct uncertainty; equal semantic strings do
@@ -135,6 +137,8 @@ def test_each_feature_rejects_a_near_semantic_opposite_and_lost_or_misbound_rela
         actual["control"]["controller"] = "a different controller"
     elif feature == "discourse_scope":
         actual["operator"], actual["role"], actual["marker"] = "however", "contrast", "However"
+    elif feature == 'circumstance_scope':
+        actual['direction'] = 'child_to_operand'
     for first, second in ((required, actual), (actual, required)):
         assert compare_requirement_ast(first, second)["status"] == "conflict"
     relation = node("relation", type="scope_owner", left=required,

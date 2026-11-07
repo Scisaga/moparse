@@ -513,6 +513,11 @@ def _semantic_token_matches(dimension, claimed, literal):
         return True
     if dimension == "currency":
         return canonical_currency(claimed) == canonical_currency(literal)
+    if dimension == 'operator':
+        from .cjk_circumstances import CIRCUMSTANCE_MARKERS
+
+        if raw in CIRCUMSTANCE_MARKERS:
+            return CIRCUMSTANCE_MARKERS[raw] == claimed
     if dimension in {"operator", "comparison_operator"} and raw in _COMPARISONS:
         return _COMPARISONS[raw] == wanted
     if dimension in {"operator", "comparison_operator"} and raw in {"at least", "at most", "more than", "less than"}:
@@ -604,6 +609,10 @@ def _validate_semantic_sources(graph, nodes):
             from .fronted_nominal_context import validate_fronted_operation
 
             validate_fronted_operation(node, literal)
+        if node.get('kind') == 'cjk_nominal':
+            from .cjk_circumstances import validate_cjk_nominal
+
+            validate_cjk_nominal(node, literal)
         if node.get("kind") == "relative" and "marker_source" in node:
             if literal(node["marker_source"], "relative marker").strip().casefold() not in {"that", "which", "who"}:
                 raise ValueError("relative operator differs from its printed source")
@@ -660,6 +669,10 @@ def _validate_semantic_sources(graph, nodes):
                         capacity["condition_operand"] += 1
                     elif kind in {"purpose_scope", "controlled_infinitive_scope"} and field.get("kind") == "semantic_operand":
                         capacity["purpose_operand" if kind == "purpose_scope" else "controlled_infinitive_operand"] += 1
+                    elif kind == 'circumstance_scope' and field.get('kind') == 'semantic_operand':
+                        for owner in tree_nodes:
+                            if owner.get('kind') == kind and owner.get('source') == entry.get('source') and owner.get('operator'):
+                                capacity[owner['operator'] + '_operand'] += 1
                     elif kind == "modality":
                         actual = [node for node in tree_nodes if node.get("kind") == kind and "operator" in node
                                   and node.get("source") == entry.get("source")
@@ -792,6 +805,9 @@ def validate_requirement_graph(graph: dict[str, Any], *, expected: dict[str, Any
                        for edge in relations.values()):
                 raise ValueError("interpreted proposition lacks its source-bound semantic relation")
     _validate_semantic_sources(graph, nodes)
+    from .cjk_circumstances import validate_circumstance_graph
+
+    validate_circumstance_graph(graph, lambda origin, label: _semantic_literal(graph['sources'], origin))
     from .nominal_syntax import validate_nominal_sources
 
     validate_nominal_sources(graph, nodes, lambda origin, label: _semantic_literal(graph["sources"], origin))

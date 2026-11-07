@@ -22,9 +22,9 @@ _COMPARISONS = {'不超过': 'lte', '不超過': 'lte', '不高于': 'lte', '不
 _COMPARISON = re.compile('|'.join(sorted(_COMPARISONS, key=len, reverse=True)))
 _CHANGES = {'同比增长': 'increase', '同比增長': 'increase', '同比增加': 'increase', '同比上升': 'increase',
             '同比下降': 'decrease', '同比减少': 'decrease', '同比減少': 'decrease'}
-_CHANGE = re.compile(r'(?P<basis>同比|(?:相[較较]|[較较比])(?P<baseline>(?:19|20)\d{2}年(?:同期|末))|比上年末)'
+_CHANGE = re.compile(r'(?P<basis>同比|(?:相[較较]|[較较比])(?P<baseline>(?:19|20)\d{2}年(?:同期|末)|年初)|比上年末)'
                      r'(?P<direction>增长|增長|增加|上升|下降|减少|減少)')
-_PERIOD = re.compile(r'\s*(?P<prefix>於|于|截至)?(?P<period>(?:19|20)\d{2}年(?:\d{1,2}月\d{1,2}日|末|底)?)'
+_PERIOD = re.compile(r'\s*(?P<prefix>於|于|截至)?(?P<period>(?:19|20)\d{2}年(?:\d{1,2}月\d{1,2}日|底|末)?)'
                      r'(?!度|初|中|[内內前后後]|以[来來]|[\d一二三四五六七八九十]+月)\s*(?:[，,]\s*)?')
 _PREFIX = re.compile(r'如果|若|只有|除非|因为|因為|由于|由於|据|據|截至|面向|在|为|為|今年|去年|本年|上年|当年|當年|\d{4}年')
 _METRIC = re.compile(r'(?:值|量|额|額|收入|支出|利润|利潤|余额|餘額|资产|資產|负债|負債|人数|人數|指数|指數|率|规模|規模|费用|費用|损益|損益|权益|權益|借款|庫存股|库存股|存貨|存货)(?:流出|流入)?(?:\s*[（(][A-Za-z][A-Za-z0-9 -]*[）)])?$')
@@ -182,16 +182,23 @@ def read_cjk_measurements(text: str, source: dict[str, Any], *, scope=()) -> dic
             fail(a, b, 'cjk_measurement_calendar_period_unresolved')
             continue
         comparison = _COMPARISON.search(text, a, b)
-        change = _CHANGE.match(text, a, b)
+        change = _CHANGE.search(text, a, b)
+        explicit_subject = None
+        if change and change.start() > a:
+            sa, sb = _trim(text, a, change.start())
+            explicit_subject = text[sa:sb]
+            if not _valid_metric(explicit_subject):
+                change = None
         if text.rstrip().endswith(('?', '？')):
             fail(a, b, 'cjk_measurement_interrogative_scope_unresolved')
             antecedent = None
             continue
         if change:
-            if antecedent is None:
+            if antecedent is None and explicit_subject is None:
                 fail(a, b, 'cjk_relative_measurement_antecedent_or_operator_unresolved')
                 continue
-            subject, subject_source = antecedent['subject'], antecedent['subject_source']
+            subject, subject_source = ((explicit_subject, _source(source, sa, sb)) if explicit_subject is not None
+                                       else (antecedent['subject'], antecedent['subject_source']))
             measurement = read_measurement_literal(text[change.end():b], _source(source, change.end(), b))
             if measurement['matched'] and measurement['unit']:
                 predicate_source = _source(source, change.start(), change.end())
@@ -207,19 +214,22 @@ def read_cjk_measurements(text: str, source: dict[str, Any], *, scope=()) -> dic
                 if change['baseline']:
                     qualifiers['from_period'] = change['baseline']
                     qualifier_sources['from_period'] = _source(source, *change.span('baseline'))
-                if antecedent.get('qualifiers', {}).get('actor'):
+                if antecedent and antecedent.get('qualifiers', {}).get('actor'):
                     qualifiers['actor'] = antecedent['qualifiers']['actor']
                     qualifier_sources['actor'] = copy.deepcopy(antecedent['qualifier_sources']['actor'])
                 fact = emit(subject, subject_source, change[0], predicate_source, measurement, _source(source, a, b),
                             qualifiers, qualifier_sources, logic)
-                fact['subject_binding_evidence'] = {'kind': 'immediate_printed_year_on_year_antecedent',
+                fact['subject_binding_evidence'] = {'kind': 'explicit_local_metric' if explicit_subject else 'immediate_printed_year_on_year_antecedent',
                     'antecedent_source': copy.deepcopy(subject_source), 'relative_operator_source': basis_source,
                     'scope': list(scope)}
-                result['relations'].append({'type': 'cjk_year_on_year_subject_binding',
+                if explicit_subject is None:
+                    result['relations'].append({'type': 'cjk_year_on_year_subject_binding',
                     'left': {'subject': subject, 'role': 'antecedent_metric', 'scope': list(scope)},
                     'right': {'subject': subject, 'attribute': change[0], 'scope': list(scope)}, 'source': basis_source,
-                    'object_anchor': None, 'binding_evidence': copy.deepcopy(fact['subject_binding_evidence'])})
-                features.update({'year_on_year_comparison', 'same_subject_relative_clause'})
+                        'object_anchor': None, 'binding_evidence': copy.deepcopy(fact['subject_binding_evidence'])})
+                features.add('year_on_year_comparison')
+                if explicit_subject is None:
+                    features.add('same_subject_relative_clause')
             else:
                 fail(a, b, 'cjk_year_on_year_ratio_measurement_unresolved')
             # A second relative clause cannot silently pass over a relation.

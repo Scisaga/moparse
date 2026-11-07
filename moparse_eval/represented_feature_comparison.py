@@ -7,6 +7,7 @@ inputs still express the source-bound reference or collection completely.
 
 from __future__ import annotations
 
+import copy
 import json
 
 from .cjk_measurement_requirements import read_cjk_measurements
@@ -207,6 +208,7 @@ def _check_quoted_roles(graph, resolve):
 
 
 def _measurement_sources(graph):
+    from .cjk_circumstances import measurement_spans
     from .prose_requirements import _sentence_spans
     from .quoted_nominal import _source
     from .source_requirements import plan_field_body
@@ -229,7 +231,7 @@ def _measurement_sources(graph):
             continue
         if item.get('kind') != 'field_body' and _key(source) in envelopes:
             continue
-        for start, end in _sentence_spans(text):
+        for start, end in [cut for a, b in _sentence_spans(text) for cut in measurement_spans(text, a, b)]:
             origin = _source(source, start, end)
             readback = read_cjk_measurements(text[start:end], origin, scope=item.get("scope", []))
             if item.get('kind') == 'field_body':
@@ -250,7 +252,7 @@ def _check_measurements(graph, resolve, readings, feature):
     for readback in selected:
         if resolve(readback["source"]) != readback["raw_text"]:
             raise ValueError("measurement sequence differs from its original source")
-        if not all(tree in graph.get("logical_statements", []) for tree in readback["logic"]):
+        if not all(tree in list(_walk(graph.get("logical_statements", []))) for tree in readback["logic"]):
             raise ValueError("measurement sequence dropped or changed its typed source structure")
         for fact in readback["facts"]:
             # The reference projection may use the value cut as its public
@@ -260,7 +262,12 @@ def _check_measurements(graph, resolve, readings, feature):
                    for key in ("subject_source", "predicate_source", "object_source"))]
             keys = ("subject", "attribute", "predicate", "value", "object", "qualifiers", "subject_source",
                     "predicate_source", "value_source", "object_source", "qualifier_sources", "logic", "subject_binding_evidence")
-            if len(own) != 1 or any(own[0].get(key) != fact.get(key) for key in keys):
+            native = copy.deepcopy(own[0]) if len(own) == 1 else {}
+            # The surrounding circumstance graph independently owns these
+            # additions. It cannot replace or alter any measurement slot.
+            for key in ('qualifiers', 'qualifier_sources'):
+                native.get(key, {}).pop('circumstances', None)
+            if len(own) != 1 or any(native.get(key) != fact.get(key) for key in keys):
                 raise ValueError("measurement fact, antecedent or qualifier does not match its complete source")
         for expected in readback["relations"]:
             relation_types.add(expected["type"])

@@ -52,6 +52,14 @@ def _units(text: str) -> list[tuple[int, int]]:
 
 
 class _CJKReader(_Reader):
+    def emit(self, node, context=None):
+        if node['kind'] == 'cjk_measurement_sequence':
+            from .cjk_circumstances import emit_measurements
+
+            emit_measurements(self, node, context)
+            return
+        super().emit(node, context)
+
     def trim(self, start, end):
         while start < end and self.text[start].isspace():
             start += 1
@@ -96,6 +104,11 @@ class _CJKReader(_Reader):
         fragment = self.text[start:end]
         if not fragment:
             raise _Unknown('cjk_narrative_empty_clause')
+        from .cjk_circumstances import parse_composed
+
+        composed = parse_composed(self, start, end)
+        if composed is not None:
+            return composed
         if re.search(r'[“”"\'‘’]', fragment):
             raise _Unknown('cjk_narrative_quoted_scope_unresolved')
         if _CONTEXT.search(fragment) or _PREFIX.match(fragment):
@@ -251,39 +264,56 @@ def read_cjk_narrative(text: str, source: dict[str, Any], *, scope=()) -> dict[s
     result['text_atoms'] = [{'text': text, 'role': 'literal', 'source': reader.source_at(0, len(text))}]
     result['consumed_spans'] = [{'text': text, 'role': 'literal', 'span': [0, len(text)],
                                  'source': reader.source_at(0, len(text))}]
+
+    def adopt_measurements(reading):
+        identifiers = {}
+        for fact in reading['facts']:
+            existing = next((f for f in reader.facts if all(f.get(key) == fact.get(key)
+                for key in ('subject_source', 'predicate_source', 'object_source'))), None)
+            if existing is not None:
+                identifiers[fact['id']] = existing['id']
+                continue
+            item = copy.deepcopy(fact)
+            item['id'] = f'cjk_measurement:{len(reader.facts)}'
+            identifiers[fact['id']] = item['id']
+            reader.facts.append(item)
+        for edge in reading['relations']:
+            item = copy.deepcopy(edge)
+            if item.get('fact_id') in identifiers:
+                item['fact_id'] = identifiers[item['fact_id']]
+            if item not in reader.relations:
+                reader.relations.append(item)
+        reader.features.update(reading['required_matcher_features'])
+        for key in ('logic', 'unresolved', 'blockers', 'pending_requirements', 'issues'):
+            for item in reading[key]:
+                if item not in result[key]:
+                    result[key].append(copy.deepcopy(item))
+
     for ordinal, (start, end) in enumerate(_units(text)):
         fragment = text[start:end]
+        composed = bool(re.match(r'借助|通过|随着|(?:同时)?受益于|由于|因为|为了|(?:持续)?(?:加大|坚持)', fragment.lstrip())
+                        or re.search(r'(?:主要)?受.+的影响', fragment))
         measurements = read_cjk_measurements(fragment, reader.source_at(start, end), scope=scope)
-        if measurements['matched']:
-            identifiers = {}
-            for fact in measurements['facts']:
-                item = copy.deepcopy(fact)
-                item['id'] = f'cjk_measurement:{len(reader.facts)}'
-                identifiers[fact['id']] = item['id']
-                reader.facts.append(item)
-            for edge in measurements['relations']:
-                item = copy.deepcopy(edge)
-                if item.get('fact_id') in identifiers:
-                    item['fact_id'] = identifiers[item['fact_id']]
-                reader.relations.append(item)
-            reader.features.update(measurements['required_matcher_features'])
-            result['logic'].extend(copy.deepcopy(measurements['logic']))
-            for key in ('unresolved', 'blockers', 'pending_requirements', 'issues'):
-                result[key].extend(copy.deepcopy(measurements[key]))
+        if measurements['matched'] and not composed:
+            adopt_measurements(measurements)
             continue
-        pieces = [(start, end)]
-        if not (_LEADING.match(fragment.lstrip()) or _TRAILING.search(fragment)
+        from .cjk_circumstances import composition_spans
+
+        pieces = composition_spans(text, start, end) if composed else [(start, end)]
+        if not (composed or _LEADING.match(fragment.lstrip()) or _TRAILING.search(fragment)
                 or _CONTEXT.search(fragment) or _PREFIX.match(fragment.lstrip())):
             commas = list(re.finditer(r'[，,]', fragment))
             if commas:
                 boundaries = [start, *[start + match.end() for match in commas], end]
                 pieces = [(a, b - 1 if index < len(boundaries) - 2 else b)
                           for index, (a, b) in enumerate(zip(boundaries, boundaries[1:], strict=False))]
+        failed = False
         for a, b in pieces:
             reader.record = f'{source}:{ordinal}:{a}'
             try:
                 tree = reader.interpret(a, b)
             except _Unknown as error:
+                failed = True
                 item = {'kind': 'cjk_narrative', 'reason': str(error), 'text': text[a:b],
                         'source': reader.source_at(a, b), 'scope': list(scope), 'layers': ['B', 'L'],
                         'category': 'software_unsupported'}
@@ -292,6 +322,11 @@ def read_cjk_narrative(text: str, source: dict[str, Any], *, scope=()) -> dict[s
                 result['pending_requirements'].append(copy.deepcopy(item))
                 continue
             result['logic'].append(tree)
+        if composed and failed and measurements['facts']:
+            # An unsupported introduction must not erase quantities the
+            # independent measurement reader actually exposed. The complete
+            # source and every unhandled clause remain explicitly pending.
+            adopt_measurements(measurements)
     result['complete'] = result['semantic_complete'] = bool(result['logic']) and not result['unresolved']
     result['required_matcher_features'] = sorted(reader.features)
     return result
