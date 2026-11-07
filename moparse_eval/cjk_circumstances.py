@@ -14,9 +14,47 @@ from .narrative_requirements import _Unknown
 
 CIRCUMSTANCE_MARKERS = {'借助': 'means', '通过': 'means', '随着': 'background',
                          '由于': 'cause', '因为': 'cause', '受益于': 'cause',
-                         '为了': 'purpose', '带来的': 'cause', '受': 'cause', '受到': 'cause'}
-_EVENT = re.compile(r'增长|上升|下降|减少|恢复|提升|优化|转型|变动|稳健|发展|建设|变革')
+                         '为了': 'purpose', '带来的': 'cause', '受': 'cause', '受到': 'cause',
+                         '由於': 'cause', '因為': 'cause', '是': 'cause'}
+_EVENT = re.compile(r'增长|增長|增加|上升|下降|减少|減少|恢复|提升|优化|转型|变动|稳健|发展|建设|变革|流入|流出')
 _QUALIFIER = re.compile(r'保持|逐步|持续|同比')
+_ACTION = re.compile(r'(?P<manner>持续)?(?P<verb>加大|坚持|优化|優化|偿还|償還|购买|購買|取得|分配|发行|發行|募集|注销|註銷|购回|購回)(?P<body>.+)')
+_ACTOR = re.compile(r'本集[团團]|本公司')
+_CAUSE = re.compile(r'[，,](?P<degree>主要|部分)?(?P<marker>由于|由於|因为|因為|是)'
+                    r'(?P<body>.+?)(?P<non_exhaustive>等)?(?P<combined>综合影响|綜合影響)?'
+                    r'(?P<suffix>所致|导致|導致)?$')
+
+
+def trailing_cause(text):
+    match = _CAUSE.search(text.rstrip('。.'))
+    # 是 is a cause introducer only in the complete X导致 frame.
+    return match if match and (match['marker'] != '是' or match['suffix'] in {'导致', '導致'}) else None
+
+
+def causal_targets(child):
+    """A trailing explanation owns a closed parallel classification series.
+
+    Ordinary neighboring metrics retain immediate attachment. Only repeated
+    instances of the same metric inside printed financial categories, each
+    with its own amount and comparison, license the shared explanation.
+    """
+    from .financial_group_context import _POSITION_GROUP
+
+    clauses = child.get('clauses', [])
+    if len(clauses) >= 4 and len(clauses) % 2 == 0:
+        metrics, targets = set(), []
+        for amount, change in zip(clauses[::2], clauses[1::2], strict=True):
+            group = re.fullmatch(r'(?P<parent>.+?)中的(?P<metric>.+)', amount.get('subject', ''))
+            if (amount.get('kind') != 'quantity_assertion' or change.get('kind') != 'year_on_year_change'
+                    or amount.get('subject') != change.get('subject') or group is None
+                    or not _POSITION_GROUP.fullmatch(group['parent'])):
+                break
+            metrics.add(group['metric'])
+            targets.append(change['source'])
+        else:
+            if len(metrics) == 1:
+                return copy.deepcopy(targets)
+    return [copy.deepcopy(clauses[-1]['source'])] if clauses else []
 
 
 def dependency(reader, role, child, marker=None):
@@ -33,12 +71,35 @@ def nominal(reader, start, end):
     raw = reader.text[start:end]
     if not raw or re.search(r'[，,。；;:：]|借助|随着|通过|受益于|因为|由于|为了|如果|同比|列示|列说明|带动', raw) or re.match(r'[一二三四五六七八九十]+是', raw):
         raise _Unknown('cjk_circumstance_nominal_boundary_unresolved')
+    from .financial_group_context import financial_metric_designation
+
+    designation = financial_metric_designation(raw)
+    if designation:
+        def bounds(key):
+            return [start + designation.start(key), start + designation.end(key)]
+        return {'kind': 'cjk_nominal', 'head': designation['head'], 'head_span': bounds('head'),
+                'parts': [dependency(reader, 'measurement_basis', nominal(reader, *bounds('basis')), bounds('measurement')),
+                          dependency(reader, 'valuation_change_recognition', nominal(reader, *bounds('destination')), bounds('recognition'))],
+                'designation': 'fair_value_through_profit_or_loss',
+                'link_spans': [bounds(k) for k in ('basis_link', 'join', 'change_link', 'link') if designation[k]],
+                'span': [start, end]}
     quantifier = re.match(r'部分|全部', raw)
     if quantifier:
         head = start + quantifier.end()
         child = nominal(reader, head, end)
         child.update(quantifier=quantifier[0], quantifier_span=[start, head], span=[start, end])
         return child
+    actor = _ACTOR.match(raw)
+    if actor and actor.end() < len(raw) and not _ACTION.match(raw[actor.end():]):
+        child = nominal(reader, start + actor.end(), end)
+        child['parts'].append(dependency(reader, 'owner', nominal(reader, start, start + actor.end())))
+        child['span'] = [start, end]
+        return child
+    if re.match(r'(?:发行|發行).+募集.+$', raw):
+        cut = start + raw.index('募集')
+        return {'kind': 'cjk_nominal', 'head': '', 'head_span': [end, end],
+                'parts': [dependency(reader, 'nominalized_event', operations(reader, start, cut)),
+                          dependency(reader, 'nominalized_event', operations(reader, cut, end))], 'span': [start, end]}
     if raw.endswith('投入') and raw.startswith('对'):
         head = end - 2
         orient = re.search(r'面向(?P<target>[^的]+)的', raw[1:-2])
@@ -58,6 +119,26 @@ def nominal(reader, start, end):
             parts.append(dependency(reader, 'target_domain', nominal(reader, start + 1, target_end), [start, start + 1]))
         return {'kind': 'cjk_nominal', 'head': '投入', 'head_span': [head, end], 'parts': parts,
                 'link_spans': [[head - 1, head]] if not orient and target_end < head else [], 'span': [start, end]}
+    # A nominal flow owns the printed activity, not an opaque action string.
+    flow = re.search(r'淨現金流出|净现金流出|淨流出|净流出|流入$', raw)
+    if flow and flow.end() == len(raw) and _ACTION.match(raw[:flow.start()].rstrip('的')):
+        head = start + flow.start()
+        limit = head - 1 if reader.text[head - 1:head] == '的' else head
+        activity = operations(reader, start, limit)
+        return {'kind': 'cjk_nominal', 'head': reader.text[head:end], 'head_span': [head, end],
+                'parts': [dependency(reader, 'nominalized_event', activity)],
+                'link_spans': [[limit, head]] if limit < head else [], 'span': [start, end]}
+    if flow and flow.end() == len(raw) and flow.start() > 0:
+        head = start + flow.start()
+        return {'kind': 'cjk_nominal', 'head': reader.text[head:end], 'head_span': [head, end],
+                'parts': [dependency(reader, 'flow_item', nominal(reader, start, head))], 'span': [start, end]}
+    # Printed actor + repurchase is a restrictive event inside the shares
+    # being cancelled; it is not a second unconditional purchase assertion.
+    actor = _ACTOR.match(raw)
+    if actor and _ACTION.match(raw[actor.end():]):
+        child = operations(reader, start, end)
+        return {'kind': 'cjk_nominal', 'head': '', 'head_span': [end, end],
+                'parts': [dependency(reader, 'nominalized_event', child)], 'span': [start, end]}
     suffix = re.search(r'等(?:领域)?$', raw)
     if suffix:
         middle = start + suffix.start()
@@ -70,7 +151,7 @@ def nominal(reader, start, end):
         child = event(reader, start, end)
         return {'kind': 'cjk_nominal', 'head': '', 'head_span': [end, end],
                 'parts': [dependency(reader, 'nominalized_event', child)], 'span': [start, end]}
-    joins = list(re.finditer(r'以及|与|和|、', raw))
+    joins = list(re.finditer(r'以及|与|與|和|及|、', raw))
     if joins:
         spans, cursor = [], start
         for join in joins:
@@ -98,6 +179,10 @@ def event(reader, start, end):
     pa, pb = start + verb.start(), start + verb.end()
     sa, sb = start, pa
     qualifiers, spans = {}, {}
+    actor = _ACTOR.match(reader.text, sa, sb)
+    if actor and actor.end() < sb:
+        qualifiers['actor'], spans['actor'] = actor[0], [sa, actor.end()]
+        sa = actor.end()
     while True:
         qualifier = next((m for m in _QUALIFIER.finditer(reader.text[sa:sb]) if sa + m.end() == sb), None)
         if qualifier is None:
@@ -121,15 +206,23 @@ def operations(reader, start, end):
     """Only explicit conjunctions with complete event members license a group."""
     start, end = reader.trim(start, end)
     raw = reader.text[start:end]
-    if '，' in raw:
-        separators = list(re.finditer('，', raw))
+    separators = [m for m in re.finditer(r'[，,](?:以及)?|以及|、', raw)
+                  if m[0][0] in '，,' or re.search(r'(?:' + _EVENT.pattern + r'|管理)$', raw[:m.start()])]
+    if re.match(r'(?:持续)?(?:加大|坚持)', raw):
+        separators = [m for m in separators if m[0][0] in '，,']  # Internal NP lists stay inside their action.
+    if separators:
         children, cursor = [], start
+        actor = _ACTOR.match(raw)
+        if actor:
+            cursor += actor.end()
         for join in separators:
             children.append(operations(reader, cursor, start + join.start()))
             cursor = start + join.end()
         children.append(operations(reader, cursor, end))
         return {'kind': 'coordination', 'operator': 'and', 'mode': 'circumstance_operations',
-                'children': children, 'operator_spans': [[start + j.start(), start + j.end()] for j in separators],
+                'children': children, 'operator_spans': [[start + j.start() + token.start(), start + j.start() + token.end()]
+                    for j in separators for token in re.finditer(r'[，,、]|以及', j[0])],
+                **({'shared_actor': actor[0], 'shared_actor_span': [start, start + actor.end()]} if actor else {}),
                 'span': [start, end]}
     brought = re.search(r'带来的', raw)
     if brought:
@@ -137,16 +230,26 @@ def operations(reader, start, end):
         return {'kind': 'circumstance_scope', 'operator': 'cause', 'direction': 'operand_to_child',
                 'degree': None, 'simultaneous': False, 'operator_span': [pa, pb], 'span': [start, end],
                 'operand': operations(reader, start, pa), 'child': event(reader, pb, end)}
-    action = re.match(r'(?P<manner>持续)?(?P<verb>加大|坚持|优化|偿还)(?P<body>.+)', raw)
+    actor = _ACTOR.match(raw)
+    body_start = start + actor.end() if actor else start
+    body = reader.text[body_start:end]
+    # A changed flow is a state proposition with an internally interpreted
+    # activity nominal, rather than a purchase action swallowing the change.
+    if ((re.search(r'(?:增长|增長|增加|减少|減少|下降)$', body) and re.search(r'流出|流入', body))
+            or body.endswith(('流入', '流出'))):
+        return event(reader, start, end)
+    action = _ACTION.match(body)
     if action:
-        pa, pb = start + action.start('verb'), start + action.end('verb')
+        pa, pb = body_start + action.start('verb'), body_start + action.end('verb')
         obj = nominal(reader, pb, end)
-        return {'kind': 'proposition', 'subject': '', 'subject_span': None, 'subject_phrase': None,
+        return {'kind': 'proposition', 'subject': actor[0] if actor else '',
+                'subject_span': [start, body_start] if actor else None,
+                'subject_phrase': nominal(reader, start, body_start) if actor else None,
                 'attribute': action['verb'], 'predicate': action['verb'], 'predicate_span': [pa, pb],
                 'object': reader.text[pb:end], 'object_span': [pb, end], 'object_phrase': obj,
                 'prepositional_complements': [], 'role': 'description', 'span': [start, end],
                 'lexical_qualifiers': {'manner': action['manner']} if action['manner'] else {},
-                'lexical_qualifier_spans': {'manner': [start, pa]} if action['manner'] else {}}
+                'lexical_qualifier_spans': {'manner': [body_start, pa]} if action['manner'] else {}}
     # A separator inside a participant list is not an event conjunction.
     joins = [m for m in re.finditer(r'以及|、|，', raw)
              if any(raw[:m.start()].endswith(v) for v in ('优化', '提升', '增长', '稳健', '转型', '下降'))]
@@ -190,7 +293,7 @@ def measurement_tree(reader, start, end):
 def measurement_spans(text, start, end):
     """Syntax-only measurement cuts; the enclosing adjunct remains obligatory."""
     raw = text[start:end]
-    cause = re.search(r'[，,](?:主要)?受.+的影响[。.]?$', raw)
+    cause = trailing_cause(raw) or re.search(r'[，,](?:主要)?受.+的影响[。.]?$', raw)
     if cause:
         return [(start, start + cause.start())]
     if raw.startswith(('通过', '借助')):
@@ -227,6 +330,27 @@ def parse_composed(reader, start, end):
         return composed
     start, end = reader.trim(start, end)
     raw = reader.text[start:end]
+    tail = trailing_cause(raw)
+    if tail:
+        cut = start + tail.start()
+        child = measurement_tree(reader, start, cut)
+        if child is None:
+            raise _Unknown('cjk_causal_result_unresolved')
+        result = {'kind': 'circumstance_scope', 'operator': 'cause', 'direction': 'operand_to_child',
+                  'degree': tail['degree'], 'simultaneous': False,
+                  'operator_span': [start + tail.start('marker'), start + tail.end('marker')],
+                  'operand': operations(reader, start + tail.start('body'), start + tail.end('body')),
+                  'child': child, 'target_source': copy.deepcopy(child['clauses'][-1]['source']), 'span': [start, end]}
+        targets = causal_targets(child)
+        if len(targets) > 1:
+            result.pop('target_source')
+            result['target_sources'] = targets
+        for name, role in (('degree', 'degree'), ('non_exhaustive', 'non_exhaustive'), ('combined', 'combined'), ('suffix', 'suffix')):
+            if tail[name]:
+                result[role + '_span'] = [start + tail.start(name), start + tail.end(name)]
+                if role in {'combined', 'non_exhaustive'}:
+                    result[role] = True
+        return result
     cause = re.search(r'[，,](?P<degree>主要)?(?P<marker>受到|受)(?P<body>.+)的影响$', raw)
     if cause:
         cut = start + cause.start()
@@ -289,7 +413,9 @@ def validate_cjk_nominal(node, literal):
         if part.get('kind') == 'cjk_dependency':
             role, marker = part.get('role'), part.get('marker')
             permitted = {'target_domain': {'对'}, 'orientation': {'面向'},
-                         'non_exhaustive_members': {'等'}, 'activity': {None}, 'nominalized_event': {None}}
+                         'non_exhaustive_members': {'等'}, 'activity': {None}, 'nominalized_event': {None}, 'owner': {None},
+                         'flow_item': {None},
+                         'measurement_basis': {'计量', '計量'}, 'valuation_change_recognition': {'变动计入', '變動計入'}}
             if marker not in permitted.get(role, set()):
                 raise ValueError('Chinese nominal dependency role differs from marker')
             if marker is not None:
@@ -306,13 +432,14 @@ def validate_cjk_nominal(node, literal):
         if part.get('kind') != 'coordination' or part.get('operator') != 'and' or len(part.get('children', [])) < 2:
             raise ValueError('Chinese nominal relation unsupported')
         for source in part.get('operator_sources', []):
-            if cut(source) not in {'以及', '与', '和', '、'}:
+            if cut(source) not in {'以及', '与', '與', '和', '及', '、'}:
                 raise ValueError('Chinese nominal conjunction differs from source')
         for child in part['children']:
             validate_cjk_nominal(child, literal)
             cut(child['source'])
     for source in node.get('link_sources', []):
-        if cut(source) != '的':
+        allowed = {'的', '以', '且', '其'} if node.get('designation') == 'fair_value_through_profit_or_loss' else {'的'}
+        if cut(source) not in allowed:
             raise ValueError('Chinese nominal grammatical link differs from source')
     missing = [i for i in range(*bounds) if i not in covered and not raw[i - bounds[0]].isspace()]
     if missing:
@@ -336,7 +463,7 @@ def validate_cjk_event(node, literal):
         covered.update(range(*span))
 
     if node.get('attribute') != node.get('predicate') or not re.fullmatch(
-            _EVENT.pattern + '|加大|坚持|偿还', node.get('predicate', '')):
+            _EVENT.pattern + '|' + _ACTION.pattern.split('(?P<verb>')[1].split(')')[0], node.get('predicate', '')):
         raise ValueError('Chinese event predicate differs from interpreted action')
     own(node.get('predicate_source'), node['predicate'])
     for role in ('subject', 'object'):
@@ -358,6 +485,9 @@ def validate_cjk_event(node, literal):
         elif key == 'comparison_basis':
             if printed != '同比' or qs.get(key) != 'year_on_year':
                 raise ValueError('Chinese qualitative comparison basis differs from source')
+        elif key == 'actor':
+            if not _ACTOR.fullmatch(printed) or qs.get(key) != printed:
+                raise ValueError('Chinese event actor differs from source')
         elif key != 'manner' or printed not in {'持续', '保持', '逐步'} or qs.get(key) != printed:
             raise ValueError('Chinese qualitative manner differs from source')
         own(origin, printed)
@@ -399,6 +529,9 @@ def validate_circumstance_graph(graph, literal):
     else:
         business, operands = graph.get('business', []), graph.get('semantic_operands', [])
     facts = [*business, *operands]
+    from .financial_group_context import validate_financial_metric_facts
+
+    validate_financial_metric_facts(facts, literal)
     edges = [*graph.get('relations', []), *graph.get('operand_relations', graph.get('semantic_operand_relations', []))]
     expected = {fact['id']: [] for fact in facts}
     expected_sources = {fact['id']: [] for fact in facts}
@@ -421,9 +554,11 @@ def validate_circumstance_graph(graph, literal):
             marker = literal(node.get('operator_source'), 'Chinese circumstance marker')
             if CIRCUMSTANCE_MARKERS.get(marker) != node.get('operator') or node.get('direction') != 'operand_to_child':
                 raise ValueError('Chinese circumstance operator/direction differs from source')
+            if marker == '是' and literal(node.get('suffix_source'), 'causative suffix') not in {'导致', '導致'}:
+                raise ValueError('Chinese copula alone cannot prove causation')
             outer = source.get('text_span', [])
             covered = set()
-            for name in ('operator_source', 'degree_source', 'simultaneous_source', 'suffix_source'):
+            for name in ('operator_source', 'degree_source', 'simultaneous_source', 'suffix_source', 'combined_source', 'non_exhaustive_source'):
                 origin = node.get(name)
                 if not origin:
                     continue
@@ -432,14 +567,18 @@ def validate_circumstance_graph(graph, literal):
                         or not outer[0] <= span[0] < span[1] <= outer[1]):
                     raise ValueError('Chinese circumstance marker borrowed from another source')
                 printed = literal(origin, name)
-                if name == 'degree_source' and (printed != '主要' or node.get('degree') != printed):
+                if name == 'degree_source' and (printed not in {'主要', '部分'} or node.get('degree') != printed):
                     raise ValueError('Chinese causal degree differs from source')
                 if name == 'simultaneous_source' and (printed != '同时' or node.get('simultaneous') is not True):
                     raise ValueError('Chinese circumstance simultaneity differs from source')
-                if name == 'suffix_source' and printed != '的影响':
+                if name == 'suffix_source' and printed not in {'的影响', '所致', '导致', '導致'}:
                     raise ValueError('Chinese causal suffix differs from source')
+                if name in {'combined_source', 'non_exhaustive_source'} and (
+                        printed not in ({'综合影响', '綜合影響'} if name == 'combined_source' else {'等'})
+                        or node.get(name[:-7]) is not True):
+                    raise ValueError('Chinese causal combination/restriction differs from source')
                 covered.update(range(*span))
-            if bool(node.get('degree')) != bool(node.get('degree_source')) or bool(node.get('simultaneous')) != bool(node.get('simultaneous_source')):
+            if any(bool(node.get(k)) != bool(node.get(k + '_source')) for k in ('degree', 'simultaneous', 'combined', 'non_exhaustive')):
                 raise ValueError('Chinese circumstance restriction lacks its own source')
             for child in (node['operand'], node['child']):
                 own = child['source']
@@ -451,6 +590,12 @@ def validate_circumstance_graph(graph, literal):
             if any(i not in covered and not c.isspace() and c not in '，,。' for i, c in enumerate(raw, outer[0])):
                 raise ValueError('Chinese circumstance has unexplained source content')
             leaves = _leaves(node['child'])
+            if node.get('target_sources'):
+                if node['operator'] != 'cause' or node['target_sources'] != causal_targets(node['child']):
+                    raise ValueError('Chinese shared cause is not bound to the closed parallel classification series')
+                leaves = [leaf for leaf in leaves if leaf.get('source') in node['target_sources']]
+                if len(leaves) != len(node['target_sources']):
+                    raise ValueError('Chinese shared cause loses one of its classified changes')
             if node.get('target_source'):
                 leaves = [leaf for leaf in leaves if leaf.get('source') == node['target_source']]
                 if len(leaves) != 1 or node['operator'] != 'cause':
@@ -463,11 +608,10 @@ def validate_circumstance_graph(graph, literal):
                 fact = bound_leaf(leaf, operand)
                 descriptor = circumstance_descriptor(_Reader, node)
                 expected[fact['id']].append(descriptor)
-                expected_sources[fact['id']].append({key: copy.deepcopy(node[key])
-                    for key in ('operator_source', 'simultaneous_source', 'degree_source', 'suffix_source') if key in node})
+                expected_sources[fact['id']].append(circumstance_sources(node))
                 owned = [e for e in edges if e.get('type') == 'narrative_circumstance_scope' and e.get('fact_id') == fact['id']
                          and e.get('source') == node['operator_source']]
-                left = {k: descriptor[k] for k in ('operator', 'direction', 'degree', 'simultaneous')}
+                left = {k: descriptor[k] for k in ('operator', 'direction', 'degree', 'simultaneous', 'combined', 'non_exhaustive') if k in descriptor}
                 left['operand'] = _Reader.endpoint(node['operand'])
                 if (len(owned) != 1 or owned[0].get('left') != left
                         or owned[0].get('binding_evidence', {}).get('operand_logic') != node['operand']
@@ -478,6 +622,23 @@ def validate_circumstance_graph(graph, literal):
             walk(node['operand'], True)
             walk(node['child'], operand)
         elif kind == 'coordination':
+            if node.get('mode') == 'circumstance_operations':
+                origin = node['source']
+                covered = set()
+                for own in [*(c['source'] for c in node['children']), *node.get('operator_sources', [])]:
+                    if any(own.get(k) != origin.get(k) for k in ('path', 'lines', 'cell', 'block', 'native_path')):
+                        raise ValueError('Chinese operation group borrows neighboring source')
+                    covered.update(range(*own['text_span']))
+                if node.get('shared_actor'):
+                    own = node.get('shared_actor_source', {})
+                    if literal(own, 'shared actor') != node['shared_actor'] or not _ACTOR.fullmatch(node['shared_actor']):
+                        raise ValueError('Chinese operation group actor is not printed')
+                    if any(own.get(k) != origin.get(k) for k in ('path', 'lines', 'cell', 'block', 'native_path')) or own['text_span'][0] != origin['text_span'][0]:
+                        raise ValueError('Chinese operation group actor borrowed from neighbor')
+                    covered.update(range(*own['text_span']))
+                raw = literal(origin, 'operation group')
+                if any(i not in covered and not c.isspace() for i, c in enumerate(raw, origin['text_span'][0])):
+                    raise ValueError('Chinese operation group has unexplained content')
             for child in node.get('children', []):
                 walk(child, operand)
         elif kind == 'proposition' and 'lexical_qualifiers' in node:
@@ -523,7 +684,14 @@ def validate_circumstance_graph(graph, literal):
 
 def circumstance_descriptor(reader, node):
     return {'operator': node['operator'], 'direction': node['direction'], 'degree': node['degree'],
-            'simultaneous': node['simultaneous'], 'operand': reader.summary(node['operand'])}
+            'simultaneous': node['simultaneous'], 'operand': reader.summary(node['operand']),
+            **{k: node[k] for k in ('combined', 'non_exhaustive') if k in node}}
+
+
+def circumstance_sources(node):
+    return {key: copy.deepcopy(node[key]) for key in (
+        'operator_source', 'simultaneous_source', 'degree_source', 'suffix_source', 'combined_source', 'non_exhaustive_source')
+        if key in node}
 
 
 def emit_circumstance(reader, node, context):
@@ -553,15 +721,15 @@ def emit_measurements(reader, node, context):
         fact = copy.deepcopy(original)
         identities[fact['id']] = fact['id'] = f'cjk_measurement:{len(reader.facts)}'
         for wrapper in (context or {}).get('circumstance_nodes', []):
+            if wrapper.get('target_sources') and fact['source'] not in wrapper['target_sources']:
+                continue
             if wrapper.get('target_source') and fact['source'] != wrapper['target_source']:
                 continue
             fact['qualifiers'].setdefault('circumstances', []).append(circumstance_descriptor(reader, wrapper))
-            fact['qualifier_sources'].setdefault('circumstances', []).append({
-                key: copy.deepcopy(wrapper[key]) for key in ('operator_source', 'simultaneous_source', 'degree_source', 'suffix_source')
-                if key in wrapper})
-            reader.edge('narrative_circumstance_scope', {
-                'operator': wrapper['operator'], 'direction': wrapper['direction'], 'degree': wrapper['degree'],
-                'simultaneous': wrapper['simultaneous'], 'operand': reader.endpoint(wrapper['operand'])},
+            fact['qualifier_sources'].setdefault('circumstances', []).append(circumstance_sources(wrapper))
+            descriptor = circumstance_descriptor(reader, wrapper)
+            descriptor['operand'] = reader.endpoint(wrapper['operand'])
+            reader.edge('narrative_circumstance_scope', descriptor,
                 fact, wrapper['operator_source'], operator_source=wrapper['operator_source'], operand_logic=wrapper['operand'])
         reader.facts.append(fact)
     for original in read['relations']:

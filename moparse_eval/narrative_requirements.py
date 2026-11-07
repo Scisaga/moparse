@@ -550,6 +550,7 @@ class _Reader:
         if kind == 'circumstance_scope':
             return {'kind': kind, 'operator': node['operator'], 'direction': node['direction'],
                     'degree': node['degree'], 'simultaneous': node['simultaneous'],
+                    **{key: node[key] for key in ('combined', 'non_exhaustive') if key in node},
                     'operand': _Reader.summary(node['operand']), 'child': _Reader.summary(node['child'])}
         if kind == 'unknown':
             return {'kind': kind, 'status': 'unresolved', 'reason': node['reason'], 'text': node['text']}
@@ -579,7 +580,8 @@ class _Reader:
                 result = {'operator': 'not', 'operand': result}
             return result
         if kind == 'coordination':
-            return {'operator': node['operator'], 'operands': [_Reader.summary(child) for child in node['children']]}
+            return {'operator': node['operator'], 'operands': [_Reader.summary(child) for child in node['children']],
+                    **({'shared_actor': node['shared_actor']} if 'shared_actor' in node else {})}
         if kind == 'modality':
             return {'kind': kind, 'modality': node['operator'], 'polarity': node['polarity'],
                     **({'tense': node['tense']} if 'tense' in node else {}), 'child': _Reader.summary(node['child'])}
@@ -646,6 +648,7 @@ class _Reader:
                     'polarity': node['polarity'], 'tense': node['tense']}
         if node['kind'] == 'coordination':
             return {'role': 'coordination', 'operator': node['operator'],
+                    **({'shared_actor': node['shared_actor']} if 'shared_actor' in node else {}),
                     'members': [_Reader.endpoint(child) for child in node['children']]}
         if node['kind'] == 'modality':
             return {'role': 'modality', 'operator': node['operator'], 'polarity': node['polarity'],
@@ -871,12 +874,10 @@ class _Reader:
         for key, span in node.get('lexical_qualifier_spans', {}).items():
             fact['qualifier_sources'][key] = self.source_at(*span)
         if context.get('circumstance_nodes'):
-            from .cjk_circumstances import circumstance_descriptor
+            from .cjk_circumstances import circumstance_descriptor, circumstance_sources
 
             fact['qualifiers']['circumstances'] = [circumstance_descriptor(self, item) for item in context['circumstance_nodes']]
-            fact['qualifier_sources']['circumstances'] = [
-                {key: copy.deepcopy(item[key]) for key in ('operator_source', 'simultaneous_source', 'degree_source', 'suffix_source')
-                 if key in item} for item in context['circumstance_nodes']]
+            fact['qualifier_sources']['circumstances'] = [circumstance_sources(item) for item in context['circumstance_nodes']]
         if 'coordination_source_node' in context:
             fact['qualifier_sources']['coordination'] = copy.deepcopy(context['coordination_source_node']['operator_sources'])
         if 'fronted_nodes' in context:

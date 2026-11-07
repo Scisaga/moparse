@@ -48,7 +48,8 @@ _POSTPREDICATE_SCOPE = re.compile(
     r"at|before|behind|below|beneath|beside|between|beyond|by|despite|during|for|from|in|inside|into|near|off|"
     r"of|to|on|onto|outside|over|past|pending|per|regarding|since|through|throughout|till|toward|towards|under|"
     r"underneath|until|upon|via|versus|with|within|without)\b", re.I)
-_DECLARATION = re.compile(r"(?:Units?|Currency|Period|Year|(?:金[額额])?(?:单位|單位)|币种|幣種|期间|期間|年度)\s*[:：=]\s*[^。.!?！？;；]+[。.]?", re.I)
+_DECLARATION = re.compile(r"(?:(?:截至|於|于)[^。;；\n，,]{1,35}(?:止年度|止期间|止期間|年度)[，,]\s*)?"
+                          r"(?:Units?|Currency|Period|Year|(?:金[額额])?(?:单位|單位)|币种|幣種|期间|期間|年度)\s*[:：=]\s*[^。.!?！？;；]+[。.]?", re.I)
 _SCHEMA_CONTROL = re.compile(r"Attribute|Property|Field|Value|Metric|Item|Record|Group|Section|属性|屬性|字段|值|指标|指標|项目|項目|分组|分組", re.I)
 _ACTION_MEANING = dict(AUDITED_ACTION_FORMS)
 _PUNCTUATION = set(":：=;；,.。!?！？()（）[]【】{}\"“”'‘’、，/\\|-–—")
@@ -59,7 +60,9 @@ _LEGAL_NAME_CONTINUATION = re.compile(
     r"(?:inc\.?|corp\.?|ltd\.?|limited|llc|plc|co\.?|company|corporation)\s*[.]?\s*", re.I)
 _NAVIGATION = re.compile(r"\s*(?:(?:[^:：=\n]{1,160})[:：=]\s*)?(?:"
     r"(?:See(?: also)?|Refer to)\s+(?:[\"“][^\"”]+[\"”]|Note\s+\d+)(?:\s+for more information)?[.]?"
-    r"|(?:参见|參見|详见|詳見)\s*(?:《[^》]+》|[\"“][^\"”]+[\"”]|(?:附注|附註)\s*\d+)[。.]?)\s*", re.I)
+    r"|(?:参见|參見|详见|詳見)\s*(?:《[^》]+》|[\"“][^\"”]+[\"”]|(?:附注|附註)\s*\d+)[。.]?"
+    r"|(?:本公司|本集[团團])(?:19|20)\d{2}年[^，,。；;：:]+[与與][^，,。；;：:]+之[间間]的差[异異][说說]明"
+    r"[请請]?[详詳][见見](?:合[并併])?(?:财务报表|財務報表)(?:附注|附註)\d+(?:\([A-Za-z0-9]+\))*[。.]?)\s*", re.I)
 
 SEMANTIC_OBLIGATION_TYPES = frozenset({
     "assertive_proposition", "structured_field", "logical_relation", "qualifier",
@@ -1333,6 +1336,23 @@ def _structural_evidence(entry, graph, bound_relations):
             evidence.append({"span": [0, len(text)], "role": "printed_financial_classification_parent",
                              "relations": [edge["id"] for edge in edges]})
     for node in _walk(graph.get("logic", [])):
+        if node.get('kind') == 'coordination' and node.get('mode') == 'circumstance_operations' and node.get('shared_actor'):
+            from .cjk_circumstances import _ACTOR, _leaves
+
+            bounds = _range(entry, node.get('shared_actor_source', {}))
+            origin = _range(entry, node.get('source', {}))
+            leaves = _leaves(node)
+            bank = [fact for fact in graph['nodes'] if fact.get('kind') == 'semantic_operand']
+            owners = [fact for leaf in leaves for fact in bank if all(fact.get(key) == leaf.get(key)
+                      for key in ('subject_source', 'predicate_source', 'object_source')) and bound_relations(fact)]
+            scope_edges = [edge for edge in graph['relations'] if edge.get('type') == 'narrative_circumstance_scope'
+                           and any(own == node for own in _walk(edge.get('binding_evidence', {}).get('operand_logic', {})))
+                           and any(validate_relation_binding(None, fact, edge)['equivalent'] for fact in graph['nodes']
+                                   if fact['id'] in graph['projections']['B'])]
+            if (bounds and origin and bounds[0] == origin[0] and text[slice(*bounds)] == node['shared_actor']
+                    and _ACTOR.fullmatch(node['shared_actor']) and leaves and len(owners) == len(leaves) and scope_edges):
+                evidence.append({'span': list(bounds), 'role': 'source_bound_shared_cause_actor',
+                                 'relations': [e['id'] for e in scope_edges]})
         if node.get("kind") != "discourse_scope":
             continue
         bounds = _range(entry, node.get("marker_source", {}))
@@ -1365,7 +1385,7 @@ def _text_syntax_evidence(entry):
     if emphasis and emphasis['open'] == emphasis['close']:
         evidence.extend({'span': list(emphasis.span(key)), 'role': 'balanced_field_label_emphasis'} for key in ('open', 'close'))
     if _DECLARATION.fullmatch(text.strip()):
-        label = re.match(r"\s*(?:Units?|Currency|Period|Year|(?:金[額额])?(?:单位|單位)|币种|幣種|期间|期間|年度)\s*[:：=]", text, re.I)
+        label = re.search(r"(?:Units?|Currency|Period|Year|(?:金[額额])?(?:单位|單位)|币种|幣種|期间|期間|年度)\s*[:：=]", text, re.I)
         if label:
             evidence.append({"span": list(label.span()), "role": "printed_qualifier_declaration_key"})
     if re.fullmatch(r"(?:Note|Notes|附注|附註|注)\s*[:：]", text.strip(), re.I):
@@ -1897,7 +1917,12 @@ def audit_source_obligations(inventory: dict[str, Any], graph: dict[str, Any]) -
                     reference_span = (span[0] + field.start("body"), span[0] + field.end("body")) if field else span
                     references = [item for item in graph.get("explicit_references", [])
                                   if item.get("text") == entry["text"][slice(*reference_span)]
-                                  and _range(entry, item.get("source", {})) == reference_span and item.get("owner_proof")]
+                                  and _range(entry, item.get("source", {})) == reference_span and item.get("owner_proof")
+                                  and any(edge.get('type') == 'reference_directive_scope'
+                                          and edge.get('left') == item['owner_proof']['owner']
+                                          and edge.get('right', {}).get('owner') == item['owner_proof']['owner']
+                                          and edge.get('binding_evidence', {}).get('owner_proof') == item['owner_proof']
+                                          and edge.get('source') == item.get('directive_source') for edge in relations)]
                     if field:
                         label = field["label"].strip()
                         label_start = span[0] + field.start("label") + len(field["label"]) - len(field["label"].lstrip())
@@ -2097,6 +2122,9 @@ def audit_source_obligations(inventory: dict[str, Any], graph: dict[str, Any]) -
                 if (not proof and obligation.get("binding_role") in {None, "field_binding", "semantic_binding"}
                         and compact_bindings.get(entry["id"]) and not _residue(entry["text"], span, compact_bindings[entry["id"]])):
                     proof.extend(compact_bindings[entry["id"]])
+                if not proof and obligation.get('binding_role') is None:
+                    proof.extend(item for item in structural if item['role'] == 'source_bound_printed_field_owner'
+                                 and item['span'][0] <= span[0] < span[1] <= item['span'][1])
                 if proof:
                     status, reason = "explained", "printed_predicate_has_its_own_role_binding"
                 elif obligation.get("binding_role") is None:

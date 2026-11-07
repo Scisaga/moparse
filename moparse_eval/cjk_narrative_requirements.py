@@ -291,8 +291,19 @@ def read_cjk_narrative(text: str, source: dict[str, Any], *, scope=()) -> dict[s
 
     for ordinal, (start, end) in enumerate(_units(text)):
         fragment = text[start:end]
+        from .explicit_reference_requirements import read_explicit_references
+
+        navigation = read_explicit_references(fragment, reader.source_at(start, end), scope=scope)
+        if navigation['complete'] and navigation['references'][0].get('owner_roles'):
+            # The owning prose sequence emits the independently read reference
+            # edges. A difference explanation is not an asserted difference
+            # amount, direction, or a new unconditional business proposition.
+            reader.features.add('explicit_reference_binding')
+            continue
+        from .cjk_circumstances import trailing_cause
+
         composed = bool(re.match(r'借助|通过|随着|(?:同时)?受益于|由于|因为|为了|(?:持续)?(?:加大|坚持)', fragment.lstrip())
-                        or re.search(r'(?:主要)?受.+的影响', fragment))
+                        or re.search(r'(?:主要)?受.+的影响', fragment) or trailing_cause(fragment))
         measurements = read_cjk_measurements(fragment, reader.source_at(start, end), scope=scope)
         if measurements['matched'] and not composed:
             adopt_measurements(measurements)

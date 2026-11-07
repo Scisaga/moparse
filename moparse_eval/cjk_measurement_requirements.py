@@ -48,6 +48,11 @@ def _trim(text, a, b):
 
 
 def _valid_metric(metric):
+    from .financial_group_context import _POSITION_GROUP
+
+    classified = re.fullmatch(r'(?P<parent>.+?)中的(?P<metric>.+)', metric)
+    if classified and _POSITION_GROUP.fullmatch(classified['parent']):
+        return _valid_metric(classified['metric'])
     if not _METRIC.search(metric) or _PREFIX.match(metric) or _SUBJECT_SCOPE.search(metric) or _NON_ACTUAL.search(metric) or re.match(r'\*|__', metric):
         return False
     # A fixed compound label may contain conjunctions. Two independently
@@ -145,6 +150,15 @@ def read_cjk_measurements(text: str, source: dict[str, Any], *, scope=()) -> dic
         for key in ('actor', 'actor_link', 'assertion_link'):
             if measurement.get(key):
                 q[key], qs[key] = measurement[key]['text'], copy.deepcopy(measurement[key]['source'])
+        classification = re.fullmatch(r'(?P<parent>.+?)中的(?P<metric>.+)', subject)
+        if classification:
+            base = subject_source['text_span'][0]
+            q['parent_metric'], q['membership_operator'] = classification['parent'], '中的'
+            qs['parent_metric'] = {**subject_source, 'text_span': [base, base + classification.end('parent')]}
+            qs['membership_operator'] = {**subject_source, 'text_span': [base + classification.end('parent'), base + classification.start('metric')]}
+        if subject.endswith(('流出', '流入')):
+            q['flow_direction'] = 'outflow' if subject.endswith('流出') else 'inflow'
+            qs['flow_direction'] = {**subject_source, 'text_span': [subject_source['text_span'][1] - 2, subject_source['text_span'][1]]}
         if period:
             q['period'], qs['period'] = period_text, copy.deepcopy(period_source)
             if period['prefix']:
@@ -158,6 +172,33 @@ def read_cjk_measurements(text: str, source: dict[str, Any], *, scope=()) -> dic
                 'attribute_source': copy.deepcopy(predicate_source), 'value_source': copy.deepcopy(measurement['sources']['value']),
                 'object_source': copy.deepcopy(measurement['sources']['value']), 'logic': copy.deepcopy(logic),
                 'record_id': f'cjk_measurement:{source!r}', 'rule_id': 'printed_cjk_measurement_clause'}
+        from .financial_group_context import financial_metric_designation
+
+        phrase = None
+        if financial_metric_designation(subject):
+            from .cjk_circumstances import nominal
+            from .narrative_requirements import _Reader
+
+            reader = _Reader(subject, subject_source, scope)
+            phrase = nominal(reader, 0, len(subject))
+            reader.annotate_sources(phrase)
+            def absolute_only(node):
+                if isinstance(node, dict):
+                    if 'path' in node:
+                        return
+                    for key in list(node):
+                        if key == 'span' or key.endswith(('_span', '_spans')):
+                            del node[key]
+                        else:
+                            absolute_only(node[key])
+                elif isinstance(node, list):
+                    for child in node:
+                        absolute_only(child)
+            absolute_only(phrase)  # Do not reinterpret local NP cuts in an enclosing sentence.
+            fact['subject_phrase'] = copy.deepcopy(phrase)
+            logic['subject_phrase'] = copy.deepcopy(phrase)
+            fact['logic'] = copy.deepcopy(logic)
+            features.add('noun_phrase_composition')
         result['facts'].append(fact)
         endpoint = {'subject': subject, 'attribute': attribute, 'scope': list(scope)}
         result['relations'].append({'type': 'field_binding', 'left': copy.deepcopy(endpoint), 'right': copy.deepcopy(endpoint),
@@ -173,10 +214,17 @@ def read_cjk_measurements(text: str, source: dict[str, Any], *, scope=()) -> dic
                 'right': copy.deepcopy(endpoint), 'source': copy.deepcopy(qs[key]), 'object_anchor': None, 'fact_id': fact['id'],
                 'binding_evidence': {'statement_source': copy.deepcopy(own_source),
                     'qualifier_source': copy.deepcopy(qs[key]), 'data_source': copy.deepcopy(fact['value_source'])}})
+        if phrase:
+            for part in phrase['parts']:
+                result['relations'].append({'type': 'narrative_cjk_nominal_scope', 'left': _Reader.summary(part),
+                    'right': copy.deepcopy(endpoint), 'source': copy.deepcopy(part['marker_source']),
+                    'object_anchor': None, 'fact_id': fact['id'],
+                    'binding_evidence': {'statement_source': copy.deepcopy(own_source), 'nominal_logic': copy.deepcopy(part)}})
         tree['clauses'].append(copy.deepcopy(logic))
         return fact
 
     antecedent = None
+    classified_actor = None
     for part_index, (a, b) in enumerate(parts):
         if invalid_period:
             fail(a, b, 'cjk_measurement_calendar_period_unresolved')
@@ -291,6 +339,13 @@ def read_cjk_measurements(text: str, source: dict[str, Any], *, scope=()) -> dic
                 fail(a, b, 'cjk_metric_assertion_scope_unresolved')
                 continue
             subject_source, predicate_source = _source(source, sa, sb), _source(source, qa, qb)
+            if '中的' in subject:
+                if measurement.get('actor'):
+                    classified_actor = copy.deepcopy(measurement['actor'])
+                elif classified_actor and not unknown:
+                    measurement['actor'] = copy.deepcopy(classified_actor)
+            else:
+                classified_actor = None
             logic = {'kind': 'quantity_assertion', 'subject': subject, 'subject_source': subject_source,
                      'predicate': text[qa:qb], 'predicate_source': predicate_source,
                      'assertion_operator': 'realize' if realized else 'reach' if text[qa:qb] in {'达到', '達到'} else 'equal',

@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import copy
 import json
+import re
 
 from .cjk_measurement_requirements import read_cjk_measurements
 from .document_composition_requirements import (
@@ -74,6 +75,32 @@ def _check_owner(reference, graph, resolve):
                    and node.get("label_source") == item["source"] and node.get("scope") == reference["scope"]
                    for node in syntax):
             raise ValueError("reference owner has no actual field label")
+    elif len(evidence) == 1 and evidence[0].get('kind') == 'prose_endpoint_roles' and reference.get('owner_roles'):
+        roles = reference['owner_roles']
+        if set(roles) != {'actor', 'period', 'left', 'right', 'join', 'link'}:
+            raise ValueError('difference explanation loses its printed comparison roles')
+        identity = {'role': 'difference_explanation', 'actor': roles['actor']['text'], 'period': roles['period']['text'],
+                    'left_metric': roles['left']['text'], 'right_metric': roles['right']['text']}
+        if owner != {'identity': identity, 'scope': reference['scope']} or evidence[0].get('identity') != identity:
+            raise ValueError('difference explanation belongs to a different pair or period')
+        own = reference['source']
+        cursor = own['text_span'][0]
+        for key in ('actor', 'period', 'left', 'join', 'right', 'link'):
+            role = roles[key]
+            origin = role['source']
+            if (any(origin.get(k) != own.get(k) for k in ('path', 'lines', 'cell', 'block', 'native_path'))
+                    or origin.get('text_span') != [cursor, cursor + len(role['text'])]
+                    or resolve(origin) != role['text']):
+                raise ValueError('difference owner borrows an adjacent record or source span')
+            cursor += len(role['text'])
+        if (cursor != reference['directive_source']['text_span'][0]
+                or roles['join']['text'] not in {'与', '與'}
+                or not re.fullmatch(r'之[间間]的差[异異][说說]明', roles['link']['text'])
+                or not re.fullmatch(r'本集[团團]|本公司', roles['actor']['text'])
+                or not re.fullmatch(r'(?:19|20)\d{2}年', roles['period']['text'])):
+            raise ValueError('difference comparison roles do not precede their own directive')
+        if evidence[0]['source'] != {**own, 'text_span': [own['text_span'][0], cursor]}:
+            raise ValueError('difference owner evidence does not cover its actual printed pair')
     else:
         raise ValueError("reference owner representation is not independently supported")
     for item in evidence:

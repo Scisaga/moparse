@@ -3,11 +3,11 @@
   "quality_scores_withheld": true,
   "expected_comparison_complete": false,
   "candidate_comparison_started": false,
-  "software_id": "3040a4642374dff9ad6038a9e4c059ba73e81bba4da839da87111cd0cd5f0a75",
-  "git_head": "8e0ccd817993d883a34df74ad9e628004252d81b",
+  "software_id": "efbecf5a0b2d88aaec6c4bb53aeaafbcf544a62d0652b2e08747aeeae126a147",
+  "git_head": "504a0ac96761c40aa40870aae85061b7fa99e7f7",
   "configured_analysis_workers": 16,
   "source_index": "benchmark/runs/lite/requirements/current/index.json",
-  "source_index_sha256": "70f789452b2d26e2ae96fbd632be1e7b1bc5828ca15a79e6b6a47d96b29f4ba1",
+  "source_index_sha256": "a154a28a50bee1e5d89d3ed2eb0e1bb9cbe78222cfdc737a7abc545addb1c463",
   "source_compilation": {
     "command": [
       "/opt/moparse/.venv/bin/python",
@@ -16,15 +16,15 @@
       "--baseline",
       "/opt/moparse/benchmark/runs/lite",
       "--output",
-      "/opt/moparse/benchmark/runs/lite/requirements/.compiling-huawei-source",
+      "/opt/moparse/benchmark/runs/lite/requirements/.compiling-sf-source",
       "--workers",
       "16"
     ],
     "exit_code": 2,
-    "software_id": "3040a4642374dff9ad6038a9e4c059ba73e81bba4da839da87111cd0cd5f0a75",
+    "software_id": "efbecf5a0b2d88aaec6c4bb53aeaafbcf544a62d0652b2e08747aeeae126a147",
     "software_unchanged": true,
-    "software_execution_seconds": 88.34597997972742,
-    "temporary_output": "/opt/moparse/benchmark/runs/lite/requirements/.compiling-huawei-source",
+    "software_execution_seconds": 90.40929108299315,
+    "temporary_output": "/opt/moparse/benchmark/runs/lite/requirements/.compiling-sf-source",
     "analysis_workers": 16,
     "candidate_read": false,
     "pdf_or_image_read": false,
@@ -37,23 +37,23 @@
     "source_obligation_inventory_complete": true,
     "semantic_complete": false,
     "purpose": "authorized_expected_source_only_export_not_quality_grades",
-    "final_index": "/opt/moparse/benchmark/runs/lite/requirements/current/index.json",
     "index": "/opt/moparse/benchmark/runs/lite/requirements/current/index.json",
-    "index_sha256": "70f789452b2d26e2ae96fbd632be1e7b1bc5828ca15a79e6b6a47d96b29f4ba1",
+    "index_sha256": "a154a28a50bee1e5d89d3ed2eb0e1bb9cbe78222cfdc737a7abc545addb1c463",
     "all_views_same_software_id": true,
-    "output_replacement": "Complete validated source-only staging installed as sole current; replaced and incomplete generated views deleted, no archive retained."
+    "final_index": "/opt/moparse/benchmark/runs/lite/requirements/current/index.json",
+    "output_replacement": "Complete validated source-only staging installed as sole current; superseded generated views deleted, no archive retained."
   },
   "software_validation": {
     "status": "passed",
-    "summary": "4016 passed in 99.90s (0:01:39)",
+    "summary": "4110 passed in 167.57s (0:02:47)",
     "software_unchanged": true,
     "tests_unchanged": true,
     "path": "benchmark/runs/lite/requirements/validation/software-validation.json",
-    "sha256": "7978b12365ccb15272b856bdd0d773e3552dc07326ab33d33e8ad2ee24ea5d45"
+    "sha256": "7bd08a291b997d0a2e5523bd63840b1f8e52104b1a6c5bedcc38f5ca4c7f45cd"
   },
   "actual_source_diagnosis": {
     "path": "benchmark/runs/lite/requirements/validation/actual-source-diagnosis.json",
-    "sha256": "4e1629ef28e5520dc88155e07a2273b855e790e57df785b235f7bdd475fa0422"
+    "sha256": "3d228f001b651488af7bfcc795729c832dee5cc33223368157bbc868ad6cb769"
   },
   "source_preservation": {
     "all_173_original_source_inventory_arrays_identical": true,
@@ -61,42 +61,8 @@
     "all_five_scope_identities_unchanged": true,
     "canonical_expected_changed": false,
     "native_historical_or_original_costs_changed": false,
-    "generated_auxiliary_sources_arrays_identical": false,
-    "generated_auxiliary_source_view_changes": [
-      {
-        "sample_id": "catl-power-market-materials-drivers-p133-136",
-        "meaning": "Derived interpretation flags or fragments changed; authorized source inventory and selection compared separately."
-      },
-      {
-        "sample_id": "catl-storage-renewables-markets-p137-143",
-        "meaning": "Derived interpretation flags or fragments changed; authorized source inventory and selection compared separately."
-      },
-      {
-        "sample_id": "fiyta-terms-financials-p001-010",
-        "meaning": "Derived interpretation flags or fragments changed; authorized source inventory and selection compared separately."
-      },
-      {
-        "sample_id": "huawei-compliance-management-p051-053",
-        "meaning": "Derived interpretation flags or fragments changed; authorized source inventory and selection compared separately."
-      },
-      {
-        "sample_id": "huawei-terminal-business-p041-046",
-        "meaning": "Derived interpretation flags or fragments changed; authorized source inventory and selection compared separately."
-      },
-      {
-        "sample_id": "sf-industry-business-review-p017-024",
-        "meaning": "Derived interpretation flags or fragments changed; authorized source inventory and selection compared separately."
-      },
-      {
-        "sample_id": "sinopec-operations-p013-024",
-        "meaning": "Derived interpretation flags or fragments changed; authorized source inventory and selection compared separately."
-      },
-      {
-        "sample_id": "spdb-summary-financials-p001-004",
-        "meaning": "Derived interpretation flags or fragments changed; authorized source inventory and selection compared separately."
-      }
-    ],
-    "auxiliary_before_current_evidence": "benchmark/runs/lite/requirements/validation/actual-source-diagnosis.json#source_preservation"
+    "generated_auxiliary_sources_arrays_identical": true,
+    "generated_auxiliary_source_view_changes": []
   },
   "input_scope_pending": [
     {
@@ -252,26 +218,26 @@
   ],
   "projection_changes": {
     "before": {
-      "T": 30545,
-      "L": 17792,
-      "B": 7446
-    },
-    "current": {
       "T": 30566,
       "L": 18273,
       "B": 7662
     },
-    "changed_samples": 49,
-    "source_change_records": 412,
+    "current": {
+      "T": 30566,
+      "L": 18350,
+      "B": 7665
+    },
+    "changed_samples": 11,
+    "source_change_records": 42,
     "formal_denominators_frozen": false
   },
   "expected_structure_gate": {
     "status": "not_passed",
-    "reason": "Only the complete Huawei selection has independent source-only acceptance; other expected semantics and the five scope decisions remain incomplete."
+    "reason": "Huawei and SF source-only acceptance does not complete all authorized expected semantics or resolve the five input scopes."
   },
   "comparison_capability_gate": {
     "status": "not_passed",
-    "reason": "The Huawei-required controlled comparisons passed; global expected semantics and real delivery evidence remain incomplete."
+    "reason": "Huawei and SF source-only acceptance does not complete all authorized expected semantics or resolve the five input scopes."
   },
   "delivery_conversion_gate": {
     "status": "not_passed",
@@ -286,30 +252,32 @@
     "source_integrity_passed": true,
     "full_expected_semantic_acceptance_passed": false,
     "newly_complete_previously_blocked_samples": 1,
-    "huawei_complete_source_only_acceptance_passed": true
+    "huawei_complete_source_only_acceptance_passed": true,
+    "sf_complete_source_only_acceptance_passed": true,
+    "independently_accepted_complete_samples": 2
   },
   "real_candidate_cpu_replay_started": false,
   "formal_scoring_or_replay": false,
   "semantic_diagnosis": {
-    "views_with_non_deferred_pending": 170,
-    "pending_family_count": 117
+    "views_with_non_deferred_pending": 169,
+    "pending_family_count": 118
   },
   "remaining_baseline_interpretation_defects": {
     "old_svos": 12,
     "still_emitted": 0,
     "scope_rows_with_other_pending": 9
   },
-  "meaning": "Only the explicitly named complete Huawei expected selection is independently accepted source-only. Global expected semantics, actual comparisons, replays and quality publication remain incomplete.",
+  "meaning": "Huawei and SF complete authorized expected selections independently accepted source-only. Global semantics, five scopes, actual comparisons, replays and grades remain incomplete.",
   "baseline_preservation": {
     "path": "benchmark/runs/lite/requirements/validation/baseline-preservation.json",
-    "sha256": "63897bd73c371c5b144c5faa06df2768c1d5404b9a38ff173da3932ba984c090",
+    "sha256": "ba94f5bc3e6fd380204d508f5da7526e48577e9dd9b35be0f0556789480a7932",
     "status": "passed",
-    "meaning": "A/B/C preserved against the actual incoming HEAD; no semantic acceptance inferred for other samples."
+    "meaning": "A/B/C and the complete Huawei source graph preserved against actual incoming HEAD."
   },
   "repository_checks": {
     "ruff": {
       "status": "passed",
-      "scoped_changed_python_files": 14
+      "scoped_changed_python_files": 10
     },
     "markdown_policy": {
       "status": "passed",
@@ -331,10 +299,10 @@
       "original_cost_table_rows_unchanged": true,
       "all_projection_changes_have_original_source_context": true
     },
-    "execution_boundary": "Controlled synthetic comparisons and authorized expected source-only compilation; no actual candidate/PDF/image/model/replay/service operation."
+    "execution_boundary": "Authorized expected source-only compilation and controlled invented comparisons only; no actual candidate/PDF/image/model/replay/GPU/TTS/service/deployment/API/commit/push."
   },
-  "requirement_index_sha256": "70f789452b2d26e2ae96fbd632be1e7b1bc5828ca15a79e6b6a47d96b29f4ba1",
-  "initial_head": "8e0ccd817993d883a34df74ad9e628004252d81b",
+  "requirement_index_sha256": "a154a28a50bee1e5d89d3ed2eb0e1bb9cbe78222cfdc737a7abc545addb1c463",
+  "initial_head": "504a0ac96761c40aa40870aae85061b7fa99e7f7",
   "initial_worktree_dirty": false,
   "huawei_complete_source_only_acceptance": {
     "sample_id": "huawei-operating-results-p062-063",
@@ -343,8 +311,8 @@
     "unresolved": 0,
     "before": {
       "T": 407,
-      "L": 524,
-      "B": 113
+      "L": 575,
+      "B": 122
     },
     "current": {
       "T": 407,
@@ -354,14 +322,40 @@
     "independent_oracle": "benchmark/runs/lite/requirements/validation/actual-source-diagnosis.json#work_packages/independent_source_acceptance",
     "reproduction": "PYTHONPATH=/opt/moparse .venv/bin/python benchmark/runs/lite/requirements/validation/source-oracle.py",
     "fresh_production_compile_matches_saved_current": true,
-    "verifier_sha256": "c27ed9e9184d794574b78ad8a6fb27f9cd79550774b54522cd099cff1f9ad87a"
+    "verifier_sha256": "b93705554d6a18362cf530bec219a38a293cb82dcbcff7cb78e3a5d08df39aa0"
   },
   "current_task": {
-    "fixed_sample": "huawei-operating-results-p062-063",
+    "fixed_sample": "sf-cashflow-assets-liabilities-p040-041",
     "status": "passed_source_only",
     "commit_or_push": false,
-    "other_samples_independently_accepted": false,
+    "huawei_preserved": true,
+    "other_new_samples_independently_accepted": false,
     "recorded_phase": "source_only_validation_before_git_publication"
   },
-  "git_head_meaning": "HEAD observed during the source-only validation; software_id identifies the tested code independently of Git publication."
+  "git_head_meaning": "HEAD observed during the source-only validation; software_id identifies the tested code independently of Git publication.",
+  "sf_complete_source_only_acceptance": {
+    "sample_id": "sf-cashflow-assets-liabilities-p040-041",
+    "status": "passed",
+    "all_authorized_sources": 40,
+    "unresolved": 0,
+    "before": {
+      "T": 585,
+      "L": 638,
+      "B": 129
+    },
+    "current": {
+      "T": 585,
+      "L": 708,
+      "B": 133
+    },
+    "independent_oracle": "benchmark/runs/lite/requirements/validation/actual-source-diagnosis.json#work_packages/independent_source_acceptance",
+    "reproduction": "PYTHONPATH=/opt/moparse .venv/bin/python benchmark/runs/lite/requirements/validation/source-oracle.py",
+    "fresh_production_compile_matches_saved_current": true,
+    "verifier_sha256": "b93705554d6a18362cf530bec219a38a293cb82dcbcff7cb78e3a5d08df39aa0"
+  },
+  "version_control_authorization": {
+    "action": "commit_and_push_complete_worktree",
+    "source": "subsequent_explicit_user_request",
+    "evaluation_and_runtime_permissions_unchanged": true
+  }
 }

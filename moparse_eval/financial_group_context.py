@@ -32,6 +32,42 @@ _RECLASSIFICATION = re.compile(
 _POSITION_GROUP = re.compile(
     r"(?:非流动|非流動|流动|流動)?(?:资产|資產|负债|負債)|所有者权益|所有者權益|权益|權益"
     r"|(?:non[- ]current\s+|current\s+)?(?:assets|liabilities)|(?:shareholders['’]?\s+|owners['’]?\s+)?equity", re.I)
+_VALUATION_DESIGNATION = re.compile(
+    r'(?P<basis_link>以)(?P<basis>公允[价價]值)(?P<measurement>[计計]量)(?P<join>且)'
+    r'(?P<change_link>其)?(?P<recognition>[变變][动動][计計]入)(?P<destination>[当當]期[损損]益)'
+    r'(?P<link>的)(?P<head>金融[资資][产產])')
+
+
+def financial_metric_designation(text):
+    """Recognize a printed accounting designation, never a new value fact."""
+    return _VALUATION_DESIGNATION.fullmatch(text)
+
+
+def validate_financial_metric_facts(facts, literal):
+    """An intact metric string cannot hide missing accounting relationships."""
+    for fact in facts:
+        subject = fact.get('subject', '')
+        designation = financial_metric_designation(subject)
+        if designation and fact.get('logic', {}).get('kind') in {'quantity_assertion', 'year_on_year_change'}:
+            phrase = fact.get('subject_phrase') or {}
+            if (phrase.get('kind') != 'cjk_nominal' or phrase.get('source') != fact.get('subject_source')
+                    or phrase.get('head') != designation['head']
+                    or [(d.get('role'), d.get('marker'), d.get('child', {}).get('head')) for d in phrase.get('parts', [])] != [
+                        ('measurement_basis', designation['measurement'], designation['basis']),
+                        ('valuation_change_recognition', designation['recognition'], designation['destination'])]):
+                raise ValueError('Financial metric lacks its complete measurement and recognition designation')
+        classification = re.fullmatch(r'(?P<parent>.+?)中的(?P<metric>.+)', subject)
+        if classification and _POSITION_GROUP.fullmatch(classification['parent']) and fact.get('predicate'):
+            qs = fact.get('qualifiers', {})
+            origins = fact.get('qualifier_sources', {})
+            source = fact.get('subject_source', {})
+            base = source.get('text_span', [0])[0]
+            required = {'parent_metric': classification['parent'], 'membership_operator': '中的'}
+            cuts = {'parent_metric': [base, base + classification.end('parent')],
+                    'membership_operator': [base + classification.end('parent'), base + classification.start('metric')]}
+            if any(qs.get(k) != v or origins.get(k) != {**source, 'text_span': cuts[k]}
+                   or literal(origins[k], k) != v for k, v in required.items()):
+                raise ValueError('Financial metric is not bound to its printed internal classification')
 
 
 def financial_statement_kind(heading: dict[str, Any] | None) -> str | None:

@@ -524,6 +524,8 @@ def _semantic_token_matches(dimension, claimed, literal):
         return {"at least": "ge", "at most": "le", "more than": "gt", "less than": "lt"}[raw] == wanted
     if dimension == "comparison_basis":
         return wanted == "year on year" and raw == "同比"
+    if dimension == 'flow_direction':
+        return {'流出': 'outflow', '流入': 'inflow'}.get(raw) == claimed
     if dimension == "change_direction":
         return raw in {text[2:] for text, direction in _CHANGES.items() if direction == wanted}
     if dimension == "aspect":
@@ -729,7 +731,7 @@ def _validate_semantic_sources(graph, nodes):
                 continue
             if isinstance(value, str):
                 if name in {"modality", "polarity", "modal_polarity", "tense", "condition_operator", "exception_operator",
-                            "currency", "comparison_operator", "comparison_basis", "change_direction", "aspect"}:
+                            "currency", "comparison_operator", "comparison_basis", "change_direction", "flow_direction", "aspect"}:
                     token(value, origin, name)
                 else:
                     cut(value, origin, "qualifier " + name)
@@ -831,6 +833,12 @@ def validate_requirement_graph(graph: dict[str, Any], *, expected: dict[str, Any
     from .enumeration_binding import validate_enumeration_bindings
 
     validate_enumeration_bindings(graph, nodes, lambda source: _semantic_literal(sources, source))
+    if any(item.get('owner_roles') for item in graph.get('explicit_references', [])):
+        from .represented_feature_comparison import _check_references, _reference_sources
+
+        projected_references = evaluation_projection(graph)
+        _check_references(projected_references, lambda source: _semantic_literal(sources, source),
+                          _reference_sources(projected_references))
     from .source_obligations import validate_source_obligations
 
     validate_source_obligations(graph, expected=expected)

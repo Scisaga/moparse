@@ -20,6 +20,11 @@ _CJK_NUMBERED = re.compile(r'第(?P<identifier>\d+(?:\.\d+)*|[一二三四五六
 _CJK_NOTE = re.compile(r'(?P<label>附注|附註|注)\s*(?P<identifier>' + _ID + r')(?![A-Za-z0-9]|\.\d)', re.I)
 _TAIL = re.compile(r'\s*(?:(?P<purpose>for\s+more\s+information)\s*)?[.。;；!?！？]?\s*$', re.I)
 _OWNER_KINDS = {'printed_field_label', 'prose_endpoint_roles', 'heading_scope'}
+_INLINE_DIFFERENCE = re.compile(
+    r'(?P<actor>本集[团團]|本公司)(?P<period>(?:19|20)\d{2}年)'
+    r'(?P<left>[^，,。；;：:]+?)(?P<join>与|與)(?P<right>[^，,。；;：:]+?)'
+    r'(?P<link>之[间間]的差[异異][说說]明)(?P<directive>[请請]?[详詳][见見])')
+_REPORT_DOCUMENT = re.compile(r'(?:合[并併])?(?:财务报表|財務報表)')
 
 
 def _source(source, start, end):
@@ -56,13 +61,17 @@ def _target(text, start):
             raise ValueError('reference_quoted_target_unresolved')
         return {'target': {'role': 'reference_target', 'kind': 'quoted_title', 'title': text[start + 1:end]},
                 'target_span': [start, end + 1], 'title_span': [start + 1, end]}
-    match = _NUMBERED.match(text, start) or _CJK_NUMBERED.match(text, start) or _CJK_NOTE.match(text, start)
+    document = _REPORT_DOCUMENT.match(text, start)
+    note_start = document.end() if document else start
+    match = _NUMBERED.match(text, note_start) or _CJK_NUMBERED.match(text, note_start) or _CJK_NOTE.match(text, note_start)
     if match is None:
         raise ValueError('reference_target_schema_unresolved')
     label = 'note' if match['label'] in {'附注', '附註', '注'} else match['label'].lower()
     return {'target': {'role': 'reference_target', 'kind': 'numbered_reference',
-                       'reference_kind': label, 'identifier': match['identifier']},
-            'target_span': [match.start(), match.end()],
+                       'reference_kind': label, 'identifier': match['identifier'],
+                       **({'document': document[0]} if document else {})},
+            'target_span': [start, match.end()],
+            **({'document_span': list(document.span())} if document else {}),
             'identifier_span': [match.start('identifier'), match.end('identifier')],
             'kind_span': [match.start('label'), match.end('label')]}
 
@@ -122,11 +131,17 @@ def read_explicit_references(text: str, source: dict[str, Any], *, scope=(), own
               'comparison_status': 'not_validated_by_this_source_reader'}
     quoted = _quoted_regions(text)
     consumed = []
-    for match in _DIRECTIVE.finditer(text):
+    from .cjk_measurement_requirements import _valid_metric
+
+    inline = [m for m in _INLINE_DIFFERENCE.finditer(text)
+              if (m.start() == 0 or text[m.start() - 1] in '。；;\n')
+              and _valid_metric(m['left']) and _valid_metric(m['right'])]
+    directives = [(m, None) for m in _DIRECTIVE.finditer(text)] + [(m, m) for m in inline]
+    for match, difference in sorted(directives, key=lambda row: row[0].start()):
         if any(a <= match.start() < b for a, b in quoted):
             continue
         before = text[:match.start()].rstrip(' \t')
-        if before and before[-1] not in '.。;；:：!?！？\n':
+        if difference is None and before and before[-1] not in '.。;；:：!?！？\n':
             continue
         result['matched'] = True
         start = match.start()
@@ -145,8 +160,10 @@ def read_explicit_references(text: str, source: dict[str, Any], *, scope=(), own
             result['pending_requirements'].append(copy.deepcopy(pending))
             result['blockers'].append(pending)
             continue
-        kind = re.sub(r'\s+', '_', match[0].lower())
-        reference = {'directive_kind': kind, 'directive_text': match[0], 'directive_source': _source(source, start, match.end()),
+        directive_start = difference.start('directive') if difference else start
+        directive_text = difference['directive'] if difference else match[0]
+        kind = 'difference_explanation' if difference else re.sub(r'\s+', '_', match[0].lower())
+        reference = {'directive_kind': kind, 'directive_text': directive_text, 'directive_source': _source(source, directive_start, match.end()),
                      'target': parsed['target'], 'scope': list(scope), 'source': _source(source, start, end),
                      'text': text[start:end], 'object_anchor': None}
         for role, span in [(name[:-5], value) for name, value in parsed.items() if name.endswith('_span')]:
@@ -156,7 +173,17 @@ def read_explicit_references(text: str, source: dict[str, Any], *, scope=(), own
             a = parsed['target_span'][1] + tail.start('purpose')
             b = parsed['target_span'][1] + tail.end('purpose')
             reference['purpose_text'], reference['purpose_source'] = text[a:b], _source(source, a, b)
-        proof = _owner_proof(owner, owner_evidence, text, source, [start, end])
+        if difference:
+            identity = {'role': 'difference_explanation', 'left_metric': difference['left'],
+                        'right_metric': difference['right'], 'actor': difference['actor'], 'period': difference['period']}
+            own = {'identity': identity, 'scope': list(scope)}
+            evidence = [{'kind': 'prose_endpoint_roles', 'identity': copy.deepcopy(identity),
+                         'text': text[start:directive_start], 'source': _source(source, start, directive_start)}]
+            proof = _owner_proof(own, evidence, text, source, [directive_start, end])
+            reference['owner_roles'] = {key: {'text': difference[key], 'source': _source(source, *difference.span(key))}
+                                       for key in ('actor', 'period', 'left', 'right', 'join', 'link')}
+        else:
+            proof = _owner_proof(owner, owner_evidence, text, source, [start, end])
         reference['owner_proof'] = proof
         directive = {'role': 'reference_directive', 'directive_kind': kind,
                      'owner': copy.deepcopy(proof['owner']) if proof else None}
