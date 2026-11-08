@@ -449,3 +449,190 @@ def test_replaced_quoted_governance_analysis_does_not_block_an_independent_typed
     assert score['layers']['B']['denominator'] == 2
     assert [r['outcome'] for r in score['outcomes'] if r['layer'] == 'B'] == ['incorrect', 'correct']
     assert score['layers']['L']['score'] == 100
+
+
+WEAK_A = '董事會秘書接受專業培訓。'
+WEAK_B = '董事會秘書參加專業教育。'
+WEAK_CANDIDATE = '董事會秘書進行職業訓練。'
+
+
+def _reverse_internal_document_traversal(monkeypatch):
+    """Keep authored reading order; permute only the solver's input traversal."""
+    import moparse_eval.document_ast_comparison as module
+
+    original = module.compare_document_ast
+
+    def reversed_solver(required, actual, **kwargs):
+        count = len(required['children'])
+        result = original({**required, 'children': list(reversed(required['children']))}, actual, **kwargs)
+        for row in result['proof']['rows']:
+            row['required_index'] = count - 1 - row['required_index']
+        result['proof']['rows'].sort(key=lambda row: row['required_index'])
+        for span in result['proof']['consumed_spans']:
+            span['required_index'] = count - 1 - span['required_index']
+        return result
+
+    monkeypatch.setattr(module, 'compare_document_ast', reversed_solver)
+
+
+@pytest.mark.parametrize('reverse', [False, True])
+def test_tentative_weak_correspondence_cannot_prove_another_requirement_missing(tmp_path, monkeypatch, reverse):
+    graph, required = compile_content_document(tmp_path, '# 培訓\n\n' + WEAK_A + '\n\n' + WEAK_B)
+    if reverse:
+        _reverse_internal_document_traversal(monkeypatch)
+    score = compare(required, '# 培訓\n\n' + WEAK_CANDIDATE)
+    proof = score['document_comparison']['decision']['proof']
+    rows = {row['required_id']: row for row in proof['rows']}
+    assert set(rows) == {row['requirement_id'] for row in graph['source_form_requirements']}
+    assert all(row['decision']['status'] == 'unresolved' for row in rows.values())
+    assert all(row['correspondence_status'] == 'unresolved' for row in rows.values())
+    assert all(row['retrieval']['competing_requirement_ids'] for row in rows.values())
+    assert not proof['consumed_spans']
+    assert score['layers']['B']['denominator'] == 2
+    assert score['layers']['B']['score'] is score['layers']['L']['score'] is None
+    assert all(row['outcome'] == 'unresolved' for row in score['outcomes'] if ':content:' in row['id'])
+    assert len([b for b in score['blockers'] if b.get('side') == 'comparison']) == 2
+    with pytest.raises(ValueError):
+        validate_evidence(score)
+
+
+@pytest.mark.parametrize('reverse', [False, True])
+@pytest.mark.parametrize('candidate,status', [
+    (TRAINING.replace('18', '19'), 'conflict'),
+    (TRAINING.replace('18小時', '0.0018萬元'), 'unresolved'),
+])
+def test_confirmed_identity_reserves_capacity_even_when_content_conflicts_or_is_unresolved(
+        tmp_path, monkeypatch, reverse, candidate, status):
+    weak = '董事會秘書進行職業教育。'
+    _, required = compile_content_document(tmp_path, '# 治理\n\n' + weak + '\n\n' + TRAINING)
+    if reverse:
+        _reverse_internal_document_traversal(monkeypatch)
+    score = compare(required, '# 治理\n\n' + candidate)
+    rows = score['document_comparison']['decision']['proof']['rows']
+    assert rows[0]['decision']['status'] == 'missing'
+    assert rows[0]['decision']['proof']['complete_scope_exclusively_covered']
+    assert rows[1]['decision']['status'] == status
+    assert rows[1]['correspondence_status'] == 'confirmed'
+    assert score['layers']['B']['denominator'] == 2
+    assert [r['outcome'] for r in score['outcomes'] if r['layer'] == 'B'] == [
+        'incorrect', 'unresolved' if status == 'unresolved' else 'incorrect']
+    assert bool(score['blockers']) == (status == 'unresolved')
+    assert score['publishable'] == (status != 'unresolved')
+
+
+def test_one_unique_weak_expression_remains_tentative_and_does_not_claim_layout_identity(tmp_path):
+    _, required = compile_content_document(tmp_path, '# 培訓\n\n' + WEAK_A)
+    score = compare(required, '# 培訓\n\n' + WEAK_CANDIDATE)
+    proof = score['document_comparison']['decision']['proof']
+    row, = proof['rows']
+    assert row['decision']['status'] == 'unresolved'
+    assert row['correspondence_status'] == 'tentative'
+    assert row['actual_spans'] and not proof['consumed_spans']
+    assert score['layers']['B']['denominator'] == 1
+    assert score['layers']['L']['score'] is None
+    assert next(r for r in score['outcomes'] if r['id'] == 'L:content:0')['outcome'] == 'unresolved'
+
+
+def test_partial_overlap_with_a_confirmed_span_is_not_exhaustive_absence_proof(tmp_path):
+    _, required = compile_content_document(tmp_path, '# 治理\n\n' + TRAINING + '\n\n' + WEAK_B)
+    score = compare(required, '# 治理\n\n' + TRAINING + WEAK_CANDIDATE)
+    rows = score['document_comparison']['decision']['proof']['rows']
+    assert rows[0]['decision']['status'] == 'equivalent'
+    assert rows[1]['decision']['status'] == 'unresolved'
+    assert score['layers']['B']['denominator'] == 2
+    assert not score['publishable']
+
+
+@pytest.mark.parametrize('reverse', [False, True])
+def test_two_independently_identified_expressions_keep_fixed_outcomes_under_solver_permutation(tmp_path, monkeypatch, reverse):
+    _, required = compile_content_document(tmp_path, '# 治理\n\n' + MEETINGS + '\n\n' + TRAINING)
+    if reverse:
+        _reverse_internal_document_traversal(monkeypatch)
+    score = compare(required, '# 治理\n\n委員會每年至少召開3次會議。董事會秘書接受專業培訓的時間為19小時以上。')
+    rows = score['document_comparison']['decision']['proof']['rows']
+    assert [r['decision']['status'] for r in rows] == ['equivalent', 'conflict']
+    assert all(r['correspondence_status'] == 'confirmed' for r in rows)
+    assert [r['outcome'] for r in score['outcomes'] if r['layer'] == 'B'] == ['correct', 'incorrect']
+    assert score['layers']['B']['denominator'] == 2
+    assert score['layers']['L']['score'] == 100
+
+
+def test_separate_cover_nominals_cannot_invent_a_reporting_proposition(tmp_path):
+    text = '# 城市韧性报告2029\n\nUrban Resilience Report\n\n城市韧性分析小组\n\n远岸出版社'
+    graph, required = compile_content_document(tmp_path, text)
+    assert len(graph['document_ast']['children']) == 4
+    # None of these three printed names asserts a subject reporting an object.
+    assert required['comparison_coverage']['retained_semantic_requirements']['B'] == []
+    assert len(graph['source_form_requirements']) == 3
+    assert not any(n.get('attribute', '').lower() == 'report' for n in graph['nodes'])
+
+
+@pytest.mark.parametrize('label,body', [
+    ('拓展合作，支持产业转型', '携手科研伙伴，在多个领域推进联合研究。'),
+    ('积极在研究组织分享思想', '在专业会议中，交流新技术的研究成果。'),
+    ('参与竞赛，共同培养人才', '参与公开竞赛，贡献题目，鼓励学生探索。'),
+])
+def test_unparsed_labelled_sentence_is_complete_content_instead_of_an_opaque_scalar(tmp_path, label, body):
+    text = '# 研究进展\n\n- ' + label + '：' + body
+    graph, required = compile_content_document(tmp_path, text)
+    assert len(graph['source_form_requirements']) == 1
+    assert required['comparison_coverage']['retained_semantic_requirements']['B'] == []
+    assert graph['source_form_requirements'][0]['content']['source']['text_span'] == [0, len(label + '：' + body)]
+    assert not graph['semantic_complete']
+
+
+@pytest.mark.parametrize('nominal', ['储能', '儲能', '智能', '性能', '功能'])
+def test_nominal_final_neng_is_not_a_printed_ability_operator(tmp_path, nominal):
+    text = '# 研究\n\n' + nominal + '主要包括甲类、乙类。'
+    graph, required = compile_content_document(tmp_path, text)
+    facts = [n for n in graph['nodes'] if n['id'] in graph['projections']['B']]
+    assert [(f['subject'], f['attribute'], f['value']) for f in facts] == [
+        (nominal, '包括', '甲类'), (nominal, '包括', '乙类')]
+    assert all('modality' not in f['qualifiers'] for f in facts)
+    assert 'ability_operator' not in graph['required_matcher_features']
+    # An independently printed ability after the complete nominal stays real.
+    _, modal = compile_content_document(tmp_path, '# 研究\n\n' + nominal + '能够支持甲类。')
+    assert modal['business'][0]['qualifiers']['modality'] == 'ability'
+
+
+def test_printed_clause_routing_preserves_closed_financial_records(tmp_path):
+    text = '# 财务\n\n基金：期初金額13；期末金額24；本期公允價值變動損益11。'
+    graph, required = compile_content_document(tmp_path, text)
+    assert not graph['source_form_requirements']
+    assert [(f['subject'], f['attribute'], f['value']) for f in required['business']] == [
+        ('基金', '期初金額', '13'), ('基金', '期末金額', '24'), ('基金', '本期公允價值變動損益', '11')]
+    assert graph['comparison_coverage']['responsibility_complete']
+
+
+def test_printed_clause_routing_preserves_an_explicit_compact_column_inventory(tmp_path):
+    text = ('# 财务\n\n於12月31日，金額單位：人民幣千元。各項分別列示2031年金額、佔總資產比，'
+            '2030年金額、佔總資產比，金額同比變動、佔總資產比重同比增減。\n\n'
+            '- 存貨：2031年18、9%；2030年12、6%；金額同比變動50%；佔總資產比重同比增減3%。')
+    graph, required = compile_content_document(tmp_path, text)
+    assert graph['semantic_complete'], graph['unresolved']
+    assert len(required['business']) == 6
+    assert [f['value'] for f in required['business']] == ['18', '9', '12', '6', '50', '3']
+    assert not graph['source_form_requirements']
+
+
+def test_printed_clause_routing_preserves_existing_financial_reason_fields(tmp_path):
+    text = ('# 财务\n\n其他收益：2031年末1,357；2030年末-268；增减606.34%；'
+            '报告期内变动的主要原因：市场需求变化，相关业务收入上升。')
+    graph, required = compile_content_document(tmp_path, text)
+    facts = required['business']
+    # The established series reader keeps terminal punctuation in T, outside
+    # the typed cause value. Both annual positions and the reason must survive.
+    assert [(f['attribute'], f['value']) for f in facts] == [
+        ('其他收益', '1,357'), ('其他收益', '-268'), ('增减', '606.34'),
+        ('报告期内变动的主要原因', '市场需求变化，相关业务收入上升')]
+    assert ''.join(n['text'] for n in graph['document_ast']['children'][1]['content']['children']).endswith('上升。')
+    assert not any(i['reason'] == 'series_attribute_unavailable' for i in graph['unresolved'])
+
+
+@pytest.mark.parametrize('marker', ['²', '²⁰'])
+def test_terminal_footnote_markers_do_not_join_independent_paragraphs(tmp_path, marker):
+    text = '# 风险\n\nThe board approved the proposal.' + marker + '\n\nThe committee considered another matter.'
+    graph, required = compile_content_document(tmp_path, text)
+    assert not any(n['source'].get('joined_fragments') for n in graph['nodes'])
+    assert not any(n.get('source_fragments') for n in required['text'])
+    assert ''.join(n['text'] for n in graph['document_ast']['children'][1]['content']['children']).endswith(marker)

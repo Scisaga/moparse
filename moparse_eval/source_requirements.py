@@ -59,7 +59,24 @@ def plan_field_body(text: str, source: dict[str, Any]) -> dict[str, Any] | None:
     # A multi-field record must be split by the balanced sequence planner.
     if re.search(r"[;；]\s*[^:：=;；]+[:：=]", body):
         return None
-    if not (_BODY_ROLE.fullmatch(label) or read_propositions(body, source)["matched"]
+    # Printed CJK sentence clauses are not an atomic field value merely
+    # because their verbs are outside the bounded semantic reader. Keep the
+    # label and the entire body for content preservation and retain analysis
+    # limits; this route does not certify a new subject/predicate reading.
+    printed_clauses = (bool(re.search(r'[\u3400-\u9fff]', body))
+                       and bool(re.search(r'[,，;；]', body))
+                       and bool(re.search(r'[。！？][」』”）)]*$', body)))
+    if printed_clauses:
+        from .compact_requirements import read_compact_schema
+        from .field_sequence_requirements import read_labelled_record
+        from .series_requirements import _CAUSE
+
+        # An explicit column inventory or a closed scalar record keeps its
+        # existing reader. Its separators do not make it narrative prose.
+        printed_clauses = not (read_compact_schema(text, source)['matched']
+                               or read_labelled_record(text, source)['matched']
+                               or _CAUSE.fullmatch(label))
+    if not (_BODY_ROLE.fullmatch(label) or printed_clauses or read_propositions(body, source)["matched"]
             or read_narrative(body, source)["logic"] or read_cjk_narrative(body, source)["logic"] or reference_body):
         return None
     offset = source.get("text_span", [0])[0]
@@ -111,6 +128,11 @@ def plan_mixed_source(text: str, source: dict[str, Any]) -> dict[str, Any] | Non
     # treating ordinary enumerations in a single field as independent facts.
     if not fields or not fields[0]:
         return None
+    from .series_requirements import _CAUSE
+
+    if (re.match(r'(?:19|20)\d{2}年', fields[0][2].strip())
+            and any(field is not None and _CAUSE.fullmatch(field[1].strip()) for field in fields[1:])):
+        return None  # One annual financial series retains its trailing reason.
     if sum(match is not None for match in fields) < 2:
         from .proposition_requirements import read_propositions
 

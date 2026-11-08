@@ -1328,7 +1328,13 @@ def _finish(graph: _Graph) -> dict[str, Any]:
                 and merged[-1].get("continuity_segment") == item.get("continuity_segment")
                 and merged[-1].get("scope") == item.get("scope")
                 and not merged[-1]["source"].get("cell") and not item["source"].get("cell")
-                and not re.search(r'''[。.!?！？;；:：]["”’」』）)\]]*$''', merged[-1]["text"])
+                # A separate title-case nominal and a following CJK name do
+                # not prove sentence continuation. In particular the last
+                # capitalized noun cannot acquire a new verbal object just
+                # by concatenating independent cover metadata blocks.
+                and not (re.fullmatch(r'(?:[A-Z][A-Za-z]+\s+)+[A-Z][A-Za-z]+', merged[-1]['text'].strip())
+                         and re.match(r'[\u3400-\u9fff]', item['text']))
+                and not re.search(r'''[。.!?！？;；:：]["”’」』）)\]]*[⁰¹²³⁴⁵⁶⁷⁸⁹]*$''', merged[-1]["text"])
                 and not NUMERIC.fullmatch(merged[-1]["text"])
                 and not NUMERIC.fullmatch(item["text"])):
             previous = merged[-1]

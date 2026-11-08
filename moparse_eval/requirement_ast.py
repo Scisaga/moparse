@@ -367,6 +367,7 @@ def compare_document_ast(required, actual, *, source_resolver=None):
         proposals.append(hits)
         rows.append({'required_index': index, 'required_id': block.get('requirement_id', f'content:{index}'),
                      'actual_index': None, 'actual_indices': [], 'actual_spans': [],
+                     'correspondence_status': 'unresolved',
                      'required': copy.deepcopy(block), 'actual': None,
                      'retrieval': {'candidates': [hit['trace'] for hit in candidates.values()], 'value_used': False,
                                    'alignment_limit': DOCUMENT_ALIGNMENT_LIMIT}})
@@ -380,6 +381,13 @@ def compare_document_ast(required, actual, *, source_resolver=None):
     for i, hit in exact_assignments.items():
         if i not in colliding:
             consumed.extend((i, span) for span in hit['spans'])
+    # Only independently anchored identities reserve capacity. A unique weak
+    # retrieval is a tentative comparison, never an exclusive absence proof.
+    # Compute every residual possibility before visiting any required row.
+    residual = []
+    for i, hits in enumerate(proposals):
+        residual.append([hit for hit in hits if not any(owner != i and _span_overlap(a, b)
+            for owner, b in consumed for a in hit['spans'])])
     for i, (row, hits) in enumerate(zip(rows, proposals, strict=True)):
         available = []
         for hit in hits:
@@ -388,6 +396,10 @@ def compare_document_ast(required, actual, *, source_resolver=None):
             hit['trace']['accepted_for_comparison'] = not occupied
             if not occupied:
                 available.append(hit)
+        competitors = sorted({rows[j]['required_id'] for j, others in enumerate(residual)
+            if j != i and any(_span_overlap(a, b) for hit in available for other in others
+                              for a in hit['spans'] for b in other['spans'])})
+        row['retrieval']['competing_requirement_ids'] = competitors
         limit = not any(hit['exact_shape'] for hit in hits) and any(len(parts) == DOCUMENT_ALIGNMENT_LIMIT and
                     _document_role(parts[0][1]) == 'body' and parts[0][1]['scope'] == row['required']['scope']
                     and parts[-1][0] + 1 < len(actual['children'])
@@ -396,21 +408,29 @@ def compare_document_ast(required, actual, *, source_resolver=None):
                     and actual['children'][parts[-1][0] + 1]['parents'] == row['required']['parents']
                     for parts in windows)
         row['retrieval']['limit_triggered'] = limit
-        selected = available[0] if len(available) == 1 and i not in colliding else None
+        selected = (available[0] if len(available) == 1 and i not in colliding
+                    and (i in exact_assignments or not competitors) else None)
         if selected is not None:
             row.update(actual_index=selected['spans'][0]['actual_index'],
                        actual_indices=[span['actual_index'] for span in selected['spans']],
                        actual_spans=copy.deepcopy(selected['spans']), actual=copy.deepcopy(selected['actual']))
             row['retrieval']['selection_basis'] = 'unique_value_independent_shape' if selected['exact_shape'] else 'unique_scoped_expression'
+            row['correspondence_status'] = 'confirmed' if selected['exact_shape'] else 'tentative'
             row['decision'] = compare_content_ast(row['required']['content'], selected['actual']['content'],
                 {'source_resolver': source_resolver} if source_resolver else {})
-            if i not in exact_assignments:
-                consumed.extend((i, span) for span in selected['spans'])
         else:
             compatible = [part for part in actual['children'] if part['scope'] == row['required']['scope']
                           and part['parents'] == row['required']['parents']
                           and _document_role(part) == _document_role(row['required']) and part.get('content') is not None]
             wrong_scope = [hit for hit in row['retrieval']['candidates'] if hit['exact_shape'] and hit['conflicts']]
+            # An overlap can invalidate a proposed cut without exhausting the
+            # scope. Check every actual leaf, not just the retrieved window.
+            fully_covered = bool(compatible) and all(any(owner != i and _span_overlap(
+                {'source': leaf['source'], 'text_span': leaf['source']['text_span']}, span)
+                and span['text_span'][0] <= leaf['source']['text_span'][0]
+                and leaf['source']['text_span'][1] <= span['text_span'][1]
+                for owner, span in consumed)
+                for part in compatible for leaf in _content_leaves(part['content']))
             if available or i in colliding:
                 status, reason = 'unresolved', 'document_block_identity_ambiguous'
             elif limit:
@@ -421,14 +441,18 @@ def compare_document_ast(required, actual, *, source_resolver=None):
                 status, reason = 'unresolved', 'document_reader_coverage_incomplete'
             elif not compatible:
                 status, reason = 'missing', 'document_required_scope_empty'
-            elif hits and not available:
+            elif hits and not available and fully_covered:
                 status, reason = 'missing', 'document_scope_exhausted_by_independent_requirements'
             else:
                 status, reason = 'unresolved', 'document_correspondence_unresolved'
             row['decision'] = _result(status, '$', reason=reason,
                 proof={'scope_checked': True, 'compatible_blocks': len(compatible),
                        'exclusive_owners': sorted({owner for owner, _ in consumed if owner != i}),
+                       'complete_scope_exclusively_covered': fully_covered,
+                       'competing_requirement_ids': competitors,
                        'limit_triggered': limit, 'retrieval_threshold_is_absence_proof': False})
+            if status == 'missing':
+                row['correspondence_status'] = 'missing'
     remaining = []
     for index, block in enumerate(actual['children']):
         if block.get('content') is None:

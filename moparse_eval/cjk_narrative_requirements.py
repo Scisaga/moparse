@@ -293,6 +293,9 @@ class _CJKReader(_Reader):
                 if completed:
                     b = completed.start()
             modal = _MODAL_SUFFIX.search(self.text[a:b])
+            if modal and modal['modal'] == '能' and self.text[a:b].endswith(
+                    ('储能', '儲能', '智能', '性能', '功能', '效能', '本能', '潜能', '潛能')):
+                modal = None  # A complete nominal ending is not an ability.
             if modal:
                 if modal['modal'] in {'将', '將'} and not modal['negative']:
                     # Restore the existing explicit 将不 polarity contract;

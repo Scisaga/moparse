@@ -33,15 +33,36 @@ def _grammar_limit(issue):
     return reason.startswith(('cjk_narrative_', 'narrative_', 'quoted_nominal_', 'entity_assignment_',
                               'business_preamble_', 'business_clause_', 'prose_clause_')) or reason in {
         'source_obligation_pending', 'source_has_no_supported_semantic_disposition',
-        'cjk_measurement_sequence_incomplete', 'proposition_syntax_unsupported',
+        'cjk_measurement_sequence_incomplete', 'proposition_syntax_unsupported', 'proposition_object_unresolved',
         'cjk_circumstance_nominal_operation_unresolved'}
+
+
+def _original_content_sources(source):
+    """Project a joined analysis cut back onto each actual source fragment."""
+    fragments = source.get('joined_fragments')
+    if not fragments:
+        return [source]
+    base = fragments[0]['source'].get('text_span', [0])[0]
+    a, b = source.get('text_span', [base + fragments[0]['joined_span'][0], base + fragments[-1]['joined_span'][1]])
+    a, b = a - base, b - base
+    result = []
+    for fragment in fragments:
+        start, end = fragment['joined_span']
+        if max(start, a) < min(end, b):
+            origin = copy.deepcopy(fragment['source'])
+            offset = origin.get('text_span', [0])[0]
+            origin['text_span'] = [offset + max(start, a) - start, offset + min(end, b) - start]
+            result.append(origin)
+    return result
 
 
 def _fallback_blocks(ast, issues):
     return [index for index, block in enumerate(ast['children'])
             if block['role'] in {'text', 'item', 'heading'}
-            and any(_same_record(block['source'], issue.get('source', {})) and _grammar_limit(issue) for issue in issues)
-            and not any(_same_record(block['source'], issue.get('source', {})) and not _grammar_limit(issue) for issue in issues)]
+            and any(_same_record(block['source'], origin) and _grammar_limit(issue)
+                    for issue in issues for origin in _original_content_sources(issue.get('source', {})))
+            and not any(_same_record(block['source'], origin) and not _grammar_limit(issue)
+                        for issue in issues for origin in _original_content_sources(issue.get('source', {})))]
 
 
 def _contains(source, origin):
@@ -136,6 +157,9 @@ def comparison_requirement_coverage(graph):
     obligations = {n['id']: n for n in [*inventory['obligations'], *inventory['authorized_raw_inventory']['obligations']]}
 
     def owners(source):
+        if source.get('joined_fragments'):
+            parts = [owners(origin) for origin in _original_content_sources(source)]
+            return sorted({ident for part in parts for ident in part}) if parts and all(parts) else []
         if source.get('text_span') is None:
             original = next((b['content']['source'] for b in ast['children']
                              if b.get('content') and _same_record(b['source'], source)), None)
@@ -362,7 +386,8 @@ def grade_document_content(requirements, evidence):
     base_required = _without_grammar_analysis(requirements, wanted_ast['children'])
     # Only owned raw cuts replace partial language analysis. An unrelated typed
     # fact or local unknown in the same native block must survive unchanged.
-    cuts = [span for row in decision['proof']['rows'] for span in row['actual_spans']]
+    cuts = [span for row in decision['proof']['rows'] if row['correspondence_status'] == 'confirmed'
+            for span in row['actual_spans']]
     cuts.extend(span for row in decision['proof']['rows'] for hit in row['retrieval']['candidates']
                 if hit['exact_shape'] and hit['conflicts'] for span in hit['candidate_spans'])
     base_actual = _without_grammar_analysis(evidence, [{'source': span['source']} for span in cuts])
@@ -370,7 +395,7 @@ def grade_document_content(requirements, evidence):
     score = copy.deepcopy(base)
     for index, row in enumerate(decision['proof']['rows']):
         status = row['decision']['status']
-        scope_correct = row['actual_index'] is not None
+        scope_correct = row['correspondence_status'] == 'confirmed'
         for layer, correct in (('B', status == 'equivalent'), ('L', scope_correct)):
             if layer == 'B' and row['required']['role'] == 'heading':
                 continue  # Document labels own T/L; they assert no new fact.
@@ -388,7 +413,8 @@ def grade_document_content(requirements, evidence):
                                       'source': row['required']['source'], 'layers': ['B'] if scope_correct else ['B', 'L']})
     # Reading order is a relation independently of value/content correctness.
     for index, (first, second) in enumerate(zip(decision['proof']['rows'], decision['proof']['rows'][1:], strict=False)):
-        unknown = any(row['decision']['status'] == 'unresolved' and not row['actual_spans'] for row in (first, second))
+        unknown = any(row['decision']['status'] == 'unresolved' and row['correspondence_status'] != 'confirmed'
+                      for row in (first, second))
         correct = bool(first['actual_spans'] and second['actual_spans']) and (
             (first['actual_spans'][-1]['actual_index'], first['actual_spans'][-1]['text_span'][1]) <=
             (second['actual_spans'][0]['actual_index'], second['actual_spans'][0]['text_span'][0]))
