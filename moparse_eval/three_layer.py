@@ -1200,6 +1200,8 @@ class _Graph:
 
     def table(self, cells: list[dict[str, Any]], source: dict[str, Any]) -> None:
         self.continuity_segment += 1
+        self.data['syntax'].append({'kind': 'table', 'text': '', 'source': copy.deepcopy(source),
+                                    'scope': list(self.headings), 'parents': []})
         result = read_matrix(cells, source=source, context=tuple(self.qualifier_evidence.values()))
         self.ingest(result)
         projection = project_table_text(cells, result, source)
@@ -1857,7 +1859,10 @@ def _text_layer(reference: list[dict[str, Any]], candidate: list[dict[str, Any]]
 
 def grade_layers(requirements: dict[str, Any], evidence: dict[str, Any]) -> dict[str, Any]:
     with evidence_session():
-        if requirements.get('comparison_contract') == 'document_ast' and requirements.get('source_form_units'):
+        if requirements.get('comparison_contract') == 'document_ast':
+            if requirements.get('comparison_contract_version') != 'document_ast/1':
+                raise ValueError('unknown document comparison contract version')
+        if requirements.get('comparison_contract') == 'document_ast' and requirements.get('source_form_requirements'):
             from .document_ast_comparison import grade_document_content
 
             return grade_document_content(requirements, evidence)

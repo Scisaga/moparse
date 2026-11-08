@@ -11,7 +11,11 @@ from __future__ import annotations
 
 import copy
 
-from .requirement_ast import build_document_ast, compare_document_ast, validate_content_ast
+from .requirement_ast import (
+    build_document_ast,
+    compare_document_ast,
+    validate_content_ast,
+)
 
 
 def _location(source):
@@ -40,6 +44,50 @@ def _fallback_blocks(ast, issues):
             and not any(_same_record(block['source'], issue.get('source', {})) and not _grammar_limit(issue) for issue in issues)]
 
 
+def _contains(source, origin):
+    if not _same_record(source, origin):
+        return False
+    return (source.get('text_span') is None or origin.get('text_span') is not None
+            and source['text_span'][0] <= origin['text_span'][0] <= origin['text_span'][1] <= source['text_span'][1])
+
+
+def _fixed_content_requirements(ast, indices, facts, issues):
+    """Subtract independently complete quantity sequences before any retrieval.
+
+    Other partial readings remain replaced by one complete content requirement.
+    A complete quantity in the same raw line keeps its own comparator and vote.
+    """
+    result = []
+    for index in indices:
+        block = ast['children'][index]
+        whole = block['content']['source']['text_span']
+        typed = [fact.get('logic', {}).get('sequence_source') for fact in facts
+                 if fact.get('logic', {}).get('kind') == 'quantity_assertion']
+        cuts = sorted({tuple(source['text_span']) for source in typed if source
+                       and _contains(block['content']['source'], source)
+                       and not any(_same_record(source, issue.get('source', {}))
+                           and issue.get('source', {}).get('text_span') is not None
+                           and max(source['text_span'][0], issue['source']['text_span'][0])
+                               < min(source['text_span'][1], issue['source']['text_span'][1]) for issue in issues)})
+        spans, cursor = [], whole[0]
+        for start, end in cuts:
+            if cursor < start:
+                spans.append([cursor, start])
+            cursor = max(cursor, end)
+        if cursor < whole[1]:
+            spans.append([cursor, whole[1]])
+        tokens = block['content']['children']
+        for start, end in spans:
+            leaves = [copy.deepcopy(n) for n in tokens if start <= n['source']['text_span'][0] < end]
+            if not leaves:
+                continue
+            source = {**copy.deepcopy(block['content']['source']), 'text_span': [start, end]}
+            result.append({**copy.deepcopy(block), 'source': source,
+                'requirement_id': f'content:{index}:{start}:{end}', 'block_index': index,
+                'content': {'kind': 'content_sequence', 'source': source, 'children': leaves}})
+    return result
+
+
 def attach_document_ast(graph, expected):
     units = []
     for target in expected['targets']:
@@ -57,6 +105,9 @@ def attach_document_ast(graph, expected):
     graph['comparison_contract'] = 'document_ast'
     graph['document_ast'] = build_document_ast(units)
     graph['source_form_units'] = _fallback_blocks(graph['document_ast'], graph['unresolved'])
+    facts = [n for n in graph.get('nodes', graph.get('business', [])) if n.get('kind') != 'text']
+    graph['source_form_requirements'] = _fixed_content_requirements(
+        graph['document_ast'], graph['source_form_units'], facts, graph['unresolved'])
     # Keep every semantic-analysis limitation. A preservation proof is not a
     # forged claim that the Chinese grammar reader understood those clauses.
     graph['content_comparison_ready'] = all(any(
@@ -64,17 +115,95 @@ def attach_document_ast(graph, expected):
         for index in graph['source_form_units']) for issue in graph['unresolved'])
 
 
+
+def comparison_requirement_coverage(graph):
+    """A compiled responsibility map, explicitly separate from acceptance.
+
+    Reuse the independent inventory and its semantic audit. A retained analysis
+    limit needs exact source ownership and every linked obligation accounted
+    for; its reason name alone never waives a source/structure/binding gap.
+    """
+    from .requirement_graph import evaluation_projection, is_deferred_input_scope
+
+    blocks = graph['source_form_requirements']
+    ast = graph['document_ast']
+    projected = evaluation_projection(graph, document_contract=False)
+    retained = _without_grammar_analysis(projected, blocks)
+    banks = {'T': graph['projections']['T'], 'L': [n['id'] for n in retained['relations']],
+             'B': [n['id'] for n in retained['business']]}
+    ids = set().union(*map(set, banks.values()))
+    inventory = graph['source_obligation_inventory']
+    obligations = {n['id']: n for n in [*inventory['obligations'], *inventory['authorized_raw_inventory']['obligations']]}
+
+    def owners(source):
+        if source.get('text_span') is None:
+            original = next((b['content']['source'] for b in ast['children']
+                             if b.get('content') and _same_record(b['source'], source)), None)
+            source = original or source
+        return [b['requirement_id'] for b in blocks if _contains(b['content']['source'], source)]
+
+    responsibility = []
+    for row in graph['source_obligation_coverage']['dispositions']:
+        obligation = obligations[row['obligation_id']]
+        content = owners(obligation.get('source', {})) if 'T' not in row.get('layers', []) else []
+        semantic = sorted({ref for proof in row.get('evidence', [])
+                           for ref in [proof.get('requirement'), *proof.get('relations', [])] if ref in ids})
+        if row['status'] != 'pending':
+            status = 'content' if content and not semantic else 'semantic_or_structure'
+        elif content:
+            status = 'content'
+        elif any(is_deferred_input_scope(graph['sample_id'], issue)
+                 and obligation['id'] in issue.get('source_obligation_ids', []) for issue in graph['unresolved']):
+            status = 'deferred_input_scope'
+        else:
+            status = 'blocking'
+        responsibility.append({'obligation_id': obligation['id'], 'status': status,
+            'requirement_ids': content if status == 'content' else semantic,
+            'contract': 'document_content_preservation/1' if status == 'content' else 'typed_semantics_and_structure/1',
+            'source': copy.deepcopy(obligation.get('source', {})),
+            'analysis_disposition': row['status']})
+    by_obligation = {row['obligation_id']: row for row in responsibility}
+    limitations = []
+    for issue in graph['unresolved']:
+        linked = issue.get('source_obligation_ids', [])
+        content = owners(issue.get('source', {}))
+        if is_deferred_input_scope(graph['sample_id'], issue):
+            status = 'deferred_input_scope'
+        elif (_grammar_limit(issue) and content and 'T' not in issue.get('layers', [])
+              and all(by_obligation[n]['status'] != 'blocking' for n in linked)):
+            status = 'language_analysis_only'
+        else:
+            status = 'blocking'
+        limitations.append({'issue_id': issue['id'], 'status': status, 'obligation_ids': copy.deepcopy(linked),
+            'requirement_ids': content, 'contract': 'document_content_preservation/1' if content else None,
+            'source': copy.deepcopy(issue.get('source', {})),
+            'basis': 'complete_ordered_content_owns_this_exact_source_and_linked_obligations' if status == 'language_analysis_only' else status})
+    return {'source_complete': inventory['source_complete'], 'structure_complete': True,
+        'responsibility_complete': not any(r['status'] == 'blocking' for r in [*responsibility, *limitations]),
+        'obligations': responsibility, 'analysis_limitations': limitations,
+        'retained_semantic_requirements': banks,
+        'content_requirement_ids': [b['requirement_id'] for b in blocks],
+        'required_capabilities': sorted({'source_span_capacity', 'bidirectional_partition', 'bounded_many_to_many',
+            'order_without_value_selection', 'four_state_boundary', 'mixed_typed_content_ownership',
+            'protected_structure_barriers', *retained.get('required_matcher_features', [])}),
+        'independent_acceptance': 'not_established_by_compilation'}
+
 def validate_document_requirements(graph):
     from .requirement_graph import _semantic_literal
 
     selection = graph['source_obligation_inventory']['selection']
-    expected = {'unresolved': graph['unresolved']}
+    expected = {'unresolved': graph['unresolved'], 'nodes': graph['nodes']}
     attach_document_ast(expected, selection)
-    for key in ('document_ast', 'source_form_units', 'content_comparison_ready'):
+    for key in ('document_ast', 'source_form_units', 'source_form_requirements', 'content_comparison_ready'):
         if graph.get(key) != expected[key]:
             raise ValueError('document AST differs from its complete authorized selection: ' + key)
     for block in graph['document_ast']['children']:
+        if block['content'] is not None:
+            validate_content_ast(block['content'], lambda source: _semantic_literal(graph['sources'], source))
+    for block in graph['source_form_requirements']:
         validate_content_ast(block['content'], lambda source: _semantic_literal(graph['sources'], source))
+    if graph.get('comparison_coverage') != comparison_requirement_coverage(graph):
+        raise ValueError('comparison responsibility coverage differs from its source obligations')
 
 
 def _resolve(graph, source):
@@ -123,37 +252,88 @@ def _candidate_ast(evidence):
     units.extend({'kind': 'table_cell', 'text': item.get('text', ''), 'source': item['source'],
                   'scope': item.get('scope', []), 'parents': []}
                  for item in evidence.get('text_projection', {}).get('source_cells', []))
-    return build_document_ast(units)
+    ast = build_document_ast(units)
+    ast['reading_complete'] = (evidence.get('status') not in {'failed', 'cancelled', 'timeout'}
+        and not any(issue.get('reason') in {'candidate_reader_failure', 'native_region_read_failure'}
+                    or issue.get('category') == 'engineering_failure'
+                    for issue in [*evidence.get('blockers', []), *evidence.get('candidate_issues', [])]))
+    return ast
 
 
 def _without_grammar_analysis(graph, blocks):
     result = copy.deepcopy(graph)
-    sources = [block['source'] for block in blocks]
+    sources = [block['content']['source'] if block.get('content', {}).get('kind') == 'content_sequence'
+               else block['source'] for block in blocks]
 
     def covered(item):
-        return any(_same_record(source, item.get('source', {})) for source in sources)
+        origin = item.get('source', {})
+        def owned(origin):
+            if origin.get('text_span') is None:
+                literal = _resolve(graph, origin)
+                if isinstance(literal, str):
+                    origin = {**origin, 'text_span': [0, len(literal)]}
+            return any(_contains(source, origin) for source in sources)
+        fragments = origin.get('joined_fragments')
+        if fragments:
+            return all(owned(fragment.get('source', {})) for fragment in fragments)
+        return owned(origin)
 
     removed_facts = {fact['id'] for fact in result['business'] if covered(fact)}
     result['business'] = [fact for fact in result['business'] if fact['id'] not in removed_facts]
     if 'requirement_ledger' in result:
         result['requirement_ledger'] = copy.deepcopy(result['business'])
     for name in ('logical_statements', 'semantic_operands', 'semantic_operand_relations', 'explicit_references',
-                 'reference_roles', 'reference_dispositions', 'syntax'):
+                 'reference_roles', 'reference_dispositions'):
         result[name] = [item for item in result.get(name, []) if not covered(item)]
+    syntax = []
+    for item in result.get('syntax', []):
+        if covered(item):
+            continue
+        text, origin = item.get('text', ''), item['source']
+        start = origin.get('text_span', [0])[0]
+        end = start + len(text)
+        excluded = sorted((max(start, source['text_span'][0]), min(end, source['text_span'][1]))
+                          for source in sources if _same_record(source, origin) and source.get('text_span')
+                          and max(start, source['text_span'][0]) < min(end, source['text_span'][1]))
+        if not excluded:
+            syntax.append(item)
+            continue
+        cursor, remaining = start, []
+        for a, b in excluded:
+            if cursor < a:
+                remaining.append((cursor, a))
+            cursor = max(cursor, b)
+        if cursor < end:
+            remaining.append((cursor, end))
+        for a, b in remaining:
+            raw = text[a - start:b - start]
+            if not raw.strip():
+                continue
+            own = {**copy.deepcopy(item), 'text': raw, 'source': {**origin, 'text_span': [a, b]}}
+            evidence = own.get('syntax_evidence', {})
+            if 'item_source' in evidence:
+                evidence.update(item_source=copy.deepcopy(own['source']), item_text=raw)
+            syntax.append(own)
+    result['syntax'] = syntax
     result['relations'] = [edge for edge in result['relations'] if edge.get('fact_id') not in removed_facts
                            and not (covered(edge) and edge['type'] not in {
                                'prose_heading_membership', 'prose_reading_order', 'heading_membership',
                                'heading_order', 'list_membership'})]
     for name in ('blockers', 'pending_requirements'):
         result[name] = [issue for issue in result.get(name, []) if not (covered(issue) and _grammar_limit(issue))]
-    result['candidate_issues'] = [issue for issue in result.get('candidate_issues', []) if not covered(issue)]
+    result['candidate_issues'] = [issue for issue in result.get('candidate_issues', [])
+                                  if not (covered(issue) and _grammar_limit(issue))]
     # Runtime feature discovery still verifies every retained typed tree.
     # Features belonging solely to replaced partial trees are not requirements
     # of a source-form proof. No source or target is removed from that proof.
+    from .represented_feature_comparison import REPRESENTED_FEATURES, represented_feature_checks
     from .requirement_ast import AST_FEATURE_COMPARATORS, _feature_present
 
+    probe = {**result, 'required_matcher_features': []}
+    represented = set(represented_feature_checks(probe, lambda source: _resolve(result, source))['features'])
     result['required_matcher_features'] = [feature for feature in result.get('required_matcher_features', [])
-        if feature not in AST_FEATURE_COMPARATORS or _feature_present(feature, result.get('logical_statements', []))]
+        if (feature not in AST_FEATURE_COMPARATORS or _feature_present(feature, result.get('logical_statements', [])))
+        and (feature not in REPRESENTED_FEATURES or feature in represented)]
     result.pop('comparison_contract', None)
     return result
 
@@ -164,23 +344,28 @@ def grade_document_content(requirements, evidence):
 
     wanted = requirements['source_form_units']
     expected_ast = requirements['document_ast']
-    rebuilt = {'unresolved': requirements.get('blockers', [])}
+    rebuilt = {'unresolved': requirements.get('blockers', []), 'business': requirements['business']}
     attach_document_ast(rebuilt, requirements['document_selection'])
-    if expected_ast != rebuilt['document_ast'] or wanted != rebuilt['source_form_units']:
+    if (expected_ast != rebuilt['document_ast'] or wanted != rebuilt['source_form_units']
+            or requirements.get('source_form_requirements') != rebuilt['source_form_requirements']):
         raise ValueError('document requirements omit or rebind the authorized source selection')
     candidate_ast = _candidate_ast(evidence)
     if 'document_ast' in evidence and evidence['document_ast'] != candidate_ast:
         raise ValueError('candidate document AST differs from actual native syntax')
     for graph, ast in ((requirements, expected_ast), (evidence, candidate_ast)):
         for block in ast['children']:
-            validate_content_ast(block['content'], lambda source, graph=graph: _resolve(graph, source))
-    actual_fallback = _fallback_blocks(candidate_ast, evidence.get('blockers', []))
-    wanted_ast = {'kind': 'document', 'children': [expected_ast['children'][index] for index in wanted]}
+            if block['content'] is not None:
+                validate_content_ast(block['content'], lambda source, graph=graph: _resolve(graph, source))
+    wanted_ast = {'kind': 'document', 'children': requirements['source_form_requirements']}
     decision = compare_document_ast(wanted_ast, candidate_ast,
         source_resolver=lambda side, source: _resolve(requirements if side == 'required' else evidence, source))
     base_required = _without_grammar_analysis(requirements, wanted_ast['children'])
-    consumed = set(actual_fallback) | {i for row in decision['proof']['rows'] for i in row['actual_indices']}
-    base_actual = _without_grammar_analysis(evidence, [candidate_ast['children'][i] for i in sorted(consumed)])
+    # Only owned raw cuts replace partial language analysis. An unrelated typed
+    # fact or local unknown in the same native block must survive unchanged.
+    cuts = [span for row in decision['proof']['rows'] for span in row['actual_spans']]
+    cuts.extend(span for row in decision['proof']['rows'] for hit in row['retrieval']['candidates']
+                if hit['exact_shape'] and hit['conflicts'] for span in hit['candidate_spans'])
+    base_actual = _without_grammar_analysis(evidence, [{'source': span['source']} for span in cuts])
     base = _grade_layers(base_required, base_actual)
     score = copy.deepcopy(base)
     for index, row in enumerate(decision['proof']['rows']):
@@ -191,22 +376,29 @@ def grade_document_content(requirements, evidence):
                 continue  # Document labels own T/L; they assert no new fact.
             score['outcomes'].append({'id': f'{layer}:content:{index}', 'layer': layer,
                 'role': 'source_form_assertion' if layer == 'B' else 'document_scope',
-                'expected': row['required'], 'actual': row['actual'], 'outcome': 'correct' if correct else 'incorrect',
+                'expected': row['required'], 'actual': row['actual'],
+                'outcome': 'unresolved' if status == 'unresolved' and (layer == 'B' or not scope_correct)
+                           else 'correct' if correct else 'incorrect',
                 'reason': row['decision']['rule_id'] if layer == 'B' else 'document_scope_and_role',
                 **({'software_failure': True, 'semantic_comparison_status': 'unresolved'}
-                   if layer == 'B' and status == 'unresolved' else {}),
+                   if status == 'unresolved' and (layer == 'B' or not scope_correct) else {}),
                 'document_ast_comparison': index})
         if status == 'unresolved':
             score['blockers'].append({'side': 'comparison', 'reason': row['decision']['rule_id'],
-                                      'source': row['required']['source'], 'layers': ['B']})
+                                      'source': row['required']['source'], 'layers': ['B'] if scope_correct else ['B', 'L']})
     # Reading order is a relation independently of value/content correctness.
     for index, (first, second) in enumerate(zip(decision['proof']['rows'], decision['proof']['rows'][1:], strict=False)):
-        correct = first['actual_index'] is not None and second['actual_index'] is not None and first['actual_index'] < second['actual_index']
+        unknown = any(row['decision']['status'] == 'unresolved' and not row['actual_spans'] for row in (first, second))
+        correct = bool(first['actual_spans'] and second['actual_spans']) and (
+            (first['actual_spans'][-1]['actual_index'], first['actual_spans'][-1]['text_span'][1]) <=
+            (second['actual_spans'][0]['actual_index'], second['actual_spans'][0]['text_span'][0]))
         score['outcomes'].append({'id': f'L:content-order:{index}', 'layer': 'L',
             'role': 'reading_order',
             'expected': [first['required']['source'], second['required']['source']],
-            'actual': [first['actual_index'], second['actual_index']],
-            'outcome': 'correct' if correct else 'incorrect', 'reason': 'document_content_reading_order'})
+            'actual': [first['actual_spans'], second['actual_spans']],
+            'outcome': 'unresolved' if unknown else 'correct' if correct else 'incorrect',
+            **({'software_failure': True, 'semantic_comparison_status': 'unresolved'} if unknown else {}),
+            'reason': 'document_content_reading_order'})
     for layer in ('L', 'B'):
         rows = [row for row in score['outcomes'] if row['layer'] == layer]
         complete = not any(layer in blocker.get('layers', ['L', 'B']) for blocker in score['blockers'])

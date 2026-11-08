@@ -28,7 +28,7 @@ def test_synchronized_source_and_derived_mutation_is_rejected_against_authorized
     target.update(text=forged_text, raw_text=forged_text, raw=forged_text)
     [raw_segment] = forged["authorized_raw_segments"]
     raw_segment["raw"] = forged_text
-    graph = compile_requirement_graph(forged)
+    graph = compile_requirement_graph(forged, comparison_contract='document_ast')
     assert graph["semantic_complete"] is True
     index_path = run / "requirements/current/index.json"
     index = read_json(index_path)
@@ -36,6 +36,8 @@ def test_synchronized_source_and_derived_mutation_is_rejected_against_authorized
     view = index_path.parent / row["json"]
     write_requirement_graph(graph, view, view.with_suffix(".xml"))
     row["generated_view_sha256"] = artifact(view)["sha256"]
+    from moparse_eval.requirement_gate import _digest
+    row['comparison_coverage_sha256'] = _digest(graph['comparison_coverage'])
     row["layers"] = {layer: len(graph["projections"][layer]) for layer in ("T", "L", "B")}
     write_json(index_path, index)
     frozen = read_json(freeze)

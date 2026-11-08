@@ -3,121 +3,60 @@
   "quality_scores_withheld": true,
   "expected_comparison_complete": false,
   "candidate_comparison_started": false,
-  "software_id": "fcb47409e27c98c6849187f04771d254e3e490e22e2946514835e26f6adc2b03",
-  "git_head": "e9ec01f411341b0d06f2a60cc220cc306c1d3549",
+  "software_id": "d37c6d84db70f85b2811c11fe0c9146787e676865f5905514f4c7abeca550415",
+  "git_head": "180e91889ec19179878a4fe969cf430e2a0666a3",
   "configured_analysis_workers": 16,
   "source_index": "benchmark/runs/lite/requirements/current/index.json",
-  "source_index_sha256": "3619d280789f15e0328f5ec99a358a77e90e538d5cc9e6d1659b9db06c895886",
+  "source_index_sha256": "2a4d564c787c2315608c7619e86a88308b1642a06f12ce7170ea5a7e4161e0f5",
   "source_compilation": {
     "command": [
-      "/opt/moparse/.venv/bin/python",
+      ".venv/bin/python",
       "-m",
       "moparse_eval.requirement_graph",
       "--baseline",
       "/opt/moparse/benchmark/runs/lite",
       "--output",
-      "/opt/moparse/benchmark/runs/lite/requirements/.compiling-document-ast",
+      "/opt/moparse/benchmark/runs/lite/requirements/.compiling-document-correspondence",
       "--workers",
       "16"
     ],
     "exit_code": 2,
-    "software_id": "fcb47409e27c98c6849187f04771d254e3e490e22e2946514835e26f6adc2b03",
+    "software_id": "d37c6d84db70f85b2811c11fe0c9146787e676865f5905514f4c7abeca550415",
     "software_unchanged": true,
-    "software_execution_seconds": 121.09999279119074,
+    "software_execution_seconds": 139.12164598610252,
     "analysis_workers": 16,
+    "state": "structure_blocked",
+    "records": 173,
+    "source_integrity_failures": 0,
+    "comparison_contract_version": "document_ast/1",
     "candidate_read": false,
     "pdf_or_image_read": false,
     "canonical_expected_changed": false,
-    "state": "structure_blocked",
-    "records": 173,
-    "declared_records": 173,
-    "views_written": 173,
-    "source_integrity_failures": 0,
-    "source_obligation_inventory_complete": true,
-    "semantic_complete": false,
-    "purpose": "source_only_not_quality_grades",
+    "index_sha256": "2a4d564c787c2315608c7619e86a88308b1642a06f12ce7170ea5a7e4161e0f5",
     "index": "benchmark/runs/lite/requirements/current/index.json",
-    "index_sha256": "3619d280789f15e0328f5ec99a358a77e90e538d5cc9e6d1659b9db06c895886",
     "all_views_same_software_id": true,
     "output_replacement": "Validated same-source staging installed as sole current; superseded generated views deleted."
   },
   "software_validation": {
     "status": "passed",
-    "summary": "4280 passed in 244.69s (0:04:04)",
+    "summary": "4357 passed in 249.56s (0:04:09)",
     "software_unchanged": true,
     "tests_unchanged": true,
+    "tests_sha256": "94da6d7cbf5296bfb24b28476657a91a6dc78aa9643a3ea68f06e98244be7249",
     "path": "benchmark/runs/lite/requirements/validation/software-validation.json",
-    "sha256": "76168b6ba2494c081d81999e32c8135d1c5c5345270a87116fd234ba1cd5fecd"
+    "sha256": "15ba3e3bf6b13ad2984cfc2cc82078dabf6017b28f01e98412ce1c90418cc476"
   },
   "actual_source_diagnosis": {
     "path": "benchmark/runs/lite/requirements/validation/actual-source-diagnosis.json",
-    "sha256": "c60077c6ddc1f46414e4eca5943945c3c06e970afffe1f60e941d3a3e037911b"
+    "sha256": "249c68f1c5c6367f9c1165dc8b61a51bac0380f81d3038ec4179fa97273e46ee"
   },
   "source_preservation": {
-    "all_173_original_source_inventory_arrays_identical": true,
-    "all_173_authorized_selections_identical": true,
-    "all_five_scope_identities_unchanged": true,
-    "canonical_expected_changed": false,
-    "native_historical_or_original_costs_changed": false,
-    "generated_auxiliary_sources_arrays_identical": false,
-    "generated_auxiliary_source_view_changes": [
-      "beijing-media-director-p001-003",
-      "beijing-media-disposal-p001-008",
-      "byd-bilingual-front-p001-012",
-      "byd-outlook-finance-p037-044",
-      "catl-impairment-investment-debt-risks-p064-066",
-      "catl-ip-newbusiness-finance-risks-p058-063",
-      "catl-listing-ownership-diagrams-p178-180",
-      "catl-power-market-materials-drivers-p133-136",
-      "catl-storage-renewables-markets-p137-143",
-      "fiyta-terms-financials-p001-010",
-      "huawei-audit-p066",
-      "huawei-carrier-business-p018-022",
-      "huawei-cash-and-risk-p064-065",
-      "huawei-chairman-p008-010",
-      "huawei-cloud-business-p033-036",
-      "huawei-compliance-management-p051-053",
-      "huawei-digital-energy-p037-040",
-      "huawei-front-p002-003",
-      "huawei-research-quality-p048-050",
-      "huawei-services-connection-computing-p028-032",
-      "huawei-terminal-business-p041-046",
-      "huawei-vision-p015-016",
-      "huaweitech-5ga-p007-009",
-      "huaweitech-future-optical-p024-026",
-      "huaweitech-intelligence-address-p004-006",
-      "huaweitech-odn-p010-015",
-      "midea-front-p001-012",
-      "midea-fx-derivatives-p001-004",
-      "moutai-governance-environment-p030-039",
-      "moutai-governance-p018-029",
-      "moutai-introduction-p001-008",
-      "moutai-transactions-p040-049",
-      "pboc-banking-columns-p029-040",
-      "pboc-committees-p002-003",
-      "pboc-cover-p001",
-      "pboc-macro-columns-p011-018",
-      "pboc-policy-columns-p019-026",
-      "pboc-statistical-tables-p101-108",
-      "peoples-network-fundraising-p001-003",
-      "pingan-business-highlights-p012-013",
-      "pingan-financials-p001-004",
-      "pingan-fundraising-assurance-p003-007",
-      "sf-industry-business-review-p017-024",
-      "sf-network-infographics-p027-031",
-      "sf-supply-chain-operating-efficiency-p025-026",
-      "sinopec-finance-governance-p025-036",
-      "sinopec-operations-p013-024",
-      "spdb-credit-overview-p001-004",
-      "spdb-prospectus-issuer-terms-p006-012",
-      "spdb-prospectus-risk-tax-p013-020",
-      "spdb-summary-financials-p001-004",
-      "tangshan-accounting-policy-p001-005",
-      "tgood-acquisition-terms-p009-019",
-      "tgood-compensation-subscription-p022-028",
-      "vanke-acquisition-guarantee-p001-002",
-      "wuliangye-litigation-ruling-p001-002"
-    ]
+    "source_arrays": 173,
+    "selections": 173,
+    "authorized_raw_inventory": 173,
+    "analysis_projection_identities": 173,
+    "five_input_scopes_unchanged": true,
+    "business_payloads_and_relations_unchanged": true
   },
   "input_scope_pending": [
     {
@@ -271,2197 +210,522 @@
       ]
     }
   ],
-  "projection_changes": [
-    {
-      "sample_id": "beijing-media-director-p001-003",
-      "interpreted_units_before": {
-        "T": 35,
-        "L": 4,
-        "B": 3
-      },
-      "interpreted_units_current": {
-        "T": 33,
-        "L": 5,
-        "B": 4
-      },
-      "semantic_pending_before": 95,
-      "semantic_pending_current": 82,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/beijing-media-director-p001-003.json"
-    },
-    {
-      "sample_id": "beijing-media-disposal-p001-008",
-      "interpreted_units_before": {
-        "T": 94,
-        "L": 26,
-        "B": 10
-      },
-      "interpreted_units_current": {
-        "T": 95,
-        "L": 24,
-        "B": 9
-      },
-      "semantic_pending_before": 129,
-      "semantic_pending_current": 120,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/beijing-media-disposal-p001-008.json"
-    },
-    {
-      "sample_id": "bis-economic-review-p022-025",
-      "interpreted_units_before": {
-        "T": 80,
-        "L": 25,
-        "B": 10
-      },
-      "interpreted_units_current": {
-        "T": 86,
-        "L": 27,
-        "B": 10
-      },
-      "semantic_pending_before": 264,
-      "semantic_pending_current": 247,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/bis-economic-review-p022-025.json"
-    },
-    {
-      "sample_id": "bis-financial-risk-boxes-p035-041",
-      "interpreted_units_before": {
-        "T": 173,
-        "L": 59,
-        "B": 23
-      },
-      "interpreted_units_current": {
-        "T": 178,
-        "L": 56,
-        "B": 23
-      },
-      "semantic_pending_before": 564,
-      "semantic_pending_current": 554,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/bis-financial-risk-boxes-p035-041.json"
-    },
-    {
-      "sample_id": "bis-fiscal-productivity-policy-p042-051",
-      "interpreted_units_before": {
-        "T": 240,
-        "L": 115,
-        "B": 31
-      },
-      "interpreted_units_current": {
-        "T": 247,
-        "L": 116,
-        "B": 31
-      },
-      "semantic_pending_before": 821,
-      "semantic_pending_current": 807,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/bis-fiscal-productivity-policy-p042-051.json"
-    },
-    {
-      "sample_id": "bis-policy-boxes-p026-034",
-      "interpreted_units_before": {
-        "T": 210,
-        "L": 67,
-        "B": 23
-      },
-      "interpreted_units_current": {
-        "T": 218,
-        "L": 64,
-        "B": 23
-      },
-      "semantic_pending_before": 672,
-      "semantic_pending_current": 650,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/bis-policy-boxes-p026-034.json"
-    },
-    {
-      "sample_id": "byd-bilingual-front-p001-012",
-      "interpreted_units_before": {
-        "T": 397,
-        "L": 127,
-        "B": 53
-      },
-      "interpreted_units_current": {
-        "T": 401,
-        "L": 128,
-        "B": 52
-      },
-      "semantic_pending_before": 305,
-      "semantic_pending_current": 295,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/byd-bilingual-front-p001-012.json"
-    },
-    {
-      "sample_id": "byd-bilingual-review-p013-024",
-      "interpreted_units_before": {
-        "T": 205,
-        "L": 49,
-        "B": 15
-      },
-      "interpreted_units_current": {
-        "T": 206,
-        "L": 57,
-        "B": 19
-      },
-      "semantic_pending_before": 455,
-      "semantic_pending_current": 458,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/byd-bilingual-review-p013-024.json"
-    },
-    {
-      "sample_id": "byd-outlook-finance-p037-044",
-      "interpreted_units_before": {
-        "T": 146,
-        "L": 106,
-        "B": 28
-      },
-      "interpreted_units_current": {
-        "T": 146,
-        "L": 100,
-        "B": 25
-      },
-      "semantic_pending_before": 326,
-      "semantic_pending_current": 325,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/byd-outlook-finance-p037-044.json"
-    },
-    {
-      "sample_id": "byd-product-cards-p025-036",
-      "interpreted_units_before": {
-        "T": 187,
-        "L": 46,
-        "B": 27
-      },
-      "interpreted_units_current": {
-        "T": 200,
-        "L": 48,
-        "B": 28
-      },
-      "semantic_pending_before": 408,
-      "semantic_pending_current": 385,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/byd-product-cards-p025-036.json"
-    },
-    {
-      "sample_id": "catl-impairment-investment-debt-risks-p064-066",
-      "interpreted_units_before": {
-        "T": 46,
-        "L": 5,
-        "B": 3
-      },
-      "interpreted_units_current": {
-        "T": 44,
-        "L": 0,
-        "B": 0
-      },
-      "semantic_pending_before": 122,
-      "semantic_pending_current": 54,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/catl-impairment-investment-debt-risks-p064-066.json"
-    },
-    {
-      "sample_id": "catl-industry-market-overseas-risks-p053-057",
-      "interpreted_units_before": {
-        "T": 84,
-        "L": 14,
-        "B": 2
-      },
-      "interpreted_units_current": {
-        "T": 84,
-        "L": 9,
-        "B": 0
-      },
-      "semantic_pending_before": 110,
-      "semantic_pending_current": 106,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/catl-industry-market-overseas-risks-p053-057.json"
-    },
-    {
-      "sample_id": "catl-ip-newbusiness-finance-risks-p058-063",
-      "interpreted_units_before": {
-        "T": 101,
-        "L": 7,
-        "B": 2
-      },
-      "interpreted_units_current": {
-        "T": 101,
-        "L": 5,
-        "B": 1
-      },
-      "semantic_pending_before": 162,
-      "semantic_pending_current": 132,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/catl-ip-newbusiness-finance-risks-p058-063.json"
-    },
-    {
-      "sample_id": "catl-listing-ownership-diagrams-p178-180",
-      "interpreted_units_before": {
-        "T": 29,
-        "L": 8,
-        "B": 2
-      },
-      "interpreted_units_current": {
-        "T": 29,
-        "L": 6,
-        "B": 2
-      },
-      "semantic_pending_before": 37,
-      "semantic_pending_current": 29,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/catl-listing-ownership-diagrams-p178-180.json"
-    },
-    {
-      "sample_id": "catl-nev-battery-markets-p127-132",
-      "interpreted_units_before": {
-        "T": 134,
-        "L": 91,
-        "B": 54
-      },
-      "interpreted_units_current": {
-        "T": 144,
-        "L": 79,
-        "B": 46
-      },
-      "semantic_pending_before": 211,
-      "semantic_pending_current": 183,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/catl-nev-battery-markets-p127-132.json"
-    },
-    {
-      "sample_id": "catl-power-market-materials-drivers-p133-136",
-      "interpreted_units_before": {
-        "T": 77,
-        "L": 51,
-        "B": 35
-      },
-      "interpreted_units_current": {
-        "T": 80,
-        "L": 57,
-        "B": 33
-      },
-      "semantic_pending_before": 154,
-      "semantic_pending_current": 135,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/catl-power-market-materials-drivers-p133-136.json"
-    },
-    {
-      "sample_id": "catl-recycling-emerging-entry-barriers-p144-147",
-      "interpreted_units_before": {
-        "T": 56,
-        "L": 39,
-        "B": 18
-      },
-      "interpreted_units_current": {
-        "T": 58,
-        "L": 39,
-        "B": 17
-      },
-      "semantic_pending_before": 96,
-      "semantic_pending_current": 92,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/catl-recycling-emerging-entry-barriers-p144-147.json"
-    },
-    {
-      "sample_id": "catl-storage-renewables-markets-p137-143",
-      "interpreted_units_before": {
-        "T": 107,
-        "L": 59,
-        "B": 38
-      },
-      "interpreted_units_current": {
-        "T": 116,
-        "L": 60,
-        "B": 33
-      },
-      "semantic_pending_before": 203,
-      "semantic_pending_current": 178,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/catl-storage-renewables-markets-p137-143.json"
-    },
-    {
-      "sample_id": "fiyta-bond-followup-p011-017",
-      "interpreted_units_before": {
-        "T": 27,
-        "L": 5,
-        "B": 0
-      },
-      "interpreted_units_current": {
-        "T": 27,
-        "L": 17,
-        "B": 4
-      },
-      "semantic_pending_before": 42,
-      "semantic_pending_current": 27,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/fiyta-bond-followup-p011-017.json"
-    },
-    {
-      "sample_id": "fiyta-terms-financials-p001-010",
-      "interpreted_units_before": {
-        "T": 226,
-        "L": 106,
-        "B": 52
-      },
-      "interpreted_units_current": {
-        "T": 226,
-        "L": 118,
-        "B": 55
-      },
-      "semantic_pending_before": 275,
-      "semantic_pending_current": 249,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/fiyta-terms-financials-p001-010.json"
-    },
-    {
-      "sample_id": "hkex-board-portraits-p030",
-      "interpreted_units_before": {
-        "T": 2,
-        "L": 1,
-        "B": 0
-      },
-      "interpreted_units_current": {
-        "T": 14,
-        "L": 13,
-        "B": 0
-      },
-      "semantic_pending_before": 13,
-      "semantic_pending_current": 1,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/hkex-board-portraits-p030.json"
-    },
-    {
-      "sample_id": "hkex-ceo-review-p021-027",
-      "interpreted_units_before": {
-        "T": 112,
-        "L": 44,
-        "B": 8
-      },
-      "interpreted_units_current": {
-        "T": 113,
-        "L": 44,
-        "B": 8
-      },
-      "semantic_pending_before": 300,
-      "semantic_pending_current": 295,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/hkex-ceo-review-p021-027.json"
-    },
-    {
-      "sample_id": "hkex-chairman-statement-p017-020",
-      "interpreted_units_before": {
-        "T": 64,
-        "L": 25,
-        "B": 5
-      },
-      "interpreted_units_current": {
-        "T": 65,
-        "L": 25,
-        "B": 5
-      },
-      "semantic_pending_before": 182,
-      "semantic_pending_current": 178,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/hkex-chairman-statement-p017-020.json"
-    },
-    {
-      "sample_id": "hkex-investment-and-resources-p075-080",
-      "interpreted_units_before": {
-        "T": 348,
-        "L": 153,
-        "B": 119
-      },
-      "interpreted_units_current": {
-        "T": 349,
-        "L": 153,
-        "B": 119
-      },
-      "semantic_pending_before": 301,
-      "semantic_pending_current": 296,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/hkex-investment-and-resources-p075-080.json"
-    },
-    {
-      "sample_id": "hkex-operational-timeline-p008-009",
-      "interpreted_units_before": {
-        "T": 99,
-        "L": 51,
-        "B": 41
-      },
-      "interpreted_units_current": {
-        "T": 99,
-        "L": 50,
-        "B": 41
-      },
-      "semantic_pending_before": 87,
-      "semantic_pending_current": 87,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/hkex-operational-timeline-p008-009.json"
-    },
-    {
-      "sample_id": "hkex-organisation-photo-p028-029",
-      "interpreted_units_before": {
-        "T": 2,
-        "L": 1,
-        "B": 0
-      },
-      "interpreted_units_current": {
-        "T": 3,
-        "L": 2,
-        "B": 0
-      },
-      "semantic_pending_before": 1,
-      "semantic_pending_current": 0,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/hkex-organisation-photo-p028-029.json"
-    },
-    {
-      "sample_id": "hkex-overview-photo-p005-006",
-      "interpreted_units_before": {
-        "T": 2,
-        "L": 1,
-        "B": 0
-      },
-      "interpreted_units_current": {
-        "T": 3,
-        "L": 2,
-        "B": 0
-      },
-      "semantic_pending_before": 1,
-      "semantic_pending_current": 0,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/hkex-overview-photo-p005-006.json"
-    },
-    {
-      "sample_id": "hkex-risk-committee-p112-117",
-      "interpreted_units_before": {
-        "T": 170,
-        "L": 89,
-        "B": 19
-      },
-      "interpreted_units_current": {
-        "T": 170,
-        "L": 88,
-        "B": 19
-      },
-      "semantic_pending_before": 341,
-      "semantic_pending_current": 341,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/hkex-risk-committee-p112-117.json"
-    },
-    {
-      "sample_id": "huawei-address-p004-005",
-      "interpreted_units_before": {
-        "T": 55,
-        "L": 16,
-        "B": 8
-      },
-      "interpreted_units_current": {
-        "T": 57,
-        "L": 19,
-        "B": 10
-      },
-      "semantic_pending_before": 114,
-      "semantic_pending_current": 107,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/huawei-address-p004-005.json"
-    },
-    {
-      "sample_id": "huawei-audit-p066",
-      "interpreted_units_before": {
-        "T": 16,
-        "L": 7,
-        "B": 0
-      },
-      "interpreted_units_current": {
-        "T": 16,
-        "L": 7,
-        "B": 0
-      },
-      "semantic_pending_before": 30,
-      "semantic_pending_current": 27,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/huawei-audit-p066.json"
-    },
-    {
-      "sample_id": "huawei-automotive-p047",
-      "interpreted_units_before": {
-        "T": 31,
-        "L": 9,
-        "B": 2
-      },
-      "interpreted_units_current": {
-        "T": 31,
-        "L": 11,
-        "B": 4
-      },
-      "semantic_pending_before": 38,
-      "semantic_pending_current": 49,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/huawei-automotive-p047.json"
-    },
-    {
-      "sample_id": "huawei-carrier-business-p018-022",
-      "interpreted_units_before": {
-        "T": 143,
-        "L": 57,
-        "B": 18
-      },
-      "interpreted_units_current": {
-        "T": 144,
-        "L": 51,
-        "B": 14
-      },
-      "semantic_pending_before": 234,
-      "semantic_pending_current": 221,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/huawei-carrier-business-p018-022.json"
-    },
-    {
-      "sample_id": "huawei-cash-and-risk-p064-065",
-      "interpreted_units_before": {
-        "T": 155,
-        "L": 122,
-        "B": 39
-      },
-      "interpreted_units_current": {
-        "T": 155,
-        "L": 122,
-        "B": 39
-      },
-      "semantic_pending_before": 49,
-      "semantic_pending_current": 46,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/huawei-cash-and-risk-p064-065.json"
-    },
-    {
-      "sample_id": "huawei-chairman-p008-010",
-      "interpreted_units_before": {
-        "T": 67,
-        "L": 14,
-        "B": 5
-      },
-      "interpreted_units_current": {
-        "T": 68,
-        "L": 18,
-        "B": 8
-      },
-      "semantic_pending_before": 97,
-      "semantic_pending_current": 107,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/huawei-chairman-p008-010.json"
-    },
-    {
-      "sample_id": "huawei-cloud-business-p033-036",
-      "interpreted_units_before": {
-        "T": 89,
-        "L": 22,
-        "B": 4
-      },
-      "interpreted_units_current": {
-        "T": 92,
-        "L": 23,
-        "B": 5
-      },
-      "semantic_pending_before": 137,
-      "semantic_pending_current": 133,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/huawei-cloud-business-p033-036.json"
-    },
-    {
-      "sample_id": "huawei-compliance-management-p051-053",
-      "interpreted_units_before": {
-        "T": 96,
-        "L": 12,
-        "B": 5
-      },
-      "interpreted_units_current": {
-        "T": 92,
-        "L": 29,
-        "B": 13
-      },
-      "semantic_pending_before": 147,
-      "semantic_pending_current": 150,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/huawei-compliance-management-p051-053.json"
-    },
-    {
-      "sample_id": "huawei-cybersecurity-p054-057",
-      "interpreted_units_before": {
-        "T": 92,
-        "L": 13,
-        "B": 3
-      },
-      "interpreted_units_current": {
-        "T": 94,
-        "L": 32,
-        "B": 8
-      },
-      "semantic_pending_before": 142,
-      "semantic_pending_current": 138,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/huawei-cybersecurity-p054-057.json"
-    },
-    {
-      "sample_id": "huawei-digital-energy-p037-040",
-      "interpreted_units_before": {
-        "T": 81,
-        "L": 29,
-        "B": 11
-      },
-      "interpreted_units_current": {
-        "T": 84,
-        "L": 45,
-        "B": 17
-      },
-      "semantic_pending_before": 113,
-      "semantic_pending_current": 132,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/huawei-digital-energy-p037-040.json"
-    },
-    {
-      "sample_id": "huawei-enterprise-business-p023-027",
-      "interpreted_units_before": {
-        "T": 126,
-        "L": 31,
-        "B": 4
-      },
-      "interpreted_units_current": {
-        "T": 126,
-        "L": 46,
-        "B": 15
-      },
-      "semantic_pending_before": 174,
-      "semantic_pending_current": 193,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/huawei-enterprise-business-p023-027.json"
-    },
-    {
-      "sample_id": "huawei-front-p002-003",
-      "interpreted_units_before": {
-        "T": 54,
-        "L": 18,
-        "B": 13
-      },
-      "interpreted_units_current": {
-        "T": 54,
-        "L": 18,
-        "B": 13
-      },
-      "semantic_pending_before": 70,
-      "semantic_pending_current": 71,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/huawei-front-p002-003.json"
-    },
-    {
-      "sample_id": "huawei-industry-trends-p011-013",
-      "interpreted_units_before": {
-        "T": 91,
-        "L": 15,
-        "B": 10
-      },
-      "interpreted_units_current": {
-        "T": 91,
-        "L": 16,
-        "B": 11
-      },
-      "semantic_pending_before": 115,
-      "semantic_pending_current": 124,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/huawei-industry-trends-p011-013.json"
-    },
-    {
-      "sample_id": "huawei-open-ecosystem-p058-061",
-      "interpreted_units_before": {
-        "T": 80,
-        "L": 19,
-        "B": 9
-      },
-      "interpreted_units_current": {
-        "T": 81,
-        "L": 20,
-        "B": 10
-      },
-      "semantic_pending_before": 105,
-      "semantic_pending_current": 102,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/huawei-open-ecosystem-p058-061.json"
-    },
-    {
-      "sample_id": "huawei-progress-p006",
-      "interpreted_units_before": {
-        "T": 26,
-        "L": 6,
-        "B": 2
-      },
-      "interpreted_units_current": {
-        "T": 26,
-        "L": 14,
-        "B": 7
-      },
-      "semantic_pending_before": 52,
-      "semantic_pending_current": 53,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/huawei-progress-p006.json"
-    },
-    {
-      "sample_id": "huawei-research-quality-p048-050",
-      "interpreted_units_before": {
-        "T": 62,
-        "L": 21,
-        "B": 6
-      },
-      "interpreted_units_current": {
-        "T": 63,
-        "L": 23,
-        "B": 8
-      },
-      "semantic_pending_before": 126,
-      "semantic_pending_current": 122,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/huawei-research-quality-p048-050.json"
-    },
-    {
-      "sample_id": "huawei-services-connection-computing-p028-032",
-      "interpreted_units_before": {
-        "T": 128,
-        "L": 51,
-        "B": 16
-      },
-      "interpreted_units_current": {
-        "T": 125,
-        "L": 57,
-        "B": 20
-      },
-      "semantic_pending_before": 197,
-      "semantic_pending_current": 210,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/huawei-services-connection-computing-p028-032.json"
-    },
-    {
-      "sample_id": "huawei-terminal-business-p041-046",
-      "interpreted_units_before": {
-        "T": 109,
-        "L": 31,
-        "B": 13
-      },
-      "interpreted_units_current": {
-        "T": 120,
-        "L": 29,
-        "B": 15
-      },
-      "semantic_pending_before": 186,
-      "semantic_pending_current": 167,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/huawei-terminal-business-p041-046.json"
-    },
-    {
-      "sample_id": "huawei-vision-p015-016",
-      "interpreted_units_before": {
-        "T": 39,
-        "L": 8,
-        "B": 3
-      },
-      "interpreted_units_current": {
-        "T": 40,
-        "L": 9,
-        "B": 4
-      },
-      "semantic_pending_before": 60,
-      "semantic_pending_current": 57,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/huawei-vision-p015-016.json"
-    },
-    {
-      "sample_id": "huaweitech-5ga-p007-009",
-      "interpreted_units_before": {
-        "T": 80,
-        "L": 23,
-        "B": 10
-      },
-      "interpreted_units_current": {
-        "T": 82,
-        "L": 19,
-        "B": 8
-      },
-      "semantic_pending_before": 95,
-      "semantic_pending_current": 91,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/huaweitech-5ga-p007-009.json"
-    },
-    {
-      "sample_id": "huaweitech-apn6-p027-030",
-      "interpreted_units_before": {
-        "T": 106,
-        "L": 29,
-        "B": 16
-      },
-      "interpreted_units_current": {
-        "T": 109,
-        "L": 36,
-        "B": 19
-      },
-      "semantic_pending_before": 105,
-      "semantic_pending_current": 104,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/huaweitech-apn6-p027-030.json"
-    },
-    {
-      "sample_id": "huaweitech-cover-p001",
-      "interpreted_units_before": {
-        "T": 7,
-        "L": 2,
-        "B": 2
-      },
-      "interpreted_units_current": {
-        "T": 11,
-        "L": 4,
-        "B": 2
-      },
-      "semantic_pending_before": 28,
-      "semantic_pending_current": 22,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/huaweitech-cover-p001.json"
-    },
-    {
-      "sample_id": "huaweitech-editorial-spread-p002",
-      "interpreted_units_before": {
-        "T": 24,
-        "L": 5,
-        "B": 2
-      },
-      "interpreted_units_current": {
-        "T": 27,
-        "L": 5,
-        "B": 1
-      },
-      "semantic_pending_before": 33,
-      "semantic_pending_current": 33,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/huaweitech-editorial-spread-p002.json"
-    },
-    {
-      "sample_id": "huaweitech-future-optical-p024-026",
-      "interpreted_units_before": {
-        "T": 114,
-        "L": 26,
-        "B": 24
-      },
-      "interpreted_units_current": {
-        "T": 118,
-        "L": 40,
-        "B": 32
-      },
-      "semantic_pending_before": 163,
-      "semantic_pending_current": 153,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/huaweitech-future-optical-p024-026.json"
-    },
-    {
-      "sample_id": "huaweitech-intelligence-address-p004-006",
-      "interpreted_units_before": {
-        "T": 131,
-        "L": 27,
-        "B": 12
-      },
-      "interpreted_units_current": {
-        "T": 134,
-        "L": 32,
-        "B": 15
-      },
-      "semantic_pending_before": 186,
-      "semantic_pending_current": 179,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/huaweitech-intelligence-address-p004-006.json"
-    },
-    {
-      "sample_id": "huaweitech-metro-p016-019",
-      "interpreted_units_before": {
-        "T": 148,
-        "L": 41,
-        "B": 32
-      },
-      "interpreted_units_current": {
-        "T": 151,
-        "L": 53,
-        "B": 34
-      },
-      "semantic_pending_before": 132,
-      "semantic_pending_current": 124,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/huaweitech-metro-p016-019.json"
-    },
-    {
-      "sample_id": "huaweitech-middle-east-p021-023",
-      "interpreted_units_before": {
-        "T": 120,
-        "L": 24,
-        "B": 18
-      },
-      "interpreted_units_current": {
-        "T": 125,
-        "L": 27,
-        "B": 18
-      },
-      "semantic_pending_before": 210,
-      "semantic_pending_current": 195,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/huaweitech-middle-east-p021-023.json"
-    },
-    {
-      "sample_id": "huaweitech-odn-p010-015",
-      "interpreted_units_before": {
-        "T": 190,
-        "L": 69,
-        "B": 39
-      },
-      "interpreted_units_current": {
-        "T": 191,
-        "L": 78,
-        "B": 44
-      },
-      "semantic_pending_before": 214,
-      "semantic_pending_current": 198,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/huaweitech-odn-p010-015.json"
-    },
-    {
-      "sample_id": "iea-adoption-ai-types-p025-031",
-      "interpreted_units_before": {
-        "T": 127,
-        "L": 55,
-        "B": 19
-      },
-      "interpreted_units_current": {
-        "T": 131,
-        "L": 53,
-        "B": 19
-      },
-      "semantic_pending_before": 405,
-      "semantic_pending_current": 371,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/iea-adoption-ai-types-p025-031.json"
-    },
-    {
-      "sample_id": "iea-data-centre-definitions-history-p049-061",
-      "interpreted_units_before": {
-        "T": 228,
-        "L": 96,
-        "B": 23
-      },
-      "interpreted_units_current": {
-        "T": 237,
-        "L": 97,
-        "B": 24
-      },
-      "semantic_pending_before": 669,
-      "semantic_pending_current": 618,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/iea-data-centre-definitions-history-p049-061.json"
-    },
-    {
-      "sample_id": "iea-energy-manufacturing-p037-040",
-      "interpreted_units_before": {
-        "T": 71,
-        "L": 48,
-        "B": 15
-      },
-      "interpreted_units_current": {
-        "T": 75,
-        "L": 49,
-        "B": 16
-      },
-      "semantic_pending_before": 192,
-      "semantic_pending_current": 170,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/iea-energy-manufacturing-p037-040.json"
-    },
-    {
-      "sample_id": "iea-inference-energy-boxes-p043-048",
-      "interpreted_units_before": {
-        "T": 118,
-        "L": 45,
-        "B": 14
-      },
-      "interpreted_units_current": {
-        "T": 121,
-        "L": 48,
-        "B": 15
-      },
-      "semantic_pending_before": 331,
-      "semantic_pending_current": 318,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/iea-inference-energy-boxes-p043-048.json"
-    },
-    {
-      "sample_id": "iea-infrastructure-capabilities-p032-036",
-      "interpreted_units_before": {
-        "T": 158,
-        "L": 38,
-        "B": 19
-      },
-      "interpreted_units_current": {
-        "T": 160,
-        "L": 38,
-        "B": 19
-      },
-      "semantic_pending_before": 239,
-      "semantic_pending_current": 229,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/iea-infrastructure-capabilities-p032-036.json"
-    },
-    {
-      "sample_id": "iea-outlook-computing-rating-table-p062-070",
-      "interpreted_units_before": {
-        "T": 267,
-        "L": 138,
-        "B": 79
-      },
-      "interpreted_units_current": {
-        "T": 272,
-        "L": 138,
-        "B": 79
-      },
-      "semantic_pending_before": 547,
-      "semantic_pending_current": 521,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/iea-outlook-computing-rating-table-p062-070.json"
-    },
-    {
-      "sample_id": "iea-rise-ai-p021-024",
-      "interpreted_units_before": {
-        "T": 66,
-        "L": 26,
-        "B": 10
-      },
-      "interpreted_units_current": {
-        "T": 70,
-        "L": 25,
-        "B": 10
-      },
-      "semantic_pending_before": 198,
-      "semantic_pending_current": 169,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/iea-rise-ai-p021-024.json"
-    },
-    {
-      "sample_id": "iea-training-energy-p041-042",
-      "interpreted_units_before": {
-        "T": 35,
-        "L": 8,
-        "B": 2
-      },
-      "interpreted_units_current": {
-        "T": 36,
-        "L": 8,
-        "B": 2
-      },
-      "semantic_pending_before": 122,
-      "semantic_pending_current": 113,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/iea-training-energy-p041-042.json"
-    },
-    {
-      "sample_id": "midea-business-p013-024",
-      "interpreted_units_before": {
-        "T": 181,
-        "L": 143,
-        "B": 71
-      },
-      "interpreted_units_current": {
-        "T": 181,
-        "L": 168,
-        "B": 78
-      },
-      "semantic_pending_before": 441,
-      "semantic_pending_current": 451,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/midea-business-p013-024.json"
-    },
-    {
-      "sample_id": "midea-front-p001-012",
-      "interpreted_units_before": {
-        "T": 392,
-        "L": 289,
-        "B": 120
-      },
-      "interpreted_units_current": {
-        "T": 392,
-        "L": 296,
-        "B": 121
-      },
-      "semantic_pending_before": 382,
-      "semantic_pending_current": 380,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/midea-front-p001-012.json"
-    },
-    {
-      "sample_id": "midea-fx-derivatives-p001-004",
-      "interpreted_units_before": {
-        "T": 66,
-        "L": 39,
-        "B": 11
-      },
-      "interpreted_units_current": {
-        "T": 66,
-        "L": 22,
-        "B": 7
-      },
-      "semantic_pending_before": 89,
-      "semantic_pending_current": 89,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/midea-fx-derivatives-p001-004.json"
-    },
-    {
-      "sample_id": "midea-resumption-p001",
-      "interpreted_units_before": {
-        "T": 8,
-        "L": 2,
-        "B": 1
-      },
-      "interpreted_units_current": {
-        "T": 8,
-        "L": 3,
-        "B": 2
-      },
-      "semantic_pending_before": 10,
-      "semantic_pending_current": 16,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/midea-resumption-p001.json"
-    },
-    {
-      "sample_id": "midea-strategy-p025-036",
-      "interpreted_units_before": {
-        "T": 80,
-        "L": 58,
-        "B": 22
-      },
-      "interpreted_units_current": {
-        "T": 80,
-        "L": 58,
-        "B": 22
-      },
-      "semantic_pending_before": 315,
-      "semantic_pending_current": 296,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/midea-strategy-p025-036.json"
-    },
-    {
-      "sample_id": "moutai-governance-environment-p030-039",
-      "interpreted_units_before": {
-        "T": 709,
-        "L": 254,
-        "B": 164
-      },
-      "interpreted_units_current": {
-        "T": 709,
-        "L": 281,
-        "B": 176
-      },
-      "semantic_pending_before": 617,
-      "semantic_pending_current": 632,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/moutai-governance-environment-p030-039.json"
-    },
-    {
-      "sample_id": "moutai-governance-p018-029",
-      "interpreted_units_before": {
-        "T": 1010,
-        "L": 525,
-        "B": 428
-      },
-      "interpreted_units_current": {
-        "T": 993,
-        "L": 514,
-        "B": 418
-      },
-      "semantic_pending_before": 511,
-      "semantic_pending_current": 585,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/moutai-governance-p018-029.json"
-    },
-    {
-      "sample_id": "moutai-introduction-p001-008",
-      "interpreted_units_before": {
-        "T": 508,
-        "L": 158,
-        "B": 87
-      },
-      "interpreted_units_current": {
-        "T": 506,
-        "L": 147,
-        "B": 83
-      },
-      "semantic_pending_before": 234,
-      "semantic_pending_current": 221,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/moutai-introduction-p001-008.json"
-    },
-    {
-      "sample_id": "moutai-transactions-p040-049",
-      "interpreted_units_before": {
-        "T": 2061,
-        "L": 1220,
-        "B": 899
-      },
-      "interpreted_units_current": {
-        "T": 1939,
-        "L": 1122,
-        "B": 741
-      },
-      "semantic_pending_before": 379,
-      "semantic_pending_current": 863,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/moutai-transactions-p040-049.json"
-    },
-    {
-      "sample_id": "nhu-related-party-audit-p002-003",
-      "interpreted_units_before": {
-        "T": 27,
-        "L": 7,
-        "B": 2
-      },
-      "interpreted_units_current": {
-        "T": 27,
-        "L": 7,
-        "B": 2
-      },
-      "semantic_pending_before": 27,
-      "semantic_pending_current": 23,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/nhu-related-party-audit-p002-003.json"
-    },
-    {
-      "sample_id": "nhu-subsidiary-guarantees-p001-003",
-      "interpreted_units_before": {
-        "T": 48,
-        "L": 16,
-        "B": 9
-      },
-      "interpreted_units_current": {
-        "T": 48,
-        "L": 22,
-        "B": 12
-      },
-      "semantic_pending_before": 33,
-      "semantic_pending_current": 51,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/nhu-subsidiary-guarantees-p001-003.json"
-    },
-    {
-      "sample_id": "nvidia-business-overview-p018-019",
-      "interpreted_units_before": {
-        "T": 104,
-        "L": 57,
-        "B": 35
-      },
-      "interpreted_units_current": {
-        "T": 106,
-        "L": 54,
-        "B": 35
-      },
-      "semantic_pending_before": 49,
-      "semantic_pending_current": 35,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/nvidia-business-overview-p018-019.json"
-    },
-    {
-      "sample_id": "nvidia-ceo-letter-p010-014",
-      "interpreted_units_before": {
-        "T": 262,
-        "L": 164,
-        "B": 46
-      },
-      "interpreted_units_current": {
-        "T": 264,
-        "L": 161,
-        "B": 46
-      },
-      "semantic_pending_before": 604,
-      "semantic_pending_current": 601,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/nvidia-ceo-letter-p010-014.json"
-    },
-    {
-      "sample_id": "nvidia-illustrated-review-p002-009",
-      "interpreted_units_before": {
-        "T": 54,
-        "L": 30,
-        "B": 9
-      },
-      "interpreted_units_current": {
-        "T": 58,
-        "L": 34,
-        "B": 11
-      },
-      "semantic_pending_before": 123,
-      "semantic_pending_current": 100,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/nvidia-illustrated-review-p002-009.json"
-    },
-    {
-      "sample_id": "nvidia-meeting-notice-toc-p015-016",
-      "interpreted_units_before": {
-        "T": 170,
-        "L": 107,
-        "B": 53
-      },
-      "interpreted_units_current": {
-        "T": 172,
-        "L": 108,
-        "B": 53
-      },
-      "semantic_pending_before": 230,
-      "semantic_pending_current": 226,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/nvidia-meeting-notice-toc-p015-016.json"
-    },
-    {
-      "sample_id": "nvidia-regulatory-governance-equity-p121-127",
-      "interpreted_units_before": {
-        "T": 261,
-        "L": 139,
-        "B": 45
-      },
-      "interpreted_units_current": {
-        "T": 263,
-        "L": 144,
-        "B": 47
-      },
-      "semantic_pending_before": 707,
-      "semantic_pending_current": 701,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/nvidia-regulatory-governance-equity-p121-127.json"
-    },
-    {
-      "sample_id": "pboc-banking-columns-p029-040",
-      "interpreted_units_before": {
-        "T": 231,
-        "L": 93,
-        "B": 32
-      },
-      "interpreted_units_current": {
-        "T": 232,
-        "L": 114,
-        "B": 46
-      },
-      "semantic_pending_before": 367,
-      "semantic_pending_current": 367,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/pboc-banking-columns-p029-040.json"
-    },
-    {
-      "sample_id": "pboc-committees-p002-003",
-      "interpreted_units_before": {
-        "T": 69,
-        "L": 32,
-        "B": 32
-      },
-      "interpreted_units_current": {
-        "T": 69,
-        "L": 32,
-        "B": 32
-      },
-      "semantic_pending_before": 29,
-      "semantic_pending_current": 31,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/pboc-committees-p002-003.json"
-    },
-    {
-      "sample_id": "pboc-cover-p001",
-      "interpreted_units_before": {
-        "T": 2,
-        "L": 2,
-        "B": 1
-      },
-      "interpreted_units_current": {
-        "T": 2,
-        "L": 2,
-        "B": 1
-      },
-      "semantic_pending_before": 0,
-      "semantic_pending_current": 2,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/pboc-cover-p001.json"
-    },
-    {
-      "sample_id": "pboc-macro-columns-p011-018",
-      "interpreted_units_before": {
-        "T": 162,
-        "L": 106,
-        "B": 39
-      },
-      "interpreted_units_current": {
-        "T": 162,
-        "L": 114,
-        "B": 45
-      },
-      "semantic_pending_before": 273,
-      "semantic_pending_current": 256,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/pboc-macro-columns-p011-018.json"
-    },
-    {
-      "sample_id": "pboc-overview-p004-006",
-      "interpreted_units_before": {
-        "T": 40,
-        "L": 26,
-        "B": 12
-      },
-      "interpreted_units_current": {
-        "T": 40,
-        "L": 38,
-        "B": 17
-      },
-      "semantic_pending_before": 57,
-      "semantic_pending_current": 57,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/pboc-overview-p004-006.json"
-    },
-    {
-      "sample_id": "pboc-policy-columns-p019-026",
-      "interpreted_units_before": {
-        "T": 149,
-        "L": 68,
-        "B": 36
-      },
-      "interpreted_units_current": {
-        "T": 149,
-        "L": 71,
-        "B": 34
-      },
-      "semantic_pending_before": 251,
-      "semantic_pending_current": 243,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/pboc-policy-columns-p019-026.json"
-    },
-    {
-      "sample_id": "pboc-statistical-tables-p101-108",
-      "interpreted_units_before": {
-        "T": 1947,
-        "L": 1750,
-        "B": 947
-      },
-      "interpreted_units_current": {
-        "T": 1944,
-        "L": 1720,
-        "B": 941
-      },
-      "semantic_pending_before": 126,
-      "semantic_pending_current": 125,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/pboc-statistical-tables-p101-108.json"
-    },
-    {
-      "sample_id": "peoples-network-fundraising-p001-003",
-      "interpreted_units_before": {
-        "T": 79,
-        "L": 53,
-        "B": 27
-      },
-      "interpreted_units_current": {
-        "T": 79,
-        "L": 53,
-        "B": 27
-      },
-      "semantic_pending_before": 63,
-      "semantic_pending_current": 62,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/peoples-network-fundraising-p001-003.json"
-    },
-    {
-      "sample_id": "pingan-business-highlights-p012-013",
-      "interpreted_units_before": {
-        "T": 77,
-        "L": 71,
-        "B": 23
-      },
-      "interpreted_units_current": {
-        "T": 77,
-        "L": 69,
-        "B": 23
-      },
-      "semantic_pending_before": 67,
-      "semantic_pending_current": 68,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/pingan-business-highlights-p012-013.json"
-    },
-    {
-      "sample_id": "pingan-chairman-p014-019",
-      "interpreted_units_before": {
-        "T": 153,
-        "L": 109,
-        "B": 29
-      },
-      "interpreted_units_current": {
-        "T": 157,
-        "L": 102,
-        "B": 29
-      },
-      "semantic_pending_before": 474,
-      "semantic_pending_current": 457,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/pingan-chairman-p014-019.json"
-    },
-    {
-      "sample_id": "pingan-financials-p001-004",
-      "interpreted_units_before": {
-        "T": 640,
-        "L": 392,
-        "B": 184
-      },
-      "interpreted_units_current": {
-        "T": 641,
-        "L": 388,
-        "B": 183
-      },
-      "semantic_pending_before": 269,
-      "semantic_pending_current": 274,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/pingan-financials-p001-004.json"
-    },
-    {
-      "sample_id": "pingan-fundraising-assurance-p003-007",
-      "interpreted_units_before": {
-        "T": 193,
-        "L": 109,
-        "B": 82
-      },
-      "interpreted_units_current": {
-        "T": 193,
-        "L": 113,
-        "B": 82
-      },
-      "semantic_pending_before": 101,
-      "semantic_pending_current": 96,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/pingan-fundraising-assurance-p003-007.json"
-    },
-    {
-      "sample_id": "pingan-health-senior-care-p025-030",
-      "interpreted_units_before": {
-        "T": 145,
-        "L": 49,
-        "B": 15
-      },
-      "interpreted_units_current": {
-        "T": 146,
-        "L": 49,
-        "B": 15
-      },
-      "semantic_pending_before": 305,
-      "semantic_pending_current": 300,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/pingan-health-senior-care-p025-030.json"
-    },
-    {
-      "sample_id": "pingan-honors-p020",
-      "interpreted_units_before": {
-        "T": 30,
-        "L": 10,
-        "B": 0
-      },
-      "interpreted_units_current": {
-        "T": 31,
-        "L": 11,
-        "B": 0
-      },
-      "semantic_pending_before": 54,
-      "semantic_pending_current": 51,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/pingan-honors-p020.json"
-    },
-    {
-      "sample_id": "pingan-integrated-finance-p022-024",
-      "interpreted_units_before": {
-        "T": 71,
-        "L": 32,
-        "B": 8
-      },
-      "interpreted_units_current": {
-        "T": 71,
-        "L": 30,
-        "B": 8
-      },
-      "semantic_pending_before": 113,
-      "semantic_pending_current": 113,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/pingan-integrated-finance-p022-024.json"
-    },
-    {
-      "sample_id": "pingan-mission-opportunities-p006-007",
-      "interpreted_units_before": {
-        "T": 47,
-        "L": 38,
-        "B": 9
-      },
-      "interpreted_units_current": {
-        "T": 47,
-        "L": 37,
-        "B": 9
-      },
-      "semantic_pending_before": 90,
-      "semantic_pending_current": 90,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/pingan-mission-opportunities-p006-007.json"
-    },
-    {
-      "sample_id": "pingan-summary-and-profile-p004-005",
-      "interpreted_units_before": {
-        "T": 379,
-        "L": 27,
-        "B": 14
-      },
-      "interpreted_units_current": {
-        "T": 379,
-        "L": 26,
-        "B": 14
-      },
-      "semantic_pending_before": 93,
-      "semantic_pending_current": 93,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/pingan-summary-and-profile-p004-005.json"
-    },
-    {
-      "sample_id": "sf-auditor-grid-prose-responsibilities-p087-088",
-      "interpreted_units_before": {
-        "T": 49,
-        "L": 4,
-        "B": 2
-      },
-      "interpreted_units_current": {
-        "T": 49,
-        "L": 5,
-        "B": 2
-      },
-      "semantic_pending_before": 69,
-      "semantic_pending_current": 58,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/sf-auditor-grid-prose-responsibilities-p087-088.json"
-    },
-    {
-      "sample_id": "sf-brand-award-callouts-p034",
-      "interpreted_units_before": {
-        "T": 26,
-        "L": 9,
-        "B": 6
-      },
-      "interpreted_units_current": {
-        "T": 26,
-        "L": 10,
-        "B": 7
-      },
-      "semantic_pending_before": 34,
-      "semantic_pending_current": 32,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/sf-brand-award-callouts-p034.json"
-    },
-    {
-      "sample_id": "sf-industry-business-review-p017-024",
-      "interpreted_units_before": {
-        "T": 201,
-        "L": 64,
-        "B": 23
-      },
-      "interpreted_units_current": {
-        "T": 203,
-        "L": 66,
-        "B": 25
-      },
-      "semantic_pending_before": 328,
-      "semantic_pending_current": 310,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/sf-industry-business-review-p017-024.json"
-    },
-    {
-      "sample_id": "sf-margin-profit-ebitda-p037-039",
-      "interpreted_units_before": {
-        "T": 250,
-        "L": 219,
-        "B": 58
-      },
-      "interpreted_units_current": {
-        "T": 250,
-        "L": 220,
-        "B": 59
-      },
-      "semantic_pending_before": 97,
-      "semantic_pending_current": 99,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/sf-margin-profit-ebitda-p037-039.json"
-    },
-    {
-      "sample_id": "sf-network-infographics-p027-031",
-      "interpreted_units_before": {
-        "T": 125,
-        "L": 61,
-        "B": 50
-      },
-      "interpreted_units_current": {
-        "T": 126,
-        "L": 62,
-        "B": 51
-      },
-      "semantic_pending_before": 85,
-      "semantic_pending_current": 73,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/sf-network-infographics-p027-031.json"
-    },
-    {
-      "sample_id": "sf-revenue-operating-cost-tables-p035-036",
-      "interpreted_units_before": {
-        "T": 650,
-        "L": 579,
-        "B": 127
-      },
-      "interpreted_units_current": {
-        "T": 650,
-        "L": 579,
-        "B": 127
-      },
-      "semantic_pending_before": 46,
-      "semantic_pending_current": 38,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/sf-revenue-operating-cost-tables-p035-036.json"
-    },
-    {
-      "sample_id": "sf-supply-chain-operating-efficiency-p025-026",
-      "interpreted_units_before": {
-        "T": 38,
-        "L": 5,
-        "B": 2
-      },
-      "interpreted_units_current": {
-        "T": 37,
-        "L": 5,
-        "B": 2
-      },
-      "semantic_pending_before": 94,
-      "semantic_pending_current": 87,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/sf-supply-chain-operating-efficiency-p025-026.json"
-    },
-    {
-      "sample_id": "sinopec-finance-governance-p025-036",
-      "interpreted_units_before": {
-        "T": 569,
-        "L": 403,
-        "B": 105
-      },
-      "interpreted_units_current": {
-        "T": 910,
-        "L": 1284,
-        "B": 272
-      },
-      "semantic_pending_before": 745,
-      "semantic_pending_current": 285,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/sinopec-finance-governance-p025-036.json"
-    },
-    {
-      "sample_id": "sinopec-front-p001-012",
-      "interpreted_units_before": {
-        "T": 1347,
-        "L": 994,
-        "B": 311
-      },
-      "interpreted_units_current": {
-        "T": 1377,
-        "L": 1037,
-        "B": 324
-      },
-      "semantic_pending_before": 629,
-      "semantic_pending_current": 597,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/sinopec-front-p001-012.json"
-    },
-    {
-      "sample_id": "sinopec-operations-p013-024",
-      "interpreted_units_before": {
-        "T": 1020,
-        "L": 846,
-        "B": 277
-      },
-      "interpreted_units_current": {
-        "T": 1184,
-        "L": 1053,
-        "B": 333
-      },
-      "semantic_pending_before": 796,
-      "semantic_pending_current": 815,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/sinopec-operations-p013-024.json"
-    },
-    {
-      "sample_id": "spdb-cover-declaration-p001-002",
-      "interpreted_units_before": {
-        "T": 18,
-        "L": 6,
-        "B": 4
-      },
-      "interpreted_units_current": {
-        "T": 18,
-        "L": 7,
-        "B": 5
-      },
-      "semantic_pending_before": 22,
-      "semantic_pending_current": 15,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/spdb-cover-declaration-p001-002.json"
-    },
-    {
-      "sample_id": "spdb-credit-overview-p001-004",
-      "interpreted_units_before": {
-        "T": 367,
-        "L": 88,
-        "B": 56
-      },
-      "interpreted_units_current": {
-        "T": 368,
-        "L": 118,
-        "B": 64
-      },
-      "semantic_pending_before": 125,
-      "semantic_pending_current": 119,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/spdb-credit-overview-p001-004.json"
-    },
-    {
-      "sample_id": "spdb-prospectus-financials-seal-p021-023",
-      "interpreted_units_before": {
-        "T": 229,
-        "L": 127,
-        "B": 43
-      },
-      "interpreted_units_current": {
-        "T": 230,
-        "L": 128,
-        "B": 43
-      },
-      "semantic_pending_before": 181,
-      "semantic_pending_current": 180,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/spdb-prospectus-financials-seal-p021-023.json"
-    },
-    {
-      "sample_id": "spdb-prospectus-issuer-terms-p006-012",
-      "interpreted_units_before": {
-        "T": 132,
-        "L": 72,
-        "B": 25
-      },
-      "interpreted_units_current": {
-        "T": 128,
-        "L": 75,
-        "B": 29
-      },
-      "semantic_pending_before": 175,
-      "semantic_pending_current": 146,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/spdb-prospectus-issuer-terms-p006-012.json"
-    },
-    {
-      "sample_id": "spdb-prospectus-risk-tax-p013-020",
-      "interpreted_units_before": {
-        "T": 107,
-        "L": 64,
-        "B": 17
-      },
-      "interpreted_units_current": {
-        "T": 102,
-        "L": 53,
-        "B": 18
-      },
-      "semantic_pending_before": 181,
-      "semantic_pending_current": 138,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/spdb-prospectus-risk-tax-p013-020.json"
-    },
-    {
-      "sample_id": "spdb-summary-financials-p001-004",
-      "interpreted_units_before": {
-        "T": 332,
-        "L": 268,
-        "B": 115
-      },
-      "interpreted_units_current": {
-        "T": 312,
-        "L": 227,
-        "B": 99
-      },
-      "semantic_pending_before": 542,
-      "semantic_pending_current": 474,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/spdb-summary-financials-p001-004.json"
-    },
-    {
-      "sample_id": "tangshan-accounting-policy-p001-005",
-      "interpreted_units_before": {
-        "T": 89,
-        "L": 31,
-        "B": 11
-      },
-      "interpreted_units_current": {
-        "T": 92,
-        "L": 28,
-        "B": 12
-      },
-      "semantic_pending_before": 141,
-      "semantic_pending_current": 113,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/tangshan-accounting-policy-p001-005.json"
-    },
-    {
-      "sample_id": "tangshan-directors-opinion-p001-002",
-      "interpreted_units_before": {
-        "T": 9,
-        "L": 2,
-        "B": 0
-      },
-      "interpreted_units_current": {
-        "T": 10,
-        "L": 2,
-        "B": 0
-      },
-      "semantic_pending_before": 15,
-      "semantic_pending_current": 13,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/tangshan-directors-opinion-p001-002.json"
-    },
-    {
-      "sample_id": "tangshan-li-nomination-p009-011",
-      "interpreted_units_before": {
-        "T": 36,
-        "L": 2,
-        "B": 2
-      },
-      "interpreted_units_current": {
-        "T": 37,
-        "L": 2,
-        "B": 1
-      },
-      "semantic_pending_before": 43,
-      "semantic_pending_current": 40,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/tangshan-li-nomination-p009-011.json"
-    },
-    {
-      "sample_id": "tangshan-rong-nomination-p001-002",
-      "interpreted_units_before": {
-        "T": 35,
-        "L": 2,
-        "B": 2
-      },
-      "interpreted_units_current": {
-        "T": 36,
-        "L": 2,
-        "B": 1
-      },
-      "semantic_pending_before": 42,
-      "semantic_pending_current": 39,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/tangshan-rong-nomination-p001-002.json"
-    },
-    {
-      "sample_id": "tgood-acquisition-terms-p009-019",
-      "interpreted_units_before": {
-        "T": 189,
-        "L": 48,
-        "B": 26
-      },
-      "interpreted_units_current": {
-        "T": 188,
-        "L": 122,
-        "B": 32
-      },
-      "semantic_pending_before": 239,
-      "semantic_pending_current": 195,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/tgood-acquisition-terms-p009-019.json"
-    },
-    {
-      "sample_id": "tgood-compensation-subscription-p022-028",
-      "interpreted_units_before": {
-        "T": 112,
-        "L": 43,
-        "B": 16
-      },
-      "interpreted_units_current": {
-        "T": 112,
-        "L": 59,
-        "B": 21
-      },
-      "semantic_pending_before": 150,
-      "semantic_pending_current": 116,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/tgood-compensation-subscription-p022-028.json"
-    },
-    {
-      "sample_id": "tgood-meeting-p001-006",
-      "interpreted_units_before": {
-        "T": 191,
-        "L": 76,
-        "B": 66
-      },
-      "interpreted_units_current": {
-        "T": 191,
-        "L": 79,
-        "B": 67
-      },
-      "semantic_pending_before": 135,
-      "semantic_pending_current": 120,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/tgood-meeting-p001-006.json"
-    },
-    {
-      "sample_id": "vanke-acquisition-guarantee-p001-002",
-      "interpreted_units_before": {
-        "T": 44,
-        "L": 21,
-        "B": 9
-      },
-      "interpreted_units_current": {
-        "T": 44,
-        "L": 22,
-        "B": 11
-      },
-      "semantic_pending_before": 50,
-      "semantic_pending_current": 39,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/vanke-acquisition-guarantee-p001-002.json"
-    },
-    {
-      "sample_id": "vanke-interest-p001-002",
-      "interpreted_units_before": {
-        "T": 35,
-        "L": 11,
-        "B": 4
-      },
-      "interpreted_units_current": {
-        "T": 35,
-        "L": 12,
-        "B": 5
-      },
-      "semantic_pending_before": 38,
-      "semantic_pending_current": 55,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/vanke-interest-p001-002.json"
-    },
-    {
-      "sample_id": "vanke-repurchase-share-changes-p001-003",
-      "interpreted_units_before": {
-        "T": 74,
-        "L": 29,
-        "B": 21
-      },
-      "interpreted_units_current": {
-        "T": 74,
-        "L": 29,
-        "B": 21
-      },
-      "semantic_pending_before": 49,
-      "semantic_pending_current": 45,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/vanke-repurchase-share-changes-p001-003.json"
-    },
-    {
-      "sample_id": "vanke-sales-projects-p001",
-      "interpreted_units_before": {
-        "T": 23,
-        "L": 10,
-        "B": 6
-      },
-      "interpreted_units_current": {
-        "T": 23,
-        "L": 10,
-        "B": 6
-      },
-      "semantic_pending_before": 34,
-      "semantic_pending_current": 32,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/vanke-sales-projects-p001.json"
-    },
-    {
-      "sample_id": "wuliangye-appeal-progress-p001",
-      "interpreted_units_before": {
-        "T": 17,
-        "L": 8,
-        "B": 2
-      },
-      "interpreted_units_current": {
-        "T": 17,
-        "L": 6,
-        "B": 1
-      },
-      "semantic_pending_before": 21,
-      "semantic_pending_current": 16,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/wuliangye-appeal-progress-p001.json"
-    },
-    {
-      "sample_id": "wuliangye-litigation-ruling-p001-002",
-      "interpreted_units_before": {
-        "T": 23,
-        "L": 13,
-        "B": 4
-      },
-      "interpreted_units_current": {
-        "T": 21,
-        "L": 9,
-        "B": 2
-      },
-      "semantic_pending_before": 32,
-      "semantic_pending_current": 31,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/wuliangye-litigation-ruling-p001-002.json"
-    },
-    {
-      "sample_id": "zhenye-correction-p001",
-      "interpreted_units_before": {
-        "T": 10,
-        "L": 5,
-        "B": 3
-      },
-      "interpreted_units_current": {
-        "T": 10,
-        "L": 3,
-        "B": 2
-      },
-      "semantic_pending_before": 11,
-      "semantic_pending_current": 12,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/zhenye-correction-p001.json"
-    },
-    {
-      "sample_id": "zhenye-coupon-seals-p001-003",
-      "interpreted_units_before": {
-        "T": 19,
-        "L": 7,
-        "B": 6
-      },
-      "interpreted_units_current": {
-        "T": 22,
-        "L": 12,
-        "B": 7
-      },
-      "semantic_pending_before": 22,
-      "semantic_pending_current": 19,
-      "independent_acceptance_implied": false,
-      "current_graph": "samples/zhenye-coupon-seals-p001-003.json"
-    }
-  ],
+  "projection_changes": {
+    "semantic_projection_identities_unchanged": 173,
+    "comparison_requirements": [
+      {
+        "sample_id": "catl-nev-battery-markets-p127-132",
+        "before": {
+          "B": 64,
+          "L": 133
+        },
+        "current": {
+          "B": 66,
+          "L": 137
+        },
+        "basis": "precise_source_span_ownership_retains_complete_typed_neighbors; expected and semantic projection IDs unchanged",
+        "source_evidence": [
+          {
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-catl-2025-prospectus/expected.md",
+              "lines": [
+                1779,
+                1779
+              ],
+              "text_span": [
+                0,
+                173
+              ]
+            },
+            "role": "text",
+            "scope": [
+              "動力電池行業概覽",
+              "全球新能源車市場概覽",
+              "分地區新能源車市場"
+            ],
+            "parents": [],
+            "authorized_text": "歐洲2024年新能源車滲透率為17.2%。歐洲新能源車銷量預計於2030年增長至12.2百萬輛，2024年至2030年複合年增長率為26.5%。歐洲新能源車的滲透率預計於2030年增長至60.2%。其中，新能源乘用車滲透率預計從2024年20.3%增長至2030年64.0%；新能源商用車滲透率預計從2024年2.7%增長至2030年39.8%。",
+            "restored_typed_requirements": [
+              {
+                "id": "B:36",
+                "source": {
+                  "path": "/opt/moparse/pdf_sample/parsing/expected/complex-catl-2025-prospectus/expected.md",
+                  "lines": [
+                    1779,
+                    1779
+                  ],
+                  "text_span": [
+                    15,
+                    19
+                  ]
+                },
+                "statement_source": {
+                  "path": "/opt/moparse/pdf_sample/parsing/expected/complex-catl-2025-prospectus/expected.md",
+                  "lines": [
+                    1779,
+                    1779
+                  ],
+                  "text_span": [
+                    0,
+                    20
+                  ]
+                },
+                "subject": "歐洲2024年新能源車滲透率",
+                "value": "17.2",
+                "unit": "%"
+              }
+            ],
+            "fixed_content_spans": [
+              {
+                "id": "content:29:21:173",
+                "source": {
+                  "path": "/opt/moparse/pdf_sample/parsing/expected/complex-catl-2025-prospectus/expected.md",
+                  "lines": [
+                    1779,
+                    1779
+                  ],
+                  "text_span": [
+                    21,
+                    173
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-catl-2025-prospectus/expected.md",
+              "lines": [
+                1793,
+                1793
+              ],
+              "text_span": [
+                0,
+                170
+              ]
+            },
+            "role": "text",
+            "scope": [
+              "動力電池行業概覽",
+              "全球新能源車市場概覽",
+              "分地區新能源車市場"
+            ],
+            "parents": [],
+            "authorized_text": "美國2024年新能源車滲透率為9.7%。美國新能源車銷量預計於2030年增長至6.2百萬輛，2024年至2030年複合年增長率為25.4%。美國新能源車的滲透率預計於2030年增長至32.4%。其中，新能源乘用車滲透率預計從2024年12.2%增長至2030年39.0%；新能源商用車滲透率預計從2024年1.2%增長至2030年7.6%。",
+            "restored_typed_requirements": [
+              {
+                "id": "B:37",
+                "source": {
+                  "path": "/opt/moparse/pdf_sample/parsing/expected/complex-catl-2025-prospectus/expected.md",
+                  "lines": [
+                    1793,
+                    1793
+                  ],
+                  "text_span": [
+                    15,
+                    18
+                  ]
+                },
+                "statement_source": {
+                  "path": "/opt/moparse/pdf_sample/parsing/expected/complex-catl-2025-prospectus/expected.md",
+                  "lines": [
+                    1793,
+                    1793
+                  ],
+                  "text_span": [
+                    0,
+                    19
+                  ]
+                },
+                "subject": "美國2024年新能源車滲透率",
+                "value": "9.7",
+                "unit": "%"
+              }
+            ],
+            "fixed_content_spans": [
+              {
+                "id": "content:37:20:170",
+                "source": {
+                  "path": "/opt/moparse/pdf_sample/parsing/expected/complex-catl-2025-prospectus/expected.md",
+                  "lines": [
+                    1793,
+                    1793
+                  ],
+                  "text_span": [
+                    20,
+                    170
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "sample_id": "midea-business-p013-024",
+        "before": {
+          "B": 68,
+          "L": 143
+        },
+        "current": {
+          "B": 74,
+          "L": 161
+        },
+        "basis": "precise_source_span_ownership_retains_complete_typed_neighbors; expected and semantic projection IDs unchanged",
+        "source_evidence": [
+          {
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-midea-2024-annual/expected.md",
+              "lines": [
+                283,
+                283
+              ],
+              "text_span": [
+                0,
+                287
+              ]
+            },
+            "role": "text",
+            "scope": [
+              "（三）行业概述",
+              "1、家用电器行业"
+            ],
+            "parents": [],
+            "authorized_text": "根据奥维云网推总数据，2024年国内洗衣机市场零售额1,004亿元，同比增长7.6%；干衣机市场零售额达到162亿元，同比增加25.7%。洗护赛道市场规模大、需求场景丰富、需求刚性强，其中洗烘套装成为主要驱动力，受“国补”政策刺激，2024年洗烘套装零售额同比增长超过33%，同时产品结构也保持稳健升级，其中8,000-12,000元价格段产品占比显著提升；在容量结构端，10kg产品仍为市场主流，“国补”政策助力12kg产品占比进一步提升，容量升级或成行业主线，头部品牌小天鹅也逐步加码12kg产品布局，据奥维云网统计小天鹅在9-12月线上渠道已位居12kg产品市场第一。",
+            "restored_typed_requirements": [
+              {
+                "id": "B:39",
+                "source": {
+                  "path": "/opt/moparse/pdf_sample/parsing/expected/complex-midea-2024-annual/expected.md",
+                  "lines": [
+                    283,
+                    283
+                  ],
+                  "text_span": [
+                    53,
+                    56
+                  ]
+                },
+                "statement_source": {
+                  "path": "/opt/moparse/pdf_sample/parsing/expected/complex-midea-2024-annual/expected.md",
+                  "lines": [
+                    283,
+                    283
+                  ],
+                  "text_span": [
+                    43,
+                    58
+                  ]
+                },
+                "subject": "干衣机市场零售额",
+                "value": "162",
+                "unit": "亿元"
+              },
+              {
+                "id": "B:40",
+                "source": {
+                  "path": "/opt/moparse/pdf_sample/parsing/expected/complex-midea-2024-annual/expected.md",
+                  "lines": [
+                    283,
+                    283
+                  ],
+                  "text_span": [
+                    63,
+                    67
+                  ]
+                },
+                "statement_source": {
+                  "path": "/opt/moparse/pdf_sample/parsing/expected/complex-midea-2024-annual/expected.md",
+                  "lines": [
+                    283,
+                    283
+                  ],
+                  "text_span": [
+                    59,
+                    68
+                  ]
+                },
+                "subject": "干衣机市场零售额",
+                "value": "25.7",
+                "unit": "%"
+              }
+            ],
+            "fixed_content_spans": [
+              {
+                "id": "content:49:0:43",
+                "source": {
+                  "path": "/opt/moparse/pdf_sample/parsing/expected/complex-midea-2024-annual/expected.md",
+                  "lines": [
+                    283,
+                    283
+                  ],
+                  "text_span": [
+                    0,
+                    43
+                  ]
+                }
+              },
+              {
+                "id": "content:49:69:287",
+                "source": {
+                  "path": "/opt/moparse/pdf_sample/parsing/expected/complex-midea-2024-annual/expected.md",
+                  "lines": [
+                    283,
+                    283
+                  ],
+                  "text_span": [
+                    69,
+                    287
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-midea-2024-annual/expected.md",
+              "lines": [
+                287,
+                287
+              ],
+              "text_span": [
+                0,
+                888
+              ]
+            },
+            "role": "text",
+            "scope": [
+              "（三）行业概述",
+              "1、家用电器行业"
+            ],
+            "parents": [],
+            "authorized_text": "奥维云网推总数据显示，在厨卫大家电领域中，2024年国内烟机市场零售额为362亿元，同比增长14.9%；燃气灶市场零售额为204亿元，同比增长15.7%。烟机实现从传统顶吸、侧吸到超薄、跨界、顶侧双吸快速渗透，以“薄”为基础的“一体化嵌隐”仍是主要竞争维度，2024年新款式（超薄+顶侧双吸+跨界）的线上和线下市场零售额占比分别为36.9%和48.6%，较去年明显提升；而且多腔体、功能集成以及低噪音等技术突破也推动烟机双线市场价格结构升级，2024年线下市场4,000元以上的烟机产品占比已接近70%；燃气灶聚焦快速提升热效率以及智能化、精细温控等体验，2024年热效率68%及以上产品在线上和线下市场零售额占比分别为13.5%和39.3%，2024年定时灶产品在线上与线下市场的零售额占比分别为17.2%和10.0%，均实现快速增长，同时防干烧、不锈钢灶具、可调节底盘等属性也在加速渗透。奥维云网推总数据显示，2024年洗碗机市场零售额为132亿元，同比增长17.2%，产品结构趋势表现为追求大套数并提升空间利用率，其中16套以上的洗碗机产品在线上和线下市场的零售额占比分别提至32%和45%，同时全尺寸嵌入式产品以其更适合厨改的特性和大套数的基本盘成为目前主流款式，市场份额持续攀升，在线上和线下市场的零售额占比分别逼近50%和80%。奥维云网推总数据显示，2024年净水器市场零售额达240亿元，同比增长17.2%，产品结构表现为大通量、净热一体和含矿物质等功能特点，其中1200G产品线上市场零售额占比提升约10%，净热一体产品线下市场零售额占比突破27%，含矿物质产品线下市场零售额占比接近10%。奥维云网推总数据显示，2024年热水器（电储水热水器与燃气热水器）零售额为532亿元，同比增长5.3%，燃气热水器增长更快，实现同比增长8.8%，从升数结构看，电热大容积向60L集中，燃热向16L集中；热水器产品在外观、恒温、健康、能效等方面不断优化，其中2024年电热扁桶产品在线上市场零售额占比接近25%，具有阻垢或过滤功能的燃热产品零售额占比也达到24.7%。",
+            "restored_typed_requirements": [
+              {
+                "id": "B:41",
+                "source": {
+                  "path": "/opt/moparse/pdf_sample/parsing/expected/complex-midea-2024-annual/expected.md",
+                  "lines": [
+                    287,
+                    287
+                  ],
+                  "text_span": [
+                    61,
+                    64
+                  ]
+                },
+                "statement_source": {
+                  "path": "/opt/moparse/pdf_sample/parsing/expected/complex-midea-2024-annual/expected.md",
+                  "lines": [
+                    287,
+                    287
+                  ],
+                  "text_span": [
+                    52,
+                    66
+                  ]
+                },
+                "subject": "燃气灶市场零售额",
+                "value": "204",
+                "unit": "亿元"
+              },
+              {
+                "id": "B:42",
+                "source": {
+                  "path": "/opt/moparse/pdf_sample/parsing/expected/complex-midea-2024-annual/expected.md",
+                  "lines": [
+                    287,
+                    287
+                  ],
+                  "text_span": [
+                    71,
+                    75
+                  ]
+                },
+                "statement_source": {
+                  "path": "/opt/moparse/pdf_sample/parsing/expected/complex-midea-2024-annual/expected.md",
+                  "lines": [
+                    287,
+                    287
+                  ],
+                  "text_span": [
+                    67,
+                    76
+                  ]
+                },
+                "subject": "燃气灶市场零售额",
+                "value": "15.7",
+                "unit": "%"
+              }
+            ],
+            "fixed_content_spans": [
+              {
+                "id": "content:51:0:52",
+                "source": {
+                  "path": "/opt/moparse/pdf_sample/parsing/expected/complex-midea-2024-annual/expected.md",
+                  "lines": [
+                    287,
+                    287
+                  ],
+                  "text_span": [
+                    0,
+                    52
+                  ]
+                }
+              },
+              {
+                "id": "content:51:77:888",
+                "source": {
+                  "path": "/opt/moparse/pdf_sample/parsing/expected/complex-midea-2024-annual/expected.md",
+                  "lines": [
+                    287,
+                    287
+                  ],
+                  "text_span": [
+                    77,
+                    888
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "sample_id": "sinopec-operations-p013-024",
+        "before": {
+          "B": 364,
+          "L": 994
+        },
+        "current": {
+          "B": 366,
+          "L": 1002
+        },
+        "basis": "precise_source_span_ownership_retains_complete_typed_neighbors; expected and semantic projection IDs unchanged",
+        "source_evidence": [
+          {
+            "source": {
+              "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sinopec-2024-annual/expected.md",
+              "lines": [
+                519,
+                519
+              ],
+              "text_span": [
+                0,
+                104
+              ]
+            },
+            "role": "text",
+            "scope": [
+              "管理層討論與分析",
+              "1 合併經營業績",
+              "(2) 經營費用"
+            ],
+            "parents": [],
+            "authorized_text": "採購原油費用為人民幣9,095億元，同比降低3.7%。2024年外購原油加工量為20,765萬噸（未包括來料加工原油量），同比降低2.3%；外購原油平均單位加工成本為人民幣4,380元/噸，同比降低1.4%。",
+            "restored_typed_requirements": [
+              {
+                "id": "B:267",
+                "source": {
+                  "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sinopec-2024-annual/expected.md",
+                  "lines": [
+                    519,
+                    519
+                  ],
+                  "text_span": [
+                    10,
+                    15
+                  ]
+                },
+                "statement_source": {
+                  "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sinopec-2024-annual/expected.md",
+                  "lines": [
+                    519,
+                    519
+                  ],
+                  "text_span": [
+                    0,
+                    17
+                  ]
+                },
+                "subject": "採購原油費用",
+                "value": "9,095",
+                "unit": "億元"
+              },
+              {
+                "id": "B:268",
+                "source": {
+                  "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sinopec-2024-annual/expected.md",
+                  "lines": [
+                    519,
+                    519
+                  ],
+                  "text_span": [
+                    22,
+                    25
+                  ]
+                },
+                "statement_source": {
+                  "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sinopec-2024-annual/expected.md",
+                  "lines": [
+                    519,
+                    519
+                  ],
+                  "text_span": [
+                    18,
+                    26
+                  ]
+                },
+                "subject": "採購原油費用",
+                "value": "3.7",
+                "unit": "%"
+              }
+            ],
+            "fixed_content_spans": [
+              {
+                "id": "content:157:27:104",
+                "source": {
+                  "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sinopec-2024-annual/expected.md",
+                  "lines": [
+                    519,
+                    519
+                  ],
+                  "text_span": [
+                    27,
+                    104
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
   "expected_structure_gate": {
     "status": "not_passed",
-    "reason": "This source-only selected-document validation does not complete every authorized expected scope, resolve five input scopes, or execute actual candidate/delivery comparisons."
+    "contract": "document_ast/1",
+    "blocking_requirement_views": 152,
+    "complete_views_without_independent_sample_acceptance": 18,
+    "language_analysis_is_not_the_gate": true
   },
   "comparison_capability_gate": {
     "status": "not_passed",
-    "reason": "This source-only selected-document validation does not complete every authorized expected scope, resolve five input scopes, or execute actual candidate/delivery comparisons."
+    "controlled_capabilities_verified": 40,
+    "required_capabilities_without_controlled_evidence_views": 0,
+    "real_format_and_saved_output_diagnosis": "not_executed_this_task",
+    "native_adapters_accepted": false
   },
   "delivery_conversion_gate": {
     "status": "not_passed",
-    "reason": "This source-only selected-document validation does not complete every authorized expected scope, resolve five input scopes, or execute actual candidate/delivery comparisons."
+    "real_replay_executed": false
   },
-  "completion_status": "authorized_sinopec_document_ast_content_source_only_task_complete",
+  "completion_status": {
+    "current_source_only_software_task": "passed",
+    "global_source_requirement_acceptance": "not_passed",
+    "actual_candidate_comparison": "not_started",
+    "quality_publication": "withheld"
+  },
   "real_candidate_cpu_replay_started": false,
   "formal_scoring_or_replay": false,
   "semantic_diagnosis": {
@@ -10265,152 +8529,1877 @@
       "independent_component_count_is_not_B_denominator": true
     }
   ],
-  "meaning": "Source-only selected document contract complete; global quality grades remain withheld.",
+  "meaning": "Comparison requirements, language-analysis limitations, independent source acceptance, candidate-format diagnosis and execution authorization are distinct. Dimensions overlap.",
   "baseline_preservation": {
-    "software_id": "fcb47409e27c98c6849187f04771d254e3e490e22e2946514835e26f6adc2b03",
-    "purpose": "generated_baseline_non_regression_not_corpus_or_global_acceptance",
-    "status": "passed",
-    "validated_location": "current",
-    "A": {
-      "declarations": [
-        742,
-        781,
-        920
-      ],
-      "records": 41,
-      "requirements": 221,
-      "normalized_fact_payloads_unchanged": true
-    },
-    "B": {
-      "requirements": 3,
-      "normalized_fact_payloads_unchanged": true
-    },
-    "C": {
-      "requirements": 1,
-      "relations": 4,
-      "normalized_fact_payloads_unchanged": true,
-      "owned_relation_payloads_unchanged": true
-    },
-    "huawei": {
-      "layers": {
-        "T": 407,
-        "L": 575,
-        "B": 122
-      },
-      "independent_source_only_acceptance": "passed_current_bound_original_oracle"
-    },
-    "full_expected_accepted": false,
-    "normalized_fields": [
-      "subject",
-      "attribute",
-      "value",
-      "qualifiers",
-      "identity_facets",
-      "role",
-      "quantity_role",
-      "semantic_type",
-      "scope"
-    ],
-    "baseline_snapshot": "incoming accepted current before this task",
-    "sf": {
-      "independent_source_only_acceptance": "passed_current_bound_original_oracle",
-      "layers": {
-        "T": 585,
-        "L": 708,
-        "B": 133
-      }
-    },
-    "oracle_validation": {
-      "path": "benchmark/runs/lite/requirements/validation/oracle-validation.json",
-      "sha256": "f18d6375c991da96b0f29b1ef3f989fdd1a951b7bd93eb1e95d2fa8c2b1ad43f"
-    }
+    "path": "benchmark/runs/lite/requirements/validation/baseline-preservation.json",
+    "sha256": "8f6645cc92c2f2246112d6078e4296faeef22df0cb2bc8076237a2571b4fb616",
+    "status": "passed"
   },
   "repository_checks": {
-    "ruff": {
-      "command": [
-        ".venv/bin/ruff",
-        "check",
-        "moparse_eval",
-        "tests/unit/test_cjk_narrative_requirements.py",
-        "tests/unit/test_document_ast_comparison.py",
-        "tests/unit/test_explicit_reference_requirements.py",
-        "tests/unit/test_field_sequence_requirements.py",
-        "tests/unit/test_financial_attribution_context.py",
-        "tests/unit/test_financial_cause_source_closure.py",
-        "tests/unit/test_financial_following_cause.py",
-        "tests/unit/test_financial_group_context.py",
-        "tests/unit/test_reader_qualifier_source_closure.py",
-        "tests/unit/test_requirement_graph_enumeration_scope.py",
-        "tests/unit/test_three_layer_orchestration.py",
-        "tests/validation/lite_source_oracle.py"
-      ],
-      "exit_code": 0,
-      "output": "All checks passed!"
-    },
-    "markdown_policy": {
-      "command": [
-        "python",
-        "scripts/check_markdown_policy.py",
-        "benchmark/evaluation-tasks.md",
-        "docs/engineering/architecture.md",
-        "docs/engineering/prompts/expected-output-optimization.md"
-      ],
-      "exit_code": 0,
-      "files": 3,
-      "violations": 0
-    },
-    "git_diff_check": {
-      "exit_code": 0,
-      "scope": "modified evaluation source, tests and non-corpus owning documents"
-    },
-    "scope": "generic checks exclude corpus, datasets, runs, reports and reference-decisions"
+    "ruff": "passed_scoped_code_and_tests",
+    "markdown_policy": "61 files checked, 0 violations",
+    "diff_check": "passed",
+    "excluded_reference_and_generated_roots": true
   },
-  "requirement_index_sha256": "3619d280789f15e0328f5ec99a358a77e90e538d5cc9e6d1659b9db06c895886",
-  "initial_head": "e9ec01f411341b0d06f2a60cc220cc306c1d3549",
-  "huawei_complete_source_only_acceptance": true,
+  "requirement_index_sha256": "2a4d564c787c2315608c7619e86a88308b1642a06f12ce7170ea5a7e4161e0f5",
+  "initial_head": "180e91889ec19179878a4fe969cf430e2a0666a3",
+  "huawei_complete_source_only_acceptance": {
+    "purpose": "independent_hand_authored_complete_selected_source_oracle_not_quality_grades",
+    "scope": [
+      {
+        "lines": [
+          1568,
+          1604
+        ],
+        "pages": [
+          1
+        ],
+        "declared_source_pages": [
+          62
+        ],
+        "outside_source_pages": []
+      },
+      {
+        "lines": [
+          1606,
+          1638
+        ],
+        "pages": [
+          2
+        ],
+        "declared_source_pages": [
+          63
+        ],
+        "outside_source_pages": []
+      }
+    ],
+    "status": "passed",
+    "all_52_authorized_sources_reviewed": true,
+    "previously_explained_sources_included": true,
+    "source_records": [
+      {
+        "line": 1568,
+        "kind": "heading",
+        "meaning": "T literal and L heading hierarchy; no unconditional business fact",
+        "status": "passed"
+      },
+      {
+        "line": 1570,
+        "kind": "heading",
+        "meaning": "T literal and L heading hierarchy; no unconditional business fact",
+        "status": "passed"
+      },
+      {
+        "line": 1572,
+        "kind": "unit_declaration",
+        "meaning": "T literal and bounded amount-series qualifier; percentage and prose scopes stay separate",
+        "status": "passed"
+      },
+      {
+        "line": 1574,
+        "kind": "printed_series",
+        "expected_values": [
+          "862,072",
+          "704,174",
+          "22.4"
+        ],
+        "metric": "销售收入",
+        "parent": null,
+        "assertions": "two printed periods, sign, scale/unit, YoY pair, actual parent and membership",
+        "status": "passed"
+      },
+      {
+        "line": 1575,
+        "kind": "printed_series",
+        "expected_values": [
+          "382,571",
+          "325,364",
+          "17.6"
+        ],
+        "metric": "销售毛利",
+        "parent": null,
+        "assertions": "two printed periods, sign, scale/unit, YoY pair, actual parent and membership",
+        "status": "passed"
+      },
+      {
+        "line": 1576,
+        "kind": "printed_series",
+        "expected_values": [
+          "44.4",
+          "46.2",
+          "(1.8)"
+        ],
+        "metric": "销售毛利率",
+        "parent": "销售毛利",
+        "assertions": "two printed periods, sign, scale/unit, YoY pair, actual parent and membership",
+        "status": "passed"
+      },
+      {
+        "line": 1577,
+        "kind": "printed_series",
+        "expected_values": [
+          "(311,532)",
+          "(283,644)",
+          "9.8"
+        ],
+        "metric": "期间费用",
+        "parent": null,
+        "assertions": "two printed periods, sign, scale/unit, YoY pair, actual parent and membership",
+        "status": "passed"
+      },
+      {
+        "line": 1578,
+        "kind": "printed_series",
+        "expected_values": [
+          "36.1",
+          "40.3",
+          "(4.2)"
+        ],
+        "metric": "期间费用率",
+        "parent": "期间费用",
+        "assertions": "two printed periods, sign, scale/unit, YoY pair, actual parent and membership",
+        "status": "passed"
+      },
+      {
+        "line": 1579,
+        "kind": "printed_series",
+        "expected_values": [
+          "8,322",
+          "62,681",
+          "(86.7)"
+        ],
+        "metric": "其他净收支",
+        "parent": null,
+        "assertions": "two printed periods, sign, scale/unit, YoY pair, actual parent and membership",
+        "status": "passed"
+      },
+      {
+        "line": 1580,
+        "kind": "printed_series",
+        "expected_values": [
+          "79,361",
+          "104,401",
+          "(24.0)"
+        ],
+        "metric": "营业利润",
+        "parent": null,
+        "assertions": "two printed periods, sign, scale/unit, YoY pair, actual parent and membership",
+        "status": "passed"
+      },
+      {
+        "line": 1581,
+        "kind": "printed_series",
+        "expected_values": [
+          "9.2",
+          "14.8",
+          "(5.6)"
+        ],
+        "metric": "营业利润率",
+        "parent": "营业利润",
+        "assertions": "two printed periods, sign, scale/unit, YoY pair, actual parent and membership",
+        "status": "passed"
+      },
+      {
+        "line": 1582,
+        "kind": "printed_series",
+        "expected_values": [
+          "(8,255)",
+          "(6,659)",
+          "24.0"
+        ],
+        "metric": "净财务费用",
+        "parent": null,
+        "assertions": "two printed periods, sign, scale/unit, YoY pair, actual parent and membership",
+        "status": "passed"
+      },
+      {
+        "line": 1583,
+        "kind": "printed_series",
+        "expected_values": [
+          "(8,295)",
+          "(10,646)",
+          "(22.1)"
+        ],
+        "metric": "所得税",
+        "parent": null,
+        "assertions": "two printed periods, sign, scale/unit, YoY pair, actual parent and membership",
+        "status": "passed"
+      },
+      {
+        "line": 1584,
+        "kind": "printed_series",
+        "expected_values": [
+          "62,574",
+          "86,950",
+          "(28.0)"
+        ],
+        "metric": "净利润",
+        "parent": null,
+        "assertions": "two printed periods, sign, scale/unit, YoY pair, actual parent and membership",
+        "status": "passed"
+      },
+      {
+        "line": 1586,
+        "kind": "narrative",
+        "expected_main_assertions": [
+          [
+            "销售收入",
+            "实现",
+            "862,072"
+          ],
+          [
+            "销售收入",
+            "同比增长",
+            "22.4"
+          ],
+          [
+            "净利润",
+            "为",
+            "62,574"
+          ]
+        ],
+        "expected_noncounting_operations": [],
+        "status": "passed"
+      },
+      {
+        "line": 1588,
+        "kind": "narrative",
+        "expected_main_assertions": [
+          [
+            "收入规模",
+            "增长",
+            ""
+          ]
+        ],
+        "expected_noncounting_operations": [
+          [
+            "行业数字化、智能化、低碳化",
+            "转型",
+            ""
+          ],
+          [
+            "产品竞争力",
+            "提升",
+            ""
+          ]
+        ],
+        "status": "passed"
+      },
+      {
+        "line": 1589,
+        "kind": "narrative",
+        "expected_main_assertions": [
+          [
+            "主营业务盈利能力",
+            "恢复",
+            ""
+          ]
+        ],
+        "expected_noncounting_operations": [
+          [
+            "收入规模",
+            "增长",
+            ""
+          ],
+          [
+            "产业组合",
+            "稳健",
+            ""
+          ]
+        ],
+        "status": "passed"
+      },
+      {
+        "line": 1591,
+        "kind": "heading",
+        "meaning": "T literal and L heading hierarchy; no unconditional business fact",
+        "status": "passed"
+      },
+      {
+        "line": 1593,
+        "kind": "unit_declaration",
+        "meaning": "T literal and bounded amount-series qualifier; percentage and prose scopes stay separate",
+        "status": "passed"
+      },
+      {
+        "line": 1595,
+        "kind": "printed_series",
+        "expected_values": [
+          "179,687",
+          "164,721",
+          "9.1"
+        ],
+        "metric": "研发费用",
+        "parent": null,
+        "assertions": "two printed periods, sign, scale/unit, YoY pair, actual parent and membership",
+        "status": "passed"
+      },
+      {
+        "line": 1596,
+        "kind": "printed_series",
+        "expected_values": [
+          "20.8",
+          "23.4",
+          "(2.6)"
+        ],
+        "metric": "研发费用率",
+        "parent": "研发费用",
+        "assertions": "two printed periods, sign, scale/unit, YoY pair, actual parent and membership",
+        "status": "passed"
+      },
+      {
+        "line": 1597,
+        "kind": "printed_series",
+        "expected_values": [
+          "131,845",
+          "118,923",
+          "10.9"
+        ],
+        "metric": "销售和管理费用",
+        "parent": null,
+        "assertions": "two printed periods, sign, scale/unit, YoY pair, actual parent and membership",
+        "status": "passed"
+      },
+      {
+        "line": 1598,
+        "kind": "printed_series",
+        "expected_values": [
+          "15.3",
+          "16.9",
+          "(1.6)"
+        ],
+        "metric": "销售和管理费用率",
+        "parent": "销售和管理费用",
+        "assertions": "two printed periods, sign, scale/unit, YoY pair, actual parent and membership",
+        "status": "passed"
+      },
+      {
+        "line": 1599,
+        "kind": "printed_series",
+        "expected_values": [
+          "311,532",
+          "283,644",
+          "9.8"
+        ],
+        "metric": "期间费用合计",
+        "parent": null,
+        "assertions": "two printed periods, sign, scale/unit, YoY pair, actual parent and membership",
+        "status": "passed"
+      },
+      {
+        "line": 1600,
+        "kind": "printed_series",
+        "expected_values": [
+          "36.1",
+          "40.3",
+          "(4.2)"
+        ],
+        "metric": "期间费用率",
+        "parent": "期间费用合计",
+        "assertions": "two printed periods, sign, scale/unit, YoY pair, actual parent and membership",
+        "status": "passed"
+      },
+      {
+        "line": 1602,
+        "kind": "narrative",
+        "expected_main_assertions": [
+          [
+            "",
+            "加大",
+            "对AI、根技术、智能汽车等领域面向未来的基础研究与创新投入"
+          ],
+          [
+            "研发费用",
+            "上升",
+            ""
+          ],
+          [
+            "研发费用率",
+            "下降",
+            ""
+          ]
+        ],
+        "expected_noncounting_operations": [
+          [
+            "收入规模",
+            "增长",
+            ""
+          ]
+        ],
+        "status": "passed"
+      },
+      {
+        "line": 1604,
+        "kind": "narrative",
+        "expected_main_assertions": [
+          [
+            "",
+            "坚持",
+            "对新业务领域发展、生态建设等的投入"
+          ],
+          [
+            "销售和管理费用率",
+            "下降",
+            ""
+          ]
+        ],
+        "expected_noncounting_operations": [
+          [
+            "",
+            "变革",
+            ""
+          ],
+          [
+            "运营效率",
+            "提升",
+            ""
+          ]
+        ],
+        "status": "passed"
+      },
+      {
+        "line": 1606,
+        "kind": "heading",
+        "meaning": "T literal and L heading hierarchy; no unconditional business fact",
+        "status": "passed"
+      },
+      {
+        "line": 1608,
+        "kind": "unit_declaration",
+        "meaning": "T literal and bounded amount-series qualifier; percentage and prose scopes stay separate",
+        "status": "passed"
+      },
+      {
+        "line": 1610,
+        "kind": "printed_series",
+        "expected_values": [
+          "133",
+          "474",
+          "(71.9)"
+        ],
+        "metric": "净汇兑损失",
+        "parent": null,
+        "assertions": "two printed periods, sign, scale/unit, YoY pair, actual parent and membership",
+        "status": "passed"
+      },
+      {
+        "line": 1611,
+        "kind": "printed_series",
+        "expected_values": [
+          "8,122",
+          "6,185",
+          "31.3"
+        ],
+        "metric": "其他净财务损益",
+        "parent": null,
+        "assertions": "two printed periods, sign, scale/unit, YoY pair, actual parent and membership",
+        "status": "passed"
+      },
+      {
+        "line": 1612,
+        "kind": "printed_series",
+        "expected_values": [
+          "8,255",
+          "6,659",
+          "24.0"
+        ],
+        "metric": "净财务费用合计",
+        "parent": null,
+        "assertions": "two printed periods, sign, scale/unit, YoY pair, actual parent and membership",
+        "status": "passed"
+      },
+      {
+        "line": 1614,
+        "kind": "narrative",
+        "expected_main_assertions": [
+          [
+            "净财务费用",
+            "为",
+            "8,255"
+          ],
+          [
+            "净财务费用",
+            "同比增长",
+            "24.0"
+          ]
+        ],
+        "expected_noncounting_operations": [
+          [
+            "其他净财务损益",
+            "变动",
+            ""
+          ]
+        ],
+        "status": "passed"
+      },
+      {
+        "line": 1616,
+        "kind": "heading",
+        "meaning": "T literal and L heading hierarchy; no unconditional business fact",
+        "status": "passed"
+      },
+      {
+        "line": 1618,
+        "kind": "unit_declaration",
+        "meaning": "T literal and bounded amount-series qualifier; percentage and prose scopes stay separate",
+        "status": "passed"
+      },
+      {
+        "line": 1620,
+        "kind": "printed_series",
+        "expected_values": [
+          "475,693",
+          "390,503",
+          "21.8"
+        ],
+        "metric": "非流动资产",
+        "parent": null,
+        "assertions": "two printed periods, sign, scale/unit, YoY pair, actual parent and membership",
+        "status": "passed"
+      },
+      {
+        "line": 1621,
+        "kind": "printed_series",
+        "expected_values": [
+          "814,456",
+          "873,094",
+          "(6.7)"
+        ],
+        "metric": "流动资产",
+        "parent": null,
+        "assertions": "two printed periods, sign, scale/unit, YoY pair, actual parent and membership",
+        "status": "passed"
+      },
+      {
+        "line": 1622,
+        "kind": "printed_series",
+        "expected_values": [
+          "1,290,149",
+          "1,263,597",
+          "2.1"
+        ],
+        "metric": "资产合计",
+        "parent": null,
+        "assertions": "two printed periods, sign, scale/unit, YoY pair, actual parent and membership",
+        "status": "passed"
+      },
+      {
+        "line": 1623,
+        "kind": "printed_series",
+        "expected_values": [
+          "372,232",
+          "475,317",
+          "(21.7)"
+        ],
+        "metric": "现金与短期投资",
+        "parent": "资产合计",
+        "assertions": "two printed periods, sign, scale/unit, YoY pair, actual parent and membership",
+        "status": "passed"
+      },
+      {
+        "line": 1624,
+        "kind": "printed_series",
+        "expected_values": [
+          "109,558",
+          "97,224",
+          "12.7"
+        ],
+        "metric": "应收账款",
+        "parent": "资产合计",
+        "assertions": "two printed periods, sign, scale/unit, YoY pair, actual parent and membership",
+        "status": "passed"
+      },
+      {
+        "line": 1625,
+        "kind": "printed_series",
+        "expected_values": [
+          "60,640",
+          "53,886",
+          "12.5"
+        ],
+        "metric": "合同资产",
+        "parent": "资产合计",
+        "assertions": "two printed periods, sign, scale/unit, YoY pair, actual parent and membership",
+        "status": "passed"
+      },
+      {
+        "line": 1626,
+        "kind": "printed_series",
+        "expected_values": [
+          "179,139",
+          "154,558",
+          "15.9"
+        ],
+        "metric": "存货及其他合同成本",
+        "parent": "资产合计",
+        "assertions": "two printed periods, sign, scale/unit, YoY pair, actual parent and membership",
+        "status": "passed"
+      },
+      {
+        "line": 1627,
+        "kind": "printed_series",
+        "expected_values": [
+          "250,252",
+          "304,597",
+          "(17.8)"
+        ],
+        "metric": "非流动负债",
+        "parent": null,
+        "assertions": "two printed periods, sign, scale/unit, YoY pair, actual parent and membership",
+        "status": "passed"
+      },
+      {
+        "line": 1628,
+        "kind": "printed_series",
+        "expected_values": [
+          "237,508",
+          "291,688",
+          "(18.6)"
+        ],
+        "metric": "长期借款",
+        "parent": "非流动负债",
+        "assertions": "two printed periods, sign, scale/unit, YoY pair, actual parent and membership",
+        "status": "passed"
+      },
+      {
+        "line": 1629,
+        "kind": "printed_series",
+        "expected_values": [
+          "495,278",
+          "451,432",
+          "9.7"
+        ],
+        "metric": "流动负债",
+        "parent": null,
+        "assertions": "two printed periods, sign, scale/unit, YoY pair, actual parent and membership",
+        "status": "passed"
+      },
+      {
+        "line": 1630,
+        "kind": "printed_series",
+        "expected_values": [
+          "27,363",
+          "16,726",
+          "63.6"
+        ],
+        "metric": "短期借款",
+        "parent": "流动负债",
+        "assertions": "two printed periods, sign, scale/unit, YoY pair, actual parent and membership",
+        "status": "passed"
+      },
+      {
+        "line": 1631,
+        "kind": "printed_series",
+        "expected_values": [
+          "104,908",
+          "86,362",
+          "21.5"
+        ],
+        "metric": "应付账款",
+        "parent": "流动负债",
+        "assertions": "two printed periods, sign, scale/unit, YoY pair, actual parent and membership",
+        "status": "passed"
+      },
+      {
+        "line": 1632,
+        "kind": "printed_series",
+        "expected_values": [
+          "97,461",
+          "95,101",
+          "2.5"
+        ],
+        "metric": "合同负债",
+        "parent": "流动负债",
+        "assertions": "two printed periods, sign, scale/unit, YoY pair, actual parent and membership",
+        "status": "passed"
+      },
+      {
+        "line": 1633,
+        "kind": "printed_series",
+        "expected_values": [
+          "544,619",
+          "507,568",
+          "7.3"
+        ],
+        "metric": "所有者权益",
+        "parent": null,
+        "assertions": "two printed periods, sign, scale/unit, YoY pair, actual parent and membership",
+        "status": "passed"
+      },
+      {
+        "line": 1634,
+        "kind": "printed_series",
+        "expected_values": [
+          "1,290,149",
+          "1,263,597",
+          "2.1"
+        ],
+        "metric": "负债与所有者权益合计",
+        "parent": null,
+        "assertions": "two printed periods, sign, scale/unit, YoY pair, actual parent and membership",
+        "status": "passed"
+      },
+      {
+        "line": 1636,
+        "kind": "narrative",
+        "expected_main_assertions": [
+          [
+            "总资产余额",
+            "达到",
+            "1,290,149"
+          ],
+          [
+            "总资产余额",
+            "同比增长",
+            "2.1"
+          ],
+          [
+            "流动资产余额",
+            "占",
+            "63.1"
+          ]
+        ],
+        "expected_noncounting_operations": [],
+        "status": "passed"
+      },
+      {
+        "line": 1638,
+        "kind": "narrative",
+        "expected_main_assertions": [
+          [
+            "",
+            "偿还",
+            "部分债务"
+          ],
+          [
+            "长短期借款余额",
+            "较年初减少",
+            "43,543"
+          ]
+        ],
+        "expected_noncounting_operations": [
+          [
+            "",
+            "优化",
+            "债务结构"
+          ]
+        ],
+        "status": "passed"
+      }
+    ],
+    "source_preservation": "Original authorized source arrays, selections and T literal projection unchanged",
+    "fresh_production_compile_matches_saved_current": true,
+    "facts": 122,
+    "noncounting_operands": 9,
+    "critical_scope_decisions": [
+      "Means and accompanying background remain different; no causal meaning assigned to 随着.",
+      "Development, sales and management rate descriptions retain qualitative changes and nested investment domains, orientation and non-exhaustive scope.",
+      "The trailing main cause attaches to the immediately preceding YoY change, not the earlier expense amount; 主要 is not 唯一.",
+      "Debt optimization is a means of partial repayment; the separately dated reduction has a printed 年初 baseline, with no invented causal edge, year or repayment amount.",
+      "The last sentence at L1586 has no printed year; it remains undeclared rather than borrowing the first sentence year."
+    ],
+    "oracle_values_supplied_to_runtime": false,
+    "actual_expected_used_as_candidate": false,
+    "candidate_read": false,
+    "pdf_or_image_read": false,
+    "quality_acceptance": false,
+    "sample_id": "huawei-operating-results-p062-063",
+    "comparison_contract_version": "document_ast/1",
+    "generated_view_sha256": "5469e425af3a380ae922e2aba2012aa345b111710eec3809b5b76e5b9a5aba06",
+    "comparison_coverage_sha256": "f32ccf624732165fb892b79ca29bff5f202e38a2a322e84ef91256e1e2b0f793"
+  },
   "current_task": {
-    "fixed_sample": "sinopec-finance-governance-p025-036",
-    "status": "passed_source_only_document_ast_and_content",
-    "authorized_sources": 202,
-    "commit_or_push": false,
-    "huawei_preserved": true,
-    "sf_preserved": true,
-    "unrestricted_chinese_semantics_complete": false,
-    "other_new_samples_independently_accepted": false
+    "task": "document_AST_correspondence_four_state_boundaries_and_contract_gate",
+    "status": "passed_source_only_software_and_three_baselines",
+    "contract": {
+      "name": "document_ast",
+      "version": "document_ast/1",
+      "correspondence_limit": 8,
+      "requirements_source": "authorized expected fixed before candidates",
+      "capacity": "nonoverlapping original source spans",
+      "analysis_semantic_complete": false,
+      "comparison_requirement_coverage_complete": false,
+      "independent_full_scope_acceptance": false,
+      "global_execution_permitted": false
+    },
+    "real_candidate_comparison": false,
+    "new_grammar_packages": false
   },
   "git_head_meaning": "Unchanged checkout HEAD; software_id identifies the tested current worktree.",
-  "sf_complete_source_only_acceptance": true,
+  "sf_complete_source_only_acceptance": {
+    "purpose": "independent_hand_authored_complete_selected_source_oracle_not_quality_grades",
+    "status": "passed",
+    "all_authorized_sources": 40,
+    "previously_explained_sources_included": true,
+    "source_records": [
+      {
+        "line": 898,
+        "kind": "heading",
+        "independent_assertions": "literal, selected hierarchy and content scope; no independent amount",
+        "status": "passed"
+      },
+      {
+        "line": 900,
+        "kind": "printed_bounded_schema",
+        "independent_assertions": "full literal, printed period basis, currency/unit and actual following record bindings",
+        "status": "passed"
+      },
+      {
+        "line": 902,
+        "kind": "annual_cashflow_series",
+        "independent_assertions": [
+          "經營活動產生的現金淨額",
+          "32,186,373",
+          "26,569,819",
+          "21.14",
+          "printed 2024/2023 pairing and bounded annual unit"
+        ],
+        "status": "passed"
+      },
+      {
+        "line": 903,
+        "kind": "annual_cashflow_series",
+        "independent_assertions": [
+          "投資活動使用的現金淨額",
+          "-12,054,744",
+          "-13,505,617",
+          "10.74",
+          "printed 2024/2023 pairing and bounded annual unit"
+        ],
+        "status": "passed"
+      },
+      {
+        "line": 904,
+        "kind": "annual_cashflow_series",
+        "independent_assertions": [
+          "融資活動使用的現金淨額",
+          "-27,979,113",
+          "-12,994,685",
+          "-115.31",
+          "printed 2024/2023 pairing and bounded annual unit"
+        ],
+        "status": "passed"
+      },
+      {
+        "line": 905,
+        "kind": "annual_cashflow_series",
+        "independent_assertions": [
+          "現金及現金等價物減少/增加淨額",
+          "-7,847,484",
+          "69,517",
+          "-11,388.58",
+          "printed 2024/2023 pairing and bounded annual unit"
+        ],
+        "status": "passed"
+      },
+      {
+        "line": 906,
+        "kind": "annual_cashflow_series",
+        "independent_assertions": [
+          "現金及現金等價物的匯兌收益",
+          "45,231",
+          "98,844",
+          "-54.24",
+          "printed 2024/2023 pairing and bounded annual unit"
+        ],
+        "status": "passed"
+      },
+      {
+        "line": 907,
+        "kind": "annual_cashflow_series",
+        "independent_assertions": [
+          "年初現金及現金等價物",
+          "40,448,308",
+          "40,279,947",
+          "0.42",
+          "printed 2024/2023 pairing and bounded annual unit"
+        ],
+        "status": "passed"
+      },
+      {
+        "line": 908,
+        "kind": "annual_cashflow_series",
+        "independent_assertions": [
+          "年末現金及現金等價物",
+          "32,646,055",
+          "40,448,308",
+          "-19.29",
+          "printed 2024/2023 pairing and bounded annual unit"
+        ],
+        "status": "passed"
+      },
+      {
+        "line": 910,
+        "kind": "source_bound_narrative_and_causes",
+        "independent_assertions": {
+          "main": [
+            [
+              "經營活動產生的現金淨額",
+              "為",
+              "321.9"
+            ],
+            [
+              "經營活動產生的現金淨額",
+              "相較2023年同期增長",
+              "21.14"
+            ]
+          ],
+          "noncounting_operands": [
+            [
+              "盈利",
+              "增長",
+              ""
+            ],
+            [
+              "",
+              "優化",
+              "經營性現金流管理"
+            ]
+          ],
+          "amounts_not_cause_operands": true,
+          "cause_owners": [
+            1
+          ],
+          "main_degree": "主要",
+          "combined": true,
+          "non_exhaustive": false
+        },
+        "status": "passed"
+      },
+      {
+        "line": 912,
+        "kind": "source_bound_narrative_and_causes",
+        "independent_assertions": {
+          "main": [
+            [
+              "投資活動使用的現金淨額流出",
+              "為",
+              "120.5"
+            ],
+            [
+              "投資活動使用的現金淨額流出",
+              "相較2023年同期下降",
+              "10.74"
+            ]
+          ],
+          "noncounting_operands": [
+            [
+              "購買物業廠房設備淨現金流出",
+              "減少",
+              ""
+            ],
+            [
+              "取得子公司及其他投資的淨現金流出",
+              "減少",
+              ""
+            ],
+            [
+              "購買結構性存款淨現金流出",
+              "增加",
+              ""
+            ]
+          ],
+          "amounts_not_cause_operands": true,
+          "cause_owners": [
+            1
+          ],
+          "main_degree": "主要",
+          "combined": true,
+          "non_exhaustive": true
+        },
+        "status": "passed"
+      },
+      {
+        "line": 914,
+        "kind": "source_bound_narrative_and_causes",
+        "independent_assertions": {
+          "main": [
+            [
+              "融資活動使用的現金淨額流出",
+              "為",
+              "279.8"
+            ],
+            [
+              "融資活動使用的現金淨額流出",
+              "相較2023年同期增長",
+              "115.31"
+            ]
+          ],
+          "noncounting_operands": [
+            [
+              "借款淨流出",
+              "增加",
+              ""
+            ],
+            [
+              "分配股利淨流出",
+              "增加",
+              ""
+            ],
+            [
+              "發行H股股份募集資金",
+              "流入",
+              ""
+            ]
+          ],
+          "amounts_not_cause_operands": true,
+          "cause_owners": [
+            1
+          ],
+          "main_degree": "主要",
+          "combined": true,
+          "non_exhaustive": true
+        },
+        "status": "passed"
+      },
+      {
+        "line": 916,
+        "kind": "heading",
+        "independent_assertions": "literal, selected hierarchy and content scope; no independent amount",
+        "status": "passed"
+      },
+      {
+        "line": 918,
+        "kind": "heading",
+        "independent_assertions": "literal, selected hierarchy and content scope; no independent amount",
+        "status": "passed"
+      },
+      {
+        "line": 920,
+        "kind": "printed_bounded_schema",
+        "independent_assertions": "full literal, printed period basis, currency/unit and actual following record bindings",
+        "status": "passed"
+      },
+      {
+        "line": 922,
+        "kind": "financial_classification_parent",
+        "independent_assertions": "actual parent identity of separately bound child records; never an amount",
+        "status": "passed"
+      },
+      {
+        "line": 923,
+        "kind": "six_column_classified_record",
+        "independent_assertions": [
+          "物業、廠房及設備",
+          "非流動資產",
+          [
+            "金額",
+            "佔總資產比",
+            "金額",
+            "佔總資產比",
+            "金額同比變動",
+            "佔總資產比重同比增減"
+          ],
+          [
+            "59,174,305",
+            "27.67",
+            "60,104,416",
+            "27.14",
+            "-1.55",
+            "0.53"
+          ]
+        ],
+        "status": "passed"
+      },
+      {
+        "line": 924,
+        "kind": "six_column_classified_record",
+        "independent_assertions": [
+          "使用權資產",
+          "非流動資產",
+          [
+            "金額",
+            "佔總資產比",
+            "金額",
+            "佔總資產比",
+            "金額同比變動",
+            "佔總資產比重同比增減"
+          ],
+          [
+            "19,625,629",
+            "9.18",
+            "20,890,047",
+            "9.43",
+            "-6.05",
+            "-0.25"
+          ]
+        ],
+        "status": "passed"
+      },
+      {
+        "line": 925,
+        "kind": "six_column_classified_record",
+        "independent_assertions": [
+          "投資性房地產",
+          "非流動資產",
+          [
+            "金額",
+            "佔總資產比",
+            "金額",
+            "佔總資產比",
+            "金額同比變動",
+            "佔總資產比重同比增減"
+          ],
+          [
+            "7,241,199",
+            "3.39",
+            "6,418,720",
+            "2.90",
+            "12.81",
+            "0.49"
+          ]
+        ],
+        "status": "passed"
+      },
+      {
+        "line": 926,
+        "kind": "six_column_classified_record",
+        "independent_assertions": [
+          "對聯營企業及合營企業的投資",
+          "非流動資產",
+          [
+            "金額",
+            "佔總資產比",
+            "金額",
+            "佔總資產比",
+            "金額同比變動",
+            "佔總資產比重同比增減"
+          ],
+          [
+            "6,203,642",
+            "2.90",
+            "7,378,831",
+            "3.33",
+            "-15.93",
+            "-0.43"
+          ]
+        ],
+        "status": "passed"
+      },
+      {
+        "line": 927,
+        "kind": "financial_classification_parent",
+        "independent_assertions": "actual parent identity of separately bound child records; never an amount",
+        "status": "passed"
+      },
+      {
+        "line": 928,
+        "kind": "six_column_classified_record",
+        "independent_assertions": [
+          "存貨",
+          "流動資產",
+          [
+            "金額",
+            "佔總資產比",
+            "金額",
+            "佔總資產比",
+            "金額同比變動",
+            "佔總資產比重同比增減"
+          ],
+          [
+            "2,432,383",
+            "1.14",
+            "2,440,425",
+            "1.10",
+            "-0.33",
+            "0.04"
+          ]
+        ],
+        "status": "passed"
+      },
+      {
+        "line": 929,
+        "kind": "six_column_classified_record",
+        "independent_assertions": [
+          "合同資產",
+          "流動資產",
+          [
+            "金額",
+            "佔總資產比",
+            "金額",
+            "佔總資產比",
+            "金額同比變動",
+            "佔總資產比重同比增減"
+          ],
+          [
+            "2,740,820",
+            "1.28",
+            "1,632,592",
+            "0.74",
+            "67.88",
+            "0.54"
+          ]
+        ],
+        "status": "passed"
+      },
+      {
+        "line": 930,
+        "kind": "six_column_classified_record",
+        "independent_assertions": [
+          "貿易應收款項及應收票據",
+          "流動資產",
+          [
+            "金額",
+            "佔總資產比",
+            "金額",
+            "佔總資產比",
+            "金額同比變動",
+            "佔總資產比重同比增減"
+          ],
+          [
+            "27,981,633",
+            "13.09",
+            "25,360,433",
+            "11.45",
+            "10.34",
+            "1.64"
+          ]
+        ],
+        "status": "passed"
+      },
+      {
+        "line": 931,
+        "kind": "six_column_classified_record",
+        "independent_assertions": [
+          "以公允價值計量且其變動計入當期損益的金融資產",
+          "流動資產",
+          [
+            "金額",
+            "佔總資產比",
+            "金額",
+            "佔總資產比",
+            "金額同比變動",
+            "佔總資產比重同比增減"
+          ],
+          [
+            "11,246,156",
+            "5.26",
+            "6,809,742",
+            "3.07",
+            "65.15",
+            "2.19"
+          ]
+        ],
+        "status": "passed"
+      },
+      {
+        "line": 932,
+        "kind": "six_column_classified_record",
+        "independent_assertions": [
+          "現金及現金等價物",
+          "流動資產",
+          [
+            "金額",
+            "佔總資產比",
+            "金額",
+            "佔總資產比",
+            "金額同比變動",
+            "佔總資產比重同比增減"
+          ],
+          [
+            "32,646,055",
+            "15.27",
+            "40,448,308",
+            "18.26",
+            "-19.29",
+            "-2.99"
+          ]
+        ],
+        "status": "passed"
+      },
+      {
+        "line": 933,
+        "kind": "financial_classification_parent",
+        "independent_assertions": "actual parent identity of separately bound child records; never an amount",
+        "status": "passed"
+      },
+      {
+        "line": 934,
+        "kind": "six_column_classified_record",
+        "independent_assertions": [
+          "借款",
+          "非流動負債",
+          [
+            "金額",
+            "佔總資產比",
+            "金額",
+            "佔總資產比",
+            "金額同比變動",
+            "佔總資產比重同比增減"
+          ],
+          [
+            "26,319,260",
+            "12.31",
+            "30,396,912",
+            "13.72",
+            "-13.41",
+            "-1.41"
+          ]
+        ],
+        "status": "passed"
+      },
+      {
+        "line": 935,
+        "kind": "six_column_classified_record",
+        "independent_assertions": [
+          "租賃負債",
+          "非流動負債",
+          [
+            "金額",
+            "佔總資產比",
+            "金額",
+            "佔總資產比",
+            "金額同比變動",
+            "佔總資產比重同比增減"
+          ],
+          [
+            "7,094,483",
+            "3.32",
+            "8,038,495",
+            "3.63",
+            "-11.74",
+            "-0.31"
+          ]
+        ],
+        "status": "passed"
+      },
+      {
+        "line": 936,
+        "kind": "financial_classification_parent",
+        "independent_assertions": "actual parent identity of separately bound child records; never an amount",
+        "status": "passed"
+      },
+      {
+        "line": 937,
+        "kind": "six_column_classified_record",
+        "independent_assertions": [
+          "貿易應付款項及應付票據",
+          "流動負債",
+          [
+            "金額",
+            "佔總資產比",
+            "金額",
+            "佔總資產比",
+            "金額同比變動",
+            "佔總資產比重同比增減"
+          ],
+          [
+            "27,395,524",
+            "12.81",
+            "24,914,300",
+            "11.25",
+            "9.96",
+            "1.56"
+          ]
+        ],
+        "status": "passed"
+      },
+      {
+        "line": 938,
+        "kind": "six_column_classified_record",
+        "independent_assertions": [
+          "合同負債",
+          "流動負債",
+          [
+            "金額",
+            "佔總資產比",
+            "金額",
+            "佔總資產比",
+            "金額同比變動",
+            "佔總資產比重同比增減"
+          ],
+          [
+            "2,039,198",
+            "0.95",
+            "1,832,018",
+            "0.83",
+            "11.31",
+            "0.12"
+          ]
+        ],
+        "status": "passed"
+      },
+      {
+        "line": 939,
+        "kind": "six_column_classified_record",
+        "independent_assertions": [
+          "借款",
+          "流動負債",
+          [
+            "金額",
+            "佔總資產比",
+            "金額",
+            "佔總資產比",
+            "金額同比變動",
+            "佔總資產比重同比增減"
+          ],
+          [
+            "18,365,122",
+            "8.59",
+            "22,309,103",
+            "10.07",
+            "-17.68",
+            "-1.48"
+          ]
+        ],
+        "status": "passed"
+      },
+      {
+        "line": 940,
+        "kind": "six_column_classified_record",
+        "independent_assertions": [
+          "租賃負債",
+          "流動負債",
+          [
+            "金額",
+            "佔總資產比",
+            "金額",
+            "佔總資產比",
+            "金額同比變動",
+            "佔總資產比重同比增減"
+          ],
+          [
+            "5,501,314",
+            "2.57",
+            "5,769,965",
+            "2.61",
+            "-4.66",
+            "-0.04"
+          ]
+        ],
+        "status": "passed"
+      },
+      {
+        "line": 941,
+        "kind": "financial_classification_parent",
+        "independent_assertions": "actual parent identity of separately bound child records; never an amount",
+        "status": "passed"
+      },
+      {
+        "line": 942,
+        "kind": "six_column_classified_record",
+        "independent_assertions": [
+          "庫存股",
+          "權益",
+          [
+            "金額",
+            "佔總資產比",
+            "金額",
+            "佔總資產比",
+            "金額同比變動",
+            "佔總資產比重同比增減"
+          ],
+          [
+            "758,081",
+            "0.35",
+            "2,575,532",
+            "1.16",
+            "-70.57",
+            "-0.81"
+          ]
+        ],
+        "status": "passed"
+      },
+      {
+        "line": 944,
+        "kind": "source_bound_narrative_and_causes",
+        "independent_assertions": {
+          "main": [
+            [
+              "合同資產",
+              "為",
+              "27.4"
+            ],
+            [
+              "合同資產",
+              "較2023年末增長",
+              "67.88"
+            ]
+          ],
+          "noncounting_operands": [
+            [
+              "業務",
+              "增長",
+              ""
+            ]
+          ],
+          "amounts_not_cause_operands": true,
+          "cause_owners": [
+            1
+          ],
+          "main_degree": "主要",
+          "combined": false,
+          "non_exhaustive": false
+        },
+        "status": "passed"
+      },
+      {
+        "line": 946,
+        "kind": "source_bound_narrative_and_causes",
+        "independent_assertions": {
+          "main": [
+            [
+              "以公允價值計量且變動計入當期損益的金融資產",
+              "為",
+              "112.5"
+            ],
+            [
+              "以公允價值計量且變動計入當期損益的金融資產",
+              "較2023年末增長",
+              "65.15"
+            ]
+          ],
+          "noncounting_operands": [
+            [
+              "結構性存款",
+              "增加",
+              ""
+            ]
+          ],
+          "amounts_not_cause_operands": true,
+          "cause_owners": [
+            1
+          ],
+          "main_degree": "主要",
+          "combined": false,
+          "non_exhaustive": false
+        },
+        "status": "passed"
+      },
+      {
+        "line": 948,
+        "kind": "source_bound_narrative_and_causes",
+        "independent_assertions": {
+          "main": [
+            [
+              "非流動負債中的借款",
+              "為",
+              "263.2"
+            ],
+            [
+              "非流動負債中的借款",
+              "較2023年末下降",
+              "13.41"
+            ],
+            [
+              "流動負債中的借款",
+              "為",
+              "183.7"
+            ],
+            [
+              "流動負債中的借款",
+              "較2023年末下降",
+              "17.68"
+            ]
+          ],
+          "noncounting_operands": [
+            [
+              "",
+              "償還",
+              "借款"
+            ]
+          ],
+          "amounts_not_cause_operands": true,
+          "cause_owners": [
+            1,
+            3
+          ],
+          "main_degree": "主要",
+          "combined": false,
+          "non_exhaustive": false
+        },
+        "status": "passed"
+      },
+      {
+        "line": 950,
+        "kind": "source_bound_narrative_and_causes",
+        "independent_assertions": {
+          "main": [
+            [
+              "庫存股",
+              "為",
+              "7.6"
+            ],
+            [
+              "庫存股",
+              "較2023年末下降",
+              "70.57"
+            ]
+          ],
+          "noncounting_operands": [
+            [
+              "",
+              "註銷",
+              "本公司購回股份"
+            ]
+          ],
+          "amounts_not_cause_operands": true,
+          "cause_owners": [
+            1
+          ],
+          "main_degree": "主要",
+          "combined": false,
+          "non_exhaustive": false
+        },
+        "status": "passed"
+      }
+    ],
+    "facts": 133,
+    "noncounting_operands": 12,
+    "cause_scope_relations": 8,
+    "explicit_difference_reference": "two printed metrics, group actor, 2024 and consolidated note 34(a)",
+    "fresh_production_compile_matches_saved_current": true,
+    "source_preservation": "authorized source arrays, selection and T literal projection unchanged",
+    "oracle_values_supplied_to_runtime": false,
+    "actual_expected_used_as_candidate": false,
+    "candidate_read": false,
+    "pdf_or_image_read": false,
+    "quality_acceptance": false,
+    "sample_id": "sf-cashflow-assets-liabilities-p040-041",
+    "comparison_contract_version": "document_ast/1",
+    "generated_view_sha256": "520957d52a413e07bc8c345bbc424d4abbf1a999f3161027ab98b065ec008626",
+    "comparison_coverage_sha256": "24075ef08ddb44674c8b1ca13cf9ede0a0f1cffe1d32a46dcda616ebbee3d98e"
+  },
   "version_control_authorization": {
-    "current_task_commit_or_push": false,
-    "action_performed": false
+    "commit": false,
+    "push": false,
+    "executed": false
   },
-  "sinopec_complete_source_only_acceptance": true,
-  "original_costs_preserved": {
-    "report_tail_identical": true,
-    "cost_data_unchanged": true,
-    "report_tail_sha256": "e6562dfb197af4ff3889e7852cb59b140e7f8cd915dbc0cccfec0ce8a11d709c",
-    "cost_data_sha256": "dd43d00f05c276d32751437cd4f96a0e6d2138b5f1623a9728e6ef77890d7e81"
+  "sinopec_complete_source_only_acceptance": {
+    "status": "passed",
+    "sample_id": "sinopec-finance-governance-p025-036",
+    "complete_source_acceptance": true,
+    "all_authorized_sources_independently_reviewed": true,
+    "acceptance_contract": "document_ast_and_content_with_existing_typed_financial_semantics",
+    "unrestricted_chinese_semantics_complete": false,
+    "retained_sources": 202,
+    "sample_declaration": {
+      "id": "sinopec-finance-governance-p025-036",
+      "document_id": "complex-sinopec-2024-annual",
+      "source_pages": [
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36
+      ],
+      "source_category": "source-unknown",
+      "family_id": "sinopec-annual",
+      "tags": [
+        "zh-traditional",
+        "multi-column",
+        "ordinary-prose",
+        "cross-column-reading",
+        "cross-page-prose",
+        "hierarchical-table",
+        "units",
+        "negative-values",
+        "image-preservation"
+      ],
+      "suites": [
+        "lite"
+      ],
+      "review_status": "confirmed",
+      "input": "inputs/sinopec-finance-governance-p025-036.pdf",
+      "input_scope": "authored_page_selection",
+      "reference_dir": "references/complex-sinopec-2024-annual",
+      "evaluation": "evaluation/sinopec-finance-governance-p025-036.json"
+    },
+    "financial_review": {
+      "business_assertions": 191,
+      "assertive_sources": [
+        752,
+        754,
+        756,
+        758,
+        760,
+        762,
+        764,
+        768,
+        772,
+        773,
+        774,
+        778,
+        780,
+        782,
+        784,
+        796,
+        798,
+        802,
+        806,
+        807,
+        808,
+        809,
+        810,
+        811,
+        813,
+        824,
+        825,
+        826,
+        827,
+        828,
+        829,
+        830,
+        832,
+        833,
+        834,
+        835,
+        836,
+        837,
+        838,
+        839,
+        840,
+        842,
+        844,
+        854,
+        855,
+        856,
+        860,
+        862,
+        864,
+        868,
+        869,
+        870,
+        871,
+        872,
+        873,
+        874,
+        876
+      ],
+      "financial_note_bindings": 7,
+      "whole_sample_acceptance": false
+    },
+    "training_review": {
+      "reviewed_sources": 12,
+      "business_assertions": 60,
+      "marks": 48,
+      "whole_sample_acceptance": false
+    },
+    "document_review": {
+      "status": "passed",
+      "reviewed_sources": 202,
+      "governance_source_form_assertions": 73,
+      "labels_and_reference_declarations": 12,
+      "heading_nodes": 45,
+      "caption_nodes": 3,
+      "source_form_scope": "ordered_content_and_document_ownership_not_unrestricted_paraphrase",
+      "semantic_analysis_limitations_retained": 285,
+      "candidate_read": false,
+      "candidate_self_comparison": false
+    },
+    "selection_sha256": "95cc8445f8d80b83c3490358eb0fe1338640ed8ee71071158403880249589878",
+    "authorized_sources_sha256": "a1f18bec34dbc74995146e76412678c78b5405a3f35a620a76a167a80164c25f",
+    "original_source": {
+      "path": "/opt/moparse/pdf_sample/parsing/expected/complex-sinopec-2024-annual/expected.md",
+      "lines": [
+        860,
+        860
+      ]
+    },
+    "literal": "2024年末本公司總資產為人民幣20,848億元，比上年末增加人民幣581億元。主要歸因於公司加大轉型升級投入，固定資產及在建工程比上年末增加人民幣546億元。",
+    "independent_spans": {
+      "main": [
+        0,
+        40
+      ],
+      "degree": [
+        40,
+        42
+      ],
+      "cause_marker": [
+        42,
+        45
+      ],
+      "action": [
+        45,
+        55
+      ],
+      "comma": [
+        55,
+        56
+      ],
+      "quantified_change": [
+        56,
+        79
+      ]
+    },
+    "independent_assertion": "one outer major cause with action and collective financial change; no invented internal causal mechanism",
+    "authorized_context_read": {
+      "756": "非流動資產為人民幣15,569億元，比上年末增加人民幣667億元。主要歸因於公司持續推進轉型升級，煉化基地項目建設投資力度加大，物業廠房設備及在建工程比上年末增加人民幣547億元；加強對外合資合作，於聯合營公司的權益比上年末增加人民幣109億元。",
+      "860": "2024年末本公司總資產為人民幣20,848億元，比上年末增加人民幣581億元。主要歸因於公司加大轉型升級投入，固定資產及在建工程比上年末增加人民幣546億元。",
+      "862": "2024年末本公司的非流動負債為人民幣4,352億元，比上年末增加人民幣143億元。主要歸因於發行低成本長期債券融資。",
+      "864": "2024年末本公司股東權益為人民幣9,763億元，比上年末增加人民幣176億元。"
+    },
+    "semantic_analysis_limitations_retained": true,
+    "fresh_production_compile_matches_saved_current": true,
+    "candidate_read": false,
+    "pdf_or_image_read": false,
+    "quality_acceptance": false,
+    "comparison_contract_version": "document_ast/1",
+    "generated_view_sha256": "cccd5a58fb942f8c73792c2e4d45377d5ab149f46fd2c215bf1e6a8022396322",
+    "comparison_coverage_sha256": "2162596b0bdb40906a6eb808af2b6c2b84beec4d71af813d9224763d14ed482d"
   },
+  "original_costs_preserved": true,
   "validation_records": {
+    "software-validation.json": {
+      "path": "benchmark/runs/lite/requirements/validation/software-validation.json",
+      "sha256": "15ba3e3bf6b13ad2984cfc2cc82078dabf6017b28f01e98412ce1c90418cc476"
+    },
     "oracle-validation.json": {
       "path": "benchmark/runs/lite/requirements/validation/oracle-validation.json",
-      "sha256": "f18d6375c991da96b0f29b1ef3f989fdd1a951b7bd93eb1e95d2fa8c2b1ad43f"
+      "sha256": "06735edeb6f14fbec0e99232a7bdfe339235e906d95155f4477241c63715d1d8"
     },
     "comparison-validation.json": {
       "path": "benchmark/runs/lite/requirements/validation/comparison-validation.json",
-      "sha256": "2250869fe10d2044707847981ffa1789c2437bd22fdb5f27f01480ee762d8d50"
+      "sha256": "668cda30ea40f86c454281a3e3953e7b1e23662cb204a81964e23a2524f4b192"
     },
     "mutations-validation.json": {
       "path": "benchmark/runs/lite/requirements/validation/mutations-validation.json",
-      "sha256": "36661b644f444d7ea275eb6cddea2e18ae015647d2f8ade5d4782fc9b99a3fb3"
+      "sha256": "5b6dbddc9ea4107ce30456af7a168910e8d1184099f69f6d74fd9036b05ec675"
     },
     "baseline-preservation.json": {
       "path": "benchmark/runs/lite/requirements/validation/baseline-preservation.json",
-      "sha256": "3975995c0199518ece3373f6559fc47e6079b6fe2ee86ae0e2ce544a1c392e4a"
-    },
-    "source-compilation.json": {
-      "path": "benchmark/runs/lite/requirements/validation/source-compilation.json",
-      "sha256": "f8c3c794546f7295bb8f3f10eb58b2a4976a4e060656d882fc0f91affb33a494"
+      "sha256": "8f6645cc92c2f2246112d6078e4296faeef22df0cb2bc8076237a2571b4fb616"
     }
+  },
+  "comparison_contract": {
+    "name": "document_ast",
+    "version": "document_ast/1",
+    "correspondence_limit": 8,
+    "requirements_source": "authorized expected fixed before candidates",
+    "capacity": "nonoverlapping original source spans",
+    "analysis_semantic_complete": false,
+    "comparison_requirement_coverage_complete": false,
+    "independent_full_scope_acceptance": false,
+    "global_execution_permitted": false
+  },
+  "comparison_coverage": {
+    "source_or_structure_incomplete": 0,
+    "comparison_obligations_uncovered": 152,
+    "required_capabilities_not_independently_evidenced": 0,
+    "complete_requirements_lacking_independent_sample_acceptance": 18,
+    "independently_source_accepted": 3,
+    "independently_contract_accepted": 3,
+    "only_language_analysis_limitations": 16,
+    "with_retained_input_scope": 5,
+    "retained_input_scope_targets": 5
+  },
+  "actual_source_only_gate_check": {
+    "status": "rejected_as_required",
+    "reason": "expected structure gate: the current software must have a passed, independently evidenced gate",
+    "candidate_read": false,
+    "no_execution_or_receipt_requested": true
+  },
+  "original_cost_report_tail_sha256": "e6562dfb197af4ff3889e7852cb59b140e7f8cd915dbc0cccfec0ce8a11d709c",
+  "report": {
+    "path": "benchmark/reports/lite/report.md",
+    "sha256": "db33e0d639d4ea2d06acdae47b35b641ce0baa82fba83687e48a935785953cbc"
   }
 }

@@ -224,6 +224,12 @@ def build_document_ast(units):
     blocks = []
     for unit in units:
         text, source = unit.get('text'), unit.get('source', unit.get('reference'))
+        if isinstance(source, dict) and not (isinstance(text, str) and text.strip()) and unit.get('kind') not in {'text', 'item', 'table_cell'}:
+            blocks.append({'kind': 'document_block', 'role': unit.get('kind', 'unknown'),
+                           'scope': copy.deepcopy(unit.get('scope', [])),
+                           'parents': copy.deepcopy(unit.get('parents', [])),
+                           'source': copy.deepcopy(source), 'content': None, 'structural_barrier': True})
+            continue
         if not isinstance(text, str) or not isinstance(source, dict) or not text.strip() and unit.get('kind') != 'table_cell':
             continue
         scope = copy.deepcopy(unit.get('scope', unit.get('context', [])))
@@ -236,74 +242,209 @@ def build_document_ast(units):
     return {'kind': 'document', 'children': blocks}
 
 
-def compare_document_ast(required, actual, *, source_resolver=None):
-    """Align source-form blocks by scope and answer-independent lexical shape.
+DOCUMENT_ALIGNMENT_LIMIT = 8
+_CONTENT_BOUNDARY = frozenset('。！？.!?；;，,：:')
 
-    Every retrieval hit, conflict and capacity decision is retained. Numeric
-    values, units and printed operators cannot choose a candidate. Ambiguous
-    repeated shapes remain unresolved, including a unique correct-valued hit.
+
+def _document_role(block):
+    return 'body' if block['role'] in {'text', 'item'} else block['role']
+
+
+def _leaf_identity(leaf):
+    return ('literal', leaf['text']) if leaf['role'] == 'literal' else (leaf['role'], None)
+
+
+def _span_overlap(left, right):
+    same_origin = all(left['source'].get(key) == right['source'].get(key)
+                      for key in ('path', 'lines', 'cell', 'block', 'native_path', 'block_lines'))
+    return (same_origin
+            and max(left['text_span'][0], right['text_span'][0])
+            < min(left['text_span'][1], right['text_span'][1]))
+
+
+def _document_windows(actual):
+    """Only native-adjacent body blocks, including textless structural barriers."""
+    blocks = actual['children']
+    for start, own in enumerate(blocks):
+        if own.get('content') is None:
+            continue
+        yield [(start, own)]
+        if _document_role(own) != 'body':
+            continue
+        for end in range(start + 2, min(start + DOCUMENT_ALIGNMENT_LIMIT, len(blocks)) + 1):
+            parts = blocks[start:end]
+            if any(_document_role(part) != 'body' or part.get('content') is None
+                   or part['scope'] != own['scope'] or part['parents'] != own['parents'] for part in parts):
+                break
+            yield list(enumerate(parts, start))
+
+
+def _document_slice(parts, leaves, start, end, resolver):
+    """Cut actual source bytes, never construct candidate content from required."""
+    spans, contents = [], []
+    for index, block in parts:
+        own = [leaf for position, leaf in leaves[start:end] if position == index]
+        if not own:
+            continue
+        bounds = [own[0]['source']['text_span'][0], own[-1]['source']['text_span'][1]]
+        source = {**copy.deepcopy(block['content']['source']), 'text_span': bounds}
+        raw = resolver('actual', source) if resolver else None
+        if raw is None:
+            # Direct comparator callers still retain every actual token/source.
+            origin = block['content']['source']['text_span'][0]
+            tokens = block['content']['children']
+            raw = ''.join(' ' * (n['source']['text_span'][0] - (tokens[k-1]['source']['text_span'][1]
+                           if k else origin)) + n['text'] for k, n in enumerate(tokens))
+            raw = raw[bounds[0] - origin:bounds[1] - origin]
+        contents.append(read_content_ast(raw, source))
+        spans.append({'actual_index': index, 'source': source, 'text_span': bounds,
+                      'text': raw})
+    content = contents[0] if len(contents) == 1 else {'kind': 'content_join', 'children': contents}
+    return {**copy.deepcopy(parts[0][1]), 'source': copy.deepcopy(spans[0]['source']), 'content': content}, spans
+
+
+def compare_document_ast(required, actual, *, source_resolver=None):
+    """Bidirectional bounded correspondence, independent of answer values/order.
+
+    Lexical shape is retrieval evidence. Only a checked empty scope or exhaustive
+    exclusive coverage proves absence. Unknown rewrites and limits remain open.
+    Capacity belongs to original half-open source spans, not native block IDs.
     """
     from rapidfuzz.distance import Levenshtein
 
-    def shape(block):
-        return ''.join(n['text'] if n['role'] == 'literal' else '<' + n['role'] + '>'
-                       for n in _content_leaves(block['content']))
-
-    def role(block):
-        return 'body' if block['role'] in {'text', 'item'} else block['role']
-
-    windows = []
-    for start, own in enumerate(actual['children']):
-        windows.append(([start], own, shape(own)))
-        if role(own) != 'body':
-            continue
-        for end in range(start + 2, min(start + 8, len(actual['children'])) + 1):
-            parts = actual['children'][start:end]
-            if any(role(part) != 'body' or part['scope'] != own['scope'] or part['parents'] != own['parents'] for part in parts):
-                break
-            joined = {**own, 'content': {'kind': 'content_join', 'children': [part['content'] for part in parts]}}
-            windows.append((list(range(start, end)), joined, shape(joined)))
-    available = set(range(len(actual['children'])))
-    rows = []
+    windows = list(_document_windows(actual))
+    rows, proposals = [], []
     for index, block in enumerate(required['children']):
-        hits, trace = [], []
-        wanted = shape(block)
-        for candidate_indices, own, own_shape in windows:
-            candidate_index = candidate_indices[0]
-            similarity = Levenshtein.normalized_similarity(wanted, own_shape)
-            conflicts = []
-            if block['scope'] != own['scope'] or block['parents'] != own['parents']:
-                conflicts.append('document_scope')
-            if role(block) != role(own):
-                conflicts.append('document_role')
-            hit = similarity >= .65
-            capacity = all(i in available for i in candidate_indices)
-            accepted = hit and not conflicts and capacity
-            trace.append({'candidate_index': candidate_index, 'candidate_indices': candidate_indices,
-                          'lexical_shape_hit': hit, 'similarity': similarity,
-                          'conflicts': conflicts, 'capacity_available': capacity,
-                          'accepted_for_comparison': accepted, 'value_used': False})
-            if accepted:
-                hits.append((candidate_indices, own))
-        exact_shape = [hit for hit in hits if shape(hit[1]) == wanted]
-        # Lexical context may refine a fuzzy hit. Values never break a tie.
-        hits = exact_shape or hits
-        selected = hits[0] if len(hits) == 1 else None
-        chosen = selected[0][0] if selected is not None else None
-        if chosen is None:
-            decision = _result('unresolved' if hits else 'missing', '$',
-                               reason='document_block_identity_ambiguous' if hits else 'document_block_missing_or_scope_conflict')
+        wanted = tuple(_leaf_identity(n) for n in _content_leaves(block['content']))
+        candidates = {}
+        for parts in windows:
+            leaves = [(i, leaf) for i, part in parts for leaf in _content_leaves(part['content'])]
+            shape = tuple(_leaf_identity(n) for _, n in leaves)
+            if not shape:
+                continue
+            # Raw native edges and printed clause boundaries are independent
+            # segmentation evidence. No required number/unit chooses a cut.
+            starts = {0} | {i for i in range(1, len(leaves)) if leaves[i-1][0] != leaves[i][0]
+                           or leaves[i-1][1]['text'] in _CONTENT_BOUNDARY}
+            ends = {len(leaves)} | starts
+            cuts = {(a, a + len(wanted)) for a in starts if a + len(wanted) in ends
+                    and shape[a:a + len(wanted)] == wanted}
+            # Full native expressions and actual printed statements remain
+            # candidates even below the retrieval threshold.
+            cuts.add((0, len(leaves)))
+            statement_start = 0
+            for stop, (_, leaf) in enumerate(leaves, 1):
+                if leaf['text'] in frozenset('。！？.!?；;'):
+                    cuts.add((statement_start, stop))
+                    statement_start = stop
+            if statement_start < len(leaves):
+                cuts.add((statement_start, len(leaves)))
+            for start, end in sorted(cuts):
+                own, spans = _document_slice(parts, leaves, start, end, source_resolver)
+                key = tuple((span['actual_index'], *span['text_span']) for span in spans)
+                own_shape = tuple(_leaf_identity(n) for n in _content_leaves(own['content']))
+                exact = own_shape == wanted
+                conflicts = []
+                if block['scope'] != own['scope'] or block['parents'] != own['parents']:
+                    conflicts.append('document_scope')
+                if _document_role(block) != _document_role(own):
+                    conflicts.append('document_role')
+                similarity = Levenshtein.normalized_similarity(wanted, own_shape)
+                candidates[key] = {'actual': own, 'spans': spans, 'exact_shape': exact,
+                    'trace': {'candidate_index': spans[0]['actual_index'],
+                        'candidate_indices': [span['actual_index'] for span in spans],
+                        'candidate_spans': copy.deepcopy(spans), 'lexical_shape_hit': similarity >= .65,
+                        'similarity': similarity, 'exact_shape': exact, 'conflicts': conflicts,
+                        'capacity_available': True, 'accepted_for_comparison': not conflicts,
+                        'value_used': False}}
+        valid = [hit for hit in candidates.values() if not hit['trace']['conflicts']]
+        exact = [hit for hit in valid if hit['exact_shape']]
+        lexical = [hit for hit in valid if hit['trace']['lexical_shape_hit']]
+        # Prefer the smallest independently anchored expression; overlapping
+        # windows must not manufacture multiple identities for the same span.
+        misplaced = any(hit['exact_shape'] and hit['trace']['conflicts'] for hit in candidates.values())
+        hits = exact or lexical or ([] if misplaced else valid)
+        proposals.append(hits)
+        rows.append({'required_index': index, 'required_id': block.get('requirement_id', f'content:{index}'),
+                     'actual_index': None, 'actual_indices': [], 'actual_spans': [],
+                     'required': copy.deepcopy(block), 'actual': None,
+                     'retrieval': {'candidates': [hit['trace'] for hit in candidates.values()], 'value_used': False,
+                                   'alignment_limit': DOCUMENT_ALIGNMENT_LIMIT}})
+    consumed = []
+    # Anchor all unique exact identities together. Required order never picks
+    # their position, including two identities inside one reversed native block.
+    exact_assignments = {i: hits[0] for i, hits in enumerate(proposals)
+                         if len(hits) == 1 and hits[0]['exact_shape']}
+    colliding = {i for i, hit in exact_assignments.items() for j, other in exact_assignments.items()
+                 if i != j and any(_span_overlap(a, b) for a in hit['spans'] for b in other['spans'])}
+    for i, hit in exact_assignments.items():
+        if i not in colliding:
+            consumed.extend((i, span) for span in hit['spans'])
+    for i, (row, hits) in enumerate(zip(rows, proposals, strict=True)):
+        available = []
+        for hit in hits:
+            occupied = any(owner != i and _span_overlap(a, b) for owner, b in consumed for a in hit['spans'])
+            hit['trace']['capacity_available'] = not occupied
+            hit['trace']['accepted_for_comparison'] = not occupied
+            if not occupied:
+                available.append(hit)
+        limit = not any(hit['exact_shape'] for hit in hits) and any(len(parts) == DOCUMENT_ALIGNMENT_LIMIT and
+                    _document_role(parts[0][1]) == 'body' and parts[0][1]['scope'] == row['required']['scope']
+                    and parts[-1][0] + 1 < len(actual['children'])
+                    and _document_role(actual['children'][parts[-1][0] + 1]) == 'body'
+                    and actual['children'][parts[-1][0] + 1]['scope'] == row['required']['scope']
+                    and actual['children'][parts[-1][0] + 1]['parents'] == row['required']['parents']
+                    for parts in windows)
+        row['retrieval']['limit_triggered'] = limit
+        selected = available[0] if len(available) == 1 and i not in colliding else None
+        if selected is not None:
+            row.update(actual_index=selected['spans'][0]['actual_index'],
+                       actual_indices=[span['actual_index'] for span in selected['spans']],
+                       actual_spans=copy.deepcopy(selected['spans']), actual=copy.deepcopy(selected['actual']))
+            row['retrieval']['selection_basis'] = 'unique_value_independent_shape' if selected['exact_shape'] else 'unique_scoped_expression'
+            row['decision'] = compare_content_ast(row['required']['content'], selected['actual']['content'],
+                {'source_resolver': source_resolver} if source_resolver else {})
+            if i not in exact_assignments:
+                consumed.extend((i, span) for span in selected['spans'])
         else:
-            available.difference_update(selected[0])
-            decision = compare_content_ast(block['content'], selected[1]['content'],
-                                           {'source_resolver': source_resolver} if source_resolver else {})
-        rows.append({'required_index': index, 'actual_index': chosen, 'decision': decision,
-                     'actual_indices': selected[0] if selected is not None else [],
-                     'required': copy.deepcopy(block),
-                     'actual': copy.deepcopy(selected[1]) if selected is not None else None,
-                     'retrieval': {'candidates': trace, 'value_used': False}})
+            compatible = [part for part in actual['children'] if part['scope'] == row['required']['scope']
+                          and part['parents'] == row['required']['parents']
+                          and _document_role(part) == _document_role(row['required']) and part.get('content') is not None]
+            wrong_scope = [hit for hit in row['retrieval']['candidates'] if hit['exact_shape'] and hit['conflicts']]
+            if available or i in colliding:
+                status, reason = 'unresolved', 'document_block_identity_ambiguous'
+            elif limit:
+                status, reason = 'unresolved', 'document_alignment_limit_exceeded'
+            elif wrong_scope:
+                status, reason = 'conflict', 'document_scope_or_role_conflict'
+            elif not actual.get('reading_complete', True):
+                status, reason = 'unresolved', 'document_reader_coverage_incomplete'
+            elif not compatible:
+                status, reason = 'missing', 'document_required_scope_empty'
+            elif hits and not available:
+                status, reason = 'missing', 'document_scope_exhausted_by_independent_requirements'
+            else:
+                status, reason = 'unresolved', 'document_correspondence_unresolved'
+            row['decision'] = _result(status, '$', reason=reason,
+                proof={'scope_checked': True, 'compatible_blocks': len(compatible),
+                       'exclusive_owners': sorted({owner for owner, _ in consumed if owner != i}),
+                       'limit_triggered': limit, 'retrieval_threshold_is_absence_proof': False})
+    remaining = []
+    for index, block in enumerate(actual['children']):
+        if block.get('content') is None:
+            continue
+        start, end = block['content']['source']['text_span']
+        for span in sorted((span for _, span in consumed if span['actual_index'] == index), key=lambda span: span['text_span']):
+            if start < span['text_span'][0]:
+                remaining.append({'actual_index': index, 'source': block['source'], 'text_span': [start, span['text_span'][0]]})
+            start = max(start, span['text_span'][1])
+        if start < end:
+            remaining.append({'actual_index': index, 'source': block['source'], 'text_span': [start, end]})
     return _combine([row['decision'] for row in rows], '$', rows=rows,
-                    capacity_one=True, unadjudicated_extra_indices=sorted(available))
+                    capacity_one=True, capacity_unit='original_source_span',
+                    consumed_spans=[{'required_index': owner, **span} for owner, span in consumed],
+                    unconsumed_spans=remaining,
+                    unadjudicated_extra_indices=sorted({span['actual_index'] for span in remaining}))
 
 
 def _result(status, path, *, reason=None, proof=None, conflicts=()):

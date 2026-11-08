@@ -134,8 +134,8 @@ def _frozen_requirements(path: Path, sample_ids: set[str], software_id: str,
         raise ValueError("expected requirement model must retain the complete declared sample scope")
     result = {}
     for sample_id, row in records.items():
-        if row.get("semantic_complete") is not True or not row.get("json"):
-            raise ValueError("resolve every semantic requirement before full comparison")
+        if not row.get("json"):
+            raise ValueError("every accepted requirement must have its source-bound view")
         graph = read_json(inside(path.parent, row["json"]))
         validate_requirement_graph(graph, expected=expected_by_sample[sample_id])
         result[sample_id] = evaluation_projection(graph)

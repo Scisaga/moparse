@@ -341,10 +341,25 @@ def test_candidate_missing_output_preserves_the_same_denominators(tmp_path, monk
 
 
 def test_formal_software_blockers_withhold_the_entire_result_set(tmp_path, monkeypatch):
+    from pathlib import Path
+
+    from requirement_gate_fixture import artifact
+
     from moparse_eval.expected_evaluation import evaluate_saved
+    from moparse_eval.packaging import read_json, write_json
 
     run, _, expected, freeze = saved_run(tmp_path, monkeypatch, text="The total gyrated 17.\n")
-    with pytest.raises(ValueError, match="incomplete source obligations or semantics"):
+    # Unknown grammar alone no longer blocks an independently accepted content
+    # contract. Missing independent sample acceptance still blocks before reads.
+    frozen = read_json(freeze)
+    gate = frozen['validation']['expected_structure_gate']
+    path = Path(gate['evidence']['oracle']['path'])
+    oracle = read_json(path)
+    oracle['samples'] = []
+    write_json(path, oracle)
+    gate['evidence']['oracle'] = artifact(path)
+    write_json(freeze, frozen)
+    with pytest.raises(ValueError, match="independent acceptance.*complete declared sample scope"):
         evaluate_saved(run, tmp_path / "scores", expected_root=expected, freeze=freeze, workers=1)
     assert not (tmp_path / "scores").exists()
 

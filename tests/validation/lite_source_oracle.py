@@ -866,6 +866,67 @@ def review_sinopec_boundary():
             'candidate_read': False, 'pdf_or_image_read': False, 'quality_acceptance': False}
 
 
+
+def comparison_coverage_diagnosis(current, results, capability_evidence):
+    """Summarize generated views along independent, overlapping dimensions."""
+    import hashlib
+
+    from moparse_eval.cli import code_identity
+    from moparse_eval.requirement_gate import _digest
+
+    identity = code_identity()['software_id']
+    index = json.loads((current / 'index.json').read_text())
+    assert index['software_id'] == identity and index['software_unchanged']
+    verified = {}
+    if capability_evidence is not None and capability_evidence.exists():
+        evidence = json.loads(capability_evidence.read_text())
+        if evidence.get('software_id') == identity and evidence.get('status') == 'passed':
+            verified = evidence.get('verified_capabilities', {})
+    accepted = {value['sample_id']: value for value in results.values() if value['status'] == 'passed'}
+    rows = []
+    for row in index['records']:
+        graph_path = current / row['json']
+        assert hashlib.sha256(graph_path.read_bytes()).hexdigest() == row['generated_view_sha256']
+        graph = json.loads(graph_path.read_text())
+        coverage = graph['comparison_coverage']
+        assert _digest(coverage) == row['comparison_coverage_sha256']
+        acceptance = accepted.get(row['sample_id'], {})
+        independently_accepted = (acceptance.get('generated_view_sha256') == row['generated_view_sha256']
+                                  and acceptance.get('comparison_coverage_sha256') == _digest(coverage))
+        missing_capabilities = sorted(set(coverage['required_capabilities']) - set(verified))
+        rows.append({'sample_id': row['sample_id'], 'comparison_contract_version': graph['comparison_contract_version'],
+            'source_structure_complete': coverage['source_complete'] and coverage['structure_complete'],
+            'comparison_responsibility_complete': coverage['responsibility_complete'],
+            'unverified_capabilities': missing_capabilities,
+            'independently_source_accepted': independently_accepted,
+            'independently_contract_accepted': independently_accepted and not missing_capabilities and coverage['responsibility_complete'],
+            'language_analysis_limitations': row['language_analysis_only'],
+            'only_language_analysis_limitations': bool(row['language_analysis_only']) and coverage['responsibility_complete'],
+            'input_scope_pending': row['input_scope_pending'],
+            'semantic_complete': graph['semantic_complete'],
+            'analysis_projection_units': row['layers'], 'comparison_requirement_counts': row['comparison_requirement_counts'],
+            'blocking_obligations': [n['obligation_id'] for n in coverage['obligations'] if n['status'] == 'blocking'],
+            'blocking_analysis_limits': [n['issue_id'] for n in coverage['analysis_limitations'] if n['status'] == 'blocking'],
+            'comparison_coverage_sha256': row['comparison_coverage_sha256']})
+    counts = {
+        'source_or_structure_incomplete': sum(not r['source_structure_complete'] for r in rows),
+        'comparison_obligations_uncovered': sum(not r['comparison_responsibility_complete'] for r in rows),
+        'required_capabilities_not_independently_evidenced': sum(bool(r['unverified_capabilities']) for r in rows),
+        'complete_requirements_lacking_independent_sample_acceptance': sum(
+            r['comparison_responsibility_complete'] and not r['independently_source_accepted'] for r in rows),
+        'independently_source_accepted': sum(r['independently_source_accepted'] for r in rows),
+        'independently_contract_accepted': sum(r['independently_contract_accepted'] for r in rows),
+        'only_language_analysis_limitations': sum(r['only_language_analysis_limitations'] for r in rows),
+        'with_retained_input_scope': sum(bool(r['input_scope_pending']) for r in rows),
+        'retained_input_scope_targets': sum(r['input_scope_pending'] for r in rows)}
+    return {'comparison_contract_version': 'document_ast/1', 'software_id': identity,
+            'source_index_sha256': hashlib.sha256((current / 'index.json').read_bytes()).hexdigest(),
+            'dimensions_overlap': True, 'counts': counts, 'records': rows,
+            'formal_execution_authorized': False, 'quality_scores_withheld': True,
+            'capability_evidence': str(capability_evidence) if capability_evidence else None,
+            'meaning': 'Language analysis, comparison coverage, independent sample acceptance and execution permission are separate.'}
+
+
 if __name__ == '__main__':
     import argparse
     import hashlib
@@ -878,13 +939,27 @@ if __name__ == '__main__':
     parser.add_argument('--current', type=Path, default=CURRENT)
     parser.add_argument('--fresh-only', action='store_true', help='Development check without asserting saved-view identity')
     parser.add_argument('--output', type=Path, help='Local validation record; never a quality result')
+    parser.add_argument('--diagnosis-output', type=Path, help='Update the existing source-only diagnosis with contract dimensions')
+    parser.add_argument('--comparison-evidence', type=Path, default=WORK / 'comparison-validation.json')
     args = parser.parse_args()
     CURRENT, BIND_CURRENT = args.current, not args.fresh_only
     identity = code_identity()
     result = {}
-    for name, check in [('huawei', review), ('sf', review_sf), ('sinopec', review_sinopec_boundary)]:
+    checks = [('huawei', 'huawei-operating-results-p062-063', review),
+              ('sf', 'sf-cashflow-assets-liabilities-p040-041', review_sf),
+              ('sinopec', 'sinopec-finance-governance-p025-036', review_sinopec_boundary)]
+    for name, sample_id, check in checks:
         try:
             value = check()
+            value['sample_id'] = sample_id
+            value['comparison_contract_version'] = 'document_ast/1'
+            if BIND_CURRENT:
+                from moparse_eval.requirement_gate import _digest
+
+                graph = json.loads((CURRENT / 'samples' / (sample_id + '.json')).read_text())
+                assert graph['comparison_coverage']['responsibility_complete']
+                value['generated_view_sha256'] = hashlib.sha256((CURRENT / 'samples' / (sample_id + '.json')).read_bytes()).hexdigest()
+                value['comparison_coverage_sha256'] = _digest(graph['comparison_coverage'])
         except (AssertionError, ValueError, KeyError) as error:
             # Keep the incoming hand-authored assertion. A discovered error
             # must fail its original acceptance, never silently turn green.
@@ -897,6 +972,11 @@ if __name__ == '__main__':
               'source_index_sha256': hashlib.sha256((CURRENT / 'index.json').read_bytes()).hexdigest(),
               'results': result, 'candidate_read': False, 'pdf_or_image_read': False,
               'quality_acceptance': False, 'software_unchanged': identity['software_id'] == code_identity()['software_id']}
+    if args.diagnosis_output:
+        assert BIND_CURRENT, 'Coverage diagnosis requires current-bound independent Oracles'
+        diagnosis = json.loads(args.diagnosis_output.read_text())
+        diagnosis['comparison_contract_coverage'] = comparison_coverage_diagnosis(CURRENT, result, args.comparison_evidence)
+        args.diagnosis_output.write_text(json.dumps(diagnosis, ensure_ascii=False, indent=2) + '\n')
     if args.output:
         args.output.write_text(json.dumps(output, ensure_ascii=False, indent=2) + '\n')
     print(json.dumps({name: {k: v for k, v in value.items() if k not in {'source_records', 'traceback'}} for name, value in result.items()}, ensure_ascii=False))

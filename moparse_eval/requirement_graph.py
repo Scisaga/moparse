@@ -449,16 +449,19 @@ def compile_requirement_graph(expected: dict[str, Any], *, comparison_contract: 
     graph["semantic_complete"] = not any(not is_deferred_input_scope(expected["sample_id"], item) for item in unresolved)
     if comparison_contract not in {'semantic', 'document_ast'}:
         raise ValueError('unknown requirement comparison contract')
+    graph['comparison_contract'] = comparison_contract
+    graph['comparison_contract_version'] = comparison_contract + '/1'
     if comparison_contract == 'document_ast':
-        from .document_ast_comparison import attach_document_ast
+        from .document_ast_comparison import attach_document_ast, comparison_requirement_coverage
 
         attach_document_ast(graph, expected)
+        graph['comparison_coverage'] = comparison_requirement_coverage(graph)
     # The in-memory model has the same JSON types as its sole authoritative
     # serialization; XML never supplies a second editable representation.
     return json.loads(json.dumps(graph, ensure_ascii=False))
 
 
-def evaluation_projection(graph: dict[str, Any]) -> dict[str, Any]:
+def evaluation_projection(graph: dict[str, Any], *, document_contract: bool = True) -> dict[str, Any]:
     """Materialize scorer inputs from graph references, with no other answers."""
     nodes = {node["id"]: node for node in graph["nodes"]}
     relations = {edge["id"]: edge for edge in graph["relations"]}
@@ -473,10 +476,13 @@ def evaluation_projection(graph: dict[str, Any]) -> dict[str, Any]:
     result["semantic_operands"] = [copy.deepcopy(node) for node in graph["nodes"] if node["kind"] == "semantic_operand"]
     result["semantic_operand_relations"] = copy.deepcopy(graph.get("operand_relations", []))
     result["required_matcher_features"] = copy.deepcopy(graph.get("required_matcher_features", []))
-    if graph.get('comparison_contract') == 'document_ast':
+    result['comparison_contract_version'] = graph['comparison_contract_version']
+    if document_contract and graph.get('comparison_contract') == 'document_ast':
         result['comparison_contract'] = 'document_ast'
         result['document_ast'] = copy.deepcopy(graph['document_ast'])
         result['source_form_units'] = copy.deepcopy(graph['source_form_units'])
+        result['source_form_requirements'] = copy.deepcopy(graph['source_form_requirements'])
+        result['comparison_coverage'] = copy.deepcopy(graph['comparison_coverage'])
         result['document_selection'] = copy.deepcopy(graph['source_obligation_inventory']['selection'])
     for key in ("explicit_references", "reference_roles", "reference_dispositions"):
         result[key] = copy.deepcopy(graph.get(key, []))
@@ -791,6 +797,12 @@ def _validate_semantic_sources(graph, nodes):
 
 def validate_requirement_graph(graph: dict[str, Any], *, expected: dict[str, Any] | None = None) -> None:
     """Check transport integrity; independent semantic oracles remain required."""
+    contract = graph.get('comparison_contract')
+    if contract not in {'semantic', 'document_ast'} or graph.get('comparison_contract_version') != contract + '/1':
+        raise ValueError('unknown or inconsistent requirement comparison contract version')
+    if contract == 'document_ast' and any(key not in graph for key in (
+            'document_ast', 'source_form_units', 'source_form_requirements', 'comparison_coverage')):
+        raise ValueError('document comparison requirements and coverage are required')
     nodes = {node["id"]: node for node in graph["nodes"]}
     relations = {edge["id"]: edge for edge in graph["relations"]}
     if (graph.get("complete") != (not graph["unresolved"]) or graph.get("semantic_complete") != (
@@ -920,7 +932,8 @@ def validate_requirement_graph(graph: dict[str, Any], *, expected: dict[str, Any
                     "explicit_references", "reference_roles", "reference_dispositions", "source_obligation_inventory", "source_obligation_coverage"):
             if graph[key] != rebuilt[key]:
                 raise ValueError(f"requirement graph changed or omitted source semantics: {key}")
-        for key in ('comparison_contract', 'document_ast', 'source_form_units'):
+        for key in ('comparison_contract', 'comparison_contract_version', 'document_ast', 'source_form_units',
+                    'source_form_requirements', 'comparison_coverage'):
             if graph.get(key) != rebuilt.get(key):
                 raise ValueError(f'document comparison requirements changed: {key}')
 
@@ -1003,6 +1016,18 @@ def _compile_saved_requirement_view(job, *, cache=None):
         "authorized_raw_source_status": graph["source_obligation_inventory"]["authorized_raw_inventory"]["status_counts"],
         "unresolved_semantics": len(semantic), "input_scope_pending": len(scopes),
         "comparison_contract": graph.get('comparison_contract'),
+        "comparison_contract_version": graph['comparison_contract_version'],
+        "comparison_coverage_sha256": hashlib.sha256(json.dumps(graph['comparison_coverage'], sort_keys=True,
+            ensure_ascii=False, separators=(',', ':')).encode()).hexdigest(),
+        "comparison_responsibility_complete": graph['comparison_coverage']['responsibility_complete'],
+        "comparison_blocking_obligations": sum(row['status'] == 'blocking' for row in graph['comparison_coverage']['obligations']),
+        "comparison_blocking_limitations": sum(row['status'] == 'blocking' for row in graph['comparison_coverage']['analysis_limitations']),
+        "language_analysis_only": sum(row['status'] == 'language_analysis_only' for row in graph['comparison_coverage']['analysis_limitations']),
+        "comparison_requirement_counts": {
+            'B': len(graph['comparison_coverage']['retained_semantic_requirements']['B']) + sum(
+                b['role'] != 'heading' for b in graph['source_form_requirements']),
+            'L': len(graph['comparison_coverage']['retained_semantic_requirements']['L']) +
+                 len(graph['source_form_requirements']) + max(0, len(graph['source_form_requirements']) - 1)},
         "content_comparison_ready": graph.get('content_comparison_ready', False),
         "document_ast_blocks": len(graph.get('document_ast', {}).get('children', [])),
         "source_form_units": len(graph.get('source_form_units', [])),
@@ -1047,6 +1072,7 @@ def compile_saved_requirements(baseline: Path, output: Path, *, expected_root: P
         "inventory_validation": {"status": "not_passed", "scope": "source_integrity_not_semantic_oracle"}}
     index["analysis_workers"] = workers
     index['comparison_contract'] = 'document_ast'
+    index['comparison_contract_version'] = 'document_ast/1'
     index["declared_view_count"] = len(declared)
     jobs = [(samples[sample_id], expected_root, output, identity["software_id"]) for sample_id in sorted(declared)]
     reasons = Counter()
@@ -1095,8 +1121,12 @@ def compile_saved_requirements(baseline: Path, output: Path, *, expected_root: P
     index["source_obligation_inventory_complete"] = all(
         row.get("source_obligation_inventory_complete") is True for row in index["records"])
     index["inventory_validation"]["status"] = "passed" if index["source_obligation_inventory_complete"] else "not_passed"
-    index["state"] = "structure_compiled_pending_independent_semantic_validation" if not reasons else "structure_blocked"
-    index["validation"] = {"status": "not_passed", "reason": "Source integrity and empty pending do not replace independent semantic validation."}
+    index['comparison_responsibility_complete'] = all(row.get('comparison_responsibility_complete') is True for row in index['records'])
+    index['independent_acceptance'] = {'status': 'not_passed', 'reason': 'Compilation does not supply independent sample or capability acceptance.'}
+    index["state"] = ('structure_compiled_pending_independent_comparison_validation'
+        if index['source_obligation_inventory_complete'] and index['comparison_responsibility_complete']
+        and index['software_unchanged'] else 'structure_blocked')
+    index["validation"] = {"status": "not_passed", "reason": "Source integrity and compiled comparison coverage do not replace independent contract acceptance."}
     path = output / "index.json"
     path.write_text(json.dumps(index, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     return path
@@ -1112,7 +1142,7 @@ def main() -> int:
     index = json.loads(path.read_text())
     print(json.dumps({"index": str(path), "state": index["state"], "semantic_complete": index["semantic_complete"],
                       "unresolved_reasons": index["unresolved_reasons"]}, ensure_ascii=False))
-    return 0 if index["semantic_complete"] else 2
+    return 0 if index['source_obligation_inventory_complete'] and index['comparison_responsibility_complete'] else 2
 
 
 if __name__ == "__main__":
