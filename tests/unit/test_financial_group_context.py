@@ -26,10 +26,85 @@ EN = ("# Consolidated statement of profit or loss and other comprehensive income
       "    - Translation:2028年5;2027年3\n"
       "    - Subtotal:2028年7;2027年6")
 
+SUMMARY = ('於2029年12月31日，本公司總資產為人民幣81億元，比上年末增加人民幣8億元。其中：\n\n'
+           '流動資產為人民幣37億元，比上年末增加人民幣6億元。\n\n'
+           '非流動資產為人民幣44億元，比上年末增加人民幣2億元。')
+
 
 def graphs(markdown):
     yield compile_markdown(markdown, sample_id="invented-financial-groups")
     yield read_candidate(markdown_observation(markdown, sample_id="invented-financial-groups", pipeline="P07", pages=[1]))
+
+
+def test_total_summary_binds_only_its_immediate_complementary_categories(tmp_path):
+    from moparse_eval.expected_report import validate_evidence
+    from moparse_eval.three_layer import grade_layers, read_candidate_markdown
+    from tests.unit.test_cjk_circumstance_contract import compiled
+
+    graph, required = compiled(tmp_path, SUMMARY)
+    assert [(f['subject'], f['value']) for f in required['business']] == [
+        ('總資產', '81'), ('總資產', '8'), ('流動資產', '37'), ('流動資產', '6'), ('非流動資產', '44'), ('非流動資產', '2')]
+    for fact in required['business'][2:]:
+        assert fact['qualifiers']['parent_metric'] == '總資產'
+        assert fact['qualifiers']['actor'] == '本公司'
+        assert fact['qualifiers']['period'] == '2029年12月31日'
+        assert fact['qualifier_sources']['period']['lines'] == [1, 1]
+    context, = graph['context']['financial_summary_contexts']
+    assert [(m['text'], m['source']['lines']) for m in context['members']] == [('流動資產', [3, 3]), ('非流動資產', [5, 5])]
+    result = grade_layers(required, read_candidate_markdown(SUMMARY.replace('37億元', '370000萬元'), sample_id=required['sample_id']))
+    assert result['publishable'], result['blockers']
+    validate_evidence(result)
+    assert result['layers']['B']['score'] == result['layers']['L']['score'] == 100
+    assert result['layers']['T']['score'] < 100
+
+
+@pytest.mark.parametrize('mutation', ['delete_context', 'delete_relation', 'borrow_source', 'change_parent', 'drop_member'])
+def test_summary_declaration_members_and_inherited_sources_are_independently_required(tmp_path, mutation):
+    from tests.unit.test_cjk_circumstance_contract import compiled
+
+    graph, _ = compiled(tmp_path, SUMMARY)
+    changed = deepcopy(graph)
+    context = changed['context']['financial_summary_contexts'][0]
+    if mutation == 'delete_context':
+        changed['context']['financial_summary_contexts'] = []
+    elif mutation == 'delete_relation':
+        changed['relations'] = [e for e in changed['relations'] if not (
+            e.get('binding_evidence', {}).get('financial_summary') and e['left']['type'] == 'parent_metric')]
+    elif mutation == 'borrow_source':
+        context['marker_source']['lines'] = [3, 3]
+    elif mutation == 'change_parent':
+        context['parent']['text'] = '總負債'
+    else:
+        context['members'].pop()
+    with pytest.raises(ValueError):
+        validate_requirement_graph(changed)
+
+
+def test_ordinary_summary_amount_error_is_comparable_without_choosing_members_by_sum(tmp_path):
+    from moparse_eval.expected_report import validate_evidence
+    from moparse_eval.three_layer import grade_layers, read_candidate_markdown
+    from tests.unit.test_cjk_circumstance_contract import compiled
+
+    _, required = compiled(tmp_path, SUMMARY)
+    actual = read_candidate_markdown(SUMMARY.replace('81億元', '82億元'), sample_id=required['sample_id'])
+    assert not actual['blockers'] and not actual['pending_requirements']
+    result = grade_layers(required, actual)
+    assert result['publishable'], result['blockers']
+    validate_evidence(result)
+    assert {o['id']: o['outcome'] for o in result['outcomes'] if o['layer'] == 'B'} == {
+        f'B:{i}': 'incorrect' if i == 0 else 'correct' for i in range(6)}
+    assert result['layers']['B']['denominator'] == 6
+
+
+def test_summary_does_not_cross_a_new_heading_or_missing_counterpart(tmp_path):
+    from tests.unit.test_cjk_circumstance_contract import authored
+
+    expected = authored(tmp_path, SUMMARY.replace('\n\n非流動', '\n\n# 另一範圍\n\n非流動'))
+    graph = compile_requirement_graph(expected)
+    validate_requirement_graph(graph, expected=expected)
+    assert not graph['semantic_complete']
+    assert any(i['reason'] == 'financial_summary_members_unresolved' for i in graph['unresolved'])
+    assert not graph['context'].get('financial_summary_contexts')
 
 
 @pytest.mark.parametrize("markdown,unit,currency,root,left,right", [

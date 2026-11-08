@@ -448,9 +448,10 @@ def evaluate_saved(baseline: Path, output: Path, *, expected_root: Path,
             if diagnostic and selected_sample_ids == full_sample_ids:
                 authorized_expected[sample_id] = expected
             if frozen_requirements is None:
+                from .requirement_graph import compile_requirement_graph
                 from .three_layer import compile_expected
 
-                projection = compile_expected(expected)
+                projection = compile_expected(compile_requirement_graph(expected, comparison_contract='document_ast'))
                 projection.pop("requirement_model", None)
             else:
                 projection = frozen_requirements[sample_id]

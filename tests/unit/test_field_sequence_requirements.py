@@ -8,11 +8,206 @@ from moparse_eval.field_sequence_requirements import read_field_sequence_require
 from moparse_eval.scalar_evidence import validate_scalar_sources
 
 SOURCE = {"path": "<own-printed-fields>", "lines": [7, 7]}
+FINANCIAL_RECORDS = ('# 資產數據\n\n與計量相關的項目單位：單位：人民幣百萬元。\n\n'
+    '- 金融資產：期初金額17；期末金額19；本期公允價值變動損益3；資金來源–。\n'
+    '  - 票據：期初金額5；期末金額6；本期公允價值變動損益1；資金來源–。')
+TRAINING_RECORDS = ('# 培訓\n\n'
+    '- 陳文；職位：董事長、非執行董事；法規之更新：閱讀材料√，培訓、講座√；財務/經營情況：閱讀材料√，調研√。\n'
+    '- 林月；職位：副董事長、執行董事、總裁；法規之更新：閱讀材料√，培訓、講座√；財務/經營情況：閱讀材料√，調研√。')
+
+
+def test_untimed_person_collection_owns_each_training_field_without_inventing_a_year(tmp_path):
+    from moparse_eval.expected_report import validate_evidence
+    from moparse_eval.three_layer import grade_layers, read_candidate_markdown
+    from tests.unit.test_cjk_circumstance_contract import compiled
+
+    text = TRAINING_RECORDS.replace('# 培訓\n\n', '# 培訓\n\n現任董事參與培訓的情況如下：\n\n')
+    graph, required = compiled(tmp_path, text)
+    context, = graph['context']['enumeration_contexts']
+    roles = context['declaration']['roles']
+    assert {k: v['text'] for k, v in roles.items()} == {'subject': '現任董事', 'collection': '參與培訓的情況', 'operator': '如下'}
+    assert context['declaration']['qualifiers'] == {} and 'period' not in roles
+    assert len([r for r in required['relations'] if r['type'] == 'enumeration_membership']) == 10
+    assert all('period' not in f['qualifiers'] for f in required['business'])
+    actual = read_candidate_markdown(text.replace('√', '☑'), sample_id=required['sample_id'])
+    result = grade_layers(required, actual)
+    assert result['publishable'], result['blockers']
+    validate_evidence(result)
+    assert result['layers']['B']['score'] == result['layers']['L']['score'] == 100
+    assert result['layers']['T']['score'] < 100
+    for mutation in ['member', 'declaration', 'year', 'neighbor']:
+        changed = deepcopy(graph)
+        if mutation == 'member':
+            changed['relations'] = [r for r in changed['relations'] if r['type'] != 'enumeration_membership']
+        elif mutation == 'declaration':
+            changed['relations'] = [r for r in changed['relations'] if r['type'] != 'enumeration_declaration']
+        else:
+            fact = next(n for n in changed['nodes'] if n['id'] in changed['projections']['B'])
+            if mutation == 'year':
+                fact['qualifiers']['period'] = '2029年'
+                fact['qualifier_sources']['period'] = deepcopy(fact['subject_source'])
+            else:
+                fact['enumeration_evidence']['member_source']['lines'] = [6, 6]
+        from moparse_eval.requirement_graph import validate_requirement_graph
+        with pytest.raises(ValueError):
+            validate_requirement_graph(changed)
+    actual['enumeration_contexts'] = []
+    result = grade_layers(required, actual)
+    assert not result['publishable']
+
+
+def test_person_position_lists_and_two_level_marked_fields_are_complete_independent_records(tmp_path):
+    from moparse_eval.expected_report import validate_evidence
+    from moparse_eval.three_layer import grade_layers, read_candidate_markdown
+    from tests.unit.test_cjk_circumstance_contract import compiled
+
+    _, required = compiled(tmp_path, TRAINING_RECORDS)
+    assert [(f['subject'], f['attribute'], f['identity_facets'], f['value']) for f in required['business']] == [
+        (person, attribute, {'field_domain': domain} if domain else {}, value)
+        for person, roles in [('陳文', '董事長、非執行董事'), ('林月', '副董事長、執行董事、總裁')]
+        for attribute, domain, value in [('職位', None, roles), ('閱讀材料', '法規之更新', '√'),
+            ('培訓、講座', '法規之更新', '√'), ('閱讀材料', '財務/經營情況', '√'), ('調研', '財務/經營情況', '√')]]
+    assert len([r for r in required['relations'] if r['type'] == 'record_label_scope']) == 10
+    assert len([r for r in required['relations'] if r['type'] == 'record_position_member']) == 5
+    for candidate, wrong in [(TRAINING_RECORDS, set()), (TRAINING_RECORDS.replace('√', '✓'), set()),
+        (TRAINING_RECORDS.replace('董事長、非執行董事', '非執行董事、董事長', 1), set()),
+        (TRAINING_RECORDS.replace('閱讀材料√', '閱讀材料×', 1), {'B:1'}),
+        (TRAINING_RECORDS.replace('副董事長、執行董事、總裁', '副董事長、非執行董事、總裁'), {'B:5'})]:
+        actual = read_candidate_markdown(candidate, sample_id=required['sample_id'])
+        assert not actual['blockers'] and not actual['pending_requirements']
+        result = grade_layers(required, actual)
+        assert result['publishable'], result['blockers']
+        validate_evidence(result)
+        assert result['layers']['B']['denominator'] == 10
+        assert {o['id']: o['outcome'] for o in result['outcomes'] if o['layer'] == 'B'} == {
+            f'B:{i}': 'incorrect' if f'B:{i}' in wrong else 'correct' for i in range(10)}
+        if not wrong:
+            assert result['layers']['L']['score'] == 100
+        if candidate != TRAINING_RECORDS:
+            assert result['layers']['T']['score'] < 100
+
+
+@pytest.mark.parametrize('mutation', ['selection', 'domain', 'header', 'value_logic', 'position_member', 'record_scope', 'all_structure'])
+def test_selection_record_evidence_cannot_repair_or_borrow_a_neighboring_slot(tmp_path, mutation):
+    from moparse_eval.requirement_graph import validate_requirement_graph
+    from moparse_eval.three_layer import grade_layers, read_candidate_markdown
+    from tests.unit.test_cjk_circumstance_contract import compiled
+
+    graph, required = compiled(tmp_path, TRAINING_RECORDS)
+    changed = deepcopy(graph)
+    fields = [f for f in changed['nodes'] if f['id'] in changed['projections']['B']]
+    if mutation == 'selection':
+        fields[1]['value'] = '×'
+    elif mutation == 'domain':
+        fields[1]['identity_facets']['field_domain'] = '財務/經營情況'
+    elif mutation == 'header':
+        fields[1]['header_evidence'] = deepcopy(fields[3]['header_evidence'])
+    elif mutation == 'value_logic':
+        fields[0]['value_logic']['parts'][0]['children'].pop()
+    elif mutation == 'position_member':
+        changed['relations'] = [r for r in changed['relations'] if r['type'] != 'record_position_member']
+    elif mutation == 'record_scope':
+        changed['relations'] = [r for r in changed['relations'] if r['type'] != 'record_label_scope']
+    else:
+        for ident in changed['projections']['B']:
+            changed['nodes'] = [n for n in changed['nodes'] if n['id'] != ident]
+    with pytest.raises(ValueError):
+        validate_requirement_graph(changed)
+    actual = read_candidate_markdown(TRAINING_RECORDS, sample_id=required['sample_id'])
+    actual['business'] = []
+    with pytest.raises(ValueError):
+        grade_layers(required, actual)
 
 
 def literal(text, source):
     a, b = source["text_span"]
     return text[a:b]
+
+
+def test_labelled_records_have_each_field_relative_position_unit_and_real_parent(tmp_path):
+    from moparse_eval.expected_report import validate_evidence
+    from moparse_eval.three_layer import grade_layers, read_candidate_markdown
+    from tests.unit.test_cjk_circumstance_contract import compiled
+
+    graph, required = compiled(tmp_path, FINANCIAL_RECORDS)
+    assert [(f['subject'], f['attribute'], f['value']) for f in required['business']] == [
+        ('金融資產', '期初金額', '17'), ('金融資產', '期末金額', '19'), ('金融資產', '本期公允價值變動損益', '3'), ('金融資產', '資金來源', '–'),
+        ('票據', '期初金額', '5'), ('票據', '期末金額', '6'), ('票據', '本期公允價值變動損益', '1'), ('票據', '資金來源', '–')]
+    for i, fact in enumerate(required['business']):
+        assert fact['qualifiers']['table_caption'] == '與計量相關的項目'
+        assert fact['identity_facets'].get('group', []) == ([] if i < 4 else ['金融資產'])
+        if i % 4 != 3:
+            assert fact['qualifiers']['period'] == ['期初', '期末', '本期'][i % 4]
+            assert fact['qualifiers']['unit'] == '人民幣百萬元' and fact['qualifiers']['currency'] == '人民幣'
+        else:
+            assert 'unit' not in fact['qualifiers'] and 'currency' not in fact['qualifiers']
+            assert fact['semantic_type'] == 'printed_unspecified_value'
+    candidate = FINANCIAL_RECORDS.replace('期初金額5', '期初金額500人民幣萬元')
+    result = grade_layers(required, read_candidate_markdown(candidate, sample_id=required['sample_id']))
+    assert result['publishable'], result['blockers']
+    validate_evidence(result)
+    assert result['layers']['B']['score'] == result['layers']['L']['score'] == 100
+    assert result['layers']['T']['score'] < 100
+    assert any(n.get('text') == '單位' for n in graph['nodes'])
+
+
+@pytest.mark.parametrize('mutation,wrong', [('value', {5}), ('parent', {4, 5, 6, 7}), ('unknown_to_zero', {7})])
+def test_valid_financial_record_errors_preserve_full_denominators_and_independent_correct_fields(tmp_path, mutation, wrong):
+    from moparse_eval.expected_report import validate_evidence
+    from moparse_eval.three_layer import grade_layers, read_candidate_markdown
+    from tests.unit.test_cjk_circumstance_contract import compiled
+
+    _, required = compiled(tmp_path, FINANCIAL_RECORDS)
+    candidate = (FINANCIAL_RECORDS.replace('期末金額6', '期末金額7') if mutation == 'value' else
+                 FINANCIAL_RECORDS.replace('\n  - 票據', '\n- 票據') if mutation == 'parent' else
+                 FINANCIAL_RECORDS.rsplit('資金來源–', 1)[0] + '資金來源0。')
+    actual = read_candidate_markdown(candidate, sample_id=required['sample_id'])
+    assert not actual['blockers'] and not actual['pending_requirements']
+    result = grade_layers(required, actual)
+    assert result['publishable'], result['blockers']
+    validate_evidence(result)
+    assert result['layers']['B']['denominator'] == 8
+    assert {o['id']: o['outcome'] for o in result['outcomes'] if o['layer'] == 'B'} == {
+        f'B:{i}': 'incorrect' if i in wrong else 'correct' for i in range(8)}
+    if mutation == 'value':
+        assert result['layers']['L']['numerator'] == result['layers']['L']['denominator']
+
+
+@pytest.mark.parametrize('mutation', ['no_facts', 'borrow_header', 'no_binding', 'borrow_parent', 'change_state_type'])
+def test_internal_record_omission_or_forged_sources_are_rejected_before_comparison(tmp_path, mutation):
+    from moparse_eval.three_layer import grade_layers, read_candidate_markdown
+    from tests.unit.test_cjk_circumstance_contract import compiled
+
+    _, required = compiled(tmp_path, FINANCIAL_RECORDS)
+    actual = read_candidate_markdown(FINANCIAL_RECORDS, sample_id=required['sample_id'])
+    if mutation == 'no_facts':
+        actual['business'] = []
+    elif mutation == 'borrow_header':
+        actual['business'][4]['attribute_source'] = deepcopy(actual['business'][0]['attribute_source'])
+    elif mutation == 'no_binding':
+        actual['relations'] = [e for e in actual['relations'] if e['type'] != 'field_binding']
+    elif mutation == 'borrow_parent':
+        group = next(r for r in actual['business'][4]['row_evidence'] if r['role'] == 'row_group')
+        group['source']['lines'] = [6, 6]
+    else:
+        actual['business'][7]['semantic_type'] = 'financial_quantity'
+    with pytest.raises(ValueError):
+        grade_layers(required, actual)
+
+
+def test_ratio_and_printed_not_applicable_fields_are_not_money_or_zero(tmp_path):
+    from tests.unit.test_cjk_circumstance_contract import compiled
+
+    text = ('某業務：營業收入73人民幣百萬元；營業成本51人民幣百萬元；毛利率（註）21.7%；'
+            '營業收入比上年同期增減(0.8)%；營業成本比上年同期增減不適用。')
+    _, required = compiled(tmp_path, text)
+    assert [(f['attribute'], f['value']) for f in required['business']] == [
+        ('營業收入', '73'), ('營業成本', '51'), ('毛利率（註）', '21.7'),
+        ('營業收入比上年同期增減', '(0.8)'), ('營業成本比上年同期增減', '不適用')]
+    assert required['business'][2]['qualifiers'] == {'unit': '%'}
+    assert required['business'][3]['qualifiers'] == {'unit': '%', 'comparison_basis': '比上年同期'}
+    assert required['business'][4]['semantic_type'] == 'printed_not_applicable'
+    assert required['business'][4]['qualifiers'] == {'comparison_basis': '比上年同期'}
 
 
 def test_a_generic_explicit_attribute_and_printed_subject_columns_keep_independent_non_numeric_facts():

@@ -217,6 +217,11 @@ def decide_equivalence(required: Any, actual: Any, dimension: str, *, context: d
         first, second = exact_number(a), exact_number(b)
         if first is not None and second is not None:
             a, b = ratio(first), ratio(second)
+    elif dimension == 'selection_state':
+        marks = {**dict.fromkeys(['√', '✓', '☑'], 'selected'), **dict.fromkeys(['×', '✗', '☒'], 'unselected')}
+        if required not in marks or actual not in marks:
+            return finish(False, 'undeclared_selection_mark', status='unresolved', conflicts=['selection_state'])
+        a, b = marks[required], marks[actual]
     result["canonical"] = {"required": a, "actual": b}
     if a == b:
         return finish(True, "declared_role_spelling" if required != actual and dimension in {"label", "attribute", "action"} else "exact_canonical_literal")

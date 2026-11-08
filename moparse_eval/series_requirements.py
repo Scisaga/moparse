@@ -21,6 +21,7 @@ _PAIR = re.compile(r"^\s*([^:：;；\n]+?)\s*[:：]\s*(.*)$", re.S)
 _CURRENCY_TEXT = r"人民币|人民幣|美元|港元|港币|港幣|欧元|歐元|日元|USD|RMB|CNY|HKD|EUR|JPY|[$€£¥]"
 _CURRENCY = re.compile(_CURRENCY_TEXT, re.I)
 _GROWTH = re.compile(r"本年比上年增[減减]|較上年同期增[減减]|较上年同期增[減减]|金[額额]同比[變变][動动]|同比[變变][動动]|增[減减](?:幅度)?|YoY(?:\s+change)?", re.I)
+_DELTA = re.compile(r'變化額|变化额|變動額|变动额')
 _CHANGE_DIRECTIONS = {"增长": "increase", "增長": "increase", "增加": "increase", "上升": "increase",
                       "下降": "decrease", "减少": "decrease", "減少": "decrease"}
 _DIRECTED_CHANGE = re.compile("|".join(_CHANGE_DIRECTIONS))
@@ -42,6 +43,7 @@ _QUARTER_FIRST = re.compile(rf"(?:Q(?P<short>\d+)|Quarter\s+(?P<long>\d+))\s+{_Y
 _QUARTER_YEAR_FIRST = re.compile(rf"{_YEAR_DIGITS}(?:\s+Q(?P<short>\d+)|年\s*第?(?P<zh>[一二三四\d]+)季度)(?=$|[\s:：，,])", re.I)
 _ANNUAL_TOTAL = re.compile(rf"Total\s+{_YEAR_DIGITS}(?=$|[\s:：，,])", re.I)
 _ATTRIBUTION = re.compile(r"(?P<metric>[^:：;；。！？!?\n]+?)(?P<relation>\s+attributable\s+to|[归歸][属屬][于於])\s*[:：]?\s*$", re.I)
+_METRIC_PARENT = re.compile(r'(?:營業|营业|經營|经营)(?:收入|利潤|利润)(?:\s*/\s*[（(](?:虧損|亏损)[）)])?|Revenue|Operating\s+profit(?:\s*/\s*loss)?', re.I)
 
 
 def _ordinary_field(label: str) -> bool:
@@ -63,6 +65,11 @@ def is_ordinary_scalar_field(label: str, value: str) -> bool:
 def _period_position(text: str, source: dict[str, Any], start: int = 0) -> dict[str, Any] | None:
     """Read a printed selector, retaining its role rather than inventing dates."""
     fragment = text[start:]
+    if fragment.startswith(('於', '于')):
+        position = _period_position(text, source, start + 1)
+        if position and position['kind'] == 'calendar_day':
+            position['basis'] = {'text': fragment[0], 'source': _source(source, start, start + 1)}
+            return position
     calendar = _CALENDAR_PREFIX.match(fragment)
     if calendar:
         end = start + calendar.end()
@@ -194,11 +201,11 @@ def _block(result: dict[str, Any], reason: str, text: str, source: dict[str, Any
 
 def _attribution_parent(parents, parent_declarations):
     names = [parent["text"] if isinstance(parent, dict) else parent for parent in parents]
-    names = [name for name in names if isinstance(name, str) and _ATTRIBUTION.fullmatch(name)]
+    names = [name for name in names if isinstance(name, str) and (_ATTRIBUTION.fullmatch(name) or _METRIC_PARENT.fullmatch(name))]
     declarations = (list(parent_declarations) if parent_declarations is not None else
                     [parent for parent in parents if isinstance(parent, dict)])
     declared = [item for item in declarations if isinstance(item, dict)
-                and isinstance(item.get("text"), str) and _ATTRIBUTION.fullmatch(item["text"])]
+                and isinstance(item.get("text"), str) and (_ATTRIBUTION.fullmatch(item["text"]) or _METRIC_PARENT.fullmatch(item["text"]))]
     if not names and not declared:
         return None
     if len(names) > 1 or len(declared) > 1:
@@ -214,9 +221,11 @@ def _attribution_parent(parents, parent_declarations):
     raw = parent["text"]
     start = len(raw) - len(raw.lstrip())
     end = len(raw.rstrip().rstrip(":：").rstrip())
+    metric_owner = bool(_METRIC_PARENT.fullmatch(raw[start:end]))
     return {"parent": {"text": raw[start:end], "source": _source(origin, start, end)},
             "original": {"text": raw, "source": copy.deepcopy(origin)}, "label_span": [start, end],
-            "rule_id": "printed_attribution_parent_and_recipient"}
+            'kind': 'metric_owner' if metric_owner else 'attribution',
+            "rule_id": "printed_metric_parent_and_entity_record" if metric_owner else "printed_attribution_parent_and_recipient"}
 
 
 def _attribution_projection(result, text, source, binding):
@@ -224,7 +233,7 @@ def _attribution_projection(result, text, source, binding):
     child, parent, original = binding["child"], binding["parent"], binding["original"]
     objects, fields = [], []
     for index, fact in enumerate(result["facts"]):
-        if "attribution" not in fact.get("role_basis", {}):
+        if not ({'attribution', 'metric_owner'} & fact.get("role_basis", {}).keys()):
             continue
         fact["id"] = f"series-attribution:{index}"
         fields.append({"fact_id": fact["id"], "attribute_source": copy.deepcopy(fact["attribute_source"]),
@@ -240,7 +249,7 @@ def _attribution_projection(result, text, source, binding):
                         "qualifier_sources": copy.deepcopy(fact["qualifier_sources"]), "text_atoms": atoms})
     if not fields:
         return
-    result["parent_bindings"] = [{"kind": "attribution", "rule_id": binding["rule_id"],
+    result["parent_bindings"] = [{"kind": binding.get('kind', 'attribution'), "rule_id": binding["rule_id"],
         "parent": copy.deepcopy(parent), "child": copy.deepcopy(child), "facts": fields,
         **({"record_evidence": copy.deepcopy(binding["record_evidence"])} if binding.get("record_evidence") else {})}]
     result["projection_inputs"] = {"objects": objects, "locators": [{**copy.deepcopy(child), "role": "record_label"}],
@@ -254,6 +263,35 @@ def _attribution_projection(result, text, source, binding):
 
 def read_series_context(text: str, source: dict[str, Any], *, scope: tuple[str, ...] | list[str] = ()) -> dict[str, Any]:
     """Read only explicit declaration clauses, with property-specific units."""
+    caption = re.fullmatch(r'(?P<title>.+(?:項目|项目|數據|数据|情況|情况|金額|金额|表))'
+                           r'(?P<markers>(?:(?:單位|单位)\s*[:：]\s*){1,3})(?P<value>.+)', text)
+    if caption:
+        from .cjk_circumstances import nominal
+        from .narrative_requirements import _Reader, _Unknown
+
+        reader = _Reader(text, source, scope)
+        try:
+            phrase = nominal(reader, *caption.span('title'))
+            reader.annotate_sources(phrase)
+        except _Unknown:
+            caption = None
+        else:
+            markers = list(re.finditer(r'(?:單位|单位)\s*[:：]\s*', caption['markers']))
+            start = caption.start('markers') + markers[-1].start()
+            result = read_series_context(text[start:], _source(source, start, len(text)), scope=scope)
+            for collection in ('text_atoms', 'controls', 'consumed_spans'):
+                for item in result[collection]:
+                    item['span'] = [start + a for a in item['span']]
+            result['source'] = copy.deepcopy(source)
+            result['caption'] = {'text': caption['title'], 'source': _source(source, *caption.span('title')), 'logic': phrase}
+            _atom(result, text, source, *caption.span('title'), 'caption')
+            for marker in markers:
+                a = caption.start('markers') + marker.start()
+                _atom(result, text, source, a, a + 2, 'label')
+            result['qualifiers']['table_caption'] = caption['title']
+            result['qualifier_sources']['table_caption'] = _source(source, *caption.span('title'))
+            _project(result, text, source)
+            return result
     result = _result()
     result.update(qualifiers={}, qualifier_sources={}, attribute_units={}, unit_exceptions=[],
                   comparison_periods={}, scope=list(scope), source=copy.deepcopy(source))
@@ -446,6 +484,26 @@ def _closed_yoy_periods(facts, label, attribute):
             for key, position in (("from_period", before), ("to_period", current))}
 
 
+def _closed_delta_periods(facts, attribute):
+    from .period_evidence import calendar_date
+
+    if len(facts) != 2 or any(f.get('attribute') != attribute for f in facts):
+        return {}
+    positions = []
+    for fact in facts:
+        label = fact.get('qualifiers', {}).get('period', '')
+        origin = fact.get('qualifier_sources', {}).get('period')
+        date = calendar_date(label)
+        if date is None or not origin:
+            return {}
+        positions.append((date, label, origin))
+    positions.sort()
+    if positions[0][0] == positions[1][0]:
+        return {}
+    return {key: {'value': position[1], 'source': copy.deepcopy(position[2])}
+            for key, position in zip(('from_period', 'to_period'), positions, strict=True)}
+
+
 def _bind_printed_series_parent(result, text, source, parents, declarations, context, qualifiers, qualifier_sources, scope):
     """A printed 其中 member refers to its actual list parent metric label.
 
@@ -558,6 +616,11 @@ def read_series_requirements(text: str, source: dict[str, Any], *, context: dict
         return _result()
     result["matched"] = True
     attribution = _attribution_parent(parents, parent_declarations)
+    if (attribution and attribution.get('kind') == 'metric_owner'
+            and re.fullmatch(r'Sub[- ]?total|小計|小计', attribute or '', re.I)):
+        # A printed subtotal metric is not an entity/department record whose
+        # metric may be supplied by the parent. Keep its actual field label.
+        attribution = None
     if attribution:
         issue = attribution.get("reason")
         if issue or main_attribute_source is None or pair is None:
@@ -639,6 +702,9 @@ def read_series_requirements(text: str, source: dict[str, Any], *, context: dict
                 continue
             q["period"] = position["text"]
             sources["period"] = copy.deepcopy(position["source"])
+            if position.get('basis'):
+                q['period_basis'] = position['basis']['text']
+                sources['period_basis'] = copy.deepcopy(position['basis']['source'])
             _atom(result, text, source, start, start + position["end"], "period")
             value_start = start + position["end"]
             while value_start < end and text[value_start] in " :：，,":
@@ -661,7 +727,7 @@ def read_series_requirements(text: str, source: dict[str, Any], *, context: dict
                        layers=["B", "L"], attribution=copy.deepcopy(attribution))
                 continue
             extra = _PAIR.fullmatch(fragment)
-            growth = _GROWTH.match(fragment)
+            growth = _GROWTH.match(fragment) or _DELTA.match(fragment)
             if extra:
                 field_attribute = extra[1].strip()
                 label_start = start + extra.start(1)
@@ -689,7 +755,20 @@ def read_series_requirements(text: str, source: dict[str, Any], *, context: dict
             named_unit = context.get("attribute_units", {}).get(field_attribute)
             if named_unit:
                 q["unit"], sources["unit"] = named_unit["unit"], copy.deepcopy(named_unit["source"])
-            if _CAUSE.fullmatch(field_attribute):
+            if _DELTA.fullmatch(field_attribute):
+                for key in ('unit', 'currency'):
+                    if key in inherited:
+                        q[key], sources[key] = inherited[key], copy.deepcopy(inherited_sources[key])
+                q.pop('period_basis', None)
+                sources.pop('period_basis', None)
+                parsed = _read_scalar(text, source, value_start, end, result, q, sources)
+                comparison = _closed_delta_periods(result['facts'], attribute)
+                if comparison and parsed:
+                    for key, compared_position in comparison.items():
+                        parsed[1][key], parsed[2][key] = compared_position['value'], copy.deepcopy(compared_position['source'])
+                elif parsed:
+                    _block(result, 'series_difference_periods_unresolved', text, source, start, end, layers=['B', 'L'])
+            elif _CAUSE.fullmatch(field_attribute):
                 role = "description"
                 value_start, value_end = _trim(text, value_start, end)
                 _atom(result, text, source, value_start, value_end, "value")
@@ -728,7 +807,7 @@ def read_series_requirements(text: str, source: dict[str, Any], *, context: dict
             if attribution:
                 fact = result["facts"][-1]
                 fact["subject_source"] = copy.deepcopy(attribution["child"]["source"])
-                fact.setdefault("role_basis", {})["attribution"] = {"rule_id": attribution["rule_id"],
+                fact.setdefault("role_basis", {})[attribution.get('kind', 'attribution')] = {"rule_id": attribution["rule_id"],
                     "parent": copy.deepcopy(attribution["parent"]), "child": copy.deepcopy(attribution["child"])}
                 if attribution.get("record_evidence"):
                     fact["record_evidence"] = copy.deepcopy(attribution["record_evidence"])

@@ -150,6 +150,16 @@ def validate_infinitival_sources(graph, nodes, literal):
             expected = re.sub(r'\s+', '_', marker.lower())
             roles = {'for_example': 'example', 'for_instance': 'example', 'however': 'contrast',
                      'moreover': 'addition', 'in_addition': 'addition', 'in_particular': 'focus'}
+            if re.fullmatch(r'[A-Za-z][.)]', marker):
+                expected = 'enumeration'
+                roles[expected] = 'item_label'
+                root = node.get('source', {})
+                origin = node['marker_source']
+                outer, own = root.get('text_span', []), origin.get('text_span', [])
+                if (len(outer) != 2 or len(own) != 2 or not outer[0] == own[0] < own[1] <= outer[1]
+                        or any(origin.get(k) != root.get(k) for k in ('path', 'lines', 'cell', 'block', 'native_path'))
+                        or not (literal(node.get('separator_source'), 'item label separator') or '').isspace()):
+                    raise ValueError('printed item label borrows a different record or boundary')
             if (node.get('operator') != expected or roles.get(expected) != node.get('role')
                     or node.get('operator_source') != node.get('marker_source')):
                 raise ValueError('discourse marker scope differs from original source')

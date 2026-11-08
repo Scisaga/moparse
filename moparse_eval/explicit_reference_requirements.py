@@ -12,7 +12,9 @@ import copy
 import re
 from typing import Any
 
-_DIRECTIVE = re.compile(r'(?<!\w)(?:See(?:\s+also)?|参见|參見|见|見)(?=\s|[“"‘\'《「『]|第|附注|附註|注)', re.I)
+_DIRECTIVE = re.compile(r'(?<!\w)See(?:\s+also)?(?=\s|[“"‘\'《「『])|'
+                        r'(?:[详詳]情[请請]|[请請])?(?:参见|參見|[详詳][见見]|见|見)'
+                        r'(?=\s|[“"‘\'《「『]|第|附注|附註|注|本[報报年]|按)', re.I)
 _PAIRS = {'“': '”', '"': '"', '‘': '’', "'": "'", '《': '》', '「': '」', '『': '』'}
 _ID = r'(?:\d+(?:\.\d+)*(?:\([A-Za-z0-9]+\))*[A-Za-z]?|[IVXLCDM]+)'
 _NUMBERED = re.compile(r'(?P<label>Article|Clause|Section|Note)\s*(?P<identifier>' + _ID + r')(?![A-Za-z0-9]|\.\d)', re.I)
@@ -25,6 +27,58 @@ _INLINE_DIFFERENCE = re.compile(
     r'(?P<left>[^，,。；;：:]+?)(?P<join>与|與)(?P<right>[^，,。；;：:]+?)'
     r'(?P<link>之[间間]的差[异異][说說]明)(?P<directive>[请請]?[详詳][见見])')
 _REPORT_DOCUMENT = re.compile(r'(?:合[并併])?(?:财务报表|財務報表)')
+_ACCOUNTING_BASIS = r'(?:中國企業|中国企业|國際財務報告|国际财务报告)[會会][計计][準准][則则]'
+_ACCOUNTING_DIFFERENCE = re.compile(
+    r'(?P<actor>本公司|本集[團团])(?P<link>根[據据])(?P<left>' + _ACCOUNTING_BASIS + ')'
+    r'(?P<join>和|與|与)(?P<right>' + _ACCOUNTING_BASIS + ')'
+    r'(?P<description>[編编][製制]的[會会][計计][報报]表的主要差[異异])(?P<directive>[見见])')
+_REPORT = r'本(?:年度[報报]告|年[報报]|[報报]告)'
+
+
+def _report_target(text, start):
+    """Printed report paths and accounting-note groups, never target lookup."""
+    note = re.match(r'按(?P<basis>' + _ACCOUNTING_BASIS + r')[編编][製制]的(?P<document>[財财]務[報报]表)'
+                    r'(?P<label>附[註注])(?P<identifier>' + _ID + r')', text[start:])
+    if note:
+        stop = start + note.end()
+        members = [{'role': 'reference_target', 'kind': 'numbered_reference', 'reference_kind': 'note',
+                    'identifier': note['identifier'], 'document': note['document'], 'accounting_basis': note['basis']}]
+        operators = []
+        while stop < len(text) and text[stop] in '和及':
+            other = _report_target(text, stop + 1)
+            if not other or other['target'].get('accounting_basis') is None:
+                break
+            operators.append(text[stop])
+            members.append(other['target'])
+            stop = other['target_span'][1]
+        target = members[0] if len(members) == 1 else {
+            'role': 'reference_target', 'kind': 'reference_group', 'operator': 'and', 'members': members}
+        return {'target': target, 'target_span': [start, stop]}
+    report = re.match(r'(?P<document>' + _REPORT + ')', text[start:])
+    if not report:
+        return None
+    cursor = start + report.end()
+    target = {'role': 'reference_target', 'kind': 'document_location', 'document': report['document']}
+    page = re.match(r'第(?P<first>\d+)[頁页](?:至第(?P<last>\d+)[頁页])?', text[cursor:])
+    if page:
+        target['pages'] = [page['first'], page['last'] or page['first']]
+        cursor += page.end()
+    section = re.match(r'的(?P<actor>本公司)(?P<component>[財财]務[會会][計计][報报]告)的(?P<section>[A-Za-z])節', text[cursor:])
+    if section:
+        target.update({'actor': section['actor'], 'component': section['component'], 'section': section['section']})
+        return {'target': target, 'target_span': [start, cursor + section.end()]}
+    if cursor < len(text) and text[cursor] in _PAIRS:
+        close = text.find(_PAIRS[text[cursor]], cursor + 1)
+        if close < 0:
+            return None
+        target['title'] = text[cursor + 1:close]
+        cursor = close + 1
+        topic = re.match(r'[關关][於于](?P<topic>[^。；;]+?)(?:的有[關关][內内]容|部分描述)', text[cursor:])
+        if topic:
+            target['topic'] = topic['topic']
+            cursor += topic.end()
+        return {'target': target, 'target_span': [start, cursor]}
+    return {'target': target, 'target_span': [start, cursor]} if page else None
 
 
 def _source(source, start, end):
@@ -55,6 +109,9 @@ def _region_end(text, start):
 def _target(text, start):
     while start < len(text) and text[start].isspace():
         start += 1
+    report = _report_target(text, start)
+    if report:
+        return report
     if start < len(text) and text[start] in _PAIRS:
         end = text.find(_PAIRS[text[start]], start + 1)
         if end < 0 or not text[start + 1:end].strip():
@@ -136,18 +193,28 @@ def read_explicit_references(text: str, source: dict[str, Any], *, scope=(), own
     inline = [m for m in _INLINE_DIFFERENCE.finditer(text)
               if (m.start() == 0 or text[m.start() - 1] in '。；;\n')
               and _valid_metric(m['left']) and _valid_metric(m['right'])]
-    directives = [(m, None) for m in _DIRECTIVE.finditer(text)] + [(m, m) for m in inline]
+    accounting = [m for m in _ACCOUNTING_DIFFERENCE.finditer(text)
+                  if m.start() == 0 or text[m.start() - 1] in '。；;\n']
+    directives = [(m, None) for m in _DIRECTIVE.finditer(text)] + [(m, m) for m in [*inline, *accounting]]
     for match, difference in sorted(directives, key=lambda row: row[0].start()):
         if any(a <= match.start() < b for a, b in quoted):
             continue
         before = text[:match.start()].rstrip(' \t')
         if difference is None and before and before[-1] not in '.。;；:：!?！？\n':
             continue
+        if any(a <= match.start() < b for a, b in consumed):
+            continue
         result['matched'] = True
         start = match.start()
         try:
             parsed = _target(text, match.end())
-            end = _region_end(text, parsed['target_span'][1])
+            target_end = parsed['target_span'][1]
+            # A full stop inside a closing quoted title terminates this
+            # directive too. Do not absorb the following business sentence.
+            quoted_stop = (parsed['target']['kind'] == 'quoted_title' and target_end >= 2
+                           and text[target_end - 2] in '.。!?！？'
+                           and not re.match(r'\s+for\s+more\s+information\b', text[target_end:], re.I))
+            end = target_end if quoted_stop else _region_end(text, target_end)
             tail = _TAIL.fullmatch(text[parsed['target_span'][1]:end])
             if tail is None:
                 raise ValueError('reference_trailing_syntax_unresolved')
@@ -174,14 +241,20 @@ def read_explicit_references(text: str, source: dict[str, Any], *, scope=(), own
             b = parsed['target_span'][1] + tail.end('purpose')
             reference['purpose_text'], reference['purpose_source'] = text[a:b], _source(source, a, b)
         if difference:
-            identity = {'role': 'difference_explanation', 'left_metric': difference['left'],
-                        'right_metric': difference['right'], 'actor': difference['actor'], 'period': difference['period']}
+            accounting_difference = difference.re is _ACCOUNTING_DIFFERENCE
+            identity = ({'role': 'accounting_difference_explanation', 'actor': difference['actor'],
+                         'left_basis': difference['left'], 'right_basis': difference['right']}
+                        if accounting_difference else
+                        {'role': 'difference_explanation', 'left_metric': difference['left'],
+                         'right_metric': difference['right'], 'actor': difference['actor'], 'period': difference['period']})
             own = {'identity': identity, 'scope': list(scope)}
             evidence = [{'kind': 'prose_endpoint_roles', 'identity': copy.deepcopy(identity),
                          'text': text[start:directive_start], 'source': _source(source, start, directive_start)}]
             proof = _owner_proof(own, evidence, text, source, [directive_start, end])
-            reference['owner_roles'] = {key: {'text': difference[key], 'source': _source(source, *difference.span(key))}
-                                       for key in ('actor', 'period', 'left', 'right', 'join', 'link')}
+            keys = ('actor', 'link', 'left', 'join', 'right', 'description') if accounting_difference else ('actor', 'period', 'left', 'right', 'join', 'link')
+            reference['owner_roles'] = {key: {'text': difference[key], 'source': _source(source, *difference.span(key))} for key in keys}
+            if accounting_difference:
+                reference['owner_kind'] = 'accounting_difference'
         else:
             proof = _owner_proof(owner, owner_evidence, text, source, [start, end])
         reference['owner_proof'] = proof

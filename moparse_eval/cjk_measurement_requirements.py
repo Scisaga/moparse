@@ -21,17 +21,26 @@ _COMPARISONS = {'不超过': 'lte', '不超過': 'lte', '不高于': 'lte', '不
                 '低于': 'lt', '低於': 'lt', '小于': 'lt', '小於': 'lt', '等于': 'eq', '等於': 'eq'}
 _COMPARISON = re.compile('|'.join(sorted(_COMPARISONS, key=len, reverse=True)))
 _CHANGES = {'同比增长': 'increase', '同比增長': 'increase', '同比增加': 'increase', '同比上升': 'increase',
-            '同比下降': 'decrease', '同比减少': 'decrease', '同比減少': 'decrease'}
-_CHANGE = re.compile(r'(?P<basis>同比|(?:相[較较]|[較较比])(?P<baseline>(?:19|20)\d{2}年(?:同期|末)|年初)|比上年末)'
-                     r'(?P<direction>增长|增長|增加|上升|下降|减少|減少)')
-_PERIOD = re.compile(r'\s*(?P<prefix>於|于|截至)?(?P<period>(?:19|20)\d{2}年(?:\d{1,2}月\d{1,2}日|底|末)?)'
+            '同比下降': 'decrease', '同比减少': 'decrease', '同比減少': 'decrease', '同比降低': 'decrease'}
+_CHANGE = re.compile(r'(?P<basis>同比|(?:相[較较]|[較较比])(?P<baseline>(?:19|20)\d{2}年(?:同期|末)|年初)|比上年末)?'
+                     r'(?P<direction>增长|增長|增加|上升|下降|减少|減少|降低)'
+                     r'(?P<flow>(?:現金|现金)?(?P<flow_direction>流入|流出))?')
+_PERIOD = re.compile(r'\s*(?P<prefix>於|于|截至)?(?P<period>(?:19|20)\d{2}年(?:\d{1,2}月\d{1,2}日|期末|底|末)?)'
                      r'(?!度|初|中|[内內前后後]|以[来來]|[\d一二三四五六七八九十]+月)\s*(?:[，,]\s*)?')
 _PREFIX = re.compile(r'如果|若|只有|除非|因为|因為|由于|由於|据|據|截至|面向|在|为|為|今年|去年|本年|上年|当年|當年|\d{4}年')
-_METRIC = re.compile(r'(?:值|量|额|額|收入|支出|利润|利潤|余额|餘額|资产|資產|负债|負債|人数|人數|指数|指數|率|规模|規模|费用|費用|损益|損益|权益|權益|借款|庫存股|库存股|存貨|存货)(?:流出|流入)?(?:\s*[（(][A-Za-z][A-Za-z0-9 -]*[）)])?$')
+_METRIC = re.compile(r'(?:值|量|额|額|收入|支出|利润|利潤|余额|餘額|资产|資產|负债|負債|人数|人數|指数|指數|率|规模|規模|费用|費用|损益|損益|权益|權益|借款|庫存股|库存股|存貨|存货|淨流入|净流入|淨流出|净流出|淨變動|净变动)(?:流出|流入)?(?:\s*[（(][A-Za-z][A-Za-z0-9 -]*[）)])?$')
 _SUBJECT_SCOPE = re.compile(r'[，,；;:：。！？!?“”"\'‘’]|中的|或|并|並|同比|比上年|如果|除非|因为|因為|由于|由於|表示|认为|認為')
 _NON_ACTUAL = re.compile(r'目标|目標|预计|預計|预期|預期|预测|預測|计划|計劃|预算|預算|拟|擬|将|將|未(?:实现|實現|达|達)|不(?:为|為|是)|没有|沒有|如果|若|除非|假设|假設')
 _ASSERTION = re.compile(r'实现|實現|为|為|达到|達到')
 _ACTOR = re.compile(r'(?P<actor>本公司|本集[团團]|[该該]事[业業]部)(?:的)?')
+
+
+def _collective_position_metric(metric):
+    """One printed amount owns a balance-item group, never each member's value."""
+    parts = re.split(r'以及|與|与|及|和|、', metric)
+    return (len(parts) > 1 and all(re.fullmatch(r'[\u3400-\u9fff]{0,20}(?:資產|资产|工程|設備|设备|存款|現金|现金|現金等價物|现金等价物)', p)
+            and not re.search(r'增加|減少|减少|增長|增长|加大|推進|推进|償還|偿还|如果|因為|因为|由於|由于|的', p)
+            for p in parts))
 
 
 def _source(source, a, b):
@@ -53,11 +62,13 @@ def _valid_metric(metric):
     classified = re.fullmatch(r'(?P<parent>.+?)中的(?P<metric>.+)', metric)
     if classified and _POSITION_GROUP.fullmatch(classified['parent']):
         return _valid_metric(classified['metric'])
-    if not _METRIC.search(metric) or _PREFIX.match(metric) or _SUBJECT_SCOPE.search(metric) or _NON_ACTUAL.search(metric) or re.match(r'\*|__', metric):
+    collective = _collective_position_metric(metric)
+    activity = re.fullmatch(r'(?:投資|投资)[\u3400-\u9fff]{1,20}(?:企業|企业|公司)|(?:定向)?(?:增發|增发)', metric)
+    if not (_METRIC.search(metric) or collective or activity) or _PREFIX.match(metric) or _SUBJECT_SCOPE.search(metric) or _NON_ACTUAL.search(metric) or re.match(r'\*|__', metric):
         return False
     # A fixed compound label may contain conjunctions. Two independently
     # complete metric labels do not jointly own a single unallocated amount.
-    return not any(_METRIC.search(metric[:join.start()]) and _METRIC.search(metric[join.end():])
+    return collective or not any(_METRIC.search(metric[:join.start()]) and _METRIC.search(metric[join.end():])
                    for join in re.finditer(r'和|与|與|及|以及', metric))
 
 
@@ -102,7 +113,7 @@ def read_cjk_measurements(text: str, source: dict[str, Any], *, scope=()) -> dic
     if parent is not None and (not isinstance(parent, (list, tuple)) or len(parent) != 2
                                or any(type(v) is not int or v < 0 for v in parent) or parent[1] < parent[0]):
         raise ValueError('CJK measurement source span is invalid')
-    result = {'matched': bool((_COMPARISON.search(text) and re.search(r'\d', text)) or _CHANGE.search(text)),
+    result = {'matched': bool((_COMPARISON.search(text) or _CHANGE.search(text)) and re.search(r'\d', text)),
               'complete': False, 'semantic_complete': False, 'facts': [], 'relations': [], 'logic': [],
               'semantic_operands': [], 'semantic_operand_relations': [], 'unresolved': [], 'blockers': [],
               'pending_requirements': [], 'issues': [], 'text_atoms': [], 'controls': [], 'consumed_spans': [],
@@ -175,7 +186,10 @@ def read_cjk_measurements(text: str, source: dict[str, Any], *, scope=()) -> dic
         from .financial_group_context import financial_metric_designation
 
         phrase = None
-        if financial_metric_designation(subject):
+        if (financial_metric_designation(subject) or _collective_position_metric(subject)
+                or re.fullmatch(r'(?:投資|投资)[\u3400-\u9fff]{1,20}(?:企業|企业|公司)|(?:定向)?(?:增發|增发)', subject)
+                or re.fullmatch(r'(?:歸屬於|归属于|於|于)[^的]+的(?:淨利潤|净利润|權益|权益)', subject)
+                or subject.endswith(('淨變動', '净变动'))):
             from .cjk_circumstances import nominal
             from .narrative_requirements import _Reader
 
@@ -215,17 +229,35 @@ def read_cjk_measurements(text: str, source: dict[str, Any], *, scope=()) -> dic
                 'binding_evidence': {'statement_source': copy.deepcopy(own_source),
                     'qualifier_source': copy.deepcopy(qs[key]), 'data_source': copy.deepcopy(fact['value_source'])}})
         if phrase:
-            for part in phrase['parts']:
-                result['relations'].append({'type': 'narrative_cjk_nominal_scope', 'left': _Reader.summary(part),
-                    'right': copy.deepcopy(endpoint), 'source': copy.deepcopy(part['marker_source']),
-                    'object_anchor': None, 'fact_id': fact['id'],
-                    'binding_evidence': {'statement_source': copy.deepcopy(own_source), 'nominal_logic': copy.deepcopy(part)}})
+            def nominal_edges(node):
+                if isinstance(node, dict):
+                    if node.get('kind') == 'cjk_dependency':
+                        result['relations'].append({'type': 'narrative_cjk_nominal_scope', 'left': _Reader.summary(node),
+                            'right': copy.deepcopy(endpoint), 'source': copy.deepcopy(node.get('marker_source', node['source'])),
+                            'object_anchor': None, 'fact_id': fact['id'],
+                            'binding_evidence': {'statement_source': copy.deepcopy(own_source), 'nominal_logic': copy.deepcopy(node)}})
+                    if node.get('kind') == 'coordination' and node.get('mode') == 'nominal_members':
+                        for origin in node['operator_sources']:
+                            result['relations'].append({'type': 'narrative_nominal_coordination_scope',
+                                'left': {'operator': node['operator'], 'mode': node['mode'], 'member_count': len(node['children'])},
+                                'right': copy.deepcopy(endpoint), 'source': copy.deepcopy(origin), 'object_anchor': None,
+                                'fact_id': fact['id'], 'binding_evidence': {'statement_source': copy.deepcopy(own_source),
+                                    'operator_source': copy.deepcopy(origin), 'coordination_logic': copy.deepcopy(node)}})
+                    for child in node.values():
+                        nominal_edges(child)
+                elif isinstance(node, list):
+                    for child in node:
+                        nominal_edges(child)
+            nominal_edges(phrase)
         tree['clauses'].append(copy.deepcopy(logic))
         return fact
 
     antecedent = None
     classified_actor = None
+    preceding_change = None
+    composition_parent, composition_marker = None, None
     for part_index, (a, b) in enumerate(parts):
+        preceding = antecedent
         if invalid_period:
             fail(a, b, 'cjk_measurement_calendar_period_unresolved')
             continue
@@ -242,23 +274,40 @@ def read_cjk_measurements(text: str, source: dict[str, Any], *, scope=()) -> dic
             antecedent = None
             continue
         if change:
-            if antecedent is None and explicit_subject is None:
-                fail(a, b, 'cjk_relative_measurement_antecedent_or_operator_unresolved')
-                continue
+            if explicit_subject is None and not change['basis'] and preceding_change:
+                antecedent = preceding_change
+            if explicit_subject is None and (antecedent is None or not change['basis']):
+                if antecedent is not preceding_change or preceding_change is None:
+                    fail(a, b, 'cjk_relative_measurement_antecedent_or_operator_unresolved')
+                    continue
             subject, subject_source = ((explicit_subject, _source(source, sa, sb)) if explicit_subject is not None
                                        else (antecedent['subject'], antecedent['subject_source']))
             measurement = read_measurement_literal(text[change.end():b], _source(source, change.end(), b))
             if measurement['matched'] and measurement['unit']:
                 predicate_source = _source(source, change.start(), change.end())
-                basis_source, direction_source = _source(source, *change.span('basis')), _source(source, *change.span('direction'))
+                basis_source = _source(source, *change.span('basis')) if change['basis'] else None
+                direction_source = _source(source, *change.span('direction'))
                 basis = 'year_on_year' if change['basis'] == '同比' else change['basis']
-                direction = 'decrease' if change['direction'] in {'下降', '减少', '減少'} else 'increase'
+                direction = 'decrease' if change['direction'] in {'下降', '减少', '減少', '降低'} else 'increase'
                 logic = {'kind': 'year_on_year_change', 'subject': subject, 'subject_source': subject_source,
                          'operator_text': change[0], 'operator_source': predicate_source, 'basis': basis,
                          'direction': direction, 'baseline_period': change['baseline'], 'value_source': measurement['sources']['value'],
                          'unit_source': measurement['sources']['unit'], 'source': _source(source, a, b)}
-                qualifiers = {'comparison_basis': basis, 'change_direction': direction}
-                qualifier_sources = {'comparison_basis': basis_source, 'change_direction': direction_source}
+                qualifiers = {'change_direction': direction}
+                qualifier_sources = {'change_direction': direction_source}
+                if basis_source:
+                    qualifiers['comparison_basis'], qualifier_sources['comparison_basis'] = basis, basis_source
+                elif preceding_change and explicit_subject is None:
+                    for key in ('comparison_basis', 'from_period'):
+                        if key in preceding_change['qualifiers']:
+                            qualifiers[key] = preceding_change['qualifiers'][key]
+                            qualifier_sources[key] = copy.deepcopy(preceding_change['qualifier_sources'][key])
+                if change['flow']:
+                    qualifiers['flow_direction'] = 'inflow' if change['flow_direction'] == '流入' else 'outflow'
+                    qualifier_sources['flow_direction'] = _source(source, *change.span('flow_direction'))
+                    if change['flow'] != change['flow_direction']:
+                        qualifiers['flow_item'] = change['flow'][:-2]
+                        qualifier_sources['flow_item'] = _source(source, change.start('flow'), change.end('flow') - 2)
                 if change['baseline']:
                     qualifiers['from_period'] = change['baseline']
                     qualifier_sources['from_period'] = _source(source, *change.span('baseline'))
@@ -267,23 +316,56 @@ def read_cjk_measurements(text: str, source: dict[str, Any], *, scope=()) -> dic
                     qualifier_sources['actor'] = copy.deepcopy(antecedent['qualifier_sources']['actor'])
                 fact = emit(subject, subject_source, change[0], predicate_source, measurement, _source(source, a, b),
                             qualifiers, qualifier_sources, logic)
+                binding_source = basis_source or qualifier_sources.get('comparison_basis', direction_source)
                 fact['subject_binding_evidence'] = {'kind': 'explicit_local_metric' if explicit_subject else 'immediate_printed_year_on_year_antecedent',
-                    'antecedent_source': copy.deepcopy(subject_source), 'relative_operator_source': basis_source,
+                    'antecedent_source': copy.deepcopy(subject_source), 'relative_operator_source': binding_source,
                     'scope': list(scope)}
                 if explicit_subject is None:
                     result['relations'].append({'type': 'cjk_year_on_year_subject_binding',
                     'left': {'subject': subject, 'role': 'antecedent_metric', 'scope': list(scope)},
-                    'right': {'subject': subject, 'attribute': change[0], 'scope': list(scope)}, 'source': basis_source,
+                    'right': {'subject': subject, 'attribute': change[0], 'scope': list(scope)}, 'source': binding_source,
                         'object_anchor': None, 'binding_evidence': copy.deepcopy(fact['subject_binding_evidence'])})
-                features.add('year_on_year_comparison')
+                features.add('year_on_year_comparison' if basis_source else 'quantity_assertion')
                 if explicit_subject is None:
                     features.add('same_subject_relative_clause')
+                preceding_change = fact if basis_source else None
             else:
                 fail(a, b, 'cjk_year_on_year_ratio_measurement_unresolved')
             # A second relative clause cannot silently pass over a relation.
             antecedent = None
             continue
         antecedent = None
+        preceding_change = None
+        membership = re.match(r'其中', text[a:b])
+        if membership and preceding and preceding.get('logic', {}).get('kind') == 'quantity_assertion':
+            composition_parent = preceding
+            composition_marker = _source(source, a, a + membership.end())
+        if composition_parent:
+            member_start = a + membership.end() if membership else a
+            children = []
+            for cut in range(member_start + 1, b):
+                label = text[member_start:cut]
+                amount = read_measurement_literal(text[cut:b], _source(source, cut, b))
+                if _valid_metric(label) and amount['matched'] and amount['unit']:
+                    children.append((label, cut, amount))
+            if len(children) == 1:
+                subject, cut, measurement = children[0]
+                subject_source = _source(source, member_start, cut)
+                predicate_source = _source(source, cut, cut)
+                qualifiers = {'parent_metric': composition_parent['subject'], 'membership_operator': '其中'}
+                qualifier_sources = {'parent_metric': composition_parent['subject_source'], 'membership_operator': composition_marker}
+                for key in ('actor',):
+                    if key in composition_parent['qualifiers']:
+                        qualifiers[key], qualifier_sources[key] = composition_parent['qualifiers'][key], composition_parent['qualifier_sources'][key]
+                logic = {'kind': 'quantity_assertion', 'subject': subject, 'subject_source': subject_source,
+                    'predicate': '', 'predicate_source': predicate_source, 'assertion_operator': 'juxtaposed',
+                    'assertion_mode': 'actual', 'right_role': 'asserted_value', 'value_source': measurement['sources']['value'],
+                    'unit_source': measurement['sources']['unit'], 'source': _source(source, a, b)}
+                emit(subject, subject_source, '', predicate_source, measurement, _source(source, a, b),
+                     qualifiers, qualifier_sources, logic)
+                features.add('quantity_assertion')
+                continue
+            composition_parent, composition_marker = None, None
         ratio = re.fullmatch(r'(?P<scope>其中)?(?P<subject>[^，,。]+?)占(?P<denominator>[^，,。]+?)的(?P<measurement>.+)', text[a:b])
         if ratio:
             measurement = read_measurement_literal(ratio['measurement'], _source(source, a + ratio.start('measurement'), b))

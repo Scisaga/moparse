@@ -62,11 +62,65 @@ def inherit_omitted_subject(result, binding):
     """Only replace an absent subject slot, never a printed child actor."""
     if not binding:
         return
-    _context, member = binding
+    context, member = binding
     inherited = member["member_context"]
+    if (context['declaration'].get('role_contract') != 'printed_untimed_person_collection'
+            and any(not fact.get('subject') and not fact.get('subject_source') for fact in result.get('facts', []))):
+        def defer_actor():
+            result.setdefault('blockers', []).append({'kind': 'enumeration_binding',
+                'reason': 'enumeration_member_actor_control_unresolved', 'layers': ['B', 'L'],
+                'text': member['text'], 'source': copy.deepcopy(member['source'])})
+            result['complete'] = result['semantic_complete'] = False
+
+        if result.get('blockers') or result.get('pending_requirements'):
+            defer_actor()
+            return
+        whole = result
+        if result.get('raw_text') != member.get('text'):
+            from .proposition_requirements import read_propositions
+
+            whole = read_propositions(member['text'], member['source'], subject=inherited['subject'])
+        if not whole.get('complete') or whole.get('blockers'):
+            defer_actor()
+            return
+        # A collection's owner does not replace a participant introduced in
+        # the member itself. Local clause control needs its own parser proof.
+        if any(fact.get('subject') and fact.get('subject_source', {}).get('text_span', [0, 0])[0]
+               < fact.get('subject_source', {}).get('text_span', [0, 0])[1]
+               for fact in whole.get('facts', [])):
+            defer_actor()
+            return
     for fact in result.get("facts", []):
-        origin = fact.get("subject_source", {})
+        origin = fact.get("subject_source") or {}
         bounds = origin.get("text_span")
+        if not fact.get('subject') and not origin and context['declaration'].get('role_contract') != 'printed_untimed_person_collection':
+            controller = copy.deepcopy(inherited['subject_source'])
+            proof = {'kind': 'enumeration_subject', 'controller': inherited['subject'], 'controller_source': controller,
+                     'introduction_source': copy.deepcopy(context['source']), 'member_source': copy.deepcopy(member['source'])}
+            fact.update(subject=inherited['subject'], subject_source=controller, subject_binding_evidence=proof)
+
+            def bind_tree(value, fact=fact, controller=controller, proof=proof):
+                if isinstance(value, dict):
+                    if (value.get('kind') == 'proposition' and not value.get('subject')
+                            and value.get('predicate_source') == fact.get('predicate_source')
+                            and value.get('object_source') == fact.get('object_source')):
+                        value.update(subject=inherited['subject'], subject_source=copy.deepcopy(controller),
+                                     subject_binding_evidence=copy.deepcopy(proof), subject_phrase=None)
+                    for child in value.values():
+                        bind_tree(child)
+                elif isinstance(value, list):
+                    for child in value:
+                        bind_tree(child)
+            bind_tree(result.get('logic', []))
+            for edge in result.get('relations', []):
+                if edge.get('fact_id') != fact.get('id'):
+                    continue
+                for end in ('left', 'right'):
+                    if isinstance(edge.get(end), dict) and 'subject' in edge[end] and not edge[end]['subject']:
+                        edge[end]['subject'] = inherited['subject']
+                if 'subject_source' in edge.get('binding_evidence', {}):
+                    edge['binding_evidence']['subject_source'] = copy.deepcopy(controller)
+            continue
         if bounds and bounds[0] == bounds[1] and fact["subject"] == inherited["subject"]:
             fact["subject_source"] = copy.deepcopy(inherited["subject_source"])
             # Role sources are part of the same source-bound interpretation.
@@ -119,8 +173,8 @@ def bind_interpreted_members(data, plan):
                     data["blockers"].append(_issue("enumeration_membership_endpoint_unresolved", context))
                     continue
                 own_period = fact.get("qualifiers", {}).get("period")
-                period = roles["period"]["text"]
-                if own_period is not None and not decide_equivalence(own_period, period, "period")["equivalent"]:
+                period = roles.get('period', {}).get('text')
+                if period is not None and own_period is not None and not decide_equivalence(own_period, period, "period")["equivalent"]:
                     data["blockers"].append(_issue("enumeration_member_period_scope_unresolved", context, member,
                         layers=("B", "L"), own_period=own_period, introduction_period=copy.deepcopy(roles["period"])))
                     data["blockers"].append(_issue("enumeration_membership_endpoint_unresolved", context))
@@ -136,8 +190,9 @@ def bind_interpreted_members(data, plan):
                     fact["subject"] = roles["subject"]["text"]
                     fact["subject_source"] = copy.deepcopy(roles["subject"]["source"])
                 effective_period = period if own_period is None else own_period
-                fact.setdefault("qualifiers", {})["period"] = effective_period
-                if own_period is None:
+                if effective_period is not None:
+                    fact.setdefault("qualifiers", {})["period"] = effective_period
+                if own_period is None and period is not None:
                     fact.setdefault("qualifier_sources", {})["period"] = copy.deepcopy(roles["period"]["source"])
                 identity = {key: roles[key]["text"] for key in ("subject", "collection", "domain") if key in roles}
                 fact.setdefault("identity_facets", {})["enumeration"] = identity
@@ -145,6 +200,9 @@ def bind_interpreted_members(data, plan):
                     "introduction_source": copy.deepcopy(context["source"]),
                     "member_source": copy.deepcopy(member["source"]), "boundary": copy.deepcopy(context["boundary"])}
                 for edge in data["relations"]:
+                    if (edge.get('type') in {'enumeration_declaration', 'enumeration_membership'}
+                            or edge.get('fact_id') not in {None, fact['id']}):
+                        continue
                     right = edge.get("right")
                     if (isinstance(right, dict) and right.get("subject") == previous_subject
                             and right.get("attribute") == fact["attribute"]
@@ -152,12 +210,13 @@ def bind_interpreted_members(data, plan):
                         right["subject"] = fact["subject"]
                         if isinstance(edge.get("left"), dict) and edge["left"].get("subject") == previous_subject:
                             edge["left"]["subject"] = fact["subject"]
-                        right.setdefault("qualifiers", {})["period"] = effective_period
+                        if effective_period is not None:
+                            right.setdefault("qualifiers", {})["period"] = effective_period
                         right.setdefault("identity_facets", {})["enumeration"] = copy.deepcopy(identity)
                 edge = enumeration_membership(context, member, fact)
                 edge.update(id=f"L:{len(data['relations'])}", fact_id=fact["id"])
                 data["relations"].append(edge)
-                if own_period is None:
+                if own_period is None and period is not None:
                     data["relations"].append({"id": f"L:{len(data['relations'])}", "type": "qualifier_scope",
                         "left": {"type": "period", "text": period},
                         "right": {key: copy.deepcopy(fact[key]) for key in ("subject", "attribute", "scope", "qualifiers", "identity_facets")},
@@ -203,13 +262,21 @@ def validate_enumeration_bindings(graph, nodes, source_literal):
                              "member_source": member["source"], "boundary": context["boundary"]}
         if evidence != expected_evidence:
             raise ValueError("enumeration fact borrows a source role from another introduction")
+        control = fact.get('subject_binding_evidence', {})
+        if control.get('kind') == 'enumeration_subject' and (
+                control != {'kind': 'enumeration_subject', 'controller': roles['subject']['text'],
+                            'controller_source': roles['subject']['source'], 'introduction_source': context['source'], 'member_source': member['source']}
+                or fact.get('subject') != roles['subject']['text'] or fact.get('subject_source') != roles['subject']['source']):
+            raise ValueError('omitted actor lost its independently bound collection subject')
         identity = {key: roles[key]["text"] for key in ("subject", "collection", "domain") if key in roles}
         if fact.get("identity_facets", {}).get("enumeration") != identity:
             raise ValueError("enumeration fact identity differs from its source-bound collection")
         period_source = fact.get("qualifier_sources", {}).get("period")
-        if not decide_equivalence(fact.get("qualifiers", {}).get("period"), roles["period"]["text"], "period")["equivalent"] or not (
-                period_source == roles["period"]["source"] or period_source and owns_source(member["source"], period_source)):
+        if 'period' in roles and (not decide_equivalence(fact.get("qualifiers", {}).get("period"), roles["period"]["text"], "period")["equivalent"] or not (
+                period_source == roles["period"]["source"] or period_source and owns_source(member["source"], period_source))):
             raise ValueError("enumeration period source belongs to another scope")
+        if 'period' not in roles and period_source and not owns_source(member['source'], period_source):
+            raise ValueError('untimed collection cannot supply a member period')
         expected = enumeration_membership(context, member, fact)
         if not any(edge.get("type") == "enumeration_membership" and edge.get("fact_id") == ident
                    and all(edge.get(key) == expected[key] for key in ("left", "right", "source", "binding_evidence"))

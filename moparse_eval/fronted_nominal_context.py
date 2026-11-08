@@ -159,6 +159,18 @@ def read_fronted_operation(reader, start, end, actor, depth):
 
 def validate_fronted_operation(node, literal):
     """Verify original marker, controller, action forms and operand ownership."""
+    if node.get('operator') == 'according_to':
+        from .cjk_circumstances import validate_cjk_nominal
+
+        phrase = node.get('context_phrase', {})
+        if (node.get('role') != 'basis' or node.get('preposition') not in {'根據', '根据'}
+                or literal(node.get('operator_source'), 'basis marker') != node['preposition']
+                or phrase.get('source') != node.get('context_source')
+                or literal(node.get('context_source'), 'basis context') != node.get('context')
+                or literal(node.get('separator_source'), 'basis separator') not in {'，', ','}):
+            raise ValueError('Chinese basis loses its printed marker, context or boundary')
+        validate_cjk_nominal(phrase, literal)
+        return
     if node.get('operator') not in {'by', 'through', 'in order to', 'for the purpose of'}:
         return
     from .active_aspect_requirements import active_forms

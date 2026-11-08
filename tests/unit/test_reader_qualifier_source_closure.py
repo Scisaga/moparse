@@ -43,6 +43,40 @@ def test_proposition_negation_has_its_own_original_token_even_with_an_auxiliary(
     assert source == before
 
 
+@pytest.mark.parametrize('mutation', [None, 'span', 'text', 'source'])
+def test_joined_scalar_uses_its_own_original_fragment_coordinates(mutation):
+    from moparse_eval.cjk_measurement_requirements import read_cjk_measurements
+    from moparse_eval.scalar_evidence import validate_scalar_sources
+    from moparse_eval.three_layer import canonical
+
+    first, second = '資產為人民幣', '17億元，比上年末增加人民幣9億元。'
+    a, b = {'path': PATH, 'lines': [1, 1], 'text_span': [3, 3 + len(first)]}, {'path': PATH, 'lines': [2, 2]}
+    text = first + ' ' + second
+    source = {**a, 'text_span': [3, 3 + len(text)], 'joined_fragments': [
+        {'source': a, 'text': first, 'joined_span': [0, len(first)]},
+        {'source': b, 'text': second, 'joined_span': [len(first) + 1, len(text)]}]}
+    reading = read_cjk_measurements(text, source)
+    assert [fact['value'] for fact in reading['facts']] == ['17', '9']
+    for fact in reading['facts']:
+        fact['raw_value'] = fact['value']
+        fact['source'] = deepcopy(fact['value_source'])
+    projection = {'source_fragments': [{'source': {'path': PATH, 'lines': [1, 1]}, 'text': '前文。' + first},
+                                       {'source': b, 'text': second}]}
+    if mutation:
+        fact = reading['facts'][0]
+        fragment = fact['value_source']['joined_fragments'][1]
+        if mutation == 'span':
+            fragment['joined_span'][0] += 1
+        elif mutation == 'text':
+            fragment['text'] = second.replace('17', '18')
+        else:
+            fragment['source']['lines'] = [3, 3]
+        with pytest.raises(ValueError):
+            validate_scalar_sources(reading['facts'], projection, canonicalize=canonical)
+    else:
+        validate_scalar_sources(reading['facts'], projection, canonicalize=canonical)
+
+
 def test_agenda_condition_operator_and_operand_have_separate_sources():
     text = 'Plan, if approved.'
     source = {'path': PATH, 'lines': [3, 3], 'text_span': [19, 19 + len(text)]}

@@ -21,6 +21,8 @@ _POSSESSIVE = re.compile(rf"\s*(?P<period>{_YEAR})\s*[，,]\s*(?P<subject>[^，,
 _ENGLISH = re.compile(r"\s*(?:In\s+)?(?P<period>(?:19|20)\d{2})\s*,\s*"
                       r"(?P<subject>[A-Za-z][A-Za-z0-9 ._-]*?)(?:'s|’s)\s+"
                       r"(?P<collection>[^:;!?]+?)\s+(?P<operator>includes?)\s*:\s*$", re.I)
+_PERSON_COLLECTION = re.compile(r'\s*(?P<subject>[^，,:：;；。]+?)(?P<collection>[參参][與与]培[訓训]的(?:情況|情况))'
+                                r'(?P<operator>如下)\s*[:：]\s*$')
 _UNCERTAIN = re.compile(r"如果|除非|虽然|雖然|尽管|儘管|可能|必须|必須|不得|不能|不应|不應|"
                         r"所取得|\b(?:if|unless|although|might|may|must|not|cannot)\b|[。！？!?\n]", re.I)
 
@@ -60,7 +62,8 @@ def read_enumeration_intro(text: str, source: dict[str, Any], *, scope=()) -> di
     # Every printed word stays a literal. Source role views do not delete its
     # wording or manufacture text copies for as-yet-uninterpreted members.
     result["text_atoms"] = [{"text": text, "role": "literal", "span": [0, len(text)], "source": copy.deepcopy(whole)}]
-    match = _DOMAIN.fullmatch(text) or _POSSESSIVE.fullmatch(text) or _ENGLISH.fullmatch(text)
+    untimed = _PERSON_COLLECTION.fullmatch(text)
+    match = _DOMAIN.fullmatch(text) or _POSSESSIVE.fullmatch(text) or _ENGLISH.fullmatch(text) or untimed
     if match is None:
         _pending(result, "enumeration_introduction_roles_unresolved", text, whole)
         return result
@@ -79,8 +82,11 @@ def read_enumeration_intro(text: str, source: dict[str, Any], *, scope=()) -> di
         _pending(result, "enumeration_introduction_roles_unresolved", text, whole, roles=result["roles"])
         return result
     result["lexical_complete"] = True
-    result["qualifiers"] = {"period": result["roles"]["period"]["text"]}
-    result["qualifier_sources"] = {"period": copy.deepcopy(result["roles"]["period"]["source"])}
+    if untimed:
+        result['role_contract'] = 'printed_untimed_person_collection'
+    else:
+        result["qualifiers"] = {"period": result["roles"]["period"]["text"]}
+        result["qualifier_sources"] = {"period": copy.deepcopy(result["roles"]["period"]["source"])}
     result["required_matcher_features"] = ["enumeration_context_scope"]
     return result
 
@@ -192,6 +198,9 @@ def plan_enumeration_scopes(blocks: list[dict[str, Any]], *, selection_end=None)
                 stop = _boundary("unproved_end", member, natural=False)
                 break
             member_source = _source(own, 0, len(member["text"]))
+            if (declaration.get('role_contract') == 'printed_untimed_person_collection'
+                    and re.match(r'[^;；:：]+[;；](?:職位|职位|職務|职务)[:：]', member['text']) is None):
+                _pending(result, 'enumeration_person_member_identity_unresolved', member['text'], member_source)
             inherited = {"subject": declaration["roles"]["subject"]["text"],
                 "subject_source": copy.deepcopy(declaration["roles"]["subject"]["source"]),
                 "qualifiers": copy.deepcopy(declaration["qualifiers"]),
@@ -242,7 +251,8 @@ def enumeration_declaration(context):
     """
     declaration = context["declaration"]
     roles = declaration["roles"]
-    if not declaration.get("lexical_complete") or not all(key in roles for key in ("subject", "period", "collection", "operator")):
+    needed = ('subject', 'collection', 'operator') if declaration.get('role_contract') == 'printed_untimed_person_collection' else ('subject', 'period', 'collection', 'operator')
+    if not declaration.get("lexical_complete") or not all(key in roles for key in needed):
         raise ValueError("collection declaration lacks source-bound roles")
     left = {"subject": roles["subject"]["text"], "attribute": roles["collection"]["text"],
             "scope": copy.deepcopy(context.get("scope", [])), "qualifiers": copy.deepcopy(declaration["qualifiers"])}
@@ -250,9 +260,15 @@ def enumeration_declaration(context):
         left["domain"] = roles["domain"]["text"]
     members = [{"ordinal": index, "source": copy.deepcopy(member["source"]), "text": member["text"]}
                for index, member in enumerate(context["members"])]
+    endpoints = [{'ordinal': member['ordinal'], 'text': member['text']} for member in members]
+    if declaration.get('role_contract') == 'printed_untimed_person_collection':
+        endpoints = []
+        for member in members:
+            label = re.match(r'(?P<name>[^;；:：]+)[;；](?:職位|职位|職務|职务)[:：]', member['text'])
+            endpoints.append({'ordinal': member['ordinal'], 'identity': {'record_subject': label['name']} if label else {'unresolved_person_role': True}})
     return {"type": "enumeration_declaration", "left": left,
         "right": {"role": "declared_collection_scope", "operator": roles["operator"]["text"],
-                  "members": [{"ordinal": member["ordinal"], "text": member["text"]} for member in members]},
+                  "members": endpoints},
         "source": copy.deepcopy(declaration["source"]),
         "binding_evidence": {"introduction_source": copy.deepcopy(declaration["source"]),
             "roles": copy.deepcopy(roles), "member_sources": members, "end_boundary": copy.deepcopy(context["boundary"])},
@@ -278,7 +294,7 @@ def enumeration_membership(context, member, fact):
         "source": copy.deepcopy(source), "rule_id": "printed_introduction_and_bounded_list_member",
         "binding_evidence": {"introduction_source": copy.deepcopy(declaration["source"]),
             "member_source": copy.deepcopy(source), "subject_source": copy.deepcopy(roles["subject"]["source"]),
-            "period_source": copy.deepcopy(roles["period"]["source"]),
+            **({'period_source': copy.deepcopy(roles['period']['source'])} if 'period' in roles else {}),
             "collection_source": copy.deepcopy(roles["collection"]["source"]),
             "operator_source": copy.deepcopy(roles["operator"]["source"]),
             "end_boundary": copy.deepcopy(context["boundary"])}}

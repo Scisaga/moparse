@@ -20,7 +20,9 @@ ASSET = '於2029年12月31日，本集團合同資產為人民幣8億元，較20
 FINANCIAL = ('於2029年12月31日，本集團以公允價值計量且變動計入當期損益的金融資產為人民幣17億元，'
              '較2028年末增長16%，主要是結構性存款增加導致。')
 LOANS = ('於2029年12月31日，本集團非流動負債中的借款為人民幣17億元，較2028年末下降9%，'
-         '流動負債中的借款為人民幣11億元，較2028年末下降6%，主要是償還借款導致。')
+         '流動負債中的借款為人民幣11億元，較2028年末下降6%，兩項變化均主要是償還借款導致。')
+IMPLICIT_LOANS = LOANS.replace('兩項變化均', '')
+AMBIGUOUS_LOANS = IMPLICIT_LOANS.replace('償還借款', '優化資金管理')
 SHARES = '於2029年12月31日，本集團庫存股為人民幣6億元，較2028年末下降15%，主要是註銷本公司購回股份導致。'
 REFERENCE = '本集團2029年運輸現金淨額與淨利潤之間的差異說明請詳見合併財務報表附註8(b)。'
 
@@ -49,8 +51,15 @@ def walk(value):
             yield from walk(child)
 
 
-def compare(required, text):
-    result = grade_layers(required, read_candidate_markdown(text, sample_id=required['sample_id']))
+def compare(required, text, *, allow_unresolved=False):
+    actual = read_candidate_markdown(text, sample_id=required['sample_id'])
+    if not allow_unresolved:
+        assert not actual['blockers'], actual['blockers']
+        assert not actual['pending_requirements'], actual['pending_requirements']
+        assert not [i for i in actual['candidate_issues'] if i.get('category') == 'software_unsupported']
+    result = grade_layers(required, actual)
+    if not allow_unresolved:
+        assert result['publishable'], result['blockers']
     if result['publishable']:
         validate_evidence(result)
     else:
@@ -123,8 +132,24 @@ def test_every_financial_family_rejects_wrong_roles_measurements_and_removed_cau
     elif error == 'cause_to_condition':
         candidate = text.replace('主要由於', '只有').replace('主要是', '只有')
     else:
-        candidate = text[:text.index('，主要')] + '。'
-    result = compare(required, candidate)
+        candidate = text[:text.rfind('，', 0, text.index('主要'))] + '。'
+    result = compare(required, candidate, allow_unresolved=error == 'cause_to_condition')
+    if error in {'actor', 'year', 'value', 'unit', 'direction'}:
+        facts = required['business']
+        wrong = ({facts[0]['id']} if error in {'value', 'unit'} else
+                 {f['id'] for i, f in enumerate(facts) if error == 'actor' or i % 2 == 1})
+        outcomes = {o['id']: o['outcome'] for o in result['outcomes'] if o['layer'] == 'B'}
+        assert outcomes == {f['id']: 'incorrect' if f['id'] in wrong else 'correct' for f in facts}
+        assert result['layers']['B']['denominator'] == len(facts)
+        assert result['layers']['L']['denominator'] == len(required['relations'])
+        if error in {'value', 'unit'}:
+            assert all(o['outcome'] == 'correct' for o in result['outcomes'] if o['layer'] == 'L')
+        unaffected = {f['id'] for f in facts} - wrong
+        independent = [o for o in result['outcomes'] if o['layer'] == 'L'
+                       and o['expected'].get('fact_id') in unaffected]
+        if unaffected:
+            assert independent
+            assert all(o['outcome'] == 'correct' for o in independent)
     assert result['layers']['B']['numerator'] < result['layers']['B']['denominator']
     if error in {'value', 'unit'}:
         assert result['layers']['L']['numerator'] > 0
@@ -225,7 +250,7 @@ def test_lossless_quantity_change_and_semantically_different_cause_restrictions(
         'exhaustiveness': INVESTING.replace('等綜合', '綜合'),
         'factor_direction': INVESTING.replace('存款淨現金流出增加', '存款淨現金流出減少'),
     }[change]
-    result = compare(required, candidate)
+    result = compare(required, candidate, allow_unresolved=change == 'joint_scope')
     if change == 'quantity_scale':
         assert result['publishable'], result['blockers']
         assert result['layers']['T']['score'] < 100
@@ -262,3 +287,173 @@ def test_unsupported_source_is_retained_as_local_unresolved_not_new_amount_or_am
     validate_requirement_graph(graph, expected=source)
     assert not graph['semantic_complete'] and graph['unresolved']
     assert all(n.get('value') != '9' for n in graph['nodes'] if n['id'] in graph['projections']['B'])
+
+
+# Scope answers are written independently of causal_targets and production AST.
+# Every case owns repayment as a cause operand; balances 0/2 are never targets.
+@pytest.mark.parametrize('marker,owners,excluded', [
+    ('兩項變化均', [1, 3], [0, 2]),
+    ('两项变化共同', [1, 3], [0, 2]),
+    ('均', [1, 3], [0, 2]),
+    ('僅後者的變化', [3], [0, 1, 2]),
+    ('僅前者的變化', [1], [0, 2, 3]),
+])
+def test_independent_shared_former_and_latter_cause_scopes(tmp_path, marker, owners, excluded):
+    text = LOANS.replace('兩項變化均', marker).replace('償還借款導致', '償還借款等綜合影響導致')
+    graph, required = compiled(tmp_path, text)
+    facts = required['business']
+    assert [(n['subject'], n['attribute'], n['value']) for n in graph['nodes']
+            if n['kind'] == 'semantic_operand'] == [('', '償還', '借款')]
+    assert [i for i, f in enumerate(facts) if f['qualifiers'].get('circumstances')] == owners
+    for i in owners:
+        cause, = facts[i]['qualifiers']['circumstances']
+        assert (cause['degree'], cause['direction'], cause['non_exhaustive'], cause['combined']) == (
+            '主要', 'operand_to_child', True, True)
+    assert all('circumstances' not in facts[i]['qualifiers'] for i in excluded)
+    result = compare(required, text)
+    assert all(result['layers'][k]['score'] == 100 for k in ('T', 'L', 'B'))
+
+
+@pytest.mark.parametrize('text', [
+    AMBIGUOUS_LOANS,
+    AMBIGUOUS_LOANS.replace('主要是優化資金管理導致', '主要受本集團優化資金管理的影响'),
+    AMBIGUOUS_LOANS.replace('流動負債中的借款為人民幣11', '本公司流動負債中的借款為人民幣11'),
+    AMBIGUOUS_LOANS.replace('流動負債中的借款為人民幣11', '非流動負債中的借款為人民幣11'),
+])
+def test_no_scope_word_equal_names_or_equal_classifications_cannot_prove_shared_cause(tmp_path, text):
+    from moparse_eval.requirement_graph import compile_requirement_graph, evaluation_projection
+    from tests.unit.test_cjk_circumstance_contract import authored
+
+    expected = authored(tmp_path, text)
+    graph = compile_requirement_graph(expected)
+    validate_requirement_graph(graph, expected=expected)
+    assert not graph['semantic_complete']
+    ambiguity, = [p for p in graph['unresolved'] if p['reason'] == 'cjk_causal_scope_evidence_unresolved']
+    assert ambiguity['category'] == 'software_unsupported'
+    assert [h['scope'] for h in ambiguity['attachment_hypotheses']] == ['latter_change', 'joint_changes']
+    assert [len(h['target_sources']) for h in ambiguity['attachment_hypotheses']] == [1, 2]
+    facts = evaluation_projection(graph)['business']
+    assert [f['value'] for f in facts] == ['17', '9', '11', '6']
+    assert all('circumstances' not in f['qualifiers'] for f in facts)
+    assert not any(e['type'] == 'narrative_circumstance_scope' for e in graph['relations'])
+
+
+def test_different_actors_independent_records_and_each_own_cause_do_not_share(tmp_path):
+    first = ASSET.replace('合同資產', '非流動負債中的借款')
+    second = ASSET.replace('合同資產', '流動負債中的借款').replace('本集團', '本公司').replace('業務增長', '盈利增長')
+    graph, required = compiled(tmp_path, first + '\n\n# 獨立記錄\n\n' + second)
+    facts = required['business']
+    assert [i for i, f in enumerate(facts) if f['qualifiers'].get('circumstances')] == [1, 3]
+    assert [facts[i]['qualifiers']['circumstances'][0]['operand']['subject'] for i in (1, 3)] == ['業務', '盈利']
+    assert [f['qualifiers']['actor'] for f in facts] == ['本集團', '本集團', '本公司', '本公司']
+    assert all('circumstances' not in facts[i]['qualifiers'] for i in (0, 2))
+    actual = read_candidate_markdown(first + '\n\n# 獨立記錄\n\n' + second, sample_id=required['sample_id'])
+    actual['logical_statements'][-1]['target_source'] = deepcopy(actual['logical_statements'][0]['target_source'])
+    result = grade_layers(required, actual)
+    assert not result['publishable']
+    with pytest.raises(ValueError):
+        validate_evidence(result)
+
+
+@pytest.mark.parametrize('mutation', ['balance_target', 'omit_first', 'duplicate', 'drop_scope_source', 'raw_scope'])
+def test_scope_audit_independently_rejects_target_and_original_scope_mutations(tmp_path, mutation):
+    text = LOANS if mutation != 'raw_scope' else LOANS.replace('兩項變化均', '前者的變化')
+    graph, _ = compiled(tmp_path, text)
+    changed = deepcopy(graph)
+    wrapper = changed['logic'][0]
+    if mutation == 'balance_target':
+        wrapper['target_sources'][0] = deepcopy(wrapper['child']['clauses'][0]['source'])
+    elif mutation == 'omit_first':
+        wrapper['target_sources'].pop(0)
+    elif mutation == 'duplicate':
+        wrapper['target_sources'][1] = deepcopy(wrapper['target_sources'][0])
+    elif mutation == 'drop_scope_source':
+        del wrapper['attachment_source']
+    else:
+        # Same-length source edit leaves positions intact, but changes which
+        # result the original words require. No parser-produced oracle here.
+        def replace_source(value):
+            if isinstance(value, dict):
+                for key, item in list(value.items()):
+                    if isinstance(item, str):
+                        value[key] = item.replace('前者的變化', '後者的變化')
+                    else:
+                        replace_source(item)
+            elif isinstance(value, list):
+                for item in value:
+                    replace_source(item)
+        replace_source(changed['sources'])
+        replace_source(changed['source_obligation_inventory'])
+        from moparse_eval.cjk_circumstances import validate_circumstance_graph
+        from moparse_eval.requirement_graph import _semantic_literal
+        with pytest.raises(ValueError, match='attachment differs'):
+            validate_circumstance_graph(changed, lambda source, label: _semantic_literal(changed['sources'], source))
+    with pytest.raises(ValueError):
+        validate_requirement_graph(changed)
+
+
+def test_supported_flow_direction_error_is_a_valid_wrong_candidate_with_other_business_preserved(tmp_path):
+    text = INVESTING + '\n\n' + ASSET
+    _, required = compiled(tmp_path, text)
+    result = compare(required, text.replace('現金淨額流出', '現金淨額流入', 1))
+    assert {o['id']: o['outcome'] for o in result['outcomes'] if o['layer'] == 'B'} == {
+        'B:0': 'incorrect', 'B:1': 'incorrect', 'B:2': 'correct', 'B:3': 'correct'}
+    assert result['layers']['B']['denominator'] == 4
+    assert result['layers']['L']['denominator'] == len(required['relations'])
+    assert all(o['outcome'] == 'correct' for o in result['outcomes']
+               if o['layer'] == 'L' and o['expected'].get('fact_id') in {'B:2', 'B:3'})
+
+
+@pytest.mark.parametrize('scope,wrong', [('前者的變化', {'B:3'}), ('後者的變化', {'B:1'})])
+def test_wrong_but_supported_local_scope_is_comparable_and_only_its_owner_fails(tmp_path, scope, wrong):
+    _, required = compiled(tmp_path, LOANS)
+    result = compare(required, LOANS.replace('兩項變化均', scope))
+    assert {o['id']: o['outcome'] for o in result['outcomes'] if o['layer'] == 'B'} == {
+        f['id']: 'incorrect' if f['id'] in wrong else 'correct' for f in required['business']}
+    assert result['layers']['B']['denominator'] == 4
+    assert result['layers']['L']['denominator'] == len(required['relations'])
+    assert all(o['outcome'] == 'correct' for o in result['outcomes'] if o['layer'] == 'L'
+               and o['expected'].get('fact_id') in {'B:0', 'B:2'})
+
+
+def test_explicit_leading_cause_owns_its_whole_printed_result_without_trailing_scope_inference(tmp_path):
+    text = '由于业务增长，2029年运输收入为人民币15亿元，同比增长12%。'
+    _, required = compiled(tmp_path, text)
+    assert [f['value'] for f in required['business']] == ['15', '12']
+    assert all(f['qualifiers']['circumstances'][0]['operand']['subject'] == '业务' for f in required['business'])
+
+
+def test_unmarked_closed_parallel_borrowing_record_has_independent_common_reference(tmp_path):
+    graph, required = compiled(tmp_path, IMPLICIT_LOANS)
+    assert [i for i, f in enumerate(required['business']) if f['qualifiers'].get('circumstances')] == [1, 3]
+    assert [(n['subject'], n['attribute'], n['value']) for n in graph['nodes'] if n['kind'] == 'semantic_operand'] == [('', '償還', '借款')]
+    assert graph['logic'][0]['attachment'] == 'all'
+    assert len(graph['logic'][0]['implicit_attachment_sources']) == 2
+    result = compare(required, LOANS)
+    assert result['layers']['B']['score'] == result['layers']['L']['score'] == 100
+    assert result['layers']['T']['score'] < 100
+
+
+@pytest.mark.parametrize('before,after,wrong', [('17億元', '18億元', {'B:0'}),
+                                            ('2028年末下降9%', '2027年末下降9%', {'B:1'}),
+                                            ('下降9%', '增長9%', {'B:1'})])
+def test_implicit_scope_is_not_selected_by_correct_numeric_year_or_direction_values(tmp_path, before, after, wrong):
+    _, required = compiled(tmp_path, IMPLICIT_LOANS)
+    result = compare(required, IMPLICIT_LOANS.replace(before, after, 1))
+    assert {o['id']: o['outcome'] for o in result['outcomes'] if o['layer'] == 'B'} == {
+        f['id']: 'incorrect' if f['id'] in wrong else 'correct' for f in required['business']}
+    assert result['layers']['B']['denominator'] == 4
+
+
+def test_declared_but_unspecified_one_or_two_targets_remains_unknown(tmp_path):
+    from moparse_eval.requirement_graph import compile_requirement_graph, evaluation_projection
+    from tests.unit.test_cjk_circumstance_contract import authored
+
+    expected = authored(tmp_path, LOANS.replace('兩項變化均', '其中一項或兩項變化'))
+    graph = compile_requirement_graph(expected)
+    validate_requirement_graph(graph, expected=expected)
+    unresolved, = [p for p in graph['unresolved'] if p['reason'] == 'cjk_causal_attachment_declared_uncertain']
+    assert unresolved['category'] == 'source_attachment_ambiguity'
+    assert [h['scope'] for h in unresolved['attachment_hypotheses']] == ['former_change', 'latter_change', 'joint_changes']
+    assert not graph['semantic_complete']
+    assert [f['value'] for f in evaluation_projection(graph)['business']] == ['17', '9', '11', '6']

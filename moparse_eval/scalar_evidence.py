@@ -32,7 +32,7 @@ def _bounds(source: dict[str, Any], offset: int, length: int) -> tuple[int, int]
 
 
 def validate_scalar_sources(facts: Iterable[dict[str, Any]], projection: dict[str, Any], *,
-                            canonicalize: Callable[[str], str]) -> None:
+                            canonicalize: Callable[[str], str], syntax=None, relations=None, blockers=()) -> None:
     """Reject forged scalar sources even when all derived copies agree.
 
     The contract applies only when a reader declares both ``raw_value`` and a
@@ -41,6 +41,7 @@ def validate_scalar_sources(facts: Iterable[dict[str, Any]], projection: dict[st
     """
     facts = list(facts)
     snapshots: dict[str, list[tuple[str, int]]] | None = None
+    snapshot_records = []
     checked = set()
     for fact in facts:
         if not isinstance(fact.get("raw_value"), str) or not isinstance(fact.get("value_source"), dict):
@@ -64,8 +65,31 @@ def validate_scalar_sources(facts: Iterable[dict[str, Any]], projection: dict[st
                 if type(offset) is not int:
                     raise ValueError("source-bound scalar has a malformed original source offset")
                 snapshots[_location(original)].append((item["text"], offset))
+                snapshot_records.append(item)
         if _location(source) != _location(value_source):
             raise ValueError("source-bound scalar value_source is outside its own actual field")
+        if source.get('joined_fragments') or value_source.get('joined_fragments'):
+            from .requirement_graph import _semantic_literal
+
+            def original_literal(origin):
+                for record in snapshot_records:
+                    own = record['source']
+                    if _location(own) != _location(origin):
+                        continue
+                    own_span = own.get('cell_text_span', own.get('text_span'))
+                    if origin.get('cell_text_span', origin.get('text_span')) is None and own_span is not None:
+                        continue
+                    offset = own_span[0] if own_span is not None else 0
+                    bounds = _bounds(origin, offset, len(record['text']))
+                    if bounds:
+                        return record['text'][bounds[0] - offset:bounds[1] - offset]
+                return None
+
+            raw = _semantic_literal([], source, resolver=original_literal)
+            value = _semantic_literal([], value_source, resolver=original_literal)
+            if raw != fact['raw_value'] or value is None or canonicalize(value) != canonicalize(fact['value']):
+                raise ValueError('joined scalar differs from its independently retained original fragments')
+            continue
         proven = False
         for text, offset in snapshots.get(_location(source), []):
             outer, inner = _bounds(source, offset, len(text)), _bounds(value_source, offset, len(text))
@@ -113,3 +137,94 @@ def validate_scalar_sources(facts: Iterable[dict[str, Any]], projection: dict[st
                         valid = True
             if not valid:
                 raise ValueError('source-bound series comparison period is outside its own row or explicit declaration')
+    _validate_labelled_records(facts, projection, syntax=syntax, relations=relations, blockers=blockers)
+
+
+def _validate_labelled_records(facts, projection, *, syntax, relations, blockers):
+    """Require every scalar field actually present in a closed native record.
+
+    Discovery reads this side's immutable text, never the other side's answers.
+    Locators are source roles before any numeric value is checked. Independent
+    semantic fixtures own the correctness of the financial column grammar.
+    """
+    from .field_sequence_requirements import read_labelled_record
+    from .source_obligations import validate_relation_binding
+
+    seen = set()
+    for fragment in projection.get('source_fragments', []):
+        decoded = read_labelled_record(fragment['text'], fragment['source'])
+        if not decoded['matched'] or decoded['blockers']:
+            continue
+        own_syntax = [s for s in syntax or [] if s['text'] == fragment['text']
+                      and _location(s['source']) == _location(fragment['source'])]
+        groups = []
+        if len(own_syntax) == 1:
+            item = own_syntax[0]
+            prior = (syntax or [])[:syntax.index(item)]
+            for depth, parent in enumerate(item.get('parents', [])):
+                declared = [p for p in item.get('parent_evidence', []) if p['text'] == parent]
+                choices = [s for s in prior if s['text'] == parent and s.get('kind') == 'parent_label'
+                           and s.get('parents', []) == item['parents'][:depth] and s.get('scope') == item.get('scope')]
+                if declared:
+                    choices = [s for s in choices if any(_location(s['source']) == _location(p['source']) for p in declared)]
+                else:
+                    choices = [s for s in choices if s.get('syntax_evidence', {}).get('list_span')
+                               and s['syntax_evidence']['list_span'] == item.get('syntax_evidence', {}).get('list_span')
+                               and s['syntax_evidence'].get('list_stream') == item.get('syntax_evidence', {}).get('list_stream')]
+                ancestor = read_labelled_record(choices[-1]['text'], choices[-1]['source']) if choices else None
+                if not ancestor or not ancestor['matched'] or ancestor['blockers']:
+                    if any(b.get('reason', '').startswith('labelled_record_parent_')
+                           and _location(b.get('source', {})) == _location(item['source']) for b in blockers):
+                        continue  # The grammar gap already blocks publication.
+                    raise ValueError('native labelled record has no source-proved parent context')
+                groups.append({'role': 'row_group', **ancestor['record_label']})
+        for field in decoded['facts']:
+            key = json.dumps([field[k] for k in ('subject_source', 'attribute_source', 'value_source')], sort_keys=True)
+            if key in seen:
+                continue
+            seen.add(key)
+            own = [f for f in facts if all(f.get(k) == field[k] for k in ('subject_source', 'attribute_source', 'value_source'))]
+            if len(own) != 1:
+                raise ValueError('native labelled record lost or borrowed a scalar field role')
+            fact = own[0]
+            if any(fact.get(k) != field[k] for k in ('subject', 'attribute', 'value', 'raw_value', 'semantic_type')):
+                raise ValueError('native labelled record payload differs from its own printed field')
+            if field.get('semantic_type') in {'printed_position_list', 'printed_selection_state'}:
+                facets = {k: v for k, v in fact.get('identity_facets', {}).items() if k != 'enumeration'}
+                if 'enumeration' in fact.get('identity_facets', {}) and (not fact.get('enumeration_evidence') or relations is not None
+                        and not any(e.get('type') == 'enumeration_membership' and e.get('fact_id') == fact['id'] for e in relations)):
+                    raise ValueError('native selection field has an unproved collection owner')
+                if (fact.get('value_logic') != field.get('value_logic')
+                        or facets != field.get('identity_facets', {})
+                        or fact.get('header_evidence') != field.get('header_evidence')):
+                    raise ValueError('native position or selection field lost its own typed value or domain')
+                def endpoint_owns(edge, fact=fact):
+                    right = edge.get('right', {})
+                    return (all(right.get(k) == fact[k] for k in ('subject', 'attribute', 'scope'))
+                            and right.get('identity_facets', {}) == fact.get('identity_facets', {})
+                            and ('qualifiers' not in right or right['qualifiers'] == fact.get('qualifiers', {})))
+                if relations is not None and field.get('value_logic'):
+                    members = [n for part in field['value_logic'].get('parts', []) if part.get('kind') == 'coordination'
+                               for n in part['children']]
+                    edges = [e for e in relations if e.get('type') == 'record_position_member' and e.get('fact_id') == fact['id']]
+                    if len(edges) != len(members) or any(len([e for e in edges if
+                            e.get('left') == {'position': member['head']} and e.get('source') == member['source']
+                            and endpoint_owns(e)
+                            and e.get('binding_evidence', {}).get('value_logic') == field['value_logic']]) != 1 for member in members):
+                        raise ValueError('native position list lost or borrowed a member relation')
+                if relations is not None:
+                    labels = [e for e in relations if e.get('type') == 'record_label_scope' and e.get('fact_id') == fact['id']
+                              and e.get('source') == field['subject_source'] and e.get('left') == {'record_subject': fact['subject']}
+                              and endpoint_owns(e)
+                              and e.get('binding_evidence', {}).get('headers') == field['header_evidence']]
+                    if len(labels) != 1:
+                        raise ValueError('native selection field lost its explicit person record scope')
+            if syntax is not None and len(own_syntax) == 1:
+                if ([r for r in fact.get('row_evidence', []) if r.get('role') == 'row_group'] != groups
+                        or fact.get('identity_facets', {}).get('group', []) != [g['text'] for g in groups]):
+                    raise ValueError('native labelled record borrows an adjacent parent identity or source')
+            if relations is not None:
+                edges = [e for e in relations if e.get('type') == 'field_binding' and e.get('fact_id') == fact['id']
+                         and validate_relation_binding(None, fact, e)['equivalent']]
+                if len(edges) != 1:
+                    raise ValueError('native labelled record lacks its unique field binding')

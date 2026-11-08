@@ -112,3 +112,33 @@ def test_the_bridge_requires_the_own_parent_and_child_source_objects_not_their_c
         changed = deepcopy(series)
         changed["parent_bindings"][0][target]["source"]["lines"] = [99, 99]
         assert not read_financial_attribution_context(changed, heading=heading, syntax=syntax, pending=pending, parents=[parent])["matched"]
+SEGMENTS = ('# 分部財務\n\n截至12月31日止年度，單位：人民幣百萬元。\n\n'
+            '- 營業收入\n  - 東部工廠：2029年17；2028年13。\n  - 西部工廠：2029年11；2028年9。\n'
+            '- 營業利潤/（虧損）\n  - 東部工廠：2029年3；2028年(1)。\n  - 西部工廠：2029年(2)；2028年4。')
+
+
+def test_physical_metric_parent_owns_complete_entity_year_records_and_original_unit_scope(tmp_path):
+    from moparse_eval.expected_report import validate_evidence
+    from moparse_eval.three_layer import grade_layers, read_candidate_markdown
+    from tests.unit.test_cjk_circumstance_contract import compiled
+
+    graph, required = compiled(tmp_path, SEGMENTS)
+    assert [(f['subject'], f['attribute'], f['value']) for f in required['business']] == [
+        ('東部工廠', '營業收入', '17'), ('東部工廠', '營業收入', '13'), ('西部工廠', '營業收入', '11'), ('西部工廠', '營業收入', '9'),
+        ('東部工廠', '營業利潤/（虧損）', '3'), ('東部工廠', '營業利潤/（虧損）', '(1)'),
+        ('西部工廠', '營業利潤/（虧損）', '(2)'), ('西部工廠', '營業利潤/（虧損）', '4')]
+    assert len(graph['context']['parent_bindings']) == 4
+    for fact in required['business']:
+        assert fact['qualifiers']['unit'] == '人民幣百萬元'
+        assert fact['qualifiers']['currency'] == '人民幣'
+        assert fact['qualifiers']['period_basis'] == '截至12月31日止年度'
+        assert fact['qualifier_sources']['period_basis']['lines'] == [3, 3]
+        assert fact['role_basis']['metric_owner']['parent']['source']['lines'] in ([5, 5], [8, 8])
+    actual = read_candidate_markdown(SEGMENTS.replace('2029年17', '2029年18'), sample_id=required['sample_id'])
+    assert not actual['blockers'] and not actual['pending_requirements']
+    result = grade_layers(required, actual)
+    assert result['publishable'], result['blockers']
+    validate_evidence(result)
+    assert result['layers']['B']['denominator'] == 8
+    assert {o['id']: o['outcome'] for o in result['outcomes'] if o['layer'] == 'B'} == {
+        f'B:{i}': 'incorrect' if i == 0 else 'correct' for i in range(8)}

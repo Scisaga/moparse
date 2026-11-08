@@ -541,6 +541,11 @@ def _validate_flat_evidence(score: dict[str, Any]) -> None:
 
 def validate_evidence(score: dict[str, Any]) -> None:
     """Replay both flat evidence and any compositional decision that changed it."""
+    if 'document_comparison' in score:
+        from .document_ast_comparison import validate_document_evidence
+
+        validate_document_evidence(score)
+        return
     semantic = score.get("semantic_comparison")
     if semantic is None:
         raise ValueError("semantic comparison evidence is required by the current scoring contract")

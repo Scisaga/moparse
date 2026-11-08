@@ -58,7 +58,9 @@ def _sources(expected: dict[str, Any]) -> list[dict[str, Any]]:
         text = target.get("raw_text", target.get("text", ""))
         plan = None if target["kind"] in {"heading", "table", "image_caption"} or target.get("has_children") else plan_mixed_source(text, reference)
         if plan is None and target["kind"] in {"text", "paragraph", "item"} and not target.get("has_children") and not re.match(r"[^:：=\n]{1,160}[:：=]", text):
-            sentences = _sentence_spans(text)
+            from .cjk_narrative_requirements import join_following_explanations
+
+            sentences = join_following_explanations(text, _sentence_spans(text), source=reference)
             if len(sentences) > 1:
                 plan = {"rule_id": "printed_sentence_source_inventory", "fragments": [
                     {"text": text[a:b], "source": {**copy.deepcopy(reference), "text_span": [a, b]}, "syntax": "sentence"}
@@ -69,7 +71,9 @@ def _sources(expected: dict[str, Any]) -> list[dict[str, Any]]:
             body = plan_field_body(part["text"], part["source"]) if target["kind"] not in {"heading", "table", "image_caption"} else None
             if body:
                 field_fragments.append({"text": body["label"], "source": body["label_source"], "syntax": "field_label"})
-                for a, b in _sentence_spans(body["body"]):
+                from .cjk_narrative_requirements import join_following_explanations
+
+                for a, b in join_following_explanations(body['body'], _sentence_spans(body["body"]), source=body['body_source']):
                     offset = body["body_source"]["text_span"][0]
                     field_fragments.append({"text": body["body"][a:b], "syntax": "field_body_sentence",
                         "source": {**copy.deepcopy(body["body_source"]), "text_span": [offset + a, offset + b]}})
@@ -158,7 +162,7 @@ def _literal(sources, source):
 
 def _literal_source(sources, source, text):
     """Bound a known readback literal within its own printed source only."""
-    value = _literal(sources, source)
+    value = _semantic_literal(sources, source) if source.get('joined_fragments') else _literal(sources, source)
     if value is None:
         return copy.deepcopy(source)
     offset = source.get("text_span", [0, 0])[0]
@@ -182,12 +186,14 @@ def _node_sources(node):
 
 def _normalize_fact(fact, sources):
     item = copy.deepcopy(fact)
-    for fragment in item.get("source", {}).get("joined_fragments", []):
-        original = next((entry for entry in sources if _cover(entry, fragment["source"])), None)
-        if original:
-            fragment["projected_text"] = fragment["text"]
-            fragment["text"] = original["text"]
-            fragment["join_rule"] = "legal_whitespace_projection"
+    for fragment in item.get('source', {}).get('joined_fragments', []):
+        original = next((entry for entry in sources if _cover(entry, fragment['source'])), None)
+        if original and re.sub(r'\s+', ' ', original['text']).strip() == re.sub(r'\s+', ' ', fragment['text']).strip():
+            # Retain original presentation whitespace, never surrounding
+            # prose that happens to share the same physical paragraph.
+            fragment['projected_text'] = fragment['text']
+            fragment['text'] = original['text']
+            fragment['join_rule'] = 'legal_whitespace_projection'
     item["kind"] = "logical_group" if item.get("role") == "logical_group" else "proposition" if item.get("role") == "description" else "fact"
     origin = item.get("value_source", item.get("source", {}))
     item["value_source"] = _literal_source(sources, origin, item["value"])
@@ -304,6 +310,12 @@ def _not_applicable(entry, layer, projected, business_sources=()):
     if layer == "B" and syntax:
         return ("source_proven_metric_declaration", "The metric declaration supplies independently bound children, not an empty additional fact.",
                 {"declaration": copy.deepcopy(syntax)})
+    if layer == 'B':
+        caption = next((item for item in projected.get('syntax', []) if item.get('semantic_role') == 'qualifier_declaration'
+                        and item.get('text') == text and _cover(entry, item['source'])), None)
+        if caption and caption['qualifier_caption'].get('caption') and not caption['qualifier_caption']['blockers']:
+            return ('source_proven_caption_unit_declaration', 'The printed nominal caption and unit scope constrain following records without another scalar vote.',
+                    {'declaration': copy.deepcopy(caption['qualifier_caption'])})
     if kind == "table" and not text:
         return "table_requirements_are_owned_by_cells", "The table container delegates literal and semantic requirements to its original cells."
     if kind == "cell" and entry.get("native", {}).get("is_column_header"):
@@ -327,7 +339,7 @@ def _not_applicable(entry, layer, projected, business_sources=()):
     return None
 
 
-def compile_requirement_graph(expected: dict[str, Any]) -> dict[str, Any]:
+def compile_requirement_graph(expected: dict[str, Any], *, comparison_contract: str = 'semantic') -> dict[str, Any]:
     """Compile one selected reference before any candidate is read."""
     from .reference_compiler import compile_reference_semantics
     from .source_obligations import audit_source_obligations, build_source_obligation_inventory
@@ -435,6 +447,12 @@ def compile_requirement_graph(expected: dict[str, Any]) -> dict[str, Any]:
                     reason="Recovered requirements do not explain every independently inventoried source obligation.")
     graph["complete"] = not unresolved
     graph["semantic_complete"] = not any(not is_deferred_input_scope(expected["sample_id"], item) for item in unresolved)
+    if comparison_contract not in {'semantic', 'document_ast'}:
+        raise ValueError('unknown requirement comparison contract')
+    if comparison_contract == 'document_ast':
+        from .document_ast_comparison import attach_document_ast
+
+        attach_document_ast(graph, expected)
     # The in-memory model has the same JSON types as its sole authoritative
     # serialization; XML never supplies a second editable representation.
     return json.loads(json.dumps(graph, ensure_ascii=False))
@@ -455,24 +473,29 @@ def evaluation_projection(graph: dict[str, Any]) -> dict[str, Any]:
     result["semantic_operands"] = [copy.deepcopy(node) for node in graph["nodes"] if node["kind"] == "semantic_operand"]
     result["semantic_operand_relations"] = copy.deepcopy(graph.get("operand_relations", []))
     result["required_matcher_features"] = copy.deepcopy(graph.get("required_matcher_features", []))
+    if graph.get('comparison_contract') == 'document_ast':
+        result['comparison_contract'] = 'document_ast'
+        result['document_ast'] = copy.deepcopy(graph['document_ast'])
+        result['source_form_units'] = copy.deepcopy(graph['source_form_units'])
+        result['document_selection'] = copy.deepcopy(graph['source_obligation_inventory']['selection'])
     for key in ("explicit_references", "reference_roles", "reference_dispositions"):
         result[key] = copy.deepcopy(graph.get(key, []))
     return result
 
 
-def _semantic_literal(sources, origin):
+def _semantic_literal(sources, origin, *, resolver=None):
     """Resolve source spans, including independently checked prose joins."""
     if not isinstance(origin, dict):
         return None
     fragments = origin.get("joined_fragments")
     if not fragments:
-        return _literal(sources, origin)
+        return resolver(origin) if resolver else _literal(sources, origin)
     first = fragments[0].get("source", {})
     if origin.get("path") != first.get("path") or origin.get("lines") != first.get("lines"):
         return None
     joined = ""
     for fragment in fragments:
-        actual = _literal(sources, fragment.get("source", {}))
+        actual = resolver(fragment.get('source', {})) if resolver else _literal(sources, fragment.get("source", {}))
         projected = fragment.get("projected_text", fragment.get("text"))
         bounds = fragment.get("joined_span")
         if (actual is None or not isinstance(projected, str) or not isinstance(bounds, (list, tuple))
@@ -518,6 +541,10 @@ def _semantic_token_matches(dimension, claimed, literal):
 
         if raw in CIRCUMSTANCE_MARKERS:
             return CIRCUMSTANCE_MARKERS[raw] == claimed
+        if raw in {'根據', '根据'}:
+            return claimed == 'according_to'
+        if re.fullmatch(r'[a-z][.)]', raw):
+            return claimed == 'enumeration'
     if dimension in {"operator", "comparison_operator"} and raw in _COMPARISONS:
         return _COMPARISONS[raw] == wanted
     if dimension in {"operator", "comparison_operator"} and raw in {"at least", "at most", "more than", "less than"}:
@@ -529,7 +556,7 @@ def _semantic_token_matches(dimension, claimed, literal):
     if dimension == "change_direction":
         return raw in {text[2:] for text, direction in _CHANGES.items() if direction == wanted}
     if dimension == "aspect":
-        return raw in {"perfect": {"have", "has"}, "progressive": {"is", "are"}}.get(wanted, set())
+        return raw in {"perfect": {"have", "has", "已", "已经", "已經", "了"}, "progressive": {"is", "are"}}.get(wanted, set())
     if dimension in {"polarity", "modal_polarity"}:
         return wanted == "negative" and raw in {"not", "never", "no", "cannot", "不", "不能", "不得"}
     if dimension in {"operator", "condition_operator", "exception_operator"}:
@@ -539,7 +566,8 @@ def _semantic_token_matches(dimension, claimed, literal):
         if wanted == "ability" and re.fullmatch(r"(?:is|are|was|were) (?:not )?able to", raw):
             return True
         return raw in {"can": {"cannot"}, "may": {"可以", "不可以"}, "must": {"必须", "必須", "不得"},
-                       "should": {"应当", "應當"}, "ability": {"能", "能够", "能夠", "不能", "不能够", "不能夠"}}.get(wanted, set())
+                       "should": {"应当", "應當"}, "will": {"将", "將"},
+                       "ability": {"能", "能够", "能夠", "不能", "不能够", "不能夠"}}.get(wanted, set())
     if dimension == "tense":
         past = _PAST | _REPORT_PAST | {"did", "had"}
         present = (set(_ACTIONS) | set(_REPORT_ACTIONS) | {"do", "does", "am", "has", "have"}) - past
@@ -559,6 +587,15 @@ def _validate_semantic_sources(graph, nodes):
     trees = [*graph.get("logic", []), *(node.get("logic", {}) for node in [*facts, *operands]),
              *graph.get("operand_relations", [])]
     tree_nodes = [node for tree in trees for node in _semantic_dicts(tree)]
+    # A qualifier copied into a leaf is not a substitute for the enclosing
+    # source-bound temporal scope. Audit the owning tree as well as its leaves.
+    temporal_scopes = [node for tree in graph.get('logic', []) for node in _semantic_dicts(tree)
+                       if node.get('kind') == 'temporal_scope']
+    for field in [*facts, *operands]:
+        for scope in field.get('logic', {}).get('operator_path', []):
+            if scope.get('kind') == 'temporal_scope' and not any(
+                    node.get('source') == scope.get('source') for node in temporal_scopes):
+                raise ValueError('temporal qualifier lost its original enclosing scope')
 
     def literal(origin, label):
         text = _semantic_literal(sources, origin)
@@ -602,7 +639,7 @@ def _validate_semantic_sources(graph, nodes):
 
             raw_operator = literal(node.get("operator_source"), "year-on-year operator")
             change = _CHANGE.fullmatch(raw_operator)
-            direction = ('decrease' if change and change['direction'] in {'下降', '减少', '減少'} else 'increase')
+            direction = ('decrease' if change and change['direction'] in {'下降', '减少', '減少', '降低'} else 'increase')
             basis = 'year_on_year' if change and change['basis'] == '同比' else change['basis'] if change else None
             if (raw_operator != node.get("operator_text") or not change or direction != node.get("direction")
                     or node.get("basis") != basis or node.get("baseline_period") != change['baseline']):
@@ -623,12 +660,27 @@ def _validate_semantic_sources(graph, nodes):
             offset = own.get("text_span", [0, 0])[0] - span[0]
             origins = [{**copy.deepcopy(own), "text_span": [offset + a, offset + b]}
                        for a, b in node.get("operator_spans", [])]
+            if ('operator_spans' not in node and node.get('mode') == 'nominal_members'
+                    and all(child.get('kind') == 'cjk_nominal' for child in node.get('children', []))):
+                # Imported Chinese nominal constituents retain absolute
+                # original sources rather than a second reader's local cuts.
+                # Audit their actual parent and local ranges directly.
+                origins = node.get('operator_sources', [])
+                bounds = own.get('text_span', [])
+                if len(bounds) != 2 or any(
+                        any(origin.get(k) != own.get(k) for k in ('path', 'lines', 'cell', 'block', 'native_path'))
+                        or len(origin.get('text_span', [])) != 2
+                        or not bounds[0] <= origin['text_span'][0] < origin['text_span'][1] <= bounds[1]
+                        for origin in origins):
+                    raise ValueError('absolute Chinese nominal operator is not local to its source')
             if node.get("operator_sources") != origins:
                 raise ValueError("coordination operator sources differ from their original spans")
             printed = [literal(origin, "coordination operator").strip().casefold() for origin in origins]
             joins = {"and": {"and", "和", "与", "與", "及", "并", "並", "且", "并且", "並且", "以及"},
                      "or": {"or", "或"}}
             allowed = joins.get(node.get("operator"), set())
+            if node.get('mode') == 'circumstance_operations' and node.get('operator') == 'and':
+                allowed |= {'；', ';'}
             if (not printed or any(raw not in allowed | {",", "，", "、"} for raw in printed)
                     or node.get("operator") == "or" and not any(raw in allowed for raw in printed)):
                 raise ValueError("logical enumeration operator differs from its printed source")
@@ -807,9 +859,21 @@ def validate_requirement_graph(graph: dict[str, Any], *, expected: dict[str, Any
                        for edge in relations.values()):
                 raise ValueError("interpreted proposition lacks its source-bound semantic relation")
     _validate_semantic_sources(graph, nodes)
+    from .scalar_evidence import validate_scalar_sources
+    from .three_layer import canonical
+
+    projected_scalars = evaluation_projection(graph)
+    validate_scalar_sources(projected_scalars['business'], projected_scalars.get('text_projection', {}), canonicalize=canonical,
+                            syntax=projected_scalars.get('syntax', []), relations=projected_scalars['relations'], blockers=graph['unresolved'])
     from .cjk_circumstances import validate_circumstance_graph
 
     validate_circumstance_graph(graph, lambda origin, label: _semantic_literal(graph['sources'], origin))
+    from .financial_group_context import validate_financial_summaries
+
+    validate_financial_summaries(evaluation_projection(graph), lambda origin: _semantic_literal(graph['sources'], origin), allow_unresolved=True)
+    from .financial_group_context import validate_financial_notes
+
+    validate_financial_notes(evaluation_projection(graph), lambda origin: _semantic_literal(graph['sources'], origin))
     from .nominal_syntax import validate_nominal_sources
 
     validate_nominal_sources(graph, nodes, lambda origin, label: _semantic_literal(graph["sources"], origin))
@@ -833,7 +897,8 @@ def validate_requirement_graph(graph: dict[str, Any], *, expected: dict[str, Any
     from .enumeration_binding import validate_enumeration_bindings
 
     validate_enumeration_bindings(graph, nodes, lambda source: _semantic_literal(sources, source))
-    if any(item.get('owner_roles') for item in graph.get('explicit_references', [])):
+    references = graph.get('explicit_references', [])
+    if references and all(item.get('owner_proof') for item in references):
         from .represented_feature_comparison import _check_references, _reference_sources
 
         projected_references = evaluation_projection(graph)
@@ -842,15 +907,22 @@ def validate_requirement_graph(graph: dict[str, Any], *, expected: dict[str, Any
     from .source_obligations import validate_source_obligations
 
     validate_source_obligations(graph, expected=expected)
+    if graph.get('comparison_contract') == 'document_ast':
+        from .document_ast_comparison import validate_document_requirements
+
+        validate_document_requirements(graph)
     if expected is not None:
         # Reinterpret the immutable external input to catch synchronized edits
         # of nodes, projections and dispositions. This is an omission/mutation
         # guard, not independent proof that the interpreter understood prose.
-        rebuilt = compile_requirement_graph(expected)
+        rebuilt = compile_requirement_graph(expected, comparison_contract=graph.get('comparison_contract', 'semantic'))
         for key in ("sources", "nodes", "relations", "projections", "dispositions", "unresolved", "logic", "operand_relations", "required_matcher_features",
                     "explicit_references", "reference_roles", "reference_dispositions", "source_obligation_inventory", "source_obligation_coverage"):
             if graph[key] != rebuilt[key]:
                 raise ValueError(f"requirement graph changed or omitted source semantics: {key}")
+        for key in ('comparison_contract', 'document_ast', 'source_form_units'):
+            if graph.get(key) != rebuilt.get(key):
+                raise ValueError(f'document comparison requirements changed: {key}')
 
 
 def _xml(parent, key, value):
@@ -908,7 +980,7 @@ def _compile_saved_requirement_view(job, *, cache=None):
         return failed(ValueError("worker software identity differs from the compilation freeze"), "compiler_software_identity_failure")
     try:
         expected = read_expected(sample, Path(expected_root), cache=_SAVED_REQUIREMENT_SOURCE_CACHE if cache is None else cache)
-        graph = compile_requirement_graph(expected)
+        graph = compile_requirement_graph(expected, comparison_contract='document_ast')
         validate_requirement_graph(graph, expected=expected)
         write_requirement_graph(graph, json_path, xml_path)
     except Exception as error:
@@ -930,6 +1002,10 @@ def _compile_saved_requirement_view(job, *, cache=None):
                                  "scope": "source_integrity_not_semantic_oracle"},
         "authorized_raw_source_status": graph["source_obligation_inventory"]["authorized_raw_inventory"]["status_counts"],
         "unresolved_semantics": len(semantic), "input_scope_pending": len(scopes),
+        "comparison_contract": graph.get('comparison_contract'),
+        "content_comparison_ready": graph.get('content_comparison_ready', False),
+        "document_ast_blocks": len(graph.get('document_ast', {}).get('children', [])),
+        "source_form_units": len(graph.get('source_form_units', [])),
         "disposition": "interpreted" if not semantic else "unresolved",
         "layers": {layer: len(graph["projections"][layer]) for layer in LAYERS}},
         dict(Counter(issue["reason"] for issue in semantic)))
@@ -970,6 +1046,7 @@ def compile_saved_requirements(baseline: Path, output: Path, *, expected_root: P
         "source_obligation_inventory_complete": False,
         "inventory_validation": {"status": "not_passed", "scope": "source_integrity_not_semantic_oracle"}}
     index["analysis_workers"] = workers
+    index['comparison_contract'] = 'document_ast'
     index["declared_view_count"] = len(declared)
     jobs = [(samples[sample_id], expected_root, output, identity["software_id"]) for sample_id in sorted(declared)]
     reasons = Counter()

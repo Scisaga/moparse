@@ -565,7 +565,7 @@ class _Reader:
                     **({'tense': node['tense']} if 'tense' in node else {})}
         if kind == 'cjk_measurement_sequence':
             return {'kind': kind, 'clauses': [{key: copy.deepcopy(value) for key, value in clause.items()
-                if key in {'kind', 'subject', 'value', 'unit', 'direction', 'basis', 'baseline_period'}}
+                if key in {'kind', 'subject', 'value', 'unit', 'currency', 'direction', 'basis', 'baseline_period'}}
                 for clause in node['clauses']]}
         if kind == 'cjk_nominal':
             return {'kind': kind, 'head': node['head'], 'parts': [_Reader.summary(part) for part in node['parts']],
@@ -633,6 +633,10 @@ class _Reader:
         if node['kind'] == 'circumstance_scope':
             return {'role': 'circumstance_scope', 'operator': node['operator'],
                     'operand': _Reader.endpoint(node['operand']), 'child': _Reader.endpoint(node['child'])}
+        if node['kind'] == 'cjk_measurement_sequence':
+            return {'role': 'cjk_measurement_sequence', 'clauses': [
+                {'subject': leaf['subject'], 'predicate_kind': leaf['kind'],
+                 'attribute': leaf.get('predicate', leaf.get('operator_text'))} for leaf in node['clauses']]}
         if node['kind'] == 'unknown':
             return {'role': 'unresolved', 'reason': node['reason']}
         if node['kind'] in {'purpose_scope', 'controlled_infinitive_scope'}:
@@ -984,7 +988,8 @@ class _Reader:
                 controller_source=binding['control']['controller_source'],
                 operand_source=binding['operand']['source'], operand_logic=binding['operand'])
         for discourse in context.get('discourse_nodes', []):
-            self.edge('narrative_discourse_scope', {'operator': discourse['operator'], 'role': discourse['role']},
+            self.edge('narrative_discourse_scope', {'operator': discourse['operator'], 'role': discourse['role'],
+                **({'marker': discourse['marker']} if discourse['role'] == 'item_label' else {})},
                 fact, discourse['marker_source'], marker_source=discourse['marker_source'])
         for quoted in quoted_roles:
             self.edge('narrative_quoted_nominal_scope', {'role': 'quoted_nominal', 'nominal_role': quoted['role'],
@@ -994,6 +999,7 @@ class _Reader:
                       'context': fronted['context']}, fact, self.source_at(*fronted['preposition_span']),
                       context_source=self.source_at(*fronted['context_span']),
                       separator_source=self.source_at(*fronted['separator_span']),
+                      **({'context_phrase': fronted['context_phrase']} if 'context_phrase' in fronted else {}),
                       **({'quoted_nominals': fronted['quoted_nominals']} if 'quoted_nominals' in fronted else {}))
         if 'temporal' in context:
             for key, value in context['temporal']['qualifiers'].items():

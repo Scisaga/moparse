@@ -98,6 +98,26 @@ def test_non_list_paragraph_after_the_list_does_not_borrow_its_period_or_actor()
     validate_requirement_graph(graph)
 
 
+@pytest.mark.parametrize('text', ['Vega批准Omega，优化Sigma。', '新的业务叙述尚无解释，优化Sigma。'])
+def test_partial_member_does_not_borrow_intro_actor_across_a_new_actor_or_unknown_clause(text):
+    graph = compile_requirement_graph(expected(target(INTRO, 1, children=True, list_span=[1, 2]),
+        target(text, 2, parents=[INTRO], list_span=[1, 2])))
+    assert not graph['semantic_complete']
+    assert not any(f.get('subject') == 'Lumen' for f in facts(graph))
+    assert any(issue['reason'] == 'enumeration_member_actor_control_unresolved' for issue in graph['unresolved'])
+    validate_requirement_graph(graph)
+
+
+def test_repeated_predicates_in_one_member_do_not_mutate_an_earlier_membership():
+    text = 'Vega实现Kappa，Vega实现Sigma。'
+    graph = compile_requirement_graph(expected(target(INTRO, 1, children=True, list_span=[1, 2]),
+        target(text, 2, parents=[INTRO], list_span=[1, 2])))
+    assert [(f['subject'], f['attribute'], f['value']) for f in facts(graph)] == [
+        ('Vega', '实现', 'Kappa'), ('Vega', '实现', 'Sigma')]
+    assert len([edge for edge in graph['relations'] if edge['type'] == 'enumeration_membership']) == 2
+    validate_requirement_graph(graph)
+
+
 @pytest.mark.parametrize("case", ["missing-actor", "unprinted-parent"])
 def test_failure_closed_omitted_actor_requires_one_actual_unambiguous_introduction(case):
     intro = "2028年，合作进展包括：" if case == "missing-actor" else INTRO

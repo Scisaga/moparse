@@ -30,6 +30,13 @@ _TIME_CUE = re.compile(r"\b(?:year|period|quarter|month|week)\s+ended\b|\bas\s+o
 _CHANGE = re.compile(r"Change|(?:YoY|year.over.year)(?:\s+change)?|變動|变动|同比(?:變動|变动)?|"
                      r"金[額额]同比[變变][動动]", re.I)
 _METADATA = re.compile(r"Units?|Currency|Period|Scope|Note|单位|單位|币种|幣種|期间|期間|口径|口徑|附注|附註", re.I)
+_RECORD_METRIC = re.compile(
+    r'(?:(?:期初|期末|本期|當期|当期|本年|上期|上年|其他)?'
+    r'(?:金額|金额|餘額|余额|變動|变动|公允(?:價值|价值)(?:變動|变动)(?:損益|损益)?|'
+    r'(?:計提|计提)的(?:減值|减值)|(?:購買|购买|出售|贖回|赎回)(?:/(?:出售|贖回|赎回))?(?:金額|金额))|'
+    r'(?:計入|计入)(?:權益|权益|損益|损益)的(?:累計|累计)(?:公允(?:價值|价值))?(?:變動|变动)|'
+    r'(?:營業|营业|銷售|销售|經營|经营)?(?:收入|成本|利潤|利润)|(?:毛|淨|净)?利率(?:[（(](?:註|注)[）)])?|'
+    r'資金來源|资金来源)(?:(?:比上年同期|比上年|比上期)(?:增減|增减))?')
 
 
 def _result():
@@ -74,7 +81,7 @@ def _proof_atom(result, text, source, proof, role):
 
 def _project(result, text, source):
     owned = {position for item in [*result["text_atoms"], *result["controls"]] for position in range(*item["span"])}
-    for match in re.finditer(r"[^\s;；:：()（）,.。]+|[\s;；:：()（）,.。]+", text):
+    for match in re.finditer(r"[^\s;；:：()（）,.。，]+|[\s;；:：()（）,.。，]+", text):
         uncovered = [position for position in range(*match.span()) if position not in owned]
         if not uncovered:
             continue
@@ -88,7 +95,7 @@ def _project(result, text, source):
         groups.append((start, previous + 1))
         for a, b in groups:
             fragment = text[a:b]
-            if re.fullmatch(r"[\s;；:：()（）,.。]+", fragment):
+            if re.fullmatch(r"[\s;；:：()（）,.。，]+", fragment):
                 result["controls"].append({"text": fragment, "span": [a, b], "source": _source(source, a, b),
                                            "reason": "explicit_field_sequence_separator"})
             else:
@@ -112,6 +119,202 @@ def _measurement(text, source, start, end):
         if shorter["matched"]:
             parsed, end = shorter, end - 1
     return parsed, end
+
+
+def read_labelled_record(text, source, *, scope=(), qualifiers=None, qualifier_sources=None, parents=()):
+    """Expose every printed label/scalar in a closed record, not an opaque value.
+
+    Only already named financial columns and lossless scalars enter this
+    grammar. A nested record must independently retain its own fields and a
+    source-proved parent record label; parent amounts never fill child slots.
+    """
+    result = _result()
+    selections = _read_selection_record(text, source, scope=scope)
+    if selections['matched']:
+        return selections
+    outer = re.match(r'(?P<name>[^:：;；。\n]{1,80})[:：](?P<body>.+)', text)
+    if outer is None or not re.search(r'[;；]', outer['body']):
+        return result
+    if re.search(r'主要|因為|因为|由於|由于|其中|[為为].*\d|https?://', outer['name']):
+        return result
+    fields, unread = [], []
+    for match in re.finditer(r'[^;；]+', text[outer.start('body'):]):
+        a, b = _trim(text, outer.start('body') + match.start(), outer.start('body') + match.end())
+        candidates = []
+        for cut in range(a + 1, b):
+            label = text[a:cut].rstrip(':： ')
+            if not _RECORD_METRIC.fullmatch(label):
+                continue
+            scalar, raw_end = _measurement(text, source, cut, b)
+            if scalar['matched']:
+                candidates.append((label, cut, scalar, raw_end))
+            elif text[cut:b].rstrip('。.') in {'不適用', '不适用', '–', '—', '-'}:
+                candidates.append((label, cut, {'matched': True, 'value': text[cut:b].rstrip('。.'), 'unit': None, 'currency': None,
+                    'sources': {'value': _source(source, cut, b - int(text[b - 1:b] in '。.'))}}, b - int(text[b - 1:b] in '。.')))
+        if len(candidates) != 1:
+            unread.append((a, b))
+        else:
+            fields.append((a, b, *candidates[0]))
+    if len(fields) < 2:
+        return result
+    result['matched'] = True
+    name = outer['name'].strip()
+    name_start = outer.start('name') + len(outer['name']) - len(outer['name'].lstrip())
+    name_source = _source(source, name_start, name_start + len(name))
+    rows = [{'role': 'record_label', 'text': name, 'source': copy.deepcopy(name_source)}]
+    groups = []
+    for parent in parents:
+        if not isinstance(parent, dict) or not parent.get('source', {}).get('path'):
+            _pending(result, 'labelled_record_parent_source_unavailable', text, source)
+            continue
+        own = read_labelled_record(parent['text'], parent['source'])
+        if not own['matched'] or own['blockers'] or {f['attribute'] for f in own['facts']} != {f[2] for f in fields}:
+            _pending(result, 'labelled_record_parent_roles_unresolved', text, source, parent=copy.deepcopy(parent))
+            continue
+        label = own['record_label']
+        rows.append({'role': 'row_group', **copy.deepcopy(label)})
+        groups.append(label['text'])
+    result['record_label'] = {'text': name, 'source': copy.deepcopy(name_source)}
+    result['projection_inputs']['locators'] = [{'role': 'record_label', **copy.deepcopy(result['record_label'])}]
+    result['projection_inputs']['source_fragments'] = [{'text': text, 'source': copy.deepcopy(source)}]
+    _atom(result, text, source, name_start, name_start + len(name), 'locator')
+    for a, _b, label, cut, measured, raw_end in fields:
+        label_source = _source(source, a, a + len(label))
+        q, qs = copy.deepcopy(qualifiers or {}), copy.deepcopy(qualifier_sources or {})
+        if label in {'資金來源', '资金来源'} or re.search(r'率|比上年|比上期', label):
+            for key in ('unit', 'currency'):
+                q.pop(key, None)
+                qs.pop(key, None)
+        for key in ('unit', 'currency'):
+            if measured[key]:
+                q[key], qs[key] = measured[key], copy.deepcopy(measured['sources'][key])
+        if measured['unit'] in {'%', '‰'}:
+            q.pop('currency', None)
+            qs.pop('currency', None)
+        position = re.match(r'期初|期末|本期', label)
+        if position:
+            q['period'] = position[0]
+            qs['period'] = _source(source, a, a + position.end())
+        if cumulative := re.search(r'累計|累计', label):
+            q['aggregation'] = cumulative[0]
+            qs['aggregation'] = _source(source, a + cumulative.start(), a + cumulative.end())
+        basis = re.search(r'比上年同期|比上年|比上期', label)
+        if basis:
+            q['comparison_basis'] = basis[0]
+            qs['comparison_basis'] = _source(source, a + basis.start(), a + basis.end())
+        fact = {'id': f'labelled-record:{len(result["facts"])}', 'subject': name, 'subject_source': copy.deepcopy(name_source),
+            'attribute': label, 'attribute_source': copy.deepcopy(label_source), 'value': measured['value'], 'role': 'metric',
+            'qualifiers': q, 'qualifier_sources': qs, 'scope': list(scope), 'identity_facets': {'group': groups} if groups else {},
+            'source': _source(source, cut, raw_end), 'value_source': copy.deepcopy(measured['sources']['value']),
+            'raw_value': text[cut:raw_end], 'row_evidence': copy.deepcopy(rows),
+            'header_evidence': [{'role': 'column_header', 'text': label, 'source': copy.deepcopy(label_source)}],
+            'record_id': 'labelled-record:' + json.dumps(name_source, sort_keys=True), 'rule_id': 'printed_financial_label_scalar_record',
+            'semantic_type': ('printed_unspecified_value' if measured['value'] in {'–', '—', '-'}
+                              else 'printed_not_applicable' if measured['value'] in {'不適用', '不适用'} else 'financial_quantity')}
+        result['facts'].append(fact)
+        _atom(result, text, source, a, a + len(label), 'label')
+        va, vb = measured['sources']['value']['text_span']
+        _atom(result, text, source, va - _offset(source), vb - _offset(source), 'value')
+        if measured['unit']:
+            ua, ub = measured['sources']['unit']['text_span']
+            _atom(result, text, source, ua - _offset(source), ub - _offset(source), 'unit')
+        result['projection_inputs']['objects'].append({k: copy.deepcopy(fact[k]) for k in (
+            'source', 'attribute', 'attribute_source', 'value', 'value_source', 'qualifiers', 'qualifier_sources')})
+    for a, b in unread:
+        _pending(result, 'labelled_record_field_unresolved', text[a:b], _source(source, a, b))
+        _atom(result, text, source, a, b, 'unresolved_text')
+    _project(result, text, source)
+    return result
+
+
+def _read_selection_record(text, source, *, scope=()):
+    """Explicit person/position and two-level marked field records."""
+    result = _result()
+    parts = _parts(text)
+    if len(parts) < 3 or not re.fullmatch(r'[\u3400-\u9fffA-Za-z .·]{2,80}', text[slice(*parts[0])]):
+        return result
+    position = _PAIR.fullmatch(text[slice(*parts[1])])
+    if position is None or position[1] not in {'職位', '职位', '職務', '职务'} or not re.search(r'[√✓☑×✗☒]', text):
+        return result
+    name = text[slice(*parts[0])]
+    name_source = _source(source, *parts[0])
+    result.update(matched=True, record_label={'text': name, 'source': name_source}, scope={'subject': name, 'scope': list(scope)})
+    result['projection_inputs']['source_fragments'] = [{'text': text, 'source': copy.deepcopy(source)}]
+    _atom(result, text, source, *parts[0], 'locator')
+
+    def field(label, label_source, a, b, *, domain=None, domain_source=None, nominal=False):
+        raw = text[a:b]
+        headers = ([{'role': 'column_group', 'text': domain, 'source': copy.deepcopy(domain_source)}] if domain else [])
+        headers.append({'role': 'column_header', 'text': label, 'source': copy.deepcopy(label_source)})
+        fact = {'id': f'labelled-record:{len(result["facts"])}', 'subject': name, 'subject_source': copy.deepcopy(name_source),
+                'attribute': label, 'attribute_source': copy.deepcopy(label_source), 'value': raw, 'raw_value': raw,
+                'role': 'metric', 'semantic_type': 'printed_position_list' if nominal else 'printed_selection_state',
+                'source': _source(source, a, b), 'value_source': _source(source, a, b), 'qualifiers': {}, 'qualifier_sources': {},
+                'identity_facets': {'field_domain': domain} if domain else {}, 'scope': list(scope),
+                'row_evidence': [{'role': 'record_label', 'text': name, 'source': copy.deepcopy(name_source)}],
+                'header_evidence': headers, 'record_id': 'selection-record:' + json.dumps(name_source, sort_keys=True),
+                'rule_id': 'printed_position_and_hierarchical_selection_fields'}
+        if nominal:
+            from .cjk_circumstances import nominal as read_nominal
+            from .cjk_narrative_requirements import _CJKReader
+            from .narrative_requirements import _Unknown
+
+            if not all(re.fullmatch(r'(?:副)?董事長|(?:獨立|独立)?(?:非)?[執执]行董事|董事|(?:高[級级])?副[總总]裁|[總总]裁|[董監监]事[會会]秘[書书]', item)
+                       for item in re.split('、', raw)):
+                _pending(result, 'position_list_roles_unresolved', raw, fact['value_source'])
+                return
+            reader = _CJKReader(raw, fact['value_source'], scope)
+            try:
+                logic = read_nominal(reader, 0, len(raw))
+                reader.annotate_sources(logic)
+            except _Unknown:
+                _pending(result, 'position_list_roles_unresolved', raw, fact['value_source'])
+                return
+            fact['value_logic'] = logic
+            members = [n for part in logic.get('parts', []) if part.get('kind') == 'coordination'
+                       for n in part['children']]
+            for member in members:
+                result['relations'].append({'type': 'record_position_member', 'left': {'position': member['head']},
+                    'right': {'subject': name, 'attribute': label, 'scope': list(scope), 'identity_facets': copy.deepcopy(fact['identity_facets'])}, 'fact_id': fact['id'],
+                    'source': copy.deepcopy(member['source']), 'object_anchor': None,
+                    'binding_evidence': {'statement_source': copy.deepcopy(fact['source']),
+                                         'member_source': copy.deepcopy(member['source']), 'value_logic': copy.deepcopy(logic)},
+                    'rule_id': 'printed_position_list_member'})
+            result['record_composition'] = True
+        result['facts'].append(fact)
+        result['record_composition'] = True
+        result['relations'].append({'type': 'record_label_scope', 'left': {'record_subject': name},
+            'right': {'subject': name, 'attribute': label, 'scope': list(scope), 'identity_facets': copy.deepcopy(fact['identity_facets'])}, 'source': copy.deepcopy(name_source),
+            'fact_id': fact['id'], 'object_anchor': None,
+            'binding_evidence': {'statement_source': copy.deepcopy(fact['source']), 'row_label_source': copy.deepcopy(name_source),
+                                 'headers': copy.deepcopy(headers)}, 'rule_id': 'printed_person_record_prefix'})
+        result['projection_inputs']['objects'].append({k: copy.deepcopy(fact[k]) for k in (
+            'source', 'attribute', 'attribute_source', 'value', 'value_source', 'qualifiers', 'qualifier_sources')})
+        _atom(result, text, source, a, b, 'value')
+
+    pa, pb = parts[1]
+    la, lb = pa + position.start(1), pa + position.end(1)
+    va, vb = pa + position.start(2), pa + position.end(2)
+    _atom(result, text, source, la, lb, 'label')
+    field(position[1], _source(source, la, lb), va, vb, nominal=True)
+    for pa, pb in parts[2:]:
+        pair = _PAIR.fullmatch(text[pa:pb].rstrip('。.'))
+        if pair is None:
+            _pending(result, 'selection_domain_unresolved', text[pa:pb], _source(source, pa, pb))
+            continue
+        da, db = pa + pair.start(1), pa + pair.end(1)
+        _atom(result, text, source, da, db, 'label')
+        for mark in re.finditer(r'[^，,]+', pair[2]):
+            item = re.fullmatch(r'(?P<method>[^√✓☑×✗☒]+)(?P<state>[√✓☑×✗☒])', mark[0])
+            base = pa + pair.start(2) + mark.start()
+            if item is None:
+                _pending(result, 'selection_method_or_state_unresolved', mark[0], _source(source, base, base + len(mark[0])))
+                continue
+            a, b = base + item.start('method'), base + item.end('method')
+            _atom(result, text, source, a, b, 'label')
+            field(item['method'], _source(source, a, b), b, b + 1, domain=pair[1], domain_source=_source(source, da, db))
+    _project(result, text, source)
+    return result
 
 
 def read_field_sequence_requirements(text: str, source: dict[str, Any], *, scope=(), schema=None,

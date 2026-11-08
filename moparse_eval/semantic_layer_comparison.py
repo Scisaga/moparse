@@ -99,14 +99,17 @@ def _business_responsibility(row, tree, own_tree, context):
                 and target.get("logic", {}).get("tree") == tree
                 and candidate.get("logic", {}).get("tree") == own_tree):
             return None
-    elif target.get("role") == candidate.get("role") == "description":
+    elif target.get('role') == candidate.get('role') and target.get('role') in {'description', 'formula_definition'}:
         leaves = [leaf for leaf in _main_assertions(tree) if _role_key(leaf) == _role_key(target)]
         own_leaves = [leaf for leaf in _main_assertions(own_tree) if _role_key(leaf) == _role_key(candidate)]
         if len(leaves) != 1 or len(own_leaves) != 1:
             return None
         for fact, leaf in ((target, leaves[0]), (candidate, own_leaves[0])):
-            if (fact.get("value") != leaf.get("object") or fact.get("object") != leaf.get("object")
-                    or fact.get("attribute") != leaf.get("attribute") or fact.get("subject") != leaf.get("subject")):
+            measured = leaf.get('kind') in {'quantity_assertion', 'quantity_comparison', 'year_on_year_change'}
+            value = leaf.get('value') if measured else leaf.get('object')
+            attribute = leaf.get('predicate', leaf.get('operator_text')) if measured else leaf.get('attribute')
+            if (fact.get("value") != value or fact.get("object") != value
+                    or fact.get("attribute") != attribute or fact.get("subject") != leaf.get("subject")):
                 return None
         if not compare_requirement_ast(leaves[0], own_leaves[0], context=context)["equivalent"]:
             return None
@@ -155,6 +158,13 @@ def _relation_node(edge, graph, tree, side, resolve):
                    and edge.get("source") in node.get("operator_sources", [])
                    and left == {"operator": node.get("operator"), "mode": node.get("mode"),
                                 "member_count": len(node.get("children", []))}]
+    elif edge['type'] == 'narrative_cjk_nominal_scope':
+        from .narrative_requirements import _Reader
+
+        matches = [node for node in nodes if node.get('kind') == 'cjk_dependency'
+                   and node == binding.get('nominal_logic')
+                   and edge.get('source') == node.get('marker_source', node.get('source'))
+                   and left == _Reader.summary(node)]
     elif edge['type'] == 'narrative_circumstance_scope':
         matches = [node for node in _walk_nodes(tree) if node.get('kind') == 'circumstance_scope'
                    and node.get('operator_source') == edge.get('source')
@@ -186,6 +196,11 @@ def _relation_responsibility(row, required, actual, tree, own_tree, context, use
             identity = ("preposition", "semantic_role", "attachment")
             if any(target["left"].get(key) != candidate["left"].get(key) for key in identity):
                 continue
+        if target['type'] == 'narrative_cjk_nominal_scope':
+            identity = ('role',) if target['left'].get('role') in {
+                'arithmetic_base', 'arithmetic_group', 'dividend', 'divisor', 'subtrahend', 'addend'} else ('role', 'marker')
+            if any(target['left'].get(key) != candidate['left'].get(key) for key in identity):
+                continue
         hits.append((candidate, own_node))
     if len(hits) != 1:
         return None
@@ -199,17 +214,23 @@ def _relation_responsibility(row, required, actual, tree, own_tree, context, use
             "capacity": 1, "decision": decision}
 
 
-def _affected_assertions(tree, decision):
+def _affected_assertions(tree, decision, actual_tree=None):
     """Bind each failed path to its grammatical owning assertion(s)."""
     children = decision.get("proof", {}).get("children", [])
     if children:
-        return [leaf for child in children for leaf in _affected_assertions(tree, child)]
+        return [leaf for child in children for leaf in _affected_assertions(tree, child, actual_tree)]
     if decision.get("status") not in {"conflict", "missing"}:
         return []
-    node, chain = tree, []
+    node, actual_node, chain = tree, actual_tree, []
     for field, index in re.findall(r"\.([A-Za-z_][A-Za-z_0-9]*)|\[(\d+)\]", decision.get("path", "")):
         token = field if field else int(index)
-        chain.append((node, token))
+        chain.append((node, actual_node, token))
+        if isinstance(actual_node, dict) and isinstance(token, str):
+            actual_node = actual_node.get(token)
+        elif isinstance(actual_node, list) and isinstance(token, int) and token < len(actual_node):
+            actual_node = actual_node[token]
+        else:
+            actual_node = None
         if isinstance(node, dict) and isinstance(token, str) and token in node:
             node = node[token]
         elif isinstance(node, list) and isinstance(token, int) and token < len(node):
@@ -218,16 +239,29 @@ def _affected_assertions(tree, decision):
             break
     # A condition/restriction/purpose operand qualifies its enclosing main
     # assertion. Its words do not become independent B requirements.
-    for owner, field in chain:
+    for owner, actual_owner, field in chain:
         if (isinstance(owner, dict) and owner.get("kind") in {
                 "conditions", "condition", "exception", "relative", "restrictive_relative", "reporting",
                 "purpose_scope", "controlled_infinitive_scope", "circumstance_scope"} and field != "child"):
             leaves = _main_assertions(owner.get("child"))
-            return [leaf for leaf in leaves if leaf.get('source') == owner['target_source']] if owner.get('target_source') else leaves
-    for owner in [node, *[owner for owner, _field in reversed(chain)]]:
+            targets = owner.get('target_sources', [owner['target_source']] if owner.get('target_source') else None)
+            if owner.get('kind') == 'circumstance_scope' and field == 'attachment' and isinstance(actual_owner, dict):
+                # Scope was source-validated on both sides. Map the changed
+                # target membership by the local clause positions, never by
+                # the expected numeric answers. Shared owners still retain
+                # the same cause; balances are not cause targets at all.
+                own_leaves = _main_assertions(actual_owner.get('child'))
+                own_targets = actual_owner.get('target_sources', [actual_owner['target_source']]
+                                               if actual_owner.get('target_source') else None)
+                if targets is not None and own_targets is not None and len(leaves) == len(own_leaves):
+                    required_indexes = {i for i, leaf in enumerate(leaves) if leaf.get('source') in targets}
+                    actual_indexes = {i for i, leaf in enumerate(own_leaves) if leaf.get('source') in own_targets}
+                    return [leaf for i, leaf in enumerate(leaves) if i in required_indexes ^ actual_indexes]
+            return [leaf for leaf in leaves if leaf.get('source') in targets] if targets is not None else leaves
+    for owner in [node, *[owner for owner, _actual, _field in reversed(chain)]]:
         if isinstance(owner, dict) and owner.get("kind") in {"proposition", 'quantity_assertion', 'quantity_comparison', 'year_on_year_change'}:
             return [owner]
-    for owner in [node, *[owner for owner, _field in reversed(chain)]]:
+    for owner in [node, *[owner for owner, _actual, _field in reversed(chain)]]:
         if isinstance(owner, dict) and owner.get("kind"):
             leaves = _main_assertions(owner)
             if leaves:
@@ -431,7 +465,9 @@ def compare_semantic_layers(required, actual, rows, layers, *, canonicalize, sco
             for item in result["proof"]["rows"]:
                 decision = item["decision"]
                 tree = trees[item["required_index"]]
-                affected = _affected_assertions(tree, decision)
+                own_tree = (actual.get('logical_statements', [])[item['actual_index']]
+                            if item.get('actual_index') is not None else None)
+                affected = _affected_assertions(tree, decision, own_tree)
                 for row in rows:
                     if row["layer"] != layer:
                         continue

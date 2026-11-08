@@ -359,7 +359,9 @@ def test_bounded_diagnostic_traversal_needs_no_freeze_and_never_publishes_scores
     index_path = evaluate_saved(run, tmp_path / "diagnosis", expected_root=expected, diagnostic=True, workers=1,
                                sample_ids=["synthetic"])
     index = read_json(index_path)
-    assert index["state"] == ("diagnostic_completed" if supported else "blocked")
+    # Complete identical content is comparable even without an SVO reader;
+    # the diagnostic execution still withholds every quality score.
+    assert index["state"] == "diagnostic_completed"
     assert index["diagnostic_only"] is True
     assert index["expected_comparison_complete"] is False
     assert "summary" not in index and "adoption" not in index

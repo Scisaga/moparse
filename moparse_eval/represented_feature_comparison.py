@@ -24,10 +24,10 @@ from .quoted_nominal_validation import validate_quoted_nominals
 REPRESENTED_FEATURES = frozenset({"explicit_reference_binding", "enumeration_context_scope",
                                   "document_composition", "page_reference_binding", "quoted_nominal_scope",
                                   "shared_period_scope", "same_subject_relative_clause", "year_on_year_comparison",
-                                  "quantity_assertion", "compact_column_binding"})
+                                  "quantity_assertion", "compact_column_binding", "financial_summary_scope", "financial_note_scope"})
 REPRESENTED_INPUT_KEYS = (
     "syntax", "enumeration_contexts", "relations", "explicit_references", "reference_roles", "reference_dispositions",
-    "semantic_operands", "semantic_operand_relations", "compact_schemas",
+    "semantic_operands", "semantic_operand_relations", "compact_schemas", "financial_summary_contexts",
 )
 
 
@@ -77,6 +77,32 @@ def _check_owner(reference, graph, resolve):
             raise ValueError("reference owner has no actual field label")
     elif len(evidence) == 1 and evidence[0].get('kind') == 'prose_endpoint_roles' and reference.get('owner_roles'):
         roles = reference['owner_roles']
+        if reference.get('owner_kind') == 'accounting_difference':
+            order = ('actor', 'link', 'left', 'join', 'right', 'description')
+            identity = {'role': 'accounting_difference_explanation', 'actor': roles.get('actor', {}).get('text'),
+                        'left_basis': roles.get('left', {}).get('text'), 'right_basis': roles.get('right', {}).get('text')}
+            if set(roles) != set(order) or owner != {'identity': identity, 'scope': reference['scope']} or evidence[0].get('identity') != identity:
+                raise ValueError('accounting comparison reference belongs to different printed bases')
+            own = reference['source']
+            cursor = own['text_span'][0]
+            for key in order:
+                role = roles[key]
+                origin = role['source']
+                if (any(origin.get(k) != own.get(k) for k in ('path', 'lines', 'cell', 'block', 'native_path'))
+                        or origin.get('text_span') != [cursor, cursor + len(role['text'])] or resolve(origin) != role['text']):
+                    raise ValueError('accounting comparison borrows an adjacent source')
+                cursor += len(role['text'])
+            from .explicit_reference_requirements import _ACCOUNTING_DIFFERENCE
+
+            prefix = ''.join(roles[key]['text'] for key in order)
+            if (_ACCOUNTING_DIFFERENCE.fullmatch(prefix + reference['directive_text']) is None
+                    or cursor != reference['directive_source']['text_span'][0]
+                    or evidence[0]['source'] != {**own, 'text_span': [own['text_span'][0], cursor]}):
+                raise ValueError('accounting comparison roles do not precede their own directive')
+            for item in evidence:
+                if resolve(item['source']) != item['text']:
+                    raise ValueError('reference owner differs from its original source')
+            return proof
         if set(roles) != {'actor', 'period', 'left', 'right', 'join', 'link'}:
             raise ValueError('difference explanation loses its printed comparison roles')
         identity = {'role': 'difference_explanation', 'actor': roles['actor']['text'], 'period': roles['period']['text'],
@@ -136,7 +162,7 @@ def _check_references(graph, resolve, discovered):
             raise ValueError("reference source-bound relation is missing, changed or duplicated")
         remaining.remove(matches[0])
     if remaining or graph.get("reference_roles", []) != expected_roles or graph.get("reference_dispositions", []) != expected_dispositions:
-        raise ValueError("reference relation, role or disposition transport is incomplete")
+        raise ValueError("reference relation, reference_roles or disposition transport is incomplete")
     return {"reference_sources": [item["source"] for item in stored], "relation_types": sorted(relation_types),
             "comparison_owner": "grade_relations", "business_votes_added": 0}
 
@@ -236,6 +262,7 @@ def _check_quoted_roles(graph, resolve):
 
 def _measurement_sources(graph):
     from .cjk_circumstances import measurement_spans
+    from .cjk_narrative_requirements import join_following_explanations
     from .prose_requirements import _sentence_spans
     from .quoted_nominal import _source
     from .source_requirements import plan_field_body
@@ -258,7 +285,13 @@ def _measurement_sources(graph):
             continue
         if item.get('kind') != 'field_body' and _key(source) in envelopes:
             continue
-        for start, end in [cut for a, b in _sentence_spans(text) for cut in measurement_spans(text, a, b)]:
+        from .financial_group_context import read_financial_summary_intro
+
+        summary = read_financial_summary_intro(text, source, scope=item.get('scope', []))
+        if summary:
+            text, source = summary['prefix'], summary['prefix_source']
+        for start, end in [cut for a, b in join_following_explanations(text, _sentence_spans(text), source=source)
+                           for cut in measurement_spans(text, a, b)]:
             origin = _source(source, start, end)
             readback = read_cjk_measurements(text[start:end], origin, scope=item.get("scope", []))
             if item.get('kind') == 'field_body':
@@ -285,7 +318,7 @@ def _check_measurements(graph, resolve, readings, feature):
             # The reference projection may use the value cut as its public
             # source. Its independent role cuts still identify this exact
             # source clause without selecting by the expected numeric value.
-            own = [item for item in graph.get("business", []) if all(item.get(key) == fact.get(key)
+            own = [item for item in [*graph.get("business", []), *graph.get('semantic_operands', [])] if all(item.get(key) == fact.get(key)
                    for key in ("subject_source", "predicate_source", "object_source"))]
             keys = ("subject", "attribute", "predicate", "value", "object", "qualifiers", "subject_source",
                     "predicate_source", "value_source", "object_source", "qualifier_sources", "logic", "subject_binding_evidence")
@@ -294,11 +327,13 @@ def _check_measurements(graph, resolve, readings, feature):
             # additions. It cannot replace or alter any measurement slot.
             for key in ('qualifiers', 'qualifier_sources'):
                 native.get(key, {}).pop('circumstances', None)
+                for added in native.get('financial_summary_evidence', {}).get('inherited', []):
+                    native.get(key, {}).pop(added, None)
             if len(own) != 1 or any(native.get(key) != fact.get(key) for key in keys):
                 raise ValueError("measurement fact, antecedent or qualifier does not match its complete source")
         for expected in readback["relations"]:
             relation_types.add(expected["type"])
-            if sum(_same_relation(edge, expected) for edge in graph.get("relations", [])) != 1:
+            if sum(_same_relation(edge, expected) for edge in [*graph.get("relations", []), *graph.get('semantic_operand_relations', [])]) != 1:
                 raise ValueError("measurement qualifier or relative-subject relation is missing or source-inconsistent")
     return {"sequence_sources": [readback["source"] for readback in selected], "relation_types": sorted(relation_types),
             "comparison_owner": "native_measurement_ast_and_grade_business_and_grade_relations", "business_votes_added": 0}
@@ -338,6 +373,14 @@ def represented_feature_checks(graph, resolve):
     compositions = _composition_sources(graph)
     measurements = _measurement_sources(graph)
     features = declared & REPRESENTED_FEATURES
+    from .financial_group_context import read_financial_summary_intro, validate_financial_summaries
+
+    if any(re.search(r'[（(][註注][）)]', item.get('text', '')) for item in graph.get('syntax', [])):
+        features.add('financial_note_scope')
+
+    if graph.get('financial_summary_contexts') or any(read_financial_summary_intro(i['text'], i['source'], scope=i.get('scope', []))
+                                                    for i in graph.get('syntax', [])):
+        features.add('financial_summary_scope')
     if graph.get("compact_schemas") or any(f.get("compact_column") for f in graph.get("business", [])):
         features.add("compact_column_binding")
     if discovered or graph.get("explicit_references") or any(edge.get("type") in {
@@ -357,7 +400,13 @@ def represented_feature_checks(graph, resolve):
         try:
             if feature not in declared:
                 raise ValueError("source-bound representation lost its comparison dependency")
-            if feature == "explicit_reference_binding":
+            if feature == 'financial_note_scope':
+                from .financial_group_context import validate_financial_notes
+
+                proof = validate_financial_notes(graph, resolve)
+            elif feature == 'financial_summary_scope':
+                proof = validate_financial_summaries(graph, resolve)
+            elif feature == "explicit_reference_binding":
                 proof = _check_references(graph, resolve, discovered)
             elif feature == "enumeration_context_scope":
                 proof = _check_enumerations(graph, resolve, planned)

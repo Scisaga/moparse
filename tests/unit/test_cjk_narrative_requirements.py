@@ -118,7 +118,6 @@ def test_copula_negation_has_a_real_negation_source():
     '星港公司提供可以保存记录的系统。',
     '面向客户，星港公司提供物流服务。',
     '为了扩大业务，星港公司提供物流服务。',
-    '2027年，星港公司提供物流服务。',
     '星港公司是一家全球运营的公司。',
     '星港公司表示远山公司是供应商。',
     '星港公司提供“研究和开发”服务。',
@@ -126,7 +125,6 @@ def test_copula_negation_has_a_real_negation_source():
     '星港公司是供应商吗？',
     '如果许可是有效的，则星港公司释放货物。',
     '星港公司将释放货物。',
-    '星港公司已经提供物流服务。',
 ])
 def test_unsupported_scope_never_becomes_an_opaque_complete_business_field(text):
     result = read(text)

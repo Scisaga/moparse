@@ -162,6 +162,8 @@ GFM 语法要求分隔线之前有一行表头。来源首行角色未知时，�
 
 `authorized_source_inventory`独立承接语法读取前保留的授权expected原始行段，`source_obligations`在业务解释前列出来源义务，再审计要求图的实际角色与关系；未知内容保留pending。`requirement_gate`在回放主机和正式评分入口重新绑定canonical、完整Lite声明与独立证据，隔离候选只接收无答案回执。来源完整、语义完整和独立验收分别记录，派生JSON是唯一模型，XML仅作投影。
 
+`document_ast_comparison`消费只读expected的文档结构和候选自身的原生语法视图，复用`requirement_ast`的逐叶来源校验、内容证明及有容量约束的结构对应，再接入既有`grade_layers`和`validate_evidence`。已支持的业务关系继续走原比较器；内容保留证明不制造主谓宾或原因附着。语义解释视图的未决保持原样，文档内容比较能力与通用语义解析完成分别记录；具体合同由[评测任务](../../benchmark/evaluation-tasks.md#文档-ast-与内容比较)维护。
+
 `service_stages`冻结候选实际阶段，按已记录的原生路径、格位和来源引用建立对象账本；无可证明对应、原因或渲染位置时保留unknown，不按相似文字补来源。对象审计与最终交付判断分开，实际八组回放及交付增损验收仍受上述门槛约束。
 
 | 模块 | 职责 |

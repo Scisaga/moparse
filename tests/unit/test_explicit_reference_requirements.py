@@ -38,6 +38,122 @@ def test_quoted_title_and_directive_are_separate_source_bound_roles_not_business
     assert result['required_matcher_features'] == ['explicit_reference_binding']
 
 
+def test_quoted_terminal_full_stop_does_not_absorb_the_following_sentence():
+    text, result = read_for('Revenue', 'See “Operating Results.” Additional risks remain.')
+    reference, = result['references']
+    assert reference['text'] == 'See “Operating Results.”'
+    assert reference['target']['title'] == 'Operating Results.'
+    assert any('Additional risks remain.' in item['text'] for item in result['residual_spans'])
+
+
+def test_quoted_terminal_full_stop_retains_an_explicit_reference_purpose():
+    _, result = read_for('Revenue', 'See “Operating Results.” for more information. Additional risks remain.')
+    reference, = result['references']
+    assert reference['purpose_text'] == 'for more information'
+    assert reference['text'].endswith('for more information.')
+
+
+@pytest.mark.parametrize('directive,target', [
+    ('參見本報告「營運」關於設備擔保的有關內容。',
+     {'role': 'reference_target', 'kind': 'document_location', 'document': '本報告', 'title': '營運', 'topic': '設備擔保'}),
+    ('參見本報告「展望」關於購置設備部分描述。',
+     {'role': 'reference_target', 'kind': 'document_location', 'document': '本報告', 'title': '展望', 'topic': '購置設備'}),
+    ('詳情請參見按中國企業會計準則編製的財務報表附註2(17)和按國際財務報告會計準則編製的財務報表附註8。',
+     {'role': 'reference_target', 'kind': 'reference_group', 'operator': 'and', 'members': [
+         {'role': 'reference_target', 'kind': 'numbered_reference', 'reference_kind': 'note', 'identifier': '2(17)', 'document': '財務報表', 'accounting_basis': '中國企業會計準則'},
+         {'role': 'reference_target', 'kind': 'numbered_reference', 'reference_kind': 'note', 'identifier': '8', 'document': '財務報表', 'accounting_basis': '國際財務報告會計準則'}]}),
+])
+def test_report_reference_paths_and_note_groups_through_the_production_chain(tmp_path, directive, target):
+    from moparse_eval.expected_report import validate_evidence
+    from moparse_eval.three_layer import grade_layers, read_candidate_markdown
+    from tests.unit.test_cjk_circumstance_contract import compiled
+
+    text = '# 擔保\n\n' + directive
+    graph, required = compiled(tmp_path, text)
+    reference, = graph['explicit_references']
+    assert reference['target'] == target
+    assert reference['owner_proof']['owner'] == {'identity': {'role': 'heading_scope'}, 'scope': ['擔保']}
+    result = grade_layers(required, read_candidate_markdown(text, sample_id=required['sample_id']))
+    assert result['publishable'], result['blockers']
+    validate_evidence(result)
+    assert all(result['layers'][key]['score'] == 100 for key in ('T', 'L', 'B') if result['layers'][key]['denominator'])
+
+
+def test_accounting_difference_owns_a_report_page_and_section_without_invented_amount(tmp_path):
+    from moparse_eval.expected_report import validate_evidence
+    from moparse_eval.three_layer import grade_layers, read_candidate_markdown
+    from tests.unit.test_cjk_circumstance_contract import compiled
+
+    text = ('# 會計\n\n本公司根據國際財務報告會計準則和中國企業會計準則編製的會計報表的主要差異'
+            '見本年度報告第219頁的本公司財務會計報告的D節。')
+    graph, required = compiled(tmp_path, text)
+    reference, = graph['explicit_references']
+    assert reference['target'] == {'role': 'reference_target', 'kind': 'document_location', 'document': '本年度報告',
+                                   'pages': ['219', '219'], 'actor': '本公司', 'component': '財務會計報告', 'section': 'D'}
+    assert reference['owner_proof']['owner']['identity'] == {'role': 'accounting_difference_explanation', 'actor': '本公司',
+        'left_basis': '國際財務報告會計準則', 'right_basis': '中國企業會計準則'}
+    assert not required['business']
+    for candidate, correct in [(text, True), (text.replace('219', '220'), False), (text.replace('D節', 'E節'), False)]:
+        actual = read_candidate_markdown(candidate, sample_id=required['sample_id'])
+        assert not actual['blockers'] and not actual['pending_requirements']
+        result = grade_layers(required, actual)
+        assert result['publishable'], result['blockers']
+        validate_evidence(result)
+        outcomes = [o for o in result['outcomes'] if o['layer'] == 'L']
+        target_id = next(r['id'] for r in required['relations'] if r['type'] == 'explicit_reference_target')
+        assert next(o['outcome'] for o in outcomes if o['id'] == target_id) == ('correct' if correct else 'incorrect')
+        assert result['layers']['L']['denominator'] == len(required['relations'])
+
+
+@pytest.mark.parametrize('mutation', ['target', 'binding', 'owner', 'neighbor_source', 'all_semantics'])
+def test_report_reference_semantics_cannot_be_forged_while_retaining_all_literal_text(tmp_path, mutation):
+    from moparse_eval.expected_report import validate_evidence
+    from moparse_eval.requirement_graph import validate_requirement_graph
+    from moparse_eval.three_layer import grade_layers, read_candidate_markdown
+    from tests.unit.test_cjk_circumstance_contract import compiled
+
+    text = '# 擔保\n\n參見本報告「營運」關於設備擔保的有關內容。\n\n# 支出\n\n參見本報告「展望」關於購置設備部分描述。'
+    graph, required = compiled(tmp_path, text)
+    changed = deepcopy(graph)
+    reference = changed['explicit_references'][0]
+    if mutation == 'target':
+        reference['target']['topic'] = '購置設備'
+    elif mutation == 'binding':
+        changed['relations'] = [r for r in changed['relations'] if r['type'] != 'explicit_reference_target']
+    elif mutation == 'owner':
+        reference['owner_proof'] = deepcopy(changed['explicit_references'][1]['owner_proof'])
+    elif mutation == 'neighbor_source':
+        reference['target_source'] = deepcopy(changed['explicit_references'][1]['target_source'])
+    else:
+        changed['explicit_references'] = []
+    with pytest.raises(ValueError):
+        validate_requirement_graph(changed)
+    actual = read_candidate_markdown(text, sample_id=required['sample_id'])
+    actual['explicit_references'] = []
+    result = grade_layers(required, actual)
+    assert result['layers']['T']['score'] == 100 and not result['publishable']
+    with pytest.raises(ValueError):
+        validate_evidence(result)
+
+
+def test_wrong_report_topic_changes_only_the_owned_reference_target(tmp_path):
+    from moparse_eval.expected_report import validate_evidence
+    from moparse_eval.three_layer import grade_layers, read_candidate_markdown
+    from tests.unit.test_cjk_circumstance_contract import compiled
+
+    text = '# 擔保\n\n參見本報告「營運」關於設備擔保的有關內容。'
+    _, required = compiled(tmp_path, text)
+    for candidate in (text.replace('設備擔保', '設備租賃'), text.replace('「營運」', '「風險」')):
+        actual = read_candidate_markdown(candidate, sample_id=required['sample_id'])
+        assert not actual['blockers'] and not actual['pending_requirements']
+        result = grade_layers(required, actual)
+        assert result['publishable'], result['blockers']
+        validate_evidence(result)
+        target_id = next(r['id'] for r in required['relations'] if r['type'] == 'explicit_reference_target')
+        assert {o['id']: o['outcome'] for o in result['outcomes'] if o['layer'] == 'L'} == {
+            r['id']: 'incorrect' if r['id'] == target_id else 'correct' for r in required['relations']}
+
+
 @pytest.mark.parametrize('directive,kind,identifier', [
     ('See Article 07.', 'article', '07'),
     ('See Clause 2.4(a) for more information.', 'clause', '2.4(a)'),

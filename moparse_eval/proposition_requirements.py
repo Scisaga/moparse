@@ -19,8 +19,6 @@ _VERB = re.compile(r"\b(" + "|".join(sorted(VERBS, key=len, reverse=True)) + r")
 _MODAL = re.compile(r"\b(shall|must|may|can|cannot|will|should)\b", re.I)
 _CONDITION = re.compile(r"\b(only if|unless|except(?: when| that| for)?|if)\b", re.I)
 _COORDINATOR = re.compile(r"\s+(and|or)\s+", re.I)
-_CJK_VERB = re.compile(r"持有|拥有|擁有|收购|收購|批准|审批|審批|审阅|審閱|披露|支付|偿还|償還|投资|投資|增加|减少|減少")
-_CJK_MODAL = re.compile(r"必须|必須|应当|應當|应|應|可以|将|將|不得|不能")
 
 
 def _source(source: dict[str, Any], start: int, end: int) -> dict[str, Any]:
@@ -87,6 +85,14 @@ def _coordination_relations(facts, operators, *, mode):
 
 
 def read_propositions(text: str, source: dict[str, Any], *, scope=(), subject: str | None = None) -> dict[str, Any]:
+    if re.search(r'[\u3400-\u9fff]', text) and not _VERB.search(text):
+        # A Chinese verb hit cannot certify the words on either side as
+        # unstructured subject/object fields. Use the owning typed grammar.
+        from .cjk_narrative_requirements import read_cjk_narrative
+
+        reading = read_cjk_narrative(text, source, scope=scope)
+        reading['matched'] = bool(reading['facts'] or reading['complete'])
+        return reading
     result: dict[str, Any] = {"matched": False, "complete": False, "facts": [], "relations": [],
                               "blockers": [], "pending_requirements": [], "issues": [], "clauses": [],
                               "required_matcher_features": []}
@@ -108,14 +114,10 @@ def read_propositions(text: str, source: dict[str, Any], *, scope=(), subject: s
             body_start += year_prefix.end()
         modal = _MODAL.search(text, body_start, body_end)
         verb = _VERB.search(text, modal.end() if modal else body_start, body_end)
-        cjk = False
         if verb is None:
-            verb = _CJK_VERB.search(text, body_start, body_end)
-            cjk = verb is not None
-            modal = _CJK_MODAL.search(text, body_start, verb.start()) if verb else None
-            if modal and text[modal.end():verb.start()].strip() not in {'', '不'}:
-                modal = None  # 應佔權益 is a nominal, not a distant modal action.
-        if verb is None:
+            if re.search(r'[\u3400-\u9fff]', fragment):
+                result['matched'] = True
+                _pending(result, text, source, start, end, 'cjk_sentence_requires_typed_narrative')
             continue
         result["matched"] = True
         if not valid_conditions:
@@ -133,7 +135,7 @@ def read_propositions(text: str, source: dict[str, Any], *, scope=(), subject: s
         if not printed_subject or re.search(r"[;；:：]", printed_subject):
             _pending(result, text, source, start, end, "proposition_subject_unresolved", conditions=conditions)
             continue
-        if not cjk and (re.search(r"[,，]|\b(?:to|that|which|who|whose|whom)\b", printed_subject, re.I)
+        if (re.search(r"[,，]|\b(?:to|that|which|who|whose|whom)\b", printed_subject, re.I)
                         or re.match(r"(?:How|Why|When|What|Whether|Under|In|During|After|Before|Since|Until|From|According)\b", printed_subject, re.I)):
             _pending(result, text, source, sentence_start, sentence_end, "proposition_subject_scope_unresolved")
             continue
@@ -144,16 +146,15 @@ def read_propositions(text: str, source: dict[str, Any], *, scope=(), subject: s
         if re.search(r"\b(?:said|announced|believe|believes|reported)\b|宣布|表示|认为|認為", prefix, re.I):
             _pending(result, text, source, sentence_start, sentence_end, "proposition_reported_scope_unresolved", conditions=conditions)
             continue
-        if not cjk:
-            from .narrative_requirements import _ACTIONS, _Reader
+        from .narrative_requirements import _ACTIONS, _Reader
 
-            syntax = _Reader(text, source, scope).syntax
-            if any(match[1].lower() in _ACTIONS for match in re.finditer(r"\bto\s+([A-Za-z]+)\b", syntax[verb.end():body_end], re.I)):
+        syntax = _Reader(text, source, scope).syntax
+        if any(match[1].lower() in _ACTIONS for match in re.finditer(r"\bto\s+([A-Za-z]+)\b", syntax[verb.end():body_end], re.I)):
                 # This finite reader has no control/attachment grammar. A
                 # separate owning Narrative AST must interpret the infinitive
                 # instead of distributing its words as ordinary AND objects.
-                _pending(result, text, source, sentence_start, sentence_end, "proposition_infinitival_scope_unresolved")
-                continue
+            _pending(result, text, source, sentence_start, sentence_end, "proposition_infinitival_scope_unresolved")
+            continue
         q: dict[str, Any] = {}
         q_sources = {}
         if year_prefix:
@@ -188,7 +189,7 @@ def read_propositions(text: str, source: dict[str, Any], *, scope=(), subject: s
         predicates = [(verb, verb.end(), body_end)]
         action_operators = []
         disjunctive_actions = False
-        remaining = list((_CJK_VERB if cjk else _VERB).finditer(text, verb.end(), body_end))
+        remaining = list(_VERB.finditer(text, verb.end(), body_end))
         for following in remaining:
             between = text[predicates[-1][0].end():following.start()]
             join = re.search(r"\b(and|or)\s*$|(?:并|並|及|和|或)\s*$", between, re.I)
@@ -223,7 +224,7 @@ def read_propositions(text: str, source: dict[str, Any], *, scope=(), subject: s
                     continue
             object_spans = [(a, b)]
             joins = list(_COORDINATOR.finditer(text, a, b))
-            nominal_of = re.search(r"\bof\b", text[a:b], re.I) if not cjk else None
+            nominal_of = re.search(r"\bof\b", text[a:b], re.I)
             if nominal_of is not None and any(a + nominal_of.start() < join.start() for join in joins):
                 # OF introduces a nominal complement. Its internal AND/OR
                 # cannot become additional direct objects of this predicate.
@@ -239,17 +240,17 @@ def read_propositions(text: str, source: dict[str, Any], *, scope=(), subject: s
                     object_spans.append(_trim(text, cursor, join.start()))
                     cursor = join.end()
                 object_spans.append(_trim(text, cursor, b))
-            action = current[0] if cjk else VERBS[current[0].lower()]
+            action = VERBS[current[0].lower()]
             object_fact_start = len(result["facts"])
             for object_start, object_end in object_spans:
-                if not cjk and re.match(r"(?:do|does|did|is|are|was|were|may|must|shall|will|can)\s+(?:not\s+)?[A-Za-z]+\b",
+                if re.match(r"(?:do|does|did|is|are|was|were|may|must|shall|will|can)\s+(?:not\s+)?[A-Za-z]+\b",
                                         text[object_start:object_end], re.I):
                     _pending(result, text, source, object_start, object_end,
                              "proposition_embedded_auxiliary_clause_unresolved")
                     continue
                 own_q = copy.deepcopy(q)
                 own_q_sources = copy.deepcopy(q_sources)
-                if not modal and not cjk:
+                if not modal:
                     raw_verb = current[0].lower()
                     own_q["tense"] = "past" if raw_verb.endswith("ed") or raw_verb in {"held", "paid", "sold"} else "present"
                     own_q_sources["tense"] = _source(source, current.start(), current.end())

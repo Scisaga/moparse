@@ -18,6 +18,11 @@ from .metrics import normalize_text
 from .scope_correspondence import verify_scope
 
 _SCHEMAS = {
+    # Source-form content has a narrower contract than an interpreted clause:
+    # identity of every ordered leaf proves preservation without inventing an
+    # actor, predicate or attachment. It does not prove arbitrary paraphrases.
+    "content_sequence": {"children"},
+    "content_token": {"role", "text"},
     "proposition": {"subject", "attribute", "object"},
     "coordination": {"operator", "children", "mode"},
     "modality": {"operator", "polarity", "child"},
@@ -57,7 +62,7 @@ _SCHEMAS = {
 }
 _UNSOURCED_DESCRIPTORS = {"nominal", "predicate", "subject_control", "object_control"}
 _PROVENANCE = {"id", "rule_id", "record_id", "source", "source_id", "sources", "span", "text_span", "cell_text_span", "joined_span",
-               "status", "complete", "unresolved", "pending", "record_evidence", "field_label_evidence"}
+               "status", "complete", "unresolved", "pending", "record_evidence", "field_label_evidence", "subject_binding_evidence"}
 _PERIOD_KEYS = {"period", "from_period", "to_period", "comparison_period", "period_basis", "currency"}
 _UNRESOLVED = {"unknown", "pending", "partial", "unsupported", "unresolved", "scope_unknown", "attachment_unknown"}
 _MISSING = object()
@@ -69,13 +74,236 @@ _OPERATORS = {
     "exception": {"unless", "except_if", "except_when"},
     "purpose_scope": {"purpose"},
     "controlled_infinitive_scope": {"complement"},
-    "discourse_scope": {"for_example", "for_instance", "however", "moreover", "in_addition", "in_particular"},
+    "discourse_scope": {"for_example", "for_instance", "however", "moreover", "in_addition", "in_particular", "enumeration"},
     "circumstance_scope": {"means", "background", "cause", "purpose", "condition"},
 }
 
 
 def _canonical(value):
     return normalize_text(value, collapse_whitespace=True) if isinstance(value, str) else value
+
+
+_CONTENT_OPERATORS = ('不得', '不能', '沒有', '没有', '不超過', '不超过', '至少', '最少', '以上', '以下',
+                      '過半數', '过半数', '主要', '僅', '仅', '全部', '所有', '均', '必須', '必须', '應當', '应当')
+_CONTENT_UNITS = ('人民幣', '人民币', '億元', '亿元', '百萬元', '百万元', '萬元', '万元', '小時', '小时',
+                  '季度', '年度', '年', '月', '日', '天', '名', '位', '人', '次', '元', '%')
+_CONTENT_NUMBER = re.compile(r'\d+(?:,\d{3})*(?:\.\d+)?')
+_CONTENT_TOKEN = re.compile('|'.join(map(re.escape, sorted(
+    {*_CONTENT_OPERATORS, *_CONTENT_UNITS}, key=lambda value: (-len(value), value))))
+    + r'|\d+(?:,\d{3})*(?:\.\d+)?|[A-Za-z]+|[^\s]')
+
+
+def _content_role(text, original='', start=0, end=0):
+    numeric_unit = text in _CONTENT_UNITS and (bool(re.compile(r'\d\s*$').search(original, 0, start))
+        or text in {'人民幣', '人民币'} and bool(re.compile(r'\s*\d').match(original, end)))
+    return ('number' if _CONTENT_NUMBER.fullmatch(text) else 'operator' if text in _CONTENT_OPERATORS
+            else 'unit' if numeric_unit else 'literal')
+
+
+def read_content_ast(text, source):
+    """Expose an ordered, lossless content AST; infer no Chinese sentence roles.
+
+    Spaces between tokens are presentation; word boundaries, punctuation,
+    numbers, printed operators and units remain individual source-bound leaves.
+    The contract is preservation, not a claim to understand an unseen grammar.
+    """
+    offset = source.get('text_span', [0])[0]
+    origin = {**copy.deepcopy(source), 'text_span': [offset, offset + len(text)]}
+    return {'kind': 'content_sequence', 'source': origin, 'children': [
+        {'kind': 'content_token', 'role': _content_role(match[0], text, match.start(), match.end()), 'text': match[0],
+         'source': {**copy.deepcopy(source), 'text_span': [offset + match.start(), offset + match.end()]}}
+        for match in _CONTENT_TOKEN.finditer(text)]}
+
+
+def validate_content_ast(node, resolve):
+    """Independently check leaf coverage, order, roles and original source cuts."""
+    if node.get('kind') == 'content_join':
+        if len(node.get('children', [])) < 2 or any(child.get('kind') != 'content_sequence' for child in node['children']):
+            raise ValueError('content join needs complete original adjacent fragments')
+        for child in node['children']:
+            validate_content_ast(child, resolve)
+        return
+    source = node.get('source', {})
+    literal = resolve(source)
+    bounds = source.get('text_span')
+    if (literal == '' and source.get('cell') and isinstance(bounds, (list, tuple)) and len(bounds) == 2
+            and bounds[0] == bounds[1] and node.get('kind') == 'content_sequence' and node.get('children') == []):
+        return  # An actual empty cell is retained, never converted into zero.
+    if (node.get('kind') != 'content_sequence' or not isinstance(literal, str) or not literal.strip()
+            or not isinstance(bounds, (list, tuple)) or len(bounds) != 2 or bounds[1] - bounds[0] != len(literal)):
+        raise ValueError('content AST lacks its complete original source')
+    cursor = bounds[0]
+    for child in node.get('children', []):
+        origin = child.get('source', {})
+        cut = origin.get('text_span')
+        if (child.get('kind') != 'content_token' or not isinstance(cut, (list, tuple)) or len(cut) != 2
+                or not cursor <= cut[0] < cut[1] <= bounds[1]
+                or any(origin.get(key) != source.get(key) for key in ('path', 'lines', 'cell', 'block', 'native_path'))
+                or literal[cursor - bounds[0]:cut[0] - bounds[0]].strip()
+                or literal[cut[0] - bounds[0]:cut[1] - bounds[0]] != child.get('text')
+                or child.get('role') != _content_role(child.get('text', ''), literal,
+                    cut[0] - bounds[0], cut[1] - bounds[0])):
+            raise ValueError('content AST leaf was omitted, reordered, forged or borrowed')
+        cursor = cut[1]
+    if literal[cursor - bounds[0]:].strip() or not node.get('children'):
+        raise ValueError('content AST silently omits source content')
+    # Prevent merging two words/leaves into a new opaque leaf while retaining
+    # the complete literal. This checks lexical representation, not semantics.
+    if [child['text'] for child in node['children']] != [m[0] for m in _CONTENT_TOKEN.finditer(literal)]:
+        raise ValueError('content AST changed its lexical boundaries')
+
+
+def compare_content_ast(required, actual, context=None):
+    """Prove literal preservation, or a local, explicit typed-value conflict.
+
+    An arbitrary wording change remains unresolved; it is never advertised as
+    an incorrect business statement merely because its characters differ.
+    """
+    context = context or {}
+    resolver = context.get('source_resolver')
+    if resolver:
+        for side, tree in (('required', required), ('actual', actual)):
+            try:
+                validate_content_ast(tree, lambda source, side=side: resolver(side, source))
+            except (ValueError, KeyError, TypeError) as error:
+                return _result('unresolved', '$', reason='content_ast_source_inconsistent', proof={'side': side, 'error': str(error)})
+    left, right = _content_leaves(required), _content_leaves(actual)
+    left_shape = [(n.get('role'), n.get('text') if n.get('role') == 'literal' else None) for n in left]
+    right_shape = [(n.get('role'), n.get('text') if n.get('role') == 'literal' else None) for n in right]
+    identical = [(n.get('role'), n.get('text')) for n in left] == [(n.get('role'), n.get('text')) for n in right]
+    if identical:
+        return _result('equivalent', '$', reason='complete_source_form_identity', proof={'ordered_leaves': len(left), 'semantic_inference': False})
+    if left_shape == right_shape:
+        differences = [{'index': index, 'role': a['role'], 'required': a['text'], 'actual': b['text']}
+                       for index, (a, b) in enumerate(zip(left, right, strict=True)) if a['text'] != b['text']]
+        for difference in differences:
+            difference['decision'] = _content_token_equivalence(difference)
+        if all(item['decision']['equivalent'] for item in differences):
+            return _result('equivalent', '$', reason='source_form_declared_token_equivalence', proof={'differences': differences})
+        # A scale change can compensate a number change. This branch has no
+        # owning quantity AST, so delegate rather than inventing a binding.
+        changed = {item['role'] for item in differences if not item['decision']['equivalent']}
+        if {'number', 'unit'} <= changed or any(item['decision']['status'] == 'unresolved' for item in differences):
+            return _result('unresolved', '$', reason='source_form_typed_equivalence_unresolved', proof={'differences': differences})
+        return _result('conflict', '$', reason='source_form_typed_value_conflict', proof={'differences': differences})
+    return _result('unresolved', '$', reason='wording_change_requires_semantic_comparison',
+                   proof={'semantic_inference': False})
+
+
+def _content_token_equivalence(item):
+    from .equivalence import decide_equivalence
+
+    left, right, role = item['required'], item['actual'], item['role']
+    if role == 'number':
+        return decide_equivalence(left, right, 'number')
+    if role == 'unit':
+        if left in {'人民幣', '人民币'} or right in {'人民幣', '人民币'}:
+            return decide_equivalence(left, right, 'currency')
+        durations = {'小時': 'hour', '小时': 'hour', '年度': 'year', '年': 'year',
+                     '日': 'day', '天': 'day', '月': 'month', '季度': 'quarter'}
+        if left in durations and right in durations:
+            return decide_equivalence(durations[left], durations[right], 'duration_unit')
+        decision = decide_equivalence(left, right, 'unit')
+        proof = decision['proof']
+        if (decision['equivalent'] and proof.get('required_unit', {}).get('scale')
+                != proof.get('actual_unit', {}).get('scale')):
+            decision.update(equivalent=False, status='unresolved', rule_id='quantity_scale_needs_owning_quantity_ast')
+        return decision
+    operators = {'沒有': '没有', '不超過': '不超过', '過半數': '过半数', '僅': '仅',
+                 '必須': '必须', '應當': '应当', '至少': 'lower_inclusive', '最少': 'lower_inclusive',
+                 '以上': 'lower_inclusive', '以下': 'upper_inclusive'}
+    return decide_equivalence(operators.get(left, left), operators.get(right, right), 'printed_operator')
+
+
+def _content_leaves(node):
+    return [leaf for child in node['children'] for leaf in _content_leaves(child)] if node.get('kind') == 'content_join' else node.get('children', [])
+
+
+def build_document_ast(units):
+    """Keep producer document structure and content; never access expected."""
+    blocks = []
+    for unit in units:
+        text, source = unit.get('text'), unit.get('source', unit.get('reference'))
+        if not isinstance(text, str) or not isinstance(source, dict) or not text.strip() and unit.get('kind') != 'table_cell':
+            continue
+        scope = copy.deepcopy(unit.get('scope', unit.get('context', [])))
+        if unit.get('kind') == 'heading' and scope[-1:] == [text]:
+            scope = scope[:-1]
+        blocks.append({'kind': 'document_block', 'role': unit.get('kind', 'text'),
+                       'scope': scope,
+                       'parents': copy.deepcopy(unit.get('parents', [])),
+                       'source': copy.deepcopy(source), 'content': read_content_ast(text, source)})
+    return {'kind': 'document', 'children': blocks}
+
+
+def compare_document_ast(required, actual, *, source_resolver=None):
+    """Align source-form blocks by scope and answer-independent lexical shape.
+
+    Every retrieval hit, conflict and capacity decision is retained. Numeric
+    values, units and printed operators cannot choose a candidate. Ambiguous
+    repeated shapes remain unresolved, including a unique correct-valued hit.
+    """
+    from rapidfuzz.distance import Levenshtein
+
+    def shape(block):
+        return ''.join(n['text'] if n['role'] == 'literal' else '<' + n['role'] + '>'
+                       for n in _content_leaves(block['content']))
+
+    def role(block):
+        return 'body' if block['role'] in {'text', 'item'} else block['role']
+
+    windows = []
+    for start, own in enumerate(actual['children']):
+        windows.append(([start], own, shape(own)))
+        if role(own) != 'body':
+            continue
+        for end in range(start + 2, min(start + 8, len(actual['children'])) + 1):
+            parts = actual['children'][start:end]
+            if any(role(part) != 'body' or part['scope'] != own['scope'] or part['parents'] != own['parents'] for part in parts):
+                break
+            joined = {**own, 'content': {'kind': 'content_join', 'children': [part['content'] for part in parts]}}
+            windows.append((list(range(start, end)), joined, shape(joined)))
+    available = set(range(len(actual['children'])))
+    rows = []
+    for index, block in enumerate(required['children']):
+        hits, trace = [], []
+        wanted = shape(block)
+        for candidate_indices, own, own_shape in windows:
+            candidate_index = candidate_indices[0]
+            similarity = Levenshtein.normalized_similarity(wanted, own_shape)
+            conflicts = []
+            if block['scope'] != own['scope'] or block['parents'] != own['parents']:
+                conflicts.append('document_scope')
+            if role(block) != role(own):
+                conflicts.append('document_role')
+            hit = similarity >= .65
+            capacity = all(i in available for i in candidate_indices)
+            accepted = hit and not conflicts and capacity
+            trace.append({'candidate_index': candidate_index, 'candidate_indices': candidate_indices,
+                          'lexical_shape_hit': hit, 'similarity': similarity,
+                          'conflicts': conflicts, 'capacity_available': capacity,
+                          'accepted_for_comparison': accepted, 'value_used': False})
+            if accepted:
+                hits.append((candidate_indices, own))
+        exact_shape = [hit for hit in hits if shape(hit[1]) == wanted]
+        # Lexical context may refine a fuzzy hit. Values never break a tie.
+        hits = exact_shape or hits
+        selected = hits[0] if len(hits) == 1 else None
+        chosen = selected[0][0] if selected is not None else None
+        if chosen is None:
+            decision = _result('unresolved' if hits else 'missing', '$',
+                               reason='document_block_identity_ambiguous' if hits else 'document_block_missing_or_scope_conflict')
+        else:
+            available.difference_update(selected[0])
+            decision = compare_content_ast(block['content'], selected[1]['content'],
+                                           {'source_resolver': source_resolver} if source_resolver else {})
+        rows.append({'required_index': index, 'actual_index': chosen, 'decision': decision,
+                     'actual_indices': selected[0] if selected is not None else [],
+                     'required': copy.deepcopy(block),
+                     'actual': copy.deepcopy(selected[1]) if selected is not None else None,
+                     'retrieval': {'candidates': trace, 'value_used': False}})
+    return _combine([row['decision'] for row in rows], '$', rows=rows,
+                    capacity_one=True, unadjudicated_extra_indices=sorted(available))
 
 
 def _result(status, path, *, reason=None, proof=None, conflicts=()):
@@ -98,6 +326,9 @@ def _provenance_key(key):
 
 def _semantic_keys(node):
     keys = {key for key in node if not _provenance_key(key)}
+    if node.get('kind') == 'cjk_dependency' and node.get('role') in {
+            'arithmetic_base', 'arithmetic_group', 'dividend', 'divisor', 'subtrahend', 'addend'}:
+        keys.discard('marker')  # The typed role owns the audited arithmetic operation.
     # Surface forms are checked against their own sources. A normalized
     # predicate and decomposed nominal, when present, carry comparison meaning.
     if "attribute" in node:
@@ -162,6 +393,16 @@ def _source_checks(node, side, path, context):
     literal = resolver(side, copy.deepcopy(source))
     if not isinstance(literal, str) or not literal:
         return [_result("unresolved", path, reason="ast_node_source_unavailable", proof={"side": side, "source": copy.deepcopy(source)})]
+    if node.get('kind') == 'content_token':
+        if literal != node.get('text'):
+            return [_result('unresolved', path, reason='content_token_not_bound_to_source')]
+        return []
+    if node.get('kind') == 'content_sequence':
+        try:
+            validate_content_ast(node, lambda source: resolver(side, source))
+        except ValueError as error:
+            return [_result('unresolved', path, reason='content_ast_source_inconsistent', proof={'error': str(error)})]
+        return []
     if node.get("kind") == "cjk_measurement_sequence" or node.get("sequence_source"):
         from .cjk_measurement_requirements import read_cjk_measurements
 
@@ -198,6 +439,15 @@ def _source_checks(node, side, path, context):
             node.get('kind') == 'cjk_nominal' and bool(node.get('parts')) or node.get("kind") == "noun_phrase"
             and isinstance(node.get("coordination"), dict) and len(node["coordination"].get("children", [])) >= 2))
         local = local_origin(origin, empty=empty_object or empty_group_head)
+        control = node.get('subject_binding_evidence', {})
+        if key == 'subject' and control.get('kind') == 'enumeration_subject':
+            member, intro = control.get('member_source', {}), control.get('introduction_source', {})
+            a, b = member.get('text_span', [None, None])
+            local = (origin == control.get('controller_source') and control.get('controller') == node[key]
+                     and source.get('path') == member.get('path') == intro.get('path') == origin.get('path')
+                     and source.get('lines') == member.get('lines')
+                     and len(intro.get('lines', [])) == 2 and intro['lines'][1] < member['lines'][0]
+                     and a is not None and a <= span[0] <= span[1] <= b)
         if original != node[key] or not local:
             checks.append(_result("unresolved", path + "." + key, reason="ast_role_not_bound_to_own_source",
                                   proof={"side": side, "source": copy.deepcopy(origin), "claimed": node[key],
@@ -219,6 +469,8 @@ def _source_checks(node, side, path, context):
         printed = [resolver(side, copy.deepcopy(origin)) if isinstance(origin, dict) else None for origin in origins]
         allowed = {"and": {"and", "和", "与", "與", "及", "并", "並", "且", "并且", "並且", "以及"},
                    "or": {"or", "或"}, "but": {"but"}}.get(node.get("operator"), set())
+        if node.get('mode') == 'circumstance_operations' and node.get('operator') == 'and':
+            allowed |= {'；', ';'}
         normalized = [raw.strip().casefold() if isinstance(raw, str) else None for raw in printed]
         valid = (bool(origins) and all(local_origin(origin) for origin in origins)
                  and all(raw in allowed | {",", "，", "、"} for raw in normalized)
@@ -333,6 +585,10 @@ def compare_requirement_ast(required: Any, actual: Any, context: dict[str, Any] 
     syntax is never equivalent, even when identical on both sides.
     """
     context = {"canonicalize": _canonical, **(context or {})}
+    if isinstance(required, dict) and required.get('kind') in {'content_sequence', 'content_join'}:
+        if not isinstance(actual, dict) or actual.get('kind') not in {'content_sequence', 'content_join'}:
+            return _result('missing', '$', reason='required_content_ast_missing')
+        return compare_content_ast(required, actual, context)
     limit = context.get("max_depth", 64)
 
     def typed_root(value):
@@ -387,6 +643,10 @@ def compare_requirement_ast(required: Any, actual: Any, context: dict[str, Any] 
                 children.append(_result(status, path + ".quantity", reason=quantity["rule_id"], proof={"equivalence": quantity}, conflicts=quantity["conflicts"]))
                 skip.update({"value", "unit", "currency", "quantity_role"})
             first_keys, second_keys = _semantic_keys(first), _semantic_keys(second)
+            if (kinds[0] == 'discourse_scope' and first.get('role') == second.get('role') == 'item_label'
+                    and context.get('layer') == 'B'):
+                first_keys.discard('marker')
+                second_keys.discard('marker')
             delegated = []
             if kinds[0] == "proposition":
                 for surface_role in ("object", "subject"):
@@ -524,6 +784,9 @@ def _walk(value):
 def _feature_present(feature, statements):
     nodes = list(_walk(statements))
     kinds = {node.get("kind") for node in nodes}
+    if feature == 'active_aspect_scope' and any(node.get('kind') == 'proposition'
+            and node.get('lexical_qualifiers', {}).get('aspect') in {'perfect', 'progressive'} for node in nodes):
+        return True
     expected = {
         "coordination_scope": "coordination", "alternative_membership": "coordination",
         "contrast_scope": "coordination", "modal_operator": "modality", "ability_operator": "modality",

@@ -21,7 +21,7 @@ _NUMBER_WORDS = frozenset("zero one two three four five six seven eight nine ten
 _NEGATION = frozenset({"not", "no", "never", "neither", "nor"})
 _QUANTITY = re.compile(r"(?<![A-Za-z0-9])[+\-−]?(?:\d[\d,]*(?:\.\d+)?|\.\d+)(?:\s*(?:人民[幣币]|美元|港元)?(?:百萬|百万|千萬|千万|億|亿|萬|万|百|千)?元|\s*(?:credits?|shares?|people|persons?)|[%‰])?(?![A-Za-z0-9])", re.I)
 _WORDS = re.compile(r"[A-Za-z0-9]*[A-Za-z][A-Za-z0-9]*(?:['’\-][A-Za-z0-9]+)*|[\u3400-\u9fff]+")
-_ORDINAL = re.compile(r"^\s*(?:\((\d+)\)|([0-9]+)[.)、])\s+")
+_ORDINAL = re.compile(r"^\s*(?:\((\d+)\)|([0-9]+|[A-Za-z])[.)、])\s+")
 _RECORD_PRIMARY = re.compile(r"Name|Entity|Company|Subject|名称|姓名|主体|公司名称", re.I)
 _RECORD_IDENTITY = re.compile(r"Role|Type|Code|Identifier|ID|Region|职务|类型|地区|证券代码", re.I)
 _RECORD_PAIR = re.compile(r"\s*(?P<attribute>[^:：=\n]+?)\s*[:：=]\s*(?P<value>.*?)\s*$", re.S)
@@ -53,6 +53,9 @@ def _sentence_spans(text: str) -> list[tuple[int, int]]:
     result, start = [], 0
     for match in re.finditer(r'''[.!?。！？]["”’」』）)\]]*''', text):
         end = match.end()
+        ordinal = _ORDINAL.match(text, start)
+        if ordinal and match.start() < ordinal.end():
+            continue
         if text[match.start()] in ".!?" and end < len(text) and not text[end].isspace():
             continue
         if _enclosed(text, end):
@@ -471,6 +474,14 @@ def prose_endpoint(text: str, source: dict[str, Any], *, scope: tuple[str, ...] 
     from .cjk_measurement_requirements import read_cjk_measurements
 
     measurements = read_cjk_measurements(body, body_source, scope=scope)
+    if not measurements['complete']:
+        from .cjk_circumstances import trailing_cause
+
+        cause = trailing_cause(body)
+        if cause and (cause['marker'] in {'归因于', '歸因於'} or body[cause.start()] == '。'):
+            prefix = read_cjk_measurements(body[:cause.start()], _source(body_source, 0, cause.start()), scope=scope)
+            if prefix['complete']:
+                measurements = prefix
     period_evidence = None
     if measurements["complete"] and (period := measurements["logic"][0].get("period")):
         identity = {"metric_roles": [
@@ -478,6 +489,14 @@ def prose_endpoint(text: str, source: dict[str, Any], *, scope: tuple[str, ...] 
             for clause in measurements["logic"][0]["clauses"]],
             "period": period["text"], "ordinal": (ordinal[1] or ordinal[2]) if ordinal else None}
         period_evidence = copy.deepcopy(period)
+    elif not measurements['complete']:
+        from .temporal_prose_requirements import read_cjk_temporal
+
+        temporal = read_cjk_temporal(body, body_source, 0, len(body))
+        if temporal and 'period' in temporal['qualifiers']:
+            identity['period'] = temporal['qualifiers']['period']
+            period_evidence = {'text': temporal['qualifiers']['period'],
+                               'source': temporal['qualifier_sources']['period']}
     return {"id": identifier, "identity": identity, "scope": list(scope), "text": text,
             "source": copy.deepcopy(source), "content_slots": [{"span": [match.start() + (ordinal.end() if ordinal else 0), match.end() + (ordinal.end() if ordinal else 0)],
                                                                  "text": match[0], "source": _source(body_source, match.start(), match.end())}
@@ -497,6 +516,22 @@ def read_prose_sequence(units: list[dict[str, Any]], *, scope: tuple[str, ...] |
     headings = {unit["id"]: unit for unit in units if unit.get("kind") == "heading" and unit.get("id")}
     previous = {}
     for index, unit in enumerate(units):
+        if unit.get('kind') == 'image_caption':
+            # Captions keep their printed owner and occurrence capacity.
+            # They cannot become an ordinary prose sentence or bridge two
+            # paragraphs. No image content is inspected or interpreted.
+            own_scope = list(unit.get('scope', scope))
+            node = prose_endpoint(unit['text'], unit['source'], scope=own_scope, identifier=unit.get('id', f'caption:{index}'))
+            node['kind'] = 'image_caption'
+            node['identity'] = {'role': 'image_caption', 'caption': unit['text']}
+            result['endpoints'].append(node)
+            if own_scope:
+                result['relations'].append({'id': f"L:prose:{len(result['relations'])}", 'type': 'prose_heading_membership',
+                    'left': own_scope, 'right': {'identity': copy.deepcopy(node['identity']), 'scope': own_scope},
+                    'source': copy.deepcopy(unit['source']), 'scope_evidence': {'kind': 'unit_declared_scope', 'scope': own_scope,
+                        'sources': copy.deepcopy(unit.get('scope_sources', [unit['source']]))}})
+            previous.clear()
+            continue
         if unit.get("kind", "paragraph") not in {"paragraph", "prose", "text"}:
             previous.clear()
             continue
@@ -570,9 +605,9 @@ def read_prose_sequence(units: list[dict[str, Any]], *, scope: tuple[str, ...] |
                 if node.get(context_key):
                     result["relations"][-1][context_key] = copy.deepcopy(node[context_key])
         previous[key] = endpoint
-    counts = Counter(repr((node["identity"], node["scope"])) for node in result["endpoints"])
+    counts = Counter(repr((node["identity"], node["scope"])) for node in result["endpoints"] if node.get('kind') != 'image_caption')
     for node in result["endpoints"]:
-        if counts[repr((node["identity"], node["scope"]))] > 1:
+        if node.get('kind') != 'image_caption' and counts[repr((node["identity"], node["scope"]))] > 1:
             result["blockers"].append({"reason": "prose_endpoint_role_collision", "source": node["source"], "identity": node["identity"]})
     for blocker in result["blockers"]:
         blocker.setdefault("layers", ["L"])

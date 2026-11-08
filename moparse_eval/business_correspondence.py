@@ -180,6 +180,14 @@ def requirement_key(item: dict[str, Any], canonicalize: Canonicalize) -> tuple[A
 
 def assertion_signature(item: dict[str, Any], canonicalize: Canonicalize) -> tuple[Any, ...]:
     q = item.get("qualifiers", {})
+    if item.get('semantic_type') == 'printed_selection_state':
+        state = decide_equivalence(item['value'], item['value'], 'selection_state')['canonical']['required']
+        return ('printed_selection_state', state), freeze(q, canonicalize)
+    if item.get('semantic_type') == 'printed_position_list':
+        root = item['value_logic']
+        members = [child['head'] for part in root.get('parts', []) if part.get('kind') == 'coordination'
+                   for child in part['children']] or [root['head']]
+        return ('printed_position_list', tuple(sorted(canonicalize(member) for member in members))), freeze(q, canonicalize)
     quantity = normalize_quantity({"value": item["value"], "unit": q.get("unit"), "currency": q.get("currency"),
                                    "quantity_role": item.get("quantity_role", q.get("quantity_role"))})
     number = exact_number(item["value"])
@@ -189,6 +197,15 @@ def assertion_signature(item: dict[str, Any], canonicalize: Canonicalize) -> tup
 
 
 def _value_check(required, actual, canonicalize):
+    if required.get('semantic_type') == actual.get('semantic_type') == 'printed_position_list':
+        from .requirement_ast import compare_requirement_ast
+
+        decision = compare_requirement_ast(required.get('value_logic'), actual.get('value_logic'),
+                                           context={'canonicalize': canonicalize, 'layer': 'B'})
+        return {'required': required['value'], 'actual': actual['value'], 'correct': decision['equivalent'],
+                'status': 'correct' if decision['equivalent'] else 'explicit_conflict', 'equivalence': decision}
+    if required.get('semantic_type') == actual.get('semantic_type') == 'printed_selection_state':
+        return _check(required['value'], actual['value'], canonicalize, key='selection_state')
     if (required.get("role") != "identity" and actual.get("role") != "identity"
             and exact_number(required["value"]) is not None and exact_number(actual["value"]) is not None):
         operands = tuple({"value": item["value"], "unit": item.get("qualifiers", {}).get("unit"),
@@ -316,6 +333,11 @@ def _record_comparison(members: list[dict[str, Any]], candidates: list[dict[str,
         for item in collection:
             records[_record_id(item)].append(item)
         by_record.append(records)
+    if len(by_record[0]) == len(by_record[1]) == 1:
+        # Complete assertion sets still reject a conflicting repeated field.
+        # With only one record there is no cross-record association to check;
+        # its other independent fields must retain their own outcomes.
+        return None
     equal = Counter(record_vector(fields, canonicalize) for fields in by_record[0].values()) == Counter(
         record_vector(fields, canonicalize, attribute_labels=labels) for fields in by_record[1].values())
     return {"rule": "complete_record_vector_multiset", "complete": True, "equal": equal,
