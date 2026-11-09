@@ -7,7 +7,13 @@ import pytest
 from moparse_eval.document_ast_comparison import _original_content_sources
 from moparse_eval.requirement_graph import compile_requirement_graph, validate_requirement_graph
 from tests.unit.test_cjk_circumstance_contract import authored
-from tests.validation.lite_source_oracle import check_fixed_source_graph
+from tests.validation.lite_source_oracle import (
+    _check_directory_source,
+    check_fixed_source_graph,
+    fixed_assertion_catalogue,
+    handwritten_assertion_identity,
+    source_in_target,
+)
 
 
 def independent_sample(tmp_path):
@@ -166,3 +172,159 @@ def test_preauthorized_either_representation_still_rejects_a_proper_content_subs
     content['source']['text_span'][1] -= 1
     with pytest.raises((AssertionError, ValueError)):
         check_fixed_source_graph(graph, original, expected)
+
+
+def test_collected_source_failures_preserve_both_defects_and_execute_later_sources(tmp_path):
+    graph, original, expected = independent_sample(tmp_path)
+    changed = deepcopy(graph)
+    changed['document_ast']['children'][2]['content']['children'].pop()
+    fact = next(n for n in changed['nodes']
+                if n['id'] in changed['comparison_coverage']['retained_semantic_requirements']['B'])
+    fact['value'] = '近山'
+    cases = check_fixed_source_graph(changed, original, expected, collect_failures=True)
+    sources = [case for case in cases if case.get('source_assertion_case')]
+    assert len(sources) == len(expected['sources'])
+    assert [(case['input']['source']['lines'][0], case['status']) for case in sources] == [
+        (1, 'passed'), (3, 'passed'), (5, 'failed'), (7, 'failed')]
+    assert sources[-1]['expected']['source_assertions']['anchors'] == ['事务所：远海']
+    assert sources[-1]['actual']['typed_facts'][0]['value'] == '近山'
+    assert sources[-1]['traceback'] and sources[-1]['observed_requirement_ids']
+    assert sources[-1]['requirement_ids'] == []
+    assert any(case['failure_stage'] == 'coverage_and_order' for case in cases if case['status'] == 'failed')
+    with pytest.raises((AssertionError, ValueError)):
+        check_fixed_source_graph(changed, original, expected)
+
+
+def test_collecting_a_missing_document_block_does_not_skip_later_assertions(tmp_path):
+    graph, original, expected = independent_sample(tmp_path)
+    changed = deepcopy(graph)
+    changed['document_ast']['children'].pop(1)
+    cases = check_fixed_source_graph(changed, original, expected, collect_failures=True)
+    assert any(case['failure_stage'] == 'document_structure' for case in cases if case['status'] == 'failed')
+    sources = [case for case in cases if case.get('source_assertion_case')]
+    assert [case['status'] for case in sources] == ['passed', 'failed', 'passed', 'passed']
+    assert sources[1]['input']['source']['lines'] == [3, 3]
+    assert 'document source block missing' in sources[1]['detail']
+
+
+def test_multiline_source_owns_actual_raw_interior_rows_without_borrowing_a_neighbor(tmp_path):
+    text = '# Closing\n\nNora Vale\nChair\nHarbor City, 12 May 2030\n\nThe board retained the stated limits.'
+    original = authored(tmp_path, text)
+    expected = {'ranges': [(1, 7)], 'sources': [
+        {'line': 1, 'role': 'H1', 'anchors': ['Closing'], 'scope': [], 'parents': []},
+        {'line': 3, 'role': 'P', 'anchors': ['Nora Vale', 'Chair', 'Harbor City, 12 May 2030'],
+         'scope': ['Closing'], 'parents': []},
+        {'line': 7, 'role': 'P', 'anchors': ['The board retained the stated limits.'],
+         'scope': ['Closing'], 'parents': []},
+    ]}
+    graph = compile_requirement_graph(original, comparison_contract='document_ast')
+    validate_requirement_graph(graph, expected=original)
+    cases = check_fixed_source_graph(graph, original, expected)
+    case = next(case for case in cases if case['input'].get('source', {}).get('lines') == [3, 5])
+    raw = [row for row in graph['comparison_coverage']['obligations']
+           if row['obligation_id'].startswith('authorized-raw-obligation:') and row['source']['lines'][0] in (3, 4, 5)]
+    assert len(raw) == 3 and {row['obligation_id'] for row in raw} <= set(case['obligation_ids'])
+    target = next(target for target in original['targets'] if target['reference']['lines'] == [3, 5])
+    path = target['reference']['path']
+    assert source_in_target({'path': path, 'lines': [4, 4]}, target, original)
+    assert not source_in_target({'path': path, 'lines': [7, 7]}, target, original)
+    assert not source_in_target({'path': path + '.neighbor', 'lines': [4, 4]}, target, original)
+    assert not source_in_target({'path': path, 'lines': [4, 4], 'text_span': [0, 5]}, target, original)
+    changed = deepcopy(original)
+    changed['authorized_raw_segments'][0]['raw'] = text.replace('Nora Vale\nChair', 'Nora Vale\nAnother Chair')
+    assert not source_in_target({'path': path, 'lines': [4, 4]}, target, changed)
+
+
+def test_all_handwritten_modules_are_bound_without_replacing_historical_batches(tmp_path):
+    from tests.validation import lite_fixed_source_assertions as historical
+    from tests.validation.lite_source_oracle import CONTROLLED_REVIEW_MODULES, REVIEW_MODULES
+
+    before = deepcopy((historical.ASSERTIONS, historical.ADDITIONAL_ASSERTIONS))
+    catalogue = fixed_assertion_catalogue()
+    assert len(catalogue['review_ids']) == 23
+    assert len(catalogue['assertions']) + 3 == 55
+    assert (historical.ASSERTIONS, historical.ADDITIONAL_ASSERTIONS) == before
+    paths = ['tests/validation/lite_fixed_source_assertions.py']
+    paths += [name.replace('.', '/') + '.py' for name in (*REVIEW_MODULES, *CONTROLLED_REVIEW_MODULES)]
+    for name in paths:
+        path = tmp_path / name
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text('independent hand assertions: ' + name)
+    first = handwritten_assertion_identity(tmp_path)
+    (tmp_path / paths[-2]).write_text('changed independent assertion')
+    second = handwritten_assertion_identity(tmp_path)
+    assert first['handwritten_assertions_sha256'] == second['handwritten_assertions_sha256']
+    assert first['handwritten_assertions_aggregate_sha256'] != second['handwritten_assertions_aggregate_sha256']
+    assert first['handwritten_assertion_modules_sha256'].keys() == set(paths)
+    assert first['handwritten_assertion_modules_sha256'][paths[-2]] != second['handwritten_assertion_modules_sha256'][paths[-2]]
+
+
+def test_multiline_markdown_controls_require_an_exact_independent_physical_transcription(tmp_path):
+    text = '# Closing\n\nNora Vale\\\n*Chair*\\\nHarbor City, 12 May 2030'
+    original = authored(tmp_path, text)
+    physical = {3: 'Nora Vale\\', 4: '*Chair*\\', 5: 'Harbor City, 12 May 2030'}
+    expected = {'ranges': [(1, 5)], 'sources': [
+        {'line': 1, 'role': 'H1', 'anchors': ['Closing'], 'scope': [], 'parents': []},
+        {'line': 3, 'role': 'P', 'anchors': ['Nora Vale', 'Chair', 'Harbor City, 12 May 2030'],
+         'scope': ['Closing'], 'parents': [], 'physical_lines': physical},
+    ]}
+    graph = compile_requirement_graph(original, comparison_contract='document_ast')
+    validate_requirement_graph(graph, expected=original)
+    cases = check_fixed_source_graph(graph, original, expected)
+    source = next(case for case in cases if case['input'].get('source', {}).get('lines') == [3, 5])
+    assert source['status'] == 'passed'
+    assert any(ident.startswith('authorized-raw-obligation:') for ident in source['obligation_ids'])
+    target = original['targets'][-1]
+    interior = {'path': target['reference']['path'], 'lines': [4, 4]}
+    assert not source_in_target(interior, target, original)
+    assert source_in_target(interior, target, original, physical_lines=physical)
+    assert not source_in_target(interior, target, original, physical_lines={**physical, 4: '*Other*\\'})
+    assert not source_in_target(interior, target, original, physical_lines={4: '*Chair*\\'})
+
+
+def test_complete_directory_text_cannot_disguise_a_page_reference_as_a_metric(tmp_path):
+    original = authored(tmp_path, '# Contents\n\n## North\n\n- Summary: 017')
+    graph = compile_requirement_graph(original, comparison_contract='document_ast')
+    validate_requirement_graph(graph, expected=original)
+    assert graph['comparison_coverage']['responsibility_complete']
+    # The literal page and parent exist, but ordinary scalar/content ownership
+    # does not prove the navigation role or its role-sensitive comparison.
+    with pytest.raises(AssertionError, match='navigation page role'):
+        _check_directory_source(graph, original, (5, 'North', 'Summary', '017'))
+
+
+def test_independent_binding_override_preserves_the_required_subject_attachment(tmp_path):
+    text = 'Members of all oversight committees are directors.'
+    graph, original, expected = representation_sample(tmp_path, text, policy='typed',
+        typed_facts=[('Members of all oversight committees', 'be', 'directors',
+                      {'polarity': 'positive', 'tense': 'present'})])
+    expected['sources'][-1]['binding_qualifiers'] = {'tense': 'present'}
+    expected['required_relations'] = {3: [{
+        'type': 'narrative_prepositional_attachment',
+        'left': {'preposition': 'of', 'semantic_role': 'complement',
+                 'attachment': {'kind': 'nominal', 'head': 'Members'}, 'complement': 'all oversight committees'},
+        'right': {'subject': 'Members of all oversight committees', 'attribute': 'be',
+                  'scope': ['范围'], 'qualifiers': {'tense': 'present'}},
+    }]}
+    check_fixed_source_graph(graph, original, expected)
+    changed = deepcopy(graph)
+    changed['relations'] = [edge for edge in changed['relations'] if edge['type'] != 'narrative_prepositional_attachment']
+    with pytest.raises(AssertionError, match='independently required relation'):
+        check_fixed_source_graph(changed, original, expected)
+
+
+def test_whole_content_cannot_accept_an_extra_vote_for_the_same_parent_scope(tmp_path):
+    # This existing production gap remains a failed acceptance, separately
+    # from the numeric-role repair. The independent source contract has one
+    # statement, one parent membership, and no retained typed assertion.
+    text = 'The archive retains security code 004721 for the retired issue.'
+    graph, original, expected = representation_sample(tmp_path, text, policy='content')
+    assert not graph['comparison_coverage']['retained_semantic_requirements']['B']
+    assert graph['source_form_requirements'][0]['source']['text_span'] == [0, len(text)]
+    cases = check_fixed_source_graph(graph, original, expected, collect_failures=True)
+    failed = [case for case in cases if case['status'] != 'passed']
+    source_failures = [case for case in failed if case['source_assertion_case']]
+    assert len(source_failures) == 1
+    assert 'duplicate statement parent-scope responsibility' in source_failures[0]['detail']
+    assert source_failures[0]['input']['source']['lines'] == [3, 3]
+    assert any(case['failure_stage'] == 'coverage_and_order' for case in failed)

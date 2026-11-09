@@ -92,6 +92,29 @@ _CONTENT_TOKEN = re.compile('|'.join(map(re.escape, sorted(
     {*_CONTENT_OPERATORS, *_CONTENT_UNITS}, key=lambda value: (-len(value), value))))
     + r'|\d+(?:,\d{3})*(?:\.\d+)?|[A-Za-z]+|[^\s]')
 
+# A lexical digit sequence alone proves no amount, duration, date or identifier
+# role. Only these already supported printed measurement units supply a local
+# quantity basis; calendar suffixes deliberately do not do so.
+_CONTENT_MEASURE_UNITS = tuple(sorted(set(_CONTENT_UNITS) - {'年', '月', '日', '年度', '季度'}, key=len, reverse=True))
+_CONTENT_CURRENCIES = ('人民幣', '人民币', '$', '¥', '￥', '€', '£')
+
+
+def _content_numeric_context(original, start, end, source):
+    right, left = original[end:], original[:start]
+    unit = next((text for text in _CONTENT_MEASURE_UNITS if right.lstrip().startswith(text)), None)
+    if unit is not None:
+        unit_start = end + len(right) - len(right.lstrip())
+    else:
+        unit = next((text for text in _CONTENT_CURRENCIES if left.rstrip().endswith(text)), None)
+        unit_start = len(left.rstrip()) - len(unit) if unit is not None else None
+    # An adjoining Latin name or code does not become a quantity merely because
+    # its last letter also resembles a unit or currency spelling.
+    if unit is None or (start and re.match(r'[A-Za-z_]', original[start - 1])):
+        return {'dimension': 'literal', 'unit': None}
+    offset = source.get('text_span', [0])[0]
+    return {'dimension': 'number', 'unit': {'text': unit, 'source': {
+        **copy.deepcopy(source), 'text_span': [offset + unit_start, offset + unit_start + len(unit)]}}}
+
 
 def _content_role(text, original='', start=0, end=0):
     numeric_unit = text in _CONTENT_UNITS and (bool(re.compile(r'\d\s*$').search(original, 0, start))
@@ -109,10 +132,15 @@ def read_content_ast(text, source):
     """
     offset = source.get('text_span', [0])[0]
     origin = {**copy.deepcopy(source), 'text_span': [offset, offset + len(text)]}
-    return {'kind': 'content_sequence', 'source': origin, 'children': [
+    result = {'kind': 'content_sequence', 'source': origin, 'children': [
         {'kind': 'content_token', 'role': _content_role(match[0], text, match.start(), match.end()), 'text': match[0],
          'source': {**copy.deepcopy(source), 'text_span': [offset + match.start(), offset + match.end()]}}
         for match in _CONTENT_TOKEN.finditer(text)]}
+    for child in result['children']:
+        if child['role'] == 'number':
+            start, end = child['source']['text_span']
+            child['numeric_context'] = _content_numeric_context(text, start - offset, end - offset, source)
+    return result
 
 
 def validate_content_ast(node, resolve):
@@ -142,7 +170,9 @@ def validate_content_ast(node, resolve):
                 or literal[cursor - bounds[0]:cut[0] - bounds[0]].strip()
                 or literal[cut[0] - bounds[0]:cut[1] - bounds[0]] != child.get('text')
                 or child.get('role') != _content_role(child.get('text', ''), literal,
-                    cut[0] - bounds[0], cut[1] - bounds[0])):
+                    cut[0] - bounds[0], cut[1] - bounds[0])
+                or (child.get('role') == 'number' and child.get('numeric_context') != _content_numeric_context(
+                    literal, cut[0] - bounds[0], cut[1] - bounds[0], source))):
             raise ValueError('content AST leaf was omitted, reordered, forged or borrowed')
         cursor = cut[1]
     if literal[cursor - bounds[0]:].strip() or not node.get('children'):
@@ -174,7 +204,9 @@ def compare_content_ast(required, actual, context=None):
     if identical:
         return _result('equivalent', '$', reason='complete_source_form_identity', proof={'ordered_leaves': len(left), 'semantic_inference': False})
     if left_shape == right_shape:
-        differences = [{'index': index, 'role': a['role'], 'required': a['text'], 'actual': b['text']}
+        differences = [{'index': index, 'role': a['role'], 'required': a['text'], 'actual': b['text'],
+                        **({'numeric_context': {'required': a['numeric_context'], 'actual': b['numeric_context']}}
+                           if a['role'] == 'number' else {})}
                        for index, (a, b) in enumerate(zip(left, right, strict=True)) if a['text'] != b['text']]
         for difference in differences:
             difference['decision'] = _content_token_equivalence(difference)
@@ -195,7 +227,20 @@ def _content_token_equivalence(item):
 
     left, right, role = item['required'], item['actual'], item['role']
     if role == 'number':
-        return decide_equivalence(left, right, 'number')
+        contexts = item.get('numeric_context', {})
+        decision = decide_equivalence(left, right, 'number')
+        if all(contexts.get(side, {}).get('dimension') == 'number' for side in ('required', 'actual')):
+            decision['proof']['source_bound_quantity_roles'] = copy.deepcopy(contexts)
+            return decision
+        literal = decide_equivalence(left, right, 'literal')
+        if decision['equivalent'] and not literal['equivalent']:
+            # Numerically equal text may be a date, reference, security code,
+            # plan name, or an unsupported amount. No quantity proof chooses
+            # between those roles. Preserve the complete required item as open.
+            literal.update(status='unresolved', rule_id='numeric_text_role_unresolved',
+                           proof={'source_bound_numeric_roles': copy.deepcopy(contexts),
+                                  'quantity_equivalence_applied': False})
+        return literal
     if role == 'unit':
         if left in {'人民幣', '人民币'} or right in {'人民幣', '人民币'}:
             return decide_equivalence(left, right, 'currency')

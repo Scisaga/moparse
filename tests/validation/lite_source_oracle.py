@@ -14,6 +14,65 @@ ROOT = Path(__file__).resolve().parents[2]
 WORK = ROOT / 'benchmark/runs/lite/requirements/validation'
 CURRENT = WORK.parent / 'current'
 BIND_CURRENT = True
+REVIEW_MODULES = (
+    'tests.validation.lite_review_alibaba_assertions',
+    'tests.validation.lite_review_hkex_assertions',
+    'tests.validation.lite_review_energy_assertions',
+)
+CONTROLLED_REVIEW_MODULES = ('tests.validation.lite_review_numeric_role_cases',)
+
+
+def fixed_assertion_catalogue():
+    """Combine declarations without replacing either historical batch."""
+    import importlib
+
+    from tests.validation import lite_fixed_source_assertions as baseline
+
+    data = {
+        'assertions': {**baseline.ASSERTIONS, **baseline.ADDITIONAL_ASSERTIONS},
+        'typed': dict(baseline.TYPED_ASSERTIONS),
+        'policies': dict(baseline.REPRESENTATION_POLICIES),
+        'scope_labels': dict(baseline.TYPED_SCOPE_LABELS),
+        'controls': dict(baseline.CONTROL_ASSERTIONS),
+        'ordered_groups': dict(baseline.ORDERED_SOURCE_GROUPS),
+        'overrides': {}, 'directory': {}, 'relations': {}, 'numeric_roles': {}, 'review_ids': set(),
+    }
+    names = {'assertions': 'REVIEW_ASSERTIONS', 'typed': 'REVIEW_TYPED_ASSERTIONS',
+             'policies': 'REVIEW_REPRESENTATION_POLICIES', 'controls': 'REVIEW_CONTROL_ASSERTIONS',
+             'ordered_groups': 'REVIEW_ORDERED_SOURCE_GROUPS', 'overrides': 'REVIEW_SOURCE_OVERRIDES',
+             'directory': 'REVIEW_DIRECTORY_ASSERTIONS', 'relations': 'REVIEW_REQUIRED_RELATIONS',
+             'numeric_roles': 'REVIEW_NUMERIC_ROLE_DEPENDENCIES'}
+    for name in REVIEW_MODULES:
+        module = importlib.import_module(name)
+        for key, exported in names.items():
+            declared = getattr(module, exported, {})
+            assert not data[key].keys() & declared.keys(), (name, exported, 'duplicate declaration')
+            data[key].update(declared)
+        data['review_ids'].update(module.REVIEW_ASSERTIONS)
+    return data
+
+
+def handwritten_assertion_identity(root=ROOT):
+    """Bind every hand-authored module, while retaining the old single digest."""
+    import hashlib
+
+    paths = ['tests/validation/lite_fixed_source_assertions.py']
+    paths += [name.replace('.', '/') + '.py' for name in (*REVIEW_MODULES, *CONTROLLED_REVIEW_MODULES)]
+    digests = {path: hashlib.sha256((root / path).read_bytes()).hexdigest() for path in paths}
+    aggregate = hashlib.sha256(json.dumps(digests, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
+    return {'handwritten_assertions_sha256': digests[paths[0]],
+            'handwritten_assertion_modules_sha256': digests,
+            'handwritten_assertions_aggregate_sha256': aggregate}
+
+
+def numeric_role_validation():
+    """Execute invented role cases once per frozen Oracle invocation."""
+    if not hasattr(numeric_role_validation, '_records'):
+        from tests.validation.lite_review_numeric_role_cases import run_numeric_role_cases
+
+        numeric_role_validation._records = run_numeric_role_cases()
+    return numeric_role_validation._records
+
 # Transcribed from the complete authorized text before consulting projection
 # values. These records are a diagnostic test oracle, not runtime answers.
 SERIES = [
@@ -869,11 +928,8 @@ def review_sinopec_boundary():
 
 def fixed_source_expectations(sample_id):
     """Read hand-authored original locations, never a semantic selector."""
-    from tests.validation.lite_fixed_source_assertions import (
-        ADDITIONAL_ASSERTIONS, ASSERTIONS, CONTROL_ASSERTIONS, ORDERED_SOURCE_GROUPS,
-    )
-
-    document, pages, ranges, text = {**ASSERTIONS, **ADDITIONAL_ASSERTIONS}[sample_id]
+    catalogue = fixed_assertion_catalogue()
+    document, pages, ranges, text = catalogue['assertions'][sample_id]
     assertions, stack = [], []
     record = None
     for row in text.strip().splitlines():
@@ -886,14 +942,19 @@ def fixed_source_expectations(sample_id):
         scope = [name for _, name in stack]
         assertions.append({'line': line, 'role': role, 'anchors': checks, 'scope': scope,
                            'parents': [], 'record': record})
+        # Only independently declared source-specific structure may override
+        # this lexical heading stack; the compiled graph is never consulted.
+        assertions[-1].update(catalogue['overrides'].get((sample_id, line), {}))
         if role.startswith('H'):
             stack.append((level, checks[0]))
             record = None
         elif role == 'D' and checks[0] != '複合年增長率：':
             record = checks[0]
     return {'document_id': document, 'source_pages': pages, 'ranges': ranges, 'sources': assertions,
-            'separator_literals': CONTROL_ASSERTIONS.get(sample_id, {}),
-            'ordered_source_groups': ORDERED_SOURCE_GROUPS.get(sample_id, []),
+            'separator_literals': catalogue['controls'].get(sample_id, {}),
+            'ordered_source_groups': catalogue['ordered_groups'].get(sample_id, []),
+            'directory_assertions': catalogue['directory'].get(sample_id, []),
+            'required_relations': {line: rows for (sid, line), rows in catalogue['relations'].items() if sid == sample_id},
             'scope': 'complete authorized text, selected hierarchy, records and printed relations; no image interpretation'}
 
 
@@ -910,12 +971,19 @@ def read_fixed_source_assertions(sample_id):
     assert [t['reference']['lines'][0] for t in original['targets']] == [s['line'] for s in expected['sources']]
     for assertion, target in zip(expected['sources'], original['targets'], strict=True):
         role = assertion['role']
-        kind = ('heading' if role.startswith('H') else 'image_caption' if role == 'C'
-                else 'item' if role in {'I', 'S'} else 'text')
+        kind = assertion.get('source_kind', 'heading' if role.startswith('H') else 'image_caption' if role == 'C'
+                             else 'item' if role in {'I', 'S'} else 'text')
         assert target['kind'] == kind, (sample_id, assertion['line'], kind, target['kind'])
         literal = target.get('raw_text', target['text'])
         assert all(s in literal for s in assertion['anchors']), (sample_id, assertion['line'], assertion['anchors'])
         assert target.get('parents', []) == assertion['parents']
+        if 'source_lines' in assertion:
+            assert target['reference']['lines'] == assertion['source_lines']
+        if 'physical_lines' in assertion:
+            first, last = target['reference']['lines']
+            assert set(assertion['physical_lines']) == set(range(first, last + 1))
+            actual = _authorized_raw_lines(original, target['reference']['path'])
+            assert all(actual.get(line) == literal for line, literal in assertion['physical_lines'].items())
         scope = [s['text'] for s in target.get('selected_heading_context', [])]
         if kind == 'heading':
             assert target['text'] == assertion['anchors'][0]
@@ -925,177 +993,240 @@ def read_fixed_source_assertions(sample_id):
     return sample, original, expected
 
 
-def check_fixed_source_graph(graph, original, expected):
-    """Assert substantive original-source responsibilities, then bind derived IDs.
+def _authorized_raw_lines(original, path):
+    actual = {}
+    for segment in original['authorized_raw_segments']:
+        if segment['source']['path'] == path:
+            first = segment['source']['lines'][0]
+            actual.update({first + offset: row for offset, row in enumerate(segment['raw'].splitlines())})
+    return actual
 
-    This is deliberately a test oracle for the fixed sources, not a runtime
-    semantic interpreter. The compiler's selected IDs are observations, never
-    the expected meanings. Every retained typed answer must match handwritten
-    facts; every other statement must have a full ordered content owner.
-    """
+
+def source_in_target(source, target, original, *, physical_lines=None):
+    """Bind an exact source, or an actually read interior multiline raw row."""
+    owner = target['reference']
+    if source.get('path') != owner.get('path') or source.get('cell') != owner.get('cell'):
+        return False
+    if source.get('lines') == owner.get('lines'):
+        return True
+    # Raw-line obligations carry physical rows, whereas the content source
+    # can own one multiline statement. A local text_span is never projected
+    # to another line range by this test-only binding.
+    if source.get('text_span') is not None or source.get('lines') is None:
+        return False
+    start, end = owner['lines']
+    a, b = source['lines']
+    if not (start < end and start <= a <= b <= end):
+        return False
+    literal = target.get('raw_text', target['text']).splitlines()
+    if len(literal) != end - start + 1:
+        return False
+    actual = _authorized_raw_lines(original, owner['path'])
+    if physical_lines is not None:
+        # Independently transcribed Markdown hard-break/emphasis controls are
+        # still owned by this actual multiline statement, never waived as N/A.
+        if set(physical_lines) != set(range(start, end + 1)):
+            return False
+        return all(actual.get(line) == physical_lines[line] for line in range(start, end + 1))
+    return all(line in actual and actual[line] == literal[line - start] for line in range(a, b + 1))
+
+
+def _check_fixed_source(graph, original, expected, assertion, target, block):
     from moparse_eval.requirement_ast import validate_content_ast
-    from tests.validation.lite_fixed_source_assertions import (
-        REPRESENTATION_POLICIES,
-        TYPED_ASSERTIONS,
-        TYPED_SCOPE_LABELS,
-    )
 
+    catalogue = fixed_assertion_catalogue()
+    TYPED_ASSERTIONS = catalogue['typed']
+    REPRESENTATION_POLICIES = catalogue['policies']
+    TYPED_SCOPE_LABELS = catalogue['scope_labels']
     sample_id = original['sample_id']
-    blocks = graph['document_ast']['children']
-    assertions = expected['sources']
-    assert len(blocks) == len(assertions)
-    assert [b['source']['lines'][0] for b in blocks] == [s['line'] for s in assertions]
     coverage = graph['comparison_coverage']
     retained = coverage['retained_semantic_requirements']
     facts = [n for n in graph['nodes'] if n['id'] in retained['B']]
     edges = [n for n in graph['relations'] if n['id'] in retained['L']]
     content = graph['source_form_requirements']
-    cases = []
-    for assertion, target, block in zip(assertions, original['targets'], blocks, strict=True):
-        line = assertion['line']
-        raw = target.get('raw_text', target['text'])
-        assert block['role'] == target['kind'] and block['scope'] == assertion['scope'], (sample_id, line, 'scope')
-        assert block['parents'] == assertion['parents']
-        assert block['source']['lines'] == target['reference']['lines']
-        validate_content_ast(block['content'], lambda source: _semantic_literal(graph['sources'], source))
-        # These independent literal checks do not use the compiler's tokenizer
-        # to construct the expected content or a comparison candidate.
-        assert ''.join(n['text'] for n in block['content']['children']) == ''.join(raw.split()), (sample_id, line)
-        assert all(literal in raw for literal in assertion['anchors'])
-        own_content = [b for b in content if b['source']['lines'][0] == line]
-        for own in own_content:
-            assert own['scope'] == assertion['scope'] and own['parents'] == assertion['parents']
-            a, b = own['content']['source']['text_span']
-            assert ''.join(n['text'] for n in own['content']['children']) == ''.join(raw[a:b].split())
-        observed = [f for f in facts if f['source']['lines'][0] == line]
-        wanted = list(assertion.get('typed_facts', TYPED_ASSERTIONS.get((sample_id, line), [])))
-        if assertion['role'] == 'F':
-            label, value = assertion['anchors'][0].split('：', 1)
-            wanted = [('', label, value, {})]
-        actual = [(f['subject'], f['attribute'], f['value'], f['qualifiers']) for f in observed]
-        structural = assertion['role'].startswith('H') or assertion['role'] in {'D', 'C'}
-        policy = assertion.get('representation', REPRESENTATION_POLICIES.get((sample_id, line),
-            'typed' if assertion['role'] == 'F' else 'structure' if structural else 'content'))
-        assert policy in {'typed', 'content', 'either', 'mixed', 'structure'}, (sample_id, line, policy)
-        if policy in {'typed', 'mixed'}:
-            assert wanted and actual == wanted, (sample_id, line, 'required typed representation', wanted, actual)
-        elif policy == 'either':
-            assert wanted and (actual == wanted or not actual and own_content), (
-                sample_id, line, 'preauthorized complete alternative', wanted, actual)
-        else:
-            assert not actual, (sample_id, line, 'content or structure cannot invent typed facts', actual)
-        # Empty lists cannot certify an absent non-counting operand or an
-        # invented opaque fact. All observed typed facts were checked above.
+    line = assertion['line']
+    raw = target.get('raw_text', target['text'])
+    assert block is not None, (sample_id, line, 'document source block missing')
+    assert block['role'] == target['kind'] and block['scope'] == assertion['scope'], (sample_id, line, 'scope')
+    assert block['parents'] == assertion['parents']
+    assert block['source'] == target['reference'], (sample_id, line, 'original source identity')
+    validate_content_ast(block['content'], lambda source: _semantic_literal(graph['sources'], source))
+    # These independent literal checks do not use the compiler's tokenizer
+    # to construct the expected content or a comparison candidate.
+    assert ''.join(n['text'] for n in block['content']['children']) == ''.join(raw.split()), (sample_id, line)
+    assert all(literal in raw for literal in assertion['anchors'])
+    own_content = [b for b in content if b['source']['lines'][0] == line]
+    for own in own_content:
+        assert own['scope'] == assertion['scope'] and own['parents'] == assertion['parents']
+        a, b = own['content']['source']['text_span']
+        assert ''.join(n['text'] for n in own['content']['children']) == ''.join(raw[a:b].split())
+    observed = [f for f in facts if f['source']['lines'][0] == line]
+    wanted = list(assertion.get('typed_facts', TYPED_ASSERTIONS.get((sample_id, line), [])))
+    if assertion['role'] == 'F':
+        label, value = assertion['anchors'][0].split('：', 1)
+        wanted = [('', label, value, {})]
+    actual = [(f['subject'], f['attribute'], f['value'], f['qualifiers']) for f in observed]
+    structural = assertion['role'].startswith('H') or assertion['role'] in {'D', 'C'}
+    policy = assertion.get('representation', REPRESENTATION_POLICIES.get((sample_id, line),
+        'typed' if assertion['role'] == 'F' else 'structure' if structural else 'content'))
+    assert policy in {'typed', 'content', 'either', 'mixed', 'structure'}, (sample_id, line, policy)
+    if policy in {'typed', 'mixed'}:
+        assert wanted and actual == wanted, (sample_id, line, 'required typed representation', wanted, actual)
+    elif policy == 'either':
+        assert wanted and (actual == wanted or not actual and own_content), (
+            sample_id, line, 'preauthorized complete alternative', wanted, actual)
+    else:
+        assert not actual, (sample_id, line, 'content or structure cannot invent typed facts', actual)
+    # The independent content policy owns this statement's printed parent
+    # scope as well as its words. A retired partial clause cannot add another
+    # vote for that same scope. Keep distinct conditions, records, typed
+    # bindings and caption relations outside this narrowly identical duty.
+    if not observed and any(c['source']['text_span'] == [0, len(raw)] for c in own_content):
+        duplicate_scopes = [edge for edge in edges if edge['type'] == 'prose_heading_membership'
+            and source_in_target(edge['source'], target, original)
+            and edge['left'] == assertion['scope']
+            and edge.get('right', {}).get('scope') == assertion['scope']]
+        assert not duplicate_scopes, (sample_id, line, 'duplicate statement parent-scope responsibility',
+                                      duplicate_scopes)
+    # Empty lists cannot certify an absent non-counting operand or an
+    # invented opaque fact. All observed typed facts were checked above.
+    for fact in observed:
+        scope = assertion['scope']
+        label = TYPED_SCOPE_LABELS.get((sample_id, line))
+        if label:
+            assert raw.startswith(label + '：')
+            scope = [*scope, label]
+        assert fact['scope'] == scope, (sample_id, line, 'typed scope')
+        sequence = fact.get('logic', {}).get('sequence_source')
+        owned = sequence or fact['source']
+        bounds = owned.get('text_span', [0, len(raw)])
+        assert not any(max(bounds[0], c['source']['text_span'][0]) < min(bounds[1], c['source']['text_span'][1])
+                       for c in own_content), (sample_id, line, 'typed/content overlap')
+        if not fact.get('logic'):
+            assert _semantic_literal(graph['sources'], fact['attribute_source']) == fact['attribute']
+            assert _semantic_literal(graph['sources'], fact['value_source']) == fact['value']
+            assert any(e['type'] == 'field_binding' and e.get('fact_id') == fact['id'] for e in edges)
+    if observed:
+        typed_spans = []
         for fact in observed:
-            scope = assertion['scope']
-            label = TYPED_SCOPE_LABELS.get((sample_id, line))
-            if label:
-                assert raw.startswith(label + '：')
-                scope = [*scope, label]
-            assert fact['scope'] == scope, (sample_id, line, 'typed scope')
             sequence = fact.get('logic', {}).get('sequence_source')
-            owned = sequence or fact['source']
-            bounds = owned.get('text_span', [0, len(raw)])
-            assert not any(max(bounds[0], c['source']['text_span'][0]) < min(bounds[1], c['source']['text_span'][1])
-                           for c in own_content), (sample_id, line, 'typed/content overlap')
-            if not fact.get('logic'):
-                assert _semantic_literal(graph['sources'], fact['attribute_source']) == fact['attribute']
-                assert _semantic_literal(graph['sources'], fact['value_source']) == fact['value']
-                assert any(e['type'] == 'field_binding' and e.get('fact_id') == fact['id'] for e in edges)
-        if observed:
-            typed_spans = []
-            for fact in observed:
-                sequence = fact.get('logic', {}).get('sequence_source')
-                origins = ([sequence or fact.get('statement_source', fact['source'])] if fact.get('logic') else
-                           [fact.get('attribute_source', {}), fact['value_source']])
-                origins += list(fact.get('qualifier_sources', {}).values())
-                origins += [p['source'] for p in fact.get('qualifier_provenance', {}).values()
-                            if isinstance(p, dict) and isinstance(p.get('source'), dict)]
-                for origin in origins:
-                    if (isinstance(origin, dict) and origin.get('path') == target['reference']['path']
-                            and origin.get('lines') == target['reference']['lines'] and origin.get('text_span')):
-                        typed_spans.append(origin['text_span'])
-                bindings = [e for e in edges if e['type'] == 'field_binding' and e.get('fact_id') == fact['id']]
-                assert len(bindings) == 1, (sample_id, line, 'typed binding cardinality')
-                right = bindings[0]['right']
-                assert all(right.get(k) == fact.get(k) for k in ('subject', 'attribute', 'scope')), (
-                    sample_id, line, 'independent typed endpoint identity')
-                if 'qualifiers' in right:
-                    assert right['qualifiers'] == fact['qualifiers'], (sample_id, line, 'typed endpoint qualifiers')
-                for key in {'unit', 'currency', 'period', 'from_period', 'to_period'} & fact['qualifiers'].keys():
-                    bound = [e for e in edges if e['type'] == 'qualifier_scope' and e.get('fact_id') == fact['id']
-                             and e.get('left', {}).get('type') == key and e['left'].get('text') == fact['qualifiers'][key]
-                             and all(e['right'].get(k) == fact.get(k) for k in ('subject', 'attribute', 'scope'))]
-                    assert bound, (sample_id, line, 'independent typed qualifier relation', key)
-            label = TYPED_SCOPE_LABELS.get((sample_id, line))
-            if label:
-                typed_spans.append([0, len(label) + 1])
-            for pos, char in enumerate(raw):
-                if (char.isspace() or char in ':：;；'
-                        or pos == len(raw) - 1 and char in '。.!?！？'):
-                    continue
-                typed_owner = any(a <= pos < b for a, b in typed_spans)
-                content_owners = sum(c['source']['text_span'][0] <= pos < c['source']['text_span'][1] for c in own_content)
-                assert int(typed_owner) + content_owners == 1, (
-                    sample_id, line, 'typed/content representation has a hole or overlap', pos)
-        if structural:
-            assert not observed, (sample_id, line, 'label or caption invented a business assertion')
-        elif not observed or any(f.get('logic', {}).get('kind') == 'quantity_assertion' for f in observed):
-            spans = [c['content']['source']['text_span'] for c in own_content]
-            spans += list({tuple(f['logic']['sequence_source']['text_span']) for f in observed
-                           if f.get('logic', {}).get('kind') == 'quantity_assertion'})
-            assert all(char.isspace() or any(a <= pos < b for a, b in spans) for pos, char in enumerate(raw)), (
-                sample_id, line, 'statement lacks complete content/typed responsibility', spans)
-            # Complete coverage also needs an exclusive partition. Merely
-            # finding an overlapping ID cannot own the statement's remainder.
-            assert all(sum(a <= pos < b for a, b in spans) == 1
-                       for pos, char in enumerate(raw) if not char.isspace()), (
-                sample_id, line, 'overlapping content/typed responsibility', spans)
-        if assertion['role'].startswith('H') and assertion['scope']:
-            assert own_content or any(e['type'] == 'heading_parent' and e['source']['lines'][0] == line
-                and e['left'] == assertion['scope'][-1] and e['right'] == target['text'] for e in edges), (
-                    sample_id, line, 'heading parent unowned')
-        if assertion['role'] == 'C':
-            assert assertion['scope'] and any(e['type'] == 'prose_heading_membership'
-                and e['source']['lines'][0] == line for e in edges), (sample_id, line, 'caption scope')
-        # ID collection follows the substantive assertion above and is bound
-        # through its original physical source, never a positional B/L number.
-        case_ids = [n['id'] for n in graph['nodes'] if n['id'] in retained['T'] + retained['B']
-                    and n['source']['lines'][0] == line]
-        case_ids += [n['id'] for n in edges if n['source']['lines'][0] == line]
-        case_ids += [b['requirement_id'] for b in own_content]
-        cases.append({'case_id': f'source::{sample_id}::L{line}', 'status': 'passed',
-            'input': {'sample_id': sample_id, 'source': target['reference']},
-            'expected': {'source_assertions': assertion, 'typed_facts': wanted,
-                         'representation_policy': policy,
-                         'counting_rule': 'one exclusive fixed representation before candidate reading; shared typed role evidence adds no extra vote',
-                         'full_ordered_statement_responsibility': not structural,
-                         'image_semantics_applicable': False},
-            'actual': {'document_scope_and_order': 'passed', 'literal_and_content_spans': 'passed',
-                       'typed_facts': actual, 'typed_content_overlap': False,
-                       'content_spans': [b['source']['text_span'] for b in own_content]},
-            'requirement_ids': case_ids,
-            'obligation_ids': [r['obligation_id'] for r in coverage['obligations'] if r['source']['lines'][0] == line],
-            'analysis_limitation_ids': [r['issue_id'] for r in coverage['analysis_limitations']
-                                        if r['source']['lines'][0] == line]})
+            origins = ([sequence or fact.get('statement_source', fact['source'])] if fact.get('logic') else
+                       [fact.get('attribute_source', {}), fact['value_source']])
+            origins += list(fact.get('qualifier_sources', {}).values())
+            origins += [p['source'] for p in fact.get('qualifier_provenance', {}).values()
+                        if isinstance(p, dict) and isinstance(p.get('source'), dict)]
+            for origin in origins:
+                if (isinstance(origin, dict) and origin.get('path') == target['reference']['path']
+                        and origin.get('lines') == target['reference']['lines'] and origin.get('text_span')):
+                    typed_spans.append(origin['text_span'])
+            bindings = [e for e in edges if e['type'] == 'field_binding' and e.get('fact_id') == fact['id']]
+            assert len(bindings) == 1, (sample_id, line, 'typed binding cardinality')
+            right = bindings[0]['right']
+            assert all(right.get(k) == fact.get(k) for k in ('subject', 'attribute', 'scope')), (
+                sample_id, line, 'independent typed endpoint identity')
+            if 'qualifiers' in right:
+                assert right['qualifiers'] == assertion.get('binding_qualifiers', fact['qualifiers']), (sample_id, line, 'typed endpoint qualifiers')
+            for key in {'unit', 'currency', 'period', 'from_period', 'to_period'} & fact['qualifiers'].keys():
+                bound = [e for e in edges if e['type'] == 'qualifier_scope' and e.get('fact_id') == fact['id']
+                         and e.get('left', {}).get('type') == key and e['left'].get('text') == fact['qualifiers'][key]
+                         and all(e['right'].get(k) == fact.get(k) for k in ('subject', 'attribute', 'scope'))]
+                assert bound, (sample_id, line, 'independent typed qualifier relation', key)
+        label = TYPED_SCOPE_LABELS.get((sample_id, line))
+        if label:
+            typed_spans.append([0, len(label) + 1])
+        for pos, char in enumerate(raw):
+            if (char.isspace() or char in ':：;；'
+                    or pos == len(raw) - 1 and char in '。.!?！？'):
+                continue
+            typed_owner = any(a <= pos < b for a, b in typed_spans)
+            content_owners = sum(c['source']['text_span'][0] <= pos < c['source']['text_span'][1] for c in own_content)
+            assert int(typed_owner) + content_owners == 1, (
+                sample_id, line, 'typed/content representation has a hole or overlap', pos)
+    if structural:
+        assert not observed, (sample_id, line, 'label or caption invented a business assertion')
+    elif not observed or any(f.get('logic', {}).get('kind') == 'quantity_assertion' for f in observed):
+        spans = [c['content']['source']['text_span'] for c in own_content]
+        spans += list({tuple(f['logic']['sequence_source']['text_span']) for f in observed
+                       if f.get('logic', {}).get('kind') == 'quantity_assertion'})
+        assert all(char.isspace() or any(a <= pos < b for a, b in spans) for pos, char in enumerate(raw)), (
+            sample_id, line, 'statement lacks complete content/typed responsibility', spans)
+        # Complete coverage also needs an exclusive partition. Merely
+        # finding an overlapping ID cannot own the statement's remainder.
+        assert all(sum(a <= pos < b for a, b in spans) == 1
+                   for pos, char in enumerate(raw) if not char.isspace()), (
+            sample_id, line, 'overlapping content/typed responsibility', spans)
+    if assertion['role'].startswith('H') and assertion['scope']:
+        assert own_content or any(e['type'] == 'heading_parent' and e['source']['lines'][0] == line
+            and e['left'] == assertion['scope'][-1] and e['right'] == target['text'] for e in edges), (
+                sample_id, line, 'heading parent unowned')
+    if assertion['role'] == 'C':
+        assert assertion['scope'] and any(e['type'] == 'prose_heading_membership'
+            and e['source']['lines'][0] == line for e in edges), (sample_id, line, 'caption scope')
+    for requirement in expected.get('required_relations', {}).get(line, []):
+        matching = [edge for edge in edges if edge['type'] == requirement['type']
+                    and source_in_target(edge['source'], target, original)
+                    and all(edge.get(side, {}).get(key) == value
+                            for side in ('left', 'right') for key, value in requirement.get(side, {}).items())]
+        assert len(matching) == 1, (sample_id, line, 'independently required relation', requirement, matching)
+    # ID collection follows the substantive assertion above and is bound
+    # through its original physical source, never a positional B/L number.
+    case_ids = [n['id'] for n in graph['nodes'] if n['id'] in retained['T'] + retained['B']
+                and n['source']['lines'][0] == line]
+    case_ids += [n['id'] for n in edges if n['source']['lines'][0] == line]
+    case_ids += [b['requirement_id'] for b in own_content]
+    return {'case_id': f'source::{sample_id}::L{line}', 'status': 'passed', 'source_assertion_case': True, 'attempted': True,
+        'input': {'sample_id': sample_id, 'source': target['reference']},
+        'expected': {'source_assertions': assertion, 'typed_facts': wanted,
+                     'representation_policy': policy,
+                     'counting_rule': 'one exclusive fixed representation before candidate reading; shared typed role evidence adds no extra vote',
+                     'full_ordered_statement_responsibility': not structural,
+                     'image_semantics_applicable': False},
+        'actual': {'document_scope_and_order': 'passed', 'literal_and_content_spans': 'passed',
+                   'typed_facts': actual, 'typed_content_overlap': False,
+                   'content_spans': [b['source']['text_span'] for b in own_content]},
+        'requirement_ids': case_ids,
+        'obligation_ids': [r['obligation_id'] for r in coverage['obligations'] if source_in_target(
+            r['source'], target, original, physical_lines=assertion.get('physical_lines'))],
+        'analysis_limitation_ids': [r['issue_id'] for r in coverage['analysis_limitations']
+                                    if source_in_target(r['source'], target, original, physical_lines=assertion.get('physical_lines'))]}
+
+
+def _check_ordered_source_group(graph, original, start, end, meaning):
+    sample_id = original['sample_id']
+    blocks = graph['document_ast']['children']
+    content = graph['source_form_requirements']
+    group = [b for b in blocks if start <= b['source']['lines'][0] <= end]
+    assert group and group[0]['source']['lines'][0] == start and group[-1]['source']['lines'][0] == end
+    assert all(b['scope'] == group[0]['scope'] for b in group), (sample_id, meaning, 'group scope')
+    # The comparison's fixed content-order edges are implicit between
+    # adjacent requirements. Require all non-caption members, in exact
+    # adjacency; original source unions alone cannot establish this edge.
+    members = [b for b in content if start <= b['source']['lines'][0] <= end]
+    wanted = [b for b in group if b['role'] != 'image_caption']
+    assert [b['source']['lines'] for b in members] == [b['source']['lines'] for b in wanted], (
+        sample_id, meaning, 'complete ordered group must retain each original member')
+    positions = [content.index(b) for b in members]
+    assert positions == list(range(positions[0], positions[0] + len(positions))), (sample_id, meaning, 'group order')
+    return {'case_id': f'source::{sample_id}::ordered-group:{start}:{end}', 'status': 'passed',
+        'input': {'sample_id': sample_id, 'lines': [start, end]},
+        'expected': {'source_assertions': meaning, 'contract': 'complete_content_with_scope_and_fixed_reading_order'},
+        'actual': {'source_lines': [b['source']['lines'] for b in group], 'content_positions': positions},
+        'requirement_ids': [], 'obligation_ids': [], 'analysis_limitation_ids': []}
+
+
+def _finish_fixed_source_cases(graph, original, expected, cases, *, collect_failures=False):
+    sample_id = original['sample_id']
+    coverage = graph['comparison_coverage']
+    retained = coverage['retained_semantic_requirements']
     for start, end, meaning in expected.get('ordered_source_groups', []):
-        group = [b for b in blocks if start <= b['source']['lines'][0] <= end]
-        assert group and group[0]['source']['lines'][0] == start and group[-1]['source']['lines'][0] == end
-        assert all(b['scope'] == group[0]['scope'] for b in group), (sample_id, meaning, 'group scope')
-        # The comparison's fixed content-order edges are implicit between
-        # adjacent requirements. Require all non-caption members, in exact
-        # adjacency; original source unions alone cannot establish this edge.
-        members = [b for b in content if start <= b['source']['lines'][0] <= end]
-        wanted = [b for b in group if b['role'] != 'image_caption']
-        assert [b['source']['lines'] for b in members] == [b['source']['lines'] for b in wanted], (
-            sample_id, meaning, 'complete ordered group must retain each original member')
-        positions = [content.index(b) for b in members]
-        assert positions == list(range(positions[0], positions[0] + len(positions))), (sample_id, meaning, 'group order')
-        cases.append({'case_id': f'source::{sample_id}::ordered-group:{start}:{end}', 'status': 'passed',
-            'input': {'sample_id': sample_id, 'lines': [start, end]},
-            'expected': {'source_assertions': meaning, 'contract': 'complete_content_with_scope_and_fixed_reading_order'},
-            'actual': {'source_lines': [b['source']['lines'] for b in group], 'content_positions': positions},
-            'requirement_ids': [], 'obligation_ids': [], 'analysis_limitation_ids': []})
+        try:
+            cases.append(_check_ordered_source_group(graph, original, start, end, meaning))
+        except (AssertionError, ValueError, KeyError) as error:
+            if not collect_failures:
+                raise
+            cases.append(_source_failure_case(graph, original,
+                f'source::{sample_id}::ordered-group:{start}:{end}',
+                {'ordered_range': [start, end], 'source_assertions': meaning}, error, stage='reading_order'))
     required_ids = set(coverage['content_requirement_ids']).union(*map(set, retained.values()))
     assigned = {ident for case in cases for ident in case['obligation_ids']}
     formatting = [r for r in coverage['obligations'] if r['obligation_id'] not in assigned]
@@ -1119,29 +1250,151 @@ def check_fixed_source_graph(graph, original, expected):
                          'nonblank_controls': expected.get('separator_literals', {})},
             'actual': {'all_gap_literals_independently_accounted': True}, 'requirement_ids': [],
             'obligation_ids': [r['obligation_id'] for r in formatting], 'analysis_limitation_ids': []})
-    assert set().union(*(set(c['requirement_ids']) for c in cases)) == required_ids
-    assert set().union(*(set(c['obligation_ids']) for c in cases)) == {r['obligation_id'] for r in coverage['obligations']}
-    assert set().union(*(set(c['analysis_limitation_ids']) for c in cases)) == {r['issue_id'] for r in coverage['analysis_limitations']}
-    assert coverage['source_complete'] and coverage['structure_complete'] and coverage['responsibility_complete']
+    accepted_ids = set().union(*(set(c['requirement_ids']) for c in cases))
+    assert accepted_ids == required_ids, (sample_id, 'fixed requirements not independently accepted',
+                                         sorted(required_ids - accepted_ids), sorted(accepted_ids - required_ids))
+    assert set().union(*(set(c['obligation_ids']) for c in cases)) == {r['obligation_id'] for r in coverage['obligations']}, (
+        sample_id, 'source obligations left without an executed source assertion')
+    assert set().union(*(set(c['analysis_limitation_ids']) for c in cases)) == {r['issue_id'] for r in coverage['analysis_limitations']}, (
+        sample_id, 'analysis limitations left without an executed source assertion')
+    assert coverage['source_complete'] and coverage['structure_complete'] and coverage['responsibility_complete'], (
+        sample_id, 'production comparison responsibilities incomplete')
     return cases
 
 
-def review_fixed_sample(sample_id):
-    import hashlib
+def _source_failure_case(graph, original, case_id, expected, error, *, target=None, stage='source'):
+    """A failed assertion remains visible and never certifies an accepted ID."""
+    import traceback
 
+    source = target['reference'] if target else {}
+    retained = graph['comparison_coverage']['retained_semantic_requirements']
+    def own(row):
+        return target is not None and source_in_target(
+            row.get('source', {}), target, original,
+            physical_lines=expected.get('physical_lines') if isinstance(expected, dict) else None)
+    observed_ids = [n['id'] for n in [*graph['nodes'], *graph['relations']] if own(n)]
+    observed_ids += [n['requirement_id'] for n in graph['source_form_requirements'] if own(n)]
+    return {'case_id': case_id, 'status': 'failed', 'source_assertion_case': stage == 'source',
+            'attempted': True, 'failure_stage': stage,
+            'input': {'sample_id': original['sample_id'], 'source': source},
+            'expected': {'source_assertions': expected},
+            'actual': {'original_text': target.get('raw_text', target['text']) if target else None,
+                       'blocks': [b for b in graph['document_ast']['children'] if own(b)],
+                       'typed_facts': [n for n in graph['nodes'] if n['id'] in retained['B'] and own(n)],
+                       'content_sources': [n['source'] for n in graph['source_form_requirements'] if own(n)]},
+            'error': type(error).__name__, 'detail': str(error), 'traceback': traceback.format_exc(),
+            'requirement_ids': [], 'observed_requirement_ids': observed_ids,
+            'obligation_ids': [r['obligation_id'] for r in graph['comparison_coverage']['obligations'] if own(r)],
+            'analysis_limitation_ids': [r['issue_id'] for r in graph['comparison_coverage']['analysis_limitations'] if own(r)]}
+
+
+def _check_directory_source(graph, original, entry):
+    """A printed navigation page is a literal reference with an actual parent."""
+    line, parent, label, page = entry
+    target = next(t for t in original['targets'] if t['reference']['lines'][0] == line)
+    assert target['text'] == label + ': ' + page
+    assert [h['text'] for h in target.get('selected_heading_context', [])] == ['Contents', parent]
+    coverage = graph['comparison_coverage']
+    retained = coverage['retained_semantic_requirements']
+    facts = [n for n in graph['nodes'] if n['id'] in retained['B'] and source_in_target(n['source'], target, original)]
+    matching = [f for f in facts if f.get('semantic_type') == 'toc_page'
+                and (f['subject'], f['attribute'], f['value']) == (label, 'Page', page)
+                and f.get('identity_facets', {}).get('toc_parent') == [parent]]
+    assert len(matching) == 1, (line, 'literal navigation page role and own entry/parent missing', entry, facts)
+    edges = [e for e in graph['relations'] if e['id'] in retained['L'] and source_in_target(e['source'], target, original)]
+    endpoint = {'type': 'toc_entry', 'title': label, 'parent_path': [parent]}
+    page_edges = [e for e in edges if e['type'] == 'toc_entry_page' and e['left'] == endpoint
+                  and e['right'] == {'type': 'toc_page_slot', 'title': label, 'parent_path': [parent]}]
+    parent_edges = [e for e in edges if e['type'] == 'toc_parent' and e['right'] == endpoint
+                    and e['left'] == {'type': 'toc_entry_parent', 'title': parent, 'parent_path': []}]
+    assert len(page_edges) == len(parent_edges) == 1, (line, 'entry/page and parent relation missing', entry)
+    return {'case_id': f"source::{original['sample_id']}::directory:L{line}", 'status': 'passed',
+            'input': {'sample_id': original['sample_id'], 'source': target['reference']},
+            'expected': {'source_assertions': {'parent': parent, 'entry': label, 'literal_page_reference': page,
+                                              'page_is_a_quantity': False}},
+            'actual': {'literal_page': matching[0]['value'], 'parent': matching[0]['identity_facets']['toc_parent']},
+            'requirement_ids': [matching[0]['id'], page_edges[0]['id'], parent_edges[0]['id']],
+            'obligation_ids': [], 'analysis_limitation_ids': []}
+
+
+def check_fixed_source_graph(graph, original, expected, *, collect_failures=False):
+    """Check every declared source; collecting failures does not accept them."""
+    blocks, assertions = graph['document_ast']['children'], expected['sources']
+    cases = []
+    try:
+        assert len(blocks) == len(assertions)
+        assert [b['source']['lines'][0] for b in blocks] == [s['line'] for s in assertions]
+    except (AssertionError, ValueError, KeyError) as error:
+        if not collect_failures:
+            raise
+        cases.append(_source_failure_case(graph, original, f"source::{original['sample_id']}::document-envelope",
+            {'ordered_source_lines': [a['line'] for a in assertions]}, error, stage='document_structure'))
+    targets = {t['reference']['lines'][0]: t for t in original['targets']}
+    for assertion in assertions:
+        target = targets[assertion['line']]
+        candidates = [b for b in blocks if b['source'] == target['reference']]
+        block = candidates[0] if len(candidates) == 1 else None
+        try:
+            cases.append(_check_fixed_source(graph, original, expected, assertion, target, block))
+        except (AssertionError, ValueError, KeyError) as error:
+            if not collect_failures:
+                raise
+            cases.append(_source_failure_case(graph, original, f"source::{original['sample_id']}::L{assertion['line']}",
+                assertion, error, target=target))
+    for entry in expected.get('directory_assertions', []):
+        try:
+            cases.append(_check_directory_source(graph, original, entry))
+        except (AssertionError, ValueError, KeyError) as error:
+            if not collect_failures:
+                raise
+            target = targets[entry[0]]
+            cases.append(_source_failure_case(graph, original, f"source::{original['sample_id']}::directory:L{entry[0]}",
+                {'parent': entry[1], 'entry': entry[2], 'literal_page_reference': entry[3], 'page_is_a_quantity': False},
+                error, target=target, stage='navigation_role'))
+    try:
+        _finish_fixed_source_cases(graph, original, expected, cases, collect_failures=collect_failures)
+    except (AssertionError, ValueError, KeyError) as error:
+        if not collect_failures:
+            raise
+        cases.append(_source_failure_case(graph, original, f"source::{original['sample_id']}::remaining-responsibilities",
+            {'complete_source_scope': expected['ranges'], 'all_fixed_requirements_independently_accounted': True},
+            error, stage='coverage_and_order'))
+    return cases
+
+
+def review_fixed_sample(sample_id, *, collect_failures=None):
     from moparse_eval.cli import code_identity
     from moparse_eval.requirement_gate import _digest
 
     sample, original, expected = read_fixed_source_assertions(sample_id)
     graph = compile_requirement_graph(original, comparison_contract='document_ast')
     validate_requirement_graph(graph, expected=original)
-    cases = check_fixed_source_graph(graph, original, expected)
+    if collect_failures is None:
+        collect_failures = sample_id in fixed_assertion_catalogue()['review_ids']
+    cases = check_fixed_source_graph(graph, original, expected, collect_failures=collect_failures)
+    dependencies = fixed_assertion_catalogue()['numeric_roles'].get(sample_id, [])
+    if dependencies:
+        role_cases = {c['case_id']: c for c in numeric_role_validation()}
+        for dependency in dependencies:
+            target = next(t for t in original['targets'] if t['reference']['lines'][0] == dependency['line'])
+            observed = role_cases.get(dependency['case_id'])
+            accepted = observed is not None and observed['status'] == 'passed'
+            case = {'case_id': f"source::{sample_id}::comparison-role:L{dependency['line']}::{dependency['case_id']}",
+                    'status': 'passed' if accepted else 'failed', 'failure_stage': 'comparison_numeric_role',
+                    'input': {'sample_id': sample_id, 'source': target['reference']},
+                    'expected': {'source_assertions': dependency}, 'actual': {'controlled_role_evidence': observed},
+                    'requirement_ids': [], 'obligation_ids': [], 'analysis_limitation_ids': []}
+            if not accepted:
+                case['detail'] = 'Required literal calendar/reference role lacks a passing independent comparison proof: ' + dependency['case_id']
+            cases.append(case)
     if BIND_CURRENT:
         index = json.loads((CURRENT / 'index.json').read_text())
         row = next(r for r in index['records'] if r['sample_id'] == sample_id)
         assert row['software_id'] == index['software_id'] == code_identity()['software_id']
         assert graph == json.loads((CURRENT / row['json']).read_text())
-    return {'status': 'passed', 'sample_id': sample_id, 'complete_source_acceptance': True,
+    failures = [c for c in cases if c['status'] != 'passed']
+    return {'status': 'returned_for_specific_coverage_gap' if failures else 'passed',
+            'sample_id': sample_id, 'complete_source_acceptance': not failures,
             'all_authorized_sources_independently_reviewed': True, 'previously_explained_sources_included': True,
             'sample_declaration': sample, 'source_assertions': expected, 'cases': cases,
             'case_ids': [c['case_id'] for c in cases],
@@ -1150,7 +1403,13 @@ def review_fixed_sample(sample_id):
             'analysis_limitation_ids': sorted({ident for c in cases for ident in c['analysis_limitation_ids']}),
             'selection_sha256': _digest(graph['source_obligation_inventory']['selection']),
             'authorized_sources_sha256': _digest(graph['source_obligation_inventory']['sources']),
-            'handwritten_assertions_sha256': hashlib.sha256((ROOT / 'tests/validation/lite_fixed_source_assertions.py').read_bytes()).hexdigest(),
+            **handwritten_assertion_identity(),
+            'source_cases_attempted': sum(c.get('source_assertion_case') is True for c in cases),
+            'source_cases_expected': len(expected['sources']),
+            'failed_case_ids': [c['case_id'] for c in failures],
+            'specific_coverage_gaps': [{'case_id': c['case_id'], 'source': c['input'].get('source'),
+                                      'detail': c['detail'], 'failure_stage': c['failure_stage']} for c in failures],
+            'comparison_numeric_role_dependencies': dependencies,
             'required_capabilities': graph['comparison_coverage']['required_capabilities'],
             'fresh_production_compile_matches_saved_current': BIND_CURRENT,
             'semantic_analysis_limitations_retained': len(graph['unresolved']),
@@ -1303,19 +1562,19 @@ if __name__ == '__main__':
     parser.add_argument('--output', type=Path, help='Local validation record; never a quality result')
     parser.add_argument('--diagnosis-output', type=Path, help='Update the existing source-only diagnosis with contract dimensions')
     parser.add_argument('--comparison-evidence', type=Path, default=WORK / 'comparison-validation.json')
-    parser.add_argument('--sample', action='append', help='Explicit source-only development subset; default runs all 32 source Oracles')
+    parser.add_argument('--sample', action='append', help='Explicit source-only development subset; default runs all 55 source Oracles')
     parser.add_argument('--cross-fragments-only', action='store_true', help='Review only the five fixed source spans, without whole-sample acceptance')
     args = parser.parse_args()
     CURRENT, BIND_CURRENT = args.current, not args.fresh_only
     identity = code_identity()
+    assertion_identity = handwritten_assertion_identity()
+    validation_code_sha256 = hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
     result = {}
     checks = [('huawei', 'huawei-operating-results-p062-063', review),
               ('sf', 'sf-cashflow-assets-liabilities-p040-041', review_sf),
               ('sinopec', 'sinopec-finance-governance-p025-036', review_sinopec_boundary)]
-    from tests.validation.lite_fixed_source_assertions import ADDITIONAL_ASSERTIONS, ASSERTIONS
-
     checks.extend((sample_id, sample_id, lambda sample_id=sample_id: review_fixed_sample(sample_id))
-                  for sample_id in sorted({**ASSERTIONS, **ADDITIONAL_ASSERTIONS}))
+                  for sample_id in sorted(fixed_assertion_catalogue()['assertions']))
     if args.sample:
         unknown = set(args.sample) - {sample_id for _, sample_id, _ in checks}
         if unknown:
@@ -1332,14 +1591,16 @@ if __name__ == '__main__':
                 from moparse_eval.requirement_gate import _digest
 
                 graph = json.loads((CURRENT / 'samples' / (sample_id + '.json')).read_text())
-                assert graph['comparison_coverage']['responsibility_complete']
+                if value['status'] == 'passed':
+                    assert graph['comparison_coverage']['responsibility_complete']
                 value['generated_view_sha256'] = hashlib.sha256((CURRENT / 'samples' / (sample_id + '.json')).read_bytes()).hexdigest()
                 value['comparison_coverage_sha256'] = _digest(graph['comparison_coverage'])
         except (AssertionError, ValueError, KeyError) as error:
             # Keep the incoming hand-authored assertion. A discovered error
             # must fail its original acceptance, never silently turn green.
             value = {'status': 'failed', 'error': type(error).__name__, 'detail': str(error),
-                     'traceback': traceback.format_exc(), 'complete_source_acceptance': False}
+                     'sample_id': sample_id, 'traceback': traceback.format_exc(), 'complete_source_acceptance': False,
+                     'all_authorized_sources_independently_reviewed': False}
         result[name] = value
     source_span_results = review_cross_fragment_sources() if not args.sample else {}
     capability = json.loads(args.comparison_evidence.read_text()) if args.comparison_evidence.exists() else {}
@@ -1357,8 +1618,13 @@ if __name__ == '__main__':
         value['independent_contract_accepted'] = BIND_CURRENT and capability_current and all(
             value['capability_evidence']['verified'].values())
     output = {'purpose': 'source_only_software_oracles_not_quality_grades', 'software': identity,
-              'validation_code_sha256': hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
-              'handwritten_assertions_sha256': hashlib.sha256((ROOT / 'tests/validation/lite_fixed_source_assertions.py').read_bytes()).hexdigest(),
+              'validation_code_sha256': validation_code_sha256,
+              'validation_code_unchanged': validation_code_sha256 == hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+              **assertion_identity,
+              'handwritten_assertions_unchanged': assertion_identity == handwritten_assertion_identity(),
+              'executed_sample_ids': [sample_id for _, sample_id, _ in checks],
+              'new_review_sample_ids': sorted(fixed_assertion_catalogue()['review_ids']),
+              'controlled_numeric_role_cases': getattr(numeric_role_validation, '_records', []),
               'command': [sys.executable, *sys.argv], 'bind_current': BIND_CURRENT,
               'source_index_sha256': hashlib.sha256((CURRENT / 'index.json').read_bytes()).hexdigest(),
               'results': result, 'source_span_results': source_span_results, 'candidate_read': False, 'pdf_or_image_read': False,
@@ -1373,5 +1639,7 @@ if __name__ == '__main__':
     print(json.dumps({name: {k: v for k, v in value.items() if k in {
         'status', 'sample_id', 'complete_source_acceptance', 'independent_contract_accepted', 'detail'}}
         for name, value in result.items()}, ensure_ascii=False))
-    raise SystemExit(0 if all(v['status'] == 'passed' and (not BIND_CURRENT or v['independent_contract_accepted'])
+    raise SystemExit(0 if output['software_unchanged'] and output['validation_code_unchanged']
+                     and output['handwritten_assertions_unchanged']
+                     and all(v['status'] == 'passed' and (not BIND_CURRENT or v['independent_contract_accepted'])
                              for v in result.values()) else 1)

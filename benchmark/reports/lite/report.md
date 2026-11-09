@@ -1,103 +1,80 @@
-# MO-Parse Lite：新增11份独立验收与五处来源责任
+# MO-Parse Lite：新增23份独立审查与数字角色责任修复
 
-新增11份已完成独立审查：11份通过、0份退回、0份受外部条件阻塞，未审查0份；其中6份修复后通过。五处跨片段来源责任全部闭合，局部剩余缺口0。原21份已在最终源码和唯一current下重新通过。以上是document_ast/1的source-only独立来源验收；全局仍未通过，质量成绩继续暂停。
+新增23份已完成独立审查：0份通过、23份退回、0份受外部条件阻塞；公共根因「完整内容数码误用数量等价」已修复，影响3094个真实来源、164份样本。940个授权来源全部阅读并实际执行逐源断言，未审查0份。以上是source-only软件和来源责任验收，不是管线质量成绩。
 
-## 固定新增批次与实际执行入口
+## 固定23份与逐项结论
 
-接手HEAD为 `1c11b961d740ca961af9a5fc5f8b255a2b190cad`，接手工作区干净，/opt/mosaic-parse与/opt/moparse指向同一仓库。新增11份来自上一轮明确记录的集合外清单，与当前责任完整集合减去21份有效独立验收的差集一致，没有替换成员。旧18份历史身份继续保留在[actual-source-diagnosis.json](../../runs/lite/requirements/validation/actual-source-diagnosis.json)的fixed_sample_acceptance；本轮的完整声明、授权selection、来源身份、合同版本、接手视图及coverage摘要、能力和最终绑定位于additional_sample_acceptance。新增责任完整的其他23份单列，没有补入本批次或当作通过。
+接手HEAD为997dd9157344a586de4804566f57d3a99396d083，工作区干净，源码与索引身份匹配交接记录。固定23份来自上一轮明确清单，与责任完整集合减原32份的差集一致，没有替换成员或修改manifest。旧18份及旧11份历史身份保留；本轮清单、完整selection、原始来源身份、接手与最终view/coverage摘要、固定B/L、能力依赖及实质失败保存在[actual-source-diagnosis.json](../../runs/lite/requirements/validation/actual-source-diagnosis.json)的review_sample_acceptance。
 
-[独立入口](../../../tests/validation/lite_source_oracle.py)默认实际执行原21份、新增11份及五处有限来源审查。`--sample SAMPLE_ID`为局部开发入口，`--cross-fragments-only`只审查五处，不接受其所属四份整样本。[手写断言](../../../tests/validation/lite_fixed_source_assertions.py)分别保存旧ASSERTIONS、新ADDITIONAL_ASSERTIONS、表示策略、顺序组和五处原文断言；生产代码不导入这些答案。
+统一入口为[tests/validation/lite_source_oracle.py](../../../tests/validation/lite_source_oracle.py)，默认实际执行55份及五处有限来源。新23份逐源执行，失败后继续后文；来源case的expected来自预先手写声明，生产输出只作为observed。每份执行证据见[oracle-validation.json](../../runs/lite/requirements/validation/oracle-validation.json)的results[sample_id]；case_ids、已验收要求、observed失败要求、obligations及analysis limitations分别保存，不用自动枚举ID证明通过。
 
-11份的239个授权来源全部审查，包括explained内容；实际执行258个来源、空白或显式引用分隔、归属顺序case。每份证据位于[oracle-validation.json](../../runs/lite/requirements/validation/oracle-validation.json)的results[sample_id]，case_ids、requirement_ids、obligation_ids、analysis_limitation_ids及比较能力证明均在执行断言后绑定。没有用实际expected复制成candidate自比较。
+| sample_id | document_id | 授权来源 | 固定合同B/L | 结论及最小具体缺口 |
+| --- | --- | ---: | ---: | --- |
+| alibaba-company-overview-p006-008 | complex-alibaba-2025-annual | 35 | 20/63 | 退回：L114 父归属重复计票 |
+| alibaba-mission-values-p003 | complex-alibaba-2025-annual | 14 | 10/38 | 退回：L39 父归属重复计票 |
+| alibaba-risk-summary-p105-108 | complex-alibaba-2025-annual | 70 | 65/152 | 退回：L2258 父归属重复计票 |
+| alibaba-shareholder-letter-p004-005 | complex-alibaba-2025-annual | 29 | 24/61 | 退回：L56 不完整类型化解释；L76 父归属重复计票 |
+| bis-endnotes-technical-annex-p052-057 | complex-bis-economic-2024 | 65 | 63/139 | 退回：L968 父归属重复计票 |
+| byd-bilingual-review-p013-024 | complex-byd-2024-annual | 67 | 46/125 | 退回：L345 父归属重复计票 |
+| hkex-chairman-statement-p017-020 | complex-hkex-2024-annual | 39 | 30/75 | 退回：L366 父归属重复计票 |
+| hkex-contents-p003 | complex-hkex-2024-annual | 33 | 26/46 | 退回：L13 父级责任缺失；L15 25项目录角色/页码及父组证明缺失 |
+| hkex-independent-auditor-p137-141 | complex-hkex-2024-annual | 78 | 61/155 | 退回：L4312 父归属重复计票 |
+| hkex-nomination-governance-p105-108 | complex-hkex-2024-annual | 76 | 57/151 | 退回：L3225 父归属重复计票 |
+| hkex-operational-timeline-p008-009 | complex-hkex-2024-annual | 53 | 45/78 | 退回：L123 父归属重复计票 |
+| hkex-strategic-message-p007 | complex-hkex-2024-annual | 6 | 5/12 | 退回：L70 父归属重复计票 |
+| iea-energy-manufacturing-p037-040 | complex-iea-energy-ai-2025 | 31 | 20/68 | 退回：L647 父归属重复计票 |
+| iea-inference-energy-boxes-p043-048 | complex-iea-energy-ai-2025 | 44 | 35/91 | 退回：L753 父归属重复计票 |
+| iea-rise-ai-p021-024 | complex-iea-energy-ai-2025 | 33 | 21/58 | 退回：L434 父归属重复计票 |
+| iea-training-energy-p041-042 | complex-iea-energy-ai-2025 | 16 | 13/31 | 退回：L707 父归属重复计票 |
+| nvidia-definitions-p017 | complex-nvidia-2025-annual | 50 | 49/67 | 退回：L466 父归属重复计票 |
+| pingan-chairman-p014-019 | complex-pingan-2024-annual | 32 | 27/93 | 退回：L504 父归属重复计票 |
+| pingan-integrated-finance-p022-024 | complex-pingan-2024-annual | 45 | 23/64 | 退回：L658 父归属重复计票；L668 不完整类型化解释 |
+| pingan-mission-opportunities-p006-007 | complex-pingan-2024-annual | 30 | 18/48 | 退回：L231 父归属重复计票 |
+| pingan-results-announcement-p001 | complex-pingan-2024-annual | 16 | 14/29 | 退回：L21 父归属重复计票 |
+| pingan-strategy-cards-p008-011 | complex-pingan-2024-annual | 53 | 36/82 | 退回：L291 父归属重复计票；L298 指定typed/mixed责任缺失 |
+| tencent-enforcement-notices-jurisdiction-p149-151 | complex-tencent-2025-bond-programme | 25 | 19/46 | 退回：L2091 父归属重复计票 |
 
-| sample_id | document_id | 授权来源数 | 分析T/L/B节点 | 当前固定合同B/L | 结论 |
-| --- | --- | ---: | ---: | ---: | --- |
-| beijing-media-director-p001-003 | 1201816142 | 29 | 31/2/1 | 27/54 | 修复后通过 |
-| fiyta-bond-followup-p011-017 | 1200778318 | 26 | 27/17/4 | 15/37 | 修复后通过 |
-| huawei-audit-p066 | complex-huawei-2024-annual | 20 | 16/7/0 | 12/31 | 通过 |
-| huaweitech-cover-p001 | complex-huaweitech-2024-096 | 15 | 11/4/2 | 12/23 | 通过 |
-| huaweitech-middle-east-p021-023 | complex-huaweitech-2024-096 | 65 | 127/22/10 | 52/115 | 修复后通过 |
-| midea-resumption-p001 | 1200767576 | 8 | 12/5/4 | 8/13 | 修复后通过 |
-| pingan-honors-p020 | complex-pingan-2024-annual | 25 | 31/11/0 | 13/38 | 通过 |
-| tangshan-directors-opinion-p001-002 | 1200975009 | 10 | 10/2/0 | 7/15 | 通过 |
-| wuliangye-appeal-progress-p001 | 1201860324 | 17 | 21/8/3 | 13/27 | 修复后通过 |
-| zhenye-correction-p001 | 1200799174 | 10 | 14/4/3 | 10/17 | 修复后通过 |
-| zhenye-coupon-seals-p001-003 | 1200694910 | 14 | 22/12/7 | 13/22 | 通过 |
+所有explained内容均纳入审查。标题、父级、列表、图题、记录、签章、完整数字/单位/期间/限定/否定/顺序及不适用的正面依据保存在三份手写声明模块。图题只审查文字与结构，不读取图像；零项不适用没有被写成100分。IEA训练样本完整审查16个来源，L730仍通过局部复验，L707/L709等整样本计票缺口没有因此获准。
 
-标题、图题、封面及签章只按授权文字和结构验收，不做图像理解。上下文标题及图题不额外虚构B事实；适用性不表示业务质量100分。表内分析节点与固定合同比较要求分列；本轮没有实际保存输出评分，因此没有实际候选分子、成绩或正式冻结分母。
+## 唯一公共生产修复
 
-## 五处来源的首个失败点与修复
+首个失败函数是moparse_eval/requirement_ast.py::_content_token_equivalence：旧实现仅因词面token为number，就调用数量无损等价，错误接受日期、法条、计划、模型版本及证券代码的等值数码改写。两个实际授权来源为NVIDIA L452的Item 402(v)/Regulation S-K，以及IEA训练L722的as of 24 March 2025；它们进入同一完整内容数字比较路径。没有把真实expected复制成candidate，也没有比较真实候选。
 
-这五处分别属于BIS的bis-fiscal-productivity-policy-p042-051、bis-policy-boxes-p026-034，以及IEA的iea-infrastructure-capabilities-p032-036、iea-training-energy-p041-042，和新增11份没有交集。文档分别为complex-bis-economic-2024和complex-iea-energy-ai-2025；原路径、全文、完整selection、旧撤回责任及阻塞义务、前后分析和原始跨度、最终要求与剩余义务见同一诊断的cross_fragment_source_review，执行证据在oracle-validation.json的source_span_results。
+read_content_ast现在保留数字的同源比较角色及有限本地计量依据和单位跨度，validate_content_ast从原文重新核验这些信息。只有有明确计量依据的内容数字调用既有number等价；没有所属角色证明的等值数码改写保持unresolved，完整要求和分母保留，相关层不发布成绩。完整typed数量、期间、字段身份及文本值继续使用原比较器。数量18小時到18.0小時、有限单位/限定词变化仍受控通过；日期和引用不再借用该规则，T仍保留字面差异。
 
-| 原始来源 | 首个实际失败点 | 当前合法责任 |
-| --- | --- | --- |
-| BIS L838 | 命题范围解释未闭合时，语言分析路由拒绝了该原始脚注范围；本处没有joined_fragments，不能谎称是连接坐标错误。 | 完整保留五条脚注、引用、日期、ICs所属描述和原始顺序；固定原来源0–688，单独内容要求，原17项分析限制保留。 |
-| BIS L948 | 分词解释未闭合被当作不能由内容合同承担，导致整段没有责任。 | 原来源0–469保留last year与today、below 1.6%与1%、GDP及人口和地缘限定，原10项分析限制保留。 |
-| BIS L674 | 前置名词范围解释未闭合阻止完整内容接手。 | 原来源0–98保留In addition to限定与主句，原1项分析限制保留。 |
-| IEA L588 | 未加句号的L586和L588的独立有限句被连接，首句分析沿用了前一原始来源身份。 | 停止错误连接；按L588自己的0–883承担完整供应链正文，ASML、Carl Zeiss及地域和限定不借邻源；原23项分析限制保留。 |
-| IEA L730 | L728未加句号的训练能耗callout错误连接了独立上标脚注。 | 脚注从L728拆开，L730原始0–62保留⁴与never及maximum designed限定；原1项分析限制保留。 |
+全部同类实际范围已在173份来源图重新编译和来源校验中核验：3094个原始来源、164份样本视图，集合外141份没有因此获得整样本验收。修复只改变来源绑定的数字角色证据；分析T/L/B、固定B/L要求、来源与责任分区均未变化，合法分母变化为0。具体逐来源命中见shared_comparison_responsibility_repair.affected_scope；不是按pending条数估算收益。
 
-五处各新增一份固定内容责任，局部对应B要求加1、范围及顺序L要求加2；没有强行恢复旧节点或旧数量。共享修复还影响四份中的其他来源，整样本固定B/L分别为44/148到59/181、45/126到60/157、14/40到19/50、9/23到13/31；这些更大变化的逐来源证据另见additional_sample_acceptance.final_rebuild_comparison，不能都计作五处成果。
+独立[数字角色用例](../../../tests/validation/lite_review_numeric_role_cases.py)执行13组、39个变体：12组36个变体通过；原security-code单句的3个变体保留为独立的重复L责任失败，没有改预期L1去迎合L2，也不计为已验证数字能力。额外19项生产链测试覆盖合法计量变化、近似非等价、角色/单位来源删除和伪造、邻源借用、错误范围、最终outcomes、固定分母及证据重放。最终结果均绑定同一源码、测试、断言和current。
 
-本次五处均无剩余局部责任缺口。其所属整样本没有因局部审查取得独立验收；前述前三份另有5、19、105项阻塞义务及5、20、8项阻塞分析限制。训练能耗样本虽由共享修复取得完整比较责任，仍列在未独立验收的23份中。
+## 审查退回与旧验收纠正
 
-连接分析只作连续表达记录。original_source_cuts在所属第一片段的分析坐标与各原始片段局部半开字符区间之间显式投影，检查非零起点、各片段顺序、首尾部分使用、真实空白与投影空白、插入空格及原身份。来源复核拒绝片段调序、删除、平移、替换和跨插入内容取字。不能跳过标题、图片、表格、列表边界或原文分号；原21份回归暴露的CATL L1952与SF L550分号跳过问题已作通用边界修复，原文及原分析义务保留。
+完整内容已经承担整段及其明确父范围后，生产仍保留已撤下局部命题的prose_heading_membership，并另计完整内容document_scope，形成重复父归属票。独立单句控制和真实HKEX L390、L4350证实相同范围及关系；其他来源逐一核对原文、完整内容跨度、已撤下B端点和相同父范围后退回，未按同一行号或reason字符串直接豁免。该第二根因仅建立失效验收守卫和具体诊断，本轮没有修改生产实现去展开第二公共包。
 
-跨片段部分解释若由内容接手，必须为该陈述所有实际原始片段建立责任，并检查相同范围、父级和连续结构，避免只补尾段却保留同一整句的类型化票。完整数量仍精确分区保留类型化比较，不以任意重叠ID、忽略text_span、邻源借值或reason批量豁免使其通过。本文正文合同的范围和顺序也有独立候选反例，不以字符区间并集证明关系。
+另有Alibaba股东信L56将前置年度句吞成actor、HKEX目录L13父级和25项导航角色缺失、Ping An L668舍入注记错误modal object，以及策略L298/L309/L328的必需typed/mixed责任缺失。完整文字保留不能覆盖这些合同缺口；没有以reason白名单、删除要求或缩小分母使其通过。
 
-## 新增审查发现的具体缺陷与表示策略
+原32份最终复验为29份通过、3份旧验收撤回。华为、顺丰、中石化三个完整Oracle通过；撤回的是catl-nev-battery-markets-p127-132 L1826、fiyta-bond-followup-p011-017 L192、pboc-cover-p001 L5，均为已有父归属重复责任。历史批次记录和旧实质断言保持，当前撤回见review_sample_acceptance.original_32_final_regression，不把错误验收静默保留。
 
-北青公告及中东文章的冒号标题原来生成虚构标量字段；现在保留标题全文及层级。括号字段如（股份代號：1000）原来被切成不平衡的标签和值；现在按预先声明的完整内容责任保留。飞亚达L192的“不存在对外担保（不包括对子公司的担保）”不能由一个负向includes及残缺actor解释；独立来源守卫拒绝该完整类型化解释，完整正文承担期间、否定及排除限定，原部分分析保留。
+五处BIS L838/L948/L674、IEA L588/L730在最终current下全部通过，仍仅为局部来源证据。A保留顺丰三项声明及221项计量，B保留华为L1586三项要求。C的原一项命题及4条关系在分析层完全保留，但新审查证明它们没有作为首句typed/mixed比较责任保留；旧“只核对分析payload”的保护不足已明确撤回，不能宣称C比较责任通过。
 
-美的L5、五粮液L5与振业更正L5的宽空白分隔证券信息原来被吞进第一个值；现在保留各标签和值的原始跨度，分成实际打印的代码、简称和公告编号。中东文章L708/L713的URI scheme冒号不再成为https字段，完整引用文字仍保留。表格屏障的受控生产链还补齐了文档AST格位的已有native_path身份，未放宽来源匹配。
+1639项完整计量的真实保护范围已确认：保留B中可由既有exact_number读取数值且有明确unit限定的要求，属于2321项保留数值事实的子集。逐来源、值、单位、期间、限定及完整payload核对无丢失或降级；173份全部分析B payload及关系也完全保持，不只检查数量相等。证据见[baseline-preservation.json](../../runs/lite/requirements/validation/baseline-preservation.json)和final_rebuild_comparison。
 
-表示策略在读取任何候选前固定：A必须类型化的完整计量包括CATL L1779和L1793，以及明确声明的完整字段；B由完整内容负责的正文保持全文、范围、顺序和责任边界，不要求通用SVO；C仅为逐项指定、经完整断言验证的简单字段或短句允许两种完整表示。C仍检查完整覆盖、类型化端点、数量或期间关系、排他分区和固定计票规则，不能只判断own_content非空。没有将全部TYPED_ASSERTIONS机械改为强制类型化。
+## 最终同版验证与全局门禁
 
-[表示策略反例](../../../tests/unit/test_fixed_source_oracle.py)直接验证必需计量被删除时，即使完整文字AST仍合法也不能通过，拒绝局部内容代替整段、责任重复、空洞及混合重叠；由完整内容负责的正文不因缺少SVO而被误拒绝。[跨片段生产链](../../../tests/unit/test_cross_fragment_source_ownership.py)由合成expected和授权声明开始，经read_expected、要求图、来源审计、投影、独立合成candidate、grade_layers及validate_evidence执行，覆盖多个片段、偏移、顺序、来源替换、屏障、脚注、混合责任和文字完整但归属顺序错误。
+完整受控回归为4453 passed in 234.45s (0:03:54)，源码、测试、手写断言在执行期间不变。software_id为`6c6a6e709df49536fa69e0ab8fe8a3b4ab124147db8c4d3daa93493393b5f37b`，tests_sha256为`b61adb05198ac9801c4cc55db2aec50f282e6b0bfcdb6cb56479530f9c29a3cb`，手写断言聚合身份为`fc978dd00d1c8ef09a6b5bebbcedf2c6f1f6038e35f02c35c2c7cef698912b45`，唯一current索引为`6cbcd359ce4ce56363ea2690595b1c58f9b1ffcf2aa0ce4b1efac248cbd8b70a`。原4452项开发执行因手写模块在运行期间变化，已由这次冻结后执行替代，未作为最终验收。
 
-新写五粮液断言的一处标题层级曾误写H3，已依授权Markdown纠正为H2；新写标量断言曾把完整source当作value_source，已纠正并分别验证标签、值及单位来源。封面EM2.0模式的打印标签经完整来源审查明确为允许双表示的简单字段。这些是透明修正本轮新增Oracle；原21份已验收的实质预期未改写以迎合新输出。
+173份JSON/XML由16个CPU分析进程同源码重建，来源完整性失败0，退出码2对应保留的集合外责任及五个输入范围；不是来源编译失败。最终Oracle退出码1对应真实退回和旧验收撤回，940/940新来源已执行，未反复运行相同命令求0。暂存视图完成保真核对后替换唯一current，失效生成视图已删除。Ruff指定规则、非语料Markdown政策和排除受保护路径的diff空白检查通过。
 
-## 合法要求变化与原21份保护
-
-| 新增成员 | 接手固定B/L | 当前固定B/L | 原文依据 |
-| --- | ---: | ---: | --- |
-| beijing-media-director-p001-003 | 28/54 | 27/54 | L11是标题，L9的括号原文完整保留。 |
-| fiyta-bond-followup-p011-017 | 15/41 | 15/37 | L192整句承担日期、否定及括号排除；撤销不能独立成立的局部关系票。 |
-| huaweitech-middle-east-p021-023 | 55/113 | 52/115 | L628/L642/L658是标题；L708/L713是完整URI，仍有范围及顺序责任。 |
-| midea-resumption-p001 | 6/11 | 8/13 | L5实际打印三项证券元数据，补回另两项。 |
-| wuliangye-appeal-progress-p001 | 11/25 | 13/27 | L5实际打印三项证券元数据，补回另两项。 |
-| zhenye-correction-p001 | 8/15 | 10/17 | L5实际打印三项证券元数据，保留“深振业 A”的原字。 |
-
-其余新增5份固定B/L不变。新增批次合计固定B/L从180/388变为182/392；这是expected固定责任的合法变化，不是实际候选成绩。候选分块或表现没有改变这些数量。
-
-原21份的最终当前绑定证据位于additional_sample_acceptance.original_21_final_regression及oracle-validation.json；旧18份历史身份没有覆盖。A保留三项声明及221项计量，B保留华为L1586三项要求，C保留平安L298首句一项命题及4条关系的原payload。旧三个完整来源Oracle的实质断言保持，当前结果在[baseline-preservation.json](../../runs/lite/requirements/validation/baseline-preservation.json)重新绑定。
-
-173份的原始来源数组、selection及五个输入范围逐份保持；派生来源数组也173份全部保持。104份分析或固定合同投影变化保存在final_rebuild_comparison.contract_deltas_by_source；89处分析B减少逐来源保留原文、前后事实、最终内容或结构责任及具体理由。旧完整计量事实另核对1639项，丢失0，未把完整类型化计量吞进正文。这些集合外回归核对不提供其余样本完整独立验收。
-
-## 最终同版证据与全局边界
-
-[完整受控回归](../../runs/lite/requirements/validation/software-validation.json)为 `4426 passed in 256.91s (0:04:16)`，181个测试文件；受测源码与测试身份在执行期间保持。software_id为 `8752b11786c4ec6936ddc23840958e1e1a15dd9cf955fbcd03ef7a09b01efc78`，tests_sha256为 `9fddc0721c8940d2e3cd54e20e2bd9c846bd01a38ec69e371b63247817a33a41`。40种受控能力和599项突变或反例记录在comparison-validation.json、mutations-validation.json及regression.xml；受控能力不等于真实原生格式读取或八组交付链通过。
-
-[唯一current索引](../../runs/lite/requirements/current/index.json)以16个分析进程重建173份JSON/XML，耗时154.23秒，来源完整性失败0。索引SHA-256为 `57914c6120086236ecaa6e4e03e9e93cc74481f21662c543cbd8e7fbe3e29bc4`；最终Oracle SHA-256为 `64e134be8f984ad96b0aa50c212420c941245dc2d94456e9c743201d9ae8ac74`。32份及五处均重新编译并与已安装current绑定，源码、测试、手写断言、索引、生成视图、coverage与执行能力证明一致。失效生成视图已删除。
-
-最终命令为 `PYTHONPATH=/opt/moparse .venv/bin/python tests/validation/lite_source_oracle.py --output benchmark/runs/lite/requirements/validation/oracle-validation.json --diagnosis-output benchmark/runs/lite/requirements/validation/actual-source-diagnosis.json`。最终退出码0。重建退出码2对应仍未覆盖的集合外责任，保留原样，不删样本求0。
-
-| 全局维度，允许重叠 | 当前数量 |
+| 当前独立维度 | 数量 |
 | --- | ---: |
-| 来源或结构不完整 | 0 |
-| 比较责任仍有未覆盖 | 118 |
-| 完整责任但缺少独立样本验收 | 23 |
-| 独立来源及合同验收 | 32 |
-| 仅保留语言分析限制 | 50 |
-| 含既定输入范围问题的视图 | 5 |
+| 编译比较责任仍有缺口 | 118 |
+| 编译责任完整但缺少有效独立验收 | 26 |
+| 当前有效独立来源及合同验收 | 29 |
+| 固定23份已审查 / 未审查 | 23 / 0 |
 | 既定输入范围目标 | 5 |
 
-全局仍为structure_blocked，来源结构、比较能力和交付转换三个全局门禁均未通过。23份新出现的责任完整视图只列在本轮诊断，没有替换新增11份，也没有开始其完整修复。真实格式读取、全范围保存输出诊断、八组真实回放及正式评分均未验收。五个输入范围保持Alibaba L230、Midea L417、PBOC L540和PBOC L252两项原身份；Alibaba L2353两种附着及未经批准的多解释合同保持。
+这些维度不机械相加。编译责任完整不是独立验收；本轮数字角色修复没有让集合外新增整样本通过。五个输入范围保留Alibaba L230、Midea L417、PBOC L540和PBOC L252两项原身份；Alibaba L2353的两种附着及未批准的多解释合同保持。来源结构、比较能力、真实格式读取、全范围保存输出诊断及交付转换门禁仍未通过，全局为structure_blocked，质量成绩继续暂停。
 
-当前HEAD仍为接手提交；本轮代码、测试及文档留在未提交工作区，没有提交或推送。Ruff指定致命错误规则、非语料Markdown政策及排除受保护路径的diff空白检查通过。原始处理成本及下列原始观测尾段保持；本轮source-only软件时间没有并入解析性能。
-
-本轮未读取原始PDF、图片、字层，未运行OCR、VLM、模型或裁判、实际候选比较、真实回放、正式保存输出评分、GPU/TTS或在线服务操作、部署、公开API修改或质量发布。canonical expected、映射、selection、页包、语料、native、历史交付与原始成本保持只读。候选仅为独立合成测试。下一步只按新的明确授权推进；续做入口为[expected output optimization](../../../docs/engineering/prompts/expected-output-optimization.md)。
+本轮未读取原始PDF、图片或字层，未运行OCR、VLM、模型服务或裁判、实际候选比较、真实native到final回放、正式评分、GPU/TTS或在线服务操作、部署、公开API修改、提交、推送或质量发布。canonical expected、原始映射、selection、页包、语料、有效native、历史交付和原始成本保持只读。仅独立合成candidate用于受控比较；P01–P08标签或受控测试不代表八组原生适配链通过。续做入口见[expected output optimization](../../../docs/engineering/prompts/expected-output-optimization.md)。
 
 ## 原始处理成本
 
