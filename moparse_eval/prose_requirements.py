@@ -49,6 +49,19 @@ def _subject(value: str) -> str:
     return re.sub(r"^The\b", "the", value)
 
 
+def _unresolved_subject_context(value: str) -> bool:
+    """Reject a printed note marker or an unparsed temporal reporting clause.
+
+    These are boundaries of the finite subject grammar, not inferred actors.
+    A number in parentheses stays in its original statement; an AS clause
+    after a temporal subject and finite past verb is not one nominal subject.
+    """
+    marker = _ORDINAL.match(value)
+    numbered = marker and (marker[1] or marker[2]).isdigit()
+    temporal_clause = re.search(r'\b(?:year|quarter|period)\b(?:\s+\d{4})?\s+[a-z]+ed\b.+\bas\b', value)
+    return bool(numbered or temporal_clause)
+
+
 def _sentence_spans(text: str) -> list[tuple[int, int]]:
     result, start = [], 0
     for match in re.finditer(r'''[.!?。！？]["”’」』）)\]]*''', text):
@@ -304,6 +317,14 @@ def read_prose_requirements(text: str, source: dict[str, Any], *, label: str | N
         while subject_end > subject_start and text[subject_end - 1].isspace():
             subject_end -= 1
         printed_subject = text[subject_start:subject_end]
+        if _unresolved_subject_context(printed_subject):
+            pending = {'kind': 'proposition', 'comparison_domain': 'sentence_interpretation',
+                'reason': 'prose_subject_boundary_unsupported', 'source': _source(source, sentence_start, sentence_end),
+                'text': text[sentence_start:sentence_end], 'subject_source': _source(source, subject_start, subject_end),
+                'layers': ['B', 'L']}
+            result['blockers'].append(pending)
+            result['pending_requirements'].append(copy.deepcopy(pending))
+            continue
         if not printed_subject or re.search(r"[:：;\n]", printed_subject):
             result["blockers"].append({"reason": "prose_subject_boundary_unsupported", "source": _source(source, subject_start, subject_end), "text": printed_subject})
             continue

@@ -482,6 +482,7 @@ def evaluation_projection(graph: dict[str, Any], *, document_contract: bool = Tr
         result['document_ast'] = copy.deepcopy(graph['document_ast'])
         result['source_form_units'] = copy.deepcopy(graph['source_form_units'])
         result['source_form_requirements'] = copy.deepcopy(graph['source_form_requirements'])
+        result['source_form_order_anchors'] = copy.deepcopy(graph['source_form_order_anchors'])
         result['comparison_coverage'] = copy.deepcopy(graph['comparison_coverage'])
         result['document_selection'] = copy.deepcopy(graph['source_obligation_inventory']['selection'])
     for key in ("explicit_references", "reference_roles", "reference_dispositions"):
@@ -830,7 +831,7 @@ def validate_requirement_graph(graph: dict[str, Any], *, expected: dict[str, Any
     if contract not in {'semantic', 'document_ast'} or graph.get('comparison_contract_version') != contract + '/1':
         raise ValueError('unknown or inconsistent requirement comparison contract version')
     if contract == 'document_ast' and any(key not in graph for key in (
-            'document_ast', 'source_form_units', 'source_form_requirements', 'comparison_coverage')):
+            'document_ast', 'source_form_units', 'source_form_requirements', 'source_form_order_anchors', 'comparison_coverage')):
         raise ValueError('document comparison requirements and coverage are required')
     nodes = {node["id"]: node for node in graph["nodes"]}
     relations = {edge["id"]: edge for edge in graph["relations"]}
@@ -962,7 +963,7 @@ def validate_requirement_graph(graph: dict[str, Any], *, expected: dict[str, Any
             if graph[key] != rebuilt[key]:
                 raise ValueError(f"requirement graph changed or omitted source semantics: {key}")
         for key in ('comparison_contract', 'comparison_contract_version', 'document_ast', 'source_form_units',
-                    'source_form_requirements', 'comparison_coverage'):
+                    'source_form_requirements', 'source_form_order_anchors', 'comparison_coverage'):
             if graph.get(key) != rebuilt.get(key):
                 raise ValueError(f'document comparison requirements changed: {key}')
 
@@ -1003,6 +1004,7 @@ def _compile_saved_requirement_view(job, *, cache=None):
     """Compile one authorized source view; worker failures retain its identity."""
     from .cli import code_identity
     from .expected_readback import read_expected
+    from .document_ast_comparison import document_order_requirements
 
     sample, expected_root, output, software_id = job
     sample_id = sample["id"]
@@ -1056,7 +1058,7 @@ def _compile_saved_requirement_view(job, *, cache=None):
             'B': len(graph['comparison_coverage']['retained_semantic_requirements']['B']) + sum(
                 b['role'] != 'heading' for b in graph['source_form_requirements']),
             'L': len(graph['comparison_coverage']['retained_semantic_requirements']['L']) +
-                 len(graph['source_form_requirements']) + max(0, len(graph['source_form_requirements']) - 1)},
+                 len(graph['source_form_requirements']) + len(document_order_requirements(graph))},
         "content_comparison_ready": graph.get('content_comparison_ready', False),
         "document_ast_blocks": len(graph.get('document_ast', {}).get('children', [])),
         "source_form_units": len(graph.get('source_form_units', [])),

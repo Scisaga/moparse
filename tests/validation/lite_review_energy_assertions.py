@@ -385,6 +385,12 @@ REVIEW_TYPED_ASSERTIONS[('pingan-strategy-cards-p008-011', 298)] = [
      {'polarity': 'positive', 'tense': 'present'}),
 ]
 REVIEW_REPRESENTATION_POLICIES[('pingan-strategy-cards-p008-011', 298)] = 'mixed'
+# Narrative binding identifies the tense-bearing slot; positive polarity is a
+# B assertion, not a printed L endpoint token. This matches the existing
+# independently declared narrative endpoint contract and keeps B positive.
+REVIEW_SOURCE_OVERRIDES = {
+    ('pingan-strategy-cards-p008-011', 298): {'binding_qualifiers': {'tense': 'present'}},
+}
 REVIEW_TYPED_ASSERTIONS[('pingan-results-announcement-p001', 13)] = [
     ('', 'Stock Code', '2318 (HKD counter) and 82318 (RMB counter)', {}),
 ]

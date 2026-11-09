@@ -63,8 +63,13 @@ def interpret_reference_sources(sample_id: str, units: tuple[SourceUnit, ...]) -
         if target["id"] in handled:
             if target["kind"] == "heading":
                 reader.clear_heading_state()
-            reader.data["syntax"].append({"kind": target["kind"], "text": target["text"],
-                "source": {**source, "block": target["id"]}, "scope": list(unit.scope), "semantic_role": "toc"})
+                reader.headings = list(unit.scope)
+                if reader.headings[-1:] != [target['text']]:
+                    reader.headings.append(target['text'])
+                reader.navigation_heading(target['text'], source, target.get('heading_level') or 1)
+            else:
+                reader.data["syntax"].append({"kind": target["kind"], "text": target["text"],
+                    "source": {**source, "block": target["id"]}, "scope": list(unit.scope), "semantic_role": "toc"})
         elif target.get("cells"):
             reader.table(copy.deepcopy(target["cells"]), source)
         else:

@@ -116,14 +116,14 @@ def test_worker_receipt_cannot_drift_or_carry_reference_locations(tmp_path, muta
         validate_replay_gate_receipt(receipt, "controlled-source", scope={"fixture"})
 
 
-def document_gate(tmp_path):
+def document_gate(tmp_path, body=None):
     from requirement_gate_fixture import controlled_evidence
 
     from moparse_eval.requirement_gate import _digest
     from moparse_eval.requirement_graph import write_requirement_graph
     from tests.unit.test_document_ast_comparison import TRAINING, compile_content_document
 
-    graph, _ = compile_content_document(tmp_path, '# 治理\n\n' + TRAINING)
+    graph, _ = compile_content_document(tmp_path, '# 治理\n\n' + (TRAINING if body is None else body))
     assert not graph['semantic_complete'] and graph['comparison_coverage']['responsibility_complete']
     view = tmp_path / 'samples/document.json'
     write_requirement_graph(graph, view, view.with_suffix('.xml'))
@@ -149,6 +149,25 @@ def test_new_contract_accepts_independently_evidenced_content_without_forging_se
     validate_replay_gate_receipt(receipt, 'controlled-source')
     assert receipt['comparison_contract_version'] == 'document_ast/1'
     assert not any(token in repr(receipt) for token in ['董事', 'source_span', 'expected.md'])
+
+
+@pytest.mark.parametrize('omit', ['sample', 'case', 'both'])
+def test_mixed_order_is_a_required_independently_bound_responsibility(tmp_path, omit):
+    body = ('Aster builds a one-stop online and offline service platform for users. '
+            'Context about additional arrangements remains under discussion.')
+    validation = document_gate(tmp_path, body)
+    validate_expected_structure_gate(validation, 'controlled-source')
+    path = tmp_path / 'oracle.json'
+    record = read_json(path)
+    sample = record['samples'][0]
+    [case] = [c for c in record['cases'] if c['case_id'] in sample['case_ids']]
+    assert any(ident.startswith('L:mixed-order:') for ident in sample['requirement_ids'])
+    for row in ([sample] if omit == 'sample' else [case] if omit == 'case' else [sample, case]):
+        row['requirement_ids'] = [ident for ident in row['requirement_ids'] if not ident.startswith('L:mixed-order:')]
+    write_json(path, record)
+    validation['expected_structure_gate']['evidence']['oracle'] = artifact(path)
+    with pytest.raises(ValueError, match='responsibilities'):
+        validate_expected_structure_gate(validation, 'controlled-source')
 
 
 @pytest.mark.parametrize('mutation', ['no_samples', 'partial_samples', 'missing_requirement', 'missing_obligation',

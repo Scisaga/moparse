@@ -1,31 +1,29 @@
-# MO-Parse：新增23份独立验收与一个公共比较责任修复
+# MO-Parse：原23份及撤回3份的验收阻塞修复
 
-先读取AGENTS.md、benchmark/evaluation-tasks.md的当前合同、唯一Lite报告及其data/diagnosis-summary.json。/opt/mosaic-parse与/opt/moparse指向同一仓库。以现场HEAD、工作区、software_id、测试和独立断言身份为准，保留已有修改，不执行reset、覆盖checkout或clean，不主动提交或推送。
+先读取AGENTS.md、benchmark/evaluation-tasks.md的当前合同、唯一Lite报告及其data/diagnosis-summary.json。继续使用/opt/moparse；/opt/mosaic-parse指向同一仓库。以当前HEAD、工作区、software_id、测试和独立断言身份为准，保留已有修改，不执行reset、覆盖checkout或clean，不提交或推送。接手参考提交为4d537c942ea49f0101fd51af217bd2919b3476d2。
 
-固定18份、后续11份和BIS L838、L948、L674及IEA L588、L730五处局部来源修复已完成。原18份与华为、顺丰、中石化、后续11份合计32份转为回归保护；fixed_sample_acceptance、additional_sample_acceptance和cross_fragment_source_review保留历史批次身份。本轮固定上一轮明确列出的23份责任完整但缺少独立验收的样本，逐份阅读全部授权expected文字与结构、预先声明实质断言和表示策略，完成独立审查并绑定最终证据；在同一诊断的review_sample_acceptance保存清单及结果，不替换旧批次或正式manifest。同时从真实诊断选择一个有至少两个真实来源证明的公共实现根因，修复并核验全部同类命中范围，不扩展为118份全文修复或通用语言解析重建。当前状态只见唯一Lite报告。
+当前本轮已完成：原23份23/23通过，撤回3份3/3恢复，其余29份回归、55份完整来源Oracle及五处局部来源全部通过，173份JSON/XML同版重建并绑定证据。当前软件和断言摘要以唯一Lite报告及现有验证记录为准；以下保留本轮执行合同和复现入口，不自动授权118份新任务。
 
-接手HEAD为997dd9157344a586de4804566f57d3a99396d083，工作区干净，software_id和current索引与上一轮记录一致。接手时全局仍有118份比较责任缺口和固定23份待独立审查；这些是接手状态，不是本轮结果。173份来源、selection及五个输入范围保持。23份全部必须有通过、修复后通过、具体覆盖退回、真实外部阻塞或尚未审查的明确状态；不要求无条件全部通过。IEA训练能耗样本须完整审查，旧L730局部通过不能替代整份验收。
+本轮只修复上一轮固定23份及撤回3份直接依赖的生产缺陷，并执行其余29份有效基线和必要公共回归。不建立新批次，不再执行相同的940项人工普查，不展开其余118份的整样本新任务。上一轮“只实施一个公共修复包”的限制已取消；已知实现缺口不能仅以另一个公共根因为由登记后停止。32份旧批次及23份新增样本身份保留，不修改正式manifest、来源或selection。当前结论以唯一Lite报告和绑定证据为准。
 
-固定23份现已完成全部940个授权来源的独立阅读和断言执行：0份通过、23份退回、外部阻塞及未审查0份。唯一公共生产修复为完整内容数字的同源计量角色守卫，拒绝将日期、引用、计划/模型/证券标识的等值数码改写直接视为数量等价；影响3094个真实来源、164份视图，不授予集合外整样本验收。完整内容与已撤下局部命题父归属重复计票另列具体退回，不在本轮展开第二公共修复。原32份当前29份通过，CATL新能源市场L1826、飞亚达L192、PBOC封面L5的旧验收已明确撤回；旧批次身份保留。L298首句命题及4关系在分析层保留，但typed/mixed比较责任未保留，旧分析保护不能作为比较验收。当前结果只见唯一Lite报告；不要把已完成来源审查再次当作尚未审查，也不要把退回写成通过。
+先修父归属重复计票。完整内容与被替代局部命题对同一陈述、同一父端点和来源只承担一份L责任；其他表示保留分析或证明用途。责任唯一化发生在候选读取前，并贯穿投影、覆盖、固定B/L分母、最终outcomes及证据重放。不能按关系类型、同行或同标题批量去重，不能只在评分末尾修数字；独立标题层级、列表归属和阅读顺序继续保留。正常生产输入应实际通过且只计一票，独立注入重复责任后仍须被实质Oracle拒绝。
 
-生产实现、完整授权来源断言和受控候选证据分别保存。容量对应由moparse_eval/requirement_ast.py::compare_document_ast及document_ast_comparison.py接入最终outcomes、blockers、分母和证据重放。已确认与暂定身份、排他缺失证明、语义四态及顺序的拥有定义见evaluation-tasks.md的“文档 AST 与内容比较”，合同仍为document_ast/1。semantic/1继续保持严格语义条件。
+先恢复catl-nev-battery-markets-p127-132、fiyta-bond-followup-p011-017及pboc-cover-p001，再对原23份运行全部已有来源case并继续修复残余。Alibaba股东信的不完整主体、HKEX目录的导航与父组、Ping An舍入注记和策略L298/L309/L328的typed/mixed责任均在范围内。定位行号不替代授权原文。完整内容合同继续有效，但已规定的类型化责任不得被整段内容吞掉。C基线须核实首句一项命题与4条关系进入最终比较，并通过顺序及错绑判定路径，分析层仍存在不足以恢复验收。
 
-独立来源入口为tests/validation/lite_source_oracle.py；原18份及11份断言保留在tests/validation/lite_fixed_source_assertions.py；新增23份的声明分列在lite_review_alibaba_assertions.py、lite_review_hkex_assertions.py和lite_review_energy_assertions.py，独立数字角色反例在lite_review_numeric_role_cases.py，均通过同一入口执行并纳入聚合身份。生产读取器和评分器不得导入这些手写答案。先依据完整授权文字建立独立断言，再调用read_expected、compile_requirement_graph、来源审计、图校验及evaluation_projection。不能从生产输出复制Oracle，不能把没有pending、自动枚举ID或编译与current一致当作独立验收，也不能把实际expected复制成candidate自比较。
+独立来源入口为tests/validation/lite_source_oracle.py；原18份及11份断言保留在tests/validation/lite_fixed_source_assertions.py；23份的已完成声明位于lite_review_alibaba_assertions.py、lite_review_hkex_assertions.py和lite_review_energy_assertions.py，数字角色反例位于lite_review_numeric_role_cases.py。生产读取器与评分器不得导入这些手写答案。保留真实失败记录和实质标准，不删除守卫、允许重复票或接受错误输出求绿。目录的通用标量断言不得与已手写的严格导航合同相冲突；字段定位端点与B极性的职责分别验证，不能放宽原本的事实或关系要求。
 
-每份通过样本必须绑定当前源码、唯一current中的生成视图、comparison_coverage、实际执行的逐来源case、义务与语言分析限制、独立能力用例及完整selection身份。正文保留证明允许承担尚未完整解释的陈述；已有数量、单位、期间、条件和业务关系继续使用经过验证的类型化比较器。完整内容与类型化责任须互不吞并、无遗漏、无重复计票，文字变化按所属合同处理。
+每个修复依次完成独立失败反例、通用实现、完整expected生产链、合成candidate最终B/L比较、证据复核及原真实来源Oracle。保留数字角色和同源守卫、普通错值判错、未支持改写未决、候选分块不改变固定分母；数量角色不从邻记录借用。已有比较定义由benchmark/evaluation-tasks.md的“文档 AST 与内容比较”拥有，继续使用document_ast/1，semantic/1仍保持严格语义条件，不另建Oracle平台或通用自然语言解析器。
 
-华为huawei-operating-results-p062-063、顺丰sf-cashflow-assets-liabilities-p040-041、中石化sinopec-finance-governance-p025-036保留原完整来源Oracle。A/B/C继续保护顺丰L742、L781、L920三项声明及221项计量、华为L1586三项业务要求、平安L298首句0–76的一项命题及4条关系。发现回归须修实现或逐来源撤回验收，禁止改写旧Oracle迎合输出。
+本轮修复记录放在既有actual-source-diagnosis.json的acceptance_blocker_repair；原review_sample_acceptance、fixed_sample_acceptance、additional_sample_acceptance和cross_fragment_source_review保留批次历史，当前验收绑定最终源码和生成视图。每份通过样本须有全部非延期来源责任、实质case、义务、分析限制及能力用例证据。没有pending、自动枚举ID、编译完整或与current相同都不单独建立独立验收。
 
-已完成阶段修复了独立封面署名的错误拼接、冒号叙述误当标量、名词末尾“能”误当能力模态，以及连接分析跨度回到原始片段的责任归属。显式财务列声明与封闭标量记录仍交给既有读取器；不能扩大正文路由去吞掉已支持财务事实。具体来源、独立反例和投影变化见当前诊断及comparison-validation、mutations-validation、baseline-preservation，不另建Oracle平台、报告或通用语言解释器。
+源码与断言冻结后，执行software-validation.json中完整受控回归并纳入新反例，再用 `.venv/bin/python -m moparse_eval.requirement_graph --baseline benchmark/runs/lite --output benchmark/runs/lite/requirements/<新的暂存目录> --workers 16` 同版重建173份JSON/XML。核对每份原始来源、selection、五个输入范围、A/B和1639项完整计量的payload；逐来源解释每项B变化及L撤票，证明确实消除同一责任的重复票。核验暂存结果后替换唯一current并删除失效生成视图，不归档过期生成答案，不删样本求退出码0。
 
-若源码或手写断言发生变化，先执行受影响受控用例，再以software-validation.json中保存的完整命令完成软件回归；测试输入保持独立合成。173份source-only重建使用 `.venv/bin/python -m moparse_eval.requirement_graph --baseline benchmark/runs/lite --output benchmark/runs/lite/requirements/<新的暂存目录> --workers 16`。先核对原始授权来源、selection、五个输入范围、A/B/C、每个B减少及合法分母变化，再替换唯一current并删除失效生成视图。退出码2可能表示集合外比较责任仍不完整，不删样本求0。
+最终绑定命令为 `PYTHONPATH=/opt/moparse .venv/bin/python tests/validation/lite_source_oracle.py --output benchmark/runs/lite/requirements/validation/oracle-validation.json --diagnosis-output benchmark/runs/lite/requirements/validation/actual-source-diagnosis.json`。默认入口执行55份来源Oracle及BIS L838、L948、L674和IEA L588、L730五处局部来源审查。--sample与--fresh-only仅供开发，不能替代最终current绑定。来源、测试、断言、能力证据、索引和视图摘要不一致时不得沿用旧验收。五处局部通过不接受其所属整样本；原23份中的IEA训练样本仍须整份通过原完整Oracle。
 
-最终绑定命令为 `PYTHONPATH=/opt/moparse .venv/bin/python tests/validation/lite_source_oracle.py --output benchmark/runs/lite/requirements/validation/oracle-validation.json --diagnosis-output benchmark/runs/lite/requirements/validation/actual-source-diagnosis.json`。默认入口实际执行原32份回归、新增23份及五处有限来源审查，逐来源断言先于生产编译；新增23份逐源收集实质失败并继续检查后文，退回不伪装通过。`--sample SAMPLE_ID`仅用于局部开发，`--cross-fragments-only`仅审查五处而不接受其所属四份整样本。必须在最终源码、同版比较能力证据和已安装current下重新执行；--fresh-only只用于开发。源码、测试、手写断言、能力用例、索引和生成视图不一致时不得沿用旧验收。
+A保护顺丰L742、L781、L920三项声明及221项计量；B保护华为L1586三项业务要求；C保护平安策略L298首句0–76的一项命题和4条关系及其最终判定。完整计量保护1639项原有明确单位数值要求，须核对原值、单位、期间、来源和完整payload，不只比较数量。五个输入范围保留Alibaba L230、Midea L417、PBOC L540及PBOC L252两项既有选段。Alibaba L2353双附着和未经批准的多解释合同保持原状态。
 
-全局来源责任、逐样本独立验收、比较能力、真实格式读取和交付回放保持独立门禁。新增23份全部完成实质审查后，最终源码须复验原32份及五处有限来源，保护A/B/C及接手1639项完整计量的实际payload、来源和限定。核验唯一公共根因的全部同类真实范围，集合外责任完整的样本仅记待独立验收。源码与断言冻结后完成受控回归、173份同源码JSON/XML重建、全部合法B/L变化及来源范围核验，再将验收绑定最终current。不扩大reason白名单、削减分母、吞掉完整计量或以没有pending宣称完成；退出码2的实际诊断须保留。全部质量成绩继续暂停。
+结束时首先交付生产修复与真实复验结果，不能以审查完全部退回、失败守卫、报告或单元测试作为完成。当前授权下能够修复的实现缺口继续修。真正不能解决的输入、授权或证据问题保留失败，给出原文、最小反例和所需决策，不强制样本变绿。最终先报告父归属是否修复、撤回3份恢复数、原23份通过数及每份真实剩余阻塞，再说明29份回归、五处局部、173份重建和证据绑定。
 
-五个输入范围保留原身份：Alibaba L230、Midea L417、PBOC L540，以及PBOC L252的两项既有选段。软件缺陷与输入授权问题分列，不能删成员、裁段或忽略目标。Alibaba L2353的两种附着及未经批准的多解释合同保持原状态。
+canonical expected、原始映射、selection、页包、语料、有效native、历史交付正文及原始成本只读。本阶段禁止读取PDF、图片、字层或OCR，禁止模型、实际候选比较、真实native到final回放、正式评分、GPU/TTS/在线服务操作、部署、公开API修改、提交与推送。候选只限独立合成受控测试，不把实际expected复制为candidate。16进程仅用于CPU分析，不改变原管线或隔离后处理资源。
 
-canonical expected、原始映射、selection、页包、语料、有效native、历史交付正文和原始成本只读。本阶段禁止原始PDF、图片、字层、OCR/VLM、模型服务或裁判、实际候选比较、真实native到final回放、正式保存输出评分、GPU/TTS/在线服务操作、部署、公开API修改、提交、推送及质量排名。候选只用于独立合成受控测试，P01–P08标签参数化不代表八种原生适配链验收。分析使用16个CPU进程，不改变原管线或隔离后处理的资源合同。
-
-只维护benchmark/reports/lite/report.md及现有诊断、验证目录。原始处理成本不重测、不改写；不向AGENTS.md追加本任务全文。通用检查永久排除pdf_sample、datasets、benchmark/reference-decisions、benchmark/runs和benchmark/reports，包括显式路径调用。来源验收、软件回归与原始材料的真实性审核保持各自边界。
+只维护benchmark/reports/lite/report.md及现有诊断和验证记录，原始处理成本不重测、不改写。通用检查永久排除pdf_sample、datasets、benchmark/reference-decisions、benchmark/runs和benchmark/reports，包括显式路径调用。来源验收不建立真实原生格式、保存输出评分、交付或全局质量验收，全部质量成绩继续暂停。

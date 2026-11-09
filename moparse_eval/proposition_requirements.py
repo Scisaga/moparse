@@ -12,7 +12,7 @@ import re
 from typing import Any
 
 from .action_forms import PROPOSITION_ACTION_FORMS
-from .prose_requirements import _sentence_spans, prose_role_relations
+from .prose_requirements import _sentence_spans, _unresolved_subject_context, prose_role_relations
 
 VERBS = dict(PROPOSITION_ACTION_FORMS)
 _VERB = re.compile(r"\b(" + "|".join(sorted(VERBS, key=len, reverse=True)) + r")\b", re.I)
@@ -132,6 +132,9 @@ def read_propositions(text: str, source: dict[str, Any], *, scope=(), subject: s
         if auxiliary:
             subject_end = subject_start + auxiliary.start()
         printed_subject = text[subject_start:subject_end] or subject
+        if printed_subject and _unresolved_subject_context(printed_subject):
+            _pending(result, text, source, sentence_start, sentence_end, 'proposition_subject_scope_unresolved')
+            continue
         if not printed_subject or re.search(r"[;；:：]", printed_subject):
             _pending(result, text, source, start, end, "proposition_subject_unresolved", conditions=conditions)
             continue

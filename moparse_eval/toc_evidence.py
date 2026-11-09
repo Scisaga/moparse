@@ -189,6 +189,7 @@ class _Reader:
     def _parts(text: str) -> dict[str, Any] | None:
         patterns = [
             (rf"^\s*(?P<title>.+?)\s*[:：]?\s+(?P<label>Pages?|页码|頁碼|页|頁)\s*[:：]?\s*(?P<page>{_PAGE})\s*$", "explicit_page_label"),
+            (rf"^\s*(?P<title>[^:：]+?)\s*[:：]\s*(?P<page>{_PAGE})\s*$", "colon_page_slot_under_own_directory_role"),
             (rf"^\s*(?P<title>.+?)(?P<separator>\s*[.．·…]{{2,}}\s*|\t+| {{2,}})(?P<page>{_PAGE})\s*$", "printed_toc_alignment_separator"),
             (rf"^\s*(?P<page>{_PAGE})(?P<separator>\s+|、)(?P<title>\S.*?)\s*$", "page_first_under_own_directory_role"),
         ]

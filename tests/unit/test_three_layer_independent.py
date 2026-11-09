@@ -407,12 +407,19 @@ DIRECTORY = "## Contents\n\n- North\n  - Summary: 3\n- South\n  - Summary: 8\n"
     "## Contents\n\n- North\n  - Summary: 8\n- South\n  - Summary: 3\n",
     "| Entry | Page |\n|---|---|\n| North / Summary | 3 |\n| South / Summary | 8 |\n",
 ])
-def test_unsupported_directory_parent_page_bindings_cannot_publish_grades(candidate):
+def test_directory_bindings_judge_own_parent_page_slots_without_value_selection(candidate):
     requirements, result = score(DIRECTORY, candidate)
     assert requirements["text"]
-    assert result["publishable"] is False
-    assert result["score"] is None
-    assert result["blockers"]
+    assert result['publishable'], result['blockers']
+    assert result['layers']['B']['denominator'] == 2
+    assert result['layers']['L']['denominator'] == 4
+    if candidate == DIRECTORY:
+        assert result['layers']['B']['score'] == result['layers']['L']['score'] == 100
+    elif 'North / Summary' in candidate:
+        assert result['layers']['B']['numerator'] == result['layers']['L']['numerator'] == 0
+    else:
+        assert result['layers']['B']['numerator'] == 0
+        assert result['layers']['L']['score'] == 100
 
 
 GROUPED_MATRIX = ("- North\n  - Name: Delta\n    - Revenue: 17\n"

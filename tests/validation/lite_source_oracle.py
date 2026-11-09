@@ -1060,6 +1060,22 @@ def _check_fixed_source(graph, original, expected, assertion, target, block):
         assert own['scope'] == assertion['scope'] and own['parents'] == assertion['parents']
         a, b = own['content']['source']['text_span']
         assert ''.join(n['text'] for n in own['content']['children']) == ''.join(raw[a:b].split())
+    navigation = next((entry for entry in expected.get('directory_assertions', []) if entry[0] == line), None)
+    if navigation is not None:
+        # The already-authored navigation contract owns this literal entry.
+        # Its Page endpoint must not also be tested as a scalar metric. Keep
+        # the stronger original parent/title/page assertions, with no fallback.
+        page_case = _check_directory_source(graph, original, navigation)
+        assert not own_content, (sample_id, line, 'navigation cannot fall back to ordinary content')
+        ids = [n['id'] for n in graph['nodes'] if n['id'] in retained['T'] and n['source']['lines'][0] == line]
+        return {'case_id': f'source::{sample_id}::L{line}', 'status': 'passed',
+            'source_assertion_case': True, 'attempted': True,
+            'input': {'sample_id': sample_id, 'source': target['reference']},
+            'expected': {'source_assertions': assertion, 'navigation': page_case['expected'],
+                         'representation_policy': 'typed_navigation'},
+            'actual': page_case['actual'], 'requirement_ids': [*ids, *page_case['requirement_ids']],
+            'obligation_ids': [r['obligation_id'] for r in coverage['obligations'] if source_in_target(r['source'], target, original)],
+            'analysis_limitation_ids': [r['issue_id'] for r in coverage['analysis_limitations'] if source_in_target(r['source'], target, original)]}
     observed = [f for f in facts if f['source']['lines'][0] == line]
     wanted = list(assertion.get('typed_facts', TYPED_ASSERTIONS.get((sample_id, line), [])))
     if assertion['role'] == 'F':
@@ -1110,8 +1126,22 @@ def _check_fixed_source(graph, original, expected, assertion, target, block):
         typed_spans = []
         for fact in observed:
             sequence = fact.get('logic', {}).get('sequence_source')
+            sentence = fact.get('statement_boundary_evidence', {})
+            printed = sentence.get('sentence_source', {})
+            if sentence:
+                import re
+
+                assert sentence.get('kind') == 'complete_printed_proposition_sentence'
+                assert sentence.get('semantic_source') == fact['source']
+                assert source_in_target(printed, target, original)
+                a, b = fact['source']['text_span']
+                x, y = printed['text_span']
+                assert 0 <= x <= a < b <= y <= len(raw) and not raw[x:a].strip()
+                assert re.fullmatch(r'[.!?。！？]["”’」』）)\]]*\s*', raw[b:y])
             origins = ([sequence or fact.get('statement_source', fact['source'])] if fact.get('logic') else
                        [fact.get('attribute_source', {}), fact['value_source']])
+            if sentence:
+                origins.append(printed)
             origins += list(fact.get('qualifier_sources', {}).values())
             origins += [p['source'] for p in fact.get('qualifier_provenance', {}).values()
                         if isinstance(p, dict) and isinstance(p.get('source'), dict)]
@@ -1218,6 +1248,26 @@ def _finish_fixed_source_cases(graph, original, expected, cases, *, collect_fail
     sample_id = original['sample_id']
     coverage = graph['comparison_coverage']
     retained = coverage['retained_semantic_requirements']
+    from moparse_eval.document_ast_comparison import document_order_requirements
+
+    content = {b['requirement_id']: b for b in graph['source_form_requirements']}
+    anchors = {b['requirement_id']: b for b in graph['source_form_order_anchors']}
+    mixed = [e for e in document_order_requirements(graph) if e['role'] == 'mixed_typed_content_order']
+    for edge in mixed:
+        left, right = [(content | anchors)[edge[k]] for k in ('left', 'right')]
+        assert left['block_index'] == right['block_index']
+        assert left['source']['text_span'][1] <= right['source']['text_span'][0]
+        assert left['scope'] == right['scope'] and left['parents'] == right['parents']
+        anchor = left if edge['left'] in anchors else right
+        assert set(anchor['typed_requirement_ids']) <= set(retained['B'])
+        assert anchor['typed_requirement_ids']
+        assert all(ident in {i for case in cases if case['status'] == 'passed' for i in case['requirement_ids']}
+                   for ident in [*anchor['typed_requirement_ids'], right['requirement_id'] if anchor is left else left['requirement_id']])
+        cases.append({'case_id': f"source::{sample_id}::{edge['id']}", 'status': 'passed',
+            'input': {'sample_id': sample_id, 'source': anchor['source']},
+            'expected': {'source_assertions': 'The independently accepted typed clause and its remaining content keep their printed order.'},
+            'actual': {'left': left['source'], 'right': right['source'], 'typed_requirements': anchor['typed_requirement_ids']},
+            'requirement_ids': [edge['id']], 'obligation_ids': [], 'analysis_limitation_ids': []})
     for start, end, meaning in expected.get('ordered_source_groups', []):
         try:
             cases.append(_check_ordered_source_group(graph, original, start, end, meaning))
@@ -1227,7 +1277,7 @@ def _finish_fixed_source_cases(graph, original, expected, cases, *, collect_fail
             cases.append(_source_failure_case(graph, original,
                 f'source::{sample_id}::ordered-group:{start}:{end}',
                 {'ordered_range': [start, end], 'source_assertions': meaning}, error, stage='reading_order'))
-    required_ids = set(coverage['content_requirement_ids']).union(*map(set, retained.values()))
+    required_ids = set(coverage['content_requirement_ids'] + coverage['mixed_order_requirement_ids']).union(*map(set, retained.values()))
     assigned = {ident for case in cases for ident in case['obligation_ids']}
     formatting = [r for r in coverage['obligations'] if r['obligation_id'] not in assigned]
     if formatting:
@@ -1300,7 +1350,7 @@ def _check_directory_source(graph, original, entry):
     matching = [f for f in facts if f.get('semantic_type') == 'toc_page'
                 and (f['subject'], f['attribute'], f['value']) == (label, 'Page', page)
                 and f.get('identity_facets', {}).get('toc_parent') == [parent]]
-    assert len(matching) == 1, (line, 'literal navigation page role and own entry/parent missing', entry, facts)
+    assert len(matching) == len(facts) == 1, (line, 'literal navigation page role and own entry/parent missing', entry, facts)
     edges = [e for e in graph['relations'] if e['id'] in retained['L'] and source_in_target(e['source'], target, original)]
     endpoint = {'type': 'toc_entry', 'title': label, 'parent_path': [parent]}
     page_edges = [e for e in edges if e['type'] == 'toc_entry_page' and e['left'] == endpoint

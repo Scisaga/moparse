@@ -15,7 +15,7 @@ import re
 from typing import Any
 
 from .action_forms import NARRATIVE_ACTION_FORMS, NARRATIVE_PAST_FORMS
-from .prose_requirements import _sentence_spans
+from .prose_requirements import _sentence_spans, _unresolved_subject_context
 
 _ACTIONS = dict(NARRATIVE_ACTION_FORMS)
 _PAST = set(NARRATIVE_PAST_FORMS)
@@ -103,6 +103,8 @@ class _Reader:
         if reason:
             raise _Unknown(reason)
         value = self.syntax[start:end]
+        if actor and _unresolved_subject_context(value):
+            raise _Unknown('narrative_subject_scope_unresolved')
         if not value or _UNSUPPORTED.search(value) or _PRIMARY.search(value) or _RELATIVE.search(value):
             raise _Unknown("narrative_nominal_boundary_unresolved")
         if re.search(r"\b(?:to\s+[A-Za-z]+|do|does|did|not|never)\b", value, re.I):
@@ -1073,6 +1075,7 @@ def read_narrative(text: str, source: dict[str, Any], *, scope=()) -> dict[str, 
         return result
     result['text_atoms'] = [{'text': text, 'role': 'literal', 'source': reader.source_at(0, len(text))}]
     result['consumed_spans'] = [{'text': text, 'role': 'literal', 'span': [0, len(text)], 'source': reader.source_at(0, len(text))}]
+    closed_sentences = []
     for ordinal, (start, end) in enumerate(_sentence_spans(text)):
         reader.record = f"{source.get('path')}:{source.get('lines', [])}:{source.get('block')}:{source.get('text_span')}:narrative:{ordinal}"
         from .document_composition_requirements import read_document_composition
@@ -1090,6 +1093,7 @@ def read_narrative(text: str, source: dict[str, Any], *, scope=()) -> dict[str, 
             reader.features.update(composition['required_matcher_features'])
             continue
         try:
+            first_fact = len(reader.facts)
             tree = reader.interpret(start, end)
         except _Unknown as error:
             item = {'kind': 'narrative', 'comparison_domain': 'sentence_interpretation', 'reason': str(error), 'text': text[start:end],
@@ -1108,6 +1112,9 @@ def read_narrative(text: str, source: dict[str, Any], *, scope=()) -> dict[str, 
             result['pending_requirements'].append(copy.deepcopy(item))
             continue
         result['logic'].append(tree)
+        emitted = reader.facts[first_fact:]
+        if tree.get('kind') == 'proposition' and len(emitted) == 1:
+            closed_sentences.append((emitted[0], reader.source_at(start, end)))
         for unknown in reader.unknown_nodes:
             pending_span = unknown.get('unresolved_span', unknown['span'])
             item = {'kind': 'narrative', 'comparison_domain': 'sentence_interpretation', 'reason': unknown['reason'], 'text': reader.text[slice(*pending_span)],
@@ -1116,6 +1123,20 @@ def read_narrative(text: str, source: dict[str, Any], *, scope=()) -> dict[str, 
             if item not in result['unresolved']:
                 for key in ('unresolved', 'blockers', 'pending_requirements'):
                     result[key].append(copy.deepcopy(item))
+    # Preserve the printed boundary even when an upstream syntax reader has
+    # already separated this sentence from its unresolved neighbors. Its
+    # terminator is not a second content fragment or part of the next duty.
+    for fact, sentence in closed_sentences:
+        start, end = sentence['text_span']
+        if any(max(start, issue['source']['text_span'][0]) < min(end, issue['source']['text_span'][1])
+               for issue in result['unresolved']):
+            continue
+        semantic = copy.deepcopy(fact['source'])
+        base = source.get('text_span', [0])[0]
+        if not re.fullmatch(r'[.!?。！？]["”’」』）)\]]*\s*', text[semantic['text_span'][1] - base:end - base]):
+            continue
+        fact['statement_boundary_evidence'] = {'kind': 'complete_printed_proposition_sentence',
+            'semantic_source': semantic, 'sentence_source': copy.deepcopy(sentence)}
     result['complete'] = result['semantic_complete'] = bool(result['logic']) and not result['unresolved']
     result['required_matcher_features'] = sorted(reader.features)
     return result

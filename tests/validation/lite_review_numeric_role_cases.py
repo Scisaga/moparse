@@ -62,9 +62,10 @@ ROLE_CASES = [
      'candidate_exact': '# Index\n\nThe auditor report begins on page 135.',
      'candidate_layout': '# Index\n\n\nThe auditor report begins on page 135.',
      'candidate_numeric_rewrite': '# Index\n\nThe auditor report begins on page 135.0.',
-     # The explicit "page" reference adds its own binding to the document
-     # content membership; it is not an extra business assertion.
-     'fixed_denominators': {'B': 1, 'L': 2}, 'changed_business_index': 0,
+     # One body statement has one parent scope. The previous L=2 mistook its
+     # retired prose-heading membership for a separate page-navigation edge;
+     # there is no directory or independent navigation endpoint in this source.
+     'fixed_denominators': {'B': 1, 'L': 1}, 'changed_business_index': 0,
      'required_role': 'printed_page_reference'},
     {'case_id': 'numeric-role/reporting-year',
      'expected_text': '# Outlook\n\nIn 2029, the board expects stable growth.',
@@ -108,7 +109,7 @@ ROLE_CASES = [
      'candidate_numeric_rewrite': '# Terms\n\nThe archive retains security code 4721 for the retired issue.',
      'fixed_denominators': {'B': 1, 'L': 1}, 'changed_business_index': 0,
      'required_role': 'security_text_code',
-     'evidence_scope': 'known_separate_duplicate_membership_gap_not_verified_numeric_capability'},
+     'evidence_scope': 'fixed_statement_parent_scope_single_vote_regression'},
     {'case_id': 'numeric-role/security-code-isolated',
      'expected_text': '# Archive\n\nArchived issue dossier CODE004721X.',
      'candidate_exact': '# Archive\n\nArchived issue dossier CODE004721X.',

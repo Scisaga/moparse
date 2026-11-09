@@ -180,6 +180,8 @@ def requirement_key(item: dict[str, Any], canonicalize: Canonicalize) -> tuple[A
 
 def assertion_signature(item: dict[str, Any], canonicalize: Canonicalize) -> tuple[Any, ...]:
     q = item.get("qualifiers", {})
+    if item.get('semantic_type') == 'toc_page':
+        return ('printed_navigation_reference', freeze(item['value'], canonicalize)), freeze(q, canonicalize)
     if item.get('semantic_type') == 'printed_selection_state':
         state = decide_equivalence(item['value'], item['value'], 'selection_state')['canonical']['required']
         return ('printed_selection_state', state), freeze(q, canonicalize)
@@ -197,6 +199,9 @@ def assertion_signature(item: dict[str, Any], canonicalize: Canonicalize) -> tup
 
 
 def _value_check(required, actual, canonicalize):
+    if required.get('semantic_type') == 'toc_page' or actual.get('semantic_type') == 'toc_page':
+        return {**_check(required['value'], actual['value'], canonicalize),
+                'role_basis': 'printed_navigation_reference', 'quantity_equivalence_applicable': False}
     if required.get('semantic_type') == actual.get('semantic_type') == 'printed_position_list':
         from .requirement_ast import compare_requirement_ast
 

@@ -10,6 +10,7 @@ an execution branch, a candidate, or a tolerance.
 from __future__ import annotations
 
 import copy
+import re
 
 from .requirement_ast import (
     build_document_ast,
@@ -86,24 +87,53 @@ def _contains(source, origin):
             and source['text_span'][0] <= origin['text_span'][0] <= origin['text_span'][1] <= source['text_span'][1])
 
 
-def _fixed_content_requirements(ast, indices, facts, issues):
-    """Subtract independently complete quantity sequences before any retrieval.
+def _fixed_content_requirements(ast, indices, facts, issues, units):
+    """Subtract complete quantities and self-contained nominal compositions.
 
-    Other partial readings remain replaced by one complete content requirement.
-    A complete quantity in the same raw line keeps its own comparator and vote.
+    Plain SVO guesses remain replaced by the approved whole-content contract.
+    The bounded composed-nominal/attachment contract keeps its typed sentence
+    only with a proved printed boundary and no external field-label owner.
     """
-    result = []
+    typed = [(part, fact['id']) for fact in facts if fact.get('logic', {}).get('kind') == 'quantity_assertion'
+             for part in _original_content_sources(fact['logic']['sequence_source'])]
+    for fact in facts:
+        boundary = fact.get('statement_boundary_evidence', {})
+        sentence = boundary.get('sentence_source', {})
+        semantic = fact.get('source', {})
+        operators = fact.get('logic', {}).get('operator_path', [])
+        if (fact.get('logic', {}).get('kind') != 'narrative_leaf' or len(operators) != 1
+                or operators[0].get('kind') != 'proposition'
+                or fact.get('field_label_evidence')
+                or not (fact.get('object_phrase') or {}).get('compound')
+                or not fact.get('prepositional_complements')
+                or boundary.get('kind') != 'complete_printed_proposition_sentence'
+                or boundary.get('semantic_source') != semantic
+                or not sentence.get('text_span') or not semantic.get('text_span')
+                or not _contains(sentence, semantic)):
+            continue
+        for unit in units:
+            if not _same_record(unit['source'], sentence):
+                continue
+            raw = unit['text']
+            offset = unit['source'].get('text_span', [0])[0]
+            a, b = sentence['text_span']
+            x, y = semantic['text_span']
+            if (0 <= a - offset <= x - offset <= y - offset <= b - offset <= len(raw)
+                    and not raw[a - offset:x - offset].strip()
+                    and re.fullmatch(r'[.!?。！？]["”’」』）)\]]*\s*', raw[y - offset:b - offset])):
+                typed.append((copy.deepcopy(sentence), fact['id']))
+                break
+    result, anchors = [], []
     for index in indices:
         block = ast['children'][index]
         whole = block['content']['source']['text_span']
-        typed = [part for fact in facts if fact.get('logic', {}).get('kind') == 'quantity_assertion'
-                 for part in _original_content_sources(fact['logic']['sequence_source'])]
-        cuts = sorted({tuple(source['text_span']) for source in typed if source
+        complete = [(source, ident) for source, ident in typed if source
                        and _contains(block['content']['source'], source)
                        and not any(_same_record(source, part) and part.get('text_span') is not None
                            and max(source['text_span'][0], part['text_span'][0])
                                < min(source['text_span'][1], part['text_span'][1])
-                           for issue in issues for part in _original_content_sources(issue.get('source', {})))})
+                           for issue in issues for part in _original_content_sources(issue.get('source', {})))]
+        cuts = sorted({tuple(source['text_span']) for source, _ident in complete})
         spans, cursor = [], whole[0]
         for start, end in cuts:
             if cursor < start:
@@ -112,15 +142,45 @@ def _fixed_content_requirements(ast, indices, facts, issues):
         if cursor < whole[1]:
             spans.append([cursor, whole[1]])
         tokens = block['content']['children']
-        for start, end in spans:
+        def piece(start, end, ident, **extra):
             leaves = [copy.deepcopy(n) for n in tokens if start <= n['source']['text_span'][0] < end]
             if not leaves:
-                continue
+                return None
             source = {**copy.deepcopy(block['content']['source']), 'text_span': [start, end]}
-            result.append({**copy.deepcopy(block), 'source': source,
-                'requirement_id': f'content:{index}:{start}:{end}', 'block_index': index,
-                'content': {'kind': 'content_sequence', 'source': source, 'children': leaves}})
-    return result
+            return {**copy.deepcopy(block), 'source': source,
+                'requirement_id': ident, 'block_index': index, **extra,
+                'content': {'kind': 'content_sequence', 'source': source, 'children': leaves}}
+        own = [p for a, b in spans if (p := piece(a, b, f'content:{index}:{a}:{b}'))]
+        result.extend(own)
+        if own:
+            for start, end in cuts:
+                anchors.append(piece(start, end, f'typed-order:{index}:{start}:{end}',
+                    comparison_role='typed_order_anchor', typed_requirement_ids=sorted({
+                        ident for origin, ident in complete if origin['text_span'] == [start, end]})))
+    return result, anchors
+
+
+def document_order_requirements(graph):
+    """Fix reading-order endpoints from exclusive source partitions, before retrieval."""
+    content = graph['source_form_requirements']
+    anchors = graph['source_form_order_anchors']
+    rows = sorted([*content, *anchors], key=lambda b: (b['block_index'], b['source']['text_span'][0]))
+    orders = []
+
+    def edge(ident, left, right, role):
+        return {'id': ident, 'role': role,
+            'left': left['requirement_id'], 'right': right['requirement_id'],
+            'sources': [copy.deepcopy(left['source']), copy.deepcopy(right['source'])]}
+
+    for index, (left, right) in enumerate(zip(content, content[1:], strict=False)):
+        if left['block_index'] == right['block_index'] and rows.index(right) != rows.index(left) + 1:
+            continue  # Its actual mixed neighbours own this partition order.
+        orders.append(edge(f'L:content-order:{index}', left, right, 'content_order'))
+    for index, (left, right) in enumerate(zip(rows, rows[1:], strict=False)):
+        if (left['block_index'] == right['block_index']
+                and sum(b.get('comparison_role') == 'typed_order_anchor' for b in (left, right)) == 1):
+            orders.append(edge(f'L:mixed-order:{index}', left, right, 'mixed_typed_content_order'))
+    return orders
 
 
 def attach_document_ast(graph, expected):
@@ -142,8 +202,8 @@ def attach_document_ast(graph, expected):
     graph['document_ast'] = build_document_ast(units)
     facts = [n for n in graph.get('nodes', graph.get('business', [])) if n.get('kind') != 'text']
     graph['source_form_units'] = _fallback_blocks(graph['document_ast'], graph['unresolved'], facts)
-    graph['source_form_requirements'] = _fixed_content_requirements(
-        graph['document_ast'], graph['source_form_units'], facts, graph['unresolved'])
+    graph['source_form_requirements'], graph['source_form_order_anchors'] = _fixed_content_requirements(
+        graph['document_ast'], graph['source_form_units'], facts, graph['unresolved'], units)
     # Keep every semantic-analysis limitation. A preservation proof is not a
     # forged claim that the Chinese grammar reader understood those clauses.
     graph['content_comparison_ready'] = all(any(
@@ -221,10 +281,16 @@ def comparison_requirement_coverage(graph):
         'responsibility_complete': not any(r['status'] == 'blocking' for r in [*responsibility, *limitations]),
         'obligations': responsibility, 'analysis_limitations': limitations,
         'retained_semantic_requirements': banks,
+        'content_relation_ownership': copy.deepcopy(retained['content_relation_ownership']),
         'content_requirement_ids': [b['requirement_id'] for b in blocks],
+        'mixed_order_requirement_ids': [e['id'] for e in document_order_requirements(graph)
+                                       if e['role'] == 'mixed_typed_content_order'],
         'required_capabilities': sorted({'source_span_capacity', 'bidirectional_partition', 'bounded_many_to_many',
             'order_without_value_selection', 'four_state_boundary', 'mixed_typed_content_ownership',
-            'protected_structure_barriers', *retained.get('required_matcher_features', [])}),
+            'protected_structure_barriers', *({'mixed_typed_content_order'} if graph['source_form_order_anchors'] else set()),
+            *({'statement_parent_scope_single_vote'} if retained['content_relation_ownership'] else set()),
+            *({'literal_navigation_role'} if any(f.get('semantic_type') == 'toc_page' for f in retained['business']) else set()),
+            *retained.get('required_matcher_features', [])}),
         'independent_acceptance': 'not_established_by_compilation'}
 
 def validate_document_requirements(graph):
@@ -233,13 +299,15 @@ def validate_document_requirements(graph):
     selection = graph['source_obligation_inventory']['selection']
     expected = {'unresolved': graph['unresolved'], 'nodes': graph['nodes']}
     attach_document_ast(expected, selection)
-    for key in ('document_ast', 'source_form_units', 'source_form_requirements', 'content_comparison_ready'):
+    for key in ('document_ast', 'source_form_units', 'source_form_requirements', 'source_form_order_anchors', 'content_comparison_ready'):
         if graph.get(key) != expected[key]:
             raise ValueError('document AST differs from its complete authorized selection: ' + key)
     for block in graph['document_ast']['children']:
         if block['content'] is not None:
             validate_content_ast(block['content'], lambda source: _semantic_literal(graph['sources'], source))
     for block in graph['source_form_requirements']:
+        validate_content_ast(block['content'], lambda source: _semantic_literal(graph['sources'], source))
+    for block in graph['source_form_order_anchors']:
         validate_content_ast(block['content'], lambda source: _semantic_literal(graph['sources'], source))
     if graph.get('comparison_coverage') != comparison_requirement_coverage(graph):
         raise ValueError('comparison responsibility coverage differs from its source obligations')
@@ -317,6 +385,52 @@ def _without_grammar_analysis(graph, blocks):
 
     removed_facts = {fact['id'] for fact in result['business'] if covered(fact)}
     result['business'] = [fact for fact in result['business'] if fact['id'] not in removed_facts]
+    retained_fact_ids = {fact['id'] for fact in result['business']}
+
+    def scope_owner(edge):
+        # A content requirement owns its particular statement's parent scope.
+        # The relation's type or a shared heading/line alone proves nothing:
+        # both endpoints, the original cuts and independent scope provenance
+        # must describe precisely that same already-owned duty.
+        scope = edge.get('left')
+        proof = edge.get('scope_evidence', {})
+        if (edge.get('type') != 'prose_heading_membership'
+                or not isinstance(scope, list) or edge.get('right', {}).get('scope') != scope
+                or edge.get('fact_id') in retained_fact_ids
+                or proof.get('kind') != 'unit_declared_scope' or proof.get('scope') != scope
+                or not proof.get('sources')):
+            return None
+        owners = []
+        for source in [edge.get('source', {}), *proof['sources']]:
+            parts = _original_content_sources(source)
+            if not parts:
+                return None
+            for origin in parts:
+                if origin.get('text_span') is None:
+                    literal = _resolve(graph, origin)
+                    if not isinstance(literal, str):
+                        return None
+                    origin = {**origin, 'text_span': [0, len(literal)]}
+                matches = [(index, block) for index, block in enumerate(blocks)
+                    if block.get('scope') == scope and block.get('role') in {'text', 'item'}
+                    and block.get('requirement_id') and block.get('content')
+                    and _contains(block['content']['source'], origin)]
+                if len(matches) != 1:
+                    return None
+                index, block = matches[0]
+                owners.append({'requirement_id': block['requirement_id'],
+                    'counted_relation_id': f'L:content:{index}',
+                    'source': copy.deepcopy(block['content']['source']),
+                    'scope': copy.deepcopy(scope), 'parents': copy.deepcopy(block['parents'])})
+        unique = {owner['requirement_id']: owner for owner in owners}
+        return {'analysis_relation_id': edge['id'], 'relation': 'statement_parent_scope',
+            'source': copy.deepcopy(edge['source']), 'parent_scope': copy.deepcopy(scope),
+            'owners': list(unique.values()),
+            'basis': 'same_source_statement_and_declared_parent_scope_owned_before_candidate_reading'}
+
+    scope_ownership = [proof for edge in result['relations'] if (proof := scope_owner(edge)) is not None]
+    transferred_scopes = {proof['analysis_relation_id'] for proof in scope_ownership}
+    result['content_relation_ownership'] = scope_ownership
     if 'requirement_ledger' in result:
         result['requirement_ledger'] = copy.deepcopy(result['business'])
     for name in ('logical_statements', 'semantic_operands', 'semantic_operand_relations', 'explicit_references',
@@ -353,8 +467,9 @@ def _without_grammar_analysis(graph, blocks):
             syntax.append(own)
     result['syntax'] = syntax
     result['relations'] = [edge for edge in result['relations'] if edge.get('fact_id') not in removed_facts
+                           and edge['id'] not in transferred_scopes
                            and not (covered(edge) and edge['type'] not in {
-                               'prose_heading_membership', 'prose_reading_order', 'heading_membership',
+                               'prose_heading_membership', 'prose_reading_order', 'heading_parent', 'heading_membership',
                                'heading_order', 'list_membership'})]
     for name in ('blockers', 'pending_requirements'):
         result[name] = [issue for issue in result.get(name, []) if not (covered(issue) and _grammar_limit(issue))]
@@ -384,8 +499,17 @@ def grade_document_content(requirements, evidence):
     rebuilt = {'unresolved': requirements.get('blockers', []), 'business': requirements['business']}
     attach_document_ast(rebuilt, requirements['document_selection'])
     if (expected_ast != rebuilt['document_ast'] or wanted != rebuilt['source_form_units']
-            or requirements.get('source_form_requirements') != rebuilt['source_form_requirements']):
+            or requirements.get('source_form_requirements') != rebuilt['source_form_requirements']
+            or requirements.get('source_form_order_anchors') != rebuilt['source_form_order_anchors']):
         raise ValueError('document requirements omit or rebind the authorized source selection')
+    base_required = _without_grammar_analysis(requirements, requirements['source_form_requirements'])
+    coverage = requirements['comparison_coverage']
+    if (coverage['retained_semantic_requirements']['L'] != [e['id'] for e in base_required['relations']]
+            or coverage['retained_semantic_requirements']['B'] != [f['id'] for f in base_required['business']]
+            or coverage.get('content_relation_ownership') != base_required['content_relation_ownership']
+            or coverage.get('mixed_order_requirement_ids') != [e['id'] for e in document_order_requirements(requirements)
+                                                              if e['role'] == 'mixed_typed_content_order']):
+        raise ValueError('fixed comparison responsibility differs from its source-bound owners')
     candidate_ast = _candidate_ast(evidence)
     if 'document_ast' in evidence and evidence['document_ast'] != candidate_ast:
         raise ValueError('candidate document AST differs from actual native syntax')
@@ -393,26 +517,32 @@ def grade_document_content(requirements, evidence):
         for block in ast['children']:
             if block['content'] is not None:
                 validate_content_ast(block['content'], lambda source, graph=graph: _resolve(graph, source))
-    wanted_ast = {'kind': 'document', 'children': requirements['source_form_requirements']}
+    wanted_ast = {'kind': 'document', 'children': sorted([
+        *requirements['source_form_requirements'], *requirements['source_form_order_anchors']],
+        key=lambda b: (b['block_index'], b['source']['text_span'][0]))}
     decision = compare_document_ast(wanted_ast, candidate_ast,
         source_resolver=lambda side, source: _resolve(requirements if side == 'required' else evidence, source))
-    base_required = _without_grammar_analysis(requirements, wanted_ast['children'])
     # Only owned raw cuts replace partial language analysis. An unrelated typed
     # fact or local unknown in the same native block must survive unchanged.
-    cuts = [span for row in decision['proof']['rows'] if row['correspondence_status'] == 'confirmed'
+    content_rows = [row for row in decision['proof']['rows']
+                    if row['required'].get('comparison_role') != 'typed_order_anchor']
+    cuts = [span for row in content_rows if row['correspondence_status'] == 'confirmed'
             for span in row['actual_spans']]
-    cuts.extend(span for row in decision['proof']['rows'] for hit in row['retrieval']['candidates']
+    cuts.extend(span for row in content_rows for hit in row['retrieval']['candidates']
                 if hit['exact_shape'] and hit['conflicts'] for span in hit['candidate_spans'])
     base_actual = _without_grammar_analysis(evidence, [{'source': span['source']} for span in cuts])
     base = _grade_layers(base_required, base_actual)
     score = copy.deepcopy(base)
+    content_index = 0
     for index, row in enumerate(decision['proof']['rows']):
+        if row['required'].get('comparison_role') == 'typed_order_anchor':
+            continue  # Existing typed B/bindings own this sentence; only order uses its span.
         status = row['decision']['status']
         scope_correct = row['correspondence_status'] == 'confirmed'
         for layer, correct in (('B', status == 'equivalent'), ('L', scope_correct)):
             if layer == 'B' and row['required']['role'] == 'heading':
                 continue  # Document labels own T/L; they assert no new fact.
-            score['outcomes'].append({'id': f'{layer}:content:{index}', 'layer': layer,
+            score['outcomes'].append({'id': f'{layer}:content:{content_index}', 'layer': layer,
                 'role': 'source_form_assertion' if layer == 'B' else 'document_scope',
                 'expected': row['required'], 'actual': row['actual'],
                 'outcome': 'unresolved' if status == 'unresolved' and (layer == 'B' or not scope_correct)
@@ -424,20 +554,26 @@ def grade_document_content(requirements, evidence):
         if status == 'unresolved':
             score['blockers'].append({'side': 'comparison', 'reason': row['decision']['rule_id'],
                                       'source': row['required']['source'], 'layers': ['B'] if scope_correct else ['B', 'L']})
+        content_index += 1
     # Reading order is a relation independently of value/content correctness.
-    for index, (first, second) in enumerate(zip(decision['proof']['rows'], decision['proof']['rows'][1:], strict=False)):
+    rows = {b['requirement_id']: row for b, row in zip(wanted_ast['children'], decision['proof']['rows'], strict=True)}
+    for edge in document_order_requirements(requirements):
+        first, second = rows[edge['left']], rows[edge['right']]
         unknown = any(row['decision']['status'] == 'unresolved' and row['correspondence_status'] != 'confirmed'
                       for row in (first, second))
         correct = bool(first['actual_spans'] and second['actual_spans']) and (
             (first['actual_spans'][-1]['actual_index'], first['actual_spans'][-1]['text_span'][1]) <=
             (second['actual_spans'][0]['actual_index'], second['actual_spans'][0]['text_span'][0]))
-        score['outcomes'].append({'id': f'L:content-order:{index}', 'layer': 'L',
+        score['outcomes'].append({'id': edge['id'], 'layer': 'L',
             'role': 'reading_order',
             'expected': [first['required']['source'], second['required']['source']],
             'actual': [first['actual_spans'], second['actual_spans']],
             'outcome': 'unresolved' if unknown else 'correct' if correct else 'incorrect',
             **({'software_failure': True, 'semantic_comparison_status': 'unresolved'} if unknown else {}),
-            'reason': 'document_content_reading_order'})
+            'reason': edge['role']})
+        if unknown and edge['role'] == 'mixed_typed_content_order':
+            score['blockers'].append({'side': 'comparison', 'reason': 'document_order_endpoint_unresolved',
+                                      'source': edge['sources'][0], 'layers': ['L']})
     for layer in ('L', 'B'):
         rows = [row for row in score['outcomes'] if row['layer'] == layer]
         complete = not any(layer in blocker.get('layers', ['L', 'B']) for blocker in score['blockers'])

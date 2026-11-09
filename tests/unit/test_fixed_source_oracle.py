@@ -287,10 +287,13 @@ def test_complete_directory_text_cannot_disguise_a_page_reference_as_a_metric(tm
     graph = compile_requirement_graph(original, comparison_contract='document_ast')
     validate_requirement_graph(graph, expected=original)
     assert graph['comparison_coverage']['responsibility_complete']
-    # The literal page and parent exist, but ordinary scalar/content ownership
-    # does not prove the navigation role or its role-sensitive comparison.
+    _check_directory_source(graph, original, (5, 'North', 'Summary', '017'))
+    changed = deepcopy(graph)
+    [fact] = [f for f in changed['nodes'] if f['id'] in changed['comparison_coverage']['retained_semantic_requirements']['B']]
+    fact['semantic_type'] = 'metric'
+    # Independent corruption remains rejected after normal production works.
     with pytest.raises(AssertionError, match='navigation page role'):
-        _check_directory_source(graph, original, (5, 'North', 'Summary', '017'))
+        _check_directory_source(changed, original, (5, 'North', 'Summary', '017'))
 
 
 def test_independent_binding_override_preserves_the_required_subject_attachment(tmp_path):
@@ -313,18 +316,41 @@ def test_independent_binding_override_preserves_the_required_subject_attachment(
         check_fixed_source_graph(changed, original, expected)
 
 
-def test_whole_content_cannot_accept_an_extra_vote_for_the_same_parent_scope(tmp_path):
-    # This existing production gap remains a failed acceptance, separately
-    # from the numeric-role repair. The independent source contract has one
-    # statement, one parent membership, and no retained typed assertion.
+def test_whole_content_owns_the_only_vote_for_its_statement_parent_scope(tmp_path):
+    from moparse_eval.expected_report import validate_evidence
+    from moparse_eval.requirement_graph import evaluation_projection
+    from moparse_eval.three_layer import grade_layers, read_candidate_markdown
+
     text = 'The archive retains security code 004721 for the retired issue.'
     graph, original, expected = representation_sample(tmp_path, text, policy='content')
     assert not graph['comparison_coverage']['retained_semantic_requirements']['B']
     assert graph['source_form_requirements'][0]['source']['text_span'] == [0, len(text)]
-    cases = check_fixed_source_graph(graph, original, expected, collect_failures=True)
-    failed = [case for case in cases if case['status'] != 'passed']
-    source_failures = [case for case in failed if case['source_assertion_case']]
-    assert len(source_failures) == 1
-    assert 'duplicate statement parent-scope responsibility' in source_failures[0]['detail']
-    assert source_failures[0]['input']['source']['lines'] == [3, 3]
-    assert any(case['failure_stage'] == 'coverage_and_order' for case in failed)
+    assert all(case['status'] == 'passed' for case in check_fixed_source_graph(graph, original, expected))
+    assert not graph['comparison_coverage']['retained_semantic_requirements']['L']
+    [owner] = graph['comparison_coverage']['content_relation_ownership']
+    assert owner['relation'] == 'statement_parent_scope'
+    assert owner['owners'][0]['counted_relation_id'] == 'L:content:0'
+    assert any(e['id'] == owner['analysis_relation_id'] for e in graph['relations'])
+    required = evaluation_projection(graph)
+    score = grade_layers(required, read_candidate_markdown('# 范围\n\n' + text, sample_id=required['sample_id']))
+    assert score['layers']['B']['denominator'] == score['layers']['L']['denominator'] == 1
+    assert [r['id'] for r in score['outcomes'] if r['layer'] == 'L'] == ['L:content:0']
+    assert score['layers']['L']['numerator'] == 1
+    validate_evidence(score)
+
+
+def test_injected_duplicate_parent_scope_is_still_rejected(tmp_path):
+    from moparse_eval.requirement_graph import evaluation_projection
+    from moparse_eval.three_layer import grade_layers, read_candidate_markdown
+
+    text = 'The archive retains security code 004721 for the retired issue.'
+    graph, original, expected = representation_sample(tmp_path, text, policy='content')
+    duplicate = graph['comparison_coverage']['content_relation_ownership'][0]['analysis_relation_id']
+    graph['comparison_coverage']['retained_semantic_requirements']['L'].append(duplicate)
+    with pytest.raises(AssertionError, match='duplicate statement parent-scope responsibility'):
+        check_fixed_source_graph(graph, original, expected)
+    with pytest.raises(ValueError, match='comparison responsibility coverage'):
+        validate_requirement_graph(graph, expected=original)
+    required = evaluation_projection(graph)
+    with pytest.raises(ValueError, match='fixed comparison responsibility'):
+        grade_layers(required, read_candidate_markdown('# 范围\n\n' + text, sample_id=required['sample_id']))

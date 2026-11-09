@@ -1179,10 +1179,12 @@ def _toc_source_bindings(inventory, graph):
         schema = []
         headers = [cut(item.get("source", {}), item.get("text")) for item in fact.get("header_evidence", [])]
         headers = [item for item in headers if item and _TOC_PAGE_LABEL.fullmatch(item[0]["text"][item[1][0]:item[1][1]])]
-        if len(headers) != 1 or not same(fact.get("attribute_source", {}), headers[0]):
+        if len(headers) > 1 or headers and not same(fact.get("attribute_source", {}), headers[0]):
             continue
-        attribute = headers[0]
+        attribute = headers[0] if headers else None
         if title[0].get("cell"):
+            if attribute is None:
+                continue
             cells = [entry for entry in materials if entry["target_id"] == title[0]["target_id"] and entry.get("cell")]
             band = min((entry["cell"].get("row", -1) for entry in cells), default=-1)
             title_headers = [entry for entry in cells if entry["cell"].get("row") == band
@@ -1215,17 +1217,23 @@ def _toc_source_bindings(inventory, graph):
             if not valid:
                 continue
         else:
-            # Existing explicit printed Page fields retain the whole source;
-            # their position is established before inspecting the page value.
-            if not directories or page[0]["id"] != title[0]["id"] or attribute[0]["id"] != title[0]["id"]:
+            # A declared directory supplies the page role. Its source-bound
+            # title/separator/page slots need not repeat the word "Page".
+            if (not directories or page[0]["id"] != title[0]["id"]
+                    or attribute is not None and attribute[0]["id"] != title[0]["id"]):
                 continue
             literal = title[0]["text"]
             a, b = title[1]
-            c, d = attribute[1]
             p, q = page[1]
-            if (literal[:a].strip() or literal[q:].strip() or not b <= c < d <= p
-                    or re.fullmatch(r"\s*[:：]?\s*", literal[b:c]) is None
-                    or re.fullmatch(r"\s*[:：]?\s*", literal[d:p]) is None):
+            if literal[:a].strip() or literal[q:].strip() or b > p:
+                continue
+            if attribute is not None:
+                c, d = attribute[1]
+                if (not b <= c < d <= p or re.fullmatch(r"\s*[:：]?\s*", literal[b:c]) is None
+                        or re.fullmatch(r"\s*[:：]?\s*", literal[d:p]) is None):
+                    continue
+            elif (fact.get('attribute_source') is not None
+                    or re.fullmatch(r'\s*[:：]\s*|\s*[.．·…]{2,}\s*|\t+| {2,}', literal[b:p]) is None):
                 continue
             valid = True
             for label in title[0].get("parents", []):
@@ -1253,7 +1261,8 @@ def _toc_source_bindings(inventory, graph):
         def bound(edge, title=title, page=page, attribute=attribute, parents=parents):
             binding = edge.get("binding_evidence", {})
             return (same(binding.get("entry_source", {}), title) and same(binding.get("page_source", {}), page)
-                    and same(binding.get("attribute_source", {}), attribute)
+                    and (same(binding.get("attribute_source", {}), attribute) if attribute is not None
+                         else binding.get('attribute_source') is None)
                     and [anchor(origin) for origin in binding.get("parent_sources", [])]
                     == [(entry["id"], span) for entry, span in parents])
 
@@ -1276,8 +1285,11 @@ def _toc_source_bindings(inventory, graph):
         evidence = {"role": "source_bound_toc_protocol", "requirement": fact["id"],
                     "relations": [edge["id"] for edge in [*linked, *ancestry]],
                     "heading_sources": [{"text": own[0]["text"], "source": copy.deepcopy(own[0]["source"])} for own in stack]}
-        for material in [title[0], page[0], attribute[0], *[own[0] for own in parents], *schema]:
+        for material in [title[0], page[0], *([attribute[0]] if attribute is not None else []), *[own[0] for own in parents], *schema]:
+            literal_spans = [title[1]] if material['id'] == title[0]['id'] else [
+                own[1] for own in parents if own[0]['id'] == material['id']]
             proofs[material["id"]].append({**evidence, "span": [0, len(material["text"])],
+                'literal_role_spans': [list(span) for span in literal_spans],
                 "schema_control": material in schema})
     return {ident: values for ident, values in proofs.items()
             if owners[ident] <= {value["requirement"] for value in values}}
@@ -1309,6 +1321,36 @@ def _structural_evidence(entry, graph, bound_relations):
     """Explain finite printed syntax only when its graph bindings still exist."""
     text, source = entry["text"], entry["source"]
     evidence = []
+    # The entire printed key of a closed scalar record is a literal role.
+    # Words such as AND or a terminal participle in that key are not separate
+    # sentence operators. Require the original delimiter/value and an actual
+    # field binding; a source label or a retained node alone is insufficient.
+    from .measurement_evidence import read_measurement_literal
+    from .source_requirements import _ASSERTED_LABEL
+
+    for fact in graph['nodes']:
+        if fact.get('predicate') or fact.get('logic'):
+            continue
+        label = _range(entry, fact.get('attribute_source', {}))
+        value = _range(entry, fact.get('value_source', {}))
+        if (not label or not value or label[0] != 0 or label[1] > value[0]
+                or text[slice(*label)] != fact.get('attribute')
+                or text[slice(*value)] != fact.get('value')
+                or _ASSERTED_LABEL.search(text[slice(*label)])
+                or re.fullmatch(r'\s*[:：=]\s*', text[label[1]:value[0]]) is None
+                or text[value[1]:].strip(' .。')):
+            continue
+        literal = text[slice(*value)].rstrip('.。')
+        predicate_hits = list(_PREDICATE.finditer(_syntax_mask(text[slice(*label)])))
+        if predicate_hits and (len(predicate_hits) != 1 or predicate_hits[0].end() != label[1]
+                               or not predicate_hits[0][0].casefold().endswith('ed')):
+            continue  # An unresolved finite verb cannot be certified by a scalar alone.
+        atomic = read_measurement_literal(literal[:-1] if literal.endswith('+') else literal)
+        edges = [edge for edge in bound_relations(fact) if edge['type'] == 'field_binding']
+        if atomic['matched'] and edges:
+            evidence.append({'span': list(label), 'role': 'source_bound_atomic_scalar_key',
+                'requirement': fact['id'], 'value_source': copy.deepcopy(fact['value_source']),
+                'relations': [edge['id'] for edge in edges]})
     for fact in graph['nodes']:
         if fact.get('semantic_type') != 'printed_position_list':
             continue
@@ -1935,6 +1977,16 @@ def audit_source_obligations(inventory: dict[str, Any], graph: dict[str, Any]) -
                                                   *compact_bindings.get(entry["id"], [])]
             role_evidence = role_cache[entry["id"]]
             structural = structural_cache[entry["id"]]
+            navigation_labels = [item for item in toc_bindings.get(entry['id'], [])
+                if any(a <= span[0] < span[1] <= b for a, b in item.get('literal_role_spans', []))]
+            if navigation_labels and (obligation['kind'] == 'qualifier' or obligation['kind'] == 'relation'
+                    and obligation.get('binding_role') in {None, 'attachment', 'prepositional_attachment'}):
+                rows.append({'obligation_id': obligation['id'], 'status': 'explained', 'layers': obligation['layers'],
+                    'interpretation_rule': obligation['interpretation_rule'],
+                    'reason': 'printed_navigation_title_or_parent_is_its_bound_literal_role',
+                    'source_basis': obligation['source_basis'], 'evidence': navigation_labels,
+                    'unexplained_character_positions': []})
+                continue
             if obligation["kind"] == "text":
                 evidence = [*_text_syntax_evidence(entry), *_text_field_delimiters(entry, text_nodes)]
                 for node in text_nodes:
@@ -2302,7 +2354,8 @@ def audit_source_obligations(inventory: dict[str, Any], graph: dict[str, Any]) -
                         and compact_bindings.get(entry["id"]) and not _residue(entry["text"], span, compact_bindings[entry["id"]])):
                     proof.extend(compact_bindings[entry["id"]])
                 if not proof and obligation.get('binding_role') is None:
-                    proof.extend(item for item in structural if item['role'] in {'source_bound_printed_field_owner', 'source_bound_basis_nominal_action'}
+                    proof.extend(item for item in structural if item['role'] in {'source_bound_printed_field_owner', 'source_bound_basis_nominal_action',
+                                                                               'source_bound_atomic_scalar_key'}
                                  and item['span'][0] <= span[0] < span[1] <= item['span'][1])
                 if proof:
                     status, reason = "explained", "printed_predicate_has_its_own_role_binding"
@@ -2347,6 +2400,10 @@ def audit_source_obligations(inventory: dict[str, Any], graph: dict[str, Any]) -
                 if edges and any(a <= span[0] < span[1] <= b for origin in origins for a, b in _ranges(entry, origin)):
                     status, reason = "explained", "printed_operator_has_source_bound_scope"
                     proof = [{"relation": edge.get("id", f"operand-edge:{relations.index(edge)}")} for edge in edges]
+                nominal_key = [item for item in structural if item['role'] == 'source_bound_atomic_scalar_key'
+                               and item['span'][0] <= span[0] < span[1] <= item['span'][1]]
+                if nominal_key:
+                    status, reason, proof = 'explained', 'printed_word_is_part_of_its_bound_scalar_key', nominal_key
             else:
                 # The semantic fragment must be explained word by word by
                 # explicit roles and scoped operators. Generic T/source

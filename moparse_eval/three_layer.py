@@ -700,7 +700,7 @@ class _Graph:
                                  if key == "qualifier_provenance" else copy.deepcopy(fact[key]))
             for key in ("logic", "qualifier_sources", "value_source", "attribute_source", "subject_source", "predicate", "object", "predicate_source", "object_source", "rule_id", "printed_label", "label_source",
                         "semantic_type", "semantic_role", "directory_evidence", "field_label_evidence", "record_evidence", "quoted_nominals", "subject_binding_evidence",
-                        "statement_source", "subject_phrase", "object_phrase", "prepositional_complements", "compact_column", "value_logic"):
+                        "statement_source", "statement_boundary_evidence", "subject_phrase", "object_phrase", "prepositional_complements", "compact_column", "value_logic"):
                 if key in fact:
                     if key == "value_source" and item["value"] != fact["value"]:
                         continue
@@ -743,6 +743,16 @@ class _Graph:
         self.data["toc_evidence"] = {key: copy.deepcopy(result[key]) for key in
                                       ("entries", "unresolved", "handled_block_ids")}
         return set(result["handled_block_ids"])
+
+    def navigation_heading(self, text: str, source: dict[str, Any], level: int) -> None:
+        # Navigation atoms already own the literal; the printed heading still
+        # owns its independent document hierarchy, outside entry parentage.
+        self.continuity_segment += 1
+        self.data['syntax'].append({'kind': 'heading', 'text': text, 'source': source,
+            'scope': list(self.headings), 'heading_level': level, 'semantic_role': 'toc'})
+        if len(self.headings) > 1:
+            self.relation('heading_parent', self.headings[-2], self.headings[-1], source)
+            self.data['relations'][-1]['required_scope'] = list(self.headings)
 
     def compact_projection(self, result: dict[str, Any], text: str, source: dict[str, Any]) -> None:
         if result.get("text_projection_complete"):
@@ -1656,6 +1666,8 @@ def compile_markdown(markdown: str, *, sample_id: str = "synthetic",
             graph.qualifiers = {}
             if f"syntax:{index}" not in toc_handled:
                 graph.prose(element.text, source, "heading")
+            else:
+                graph.navigation_heading(element.text, source, level)
         elif f"syntax:{index}" in toc_handled:
             graph.data["syntax"].append({"kind": element.kind, "text": element.text,
                 "source": {**source, "block": f"syntax:{index}"}, "scope": list(graph.headings), "semantic_role": "toc"})
@@ -1741,8 +1753,10 @@ def read_candidate(observation: dict[str, Any]) -> dict[str, Any]:
                 graph.block("native_note_binding_interpretation_unsupported", source)
             if block.get("id") in toc_handled:
                 if block.get("kind") in {"heading", "section_header", "title", "doc_title", "paragraph_title"}:
-                    graph.enter_heading(visible_text(block.get("text", ""), block.get("text_format", "plain")),
-                                        max(1, int(block.get("heading_level", block.get("level", 1)) or 1)))
+                    text = visible_text(block.get('text', ''), block.get('text_format', 'plain'))
+                    level = max(1, int(block.get('heading_level', block.get('level', 1)) or 1))
+                    graph.enter_heading(text, level)
+                    graph.navigation_heading(text, source, level)
                 graph.continuity_segment += 1
                 continue
             if block.get("cells"):

@@ -95,7 +95,8 @@ def _document_acceptance(index, graphs, evidence):
         if any(item['status'] == 'blocking' for item in coverage['analysis_limitations']):
             _fail('document AST retains uncovered analysis obligations')
         sample = by_sample[row['sample_id']]
-        required = set(coverage['content_requirement_ids']).union(*map(set, coverage['retained_semantic_requirements'].values()))
+        required = set(coverage['content_requirement_ids'] + coverage['mixed_order_requirement_ids']).union(
+            *map(set, coverage['retained_semantic_requirements'].values()))
         references = sample.get('case_ids')
         if (not isinstance(references, list) or not references or len(references) != len(set(references))
                 or any(ident not in oracle_cases for ident in references)):

@@ -83,7 +83,7 @@ def controlled_evidence(root, index, software_id):
                 'comparison_contract_version': 'document_ast/1',
                 'generated_view_sha256': row['generated_view_sha256'],
                 'comparison_coverage_sha256': _digest(coverage),
-                'requirement_ids': sorted(set(coverage['content_requirement_ids']).union(
+                'requirement_ids': sorted(set(coverage['content_requirement_ids'] + coverage['mixed_order_requirement_ids']).union(
                     *map(set, coverage['retained_semantic_requirements'].values()))),
                 'obligation_ids': [r['obligation_id'] for r in coverage['obligations']],
                 'analysis_limitation_ids': [r['issue_id'] for r in coverage['analysis_limitations']]})
