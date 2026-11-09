@@ -421,7 +421,9 @@ def _walk(value):
 def _ranges(entry, source):
     fragments = source.get("joined_fragments") if isinstance(source, dict) else None
     if fragments:
-        return [span for part in fragments if (span := _range(entry, part.get("source", {}))) is not None]
+        from .source_requirements import original_source_cuts
+
+        return [span for part in original_source_cuts(source) if (span := _range(entry, part)) is not None]
     span = _range(entry, source)
     return [span] if span is not None else []
 
@@ -447,7 +449,9 @@ def proposition_role_conflicts(entry, fact):
         raw = entry["text"][slice(*bounds)]
         syntax = _syntax_mask(raw)
         reason = None
-        if len(list(_segments(raw))) > 1 or re.search(r"[。！？!?；;]", syntax):
+        if any(raw.count(a) != raw.count(b) for a, b in [('(', ')'), ('（', '）'), ('[', ']')]):
+            reason = 'proposition_role_crosses_parenthetical_boundary'
+        elif len(list(_segments(raw))) > 1 or re.search(r"[。！？!?；;]", syntax):
             reason = "proposition_role_contains_another_statement"
         elif re.search(r"主要[歸归]因[於于]|[由因][於于为為]|因[为為]|[为為]了|以便|"
                        r"\b(?:because|therefore|so that|in order to|for the purpose of|unless|if)\b", syntax, re.I):

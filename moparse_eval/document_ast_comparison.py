@@ -16,6 +16,7 @@ from .requirement_ast import (
     compare_document_ast,
     validate_content_ast,
 )
+from .source_requirements import original_source_cuts
 
 
 def _location(source):
@@ -24,11 +25,18 @@ def _location(source):
 
 
 def _same_record(left, right):
-    return left.get('path') == right.get('path') and left.get('lines') == right.get('lines') and all(
+    return (left.get('path') == right.get('path') and left.get('lines') == right.get('lines') and all(
         left.get(key) == right.get(key) for key in ('cell', 'native_path') if key in left or key in right)
+        and not ('block' in left and 'block' in right and left['block'] != right['block']))
 
 
 def _grammar_limit(issue):
+    # A bounded sentence reader declares its failed interpretation explicitly.
+    # This classifies analysis only: exact original ownership, linked source
+    # obligations, quantities and structure are checked separately below.
+    if issue.get('comparison_domain') == 'sentence_interpretation':
+        return (issue.get('kind') in {'narrative', 'proposition'}
+                and set(issue.get('layers', ['B', 'L'])) <= {'B', 'L'})
     reason = issue.get('reason', '')
     return reason.startswith(('cjk_narrative_', 'narrative_', 'quoted_nominal_', 'entity_assignment_',
                               'business_preamble_', 'business_clause_', 'prose_clause_')) or reason in {
@@ -39,30 +47,36 @@ def _grammar_limit(issue):
 
 def _original_content_sources(source):
     """Project a joined analysis cut back onto each actual source fragment."""
-    fragments = source.get('joined_fragments')
-    if not fragments:
-        return [source]
-    base = fragments[0]['source'].get('text_span', [0])[0]
-    a, b = source.get('text_span', [base + fragments[0]['joined_span'][0], base + fragments[-1]['joined_span'][1]])
-    a, b = a - base, b - base
-    result = []
-    for fragment in fragments:
-        start, end = fragment['joined_span']
-        if max(start, a) < min(end, b):
-            origin = copy.deepcopy(fragment['source'])
-            offset = origin.get('text_span', [0])[0]
-            origin['text_span'] = [offset + max(start, a) - start, offset + min(end, b) - start]
-            result.append(origin)
-    return result
+    return original_source_cuts(source)
 
 
-def _fallback_blocks(ast, issues):
-    return [index for index, block in enumerate(ast['children'])
+def _fallback_blocks(ast, issues, facts=()):
+    indices = [index for index, block in enumerate(ast['children'])
             if block['role'] in {'text', 'item', 'heading'}
             and any(_same_record(block['source'], origin) and _grammar_limit(issue)
                     for issue in issues for origin in _original_content_sources(issue.get('source', {})))
             and not any(_same_record(block['source'], origin) and not _grammar_limit(issue)
                         for issue in issues for origin in _original_content_sources(issue.get('source', {})))]
+    # Replacing just the tail of a joined, partly interpreted assertion would
+    # retain its typed assertion as well and count the same responsibility
+    # twice. Expand through that actual joined statement, never through a
+    # neighbouring literal or a textual hit from a different source.
+    for fact in facts:
+        statement = fact.get('statement_source', fact.get('source', {}))
+        if not statement.get('joined_fragments'):
+            continue
+        parts = _original_content_sources(statement)
+        own = [i for i, b in enumerate(ast['children']) if any(_same_record(b['source'], s) for s in parts)]
+        if (not any(i in indices for i in own) or not own
+                or any(ast['children'][i]['role'] not in {'text', 'item'} for i in own)
+                or any(ast['children'][i]['scope'] != ast['children'][own[0]]['scope']
+                       or ast['children'][i]['parents'] != ast['children'][own[0]]['parents'] for i in own)
+                or own != list(range(min(own), max(own) + 1))
+                or any(not _grammar_limit(issue) and any(_same_record(origin, part)
+                    for origin in _original_content_sources(issue.get('source', {})) for part in parts) for issue in issues)):
+            continue
+        indices.extend(i for i in own if i not in indices)
+    return sorted(indices)
 
 
 def _contains(source, origin):
@@ -82,14 +96,14 @@ def _fixed_content_requirements(ast, indices, facts, issues):
     for index in indices:
         block = ast['children'][index]
         whole = block['content']['source']['text_span']
-        typed = [fact.get('logic', {}).get('sequence_source') for fact in facts
-                 if fact.get('logic', {}).get('kind') == 'quantity_assertion']
+        typed = [part for fact in facts if fact.get('logic', {}).get('kind') == 'quantity_assertion'
+                 for part in _original_content_sources(fact['logic']['sequence_source'])]
         cuts = sorted({tuple(source['text_span']) for source in typed if source
                        and _contains(block['content']['source'], source)
-                       and not any(_same_record(source, issue.get('source', {}))
-                           and issue.get('source', {}).get('text_span') is not None
-                           and max(source['text_span'][0], issue['source']['text_span'][0])
-                               < min(source['text_span'][1], issue['source']['text_span'][1]) for issue in issues)})
+                       and not any(_same_record(source, part) and part.get('text_span') is not None
+                           and max(source['text_span'][0], part['text_span'][0])
+                               < min(source['text_span'][1], part['text_span'][1])
+                           for issue in issues for part in _original_content_sources(issue.get('source', {})))})
         spans, cursor = [], whole[0]
         for start, end in cuts:
             if cursor < start:
@@ -118,15 +132,16 @@ def attach_document_ast(graph, expected):
             for cell in target['cells']:
                 units.append({'kind': 'table_cell', 'text': cell.get('text', ''), 'scope': scope,
                     'source': {**target['reference'], 'cell': cell.get('id', cell.get('native_path')),
-                               'row': cell.get('row'), 'column': cell.get('col')},
+                               'row': cell.get('row'), 'column': cell.get('col'),
+                               **({'native_path': cell['native_path']} if cell.get('native_path') is not None else {})},
                     'parents': target.get('parents', [])})
         else:
             units.append({'kind': target['kind'], 'text': target.get('raw_text', target['text']),
                           'source': target['reference'], 'scope': scope, 'parents': target.get('parents', [])})
     graph['comparison_contract'] = 'document_ast'
     graph['document_ast'] = build_document_ast(units)
-    graph['source_form_units'] = _fallback_blocks(graph['document_ast'], graph['unresolved'])
     facts = [n for n in graph.get('nodes', graph.get('business', [])) if n.get('kind') != 'text']
+    graph['source_form_units'] = _fallback_blocks(graph['document_ast'], graph['unresolved'], facts)
     graph['source_form_requirements'] = _fixed_content_requirements(
         graph['document_ast'], graph['source_form_units'], facts, graph['unresolved'])
     # Keep every semantic-analysis limitation. A preservation proof is not a
@@ -297,10 +312,8 @@ def _without_grammar_analysis(graph, blocks):
                 if isinstance(literal, str):
                     origin = {**origin, 'text_span': [0, len(literal)]}
             return any(_contains(source, origin) for source in sources)
-        fragments = origin.get('joined_fragments')
-        if fragments:
-            return all(owned(fragment.get('source', {})) for fragment in fragments)
-        return owned(origin)
+        parts = _original_content_sources(origin)
+        return bool(parts) and all(owned(part) for part in parts)
 
     removed_facts = {fact['id'] for fact in result['business'] if covered(fact)}
     result['business'] = [fact for fact in result['business'] if fact['id'] not in removed_facts]

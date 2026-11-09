@@ -19,6 +19,72 @@ _ASSERTED_LABEL = re.compile(
     r"|[。！？!?]|(?:我们|本公司|本集团|管理层|董事会)(?:正在|已经|将|拟|计划|决定|宣布)|[为為]$", re.I)
 
 
+def original_source_cuts(source: dict[str, Any]) -> list[dict[str, Any]]:
+    """Project one analysis interval into unchanged, local character ranges.
+
+    Joined coordinates are relative to the first fragment's original start.
+    Inserted separators have no source. Whitespace projection can change its
+    length, so copying a joined offset into another original is insufficient.
+    Literal/source authentication remains the owning graph/evidence check.
+    """
+    fragments = source.get('joined_fragments')
+    if not fragments:
+        return [copy.deepcopy(source)]
+    if not isinstance(fragments, list) or len(fragments) < 2:
+        raise ValueError('joined source requires its complete original fragments')
+    first = fragments[0]['source']
+    if any(source.get(k) != first.get(k) for k in ('path', 'lines', 'cell', 'block', 'native_path')):
+        raise ValueError('joined source differs from its first original identity')
+    cursor, previous, layout = 0, '', []
+    for fragment in fragments:
+        raw = fragment.get('text')
+        text = fragment.get('projected_text', raw)
+        span = fragment.get('joined_span')
+        origin = fragment.get('source', {})
+        if not isinstance(raw, str) or not isinstance(text, str) or not text:
+            raise ValueError('joined source lacks original and projected wording')
+        gap = (0 if re.search(r'[\u3400-\u9fff]$', previous) and re.match(r'[\u3400-\u9fff]', text) else 1) if layout else 0
+        if span != [cursor + gap, cursor + gap + len(text)]:
+            raise ValueError('joined source has an invalid separator or interval')
+        positions = [(i, char) for i, char in enumerate(raw) if not char.isspace()]
+        projected = [(i, char) for i, char in enumerate(text) if not char.isspace()]
+        if ([char for _, char in positions] != [char for _, char in projected]
+                or re.sub(r'\s+', ' ', raw).strip() != re.sub(r'\s+', ' ', text).strip()):
+            raise ValueError('joined source changed original non-whitespace content')
+        bounds = origin.get('text_span', [0, len(raw)])
+        if (len(bounds) != 2 or any(type(n) is not int for n in bounds)
+                or bounds[0] < 0 or bounds[1] - bounds[0] != len(raw)):
+            raise ValueError('joined original interval differs from its actual wording')
+        layout.append((origin, bounds[0], raw, text, span, dict(zip(
+            (i for i, _ in projected), (i for i, _ in positions), strict=True))))
+        cursor, previous = span[1], text
+    base = first.get('text_span', [0])[0]
+    cut = source.get('text_span', [base, base + cursor])
+    if (len(cut) != 2 or any(type(n) is not int for n in cut)
+            or not 0 <= cut[0] - base <= cut[1] - base <= cursor):
+        raise ValueError('joined analysis cut lies outside its original expression')
+    a, b = cut[0] - base, cut[1] - base
+    result = []
+    for origin, offset, raw, text, (start, end), points in layout:
+        lo, hi = max(start, a) - start, min(end, b) - start
+        if lo >= hi:
+            continue
+        if lo == 0:
+            left = 0
+        elif text[lo].isspace():
+            left = max((v + 1 for k, v in points.items() if k < lo), default=0)
+        else:
+            left = points[lo]
+        if hi == len(text):
+            right = len(raw)
+        elif text[hi - 1].isspace():
+            right = min((v for k, v in points.items() if k >= hi), default=len(raw))
+        else:
+            right = points[hi - 1] + 1
+        result.append({**copy.deepcopy(origin), 'text_span': [offset + left, offset + right]})
+    return result
+
+
 def plan_field_body(text: str, source: dict[str, Any]) -> dict[str, Any] | None:
     """Expose an asserted field body before the scalar field reader sees it.
 

@@ -262,10 +262,19 @@ def _pairs(text: str) -> list[tuple[str, str]]:
     Times, URLs, negatives and ordinary terminal numbers remain literal.
     Semicolons split only if every clause is independently labelled.
     """
-    pieces = re.split(r"[;；]\s*", text.strip())
+    if re.match(r'^[A-Za-z][A-Za-z0-9+.-]*://', text.strip()):
+        return []
+    pieces = re.split(r"[;；]\s*|\u3000+(?=[^:：=;；\u3000]+[:：=])", text.strip())
     if pieces and not pieces[-1]:
         pieces.pop()
     matches = [PAIR.fullmatch(piece) for piece in pieces]
+    # An enclosing parenthesis is not part of an attribute on one side of
+    # the colon and part of its value on the other. Preserve the whole body
+    # for the content contract rather than manufacture two unbalanced roles.
+    if any(match and any(match[1].count(a) != match[1].count(b)
+                         or match[2].count(a) != match[2].count(b)
+                         for a, b in [('(', ')'), ('（', '）'), ('[', ']')]) for match in matches):
+        return []
     if matches and all(matches):
         return [(match[1].strip(), match[2].strip()) for match in matches if match]
     match = PAIR.fullmatch(text.strip())
@@ -787,6 +796,12 @@ class _Graph:
                                     "syntax_evidence": copy.deepcopy(syntax_evidence or {})})
         if kind == 'heading' and self.heading_stack and self.heading_stack[-1][1] == text:
             self.data['syntax'][-1]['heading_level'] = self.heading_stack[-1][0]
+        if kind == 'heading' and _pairs(text) and not all(QUALIFIER.fullmatch(key) for key, _ in _pairs(text)):
+            self.literal(text, source, 'heading')
+            if len(self.headings) > 1:
+                self.relation('heading_parent', self.headings[-2], self.headings[-1], source)
+                self.data['relations'][-1]['required_scope'] = list(self.headings)
+            return
         declaration = read_enumeration_intro(text, source, scope=self.headings) if kind not in {
             "heading", "image", "image_caption", "table_caption"} else {"matched": False}
         if declaration["matched"]:
@@ -1320,6 +1335,23 @@ def _finish(graph: _Graph) -> dict[str, Any]:
                 source["text_span"] = [offset + start, offset + cursor]
             sentence_units.append({**item, "source": source, "text": text, "id": f"{item['id']}:sentence:{i}"})
     merged = []
+
+    def original_gap_is_whitespace(previous, item):
+        left = previous.get('source_fragments', [previous['source']])[-1]
+        right = item['source']
+        if graph.source_key(left) != graph.source_key(right):
+            return True
+        a, b = left.get('text_span'), right.get('text_span')
+        if not a or not b or a[1] > b[0]:
+            return False
+        for snapshot in fragments:
+            origin, raw = snapshot['source'], snapshot['text']
+            offset = origin.get('text_span', [0])[0]
+            if (graph.source_key(origin) == graph.source_key(left)
+                    and offset <= a[1] <= b[0] <= offset + len(raw)):
+                return not raw[a[1] - offset:b[0] - offset].strip()
+        return False
+
     for item in sentence_units:
         if (merged and merged[-1]["role"] == item["role"] == "literal"
                 and merged[-1].get('syntax_kind') not in {'heading', 'image', 'image_caption', 'picture', 'figure', 'table_caption'}
@@ -1328,6 +1360,12 @@ def _finish(graph: _Graph) -> dict[str, Any]:
                 and merged[-1].get("continuity_segment") == item.get("continuity_segment")
                 and merged[-1].get("scope") == item.get("scope")
                 and not merged[-1]["source"].get("cell") and not item["source"].get("cell")
+                and original_gap_is_whitespace(merged[-1], item)
+                and not (merged[-1]['source'].get('lines') != item['source'].get('lines') and (
+                    re.match(r'^[⁰¹²³⁴⁵⁶⁷⁸⁹]+\s', item['text'])
+                    or re.match(r'^[A-Z]', item['text'])
+                    and re.search(r'\b(?:is|are|was|were|shall|must|will|can|requires?)\b', merged[-1]['text'], re.I)
+                    and re.search(r'\b(?:is|are|was|were|shall|must|will|can|requires?)\b', item['text'], re.I)))
                 # A separate title-case nominal and a following CJK name do
                 # not prove sentence continuation. In particular the last
                 # capitalized noun cannot acquire a new verbal object just

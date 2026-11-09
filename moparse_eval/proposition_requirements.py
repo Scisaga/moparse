@@ -35,7 +35,7 @@ def _trim(text: str, start: int, end: int) -> tuple[int, int]:
 
 
 def _pending(result, text, source, start, end, reason, **detail):
-    pending = {"reason": reason, "kind": "proposition", "text": text[start:end],
+    pending = {"reason": reason, "kind": "proposition", "comparison_domain": "sentence_interpretation", "text": text[start:end],
                "source": _source(source, start, end), "layers": ["B", "L"], **detail}
     result["pending_requirements"].append(pending)
     result["blockers"].append(copy.deepcopy(pending))

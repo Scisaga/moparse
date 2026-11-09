@@ -1092,7 +1092,7 @@ def read_narrative(text: str, source: dict[str, Any], *, scope=()) -> dict[str, 
         try:
             tree = reader.interpret(start, end)
         except _Unknown as error:
-            item = {'kind': 'narrative', 'reason': str(error), 'text': text[start:end],
+            item = {'kind': 'narrative', 'comparison_domain': 'sentence_interpretation', 'reason': str(error), 'text': text[start:end],
                     'source': reader.source_at(start, end), 'scope': list(scope), 'layers': ['B', 'L'],
                     'category': 'software_unsupported'}
             quoted_scopes = [{key: copy.deepcopy(value) for key, value in quoted.items() if key != 'span'}
@@ -1110,7 +1110,7 @@ def read_narrative(text: str, source: dict[str, Any], *, scope=()) -> dict[str, 
         result['logic'].append(tree)
         for unknown in reader.unknown_nodes:
             pending_span = unknown.get('unresolved_span', unknown['span'])
-            item = {'kind': 'narrative', 'reason': unknown['reason'], 'text': reader.text[slice(*pending_span)],
+            item = {'kind': 'narrative', 'comparison_domain': 'sentence_interpretation', 'reason': unknown['reason'], 'text': reader.text[slice(*pending_span)],
                     'source': reader.source_at(*pending_span), 'scope': list(scope), 'layers': ['B', 'L'],
                     'category': 'software_unsupported'}
             if item not in result['unresolved']:

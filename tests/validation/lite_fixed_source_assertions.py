@@ -557,3 +557,367 @@ TYPED_ASSERTIONS = {
 # A printed labelled body retains this additional local field scope. It is
 # independently present before the body, not an inferred document heading.
 TYPED_SCOPE_LABELS = {('catl-storage-renewables-markets-p137-143', 2045): '註'}
+
+# Second batch, fixed from the previous stage's recorded eleven, not a
+# replacement for ASSERTIONS or a filter over companies. Read in full before
+# compiling this batch. P/I own complete ordered statements; named F sources
+# retain the complete printed fields below. Captions assert text only.
+ADDITIONAL_ASSERTIONS = {
+    'beijing-media-director-p001-003': ('1201816142', [1, 2, 3], [(1, 23), (25, 39), (41, 57)], '''
+1|P|香港交易及結算所有限公司~香港聯合交易所有限公司~概不負責~準確性或完整性~任何損失
+3|P|BEIJING MEDIA CORPORATION LIMITED
+5|P|北青傳媒股份有限公司
+7|P|於中華人民共和國註冊成立的股份有限公司
+9|P|股份代號：1000
+11|H1|公告：建議更換董事
+13|P|董事會謹此宣佈：
+15|P|二零一五年十二月七日~段鋼~工作調整~執行董事~辭任即時生效；及
+17|P|劉弘~非執行董事~股東大會批准之日起生效~本屆董事會任期屆滿
+19|P|北青傳媒股份有限公司~本公司~董事會~謹此宣佈：
+21|P|二零一五年十二月七日~段鋼~工作調整~執行董事~辭任即時生效；及
+23|P|劉弘~非執行董事~股東大會批准之日起生效~本屆董事會任期屆滿
+25|P|段鋼~並無意見分歧或未決事宜~亦無任何~股東垂注
+27|P|段鋼~任期內~寶貴貢獻~衷心之感謝
+29|H2|劉弘先生履歷詳情
+31|P|四十二歲~300104.SZ~02369.HK~一九九七年至二零零四年~二零零四年至二零零八年~二零零九年二月至二零一五年十月~一九九五年七月~機械製造工藝與設備~一九九七年七月~新聞學~二零零三年一月~法學碩士
+33|P|除上述披露者外~過去三年內並無~其他上市公司~董事職務
+35|P|於本公告日期~董事、高級管理人員、主要股東或控股股東概無關係
+37|P|並無~第XV部~任何權益~正式獲委任~服務合約~任期自委任日期起~輪席退任~膺選連任
+39|P|薪酬待遇~薪酬委員會~股東授權後~其中包括~職責及責任
+41|P|除上文所披露者外~並不知悉~股東垂注~13.51(2)(h)至(v)
+43|P|承董事會命
+45|P|北青傳媒股份有限公司
+47|P|董事會主席
+49|P|張延平
+51|P|中國北京
+53|P|二零一五年十二月七日
+55|P|執行董事張延平、余海波及何筱娜~非執行董事李世恒、劉涵、吳佩華、李小兵、王林及徐迅~獨立非執行董事宋建武、崔保國、吳德龍、崔恩卿及陳冀
+57|P|www.bjmedia.com.cn~已刊發的公告
+'''),
+    'fiyta-bond-followup-p011-017': ('1200778318', [11, 12, 13, 14, 15, 16, 17],
+        [(156, 166), (168, 170), (172, 174), (176, 182), (184, 186), (188, 200), (202, 206)], '''
+156|H1|第三章　发行人募集资金使用情况
+158|H2|一、本次公司债券募集资金情况
+160|P|2012年9月9日~证监许可[2012]1209号~不超过人民币4亿元~2013年2月26日~5.04%~2013年2月27日~2013年3月1日~合计发行人民币4亿元~净募集资金计人民币3.969亿元~2013年3月5日~起息日~中瑞岳华验字[2013]第0055号
+162|P|2012年度公开发行公司债券募集说明书~募集资金4亿元~其中3亿元~偿还银行借款~剩余部分~补充流动资金
+164|H2|二、本期公司债券募集资金实际使用情况
+166|P|报告期内~严格按照~约定的募集资金用途~截至2014年12月31日~全部使用完毕
+168|H1|第四章　债券持有人会议召开情况
+170|P|2014年度~未发生须召开~未召开债券持有人会议
+172|H1|第五章　本次债券利息的偿付情况
+174|P|起息日为2013年2月27日~2014年2月27日及2015年2月27日~第一次及第二次付息
+176|H1|第六章　本次公司债券跟踪评级情况
+178|P|联合信用评级有限公司~存续期内~每年公司年报公告后~一次定期跟踪评级~不定期跟踪评级
+180|P|2014年4月28日~主体长期信用等级为AA~稳定~12亚达债~AA+
+182|P|联合信用评级有限公司~近期~第二次跟踪评级报告~投资者关注
+184|H1|第七章　负责处理与公司债券相关事务专人的变动情况
+186|P|报告期内~专人未发生变动
+188|H1|第八章　其他事项
+190|H2|一、发行人的对外担保情况
+192|P|截至2014年12月31日~不存在对外担保~不包括对子公司的担保
+194|H2|二、发行人涉及的未决诉讼或仲裁事项
+196|P|截至2014年12月31日~不存在应披露~未决诉讼、仲裁等或有事项
+198|H2|三、相关当事人
+200|P|2014年度~受托管理人和资信评级机构均未发生变动
+202|P|本页无正文~2012年度公司债券受托管理事务报告（2014年度）~盖章页
+204|P|招商证券股份有限公司
+206|P|2015年4月1日
+'''),
+    'huawei-audit-p066': ('complex-huawei-2024-annual', [66], [(1707, 1745)], '''
+1707|H1|独立审计师报告
+1709|C|KPMG
+1711|H2|独立审计师就合并财务报表摘要致华为投资控股有限公司董事会之报告
+1713|H3|意见
+1715|P|第65页至第105页~华为投资控股有限公司及其子公司~2024年12月31日~概要合并财务状况表~截至该日止年度~概要合并利润及其他综合收益表~概要合并现金流量表~相关附注~经审计合并财务报表中摘录
+1717|P|附注2~标准编制~所有重大方面~保持了一致
+1719|H3|合并财务报表摘要
+1721|P|没有包含~国际会计准则理事会~国际财务报告准则~所有披露~不能~替代
+1723|H3|经审计合并财务报表及其审计报告
+1725|P|2025年3月26日~截至2024年12月31日止年度~无保留意见
+1727|H3|管理层对合并财务报表摘要的责任
+1729|P|管理层的责任~附注2~基础编制
+1731|H3|审计师的责任
+1733|P|国际审计准则810号（修订）~财务报表摘要报告业务~相关程序~是否在所有重大方面~一致发表意见
+1735|P|毕马威华振会计师事务所（特殊普通合伙）
+1737|P|执业会计师
+1739|P|南山区科苑南路2666号
+1741|P|中国华润大厦15楼
+1743|P|518052 中国深圳
+1745|P|2025年3月26日
+'''),
+    'huaweitech-cover-p001': ('complex-huaweitech-2024-096', [1], [(1, 29)], '''
+1|H1|华为技术 HuaweiTech
+3|P|EXPLORE · INNOVATE · INSPIRE
+5|P|总第096期~2024年第1期
+7|P|引领商业成功
+9|P|拥抱5G-A，释放产业红利
+11|P|引领数智转型
+13|P|EM2.0模式：非洲运营商数智化转型发展之路
+15|P|创新引领未来
+17|P|共同定义5G-A时代ICT架构，共赢新机遇
+19|C|封面插图
+21|P|拥抱5G-A~引领智能世界加速到来
+23|C|移动阅读二维码
+25|P|扫描体验移动阅读
+27|P|内部资料~免费交流
+29|F|出版物准印证号：粤B L0230032
+'''),
+    'huaweitech-middle-east-p021-023': ('complex-huaweitech-2024-096', [21, 22, 23],
+        [(602, 638), (640, 676), (678, 718)], '''
+602|H1|中东领航5G-A时代，加速迈向智能世界
+604|P|文 / 华为中东中亚ICT Marketing与解决方案销售部部长 唐臻田
+606|C|唐臻田
+608|P|中东运营商~海湾六国~5G-A时代~场景化验证~新型增长机会~持续夯实5G商业成功成果
+610|P|阿拉伯世界~关键要素~连接
+612|P|中国~丝绸、瓷器~印度和马来群岛~香料、矿物、蔗糖~中亚~宝石~东非~象牙、金沙~北欧~蜂蜜、毛皮和木材~运输与商业网络~交流和发展
+614|P|海湾六国~非石油经济~阿联酋、沙特~数字枢纽~stc、e&、zain~云、DC、toB集成~中东、非洲~ICT基础设施
+616|H2|中东迈入5G-A商用元年
+618|P|2023年MBBF期间~6家~20+场次~Redcap、Passive-IoT、裸眼3D~所有运营商~10Gbps
+620|H2|务实探索5G-A新业务，推进5G商业长青
+622|P|5G商业成功~持续投资5G~核心动力
+624|P|截至2023年底~5G用户渗透率和5G分流比均超过40%~2018年~20%~45%~FWA
+626|P|个人（toC）、家庭（toH）、行业（toB）~用户体验~创新应用
+628|H3|个人（toC）：裸眼3D，沉浸式体验激发十倍流量红利
+630|P|阿凡达~十多年~核心技术基本成熟~良好体验、高效3D内容制作和平价终端~规模商用
+632|P|迪拜、阿曼~Naked-eye 3D~近半年来~沙特、阿联酋、阿曼~运营商A~PAD与FWA、手机膜与2C~运营商B~OSN~YouTube~运营商C~3D权益~运营商D~3D内容转制
+634|P|卡塔尔Vodafone~供应商、监管机构、战略合作伙伴~5G-A~数字化转型~最前沿的位置。[1]
+636|P|Ramy Boctor，卡塔尔Vodafone CTO
+638|C|文章配图
+640|P|高端套餐设计~3D内容生态~预计在2024年上半年~裸眼3D业务
+642|H3|家庭（toH）：FWA体验再升级，从Fiber-like到Air-Fiber
+644|P|FWA的可持续发展~重中之重
+646|P|超过21%~阿联酋、卡塔尔、巴林~两个共性问题~第一~网络拥塞~第二~每年40%+~300Mbps~500Mbps~竞争优势
+648|P|不确定的100Mbps~可靠的300Mbps~70%~67%~20%以上~发放前~发放中~部分场景~辅助安装~消费者使用过程中~预防性优化~VIP客服通道
+650|P|阿联酋du~MWC 2024~游戏者~高速、低时延~TV类权益[2]
+652|P|与光并进~广阔想象空间
+654|P|接近甚至媲美光纤~5G SA~5G-A~6G~半路上。[3]
+656|P|Karim Benkirane，du CCO
+658|H3|行业（toB）：万兆城市底座，助力行业数字化发展
+660|P|2022年~沙特通信部~10Gbps Society~MoU~新城规划~泛在基础连接~ICT综合解决方案
+662|I|低碳~认知城市~NEOM~红海集团和zain~零碳5G~珊瑚礁、海龟筑巢地~生态实施监控[4]~智能安防、电子屏幕、新能源充电桩、环境监控、自动驾驶
+663|I|约有40%~一年内~stc~沙特港务局~起重机远程操作、起重机三维可视化、车牌识别、人脸识别~5G移动边缘、5G园区、车载5G网络~政府、交通、医疗、航空、油气~[5]~[6]
+664|I|P-IoT和Redcap~无源，长待机，低成本~数字孪生~跟踪和调配~Redcap低成本5G模组~CCTV~智慧安防
+666|P|白皮书~阿联酋5G~承诺~先进技术~开拓创新~持续投入。[7]
+668|P|Khalid Murshed，etisalat by e& CTIO
+670|C|文章配图
+672|H2|技术引领，有序打造万兆网络
+674|P|区域领先运营商~完成5G-A目标网规划
+676|P|第一步~用户体验三年翻倍~当前~100Mbps~165Mbps~2026年~200Mbps~500Mbps
+678|P|第二步~到2026年~5Gbps~小于20ms~到2030年~10Gbps~小于10ms
+680|P|TDD 3载波（300MHz频谱）~双频META（2.6/2.3+C-band）~ELAA（Extreme-Large Antenna Arrays）~192迈向384~5Gbps~用户体验提升近30%~能耗降低近30%[8]
+682|P|沙特stc~4载波~C-band和中低频~5G-A演进[9]
+684|P|2024年巴塞罗那通信展~阿联酋du~5G-Advanced Country~科威特CITRA~5G-A Smart Cities~沙特zain~All in 5G-A
+686|P|网络平滑~5G超级套餐~新通话、3D、MR~FWA~速率~定价演进~持续创新的动力
+688|P|du 5G-A商用~关键里程碑~商业创新、行业数字化~阿联酋~数字化转型。[10]
+690|P|Fahad Al Hassawi，du CEO
+692|H2|合力同心，高质量5G建设推进数字绿洲发展
+694|P|数智化、低碳化~政府和运营商一致的追求
+696|P|2030愿景~UAE 2031~资金、产业政策~Speedtest Top10~四个来自中东~巴林、阿联酋、沙特、阿曼~碳中和
+698|P|不变的初心~2018~2023~stc品牌价值提升85%~第11~19名~e&~14~预计2024年~阿联酋~全国性5G-A部署
+700|P|2023年~迪拜~43%~阿布扎比~第六~2031前~20家~沙特~33%~13.8亿美金~中东和北非~初创企业
+702|P|5G-A~沙特2030愿景~UAE 2031~不仅~更能~数字经济转型~数字绿洲
+704|C|文章配图
+706|H2|引文
+708|I|https://www.marhaba.qa/vodafone-qatar-hosts-groundbreaking-discussion-on-5-5g-technology/
+709|I|du, Huawei sign strategic cooperation~Feb 28, 2024~https://www.rcrwireless.com/20240228/5g/du-huawei-sign-strategic-cooperation-boost-5g-uae
+710|I|Du to bolster FWA 5G play to challenge rival.~Feb 29, 2024~https://developingtelecoms.com/telecom-business/operator-news/16333-du-to-bolster-fwa-5g-play-to-challenge-rival.html
+711|I|An Inspiring Journey~World’s First Zero-Emission 5G Network~Oct 09, 2023~https://www.telecomreview.com/articles/exclusive-interviews/7406-an-inspiring-journey-zain-ksa-and-red-sea-global-pioneering-world-s-first-zero-emission-5g-network
+712|I|5G-Advanced: The Future of Wireless Communications in the UAE.~Mar 09, 2023~https://www.samenacouncil.org/samena_daily_news?news=94414
+713|I|https://www.eand.com/content/dam/eand/assets/docs/general/5G-advanced_the_future_of%20_wireless_communications_in_uae.pdf
+714|I|etisalat by e& launches white paper~Jan 03 2024~https://wam.ae/article/b0ys2bv-etisalat-launches-white-paper-uaes-transition
+715|I|du Spearheads Commercial Deployment of 5G-Advanced.~Feb 07, 2024~https://www.telecomreview.com/articles/telecom-operators/7818-du-spearheads-commercial-deployment-of-5g-advanced
+716|I|stc Achieves Substantial Progress in Advancing 5G.~Jan 02 2024~https://www.telecomreview.com/articles/telecom-operators/7719-stc-achieves-substantial-progress-in-advancing-5g
+717|I|du Commits to Building UAE as 5G-Advanced Country.~Feb 27,2024~https://www.telecomreview.com/articles/telecom-operators/7882-mwc24-du-commits-to-building-uae-as-5g-advanced-country
+718|I|Accelerating Growth: the GCC's Start-up Ecosystem.~Jan 31 2024~https://communicateonline.me/category/industry-insights/post-details/accelerating-growth-the-gccs-start-up-ecosystem
+'''),
+    'midea-resumption-p001': ('1200767576', [1], [(1, 15)], '''
+1|H1|美的集团股份有限公司
+3|H2|复牌提示性公告
+5|P|证券代码：000333~证券简称：美的集团~公告编号：2015-018
+7|P|真实、准确、完整~没有虚假记载、误导性陈述或重大遗漏
+9|P|长期激励~2015年3月26日开市起停牌~2015年3月27日~第一届董事会第二十六次~第二期股票期权激励计划~核心管理团队持股计划~美的集团合伙人~2015年3月31日~中国证券报~证券时报~上海证券报~巨潮资讯网~开市起复牌
+11|P|特此公告！
+13|P|美的集团股份有限公司董事会
+15|P|2015年3月31日
+'''),
+    'pingan-honors-p020': ('complex-pingan-2024-annual', [20], [(566, 614)], '''
+566|H1|Honors and Awards
+568|P|In 2024~leading brand value~domestic and foreign rating agencies and media~comprehensive strength, corporate governance, corporate social responsibility
+570|H2|Fortune
+572|P|No. 53~Fortune Global 500~No. 9~global financial services companies
+574|H2|Forbes
+576|P|No. 29~Forbes Global 2000
+578|H2|The Hong Kong Institute of Directors
+580|P|Ping An’s Board of Directors~Directors Of The Year Award 2024
+582|H2|China Association for Public Companies
+584|P|2024 Best Practice of the Board of Directors of Listed Companies
+586|H2|Extel (formerly known as Institutional Investor)
+588|P|Best Board of Directors
+590|P|Best IR Program
+592|H2|MSCI ESG Ratings
+594|P|Upgraded to AA~No. 1~multi-line insurance and brokerage~Asia-Pacific~3 consecutive years
+596|H2|China ESG Listed Company Pioneer 100 list
+598|P|CCTV 2024~No. 1~China’s financial industry~2 consecutive years
+600|H2|Ministry of Civil Affairs of the PRC
+602|P|The 12th China Charity Award
+604|H2|Kantar BrandZ
+606|P|No. 9~BrandZ™ Top 100 Most Valuable Chinese Brands
+608|H2|Brand Finance
+610|P|No. 1~Brand Finance Insurance 100
+612|P|No. 31~Brand Finance Global 500
+614|C|Photograph
+'''),
+    'tangshan-directors-opinion-p001-002': ('1200975009', [1, 2], [(1, 11), (13, 19)], '''
+1|H1|唐山港集团股份有限公司独立董事
+3|H2|关于第五届董事会聘任高级管理人员的独立意见
+5|P|独立董事~公司法~上市公司治理准则~建立独立董事制度~公司章程~全体股东~五届一次董事会~尽职调查和审核：
+7|P|宣国宝~总经理~金东光~李建振~韩功千~赵坤~张小强~李顺平~副总经理~单利霞~财务总监~杨光~董事会秘书
+9|P|符合~任职资格~能够胜任~不存在~第147条、149条~禁入尚未解除~提名、聘任程序~同意~聘任决议
+11|P|以下无正文
+13|P|此页无正文~第五届董事会聘任高级管理人员~签字页
+15|P|独立董事：
+17|C|独立董事签字
+19|P|2015年5月6日
+'''),
+    'wuliangye-appeal-progress-p001': ('1201860324', [1], [(1, 33)], '''
+1|H1|宜宾五粮液股份有限公司
+3|H2|关于涉及诉讼事项进展情况的公告
+5|P|证券代码：000858~证券简称：五粮液~公告编号：2015/第039号
+7|P|真实、准确、完整~没有虚假记载、误导性陈述或重大遗漏
+9|H2|一、概述
+11|P|尹孝功、尹孝根、尹孝松、尹岚渊、尹孝原、尹钢~原告~四川省宜宾五粮液集团有限公司~四川省宜宾五粮液酒厂有限公司~物权保护纠纷~四川省高级人民法院~2015年11月20日~驳回~鼓楼街16口~明代酿酒窖池~使用费
+13|P|2015年5月20日~2015年11月27日~应诉通知书~2015/第007号~民事裁定结果~2015/第037号
+15|H2|二、诉讼进展情况
+17|P|四川省高级人民法院~最高人民法院~民事上诉状~未曾收到~应诉的司法文书
+19|P|密切关注~按照相关规定披露
+21|H2|三、本次公告的诉讼对公司本期利润或期后利润的可能影响
+23|P|本报告期利润无重大影响
+25|H2|四、备查文件
+27|P|民事上诉状
+29|P|特此公告
+31|P|宜宾五粮液股份有限公司董事会
+33|P|2015年12月26日
+'''),
+    'zhenye-correction-p001': ('1200799174', [1], [(1, 19)], '''
+1|H1|深圳市振业（集团）股份有限公司
+3|H2|更正公告
+5|P|股票代码：000006~股票简称：深振业 A~公告编号：2015-014
+7|P|真实、准确和完整~没有虚假记载、误导性陈述或者重大遗漏
+9|P|2015年4月8日~上海证券报~巨潮资讯网~2015年公司债券上市公告书~2015-013~工作疏忽~证券简称：15振业债~错写成~证券简称：15深业债~原公告其他内容不变
+11|P|不便深表歉意
+13|P|特此公告。
+15|P|深圳市振业（集团）股份有限公司
+17|P|董事会
+19|P|二〇一五年四月九日
+'''),
+    'zhenye-coupon-seals-p001-003': ('1200694910', [1, 2, 3], [(1, 19), (21, 23), (25, 27)], '''
+1|P|股票简称：深振业A；股票代码：000006；公告编号：2015-005
+3|H1|深圳市振业（集团）股份有限公司2015年公司债券票面利率公告
+5|P|真实、准确和完整~没有虚假记载、误导性陈述或者重大遗漏
+7|P|不超过15亿元~证监许可[2015]169号~本期债券发行规模为15亿元
+9|P|2015年3月12日~下午15：00前~招商证券股份有限公司~机构投资者~票面利率询价~充分协商和审慎判断~票面利率为5.20%
+11|P|2015年3月13日~社会公众投资者~101650~15振业债~2015年3月17日~机构投资者~2015年3月11日~中国证券报~证券时报~深圳证券交易所网站~http://www.szse.cn~http://www.cninfo.com.cn~2015-004
+13|P|特此公告。
+15|F|发行人：深圳市振业（集团）股份有限公司
+17|F|保荐人（主承销商）：招商证券股份有限公司
+19|P|二〇一五年三月十三日
+21|P|本页无正文~2015年公司债券票面利率公告~发行人签章页
+23|C|发行人签章
+25|P|本页无正文~2015年公司债券票面利率公告~保荐机构（主承销商）签章页
+27|C|保荐机构（主承销商）签章
+'''),
+}
+
+# A: complete measurements whose independently supported unit/value boundary
+# must survive a reader failure. B: other P/I bodies require full content.
+# C: these explicitly named simple fields/clauses permit either *complete*
+# independently checked typed representation or complete content, never a
+# proper substring or a production-driven choice of the expected denominator.
+REPRESENTATION_POLICIES = {
+    ('catl-nev-battery-markets-p127-132', 1779): 'typed',
+    ('catl-nev-battery-markets-p127-132', 1793): 'typed',
+    ('sf-brand-award-callouts-p034', 728): 'either',
+    ('sf-brand-award-callouts-p034', 734): 'either',
+    ('catl-listing-ownership-diagrams-p178-180', 2529): 'either',
+    ('catl-nev-battery-markets-p127-132', 1809): 'either',
+    ('catl-power-market-materials-drivers-p133-136', 1889): 'either',
+    ('catl-recycling-emerging-entry-barriers-p144-147', 2091): 'either',
+    ('catl-storage-renewables-markets-p137-143', 2045): 'either',
+    ('midea-resumption-p001', 5): 'typed',
+    ('wuliangye-appeal-progress-p001', 5): 'typed',
+    ('zhenye-correction-p001', 5): 'typed',
+    ('zhenye-coupon-seals-p001-003', 1): 'typed',
+    ('huaweitech-cover-p001', 13): 'either',
+}
+TYPED_ASSERTIONS.update({
+    ('huaweitech-cover-p001', 13): [('', 'EM2.0模式', '非洲运营商数智化转型发展之路', {})],
+    ('midea-resumption-p001', 5): [('', '证券代码', '000333', {}), ('', '证券简称', '美的集团', {}), ('', '公告编号', '2015-018', {})],
+    ('wuliangye-appeal-progress-p001', 5): [('', '证券代码', '000858', {}), ('', '证券简称', '五粮液', {}), ('', '公告编号', '2015/第039号', {})],
+    ('zhenye-correction-p001', 5): [('', '股票代码', '000006', {}), ('', '股票简称', '深振业 A', {}), ('', '公告编号', '2015-014', {})],
+    ('zhenye-coupon-seals-p001-003', 1): [('', '股票简称', '深振业A', {}), ('', '股票代码', '000006', {}), ('', '公告编号', '2015-005', {})],
+})
+
+# Explicit Markdown quote separators, read with both attribution paragraphs.
+# These are the only nonblank gaps authorized by this batch's source Oracle.
+CONTROL_ASSERTIONS = {
+    'huaweitech-middle-east-p021-023': {635: '>', 655: '>', 667: '>', 689: '>'},
+}
+ORDERED_SOURCE_GROUPS = {
+    'huaweitech-middle-east-p021-023': [
+        (634, 636, 'Vodafone statement and Ramy Boctor attribution'),
+        (654, 656, '5G evolution statement and Karim Benkirane attribution'),
+        (666, 668, 'white paper commitment and Khalid Murshed attribution'),
+        (688, 690, 'du milestone statement and Fahad Al Hassawi attribution'),
+    ],
+    'beijing-media-director-p001-003': [
+        (43, 53, 'board authorization, company, chairman, name, location and date'),
+    ],
+    'tangshan-directors-opinion-p001-002': [
+        (13, 19, 'signature page declaration, directors label, signature caption and date'),
+    ],
+    'zhenye-coupon-seals-p001-003': [
+        (21, 23, 'issuer seal declaration and issuer seal caption'),
+        (25, 27, 'sponsor seal declaration and sponsor seal caption'),
+    ],
+}
+
+# Limited source review, not acceptance of these four entire samples. Exact
+# original statements and their selected context were read independently.
+CROSS_SOURCE_ASSERTIONS = [
+    ('bis-fiscal-productivity-policy-p042-051', 'complex-bis-economic-2024', 838,
+     ['Productivity pressure points', 'Box E. Life insurance companies – legacy risks from “low for long”',
+      'Graph E1. Insurance companies’ real estate exposure, link to private equity and liquidity risk'],
+     '¹ See also International Association of Insurance Supervisors (IAIS), Global Insurance Market Report, December 2023. '
+     '² For a discussion of ICs’ sovereign debt holdings and the underlying data sources, see Farkas et al (2023a). '
+     '³ Concerns have also been raised about private equity-linked ICs’ use of reinsurance with foreign affiliates to exploit regulatory and tax arbitrage opportunities. '
+     'See eg Kirti and Sarin (2024). '
+     '⁴ Another potential source of ICs’ liquidity needs are derivatives-related margin calls following an increase in interest rates, as discussed in Farkas et al (2023b). '
+     '⁵ See, for example, the liquidity metrics introduced by the IAIS in its Global Monitoring Exercise.',
+     'sentence-interpretation routing rejected an independently sourced reference sentence; full footnote scope had no owner'),
+    ('bis-fiscal-productivity-policy-p042-051', 'complex-bis-economic-2024', 948,
+     ['Turbulence scenarios and policy implications', 'Policy implications', 'Fiscal policy'],
+     'The window of opportunity to take decisive action is narrowing. '
+     'For example, as of last year, AEs would have needed to keep budget deficits below 1.6% of GDP to stabilise public debt; '
+     'today, that number is 1% of GDP.²⁰ And the room for fiscal policy manoeuvre is rapidly shrinking. '
+     'Looming ahead are much larger spending needs related to healthcare and pensions – given demographic trends – and the green transition and defence – considering the geopolitical landscape.',
+     'sentence-interpretation routing rejected the unsupported participle; full original paragraph had no owner'),
+    ('bis-policy-boxes-p026-034', 'complex-bis-economic-2024', 674,
+     ['Pressure points', 'Inflation pressure points', 'Graph 11. Two key relative price adjustments are still incomplete¹'],
+     'In addition to the incomplete adjustment of relative prices, other pressure points are noteworthy.',
+     'sentence-interpretation routing rejected the fronted nominal analysis; original statement had no owner'),
+    ('iea-infrastructure-capabilities-p032-036', 'complex-iea-energy-ai-2025', 588,
+     ['Figure 1.9. Select AI infrastructure and types of applications'],
+     'These AI-focused chips, in turn, are manufactured using highly complex machines. '
+     'Advanced extreme ultraviolet lithography machines, such as those produced by ASML, are crucial for creating the intricate circuit patterns on AI-focused chips. '
+     'This process involves using light to etch switches onto silicon wafers. '
+     'ASML, headquartered in the Netherlands, is the market leader in manufacturing these machines. '
+     'The optical systems – which are among the most critical of the core components of ASML’s lithography machines – are, in turn, manufactured by the German company Carl Zeiss. '
+     'These are only a few of the key components that enable AI. '
+     'The supply chains of various other parts of the puzzle, such as silicon wafers and data centre cooling systems, are also highly international. '
+     'AI is therefore a global enterprise, even as parts of it are heavily concentrated in certain regions.',
+     'independent finite paragraphs at L586 and L588 were joined; the first local sentence was attributed to the preceding original'),
+    ('iea-training-energy-p041-042', 'complex-iea-energy-ai-2025', 730,
+     ['Figure 1.15. Estimated training-related maximum power draw, electricity consumption and cumulative electricity consumption for a set of large AI models since 2020'],
+     '⁴ In practice, servers never hit their maximum designed power.',
+     'the unpunctuated L728 callout was joined to an independent superscript footnote at L730'),
+]

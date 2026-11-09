@@ -496,10 +496,18 @@ def _semantic_literal(sources, origin, *, resolver=None):
     fragments = origin.get("joined_fragments")
     if not fragments:
         return resolver(origin) if resolver else _literal(sources, origin)
+    from .source_requirements import original_source_cuts
+
+    try:
+        original_source_cuts(origin)
+    except (ValueError, KeyError, TypeError):
+        return None
     first = fragments[0].get("source", {})
     if origin.get("path") != first.get("path") or origin.get("lines") != first.get("lines"):
         return None
     joined = ""
+    originals = [s for s in sources if 'kind' in s and s['kind'] != 'fragment' and not s['source'].get('cell')]
+    previous = None
     for fragment in fragments:
         actual = resolver(fragment.get('source', {})) if resolver else _literal(sources, fragment.get("source", {}))
         projected = fragment.get("projected_text", fragment.get("text"))
@@ -512,6 +520,27 @@ def _semantic_literal(sources, origin, *, resolver=None):
         if (normalize(actual) != normalize(projected) or not isinstance(fragment.get("text"), str)
                 or normalize(actual) != normalize(fragment["text"])):
             return None
+        if originals:
+            reference = fragment['source']
+            found = next(((i, s) for i, s in enumerate(originals) if _cover(s, reference)
+                and all(s['source'].get(key) == reference.get(key) for key in ('block', 'native_path')
+                        if key in s['source'])), None)
+            if found is None:
+                return None
+            i, entry = found
+            offset = entry['source'].get('text_span', [0])[0]
+            lo, hi = reference.get('text_span', [offset, offset + len(entry['text'])])
+            if previous:
+                last_i, last_entry, last_hi, last_offset = previous
+                if i == last_i:
+                    if lo < last_hi or last_entry['text'][last_hi - last_offset:lo - last_offset].strip():
+                        return None
+                elif (i != last_i + 1 or entry['kind'] not in {'text', 'paragraph', 'item'}
+                        or last_entry['text'][last_hi - last_offset:].strip()
+                        or entry['text'][:lo - offset].strip()
+                        or entry.get('parents', []) != last_entry.get('parents', [])):
+                    return None
+            previous = i, entry, hi, offset
         a, b = bounds
         if a < len(joined) or b - a != len(projected):
             return None

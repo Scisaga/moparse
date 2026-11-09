@@ -88,3 +88,81 @@ def test_joined_analysis_ownership_projects_absolute_offsets_to_all_original_fra
         {'path': 'invented', 'lines': [1, 1], 'text_span': [9, 11]},
         {'path': 'invented', 'lines': [3, 3], 'text_span': [2, 6]},
     ]
+
+
+def representation_sample(tmp_path, text, *, policy, typed_facts=()):
+    original = authored(tmp_path, '# 范围\n\n' + text)
+    expected = {'ranges': [(1, 3)], 'sources': [
+        {'line': 1, 'role': 'H1', 'anchors': ['范围'], 'scope': [], 'parents': [], 'record': None},
+        {'line': 3, 'role': 'P', 'anchors': [text], 'scope': ['范围'], 'parents': [], 'record': None,
+         'representation': policy, 'typed_facts': list(typed_facts)},
+    ]}
+    graph = compile_requirement_graph(original, comparison_contract='document_ast')
+    validate_requirement_graph(graph, expected=original)
+    return graph, original, expected
+
+
+def test_required_complete_measurement_cannot_fall_back_to_intact_whole_content(tmp_path):
+    graph, original, expected = representation_sample(tmp_path, 'Revenue: 17万元', policy='typed',
+        typed_facts=[('', 'Revenue', '17', {'unit': '万元'})])
+    check_fixed_source_graph(graph, original, expected)
+    changed = deepcopy(graph)
+    # Simulate a reader returning full, source-valid lexical content instead
+    # of the independently required typed quantity. The Oracle is called
+    # directly; rejection must come from its representation declaration.
+    whole = deepcopy(changed['document_ast']['children'][-1])
+    whole['source'] = deepcopy(whole['content']['source'])
+    whole['requirement_id'] = 'content:reader-fallback'
+    changed['source_form_requirements'] = [whole]
+    changed['comparison_coverage']['retained_semantic_requirements']['B'] = []
+    with pytest.raises(AssertionError, match='required typed representation'):
+        check_fixed_source_graph(changed, original, expected)
+
+
+def test_authorized_body_content_does_not_require_a_universal_SVO_analysis(tmp_path):
+    text = '董事會秘書接受專業培訓的時間為18小時以上。'
+    graph, original, expected = representation_sample(tmp_path, text, policy='content')
+    cases = check_fixed_source_graph(graph, original, expected)
+    assert cases[1]['expected']['representation_policy'] == 'content'
+    assert cases[1]['actual']['typed_facts'] == []
+
+
+@pytest.mark.parametrize('mutation', ['partial', 'duplicate', 'hole', 'overlap'])
+def test_independent_representation_policy_requires_an_exact_mixed_partition(tmp_path, mutation):
+    text = '流動資產為人民幣80億元。董事會秘書接受專業培訓的時間為18小時以上。'
+    graph, original, expected = representation_sample(tmp_path, text, policy='mixed',
+        typed_facts=[('流動資產', '為', '80', {'unit': '億元', 'currency': '人民幣'})])
+    check_fixed_source_graph(graph, original, expected)
+    changed = deepcopy(graph)
+    content = changed['source_form_requirements'][0]
+    if mutation == 'duplicate':
+        changed['source_form_requirements'].append(deepcopy(content))
+    elif mutation == 'partial':
+        content['source']['text_span'][1] -= 1
+        content['content']['source']['text_span'][1] -= 1
+        content['content']['children'].pop()
+    elif mutation == 'hole':
+        content['source']['text_span'][0] += 1
+        content['content']['source']['text_span'][0] += 1
+        content['content']['children'].pop(0)
+    else:
+        extra = deepcopy(changed['document_ast']['children'][-1])
+        extra['source'] = deepcopy(extra['content']['source'])
+        extra['requirement_id'] = 'content:overlap'
+        changed['source_form_requirements'].append(extra)
+    with pytest.raises((AssertionError, ValueError)):
+        check_fixed_source_graph(changed, original, expected)
+
+
+def test_preauthorized_either_representation_still_rejects_a_proper_content_substring(tmp_path):
+    text = '董事會秘書接受專業培訓的時間為18小時以上。'
+    graph, original, expected = representation_sample(tmp_path, text, policy='either',
+        typed_facts=[('董事會秘書', '接受', '專業培訓的時間為18小時以上', {'polarity': 'positive'})])
+    check_fixed_source_graph(graph, original, expected)
+    content = graph['source_form_requirements'][0]
+    # Even a fully valid local lexical AST cannot replace the whole statement.
+    content['content']['children'].pop()
+    content['content']['source']['text_span'][1] -= 1
+    content['source']['text_span'][1] -= 1
+    with pytest.raises((AssertionError, ValueError)):
+        check_fixed_source_graph(graph, original, expected)
