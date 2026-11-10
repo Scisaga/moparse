@@ -344,7 +344,7 @@ def read_field_sequence_requirements(text: str, source: dict[str, Any], *, scope
     fields, unread = [], []
     for a, b in pieces[1:]:
         pair = _PAIR.fullmatch(text[a:b])
-        if pair is None:
+        if pair is None or not pair[2].strip():
             unread.append((a, b))
             continue
         la, lb = _trim(text, a + pair.start(1), a + pair.end(1))

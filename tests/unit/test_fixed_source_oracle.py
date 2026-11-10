@@ -237,15 +237,20 @@ def test_multiline_source_owns_actual_raw_interior_rows_without_borrowing_a_neig
 
 def test_all_handwritten_modules_are_bound_without_replacing_historical_batches(tmp_path):
     from tests.validation import lite_fixed_source_assertions as historical
-    from tests.validation.lite_source_oracle import CONTROLLED_REVIEW_MODULES, REVIEW_MODULES
+    from tests.validation.lite_source_oracle import (
+        CONTROLLED_REVIEW_MODULES,
+        REVIEW_MODULES,
+        STAGE3_MODULES,
+    )
 
     before = deepcopy((historical.ASSERTIONS, historical.ADDITIONAL_ASSERTIONS))
     catalogue = fixed_assertion_catalogue()
     assert len(catalogue['review_ids']) == 23
-    assert len(catalogue['assertions']) + 3 == 55
+    assert len(catalogue['stage3_ids']) == 1
+    assert len(catalogue['assertions']) - len(catalogue['stage3_ids']) + 3 == 55
     assert (historical.ASSERTIONS, historical.ADDITIONAL_ASSERTIONS) == before
     paths = ['tests/validation/lite_fixed_source_assertions.py']
-    paths += [name.replace('.', '/') + '.py' for name in (*REVIEW_MODULES, *CONTROLLED_REVIEW_MODULES)]
+    paths += [name.replace('.', '/') + '.py' for name in (*REVIEW_MODULES, *STAGE3_MODULES, *CONTROLLED_REVIEW_MODULES)]
     for name in paths:
         path = tmp_path / name
         path.parent.mkdir(parents=True, exist_ok=True)

@@ -19,6 +19,7 @@ REVIEW_MODULES = (
     'tests.validation.lite_review_hkex_assertions',
     'tests.validation.lite_review_energy_assertions',
 )
+STAGE3_MODULES = ('tests.validation.lite_stage3_assertions',)
 CONTROLLED_REVIEW_MODULES = ('tests.validation.lite_review_numeric_role_cases',)
 
 
@@ -35,20 +36,20 @@ def fixed_assertion_catalogue():
         'scope_labels': dict(baseline.TYPED_SCOPE_LABELS),
         'controls': dict(baseline.CONTROL_ASSERTIONS),
         'ordered_groups': dict(baseline.ORDERED_SOURCE_GROUPS),
-        'overrides': {}, 'directory': {}, 'relations': {}, 'numeric_roles': {}, 'review_ids': set(),
+        'overrides': {}, 'directory': {}, 'relations': {}, 'numeric_roles': {}, 'review_ids': set(), 'stage3_ids': set(),
     }
     names = {'assertions': 'REVIEW_ASSERTIONS', 'typed': 'REVIEW_TYPED_ASSERTIONS',
              'policies': 'REVIEW_REPRESENTATION_POLICIES', 'controls': 'REVIEW_CONTROL_ASSERTIONS',
              'ordered_groups': 'REVIEW_ORDERED_SOURCE_GROUPS', 'overrides': 'REVIEW_SOURCE_OVERRIDES',
              'directory': 'REVIEW_DIRECTORY_ASSERTIONS', 'relations': 'REVIEW_REQUIRED_RELATIONS',
              'numeric_roles': 'REVIEW_NUMERIC_ROLE_DEPENDENCIES'}
-    for name in REVIEW_MODULES:
+    for name in (*REVIEW_MODULES, *STAGE3_MODULES):
         module = importlib.import_module(name)
         for key, exported in names.items():
             declared = getattr(module, exported, {})
             assert not data[key].keys() & declared.keys(), (name, exported, 'duplicate declaration')
             data[key].update(declared)
-        data['review_ids'].update(module.REVIEW_ASSERTIONS)
+        data['stage3_ids' if name in STAGE3_MODULES else 'review_ids'].update(module.REVIEW_ASSERTIONS)
     return data
 
 
@@ -57,7 +58,7 @@ def handwritten_assertion_identity(root=ROOT):
     import hashlib
 
     paths = ['tests/validation/lite_fixed_source_assertions.py']
-    paths += [name.replace('.', '/') + '.py' for name in (*REVIEW_MODULES, *CONTROLLED_REVIEW_MODULES)]
+    paths += [name.replace('.', '/') + '.py' for name in (*REVIEW_MODULES, *STAGE3_MODULES, *CONTROLLED_REVIEW_MODULES)]
     digests = {path: hashlib.sha256((root / path).read_bytes()).hexdigest() for path in paths}
     aggregate = hashlib.sha256(json.dumps(digests, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
     return {'handwritten_assertions_sha256': digests[paths[0]],
@@ -967,6 +968,10 @@ def read_fixed_source_assertions(sample_id):
     assert sample['document_id'] == expected['document_id'], (sample_id, sample['document_id'])
     assert sample['source_pages'] == expected['source_pages']
     original = read_expected(sample, ROOT / 'pdf_sample/parsing/expected')
+    original_targets = {t['reference']['lines'][0]: t for t in original['targets']}
+    for assertion in expected['sources']:
+        if 'parent_lines' in assertion:
+            assertion['parents'] = [original_targets[line]['raw_text'] for line in assertion['parent_lines']]
     assert [tuple(s['lines']) for s in original['scope']] == expected['ranges']
     assert [t['reference']['lines'][0] for t in original['targets']] == [s['line'] for s in expected['sources']]
     for assertion, target in zip(expected['sources'], original['targets'], strict=True):
@@ -1420,7 +1425,7 @@ def review_fixed_sample(sample_id, *, collect_failures=None):
     graph = compile_requirement_graph(original, comparison_contract='document_ast')
     validate_requirement_graph(graph, expected=original)
     if collect_failures is None:
-        collect_failures = sample_id in fixed_assertion_catalogue()['review_ids']
+        collect_failures = sample_id in fixed_assertion_catalogue()['review_ids'] | fixed_assertion_catalogue()['stage3_ids']
     cases = check_fixed_source_graph(graph, original, expected, collect_failures=collect_failures)
     dependencies = fixed_assertion_catalogue()['numeric_roles'].get(sample_id, [])
     if dependencies:
@@ -1562,7 +1567,7 @@ def review_cross_fragment_sources():
         assert _semantic_literal(graph['sources'], owners[0]['source']) == literal
         coverage = graph['comparison_coverage']
 
-        def belongs(source):
+        def belongs(source, *, target=target, line=line):
             return any(part.get('path') == target['reference']['path'] and part.get('lines') == [line, line]
                        for part in _original_content_sources(source))
 
@@ -1612,7 +1617,7 @@ if __name__ == '__main__':
     parser.add_argument('--output', type=Path, help='Local validation record; never a quality result')
     parser.add_argument('--diagnosis-output', type=Path, help='Update the existing source-only diagnosis with contract dimensions')
     parser.add_argument('--comparison-evidence', type=Path, default=WORK / 'comparison-validation.json')
-    parser.add_argument('--sample', action='append', help='Explicit source-only development subset; default runs all 55 source Oracles')
+    parser.add_argument('--sample', action='append', help='Explicit development subset; default runs the original 55 and the fixed phase-three sample')
     parser.add_argument('--cross-fragments-only', action='store_true', help='Review only the five fixed source spans, without whole-sample acceptance')
     args = parser.parse_args()
     CURRENT, BIND_CURRENT = args.current, not args.fresh_only
@@ -1674,6 +1679,7 @@ if __name__ == '__main__':
               'handwritten_assertions_unchanged': assertion_identity == handwritten_assertion_identity(),
               'executed_sample_ids': [sample_id for _, sample_id, _ in checks],
               'new_review_sample_ids': sorted(fixed_assertion_catalogue()['review_ids']),
+              'stage3_sample_ids': sorted(fixed_assertion_catalogue()['stage3_ids']),
               'controlled_numeric_role_cases': getattr(numeric_role_validation, '_records', []),
               'command': [sys.executable, *sys.argv], 'bind_current': BIND_CURRENT,
               'source_index_sha256': hashlib.sha256((CURRENT / 'index.json').read_bytes()).hexdigest(),

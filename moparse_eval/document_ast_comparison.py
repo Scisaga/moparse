@@ -31,10 +31,45 @@ def _same_record(left, right):
         and not ('block' in left and 'block' in right and left['block'] != right['block']))
 
 
-def _grammar_limit(issue):
+def _list_scope_proof(issue, ast):
+    """Authenticate a printed list ancestry, rather than waive a reason name.
+
+    The existing document comparison owns the complete parent's words, the
+    child's words, exact ancestor chain and order. This proves preservation
+    only; it does not interpret a condition as an occurred business event.
+    """
+    if issue.get('reason') != 'list_group_scope_interpretation_unsupported' or not ast:
+        return None
+    blocks = ast['children']
+    own = [(i, b) for i, b in enumerate(blocks) if _same_record(b['source'], issue.get('source', {}))]
+    if len(own) != 1:
+        return None
+    index, child = own[0]
+    if child['role'] != 'item' or not child['parents'] or issue.get('parent') not in child['parents']:
+        return None
+    chain = []
+    for depth, name in enumerate(child['parents']):
+        matches = [(i, b) for i, b in enumerate(blocks[:index])
+            if b['role'] == 'item' and b['scope'] == child['scope']
+            and b['parents'] == child['parents'][:depth] and b.get('content')
+            and ''.join(n['text'] for n in b['content']['children']) == ''.join(name.split())]
+        if not matches:
+            return None
+        i, parent = matches[-1]
+        if chain and i <= chain[-1][0]:
+            return None
+        if name == issue['parent'] and not _same_record(parent['source'], issue.get('parent_source') or {}):
+            return None
+        chain.append((i, parent))
+    return {'child': child['source'], 'parents': [b['source'] for _, b in chain]}
+
+
+def _grammar_limit(issue, ast=None):
     # A bounded sentence reader declares its failed interpretation explicitly.
     # This classifies analysis only: exact original ownership, linked source
     # obligations, quantities and structure are checked separately below.
+    if _list_scope_proof(issue, ast):
+        return True
     if issue.get('comparison_domain') == 'sentence_interpretation':
         return (issue.get('kind') in {'narrative', 'proposition'}
                 and set(issue.get('layers', ['B', 'L'])) <= {'B', 'L'})
@@ -52,12 +87,22 @@ def _original_content_sources(source):
 
 
 def _fallback_blocks(ast, issues, facts=()):
+    from .quantity import exact_number
+
     indices = [index for index, block in enumerate(ast['children'])
             if block['role'] in {'text', 'item', 'heading'}
-            and any(_same_record(block['source'], origin) and _grammar_limit(issue)
+            and any(_same_record(block['source'], origin) and _grammar_limit(issue, ast)
                     for issue in issues for origin in _original_content_sources(issue.get('source', {})))
-            and not any(_same_record(block['source'], origin) and not _grammar_limit(issue)
+            and not any(_same_record(block['source'], origin) and not _grammar_limit(issue, ast)
                         for issue in issues for origin in _original_content_sources(issue.get('source', {})))]
+    # A newly preserved list chain must not swallow an already typed field,
+    # financial series or identity. Those records retain their binding gate.
+    indices = [i for i in indices if not (
+        any(_list_scope_proof(issue, ast) and _same_record(ast['children'][i]['source'], issue['source']) for issue in issues)
+        and any(_same_record(ast['children'][i]['source'], fact.get('source', {}))
+                and (fact.get('role') in {'metric', 'identity'}
+                     or exact_number(fact.get('value', '')) is not None and fact.get('qualifiers', {}).get('unit'))
+                for fact in facts))]
     # Replacing just the tail of a joined, partly interpreted assertion would
     # retain its typed assertion as well and count the same responsibility
     # twice. Expand through that actual joined statement, never through a
@@ -73,7 +118,7 @@ def _fallback_blocks(ast, issues, facts=()):
                 or any(ast['children'][i]['scope'] != ast['children'][own[0]]['scope']
                        or ast['children'][i]['parents'] != ast['children'][own[0]]['parents'] for i in own)
                 or own != list(range(min(own), max(own) + 1))
-                or any(not _grammar_limit(issue) and any(_same_record(origin, part)
+                or any(not _grammar_limit(issue, ast) and any(_same_record(origin, part)
                     for origin in _original_content_sources(issue.get('source', {})) for part in parts) for issue in issues)):
             continue
         indices.extend(i for i in own if i not in indices)
@@ -142,7 +187,7 @@ def _fixed_content_requirements(ast, indices, facts, issues, units):
         if cursor < whole[1]:
             spans.append([cursor, whole[1]])
         tokens = block['content']['children']
-        def piece(start, end, ident, **extra):
+        def piece(start, end, ident, *, tokens=tokens, block=block, index=index, **extra):
             leaves = [copy.deepcopy(n) for n in tokens if start <= n['source']['text_span'][0] < end]
             if not leaves:
                 return None
@@ -224,7 +269,7 @@ def comparison_requirement_coverage(graph):
     blocks = graph['source_form_requirements']
     ast = graph['document_ast']
     projected = evaluation_projection(graph, document_contract=False)
-    retained = _without_grammar_analysis(projected, blocks)
+    retained = _without_grammar_analysis(projected, blocks, ast)
     banks = {'T': graph['projections']['T'], 'L': [n['id'] for n in retained['relations']],
              'B': [n['id'] for n in retained['business']]}
     ids = set().union(*map(set, banks.values()))
@@ -266,9 +311,11 @@ def comparison_requirement_coverage(graph):
     for issue in graph['unresolved']:
         linked = issue.get('source_obligation_ids', [])
         content = owners(issue.get('source', {}))
+        list_scope = _list_scope_proof(issue, ast)
+        list_parents_owned = not list_scope or all(owners(parent) for parent in list_scope['parents'])
         if is_deferred_input_scope(graph['sample_id'], issue):
             status = 'deferred_input_scope'
-        elif (_grammar_limit(issue) and content and 'T' not in issue.get('layers', [])
+        elif (_grammar_limit(issue, ast) and content and list_parents_owned and 'T' not in issue.get('layers', [])
               and all(by_obligation[n]['status'] != 'blocking' for n in linked)):
             status = 'language_analysis_only'
         else:
@@ -285,11 +332,16 @@ def comparison_requirement_coverage(graph):
         'content_requirement_ids': [b['requirement_id'] for b in blocks],
         'mixed_order_requirement_ids': [e['id'] for e in document_order_requirements(graph)
                                        if e['role'] == 'mixed_typed_content_order'],
+        'list_scope_ownership': [{'issue_id': issue['id'], **proof,
+            'requirement_ids': sorted({ident for source in [proof['child'], *proof['parents']] for ident in owners(source)})}
+            for issue in graph['unresolved'] if (proof := _list_scope_proof(issue, ast))
+            and any(row['issue_id'] == issue['id'] and row['status'] == 'language_analysis_only' for row in limitations)],
         'required_capabilities': sorted({'source_span_capacity', 'bidirectional_partition', 'bounded_many_to_many',
             'order_without_value_selection', 'four_state_boundary', 'mixed_typed_content_ownership',
             'protected_structure_barriers', *({'mixed_typed_content_order'} if graph['source_form_order_anchors'] else set()),
             *({'statement_parent_scope_single_vote'} if retained['content_relation_ownership'] else set()),
             *({'literal_navigation_role'} if any(f.get('semantic_type') == 'toc_page' for f in retained['business']) else set()),
+            *({'nested_content_scope'} if any(_list_scope_proof(issue, ast) for issue in graph['unresolved']) else set()),
             *retained.get('required_matcher_features', [])}),
         'independent_acceptance': 'not_established_by_compilation'}
 
@@ -334,7 +386,18 @@ def _candidate_ast(evidence):
     units = copy.deepcopy(evidence.get('syntax', []))
     stack = []
     contexts = evidence.get('native_context', {}).get('by_block', {})
-    for unit in units:
+    for position, unit in enumerate(units):
+        if unit.get('kind') == 'parent_label' and unit.get('syntax_evidence', {}).get('kind') in {'item', 'list_item'}:
+            unit['kind'] = 'item'
+        syntax = unit.get('syntax_evidence', {})
+        if syntax.get('list_span') and syntax.get('kind') in {'item', 'list_item'}:
+            for depth, name in enumerate(unit.get('parents', [])):
+                if not any(prior['text'] == name and prior.get('parents', []) == unit['parents'][:depth]
+                        and prior.get('scope') == unit.get('scope')
+                        and prior.get('syntax_evidence', {}).get('list_span') == syntax['list_span']
+                        and prior.get('syntax_evidence', {}).get('list_stream') == syntax.get('list_stream')
+                        for prior in units[:position]):
+                    raise ValueError('document list scope differs from its actual printed parent stream')
         # Heading visitors include the heading itself in native scope; the
         # expected reader records its ancestors. Preserve one common meaning.
         if unit.get('kind') == 'heading' and unit.get('scope', [])[-1:] == [unit.get('text')]:
@@ -367,7 +430,7 @@ def _candidate_ast(evidence):
     return ast
 
 
-def _without_grammar_analysis(graph, blocks):
+def _without_grammar_analysis(graph, blocks, ast=None):
     result = copy.deepcopy(graph)
     sources = [block['content']['source'] if block.get('content', {}).get('kind') == 'content_sequence'
                else block['source'] for block in blocks]
@@ -382,6 +445,12 @@ def _without_grammar_analysis(graph, blocks):
             return any(_contains(source, origin) for source in sources)
         parts = _original_content_sources(origin)
         return bool(parts) and all(owned(part) for part in parts)
+
+    def replaceable(issue):
+        document = ast or graph.get('document_ast')
+        proof = _list_scope_proof(issue, document)
+        return (_grammar_limit(issue, document)
+                and (not proof or all(covered({'source': parent}) for parent in proof['parents'])))
 
     removed_facts = {fact['id'] for fact in result['business'] if covered(fact)}
     result['business'] = [fact for fact in result['business'] if fact['id'] not in removed_facts]
@@ -429,6 +498,37 @@ def _without_grammar_analysis(graph, blocks):
             'basis': 'same_source_statement_and_declared_parent_scope_owned_before_candidate_reading'}
 
     scope_ownership = [proof for edge in result['relations'] if (proof := scope_owner(edge)) is not None]
+    # Only the newly proved nested-content contract owns this exact list
+    # membership too. Other list relations stay independent, including a
+    # same-line relation whose endpoints or parent provenance differ.
+    for edge in result['relations']:
+        if edge.get('type') != 'list_membership' or set(edge.get('right', {})) != {'text'}:
+            continue
+        document = ast or graph.get('document_ast')
+        for issue in graph.get('blockers', []):
+            proof = _list_scope_proof(issue, document)
+            if not proof or not _same_record(edge['source'], proof['child']):
+                continue
+            child = next(b for b in document['children'] if _same_record(b['source'], proof['child']))
+            if (edge['left'] != child['parents'][-1]
+                    or ''.join(edge['right']['text'].split()) != ''.join(n['text'] for n in child['content']['children'])
+                    or not covered(edge) or not all(covered({'source': p}) for p in proof['parents'])):
+                continue
+            owners = [(index, block) for index, block in enumerate(blocks)
+                if block.get('content') and block.get('parents') == child['parents']
+                and block.get('scope') == child['scope']
+                and _contains(block['content']['source'], child['content']['source'])]
+            if len(owners) != 1:
+                continue
+            index, block = owners[0]
+            scope_ownership.append({'analysis_relation_id': edge['id'], 'relation': 'printed_list_parent_scope',
+                'source': copy.deepcopy(edge['source']), 'parent_scope': copy.deepcopy(child['parents']),
+                'parent_sources': copy.deepcopy(proof['parents']),
+                'owners': [{'requirement_id': block['requirement_id'], 'counted_relation_id': f'L:content:{index}',
+                    'source': copy.deepcopy(block['content']['source']), 'scope': copy.deepcopy(block['scope']),
+                    'parents': copy.deepcopy(block['parents'])}],
+                'basis': 'same_complete_printed_parent_chain_and_child_owned_before_candidate_reading'})
+            break
     transferred_scopes = {proof['analysis_relation_id'] for proof in scope_ownership}
     result['content_relation_ownership'] = scope_ownership
     if 'requirement_ledger' in result:
@@ -472,9 +572,9 @@ def _without_grammar_analysis(graph, blocks):
                                'prose_heading_membership', 'prose_reading_order', 'heading_parent', 'heading_membership',
                                'heading_order', 'list_membership'})]
     for name in ('blockers', 'pending_requirements'):
-        result[name] = [issue for issue in result.get(name, []) if not (covered(issue) and _grammar_limit(issue))]
+        result[name] = [issue for issue in result.get(name, []) if not (covered(issue) and replaceable(issue))]
     result['candidate_issues'] = [issue for issue in result.get('candidate_issues', [])
-                                  if not (covered(issue) and _grammar_limit(issue))]
+                                  if not (covered(issue) and replaceable(issue))]
     # Runtime feature discovery still verifies every retained typed tree.
     # Features belonging solely to replaced partial trees are not requirements
     # of a source-form proof. No source or target is removed from that proof.
@@ -530,7 +630,7 @@ def grade_document_content(requirements, evidence):
             for span in row['actual_spans']]
     cuts.extend(span for row in content_rows for hit in row['retrieval']['candidates']
                 if hit['exact_shape'] and hit['conflicts'] for span in hit['candidate_spans'])
-    base_actual = _without_grammar_analysis(evidence, [{'source': span['source']} for span in cuts])
+    base_actual = _without_grammar_analysis(evidence, [{'source': span['source']} for span in cuts], candidate_ast)
     base = _grade_layers(base_required, base_actual)
     score = copy.deepcopy(base)
     content_index = 0
