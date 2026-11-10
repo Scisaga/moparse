@@ -297,9 +297,10 @@ class _Reader:
                     self.text("".join(lines[cursor:]), _origin(source, offsets[cursor], len(text)), representation=representation)
                 return
         whole_heading = heading_evidence({"kind": kind, "text": text, "text_format": representation, "level": level})
-        if whole_heading["role"] == "heading" or whole_heading["markdown_status"] == "single_heading":
+        if (whole_heading["role"] == "heading" or whole_heading["markdown_status"] == "single_heading"
+                or kind in {'document_index', 'toc'} and type(level) is int):
             literal = visible_text(text, representation).strip()
-            if _TOC_TITLE.fullmatch(literal):
+            if _TOC_TITLE.fullmatch(literal) or kind in {'document_index', 'toc'}:
                 self.active, self.root_level, self.groups, self.page_declaration = True, whole_heading.get("resolved_level"), [], None
                 self.result["matched"] = True
                 raw_heading = re.search(r"(?m)^\s{0,3}#{1,6}[ \t]+(.+?)\s*#*\s*$", text) if representation == "markdown" else None

@@ -20,6 +20,7 @@ REVIEW_MODULES = (
     'tests.validation.lite_review_energy_assertions',
 )
 STAGE3_MODULES = ('tests.validation.lite_stage3_assertions',)
+STAGE4_MODULES = ('tests.validation.lite_stage4_assertions',)
 CONTROLLED_REVIEW_MODULES = ('tests.validation.lite_review_numeric_role_cases',)
 
 
@@ -36,20 +37,21 @@ def fixed_assertion_catalogue():
         'scope_labels': dict(baseline.TYPED_SCOPE_LABELS),
         'controls': dict(baseline.CONTROL_ASSERTIONS),
         'ordered_groups': dict(baseline.ORDERED_SOURCE_GROUPS),
-        'overrides': {}, 'directory': {}, 'relations': {}, 'numeric_roles': {}, 'review_ids': set(), 'stage3_ids': set(),
+        'overrides': {}, 'directory': {}, 'relations': {}, 'numeric_roles': {}, 'review_ids': set(), 'stage3_ids': set(), 'stage4_ids': set(),
     }
     names = {'assertions': 'REVIEW_ASSERTIONS', 'typed': 'REVIEW_TYPED_ASSERTIONS',
              'policies': 'REVIEW_REPRESENTATION_POLICIES', 'controls': 'REVIEW_CONTROL_ASSERTIONS',
              'ordered_groups': 'REVIEW_ORDERED_SOURCE_GROUPS', 'overrides': 'REVIEW_SOURCE_OVERRIDES',
              'directory': 'REVIEW_DIRECTORY_ASSERTIONS', 'relations': 'REVIEW_REQUIRED_RELATIONS',
              'numeric_roles': 'REVIEW_NUMERIC_ROLE_DEPENDENCIES'}
-    for name in (*REVIEW_MODULES, *STAGE3_MODULES):
+    for name in (*REVIEW_MODULES, *STAGE3_MODULES, *STAGE4_MODULES):
         module = importlib.import_module(name)
         for key, exported in names.items():
             declared = getattr(module, exported, {})
             assert not data[key].keys() & declared.keys(), (name, exported, 'duplicate declaration')
             data[key].update(declared)
-        data['stage3_ids' if name in STAGE3_MODULES else 'review_ids'].update(module.REVIEW_ASSERTIONS)
+        group = 'stage4_ids' if name in STAGE4_MODULES else 'stage3_ids' if name in STAGE3_MODULES else 'review_ids'
+        data[group].update(module.REVIEW_ASSERTIONS)
     return data
 
 
@@ -58,7 +60,7 @@ def handwritten_assertion_identity(root=ROOT):
     import hashlib
 
     paths = ['tests/validation/lite_fixed_source_assertions.py']
-    paths += [name.replace('.', '/') + '.py' for name in (*REVIEW_MODULES, *STAGE3_MODULES, *CONTROLLED_REVIEW_MODULES)]
+    paths += [name.replace('.', '/') + '.py' for name in (*REVIEW_MODULES, *STAGE3_MODULES, *STAGE4_MODULES, *CONTROLLED_REVIEW_MODULES)]
     digests = {path: hashlib.sha256((root / path).read_bytes()).hexdigest() for path in paths}
     aggregate = hashlib.sha256(json.dumps(digests, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
     return {'handwritten_assertions_sha256': digests[paths[0]],
@@ -1065,6 +1067,32 @@ def _check_fixed_source(graph, original, expected, assertion, target, block):
         assert own['scope'] == assertion['scope'] and own['parents'] == assertion['parents']
         a, b = own['content']['source']['text_span']
         assert ''.join(n['text'] for n in own['content']['children']) == ''.join(raw[a:b].split())
+    if assertion.get('navigation'):
+        declaration = assertion['navigation']
+        label, page, parents = declaration['title'], declaration['page'], declaration['parent_path']
+        assert raw == page + ' ' + label
+        nav_facts = [n for n in facts if n['source']['lines'][0] == line]
+        assert len(nav_facts) == 1 and (
+            nav_facts[0]['subject'], nav_facts[0]['attribute'], nav_facts[0]['value'],
+            nav_facts[0].get('semantic_type'), nav_facts[0].get('identity_facets', {}).get('toc_parent')) == (
+                label, 'Page', page, 'toc_page', parents), (sample_id, line, 'mandatory literal navigation', nav_facts)
+        endpoint = {'type': 'toc_entry', 'title': label, 'parent_path': parents}
+        own_edges = [e for e in edges if e['source']['lines'][0] == line]
+        page_edges = [e for e in own_edges if e['type'] == 'toc_entry_page' and e['left'] == endpoint
+                      and e['right'] == {'type': 'toc_page_slot', 'title': label, 'parent_path': parents}]
+        parent_edges = [e for e in own_edges if e['type'] == 'toc_parent' and e['right'] == endpoint
+                        and e['left'] == {'type': 'toc_entry_parent', 'title': parents[-1], 'parent_path': parents[:-1]}] if parents else []
+        assert len(page_edges) == 1 and len(parent_edges) == bool(parents)
+        assert not own_content, (sample_id, line, 'navigation cannot fall back to ordinary content')
+        ids = [n['id'] for n in graph['nodes'] if n['id'] in retained['T'] and n['source']['lines'][0] == line]
+        return {'case_id': f'source::{sample_id}::L{line}', 'status': 'passed',
+            'source_assertion_case': True, 'attempted': True,
+            'input': {'sample_id': sample_id, 'source': target['reference']},
+            'expected': {'source_assertions': assertion, 'representation_policy': 'typed_navigation'},
+            'actual': {'navigation': declaration, 'ordinary_quantity': False},
+            'requirement_ids': ids + [nav_facts[0]['id']] + [e['id'] for e in own_edges],
+            'obligation_ids': [r['obligation_id'] for r in coverage['obligations'] if source_in_target(r['source'], target, original)],
+            'analysis_limitation_ids': [r['issue_id'] for r in coverage['analysis_limitations'] if source_in_target(r['source'], target, original)]}
     navigation = next((entry for entry in expected.get('directory_assertions', []) if entry[0] == line), None)
     if navigation is not None:
         # The already-authored navigation contract owns this literal entry.
@@ -1109,6 +1137,11 @@ def _check_fixed_source(graph, original, expected, assertion, target, block):
             and edge.get('right', {}).get('scope') == assertion['scope']]
         assert not duplicate_scopes, (sample_id, line, 'duplicate statement parent-scope responsibility',
                                       duplicate_scopes)
+        if sample_id in catalogue['stage4_ids']:
+            partial = [edge for edge in edges if source_in_target(edge['source'], target, original)
+                       and (edge['type'] in {'prose_heading_membership', 'prose_reading_order'}
+                            or edge['type'] == 'heading_parent' and edge.get('field_label_evidence'))]
+            assert not partial, (sample_id, line, 'complete content still counts partial labelled prose roles', partial)
     # Empty lists cannot certify an absent non-counting operand or an
     # invented opaque fact. All observed typed facts were checked above.
     for fact in observed:
@@ -1253,7 +1286,10 @@ def _finish_fixed_source_cases(graph, original, expected, cases, *, collect_fail
     sample_id = original['sample_id']
     coverage = graph['comparison_coverage']
     retained = coverage['retained_semantic_requirements']
-    from moparse_eval.document_ast_comparison import document_order_requirements
+    from moparse_eval.document_ast_comparison import (
+        document_order_requirements,
+        navigation_order_requirements,
+    )
 
     content = {b['requirement_id']: b for b in graph['source_form_requirements']}
     anchors = {b['requirement_id']: b for b in graph['source_form_order_anchors']}
@@ -1282,7 +1318,21 @@ def _finish_fixed_source_cases(graph, original, expected, cases, *, collect_fail
             cases.append(_source_failure_case(graph, original,
                 f'source::{sample_id}::ordered-group:{start}:{end}',
                 {'ordered_range': [start, end], 'source_assertions': meaning}, error, stage='reading_order'))
-    required_ids = set(coverage['content_requirement_ids'] + coverage['mixed_order_requirement_ids']).union(*map(set, retained.values()))
+    declared_navigation = [s for s in expected['sources'] if s.get('navigation')]
+    directory_entries = expected.get('directory_assertions', [])
+    navigation = navigation_order_requirements(graph)
+    if navigation:
+        declared_lines = [s['line'] for s in declared_navigation] or [row[0] for row in directory_entries]
+        assert [e['sources'][0]['lines'][0] for e in navigation] == declared_lines[:-1]
+        assert [e['sources'][1]['lines'][0] for e in navigation] == declared_lines[1:]
+        cases.append({'case_id': f'source::{sample_id}::navigation-order', 'status': 'passed',
+            'input': {'sample_id': sample_id},
+            'expected': {'source_assertions': 'Hand-authored navigation entry order with independent parent/title/page assertions.',
+                         'ordered_source_lines': declared_lines},
+            'actual': {'ordered_edges': navigation}, 'requirement_ids': [e['id'] for e in navigation],
+            'obligation_ids': [], 'analysis_limitation_ids': []})
+    required_ids = set(coverage['content_requirement_ids'] + coverage['mixed_order_requirement_ids']
+                       + coverage['navigation_order_requirement_ids']).union(*map(set, retained.values()))
     assigned = {ident for case in cases for ident in case['obligation_ids']}
     formatting = [r for r in coverage['obligations'] if r['obligation_id'] not in assigned]
     if formatting:
@@ -1425,7 +1475,8 @@ def review_fixed_sample(sample_id, *, collect_failures=None):
     graph = compile_requirement_graph(original, comparison_contract='document_ast')
     validate_requirement_graph(graph, expected=original)
     if collect_failures is None:
-        collect_failures = sample_id in fixed_assertion_catalogue()['review_ids'] | fixed_assertion_catalogue()['stage3_ids']
+        catalogue = fixed_assertion_catalogue()
+        collect_failures = sample_id in catalogue['review_ids'] | catalogue['stage3_ids'] | catalogue['stage4_ids']
     cases = check_fixed_source_graph(graph, original, expected, collect_failures=collect_failures)
     dependencies = fixed_assertion_catalogue()['numeric_roles'].get(sample_id, [])
     if dependencies:
@@ -1617,7 +1668,7 @@ if __name__ == '__main__':
     parser.add_argument('--output', type=Path, help='Local validation record; never a quality result')
     parser.add_argument('--diagnosis-output', type=Path, help='Update the existing source-only diagnosis with contract dimensions')
     parser.add_argument('--comparison-evidence', type=Path, default=WORK / 'comparison-validation.json')
-    parser.add_argument('--sample', action='append', help='Explicit development subset; default runs the original 55 and the fixed phase-three sample')
+    parser.add_argument('--sample', action='append', help='Explicit development subset; default runs all independent source declarations')
     parser.add_argument('--cross-fragments-only', action='store_true', help='Review only the five fixed source spans, without whole-sample acceptance')
     args = parser.parse_args()
     CURRENT, BIND_CURRENT = args.current, not args.fresh_only
@@ -1680,6 +1731,7 @@ if __name__ == '__main__':
               'executed_sample_ids': [sample_id for _, sample_id, _ in checks],
               'new_review_sample_ids': sorted(fixed_assertion_catalogue()['review_ids']),
               'stage3_sample_ids': sorted(fixed_assertion_catalogue()['stage3_ids']),
+              'stage4_sample_ids': sorted(fixed_assertion_catalogue()['stage4_ids']),
               'controlled_numeric_role_cases': getattr(numeric_role_validation, '_records', []),
               'command': [sys.executable, *sys.argv], 'bind_current': BIND_CURRENT,
               'source_index_sha256': hashlib.sha256((CURRENT / 'index.json').read_bytes()).hexdigest(),

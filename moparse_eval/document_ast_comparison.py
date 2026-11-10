@@ -228,6 +228,23 @@ def document_order_requirements(graph):
     return orders
 
 
+def navigation_order_requirements(graph, *, retained_fact_ids=None):
+    """Ordered navigation identities; page values never select their position."""
+    retained = retained_fact_ids
+    if retained is None:
+        retained = graph.get('comparison_coverage', {}).get('retained_semantic_requirements', {}).get('B')
+    facts = graph.get('nodes', graph.get('business', []))
+    entries = [f for f in facts if f.get('semantic_type') == 'toc_page'
+               and (retained is None or f['id'] in retained)]
+    entries.sort(key=lambda f: (f['source'].get('lines', [0])[0], f['source'].get('text_span', [0])[0]))
+    return [{'id': f'L:navigation-order:{i}', 'role': 'navigation_order',
+             'left': {'title': left['subject'], 'parent_path': copy.deepcopy(left['identity_facets']['toc_parent'])},
+             'right': {'title': right['subject'], 'parent_path': copy.deepcopy(right['identity_facets']['toc_parent'])},
+             'sources': [copy.deepcopy(left['source']), copy.deepcopy(right['source'])]}
+            for i, (left, right) in enumerate(zip(entries, entries[1:], strict=False))
+            if left.get('directory_evidence') == right.get('directory_evidence')]
+
+
 def attach_document_ast(graph, expected):
     units = []
     for target in expected['targets']:
@@ -332,6 +349,7 @@ def comparison_requirement_coverage(graph):
         'content_requirement_ids': [b['requirement_id'] for b in blocks],
         'mixed_order_requirement_ids': [e['id'] for e in document_order_requirements(graph)
                                        if e['role'] == 'mixed_typed_content_order'],
+        'navigation_order_requirement_ids': [e['id'] for e in navigation_order_requirements(graph, retained_fact_ids=banks['B'])],
         'list_scope_ownership': [{'issue_id': issue['id'], **proof,
             'requirement_ids': sorted({ident for source in [proof['child'], *proof['parents']] for ident in owners(source)})}
             for issue in graph['unresolved'] if (proof := _list_scope_proof(issue, ast))
@@ -456,6 +474,14 @@ def _without_grammar_analysis(graph, blocks, ast=None):
     result['business'] = [fact for fact in result['business'] if fact['id'] not in removed_facts]
     retained_fact_ids = {fact['id'] for fact in result['business']}
 
+    def printed_label_scope(edge, block, scope):
+        label = edge.get('field_label_evidence', {})
+        return (label.get('role') == 'printed_field_label' and isinstance(label.get('text'), str)
+                and scope == block.get('scope', []) + [label['text']]
+                and _resolve(graph, label.get('source', {})) == label['text']
+                and all(_contains(block['content']['source'], source)
+                        for source in _original_content_sources(label.get('source', {}))))
+
     def scope_owner(edge):
         # A content requirement owns its particular statement's parent scope.
         # The relation's type or a shared heading/line alone proves nothing:
@@ -481,7 +507,8 @@ def _without_grammar_analysis(graph, blocks, ast=None):
                         return None
                     origin = {**origin, 'text_span': [0, len(literal)]}
                 matches = [(index, block) for index, block in enumerate(blocks)
-                    if block.get('scope') == scope and block.get('role') in {'text', 'item'}
+                    if (block.get('scope') == scope or printed_label_scope(edge, block, scope))
+                    and block.get('role') in {'text', 'item'}
                     and block.get('requirement_id') and block.get('content')
                     and _contains(block['content']['source'], origin)]
                 if len(matches) != 1:
@@ -490,7 +517,7 @@ def _without_grammar_analysis(graph, blocks, ast=None):
                 owners.append({'requirement_id': block['requirement_id'],
                     'counted_relation_id': f'L:content:{index}',
                     'source': copy.deepcopy(block['content']['source']),
-                    'scope': copy.deepcopy(scope), 'parents': copy.deepcopy(block['parents'])})
+                    'scope': copy.deepcopy(block['scope']), 'parents': copy.deepcopy(block['parents'])})
         unique = {owner['requirement_id']: owner for owner in owners}
         return {'analysis_relation_id': edge['id'], 'relation': 'statement_parent_scope',
             'source': copy.deepcopy(edge['source']), 'parent_scope': copy.deepcopy(scope),
@@ -498,6 +525,30 @@ def _without_grammar_analysis(graph, blocks, ast=None):
             'basis': 'same_source_statement_and_declared_parent_scope_owned_before_candidate_reading'}
 
     scope_ownership = [proof for edge in result['relations'] if (proof := scope_owner(edge)) is not None]
+    for edge in result['relations']:
+        if edge.get('type') != 'heading_parent' or not edge.get('field_label_evidence'):
+            continue
+        origin = copy.deepcopy(edge['source'])
+        if origin.get('text_span') is None:
+            literal = _resolve(graph, origin)
+            if not isinstance(literal, str):
+                continue
+            origin['text_span'] = [0, len(literal)]
+        for index, block in enumerate(blocks):
+            if (not block.get('content') or not block.get('scope')
+                    or edge.get('left') != block['scope'][-1]
+                    or edge.get('right') != edge['field_label_evidence'].get('text')
+                    or not printed_label_scope(edge, block, edge.get('required_scope'))
+                    or not all(_contains(block['content']['source'], source)
+                               for source in _original_content_sources(origin))):
+                continue
+            scope_ownership.append({'analysis_relation_id': edge['id'], 'relation': 'printed_local_label_parent',
+                'source': copy.deepcopy(edge['source']), 'label': copy.deepcopy(edge['field_label_evidence']),
+                'owners': [{'requirement_id': block['requirement_id'], 'counted_relation_id': f'L:content:{index}',
+                    'source': copy.deepcopy(block['content']['source']), 'scope': copy.deepcopy(block['scope']),
+                    'parents': copy.deepcopy(block['parents'])}],
+                'basis': 'same_complete_statement_owns_its_printed_label_body_and_outer_parent'})
+            break
     # Only the newly proved nested-content contract owns this exact list
     # membership too. Other list relations stay independent, including a
     # same-line relation whose endpoints or parent provenance differ.
@@ -529,6 +580,61 @@ def _without_grammar_analysis(graph, blocks, ast=None):
                     'parents': copy.deepcopy(block['parents'])}],
                 'basis': 'same_complete_printed_parent_chain_and_child_owned_before_candidate_reading'})
             break
+    # A complete-content order path already owns the order of the same two
+    # independently sourced prose endpoints. Keep only that counted owner;
+    # an ambiguous endpoint or a partial/typed partition cannot transfer it.
+    for edge in result['relations']:
+        if edge.get('type') != 'prose_reading_order':
+            continue
+        owners, origins = [], []
+        for side in ('left', 'right'):
+            endpoint = edge.get(side, {})
+            if not isinstance(endpoint, dict):
+                break
+            matches = [p for p in graph.get('prose_endpoints', [])
+                       if p.get('identity') == endpoint.get('identity') and p.get('scope') == endpoint.get('scope')]
+            if len(matches) != 1:
+                break
+            origin = matches[0]['source']
+            if side == 'right' and not _same_record(origin, edge['source']):
+                break
+            literal = _resolve(graph, origin)
+            if not isinstance(literal, str):
+                break
+            whole = {**origin, 'text_span': origin.get('text_span', [0, len(literal)])}
+            own = [(i, b) for i, b in enumerate(blocks) if b.get('content')
+                   and (b.get('scope') == endpoint.get('scope') or printed_label_scope(edge, b, endpoint.get('scope')))
+                   and all(_contains(b['content']['source'], source) for source in _original_content_sources(whole))]
+            if len(own) != 1:
+                break
+            owners.append(own[0])
+            origins.append(whole)
+        if len(owners) != 2 or owners[0][0] > owners[1][0]:
+            continue
+        a, b = owners[0][0], owners[1][0]
+        if a == b:
+            if origins[0]['text_span'][1] > origins[1]['text_span'][0]:
+                continue
+            block = owners[0][1]
+            scope_ownership.append({'analysis_relation_id': edge['id'], 'relation': 'printed_intra_statement_order',
+                'source': copy.deepcopy(edge['source']), 'operand_sources': copy.deepcopy(origins),
+                'owners': [{'requirement_id': block['requirement_id'], 'counted_relation_id': f'L:content:{a}',
+                    'source': copy.deepcopy(block['content']['source']), 'scope': copy.deepcopy(block['scope']),
+                    'parents': copy.deepcopy(block['parents'])}],
+                'basis': 'same_complete_ordered_statement_owns_both_nonoverlapping_clause_sources'})
+            continue
+        order_ids = [f'L:content-order:{i}' for i in range(a, b)]
+        actual_orders = {e['id'] for e in document_order_requirements({
+            'source_form_requirements': blocks, 'source_form_order_anchors': graph.get('source_form_order_anchors', [])})}
+        if not set(order_ids) <= actual_orders:
+            continue
+        # The immutable content chain supplies every intervening order edge.
+        scope_ownership.append({'analysis_relation_id': edge['id'], 'relation': 'printed_statement_order',
+            'source': copy.deepcopy(edge['source']),
+            'owners': [{'requirement_id': block['requirement_id'], 'source': copy.deepcopy(block['content']['source'])}
+                       for _, block in owners],
+            'counted_relation_ids': order_ids,
+            'basis': 'same_unique_source_endpoints_and_complete_content_order_path'})
     transferred_scopes = {proof['analysis_relation_id'] for proof in scope_ownership}
     result['content_relation_ownership'] = scope_ownership
     if 'requirement_ledger' in result:
@@ -608,7 +714,8 @@ def grade_document_content(requirements, evidence):
             or coverage['retained_semantic_requirements']['B'] != [f['id'] for f in base_required['business']]
             or coverage.get('content_relation_ownership') != base_required['content_relation_ownership']
             or coverage.get('mixed_order_requirement_ids') != [e['id'] for e in document_order_requirements(requirements)
-                                                              if e['role'] == 'mixed_typed_content_order']):
+                                                              if e['role'] == 'mixed_typed_content_order']
+            or coverage.get('navigation_order_requirement_ids') != [e['id'] for e in navigation_order_requirements(requirements)]):
         raise ValueError('fixed comparison responsibility differs from its source-bound owners')
     candidate_ast = _candidate_ast(evidence)
     if 'document_ast' in evidence and evidence['document_ast'] != candidate_ast:
@@ -673,6 +780,26 @@ def grade_document_content(requirements, evidence):
             'reason': edge['role']})
         if unknown and edge['role'] == 'mixed_typed_content_order':
             score['blockers'].append({'side': 'comparison', 'reason': 'document_order_endpoint_unresolved',
+                                      'source': edge['sources'][0], 'layers': ['L']})
+    entries = evidence.get('toc_evidence', {}).get('entries', [])
+    navigation = evidence.get('toc_evidence')
+    empty_directory = (isinstance(navigation, dict) and not entries
+                       and not navigation.get('unresolved') and bool(navigation.get('handled_block_ids')))
+    for edge in navigation_order_requirements(requirements):
+        hits = [[(i, entry) for i, entry in enumerate(entries)
+                 if all(entry.get(k) == endpoint[k] for k in ('title', 'parent_path'))
+                 and entry.get('parentage') == 'explicit'] for endpoint in (edge['left'], edge['right'])]
+        unique = all(len(own) == 1 for own in hits)
+        unknown = (not entries and not empty_directory or any(len(own) > 1 for own in hits)
+                   or not unique and not candidate_ast.get('reading_complete', True))
+        correct = unique and hits[0][0][0] < hits[1][0][0]
+        score['outcomes'].append({'id': edge['id'], 'layer': 'L', 'role': 'navigation_order',
+            'expected': edge, 'actual': copy.deepcopy(hits),
+            'outcome': 'unresolved' if unknown else 'correct' if correct else 'incorrect',
+            'reason': 'own_unique_navigation_identities_in_printed_order',
+            **({'software_failure': True, 'semantic_comparison_status': 'unresolved'} if unknown else {})})
+        if unknown:
+            score['blockers'].append({'side': 'comparison', 'reason': 'navigation_order_identity_unresolved',
                                       'source': edge['sources'][0], 'layers': ['L']})
     for layer in ('L', 'B'):
         rows = [row for row in score['outcomes'] if row['layer'] == layer]

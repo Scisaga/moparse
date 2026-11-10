@@ -377,6 +377,8 @@ def _toc_syntax_blocks(targets: list[dict[str, Any]]) -> list[dict[str, Any]]:
                  "kind": "heading" if target["kind"] == "heading" else "toc_group" if target.get("has_children") else "text"}
         if target.get("heading_level"):
             block["heading_level"] = target["heading_level"]
+        if target.get('navigation_directory'):
+            block['kind'] = 'document_index'
         if target.get("cells"):
             block.update(kind="table", cells=copy.deepcopy(target["cells"]))
         external = {item.get("text") for item in target.get("outside_selection_context", []) if item.get("kind") == "list_parent"}
@@ -1670,7 +1672,10 @@ def compile_markdown(markdown: str, *, sample_id: str = "synthetic",
                 graph.navigation_heading(element.text, source, level)
         elif f"syntax:{index}" in toc_handled:
             graph.data["syntax"].append({"kind": element.kind, "text": element.text,
-                "source": {**source, "block": f"syntax:{index}"}, "scope": list(graph.headings), "semantic_role": "toc"})
+                "source": {**source, "block": f"syntax:{index}"}, "scope": list(graph.headings), "semantic_role": "toc",
+                "parents": list(element.parents),
+                "syntax_evidence": {"kind": element.kind, "list_span": list(element.list_span) if element.list_span else None,
+                                    "list_lines": list(element.lines), "list_stream": path}})
         elif element.cells:
             graph.table(element.cells, source)
         else:
@@ -1920,7 +1925,9 @@ def grade_layers(requirements: dict[str, Any], evidence: dict[str, Any]) -> dict
         if requirements.get('comparison_contract') == 'document_ast':
             if requirements.get('comparison_contract_version') != 'document_ast/1':
                 raise ValueError('unknown document comparison contract version')
-        if requirements.get('comparison_contract') == 'document_ast' and requirements.get('source_form_requirements'):
+        if requirements.get('comparison_contract') == 'document_ast' and (
+                requirements.get('source_form_requirements')
+                or requirements.get('comparison_coverage', {}).get('navigation_order_requirement_ids')):
             from .document_ast_comparison import grade_document_content
 
             return grade_document_content(requirements, evidence)

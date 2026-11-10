@@ -5,7 +5,11 @@ from copy import deepcopy
 import pytest
 
 from moparse_eval.expected_report import validate_evidence
-from moparse_eval.requirement_graph import compile_requirement_graph, evaluation_projection, validate_requirement_graph
+from moparse_eval.requirement_graph import (
+    compile_requirement_graph,
+    evaluation_projection,
+    validate_requirement_graph,
+)
 from moparse_eval.source_obligations import audit_source_obligations
 from moparse_eval.three_layer import grade_layers, read_candidate_markdown
 from tests.unit.test_cjk_circumstance_contract import authored
@@ -34,7 +38,7 @@ def test_navigation_page_and_parent_roles_survive_the_complete_production_chain(
     candidate = TEXT.replace(': ', ': Page ') if explicit_page else TEXT
     score = grade_layers(required, read_candidate_markdown(candidate, sample_id=required['sample_id']))
     assert (score['layers']['B']['numerator'], score['layers']['B']['denominator']) == (2, 2)
-    assert (score['layers']['L']['numerator'], score['layers']['L']['denominator']) == (6, 6)
+    assert (score['layers']['L']['numerator'], score['layers']['L']['denominator']) == (7, 7)  # Six original relations plus the declared navigation order.
     assert [r['role'] for r in score['outcomes'] if r['layer'] == 'L'].count('heading_parent') == 2
     validate_evidence(score)
 
@@ -52,11 +56,11 @@ def test_navigation_errors_cannot_change_fixed_denominators_or_become_quantities
         'leading_zero': TEXT.replace('017', '17'),
     }[change]
     score = grade_layers(required, read_candidate_markdown(candidate, sample_id=required['sample_id']))
-    assert [score['layers'][k]['denominator'] for k in ('B', 'L')] == [2, 6]
+    assert [score['layers'][k]['denominator'] for k in ('B', 'L')] == [2, 7]
     assert any(r['outcome'] != 'correct' for r in score['outcomes'] if r['layer'] in {'B', 'L'})
     if change in {'wrong_page', 'leading_zero'}:
         assert score['layers']['B']['numerator'] == 1
-        assert score['layers']['L']['numerator'] == 6
+        assert score['layers']['L']['numerator'] == 7
         assert all(c['value']['quantity_equivalence_applicable'] is False
                    for r in score['outcomes'] if r['layer'] == 'B' for c in r['comparisons'])
         validate_evidence(score)

@@ -295,6 +295,14 @@ def _document_role(block):
     return 'body' if block['role'] in {'text', 'item'} else block['role']
 
 
+def _document_context(block):
+    # Soft wrapping changes neither a heading nor an item's parent identity.
+    # Keep original strings/sources in evidence; fold whitespace only for
+    # comparison, preserving word boundaries and every non-whitespace token.
+    return tuple(tuple(re.sub(r'\s+', ' ', value).strip() for value in block.get(key, []))
+                 for key in ('scope', 'parents'))
+
+
 def _leaf_identity(leaf):
     return ('literal', leaf['text']) if leaf['role'] == 'literal' else (leaf['role'], None)
 
@@ -319,7 +327,7 @@ def _document_windows(actual):
         for end in range(start + 2, min(start + DOCUMENT_ALIGNMENT_LIMIT, len(blocks)) + 1):
             parts = blocks[start:end]
             if any(_document_role(part) != 'body' or part.get('content') is None
-                   or part['scope'] != own['scope'] or part['parents'] != own['parents'] for part in parts):
+                   or _document_context(part) != _document_context(own) for part in parts):
                 break
             yield list(enumerate(parts, start))
 
@@ -390,7 +398,7 @@ def compare_document_ast(required, actual, *, source_resolver=None):
                 own_shape = tuple(_leaf_identity(n) for n in _content_leaves(own['content']))
                 exact = own_shape == wanted
                 conflicts = []
-                if block['scope'] != own['scope'] or block['parents'] != own['parents']:
+                if _document_context(block) != _document_context(own):
                     conflicts.append('document_scope')
                 if _document_role(block) != _document_role(own):
                     conflicts.append('document_role')
@@ -446,11 +454,10 @@ def compare_document_ast(required, actual, *, source_resolver=None):
                               for a in hit['spans'] for b in other['spans'])})
         row['retrieval']['competing_requirement_ids'] = competitors
         limit = not any(hit['exact_shape'] for hit in hits) and any(len(parts) == DOCUMENT_ALIGNMENT_LIMIT and
-                    _document_role(parts[0][1]) == 'body' and parts[0][1]['scope'] == row['required']['scope']
+                    _document_role(parts[0][1]) == 'body' and _document_context(parts[0][1]) == _document_context(row['required'])
                     and parts[-1][0] + 1 < len(actual['children'])
                     and _document_role(actual['children'][parts[-1][0] + 1]) == 'body'
-                    and actual['children'][parts[-1][0] + 1]['scope'] == row['required']['scope']
-                    and actual['children'][parts[-1][0] + 1]['parents'] == row['required']['parents']
+                    and _document_context(actual['children'][parts[-1][0] + 1]) == _document_context(row['required'])
                     for parts in windows)
         row['retrieval']['limit_triggered'] = limit
         selected = (available[0] if len(available) == 1 and i not in colliding
@@ -464,8 +471,7 @@ def compare_document_ast(required, actual, *, source_resolver=None):
             row['decision'] = compare_content_ast(row['required']['content'], selected['actual']['content'],
                 {'source_resolver': source_resolver} if source_resolver else {})
         else:
-            compatible = [part for part in actual['children'] if part['scope'] == row['required']['scope']
-                          and part['parents'] == row['required']['parents']
+            compatible = [part for part in actual['children'] if _document_context(part) == _document_context(row['required'])
                           and _document_role(part) == _document_role(row['required']) and part.get('content') is not None]
             wrong_scope = [hit for hit in row['retrieval']['candidates'] if hit['exact_shape'] and hit['conflicts']]
             # An overlap can invalidate a proposed cut without exhausting the

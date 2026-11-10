@@ -77,6 +77,24 @@ def inline_text(text: str) -> str:
     return _inline_tokens(MARKDOWN.parseInline(text)).strip()
 
 
+def declared_navigation_heading(expected: dict[str, Any]) -> dict[str, Any] | None:
+    """Bind an authored section-TOC role only to a whole selected directory.
+
+    A mixed front-matter selection can carry the same category tag; it does
+    not declare its cover, ordinary body or every heading to be a directory.
+    """
+    if 'section-toc' not in (expected.get('tags') or []):
+        return None
+    targets = expected['targets']
+    headings = [t for t in targets if t['kind'] == 'heading']
+    entries = [t for t in targets if t['kind'] != 'image_caption' and t['kind'] != 'heading']
+    if (len(headings) != 1 or targets[0] is not headings[0] or not entries
+            or any(t['kind'] != 'item' or not re.fullmatch(
+                r'(?:\d+(?:[-–]\d+)?|[ivxlcdmIVXLCDM]+)[ \t]+\S.*', t['text']) for t in entries)):
+        return None
+    return headings[0]
+
+
 def elements(markdown: str) -> list[Element]:
     """Read public Markdown syntax with physical lines, without target data."""
     lines = markdown.splitlines(keepends=True)
@@ -125,7 +143,11 @@ def elements(markdown: str) -> list[Element]:
             text = _inline_tokens(token.children or []).strip()
             if not text and token.children and any(c.type == "image" for c in token.children):
                 text = " ".join(c.content for c in token.children if c.type == "image")
-            parents = tuple(item["element"].text for item in items[:-1] if item["element"])
+            # The first paragraph names the item. Later paragraphs inside
+            # that same CommonMark item are children of that original label,
+            # just as nested bullets are; they must not lose its identity.
+            owners = items if items and items[-1]["element"] is not None else items[:-1]
+            parents = tuple(item["element"].text for item in owners if item["element"])
             if previous.type == "heading_open":
                 level = int(previous.tag[1:])
                 headings = [(n, t) for n, t in headings if n < level]

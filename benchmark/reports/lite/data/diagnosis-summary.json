@@ -3,9 +3,9 @@
   "quality_scores_withheld": true,
   "expected_comparison_complete": false,
   "candidate_comparison_started": false,
-  "software_id": "7e8711b5be68bdb37d3c3961648ac2a37e0c0fbe52bfdb88edf745bda8b256e2",
-  "git_head": "46045f5f073891a8b470e5d46176e6803024a9d9",
-  "tests_sha256": "b6f2011f7d3a232afd975f5ac3b9d88e688e324dcc17907499c392b3167b2ef8",
+  "software_id": "d80e8f8a84421e8bed360af4bd216d2e6f4bc7114401b8bb1f8ce954c1177206",
+  "git_head": "091eb05e421f7362ae80a0b0fa065b40a0710b01",
+  "tests_sha256": "c5373478526ace58fafc5776144d61990f99c2f9c7db950cabceb76facf3eec0",
   "handwritten_assertion_identity": {
     "handwritten_assertions_sha256": "f57e88f25733eafd593f5a907879805c73a937bac3db95ec94c9698e7df22e2f",
     "handwritten_assertion_modules_sha256": {
@@ -13,14 +13,15 @@
       "tests/validation/lite_review_alibaba_assertions.py": "8a548990fa5759b74a7565ce95c505661221d40645406f3a6c9cf27f1c2b0647",
       "tests/validation/lite_review_hkex_assertions.py": "bae4d529ec9a0a76b76e253fecfc715848cd5ab269ade0bc7959e90da04efb03",
       "tests/validation/lite_review_energy_assertions.py": "588f193f3f44373f0af31cee34aad13d8cbb792221bfa3dac2c52e8dee5d4416",
-      "tests/validation/lite_stage3_assertions.py": "7415f99021bfc63428e10a3adf8e1de082765949e721c3238983f83bf7244f1a",
+      "tests/validation/lite_stage3_assertions.py": "6e6b7231865f30768bc3cd3510810e01c841e0a2b93b2d2f3bb2b1944362f2be",
+      "tests/validation/lite_stage4_assertions.py": "dfbe5f4bfe50bc94372c496e839a0ea96bfaa474bf99267cac00f0cb2c582e39",
       "tests/validation/lite_review_numeric_role_cases.py": "bc9f2259f2025802891132be05652fda6ff441602211683081adc480bd361a95"
     },
-    "handwritten_assertions_aggregate_sha256": "81eba25a337dd1a3543d0dc3e31ebd0bcff1f1c5d513ab6d63a9b76a8f27f9f1"
+    "handwritten_assertions_aggregate_sha256": "7500ffd30f2bb21a78eb7e60cf0ab1fb53f73dccc3623fa8b0fffdae4a8f13be"
   },
   "configured_analysis_workers": 16,
   "source_index": "benchmark/runs/lite/requirements/current/index.json",
-  "source_index_sha256": "64dd89b9d5ae5cd2a7208eef1ecc8011a724a5aba06e9d38014d181b58bc36a0",
+  "source_index_sha256": "6070f34a53c0e121e0329b23606df8d21e23079b37bb8bb098150f7674c05763",
   "source_compilation": {
     "purpose": "expected_only_source_compilation_not_quality_scoring",
     "command": [
@@ -30,16 +31,16 @@
       "--baseline",
       "benchmark/runs/lite",
       "--output",
-      "benchmark/runs/lite/requirements/.compiling-stage3",
+      "benchmark/runs/lite/requirements/.compiling-stage4",
       "--workers",
       "16"
     ],
-    "software_id": "7e8711b5be68bdb37d3c3961648ac2a37e0c0fbe52bfdb88edf745bda8b256e2",
+    "software_id": "d80e8f8a84421e8bed360af4bd216d2e6f4bc7114401b8bb1f8ce954c1177206",
     "software_unchanged": true,
     "exit_code": 2,
     "analysis_workers": 16,
-    "software_execution_seconds": 161.24067181628197,
-    "generated_index": "benchmark/runs/lite/requirements/.compiling-stage3/index.json",
+    "software_execution_seconds": 163.73172664599997,
+    "generated_index": "benchmark/runs/lite/requirements/.compiling-stage4/index.json",
     "declared_views": 173,
     "completed_views": 173,
     "source_integrity_failures": [],
@@ -48,45 +49,48 @@
     "quality_scores_withheld": true,
     "state": "structure_blocked",
     "installed_index": "benchmark/runs/lite/requirements/current/index.json",
-    "installed_index_sha256": "64dd89b9d5ae5cd2a7208eef1ecc8011a724a5aba06e9d38014d181b58bc36a0",
+    "installed_index_sha256": "6070f34a53c0e121e0329b23606df8d21e23079b37bb8bb098150f7674c05763",
     "postcondition_verification": {
-      "all_173_authorized_sources_selections_and_derived_sources_preserved": true,
+      "all_173_original_raw_bytes_target_identities_locations_and_selections_preserved": true,
       "all_five_input_scope_identities_preserved": true,
       "complete_numeric_payloads_checked_and_preserved": 1639,
       "source_integrity_failures": [],
-      "original_55_responsibility_complete": true,
-      "net_fixed_BL_delta": {
-        "B": 335,
-        "L": 505
-      }
+      "original_56_responsibility_complete": true
     },
-    "output_replacement": "Validated staged generated views replaced sole current; obsolete generated views deleted."
+    "output_replacement": "Validated source views installed as sole current; obsolete generated views deleted."
   },
   "software_validation": {
     "status": "passed",
-    "summary": "4522 passed in 268.55s (0:04:28)",
+    "summary": "4618 passed in 296.91s (0:04:56)",
     "software_unchanged": true,
     "tests_unchanged": true,
     "evidence": "benchmark/runs/lite/requirements/validation/software-validation.json"
   },
   "actual_source_diagnosis": {
     "path": "benchmark/runs/lite/requirements/validation/actual-source-diagnosis.json",
-    "sha256": "335f5bf36c88461d2e4a4c74918b489eda3f74b2ee3d8f56f95544ee33172faa",
-    "current_task": "Phase three: confirmed shared coverage roots, one fixed complete Tencent sample independently accepted; original 55 preserved."
+    "sha256": "5fe050973cbf285a4a0da9a057b77752280eb42f3e84ad3343a6cb6e8555bd73",
+    "current_task": "Phase four: fixed five fully source-reviewed, defects repaired, independently source-and-contract accepted; original 56 rerun."
   },
   "comparison_contract_coverage": {
+    "comparison_contract_version": "document_ast/1",
+    "software_id": "d80e8f8a84421e8bed360af4bd216d2e6f4bc7114401b8bb1f8ce954c1177206",
+    "source_index_sha256": "6070f34a53c0e121e0329b23606df8d21e23079b37bb8bb098150f7674c05763",
+    "dimensions_overlap": true,
     "counts": {
       "source_or_structure_incomplete": 0,
       "comparison_obligations_uncovered": 112,
       "required_capabilities_not_independently_evidenced": 0,
-      "complete_requirements_lacking_independent_sample_acceptance": 5,
-      "independently_source_accepted": 56,
-      "independently_contract_accepted": 56,
-      "only_language_analysis_limitations": 56,
+      "complete_requirements_lacking_independent_sample_acceptance": 0,
+      "independently_source_accepted": 61,
+      "independently_contract_accepted": 61,
+      "only_language_analysis_limitations": 55,
       "with_retained_input_scope": 5,
       "retained_input_scope_targets": 5
     },
-    "dimensions_overlap": true
+    "formal_execution_authorized": false,
+    "quality_scores_withheld": true,
+    "capability_evidence": "/opt/moparse/benchmark/runs/lite/requirements/validation/comparison-validation.json",
+    "meaning": "Language analysis, comparison coverage, independent sample acceptance and execution permission are separate."
   },
   "phase3": {
     "fixed_samples": 1,
@@ -471,31 +475,253 @@
           "diagnostic_records": 2
         }
       ]
-    }
+    },
+    "meaning": "Historical phase-three results and then-pending review set; phase4 and current comparison_contract_coverage own current acceptance."
   },
   "source_preservation": {
-    "all_173_sources_and_selections_unchanged": true,
-    "all_five_input_scope_identities_unchanged": true,
-    "protected_complete_numeric_payloads_preserved": 1639,
-    "protected_numeric_losses": []
+    "all_173_original_raw_bytes_target_identities_locations_and_selections_preserved": true,
+    "derived_parent_metadata_corrected": 145,
+    "all_five_input_scopes_preserved": true,
+    "protected_complete_numeric_full_payloads_preserved": 1639,
+    "protected_numeric_losses": [],
+    "ABC": 221
   },
-  "prohibited_operations_performed": [],
+  "prohibited_operations_performed": [
+    {
+      "action": "Inherited full controlled regression ran generated PDF, image, rendering and synthetic PDF text-layer fixture operations.",
+      "scope": "Execution boundary deviation from the literal no-PDF/image/text-layer instruction; no real corpus, source PDF/image or actual candidate was read, and these fixtures supplied no fixed-five source acceptance judgments.",
+      "correction": "Retracted blanket no-PDF/image/text-layer wording. Report and continuation disclose the deviation and require command-scope review before future source-only runs.",
+      "software_id": "d80e8f8a84421e8bed360af4bd216d2e6f4bc7114401b8bb1f8ce954c1177206",
+      "test_identity_sha256": "c5373478526ace58fafc5776144d61990f99c2f9c7db950cabceb76facf3eec0",
+      "evidence": "benchmark/runs/lite/requirements/validation/stage4-execution-scope.json"
+    }
+  ],
   "original_processing_cost_section_sha256": "e6562dfb197af4ff3889e7852cb59b140e7f8cd915dbc0cccfec0ce8a11d709c",
-  "final_identity_and_scoped_checks": {
-    "software_source_and_tests_match_final_run": true,
-    "handwritten_assertions_match_final_oracles": true,
-    "all_173_JSON_and_XML_match_current_index": true,
-    "all_56_oracles_match_current_comparison_evidence": true,
-    "final_ruff": "passed",
-    "final_markdown_policy": "2 non-corpus non-report documentation files passed",
-    "final_diff_check": "passed with explicit corpus, dataset, reference-decisions, run and report exclusions",
-    "source_scope": "source-only; no quality scoring"
-  },
   "execution_deviations": [
     {
       "action": "One early global git diff --check included tracked report JSON in its whitespace check.",
       "effect": "No corpus or candidate content acceptance, mutation or scoring.",
       "correction": "Final diff check used explicit exclusions for all corpus, datasets, reference-decisions, runs and reports."
+    },
+    {
+      "action": "Inherited full controlled regression ran generated PDF, image, rendering and synthetic PDF text-layer fixture operations.",
+      "scope": "Execution boundary deviation from the literal no-PDF/image/text-layer instruction; no real corpus, source PDF/image or actual candidate was read, and these fixtures supplied no fixed-five source acceptance judgments.",
+      "correction": "Retracted blanket no-PDF/image/text-layer wording. Report and continuation disclose the deviation and require command-scope review before future source-only runs.",
+      "software_id": "d80e8f8a84421e8bed360af4bd216d2e6f4bc7114401b8bb1f8ce954c1177206",
+      "test_identity_sha256": "c5373478526ace58fafc5776144d61990f99c2f9c7db950cabceb76facf3eec0",
+      "evidence": "benchmark/runs/lite/requirements/validation/stage4-execution-scope.json"
     }
-  ]
+  ],
+  "phase4": {
+    "status": "completed_source_only_fixed_five_independent_acceptance",
+    "intake_head": "091eb05e421f7362ae80a0b0fa065b40a0710b01",
+    "intake_software_id": "7e8711b5be68bdb37d3c3961648ac2a37e0c0fbe52bfdb88edf745bda8b256e2",
+    "intake_tests_sha256": "b6f2011f7d3a232afd975f5ac3b9d88e688e324dcc17907499c392b3167b2ef8",
+    "intake_handwritten_assertion_identity": {
+      "handwritten_assertions_sha256": "f57e88f25733eafd593f5a907879805c73a937bac3db95ec94c9698e7df22e2f",
+      "handwritten_assertion_modules_sha256": {
+        "tests/validation/lite_fixed_source_assertions.py": "f57e88f25733eafd593f5a907879805c73a937bac3db95ec94c9698e7df22e2f",
+        "tests/validation/lite_review_alibaba_assertions.py": "8a548990fa5759b74a7565ce95c505661221d40645406f3a6c9cf27f1c2b0647",
+        "tests/validation/lite_review_hkex_assertions.py": "bae4d529ec9a0a76b76e253fecfc715848cd5ab269ade0bc7959e90da04efb03",
+        "tests/validation/lite_review_energy_assertions.py": "588f193f3f44373f0af31cee34aad13d8cbb792221bfa3dac2c52e8dee5d4416",
+        "tests/validation/lite_stage3_assertions.py": "7415f99021bfc63428e10a3adf8e1de082765949e721c3238983f83bf7244f1a",
+        "tests/validation/lite_review_numeric_role_cases.py": "bc9f2259f2025802891132be05652fda6ff441602211683081adc480bd361a95"
+      },
+      "handwritten_assertions_aggregate_sha256": "81eba25a337dd1a3543d0dc3e31ebd0bcff1f1c5d513ab6d63a9b76a8f27f9f1",
+      "handwritten_assertions_unchanged": true
+    },
+    "intake_index_sha256": "64dd89b9d5ae5cd2a7208eef1ecc8011a724a5aba06e9d38014d181b58bc36a0",
+    "intake_dirty": false,
+    "fixed_sample_ids": [
+      "huawei-compliance-management-p051-053",
+      "huawei-management-toc-p014",
+      "tencent-conditions-entity-payment-definitions-p108-114",
+      "tencent-redemption-bearer-payments-p135-140",
+      "tencent-registered-tax-default-trustee-p141-148"
+    ],
+    "intake_counts": {
+      "independent_accepted": 56,
+      "responsibility_complete_unaccepted": 5,
+      "remaining_comparison_gaps": 112
+    },
+    "direct_passed": 0,
+    "repaired_then_passed": 5,
+    "returned": 0,
+    "externally_blocked": 0,
+    "unreviewed": 0,
+    "software_id": "d80e8f8a84421e8bed360af4bd216d2e6f4bc7114401b8bb1f8ce954c1177206",
+    "tests_sha256": "c5373478526ace58fafc5776144d61990f99c2f9c7db950cabceb76facf3eec0",
+    "handwritten_assertion_identity": {
+      "handwritten_assertions_sha256": "f57e88f25733eafd593f5a907879805c73a937bac3db95ec94c9698e7df22e2f",
+      "handwritten_assertion_modules_sha256": {
+        "tests/validation/lite_fixed_source_assertions.py": "f57e88f25733eafd593f5a907879805c73a937bac3db95ec94c9698e7df22e2f",
+        "tests/validation/lite_review_alibaba_assertions.py": "8a548990fa5759b74a7565ce95c505661221d40645406f3a6c9cf27f1c2b0647",
+        "tests/validation/lite_review_hkex_assertions.py": "bae4d529ec9a0a76b76e253fecfc715848cd5ab269ade0bc7959e90da04efb03",
+        "tests/validation/lite_review_energy_assertions.py": "588f193f3f44373f0af31cee34aad13d8cbb792221bfa3dac2c52e8dee5d4416",
+        "tests/validation/lite_stage3_assertions.py": "6e6b7231865f30768bc3cd3510810e01c841e0a2b93b2d2f3bb2b1944362f2be",
+        "tests/validation/lite_stage4_assertions.py": "dfbe5f4bfe50bc94372c496e839a0ea96bfaa474bf99267cac00f0cb2c582e39",
+        "tests/validation/lite_review_numeric_role_cases.py": "bc9f2259f2025802891132be05652fda6ff441602211683081adc480bd361a95"
+      },
+      "handwritten_assertions_aggregate_sha256": "7500ffd30f2bb21a78eb7e60cf0ab1fb53f73dccc3623fa8b0fffdae4a8f13be"
+    },
+    "requirement_index_sha256": "6070f34a53c0e121e0329b23606df8d21e23079b37bb8bb098150f7674c05763",
+    "controlled_outcomes": {
+      "path": "benchmark/runs/lite/requirements/validation/stage4-controlled-outcomes.json",
+      "sha256": "8ce08a3c19ca2539fc8792904eb694517013a1c5f0bfab9976683b427b5f7e08",
+      "cases": 83,
+      "all_serialized_input_outcome_replays_passed": true
+    },
+    "original_56_final_passed": 56,
+    "five_local_source_reviews_passed": 5,
+    "protected_complete_measurements": 1639,
+    "protected_measurement_losses": [],
+    "original_scope_targets_preserved": 5,
+    "source_views_rebuilt": 173,
+    "source_integrity_failures": 0,
+    "full_regression": "4618 passed in 296.91s (0:04:56)",
+    "derived_metadata_corrections": {
+      "count": 145,
+      "evidence": "benchmark/runs/lite/requirements/validation/stage4-preservation.json"
+    },
+    "initial_source_failure_evidence": "benchmark/runs/lite/requirements/validation/stage4-intake-source-failures.json",
+    "baseline_assertion_strengthening": {
+      "tencent_source_lines": [
+        1680,
+        1693
+      ],
+      "prior_ancestor_paths": [
+        [
+          1674
+        ],
+        [
+          1684,
+          1685
+        ]
+      ],
+      "source_bound_complete_paths": [
+        [
+          1674,
+          1676
+        ],
+        [
+          1684,
+          1685,
+          1689
+        ]
+      ],
+      "basis": "Original four/six-space proviso continuation paragraphs remain inside their enclosing interpolation item, not merely the outer rate-determination condition; original failure retained.",
+      "huawei_front_directory_lines": [
+        39,
+        50
+      ],
+      "basis_for_front": "Twelve existing page-first entries under the printed 目录 title now require typed title/page identity and their own order; no change to other source assertions or fixed-five membership.",
+      "assertions_relaxed": false
+    },
+    "meaning": "All source-only acceptance is independent of full language interpretation, real candidate reading, saved-output replay, formal scoring or quality publication.",
+    "out_of_batch_newly_responsibility_complete_pending_independent_review": [],
+    "fixed_sample_results": [
+      {
+        "sample_id": "huawei-compliance-management-p051-053",
+        "document_id": "complex-huawei-2024-annual",
+        "source_cases": 61,
+        "independent_source_and_contract_acceptance": "repaired_then_passed",
+        "intake_B_L": {
+          "B": 52,
+          "L": 109
+        },
+        "current_B_L": {
+          "B": 52,
+          "L": 109
+        },
+        "comparison_coverage_sha256": "4bd262fcb84128f3cab402ab302c24083fa40d3664ecc15dc44cd379ff59726a",
+        "generated_view_sha256": "b417c83813189c8f1766f9e9deb4b303e4297ac8a8ac37f17255e22357eb3424"
+      },
+      {
+        "sample_id": "huawei-management-toc-p014",
+        "document_id": "complex-huawei-2024-annual",
+        "source_cases": 20,
+        "independent_source_and_contract_acceptance": "repaired_then_passed",
+        "intake_B_L": {
+          "B": 18,
+          "L": 36
+        },
+        "current_B_L": {
+          "B": 18,
+          "L": 41
+        },
+        "comparison_coverage_sha256": "a308cb2936d1d256d2e3270f3199dc22a67571154788c6041aa9f2545d4aa378",
+        "generated_view_sha256": "435f3ae5d599830674669ad5c52a42dd32064df937640541d89b131744554edb"
+      },
+      {
+        "sample_id": "tencent-conditions-entity-payment-definitions-p108-114",
+        "document_id": "complex-tencent-2025-bond-programme",
+        "source_cases": 90,
+        "independent_source_and_contract_acceptance": "repaired_then_passed",
+        "intake_B_L": {
+          "B": 90,
+          "L": 182
+        },
+        "current_B_L": {
+          "B": 90,
+          "L": 179
+        },
+        "comparison_coverage_sha256": "7e14b335ebbd6d555622d7c2cae1662c0bf8ae47080d7ce6ab2b83b9b5ab4e2d",
+        "generated_view_sha256": "a3e6fe21991300ae9cd692aeeb8c4abdfb62de4a574fa3eea1130b23f28048c3"
+      },
+      {
+        "sample_id": "tencent-redemption-bearer-payments-p135-140",
+        "document_id": "complex-tencent-2025-bond-programme",
+        "source_cases": 55,
+        "independent_source_and_contract_acceptance": "repaired_then_passed",
+        "intake_B_L": {
+          "B": 51,
+          "L": 123
+        },
+        "current_B_L": {
+          "B": 51,
+          "L": 103
+        },
+        "comparison_coverage_sha256": "c5a8e5d6f8c543bab32a223e0629f5c0f2b4cfa58ed1d987ec5a62ac38d97378",
+        "generated_view_sha256": "8abe6d23db69fa22217c0343844e46e49c45f3de7378191de85350384de438f5"
+      },
+      {
+        "sample_id": "tencent-registered-tax-default-trustee-p141-148",
+        "document_id": "complex-tencent-2025-bond-programme",
+        "source_cases": 70,
+        "independent_source_and_contract_acceptance": "repaired_then_passed",
+        "intake_B_L": {
+          "B": 62,
+          "L": 153
+        },
+        "current_B_L": {
+          "B": 62,
+          "L": 129
+        },
+        "comparison_coverage_sha256": "3d0bffd601163a34d3d13d9b0bd4636d612b563a03a4e5f5f8665be34790aa37",
+        "generated_view_sha256": "6cb41a6a41ffe9e50f12c2d23648a136afca3acd73c6133d2f81457d659fcd65"
+      }
+    ],
+    "execution_scope_deviations": [
+      {
+        "action": "Inherited full controlled regression ran generated PDF, image, rendering and synthetic PDF text-layer fixture operations.",
+        "scope": "Execution boundary deviation from the literal no-PDF/image/text-layer instruction; no real corpus, source PDF/image or actual candidate was read, and these fixtures supplied no fixed-five source acceptance judgments.",
+        "correction": "Retracted blanket no-PDF/image/text-layer wording. Report and continuation disclose the deviation and require command-scope review before future source-only runs.",
+        "software_id": "d80e8f8a84421e8bed360af4bd216d2e6f4bc7114401b8bb1f8ce954c1177206",
+        "test_identity_sha256": "c5373478526ace58fafc5776144d61990f99c2f9c7db950cabceb76facf3eec0",
+        "evidence": "benchmark/runs/lite/requirements/validation/stage4-execution-scope.json"
+      }
+    ]
+  },
+  "final_identity_and_scoped_checks": {
+    "software_source_and_tests_match_final_run": true,
+    "handwritten_assertions_match_final_oracles": true,
+    "all_173_JSON_and_XML_match_current_index": true,
+    "all_61_oracles_match_current_comparison_evidence": true,
+    "all_83_controlled_outcomes_match_current": true,
+    "final_ruff": "passed",
+    "final_markdown_policy": "2 changed non-corpus non-report documents passed",
+    "final_diff_check": "passed with explicit corpus, dataset, reference-decisions, run and report exclusions",
+    "source_scope": "source-only; no real candidate reading, replay or quality scoring",
+    "execution_scope_deviation": "Inherited regression included synthetic media and text-layer fixture IO; no real sources read. See stage4-execution-scope.json."
+  }
 }

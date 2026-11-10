@@ -109,8 +109,18 @@ def _fragment_contract(fragment, entry, target, non_applicability_rule, navigati
 
 def source_selection(expected: dict[str, Any]) -> dict[str, Any]:
     """A generated snapshot, never a second editable answer standard."""
-    return json.loads(json.dumps({key: expected[key] for key in (
+    selection = json.loads(json.dumps({key: expected[key] for key in (
         "sample_id", "document_id", "source_pages", "scope", "targets", "authorized_raw_segments") if key in expected}, ensure_ascii=False))
+    from .expected_readback import declared_navigation_heading
+
+    heading = declared_navigation_heading(expected)
+    if heading:
+        # Preserve the original declaration needed to reproduce this generated
+        # inventory when validating a saved view without a live expected object.
+        selection['tags'] = ['section-toc']
+        selection['navigation_declaration'] = {'role': 'section_toc', 'source': copy.deepcopy(heading['reference']),
+                                              'basis': 'existing_selection_tag:section-toc'}
+    return selection
 
 
 def _origin(source, start, end):
@@ -1166,7 +1176,12 @@ def _toc_source_bindings(inventory, graph):
         invalid_directory = False
         for claim in fact.get("directory_evidence", []):
             found = cut(claim.get("source", {}), claim.get("text"))
-            if (not found or found[0]["source_kind"] != "heading" or not _TOC_DIRECTORY.fullmatch(found[0]["text"].strip())
+            declaration = inventory['selection'].get('navigation_declaration', {})
+            declared_directory = (found and declaration.get('role') == 'section_toc'
+                                  and declaration.get('basis') == 'existing_selection_tag:section-toc'
+                                  and _same_source(found[0]['source'], declaration.get('source', {})))
+            if (not found or found[0]["source_kind"] != "heading" or not (
+                    _TOC_DIRECTORY.fullmatch(found[0]["text"].strip()) or declared_directory)
                     or found[1] != whole(found[0])[1] or not any(found[0]["id"] == own[0]["id"] for own in stack)):
                 invalid_directory = True
                 break
@@ -1225,9 +1240,14 @@ def _toc_source_bindings(inventory, graph):
             literal = title[0]["text"]
             a, b = title[1]
             p, q = page[1]
-            if literal[:a].strip() or literal[q:].strip() or b > p:
+            page_first = (p == 0 and q <= a and b == len(literal)
+                          and re.fullmatch(r'[ \t]+', literal[q:a]) is not None)
+            if page_first:
+                if attribute is not None or fact.get('attribute_source') is not None:
+                    continue
+            elif literal[:a].strip() or literal[q:].strip() or b > p:
                 continue
-            if attribute is not None:
+            elif attribute is not None:
                 c, d = attribute[1]
                 if (not b <= c < d <= p or re.fullmatch(r"\s*[:：]?\s*", literal[b:c]) is None
                         or re.fullmatch(r"\s*[:：]?\s*", literal[d:p]) is None):
@@ -1242,7 +1262,12 @@ def _toc_source_bindings(inventory, graph):
                 if len(originals) != 1:
                     valid = False
                     break
-                parents.append(whole(originals[0]))
+                parent = originals[0]
+                # A page-first parent is itself a navigation entry: its title
+                # has an independent local source, while its page is not part
+                # of the child's identity. Validate the printed slot syntax.
+                match = re.fullmatch(r'(?:\d+(?:[-–]\d+)?|[ivxlcdmIVXLCDM]+)[ \t]+(.+)', parent['text'])
+                parents.append((parent, match.span(1)) if match else whole(parent))
             if not valid:
                 continue
         parent_names = [entry["text"][span[0]:span[1]] for entry, span in parents]

@@ -1003,8 +1003,8 @@ _SAVED_REQUIREMENT_SOURCE_CACHE: dict[Path, Any] = {}
 def _compile_saved_requirement_view(job, *, cache=None):
     """Compile one authorized source view; worker failures retain its identity."""
     from .cli import code_identity
+    from .document_ast_comparison import document_order_requirements, navigation_order_requirements
     from .expected_readback import read_expected
-    from .document_ast_comparison import document_order_requirements
 
     sample, expected_root, output, software_id = job
     sample_id = sample["id"]
@@ -1058,7 +1058,7 @@ def _compile_saved_requirement_view(job, *, cache=None):
             'B': len(graph['comparison_coverage']['retained_semantic_requirements']['B']) + sum(
                 b['role'] != 'heading' for b in graph['source_form_requirements']),
             'L': len(graph['comparison_coverage']['retained_semantic_requirements']['L']) +
-                 len(graph['source_form_requirements']) + len(document_order_requirements(graph))},
+                 len(graph['source_form_requirements']) + len(document_order_requirements(graph)) + len(navigation_order_requirements(graph))},
         "content_comparison_ready": graph.get('content_comparison_ready', False),
         "document_ast_blocks": len(graph.get('document_ast', {}).get('children', [])),
         "source_form_units": len(graph.get('source_form_units', [])),

@@ -12,7 +12,7 @@ import copy
 from dataclasses import dataclass
 from typing import Any
 
-from .expected_readback import _context_kind, _explicit_context
+from .expected_readback import _context_kind, _explicit_context, declared_navigation_heading
 
 
 @dataclass(frozen=True)
@@ -27,9 +27,16 @@ class SourceUnit:
 def plan_reference_sources(expected: dict[str, Any]) -> tuple[SourceUnit, ...]:
     """Take independent snapshots; no reader can change the input declaration."""
     selected_headings = {target["text"] for target in expected["targets"] if target["kind"] == "heading"}
+    # An existing authored selection can explicitly declare a section TOC
+    # without printing the word Contents. This role belongs to the expected
+    # scope only; candidate readers must supply their own navigation evidence.
+    heading = declared_navigation_heading(expected)
+    directory = heading['id'] if heading else None
     units = []
     for original in expected["targets"]:
         target = copy.deepcopy(original)
+        if target['id'] == directory:
+            target['navigation_directory'] = True
         outside = target.get("outside_selection_context", [])
         explanations = [item for item in outside if item.get("kind") == "heading"]
         dependencies = [item for item in outside if item.get("kind") != "heading"]

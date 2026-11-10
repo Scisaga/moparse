@@ -241,16 +241,19 @@ def test_all_handwritten_modules_are_bound_without_replacing_historical_batches(
         CONTROLLED_REVIEW_MODULES,
         REVIEW_MODULES,
         STAGE3_MODULES,
+        STAGE4_MODULES,
     )
 
     before = deepcopy((historical.ASSERTIONS, historical.ADDITIONAL_ASSERTIONS))
     catalogue = fixed_assertion_catalogue()
     assert len(catalogue['review_ids']) == 23
     assert len(catalogue['stage3_ids']) == 1
-    assert len(catalogue['assertions']) - len(catalogue['stage3_ids']) + 3 == 55
+    assert len(catalogue['stage4_ids']) == 5
+    assert len(catalogue['assertions']) - len(catalogue['stage3_ids']) - len(catalogue['stage4_ids']) + 3 == 55
+    assert len(catalogue['assertions']) + 3 == 61
     assert (historical.ASSERTIONS, historical.ADDITIONAL_ASSERTIONS) == before
     paths = ['tests/validation/lite_fixed_source_assertions.py']
-    paths += [name.replace('.', '/') + '.py' for name in (*REVIEW_MODULES, *STAGE3_MODULES, *CONTROLLED_REVIEW_MODULES)]
+    paths += [name.replace('.', '/') + '.py' for name in (*REVIEW_MODULES, *STAGE3_MODULES, *STAGE4_MODULES, *CONTROLLED_REVIEW_MODULES)]
     for name in paths:
         path = tmp_path / name
         path.parent.mkdir(parents=True, exist_ok=True)
