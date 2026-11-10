@@ -21,6 +21,7 @@ REVIEW_MODULES = (
 )
 STAGE3_MODULES = ('tests.validation.lite_stage3_assertions',)
 STAGE4_MODULES = ('tests.validation.lite_stage4_assertions',)
+STAGE5_MODULES = ('tests.validation.lite_stage5_assertions',)
 CONTROLLED_REVIEW_MODULES = ('tests.validation.lite_review_numeric_role_cases',)
 
 
@@ -37,20 +38,20 @@ def fixed_assertion_catalogue():
         'scope_labels': dict(baseline.TYPED_SCOPE_LABELS),
         'controls': dict(baseline.CONTROL_ASSERTIONS),
         'ordered_groups': dict(baseline.ORDERED_SOURCE_GROUPS),
-        'overrides': {}, 'directory': {}, 'relations': {}, 'numeric_roles': {}, 'review_ids': set(), 'stage3_ids': set(), 'stage4_ids': set(),
+        'overrides': {}, 'directory': {}, 'relations': {}, 'numeric_roles': {}, 'review_ids': set(), 'stage3_ids': set(), 'stage4_ids': set(), 'stage5_ids': set(),
     }
     names = {'assertions': 'REVIEW_ASSERTIONS', 'typed': 'REVIEW_TYPED_ASSERTIONS',
              'policies': 'REVIEW_REPRESENTATION_POLICIES', 'controls': 'REVIEW_CONTROL_ASSERTIONS',
              'ordered_groups': 'REVIEW_ORDERED_SOURCE_GROUPS', 'overrides': 'REVIEW_SOURCE_OVERRIDES',
              'directory': 'REVIEW_DIRECTORY_ASSERTIONS', 'relations': 'REVIEW_REQUIRED_RELATIONS',
              'numeric_roles': 'REVIEW_NUMERIC_ROLE_DEPENDENCIES'}
-    for name in (*REVIEW_MODULES, *STAGE3_MODULES, *STAGE4_MODULES):
+    for name in (*REVIEW_MODULES, *STAGE3_MODULES, *STAGE4_MODULES, *STAGE5_MODULES):
         module = importlib.import_module(name)
         for key, exported in names.items():
             declared = getattr(module, exported, {})
             assert not data[key].keys() & declared.keys(), (name, exported, 'duplicate declaration')
             data[key].update(declared)
-        group = 'stage4_ids' if name in STAGE4_MODULES else 'stage3_ids' if name in STAGE3_MODULES else 'review_ids'
+        group = 'stage5_ids' if name in STAGE5_MODULES else 'stage4_ids' if name in STAGE4_MODULES else 'stage3_ids' if name in STAGE3_MODULES else 'review_ids'
         data[group].update(module.REVIEW_ASSERTIONS)
     return data
 
@@ -60,7 +61,7 @@ def handwritten_assertion_identity(root=ROOT):
     import hashlib
 
     paths = ['tests/validation/lite_fixed_source_assertions.py']
-    paths += [name.replace('.', '/') + '.py' for name in (*REVIEW_MODULES, *STAGE3_MODULES, *STAGE4_MODULES, *CONTROLLED_REVIEW_MODULES)]
+    paths += [name.replace('.', '/') + '.py' for name in (*REVIEW_MODULES, *STAGE3_MODULES, *STAGE4_MODULES, *STAGE5_MODULES, *CONTROLLED_REVIEW_MODULES)]
     digests = {path: hashlib.sha256((root / path).read_bytes()).hexdigest() for path in paths}
     aggregate = hashlib.sha256(json.dumps(digests, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
     return {'handwritten_assertions_sha256': digests[paths[0]],
@@ -1062,6 +1063,11 @@ def _check_fixed_source(graph, original, expected, assertion, target, block):
     # to construct the expected content or a comparison candidate.
     assert ''.join(n['text'] for n in block['content']['children']) == ''.join(raw.split()), (sample_id, line)
     assert all(literal in raw for literal in assertion['anchors'])
+    literal_partition = None
+    if sample_id in catalogue['stage5_ids']:
+        from tests.validation.lite_stage5_assertions import check_literal_source
+
+        literal_partition = check_literal_source(graph, original, target)
     own_content = [b for b in content if b['source']['lines'][0] == line]
     for own in own_content:
         assert own['scope'] == assertion['scope'] and own['parents'] == assertion['parents']
@@ -1250,6 +1256,7 @@ def _check_fixed_source(graph, original, expected, assertion, target, block):
                      'full_ordered_statement_responsibility': not structural,
                      'image_semantics_applicable': False},
         'actual': {'document_scope_and_order': 'passed', 'literal_and_content_spans': 'passed',
+                   **({'literal_partition': literal_partition} if literal_partition else {}),
                    'typed_facts': actual, 'typed_content_overlap': False,
                    'content_spans': [b['source']['text_span'] for b in own_content]},
         'requirement_ids': case_ids,
@@ -1732,6 +1739,7 @@ if __name__ == '__main__':
               'new_review_sample_ids': sorted(fixed_assertion_catalogue()['review_ids']),
               'stage3_sample_ids': sorted(fixed_assertion_catalogue()['stage3_ids']),
               'stage4_sample_ids': sorted(fixed_assertion_catalogue()['stage4_ids']),
+              'stage5_sample_ids': sorted(fixed_assertion_catalogue()['stage5_ids']),
               'controlled_numeric_role_cases': getattr(numeric_role_validation, '_records', []),
               'command': [sys.executable, *sys.argv], 'bind_current': BIND_CURRENT,
               'source_index_sha256': hashlib.sha256((CURRENT / 'index.json').read_bytes()).hexdigest(),

@@ -794,7 +794,8 @@ class _Graph:
             plan = plan_mixed_source(text, source)
             if plan:
                 self.data.setdefault("source_interpretation_plans", []).append({"source": copy.deepcopy(source), **plan})
-                self.text_projections.append({"atoms": [], "controls": plan["controls"], "complete": True})
+                self.text_projections.append({"atoms": [], "controls": plan["controls"], "complete": True,
+                    "source_fragments": [{"source": copy.deepcopy(source), "text": text}]})
                 for fragment in plan["fragments"]:
                     self.prose(fragment["text"], fragment["source"], kind, parents, parent_evidence, syntax_evidence)
                 return
@@ -1305,11 +1306,14 @@ def _finish(graph: _Graph) -> dict[str, Any]:
         edge["id"] = f"L:{index}"
     # Stable semantic requirements; never inferred from candidate availability.
     # Delimiter labels for qualifiers are relational syntax, while their actual
-    # literals remain text. A table's schema role labels are also syntax.
+    # literals remain text. Note/condition/exception labels are visible
+    # content, even when their values also provide semantic qualifiers.
+    # A table's schema role labels are also syntax.
     empty_context_sources = {graph.source_key(item["source"]) for item in graph.data["syntax"]
                              if re.fullmatch(r"[^:：。.!?！？;；]+[:：]", item["text"].strip())}
     graph.data["text"] = [x for x in graph.data["text"] if not
                           (x["role"] == "label" and QUALIFIER.fullmatch(x["text"])
+                           and _qualifier_key(x["text"]) in {"unit", "currency", "period", "scope"}
                            and graph.source_key(x["source"]) not in empty_context_sources)]
     projection = combine_text_projections([{"atoms": graph.data["text"], "complete": True}, *graph.text_projections])
     graph.data["text"] = projection["atoms"]

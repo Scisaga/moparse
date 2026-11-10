@@ -187,6 +187,28 @@ def plan_mixed_source(text: str, source: dict[str, Any]) -> dict[str, Any] | Non
     if quote or stack or not spans:
         return None
     spans.append((start, len(text)))
+    # A soft line inside an explicit equation's unfinished value is not a
+    # new assertion. Keep the original newline and offsets; independently
+    # labelled or interpretable statements still establish real boundaries.
+    from .narrative_requirements import read_narrative
+    from .proposition_requirements import read_propositions
+
+    index = 0
+    while index < len(separators):
+        a, b = spans[index]
+        c, d = spans[index + 1]
+        field = _PAIR.fullmatch(text[a:b])
+        tail = text[c:d].strip()
+        if (text[slice(*separators[index])] == '\n' and field and field[2].strip() and tail
+                and re.fullmatch(r'\s*=\s*', text[a:b][field.end(1):field.start(2)])
+                and not re.search(r'[.!?。！？]["”’）)]*$', field[2].rstrip())
+                and not _PAIR.fullmatch(tail)
+                and not read_narrative(tail, source)['logic']
+                and not read_propositions(tail, source)['matched']):
+            spans[index:index + 2] = [(a, d)]
+            separators.pop(index)
+        else:
+            index += 1
     trimmed = [(a + len(text[a:b]) - len(text[a:b].lstrip()), b - len(text[a:b]) + len(text[a:b].rstrip()))
                for a, b in spans if text[a:b].strip()]
     fields = [_PAIR.fullmatch(text[a:b]) for a, b in trimmed]
@@ -208,7 +230,7 @@ def plan_mixed_source(text: str, source: dict[str, Any]) -> dict[str, Any] | Non
     if any(field is None and re.match(r"(?:19|20)\d{2}年?\s*[+\-−(（]?\d", text[a:b])
            for (a, b), field in zip(trimmed, fields, strict=True)):
         return None  # A compact date/value tuple needs its own printed schema.
-    if all(fields) and "\n" not in text and not any(
+    if all(fields) and not any('\n' in text[a:b] for a, b in separators) and not any(
             plan_field_body(text[a:b], source) for a, b in trimmed):
         return None  # The existing single-record field reader owns this case.
     offset = source.get("text_span", [0])[0]
