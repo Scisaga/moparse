@@ -4,6 +4,8 @@
 
 这里的“管线输出”指完整声明配置产生的原生结构、Markdown、媒体及状态。混合配置包含两个分支及其原始页序关联；一次 VLM 请求的文本、当前 worker 投影和 MO-Parse 最终正文分别核对。
 
+2026-11-12的[架构与评测审查](../../benchmark/reports/lite/moparse-architecture-evaluation-review.md)已读取八组保存quality800原生JSON，确认应按Docling、GLM、Paddle、typed MinerU和visual五个格式族保留差异、共享无损交接和公共内容处理。下一阶段先抽取P01已验证的通用交接，以P01双分支与P05全页GLM横向验证，再验证P03/P04；P02作为V2差异接入，不复制整条服务链。当前P01专用分支、其余bridge和公共消费字段仍不完全一致，八组读到adapted不等于统一服务验收。该方向尚未实施，本轮没有修改adapter、IR或运行转换、回放及评分；具体边界和顺序由[技术路线](../engineering/technical-route.md)维护。
+
 ## 管线索引
 
 | 编号与说明 | 已有依据或代码 | 研究侧现状 |

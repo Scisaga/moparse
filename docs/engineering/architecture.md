@@ -2,6 +2,8 @@
 
 本文说明 MO-Parse 的组件与内部表示；交付要求及当前缺口统一见[输出规范](../specs/moparse-output-spec.md)，逐管线格式及适配逻辑见[输出与适配说明](../pipelines/README.md)，执行约束见 [AGENTS.md](../../AGENTS.md)，决策变更见[ADR-0001](../adr/0001-faithful-gfm-for-downstream-extraction.md)。2026-10-21 的范围调整不修改代码或部署，图片语义化不属于目标架构。
 
+2026-11-12的[架构与评测审查](../../benchmark/reports/lite/moparse-architecture-evaluation-review.md)核对了实际调用链及八组保存原生JSON。当前有共同组件和P01局部闭环，但`SavedContentService`、IR逐节点读取、表格分类与渲染、最终清理仍存在`saved_p01`分支，不能称八组统一处理已完成。下一阶段先抽取有来源、保序、保留未知与失败的内部适配契约和共同内容链，再按格式族接入；本轮只更新审查文档，没有修改核心实现或执行转换、回放及评分。
+
 ## 目标处理流程
 
 工作区的`table_context_service`从已保全原生块和`TableFragment`读取局部计量、记录字段及文字限定；`table_semantics_service`检查来源、用途与记录范围并渲染实际正文。PDF来源补充保持独立，P08不进入该路径。2026-11-11的P01工程入口为`p01_native_closure.close_p01_document → replay_native → service_p01_adapter.adapt_p01 → SavedContentService.finalize`，实际复用`ExportService.apply_document`、`DocumentIRService.build`、表格关系服务和`FinalContentService.apply`；原件补充以`allow_source_reads=False`禁用，资产阶段仅处理声明和未交付状态。开发样本、真实阶段及未完成范围只见[唯一Lite报告](../../benchmark/reports/lite/report.md)，不推导线上部署或解析质量结论。
@@ -29,7 +31,7 @@
 
 后端可以输出 Markdown、HTML、XML、JSON 或 SDK 结构，服务按本后端已有信息接入，不要求候选先实现共同语义接口。先逐组核实原生输出，再明确服务转换需要的信息；若还需从原件恢复缺失表格关系，应单独验证服务方法及费用，不把这些答案算成后端原生能力。来源与关系证据统一见[表格来源与证据约定](../specs/table-source.md)。
 
-设计顺序为原生输出盘点 → 本组适配逻辑 → 内容转换 → 共同组装；运行时按已经确定的适配器读取结果。相同格式可共享读取函数，混合管线仍保留分支身份及页序，不能先转 GFM 再恢复上游已有结构。表格来源、语义关系和本链路审计只维护当前定义。
+设计顺序为八组原生输出盘点 → 按格式族确定共同交接与来源映射 → 公共内容处理 → 共同组装及分阶段验收。Docling、GLM、Paddle、typed MinerU与visual保留各自字段和能力差异，相同格式共享无损读取；公共服务按实际来源与能力处理，不按PXX选择规则。混合管线仍保留分支身份及页序，不能先转GFM再恢复上游已有结构。表格来源、语义关系和本链路审计只维护当前定义。
 
 研究侧忠实导出可保留原表和页面信息；服务最终正文则必须遵守[输出契约](../specs/moparse-output-spec.md)。原生或纯视觉输入限制适用于各声明解析配置，不能用服务后来的原件恢复修改候选解析成绩。
 
@@ -39,7 +41,7 @@
 
 研究读取只做无损转译与忠实导出，服务适配负责把已有内容交给用途判断、表格关联、图片保全和页面清理；有损或补答案的逻辑不能进入研究出口。媒体字节、图题、源格、嵌套富文本与失败均有去向，无法获得的信息明确保留缺口。
 
-现有 `DocumentEvidenceIR`、`ContentRegion`、`TextBlock` 和表格类型是有限的服务内部实现。先核对各组输出及其映射，再决定保留、扩展或调整哪些内部字段；不能把当前表示的缺项误报为上游没有，也不把它预设为候选必须提供的统一语义接口。共同组装消费已适配并处理的实际内容，生成正文、图片引用和覆盖信息。
+现有`ContentParseResult`、`ContentRegion`、`TextBlock`和表格类型是有限的服务消费视图，仓库没有名为`DocumentEvidenceIR`的类。原生对象引用、父子关系、分支页身份、原始与派生文字及坐标应由内部证据明确交接，不能仅以native_path或消费视图替代完整原生产物。具体有界调整及迁移依据见[审查第三部分](../../benchmark/reports/lite/moparse-architecture-evaluation-review.md#第三部分统一-ir-审查)，不新增万能IR、旧格式兼容链或公开协议。
 
 2026-10-29工作区的`FinalContentService`在图片与表格处理之后生成实际发布正文，私有`_final_text_evidence`及内部日志保存编辑前组装文字、精确编辑区间和续接状态。业务正文与内部定位分开，评分读取通过编辑区间映射回实际发布字符，不能使用已移除文字给分。PDF图片保全保留实际图片引用，资产ID、物理位置和操作说明留在IR；未解决表格通过文档partial及警告传递。P08视觉块由`mineru_visual_result`独立适配，当前用于保存产物的CPU服务replay；其来源分支不调用P07的PDF原生文字和矢量表格补充。逐组边界仍由[适配专文](../pipelines/README.md)维护，工作区变更不表示线上已切换。
 
@@ -87,7 +89,7 @@ MinerU 原生匹配层使用 PDF 书写方向检查字符归属，不包含文�
 
 ## 最终转换与状态
 
-最终渲染在所用管线的输出和适配逻辑明确后设计，接收已适配、分类和处理的正文、数据表描述及图片引用；未解决状态随内容进入组装。格式、覆盖与失败状态的唯一验收定义见[输出契约第 7、8 节](../specs/moparse-output-spec.md#7-未完成失败与覆盖)；现有 Job 终态与内容完整性的联动仍需实现和接口验证。图片按原图交付，不以图片未语义化为失败。
+最终渲染在所用管线的输出和适配逻辑明确后设计，接收已适配、分类和处理的正文、数据表描述及图片引用；未解决状态随内容进入组装。格式、覆盖与失败状态的唯一验收定义见[输出契约第7、8节](../specs/moparse-output-spec.md#7-未完成失败与覆盖)。源码中的JobService同步和异步完成路径均承接parse_result.status的partial，完整状态覆盖及线上接口仍须实际验收，不能由这次静态审查断言部署完成。图片按原图交付，不以图片未语义化为失败。
 
 ## 内部证据与持久化
 
