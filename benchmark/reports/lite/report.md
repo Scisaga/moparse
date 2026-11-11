@@ -1,4 +1,74 @@
-# MO-Parse Lite：P01真实原生格式适配与最终正文纵向闭环
+# MO-Parse Lite：共同适配契约与P01/P05横向工程验收
+
+共同适配契约与公共source-free处理已实施；P01/P05横向验证完成，固定三页文档交付状态分别为partial和completed。两组使用各自真实保存native.json及配对observation，经同一公共处理链生成实际正文并由Storage持久化。本轮完成Normalization及受限产品处理的工程验收，没有生成Native或Product质量成绩，也没有取得八组正式门禁。
+
+接手HEAD为`60c22d5958c99a21894f2f799c20922278129249`，工作区干净；两个工作区入口均指向/opt/moparse。接手源码身份、测试清单、固定输入和P01历史产物的实际SHA在[接手记录](../../runs/lite/service/development/shared-content-closure/intake.json)。最终源码software_id为`67eb3d2cbd3300130bcef89dc59657f154731ca92431724cd81fccd4f6bf0849`，测试及两份真实复验绑定同一身份，见[最终绑定](../../runs/lite/service/development/shared-content-closure/final-binding.json)。未经授权的提交和推送均未执行。
+
+## 当前实际正文与状态
+
+固定输入仅为vanke-repurchase-share-changes-p001-003：P01前两页Docling、第三页GLM；P05三页均为自身的全页GLM保存结果。P05第二页已有真实HTML表格，因此没有增加样本或重新盘点其余保存结果。选择依据是原生格式覆盖，转换没有读取expected、原件或媒体，也未借用faithful.md、另一组结果或历史final生成正文。
+
+| 项目 | P01 | P05 |
+| --- | --- | --- |
+| 实际正文 | [final.md](../../runs/lite/service/current/p01/development/shared-content-vanke-3p-verified/final.md) | [final.md](../../runs/lite/service/current/p05/development/shared-content-vanke-3p-verified/final.md) |
+| 完整阶段、来源与状态 | [evidence.json](../../runs/lite/service/current/p01/development/shared-content-vanke-3p-verified/evidence.json) | [evidence.json](../../runs/lite/service/current/p05/development/shared-content-vanke-3p-verified/evidence.json) |
+| 原执行 / 格式读取 / 公共转换 / 交付 | completed / read / completed / partial | completed / read / completed / completed |
+| 原生内容对象 | 25个文字或列表、1表、2个图片出现位置 | 26个文字或标题、1表 |
+| 独立输入源格及正文去向 | 45格；37个非空格定位到实际final，8个空字面未补值 | 44格；37个非空格定位到实际final，7个空字面未补值 |
+| 结构与元数据保留 | 4个容器、2个元数据项保留在原生审计 | 6个元数据项保留在原生审计 |
+| 媒体声明 | 2处未读取、未验证、未交付；保留两个warning和partial | 主结果没有待交付图片出现位置；original_images仅为输入页媒体元数据，image_files为空，均未解码 |
+| 正文SHA256 | `9e2c899567e66599ee29fde3ed71cff3d4d8842f154bd3bdf676336335eb81a7` | `f8556a2134167b7e66b2df93ce47a85230c015497215525f2d43ca30d6fc3349` |
+
+P01新正文与历史vertical-closure-vanke-3p/final.md逐字节相同，所有SemanticTableView及其记录、完整表头、期间、限定与原验收结果相同。原始文字、45个源格、列表顺序及两处媒体未交付保持；历史正文和证据未覆盖。P05保留自己的HTML首列表头rowspan=2，因此是44格；没有照搬P01的45格结构。两组均独立检查5个记录、25个值关系的原生行、完整列标题路径及期间来源，不能以数字出现在正文替代关系验收。
+
+P05的vision_footnote原文字（含2,810,500股）按文字保留在其自身出现位置，实际final跨度已核对；原生未提供表格附注引用，因此未将相邻文字伪造成已确认的记录附注关系。该范围completed只说明已保存主结果的工程交付状态，不证明解析准确率、图像完整性、全部P05或八组已通过。
+
+## 实际代码与共同准入
+
+实际调用为`saved_content_closure.close_saved_document → replay_native → app.adapters.saved_native.adapt_saved_document → SavedContentService.finalize → StorageService.write_result`。共同finalization统一执行Export、实际ContentParseResult构建、媒体声明状态、TableContext/TableSemantics和FinalContent。P01旧入口是薄包装，P05没有第二套转换器，也没有伪造saved_p01字段。
+
+| 文件与函数 | 实施内容 |
+| --- | --- |
+| app/models/native_content.py；DocumentParseResult._native_content | 小型私有契约，实际JSON字节和SHA为证据根；工件、视图、路径、跨度、页/分支、出现位置、顺序依据、父子及源格可追溯，SDK未提升字段留在不可变输入 |
+| app/adapters/native_readers.py | 共享Docling引用与源格、GLM JSON解包、HTML/GFM格位和可见文字等无损原语；研究主视图政策留在原路径，app不反向依赖评测器 |
+| app/adapters/saved_native.py；native_content_service.render_native_blocks | 真实格式解码与共同显示投影分开，P01/P05调用同一实现；raw_json_result和markdown_result不补答案，vision_footnote以共同的保守文字规则处理 |
+| app/adapters/native_inventory.py；native_content_evidence.validate_native_content | 清单从输入独立建立，随后核验对象、引用、页、顺序、原文字、几何、源格及媒体；清单没有从_native_page_blocks复制生成 |
+| verify_table_source；validate_ir_handoff；validate_table_relations | 以实际源格、跨度、尺寸和来源准入，逐对象核验IR，检查记录行、完整表头路径、单位/期间/附注的实际来源和范围 |
+| SavedContentService.finalize；service_stages | 实际IR交接观察点、四种状态、逐阶段源对象及编辑证据；最终正文取实际final，未从隐藏IR重建答案 |
+
+Export的编辑记录、IR逐节点消费、table_context的源格准入与context locator、TableSemantics的列表渲染及编辑、FinalContent的续接守卫/内部标记/partial均已移除saved_p01条件，依据共同证据和明确source-free模式处理。保留配置与producer核对、允许分支、主视图、实际工件SHA、局部页映射、原生关系、完整格位和范围守卫；未用P01/P05联合白名单决定公共语义。
+
+共同准入会从不可变输入重新取得清单，核对每个出现位置与源格。locator绑定实际工件SHA、主视图、对象或HTML/GFM语法路径及必要跨度；同字面不同位置不得相互替代。原生index、数组位置与服务显示索引分开，未知顺序不升级为确定读序，GLM不获得PDF字符来源，unknown不默认Docling。显示投影另做一致性检查，派生用途和关系留在服务证据，不写回原生角色。
+
+原执行状态只读取配对observation的必要身份、处理页、失败、超时、截断和warning，不取正文或关系补native。当前格式读取、转换和交付另留状态；缺少原状态保持unknown，信息warning不一律导致硬失败，原执行failed不会因读到文字变为completed，工程异常继续抛出。真实两份原执行均为completed；真实failed/timeout/truncated覆盖没有因此获得，相关传播由独立受控反例保护。
+
+## 双向去向、独立反例与阶段
+
+独立输入清单分别包含P01的81项和P05的77项对象、源格、媒体及结构/元数据；它们逐项映射到适配对象、消费视图或原生审计，再到实际正文、明确清理、未交付或未解决状态。容器和纯元数据不强求打印到Markdown；一个来源的多次派生及同字面的不同来源分别留证。本次真实输入没有未定位的非空源格或可用正文对象。
+
+固定源事实的手写验收在[shared_native_assertions.py](../../../tests/validation/shared_native_assertions.py)，独立于转换器及编辑重放。它核对两种真实格位差异、记录、完整表头路径、源值、期间、P05附注文字与最终实际跨度。受控删除/错绑在[test_shared_saved_content.py](../../../tests/unit/test_shared_saved_content.py)：删除正文、列表成员、整表、源格、GLM区域或媒体，改父级、locator、格位、页映射、坐标原点，删除父容器或显示文字，用相邻同字面对象替换，跨分支借用、重复对象或把原失败改为成功，均会被核验发现；伪validated/supports_tables不能替代证据。错绑或删去表头、单位、期间、附注也有独立失败用例。
+
+实际捕获adapted、source_pages、native_pages、exported、ir、assets、semantic、final八个观察点。source_pages/native_pages明确不适用；ir在DocumentIRService真正构建后捕获新增消费对象，未复制相邻快照充阶段。exported、semantic、final的实际生产者编辑均精确重放；ir/assets分别保留实际无文字变化状态和不同对象/状态证据。关系正确性另由源格与手写断言核验，编辑重放仅证明变换一致性。
+
+每组final.md、final快照、result.markdown、parse_result.renderings及Storage实际落盘Markdown按UTF-8字节一致。源工件与配对observation的实测SHA在执行前后不变；声明原PDF SHA仍明确为既有元数据，并未读取原件求验真。开发转换耗时只作工程运行观测写入各组evidence，不替换历史解析成本，也不相加构造端到端成本。
+
+## 当前验证、保全与限制
+
+最终同版source-only回归为655 passed，执行18个已审查模块，14个共享依赖；清单内其余146个模块及81个混合/媒体/未经接纳模块未在本轮收集。见[运行JSON](../../runs/lite/service/development/shared-content-closure/source-only-verified.json)和[JUnit](../../runs/lite/service/development/shared-content-closure/source-only-verified.xml)。通过scripts/test_source_only.py执行，先核查新增模块、P01 helper、fixture、导入与I/O再更新审查摘要及哈希；父conftest禁用、插件自动加载关闭。相关T/L/B回归只使用独立合成文字，没有实际candidate与expected比较，没有修改T/L/B规则或批量重签旧验收。
+
+初始P05消费字段缺口和伪saved_p01准入各有执行失败反例；中间迁移失败、冻结回归发现的缺格但仍有bbox的保留缺口，以及修复前后记录均留在development目录，未将失败计为通过。最终回归、两份真实复验及固定断言同绑software_id，边界违规0，源码和测试运行中未变。初始及中间测试计数不作为当前验收结论。
+
+Ruff通过，14个相关app源码目标的mypy通过，见[静态检查](../../runs/lite/service/development/shared-content-closure/static-checks.json)。[读取抽取核验](../../runs/lite/service/development/shared-content-closure/readback-extraction-check.json)确认无损函数仅移动归属和中性依赖，研究read_glm主视图政策及visible_text不变。公开HTTP schema与历史SHA完全相同，14条路径，未启动lifespan、未发送请求，见[协议保全](../../runs/lite/service/development/shared-content-closure/http-schema-check.json)。6份非语料技术文档Markdown政策检查0违规；限定软件/文档diff检查通过，通用检查未扫描语料、运行产物或报告。
+
+本轮串行开发转换限8 CPU、8 GiB，关闭GPU可见性并拒绝网络、原件、媒体和参考答案I/O。没有PDF/图像创建、读取、解码或渲染，没有字层、OCR、模型、GPU/TTS或在线服务操作，没有部署、完整ZIP、正式评分或八组真实回放。原生及状态、P01历史产物、原成本摘要和current要求索引身份保持，formal service/current/index.json不存在，未激活正式current。Expected、selection、五个输入范围与正式分母未编辑；没有为新app软件身份重编要求图或重签旧门禁。
+
+当前验收仅覆盖固定P01双分支和P05全页GLM保存格式及受控边界。P02、Paddle、typed MinerU、visual尚未接入此共同source-free准入；真实GLM媒体、完整媒体目录到出现位置、复杂富文本源格、未知全局阅读顺序、更多跨页结构及真实失败样本尚未取得本轮实样验证。P01的两处图片交付和完整离线包仍未完成；图片语义解释始终不在目标内。63份来源及合同、107份覆盖缺口、3份待独立验收和五个输入范围保持，55份为历史保护集合，不与63相加；全局structure_blocked和正式成绩撤回不变。
+
+## 历史开发与来源保护证据
+
+以下为此前P01纵向闭环及source-only工作保留记录，其中“本轮”和软件身份属于对应历史阶段。当前实施与状态以上述共同契约和横向验收为准；原成本段及历史输入未覆盖。
+
+### 2026-11-11 P01纵向闭环记录
 
 2026-11-11按最新授权完成P01保存原生JSON到最终Markdown的单文档工程闭环。接手HEAD为`9a97fa062156423caada86c62c338c47bbb94d28`，工作区干净，`/opt/mosaic-parse`与`/opt/moparse`指向同一入口。真实原生格式读回和受限服务转换分别验证通过，开发文档因两处图片未交付保持partial；本报告不提供解析质量成绩或排名。
 

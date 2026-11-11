@@ -7,12 +7,11 @@ table model is a consumer projection, never the replacement for those objects.
 from __future__ import annotations
 
 import copy
-import html
-import math
 from collections.abc import Mapping
 from typing import Any
 
 from app.parsers.mineru_native_remote import MinerUPictureCandidate
+from app.services.native_content_service import _cell_text, _flag, _table, normalized_box
 from app.services.native_text_service import _literal as render_literal
 from app.services.table_service import PageFurnitureFragment, TableCellFragment, TableFragment
 
@@ -46,50 +45,12 @@ def permitted_pages(bridge: Mapping[str, Any], capability: str) -> set[int]:
             if type(item.get("raw_page")) is int and item.get("capabilities", {}).get(capability) is True}
 
 
-def normalized_box(block: Mapping[str, Any]) -> tuple[float, float, float, float] | None:
-    raw = block.get("bbox")
-    if isinstance(raw, Mapping):
-        raw = [raw.get(key) for key in ("l", "t", "r", "b")]
-    if not isinstance(raw, (list, tuple)) or len(raw) != 4:
-        return None
-    if not all(type(value) in {int, float} and math.isfinite(value) for value in raw):
-        return None
-    left, top, right, bottom = map(float, raw)
-    system = block.get("coordinate_system")
-    if system == "normalized_1000":
-        left, top, right, bottom = (value / 1000 for value in (left, top, right, bottom))
-    elif system in {"pixel", "pdf_points"}:
-        size = block.get("page_dimensions", {})
-        width, height = size.get("width"), size.get("height")
-        if not width or not height:
-            return None
-        if str(block.get("coordinate_origin", "")).upper() in {"BOTTOMLEFT", "BOTTOM_LEFT"}:
-            top, bottom = height - top, height - bottom
-        left, right, top, bottom = left / width, right / width, top / height, bottom / height
-    elif system not in {"normalized_1", "normalized"}:
-        return None
-    if not (0 <= left <= right <= 1 and 0 <= top <= bottom <= 1):
-        return None
-    return left, top, right, bottom
 
 
-def _cell_html(cell: Mapping[str, Any]) -> str:
-    column = _flag(cell, "is_column_header", "column_header")
-    row = _flag(cell, "is_row_header", "row_header")
-    tag = "th" if column or row else "td"
-    attrs = f' rowspan="{cell.get("row_span", 1)}" colspan="{cell.get("col_span", 1)}"'
-    if column != row:
-        attrs += ' scope="col"' if column else ' scope="row"'
-    attrs += f' data-native-ref="{html.escape(str(cell.get("native_path", cell.get("id", ""))), quote=True)}"'
-    return f"<{tag}{attrs}>{html.escape(_cell_text(cell))}</{tag}>"
 
 
-def _flag(cell: Mapping[str, Any], *names: str) -> bool:
-    return any(cell.get(name) is True for name in names)
 
 
-def _cell_text(cell: Mapping[str, Any]) -> str:
-    return cell.get("text") if isinstance(cell.get("text"), str) else ""
 
 
 def attach_source_tables(fragments: list[TableFragment], blocks: list[dict[str, Any]]) -> None:
@@ -114,55 +75,6 @@ def attach_source_tables(fragments: list[TableFragment], blocks: list[dict[str, 
         fragment.column_boundaries = []
 
 
-def _table(block: dict[str, Any], page: int, ordinal: int, branch: str) -> TableFragment | None:
-    cells = block.get("cells", [])
-    if not cells:
-        return None
-    if any(type(cell.get(key)) is not int or cell[key] < 0 for cell in cells for key in ("row", "col")):
-        raise NativeReadError("saved cell position is unknown")
-    if any(type(cell.get(key, 1)) is not int or not 1 <= cell.get(key, 1) <= 2000
-           for cell in cells for key in ("row_span", "col_span")):
-        raise NativeReadError("saved cell span is unknown or invalid")
-    height = max(cell["row"] + cell.get("row_span", 1) for cell in cells)
-    width = max(cell["col"] + cell.get("col_span", 1) for cell in cells)
-    if height * width > 200_000:
-        raise NativeReadError("saved table exceeds service bridge grid budget")
-    rows = [[""] * width for _ in range(height)]
-    projected = []
-    occupied = set()
-    for cell in cells:
-        for row in range(cell["row"], cell["row"] + cell.get("row_span", 1)):
-            for column in range(cell["col"], cell["col"] + cell.get("col_span", 1)):
-                if (row, column) in occupied:
-                    raise NativeReadError("saved cells overlap")
-                occupied.add((row, column))
-        rows[cell["row"]][cell["col"]] = _cell_text(cell)
-        projected.append(TableCellFragment(
-            row=cell["row"], column=cell["col"], row_span=cell.get("row_span", 1),
-            column_span=cell.get("col_span", 1), text=_cell_text(cell),
-            is_column_header=_flag(cell, "is_column_header", "column_header"),
-            is_row_header=_flag(cell, "is_row_header", "row_header"),
-        ))
-    original = block.get("text", "")
-    if block.get("text_format") in {"html", "markdown"} and original:
-        rendered = original
-    else:
-        rendered = "<table>" + "".join("<tr>" + "".join(_cell_html(cell) for cell in cells if cell["row"] == row)
-                                       + "</tr>" for row in range(height)) + "</table>"
-    ident = f"{branch}_p{page}_t{ordinal}"
-    box = normalized_box(block)
-    header_depth = max((cell.row + cell.row_span for cell in projected if cell.is_column_header), default=0)
-    return TableFragment(
-        fragment_id=ident, page_number=page, ordinal=ordinal, normalized_bbox=box or (0, 0, 0, 0),
-        num_rows=height, num_cols=width, rows=rows, column_boundaries=[], markdown=rendered,
-        rendered=f"<!-- table-fragment: {ident} -->\n\n{rendered}", source_kind=branch,
-        cells=projected, has_column_header=bool(header_depth),
-        header_scope_complete=bool(header_depth) and all(cell.is_column_header for cell in projected if cell.row < header_depth),
-        caption_scope_complete=False,
-        native_evidence={"native_path": block["native_path"], "source_cells": copy.deepcopy(cells),
-                         "native_references": copy.deepcopy(block.get("native_references", {})),
-                         "coordinate_status": "known" if box else "unknown", "display_column_boundaries": "not_inferred"},
-    )
 
 
 def render_saved_page(raw: Mapping[str, Any], page: int, branch: str, pointer: str,

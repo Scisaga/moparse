@@ -40,6 +40,7 @@ from app.models.parse_result import (
 from app.models.source import StoredSource
 from app.models.source_evidence import SourceRegionEvidence
 from app.services.evidence_service import PageEvidence, compact_text
+from app.services.native_content_evidence import native_partial
 from app.services.table_service import TableCellFragment, TableFragment
 from app.utils.settings import setting
 
@@ -80,7 +81,7 @@ def _native_bbox(
     )
 
 
-def _source_kind(value: str) -> ProvenanceSourceKind:
+def _source_kind(value: str) -> ProvenanceSourceKind | None:
     normalized = value.casefold()
     if "mineru" in normalized:
         return ProvenanceSourceKind.MINERU
@@ -88,7 +89,9 @@ def _source_kind(value: str) -> ProvenanceSourceKind:
         return ProvenanceSourceKind.GLM
     if "native" in normalized or "pymupdf" in normalized:
         return ProvenanceSourceKind.NATIVE
-    return ProvenanceSourceKind.DOCLING
+    if "docling" in normalized:
+        return ProvenanceSourceKind.DOCLING
+    return None
 
 
 def _cell_evidence(
@@ -103,11 +106,12 @@ def _cell_evidence(
     if row < len(fragment.cell_evidence) and column < len(fragment.cell_evidence[row]):
         values = fragment.cell_evidence[row][column]
     sources = {
-        _source_kind(name)
+        source
         for name, value in values.items()
-        if name != "final" and value is not None
+        if name != "final" and value is not None and (source := _source_kind(name)) is not None
     }
-    sources.add(base_source)
+    if base_source is not None:
+        sources.add(base_source)
     selected = [
         source
         for name, value in values.items()
@@ -244,7 +248,7 @@ class DocumentIRService:
                 source_regions_by_page.get(page.page_number, []),
                 table_fragments=fragments_by_page.get(page.page_number, []),
                 saved_blocks=(result._native_page_blocks.get(page.page_number)
-                              if "saved_p01" in result._source_verification else None),
+                              if result._native_content is not None else None),
             )
             for page in sorted(result.pages, key=lambda item: item.page_number)
         ]
@@ -264,8 +268,7 @@ class DocumentIRService:
         ]
 
         summary = result.quality_summary
-        saved_state = result._source_verification.get("saved_p01")
-        saved_partial = isinstance(saved_state, dict) and saved_state.get("status") == "partial"
+        saved_partial = result._native_content is not None and native_partial(result)
         glm_calls = summary.glm_calls if summary is not None else None
         return ContentParseResult(
             status=(
@@ -380,7 +383,7 @@ class DocumentIRService:
                               "formula": RegionType.FORMULA, "unknown": RegionType.UNKNOWN}.get(role, RegionType.TEXT)
                 ident = native.get("occurrence_id", native["id"])
                 region_id = ident + ":region"
-                saved_source_kind = ProvenanceSourceKind.GLM if native.get("native_branch") == "glm" else ProvenanceSourceKind.DOCLING
+                saved_source_kind = _source_kind(str(native.get("native_branch", "")))
                 position = _bbox(native.get("service_bbox"))
                 quality = (ElementQuality.MISSING if native.get("read_status") == "unresolved"
                            or role == "image" and native.get("media", {}).get("status") != "ready"
@@ -389,7 +392,7 @@ class DocumentIRService:
                                         block_type=block_type, bbox=position, reading_order=index,
                                         text=str(native.get("text", "")), quality=quality,
                                         provenance=ElementProvenance(selected_source=saved_source_kind,
-                                            sources=[ProvenanceSource(source=saved_source_kind)])))
+                                            sources=[ProvenanceSource(source=saved_source_kind)] if saved_source_kind is not None else [])))
                 regions.append(ContentRegion(region_id=region_id, unit_id=page_id, region_type=block_type,
                                              bbox=position, reading_order=index, block_ids=[ident], quality=quality))
         elif evidence and evidence.native_blocks:
@@ -450,7 +453,7 @@ class DocumentIRService:
             if text:
                 block_id = f"{page_id}-b1"
                 region_id = f"{page_id}-r1"
-                source = _source_kind(str(getattr(page, "backend", "") or "docling"))
+                source = _source_kind(str(getattr(page, "backend", "") or "unknown"))
                 blocks.append(
                     TextBlock(
                         block_id=block_id,
@@ -461,8 +464,8 @@ class DocumentIRService:
                         quality=ElementQuality.SELECTED,
                         provenance=ElementProvenance(
                             selected_source=source,
-                            supporting_sources=[source],
-                            sources=[ProvenanceSource(source=source)],
+                            supporting_sources=[source] if source is not None else [],
+                            sources=[ProvenanceSource(source=source)] if source is not None else [],
                         ),
                     )
                 )

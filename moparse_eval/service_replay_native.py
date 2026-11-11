@@ -189,6 +189,8 @@ def replay_native(
     native: Mapping[str, Any], source: StoredSource, options: ContentParseOptions, *, document_id: str,
     mineru_projector: MinerUProjector | None = None,
     include_source_markers: bool = False,
+    artifact=None, original_observation=None, observation_identity=None,
+    observation_bytes=None, source_pages=None,
 ) -> tuple[DocumentParseResult, dict[str, Any]]:
     """Build service input from a saved declared branch, without source reads.
 
@@ -198,11 +200,13 @@ def replay_native(
     pipeline = native.get("pipeline")
     if pipeline not in PIPELINE_BRANCHES:
         raise ValueError("service replay requires a declared P01-P08 candidate")
-    if pipeline == "P01":
-        from .service_p01_adapter import adapt_p01
+    if pipeline in {"P01", "P05"}:
+        from app.adapters.saved_native import adapt_saved_document
 
-        return adapt_p01(native, source, options, document_id=document_id,
-                         include_source_markers=include_source_markers)
+        return adapt_saved_document(native, source, options, document_id=document_id,
+            include_source_markers=include_source_markers, artifact=artifact,
+            original_observation=original_observation, observation_identity=observation_identity,
+            observation_bytes=observation_bytes, source_pages=source_pages)
     selected = parse_page_range(options.page_range, source.page_count)
     result = DocumentParseResult(document_id=document_id, filename=source.filename, mime_type=source.mime_type,
                                  page_count=source.page_count, processed_pages=0,

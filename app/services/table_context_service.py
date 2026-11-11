@@ -188,7 +188,7 @@ def closes_group(group: str, label: str) -> bool:
     return bool(left and right and left[2] == right[2] and left[1] != right[1])
 
 
-def native_scopes(fragment: TableFragment) -> dict[str, Any]:
+def native_scopes(fragment: TableFragment, *, contract=None) -> dict[str, Any]:
     """Classify local relationships from actual native fields, not grid shape."""
     cells = fragment.cells
     evidence: dict[str, Any] = {
@@ -199,10 +199,8 @@ def native_scopes(fragment: TableFragment) -> dict[str, Any]:
         "retained_row_context": {},
         "structure_readable": False,
     }
-    saved = fragment.native_evidence.get("saved_structure", {})
-    supported_saved = (saved.get("pipeline") == "P01"
-                       and saved.get("branch") in {"docling", "glm"}
-                       and saved.get("cell_identity") in {"native_json_cells", "primary_html_cells"})
+    from app.services.native_content_evidence import verify_table_source
+    supported_saved = verify_table_source(fragment, contract) if contract is not None else False
     if not fragment.valid or not cells or not (fragment.source_kind == "mineru" or supported_saved):
         return evidence
     occupied: set[tuple[int, int]] = set()
@@ -688,7 +686,7 @@ def prepare_native_table_scopes(result: DocumentParseResult) -> None:
             table_index += 1
             # Classification augments the original source cells and references;
             # it must not replace the adapter's evidence with a smaller view.
-            fragment.native_evidence.update(native_scopes(fragment))
+            fragment.native_evidence.update(native_scopes(fragment, contract=result._native_content))
             scopes = fragment.native_evidence.get("header_scopes", [])
             if not fragment.source_header_scopes and scopes:
                 fragment.source_header_scopes = scopes
@@ -870,7 +868,7 @@ def prepare_native_table_scopes(result: DocumentParseResult) -> None:
                 ):
                     caption(f"cell.{cell.row}.0", cell.text)
             fragment.context_refs = tuple(dict.fromkeys(context))
-            if fragment.native_evidence.get("saved_structure", {}).get("pipeline") == "P01":
+            if result._native_content is not None:
                 locators = {}
                 for reference in fragment.context_refs:
                     position_id = reference.block_id.split(".", 1)[0]
@@ -878,6 +876,7 @@ def prepare_native_table_scopes(result: DocumentParseResult) -> None:
                         owner = raw_blocks[int(position_id)]
                         if isinstance(owner, dict) and owner.get("native_path"):
                             locators[reference.token] = {"native_path": owner["native_path"],
+                                                        "evidence_locator": owner.get("source_locator"),
                                                         "source_text_span": [reference.start, reference.end],
                                                         "text": reference.text, "page": reference.page}
                 fragment.native_evidence["context_native_paths"] = locators

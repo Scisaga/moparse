@@ -12,11 +12,11 @@ import re
 from collections import Counter
 from typing import Any
 
-from markdown_it import MarkdownIt
-
+from app.adapters.native_readers import code_ranges as _code_ranges
 from app.models.content_result import ParseWarning
 from app.models.parse_result import DocumentParseResult, PipelineWarning, WarningSeverity
 from app.services.export_service import ExportService
+from app.services.native_content_evidence import native_partial
 
 _OWNED_COMMENT = re.compile(
     r"<!--\s*(?:/?source-region(?:-image)?|source-page(?:-image)?|source-furniture|source-text|"
@@ -85,22 +85,6 @@ def map_text_offset(position: int, edits: list[dict[str, Any]], *, end: bool = F
     return position + shift
 
 
-def _code_ranges(markdown: str) -> list[tuple[int, int]]:
-    offsets = [0, *[m.end() for m in re.finditer(r"\r\n|\r|\n", markdown)]]
-    if offsets[-1] != len(markdown):
-        offsets.append(len(markdown))
-    ranges = [(offsets[t.map[0]], offsets[t.map[1]])
-              for t in MarkdownIt("commonmark").parse(markdown)
-              if t.type in {"fence", "code_block"} and t.map]
-    # Inline code's complete delimiter run must match; never clean its literal
-    # example of a page comment as though the producer emitted that comment.
-    for match in re.finditer(r"(?<![`\\])(`+)(?!`)", markdown):
-        if any(a <= match.start() < b for a, b in ranges):
-            continue
-        close = re.search(r"(?<!`)" + re.escape(match[1]) + r"(?!`)", markdown[match.end():])
-        if close and not re.search(r"\n\s*\n", markdown[match.end():match.end() + close.start()]):
-            ranges.append((match.start(), match.end() + close.end()))
-    return ranges
 
 
 def _unique(source: str, text: str, start: int, end: int) -> tuple[int, int] | None:
@@ -301,7 +285,7 @@ class FinalContentService:
                     str(previous[1].get("markdown", "")), str(block.get("markdown", ""))))
                 if declared or literal_scale:
                     found = None
-                    same_source_scope = (previous is None or "saved_p01" not in result._source_verification
+                    same_source_scope = (previous is None or result._native_content is None
                                          or (block.get("native_branch") == previous[1].get("native_branch")
                                              and (block.get("native_branch") != "glm" or number == previous[0])))
                     if previous is not None and same_source_scope and 0 <= number - previous[0] <= 1:
@@ -323,7 +307,7 @@ class FinalContentService:
                         pending.append({"page": number, "reason": "declared_continuation_has_no_unique_adjacent_text"})
                 previous = (number, block)
 
-        if "saved_p01" in result._source_verification:
+        if result._native_content is not None:
             # Collapse only whitespace owned by removed assembly controls.
             # Native list indentation and explicit continuation separators stay.
             control_gaps = re.compile(r"(?:[ \t\r\n\f]|" + _OWNED_COMMENT.pattern + r")+")
@@ -381,8 +365,7 @@ class FinalContentService:
                     message="an explicit native continuation could not be resolved; existing text is retained",
                     details={"continuations": pending},
                 ))
-            saved_state = result._source_verification.get("saved_p01")
-            if isinstance(saved_state, dict) and saved_state.get("status") == "partial":
+            if result._native_content is not None and native_partial(result):
                 result.parse_result.status = "partial"
             # Final-stage warnings must reach the same persisted/public status.
             result.parse_result.warnings = [ParseWarning(code=w.code, severity=w.severity.value,

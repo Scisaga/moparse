@@ -4,7 +4,7 @@
 
 这里的“管线输出”指完整声明配置产生的原生结构、Markdown、媒体及状态。混合配置包含两个分支及其原始页序关联；一次 VLM 请求的文本、当前 worker 投影和 MO-Parse 最终正文分别核对。
 
-2026-11-12的[架构与评测审查](../../benchmark/reports/lite/moparse-architecture-evaluation-review.md)已读取八组保存quality800原生JSON，确认应按Docling、GLM、Paddle、typed MinerU和visual五个格式族保留差异、共享无损交接和公共内容处理。下一阶段先抽取P01已验证的通用交接，以P01双分支与P05全页GLM横向验证，再验证P03/P04；P02作为V2差异接入，不复制整条服务链。当前P01专用分支、其余bridge和公共消费字段仍不完全一致，八组读到adapted不等于统一服务验收。该方向尚未实施，本轮没有修改adapter、IR或运行转换、回放及评分；具体边界和顺序由[技术路线](../engineering/technical-route.md)维护。
+2026-11-12按已完成的[架构与评测审查](../../benchmark/reports/lite/moparse-architecture-evaluation-review.md)实施第一阶段：Docling与GLM的无损原语位于app/adapters/native_readers.py，研究读回保留自己的主视图政策；P01双分支与P05全页GLM共用app/adapters/saved_native.py和同一公共source-free调度。准入检查实际工件、页、对象、源格和状态，公共语义不按PXX分派。固定三页实际正文、迁移保护、交付状态及边界见[唯一报告](../../benchmark/reports/lite/report.md)；其他六组未因此接通此共同准入，顺序由[技术路线](../engineering/technical-route.md)维护。
 
 ## 管线索引
 
@@ -30,6 +30,8 @@
 ## 保存结果的八管线服务适配
 
 2026-11-11新增的P01单文档开发入口按当轮明确授权执行真实保存JSON到最终正文的转换，独立于下述八组正式执行门槛。它强制禁用原件和媒体字节访问，实际正文放在`service/current/p01/development/`，不修改正式`service/current/index.json`或既有P07/P08配对。范围、partial和证据由[P01说明](p01-docling-v1-glm.md)及[唯一报告](../../benchmark/reports/lite/report.md)维护；其他七组没有因此取得新的纵向验收结论。
+
+2026-11-12的共同开发入口为`moparse_eval.saved_content_closure`，必须使用各组自己的native与配对observation，读取后经共同契约核验、导出、实际IR、表格关系、最终清理及Storage落盘；P01包装没有第二套转换。原件与媒体读取禁用，声明原PDF SHA不冒充实测工件SHA，缺少原状态仍为unknown，媒体声明不冒充交付。此次P05真实HTML表格验证补足此前P01样本仅有GLM文字的格式范围；产品质量成绩及其他六组共同链验收均未取得。
 
 工作区的[离线 bridge](../../moparse_eval/service_replay_native.py)现按已保存的实际页分支接入八组：P01/P02读取各自Docling文档树及GLM主视图，P03/P04读取各自Paddle页面区域，P05读取全页GLM主视图，P06/P07读取各自typed MinerU及GLM分支，P08读取视觉SDK块。这里没有重新运行converter、布局模型或识别模型，也不以raw审计视图补全主结果。后端原生对象仍独立保留；服务的表格和页面模型仅为消费投影，不能替代完整原生树、单元格引用、跨度、媒体、顺序及失败记录。
 

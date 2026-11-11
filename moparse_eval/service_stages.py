@@ -137,6 +137,7 @@ def _stage_audit(snapshot):
                 "final_text_evidence": observed._final_text_evidence,
                 "pages": observed.pages,
                 "parse_result": observed.parse_result,
+                "native_handoff": observed._native_content.audit() if observed._native_content is not None else None,
             })
     return snapshot["_object_audit"]
 
@@ -172,6 +173,8 @@ def _object_inventory(snapshot):
             return [], ["source_fragment_page_unknown"]
         reference = {"native_path": native, "fragment_id": identifier, "page": fragment.get("page_number"),
                      "evidence_pointer": f"#/table_fragments/{index}/native_evidence/native_path"}
+        if isinstance(native_evidence.get('source_binding'), dict):
+            reference['native_binding'] = native_evidence['source_binding']
         cells = fragment.get("cells", [])
         if not isinstance(cells, list):
             return [], ["source_cells_not_a_list"]

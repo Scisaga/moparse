@@ -2,11 +2,11 @@
 
 本文说明 MO-Parse 的组件与内部表示；交付要求及当前缺口统一见[输出规范](../specs/moparse-output-spec.md)，逐管线格式及适配逻辑见[输出与适配说明](../pipelines/README.md)，执行约束见 [AGENTS.md](../../AGENTS.md)，决策变更见[ADR-0001](../adr/0001-faithful-gfm-for-downstream-extraction.md)。2026-10-21 的范围调整不修改代码或部署，图片语义化不属于目标架构。
 
-2026-11-12的[架构与评测审查](../../benchmark/reports/lite/moparse-architecture-evaluation-review.md)核对了实际调用链及八组保存原生JSON。当前有共同组件和P01局部闭环，但`SavedContentService`、IR逐节点读取、表格分类与渲染、最终清理仍存在`saved_p01`分支，不能称八组统一处理已完成。下一阶段先抽取有来源、保序、保留未知与失败的内部适配契约和共同内容链，再按格式族接入；本轮只更新审查文档，没有修改核心实现或执行转换、回放及评分。
+2026-11-12按已完成的[架构与评测审查](../../benchmark/reports/lite/moparse-architecture-evaluation-review.md)实施第一阶段：保存Docling/GLM以私有NativeContentContract交接到同一source-free内容链，P01双分支与P05全页GLM在固定三页保存结果上完成横向工程验证。公共消费者已移除saved_p01准入和语义分支；配置身份、允许分支、主视图及来源权限仍显式校验。实际正文、交付状态及证据仅在[唯一报告](../../benchmark/reports/lite/report.md)维护，不代表八组已接通或取得质量成绩。
 
 ## 目标处理流程
 
-工作区的`table_context_service`从已保全原生块和`TableFragment`读取局部计量、记录字段及文字限定；`table_semantics_service`检查来源、用途与记录范围并渲染实际正文。PDF来源补充保持独立，P08不进入该路径。2026-11-11的P01工程入口为`p01_native_closure.close_p01_document → replay_native → service_p01_adapter.adapt_p01 → SavedContentService.finalize`，实际复用`ExportService.apply_document`、`DocumentIRService.build`、表格关系服务和`FinalContentService.apply`；原件补充以`allow_source_reads=False`禁用，资产阶段仅处理声明和未交付状态。开发样本、真实阶段及未完成范围只见[唯一Lite报告](../../benchmark/reports/lite/report.md)，不推导线上部署或解析质量结论。
+工作区的`table_context_service`从有来源的原生块和TableFragment读取局部计量、记录字段及文字限定，`table_semantics_service`检查用途与记录范围并渲染正文。当前开发调用为`saved_content_closure.close_saved_document → replay_native → app.adapters.saved_native.adapt_saved_document → SavedContentService.finalize`；P01旧入口仅作薄包装。两组使用同一Export、DocumentIRService、TableContext、TableSemantics、FinalContent和Storage实现。原件补充以allow_source_reads=False禁用，媒体仅处理声明与未交付状态，不执行正式service_evaluation入口、线上服务或资产提取。
 
 研究评分独立使用`expected_readback`读取canonical expected选段的原始语法，`saved_native`及`adapters`按声明分支读取保存SDK对象，`native_readback`保留已有明确角色与关系。候选读取接口不接收expected，最终正文从实际final.md读取，不能用内部IR补分。
 
@@ -48,6 +48,14 @@
 原生text块的内容与其Markdown完全一致、整块明确为紧连的大于号、数字及单位时，最终显示转义行首`>`，避免被Markdown解释为引用并从可见文字中吞掉比较符。引用、代码、数学、普通正文及已经变化的原生投影保持各自渲染；该显示处理不补回原生缺失的符号，不重组标签关系或解释图像。编辑仍进入同一精确字符区间日志，受控结构与保存输入的局部正文验证分别记录，不能据此宣称全部Lite业务目标已通过。
 
 共同最终步骤按分行或竖线分段识别原生footer中的制作字段束，仅容纳同一字段束已有键词和明确翻译布尔标记组成的原生span碎片，包含其他业务段的混合页脚继续保留；同页相邻原生文本中的完整货币金额与紧随的英文数量单位可按字面边界续接，仍受唯一定位、代码保护与无区域阻隔约束。单位表达及未命名剩余行的上下文规则见[表格来源](../specs/table-source.md#关系转换与审计)；实际编辑进入同一精确映射，候选旧正文与新正文读取分别核对实际打印字节。
+
+## 当前私有适配交接
+
+DocumentParseResult._native_content持有小型不可变NativeContentContract，包含实际接收JSON字节及SHA、配置与producer、独立输入对象清单、物理页和分支页、已有原页映射、带工件SHA和主视图的locator、文字跨度、顺序依据、父子与引用、源格及媒体出现位置。未提升的SDK字段仍留在不可变输入根；HTML/GFM格位通过显式语法路径解析。没有新增公开HTTP字段或替代全部SDK的通用文档模型。
+
+`native_inventory.inventory_native`先从输入根独立建立清单；`native_content_evidence.validate_native_content`检查对象/格位覆盖、父链、主视图、原文字、页映射、几何和声明，拒绝丢失、重复、错绑及伪能力。`verify_table_source`以实际源格、跨度、尺寸和绑定准入，服务推导的用途与范围留在派生证据，不反填原生角色。原生顺序与服务显示索引分开，未知顺序保留；未知来源不默认Docling。
+
+原执行状态仅从配对observation的身份、页、失败、超时、截断和warning字段取得，不使用其正文或关系。原执行、格式读取、公共转换和交付分别保留，缺少状态时保持unknown，信息warning本身不改为硬失败。IR构建后立即核验逐对象交接并捕获实际快照；源格到记录、完整表头路径及限定另作关系检查，编辑重放仅证明变换一致性。该边界的固定输入和独立反例见唯一报告；原件、媒体及完整ZIP仍不属于此开发入口。
 
 ## 当前 PDF 路由与来源能力
 

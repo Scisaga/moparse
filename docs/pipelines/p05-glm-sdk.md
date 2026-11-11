@@ -4,7 +4,7 @@
 
 [全部管线](README.md) · [固定比较条件](../../benchmark/pipelines-to-test.md#主比较配置)
 
-离线服务bridge已接入全页保存json_result主视图，空主视图不从raw_json_result或另一个显示视图择优补文；HTML原格、角色和引用留在来源审计，均分显示列框不作为源格。当前受控及单份JSON读回不代表全量service验收，阶段、视觉来源权限和执行门槛见[八管线服务适配](README.md#保存结果的八管线服务适配)。
+2026-11-12的固定三页真实开发验证使用P05自己的native.json和配对observation，与P01共用`app.adapters.saved_native.adapt_saved_document`及公共source-free内容链。输入三页均为各自GLM json_result，第二页真实HTML表格保留格位和跨度并进入共同关系转换；vision_footnote按源文字保留，不补造表内附注绑定。实际final.md和Storage字节一致，原执行、读回、转换及此范围交付均completed；该状态仅表示现有声明内容的工程交付，不是解析准确率、全P05或媒体验收。输入original_images仅作输入页元数据声明，未解码，主结果没有待交付图片出现位置。正文、来源和未覆盖项见[唯一报告](../../benchmark/reports/lite/report.md)。
 
 ## 1. 配置与执行边界
 

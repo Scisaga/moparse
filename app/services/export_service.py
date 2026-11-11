@@ -120,7 +120,7 @@ class ExportService:
         for page in result.pages:
             page.plain_text = self.markdown_to_text(page.content or "", source_regions=result._source_regions)
         before = (self.join_pages(result.pages, preserve_page_breaks=True, source_regions=result._source_regions)[0]
-                  if "saved_p01" in result._source_verification else None)
+                  if result._native_content is not None else None)
         result.markdown, result.plain_text = self.join_document(
             result.pages, preserve_page_breaks=True, table_fragments=result._table_fragments,
             page_furniture=result._page_furniture, source_regions=result._source_regions,

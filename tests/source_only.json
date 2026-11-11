@@ -68,7 +68,7 @@
     "tests/unit/test_nested_content_responsibility.py": "be3f5b6afbc3f0e39d3e87409b731e80bae12d3bc35155c8ac6c05db04280c98",
     "tests/unit/test_nested_nominal_production_path.py": "e9be326c198b9ff61a13d24321392e3d0d3b87b7fc2764bb9247726d7ad5c232",
     "tests/unit/test_nonfinite_operation_production.py": "ff0467102fe8ab0ad6557cfc1e46393183403415dacc11d89f2bb01cd6229233",
-    "tests/unit/test_p01_saved_content.py": "7440a76b9e794f481d4b852ef8afc3a87e5d2c58f736db5ac6555d9d00290191",
+    "tests/unit/test_p01_saved_content.py": "bdf978d80939fd5419819a7e60f87b8c07883e785fc858ce43c2cdc1e16e10f7",
     "tests/unit/test_period_basis_equivalence.py": "48acf89a71c08cff13f571ee1c0d99b994e8d2281234f7103a4889e1dc7042e1",
     "tests/unit/test_proposition_coordination_sources.py": "ba6ba275f8ce34c0bb6ccf45af2170f938dd6eac3ac6704193cbcc4f34f251ed",
     "tests/unit/test_proposition_nominal_owner.py": "03c82e6546570f8043786ba9b057efafe130d61b17e8eaf49760b2d603a5acb4",
@@ -164,7 +164,8 @@
     "tests/unit/test_three_layer_toc_contract.py": "f5986fc35054d7163390321e48c1851f213107d6558b815f80775ce3e055de6e",
     "tests/unit/test_three_layer_unit_scope_contract.py": "97bdaacaae96dce9ee98f792546486116cf47e84df4a976d49e1eb984f7c9242",
     "tests/unit/test_toc_evidence.py": "2d4fd676267b3490825b9d74dab79aaa848a43dd394718b9fbbe05d2cdec2736",
-    "tests/unit/test_toc_parentage_contract.py": "fc15471bdd6097b31fa8dcaf764f0e186d2c1f070ee54ba4eecc3dc709c2b87a"
+    "tests/unit/test_toc_parentage_contract.py": "fc15471bdd6097b31fa8dcaf764f0e186d2c1f070ee54ba4eecc3dc709c2b87a",
+    "tests/unit/test_shared_saved_content.py": "9dff46159439ea800664f32ddd77094cc31d946c92b54bf8d2b2f87b5c102e63"
   },
   "dependencies": {
     "pyproject.toml": "e622a4f69bfb14f4919f276dd34272373f669abe6b236e3251e7719cd37005c8",
@@ -179,7 +180,8 @@
     "tests/validation/lite_stage4_assertions.py": "dfbe5f4bfe50bc94372c496e839a0ea96bfaa474bf99267cac00f0cb2c582e39",
     "tests/validation/lite_review_energy_assertions.py": "588f193f3f44373f0af31cee34aad13d8cbb792221bfa3dac2c52e8dee5d4416",
     "tests/validation/lite_review_alibaba_assertions.py": "8a548990fa5759b74a7565ce95c505661221d40645406f3a6c9cf27f1c2b0647",
-    "tests/validation/lite_stage3_assertions.py": "6e6b7231865f30768bc3cd3510810e01c841e0a2b93b2d2f3bb2b1944362f2be"
+    "tests/validation/lite_stage3_assertions.py": "6e6b7231865f30768bc3cd3510810e01c841e0a2b93b2d2f3bb2b1944362f2be",
+    "tests/validation/shared_native_assertions.py": "97df31e5af68a7bef00aa7c1a1bd865b966d0c596702adb2763435a0c2644a1a"
   },
   "excluded_modules": {
     "tests/integration/test_http_api.py": "Outside the source/requirement/comparison software regression; dependencies and possible media/service side effects not admitted or collected.",
@@ -268,7 +270,7 @@
     "pytest tmp_path, monkeypatch and parametrization",
     "tests/conftest.py reviewed but disabled by --noconftest; native_pdf fixture never collected",
     "pytest_asyncio.plugin explicitly loaded; all other third-party plugin autoload disabled",
-    "P01 addition: five existing final/stage/bridge/table modules fully reviewed; all use invented text/JSON and in-memory metadata; no test file or assertion modified"
+    "P01 original content assertions retained; independent completed execution metadata and the actual IR stage added to the helper. Engineering injection follows the extracted shared renderer; no media/network fixture."
   ],
   "important_helpers": [
     "tests.unit.test_cjk_circumstance_contract.authored: synthetic expected.md + manifest.json only",
@@ -285,7 +287,9 @@
     "typed B/L and AST comparisons, ownership, reading order, duplicate capacity",
     "fixed source Oracle mutation guards and evidence serialization/replay",
     "input-scope retention, requirement-gate transport and source-only parallel compiler",
-    "P01 saved-native adapter and source-free service finalization using invented Docling/GLM structures, exact stages and text persistence; no source/media/model access"
+    "P01 saved-native adapter and source-free service finalization using invented Docling/GLM structures, exact stages and text persistence; no source/media/model access",
+    "Shared saved content development: independently authored text/JSON checks for consumer fields and rejection of forged producer flags; reviewed imports use no source/media fixtures.",
+    "Shared contract review completed: new module and full P01 synthetic helper read; import graph/fixtures/I-O sites inspected. Controlled text/JSON tests delete or rebind objects, cells, tables, media, parent containers, locators, geometry, display, execution and IR; qualifiers use independent hand-written relations. Static dependency walk parses app Python only. No source/media/model/network/expected-answer fixture added. Fixed real-format assertions separately authored from the P01/P05 native JSON and bound by dependency SHA; they do not open files or grade parser quality."
   ],
   "history": "The prior 4618-pass run and stage4-execution-scope.json remain historical evidence with disclosed media deviations."
 }

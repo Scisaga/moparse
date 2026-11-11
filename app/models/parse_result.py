@@ -9,6 +9,7 @@ from typing import Literal
 from pydantic import BaseModel, ConfigDict, Field, PrivateAttr
 
 from app.models.content_result import ContentParseResult
+from app.models.native_content import NativeContentContract
 from app.models.table_semantics import SemanticTableView
 
 
@@ -175,6 +176,7 @@ class DocumentParseResult(BaseModel):
     _page_furniture: list[object] = PrivateAttr(default_factory=list)
     _source_regions: list[object] = PrivateAttr(default_factory=list)
     _native_page_blocks: dict[int, list[dict[str, object]]] = PrivateAttr(default_factory=dict)
+    _native_content: NativeContentContract | None = PrivateAttr(default=None)
     _source_verification: dict[str, object] = PrivateAttr(default_factory=dict)
     _table_views: list[object] = PrivateAttr(default_factory=list)
     _semantic_tables: list[SemanticTableView] = PrivateAttr(default_factory=list)

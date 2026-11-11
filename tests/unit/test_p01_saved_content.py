@@ -194,6 +194,8 @@ async def close(n):
         sample_id="invented",
         declared_source_sha256="a" * 64,
         source_pages=[101, 102, 103],
+        original_observation={"pipeline": "P01", "status": "completed",
+                              "pages": [{"page": p, "status": "completed"} for p in (1, 2, 3)]},
     )
 
 
@@ -240,6 +242,7 @@ async def test_complete_mixed_document_uses_real_services_and_keeps_exact_values
         "source_pages",
         "native_pages",
         "exported",
+        "ir",
         "assets",
         "semantic",
         "final",
@@ -448,12 +451,12 @@ async def test_native_conversion_errors_are_retained_with_partial_status(status,
 
 @pytest.mark.asyncio
 async def test_software_exception_is_not_disguised_as_a_native_failure(monkeypatch):
-    from moparse_eval import service_p01_adapter
+    from app.services import native_content_service
 
     def bug(*args, **kwargs):
         raise RuntimeError("intentional engineering fault")
 
-    monkeypatch.setattr(service_p01_adapter, "_table", bug)
+    monkeypatch.setattr(native_content_service, "_table", bug)
     with pytest.raises(RuntimeError, match="intentional engineering fault"):
         await close(native())
 
@@ -504,6 +507,7 @@ async def test_every_nonempty_cell_and_ordinary_block_has_an_actual_final_destin
         "not_applicable",
         "not_applicable",
         "verified",
+        "verified_no_text_change",
         "verified_no_text_change",
         "verified",
         "verified",

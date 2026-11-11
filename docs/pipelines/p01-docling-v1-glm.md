@@ -4,7 +4,7 @@
 
 [全部管线](README.md) · [固定比较条件](../../benchmark/pipelines-to-test.md#主比较配置)
 
-2026-11-11的离线工程入口为`moparse_eval.p01_native_closure`：从真实保存JSON调用P01 adapter，再经共用导出、内部IR、表格上下文与关系转换及FinalContentService生成实际最终正文。代表性开发输入为完整的既有三页万科股份变动selection，含两页Docling、一页GLM、多层表头、正文、列表和图片声明；按原生格式覆盖选取，未用expected选答案。阶段与验收证据只见[唯一Lite报告](../../benchmark/reports/lite/report.md)。这不是173份全量service转换或正式评分；图片字节未验证，开发结果按未交付资产保留partial。
+2026-11-11的P01三页历史产物保留原字节；2026-11-12将P01入口收为薄包装，实际调用`app.adapters.saved_native.adapt_saved_document → SavedContentService.finalize`，与P05使用同一共同契约和公共source-free链。固定三页新正文与历史正文逐字节一致，源格、记录、表头限定及列表关系保持，两处媒体仍未交付、文档partial。真实输入、阶段、独立覆盖核验和工程回归只见[唯一报告](../../benchmark/reports/lite/report.md)，未扩大到173份或正式评分。
 
 原生节点、原始label、父子及引用关系、源格和跨度、charspan及坐标原点均保留在内部证据中，服务角色另行投影为`type/content/markdown`；不以texts或tables数组顺序替代阅读树。GLM只以json_result生成正文，raw_json_result与markdown_result不补主结果；未提供的来源类别与方法显式为unknown。数据表须通过完整结构与局部字段/计量范围判定，确认记录输出多层列表，未知或混合行保留并传递partial；媒体声明不代表图片文件已交付。跨页表完整转换、丰富单元格引用及GLM媒体清单到区域的完整对应仍须独立验证。正式八组的阶段、来源隔离和执行门槛见[八管线服务适配](README.md#保存结果的八管线服务适配)。
 

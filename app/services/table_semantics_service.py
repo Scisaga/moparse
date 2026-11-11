@@ -1066,7 +1066,7 @@ class TableSemanticsService:
             if not isinstance(source_view, TableSourceView):
                 continue
             view = bind_table_view(source_view.view_id, source_view.fragments, fragments)
-            if "saved_p01" in result._source_verification:
+            if result._native_content is not None:
                 view = replace(view, rendering="nested_lists")
             # Only replace an exact source-owned span. Rich unknown neighbors
             # and asset substitutions must never be inferred from a regex.
@@ -1121,7 +1121,7 @@ class TableSemanticsService:
                                 else "单位：" + literal
                             )
                 replacement = "\n\n".join([*dict.fromkeys(legends), source_view.rendered, rendered])
-            if "saved_p01" in result._source_verification:
+            if result._native_content is not None:
                 a = result._source_markdown.index(source_view.rendered)
                 c = markdown.index(source_view.rendered)
                 producer_edits.append({
@@ -1167,7 +1167,7 @@ class TableSemanticsService:
                                    "after_span": [len(markdown), len(markdown) + len(summary)],
                                    "before": "", "after": summary, "reason": "internal_semantic_status_marker", "source_refs": []})
             markdown += summary
-        if "saved_p01" in result._source_verification:
+        if result._native_content is not None:
             shift = 0
             for edit in sorted(producer_edits, key=lambda e: e["before_span"]):
                 start, end = edit["before_span"]
