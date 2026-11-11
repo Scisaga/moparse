@@ -76,3 +76,4 @@ class SemanticTableView:
     retained_cells: tuple[CellRef, ...] = ()
     retained_rows: tuple[tuple[str, int], ...] = ()
     row_issues: tuple[tuple[str, int, str], ...] = ()
+    rendering: Literal["record_lines", "nested_lists"] = "record_lines"

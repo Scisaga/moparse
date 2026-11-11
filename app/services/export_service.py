@@ -6,13 +6,14 @@ import hashlib
 import html
 import re
 from collections.abc import Sequence
+from difflib import SequenceMatcher
 from html.parser import HTMLParser
 
 from markdown_it import MarkdownIt
 from markdown_it.rules_inline.backticks import backtick
 from markdown_it.rules_inline.state_inline import StateInline
 
-from app.models.parse_result import PageParseResult
+from app.models.parse_result import DocumentParseResult, PageParseResult
 from app.models.source_evidence import SourceRegionEvidence
 from app.services.table_service import (
     PageFurnitureFragment,
@@ -113,6 +114,32 @@ def _protect_code(content: str) -> tuple[str, list[tuple[str, str]]]:
 
 
 class ExportService:
+    def apply_document(self, result: DocumentParseResult, *, merge_cross_page_tables: bool = True) -> None:
+        """Assemble the same source-owned document for live and saved inputs."""
+        views: list[TableSourceView] = []
+        for page in result.pages:
+            page.plain_text = self.markdown_to_text(page.content or "", source_regions=result._source_regions)
+        before = (self.join_pages(result.pages, preserve_page_breaks=True, source_regions=result._source_regions)[0]
+                  if "saved_p01" in result._source_verification else None)
+        result.markdown, result.plain_text = self.join_document(
+            result.pages, preserve_page_breaks=True, table_fragments=result._table_fragments,
+            page_furniture=result._page_furniture, source_regions=result._source_regions,
+            merge_cross_page_tables=merge_cross_page_tables, public_views=views,
+        )
+        result._table_views = [*views]
+        result.processed_pages = sum(page.status.value != "failed" for page in result.pages)
+        if before is not None:
+            refs = [fragment.native_evidence.get("native_path", fragment.fragment_id)
+                    for fragment in result._table_fragments if isinstance(fragment, TableFragment)]
+            result._source_verification["saved_exported_edits"] = {
+                "input": before, "output": result.markdown,
+                "edits": [{"before_span": [a, b], "after_span": [c, d], "before": before[a:b],
+                           "after": result.markdown[c:d], "reason": "source_table_assembly_and_page_export",
+                           "source_refs": refs}
+                          for operation, a, b, c, d in SequenceMatcher(None, before, result.markdown, autojunk=False).get_opcodes()
+                          if operation != "equal"],
+            }
+
     @staticmethod
     def _protect_source_regions(
         content: str, source_regions: list[object] | None

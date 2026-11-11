@@ -4,7 +4,7 @@
 
 ## 目标处理流程
 
-工作区的`table_context_service`从已保全原生块和`TableFragment`读取局部计量、记录字段及文字限定；`table_semantics_service`检查来源、用途与记录范围并渲染实际正文。PDF来源补充保持独立，P08不进入该路径。本轮不改变服务或候选处理，不以评分软件重建推导线上部署或交付改善。
+工作区的`table_context_service`从已保全原生块和`TableFragment`读取局部计量、记录字段及文字限定；`table_semantics_service`检查来源、用途与记录范围并渲染实际正文。PDF来源补充保持独立，P08不进入该路径。2026-11-11的P01工程入口为`p01_native_closure.close_p01_document → replay_native → service_p01_adapter.adapt_p01 → SavedContentService.finalize`，实际复用`ExportService.apply_document`、`DocumentIRService.build`、表格关系服务和`FinalContentService.apply`；原件补充以`allow_source_reads=False`禁用，资产阶段仅处理声明和未交付状态。开发样本、真实阶段及未完成范围只见[唯一Lite报告](../../benchmark/reports/lite/report.md)，不推导线上部署或解析质量结论。
 
 研究评分独立使用`expected_readback`读取canonical expected选段的原始语法，`saved_native`及`adapters`按声明分支读取保存SDK对象，`native_readback`保留已有明确角色与关系。候选读取接口不接收expected，最终正文从实际final.md读取，不能用内部IR补分。
 
@@ -72,6 +72,8 @@ MinerU 原生匹配层使用 PDF 书写方向检查字符归属，不包含文�
 ## 内容分类与表格关系层
 
 当前 `TableCell`、`ParsedTable`、`TableFragment` 保留来源网格与角色观测，`CellRef`、`ValueRelation`、`SemanticRecord`、`SemanticTableView` 保存有界表格关系和状态。来源视图登记精确拥有的范围，现有语义服务在资产处理后替换 Markdown 片段；这是有限实现，不是所有原生格式的通用接入方式。后续组装需依据各组真实输出设计，并保护有效邻接内容。
+
+仓库没有名为`DocumentEvidenceIR`的实现；当前结构化消费视图是`ContentParseResult`。P01将逐节点正文、表格和图片区域送入既有`TextBlock`、`ContentRegion`及`ParsedTable`，按原生阅读树保持区域顺序；完整原生payload、父子引用、单元格路径、charspan、分支局部页身份和旋正元数据留在内部stage sidecar。内部来源类别与策略允许`unknown`，不以`native`或`sparse`填补缺失观测；这些类型未进入HTTP OpenAPI，公开协议保持。已确认的P01表格使用`SemanticTableView.rendering=nested_lists`，最终正文不包含来源JSON或IR。图片字节验证、原PDF坐标逆变换及完整ZIP交付仍有独立边界。
 
 局部关系不再因后续一行未解决而全部丢弃：partial视图在保留原始源格的同时，按原行顺序交错确定记录和剩余显示片段，完整共享跨度不被切开。完整转换、部分转换与原表保全分开统计；实际测量与状态由[评测索引](../../benchmark/reports/README.md)维护，工作区实现不代表线上部署。
 

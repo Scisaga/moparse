@@ -459,6 +459,32 @@ def _producer_edits(before, after):
     """Use recorded reasons only after exact literal text/span mapping replays."""
     from app.services.final_content_service import apply_text_edits, map_text_offset
 
+    semantic = _stage_audit(after).get("source_verification", {}).get("saved_" + after.get("stage", "") + "_edits", {})
+    if after.get("stage") in {"semantic", "exported"} and semantic.get("input") == before["markdown"]:
+        edits = sorted(semantic.get("edits", []), key=lambda e: e["before_span"])
+        parts, cursor, operations = [], 0, []
+        for edit in edits:
+            a, b = edit["before_span"]
+            c, d = edit["after_span"]
+            if (not cursor <= a <= b <= len(before["markdown"])
+                    or before["markdown"][a:b] != edit["before"]
+                    or after["markdown"][c:d] != edit["after"]):
+                return {"status": "conflict", "operations": []}
+            parts.extend((before["markdown"][cursor:a], edit["after"]))
+            cursor = b
+            operations.append({**copy.deepcopy(edit), "stage": after["stage"],
+                               "source_status": "known" if edit["source_refs"] else "internal_control",
+                               "execution_status": "exact_producer_edit_replayed"})
+        parts.append(before["markdown"][cursor:])
+        if "".join(parts) != after["markdown"] or semantic.get("output") != after["markdown"]:
+            return {"status": "conflict", "operations": []}
+        return {"status": "verified", "operations": operations}
+
+    if before["markdown"] == after["markdown"] and not _stage_audit(after).get("final_text_evidence"):
+        applicability = after.get("applicability", {})
+        return {"status": "not_applicable" if applicability.get("applicable") is False else "verified_no_text_change",
+                "reason": applicability.get("reason", "actual_stage_emitted_same_text"), "operations": []}
+
     evidence = _stage_audit(after).get("final_text_evidence", {})
     if not isinstance(evidence, dict):
         return {"status": "unsupported", "operations": []}
@@ -481,7 +507,8 @@ def _producer_edits(before, after):
                                 "sha256": hashlib.sha256(after["markdown"].encode()).hexdigest()}],
             "before_span": [a, b], "after_span": [c, d],
             "deleted_content": before["markdown"][a:b], "inserted_content": after["markdown"][c:d],
-            "added_structure": [], "source_refs": [], "source_status": "unknown",
+            "added_structure": [], "source_refs": edit.get("source_refs", []),
+            "source_status": "known" if edit.get("source_refs") else "internal_control" if edit.get("reason") in {"internal_marker", "physical_page_control", "internal_layout_spacing"} else "unknown",
             "producer_evidence": {"stage": after["stage"], "artifact": "stage_source_audit",
                                   "pointer": f"#/final_text_evidence/edits/{index}", "sha256": _digest(edit)},
             "reason": {"status": "recorded" if isinstance(edit.get("reason"), str) and edit["reason"] else "unrecorded",

@@ -14,6 +14,7 @@ from typing import Any
 
 from markdown_it import MarkdownIt
 
+from app.models.content_result import ParseWarning
 from app.models.parse_result import DocumentParseResult, PipelineWarning, WarningSeverity
 from app.services.export_service import ExportService
 
@@ -73,7 +74,9 @@ def map_text_offset(position: int, edits: list[dict[str, Any]], *, end: bool = F
     shift = 0
     for edit in edits:
         a, b, text = edit["start"], edit["end"], edit["replacement"]
-        if position < a or position == a and not end:
+        # Ranges are half-open. An endpoint exactly at the next edit's start
+        # does not include that edit's replacement, for either endpoint kind.
+        if position <= a:
             break
         if position >= b:
             shift += len(text) - (b - a)
@@ -107,6 +110,16 @@ def _unique(source: str, text: str, start: int, end: int) -> tuple[int, int] | N
     if a < 0 or source.find(text, a + 1, end) >= 0:
         return None
     return a, a + len(text)
+
+
+def _native_span(source: str, text: str, bounds: tuple[int, int], block: dict[str, Any]) -> tuple[int, int] | None:
+    marker = block.get("service_marker")
+    if isinstance(marker, str) and marker and source.count(marker, *bounds) == 1:
+        end = source.index(marker, *bounds)
+        start = end - len(text)
+        if bounds[0] <= start <= end and source[start:end] == text:
+            return start, end
+    return _unique(source, text, *bounds)
 
 
 def _page_ranges(source: str, protected: list[tuple[int, int]]) -> dict[int, tuple[int, int]]:
@@ -198,12 +211,12 @@ class FinalContentService:
                 inline_rendered = _typed_inline_rendering(block)
                 original_markdown = block.get("markdown")
                 if inline_rendered is not None and isinstance(original_markdown, str) and number in pages:
-                    found = _unique(source, original_markdown, *pages[number])
+                    found = _native_span(source, original_markdown, pages[number], block)
                     if found:
                         add(*found, inline_rendered, "explicit_native_inline_style")
                 literal_quantity = _literal_quantity_rendering(block)
                 if literal_quantity is not None and isinstance(original_markdown, str) and number in pages:
-                    found = _unique(source, original_markdown, *pages[number])
+                    found = _native_span(source, original_markdown, pages[number], block)
                     if found:
                         add(*found, literal_quantity, "explicit_native_quantity_operator")
 
@@ -247,14 +260,14 @@ class FinalContentService:
                     owners = [f for f in furniture if getattr(f, "page_number", None) == number
                               and str(getattr(f, "rendered", "")).endswith(rendered)]
                     owned_text = str(getattr(owners[0], "rendered", "")) if len(owners) == 1 else rendered
-                    found = _unique(source, owned_text, *pages[number])
+                    found = _native_span(source, owned_text, pages[number], block)
                     if found is None and reason in {"explicit_production_header", "explicit_production_footer"}:
                         # The same owned export stage strips trailing spaces
                         # and folds CR/LF before this stage. Match that exact
                         # producer projection, never an approximate footer.
                         owned_text = ExportService.normalize_markdown(owned_text)
                         rendered = ExportService.normalize_markdown(rendered)
-                        found = _unique(source, owned_text, *pages[number])
+                        found = _native_span(source, owned_text, pages[number], block)
                     if found:
                         add(*found, "", reason)
                     elif reason in {"explicit_production_header", "explicit_production_footer"}:
@@ -288,10 +301,13 @@ class FinalContentService:
                     str(previous[1].get("markdown", "")), str(block.get("markdown", ""))))
                 if declared or literal_scale:
                     found = None
-                    if previous is not None and 0 <= number - previous[0] <= 1:
+                    same_source_scope = (previous is None or "saved_p01" not in result._source_verification
+                                         or (block.get("native_branch") == previous[1].get("native_branch")
+                                             and (block.get("native_branch") != "glm" or number == previous[0])))
+                    if previous is not None and same_source_scope and 0 <= number - previous[0] <= 1:
                         old_number, old_block = previous
-                        left = _unique(source, str(old_block.get("markdown") or ""), *pages.get(old_number, (0, 0)))
-                        right = _unique(source, str(block.get("markdown") or ""), *pages.get(number, (0, 0)))
+                        left = _native_span(source, str(old_block.get("markdown") or ""), pages.get(old_number, (0, 0)), old_block)
+                        right = _native_span(source, str(block.get("markdown") or ""), pages.get(number, (0, 0)), block)
                         if left and right and left[1] < right[0] and not filtered_gap(left[1], right[0]).strip():
                             found = (left[1], right[0])
                             left_text = ExportService.markdown_to_text(str(old_block["markdown"]))
@@ -307,8 +323,35 @@ class FinalContentService:
                         pending.append({"page": number, "reason": "declared_continuation_has_no_unique_adjacent_text"})
                 previous = (number, block)
 
+        if "saved_p01" in result._source_verification:
+            # Collapse only whitespace owned by removed assembly controls.
+            # Native list indentation and explicit continuation separators stay.
+            control_gaps = re.compile(r"(?:[ \t\r\n\f]|" + _OWNED_COMMENT.pattern + r")+")
+            for gap in control_gaps.finditer(source):
+                a, b = gap.span()
+                if not _OWNED_COMMENT.search(gap[0]) and "\f" not in gap[0]:
+                    continue
+                if any(a <= e["start"] and e["end"] <= b and "continuation" in e["reason"] for e in edits):
+                    continue
+                visible = filtered_gap(a, b)
+                if "\n" in visible and not visible.strip():
+                    indent_match = re.search(r"[ \t]*$", visible)
+                    assert indent_match is not None
+                    indent = indent_match[0]
+                    add(a, b, "" if a == 0 or b == len(source) else "\n\n" + indent, "internal_layout_spacing")
+
         edits = _nonoverlapping(edits)
         final = apply_text_edits(source, edits)
+        shift = 0
+        for edit in edits:
+            start = edit["start"] + shift
+            edit["final_span"] = [start, start + len(edit["replacement"])]
+            edit["original"] = source[edit["start"]:edit["end"]]
+            edit["source_refs"] = [block.get("native_path") for number, blocks in native_blocks.items()
+                                   for block in blocks if number in pages and block.get("native_path")
+                                   and (owned := _native_span(source, str(block.get("markdown") or ""), pages[number], block))
+                                   and owned[0] < edit["end"] and edit["start"] < owned[1]]
+            shift += len(edit["replacement"]) - (edit["end"] - edit["start"])
         # Whitespace is kept in this stage so every published range has an exact
         # edit mapping. Paragraph joining edits already remove physical seams.
         result._final_text_evidence = {
@@ -331,6 +374,19 @@ class FinalContentService:
                     severity=WarningSeverity.WARNING,
                     details={"views": [view.view_id for view in unresolved]},
                 ))
+            if pending:
+                result.parse_result.status = "partial"
+                result.warnings.append(PipelineWarning(
+                    code="final_continuation_incomplete", backend="mo-parse-final-content",
+                    message="an explicit native continuation could not be resolved; existing text is retained",
+                    details={"continuations": pending},
+                ))
+            saved_state = result._source_verification.get("saved_p01")
+            if isinstance(saved_state, dict) and saved_state.get("status") == "partial":
+                result.parse_result.status = "partial"
+            # Final-stage warnings must reach the same persisted/public status.
+            result.parse_result.warnings = [ParseWarning(code=w.code, severity=w.severity.value,
+                                                        unit_index=w.page_number) for w in result.warnings]
 
 
 def _nonoverlapping(edits: list[dict[str, Any]]) -> list[dict[str, Any]]:

@@ -23,6 +23,7 @@ from app.services.table_semantics_service import (
     _label_separator,
     _literal,
     _record_literal_parts,
+    render_nested_record,
     render_semantic_view,
     retained_table_parts,
 )
@@ -324,8 +325,12 @@ def _semantic_blocks(
     cursor = start
     for index, record in enumerate(view.records):
         try:
-            variants = [_record_parts(record, registry, literal_labels=raw, embedded_units=units)
-                        for raw in (False, True) for units in (False, True)]
+            variants = ([render_nested_record(record, registry)] if view.rendering == "nested_lists" else
+                        [_record_parts(record, registry, literal_labels=raw, embedded_units=units)
+                         for raw in (False, True) for units in (False, True)])
+            if view.rendering == "nested_lists":
+                variants = [(line, [{**item, "text": _inline_text(line[item["span"][0]:item["span"][1]])}
+                                     for item in items]) for line, items in variants]
         except KeyError:
             state["records"].append(
                 {

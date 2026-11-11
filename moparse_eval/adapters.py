@@ -615,6 +615,8 @@ def read_docling(raw: Mapping[str, Any], page_number: int,
                  containers: list[dict[str, Any]] | None = None, **_: Any) -> list[dict[str, Any]]:
     """Traverse Docling references in reading-tree order, never array order."""
     document = raw.get("document", raw)
+    if not isinstance(document, Mapping):
+        raise NativeReadError("Docling document is not an object")
     if "document" in raw:
         pointer += "/document"
     blocks: list[dict[str, Any]] = []
@@ -625,7 +627,12 @@ def read_docling(raw: Mapping[str, Any], page_number: int,
     group_start = raw.get("research_group_pages", [page_number])[0]
 
     def dimensions(page: int) -> dict[str, Any] | None:
-        record = document.get("pages", {}).get(str(page), document.get("pages", {}).get(page, {}))
+        page_records = document.get("pages", {})
+        if not isinstance(page_records, Mapping):
+            return None
+        record = page_records.get(str(page), page_records.get(page, {}))
+        if not isinstance(record, Mapping):
+            return None
         size = record.get("size")
         if isinstance(size, Mapping):
             return {**size, "unit": "pdf_points"}
@@ -677,6 +684,14 @@ def read_docling(raw: Mapping[str, Any], page_number: int,
         if ref in seen:
             return
         seen.add(ref)
+        native_provenance = item.get("prov", [])
+        if (not isinstance(native_provenance, list)
+                or any(not isinstance(p, Mapping) or type(p.get("page_no")) is not int or p["page_no"] < 1
+                       or p.get("bbox") is not None and not isinstance(p["bbox"], Mapping)
+                       for p in native_provenance)):
+            raise NativeReadError("Docling provenance is malformed")
+        if isinstance(item.get("data"), Mapping) and not isinstance(item["data"].get("table_cells", []), list):
+            raise NativeReadError("Docling table cells are not a list")
         order = reading_order
         reading_order += 1
         identity = full_ref(ref)

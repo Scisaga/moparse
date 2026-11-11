@@ -58,7 +58,7 @@ from app.services.pdf_table_evidence_service import PDFTableEvidenceService
 from app.services.quality_service import QualityService
 from app.services.storage_service import StorageService
 from app.services.table_semantics_service import TableSemanticsService
-from app.services.table_service import TableFragment, TableSourceView
+from app.services.table_service import TableFragment
 from app.utils.deadline import attach_deadline, remaining_timeout
 from app.utils.ids import new_content_id
 from app.utils.page_range import PageRangeError, format_page_range, parse_page_range
@@ -242,26 +242,9 @@ class ParserService:
         )
 
     def _finalize_exports(self, result: DocumentParseResult, options: ContentParseOptions) -> None:
-        public_views: list[TableSourceView] = []
-        for page in result.pages:
-            page.plain_text = self.export_service.markdown_to_text(
-                page.content or "", source_regions=result._source_regions
-            )
-        markdown, plain_text = self.export_service.join_document(
-            result.pages,
-            preserve_page_breaks=True,
-            table_fragments=result._table_fragments,
-            page_furniture=result._page_furniture,
-            source_regions=result._source_regions,
-            merge_cross_page_tables=bool(
-                setting(self.settings, "cross_page_table_merge_enabled", True)
-            ),
-            public_views=public_views,
-        )
-        result._table_views = [*public_views]
-        result.markdown = markdown
-        result.plain_text = plain_text
-        result.processed_pages = sum(page.status.value != "failed" for page in result.pages)
+        self.export_service.apply_document(result, merge_cross_page_tables=bool(
+            setting(self.settings, "cross_page_table_merge_enabled", True)
+        ))
 
     async def _page_evidence(
         self,

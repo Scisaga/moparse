@@ -17,7 +17,8 @@ from .service_native_adapters import permitted_pages
 
 async def apply_source_stages(result: DocumentParseResult, bridge: dict[str, Any], source: Any,
                               options: Any, settings: Any, *, inspect_pages=None,
-                              apply_tables=None, apply_text=None, on_stage=None) -> tuple[dict[int, Any], dict[str, float], dict[str, Any]]:
+                              apply_tables=None, apply_text=None, on_stage=None,
+                              allow_source_reads: bool = True) -> tuple[dict[int, Any], dict[str, float], dict[str, Any]]:
     """Narrow every source-reading call before entering production services.
 
     A mixed document's GLM pages never enter a text/vector service. The scoped
@@ -29,13 +30,16 @@ async def apply_source_stages(result: DocumentParseResult, bridge: dict[str, Any
     all_pages = {page.page_number for page in result.pages}
     text_pages &= all_pages
     vector_pages &= all_pages
+    if not allow_source_reads:
+        text_pages, vector_pages = set(), set()
     timings: dict[str, float] = {}
     applicability = {}
     for stage, pages in (("page_evidence", text_pages | vector_pages), ("table_source", vector_pages),
                          ("native_text", text_pages)):
         applicability[stage] = {"applicable": bool(pages), "pages": sorted(pages),
                                 "not_applicable_pages": sorted(all_pages - pages),
-                                "reason": "declared_native_branch_source_permission" if pages else "no_permitted_native_branch"}
+                                "reason": ("source_access_disabled_for_saved_json_validation" if not allow_source_reads
+                                           else "declared_native_branch_source_permission" if pages else "no_permitted_native_branch")}
     started = time.perf_counter()
     eligible = text_pages | vector_pages
     if eligible:

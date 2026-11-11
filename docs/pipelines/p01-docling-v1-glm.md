@@ -4,7 +4,9 @@
 
 [全部管线](README.md) · [固定比较条件](../../benchmark/pipelines-to-test.md#主比较配置)
 
-离线服务bridge已接入保存的V1文档树与本组GLM主视图，不重跑Docling converter；原生cell、跨度、parent/children引用及转换状态留在阶段审计中。当前只完成受控及单份保存JSON读回，不代表已执行本组全量service转换；阶段、来源隔离和执行门槛见[八管线服务适配](README.md#保存结果的八管线服务适配)。
+2026-11-11的离线工程入口为`moparse_eval.p01_native_closure`：从真实保存JSON调用P01 adapter，再经共用导出、内部IR、表格上下文与关系转换及FinalContentService生成实际最终正文。代表性开发输入为完整的既有三页万科股份变动selection，含两页Docling、一页GLM、多层表头、正文、列表和图片声明；按原生格式覆盖选取，未用expected选答案。阶段与验收证据只见[唯一Lite报告](../../benchmark/reports/lite/report.md)。这不是173份全量service转换或正式评分；图片字节未验证，开发结果按未交付资产保留partial。
+
+原生节点、原始label、父子及引用关系、源格和跨度、charspan及坐标原点均保留在内部证据中，服务角色另行投影为`type/content/markdown`；不以texts或tables数组顺序替代阅读树。GLM只以json_result生成正文，raw_json_result与markdown_result不补主结果；未提供的来源类别与方法显式为unknown。数据表须通过完整结构与局部字段/计量范围判定，确认记录输出多层列表，未知或混合行保留并传递partial；媒体声明不代表图片文件已交付。跨页表完整转换、丰富单元格引用及GLM媒体清单到区域的完整对应仍须独立验证。正式八组的阶段、来源隔离和执行门槛见[八管线服务适配](README.md#保存结果的八管线服务适配)。
 
 ## 1. 配置与执行边界
 
@@ -95,7 +97,7 @@ GLM 固定以 `json_result` 为主要评分视图，`raw_json_result` 是独立�
 
 ## 5. 实现状态与验证项
 
-P01研究执行路径已修复，[P01工程预检02](../../benchmark/runs/lite/preflight/)独立完成同一清单的11个任务并提供本次冻结依据。本组保存quality800一次和perf80三轮的有效原生结果及测量；错误评分及结论已删除；本轮以完整身份、候选上下文和源位置核对后的同一程序重评，完成范围以评测索引为准；结果只见[当前统一评测报告](../../benchmark/reports/lite/report.md)，状态与限制由[评测索引](../../benchmark/reports/README.md)维护。TTS只观测不控制，先前撤回测量不恢复；执行和自动评分完成不构成内容、Gold或图片内容验收。
+P01研究执行路径已修复，[P01工程预检02](../../benchmark/runs/lite/preflight/)独立完成同一清单的11个任务并提供原执行冻结依据。本组保存quality800一次和perf80三轮的有效原生结果及测量；错误评分及结论已删除，正式质量成绩保持撤回。后续同版重评仍须满足完整身份、候选上下文和源位置核对等门槛及其执行授权，当前单文档格式适配不代替这些条件；结果只见[当前统一评测报告](../../benchmark/reports/lite/report.md)，状态与限制由[评测索引](../../benchmark/reports/README.md)维护。原执行的TTS只观测不控制，先前撤回测量不恢复；执行和自动评分完成不构成内容、Gold或图片内容验收。
 
 研究执行器显式使用 TableFormer V1，Docling 阅读树、表格、媒体和共享 GLM 分支分别保存，与 P02 的模型选择不同。共享 GLM 已显式采用 native rotary，避开 vLLM 0.19.1 的 GPT-J MRoPE CUDA 配对缺陷；研究路径的旋转坐标交接和原生结果先行保全、局部导出错误隔离已修复。机制证据与修复边界见[执行层诊断](../../benchmark/diagnostics/README.md)，不据工程修复推定具体语料影响或解析成绩。
 

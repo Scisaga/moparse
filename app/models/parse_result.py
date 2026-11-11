@@ -29,6 +29,7 @@ class PageStatus(StrEnum):
 
 
 class PageSourceKind(StrEnum):
+    UNKNOWN = "unknown"
     NATIVE = "native"
     SCANNED = "scanned"
     MIXED = "mixed"
@@ -43,6 +44,7 @@ class QualityVerdict(StrEnum):
 
 
 class SelectionStrategy(StrEnum):
+    UNKNOWN = "unknown"
     DOCLING = "docling"
     MINERU = "mineru"
     NATIVE_REPAIR = "native_repair"

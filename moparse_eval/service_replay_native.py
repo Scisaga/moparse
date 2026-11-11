@@ -8,6 +8,7 @@ typed blocks. No parser, model, transport, service, or asset extraction runs.
 from __future__ import annotations
 
 import copy
+import json
 from collections import defaultdict
 from collections.abc import Callable, Mapping
 from importlib import metadata
@@ -96,6 +97,16 @@ def project_mineru_blocks(blocks: list[Any]) -> tuple[list[Any], list[dict[str, 
 
 
 def _pointer(root: Mapping[str, Any], pointer: Any) -> Any:
+    if isinstance(pointer, str) and "::decoded" in pointer:
+        outer, inner = pointer.split("::decoded", 1)
+        serialized = _pointer(root, outer)
+        if not isinstance(serialized, str):
+            return None
+        try:
+            decoded = json.loads(serialized)
+        except json.JSONDecodeError:
+            return None
+        return _pointer(decoded, "#" + inner) if inner else decoded
     if not isinstance(pointer, str) or not pointer.startswith("#/"):
         return None
     value: Any = root
@@ -177,6 +188,7 @@ def _unreadable_page(page: int, branch: str, warnings: list[PipelineWarning]
 def replay_native(
     native: Mapping[str, Any], source: StoredSource, options: ContentParseOptions, *, document_id: str,
     mineru_projector: MinerUProjector | None = None,
+    include_source_markers: bool = False,
 ) -> tuple[DocumentParseResult, dict[str, Any]]:
     """Build service input from a saved declared branch, without source reads.
 
@@ -186,6 +198,11 @@ def replay_native(
     pipeline = native.get("pipeline")
     if pipeline not in PIPELINE_BRANCHES:
         raise ValueError("service replay requires a declared P01-P08 candidate")
+    if pipeline == "P01":
+        from .service_p01_adapter import adapt_p01
+
+        return adapt_p01(native, source, options, document_id=document_id,
+                         include_source_markers=include_source_markers)
     selected = parse_page_range(options.page_range, source.page_count)
     result = DocumentParseResult(document_id=document_id, filename=source.filename, mime_type=source.mime_type,
                                  page_count=source.page_count, processed_pages=0,

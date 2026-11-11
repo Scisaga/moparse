@@ -199,7 +199,11 @@ def native_scopes(fragment: TableFragment) -> dict[str, Any]:
         "retained_row_context": {},
         "structure_readable": False,
     }
-    if not fragment.valid or not cells or fragment.source_kind != "mineru":
+    saved = fragment.native_evidence.get("saved_structure", {})
+    supported_saved = (saved.get("pipeline") == "P01"
+                       and saved.get("branch") in {"docling", "glm"}
+                       and saved.get("cell_identity") in {"native_json_cells", "primary_html_cells"})
+    if not fragment.valid or not cells or not (fragment.source_kind == "mineru" or supported_saved):
         return evidence
     occupied: set[tuple[int, int]] = set()
     for c in cells:
@@ -682,7 +686,9 @@ def prepare_native_table_scopes(result: DocumentParseResult) -> None:
                 continue
             fragment = fragments[table_index]
             table_index += 1
-            fragment.native_evidence = native_scopes(fragment)
+            # Classification augments the original source cells and references;
+            # it must not replace the adapter's evidence with a smaller view.
+            fragment.native_evidence.update(native_scopes(fragment))
             scopes = fragment.native_evidence.get("header_scopes", [])
             if not fragment.source_header_scopes and scopes:
                 fragment.source_header_scopes = scopes
@@ -864,6 +870,17 @@ def prepare_native_table_scopes(result: DocumentParseResult) -> None:
                 ):
                     caption(f"cell.{cell.row}.0", cell.text)
             fragment.context_refs = tuple(dict.fromkeys(context))
+            if fragment.native_evidence.get("saved_structure", {}).get("pipeline") == "P01":
+                locators = {}
+                for reference in fragment.context_refs:
+                    position_id = reference.block_id.split(".", 1)[0]
+                    if position_id.isdecimal() and int(position_id) < len(raw_blocks):
+                        owner = raw_blocks[int(position_id)]
+                        if isinstance(owner, dict) and owner.get("native_path"):
+                            locators[reference.token] = {"native_path": owner["native_path"],
+                                                        "source_text_span": [reference.start, reference.end],
+                                                        "text": reference.text, "page": reference.page}
+                fragment.native_evidence["context_native_paths"] = locators
     _prepare_native_continuations(result)
 
 
@@ -918,7 +935,7 @@ def _printed_caption_range(
     gap = _native_table_gap(result, left, right)
     if gap is None:
         return None
-    categorical = {}
+    categorical: dict[int, dict[str, Any]] = {}
     scopes = [scope for scope in left.source_header_scopes if scope.get("complete")]
     if scopes:
         scope = scopes[-1]
@@ -1200,13 +1217,13 @@ def _prepare_native_continuations(result: DocumentParseResult) -> None:
                     context[right.page_number].partition(right.rendered)[0],
                 )
                 if all(_context_evidence(text) == ({}, ()) for text in gap):
-                    body = tuple(range(right.num_rows))
+                    body: tuple[int, ...] | list[int] = tuple(range(right.num_rows))
                     copied = tuple(
                         replace(
                             ref,
                             table_id=right.fragment_id,
                             block_id=f"continuation.{left.fragment_id}.{ref.block_id}",
-                            body_rows=body,
+                            body_rows=tuple(body),
                         )
                         for ref in units
                     )
@@ -1263,7 +1280,7 @@ def _prepare_native_continuations(result: DocumentParseResult) -> None:
             blocked("physical_table_not_uniquely_located")
             continue
         context = _table_context_pages([left, right], contents, fragments, furniture)
-        furniture_evidence = []
+        furniture_evidence: list[dict[str, Any]] = []
         if right.source_continues_prev is True or caption_range is not None:
             context, furniture_evidence = _native_header_part_context(
                 context, left, right, furniture

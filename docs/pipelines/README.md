@@ -27,6 +27,8 @@
 
 ## 保存结果的八管线服务适配
 
+2026-11-11新增的P01单文档开发入口按当轮明确授权执行真实保存JSON到最终正文的转换，独立于下述八组正式执行门槛。它强制禁用原件和媒体字节访问，实际正文放在`service/current/p01/development/`，不修改正式`service/current/index.json`或既有P07/P08配对。范围、partial和证据由[P01说明](p01-docling-v1-glm.md)及[唯一报告](../../benchmark/reports/lite/report.md)维护；其他七组没有因此取得新的纵向验收结论。
+
 工作区的[离线 bridge](../../moparse_eval/service_replay_native.py)现按已保存的实际页分支接入八组：P01/P02读取各自Docling文档树及GLM主视图，P03/P04读取各自Paddle页面区域，P05读取全页GLM主视图，P06/P07读取各自typed MinerU及GLM分支，P08读取视觉SDK块。这里没有重新运行converter、布局模型或识别模型，也不以raw审计视图补全主结果。后端原生对象仍独立保留；服务的表格和页面模型仅为消费投影，不能替代完整原生树、单元格引用、跨度、媒体、顺序及失败记录。
 
 [来源守卫](../../moparse_eval/service_source_policy.py)按每页实际分支限制PDF补充：Docling/MinerU原生分支保留声明的字层与矢量来源许可，GLM、Paddle和纯视觉分支不进入字层或矢量服务，包括混合配置中的GLM页。具体来源许可仍由[配置说明](../../benchmark/pipelines-to-test.md#各配置的信息许可)维护；候选worker不挂载expected、没有网络或GPU，模型调用由NoInference硬拒绝。独立后处理保持8 CPU、8 GiB及外层串行；保存输出分析的16进程不改变这些资源。

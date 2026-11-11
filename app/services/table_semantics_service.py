@@ -909,6 +909,75 @@ def _render_record(record: SemanticRecord, registry: dict[Any, Any]) -> str:
     return marker + "\n\n- " + "；".join(parts) + "。"
 
 
+def render_nested_record(record: SemanticRecord, registry: Mapping[Any, Any]) -> tuple[str, list[dict[str, Any]]]:
+    """Print existing relations as nested lists, retaining literal token spans.
+
+    These spans describe the rendering only. Consumers must independently
+    locate that exact rendering in the delivered text before using any token.
+    """
+    if any(ref not in registry for ref in _record_refs(record)):
+        raise ValueError("semantic source reference is absent")
+    parts: list[str] = []
+    emitted: list[dict[str, Any]] = []
+
+    def write(text: str) -> None:
+        parts.append(text)
+
+    def token(ref: Any, role: str, index: int | None = None, *, text: str | None = None) -> None:
+        rendered = _record_literal(record, ref, registry) if text is None else text
+        start = sum(map(len, parts))
+        parts.append(rendered)
+        emitted.append({"ref": ref, "role": role, "text": registry[ref].text.strip(),
+                        "span": [start, start + len(rendered)], "field_index": index,
+                        "value_state": "literal"})
+
+    def path(refs, role, index=None):
+        for n, ref in enumerate(dict.fromkeys(refs)):
+            if n:
+                write(" / ")
+            token(ref, role, index)
+
+    write("- ")
+    if record.subject:
+        if record.subject_headers:
+            path(record.subject_headers, "column_header")
+            write("：")
+        path((*record.row_groups, record.subject), "row_header")
+    for index, value in enumerate(record.values):
+        if record.subject or index:
+            write("\n  - ")
+        label_refs = value.column_headers if record.subject else value.row_headers
+        # Column literals include their actually linked note marker.
+        for n, ref in enumerate(dict.fromkeys(label_refs)):
+            if n:
+                write(" / ")
+            rendered = "".join(_column_literal_parts(record, value, ref, registry)) if record.subject else _record_literal(record, ref, registry)
+            token(ref, "column_header" if record.subject else "row_header", index, text=rendered)
+        label = " / ".join(registry[r].text for r in label_refs)
+        write(_label_separator(label))
+        text = _record_value_literal(value, registry)
+        if value.value_state == "source_blank":
+            if text:
+                raise ValueError("source-blank relation conflicts with a nonempty literal")
+            text = "（原表留空）"
+        elif value.value_state != "literal":
+            raise ValueError("unsupported semantic value state")
+        token(value.value, "value", index, text=text)
+        used: set[CellRef | TextRef] = {value.value, *label_refs, *record.subject_headers, *record.row_groups}
+        if record.subject:
+            used.add(record.subject)
+        for name, refs in (("单位", value.unit_refs), ("期间", value.period_refs), ("附注", value.note_refs)):
+            remaining = [r for r in dict.fromkeys(refs) if r not in used]
+            if remaining:
+                write("\n    - " + name + "：")
+                path(remaining, name, index)
+                used.update(remaining)
+    for scope in record.scope_refs:
+        write("\n  - 范围：")
+        token(scope, "scope")
+    return "".join(parts), emitted
+
+
 def render_semantic_view(view: SemanticTableView, fragments: Sequence[TableFragment]) -> str:
     """Render supported relations and exact remaining rows in source order."""
     marker = (f"<!-- semantic-view: id={view.view_id}; "
@@ -924,8 +993,16 @@ def render_semantic_view(view: SemanticTableView, fragments: Sequence[TableFragm
     if any(counts.get(ref, 0) > 1 for record in view.records for ref in _record_refs(record)):
         raise ValueError("semantic source reference is ambiguous")
     sequence = {identity: index for index, identity in enumerate(view.source_tables)}
+    def render(record):
+        if view.rendering == "nested_lists":
+            # Reuse the source marker only; the body comes from the nested
+            # renderer, never from splitting a flat display on punctuation.
+            marker = _render_record(record, registry).split("\n\n", 1)[0]
+            return marker + "\n\n" + render_nested_record(record, registry)[0]
+        return _render_record(record, registry)
+
     output = [((sequence[record.source_table_id], record.source_row, 1),
-               _render_record(record, registry)) for record in view.records]
+               render(record)) for record in view.records]
     for fragment in fragments:
         if fragment.fragment_id not in sequence:
             continue
@@ -980,6 +1057,7 @@ class TableSemanticsService:
         prepare_native_table_scopes(result)
         markdown = result.parse_result.renderings.markdown
         result._source_markdown = markdown
+        producer_edits: list[dict[str, Any]] = []
         rendered_views = []
         for source_view in result._table_views:
             if cancel_event is not None and cancel_event.is_set():
@@ -988,6 +1066,8 @@ class TableSemanticsService:
             if not isinstance(source_view, TableSourceView):
                 continue
             view = bind_table_view(source_view.view_id, source_view.fragments, fragments)
+            if "saved_p01" in result._source_verification:
+                view = replace(view, rendering="nested_lists")
             # Only replace an exact source-owned span. Rich unknown neighbors
             # and asset substitutions must never be inferred from a regex.
             body = source_view.rendered
@@ -1041,6 +1121,18 @@ class TableSemanticsService:
                                 else "单位：" + literal
                             )
                 replacement = "\n\n".join([*dict.fromkeys(legends), source_view.rendered, rendered])
+            if "saved_p01" in result._source_verification:
+                a = result._source_markdown.index(source_view.rendered)
+                c = markdown.index(source_view.rendered)
+                producer_edits.append({
+                    "before_span": [a, a + len(source_view.rendered)],
+                    "after_span": [c, c + len(replacement)],
+                    "before": source_view.rendered, "after": replacement,
+                    "reason": "source_bound_table_relations" if view.status in {"converted", "partial"} else "unresolved_table_retained",
+                    "source_refs": [f.native_evidence.get("native_path", f.fragment_id) for f in source_view.fragments],
+                    "semantic_view": view.view_id, "status": view.status,
+                    "unresolved": list(view.reason_codes),
+                })
             markdown = markdown.replace(source_view.rendered, replacement, 1)
         owned = {source for view in rendered_views for source in view.source_tables}
         for fragment in fragments:
@@ -1067,10 +1159,23 @@ class TableSemanticsService:
                 for source in view.source_tables
             }
             retained = {f.fragment_id for f in fragments} - converted - partial
-            markdown += (
+            summary = (
                 f"\n\n<!-- semantic-summary: converted={len(converted)}; "
                 f"partial={len(partial)}; retained={len(retained)} -->"
             )
+            producer_edits.append({"before_span": [len(result._source_markdown)] * 2,
+                                   "after_span": [len(markdown), len(markdown) + len(summary)],
+                                   "before": "", "after": summary, "reason": "internal_semantic_status_marker", "source_refs": []})
+            markdown += summary
+        if "saved_p01" in result._source_verification:
+            shift = 0
+            for edit in sorted(producer_edits, key=lambda e: e["before_span"]):
+                start, end = edit["before_span"]
+                edit["after_span"] = [start + shift, start + shift + len(edit["after"])]
+                shift += len(edit["after"]) - (end - start)
+            result._source_verification["saved_semantic_edits"] = {
+                "input": result._source_markdown, "output": markdown, "edits": producer_edits,
+            }
         result._semantic_tables = rendered_views
         result.parse_result.renderings.markdown = markdown
         result.parse_result.renderings.plain_text = ExportService.markdown_to_text(

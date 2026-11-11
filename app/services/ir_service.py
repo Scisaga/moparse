@@ -209,7 +209,11 @@ class DocumentIRService:
         result: DocumentParseResult,
         source: StoredSource,
         evidence_by_page: dict[int, PageEvidence],
+        *,
+        declared_source_sha256: str | None = None,
     ) -> ContentParseResult:
+        if declared_source_sha256 is not None and not re.fullmatch(r"[0-9a-f]{64}", declared_source_sha256):
+            raise ValueError("saved source identity requires a declared SHA256")
         fragments = [
             fragment for fragment in result._table_fragments if isinstance(fragment, TableFragment)
         ]
@@ -239,6 +243,8 @@ class DocumentIRService:
                 pictures_by_page.get(page.page_number, []),
                 source_regions_by_page.get(page.page_number, []),
                 table_fragments=fragments_by_page.get(page.page_number, []),
+                saved_blocks=(result._native_page_blocks.get(page.page_number)
+                              if "saved_p01" in result._source_verification else None),
             )
             for page in sorted(result.pages, key=lambda item: item.page_number)
         ]
@@ -258,16 +264,19 @@ class DocumentIRService:
         ]
 
         summary = result.quality_summary
+        saved_state = result._source_verification.get("saved_p01")
+        saved_partial = isinstance(saved_state, dict) and saved_state.get("status") == "partial"
         glm_calls = summary.glm_calls if summary is not None else None
         return ContentParseResult(
             status=(
                 "partial"
                 if result.route_summary.failed_pages or result._source_regions
+                or saved_partial
                 else "completed"
             ),
             source=ContentSource(
                 content_id=result.document_id,
-                source_sha256=_sha256(source.path),
+                source_sha256=declared_source_sha256 if declared_source_sha256 is not None else _sha256(source.path),
                 filename=result.filename,
                 mime_type=result.mime_type,
                 kind=SourceKind.PDF if source.mime_type == "application/pdf" else SourceKind.IMAGE,
@@ -332,7 +341,7 @@ class DocumentIRService:
             unit_id=f"p{fragment.page_number}",
             region_id=f"{fragment.fragment_id}-region",
             source_units=[fragment.page_number],
-            bbox=_bbox(fragment.normalized_bbox),
+            bbox=_bbox(None if fragment.native_evidence.get("coordinate_status") == "unknown" else fragment.normalized_bbox),
             caption=fragment.caption,
             unit_text=fragment.unit_text,
             row_count=fragment.num_rows,
@@ -352,6 +361,7 @@ class DocumentIRService:
         picture_candidates: list[object],
         source_regions: list[SourceRegionEvidence] | None = None,
         table_fragments: list[TableFragment] | None = None,
+        saved_blocks: list[dict] | None = None,
     ) -> ContentUnit:
         page_number = int(page.page_number)
         page_id = f"p{page_number}"
@@ -359,7 +369,30 @@ class DocumentIRService:
         blocks: list[TextBlock] = []
         regions: list[ContentRegion] = []
         source_regions = source_regions or []
-        if evidence and evidence.native_blocks:
+        if saved_blocks is not None:
+            # Public types remain stable. Rich tree/branch/source identities
+            # stay in the request's native evidence; this is its typed view.
+            for index, native in enumerate(saved_blocks):
+                role = str(native.get("type", "unknown"))
+                if role == "table":
+                    continue
+                block_type = {"title": RegionType.HEADING, "image": RegionType.IMAGE,
+                              "formula": RegionType.FORMULA, "unknown": RegionType.UNKNOWN}.get(role, RegionType.TEXT)
+                ident = native.get("occurrence_id", native["id"])
+                region_id = ident + ":region"
+                saved_source_kind = ProvenanceSourceKind.GLM if native.get("native_branch") == "glm" else ProvenanceSourceKind.DOCLING
+                position = _bbox(native.get("service_bbox"))
+                quality = (ElementQuality.MISSING if native.get("read_status") == "unresolved"
+                           or role == "image" and native.get("media", {}).get("status") != "ready"
+                           else ElementQuality.SELECTED)
+                blocks.append(TextBlock(block_id=ident, unit_id=page_id, region_id=region_id,
+                                        block_type=block_type, bbox=position, reading_order=index,
+                                        text=str(native.get("text", "")), quality=quality,
+                                        provenance=ElementProvenance(selected_source=saved_source_kind,
+                                            sources=[ProvenanceSource(source=saved_source_kind)])))
+                regions.append(ContentRegion(region_id=region_id, unit_id=page_id, region_type=block_type,
+                                             bbox=position, reading_order=index, block_ids=[ident], quality=quality))
+        elif evidence and evidence.native_blocks:
             ordered = evidence._blocks_in_reading_order()
             sizes = [block.max_font_size for block in ordered if block.max_font_size > 0]
             median = statistics.median(sizes) if sizes else 0.0
@@ -444,17 +477,21 @@ class DocumentIRService:
                     )
                 )
         for offset, table in enumerate(page_tables, len(regions) + 1):
+            source_order = next((index for index, native in enumerate(saved_blocks or [])
+                                 if native.get("service_fragment_id") == table.table_id), offset)
             regions.append(
                 ContentRegion(
                     region_id=table.region_id,
                     unit_id=page_id,
                     region_type=RegionType.TABLE,
                     bbox=table.bbox,
-                    reading_order=offset,
+                    reading_order=source_order,
                     table_ids=[table.table_id],
                     quality=table.quality,
                 )
             )
+        if saved_blocks is not None:
+            regions.sort(key=lambda region: region.reading_order)
 
         for source_region in source_regions:
             region_id = f"{page_id}-source-{source_region.source_ref}"
@@ -526,7 +563,7 @@ class DocumentIRService:
                 )
             )
 
-        regions.sort(key=_region_order)
+        regions.sort(key=(lambda region: region.reading_order) if saved_blocks is not None else _region_order)
         order_by_region: dict[str, int] = {}
         for reading_order, region in enumerate(regions, 1):
             region.reading_order = reading_order

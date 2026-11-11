@@ -200,7 +200,7 @@ class ContentRenderings(BaseModel):
 class UnitDiagnostics(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    source_kind: Literal["native", "scanned", "mixed", "sparse", "visual", "office", "video"]
+    source_kind: Literal["native", "scanned", "mixed", "sparse", "visual", "office", "video", "unknown"]
     quality_verdict: Literal["trusted", "degraded", "untrusted"]
     selected_strategy: Literal[
         "docling",
@@ -211,6 +211,7 @@ class UnitDiagnostics(BaseModel):
         "office_native",
         "visual_description",
         "video_keyframes",
+        "unknown",
     ]
     native_text_characters: int | None = Field(default=None, ge=0)
     visual_ink_ratio: float | None = Field(default=None, ge=0, le=1)
