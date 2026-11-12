@@ -108,7 +108,7 @@
     "tests/unit/test_series_routing_boundaries.py": "79eb6d819c97e31f43a6f7fb15f4e502d5b296ae8f0ab9aeced2c626d4a62283",
     "tests/unit/test_series_source_contract.py": "3230e8704c91e9a2bac6f1464502a2567b414448955055bce1112a90cb046c33",
     "tests/unit/test_service_object_ledger.py": "9d05915cb15f9c2e81171aa3dea5774ad8549cc2103bdbcc2a3c128462d5c679",
-    "tests/unit/test_service_replay_eight_pipelines.py": "b41ef4a91108783deb9da0ed8b1485bbf5fa0e4576f42271742ba8edaf76e0e5",
+    "tests/unit/test_service_replay_eight_pipelines.py": "5cf2d11eaf2c68fbd1efc6ddb3008b197b6c54aad3e10f8235bb203f3cc36617",
     "tests/unit/test_service_stages.py": "03229b8dfdf82f06f4b2917c74b9329ea544341c19ebae3ad3d09f5ee0878d94",
     "tests/unit/test_shared_equivalence.py": "e4813610ffa1d832f5b3c88517ba6950a80afe6c22ce0c4d2e11a5ad4c4ae6fc",
     "tests/unit/test_shared_equivalence_formats.py": "f8628b530b82e66918e647ee75354731b7e4422ab6f9e33677f12b89a2cfbd12",
@@ -165,7 +165,8 @@
     "tests/unit/test_three_layer_unit_scope_contract.py": "97bdaacaae96dce9ee98f792546486116cf47e84df4a976d49e1eb984f7c9242",
     "tests/unit/test_toc_evidence.py": "2d4fd676267b3490825b9d74dab79aaa848a43dd394718b9fbbe05d2cdec2736",
     "tests/unit/test_toc_parentage_contract.py": "fc15471bdd6097b31fa8dcaf764f0e186d2c1f070ee54ba4eecc3dc709c2b87a",
-    "tests/unit/test_shared_saved_content.py": "9dff46159439ea800664f32ddd77094cc31d946c92b54bf8d2b2f87b5c102e63"
+    "tests/unit/test_shared_saved_content.py": "9dff46159439ea800664f32ddd77094cc31d946c92b54bf8d2b2f87b5c102e63",
+    "tests/unit/test_paddle_saved_content.py": "0570592374359d041460624774ff1ff194f31cb6d0e0f0b7b978168d6f56d785"
   },
   "dependencies": {
     "pyproject.toml": "e622a4f69bfb14f4919f276dd34272373f669abe6b236e3251e7719cd37005c8",
@@ -181,7 +182,8 @@
     "tests/validation/lite_review_energy_assertions.py": "588f193f3f44373f0af31cee34aad13d8cbb792221bfa3dac2c52e8dee5d4416",
     "tests/validation/lite_review_alibaba_assertions.py": "8a548990fa5759b74a7565ce95c505661221d40645406f3a6c9cf27f1c2b0647",
     "tests/validation/lite_stage3_assertions.py": "6e6b7231865f30768bc3cd3510810e01c841e0a2b93b2d2f3bb2b1944362f2be",
-    "tests/validation/shared_native_assertions.py": "97df31e5af68a7bef00aa7c1a1bd865b966d0c596702adb2763435a0c2644a1a"
+    "tests/validation/shared_native_assertions.py": "97df31e5af68a7bef00aa7c1a1bd865b966d0c596702adb2763435a0c2644a1a",
+    "tests/validation/paddle_native_assertions.py": "f600374412f1d06c954b741f353ef0d0679e94b2a436e7553d8450c79f09077c"
   },
   "excluded_modules": {
     "tests/integration/test_http_api.py": "Outside the source/requirement/comparison software regression; dependencies and possible media/service side effects not admitted or collected.",
@@ -289,7 +291,8 @@
     "input-scope retention, requirement-gate transport and source-only parallel compiler",
     "P01 saved-native adapter and source-free service finalization using invented Docling/GLM structures, exact stages and text persistence; no source/media/model access",
     "Shared saved content development: independently authored text/JSON checks for consumer fields and rejection of forged producer flags; reviewed imports use no source/media fixtures.",
-    "Shared contract review completed: new module and full P01 synthetic helper read; import graph/fixtures/I-O sites inspected. Controlled text/JSON tests delete or rebind objects, cells, tables, media, parent containers, locators, geometry, display, execution and IR; qualifiers use independent hand-written relations. Static dependency walk parses app Python only. No source/media/model/network/expected-answer fixture added. Fixed real-format assertions separately authored from the P01/P05 native JSON and bound by dependency SHA; they do not open files or grade parser quality."
+    "Shared contract review completed: new module and full P01 synthetic helper read; import graph/fixtures/I-O sites inspected. Controlled text/JSON tests delete or rebind objects, cells, tables, media, parent containers, locators, geometry, display, execution and IR; qualifiers use independent hand-written relations. Static dependency walk parses app Python only. No source/media/model/network/expected-answer fixture added. Fixed real-format assertions separately authored from the P01/P05 native JSON and bound by dependency SHA; they do not open files or grade parser quality.",
+    "Paddle source-only review: all imports and source/native/execution/finish helpers inspected. Invented JSON pixel coordinates, polygons and HTML only; media targets are declaration strings, not files or synthetic images. StoredSource PDF path is never opened. Existing shared finalization, stages and persistence dependencies remain the reviewed no-source chain; no parent conftest or model/network fixture. Geometry fixture uses the actual page model_settings.use_doc_preprocessor=false field as identity-transform evidence; no image or raster created. Full extended module reviewed: mutations modify adapted objects while input JSON stays frozen; cross-page/group IDs, optional fields, raw-page states, generation truncation paths, GFM/HTML, local malformed regions and UTF-8 text persistence. Helpers write only text/JSON under tmp_path; no subprocess, raster, PDF, model or external I-O dependency added. Syntax-only formatting reviewed; assertions unchanged. Mutation cases also protect input/adapter alias isolation and malformed-region page ownership. Fixed real-input helper independently authored from P03/P04 primary JSON, with exact P04 backslash+n codepoints verified at the source field (92,110). It accepts supplied JSON/evidence/text only, has no I-O, does not import the implementation or a reference/candidate Oracle, and assigns no quality grade. Legacy Paddle bridge module fully re-read (imports, helpers and all JSON-only tests). Its obsolete _picture_candidates assertion moved to the bound media declaration, retaining the exact same normalized native box (.1,.55,.9,.9) and adding producer-raster frame, unknown input transform, no media I-O and typed-contract assertions. No P01/P05 assertion changed and no geometry requirement relaxed."
   ],
   "history": "The prior 4618-pass run and stage4-execution-scope.json remain historical evidence with disclosed media deviations."
 }

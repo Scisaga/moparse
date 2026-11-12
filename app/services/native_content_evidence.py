@@ -13,6 +13,7 @@ from collections import Counter
 from collections.abc import Mapping
 from dataclasses import asdict
 
+from app.adapters.native_config import CONFIGURATIONS
 from app.adapters.native_inventory import encoded, inventory_native
 from app.adapters.native_readers import audit_copy, html_cells, markdown_cells, resolve_pointer
 from app.models.native_content import NativeArtifact, NativeContentContract, NativeExecutionState
@@ -28,10 +29,15 @@ def _require(condition, reason):
 
 
 def _execution(native, observation, identity, payload):
+    from app.adapters.paddle_native import paddle_execution_states
+    entries = native.get('pages', [])
+    native_states = [state for index, page in enumerate(entries if isinstance(entries, list) else [])
+                     if isinstance(page, Mapping) and page.get('branch') == 'paddle' and isinstance(page.get('raw'), Mapping)
+                     for state in paddle_execution_states(page['raw'], f'#/pages/{index}/raw')]
     if observation is None:
         _require(payload is None, 'observation bytes require paired metadata')
         return NativeExecutionState(None, None, encoded({'status': 'unknown', 'pages': [],
-            'reason': 'original_execution_metadata_missing'}))
+            'reason': 'original_execution_metadata_missing', **({'native_status_evidence': native_states} if native_states else {})}))
     _require(isinstance(observation, dict), 'execution metadata must be an object')
     if payload is not None:
         _require(json.loads(payload) == observation, 'observation bytes disagree with metadata')
@@ -50,6 +56,8 @@ def _execution(native, observation, identity, payload):
                  'timed_out', 'truncated', 'stop_reason', 'processed')
     metadata['pages'] = [{k: audit_copy(p[k]) for k in page_keys if k in p}
                          for p in observation.get('pages', []) if isinstance(p, Mapping)]
+    if native_states:
+        metadata['native_status_evidence'] = native_states
     return NativeExecutionState(identity, hashlib.sha256(payload).hexdigest(), encoded(metadata))
 
 
@@ -59,6 +67,8 @@ def bind_native_content(result, native, *, selected_pages, source_pages=None, ar
     _require(isinstance(artifact, NativeArtifact) and artifact.read() == native,
              'received native bytes disagree with decoded input')
     _require(native.get('sample_id') in {None, result.document_id}, 'native sample identity conflict')
+    if isinstance(original_observation, Mapping) and 'sample_id' in original_observation:
+        _require(original_observation['sample_id'] == result.document_id, 'paired execution sample identity conflict')
     original = tuple(source_pages) if source_pages is not None else None
     _require(original is None or len(original) == result.page_count and
              all(type(n) is int and n > 0 for n in original) and len(set(original)) == len(original),
@@ -150,7 +160,7 @@ def _input_decode_gap(root, page):
         return True
     entry = pages[0]
     branch, raw = entry.get('branch'), entry.get('raw')
-    allowed = {'docling', 'glm'} if root.get('pipeline') == 'P01' else {'glm'}
+    allowed = CONFIGURATIONS.get(root.get('pipeline'), {}).get('branches', set())
     if not isinstance(branch, str) or branch not in allowed or not isinstance(raw, Mapping):
         return True
     if sum(isinstance(p, Mapping) and p.get('page') == page for p in root.get('page_processing', [])) > 1:
@@ -158,6 +168,9 @@ def _input_decode_gap(root, page):
     if branch == 'glm':
         from app.adapters.native_inventory import _regions
         return not _regions(raw, '#')
+    if branch == 'paddle':
+        payload = raw.get('res', raw)
+        return not isinstance(payload, Mapping) or not isinstance(payload.get('parsing_res_list'), list)
     pointer, local = raw.get('native_document'), raw.get('source_page', page)
     if not isinstance(pointer, str) or not pointer.startswith('#/documents/') or type(local) is not int or local < 1:
         return True
@@ -188,6 +201,9 @@ def validate_native_content(result):
     root = contract.artifact.read()
     _require(root.get('pipeline') == contract.pipeline and result.pipeline.primary == contract.producer,
              'native configuration/producer identity conflict')
+    configuration = root.get('config')
+    _require(not isinstance(configuration, Mapping) or configuration.get('pipeline', contract.pipeline) == contract.pipeline,
+             'native configuration identity contradicts the artifact pipeline')
     items, bindings = inventory_native(contract.artifact, contract.selected_pages, contract.original_pages)
     _require(items == contract.items and bindings == contract.page_bindings, 'input inventory/page mapping was changed')
     _require(Counter(p.page_number for p in result.pages) == Counter(contract.selected_pages), 'consumer page mapping changed')
@@ -249,6 +265,25 @@ def validate_native_content(result):
             _require(block.get('bbox') == (node.get('bbox_2d') if isinstance(node, Mapping) else None), 'native geometry changed')
             _require(block.get('source_view') == 'json_result' and block.get('coordinate_system') == 'normalized_1000',
                      'primary view or GLM coordinate frame changed')
+        if item.branch == 'paddle':
+            _require(block.get('order_basis') == item.order_basis, 'unknown Paddle order was promoted')
+            _require(block.get('native_array_position') == item.details['array_position'], 'native region occurrence moved')
+            _require(block.get('source_view') == item.locator.view, 'Paddle main view changed')
+            if isinstance(node, Mapping):
+                from app.adapters.paddle_native import paddle_geometry, paddle_group_identity
+                page_payload = resolve_pointer(root, item.locator.path.rsplit('/parsing_res_list/', 1)[0])
+                _require(block.get('native_group_id') == node.get('group_id')
+                         and block.get('group_identity') == paddle_group_identity(item.input_page, node), 'native group identity changed or gained a parent')
+                _require(block.get('native_block_order') == node.get('block_order')
+                         and block.get('native_block_id') == node.get('block_id'), 'native block id/rank changed')
+                _require(block.get('native_field_presence') == item.details['field_presence'], 'native missing-field state changed')
+                _require(block.get('bbox') == node.get('block_bbox') and block.get('coordinate_origin') == 'TOPLEFT'
+                         and block.get('coordinate_system') == 'pixel', 'Paddle bbox/frame changed')
+                expected_geometry = paddle_geometry(page_payload, node)
+                _require(all(block.get(k) == v for k, v in expected_geometry.items()), 'Paddle polygon/dimensions/transform evidence changed')
+                declared_asset = resolve_pointer(root, item.locator.path.split('/res/parsing_res_list/', 1)[0] + '/research_region_media') if '/res/parsing_res_list/' in item.locator.path else None
+                if isinstance(declared_asset, Mapping):
+                    _require(block.get('asset') == declared_asset.get(str(item.details['array_position'])), 'Paddle media declaration borrowed another region')
         own_cells = block.get('cells', [])
         _require(len({c.get('id') for c in own_cells}) == len(own_cells), 'duplicate source cell')
         for cell in own_cells:
@@ -302,7 +337,7 @@ def validate_native_content(result):
         branch = next((b['native_branch'] for b in projected), 'unknown')
         render_native_blocks(projected, page, branch, copy.deepcopy(parents),
                              include_source_markers=any(b.get('service_marker') for b in values))
-        _require(all(all(a.get(k) == b.get(k) for k in ('type', 'content', 'markdown', 'service_rendered', 'service_bbox'))
+        _require(all(all(a.get(k) == b.get(k) for k in ('type', 'content', 'markdown', 'service_rendered', 'service_bbox', 'media'))
                      for a, b in zip(values, projected, strict=True)), 'native/display projection changed')
     return contract
 
@@ -352,7 +387,12 @@ def native_partial(result):
     state = result._source_verification.get('native_content', {})
     execution = state.get('original_execution', {})
     observed_pages = {p.get('page', p.get('page_number')) for p in execution.get('pages', [])}
+    native_failed = any(record['metadata'].get('errors') or record['metadata'].get('error')
+                        or record['metadata'].get('truncated') or record['metadata'].get('timed_out')
+                        or record['metadata'].get('status') in {'failed', 'partial', 'timeout', 'truncated'}
+                        for record in execution.get('native_status_evidence', []))
     return (execution.get('status') != 'completed' or bool(execution.get('errors'))
+            or native_failed
             or bool(set(result._native_content.selected_pages) - observed_pages)
             or any(p.get('status') not in {'completed', 'warning'} or p.get('errors')
                    or p.get('timed_out') or p.get('truncated') for p in execution.get('pages', []))

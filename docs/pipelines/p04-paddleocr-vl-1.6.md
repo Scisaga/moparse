@@ -4,7 +4,7 @@
 
 [全部管线](README.md) · [固定比较条件](../../benchmark/pipelines-to-test.md#主比较配置)
 
-离线服务bridge按本组实际页面包装读取parsing_res_list、HTML跨度、引用和媒体，保留1.6的独立执行身份，不借1.5内容或PDF字层补全。当前受控及单份JSON读回不代表全量service验收，阶段、来源隔离和执行门槛见[八管线服务适配](README.md#保存结果的八管线服务适配)。
+2026-11-12本组使用自己的保存native.json及配对observation，经与P03完全相同的Paddle格式族读取、共同契约和公共source-free处理生成实际final.md并持久化，固定范围交付为partial。保留1.6独立配置、模型revision及输入SHA，未重标P03或借用其他组正文；当前字段和字面差异见[唯一报告](../../benchmark/reports/lite/report.md)。这不表示全部P04、真实失败或媒体验收完成。
 
 ## 1. 配置与执行边界
 
@@ -65,6 +65,22 @@ P04研究执行路径已修复，[P04工程预检02](../../benchmark/runs/lite/p
 研究执行器、完整页面 native RPC 服务及同族读取器已实现。固定 PaddleX 3.7.2 路径的 BGR/RGB 交接缺陷已在研究路径修复；该问题与线程生命周期引发的宿主内存留存分开处理。模型及调用由长期线程统一持有，并显式使用 use_queues=False；本组独立工程预检不借用 P03 的产物，也不据此宣称内容或效率已验收。机制诊断见[执行层诊断](../../benchmark/diagnostics/README.md)。
 
 HGNetV2 布局子模块与 VLM 的 attention 分别配置，不能把全局 SDPA 初始化失败归因于模型识别能力。本组模型与 processor、颜色交接、区域 token/EOS 和截断、媒体、有效邻居、取消清理及资源状态按独立工程证据与运行记录追溯。CUDA Graphs 按本组真实有界捕获和推理记录描述，实际例外保留；工程预检不等于内容验收，也不能用 P03 的探针或输出代替本组验证。
+
+本组保存配置声明PaddleOCR-VL-1.6，paddle_vlm revision为`c5630abae1d940eafe0697512a0325494b02ab42`。选定主结果保留“证券简称：万科A、万科H代”、表头中的字面反斜杠+n及日期/行名空格；没有将其变成P03的文字或重读审计导出。两份固定结果只在第一页区域4和第二页表格content存在区域字段字面差异，不能由此单独判定差异全由模型版本造成。本轮未在线核验模型和镜像。
+
+### 5.1 固定三页保存格式与共同服务验收
+
+本轮选择vanke-repurchase-share-changes-p001-003仅因实际格式覆盖：三页区域数14、14、3，含标题、正文、真实HTML表格、polygon、nullable block_order和媒体声明。主视图为各页raw.res.parsing_res_list；raw.research_region_exports及entry.faithful_markdown存在，但只保留审计、不补主答案。res.page_index/page_count均为None，输入物理页由原页调用清单建立，不把None改为0，也不按分支局部索引代替原PDF页。
+
+实际区域提供block_id、block_label、block_content、block_bbox、block_order、group_id和block_polygon_points，没有本轮可用的原生独立OCR源格、cell bbox/polygon或原生语义父链。每页group_id在当前样本中唯一，跨页重复；同版SDK序列化可将缺失group_id回退为数组idx，因此本轮不能判定这些值来自真实合并组还是回退。共同输入保留页内group identity，不生成父子或跨页关系；真实多成员组尚未覆盖，仅由独立JSON测试保护。
+
+同版PaddleX 3.7.2缓存源码的_to_json只为未列入skip_order_labels的区域递增block_order，表格、附注及图片保留None。它是部分标签的SDK序列化序号，未提供完整全局阅读顺序证明；保留原rank和数组位置，服务显示维持数组顺序，内部明确unknown，不按bbox重排或强行续接同组文字。
+
+页面尺寸为1654×2339，model_settings.use_doc_preprocessor=false；原生region bbox和polygon分别保留，即使局部边界不同也不互相替换。像素单位及TOPLEFT由同版CropByBoxes的xyxy和img[ymin:ymax,xmin:xmax]合同投影支持，尺寸来自结果记录的处理后图像shape；没有从0至1000数值猜测归一化，也没有套用Docling原点。反向原PDF变换仍为unknown，旋转和cropbox仅保留已有元数据；缺尺寸、退化框或无法确认的预处理变换保留未知和partial。缓存源码只作静态阅读，未导入或执行Paddle、图像裁剪或模型。
+
+HTML表为8行6列、44个DOM源格，含rowspan/colspan但全部使用td，没有显式header role。MO-Parse解析出的格位属于HTML投影，未冒充SDK独立OCR格或原PDF单元格几何；共同有界用途/计量规则随后建立5个记录、25个值关系及完整表头/期间路径，37个非空格定位到真实final，7个空字面未补值。普通HTML网格、混合/不足结构继续保留或partial，number标签本身不证明页码，因此当前该标签中的公司文字保留。
+
+共同路径为replay_native → app.adapters.saved_native.adapt_saved_document → read_paddle_blocks → NativeContentContract核验 → SavedContentService.finalize → Export/实际IR/TableContext/TableSemantics/FinalContent → Storage。原执行completed、格式读取read、公共转换partial、交付partial分别记录；partial来自未知完整读序、未知group语义和三处图片未交付。原生vision_footnote文字保留，不据相邻或group_id补出记录附注关系。原生字段、工件/视图/locator、原始与显示文字、状态、对象去向及阶段编辑均可复查，最终正文和持久化按实际UTF-8字节核对。
 
 ## 6. 格式核对依据
 

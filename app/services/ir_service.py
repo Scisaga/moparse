@@ -131,7 +131,7 @@ def _cell_evidence(
         sources=[
             ProvenanceSource(source=source) for source in sorted(sources, key=lambda x: x.value)
         ],
-        reason_codes=list(fragment.invalid_reasons),
+        reason_codes=[*fragment.invalid_reasons, *([] if base_source is not None else ['source_kind_retained_in_native_contract'])],
     )
 
 
@@ -392,7 +392,8 @@ class DocumentIRService:
                                         block_type=block_type, bbox=position, reading_order=index,
                                         text=str(native.get("text", "")), quality=quality,
                                         provenance=ElementProvenance(selected_source=saved_source_kind,
-                                            sources=[ProvenanceSource(source=saved_source_kind)] if saved_source_kind is not None else [])))
+                                            sources=[ProvenanceSource(source=saved_source_kind)] if saved_source_kind is not None else [],
+                                            reason_codes=[] if saved_source_kind is not None else ['source_kind_retained_in_native_contract'])))
                 regions.append(ContentRegion(region_id=region_id, unit_id=page_id, region_type=block_type,
                                              bbox=position, reading_order=index, block_ids=[ident], quality=quality))
         elif evidence and evidence.native_blocks:

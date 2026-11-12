@@ -200,7 +200,7 @@ def replay_native(
     pipeline = native.get("pipeline")
     if pipeline not in PIPELINE_BRANCHES:
         raise ValueError("service replay requires a declared P01-P08 candidate")
-    if pipeline in {"P01", "P05"}:
+    if pipeline in {"P01", "P05", 'P03', 'P04'}:
         from app.adapters.saved_native import adapt_saved_document
 
         return adapt_saved_document(native, source, options, document_id=document_id,

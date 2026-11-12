@@ -39,7 +39,7 @@ def format_readback_checks(native, result):
             )
             if not isinstance(raw, dict):
                 continue
-            field = "text" if block["native_branch"] == "docling" else "content"
+            field = {'docling': 'text', 'glm': 'content', 'paddle': 'block_content'}[block['native_branch']]
             if isinstance(raw.get(field), str) and block.get("read_status") == "read":
                 value = raw[field]
                 if block.get("text_selection"):
@@ -185,8 +185,9 @@ async def close_saved_document(
     options: ContentParseOptions | None = None,
     artifact=None, original_observation=None, observation_identity=None, observation_bytes=None,
 ):
-    if native.get("pipeline") not in {"P01", "P05"}:
-        raise ValueError("this development entry accepts the declared Docling/GLM configurations only")
+    from app.adapters.native_config import CONFIGURATIONS
+    if native.get("pipeline") not in CONFIGURATIONS:
+        raise ValueError("this development entry accepts declared source-free native configurations only")
     pipeline = native["pipeline"]
     if source_pages is not None and (
         len(source_pages) != source.page_count

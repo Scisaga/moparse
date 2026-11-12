@@ -70,7 +70,12 @@ def test_paddle_preserves_native_wrapper_nullable_order_html_refs_and_media(pipe
     assert any(ref['reference'] == 'assets/own.png' for ref in audit['asset_references'])
     original_cells = result._table_fragments[0].native_evidence['source_cells']
     assert original_cells[0]['col_span'] == 2 and original_cells[1]['native_attributes']['headers'] == 'h'
-    assert result._picture_candidates[0].normalized_bbox == (.1, .55, .9, .9)
+    declaration = audit['asset_references'][0]
+    assert declaration['native_geometry']['normalized_bbox'] == (.1, .55, .9, .9)
+    assert declaration['native_geometry']['frame'] == 'producer_output_raster'
+    assert declaration['native_geometry']['input_transform'] == 'unknown'
+    assert declaration['bbox'] is None and declaration['bytes_accessed'] is False
+    assert result._native_content is not None
     assert audit['pages'][0]['capabilities']['pdf_text'] is False
     assert audit['pages'][0]['capabilities']['pdf_vector'] is False
 

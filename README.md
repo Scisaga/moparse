@@ -93,7 +93,7 @@ curl --fail-with-body http://localhost:12303/v1/content/parse \
 
 | 工作线 | 要回答的问题 | 当前进展与入口 |
 | --- | --- | --- |
-| 解析研究 | 各方法在什么来源和版式上解析得更好，实际处理成本是多少 | P01–P08的800页原生结果、80页三轮测量及原始成本保留，expected-only三层正式成绩继续暂停，模型未重跑。当前工程主线为P01保存原生JSON到最终正文的三页开发样本闭环，范围、partial及开发暴露见[统一评测报告](benchmark/reports/lite/report.md)。其余统一比较状态由[评测索引](benchmark/reports/README.md)维护，方法范围见[研究框架](docs/research/research-framework.md)与[固定配置](benchmark/pipelines-to-test.md) |
+| 解析研究 | 各方法在什么来源和版式上解析得更好，实际处理成本是多少 | P01–P08的800页原生结果、80页三轮测量及原始成本保留，expected-only三层正式成绩继续暂停，模型未重跑。当前工程主线为Docling/GLM/Paddle保存原生JSON经共同source-free内容链生成正文的固定范围开发验证，范围、partial及开发暴露见[统一评测报告](benchmark/reports/lite/report.md)。其余统一比较状态由[评测索引](benchmark/reports/README.md)维护，方法范围见[研究框架](docs/research/research-framework.md)与[固定配置](benchmark/pipelines-to-test.md) |
 | 服务开发 | 如何保真读取原生结果，并交付适合下游消费的正文和图片 | 已有 API、Web UI、MCP、任务与资产能力；表格转换、正文清理及完整打包仍有缺口；见[架构](docs/engineering/architecture.md)与[输出规范当前差距](docs/specs/moparse-output-spec.md#9-当前实现差距与迁移) |
 
 解析研究比较完整管线的原始质量与实际成本，候选可以保留自身的表格和页面信息；MO-Parse 最终格式转换另行开发、验证和计时。候选方法、资源与统一条件见[待测试管线](benchmark/pipelines-to-test.md)，任务与外部原件、独立标注交接见[评测任务](benchmark/evaluation-tasks.md)，路线内性能实验见[MinerU 调优](benchmark/mineru-tuning.md)。不沿用已移除的旧成绩。

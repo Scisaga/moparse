@@ -24,6 +24,7 @@ _ROLES = {
     "caption": "text",
     "footnote": "text",
     "vision_footnote": "text",
+    "number": "text",
     "section_header": "title",
     "title": "title",
     "doc_title": "title",
@@ -177,6 +178,8 @@ def _inline_media(text):
     return "".join(pieces), refs
 
 def _box(block: Mapping[str, Any]):
+    if block.get('geometry_status') == 'unknown':
+        return None
     if block.get("coordinate_system") in {"pdf_points", "pixel"}:
         dimensions = block.get("page_dimensions")
         if not isinstance(dimensions, Mapping) or any(
@@ -299,7 +302,7 @@ def render_native_blocks(blocks, number, branch, containers, *, include_source_m
                     "branch": branch,
                     "cell_identity": "native_json_cells"
                     if branch == "docling"
-                    else "primary_html_cells",
+                    else "primary_html_cells" if block.get('text_format') == 'html' else 'primary_gfm_cells',
                 }
                 fragment.native_evidence["coordinate_status"] = (
                     "known" if _box(block) else "unknown"
@@ -329,8 +332,7 @@ def render_native_blocks(blocks, number, branch, containers, *, include_source_m
                     {"native_path": block["native_path"], "code": "table_structure_unresolved"}
                 )
         elif (
-            branch == "glm"
-            and role == "text"
+            role == "text"
             and block.get("cells")
             and not any(
                 c.get("is_column_header") or c.get("is_row_header") or c.get("native_header_tag")
@@ -384,6 +386,15 @@ def render_native_blocks(blocks, number, branch, containers, *, include_source_m
                 "bbox": _box(block),
                 "inline_references": inline_media,
             }
+            if isinstance(block.get('geometry_basis'), Mapping):
+                # A producer-raster declaration is not a source crop target.
+                # Keep this geometry even when its input transform is unknown.
+                declared['native_geometry'] = {
+                    'normalized_bbox': normalized_box(block) if block.get('native_bbox_status') == 'known' else None,
+                    'frame': 'producer_output_raster',
+                    'input_transform': block['geometry_basis'].get('input_transform', 'unknown'),
+                    'original_pdf_transform': block['geometry_basis'].get('original_pdf_transform', 'unknown'),
+                }
             media.append(declared)
             block["media"] = declared
             if not inline_media:
@@ -411,7 +422,7 @@ def render_native_blocks(blocks, number, branch, containers, *, include_source_m
             service_rendered=rendered,
             native_branch=branch,
             service_bbox=_box(block),
-            geometry_frame="frozen_oriented_input",
+            geometry_frame=block.get('native_geometry_frame', "frozen_oriented_input"),
             inline_media_references=inline_media,
             native_text_span=[0, len(block.get("text", ""))],
             read_status="unresolved" if block.get("read_error") or role == "unknown" else "read",

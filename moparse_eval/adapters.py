@@ -17,6 +17,7 @@ from app.adapters.native_readers import (
     _sequence,
     glm_regions,
     read_docling,
+    read_paddle,
 )
 from app.adapters.native_readers import (
     _docling_cell_fields as _docling_cell_fields,
@@ -71,43 +72,6 @@ def read_glm(raw: Mapping[str, Any], page_number: int,
         blocks.append(block)
     return blocks
 
-def read_paddle(raw: Mapping[str, Any], page_number: int,
-                pointer: str = "#/paddle", *, page_dimensions: Mapping[str, Any] | None = None,
-                **_: Any) -> list[dict[str, Any]]:
-    export_pointer = pointer + "/research_region_exports"
-    payload = raw.get("res", raw)
-    if "res" in raw:
-        pointer += "/res"
-    if not isinstance(payload, Mapping):
-        raise NativeReadError("Paddle result wrapper is not an object")
-    regions = payload.get("parsing_res_list")
-    if not isinstance(regions, list):
-        raise NativeReadError("Paddle result has no parsing_res_list")
-    blocks = []
-    for index, region in enumerate(regions):
-        if not isinstance(region, Mapping):
-            blocks.append({"id": f"p{page_number}-paddle-{index}", "kind": "unknown",
-                           "text": "", "native_path": f"{pointer}/parsing_res_list/{index}",
-                           "read_error": "non-object region", "structure_status": "unknown",
-                           "read_error_category": "candidate_native_structure"})
-            continue
-        block = _block(region, f"p{page_number}-paddle-{index}",
-                             f"{pointer}/parsing_res_list/{index}",
-                             kind=str(region.get("block_label", "unknown")),
-                             text=region.get("block_content", ""), box=region.get("block_bbox"),
-                             text_pointer=f"{pointer}/parsing_res_list/{index}/block_content",
-                             text_format="html" if region.get("block_label") == "table" else "markdown")
-        _identity(block, region, f"{pointer}/parsing_res_list/{index}")
-        exported = raw.get("research_region_exports", {}).get(str(index))
-        if isinstance(exported, str):
-            block["native_export_markdown"] = exported
-            block["native_export_markdown_path"] = export_pointer + "/" + str(index)
-        _position(block, system="pixel", page=page_number, dimensions=page_dimensions)
-        _sequence(block, [page_number, index])
-        if raw.get("research_region_media", {}).get(str(index)):
-            block["asset"] = raw["research_region_media"][str(index)]
-        blocks.append(block)
-    return blocks
 
 def read_visual(raw: list[dict[str, Any]], page_number: int,
                 pointer: str = "#/visual", *, page_dimensions: Mapping[str, Any] | None = None,

@@ -8,6 +8,7 @@ from collections import Counter, defaultdict
 from collections.abc import Mapping
 from typing import Any
 
+from app.adapters.native_config import CONFIGURATIONS
 from app.adapters.native_readers import (
     NativeReadError,
     _block,
@@ -20,6 +21,7 @@ from app.adapters.native_readers import (
     read_docling,
     resolve_pointer,
 )
+from app.adapters.paddle_native import read_paddle_blocks
 from app.models.parse_result import (
     DocumentParseResult,
     PageDiagnostics,
@@ -35,11 +37,6 @@ from app.models.parse_result import (
 )
 from app.services.native_content_service import render_native_blocks
 from app.utils.page_range import parse_page_range
-
-CONFIGURATIONS: dict[str, dict[str, Any]] = {
-    'P01': {'backend': 'docling-tableformer-v1', 'branches': {'docling', 'glm'}},
-    'P05': {'backend': 'glm-sdk-remote', 'branches': {'glm'}},
-}
 
 
 def branch_capabilities(pipeline, branch):
@@ -359,7 +356,7 @@ def adapt_saved_document(native, source, options, *, document_id, include_source
     """Read each selected physical page once, from its own declared branch."""
     pipeline = native.get("pipeline")
     if pipeline not in CONFIGURATIONS:
-        raise ValueError("source-free adapter requires a declared Docling/GLM configuration")
+        raise ValueError("source-free adapter requires a declared native configuration")
     configuration = CONFIGURATIONS[pipeline]
     selected = parse_page_range(options.page_range, source.page_count)
     result = DocumentParseResult(
@@ -521,6 +518,23 @@ def adapt_saved_document(native, source, options, *, document_id, include_source
                 status = str(envelope.get("status", "")).lower()
                 if any(k in status for k in ("partial", "fail", "error")) or envelope.get("errors"):
                     detail["local_read_errors"].append({"code": "saved_native_producer_incomplete"})
+            elif branch == 'paddle':
+                blocks = read_paddle_blocks(native, raw, number, pointer)
+                payload = raw.get('res', raw)
+                detail.update(native_page_pointer=pointer, primary_view='res.parsing_res_list' if 'res' in raw else 'parsing_res_list',
+                    source_envelope={'raw': {k: audit_copy(raw[k]) for k in ('status', 'errors', 'warnings', 'research_export_errors') if k in raw},
+                                     'page': {k: audit_copy(payload[k]) for k in ('status', 'errors', 'warnings') if k in payload}},
+                    exported_view={'present': 'research_region_exports' in raw, 'used_as_answer': False},
+                    media_catalogue={'declared': 'research_media' in raw, 'bytes_accessed': False})
+                uncertainty_paths = defaultdict(list)
+                for b in blocks:
+                    for code in b.get('source_uncertainties', []):
+                        uncertainty_paths[code].append(b['native_path'])
+                detail['local_read_errors'].extend({'code': code, 'category': 'source_uncertainty', 'native_paths': paths}
+                                                   for code, paths in uncertainty_paths.items())
+                if any(obj.get('errors') or obj.get('research_export_errors') or any(
+                    part in str(obj.get('status', '')).lower() for part in ('fail', 'error', 'partial')) for obj in (raw, payload)):
+                    detail['local_read_errors'].append({'code': 'saved_native_producer_incomplete'})
             else:
                 result.pipeline.ocr = "glm-sdk-remote"
                 blocks = _glm_blocks(raw, number, pointer)
@@ -581,7 +595,7 @@ def adapt_saved_document(native, source, options, *, document_id, include_source
         prediction = (detail.get("frozen_page_processing") or {}).get("source_prediction")
         page = PageParseResult(
             page_number=number,
-            backend={"glm": "glm-sdk-remote", "docling": configuration["backend"]}.get(
+            backend={"glm": "glm-sdk-remote", "docling": configuration["backend"], 'paddle': configuration['backend']}.get(
                 branch if isinstance(branch, str) else "unknown"
             ),
             content=content,
@@ -640,7 +654,7 @@ def adapt_saved_document(native, source, options, *, document_id, include_source
     counts = Counter(p["branch"] for p in audit["pages"] if isinstance(p["branch"], str))
     result.route_summary = RouteSummary(
         native_text_pages=counts["docling"],
-        pages_with_ocr=counts["glm"],
+        pages_with_ocr=counts["glm"] + counts['paddle'],
         failed_pages=sum(p.status == PageStatus.FAILED for p in result.pages),
     )
     result._source_verification["saved_native_bridge"] = copy.deepcopy(audit)

@@ -89,7 +89,74 @@ def inventory_native(artifact: NativeArtifact, selected: tuple[int, ...],
                          'branch_page': raw.get('source_page') if isinstance(raw, Mapping) and branch == 'docling' else None})
         if not isinstance(raw, Mapping):
             continue
-        if branch == 'docling':
+        if branch == 'paddle':
+            # Independent input walk: never consult read_paddle or adapted blocks.
+            payload = raw.get('res', raw)
+            if not isinstance(payload, Mapping):
+                continue
+            base = entry_path + '/raw' + ('/res' if 'res' in raw else '')
+            view = 'res.parsing_res_list' if 'res' in raw else 'parsing_res_list'
+            local_value = payload.get('page_index')
+            local = local_value if type(local_value) is int and local_value >= 0 else None
+            bindings[-1].update(branch_page=local, native_page_index=local_value,
+                                page_index_present='page_index' in payload, page_count=payload.get('page_count'),
+                                source_view=view, dimensions_path=base)
+            regions = payload.get('parsing_res_list', [])
+            if not isinstance(regions, list):
+                regions = []
+            for index, node in enumerate(regions):
+                path = f'{base}/parsing_res_list/{index}'
+                record = node if isinstance(node, Mapping) else {}
+                content = record.get('block_content')
+                text = content if isinstance(content, str) else ''
+                label = str(record.get('block_label', 'unknown'))
+                kind = 'table' if label == 'table' else 'picture' if label in {'image', 'picture', 'chart', 'header_image', 'footer_image'} else 'content'
+                add(kind, path, page, branch, local, text=text, order=(page, index),
+                    basis='native_array_order_unknown_reading_order', view=view,
+                    details={'label': label, 'array_position': index, 'native_block_id': record.get('block_id'),
+                             'native_block_order': record.get('block_order'), 'native_group_id': record.get('group_id'),
+                             'group_membership_semantics': 'unknown_no_parent_chain',
+                             'native_bbox': record.get('block_bbox'),
+                             'native_polygons': {k: record[k] for k in ('block_polygon_points', 'block_polygon', 'polygon') if k in record},
+                             'page_dimensions': {k: payload.get(k) for k in ('width', 'height')},
+                             'field_presence': {k: k in record for k in ('block_id', 'block_order', 'group_id', 'block_polygon_points')}})
+                cells = []
+                try:
+                    cells = html_cells(text, path + '/block_content') if re.search(r'<table\b', text, re.I) else markdown_cells(text, path + '/block_content')
+                except (NativeReadError, ValueError):
+                    pass
+                for cell in cells:
+                    add('cell', cell['id'], page, branch, local, identity=cell['id'], parent=path,
+                        text=cell['text'], view=view, details={'source_cell': cell, 'source_table': path,
+                            'origin': 'primary_html_projection' if '::html/' in cell['id'] else 'primary_gfm_projection',
+                            'native_independent_ocr_cell': False})
+                if kind == 'picture':
+                    add('media', path, page, branch, local, identity=path + ':media', parent=path, view=view,
+                        details={'appearance': 'native_picture', 'delivery': 'not_read_not_verified_not_delivered'})
+                elif not re.search(r'<table\b', text, re.I):
+                    for start, end in _inline_media(text):
+                        add('media', path, page, branch, local, identity=f'{path}:media:{start}:{end}', parent=path,
+                            view=view, spans=((start, end),), details={'appearance': 'inline_reference', 'delivery': 'not_read_not_verified_not_delivered'})
+            # Page fields, exported views and detection-only observations remain
+            # auditable. A detector region is not a second OCR answer or parent.
+            for name in payload:
+                if name not in {'parsing_res_list', 'layout_det_res'}:
+                    add('metadata', base + '/' + name, page, branch, local, view=view,
+                        details={'purpose': 'paddle_page_metadata', 'field': name})
+            layout = payload.get('layout_det_res')
+            if isinstance(layout, Mapping):
+                boxes = layout.get('boxes', [])
+                for i, _ in enumerate(boxes if isinstance(boxes, list) else []):
+                    add('metadata', base + f'/layout_det_res/boxes/{i}', page, branch, local, view=view,
+                        details={'purpose': 'layout_detection_only_not_ocr_answer', 'relation_to_primary': 'not_inferred_from_geometry'})
+            for name in raw if 'res' in raw else []:
+                if name != 'res':
+                    add('metadata', entry_path + '/raw/' + name, page, branch, local, view=view,
+                        details={'purpose': 'saved_native_audit_view', 'used_as_answer': False, 'field': name})
+            if 'faithful_markdown' in entry:
+                add('metadata', entry_path + '/faithful_markdown', page, branch, local, view=view,
+                    details={'purpose': 'saved_faithful_export_audit_only', 'used_as_answer': False})
+        elif branch == 'docling':
             pointer = raw.get('native_document')
             envelope = resolve_pointer(root, pointer)
             if not isinstance(pointer, str) or not isinstance(envelope, Mapping):
@@ -142,7 +209,8 @@ def inventory_native(artifact: NativeArtifact, selected: tuple[int, ...],
                                        and p.get('page') in selected), default=page)
                     if not own and page != first_owner:
                         continue
-                    text = node.get('text') if isinstance(node.get('text'), str) else ''
+                    literal = node.get('text')
+                    text = literal if isinstance(literal, str) else ''
                     spans = []
                     identity = path
                     if valid_prov and len({p['page_no'] for p in prov}) > 1 and text:
