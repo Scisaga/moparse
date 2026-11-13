@@ -269,6 +269,11 @@ class FinalContentService:
         previous: tuple[int, dict[str, Any]] | None = None
         joins = []
         pending = []
+        native_order = {(i.input_page, i.identity): i.order_basis for i in result._native_content.items} if result._native_content is not None else {}
+
+        def proven_order(number, block):
+            return native_order.get((number, block.get('occurrence_id', block.get('id')))) in {'native_index', 'native_reading_tree'}
+
         for number, blocks in native_blocks.items():
             for ordinal, original in enumerate(blocks):
                 block = dict(original)
@@ -285,10 +290,12 @@ class FinalContentService:
                     str(previous[1].get("markdown", "")), str(block.get("markdown", ""))))
                 if declared or literal_scale:
                     found = None
+                    order_supported = result._native_content is None or bool(previous and
+                        proven_order(previous[0], previous[1]) and proven_order(number, block))
                     same_source_scope = (previous is None or result._native_content is None
                                          or (block.get("native_branch") == previous[1].get("native_branch")
                                              and (block.get("native_branch") != "glm" or number == previous[0])))
-                    if previous is not None and same_source_scope and 0 <= number - previous[0] <= 1:
+                    if previous is not None and same_source_scope and order_supported and 0 <= number - previous[0] <= 1:
                         old_number, old_block = previous
                         left = _native_span(source, str(old_block.get("markdown") or ""), pages.get(old_number, (0, 0)), old_block)
                         right = _native_span(source, str(block.get("markdown") or ""), pages.get(number, (0, 0)), block)
@@ -304,7 +311,9 @@ class FinalContentService:
                             add(*found, separator, reason)
                             joins.append({"pages": [old_number, number], "input_range": list(found), "reason": reason})
                     if found is None and declared:
-                        pending.append({"page": number, "reason": "declared_continuation_has_no_unique_adjacent_text"})
+                        pending.append({"page": number, "reason": "declared_continuation_order_not_proven" if previous and not order_supported else "declared_continuation_has_no_unique_adjacent_text",
+                                        "native_path": block.get("native_path"),
+                                        "occurrence_id": block.get("occurrence_id", block.get("id"))})
                 previous = (number, block)
 
         if result._native_content is not None:
@@ -344,6 +353,31 @@ class FinalContentService:
             "operation_counts": dict(Counter(e["reason"] for e in edits)),
             "policy": "explicit_native_roles_and_literal_continuations_no_fact_inference",
         }
+        if result._native_content is not None:
+            coverage = []
+            for number, blocks in native_blocks.items():
+                for block in blocks:
+                    if block.get('type') == 'table':
+                        continue  # Table cells/records have their own source checks.
+                    text = str(block.get('markdown') or '').replace('\r\n', '\n').replace('\r', '\n')
+                    if not text.strip():
+                        continue
+                    span = _native_span(source, text, pages.get(number, (0, len(source))), block)
+                    final_span = None
+                    disposition = 'unresolved'
+                    if span:
+                        a, b = map_text_offset(span[0], edits), map_text_offset(span[1], edits, end=True)
+                        final_span = [a, b]
+                        if final[a:b]:
+                            disposition = 'retained'
+                        elif block.get('type') in _FURNITURE:
+                            disposition = 'explicitly_cleaned_furniture'
+                    coverage.append({'native_path': block.get('native_path'),
+                        'occurrence_id': block.get('occurrence_id', block.get('id')),
+                        'source_locator': block.get('source_locator'), 'page': number,
+                        'assembly_span': list(span) if span else None, 'final_span': final_span,
+                        'disposition': disposition})
+            result._final_text_evidence['content_coverage'] = coverage
         result.markdown = final
         result.plain_text = ExportService.markdown_to_text(final, source_regions=[])
         if result.parse_result:

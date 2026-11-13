@@ -4,7 +4,7 @@
 
 [全部管线](README.md) · [固定比较条件](../../benchmark/pipelines-to-test.md#主比较配置)
 
-离线服务bridge已接入保存的V2文档树与本组GLM主视图，不重跑converter或借V1数据；原生cell、跨度、引用、媒体声明和转换状态独立保留。当前只完成受控及单份保存JSON读回，阶段、来源隔离和全量执行门槛见[八管线服务适配](README.md#保存结果的八管线服务适配)。
+2026-11-13本组自己的三页保存native.json及配对observation已接入共同NativeContentContract，经与P01相同的Docling/GLM投影、公共source-free内容链和Storage生成实际final.md。没有复制V1 adapter或借用其源格、表头及正文；固定格式差异、状态、保护复验和实际产物统一见[唯一报告](../../benchmark/reports/lite/report.md)。该开发范围不构成解析质量、全量P02或正式服务门禁。
 
 ## 1. 配置与执行边界
 
@@ -99,6 +99,16 @@ P02研究执行路径已修复，[P02工程预检02](../../benchmark/runs/lite/p
 研究执行器显式使用 TableStructureV2Options 和独立 TableFormer V2 权重；该模型选择与 P01不同，原生结果不能借用 P01。共享 GLM 已显式采用 native rotary，避开 vLLM 0.19.1 的 GPT-J MRoPE CUDA 配对缺陷；研究路径的旋转坐标交接和原生结果先行保全、局部导出错误隔离已修复。机制证据与修复边界见[执行层诊断](../../benchmark/diagnostics/README.md)，不据工程修复推定具体语料影响或解析成绩。
 
 本组独立工程预检保存 V2 阅读树、原生格位和跨度、全 ContentLayer、图片、分支页序、方向及局部失败记录，任务完成不等于内容或结构已验收。共用读取函数不等于两组内容或结构相同；MO-Parse生产GLM路径、服务适配与最终转换仍需独立修复和验收。
+
+### 5.1 固定V2保存结果与共同内容链
+
+固定vanke-repurchase-share-changes-p001-003仅因格式覆盖选择，前两页Docling指向本组documents/0、局部页1和2，第三页为本组单图GLM json_result、局部页0。保存配置为docling 2.139.0、docling-core 2.101.1，TableFormer V2 revision为e41ba5da7ef69004f4b329168791c2987abf917c；这是保存身份，不是本轮模型运行证明。原生DoclingDocument schema为1.10.0，包含body/groups引用树、23个texts、2个groups、1表及2个pictures；GLM主结果的董事会和日期只取自身json_result，raw_json_result/markdown_result不补答案。
+
+V1/V2在此范围的阅读树、父子字段及单元格字段族相同，共用读取原语足以交接；源格、角色、文字及几何是各自的实际观测。V2表为8行6列、46格、37非空、9空，10个column_header；V1为45格、37非空、8空、9个column_header。V2的(0,3)跨度为1，另有空header格(1,3)，未沿用V1跨度2。row_header、row_section、fillable在此实样均为false；缺少字段仍保持缺少，true和富引用只由独立合成结构验证。
+
+V2的(0,1)表头原字缺右括号，(2,1)原值为15,386,99；共同转换原样交接，没有用V1、审计导出或业务常识修复。原生表框为BOTTOMLEFT，源格框为TOPLEFT，分别按本组原尺寸转换；charspan、源offset与原生角色保留。caption和footnote引用在此表均为空，没有借相邻或其他组附注补关系。既有公共规则形成5记录、25值关系及完整已有列路径，37个非空格逐项定位到实际final，9个空字面不补值。
+
+原执行completed、格式读取read、公共转换completed及交付partial分别记录；两处图片声明未读取、未验证、未交付。共同状态判定记录来源、对象、受影响字段及实际输出责任：无依赖的元数据unknown不自行降级，读序、表格、续接或资产责任未完成仍阻断完整性。实际八阶段、编辑重放、原生对象去向和Storage字节核对见唯一报告；真实失败页、跨页表和非空caption/footnote未在这份输入出现，合成测试不计为实样覆盖。
 
 ## 6. 格式核对依据
 

@@ -2,11 +2,11 @@
 
 本文说明 MO-Parse 的组件与内部表示；交付要求及当前缺口统一见[输出规范](../specs/moparse-output-spec.md)，逐管线格式及适配逻辑见[输出与适配说明](../pipelines/README.md)，执行约束见 [AGENTS.md](../../AGENTS.md)，决策变更见[ADR-0001](../adr/0001-faithful-gfm-for-downstream-extraction.md)。2026-10-21 的范围调整不修改代码或部署，图片语义化不属于目标架构。
 
-2026-11-12的共同保存结果契约已完成Docling/GLM及Paddle两轮受限横向工程验证：P01双分支、P05全页GLM以及P03/P04各自真实三页保存JSON均经同一source-free调度生成实际正文。Paddle格式差异仅在读取和证据投影处处理，未另建IR、PaddleParserService或FinalContentService；公共消费者不按P03/P04编号选择语义。配置、分支、主视图及来源守卫保留，实际状态、partial和未覆盖范围仅见[唯一报告](../../benchmark/reports/lite/report.md)，不表示八组或质量门禁已完成。
+2026-11-13在既有Docling/GLM/Paddle共同契约上接入P02自己的V2保存结果。P01/P02分别保留配置、原生格位、角色和字面差异，复用已有Docling及GLM投影，五个配置使用同一source-free调度生成正文；未另建P02处理链或IR。配置、分支、主视图及来源守卫保留，实际状态、partial、完整source-only回归和未覆盖范围仅见[唯一报告](../../benchmark/reports/lite/report.md)，不表示八组或质量门禁已完成。
 
 ## 目标处理流程
 
-工作区的`table_context_service`从有来源的原生块和TableFragment读取局部计量、记录字段及文字限定，`table_semantics_service`检查用途与记录范围并渲染正文。当前开发调用为`saved_content_closure.close_saved_document → replay_native → app.adapters.saved_native.adapt_saved_document → SavedContentService.finalize`；P01旧入口仅作薄包装。当前四个配置使用同一Export、DocumentIRService、TableContext、TableSemantics、FinalContent和Storage实现。原件补充以allow_source_reads=False禁用，媒体仅处理声明与未交付状态，不执行正式service_evaluation入口、线上服务或资产提取。
+工作区的`table_context_service`从有来源的原生块和TableFragment读取局部计量、记录字段及文字限定，`table_semantics_service`检查用途与记录范围并渲染正文。当前开发调用为`saved_content_closure.close_saved_document → replay_native → app.adapters.saved_native.adapt_saved_document → SavedContentService.finalize`；P01旧入口仅作薄包装。当前五个配置使用同一Export、DocumentIRService、TableContext、TableSemantics、FinalContent和Storage实现。原件补充以allow_source_reads=False禁用，媒体仅处理声明与未交付状态，不执行正式service_evaluation入口、线上服务或资产提取。
 
 研究评分独立使用`expected_readback`读取canonical expected选段的原始语法，`saved_native`及`adapters`按声明分支读取保存SDK对象，`native_readback`保留已有明确角色与关系。候选读取接口不接收expected，最终正文从实际final.md读取，不能用内部IR补分。
 
@@ -55,7 +55,7 @@ DocumentParseResult._native_content持有小型不可变NativeContentContract，
 
 `native_inventory.inventory_native`先从输入根独立建立清单；`native_content_evidence.validate_native_content`检查对象/格位覆盖、父链、主视图、原文字、页映射、几何和声明，拒绝丢失、重复、错绑及伪能力。`verify_table_source`以实际源格、跨度、尺寸和绑定准入，服务推导的用途与范围留在派生证据，不反填原生角色。原生顺序与服务显示索引分开，未知顺序保留；未知来源不默认Docling。
 
-原执行身份与页状态取自配对observation的必要字段，Paddle原生页及generation batch另保留自身已有的失败、超时、截断、stop reason和warning证据路径；不使用状态工件中的正文或关系补答案。原执行、格式读取、公共转换和交付分别保留，缺少状态时保持unknown，信息warning本身不改为硬失败。IR构建后立即核验逐对象交接并捕获实际快照；源格到记录、完整表头路径及限定另作关系检查，编辑重放仅证明变换一致性。该边界的固定输入和独立反例见唯一报告；原件、媒体及完整ZIP仍不属于此开发入口。
+原执行身份与页状态取自配对observation的必要字段，各格式的原生文档、图像调用及Paddle generation batch另保留已有失败、超时、截断、stop reason和warning证据路径；不使用状态工件中的正文或关系补答案。原执行、格式读取、公共转换和交付分别保留，缺少状态时保持unknown，信息warning本身不改为硬失败。IR构建后立即核验逐对象交接并捕获实际快照；源格到记录、完整表头路径及限定另作关系检查，编辑重放仅证明变换一致性。该边界的固定输入和独立反例见唯一报告；原件、媒体及完整ZIP仍不属于此开发入口。
 
 Paddle新增paddle_native.read_paddle_blocks作为格式投影，读取原生block_id/rank/group/polygon，不将group变成父链或将rank变成全局读序。HTML源格保留DOM语法路径和投影身份，像素框只按实际尺寸及可证变换交接，布局检测结果与SDK导出作为审计；number区域中的业务文字保留。NativeExecutionState另保留页或generation batch的原始状态路径，不把predictor批序号绑成SDK区域ID。Paddle来源仍在私有证据中，现有公开来源枚举未扩张，IR以空selected_source及原因说明保留限制，绝不标为Docling。实际固定字段与同版源码依据见[P03](../pipelines/p03-paddleocr-vl-1.5.md)和[P04](../pipelines/p04-paddleocr-vl-1.6.md)。
 
@@ -100,6 +100,8 @@ MinerU 原生匹配层使用 PDF 书写方向检查字符归属，不包含文�
 ## 最终转换与状态
 
 最终渲染在所用管线的输出和适配逻辑明确后设计，接收已适配、分类和处理的正文、数据表描述及图片引用；未解决状态随内容进入组装。格式、覆盖与失败状态的唯一验收定义见[输出契约第7、8节](../specs/moparse-output-spec.md#7-未完成失败与覆盖)。源码中的JobService同步和异步完成路径均承接parse_result.status的partial，完整状态覆盖及线上接口仍须实际验收，不能由这次静态审查断言部署完成。图片按原图交付，不以图片未语义化为失败。
+
+共同native_content_status.native_status_impacts依据核验过的源对象、消费角色和实际待处理责任记录影响：每项保留code、来源locator、对象、字段、正文/读序/表格/资产影响、依赖、阻断及warning-only判断。单独区域不需要成对读序，无消费依赖的group元数据和source-free文字不消费的裁剪变换保留unknown及warning；多区域所需读序未知、明确续接无解、结构不足和未转换表格仍阻断对应转换。原执行与原生文档/图像调用/批状态分别保留，失败、截断、未处理页及缺少执行覆盖证明独立限制交付，媒体未交付不反写成原生失败；工程异常继续抛出。段落续接还须有已确认的原生顺序，未知数组序不授权合句。finalization复核实际最终编辑与正文一致，并以生产者跨度核对非表格出现位置的最终去向，工程遗漏直接拒绝；表格继续按原生源格与关系独立核验。conversion与delivery分别保存原因，不按warning名称或pipeline编号直接降级。
 
 ## 内部证据与持久化
 

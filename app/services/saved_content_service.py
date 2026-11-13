@@ -13,14 +13,15 @@ from app.models.parse_options import ContentParseOptions
 from app.models.parse_result import DocumentParseResult
 from app.models.source import StoredSource
 from app.services.export_service import ExportService
-from app.services.final_content_service import FinalContentService
+from app.services.final_content_service import FinalContentService, apply_text_edits
 from app.services.ir_service import DocumentIRService
 from app.services.native_content_evidence import (
-    native_partial,
+    NativeContentError,
     validate_ir_handoff,
     validate_native_content,
     validate_table_relations,
 )
+from app.services.native_content_status import native_status_impacts
 from app.services.table_semantics_service import TableSemanticsService
 
 
@@ -71,14 +72,20 @@ class SavedContentService:
         capture("semantic")
         FinalContentService().apply(result)
         validate_native_content(result)
-        if native_partial(result):
-            result.parse_result.status = "partial"
-        bridge = cast(dict[str, Any], result._source_verification['saved_native_bridge'])
-        issues = [issue for page in bridge['pages']
-                  for issue in page.get('local_read_errors', []) if issue.get('code') not in {
-                      'saved_native_media_unverified', 'saved_native_producer_incomplete'}]
-        saved_state["conversion"] = {"status": "partial" if issues or any(
-            view.status != "converted" for view in result._semantic_tables) else "completed", "issues": issues}
+        final = result._final_text_evidence
+        assembly, edits = final.get('assembly_markdown'), final.get('edits')
+        if not isinstance(assembly, str) or not isinstance(edits, list) or apply_text_edits(assembly, edits) != result.markdown:
+            raise NativeContentError('final text differs from its actual producer edits')
+        coverage = final.get('content_coverage', [])
+        if not isinstance(coverage, list) or any(c.get('disposition') == 'unresolved' for c in coverage):
+            raise NativeContentError('final content occurrence has no source-bound destination')
+        impacts = native_status_impacts(result)
+        saved_state['impacts'] = impacts
+        conversion = [i for i in impacts if i['blocks_conversion']]
+        partial = [i for i in impacts if i['requires_partial']]
+        saved_state["conversion"] = {"status": "partial" if conversion else "completed", "issues": conversion}
+        result.parse_result.status = 'partial' if partial or result._source_regions else 'completed'
         saved_state["delivery"] = {"status": result.parse_result.status,
+                                   "partial_reasons": partial,
                                    "media": saved_state["asset_delivery"]}
         capture("final")

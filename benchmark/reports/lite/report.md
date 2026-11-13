@@ -1,109 +1,103 @@
-# MO-Parse Lite：Paddle格式族接入与公共内容链横向工程验收
+# MO-Parse Lite：P02 V2真实交接、公共状态与完整source-only工程验收
 
-Paddle格式族共同适配已完成；P03/P04真实保存结果纵向转换分别为partial和partial。各组使用自己的native.json及配对observation，经既有共同契约、公共source-free处理和Storage生成实际正文；P01/P05用同一冻结源码完成回归，分别保持partial和completed。本轮是固定格式及受限转换的工程验收，没有Native或Product质量成绩，不代表八组或完整Paddle格式已验收。
+P02 Docling V2真实保存结果适配及公共处理已完成；unknown/partial状态契约已验证；source-only允许范围回归通过。固定P02文档交付为partial，实际原因是两处媒体未交付；原执行completed、格式读取read、当前转换completed分别留证。P01/P05/P03/P04固定保护复验完成，正文及关系不变。本轮仅为Normalization和受限内容链工程验收，没有Native或Product质量成绩，没有取得八组正式门禁。
 
-接手HEAD为`cb59cee158f75c0419c332d7adc387c4067539b5`，工作区干净，/opt/mosaic-parse与/opt/moparse指向同一入口。初始software_id为`67eb3d2cbd3300130bcef89dc59657f154731ca92431724cd81fccd4f6bf0849`；输入、历史产物、测试清单及索引身份见[接手记录](../../runs/lite/service/development/paddle-content-closure/intake.json)。最终代码、718项实际测试、手写断言及四份真实复验同绑software_id=`a93a04b6f01fd145e2af7bc762ecfb43b5a741488f3f2b65b00444eca16c16e0`，测试清单SHA256=`c9ed05ba35cb48ea02288a50cfd7e1f4865187f49d046a10abff8f577efc839e`，见[最终绑定](../../runs/lite/service/development/paddle-content-closure/final-binding.json)。HEAD未变，改动留在工作区，未提交或推送。
+接手HEAD为c91f1f71397f37f55dc993b4066cf845a7d19b9b，工作区干净，两条工作区路径均指向/opt/moparse。初始software_id为a93a04b6f01fd145e2af7bc762ecfb43b5a741488f3f2b65b00444eca16c16e0；输入、历史产物及索引身份见[接手绑定](../../runs/lite/service/development/docling-v2-content-closure/intake.json)。最终源码software_id为`ecca8275b3b2ae9b50b4205bfc4de0c29724e206bf6669311c6dc6b527205b07`，测试清单SHA256为`bbbf0134b26468ed7f746470f72199fc5b017656df7ff02920172c330e8d73da`，tests_sha256为`07f29011ff54ecb4421eaee62d5bbe666bc364ec85e889d16134f4e28f677645`。完整回归、五份最终转换及独立断言绑定相同冻结身份，见[冻结](../../runs/lite/service/development/docling-v2-content-closure/freeze.json)和[最终绑定](../../runs/lite/service/development/docling-v2-content-closure/final-binding.json)。HEAD未改，代码留在工作区，未提交或推送。
 
-## P03/P04自己的实际输入与正文
+## P02自己的实际输入与正文
 
-仅固定vanke-repurchase-share-changes-p001-003：P03/P04各自measured-quality800-r1目录内的三页native.json及observation，选择依据是区域、HTML表格、polygon、nullable rank和媒体声明的格式覆盖。没有遍历转换全部Lite，没有访问expected、原件或媒体，也未从原生导出、历史final或另一组结果补文。
+仅固定vanke-repurchase-share-changes-p001-003，选择依据为真实V2树、列表、多层表格源格、图片出现位置及GLM分支覆盖；没有遍历转换全部Lite。输入为[P02 native.json](../../runs/lite/artifacts/P02/measured-quality800-r1/vanke-repurchase-share-changes-p001-003/native.json)，实测SHA256=`666c32a82e47e3cbe86dfc93787b06196b8bf05640a4665b2fca6667ba6a09cb`；配对observation实测SHA256=`edfba49a175483c6c5a1c2ddf0858408f7e50492b9b4ac6a26ba5d84b03cda29`。前两页Docling局部页1/2指向本组documents/0，第三页为本组GLM单图调用，局部页0与物理页3分开。
 
-| 项目 | P03 | P04 |
-| --- | --- | --- |
-| 自身原生输入 | [native.json](../../runs/lite/artifacts/P03/measured-quality800-r1/vanke-repurchase-share-changes-p001-003/native.json) | [native.json](../../runs/lite/artifacts/P04/measured-quality800-r1/vanke-repurchase-share-changes-p001-003/native.json) |
-| 实测原生SHA256 | `6483f74c8859d7c25367872f2c079afd86f49966229ad0e2928e7ef6c86a485d` | `48cc533a25fad62b2c84377e12fc2e055084ea63179c439503aeb7735b1d2556` |
-| 实际正文 | [final.md](../../runs/lite/service/current/p03/development/paddle-vanke-3p-final/final.md) | [final.md](../../runs/lite/service/current/p04/development/paddle-vanke-3p-final/final.md) |
-| 阶段、来源、状态、持久化 | [evidence.json](../../runs/lite/service/current/p03/development/paddle-vanke-3p-final/evidence.json) | [evidence.json](../../runs/lite/service/current/p04/development/paddle-vanke-3p-final/evidence.json) |
-| 原执行 / 格式读取 / 公共转换 / 交付 | completed / read / partial / partial | completed / read / partial / partial |
-| 主结果区域 | 31：8标题、19文字、1表、3图片出现位置 | 31：8标题、19文字、1表、3图片出现位置 |
-| HTML投影与关系 | 44格，37非空、7空；5记录、25值关系 | 44格，37非空、7空；5记录、25值关系 |
-| 几何与媒体 | 31组polygon保留；3处图片未读取、未验证、未交付 | 31组polygon保留；3处图片未读取、未验证、未交付 |
-| 正文SHA256 | `9c7f5af0f85f520fbdb128a00febd6b0cbc11bcfaa9a6f7e693d7421ae291e58` | `8d09a279ca9c2cd14af4e0af7bc96c66fac8ae363306b87fa548b2814d231b06` |
+实际[P02 final.md](../../runs/lite/service/current/p02/development/docling-v2-vanke-3p-final/final.md)的SHA256为`4a778a3fb3ccc91626fad9226c0dfe58403517cfbbc62415aa3b025ed88985b5`，来源、阶段和状态见[evidence.json](../../runs/lite/service/current/p02/development/docling-v2-vanke-3p-final/evidence.json)。正文等于实际final快照、result.markdown、parse_result.renderings和[Storage result.md](../../runs/lite/service/current/p02/development/docling-v2-vanke-3p-final/persistence/jobs/vanke-repurchase-share-changes-p001-003/output/result.md)的UTF-8字节。没有复制V1正文、原生Markdown或历史final，也未读取原件、媒体或expected补文。
 
-两份原执行均为completed，三页已处理、原始errors为空；当前unknown读序、unknown group语义及媒体未交付由共同链分别保留，未把适配器漏字段归为上游unknown。三个页面各记录native_reading_order_unverified和native_group_semantics_unknown，三处图片记录saved_native_media_unverified；工程异常仍抛出，不伪装成原生失败。Paddle页或generation batch的已有状态、stop reason、EOS与长度标记保留原始路径，批内region索引未冒充SDK block_id；真实stop_reason未知仍未知，不由可读文字补成成功。
+实际调用为`close_saved_document → replay_native → adapt_saved_document → 既有Docling/GLM投影 → NativeContentContract及来源核验 → SavedContentService.finalize → Export → 实际IR → TableContext/TableSemantics → FinalContent → Storage`。P02没有独立的公共内容处理器，已有Docling读取器可承接此实际字段族，因此未复制V1 adapter或新增V2语义分支。
 
-## 实际格式差异、group、顺序与几何
+## V1/V2实际差异与共享边界
 
-下表仅描述固定输入的真实字段和同版SDK静态依据，详细字段清单、两处字面差异、配置及缓存源码SHA见[格式清单](../../runs/lite/service/development/paddle-content-closure/format-inventory.json)。SDK缓存仅作源码阅读，未导入、执行裁剪或启动模型。
+V1/V2在此指TableFormer配置；两组保存的docling均为2.139.0、docling-core均为2.101.1，DoclingDocument schema均为1.10.0。P02配置另声明TableFormer V2 revision e41ba5da7ef69004f4b329168791c2987abf917c；P01 V1 revision为fc0f2d45e2218ea24bce5045f58a389aed16dc23。它们是各自保存执行的身份，未在线核验权重或重新运行模型，不能由结果长相推断版本或归因全部差异。详细字段和每格原始值见[实际格式清单](../../runs/lite/service/development/docling-v2-content-closure/format-inventory.json)。
 
-| 维度 | P03 | P04 | 实际结论 |
+| 维度 | P01 V1实样 | P02 V2实样 | 共享处理结论 |
 | --- | --- | --- | --- |
-| 保存配置 | PaddleOCR-VL-1.5；revision `2a4195faa5e7914c12f2fc601d72c81caf8d2da5` | PaddleOCR-VL-1.6；revision `c5630abae1d940eafe0697512a0325494b02ab42` | 独立配置和工件身份；不是当前运行或在线模型证明 |
-| 共同依赖与保存镜像 | paddleocr 3.7.0、paddlex 3.7.2、paddle_transformers 5.10.2 | 相同包声明和镜像SHA | 保存配置可核对；不据此断言所有差异只由模型版本造成 |
-| 顶层与页面 | pipeline/config/pages/documents/page_processing；三页raw.res | 相同字段族 | 各自读取，不互借对象 |
-| 主视图与区域 | res.parsing_res_list；14、14、3个区域 | 相同结构和数量 | block_id/label/content/bbox/order/group_id/polygon均保留 |
-| group_id | 页内唯一、跨页重复，无global_group_id | 同样观察 | 仅页内group identity；父链和跨页关系未知 |
-| block_order | 部分序号递增，表格、附注和图片为None | 同样观察 | 保留rank和数组位置，未证明完整全局读序 |
-| bbox/polygon | 1654×2339像素、TOPLEFT；31组polygon | 相同尺寸和区域几何 | 原框和polygon分开保留，不用一者覆盖另一者 |
-| 表格 | 主content内HTML，8行6列、44个td锚点格 | 同结构，部分原字不同 | rowspan/colspan可读；无独立SDK OCR cell list、cell几何或显式header role |
-| 页面身份 | res.page_index/page_count为None | 同样缺少局部页索引 | 物理页取保存调用清单；原PDF映射只使用已有声明，None不改0 |
-| 原生导出 | research_region_exports与faithful_markdown存在 | 同样存在 | 仅审计保留，缺主结果时不回退 |
-| 原执行失败 | 当前三页无failed/timeout/unprocessed | 当前三页亦无 | 失败传播只有独立合成JSON验证，不冒充实样覆盖 |
-| 读取器与公共处理 | 同一个read_paddle/read_paddle_blocks及finalization | 同一实现 | 公共语义没有P03/P04选择分支 |
+| 文档树 | body、furniture、2 groups；23 texts、1表、2 pictures | 相同树和对象字段族 | 共用引用遍历，不以texts数组重排阅读树 |
+| 正文及父子 | label/text/level/content_layer、parent/children、prov/charspan | 相同字段和本范围树 | 原生角色及父链保留，显示角色另投影 |
+| 表格对象 | data.table_cells、num_rows/cols、orientation/grid及引用 | 相同字段族，均为8行6列 | table_cells为主结构；其余已有字段保留在不可变根，不补主答案 |
+| 原生源格 | 45锚点格，37非空、8空 | 46锚点格，37非空、9空 | V2自己的源格独立建清单，不照搬V1数量 |
+| 跨行跨列 | (0,3) rowspan=2，(1,3)为跨度覆盖 | (0,3) rowspan=1，另有空header格(1,3) | 逐原始offset/span交接，不补成V1跨度 |
+| 原生角色 | 9 column_header | 10 column_header | row_header、row_section、fillable在两份实样均为false；缺少与false分开 |
+| 原文字面 | 较完整的日期表头和该格15,386,999 | (0,1)无右括号，(2,1)字面15,386,99 | V2原样交接，不按V1或业务常识修复 |
+| 来源几何 | 节点/表框BOTTOMLEFT、源格TOPLEFT；原页尺寸及charspan | 同坐标合同，源格框数值不同 | 分别转换原点，原框和来源仍留在自身工件 |
+| 页面与GLM | Docling物理1/2，GLM物理3 | 各自相同分支范围和本组调用 | GLM只读自身json_result；raw/Markdown视图只审计 |
+| caption/footnote及富格 | 此表引用为空，无丰富ref | 同样未出现非空引用 | 不借其他组或相邻文字补附注，非空引用仅有合成验证 |
+| 原执行 | ConversionStatus.SUCCESS、errors为空，配对三页completed | 本组同样状态 | 状态不从当前可读文字重新推定 |
 
-同版PaddleX 3.7.2的_to_json在原group_id缺失时可回退为idx，合并工具也可能给多个区域同组值；本样本不能区分其来源，更不能据值相同生成父子。block_order只为未列入skip_order_labels的区域编号，不能覆盖被跳过区域；共同链保留数组显示顺序并标记原生阅读顺序unknown，不按bbox重排、不续接同组文字。真实多成员组、跨页组及完整原生父链在当前固定范围不可用。
+P02的375项字段读回核对相等。原生清单独立包含4容器、25个文字/列表对象、1表、2图片出现位置、46格、2媒体声明和2项元数据；它们分别有适配、消费、正文或不可变审计去向。5条记录、25值关系逐项核对本组记录行、完整已有表头路径、期间和实际最终跨度；37个非空格均定位，9个空字面未补值。原生未提供单位或附注引用时不捏造关系。字面差异没有被反推成原执行截断，更没有被修复成P01答案。
 
-像素单位和TOPLEFT有同版CropByBoxes的xyxy及img[ymin:ymax,xmin:xmax]源码依据；页面width/height来自处理后图像shape。当前use_doc_preprocessor=false支持处理帧到已声明输入帧的identity，原PDF逆变换仍unknown；已有旋转/cropbox仅保留元数据，不套Docling坐标。缺尺寸、退化框、无效polygon或预处理变换不明时，保留原字面及unknown/partial；源raster媒体框与可用于输入裁剪的框明确分开，未读取媒体字节。
+独立[docling_v2_native_assertions.py](../../../tests/validation/docling_v2_native_assertions.py)直接依据P02输入声明源值、跨度、角色、父链、完整列路径、GLM分支及最终位置，不导入app或评分器。实际图像URI只核对未读取声明，完整原根仍由工件SHA绑定；没有解码图像。其手写断言曾误认CRLF为字面转义、误把审计URI声明当完整payload，均据原输入代码点和既有审计策略纠正，未改生产文字或读取媒体，见[核对说明](../../runs/lite/service/development/docling-v2-content-closure/assertion-authoring-corrections.json)。
 
-实际区域字段差异只有第一页区域4的正文空格和第二页区域2的表格content。P03保留“证券简称：万科 A、万科 H 代”，P04保留“证券简称：万科A、万科H代”；P04表头的反斜杠+n是两个原生字符，不是换行，没有反转义或替换为P03答案。两份number标签中的“万科企业股份有限公司”均作为文字保留，未据标签删成页码；vision_footnote（含2,810,500股）各在自身正文位置保留，未以邻近关系补造记录附注。
+## 公共状态契约与实际实现
 
-HTML本身是原生B类结构，从DOM得到的44格为C类投影；当前没有A类独立OCR源格。行列、span及文字的locator绑定实际content路径与DOM语法位置，cell bbox/polygon保持缺少。5个记录及25值关系为既有公共用途/计量规则的D类推导，逐项核对原生记录行、完整表头、期间和实际最终跨度，不写成原生header role；37个非空格全部定位到final，7个空字面没有补0或业务解释。普通文字网格和混合/不足结构仍保守保留或partial，没有本轮新增表格业务规则。
+共同层保留unknown事实，再核对当前输出责任。每项impact带code、来源工件/视图/路径、对象、受影响输出字段、正文/读序/表格/资产影响、实际依赖、是否阻断转换、是否需partial及warning-only判断。状态不再由local_read_errors非空或reason白名单直接决定，也不按P01/P02/P03/P04/P05编号选择结果。
 
-## 实际代码、共同准入与公共消费者
-
-实际调用为`saved_content_closure.close_saved_document → replay_native → app.adapters.saved_native.adapt_saved_document → read_paddle_blocks → NativeContentContract核验 → SavedContentService.finalize → StorageService.write_result`。finalize沿用同一Export、DocumentIRService、TableContext、TableSemantics、FinalContent；未建立PaddleParserService、另一套IR或FinalContent实现，未复制P01/P05正文，未将原生Markdown直接充当final。
-
-| 文件与函数 | 本轮实际改变 |
+| 实际证据与输出责任 | 当前处理 |
 | --- | --- |
-| app/adapters/native_readers.py；moparse_eval/adapters.py | 将已有read_paddle无损移到中性模块，研究入口重新导入同一函数；研究主视图和评分责任未变 |
-| app/adapters/paddle_native.py；read_paddle_blocks/paddle_geometry/paddle_group_identity/paddle_execution_states | 共享Paddle解码、原生字段和显示映射、polygon、未知顺序/分组、局部页和原状态路径；无答案补全 |
-| app/adapters/native_config.py；saved_native.adapt_saved_document | 配置身份和允许分支集中声明，P03/P04都只允许paddle；各自producer与工件SHA保留，接入既有适配调度 |
-| app/adapters/native_inventory.py；inventory_native | 直接独立遍历输入区域、HTML语法格、媒体及审计对象；不调用读取器或从适配块反推清单 |
-| app/services/native_content_evidence.py | 校验配置、原生对象和页映射、group/rank/polygon/原点、媒体来源及不可变原状态；沿用IR和表格关系守卫 |
-| app/services/native_content_service.py | 依据结构共享HTML/GFM投影；number保守留文；区分原生raster框与未知输入变换的媒体框 |
-| app/services/ir_service.py；app/models/native_content.py | 配置locator绑定工件SHA；Paddle来源留在私有契约，公开来源枚举不扩张，selected_source为空并记原因，不伪造Docling来源 |
-| moparse_eval/service_replay_native.py；saved_content_closure.py | 将这两个已声明配置交给同一适配/受限开发入口；其余真实格式未启动 |
+| 单独正文，rank缺少、group未解释，但没有成对排序或归属消费 | unknown和warning保留；原执行completed、读取read、转换/交付可completed |
+| 多个输出区域，原生没有可核验的必要读序 | 逐对象记录排序依赖，转换/交付partial；数组和bbox不升级为读序 |
+| group元数据未知，当前转换未消费其父链 | 仅元数据warning，不制造父链；明确续接实际依赖仍无解时另行阻断 |
+| 裁剪变换或原点未知，当前纯文字不消费几何 | 原框及unknown保留，IR框不伪造，不因这项元数据单独降级 |
+| 用途未知、缺格、未支持结构或未承担表格转换 | 保留原生内容，按实际缺口及未决责任partial；不以table标签冒充已转换 |
+| 原执行failed/timeout、已知截断、未处理页或处理覆盖未获证明 | 原执行身份与原因保留，交付独立partial；当前读取/转换另判，不能反写原执行成功 |
+| 媒体声明未读取、未验证、未交付 | 独立资产partial；不以文件名、URI或文字读取成功覆盖 |
+| 适配或内容交接自身工程异常 | 抛出工程错误，不改为上游unknown或原生failed，不生成虚假成功正文 |
 
-共同层没有P03/P04专用语义规则。保留配置/producer、允许branch、主视图、实际SHA、出现位置、物理页与局部页、原生关系、完整格位与范围守卫；能力由输入结构核实，不靠validated/supports_tables等布尔标记。主视图缺少、locator错绑、格位不足或页映射冲突不会因pipeline被接纳而通过。未提升的布局检测、导出和原始字段绑定不可变原生工件、视图和路径作审计，不变成另一份答案。
+| 文件与函数 | 实际修改 |
+| --- | --- |
+| native_config.CONFIGURATIONS；service_replay_native.replay_native | P02交给同一个有来源守卫的适配入口，保留独立producer/configuration和Docling/GLM分支权限 |
+| native_content_status.native_status_impacts/execution_incomplete | 从核验对象和实际消费依赖计算影响，区分元数据、读取/转换、未决输出、原执行和资产责任 |
+| native_content_evidence._execution/native_partial | 原observation只消费状态allowlist；Docling文档、GLM调用和Paddle批状态保留自身路径，当前状态按影响判定 |
+| native_content_evidence._cell_matches/validate_native_content | 逐格保全offset、row_section、fillable及缺少状态，错误内容类型不能擦除读取标记后宣称成功 |
+| native_content_service._table | 原始格网有洞时在投影处保留并记录结构不足；后续删格/错绑仍由原来源守卫拒绝 |
+| FinalContentService.apply | 续接须有已确认原生顺序；实际生产者跨度记录非表格出现位置到final的去向 |
+| SavedContentService.finalize | 验证最终编辑重放和出现位置，不把工程遗漏包装成partial；conversion和delivery分别保存原因 |
+| scripts/test_source_only.py | 完整允许集合受控执行，新增实际收集/执行nodeid及阶段结果；禁止仓库语料和媒体I/O |
 
-## 双向完整性、负向反例与真实阶段
+配置、实际SHA、主视图、物理/局部页、locator、父链、源格/跨度/角色、源关系及范围守卫保留。生产app没有导入expected、评分器或来源Oracle，没有改公开HTTP schema。GLM没有获得PDF字符来源，Paddle仍在私有证据根保留来源细节，公开来源枚举的限制未借本轮扩张。
 
-每份Paddle原生清单分别覆盖27个文字/标题对象、1表、3图片出现位置、44个HTML语法格、3媒体声明及64项结构/纯元数据审计。去向分别为实际正文、公共表格转换、37个非空格的final位置、7个未补值空字面、明确媒体未交付或不可变原生审计。清单直接从输入建立；适配、消费模型及最终去向按同一工件和occurrence身份核验，同字面不同区域不能替代。不要求布局检测或纯元数据打印为正文，也没有未定位正文或非空格用partial豁免。
+## 独立反例、状态迁移与阶段
 
-[独立原生断言](../../../tests/validation/paddle_native_assertions.py)直接依据各自输入手写31组polygon、原生文字、页、格位/跨度、记录与完整表头、期间、媒体和实际final位置，未导入app、评分器或来源Oracle。新增[test_paddle_saved_content.py](../../../tests/unit/test_paddle_saved_content.py)在输入不变时分别破坏正文、标题、列表成员、group成员、group_id、block_order、polygon、bbox原点/数值、整表、HTML格、页映射、媒体声明、原生ID、locator、显示文字及未知顺序；相邻同字面替换、虚构group父链和失败改成功均被拒绝。重复对象、跨分支借用、表头/单位/期间/附注错绑继续由已执行的共同契约用例保护，没有以数量相等或字符串命中替代关系核验。
+[初始三个失败](../../runs/lite/service/development/docling-v2-content-closure/initial-failures.json)分别复现：单独Paddle正文被无关unknown降级，多段GLM无可靠顺序却completed，P02未进入共同契约。新增[状态测试](../../../tests/unit/test_native_content_status.py)和[V2测试](../../../tests/unit/test_p02_saved_content.py)分别断言四层状态、warning、影响来源和实际文字；覆盖单区域缺rank/未知group、多区域顺序、同group及跨页重复、未知用途/缺格、媒体、failed/timeout/截断、信息warning、未知与独立未完成并存、原失败与可读正文共存，以及工程异常不产出伪成功。
 
-中间170项定向回归曾揭示bbox与输入列表别名、非对象区域缺页身份两个实际缺口，已分别以深拷贝和明确物理页投影修复；失败及修复前后证据保留，未把这些遗漏标为上游unknown。合成P03/P04包装的相同Paddle结构经同一finalization得到相同正文和语义，pipeline、producer和工件身份仍各自保留；实际两组则各用自身原字，未作改标签实样验证。
+后续独立反例还发现未知数组序可被续接逻辑误用、擦除reader issue列表可漏掉实际unsupported对象。现在续接保留待解决状态，公共层直接依据核验后的内容角色与未承担责任判断。正文在final前被删时，公共finalizer直接报工程交接错误；开发入口既有edit ledger此前也会拒绝该变换，未将它说成原来完全无检测。表格转换未记账、恶意清除读取失败标记和源格flag/offset错绑同样有拒绝或partial反例。删除/替换/重复、跨分支、同字面邻源、表头/单位/期间/附注错绑继续由完整允许集合中的共同测试保护；编辑重放只证明变换一致性，不能代替来源关系Oracle。
 
-四份真实结果均捕获adapted、source_pages、native_pages、exported、ir、assets、semantic、final八个观察点。source_pages/native_pages明确不适用；ir在实际DocumentIRService构建后捕获消费对象，无相邻快照复制。exported、semantic、final的生产者编辑精确重放；ir/assets记录无文字变化及各自真实对象/状态。关系正确性由独立原生格位及断言核验，edit重放只证明变换一致性，未从隐藏IR再生正文补内容。
+唯一旧状态断言迁移是P01的纯合成unknown_origin用例：其阅读树已知、文字保留、无资产及裁剪责任，旧的无条件partial与本轮合同冲突。现在要求四层状态、原点仍UNKNOWN、service_bbox为空、warning保留且没有输出依赖；其余文字和结构断言保留，真实P01的368项、45格及历史产物未改。依据见[状态迁移记录](../../runs/lite/service/development/docling-v2-content-closure/status-policy-migration.json)，不是为兼容Paddle降低真实保护基线。
 
-四份final.md、实际final快照、result.markdown、parse_result.renderings及Storage落盘result.md按UTF-8字节相等。实际输入native与配对observation在前后SHA相等，原PDF SHA仍只是已有声明。P03/P04本次串行开发转换分别约1.42秒和1.41秒，仅为工程运行观测，未替换、相加或补成历史解析成本。
+五份真实结果均捕获adapted、source_pages、native_pages、exported、ir、assets、semantic、final。来源补充两阶段明确不适用；IR来自实际构建，未复制相邻快照。exported、semantic、final生产者编辑精确重放，IR/assets保留实际无文字变化及对象差异。P02另有27项非表格出现位置的最终生产者跨度核对；所有原生对象去向均有来源，不从隐藏IR重新拼答案补final。实际命令和串行资源见[运行记录](../../runs/lite/service/development/docling-v2-content-closure/serial-development-runs.json)。
 
-## P01/P05迁移保护
+## 四组保护与当前真实状态
 
-P01/P05固定输入未改，以最终源码重新走同一公共链。新正文、全部SemanticTableView及记录/表头/期间/限定关系与上阶段开发基线完全相等，历史正文、证据和原始输入字节保留。P01 Docling与GLM分支隔离、P05全页GLM仍由各自来源合同控制，没有为Paddle降低旧断言。
+| 管线 | 本次实际正文与证据 | 原执行 / 读取 / 转换 / 交付 | 保护结果 |
+| --- | --- | --- | --- |
+| P01 | [final.md](../../runs/lite/service/current/p01/development/docling-v2-stage-regression-vanke-3p-final/final.md)、[evidence](../../runs/lite/service/current/p01/development/docling-v2-stage-regression-vanke-3p-final/evidence.json) | completed / read / completed / partial | 368字段、45格、37非空、25值关系；2处媒体未交付 |
+| P05 | [final.md](../../runs/lite/service/current/p05/development/docling-v2-stage-regression-vanke-3p-final/final.md)、[evidence](../../runs/lite/service/current/p05/development/docling-v2-stage-regression-vanke-3p-final/evidence.json) | completed / read / completed / completed | 44 HTML格、37非空、25值关系；自身footnote文字保持 |
+| P03 | [final.md](../../runs/lite/service/current/p03/development/docling-v2-stage-regression-vanke-3p-final/final.md)、[evidence](../../runs/lite/service/current/p03/development/docling-v2-stage-regression-vanke-3p-final/evidence.json) | completed / read / partial / partial | 31 polygon、44 HTML投影格、37非空、5记录25值关系；3媒体未交付 |
+| P04 | [final.md](../../runs/lite/service/current/p04/development/docling-v2-stage-regression-vanke-3p-final/final.md)、[evidence](../../runs/lite/service/current/p04/development/docling-v2-stage-regression-vanke-3p-final/evidence.json) | completed / read / partial / partial | 同样数量，全部使用自身输入和原字；3媒体未交付 |
 
-| 保护项 | P01 | P05 |
-| --- | --- | --- |
-| 本次实际正文 | [final.md](../../runs/lite/service/current/p01/development/paddle-stage-regression-vanke-3p-final/final.md) | [final.md](../../runs/lite/service/current/p05/development/paddle-stage-regression-vanke-3p-final/final.md) |
-| 本次实际证据 | [evidence.json](../../runs/lite/service/current/p01/development/paddle-stage-regression-vanke-3p-final/evidence.json) | [evidence.json](../../runs/lite/service/current/p05/development/paddle-stage-regression-vanke-3p-final/evidence.json) |
-| 原生字段与源格 | 368项历史字段核对；45格、37非空、8空 | 44个HTML格、37非空、7空 |
-| 关系 | 5条记录、25值关系、完整表头/期间来源保持 | 5条记录、25值关系、完整表头/期间来源保持 |
-| 正文与状态 | 原SHA `9e2c899567e66599ee29fde3ed71cff3d4d8842f154bd3bdf676336335eb81a7`；partial | 原SHA `f8556a2134167b7e66b2df93ce47a85230c015497215525f2d43ca30d6fc3349`；completed |
-| 媒体与持久化 | 两处媒体未交付及warning保持；实际落盘一致 | 当前主结果无待交付媒体；实际落盘一致 |
+四组最终正文UTF-8字节、全部SemanticTableView、原生对象去向、warning及实际最终编辑与上一阶段完全相等，四层状态也相同；没有改历史正文或历史状态。P03/P04每组31项group未知仅作元数据warning，31个输出出现位置各有同页多对象读序依赖、加3个媒体未交付责任，仍有实际partial依据；没有因unknown影响修正而自动completed。数量仅描述固定开发范围，不能推导全部Docling、Paddle或八组质量。
 
-旧Paddle合成测试曾把未知输入变换的raster框放在_picture_candidates；本轮改为验证绑定媒体声明中的同一精确数值框、producer_output_raster及input_transform=unknown，并要求输入框为空、bytes_accessed=false。改动发生在旧Paddle断言及审核摘要，不是降低P01/P05的368项、源格、正文或关系基线。
+## 完整source-only范围、保全与限制
 
-## 实际测试、执行边界与未完成能力
+最终`source-only-frozen`实际4175 passed、退出0：167个允许模块全部执行，17个共享依赖，允许模块未执行数为0；81个既有排除模块未收集，原因逐项保留在清单及运行记录。4175个收集nodeid与4175个实际执行nodeid完整记录，12525项setup/call/teardown报告全部passed，没有继承历史718项。见[运行JSON](../../runs/lite/service/development/docling-v2-content-closure/source-only-frozen.json)、[JUnit](../../runs/lite/service/development/docling-v2-content-closure/source-only-frozen.xml)和[完整审查](../../runs/lite/service/development/docling-v2-content-closure/source-only-review-frozen.json)。
 
-冻结后通过scripts/test_source_only.py实际执行718项：19个已审查模块、15个共享依赖，退出0、边界违规0、运行中源码和测试未变。清单内其余146个已审查模块及81个混合/媒体/未接纳模块本轮未执行，未继承旧JUnit。见[运行JSON](../../runs/lite/service/development/paddle-content-closure/source-only-verified.json)及[JUnit](../../runs/lite/service/development/paddle-content-closure/source-only-verified.xml)。新增模块、独立断言、fixture、辅助依赖和旧Paddle断言先逐项读入审查再更新摘要/哈希；父conftest禁用，插件自动加载关闭。保留原始六项失败、170项定向回归中的失败及较早716通过/2失败的旧Paddle接口回归，不改称通过；历史执行边界偏差原记录未改。
+执行前读取全部允许模块及共享辅助，检查导入、模块级执行、fixture、间接I/O和子进程。父conftest禁用，插件自动加载关闭，仅显式asyncio；SDK只构造文字/表格对象，不运行converter。受控编译及调度子进程只处理自造文字/JSON/XML和临时锁，不是实际管线回放；子进程调用路径已审查，未把父进程audit hook宣称为独立的子进程审计。Oracle只调用纯结构校验/常量目录等已审查辅助，不执行真实来源验收CLI；合成报告仅写tmp_path，不再生成正式成绩或覆盖维护报告。
 
-当前执行范围包含共同契约、Paddle/P01转换、阶段/ledger、FinalContent、表格入口、原生读回和必要T/L/B纯文本回归。相关比较只用独立合成文字/结构，未改T/L/B规则、Oracle或分母，未实际比较candidate与canonical expected。四份真实开发转换各由同一入口串行执行，限制8 CPU、8 GiB，关闭GPU可见性并拒绝网络、原件、媒体及参考答案I/O，见[串行运行记录](../../runs/lite/service/development/paddle-content-closure/serial-development-runs.json)。
+首次完整预检为4169通过、1失败，揭示公共几何warning仍错误降级无裁剪责任文字；该失败、较早定向失败和210项定向修复验证均保留。最终全量是在源码及断言冻结后执行，software_unchanged/tests_unchanged均true，边界违规0。既有历史执行偏差仍保留原记录，未追溯改称合规。
 
-16个相关app源码目标mypy通过，限定软件/测试Ruff通过，见[静态检查](../../runs/lite/service/development/paddle-content-closure/static-checks.json)。[读取抽取核验](../../runs/lite/service/development/paddle-content-closure/readback-extraction-check.json)确认read_paddle函数AST仅移动归属，研究read_glm未变，生产适配不导入评测器或测试辅助。公开HTTP schema与旧SHA完全相同，14条路径，未启动lifespan或发送请求，见[协议保全](../../runs/lite/service/development/paddle-content-closure/http-schema-check.json)。6份实际修改的非语料Markdown政策检查0违规，限定软件/文档diff检查通过，见[文档检查](../../runs/lite/service/development/paddle-content-closure/documentation-checks.json)；通用检查没有扫描语料、运行产物或报告。本报告只作当前授权范围的专门维护，历史后缀和原成本段保留。
+17个相关app源码目标mypy通过，限定修改软件/测试Ruff及diff检查通过，见[静态检查](../../runs/lite/service/development/docling-v2-content-closure/static-checks.json)。7份修改的非语料技术文档Markdown政策检查0违规，见[文档检查](../../runs/lite/service/development/docling-v2-content-closure/documentation-checks.json)。公开HTTP schema与上一阶段SHA完全相同，14条路径，未启动lifespan或发送请求，见[协议保全](../../runs/lite/service/development/docling-v2-content-closure/http-schema-check.json)。通用检查没有扫描语料、运行产物、报告或reference-decisions；唯一报告只作本任务当前章节及历史保全的专门维护。
 
-未执行PDF/图像创建、读取、解码、渲染、字层、OCR、VLM或模型，没有网络、GPU/TTS、在线服务操作、部署、完整ZIP、正式评分、八组真实回放、提交或推送。原生、原状态、P01/P05历史正文/证据、原成本和current要求索引SHA保持；formal service/current/index.json仍不存在，未激活正式current、重编要求图或重签旧门禁。Expected、selection、正式分母和五个输入范围未编辑或补答案；63份来源及合同、107份缺口、3份待独立验收保持，55份为历史保护集合、不与63相加。全局structure_blocked及正式成绩撤回不变。
+五份开发转换逐份串行，CPU affinity最多8个、地址空间8 GiB、外层并发1，GPU可见性关闭，网络、原件、媒体和参考答案I/O由入口拒绝。开发耗时只记工程运行观测，未替换原解析成本或相加冒充端到端成本。原生/observation、四组历史正文及证据、原成本摘要、current要求索引SHA保持；正式service/current/index.json仍不存在，未激活正式current、重编正式要求图或重签旧门禁。较早git_head的历史证据保留其原语境，不冒充当前正式准入。
 
-当前只完成上述Paddle固定格式与共同链的有界验收，真实多成员组/父链/跨页组、独立OCR cell list、cell几何、真实失败/超时/未处理页均未在固定实样出现；相关JSON合成测试不算真实覆盖。全局读序和group父关系未知、三处媒体交付及完整离线包尚未完成，公开来源枚举暂不能表达Paddle的细项，完整来源仍在私有证据根；图片语义解释不在目标内。下一依赖依次为P02的Docling V2差异、P06/P07 typed及Standard/Advanced差异、P08 visual来源限制，须另行明确授权，本轮未启动。只有八组共同处理及独立真实格式门槛稳定后，才可按授权开展Native/Product诊断、受控回放和正式评分。
+Expected、selection、正式分母及五个输入范围未修改或补答案；63份来源及合同、107份覆盖缺口、3份待独立验收保持，55份为历史保护集合，不与63相加。全局structure_blocked及正式成绩撤回不变。本轮没有PDF/图像创建、读取、解码、渲染、字层、OCR/VLM、模型、网络、GPU/TTS、在线服务操作、部署、完整ZIP、真实candidate与expected比较、正式评分、八组真实回放、提交或推送。
+
+本次真实P02未覆盖跨页表、丰富cell ref、非空caption/footnote、row_section/fillable=true、原生失败/超时/未处理页；纯合成例不算这些实样已验收。P03/P04真实多成员group/父链及全局读序仍未知，媒体及完整输出包未交付，公开来源枚举的Paddle细项限制保留。后续依赖为P06/P07 Typed与Standard/Advanced差异，再到P08 Visual来源边界，均未在本轮启动；Native/Product真实诊断及正式比较仍需独立授权和既有门槛。
 
 ## 历史开发与来源保护证据
 

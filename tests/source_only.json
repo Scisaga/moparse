@@ -1,6 +1,6 @@
 {
   "purpose": "Explicit reviewed source-only pytest entry; no parent conftest or automatic plugin collection.",
-  "review_basis": "Inspected imports, module-level code, fixture/helper calls and I/O sites in the existing semantic/source suite. Textual media links are parsed without loading their targets. Runtime audit rejects media file I/O and network endpoints.",
+  "review_basis": "Stage 8 reread every allowed test module and declared shared helper; inspected AST imports, module execution, fixture dependencies, every filesystem/process/service call site and the invoked helper bodies. Pure semantic tests operate on literals or invented tmp_path JSON/Markdown/XML; canonical references are not mounted as answers. Native SDK tests construct text/table objects only, without parsing or images. Parent conftest disabled; plugin autoload disabled; explicit asyncio only. Runtime audit rejects media, repository corpus and network I/O. Detailed review and frozen identities are retained with the stage evidence. The prior P01 synthetic unknown_origin assertion was reviewed and migrated to the Stage 8 duty-based contract: its reading tree/body remain complete without a crop consumer; source origin remains UNKNOWN and all four states and warning-only impact are now asserted. Real P01 field/cell/text assertions are unchanged. Added continuation-order and final-occurrence checks use immutable source identities and producer spans only. Final fixed-input V2 assertion review distinguishes actual CRLF codepoints 13/10 from literal backslashes and checks media URI audit declarations without decoding; immutable artifact retains the complete native root. All additional state/continuation/final-occurrence tests use only literals and existing source-free services.",
   "modules": {
     "tests/unit/test_action_source_audit_integration.py": "6eb76f3141c19028c0a267fc7a60b37a4997d442f01f0193349654c4a1d8872d",
     "tests/unit/test_active_aspect_requirements.py": "f320a5515d7339a7d9684a01365ee3bf3ecb2a8f1665cd68b99cfce41b2e69b8",
@@ -68,7 +68,7 @@
     "tests/unit/test_nested_content_responsibility.py": "be3f5b6afbc3f0e39d3e87409b731e80bae12d3bc35155c8ac6c05db04280c98",
     "tests/unit/test_nested_nominal_production_path.py": "e9be326c198b9ff61a13d24321392e3d0d3b87b7fc2764bb9247726d7ad5c232",
     "tests/unit/test_nonfinite_operation_production.py": "ff0467102fe8ab0ad6557cfc1e46393183403415dacc11d89f2bb01cd6229233",
-    "tests/unit/test_p01_saved_content.py": "bdf978d80939fd5419819a7e60f87b8c07883e785fc858ce43c2cdc1e16e10f7",
+    "tests/unit/test_p01_saved_content.py": "c117931fdd89949208c36c92a39e345a0f96ac534782149e706ab858fe6eb575",
     "tests/unit/test_period_basis_equivalence.py": "48acf89a71c08cff13f571ee1c0d99b994e8d2281234f7103a4889e1dc7042e1",
     "tests/unit/test_proposition_coordination_sources.py": "ba6ba275f8ce34c0bb6ccf45af2170f938dd6eac3ac6704193cbcc4f34f251ed",
     "tests/unit/test_proposition_nominal_owner.py": "03c82e6546570f8043786ba9b057efafe130d61b17e8eaf49760b2d603a5acb4",
@@ -166,11 +166,13 @@
     "tests/unit/test_toc_evidence.py": "2d4fd676267b3490825b9d74dab79aaa848a43dd394718b9fbbe05d2cdec2736",
     "tests/unit/test_toc_parentage_contract.py": "fc15471bdd6097b31fa8dcaf764f0e186d2c1f070ee54ba4eecc3dc709c2b87a",
     "tests/unit/test_shared_saved_content.py": "9dff46159439ea800664f32ddd77094cc31d946c92b54bf8d2b2f87b5c102e63",
-    "tests/unit/test_paddle_saved_content.py": "0570592374359d041460624774ff1ff194f31cb6d0e0f0b7b978168d6f56d785"
+    "tests/unit/test_paddle_saved_content.py": "0570592374359d041460624774ff1ff194f31cb6d0e0f0b7b978168d6f56d785",
+    "tests/unit/test_native_content_status.py": "5f71b147eeef83bc6629afe91d0fa193377aa976bbe40a2404806c59252a0a8e",
+    "tests/unit/test_p02_saved_content.py": "5bd68be4e709b6814709630ffc059716427bb11d5820813fa9cf6e4d94cd7013"
   },
   "dependencies": {
     "pyproject.toml": "e622a4f69bfb14f4919f276dd34272373f669abe6b236e3251e7719cd37005c8",
-    "scripts/test_source_only.py": "57033f3c0db916297922df761df79c9424b7dbcbdd9fda93f209e9f66766b213",
+    "scripts/test_source_only.py": "d1a01fb7ab748027f2aaae1255720e972e7029e6df2f0a7a105837ef970175ff",
     "tests/conftest.py": "5d5dedae16c6ed2db3800413ae9811f366f0d5d98946988c74640ef5d50a257f",
     "tests/unit/requirement_gate_fixture.py": "85bfbc13d90880e12046a4ae75f47fe243a14162c96a0aee8ff2188d0934ca83",
     "tests/validation/lite_fixed_source_assertions.py": "f57e88f25733eafd593f5a907879805c73a937bac3db95ec94c9698e7df22e2f",
@@ -183,7 +185,9 @@
     "tests/validation/lite_review_alibaba_assertions.py": "8a548990fa5759b74a7565ce95c505661221d40645406f3a6c9cf27f1c2b0647",
     "tests/validation/lite_stage3_assertions.py": "6e6b7231865f30768bc3cd3510810e01c841e0a2b93b2d2f3bb2b1944362f2be",
     "tests/validation/shared_native_assertions.py": "97df31e5af68a7bef00aa7c1a1bd865b966d0c596702adb2763435a0c2644a1a",
-    "tests/validation/paddle_native_assertions.py": "f600374412f1d06c954b741f353ef0d0679e94b2a436e7553d8450c79f09077c"
+    "tests/validation/paddle_native_assertions.py": "f600374412f1d06c954b741f353ef0d0679e94b2a436e7553d8450c79f09077c",
+    "scripts/render_lite_report.py": "3b381f7628481aa8dfe0eac121a2bd79ec4b3f344dc497b7627ae537cd562abb",
+    "tests/validation/docling_v2_native_assertions.py": "e5cf068f6cd2b3afe875e6a25e9ae19f41ea7cd6ab9228868d48cf3d086a8367"
   },
   "excluded_modules": {
     "tests/integration/test_http_api.py": "Outside the source/requirement/comparison software regression; dependencies and possible media/service side effects not admitted or collected.",
@@ -281,7 +285,10 @@
     "three_layer/read_candidate_markdown and native text structure readers -> grade_layers -> expected_report/validate_evidence",
     "requirement_source_parallel_compile: spawned Python source-only JSON/XML compiler; subprocess identity reads git rev-parse HEAD only",
     "moparse_eval_table_readback_repairs.sdk_document: Docling text/table JSON objects and export only; no parser, PDF or image data.",
-    "test_p01_saved_content.native/source/prov/cell/close: invented JSON and metadata only; SavedContentService uses a declared synthetic checksum and never opens the PDF path"
+    "test_p01_saved_content.native/source/prov/cell/close: invented JSON and metadata only; SavedContentService uses a declared synthetic checksum and never opens the PDF path",
+    "test_native_content_status.content_input/finish: independent JSON and non-mounted source metadata only; cases assert all four states and source-bound output duties",
+    "scripts.render_lite_report.render: tested with invented complete decisions and explicit tmp_path output only, no images or maintained report write",
+    "docling_v2_native_assertions.accept_fixed_docling_v2: hand-authored P02 native-field and final-span assertions; no I/O or app/evaluator import"
   ],
   "capabilities": [
     "source inventory and raw/inline bindings",

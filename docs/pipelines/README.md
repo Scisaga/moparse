@@ -4,7 +4,7 @@
 
 这里的“管线输出”指完整声明配置产生的原生结构、Markdown、媒体及状态。混合配置包含两个分支及其原始页序关联；一次 VLM 请求的文本、当前 worker 投影和 MO-Parse 最终正文分别核对。
 
-2026-11-12在已完成的Docling/GLM共同契约基础上，P03/P04已作为Paddle格式族接入同一source-free内容链，各用自己的固定三页保存结果生成正文并持久化。app/adapters/native_readers.py共享无损读取，paddle_native.py保留Paddle特有分组、rank、polygon、像素及HTML投影，研究读取主视图政策保持；公共语义没有P03/P04编号分支。各组自己的字面、配置及来源不抹平，具体范围、partial、原生差异和P01/P05回归见[唯一报告](../../benchmark/reports/lite/report.md)及逐组说明。P02、P06/P07和P08未在本轮接入共同准入，后续依[技术路线](../engineering/technical-route.md)推进。
+2026-11-13的共同source-free准入覆盖P01/P02自己的Docling V1/V2及GLM、P05全页GLM与P03/P04 Paddle固定保存结果。相同格式共享读取和投影，五个配置沿用同一Export、IR、表格语义、FinalContent和Storage；配置身份及来源权限独立，公共语义不按编号选择答案。unknown按其实际输出依赖记录影响，无关元数据不自行变成partial；原生失败、结构缺口、未知必要读序及媒体未交付保持独立依据。实际格式、正文、状态、source-only范围及四组保护由[唯一报告](../../benchmark/reports/lite/report.md)维护；P06/P07及P08尚未完成此共同准入的真实纵向验收。
 
 ## 管线索引
 

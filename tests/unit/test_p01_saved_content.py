@@ -362,7 +362,19 @@ async def test_local_adapter_gaps_preserve_neighbors_and_are_partial(defect):
     result, evidence = await close(n)
     assert "Ordinary prose 17.25" in result.markdown
     assert "After the table." in result.markdown and "Signed 2025-01-17" in result.markdown
-    assert evidence["status"] == "partial" and evidence["warnings"]
+    if defect == "unknown_origin":
+        # A known reading tree and retained body do not consume this frame.
+        # Stage 8 keeps the source uncertainty without inventing a crop duty.
+        assert evidence["status"] == "completed" and evidence["warnings"]
+        states = evidence["states"]
+        assert [states[k]["status"] for k in ("original_execution", "readback", "conversion", "delivery")] == [
+            "completed", "read", "completed", "completed"]
+        block = result._native_page_blocks[1][1]
+        assert block["coordinate_origin"] == "UNKNOWN" and block["service_bbox"] is None
+        impacts = [i for i in states["impacts"] if block["id"] in i["objects"]]
+        assert impacts and all(i["warning_only"] and not i["dependencies"] for i in impacts)
+    else:
+        assert evidence["status"] == "partial" and evidence["warnings"]
     if defect in {"missing_position", "overlapping_cell"}:
         assert "1234.50" in result.markdown and "1100.00" in result.markdown
 

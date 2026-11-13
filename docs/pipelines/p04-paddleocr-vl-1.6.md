@@ -70,17 +70,19 @@ HGNetV2 布局子模块与 VLM 的 attention 分别配置，不能把全局 SDPA
 
 ### 5.1 固定三页保存格式与共同服务验收
 
+2026-11-13的共同状态修正保留以下全部原生unknown，不再仅因reader报告未知便降级。group语义只有被当前输出责任依赖时才阻断；单独区域没有成对读序责任。当前三页实样仍有多区域读序未获证实及三处媒体未交付，新的开发复验仍为partial，历史正文与状态工件不改写；当前影响依据与完整回归仅见唯一报告。
+
 本轮选择vanke-repurchase-share-changes-p001-003仅因实际格式覆盖：三页区域数14、14、3，含标题、正文、真实HTML表格、polygon、nullable block_order和媒体声明。主视图为各页raw.res.parsing_res_list；raw.research_region_exports及entry.faithful_markdown存在，但只保留审计、不补主答案。res.page_index/page_count均为None，输入物理页由原页调用清单建立，不把None改为0，也不按分支局部索引代替原PDF页。
 
 实际区域提供block_id、block_label、block_content、block_bbox、block_order、group_id和block_polygon_points，没有本轮可用的原生独立OCR源格、cell bbox/polygon或原生语义父链。每页group_id在当前样本中唯一，跨页重复；同版SDK序列化可将缺失group_id回退为数组idx，因此本轮不能判定这些值来自真实合并组还是回退。共同输入保留页内group identity，不生成父子或跨页关系；真实多成员组尚未覆盖，仅由独立JSON测试保护。
 
 同版PaddleX 3.7.2缓存源码的_to_json只为未列入skip_order_labels的区域递增block_order，表格、附注及图片保留None。它是部分标签的SDK序列化序号，未提供完整全局阅读顺序证明；保留原rank和数组位置，服务显示维持数组顺序，内部明确unknown，不按bbox重排或强行续接同组文字。
 
-页面尺寸为1654×2339，model_settings.use_doc_preprocessor=false；原生region bbox和polygon分别保留，即使局部边界不同也不互相替换。像素单位及TOPLEFT由同版CropByBoxes的xyxy和img[ymin:ymax,xmin:xmax]合同投影支持，尺寸来自结果记录的处理后图像shape；没有从0至1000数值猜测归一化，也没有套用Docling原点。反向原PDF变换仍为unknown，旋转和cropbox仅保留已有元数据；缺尺寸、退化框或无法确认的预处理变换保留未知和partial。缓存源码只作静态阅读，未导入或执行Paddle、图像裁剪或模型。
+页面尺寸为1654×2339，model_settings.use_doc_preprocessor=false；原生region bbox和polygon分别保留，即使局部边界不同也不互相替换。像素单位及TOPLEFT由同版CropByBoxes的xyxy和img[ymin:ymax,xmin:xmax]合同投影支持，尺寸来自结果记录的处理后图像shape；没有从0至1000数值猜测归一化，也没有套用Docling原点。反向原PDF变换仍为unknown，旋转和cropbox仅保留已有元数据；缺尺寸、退化框或无法确认的预处理变换保留未知，按实际输出依赖决定partial。缓存源码只作静态阅读，未导入或执行Paddle、图像裁剪或模型。
 
 HTML表为8行6列、44个DOM源格，含rowspan/colspan但全部使用td，没有显式header role。MO-Parse解析出的格位属于HTML投影，未冒充SDK独立OCR格或原PDF单元格几何；共同有界用途/计量规则随后建立5个记录、25个值关系及完整表头/期间路径，37个非空格定位到真实final，7个空字面未补值。普通HTML网格、混合/不足结构继续保留或partial，number标签本身不证明页码，因此当前该标签中的公司文字保留。
 
-共同路径为replay_native → app.adapters.saved_native.adapt_saved_document → read_paddle_blocks → NativeContentContract核验 → SavedContentService.finalize → Export/实际IR/TableContext/TableSemantics/FinalContent → Storage。原执行completed、格式读取read、公共转换partial、交付partial分别记录；partial来自未知完整读序、未知group语义和三处图片未交付。原生vision_footnote文字保留，不据相邻或group_id补出记录附注关系。原生字段、工件/视图/locator、原始与显示文字、状态、对象去向及阶段编辑均可复查，最终正文和持久化按实际UTF-8字节核对。
+共同路径为replay_native → app.adapters.saved_native.adapt_saved_document → read_paddle_blocks → NativeContentContract核验 → SavedContentService.finalize → Export/实际IR/TableContext/TableSemantics/FinalContent → Storage。原执行completed、格式读取read、公共转换partial、交付partial分别记录；partial仍有未知完整读序和三处图片未交付的独立依据；group语义未知保留为元数据，不自行阻断。原生vision_footnote文字保留，不据相邻或group_id补出记录附注关系。原生字段、工件/视图/locator、原始与显示文字、状态、对象去向及阶段编辑均可复查，最终正文和持久化按实际UTF-8字节核对。
 
 ## 6. 格式核对依据
 

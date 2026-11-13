@@ -120,6 +120,8 @@ def _table(block: dict[str, Any], page: int, ordinal: int, branch: str) -> Table
             is_column_header=_flag(cell, "is_column_header", "column_header"),
             is_row_header=_flag(cell, "is_row_header", "row_header"),
         ))
+    if len(occupied) != height * width:
+        raise NativeReadError("saved source grid has unexplained holes")
     original = block.get("text", "")
     if block.get("text_format") in {"html", "markdown"} and original:
         rendered = original

@@ -12,6 +12,7 @@ import re
 from collections import Counter
 from collections.abc import Mapping
 from dataclasses import asdict
+from typing import Any
 
 from app.adapters.native_config import CONFIGURATIONS
 from app.adapters.native_inventory import encoded, inventory_native
@@ -33,7 +34,29 @@ def _execution(native, observation, identity, payload):
     entries = native.get('pages', [])
     native_states = [state for index, page in enumerate(entries if isinstance(entries, list) else [])
                      if isinstance(page, Mapping) and page.get('branch') == 'paddle' and isinstance(page.get('raw'), Mapping)
-                     for state in paddle_execution_states(page['raw'], f'#/pages/{index}/raw')]
+                     for state in ({**s, 'input_pages': [page.get('page')]} for s in
+                                   paddle_execution_states(page['raw'], f'#/pages/{index}/raw'))]
+    state_keys = ('status', 'errors', 'warnings', 'timed_out', 'truncated', 'stop_reason',
+                  'unprocessed_pages', 'processed', 'length_limit_reached', 'possible_length_truncation')
+    documents: dict[str, list[Any]] = {}
+    for index, page in enumerate(entries if isinstance(entries, list) else []):
+        if not isinstance(page, Mapping) or not isinstance(page.get('raw'), Mapping):
+            continue
+        raw = page['raw']
+        if page.get('branch') == 'docling' and isinstance(raw.get('native_document'), str):
+            documents.setdefault(raw['native_document'], []).append(page.get('page'))
+        elif page.get('branch') == 'glm':
+            metadata = {k: audit_copy(raw[k]) for k in state_keys if k in raw}
+            if metadata:
+                native_states.append({'native_path': f'#/pages/{index}/raw', 'input_pages': [page.get('page')],
+                                      'scope': 'native_image_call', 'metadata': metadata})
+    for path, pages in documents.items():
+        envelope = resolve_pointer(native, path)
+        if isinstance(envelope, Mapping):
+            metadata = {k: audit_copy(envelope[k]) for k in state_keys if k in envelope}
+            if metadata:
+                native_states.append({'native_path': path, 'input_pages': pages,
+                                      'scope': 'native_document', 'metadata': metadata})
     if observation is None:
         _require(payload is None, 'observation bytes require paired metadata')
         return NativeExecutionState(None, None, encoded({'status': 'unknown', 'pages': [],
@@ -129,6 +152,11 @@ def _cell_matches(item, cell):
     _require(all(cell.get(k) == v for k, v in expected.items()), 'native source cell content/position/role conflict: ' + item.identity)
     _require(cell.get('evidence_locator') == asdict(item.locator), 'source cell is not rooted in received artifact: ' + item.identity)
     raw = item.details['source_cell']
+    if item.branch == 'docling' and isinstance(raw, Mapping):
+        fields = ('start_row_offset_idx', 'end_row_offset_idx', 'start_col_offset_idx', 'end_col_offset_idx',
+                  'column_header', 'row_header', 'row_section', 'fillable')
+        _require(all((k in raw) == (k in cell) and cell.get(k) == raw.get(k) for k in fields),
+                 'native cell offsets/role/missing-field evidence changed')
     if item.branch == 'docling' and isinstance(raw, Mapping) and 'bbox' in raw:
         box = raw['bbox']
         _require(cell.get('bbox') == box and cell.get('coordinate_system') == 'pdf_points'
@@ -231,6 +259,10 @@ def validate_native_content(result):
                  'native locator/branch was rebound: ' + item.identity)
         _require(block.get('source_locator') == asdict(item.locator), 'native locator lacks artifact/view binding')
         _require(block.get('native_payload') == audit_copy(node), 'native payload was altered: ' + item.identity)
+        field = 'text' if item.branch == 'docling' else 'block_content' if item.branch == 'paddle' else 'content'
+        if isinstance(node, Mapping) and item.kind == 'content' and node.get(field) is not None and not isinstance(node[field], str):
+            _require(block.get('read_error') and block.get('read_status') == 'unresolved',
+                     'malformed native text was promoted to a successful read')
         _require(block.get('text') == (item.raw_text or ''), 'native literal or selection changed: ' + item.identity)
         _require(block.get('kind') == item.details['label'], 'native role was replaced by a service inference')
         _require(block.get('text_format') == (None if not isinstance(node, Mapping) else
@@ -384,21 +416,8 @@ def verify_table_source(fragment, contract, *, required=False):
 
 
 def native_partial(result):
-    state = result._source_verification.get('native_content', {})
-    execution = state.get('original_execution', {})
-    observed_pages = {p.get('page', p.get('page_number')) for p in execution.get('pages', [])}
-    native_failed = any(record['metadata'].get('errors') or record['metadata'].get('error')
-                        or record['metadata'].get('truncated') or record['metadata'].get('timed_out')
-                        or record['metadata'].get('status') in {'failed', 'partial', 'timeout', 'truncated'}
-                        for record in execution.get('native_status_evidence', []))
-    return (execution.get('status') != 'completed' or bool(execution.get('errors'))
-            or native_failed
-            or bool(set(result._native_content.selected_pages) - observed_pages)
-            or any(p.get('status') not in {'completed', 'warning'} or p.get('errors')
-                   or p.get('timed_out') or p.get('truncated') for p in execution.get('pages', []))
-            or execution.get('timed_out') or execution.get('truncated')
-            or state.get('readback', {}).get('status') == 'partial' or bool(state.get('media'))
-            or bool(result._source_verification.get('saved_native_bridge', {}).get('errors')))
+    from app.services.native_content_status import native_status_impacts
+    return any(impact['requires_partial'] for impact in native_status_impacts(result))
 
 
 def validate_table_relations(result):
