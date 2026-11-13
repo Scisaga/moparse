@@ -33,12 +33,10 @@ from app.models.source import StoredSource
 from app.parsers.glm_sdk_remote import GlmSdkRemoteParser
 from app.parsers.mineru_native_remote import (
     MinerUPictureCandidate,
-    _NativeContentError,
-    render_mineru_page_evidence,
 )
 from app.utils.page_range import parse_page_range
 
-from .adapters import read_glm, read_mineru, read_visual
+from .adapters import read_glm, read_visual
 from .service_native_adapters import (
     PIPELINE_BACKENDS,
     PIPELINE_BRANCHES,
@@ -121,35 +119,6 @@ def _pointer(root: Mapping[str, Any], pointer: Any) -> Any:
     return value
 
 
-def _mineru_source_page(native: Mapping[str, Any], entry: Mapping[str, Any], page: int
-                        ) -> tuple[list[Any] | None, dict[str, Any]]:
-    raw = entry.get("raw")
-    detail: dict[str, Any] = {"raw_page": page, "branch": "mineru"}
-    if not isinstance(raw, Mapping):
-        return None, {**detail, "error": "mineru_raw_not_an_object"}
-    index = raw.get("page_idx")
-    detail["raw_page_idx"] = index
-    if type(index) is not int or index != page - 1:
-        return None, {**detail, "error": "mineru_raw_page_identity_conflict"}
-    ref = raw.get("native_document")
-    detail["native_document"] = ref
-    document = _pointer(native, ref)
-    if not isinstance(document, Mapping) or document.get("schema") != "docvortex.middle":
-        return None, {**detail, "error": "mineru_declared_middle_document_unavailable"}
-    pages = document.get("pages")
-    if not isinstance(pages, list):
-        return None, {**detail, "error": "mineru_middle_pages_unavailable"}
-    matches = [(position, item) for position, item in enumerate(pages)
-               if isinstance(item, Mapping) and type(item.get("page_idx")) is int and item["page_idx"] == index]
-    if len(matches) != 1:
-        return None, {**detail, "error": "mineru_middle_page_not_unique"}
-    position, source_page = matches[0]
-    detail["native_page_pointer"] = f"{ref}/pages/{position}"
-    blocks = source_page.get("blocks")
-    if not isinstance(blocks, list):
-        return None, {**detail, "error": "mineru_middle_blocks_unavailable"}
-    return blocks, detail
-
 
 def _asset_references(value: Any, pointer: str) -> list[dict[str, Any]]:
     """Index existing candidate asset declarations without opening their files."""
@@ -202,6 +171,8 @@ def replay_native(
         raise ValueError("service replay requires a declared P01-P08 candidate")
     from app.adapters.native_config import CONFIGURATIONS
     if pipeline in CONFIGURATIONS:
+        if mineru_projector is not None:
+            raise ValueError("shared saved JSON admission does not accept injected Typed projectors")
         from app.adapters.saved_native import adapt_saved_document
 
         return adapt_saved_document(native, source, options, document_id=document_id,
@@ -236,7 +207,6 @@ def replay_native(
             diagnostic["errors"].append({"native_page_position": index, "raw_page": number,
                                          "code": "native_page_outside_replay_selection"})
         entries[number].append((index, entry))
-    projector = mineru_projector or project_mineru_blocks
     processing: dict[int, Mapping[str, Any]] = {}
     processing_items = native.get("page_processing") or []
     if not isinstance(processing_items, list):
@@ -311,31 +281,6 @@ def replay_native(
                                        warnings=warnings, diagnostics=PageDiagnostics(
                                            source_kind=PageSourceKind.VISUAL,
                                            selected_strategy=SelectionStrategy.MINERU))
-            elif branch == "mineru" and pipeline in {"P06", "P07"}:
-                blocks, identity = _mineru_source_page(native, entry, number)
-                detail.update(identity)
-                if blocks is not None:
-                    projected, errors = projector(copy.deepcopy(blocks))
-                    detail["projection_errors"] = errors
-                    projected_page = {"page_number": number, "blocks": projected}
-                    try:
-                        markdown, fragments, pictures, furniture = render_mineru_page_evidence(
-                            projected_page, warnings=warnings,
-                        )
-                        attach_source_tables(fragments, read_mineru({"blocks": projected}, number, detail["native_page_pointer"]))
-                    except _NativeContentError as exc:
-                        detail["error"] = "production_mineru_page_unreadable"
-                        detail["exception_type"] = type(exc).__name__
-                    else:
-                        result._native_page_blocks[number] = projected
-                        result._table_fragments.extend(fragments)
-                        result._picture_candidates.extend(pictures)
-                        result._page_furniture.extend(furniture)
-                        page = PageParseResult(page_number=number, backend=PIPELINE_BACKENDS[pipeline], content=markdown,
-                                               status=PageStatus.FAILED if warnings else PageStatus.COMPLETED,
-                                               warnings=warnings, diagnostics=PageDiagnostics(
-                                                   source_kind=PageSourceKind.NATIVE,
-                                                   selected_strategy=SelectionStrategy.MINERU))
             elif branch == "glm" and isinstance(raw, Mapping):
                 result.pipeline.ocr = "glm-sdk-remote"
                 if "json_result" not in raw:

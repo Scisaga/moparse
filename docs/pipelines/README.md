@@ -4,7 +4,9 @@
 
 这里的“管线输出”指完整声明配置产生的原生结构、Markdown、媒体及状态。混合配置包含两个分支及其原始页序关联；一次 VLM 请求的文本、当前 worker 投影和 MO-Parse 最终正文分别核对。
 
-2026-11-13的共同source-free准入覆盖P01/P02自己的Docling V1/V2及GLM、P05全页GLM与P03/P04 Paddle固定保存结果。相同格式共享读取和投影，五个配置沿用同一Export、IR、表格语义、FinalContent和Storage；配置身份及来源权限独立，公共语义不按编号选择答案。unknown按其实际输出依赖记录影响，无关元数据不自行变成partial；原生失败、结构缺口、未知必要读序及媒体未交付保持独立依据。实际格式、正文、状态、source-only范围及四组保护由[唯一报告](../../benchmark/reports/lite/report.md)维护；P06/P07及P08尚未完成此共同准入的真实纵向验收。
+2026-11-13的共同source-free准入覆盖P01/P02自己的Docling V1/V2及GLM、P05全页GLM与P03/P04 Paddle固定保存结果。相同格式共享读取和投影，五个配置沿用同一Export、IR、表格语义、FinalContent和Storage；配置身份及来源权限独立，公共语义不按编号选择答案。unknown按其实际输出依赖记录影响，无关元数据不自行变成partial；原生失败、结构缺口、未知必要读序及媒体未交付保持独立依据。实际格式、正文、状态、source-only范围及四组保护由[唯一报告](../../benchmark/reports/lite/report.md)维护；P06/P07的JSON接入与官方Typed缺口见下一段，P08尚未完成共同准入。
+
+第九阶段为P06/P07增加同一个MinerU Middle JSON投影和独立输入清单，接入现有公共source-free链。两组保留Standard/Advanced配置与自己的原字、list父链及HTML跨度；研究读取的默认视图政策不变。官方DocVortex固定依赖缺失，因此只能验收已保存JSON的受限转换，完整Typed验收仍未完成；P08未接入。实样范围与产物仅见[唯一报告](../../benchmark/reports/lite/report.md)。
 
 ## 管线索引
 

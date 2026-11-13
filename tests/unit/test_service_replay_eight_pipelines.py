@@ -102,18 +102,33 @@ def test_glm_empty_primary_is_not_completed_from_a_favorable_markdown_or_raw_vie
 
 
 @pytest.mark.parametrize('pipeline', ['P06', 'P07'])
-def test_typed_mineru_keeps_pipeline_identity_and_own_continuation(pipeline):
+def test_saved_mineru_json_keeps_pipeline_identity_and_own_continuation(pipeline):
     block = {'type': 'text', 'bbox': [.1, .1, .9, .2], 'content': [{'type': 'text', 'content': 'Native'}],
-             'continues_prev': True}
-    native = {'pipeline': pipeline, 'documents': [{'schema': 'docvortex.middle', 'pages': [{'page_idx': 0, 'blocks': [block]}]}],
+             'index': 0, 'continues_prev': True}
+    native = {'pipeline': pipeline, 'documents': [{'schema': 'docvortex.middle', 'schema_version': '2.0',
+              'extensions': {'mineru': {'tier': 'standard' if pipeline == 'P06' else 'advanced', 'parse_mode': 'txt'}},
+              'pages': [{'page_idx': 0, 'blocks': [block]}]}],
               'pages': [{'page': 1, 'branch': 'mineru', 'raw': {'page_idx': 0, 'native_document': '#/documents/0'}}]}
+    before = deepcopy(native)
+    calls = []
     def project(blocks):
+        calls.append(blocks)
         return [{**item, 'markdown': item['content'][0]['content']} for item in blocks], []
-    result, audit = replay_native(native, source(), ContentParseOptions(), document_id='invented', mineru_projector=project)
+    # The former fixture exercised a stand-in projector, not official Typed
+    # validation. Keep every original content/identity/continuation assertion
+    # through the evidence-bound JSON entry and explicitly reject injection.
+    with pytest.raises(ValueError, match='does not accept injected'):
+        replay_native(native, source(), ContentParseOptions(), document_id='invented', mineru_projector=project)
+    assert calls == []
+    result, audit = replay_native(native, source(), ContentParseOptions(), document_id='invented')
+    assert native == before
     assert result.pages[0].content == 'Native'
     assert result._native_page_blocks[1][0]['continues_prev'] is True
     assert ('standard' if pipeline == 'P06' else 'advanced') in result.pipeline.primary
     assert audit['pages'][0]['capabilities']['pdf_vector'] is True
+    assert result._native_content.pipeline == pipeline
+    assert result._native_page_blocks[1][0]['source_locator']['view'] == 'docvortex.middle'
+    assert audit['pages'][0]['projection'] == 'saved_json_only_not_official_typed'
 
 
 def test_visual_sdk_does_not_gain_native_pdf_capabilities():

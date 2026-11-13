@@ -108,6 +108,7 @@ class NativeContentContract:
                           **self.execution.metadata},
             'inventory': [{**asdict(item), 'details': item.details} for item in self.items],
             'source_reads': 'disabled', 'media_reads': 'disabled',
-            'primary_views': {'docling': 'document', 'glm': 'json_result'},
+            'primary_views': {'docling': 'document', 'glm': 'json_result', 'paddle': 'parsing_res_list',
+                              'mineru': 'docvortex.middle'},
             'audit_views_supply_answers': False,
         }

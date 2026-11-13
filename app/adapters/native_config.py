@@ -8,4 +8,6 @@ CONFIGURATIONS: dict[str, dict[str, Any]] = {
     "P05": {"backend": "glm-sdk-remote", "branches": {"glm"}},
     "P03": {"backend": "paddleocr-vl-1.5", "branches": {"paddle"}},
     "P04": {"backend": "paddleocr-vl-1.6", "branches": {"paddle"}},
+    "P06": {"backend": "mineru-standard-txt", "branches": {"mineru", "glm"}, "mineru_tier": "standard"},
+    "P07": {"backend": "mineru-advanced-txt", "branches": {"mineru", "glm"}, "mineru_tier": "advanced"},
 }

@@ -42,7 +42,7 @@ from app.utils.page_range import parse_page_range
 def branch_capabilities(pipeline, branch):
     if branch not in CONFIGURATIONS[pipeline]['branches']:
         raise ValueError('saved branch is outside its declared configuration')
-    return {'branch': branch, 'pdf_text': branch == 'docling', 'pdf_vector': branch == 'docling',
+    return {'branch': branch, 'pdf_text': branch in {'docling', 'mineru'}, 'pdf_vector': branch in {'docling', 'mineru'},
             'raster_assets': False, 'saved_assets': False, 'model_inference': False,
             'references': False, 'basis': 'declared_branch_source_free_processing'}
 
@@ -518,6 +518,11 @@ def adapt_saved_document(native, source, options, *, document_id, include_source
                 status = str(envelope.get("status", "")).lower()
                 if any(k in status for k in ("partial", "fail", "error")) or envelope.get("errors"):
                     detail["local_read_errors"].append({"code": "saved_native_producer_incomplete"})
+            elif branch == 'mineru':
+                from app.adapters.mineru_native import audit_objects, read_middle_page
+                blocks, containers, metadata = read_middle_page(native, entry)
+                detail.update(metadata)
+                detail['native_audit_objects'] = audit_objects(native, entry, position)
             elif branch == 'paddle':
                 blocks = read_paddle_blocks(native, raw, number, pointer)
                 payload = raw.get('res', raw)
@@ -560,7 +565,7 @@ def adapt_saved_document(native, source, options, *, document_id, include_source
             audit["asset_references"].extend(media)
             detail["local_read_errors"].extend(issues)
             detail["native_containers"] = containers
-            if not blocks and not detail["local_read_errors"]:
+            if not blocks and not containers and not detail["local_read_errors"]:
                 detail["local_read_errors"].append({"code": "native_page_content_unavailable"})
         except NativeReadError as exc:
             detail["error"] = str(exc)
@@ -595,7 +600,7 @@ def adapt_saved_document(native, source, options, *, document_id, include_source
         prediction = (detail.get("frozen_page_processing") or {}).get("source_prediction")
         page = PageParseResult(
             page_number=number,
-            backend={"glm": "glm-sdk-remote", "docling": configuration["backend"], 'paddle': configuration['backend']}.get(
+            backend={"glm": "glm-sdk-remote", "docling": configuration["backend"], 'mineru': configuration['backend'], 'paddle': configuration['backend']}.get(
                 branch if isinstance(branch, str) else "unknown"
             ),
             content=content,
@@ -603,7 +608,7 @@ def adapt_saved_document(native, source, options, *, document_id, include_source
             warnings=warnings,
             diagnostics=PageDiagnostics(
                 source_kind=PageSourceKind.NATIVE
-                if branch == "docling"
+                if branch in ("docling", "mineru")
                 else {
                     "scan": PageSourceKind.SCANNED,
                     "mixed": PageSourceKind.MIXED,
@@ -615,6 +620,8 @@ def adapt_saved_document(native, source, options, *, document_id, include_source
                 ),
                 selected_strategy=SelectionStrategy.DOCLING
                 if branch == "docling"
+                else SelectionStrategy.MINERU
+                if branch == 'mineru'
                 else SelectionStrategy.GLM_TABLE
                 if branch == "glm"
                 else SelectionStrategy.UNKNOWN,
@@ -653,7 +660,7 @@ def adapt_saved_document(native, source, options, *, document_id, include_source
             )
     counts = Counter(p["branch"] for p in audit["pages"] if isinstance(p["branch"], str))
     result.route_summary = RouteSummary(
-        native_text_pages=counts["docling"],
+        native_text_pages=counts["docling"] + counts['mineru'],
         pages_with_ocr=counts["glm"] + counts['paddle'],
         failed_pages=sum(p.status == PageStatus.FAILED for p in result.pages),
     )
@@ -664,4 +671,4 @@ def adapt_saved_document(native, source, options, *, document_id, include_source
                         original_observation=original_observation,
                         observation_identity=observation_identity,
                         observation_bytes=observation_bytes)
-    return result, audit
+    return result, result._source_verification['saved_native_bridge']

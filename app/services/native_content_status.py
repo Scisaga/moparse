@@ -101,9 +101,24 @@ def native_status_impacts(result):
                     blocking=True, conversion=True,
                     observation={'native_label': item.details.get('label'), 'consumer_role': b.get('type'),
                                  'read_status': b.get('read_status'), 'read_error': b.get('read_error')})
+            declaration = b.get('native_table_declaration', {})
+            if declaration.get('continues_prev') is True:
+                add('native_table_continuation_unresolved', 'output_responsibility_unresolved',
+                    [source(item)], ['body.table_relations'], effects=('table_relations',),
+                    dependencies=[{'obligation': 'complete_cross_page_header_and_cell_partition'}],
+                    blocking=True, conversion=True, observation=declaration)
 
     media_paths = {(i.input_page, i.locator.path) for i in contract.items if i.kind == "media"}
     for item in contract.items:
+        if item.kind == 'container':
+            declaration = item.details.get('continuation', {})
+            if item.details.get('label') != 'table' and any(v is True for v in declaration.values()):
+                add('native_container_continuation_unresolved', 'output_responsibility_unresolved',
+                    [source(item)], ['body.continuation_scope'], effects=('body_content', 'reading_order'),
+                    blocking=True, conversion=True, observation=declaration)
+            if item.details.get('label') in {'table', 'image', 'chart', 'code'} and item.details.get('native_children') == []:
+                add('native_container_content_unavailable', 'format_readback_failure', [source(item)],
+                    ['body.content_or_structure'], effects=('body_content',), blocking=True, conversion=True)
         if item.kind == "media":
             add("native_media_not_delivered", "asset_delivery_incomplete", [source(item)],
                 ["assets", "body.media_occurrence"], effects=("asset_delivery",), blocking=True,

@@ -39,7 +39,7 @@ def format_readback_checks(native, result):
             )
             if not isinstance(raw, dict):
                 continue
-            field = {'docling': 'text', 'glm': 'content', 'paddle': 'block_content'}[block['native_branch']]
+            field = {'docling': 'text', 'glm': 'content', 'mineru': 'content', 'paddle': 'block_content'}[block['native_branch']]
             if isinstance(raw.get(field), str) and block.get("read_status") == "read":
                 value = raw[field]
                 if block.get("text_selection"):
@@ -383,7 +383,10 @@ def main() -> int:
         storage = StorageService(SimpleNamespace(data_dir=args.output / "persistence"))
         stored = await storage.write_result(result.document_id, result)
         actual = evidence["stages"][-1]["markdown"]
-        if actual != result.markdown or stored.result.read_text(encoding="utf-8") != actual:
+        final_bytes = actual.encode('utf-8')
+        if (result.parse_result is None or result.markdown.encode('utf-8') != final_bytes
+                or result.parse_result.renderings.markdown.encode('utf-8') != final_bytes
+                or stored.result.read_bytes() != final_bytes):
             raise ValueError("actual final stage, online rendering and persisted text differ")
         # This is the newly emitted final stage, never a historical final.md.
         (args.output / "final.md").write_text(actual, encoding="utf-8")
@@ -399,6 +402,8 @@ def main() -> int:
             final_sha256=hashlib.sha256(actual.encode()).hexdigest(),
             native_unchanged=unchanged,
             persisted_equals_final=True,
+            final_byte_equality={'encoding': 'utf-8', 'final_snapshot': True,
+                'result_markdown': True, 'parse_result_renderings': True, 'storage_result': True},
             boundary_violations=violations,
             execution_resources={
                 "purpose": "serial_development_validation_not_performance_measurement",

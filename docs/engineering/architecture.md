@@ -4,9 +4,11 @@
 
 2026-11-13在既有Docling/GLM/Paddle共同契约上接入P02自己的V2保存结果。P01/P02分别保留配置、原生格位、角色和字面差异，复用已有Docling及GLM投影，五个配置使用同一source-free调度生成正文；未另建P02处理链或IR。配置、分支、主视图及来源守卫保留，实际状态、partial、完整source-only回归和未覆盖范围仅见[唯一报告](../../benchmark/reports/lite/report.md)，不表示八组或质量门禁已完成。
 
+第九阶段增加`mineru_native`与独立的`mineru_inventory`，直接读取P06/P07自己的保存Middle JSON，不构造仿官方Typed类。格式投影与配置核验仍在适配层，公共层仅按table_body、list父链、公式、媒体和实际来源责任选择消费行为。原生level保留为观测，doc_title/paragraph_title按明确角色生成有界显示标题，不据此宣称恢复多级文档树。派生raw块和可选content_list逐对象留有工件绑定的审计回执，独立输入清单会发现删除或错绑。官方DocVortex依赖缺失，完整Typed投影仍未验收；当前JSON模式及限制见[唯一报告](../../benchmark/reports/lite/report.md)。
+
 ## 目标处理流程
 
-工作区的`table_context_service`从有来源的原生块和TableFragment读取局部计量、记录字段及文字限定，`table_semantics_service`检查用途与记录范围并渲染正文。当前开发调用为`saved_content_closure.close_saved_document → replay_native → app.adapters.saved_native.adapt_saved_document → SavedContentService.finalize`；P01旧入口仅作薄包装。当前五个配置使用同一Export、DocumentIRService、TableContext、TableSemantics、FinalContent和Storage实现。原件补充以allow_source_reads=False禁用，媒体仅处理声明与未交付状态，不执行正式service_evaluation入口、线上服务或资产提取。
+工作区的`table_context_service`从有来源的原生块和TableFragment读取局部计量、记录字段及文字限定，`table_semantics_service`检查用途与记录范围并渲染正文。当前开发调用为`saved_content_closure.close_saved_document → replay_native → app.adapters.saved_native.adapt_saved_document → SavedContentService.finalize`；P01旧入口仅作薄包装。当前七个配置的受限JSON入口使用同一Export、DocumentIRService、TableContext、TableSemantics、FinalContent和Storage实现。原件补充以allow_source_reads=False禁用，媒体仅处理声明与未交付状态，不执行正式service_evaluation入口、线上服务或资产提取。
 
 研究评分独立使用`expected_readback`读取canonical expected选段的原始语法，`saved_native`及`adapters`按声明分支读取保存SDK对象，`native_readback`保留已有明确角色与关系。候选读取接口不接收expected，最终正文从实际final.md读取，不能用内部IR补分。
 

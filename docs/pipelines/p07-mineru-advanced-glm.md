@@ -6,6 +6,8 @@
 
 离线service回放现与八组共用阶段审计和页分支来源守卫；本组原生页及GLM页分别获得其声明许可，GLM页不因属于P07而进入PDF字层或矢量服务。既有baseline/current正文及原始观测保留；新执行不覆盖它们，门槛与实际验证边界见[八管线服务适配](README.md#保存结果的八管线服务适配)。
 
+当前第九阶段已实现保存Middle JSON的受限共同适配：`app.adapters.mineru_native.read_middle_page`读取本组自己的`documents`主视图，复用中性`read_mineru(primary_only=True)`，进入既有NativeContentContract、Evidence、SavedContentService及Storage。原始类型、内联内容、容器父链、index、页映射、表体HTML、附注和媒体声明分别保留；页面raw块及content_list（存在时）只在审计中保留，不补主答案。当前宿主`.venv`没有`docvortex==0.5.16`、MinerU及mineru-vl-utils，未安装依赖，也未执行官方Typed对象投影；有限JSON交接不构成完整Typed验收。真实正文、来源、状态、测试及未覆盖范围由[唯一报告](../../benchmark/reports/lite/report.md)维护。
+
 ## 1. 配置与执行边界
 
 原生页使用 MinerU 4.0.12 Advanced/TXT，关闭 image_analysis；扫描和混合页使用共享 GLM SDK。与 P06 仅改变 tier。
@@ -18,7 +20,7 @@ Advanced/TXT 原生页的完整 MinerU 原生结构、Markdown、媒体与状态
 
 ### 2.1 MinerU PDF 解析结果
 
-核对了安装的 `mineru/parser/base.py` 和 `docvortex/schema.py`，对照[官方 SDK](https://opendatalab.github.io/MinerU/usage/sdk_api/)及[输出说明](https://opendatalab.github.io/MinerU/reference/output_files/)。本轮只读取定义，没有调用解析或 `save()`；原生 schema 及其版本属于上游，应照实保存。
+历史固定环境曾核对 `mineru/parser/base.py` 和 `docvortex/schema.py`，对照[官方 SDK](https://opendatalab.github.io/MinerU/usage/sdk_api/)及[输出说明](https://opendatalab.github.io/MinerU/reference/output_files/)。这是既有格式定义记录，不代表当前宿主已安装SDK。第九阶段未调用解析或 `save()`；原生schema及版本照实保留。
 
 ```text
 ParseResult
@@ -43,6 +45,10 @@ save(writer) -> 物化可用素材并保存多种原生表示与图片
 | 媒体边界 | PDF 的普通 JSON 序列化会省略 `image_base64`，因此仅保存 JSON 不是完整媒体包；必须检查素材及真实引用是否就绪 |
 
 当前 [native worker](../../native_worker/server.py) 把原生块投影成 `mineru-native/1` 回包，附加页尺寸、块 Markdown 和 `source_images` 区域，且省略图像二进制。这个标记是现有传输定义，不是八组共同模型或新的内部版本。保存当前 worker 回包不能自动证明完整上游产物、元数据及媒体都已保全；当前回包也不等于本组完整的原生与 GLM 分支组合输出。
+
+第九阶段固定开发范围为本组自己的`vanke-repurchase-share-changes-p001-003`。前两页实际主结构为`docvortex.middle` 2.0，producer为MinerU 4.0.12，extensions声明advanced/txt，第三页使用自身GLM json_result。原生前两页包含13/10个顶层块、27个叶块和table/list两个容器；四条备查文件位于同一个list的四个text子块。两组均没有block_id、显式parent/children字段或content_list，父链来自实际content嵌套，已知顺序来自显式index及保存执行器的物理page_idx绑定；没有公式或非空跨页续接实样。原生level仍留在私有证据中，公共显示按doc_title和paragraph_title的明确角色生成1/2级标题，不直接用level数字声称已恢复文档树；合成5/6反例保护该边界。页raw.blocks是带Markdown/research_assets的保存投影，独立核对其原生字段与自身Middle对应页完全一致，不能称存在稳定跨视图ID，也不重复输出。
+
+表体原生字段是HTML，44个HTML投影格保留rowspan/colspan及工件绑定语法路径，分别进入共同表格上下文和语义服务；它们不是独立OCR源格。表下注以实际table_footnote对象保留，未凭日期或相邻位置把无标记说明补成每条记录的附注。表体同时带有一处image_base64媒体声明，字符串仅作声明审计，没有解码、读取或交付，因此当前JSON转换完成而文档交付partial。官方Typed、实际content_list对应、独立图块、公式和跨页分区仍未验收。
 
 ### 2.2 GLM-OCR SDK 页结果
 

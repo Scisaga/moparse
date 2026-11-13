@@ -2,6 +2,8 @@
 
 本文维护开发依赖、交付物和完成条件。逐管线格式与适配设计见[管线索引](../pipelines/README.md)，最终交付要求见[输出规范](../specs/moparse-output-spec.md)，代码职责见[架构](architecture.md)。2026-10-24新增独立数据集与Lite评测实现；实际样本、运行、评分覆盖及服务验收分别记录，不能互相替代。
 
+第九阶段已将MinerU Standard/Advanced自己的保存Middle JSON接入同一NativeContentContract和公共source-free链，并将原生、派生、消费及最终文字分开留证。当前固定DocVortex依赖未安装，官方Typed投影不能执行；该缺口不妨碍已保存JSON的受限工程验证，也不能由JSON验证替代。后续先在另行准备的固定环境完成官方Typed核验，再处理未覆盖的真实结构与P08；本轮不启动P08、Native/Product成绩或正式回放。实际状态见[唯一报告](../../benchmark/reports/lite/report.md)。
+
 ## 1. 总体依赖
 
 2026-11-13接入P02自己的Docling V2及GLM保存结果，复用已有Docling投影、共同契约和公共source-free链；同时按实际输出责任修正unknown与partial的边界，并对完整已审查source-only允许集合及P01/P05/P03/P04固定输入复验。P02原生字面、跨度及缺口不由V1补全，五个配置的状态和工程证据见[唯一报告](../../benchmark/reports/lite/report.md)。后续为P06/P07 typed格式及Standard/Advanced差异，再到P08 visual来源限制，须另行明确授权，本轮未启动。真实candidate/expected比较、正式评分、八组回放、媒体/ZIP或发布未执行；63份来源及合同、55份历史保护集合、107份缺口、3份待独立验收和5个输入范围保持。
@@ -49,7 +51,7 @@ B 同时支撑解析研究和服务适配。D 的方法研究可以使用外部�
 | 原生产物交接 | 研究worker保存完整原生文档、媒体、页序、分支和失败；GLM主结果与审计视图分开 | 原生读取与有限实际个案分别留证，不把导出完成当作内容或媒体全量正确；缺失和未知保留 |
 | 独立研究入口 | moparse_eval直接覆盖共同前处理、完整SDK、忠实导出及必要资产，使用worker直接处理时钟 | 初始化、预热及持久化分开；生产服务调用和原有字段不作为主计时，见[代码边界](architecture.md#现有调用与计时字段) |
 | 数据集与统一评分 | 人工选页及目读标注后冻结Lite，Full保留历史范围和审核状态；评分只读参考 | 按[评测任务](../../benchmark/evaluation-tasks.md)交付分项质量、覆盖、未知、成本和失败；修复评分器后同版重评，不改原生产物 |
-| 服务适配与转换 | P01/P02、P05及P03/P04交接到共同NativeContentContract和source-free调度，按输出依赖判定unknown影响 | 固定实样与受控边界分别留证；typed及visual仍须真实纵向验收，见[架构](architecture.md#当前私有适配交接)和唯一报告 |
+| 服务适配与转换 | P01/P02、P05及P03/P04交接到共同NativeContentContract和source-free调度，按输出依赖判定unknown影响 | 固定实样与受控边界分别留证；MinerU已保存JSON的受限接入与官方Typed缺口分别留证，visual仍须真实纵向验收，见[架构](architecture.md#当前私有适配交接)和唯一报告 |
 | 最终组装与输出包 | 已有正文持久化和资产 ZIP | 补齐包内 Markdown、相对图片引用与清单；随后接入完整覆盖及状态传递，详见[输出缺口](../specs/moparse-output-spec.md#9-当前实现差距与迁移) |
 
 统一评价仍遵循“数据与参考冻结 → 执行锁 → 忠实读回 → 正式测量 → 统一评分及报告”的依赖，当前受限开发转换不构成其中的正式执行。现有服务结果不能替代研究原始结果；后续服务适配和共同组装据实际读取到的信息设计，不以现有有限IR或GFM为所有后端的前置格式，也不因研究运行完成就宣称最终服务已验收。

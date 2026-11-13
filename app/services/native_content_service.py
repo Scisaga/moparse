@@ -31,6 +31,13 @@ _ROLES = {
     "paragraph_title": "title",
     "list_item": "list_item",
     "table": "table",
+    "table_body": "table",
+    "table_caption": "table_caption",
+    "table_footnote": "table_footnote",
+    "image_body": "image",
+    "image_caption": "text",
+    "image_footnote": "text",
+    "chart_body": "image",
     "picture": "image",
     "image": "image",
     "chart": "image",
@@ -45,6 +52,7 @@ _ROLES = {
     "checkbox_selected": "text",
     "checkbox_unselected": "text",
     "formula": "formula",
+    "equation": "formula",
 }
 
 
@@ -225,6 +233,9 @@ def render_native_blocks(blocks, number, branch, containers, *, include_source_m
         payload = payload if isinstance(payload, Mapping) else {}
         kind = block.get("kind", "unknown")
         role = _ROLES.get(kind, "unknown")
+        parent = parents.get(block.get('parent_id'), {})
+        if role == 'text' and parent.get('label', parent.get('kind')) == 'list':
+            role = 'list_item'
         if block["id"] in table_captions:
             role = "table_caption"
         elif block["id"] in table_notes:
@@ -347,9 +358,16 @@ def render_native_blocks(blocks, number, branch, containers, *, include_source_m
             rendered = "\n\n".join(_literal(c["text"]) for c in block["cells"] if c.get("text"))
             block["layout_order_basis"] = "primary_text_role_and_html_dom_order"
         elif role == "title" and text:
-            level = payload.get("level", 1 if kind == "doc_title" else 2)
+            # These producer roles are explicit; their optional numeric level
+            # does not prove a document heading tree. Keep that observation in
+            # native_payload and use the same bounded role/display projection
+            # for every configuration and format carrying these roles.
+            level = 1 if kind == 'doc_title' else 2 if kind == 'paragraph_title' else payload.get('level', 2)
             if type(level) is not int or not 1 <= level <= 6:
                 level = 2
+            block['heading_projection'] = {'level': level,
+                'basis': 'native_title_role_display_only' if kind in {'doc_title', 'paragraph_title'} else 'explicit_heading_or_default_display',
+                'native_level': payload.get('level'), 'document_hierarchy': 'not_inferred'}
             if not rendered.lstrip().startswith("#"):
                 rendered = "#" * level + " " + rendered
         elif role == "list_item" and text:
@@ -372,7 +390,7 @@ def render_native_blocks(blocks, number, branch, containers, *, include_source_m
                 " " * (4 * depth) + "- " + rendered.replace("\n", "\n" + " " * (4 * depth + 2))
             )
         elif role == "image":
-            reference = block.get("asset") or payload.get("image_path")
+            reference = block.get("asset") or payload.get("image_path") or block.get('native_media_declaration')
             if not reference and inline_media:
                 reference = inline_media[0]["reference"]
             image = payload.get("image", {})
@@ -404,6 +422,13 @@ def render_native_blocks(blocks, number, branch, containers, *, include_source_m
             issues.append(
                 {"native_path": block["native_path"], "code": "saved_native_media_unverified"}
             )
+        if role != 'image' and block.get('native_media_declaration'):
+            # A table/formula source-region image is an actual declaration,
+            # separate from HTML/text and never certified by that text view.
+            media.append({'native_path': block['native_path'], 'page': number, 'branch': branch,
+                'reference': block['native_media_declaration'], 'status': 'unverified_not_delivered',
+                'bytes_accessed': False, 'purpose': 'native_source_region_media'})
+            issues.append({'native_path': block['native_path'], 'code': 'saved_native_media_unverified'})
         if role in {"header", "footer", "page_number"} and rendered:
             furniture.append(
                 PageFurnitureFragment(

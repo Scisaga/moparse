@@ -89,6 +89,12 @@ def inventory_native(artifact: NativeArtifact, selected: tuple[int, ...],
                          'branch_page': raw.get('source_page') if isinstance(raw, Mapping) and branch == 'docling' else None})
         if not isinstance(raw, Mapping):
             continue
+        if branch == 'mineru':
+            from app.adapters.mineru_inventory import inventory_mineru
+            binding = inventory_mineru(root, entry, position, add)
+            if binding:
+                bindings[-1].update(binding)
+            continue
         if branch == 'paddle':
             # Independent input walk: never consult read_paddle or adapted blocks.
             payload = raw.get('res', raw)

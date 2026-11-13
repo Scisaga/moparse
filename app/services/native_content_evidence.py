@@ -30,12 +30,14 @@ def _require(condition, reason):
 
 
 def _execution(native, observation, identity, payload):
+    from app.adapters.mineru_native import execution_states
     from app.adapters.paddle_native import paddle_execution_states
     entries = native.get('pages', [])
     native_states = [state for index, page in enumerate(entries if isinstance(entries, list) else [])
                      if isinstance(page, Mapping) and page.get('branch') == 'paddle' and isinstance(page.get('raw'), Mapping)
                      for state in ({**s, 'input_pages': [page.get('page')]} for s in
                                    paddle_execution_states(page['raw'], f'#/pages/{index}/raw'))]
+    native_states.extend(execution_states(native))
     state_keys = ('status', 'errors', 'warnings', 'timed_out', 'truncated', 'stop_reason',
                   'unprocessed_pages', 'processed', 'length_limit_reached', 'possible_length_truncation')
     documents: dict[str, list[Any]] = {}
@@ -122,6 +124,12 @@ def bind_native_content(result, native, *, selected_pages, source_pages=None, ar
         if block:
             fragment.native_evidence['source_binding'] = copy.deepcopy(block.get('source_locator'))
             fragment.native_evidence['source_cells'] = copy.deepcopy(block.get('cells', []))
+    for page in result._source_verification['saved_native_bridge']['pages']:
+        for receipt in page.get('native_audit_objects', []):
+            own = next((i for i in items if i.locator.path == receipt['native_path']
+                        and i.details.get('requires_audit_receipt')), None)
+            if own:
+                receipt['source_locator'] = asdict(own.locator)
     media = copy.deepcopy(result._source_verification['saved_native_bridge'].get('asset_references', []))
     result._source_verification['native_content'] = {
         'original_execution': contract.execution.metadata,
@@ -199,6 +207,14 @@ def _input_decode_gap(root, page):
     if branch == 'paddle':
         payload = raw.get('res', raw)
         return not isinstance(payload, Mapping) or not isinstance(payload.get('parsing_res_list'), list)
+    if branch == 'mineru':
+        from app.adapters.mineru_native import source_page
+        from app.adapters.native_readers import NativeReadError
+        try:
+            source_page(root, entry)
+        except NativeReadError:
+            return True
+        return False
     pointer, local = raw.get('native_document'), raw.get('source_page', page)
     if not isinstance(pointer, str) or not pointer.startswith('#/documents/') or type(local) is not int or local < 1:
         return True
@@ -260,12 +276,13 @@ def validate_native_content(result):
         _require(block.get('source_locator') == asdict(item.locator), 'native locator lacks artifact/view binding')
         _require(block.get('native_payload') == audit_copy(node), 'native payload was altered: ' + item.identity)
         field = 'text' if item.branch == 'docling' else 'block_content' if item.branch == 'paddle' else 'content'
-        if isinstance(node, Mapping) and item.kind == 'content' and node.get(field) is not None and not isinstance(node[field], str):
+        if item.branch != 'mineru' and isinstance(node, Mapping) and item.kind == 'content' and node.get(field) is not None and not isinstance(node[field], str):
             _require(block.get('read_error') and block.get('read_status') == 'unresolved',
                      'malformed native text was promoted to a successful read')
         _require(block.get('text') == (item.raw_text or ''), 'native literal or selection changed: ' + item.identity)
         _require(block.get('kind') == item.details['label'], 'native role was replaced by a service inference')
         _require(block.get('text_format') == (None if not isinstance(node, Mapping) else
+                 item.details['text_format'] if item.branch == 'mineru' else
                  'plain' if item.branch == 'docling' else
                  'html' if re.search(r'<table\b', item.raw_text or '', re.I) else 'markdown'),
                  'native display syntax changed')
@@ -316,6 +333,31 @@ def validate_native_content(result):
                 declared_asset = resolve_pointer(root, item.locator.path.split('/res/parsing_res_list/', 1)[0] + '/research_region_media') if '/res/parsing_res_list/' in item.locator.path else None
                 if isinstance(declared_asset, Mapping):
                     _require(block.get('asset') == declared_asset.get(str(item.details['array_position'])), 'Paddle media declaration borrowed another region')
+        if item.branch == 'mineru':
+            from app.adapters.mineru_native import MEDIA_FIELDS, media_declaration
+            raw = node if isinstance(node, Mapping) else {}
+            if item.details.get('requires_read_failure'):
+                _require(block.get('read_error') and block.get('read_status') == 'unresolved',
+                         'malformed MinerU primary content was promoted to a successful read')
+            _require(block.get('source_view') == 'docvortex.middle'
+                     and block.get('native_block_type') == raw.get('type')
+                     and block.get('native_block_id') == raw.get('block_id')
+                     and block.get('native_content') == audit_copy(raw.get('content')),
+                     'MinerU primary type/id/content changed')
+            _require(block.get('native_fields') == {k: audit_copy(raw[k]) for k in raw if k not in ('content', *MEDIA_FIELDS)},
+                     'MinerU native reference/state/field changed')
+            _require(block.get('native_media_declaration') == media_declaration(raw), 'MinerU media declaration changed')
+            _require(block.get('order_basis') == item.order_basis and block.get('native_sequence') == list(item.order),
+                     'MinerU native order evidence changed')
+            if isinstance(node, Mapping):
+                _require(block.get('bbox') == node.get('bbox') and block.get('coordinate_system') == 'normalized'
+                         and block.get('coordinate_origin') == 'TOPLEFT', 'MinerU native geometry changed')
+            for field in ('continues_prev', 'merge_prev'):
+                _require((field in block) == (field in raw) and block.get(field) == raw.get(field), 'MinerU continuation changed')
+            if raw.get('type') == 'table_body' and item.parent:
+                parent = resolve_pointer(root, item.parent)
+                declaration = {k: audit_copy(parent[k]) for k in ('continues_prev', 'cell_merge') if k in parent}
+                _require(block.get('native_table_declaration') == declaration, 'native table continuation declaration changed')
         own_cells = block.get('cells', [])
         _require(len({c.get('id') for c in own_cells}) == len(own_cells), 'duplicate source cell')
         for cell in own_cells:
@@ -355,9 +397,26 @@ def validate_native_content(result):
         base = item.locator.path.split('/document/', 1)[0]
         decoded = any(b.get('native_path', '').startswith(base + '/') for _, b in blocks)
         _require(own or not decoded, 'native parent-chain container omitted')
+        if item.branch == 'mineru':
+            _require(len(own) == 1 or item.input_page in failed, 'MinerU native container omitted or duplicated')
         for c in own:
             _require(c.get('native_payload') == audit_copy(resolve_pointer(root, item.locator.path))
                      and c.get('parent_id') == item.parent, 'native parent-chain evidence rebound')
+            if item.branch == 'mineru':
+                _require(c.get('native_children') == item.details['native_children']
+                         and c.get('label') == item.details['label']
+                         and c.get('native_block_type') == item.details['label']
+                         and c.get('order_basis') == item.order_basis
+                         and c.get('native_sequence') == list(item.order), 'MinerU container identity/children/order changed')
+    receipts = [r for page in result._source_verification['saved_native_bridge']['pages'] for r in page.get('native_audit_objects', [])]
+    needed = [i for i in items if i.details.get('requires_audit_receipt')]
+    _require(Counter(r.get('native_path') for r in receipts) == Counter(i.locator.path for i in needed),
+             'derived native audit occurrence omitted, duplicated or rebound')
+    for item in needed:
+        receipt = next(r for r in receipts if r['native_path'] == item.locator.path)
+        _require(receipt.get('source_locator') == asdict(item.locator)
+                 and receipt.get('payload') == audit_copy(resolve_pointer(root, item.locator.path))
+                 and receipt.get('used_as_answer') is False, 'derived native view was altered or promoted to an answer')
     # This is transform consistency, deliberately separate from the input
     # inventory and source-relation checks. It prevents consumers from silently
     # discarding a valid display while retaining hidden raw text.
@@ -369,7 +428,7 @@ def validate_native_content(result):
         branch = next((b['native_branch'] for b in projected), 'unknown')
         render_native_blocks(projected, page, branch, copy.deepcopy(parents),
                              include_source_markers=any(b.get('service_marker') for b in values))
-        _require(all(all(a.get(k) == b.get(k) for k in ('type', 'content', 'markdown', 'service_rendered', 'service_bbox', 'media'))
+        _require(all(all(a.get(k) == b.get(k) for k in ('type', 'content', 'markdown', 'service_rendered', 'service_bbox', 'media', 'heading_projection'))
                      for a, b in zip(values, projected, strict=True)), 'native/display projection changed')
     return contract
 
