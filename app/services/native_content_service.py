@@ -53,6 +53,15 @@ _ROLES = {
     "checkbox_unselected": "text",
     "formula": "formula",
     "equation": "formula",
+    "figure": "image",
+    "list": "layout_region",
+    "region": "layout_region",
+    "description": "description",
+    "model_description": "description",
+    "image_description": "description",
+    "chart_description": "description",
+    "label": "region_label",
+    "region_label": "region_label",
 }
 
 
@@ -274,6 +283,10 @@ def render_native_blocks(blocks, number, branch, containers, *, include_source_m
                 )
         if not rendered and role == "unknown":
             rendered = "此处内容未完成。"
+        components = block.get('source_components', [])
+        primary = next((c for c in components if c['field'] == 'content'), None)
+        if primary and primary['source_type'] in {'model_description', 'native_region_label'} and text:
+            rendered = ('视觉描述：' if primary['source_type'] == 'model_description' else '区域标签：') + _literal(text)
         fragment = None
         if role == "table":
             if any(
@@ -429,6 +442,12 @@ def render_native_blocks(blocks, number, branch, containers, *, include_source_m
                 'reference': block['native_media_declaration'], 'status': 'unverified_not_delivered',
                 'bytes_accessed': False, 'purpose': 'native_source_region_media'})
             issues.append({'native_path': block['native_path'], 'code': 'saved_native_media_unverified'})
+        for component in components:
+            if component['field'] == 'content' or not component['text']:
+                continue
+            label = {'model_description': '视觉描述：', 'native_caption': '原生图题：',
+                     'native_region_label': '区域标签：'}[component['source_type']]
+            rendered = '\n\n'.join(p for p in (rendered, label + _literal(component['text'])) if p)
         if role in {"header", "footer", "page_number"} and rendered:
             furniture.append(
                 PageFurnitureFragment(
@@ -451,9 +470,13 @@ def render_native_blocks(blocks, number, branch, containers, *, include_source_m
             service_bbox=_box(block),
             geometry_frame=block.get('native_geometry_frame', "frozen_oriented_input"),
             inline_media_references=inline_media,
-            native_text_span=[0, len(block.get("text", ""))],
+            native_text_span=None if block.get('source_kind') == 'native_visual_region' else [0, len(block.get("text", ""))],
             read_status="unresolved" if block.get("read_error") or role == "unknown" else "read",
         )
+        if block.get('source_kind') == 'native_visual_region':
+            block['derived_display'] = {'source_type': 'derived_display_text',
+                'source_paths': [c['native_path'] for c in components], 'text': rendered,
+                'document_character_provenance': 'not_available', 'inferred_relations': []}
         if rendered and include_source_markers:
             marker_id = hashlib.sha256(
                 f"{number}:{block.get('occurrence_id', block['id'])}".encode()

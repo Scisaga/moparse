@@ -38,6 +38,8 @@ def _execution(native, observation, identity, payload):
                      for state in ({**s, 'input_pages': [page.get('page')]} for s in
                                    paddle_execution_states(page['raw'], f'#/pages/{index}/raw'))]
     native_states.extend(execution_states(native))
+    from app.adapters.visual_native import visual_execution_states
+    native_states.extend(visual_execution_states(native))
     state_keys = ('status', 'errors', 'warnings', 'timed_out', 'truncated', 'stop_reason',
                   'unprocessed_pages', 'processed', 'length_limit_reached', 'possible_length_truncation')
     documents: dict[str, list[Any]] = {}
@@ -113,6 +115,12 @@ def bind_native_content(result, native, *, selected_pages, source_pages=None, ar
             if item is not None:
                 block['source_locator'] = asdict(item.locator)
                 block['original_pdf_page'] = item.original_page
+            for component in block.get('source_components', []):
+                own = next((i for i in items if i.parent == block.get('id')
+                            and i.input_page == number and i.locator.path == component['native_path']
+                            and i.details.get('purpose') == 'native_visual_text_component'), None)
+                if own:
+                    component['source_locator'] = asdict(own.locator)
             for cell in block.get('cells', []):
                 own = next((i for i in items if i.kind == 'cell' and i.input_page == number
                             and i.identity == cell.get('id') and i.parent == block.get('occurrence_id', block.get('id'))), None)
@@ -197,9 +205,15 @@ def _input_decode_gap(root, page):
     entry = pages[0]
     branch, raw = entry.get('branch'), entry.get('raw')
     allowed = CONFIGURATIONS.get(root.get('pipeline'), {}).get('branches', set())
-    if not isinstance(branch, str) or branch not in allowed or not isinstance(raw, Mapping):
+    if not isinstance(branch, str) or branch not in allowed or not (
+        isinstance(raw, Mapping) or branch == 'visual' and isinstance(raw, list)
+    ):
         return True
     if sum(isinstance(p, Mapping) and p.get('page') == page for p in root.get('page_processing', [])) > 1:
+        return True
+    if branch == 'visual':
+        return not isinstance(raw, list)
+    if not isinstance(raw, Mapping):
         return True
     if branch == 'glm':
         from app.adapters.native_inventory import _regions
@@ -282,7 +296,7 @@ def validate_native_content(result):
         _require(block.get('text') == (item.raw_text or ''), 'native literal or selection changed: ' + item.identity)
         _require(block.get('kind') == item.details['label'], 'native role was replaced by a service inference')
         _require(block.get('text_format') == (None if not isinstance(node, Mapping) else
-                 item.details['text_format'] if item.branch == 'mineru' else
+                 item.details['text_format'] if item.branch in {'mineru', 'visual'} else
                  'plain' if item.branch == 'docling' else
                  'html' if re.search(r'<table\b', item.raw_text or '', re.I) else 'markdown'),
                  'native display syntax changed')
@@ -314,6 +328,55 @@ def validate_native_content(result):
             _require(block.get('bbox') == (node.get('bbox_2d') if isinstance(node, Mapping) else None), 'native geometry changed')
             _require(block.get('source_view') == 'json_result' and block.get('coordinate_system') == 'normalized_1000',
                      'primary view or GLM coordinate frame changed')
+        if item.branch == 'visual':
+            from app.adapters.visual_native import (
+                MEDIA_FIELDS as VISUAL_MEDIA_FIELDS,
+            )
+            from app.adapters.visual_native import (
+                RELATION_FIELDS,
+                STATE_FIELDS,
+                visual_geometry,
+            )
+            raw = node if isinstance(node, Mapping) else {}
+            entry = resolve_pointer(root, item.locator.path.rsplit('/raw/', 1)[0])
+            _require(block.get('source_view') == 'ContentBlock[]'
+                     and block.get('source_kind') == 'native_visual_region'
+                     and block.get('page') == item.input_page
+                     and block.get('native_array_position') == item.details['array_position']
+                     and block.get('native_sequence') == list(item.order)
+                     and block.get('order_basis') == item.order_basis,
+                     'visual page/region occurrence or order changed')
+            _require(block.get('native_fields') == item.details['native_fields']
+                     and block.get('native_content') == audit_copy(raw.get('content')),
+                     'visual native identity/fields changed')
+            _require(block.get('native_relations') == {k: audit_copy(raw[k]) for k in RELATION_FIELDS if k in raw}
+                     and block.get('parent_id') is None, 'visual grouping became a fabricated parent or was lost')
+            expected_components = []
+            for component in item.details['source_components']:
+                source = next(i for i in items if i.input_page == item.input_page
+                              and i.parent == item.identity and i.locator.path == component['native_path'])
+                expected_components.append({**component, 'source_locator': asdict(source.locator)})
+            _require(block.get('source_components') == expected_components
+                     and block.get('character_provenance') == 'not_available'
+                     and block.get('ocr_verification') == 'not_available'
+                     and block.get('native_text_span') is None and not block.get('charspan')
+                     and not block.get('text_selection') and not block.get('ocr_verified')
+                     and all(not p.get('charspan') for p in block.get('provenance', [])),
+                     'visual text/description provenance changed or character source fabricated')
+            _require(all(block.get('native_' + k if k != 'self_ref' else k) == raw.get(k)
+                         for k in ('id', 'index', 'self_ref', 'group_id')),
+                     'visual declared object identity changed')
+            _require(all(block.get(k) == v for k, v in visual_geometry(root, entry, raw).items()),
+                     'visual geometry/frame/polygon/transform changed')
+            _require(block.get('native_media_declaration') == {k: audit_copy(raw[k]) for k in VISUAL_MEDIA_FIELDS if k in raw}
+                     and block.get('asset') == (raw.get('research_asset') or raw.get('asset')),
+                     'visual media declaration changed')
+            _require(block.get('native_execution_state') == {k: audit_copy(raw[k]) for k in STATE_FIELDS if k in raw}
+                     and all(block.get(k) == raw[k] for k in ('status', 'angle', 'merge_prev') if k in raw),
+                     'visual native failure/continuation state changed')
+            if item.details['requires_read_failure']:
+                _require(block.get('read_error') and block.get('read_status') == 'unresolved',
+                         'malformed visual region promoted to successful read')
         if item.branch == 'paddle':
             _require(block.get('order_basis') == item.order_basis, 'unknown Paddle order was promoted')
             _require(block.get('native_array_position') == item.details['array_position'], 'native region occurrence moved')
@@ -371,6 +434,8 @@ def validate_native_content(result):
                    if p == page and (p, b.get('occurrence_id', b.get('id'))) in expected]
         known = [i.order for i in ordered if i.order_basis in {'native_index', 'native_reading_tree'}]
         _require(known == sorted(known), 'confirmed native reading order was changed')
+        visual = [i.order for i in ordered if i.branch == 'visual']
+        _require(visual == sorted(visual), 'visual observed array order changed; reading order remains unknown')
     media = [i for i in items if i.kind == 'media']
     declared = state.get('media', [])
     _require(declared == result._source_verification.get('saved_native_bridge', {}).get('asset_references', []),
@@ -428,7 +493,7 @@ def validate_native_content(result):
         branch = next((b['native_branch'] for b in projected), 'unknown')
         render_native_blocks(projected, page, branch, copy.deepcopy(parents),
                              include_source_markers=any(b.get('service_marker') for b in values))
-        _require(all(all(a.get(k) == b.get(k) for k in ('type', 'content', 'markdown', 'service_rendered', 'service_bbox', 'media', 'heading_projection'))
+        _require(all(all(a.get(k) == b.get(k) for k in ('type', 'content', 'markdown', 'service_rendered', 'service_bbox', 'media', 'heading_projection', 'derived_display'))
                      for a, b in zip(values, projected, strict=True)), 'native/display projection changed')
     return contract
 
@@ -588,6 +653,21 @@ def validate_ir_handoff(result):
             _require(ident in ir_blocks and ir_blocks[ident].text == block.get('text', ''), 'native occurrence lost at IR handoff')
             selected = ir_blocks[ident].provenance.selected_source
             _require(selected is None or selected.value == block['native_branch'], 'consumer IR source was fabricated')
+            if block.get('source_kind') == 'native_visual_region':
+                consumer = ir_blocks[ident]
+                reasons = {'native_visual_region', 'no_document_character_provenance',
+                           *(c['source_type'] for c in block['source_components'])}
+                _require(selected is None and not consumer.provenance.sources
+                         and not consumer.provenance.supporting_sources
+                         and reasons <= set(consumer.provenance.reason_codes),
+                         'visual source category lost or promoted to OCR at IR handoff')
+                _require(consumer.unit_id == f"p{block['page']}" and consumer.region_id == ident + ':region',
+                         'visual page or region rebound at IR handoff')
+                if block['type'] in {'layout_region', 'description', 'region_label'}:
+                    _require(consumer.block_type == 'unknown', 'visual region/description promoted to ordinary text in IR')
+                box = consumer.bbox
+                actual_box = (box.left, box.top, box.right, box.bottom) if box is not None else None
+                _require(actual_box == block['service_bbox'], 'visual spatial evidence lost at IR handoff')
     tables = {t.table_id: t for t in result.parse_result.tables}
     for f in result._table_fragments:
         _require(f.fragment_id in tables, 'table omitted at IR handoff')

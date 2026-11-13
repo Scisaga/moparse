@@ -1,4 +1,67 @@
-# MO-Parse Lite：固定DocVortex 0.5.16官方结构与文本核验
+# MO-Parse Lite：P08 Visual Blocks共同接入与视觉来源边界
+
+P08 Visual Blocks共同适配已完成；真实保存结果纵向转换状态为partial。当前结论限于本组一份三页保存JSON的来源、适配、公共处理及持久化工程验收。P01–P07的七份固定开发结果按最终源码重新生成，正文、表格关系、warning、四层状态及编辑证据与原产物保持。逐格式接入达到进入跨格式验证的最低工程条件；本轮未启动跨文档Normalization、正式candidate比较、Native/Product评分或八组正式回放。
+
+## 第十阶段：接手身份、固定输入与边界
+
+接手HEAD为`265f4318f49d7560750fe8c6d789f9823d120b40`，工作区干净，`/opt/mosaic-parse`与`/opt/moparse`指向同一目录。接手software_id为`52c296f93529246e806d6e4ca121059c7530b7c230ca192eec2ef3c74befb540`；最终源码为`7f15e69534194831f4935a3b6c0cc45b3fe95833224160844fe41455414c18aa`，source-only清单SHA256为`5ac08cab08ec491ffb4094a0e53bea6c506c37c9a518db20f50bdd686aed13e0`。本轮[接手身份](../../runs/lite/service/development/visual-content-closure/intake.json)、[最终冻结](../../runs/lite/service/development/visual-content-closure/freeze-complete.json)和[最终绑定](../../runs/lite/service/development/visual-content-closure/final-binding.json)关联源码、测试、各自native/observation、真实阶段、正文及Storage，未重签历史门禁。
+
+固定P08开发输入为`artifacts/P08/measured-quality800-r1/zhenye-coupon-seals-p001-003/native.json`，SHA256为`f07856b3df2889dc90c5a7d5bbc2a6e3388231cea17e903c4af77cf240f51fd3`；配对observation SHA256为`a6c94a7688cf7d7b4c4629501c831dd41b7ca9f0737bb4e8efca1a06bf4201c9`。选择依据是本组文字、标题、两处图片声明、页面尺寸和旋转元数据，不参考Expected或成绩。[独立格式清单](../../runs/lite/service/development/visual-content-closure/format-inventory.json)从原生JSON建立。另只读检查过本组vanke三页JSON的HTML及空list形状，未转换该P08输入或进行答案比较。其他实样沿用P01–P07各自既有固定vanke输入与配对状态，没有用其他管线补P08。
+
+该P08工件的page是输入文档页包身份；分支局部页号与原PDF物理页映射未提供，明确保留unknown。大小、输入SHA和页数只取本组已有ContentParseResult.source元数据，不重新打开或校验PDF字节；未按样本名猜原页。历史测量没有替换，开发转换时长只列在[串行执行记录](../../runs/lite/service/development/visual-content-closure/serial-development-runs.json)，不作为解析性能或质量成绩。
+
+## 实际原生结构与来源能力
+
+| 项目 | 实际保存内容与限制 |
+| --- | --- |
+| 顶层 | pipeline、config、pages、documents、page_processing；documents为空，3个页包各有page、branch=visual、raw平面数组和faithful_markdown |
+| 区域 | 共22个：14 text、3 header、2 title、2 image、1 page_number；对象没有独立稳定ID，以工件SHA、JSON locator、页包及数组位置标识出现 |
+| 文字 | 20个非空content字段来自视觉模型识别；两个image的content为null。type是区域类别，不是额外原文标签 |
+| 未提供能力 | 无文档charspan、OCR字层、polygon、父子引用、group、原生标题树、独立caption/description、区域confidence或明确reading_order字段 |
+| 空间 | bbox与angle均保留。normalized/TOPLEFT的依据为保存config声明的固定mineru-vl-utils 2.0.7格式契约，不按数值范围推测；未声明固定契约或坐标时保持unknown |
+| 页面变换 | 保留各页width/height、rotation_clockwise及原rotation/cropbox元数据；第三页原rotation为270度。没有再次旋转bbox，没有验证原PDF逆变换，未借其他管线的页或坐标 |
+| 顺序与关系 | 保留数组出现次序、原始merge_prev=false，不将数组或bbox排序认定为阅读顺序，不按相邻、重叠或视觉包含制造文档父链 |
+| 媒体 | 两个research_asset声明及其区域框保留；没有资产内容摘要、读取、解码、存在性验收或实际交付，URI不构成ready |
+| 执行观察 | 原执行及3页均completed、errors为空；23项请求终止记录均为stop。请求未给区域对应，未推断逐区域绑定；observation的派生blocks/relations未作为答案 |
+
+共同契约和既有私有区域字典已经能表达上述来源，无需新建IR、视觉专用FinalContentService或公开HTTP字段。区域、文字组件和媒体均有工件绑定；source_components区分native_text、native_caption、model_description及native_region_label，derived_display单独记录显示来源。ContentRegion保留图像和未知布局类别，现有provenance.reason_codes标明视觉来源与文档字符来源不可得。原生描述只以“视觉描述：”显示，标签只以“区域标签：”显示；模型描述内部的HTML或图片语法不成为识别表格或资产。真实输入没有description/polygon/group，相关能力仅由受控反例验证，不能写成真实格式覆盖。
+
+## 实际调用、原生对象去向与正文
+
+`moparse_eval.saved_content_closure.close_saved_document → service_replay_native.replay_native → saved_native.adapt_saved_document → visual_native.read_visual_page → NativeContentContract/NativeContentEvidence → SavedContentService.finalize → ExportService → DocumentIRService → TableContextService/TableSemanticsService → FinalContentService → StorageService`已经实际执行。中立read_visual由原研究读取器原样移动，研究默认行为不变；所有八组保存入口现在直接进入共同契约，旧独立P08 bridge分支已移除。公共语义按来源与内容责任处理，没有pipeline==P08的语义答案分支。
+
+主要修改为`app/adapters/visual_native.py::read_visual_page/visual_geometry/text_components`、独立`visual_inventory.py::inventory_visual`、现有native_config/native_inventory/saved_native交接、native_content_evidence的来源与IR核验，以及共同显示、状态和去向记录。模型只在现有私有契约audit的primary_views增加ContentBlock[]视图；没有复制正文、表格或来源IR。`saved_content_closure`允许未知原PDF页映射，只接受既有输入页数元数据。维护文档同步P08说明、管线索引、架构与技术路线，HTTP schema保持原14条路径及结构，未启动lifespan或发送请求，见[协议核验](../../runs/lite/service/development/visual-content-closure/http-schema-check.json)。
+
+输入清单独立枚举22个区域、20个文字字段、3个页包、3条页面处理元数据及2个媒体声明，共50个对象；全部有去向。区域的原始空间、序号、字段及关系声明随其身份留证。最终去向为6项immutable_native_audit、19项consumed、19项retained、2项unresolved_media_delivery、2项unverified_not_delivered和2项explicitly_excluded_furniture。文字字段与其区域分别计为两个来源对象，页码区域及其文字字段分别显式排除；这些对象数不是质量分母。没有unresolved_native_readback或unresolved_final_location，也不靠final.md反向生成清单。[独立验收与七组保护](../../runs/lite/service/development/visual-content-closure/independent-acceptance.json)逐项检查自己的原生值、来源、区域最终片段及去向，保留原生两处正文日期与两处签署日期，没有按同字面去重。
+
+P08本轮实际[final.md](../../runs/lite/service/current/p08/development/visual-zhenye-3p-delivery/final.md)的SHA256为`9ee4f677c279efc424b74e52bfac5ef5b0fcd277f189d98e8ed0d6b3a907b1b2`。[完整证据](../../runs/lite/service/current/p08/development/visual-zhenye-3p-delivery/evidence.json)记录adapted、source_pages、native_pages、exported、ir、assets、semantic、final共8个真实快照；原件补充阶段明确不适用。7个阶段转移由独立文本编辑重放验证，最终24项编辑逐一核对原区间、删除及插入内容。最终阶段、DocumentParseResult.markdown、ContentParseResult.renderings.markdown和Storage result.md的UTF-8字节一致；正文来自实际公共处理，没有复制faithful.md或旧final，没有创建占位图片。
+
+| 状态层 | P08实际状态与责任 |
+| --- | --- |
+| original_execution | completed；保存的原执行状态未改写 |
+| readback | read；22个区域及20个文字字段来源均保留 |
+| conversion | partial；多块正文的阅读顺序未获原生证明，保留数组显示和未知依据，不自动拼接 |
+| delivery | partial；上述读序责任以及2项未读取、未验证、未交付图片分别保留 |
+
+22条native_reading_order_unverified与2条saved_native_media_unverified均保留定位。未使用未知几何或原PDF页映射的正文不因此新增partial；受控单个完整文字、单个明确表格或仅空布局区域可以completed。原生失败、超时、截断、processed=false、局部导出失败与纯信息warning分开传播，不能将丢对象、错绑来源或读取失败降为普通unknown。真实实样没有这些失败对象，其覆盖仅来自受控输入。
+
+## P01–P07保护、软件验证与阶段结论
+
+七份固定开发输入分别用最终源码串行生成到各自`service/current/pXX/development/visual-stage-regression-vanke-3p-delivery/`，历史final、原生输入和历史证据未覆盖。独立断言继续保护P01/P02各自Docling V1/V2、GLM主分支及45/46个源格；P03/P04各31组polygon、44个HTML投影格、37个非空格、5条记录和25项值关系；P05自身44格、37非空格及25项值关系；P06/P07各自Middle类型、父链、顺序、44格、37非空格、5条记录及25项值关系。各组最终UTF-8字节、全部semantic_tables、table_fragments、relation_checks、warning、四层状态、去向、content_dispositions、final_text_evidence及8阶段文字均与既有产物相等。P01/P02/P06/P07保持conversion completed、delivery partial；P03/P04仍为partial；P05保持completed。
+
+P07固定DocVortex 0.5.16整页及整文档schema拒绝仍保留，四个嵌套list成员的continues_prev=null未删。既有官方验证记录和结果摘要保持，没有重跑官方schema或把拒绝改成OCR/业务语义失败。P01–P07已验证的是固定开发范围；真实跨文档、可选富文本/公式、完整content_list对应、跨页延续及失败类型仍有原有限制。P08实样未覆盖真实描述、polygon、分组、明确原生阅读顺序或复杂表格，控制例通过不补这些真实证据。
+
+最终source-only相关允许范围为14个模块、468项通过，新增视觉模块实际48项；退出0、测试及软件全程未变、边界违规0，见[本轮最终记录](../../runs/lite/service/development/visual-content-closure/source-only-complete.json)和[JUnit](../../runs/lite/service/development/visual-content-closure/source-only-complete.xml)。169个允许模块中其余155个本轮未收集，另81个原排除模块继续未收集；没有声称重新完成全部允许集合或全量pytest，没有混入历史4225、4175、718等结果。审查覆盖新测试、旧组件fixture、共享finish、conftest（禁用）、依赖、I/O及子进程；并行编译和调度探针不在本轮范围，详见[审查冻结](../../runs/lite/service/development/visual-content-closure/freeze-complete.json)。14模块逐项串行，最多8 CPU、8 GiB地址空间、数值线程1、无GPU可见性，网络及媒体/语料I/O由审查入口拒绝。Ruff对全部18项相关Python文件通过，mypy对11项相关app源码通过，README及4份维护文档Markdown政策通过。
+
+开发尝试单独保留于[过程记录](../../runs/lite/service/development/visual-content-closure/development-attempts.json)。首轮反例发现合法空布局因warning被补写“本页内容未完成”的实际缺口，现保留空区域及来源；另一项快照名称断言改为实际既有回调。旧FinalContent组件fixture原先将自造块序当成P08读取已确认顺序，并允许后续文字补充，与真实保存准入边界冲突；现直接使用明确有序的组件输入和同一个既有显示renderer，所有原测试函数及正文断言AST保持不变，生产准入没有旁路或放宽。独立实样验收曾误将日期次数设为2，已按原生四次出现更正；阶段重放核验补读已有生产者的before/after与deleted_content/inserted_content两种字段表达，不修改生产记录求通过。
+
+56项已绑定输入、observation、历史正文/Storage/证据、原始成本摘要、要求索引和官方验证绑定均保持原字节，见[保全记录](../../runs/lite/service/development/visual-content-closure/preservation.json)。正式requirements/current/index.json仍为SHA256 `09918d7c652aee0d306dc603cbf7c827c6ca01996b8a436d72fb8d4f803b6884`、state=structure_blocked；正式service/current/index.json仍不存在。63份来源验收、107份比较责任缺口、3份待独立验收及5个输入范围均未改动或重新普查，T/L/B、Expected、Oracle和分母未修改。
+
+本轮没有PDF或图片创建/读取/解码/渲染、字层、OCR、VLM/模型初始化或推理、网络调用、GPU/TTS及在线服务操作、部署、实际candidate与Expected比较、正式评分、八组正式回放、完整媒体ZIP、提交或推送。逐格式接入的最低工程条件在固定开发范围内已满足，余项作为明确的局部边界保留；后续固定跨文档集合、Normalization横向验证与Native/Product研究须另定范围和授权，本轮没有提前启动。
+
+## 历史阶段：固定DocVortex 0.5.16官方结构与文本核验
+
+以下保留前期核验记录，其中“本轮”和软件/测试身份属于对应历史阶段，不能混入上述P08本轮结果。
 
 固定依赖与本范围官方核验已完成：P06整份Middle文档及两页schema接受，P07整份文档及第2页schema拒绝、第1页接受；两组各29个原始块的schema和安全文本投影全部执行，来源及文字对照全部保留。P07的拒绝已定位并由独立合成例复现。共同JSON生产路径没有改动，既有两份正文、Storage和媒体未交付的partial保持。本结论仅覆盖同一固定三页输入的格式核验，不提供解析质量成绩或MinerU全格式验收。
 

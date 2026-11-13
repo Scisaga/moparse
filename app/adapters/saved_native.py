@@ -442,7 +442,7 @@ def adapt_saved_document(native, source, options, *, document_id, include_source
             if not isinstance(branch, str) or branch not in configuration["branches"]:
                 raise NativeReadError("saved_branch_outside_declared_pipeline")
             raw = entry.get("raw")
-            if not isinstance(raw, Mapping):
+            if not isinstance(raw, Mapping) and not (branch == 'visual' and isinstance(raw, list)):
                 raise NativeReadError("native_page_payload_not_an_object")
             pointer: Any = f"#/pages/{position}/raw"
             if len(processing[number]) > 1:
@@ -452,6 +452,8 @@ def adapt_saved_document(native, source, options, *, document_id, include_source
             )
             detail["capabilities"] = branch_capabilities(pipeline, branch)
             if branch == "docling":
+                if not isinstance(raw, Mapping):
+                    raise NativeReadError('native_page_payload_not_an_object')
                 pointer = raw.get("native_document")
                 detail["native_page_pointer"] = audit_copy(pointer)
                 if not isinstance(pointer, str) or not re.fullmatch(r"#/documents/\d+", pointer):
@@ -523,7 +525,26 @@ def adapt_saved_document(native, source, options, *, document_id, include_source
                 blocks, containers, metadata = read_middle_page(native, entry)
                 detail.update(metadata)
                 detail['native_audit_objects'] = audit_objects(native, entry, position)
+            elif branch == 'visual':
+                from app.adapters.visual_native import read_visual_page
+                blocks = read_visual_page(native, entry, position)
+                detail.update(native_page_pointer=pointer, primary_view='ContentBlock[]', branch_page=None,
+                              reading_order='unknown; array positions retained only',
+                              source_envelope={'native_entry': {k: audit_copy(entry[k]) for k in
+                                  ('status', 'errors', 'warnings') if k in entry}},
+                              character_sources='not_available; visual model output only')
+                for b in blocks:
+                    detail['local_read_errors'].append({'code': 'native_reading_order_unverified',
+                        'category': 'source_uncertainty', 'native_path': b['native_path']})
+                    if b.get('geometry_status') == 'unknown':
+                        detail['local_read_errors'].append({'code': 'native_geometry_transform_unknown',
+                            'category': 'source_uncertainty', 'native_path': b['native_path']})
+                    if b.get('native_execution_state', {}).get('warnings'):
+                        detail['local_read_errors'].append({'code': 'native_execution_warning',
+                            'category': 'execution_information', 'native_path': b['native_path']})
             elif branch == 'paddle':
+                if not isinstance(raw, Mapping):
+                    raise NativeReadError('native_page_payload_not_an_object')
                 blocks = read_paddle_blocks(native, raw, number, pointer)
                 payload = raw.get('res', raw)
                 detail.update(native_page_pointer=pointer, primary_view='res.parsing_res_list' if 'res' in raw else 'parsing_res_list',
@@ -541,6 +562,8 @@ def adapt_saved_document(native, source, options, *, document_id, include_source
                     part in str(obj.get('status', '')).lower() for part in ('fail', 'error', 'partial')) for obj in (raw, payload)):
                     detail['local_read_errors'].append({'code': 'saved_native_producer_incomplete'})
             else:
+                if not isinstance(raw, Mapping):
+                    raise NativeReadError('native_page_payload_not_an_object')
                 result.pipeline.ocr = "glm-sdk-remote"
                 blocks = _glm_blocks(raw, number, pointer)
                 detail.update(
@@ -587,7 +610,8 @@ def adapt_saved_document(native, source, options, *, document_id, include_source
                     details=issue,
                 )
             )
-        if not content and warnings:
+        layout_only = blocks and all(b.get('type') == 'layout_region' and not b.get('read_error') for b in blocks)
+        if not content and warnings and not layout_only:
             content = "本页内容未完成。"
         failed = bool(detail.get("error"))
         status = (

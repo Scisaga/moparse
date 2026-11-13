@@ -380,7 +380,9 @@ class DocumentIRService:
                 if role == "table":
                     continue
                 block_type = {"title": RegionType.HEADING, "image": RegionType.IMAGE,
-                              "formula": RegionType.FORMULA, "unknown": RegionType.UNKNOWN}.get(role, RegionType.TEXT)
+                              "formula": RegionType.FORMULA, "unknown": RegionType.UNKNOWN,
+                              "layout_region": RegionType.UNKNOWN, "description": RegionType.UNKNOWN,
+                              "region_label": RegionType.UNKNOWN}.get(role, RegionType.TEXT)
                 ident = native.get("occurrence_id", native["id"])
                 region_id = ident + ":region"
                 saved_source_kind = _source_kind(str(native.get("native_branch", "")))
@@ -388,12 +390,16 @@ class DocumentIRService:
                 quality = (ElementQuality.MISSING if native.get("read_status") == "unresolved"
                            or role == "image" and native.get("media", {}).get("status") != "ready"
                            else ElementQuality.SELECTED)
+                reasons = [] if saved_source_kind is not None else ['source_kind_retained_in_native_contract']
+                if native.get('source_components') is not None:
+                    reasons += ['native_visual_region', 'no_document_character_provenance',
+                                *sorted({c['source_type'] for c in native['source_components']})]
                 blocks.append(TextBlock(block_id=ident, unit_id=page_id, region_id=region_id,
                                         block_type=block_type, bbox=position, reading_order=index,
                                         text=str(native.get("text", "")), quality=quality,
                                         provenance=ElementProvenance(selected_source=saved_source_kind,
                                             sources=[ProvenanceSource(source=saved_source_kind)] if saved_source_kind is not None else [],
-                                            reason_codes=[] if saved_source_kind is not None else ['source_kind_retained_in_native_contract'])))
+                                            reason_codes=reasons)))
                 regions.append(ContentRegion(region_id=region_id, unit_id=page_id, region_type=block_type,
                                              bbox=position, reading_order=index, block_ids=[ident], quality=quality))
         elif evidence and evidence.native_blocks:

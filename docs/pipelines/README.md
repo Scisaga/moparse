@@ -4,9 +4,11 @@
 
 这里的“管线输出”指完整声明配置产生的原生结构、Markdown、媒体及状态。混合配置包含两个分支及其原始页序关联；一次 VLM 请求的文本、当前 worker 投影和 MO-Parse 最终正文分别核对。
 
-2026-11-13的共同source-free准入覆盖P01/P02自己的Docling V1/V2及GLM、P05全页GLM与P03/P04 Paddle固定保存结果。相同格式共享读取和投影，五个配置沿用同一Export、IR、表格语义、FinalContent和Storage；配置身份及来源权限独立，公共语义不按编号选择答案。unknown按其实际输出依赖记录影响，无关元数据不自行变成partial；原生失败、结构缺口、未知必要读序及媒体未交付保持独立依据。实际格式、正文、状态、source-only范围及四组保护由[唯一报告](../../benchmark/reports/lite/report.md)维护；P06/P07的JSON接入与官方Typed缺口见下一段，P08尚未完成共同准入。
+2026-11-13的共同source-free准入覆盖P01/P02自己的Docling V1/V2及GLM、P05全页GLM与P03/P04 Paddle固定保存结果。相同格式共享读取和投影，五个配置沿用同一Export、IR、表格语义、FinalContent和Storage；配置身份及来源权限独立，公共语义不按编号选择答案。unknown按其实际输出依赖记录影响，无关元数据不自行变成partial；原生失败、结构缺口、未知必要读序及媒体未交付保持独立依据。该次尚未接入P08；当前范围由下述第十阶段与[唯一报告](../../benchmark/reports/lite/report.md)维护。
 
-第九阶段为P06/P07增加同一个MinerU Middle JSON投影和独立输入清单，接入现有公共source-free链。两组保留Standard/Advanced配置与自己的原字、list父链及HTML跨度；研究读取的默认视图政策不变。2026-11-14在固定DocVortex 0.5.16隔离镜像中完成同两份输入的官方结构及安全文本对照，生产链保持；P06整文档schema接受，P07因四个嵌套list成员显式continues_prev=null保留整页及文档拒绝。两组各29个块均实际通过自身对象schema及文本保全对照，不外推全部MinerU格式；P08未接入。实样范围与产物仅见[唯一报告](../../benchmark/reports/lite/report.md)。
+第九阶段为P06/P07增加同一个MinerU Middle JSON投影和独立输入清单，接入现有公共source-free链。两组保留Standard/Advanced配置与自己的原字、list父链及HTML跨度；研究读取的默认视图政策不变。2026-11-14在固定DocVortex 0.5.16隔离镜像中完成同两份输入的官方结构及安全文本对照，生产链保持；P06整文档schema接受，P07因四个嵌套list成员显式continues_prev=null保留整页及文档拒绝。两组各29个块均实际通过自身对象schema及文本保全对照，不外推全部MinerU格式；该次核验未接入P08。
+
+第十阶段将[P08 Visual Blocks](p08-mineru-visual.md#保存视觉结果的共同准入)接入相同NativeContentContract与SavedContentService。八个保存配置现在共用导出、IR、表格关系、FinalContent及Storage，独立格式读取保留各自来源。P08固定三页开发样本保全22个视觉区域、20个原生文字字段和2个未交付媒体声明；未知读序不成为确定顺序，区域不产生字符跨度或标题父树。真实描述、polygon及分组样本缺失，受控边界与实样验收分开。逐格式接入达到固定开发范围的最低工程条件，后续跨文档Normalization样本与执行授权另定；完整格式、媒体交付、正式比较及质量成绩仍未完成，证据只见[唯一报告](../../benchmark/reports/lite/report.md)。
 
 ## 管线索引
 

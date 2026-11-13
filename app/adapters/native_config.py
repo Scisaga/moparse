@@ -10,4 +10,5 @@ CONFIGURATIONS: dict[str, dict[str, Any]] = {
     "P04": {"backend": "paddleocr-vl-1.6", "branches": {"paddle"}},
     "P06": {"backend": "mineru-standard-txt", "branches": {"mineru", "glm"}, "mineru_tier": "standard"},
     "P07": {"backend": "mineru-advanced-txt", "branches": {"mineru", "glm"}, "mineru_tier": "advanced"},
+    "P08": {"backend": "mineru-visual", "branches": {"visual"}},
 }

@@ -852,3 +852,25 @@ def read_mineru(raw: Mapping[str, Any], page_number: int,
             blocks.append(block)
     visit(raw.get("blocks", []), pointer + "/blocks")
     return blocks
+
+
+def read_visual(raw: list[dict[str, Any]], page_number: int,
+                pointer: str = "#/visual", *, page_dimensions: Mapping[str, Any] | None = None,
+                **_: Any) -> list[dict[str, Any]]:
+    blocks: list[dict[str, Any]] = []
+    for index, region in enumerate(raw):
+        if not isinstance(region, Mapping):
+            blocks.append({"id": f"{pointer}/{index}", "kind": "unknown", "text": "",
+                           "native_path": f"{pointer}/{index}", "page": page_number,
+                           "native_sequence": [page_number, index], "structure_status": "unknown",
+                           "read_error": "non-object native visual region",
+                           "read_error_category": "candidate_native_structure"})
+            continue
+        block = _block(region, f"p{page_number}-visual-{index}", f"{pointer}/{index}",
+                       kind=str(region.get("type", "unknown")),
+                       text=region.get("content", ""), box=region.get("bbox"), text_format="markdown")
+        _identity(block, region, f"{pointer}/{index}")
+        _position(block, system="normalized", page=page_number, dimensions=page_dimensions)
+        _sequence(block, [page_number, index])
+        blocks.append(block)
+    return blocks

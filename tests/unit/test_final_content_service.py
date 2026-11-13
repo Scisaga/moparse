@@ -1,18 +1,16 @@
 """Invented event-bearing text; no corpus, OCR, parser or reference access."""
 
 from copy import deepcopy
-from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
 
-from app.models.parse_options import ContentParseOptions
-from app.models.source import StoredSource
+from app.models.parse_result import DocumentParseResult, PageParseResult, ParsePipeline
+from app.parsers.mineru_visual_result import render_visual_page
 from app.services.export_service import ExportService
 from app.services.final_content_service import FinalContentService, apply_text_edits
 from app.services.multimodal_service import MultimodalService
 from moparse_eval.service_observation import build_service_observation, read_final_observation
-from moparse_eval.service_replay_native import replay_native
 
 
 def _block(role, text, **extra):
@@ -20,15 +18,27 @@ def _block(role, text, **extra):
 
 
 def _result(pages):
-    native = {"pipeline": "P08", "pages": [
-        {"page": i, "branch": "visual", "raw": blocks} for i, blocks in enumerate(pages, 1)
-    ]}
-    before = deepcopy(native)
-    source = StoredSource(path=Path('/unopened.pdf'), filename='synthetic.pdf', mime_type='application/pdf',
-                          size_bytes=1, page_count=len(pages))
-    result, diagnostics = replay_native(native, source, ContentParseOptions(), document_id='synthetic')
-    assert native == before
-    assert not diagnostics['errors']
+    """Authored ordered display input for FinalContentService component tests.
+
+    These fixtures test the existing renderer and final consumer, with order
+    supplied by the test author. Actual saved visual admission has no such
+    order evidence and is tested independently in test_visual_saved_content.
+    """
+    before = deepcopy(pages)
+    result = DocumentParseResult(document_id='synthetic', filename='synthetic', mime_type='text/plain',
+                                 page_count=len(pages), processed_pages=len(pages),
+                                 pipeline=ParsePipeline(profile='balanced', primary='controlled_display_fixture'))
+    for number, blocks in enumerate(pages, 1):
+        warnings = []
+        markdown, fragments, pictures, furniture, projected = render_visual_page(blocks, number, warnings=warnings)
+        assert not warnings
+        result.pages.append(PageParseResult(page_number=number, backend='controlled_display_fixture', content=markdown))
+        result._native_page_blocks[number] = projected
+        result._table_fragments.extend(fragments)
+        result._picture_candidates.extend(pictures)
+        result._page_furniture.extend(furniture)
+    assert pages == before
+    assert result._native_content is None
     result.markdown, result.plain_text = ExportService().join_pages(result.pages, preserve_page_breaks=True)
     return result
 

@@ -8,7 +8,9 @@
 
 ## 目标处理流程
 
-工作区的`table_context_service`从有来源的原生块和TableFragment读取局部计量、记录字段及文字限定，`table_semantics_service`检查用途与记录范围并渲染正文。当前开发调用为`saved_content_closure.close_saved_document → replay_native → app.adapters.saved_native.adapt_saved_document → SavedContentService.finalize`；P01旧入口仅作薄包装。当前七个配置的受限JSON入口使用同一Export、DocumentIRService、TableContext、TableSemantics、FinalContent和Storage实现。原件补充以allow_source_reads=False禁用，媒体仅处理声明与未交付状态，不执行正式service_evaluation入口、线上服务或资产提取。
+工作区的`table_context_service`从有来源的原生块和TableFragment读取局部计量、记录字段及文字限定，`table_semantics_service`检查用途与记录范围并渲染正文。当前开发调用为`saved_content_closure.close_saved_document → replay_native → app.adapters.saved_native.adapt_saved_document → SavedContentService.finalize`；P01旧入口仅作薄包装。第十阶段加入P08后，八个配置的受限JSON入口使用同一Export、DocumentIRService、TableContext、TableSemantics、FinalContent和Storage实现，移除replay_native中已无调用的旧独立bridge分支。原件补充以allow_source_reads=False禁用，媒体仅处理声明与未交付状态，不执行正式service_evaluation入口、线上服务或资产提取。
+
+P08的`visual_native`只读取本组平面区域，`visual_inventory`独立遍历输入；共同证据核验区域身份、页、bbox/polygon、坐标依据、数组出现位置、分组声明、文字组件来源及失败。NativeContentItem.details和既有私有块字典足以表达这些信息，无需第二套IR。ContentRegion区分图像、未知布局和文字；既有provenance.reason_codes说明视觉来源、描述和字符来源不可得，公共reading_order只作显示索引。模型描述与区域标签保留明确显示标记，不被当作OCR或语义表格。合法空布局区域不因warning被补写正文；媒体声明未交付和影响正文的未知顺序分别承担partial。实样、受控反例、相关source-only执行和P01–P07固定产物保护由[唯一报告](../../benchmark/reports/lite/report.md)维护。
 
 研究评分独立使用`expected_readback`读取canonical expected选段的原始语法，`saved_native`及`adapters`按声明分支读取保存SDK对象，`native_readback`保留已有明确角色与关系。候选读取接口不接收expected，最终正文从实际final.md读取，不能用内部IR补分。
 
@@ -45,7 +47,7 @@
 
 现有`ContentParseResult`、`ContentRegion`、`TextBlock`和表格类型是有限的服务消费视图，仓库没有名为`DocumentEvidenceIR`的类。原生对象引用、父子关系、分支页身份、原始与派生文字及坐标应由内部证据明确交接，不能仅以native_path或消费视图替代完整原生产物。具体有界调整及迁移依据见[审查第三部分](../../benchmark/reports/lite/moparse-architecture-evaluation-review.md#第三部分统一-ir-审查)，不新增万能IR、旧格式兼容链或公开协议。
 
-2026-10-29工作区的`FinalContentService`在图片与表格处理之后生成实际发布正文，私有`_final_text_evidence`及内部日志保存编辑前组装文字、精确编辑区间和续接状态。业务正文与内部定位分开，评分读取通过编辑区间映射回实际发布字符，不能使用已移除文字给分。PDF图片保全保留实际图片引用，资产ID、物理位置和操作说明留在IR；未解决表格通过文档partial及警告传递。P08视觉块由`mineru_visual_result`独立适配，当前用于保存产物的CPU服务replay；其来源分支不调用P07的PDF原生文字和矢量表格补充。逐组边界仍由[适配专文](../pipelines/README.md)维护，工作区变更不表示线上已切换。
+2026-10-29工作区的`FinalContentService`在图片与表格处理之后生成实际发布正文，私有`_final_text_evidence`及内部日志保存编辑前组装文字、精确编辑区间和续接状态。业务正文与内部定位分开，评分读取通过编辑区间映射回实际发布字符，不能使用已移除文字给分。PDF图片保全保留实际图片引用，资产ID、物理位置和操作说明留在IR；未解决表格通过文档partial及警告传递。P08当前按前述共同保存入口准入，来源分支不调用P07的PDF原生文字和矢量表格补充。逐组边界仍由[适配专文](../pipelines/README.md)维护，工作区变更不表示线上已切换。
 
 原生text块的内容与其Markdown完全一致、整块明确为紧连的大于号、数字及单位时，最终显示转义行首`>`，避免被Markdown解释为引用并从可见文字中吞掉比较符。引用、代码、数学、普通正文及已经变化的原生投影保持各自渲染；该显示处理不补回原生缺失的符号，不重组标签关系或解释图像。编辑仍进入同一精确字符区间日志，受控结构与保存输入的局部正文验证分别记录，不能据此宣称全部Lite业务目标已通过。
 

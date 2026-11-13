@@ -87,6 +87,10 @@ def inventory_native(artifact: NativeArtifact, selected: tuple[int, ...],
                          'original_page': original_pages[page - 1] if original_pages else None,
                          'raw_identity': raw.get('native_document') if isinstance(raw, Mapping) else None,
                          'branch_page': raw.get('source_page') if isinstance(raw, Mapping) and branch == 'docling' else None})
+        if branch == 'visual':
+            from app.adapters.visual_inventory import inventory_visual
+            bindings[-1].update(inventory_visual(root, entry, position, add))
+            continue
         if not isinstance(raw, Mapping):
             continue
         if branch == 'mineru':

@@ -1,49 +1,22 @@
 """Offline bridge from frozen candidate native objects to service readback.
 
-This module reads neither source PDF bytes nor references. The only newly
-generated Markdown is the fixed official renderer's view of already returned
-typed blocks. No parser, model, transport, service, or asset extraction runs.
+All eight saved configurations delegate to the same source-free contract.
+The separate fixed Typed verification helper remains available; it is never
+invoked by saved JSON admission. No parser, model, transport or asset extraction runs.
 """
 
 from __future__ import annotations
 
 import copy
 import json
-from collections import defaultdict
 from collections.abc import Callable, Mapping
 from importlib import metadata
 from types import SimpleNamespace
 from typing import Any
 
 from app.models.parse_options import ContentParseOptions
-from app.models.parse_result import (
-    DocumentParseResult,
-    PageDiagnostics,
-    PageParseResult,
-    PageSourceKind,
-    PageStatus,
-    ParsePipeline,
-    ParseUsage,
-    PipelineWarning,
-    RouteSummary,
-    SelectionStrategy,
-    WarningSeverity,
-)
+from app.models.parse_result import DocumentParseResult
 from app.models.source import StoredSource
-from app.parsers.glm_sdk_remote import GlmSdkRemoteParser
-from app.parsers.mineru_native_remote import (
-    MinerUPictureCandidate,
-)
-from app.utils.page_range import parse_page_range
-
-from .adapters import read_glm, read_visual
-from .service_native_adapters import (
-    PIPELINE_BACKENDS,
-    PIPELINE_BRANCHES,
-    attach_source_tables,
-    branch_capabilities,
-    render_saved_page,
-)
 
 MinerUProjector = Callable[[list[Any]], tuple[list[Any], list[dict[str, Any]]]]
 
@@ -120,40 +93,6 @@ def _pointer(root: Mapping[str, Any], pointer: Any) -> Any:
 
 
 
-def _asset_references(value: Any, pointer: str) -> list[dict[str, Any]]:
-    """Index existing candidate asset declarations without opening their files."""
-    refs = []
-    if isinstance(value, Mapping):
-        for key, child in value.items():
-            path = pointer + "/" + str(key).replace("~", "~0").replace("/", "~1")
-            if key in {"research_asset", "research_assets", "research_region_media", "image_files"}:
-                values = child.values() if isinstance(child, Mapping) else child if isinstance(child, list) else [child]
-                for ref in values:
-                    if isinstance(ref, str):
-                        refs.append({"native_path": path, "reference": None if ref.startswith("data:") else ref,
-                                     "inline_data": ref.startswith("data:")})
-            else:
-                refs.extend(_asset_references(child, path))
-    elif isinstance(value, list):
-        for index, child in enumerate(value):
-            refs.extend(_asset_references(child, f"{pointer}/{index}"))
-    return refs
-
-
-def _warning(code: str, page: int, branch: str, *, detail: dict[str, Any] | None = None) -> PipelineWarning:
-    return PipelineWarning(code=code, message="offline native replay could not read the declared candidate view",
-                           severity=WarningSeverity.ERROR, page_number=page, backend=branch, details=detail)
-
-
-def _unreadable_page(page: int, branch: str, warnings: list[PipelineWarning]
-                     ) -> tuple[PageParseResult, MinerUPictureCandidate]:
-    ref = f"replay_p{page}_unreadable"
-    return (PageParseResult(page_number=page, backend=branch, status=PageStatus.FAILED,
-                           content=f"<!-- source-page-image: {ref} -->", warnings=warnings),
-            MinerUPictureCandidate(page, 0, "原页（读回未知）", (0, 0, 1, 1),
-                                   source_page_ref=ref, allow_description=False))
-
-
 def replay_native(
     native: Mapping[str, Any], source: StoredSource, options: ContentParseOptions, *, document_id: str,
     mineru_projector: MinerUProjector | None = None,
@@ -161,179 +100,15 @@ def replay_native(
     artifact=None, original_observation=None, observation_identity=None,
     observation_bytes=None, source_pages=None,
 ) -> tuple[DocumentParseResult, dict[str, Any]]:
-    """Build service input from a saved declared branch, without source reads.
-
-    ``source`` supplies identity/page-count metadata only. PDF inspection,
-    asset extraction and service postprocessing remain the runner's work.
-    """
-    pipeline = native.get("pipeline")
-    if pipeline not in PIPELINE_BRANCHES:
-        raise ValueError("service replay requires a declared P01-P08 candidate")
+    """Admit every saved configuration through the common source-free contract."""
     from app.adapters.native_config import CONFIGURATIONS
-    if pipeline in CONFIGURATIONS:
-        if mineru_projector is not None:
-            raise ValueError("shared saved JSON admission does not accept injected Typed projectors")
-        from app.adapters.saved_native import adapt_saved_document
+    from app.adapters.saved_native import adapt_saved_document
 
-        return adapt_saved_document(native, source, options, document_id=document_id,
-            include_source_markers=include_source_markers, artifact=artifact,
-            original_observation=original_observation, observation_identity=observation_identity,
-            observation_bytes=observation_bytes, source_pages=source_pages)
-    selected = parse_page_range(options.page_range, source.page_count)
-    result = DocumentParseResult(document_id=document_id, filename=source.filename, mime_type=source.mime_type,
-                                 page_count=source.page_count, processed_pages=0,
-                                 pipeline=ParsePipeline(profile=options.profile.value,
-                                                        primary=PIPELINE_BACKENDS[pipeline]),
-                                 usage=ParseUsage(input_bytes=source.size_bytes))
-    diagnostic: dict[str, Any] = {
-        "schema": "offline-service-native-replay/1", "pipeline": pipeline, "pages": [], "errors": [],
-        "asset_references": [], "model_calls": 0, "http_calls": 0,
-        "timing_scope": "offline_native_readback_only_not_original_parser_processing",
-        "geometry_frame": "frozen_oriented_input",
-        "page_processing": copy.deepcopy(native.get("page_processing", [])),
-        "mineru_projection": "production_official_docvortex_0.5.16" if mineru_projector is None else "injected_projector",
-    }
-    entries: dict[int, list[tuple[int, Mapping[str, Any]]]] = defaultdict(list)
-    raw_pages = native.get("pages")
-    if not isinstance(raw_pages, list):
-        diagnostic["errors"].append({"code": "native_pages_not_a_list"})
-        raw_pages = []
-    for index, entry in enumerate(raw_pages):
-        if not isinstance(entry, Mapping) or type(entry.get("page")) is not int:
-            diagnostic["errors"].append({"native_page_position": index, "code": "native_page_identity_unavailable"})
-            continue
-        number = entry["page"]
-        if number not in selected:
-            diagnostic["errors"].append({"native_page_position": index, "raw_page": number,
-                                         "code": "native_page_outside_replay_selection"})
-        entries[number].append((index, entry))
-    processing: dict[int, Mapping[str, Any]] = {}
-    processing_items = native.get("page_processing") or []
-    if not isinstance(processing_items, list):
-        diagnostic["errors"].append({"code": "native_page_processing_not_a_list"})
-        processing_items = []
-    for item in processing_items:
-        if isinstance(item, Mapping) and type(item.get("page")) is int:
-            processing[item["page"]] = item
-    branches = []
-    emitted: set[str] = set()
-    for number in selected:
-        records = entries.get(number, [])
-        warnings: list[PipelineWarning] = []
-        branch = "unknown"
-        detail: dict[str, Any] = {"raw_page": number}
-        if number in processing:
-            detail["frozen_page_processing"] = copy.deepcopy(dict(processing[number]))
-        page: PageParseResult | None = None
-        if len(records) != 1:
-            detail["error"] = "native_page_missing" if not records else "native_page_duplicated"
-        else:
-            position, entry = records[0]
-            branch = str(entry.get("branch", "unknown"))
-            branches.append(branch)
-            detail.update(branch=branch, native_page_position=position)
-            raw = entry.get("raw")
-            diagnostic["asset_references"].extend(_asset_references(raw, f"#/pages/{position}/raw"))
-            if branch not in PIPELINE_BRANCHES[pipeline]:
-                detail["error"] = "saved_branch_outside_declared_pipeline"
-            else:
-                detail["capabilities"] = branch_capabilities(pipeline, branch)
-            if branch not in PIPELINE_BRANCHES[pipeline]:
-                pass
-            elif branch in {"docling", "paddle"} and isinstance(raw, Mapping):
-                pointer = f"#/pages/{position}/raw"
-                if branch == "docling":
-                    pointer = raw.get("native_document")
-                    raw = _pointer(native, pointer)
-                if not isinstance(raw, Mapping) or not isinstance(pointer, str):
-                    detail["error"] = "declared_native_document_unavailable"
-                else:
-                    if branch == "docling":
-                        diagnostic["asset_references"].extend(_asset_references(raw, pointer))
-                    rendered = render_saved_page(raw, number, branch, pointer, emitted=emitted)
-                    result._native_page_blocks[number] = rendered["blocks"]
-                    result._table_fragments.extend(rendered["fragments"])
-                    result._picture_candidates.extend(rendered["pictures"])
-                    result._page_furniture.extend(rendered["furniture"])
-                    detail.update(native_page_pointer=pointer, native_containers=rendered["containers"],
-                                  local_read_errors=rendered["errors"], source_envelope=rendered["source_envelope"])
-                    for error in rendered["errors"]:
-                        warnings.append(_warning("saved_native_local_region_unreadable", number, branch, detail=error))
-                    producer_status = str(rendered["source_envelope"].get("status", "")).lower()
-                    if any(token in producer_status for token in ("partial", "fail", "error")):
-                        warnings.append(_warning("saved_native_producer_incomplete", number, branch,
-                                                 detail=rendered["source_envelope"]))
-                    page = PageParseResult(page_number=number, backend=PIPELINE_BACKENDS[pipeline], content=rendered["markdown"],
-                                           status=PageStatus.FAILED if warnings else PageStatus.COMPLETED,
-                                           warnings=warnings, diagnostics=PageDiagnostics(
-                                               source_kind=PageSourceKind.NATIVE if branch == "docling" else PageSourceKind.VISUAL,
-                                               selected_strategy=SelectionStrategy.DOCLING if branch == "docling" else SelectionStrategy.NATIVE_REPAIR))
-            elif branch == "visual" and pipeline == "P08" and isinstance(raw, list):
-                from app.parsers.mineru_visual_result import render_visual_page
-                markdown, fragments, pictures, furniture, projected = render_visual_page(raw, number, warnings=warnings)
-                attach_source_tables(fragments, read_visual(raw, number, f"#/pages/{position}/raw"))
-                result._native_page_blocks[number] = projected
-                result._table_fragments.extend(fragments)
-                result._picture_candidates.extend(pictures)
-                result._page_furniture.extend(furniture)
-                page = PageParseResult(page_number=number, backend="mineru-visual", content=markdown,
-                                       status=PageStatus.FAILED if warnings else PageStatus.COMPLETED,
-                                       warnings=warnings, diagnostics=PageDiagnostics(
-                                           source_kind=PageSourceKind.VISUAL,
-                                           selected_strategy=SelectionStrategy.MINERU))
-            elif branch == "glm" and isinstance(raw, Mapping):
-                result.pipeline.ocr = "glm-sdk-remote"
-                if "json_result" not in raw:
-                    detail["error"] = "glm_primary_json_result_missing"
-                else:
-                    try:
-                        regions = GlmSdkRemoteParser._page_regions(raw["json_result"], warnings=warnings,
-                                                                   page_number=number)
-                        markdown, fragments = GlmSdkRemoteParser._render_regions(regions, number, warnings=warnings)
-                        source_blocks = read_glm(raw, number, f"#/pages/{position}/raw")
-                    except (ValueError, TypeError) as exc:
-                        detail["error"] = "glm_primary_view_unreadable"
-                        detail["exception_type"] = type(exc).__name__
-                    else:
-                        result._native_page_blocks[number] = source_blocks
-                        attach_source_tables(fragments, source_blocks)
-                        if not markdown:
-                            warnings.append(_warning("offline_glm_empty_page", number, branch))
-                        status = PageStatus.FAILED if warnings else PageStatus.COMPLETED
-                        ref = f"sdk_p{number}_failed" if status == PageStatus.FAILED else None
-                        if ref:
-                            markdown += f"\n\n<!-- source-page-image: {ref} -->"
-                        result._picture_candidates.append(MinerUPictureCandidate(
-                            number, 0, "扫描页原图", (0, 0, 1, 1), source_page_ref=ref, allow_description=False,
-                        ))
-                        result._table_fragments.extend(fragments)
-                        page = PageParseResult(page_number=number, backend="glm-sdk-remote", content=markdown or None,
-                                               status=status, warnings=warnings, diagnostics=PageDiagnostics(
-                                                   source_kind={"scan": PageSourceKind.SCANNED,
-                                                                "mixed": PageSourceKind.MIXED}.get(
-                                                                    str(processing.get(number, {}).get("source_prediction")),
-                                                                    PageSourceKind.SPARSE),
-                                                   selected_strategy=SelectionStrategy.GLM_TABLE))
-            else:
-                detail["error"] = "unsupported_or_unreadable_native_branch"
-        if page is None:
-            warning = _warning(str(detail.get("error", "offline_native_readback_failed")), number, branch, detail=detail)
-            page, picture = _unreadable_page(number, branch, [*warnings, warning])
-            result._picture_candidates.append(picture)
-        detail.update(status=page.status.value, warnings=[item.code for item in page.warnings])
-        if detail.get("error") or detail.get("projection_errors") or page.warnings:
-            diagnostic["errors"].append(copy.deepcopy(detail))
-        diagnostic["pages"].append(detail)
-        result.pages.append(page)
-        result.warnings.extend(page.warnings)
-    result.processed_pages = sum(page.status == PageStatus.COMPLETED for page in result.pages)
-    result.route_summary = RouteSummary(native_text_pages=sum(branch in {"docling", "mineru"} for branch in branches),
-                                        pages_with_ocr=sum(page.diagnostics is not None and page.diagnostics.source_kind != PageSourceKind.NATIVE and page.status == PageStatus.COMPLETED
-                                                           for page in result.pages),
-                                        failed_pages=sum(page.status == PageStatus.FAILED for page in result.pages))
-    result._source_verification["saved_native_bridge"] = {
-        "pipeline": pipeline, "pages": copy.deepcopy(diagnostic["pages"]),
-        "asset_references": copy.deepcopy(diagnostic["asset_references"]),
-        "source_policy": "actual_saved_branch_only_no_references_or_models",
-    }
-    return result, diagnostic
+    if native.get("pipeline") not in CONFIGURATIONS:
+        raise ValueError("service replay requires a declared P01-P08 candidate")
+    if mineru_projector is not None:
+        raise ValueError("shared saved JSON admission does not accept injected Typed projectors")
+    return adapt_saved_document(native, source, options, document_id=document_id,
+        include_source_markers=include_source_markers, artifact=artifact,
+        original_observation=original_observation, observation_identity=observation_identity,
+        observation_bytes=observation_bytes, source_pages=source_pages)

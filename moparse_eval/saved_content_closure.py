@@ -39,7 +39,7 @@ def format_readback_checks(native, result):
             )
             if not isinstance(raw, dict):
                 continue
-            field = {'docling': 'text', 'glm': 'content', 'mineru': 'content', 'paddle': 'block_content'}[block['native_branch']]
+            field = {'docling': 'text', 'glm': 'content', 'mineru': 'content', 'paddle': 'block_content', 'visual': 'content'}[block['native_branch']]
             if isinstance(raw.get(field), str) and block.get("read_status") == "read":
                 value = raw[field]
                 if block.get("text_selection"):
@@ -168,7 +168,8 @@ def content_dispositions(result, observation):
                         ],
                     )
                 elif not text:
-                    record["disposition"] = "unresolved_native_node_without_text"
+                    record["disposition"] = ('preserved_in_audit' if block['type'] == 'layout_region'
+                                             else 'unresolved_native_node_without_text')
                 else:
                     record["disposition"] = "unresolved_final_location"
             records.append(record)
@@ -356,7 +357,7 @@ def main() -> int:
         filename=meta["filename"],
         mime_type="application/pdf",
         size_bytes=meta["size_bytes"],
-        page_count=len(meta["source_pages"]),
+        page_count=meta.get('page_count') or len(meta["source_pages"]),
     )
 
     async def run():
@@ -370,7 +371,7 @@ def main() -> int:
             source,
             sample_id=meta["sample_id"],
             declared_source_sha256=meta["sha256"],
-            source_pages=meta["source_pages"],
+            source_pages=meta.get("source_pages"),
             artifact=NativeArtifact(str(args.native), received),
             original_observation=original_observation, observation_identity=str(args.observation),
             observation_bytes=observed_bytes,

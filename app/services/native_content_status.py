@@ -16,6 +16,8 @@ def execution_incomplete(metadata):
                 or metadata.get("truncated") or metadata.get("unprocessed_pages")
                 or metadata.get("length_limit_reached") or metadata.get("reached_max_new_tokens")
                 or metadata.get("possible_length_truncation")
+                or metadata.get("research_export_errors")
+                or metadata.get('processed') is False
                 or any(word in status for word in ("fail", "error", "partial", "timeout", "truncat")))
 
 
@@ -55,7 +57,8 @@ def native_status_impacts(result):
         own = [i for i in items if i.input_page == page]
         # Both textual regions and table/image occurrences have a position in
         # the delivered sequence. A singleton has no pairwise order obligation.
-        sequence = [i for i in own if i.raw_text or i.kind in {"table", "picture"}]
+        sequence = [i for i in own if i.raw_text or i.kind in {"table", "picture"}
+                    or any(c.get('text') for c in blocks.get((page, i.identity), {}).get('source_components', []))]
         for item in own:
             b = blocks.get((page, item.identity), {})
             if item.order_basis not in {"native_index", "native_reading_tree"}:
@@ -152,6 +155,11 @@ def native_status_impacts(result):
             add("original_page_incomplete", "original_execution", [{**execution_source, "path": f"#/pages/{index}", "input_page": page}],
                 ["execution.page_coverage"], effects=("body_content",), blocking=True, observation=p)
     for record in execution.get("native_status_evidence", []):
+        for warning in record['metadata'].get('warnings', []):
+            add('native_execution_warning', 'execution_information', [{
+                'artifact_sha256': contract.artifact.sha256, 'view': 'native_execution_metadata',
+                'path': record['native_path']}], ['execution.warnings'], observation=warning)
+            covered.add(('native_execution_warning', record['native_path']))
         if execution_incomplete(record["metadata"]):
             pages = record.get("input_pages", [])
             incomplete_pages.update(pages)

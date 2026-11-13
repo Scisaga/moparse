@@ -6,6 +6,16 @@
 
 离线service回放现与八组共用实际adapted至final阶段及edit ledger，继续只读本组视觉块和媒体声明；字层与矢量来源阶段明确为未适用，不制造标题树或历史before。既有baseline/current正文不覆盖，新执行及验证边界见[八管线服务适配](README.md#保存结果的八管线服务适配)。
 
+## 保存视觉结果的共同准入
+
+2026-11-14第十阶段实际核对本组`zhenye-coupon-seals-p001-003`的native.json及配对observation。顶层为pipeline、config、pages、documents、page_processing；documents为空，pages各自携带page、visual分支、平面raw数组及研究导出。22个原生区域包含14个text、3个header、2个title、2个image和1个page_number；20个非空content字段是视觉模型返回的文字，两个图片content为null。没有原生稳定对象ID、字符跨度、标题父树、分组、polygon、独立description或confidence；数组位置只标识出现位置，未被认定为已确认阅读顺序。实样不证明这些缺失能力已覆盖。
+
+[visual_native.read_visual_page](../../app/adapters/visual_native.py)复用中立`native_readers.read_visual`，与独立输入清单[visual_inventory.inventory_visual](../../app/adapters/visual_inventory.py)分别消费相同不可变JSON。每个区域及文字字段的工件SHA、JSON locator、页包身份和数组位置沿共同契约绑定；原PDF页映射未在该工件中提供，保留unknown，不借其他管线或文件名补全。`native_text`、`native_caption`、`model_description`和区域标签在source_components中分开，derived_display另记。模型描述只以“视觉描述：”显示，其内部HTML或图片语法不成为识别表格或资产；这项行为由受控结构验证，真实输入没有description字段。没有伪造OCR verified或文档字符跨度。
+
+bbox的normalized/TOPLEFT依据来自保存config声明的固定`mineru-vl-utils==2.0.7`契约；未声明固定版本或坐标字段时保持unknown，不按数值范围猜测。页面宽高、块angle及既有旋转、cropbox元数据分别保留；第三页记录原旋转270度，不再次旋转区域，也不宣称已经验证到原PDF的逆变换。polygon与分组若由其他保存对象显式提供，仅保存声明及未知关系；不根据相邻或包含位置制造父链和读序。既有ContentRegion/TextBlock按图像、未知布局区域或文字提供消费视图，私有契约保留完整区域和来源，未新建IR或公开字段。
+
+真实调用为`native.json → read_visual_page → NativeContentContract/NativeContentEvidence → SavedContentService.finalize → Export → DocumentIR → TableContext/TableSemantics → FinalContent → Storage`。本轮实际[final.md](../../benchmark/runs/lite/service/current/p08/development/visual-zhenye-3p-delivery/final.md)不是faithful.md副本。original_execution=completed、readback=read、conversion=partial、delivery=partial；必要的多块读序未证实，两个research_asset只有声明，未读取、校验或交付字节。没有裁图、OCR、VLM、网络、服务、正式评分或全量回放。50个输入清单对象均有去向，逐对象最终正文、阶段编辑及持久化证据见[唯一报告](../../benchmark/reports/lite/report.md)。
+
 ## 1. 配置与执行边界
 
 全部 PDF 页面渲染成图像，经官方纯视觉 SDK 的 vLLM 路径处理；不读取原生文字层，不接 GLM 或其他解析器。
@@ -68,7 +78,7 @@ P08 的必要裁图只能使用本组输入页面图像及 SDK 区域，保存�
 
 2026-10-30工作区采用与P07共用的HTML单元格与跨度读取，并增加基于明确字段或计量记录的局部语义入口；消费视觉SDK实际保存的表前说明、标题、局部期间与附注，不要求PDF格网。转换器不读取PDF文字层、矢量表格或P07答案，不恢复原生未保存的子项层级。表格用途、范围和partial状态独立记录，改善须进入真实返回正文；受控测试与实测结果分开，尚未部署。
 
-2026-10-29工作区新增[视觉结果适配器](../../app/parsers/mineru_visual_result.py)，直接读取固定SDK块的`content`、`type`、bbox和`merge_prev`，隔离畸形区域并保留邻居。固定SDK的`content`允许None；无文字的列表容器和图片块保留原始空值及位置，不误报读取失败。HTML表体沿实际单元格与跨度交接，图片沿本组页面图像裁取；不调用原生文字层、矢量表格补充或其他解析器。标题角色形成显示边界，`doc_title`显示为一级标题，其余标题角色显示为二级标题，不宣称真实多级从属。最终正文只采用唯一、相邻且无标题、表格、图片阻隔的显式正文续接，以及输出契约规定的受限同页货币单位断裂处理；不跨非正文块猜接事件上下文。当前接入已保存原生产物的服务replay，未新增线上模型执行入口或更改部署。按[配对协议](../../benchmark/evaluation-tasks.md#7-p07p08与mo-parse最终输出的配对评测)与P07共同验证，结果由评测索引维护。
+2026-10-29的`mineru_visual_result`保留为已有显示组件，其有序输入行为继续由独立的FinalContent组件测试保护；第十阶段共同保存入口不再调用旧P08 bridge或该投影器。当前来源及状态边界以上述[共同准入](#保存视觉结果的共同准入)为准，原有历史baseline/current不覆盖，正式配对仍受[评测任务](../../benchmark/evaluation-tasks.md#7-p07p08与mo-parse最终输出的配对评测)约束。
 
 P08研究执行路径已修复，[P08工程预检02](../../benchmark/runs/lite/preflight/)独立完成同一清单的11个任务并提供本次冻结依据。本组保存quality800一次和perf80三轮的有效原生结果及测量；错误评分及结论已删除；本轮以完整身份、候选上下文和源位置核对后的同一程序重评，完成范围以评测索引为准；结果只见[当前统一评测报告](../../benchmark/reports/lite/report.md)，状态与限制由[评测索引](../../benchmark/reports/README.md)维护。TTS只观测不控制，先前撤回测量不恢复；执行和自动评分完成不构成内容、Gold或图片内容验收。
 

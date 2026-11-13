@@ -13,7 +13,15 @@ def native_destinations(result, dispositions):
     for item in contract.items:
         record = {'identity': item.identity, 'kind': item.kind, 'locator': asdict(item.locator),
                   'page': item.input_page, 'parent': item.parent}
-        if item.kind in {'container', 'metadata'}:
+        if item.kind == 'metadata' and item.details.get('purpose') == 'native_visual_text_component':
+            owner = by_occurrence.get((item.input_page, item.parent))
+            if owner is None:
+                raise NativeContentError('visual text component lost its adapted owner: ' + item.identity)
+            record.update(destination='explicitly_excluded_furniture' if owner['disposition'] == 'explicitly_excluded_furniture'
+                          else 'consumed', source_type=item.details['source_type'],
+                          adapted_owner=item.parent, owner_destination=owner['disposition'],
+                          owner_final_spans=owner['final_spans'], span_basis='owner_display_not_document_charspan')
+        elif item.kind in {'container', 'metadata'}:
             record.update(destination='immutable_native_audit', reason='structure_or_metadata_not_markdown_content')
         elif item.kind == 'cell':
             owner = by_occurrence.get((item.input_page, item.parent))
