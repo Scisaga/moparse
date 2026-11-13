@@ -6,7 +6,7 @@
 
 2026-11-13的共同source-free准入覆盖P01/P02自己的Docling V1/V2及GLM、P05全页GLM与P03/P04 Paddle固定保存结果。相同格式共享读取和投影，五个配置沿用同一Export、IR、表格语义、FinalContent和Storage；配置身份及来源权限独立，公共语义不按编号选择答案。unknown按其实际输出依赖记录影响，无关元数据不自行变成partial；原生失败、结构缺口、未知必要读序及媒体未交付保持独立依据。实际格式、正文、状态、source-only范围及四组保护由[唯一报告](../../benchmark/reports/lite/report.md)维护；P06/P07的JSON接入与官方Typed缺口见下一段，P08尚未完成共同准入。
 
-第九阶段为P06/P07增加同一个MinerU Middle JSON投影和独立输入清单，接入现有公共source-free链。两组保留Standard/Advanced配置与自己的原字、list父链及HTML跨度；研究读取的默认视图政策不变。官方DocVortex固定依赖缺失，因此只能验收已保存JSON的受限转换，完整Typed验收仍未完成；P08未接入。实样范围与产物仅见[唯一报告](../../benchmark/reports/lite/report.md)。
+第九阶段为P06/P07增加同一个MinerU Middle JSON投影和独立输入清单，接入现有公共source-free链。两组保留Standard/Advanced配置与自己的原字、list父链及HTML跨度；研究读取的默认视图政策不变。2026-11-14在固定DocVortex 0.5.16隔离镜像中完成同两份输入的官方结构及安全文本对照，生产链保持；P06整文档schema接受，P07因四个嵌套list成员显式continues_prev=null保留整页及文档拒绝。两组各29个块均实际通过自身对象schema及文本保全对照，不外推全部MinerU格式；P08未接入。实样范围与产物仅见[唯一报告](../../benchmark/reports/lite/report.md)。
 
 ## 管线索引
 
@@ -41,7 +41,7 @@
 
 [阶段审计](../../moparse_eval/service_stages.py)捕获实际adapted、source_pages、native_pages、exported、assets、semantic及final视图，保存各阶段的来源sidecar、适用页及未适用原因。adapted来自当时真实bridge页面，不是将faithful.md改名；相邻阶段的edit ledger保留实际字符串前后跨度及文字，只记录变换，不判断正确。未适用的来源阶段明确记录，不制造历史before。既有P07/P08 baseline/current实际正文不覆盖，P01-P06没有历史service baseline；新产物写入`service/executions/<执行身份>/pXX`，八组完成且同软件、同scope及结构门槛通过后，才可一次原子切换唯一`service/current/index.json`。
 
-本次实现验证包含受控格式、引用、来源许可及原子选择反例，以及只读同一保存单页的八组JSON诊断；P01/P02/P03/P04/P05/P08已在宿主读取到实际adapted阶段且原生JSON未改，P06/P07的声明middle对象与页指针可读，但宿主缺固定`docvortex==0.5.16`，官方typed投影仍为依赖准备缺口，不能以研究Markdown替代。未读取原PDF或图片、未执行新CPU全量回放或评分；这些工程观察不构成转换质量、完整覆盖或部署验收。实际执行须等待当前expected结构门槛及固定环境预检，不能沿用旧诊断状态充当passed gate。
+此前实现验证包含受控格式、引用、来源许可及原子选择反例，以及只读同一保存单页的八组JSON诊断；P01/P02/P03/P04/P05/P08曾在宿主读取到实际adapted阶段且原生JSON未改，P06/P07当时因宿主缺固定DocVortex而未执行官方typed投影。该历史依赖缺口已由本页前述固定实样官方核验收尾，具体接受和拒绝不沿用旧诊断状态。未读取原PDF或图片、未执行新CPU全量回放或评分；这些工程观察不构成转换质量、完整覆盖或部署验收。正式执行仍须其自身expected结构门槛及固定环境预检。
 
 `prepare --validation <门槛文件>`可将同软件身份的`expected_structure_gate`写入新执行及worker plan，不启动候选；未提供门槛仍可准备工件，但不能实际warmup或measured。两种真实执行在启动容器前及worker入口都检查该门槛，warmup也不能使用已变化的软件；受控单函数测试不需要真实语料或容器。
 

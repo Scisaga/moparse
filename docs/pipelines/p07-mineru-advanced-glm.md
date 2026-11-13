@@ -6,7 +6,9 @@
 
 离线service回放现与八组共用阶段审计和页分支来源守卫；本组原生页及GLM页分别获得其声明许可，GLM页不因属于P07而进入PDF字层或矢量服务。既有baseline/current正文及原始观测保留；新执行不覆盖它们，门槛与实际验证边界见[八管线服务适配](README.md#保存结果的八管线服务适配)。
 
-当前第九阶段已实现保存Middle JSON的受限共同适配：`app.adapters.mineru_native.read_middle_page`读取本组自己的`documents`主视图，复用中性`read_mineru(primary_only=True)`，进入既有NativeContentContract、Evidence、SavedContentService及Storage。原始类型、内联内容、容器父链、index、页映射、表体HTML、附注和媒体声明分别保留；页面raw块及content_list（存在时）只在审计中保留，不补主答案。当前宿主`.venv`没有`docvortex==0.5.16`、MinerU及mineru-vl-utils，未安装依赖，也未执行官方Typed对象投影；有限JSON交接不构成完整Typed验收。真实正文、来源、状态、测试及未覆盖范围由[唯一报告](../../benchmark/reports/lite/report.md)维护。
+当前保存Middle JSON的受限共同适配由`app.adapters.mineru_native.read_middle_page`读取本组自己的`documents`主视图，复用中性`read_mineru(primary_only=True)`，进入既有NativeContentContract、Evidence、SavedContentService及Storage。原始类型、内联内容、容器父链、index、页映射、表体HTML、附注和媒体声明分别保留；页面raw块及content_list（存在时）只在审计中保留，不补主答案。2026-11-14在复用固定worker镜像的独立断网容器中实际完成官方DocVortex 0.5.16核验：23个顶层PageBlock、6个递归Block及24个原始InlineSpan均接受，29个块及24个内联对象均完成文本投影和来源对照；整份Middle文档及第2页被官方PageInfo的字段存在性规则拒绝，第1页接受。主`.venv`和共同JSON生产路径未修改。逐对象结果、拒绝原因及环境证据由[唯一报告](../../benchmark/reports/lite/report.md)维护。
+
+拒绝位置是`#/documents/0/pages/1/blocks/6/content/0`至`/3`四个list成员的显式`continues_prev: null`。官方PageBlock接受这些对象，但PageInfo禁止嵌套块显式携带该字段，包括null。保存调用`_native_snapshot → _plain → model_dump(mode="json")`会填充默认值；独立合成反例也证明官方完整model_dump会产生同样的回读拒绝，默认to_dict省略这些字段后合成例可回读。真实输入没有删字段、改写或归一化后重验为通过，本组完整文档schema仍为rejected；共同读取保留了原始字段、父链、四个成员及原编号。
 
 ## 1. 配置与执行边界
 
@@ -48,7 +50,7 @@ save(writer) -> 物化可用素材并保存多种原生表示与图片
 
 第九阶段固定开发范围为本组自己的`vanke-repurchase-share-changes-p001-003`。前两页实际主结构为`docvortex.middle` 2.0，producer为MinerU 4.0.12，extensions声明advanced/txt，第三页使用自身GLM json_result。原生前两页包含13/10个顶层块、27个叶块和table/list两个容器；四条备查文件位于同一个list的四个text子块。两组均没有block_id、显式parent/children字段或content_list，父链来自实际content嵌套，已知顺序来自显式index及保存执行器的物理page_idx绑定；没有公式或非空跨页续接实样。原生level仍留在私有证据中，公共显示按doc_title和paragraph_title的明确角色生成1/2级标题，不直接用level数字声称已恢复文档树；合成5/6反例保护该边界。页raw.blocks是带Markdown/research_assets的保存投影，独立核对其原生字段与自身Middle对应页完全一致，不能称存在稳定跨视图ID，也不重复输出。
 
-表体原生字段是HTML，44个HTML投影格保留rowspan/colspan及工件绑定语法路径，分别进入共同表格上下文和语义服务；它们不是独立OCR源格。表下注以实际table_footnote对象保留，未凭日期或相邻位置把无标记说明补成每条记录的附注。表体同时带有一处image_base64媒体声明，字符串仅作声明审计，没有解码、读取或交付，因此当前JSON转换完成而文档交付partial。官方Typed、实际content_list对应、独立图块、公式和跨页分区仍未验收。
+表体原生字段是HTML，44个HTML投影格保留rowspan/colspan及工件绑定语法路径，分别进入共同表格上下文和语义服务；它们不是独立OCR源格。表下注以实际table_footnote对象保留，未凭日期或相邻位置把无标记说明补成每条记录的附注。表体同时带有一处image_base64媒体声明，字符串仅作声明审计，没有解码、读取或交付，因此当前JSON转换完成而文档交付partial。官方复杂HTML表体与产品多层列表、官方原编号行与产品列表标记的显示差异均保留来源及关系证据；44格、5记录、25项值关系和附注通过独立既有断言复核，正文及partial未改变。实际content_list对应、独立图块、公式、跨页分区和其他实样仍未验证。
 
 ### 2.2 GLM-OCR SDK 页结果
 

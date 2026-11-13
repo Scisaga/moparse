@@ -4,7 +4,7 @@
 
 2026-11-13在既有Docling/GLM/Paddle共同契约上接入P02自己的V2保存结果。P01/P02分别保留配置、原生格位、角色和字面差异，复用已有Docling及GLM投影，五个配置使用同一source-free调度生成正文；未另建P02处理链或IR。配置、分支、主视图及来源守卫保留，实际状态、partial、完整source-only回归和未覆盖范围仅见[唯一报告](../../benchmark/reports/lite/report.md)，不表示八组或质量门禁已完成。
 
-第九阶段增加`mineru_native`与独立的`mineru_inventory`，直接读取P06/P07自己的保存Middle JSON，不构造仿官方Typed类。格式投影与配置核验仍在适配层，公共层仅按table_body、list父链、公式、媒体和实际来源责任选择消费行为。原生level保留为观测，doc_title/paragraph_title按明确角色生成有界显示标题，不据此宣称恢复多级文档树。派生raw块和可选content_list逐对象留有工件绑定的审计回执，独立输入清单会发现删除或错绑。官方DocVortex依赖缺失，完整Typed投影仍未验收；当前JSON模式及限制见[唯一报告](../../benchmark/reports/lite/report.md)。
+第九阶段增加`mineru_native`与独立的`mineru_inventory`，直接读取P06/P07自己的保存Middle JSON，不构造仿官方Typed类。格式投影与配置核验仍在适配层，公共层仅按table_body、list父链、公式、媒体和实际来源责任选择消费行为。原生level保留为观测，doc_title/paragraph_title按明确角色生成有界显示标题，不据此宣称恢复多级文档树。派生raw块和可选content_list逐对象留有工件绑定的审计回执，独立输入清单会发现删除或错绑。2026-11-14新增独立的`mineru_typed_validation`验证入口，在固定DocVortex 0.5.16离线容器中调用实际schema及安全文本renderer，同源逐对象核对共同JSON读取与既有最终交付；生产链未改回旧bridge。P06整文档schema接受，P07保留嵌套列表显式null字段引发的整页及文档拒绝，两组各29个块的文本与来源对照完成；范围及限制见[唯一报告](../../benchmark/reports/lite/report.md)。
 
 ## 目标处理流程
 

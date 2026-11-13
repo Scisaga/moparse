@@ -1,10 +1,70 @@
-# MO-Parse Lite：MinerU Standard/Advanced受限JSON接入与Typed依赖缺口
+# MO-Parse Lite：固定DocVortex 0.5.16官方结构与文本核验
+
+固定依赖与本范围官方核验已完成：P06整份Middle文档及两页schema接受，P07整份文档及第2页schema拒绝、第1页接受；两组各29个原始块的schema和安全文本投影全部执行，来源及文字对照全部保留。P07的拒绝已定位并由独立合成例复现。共同JSON生产路径没有改动，既有两份正文、Storage和媒体未交付的partial保持。本结论仅覆盖同一固定三页输入的格式核验，不提供解析质量成绩或MinerU全格式验收。
+
+接手HEAD为`0687c7313bf12f8fd2d7c2b9e8849f35d7b3da63`，工作区干净，`/opt/mosaic-parse`与`/opt/moparse`指向同一目录。当前源码、输入、实际执行及产物由[本轮最终绑定](../../runs/lite/service/development/mineru-typed-validation/final-binding.json)关联；旧第九阶段final-binding及全部历史正文和成本记录未重签或覆盖。
+
+## 隔离环境与实际官方API
+
+复用本地不可变镜像`sha256:99495729433d9dd3e37caa3f91267a28c2f605754a81c1a465b8e3f0b19e4bc9`，容器使用`/usr/local/bin/python` 3.12.12、真实`docvortex==0.5.16`和Pydantic 2.14.1。没有下载、安装、升级或联网；主`.venv`、生产容器、在线服务及原锁文件均未修改。实际安装清单与原worker锁的112项依赖版本全部一致，另有未列入锁的pip 25.0.1；这只核对包身份，不宣称重建原执行进程、模型或性能环境。镜像没有registry RepoDigest，安装包没有direct_url.json，历史下载URL未知；可复查的来源是这个本地镜像ID，包元数据另声明官方仓库`https://github.com/myhloli/DocVortex`，未将该声明当作已验证下载来源。
+
+[环境实测](../../runs/lite/service/development/mineru-typed-validation/delivery/environment.json)、[准备与复现命令](../../runs/lite/service/development/mineru-typed-validation/delivery/preparation.json)、[安装清单](../../runs/lite/service/development/mineru-typed-validation/validation-environment.freeze.txt)及[原锁对照](../../runs/lite/service/development/mineru-typed-validation/lock-comparison.json)保留解释器、模块实际路径、函数签名、依赖声明和摘要。DocVortex安装Python源树摘要为`f33355acee21a5cd5b8e97f197a4bd88ce5dafa7a4fa81d712981437347be3ba`；`schema.py`为`f1cb73d0f29104df10a59e0663b2884059354ce59c531402a362a4415854b4f4`，与原格式记录一致。METADATA及RECORD摘要也单独保存，未虚构不存在的wheel下载摘要。
+
+新入口`scripts/validate_mineru_typed.py`显式覆盖worker启动命令，只挂载审查代码、单份固定native和新验证输出目录。逐份串行，network=none、runc、无GPU设备、8 CPU、8 GiB、只读根目录，禁用模型导入、媒体文件读取、base64解码和网络调用。实际容器参数、挂载、退出及自身容器清理保留在[环境执行](../../runs/lite/service/development/mineru-typed-validation/delivery/environment-execution.json)、[P06执行](../../runs/lite/service/development/mineru-typed-validation/delivery/P06-execution.json)及[P07执行](../../runs/lite/service/development/mineru-typed-validation/delivery/P07-execution.json)。没有导入native_worker.server、调用lifespan、_initialize、PDFDocument或解析入口。
+
+官方调用为`MiddleJson.from_dict(original_document)`、`PageInfo.model_validate(original_page)`、`TypeAdapter(PageBlock)`、递归`TypeAdapter(Block)`及`TypeAdapter(InlineSpan)`。文本使用实际`LatexDelimitersConfig`、`render_single_block`；嵌套表格附注及内联span直接调用已核实的官方文本函数。表体只作worker已有的body-only显示上下文包装，原schema输入从未删字段或替换；包装字段及原父路径逐项记录。该工具不生产MO-Parse最终正文，也不接回旧bridge。
+
+## 两份固定输入的逐对象结果
+
+主输入均直接来自各自`documents/0`的docvortex.middle 2.0 pages及原始递归content，绝不取增强raw.blocks、faithful.md、旧final或GLM审计内容替代。两组前两页为各自MinerU，第三页为各自GLM主结果，不适用DocVortex schema。物理页、局部page_idx、tier、工件SHA和原始JSON路径均按原绑定保留。
+
+| 范围 | P06 Standard | P07 Advanced |
+| --- | --- | --- |
+| native SHA256 | `f15b13a9dd4f339a00293ad66b7936e163994925fbda8c591cb4289bbbca7fc4` | `22c5badfb6264ee69c96012778a4478bb85289e36a16f8ec0108733ab85f8c2e` |
+| MiddleJson文档：接受 / 拒绝 / 未执行 | 1 / 0 / 0 | 0 / 1 / 0 |
+| 适用PageInfo：接受 / 拒绝 / 未执行 | 2 / 0 / 0 | 1 / 1 / 0 |
+| 顶层PageBlock：接受 / 拒绝 / 未执行 | 27 / 0 / 0 | 23 / 0 / 0 |
+| 递归Block：接受 / 拒绝 / 未执行 | 2 / 0 / 0 | 6 / 0 / 0 |
+| 原始InlineSpan：接受 / 拒绝 / 未执行 | 25 / 0 / 0 | 24 / 0 / 0 |
+| 块文本投影及来源对照 | 29执行，29保留，无未判断差异 | 29执行，29保留，无未判断差异 |
+| 内联文本投影 | 25执行，无失败 | 24执行，无失败 |
+| GLM页面 | 1页不适用，未送DocVortex | 1页不适用，未送DocVortex |
+
+逐对象的原载荷观察、父路径、schema结果、序列化、文本和共同读取结果见[P06](../../runs/lite/service/development/mineru-typed-validation/delivery/P06.json)及[P07](../../runs/lite/service/development/mineru-typed-validation/delivery/P07.json)。媒体字段保留声明、长度及摘要，不解码。schema接受只证明这些对象的限定格式一致性，不证明OCR、业务值或最终产品质量。
+
+P07拒绝位置为`#/documents/0/pages/1/blocks/6/content/0`至`/3`四个list成员的`continues_prev: null`。官方PageBlock及ListBlock接受这些对象，但PageInfo校验`continues_prev in child.model_fields_set`，因此显式null也被拒绝；MiddleJson继承该页拒绝。保存调用`_native_snapshot → _plain → model_dump(mode="json")`使用完整默认字段；官方完整model_dump在独立合成list上产生相同回读拒绝，而默认to_dict省略这些字段后合成例可回读。该合成证据只定位序列化与schema字段存在性冲突，没有把真实P07删字段后改称通过，也没有将它归成OCR或业务识别错误。原始四成员、父链、编号及null均由共同JSON路径保留。
+
+## 实质差异、既有正文与保护
+
+[对照明细](../../runs/lite/service/development/mineru-typed-validation/correlation-delivery.json)将差异逐项归类：两组各27个块有官方默认值或序列化差异，包含anchor/continues_prev、空styles及媒体可选字段的省略；类型构造中的BlockType枚举和bbox列表到tuple单独记录。实际schema为strict及extra=forbid，未知字段不静默忽略；None、false、0、空字符串及缺失在工具与独立测试中保持可区分。schema派生默认值从未回填为原生观测，内联规范化也不靠排序ordinal或文字相似强行配对。
+
+合法显示差异有P06两项、P07七项对象记录：table容器通过各自孩子交付而无独立产品段落，官方复杂HTML表体与MO-Parse多层列表分别留证；P07另有list容器及四条成员的产品列表标记。每组44格、37个非空格、7个空字面、5条记录、25项值关系和附注最终位置均通过原有独立原生断言复核。P06四条独立text与P07真实list的差异准确保留，原编号没有被改写。没有发现共同读取或公共转换的内容、列表、表格关系或状态缺陷，因此生产代码没有修改。
+
+官方文本路径在这两份实样中直接消费表体HTML，没有触发媒体回调，回调次数均为0；每组1处image_base64声明仍未读取、未验证、未交付。另用自造媒体声明实际触发官方image_renderer一次，验证其仅产生无I/O占位与声明回执，未创建资产。两份既有最终正文、Storage字节和四层状态`completed / read / completed / partial`均保持：P06正文SHA256为`f1a82e8ea3c7759c0831eeee9efa717e09774cf308ff272b35dd6a7be56e1e97`，P07为`2ce2bb4c8533d4795f3fce975bd04986b504a51b81e34dbe436dce8c7e933a18`。
+
+[接手摘要](../../runs/lite/service/development/mineru-typed-validation/intake.json)及最终对照核实118项受保护的输入、observation、七组历史正文/证据、既有开发绑定、成本摘要及要求current索引原字节保持。P01–P05固定锚点未重新转换，保护证据为这些字节核对与本轮相关合成回归；未继承旧真实转换为新执行。正式service/current/index.json仍不存在，Expected、selection、T/L/B合同、正式分母、五个输入范围和全局structure_blocked未改变。
+
+## 本轮实际测试与边界
+
+隔离固定环境的[14项官方集成测试](../../runs/lite/service/development/mineru-typed-validation/official-tests-delivery/tests.json)全部通过，失败、错误、skip和边界违规均为0；实际调用真实官方类型及renderer。覆盖精确版本及错误版本拒绝、输入不变、坏块和坏子块保留合法兄弟、默认值和省略、列表父链、同字面不同来源、富文本/链接规范化、HTML跨度和附注、无I/O媒体回调、官方投影失败与原生失败/工程异常区分，以及完整dump的嵌套null反例。主环境缺依赖的真实调用明确返回退出2和[not_executed](../../runs/lite/service/development/mineru-typed-validation/main-environment-delivery-not-executed.json)，未模拟metadata、注入替身或使用skip冒充已通过。
+
+主环境使用当前允许清单的7个相关模块重新执行[279项source-only回归](../../runs/lite/service/development/mineru-typed-validation/source-only-related.json)，全部通过，见[JUnit](../../runs/lite/service/development/mineru-typed-validation/source-only-related.xml)；模块为MinerU、七组共同交接、共享保存转换、四层状态、P01、P02和Paddle保存内容。审查清单及全部旧断言未修改，关闭父conftest和插件自动加载，断网、禁GPU、8 CPU及8 GiB；边界违规0，源码和测试身份未变。其余161个允许模块本轮未重跑，81个排除模块未运行；上一轮4225项仅保留为历史记录。没有执行未经审查的全项目pytest。
+
+新增4个软件/测试文件的Ruff及格式检查、6份非语料技术文档和2份脚本的Markdown政策检查、限定文档diff及生产代码保全检查均通过，见[本轮静态检查](../../runs/lite/service/development/mineru-typed-validation/static-checks.json)。通用检查未扫描语料、datasets、runs、reports或reference-decisions；唯一报告只作本任务的专门维护。
+
+本轮只新增验证工具、独立集成测试及文档，没有修改adapter、共享读取、状态、服务代码或生产输出。局部工具开发曾出现Pydantic错误上下文无法JSON序列化及验证器误取容器index两个问题，均在验证工具修正，原尝试保留在[开发尝试](../../runs/lite/service/development/mineru-typed-validation/development-attempts.json)，最终同源码复验和对照通过。安装、依赖准备和数据核验全过程均未使用网络；没有PDF或图片创建/读取/解码/渲染、字层、OCR、VLM、模型初始化或推理、GPU/TTS、服务控制、部署、实际candidate与Expected比较、正式评分、八组回放、P08接入、媒体/ZIP开发、提交或推送。执行边界偏差为0。
+
+本范围没有content_list，不产生多视图对应结论；没有真实公式、独立图块、跨页续接或完整跨页分区，也未新增失败/超时实样。合成测试不计入这些真实格式覆盖。后续任何扩大样本、转换、评价或交付均按新授权办理，不能从本固定官方核验推出整条MinerU或八组质量通过。
+
+## 第九阶段JSON接入记录（历史）
+
+以下是上一轮受限JSON接入记录；其中依赖缺失、4225项测试及“本轮”均属于此前阶段，当前官方执行状态以上述2026-11-14记录为准。
 
 本轮MinerU格式族接入未完成：当前宿主缺少固定`docvortex==0.5.16`，官方Typed投影无法执行。可独立验证的保存Middle JSON读取、共同契约、公共处理和持久化已经实施；P06/P07各用自己的三页保存结果生成真实正文，交付均为partial。P01–P05固定保护复验完成。最终source-only完整允许范围4225项通过，168个模块全部重新执行，边界违规0；没有Native或Product质量成绩，也没有八组正式门禁。
 
 接手HEAD为`4ee31b0162cb68c26c849acc9824754593b370d7`，初始工作区干净，`/opt/mosaic-parse`与`/opt/moparse`为同一入口。冻结software_id为`fd70a231dc621b853ec5bd9d0e21d0958a28a5a2816196637f95ef20920d5745`，清单SHA256为`f6db94b088cc4e71cbbd72d86b6a1a77fdf816dc1f3292b9dff7abbfd22cb7b0`，测试内容身份为`4f9333edc75f6ffb8b8dd94fef5f694f0e6e6d4900bbf6d6a123e7a4767f1f66`。见[接手身份](../../runs/lite/service/development/mineru-content-closure/intake.json)、[冻结](../../runs/lite/service/development/mineru-content-closure/freeze-delivery.json)及[完整审查](../../runs/lite/service/development/mineru-content-closure/source-only-review-delivery.json)。历史软件身份不等于当前正式准入，没有重签旧证据。最后的[证据绑定](../../runs/lite/service/development/mineru-content-closure/final-binding.json)逐项关联同一源码、测试、七组原生/observation、实际阶段、正文、warning和Storage字节，不激活正式索引。
 
-## 固定依赖与本组真实输入
+### 固定依赖与本组真实输入
 
 当前Python为`/opt/moparse/.venv/bin/python` 3.13.5。`native_worker/requirements.txt`及lock声明MinerU 4.0.12、DocVortex 0.5.16、mineru-vl-utils 2.0.7；当前`.venv`三者均未安装，find_spec也没有docvortex/mineru模块路径。保存结果config记录这些固定版本，Middle metadata记录producer为MinerU 4.0.12，这些是原执行身份，不是当前宿主已安装的证明。本轮没有安装或升级，也没有仿造官方Typed类。恢复完整Typed验证需要另行准备可导入`docvortex.schema.PageBlock`的固定0.5.16环境及其依赖，再对相同输入执行只读官方投影；不需要重跑模型或借用派生Markdown。
 
@@ -25,7 +85,7 @@
 
 两份实样均没有block_id、显式parent/children字段或content_list，父链来自content的真实包含关系，路径身份绑定各自工件SHA。页raw.blocks带有Markdown/research_assets增强；独立核对其原生字段与自身Middle对应页完全一致，但没有稳定跨视图ID，不能据此宣称content_list全部保全或证明多对多映射。原生Markdown、faithful.md及GLM raw_json_result均不补主答案、不重复输出。可选content_list只在独立合成用例中验证逐对象审计、删除及错绑拒绝，不能替代真实格式覆盖。
 
-## 实际代码、共同准入与消费者
+### 实际代码、共同准入与消费者
 
 `app/adapters/native_readers.py::read_mineru`由研究读取原语原位抽取；默认研究视图政策不变，只有公共保存转换显式使用`primary_only=True`，不回退Markdown。`mineru_native.py::source_page/read_middle_page`核验本组tier、txt、Middle schema、文档引用、物理页与局部页的一致性；保留type、content、index、缺失字段、原生引用/状态、内联span及媒体声明。配置注册只决定身份和允许分支，未将Standard复制改名为Advanced。
 
@@ -35,7 +95,7 @@
 
 表体HTML只是该Typed序列化对象的原生主字段；MO-Parse解析出的消费格通过`primary_html_projection`和HTML语法路径回指原文，独立OCR源格能力为false。现有有界表格规则建立完整列头、行分组、期间和记录关系，不回写原生角色。table_footnote原文和上下文出处保留，实际无脚注标记时不将其伪造成每个数值的note_refs。原生continues_prev声明保留，缺完整跨页表头和源格分区时维持未解决，不执行SDK HTML合并。本轮没有增加T/L/B规则。
 
-## 双向覆盖、状态及失败反例
+### 双向覆盖、状态及失败反例
 
 [独立工程验收](../../runs/lite/service/development/mineru-content-closure/independent-acceptance-delivery.json)从调用方提供的本组native直接遍历，使用独立HTMLParser核对44格、完整表头路径、5条记录、25项值关系及附注来源，并核对最终出现位置。137/132项输入各有正文、转换格、空字面、结构审计或未交付媒体去向，没有未记账的available对象；数量仅说明这个固定范围，不能证明全部MinerU输出或质量。
 
@@ -43,7 +103,7 @@
 
 原执行状态只读取配对observation的身份、页处理、失败及warning白名单，不读取派生正文或关系作为答案；MinerU嵌套原生失败也单独保留。unknown、局部读错、转换未支持、工程异常、原执行失败和媒体未交付分别传播。实际两份四层状态均为`completed / read / completed / partial`，partial唯一实际原因是表体的一处原生区域媒体声明未读取、未验证、未交付；未将HTML表体转换完成当作图片已交付。普通无消费责任元数据unknown不自动导致partial。
 
-## 真实正文、阶段与五组保护
+### 真实正文、阶段与五组保护
 
 | 管线 | 本轮实际正文与来源证据 | 原执行 / 读取 / 转换 / 交付 |
 | --- | --- | --- |
@@ -59,7 +119,7 @@ P06最终正文SHA256为`f1a82e8ea3c7759c0831eeee9efa717e09774cf308ff272b35dd6a7
 
 P01–P05最终正文UTF-8字节、全部SemanticTableView、relation_checks、warning、四层状态、原生去向、content_dispositions及最终编辑证据均与第八阶段完全相同。P01/P02分别保留45/46格、各自原字和2处未交付媒体；P02的15,386,99及不完整括号没有借V1修复。P03/P04各31个polygon、44 HTML格、37非空格、5记录25值关系及partial保留；P05自身44格、25值关系与completed保留。没有修改历史正文、旧断言或已保存产物。
 
-## 允许范围测试、保全与限制
+### 允许范围测试、保全与限制
 
 最终完整允许范围4225 passed、退出0：168个模块全部实际执行，收集与执行nodeid各4225个，12675项setup/call/teardown报告全部passed，未执行允许模块数为0。软件与测试全程未变，边界违规0；pytest运行448.89秒，入口总观测449.27秒。结果只引用最后的[source-only-delivery.json](../../runs/lite/service/development/mineru-content-closure/source-only-delivery.json)和[JUnit](../../runs/lite/service/development/mineru-content-closure/source-only-delivery.xml)为准，不继承历史4175项或中断运行。清单为168个允许模块、18项共享依赖、81个排除模块，审查复核导入、fixture、间接I/O、子进程及新辅助的全部源码；父conftest关闭，插件自动加载关闭，仅显式asyncio，媒体/语料/网络由运行入口拒绝。旧子进程仅执行已审查的自造文字编译或临时锁探针，未把父hook声称为子进程独立审计。
 

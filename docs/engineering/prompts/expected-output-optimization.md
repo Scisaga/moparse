@@ -2,6 +2,10 @@
 
 工作区为`/opt/moparse`，`/opt/mosaic-parse`为同一入口。先读AGENTS.md、benchmark/evaluation-tasks.md、唯一Lite报告及现有来源诊断，以本地HEAD和工作区为准，不回退或覆盖已有修改。第四阶段固定5份已完成完整来源独立审查及必要修复；逐份结论、B/L、真实剩余阻塞及最终身份只从report.md与actual-source-diagnosis.json.phase4_independent_acceptance读取。
 
+2026-11-14固定DocVortex核验已收尾：使用本地不可变镜像`sha256:99495729433d9dd3e37caa3f91267a28c2f605754a81c1a465b8e3f0b19e4bc9`内`/usr/local/bin/python`及真实docvortex 0.5.16，未修改主.venv或历史锁。新入口为`scripts/validate_mineru_typed.py`，只运行独立schema和安全文本核验，不启动worker；`scripts/verify_mineru_typed_evidence.py`关联已有共同读取及真实最终证据。固定vanke三页的P06整文档接受，P07整文档和第2页因四个list成员显式continues_prev=null被官方PageInfo拒绝，两个配置各29个原始块和25/24个内联对象均已校验及投影对照。实际环境、逐对象证据及最终绑定在`benchmark/runs/lite/service/development/mineru-typed-validation/`，结论只见唯一Lite报告。不得重复报依赖未准备、把P07文档改称通过，或为通过而删真实字段；保存JSON生产链和两份历史正文、partial保持。
+
+该核验没有扩大到content_list、真实公式、跨页结构、媒体交付、其他Lite样本、P08或质量评价。后续按新授权处理剩余范围；原始输入、Expected、正式索引、成本、T/L/B合同及五个输入范围继续只读。隔离验证使用镜像ID、断网、runc无GPU、8 CPU和8 GiB，官方集成测试与主环境source-only测试分列，缺包必须显式未执行，不能用skip替代。下面的来源语义任务记录保留其历史证据和授权边界，不自动重跑或签发正式门禁。
+
 固定成员为huawei-compliance-management-p051-053、huawei-management-toc-p014、tencent-conditions-entity-payment-definitions-p108-114、tencent-redemption-bearer-payments-p135-140、tencent-registered-tax-default-trustee-p141-148。手写来源声明在tests/validation/lite_stage4_assertions.py；统一Oracle仍为tests/validation/lite_source_oracle.py，默认执行原56份及新增5份，并保留五处BIS/IEA局部来源。不要以责任完整、没有pending、当前视图自洽或测试数量替代独立整样本验收，也不要重建AST、Oracle或来源义务系统。
 
 必要回归加强了旧腾讯L1680/L1693的续段父链：分别为[1674,1676]及[1684,1685,1689]，按原始缩进及插值条件保留完整责任。原华为前言L39–L50的12个明确目录项也增加强制类型化导航及顺序断言；其余来源断言及原56份成员保留。旧失败在既有验证目录，不能删除失败或放宽为双表示来恢复通过。

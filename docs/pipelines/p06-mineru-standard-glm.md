@@ -4,9 +4,9 @@
 
 [全部管线](README.md) · [固定比较条件](../../benchmark/pipelines-to-test.md#主比较配置)
 
-原有离线bridge要求固定DocVortex投影，当前宿主的该依赖缺口仍未解决；第九阶段受限source-free入口改为忠实读取保存Middle JSON，GLM仍只用自身json_result。官方Typed验证与JSON工程验收分开，不以P07或研究显示结果代替。阶段、页分支权限和正式执行门槛见[八管线服务适配](README.md#保存结果的八管线服务适配)。
+第九阶段受限source-free入口忠实读取保存Middle JSON，GLM仍只用自身json_result。2026-11-14复用本地固定worker镜像，在独立断网容器中执行官方DocVortex 0.5.16 schema和安全文本投影；共同JSON生产路径保持。官方格式验证与JSON工程验收分别留证，不以P07或研究显示结果代替。阶段、页分支权限和正式执行门槛见[八管线服务适配](README.md#保存结果的八管线服务适配)。
 
-当前第九阶段已实现保存Middle JSON的受限共同适配：`app.adapters.mineru_native.read_middle_page`读取本组自己的`documents`主视图，复用中性`read_mineru(primary_only=True)`，进入既有NativeContentContract、Evidence、SavedContentService及Storage。原始类型、内联内容、容器父链、index、页映射、表体HTML、附注和媒体声明分别保留；页面raw块及content_list（存在时）只在审计中保留，不补主答案。当前宿主`.venv`没有`docvortex==0.5.16`、MinerU及mineru-vl-utils，未安装依赖，也未执行官方Typed对象投影；有限JSON交接不构成完整Typed验收。真实正文、来源、状态、测试及未覆盖范围由[唯一报告](../../benchmark/reports/lite/report.md)维护。
+当前保存Middle JSON的受限共同适配由`app.adapters.mineru_native.read_middle_page`读取本组自己的`documents`主视图，复用中性`read_mineru(primary_only=True)`，进入既有NativeContentContract、Evidence、SavedContentService及Storage。原始类型、内联内容、容器父链、index、页映射、表体HTML、附注和媒体声明分别保留；页面raw块及content_list（存在时）只在审计中保留，不补主答案。固定实样的官方`MiddleJson.from_dict`接受1份文档，`PageInfo`接受2页，`TypeAdapter(PageBlock)`接受27个顶层块，`Block`接受2个递归子块，`InlineSpan`接受25个原始内联对象；29个块及25个内联对象均实际完成文本投影和来源对照。主`.venv`未安装DocVortex、未改依赖；隔离环境及每对象证据由[唯一报告](../../benchmark/reports/lite/report.md)维护。
 
 ## 1. 配置与执行边界
 
@@ -48,7 +48,7 @@ save(writer) -> 物化可用素材并保存多种原生表示与图片
 
 第九阶段固定开发范围为本组自己的`vanke-repurchase-share-changes-p001-003`。前两页实际主结构为`docvortex.middle` 2.0，producer为MinerU 4.0.12，extensions声明standard/txt，第三页使用自身GLM json_result。原生前两页包含14/13个顶层块、28个叶块和1个table容器；四条备查文件是独立text块。两组均没有block_id、显式parent/children字段或content_list，父链来自实际content嵌套，已知顺序来自显式index及保存执行器的物理page_idx绑定；没有公式或非空跨页续接实样。原生level仍留在私有证据中，公共显示按doc_title和paragraph_title的明确角色生成1/2级标题，不直接用level数字声称已恢复文档树；合成5/6反例保护该边界。页raw.blocks是带Markdown/research_assets的保存投影，独立核对其原生字段与自身Middle对应页完全一致，不能称存在稳定跨视图ID，也不重复输出。
 
-表体原生字段是HTML，44个HTML投影格保留rowspan/colspan及工件绑定语法路径，分别进入共同表格上下文和语义服务；它们不是独立OCR源格。表下注以实际table_footnote对象保留，未凭日期或相邻位置把无标记说明补成每条记录的附注。表体同时带有一处image_base64媒体声明，字符串仅作声明审计，没有解码、读取或交付，因此当前JSON转换完成而文档交付partial。官方Typed、实际content_list对应、独立图块、公式和跨页分区仍未验收。
+表体原生字段是HTML，44个HTML投影格保留rowspan/colspan及工件绑定语法路径，分别进入共同表格上下文和语义服务；它们不是独立OCR源格。表下注以实际table_footnote对象保留，未凭日期或相邻位置把无标记说明补成每条记录的附注。表体同时带有一处image_base64媒体声明，字符串仅作声明审计，没有解码、读取或交付，因此当前JSON转换完成而文档交付partial。官方renderer保留复杂表体HTML，MO-Parse最终显示为已有多层列表；44格、5记录及25项值关系均经独立既有断言复核。正文和partial未改变。实际content_list对应、独立图块、公式、跨页分区和其他实样仍未验证。
 
 ### 2.2 GLM-OCR SDK 页结果
 
