@@ -578,6 +578,11 @@ def main() -> int:
     parser.add_argument("--workers", type=int, default=16, help="saved-output analysis processes; original execution costs unchanged")
     parser.add_argument("--diagnostic", action="store_true", help="diagnose a strict sample subset without a freeze; full traversal requires a validated freeze; publish no quality scores")
     parser.add_argument("--sample", action="append", help="explicit saved sample identity; diagnostic mode only")
+    parser.add_argument("--diagnostic-artifact-manifest", type=Path,
+                        help="explicit read-only development Native/Final bindings; diagnostic subset only")
+    parser.add_argument("--diagnostic-phase", choices=("read", "compare"), default="read")
+    parser.add_argument("--candidate-readback-root", type=Path,
+                        help="independent candidate read phase output; comparison only")
     parser.add_argument("--report-output", type=Path)
     args = parser.parse_args()
     if args.sample is not None and not args.diagnostic:
@@ -586,6 +591,17 @@ def main() -> int:
         parser.error("--freeze is required for formal scoring; unfrozen diagnostics must select a strict sample subset")
     if args.diagnostic and args.report_output:
         parser.error("diagnostic traversal cannot publish a formal report")
+    if args.diagnostic_artifact_manifest:
+        if (not args.diagnostic or not args.sample or args.workers != 1
+                or args.current_root or args.service_baseline_root or args.freeze):
+            parser.error("development artifact diagnosis needs --diagnostic, explicit --sample, --workers 1 and no formal/current inputs")
+        from .diagnostic_artifacts import run_bound_diagnostic
+
+        print(run_bound_diagnostic(args.baseline, args.output,
+            manifest_path=args.diagnostic_artifact_manifest, sample_ids=args.sample,
+            phase=args.diagnostic_phase, expected_root=args.expected_root,
+            requirements=args.requirements, candidate_root=args.candidate_readback_root))
+        return 0
     index_path = evaluate_saved(args.baseline, args.output, expected_root=args.expected_root, freeze=args.freeze,
                                 service_baseline_root=args.service_baseline_root, current_root=args.current_root,
                                 workers=args.workers, diagnostic=args.diagnostic, sample_ids=args.sample,

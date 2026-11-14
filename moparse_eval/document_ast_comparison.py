@@ -27,7 +27,7 @@ def _location(source):
 
 def _same_record(left, right):
     return (left.get('path') == right.get('path') and left.get('lines') == right.get('lines') and all(
-        left.get(key) == right.get(key) for key in ('cell', 'native_path') if key in left or key in right)
+        left.get(key) == right.get(key) for key in ('cell', 'native_path', 'block_lines') if key in left or key in right)
         and not ('block' in left and 'block' in right and left['block'] != right['block']))
 
 

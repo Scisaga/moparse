@@ -1,5 +1,18 @@
-# MO-Parse Lite：跨文档Normalization与正式评价状态
+# MO-Parse Lite：固定Native/Final诊断与正式评价状态
 
+## 第十三阶段：固定9选段的独立Native/Final诊断
+
+固定9个选段、72条Native/Final诊断已完成；实际可诊断要求11525项，未决或软件阻塞17083项；正式成绩仍未发布。
+
+本轮固定8文档、9个独立selection、64个唯一文档/管线组合和72条链；Native及配对observation与phase12同版Final逐条绑定，公共转换software_id为`f8bcef05feaa4406189d395219a4db50afb8cc9446600ee11adce7fb403e0f1f`，未重跑转换。正式质量仍为`structure_blocked`，107份责任缺口、3份完整责任待独立整样本验收及5个输入范围保持，正式service/current与scores/current均未激活。
+
+逐要求证据、T/L/B状态、Native/Final变化、最早阶段、局部有效结论、媒体限制和各管线/文档摘要见[专项诊断](native-final-diagnostic-review.md)及[执行记录](../../runs/lite/diagnostics/native-final-phase13/diagnostic-execution.json)。没有正式分数、百分比或排名。本轮修复的是候选标题字段读回及Native段落来源定位；这些评分读回修复不能冒充交付正文改善。
+
+S3/S4/S6责任完整，其余6个选段仍有具体缺口。S4/P03/P04的232字符“恢复”已证明是读回单元差异：原生677字符对象在各阶段与Final保持原文。S9/P01“资本充足率”也仍有本源格对应的Final字符跨度，不能因文字单元匹配失败认定丢字。其他确证差异及限制按专项证据分别记录。
+
+实际执行7个相关已审查source-only模块、267项测试通过；历史4282项未重跑。72份Final与Storage字节一致，交付仍9份completed、63份partial；媒体声明未验证或交付。PDF/图像、OCR/VLM、模型、网络、GPU/TTS、服务及部署操作均未执行，未提交或推送。一次历史全域诊断元数据检索偏差及调试拒绝已在专项报告和过程记录单列，未用于内容判断。
+
+以下第十二阶段及更早内容保留各自当时的身份和结论；其中“本轮”“当前”均属于对应历史阶段。
 ## 第十二阶段：固定64组合的实际公共转换与Normalization证据
 
 2026-11-14，64个唯一文档配置组合的跨文档Normalization转换已完成；72个选段与管线授权记录均已核验。固定集合保持8份文档、9个既有选段。第一批16条选段链与第二批56条选段链均实际执行，后者按document_id归并为48个唯一组合；D5的S5、S6分别转换，页范围没有合并。全部本轮有效产物使用software_id `f8bcef05feaa4406189d395219a4db50afb8cc9446600ee11adce7fb403e0f1f`，HEAD仍为`1650637de9bb6bffc8911ee959fa6fde9a6377f9`，没有提交或推送。

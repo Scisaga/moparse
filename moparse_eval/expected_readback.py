@@ -251,7 +251,8 @@ def _context_kind(text: str) -> str:
 
 
 def read_expected(sample: dict[str, Any], expected_root: Path, *,
-                  cache: dict[Path, list[Element]] | None = None) -> dict[str, Any]:
+                  cache: dict[Path, list[Element]] | None = None,
+                  selection_only: bool = False) -> dict[str, Any]:
     """Expose selected authored syntax, without compiling business answers.
 
     Ancestors and explicit context outside the selection are retained as
@@ -259,7 +260,23 @@ def read_expected(sample: dict[str, Any], expected_root: Path, *,
     periods, identities or other candidate obligations by this syntax reader.
     """
     source, scopes = declared_scope(sample, expected_root)
-    content = source.read_text(encoding="utf-8")
+    if selection_only:
+        # Bounded diagnosis must not expose another selection in the same file.
+        # Keep physical line identities, but never parse out-of-scope text or
+        # use a whole-document cache to supply ancestors or other answers.
+        if cache is not None:
+            raise ValueError('selection-only expected reading cannot use a document cache')
+        last = max(scope['lines'][1] for scope in scopes)
+        selected_lines = []
+        with source.open(encoding='utf-8') as stream:
+            for number, line in enumerate(stream, 1):
+                if number > last:
+                    break
+                selected_lines.append(line if any(a['lines'][0] <= number <= a['lines'][1]
+                                                  for a in scopes) else '\n')
+        content = ''.join(selected_lines)
+    else:
+        content = source.read_text(encoding="utf-8")
     lines = content.splitlines(keepends=True)
     if any(scope["lines"][1] > len(lines) for scope in scopes):
         raise ExpectedReadError("declared expected line range cannot be read")
