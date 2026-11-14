@@ -98,11 +98,22 @@ def _unique(source: str, text: str, start: int, end: int) -> tuple[int, int] | N
 
 def _native_span(source: str, text: str, bounds: tuple[int, int], block: dict[str, Any]) -> tuple[int, int] | None:
     marker = block.get("service_marker")
-    if isinstance(marker, str) and marker and source.count(marker, *bounds) == 1:
+    if isinstance(marker, str) and marker:
+        if source.count(marker, *bounds) != 1:
+            return None
+        if marker in text:
+            return _unique(source, text, *bounds)
         end = source.index(marker, *bounds)
-        start = end - len(text)
-        if bounds[0] <= start <= end and source[start:end] == text:
-            return start, end
+        # Replay the existing export projection at this same owned marker.
+        # A non-whitespace prefix preserves a middle block's indentation;
+        # the page-start form accounts for the exporter's outer strip.
+        middle = ExportService.normalize_markdown("X" + text + marker)[1:-len(marker)]
+        page_start = ExportService.normalize_markdown(text + marker)[:-len(marker)]
+        for rendered in dict.fromkeys((text, middle, page_start)):
+            start = end - len(rendered)
+            if bounds[0] <= start <= end and source[start:end] == rendered:
+                return start, end
+        return None
     return _unique(source, text, *bounds)
 
 

@@ -8,7 +8,7 @@
 
 第九阶段为P06/P07增加同一个MinerU Middle JSON投影和独立输入清单，接入现有公共source-free链。两组保留Standard/Advanced配置与自己的原字、list父链及HTML跨度；研究读取的默认视图政策不变。2026-11-14在固定DocVortex 0.5.16隔离镜像中完成同两份输入的官方结构及安全文本对照，生产链保持；P06整文档schema接受，P07因四个嵌套list成员显式continues_prev=null保留整页及文档拒绝。两组各29个块均实际通过自身对象schema及文本保全对照，不外推全部MinerU格式；该次核验未接入P08。
 
-第十阶段将[P08 Visual Blocks](p08-mineru-visual.md#保存视觉结果的共同准入)接入相同NativeContentContract与SavedContentService。八个保存配置现在共用导出、IR、表格关系、FinalContent及Storage，独立格式读取保留各自来源。P08固定三页开发样本保全22个视觉区域、20个原生文字字段和2个未交付媒体声明；未知读序不成为确定顺序，区域不产生字符跨度或标题父树。真实描述、polygon及分组样本缺失，受控边界与实样验收分开。逐格式接入达到固定开发范围的最低工程条件；第十一阶段的固定文档集合及现有信息流见[跨文档Normalization审查](../../benchmark/reports/lite/cross-document-normalization-review.md)，完整横向验证仍缺同版阶段证据。完整格式、媒体交付、正式比较及质量成绩仍未完成，状态见[唯一报告](../../benchmark/reports/lite/report.md)。
+第十阶段将[P08 Visual Blocks](p08-mineru-visual.md#保存视觉结果的共同准入)接入相同NativeContentContract与SavedContentService。八个保存配置现在共用导出、IR、表格关系、FinalContent及Storage，独立格式读取保留各自来源。P08固定三页开发样本保全22个视觉区域、20个原生文字字段和2个未交付媒体声明；未知读序不成为确定顺序，区域不产生字符跨度或标题父树。真实描述、polygon及分组样本缺失，受控边界与实样验收分开。逐格式接入达到固定开发范围的最低工程条件；第十一阶段的固定文档集合及现有信息流见[跨文档Normalization审查](../../benchmark/reports/lite/cross-document-normalization-review.md)，当时完整横向验证仍缺同版阶段证据。第十二阶段已在固定8份文档、9个选段补齐72条同版实际链（64个唯一文档配置），保留partial及未知；工程证据详见该专项报告。完整格式、媒体交付、正式比较及质量成绩仍未完成，状态见[唯一报告](../../benchmark/reports/lite/report.md)。
 
 ## 管线索引
 

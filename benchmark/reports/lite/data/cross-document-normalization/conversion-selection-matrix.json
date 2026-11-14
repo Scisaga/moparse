@@ -1,0 +1,1510 @@
+{
+  "software_id": "f8bcef05feaa4406189d395219a4db50afb8cc9446600ee11adce7fb403e0f1f",
+  "count": 72,
+  "records": [
+    {
+      "document_id": "10726562",
+      "sample_id": "vanke-interest-p001-002",
+      "pipeline": "P01",
+      "source_pages": [
+        1,
+        2
+      ],
+      "authorization": "verified_against_original_frozen_flow_and_selection",
+      "native_sha256": "73d5113d394d523e02de00c77c254ae1ae30a2fae704107400aae46e81b72beb",
+      "observation_sha256": "2d127f9ec12db0d1c9d6ba401e9a36cc099506b915689900d51019951bf917e0",
+      "output": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P01/vanke-interest-p001-002",
+      "native_objects": 127,
+      "states": {
+        "original_execution": "completed",
+        "readback": "read",
+        "conversion": "completed",
+        "delivery": "partial"
+      }
+    },
+    {
+      "document_id": "10726562",
+      "sample_id": "vanke-interest-p001-002",
+      "pipeline": "P02",
+      "source_pages": [
+        1,
+        2
+      ],
+      "authorization": "verified_against_original_frozen_flow_and_selection",
+      "native_sha256": "b91291091d84699101bb2059e93378eb91a61c9450203d4fe90d327b8f3adfee",
+      "observation_sha256": "5742758f838380ceef1123e7d930ffbb27d3a648c1486c84689d2ce09edce019",
+      "output": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P02/vanke-interest-p001-002",
+      "native_objects": 127,
+      "states": {
+        "original_execution": "completed",
+        "readback": "read",
+        "conversion": "completed",
+        "delivery": "partial"
+      }
+    },
+    {
+      "document_id": "10726562",
+      "sample_id": "vanke-interest-p001-002",
+      "pipeline": "P03",
+      "source_pages": [
+        1,
+        2
+      ],
+      "authorization": "verified_against_original_frozen_flow_and_selection",
+      "native_sha256": "4eb63e26546f15d818a3e6bb70d6d8c9fc7a7faacfedb94a0cd2503874e77e57",
+      "observation_sha256": "731b4d265ea8e05203cc9dc5a3891bd6a0491ef704f1fa96a05dc85677c49196",
+      "output": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P03/vanke-interest-p001-002",
+      "native_objects": 77,
+      "states": {
+        "original_execution": "completed",
+        "readback": "read",
+        "conversion": "partial",
+        "delivery": "partial"
+      }
+    },
+    {
+      "document_id": "10726562",
+      "sample_id": "vanke-interest-p001-002",
+      "pipeline": "P04",
+      "source_pages": [
+        1,
+        2
+      ],
+      "authorization": "verified_against_original_frozen_flow_and_selection",
+      "native_sha256": "fe46d4bf53be83148d09d13bfbc166d53c52980805bb6b9fa82411ce8cfae0f6",
+      "observation_sha256": "9545f7f5ba881c3452b2fe4f8c1b02a355996689188b483347c336c78f2b3b33",
+      "output": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P04/vanke-interest-p001-002",
+      "native_objects": 77,
+      "states": {
+        "original_execution": "completed",
+        "readback": "read",
+        "conversion": "partial",
+        "delivery": "partial"
+      }
+    },
+    {
+      "document_id": "10726562",
+      "sample_id": "vanke-interest-p001-002",
+      "pipeline": "P05",
+      "source_pages": [
+        1,
+        2
+      ],
+      "authorization": "verified_against_original_frozen_flow_and_selection",
+      "native_sha256": "a250d6e84315cd17ff3e78a9a359b9f91e30b57863aee8f6acf9f6dd142bc417",
+      "observation_sha256": "e0a7b51f2a56814f521d5398f03ef28915b35a9eddc2729a2c1c236c43462cdf",
+      "output": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P05/vanke-interest-p001-002",
+      "native_objects": 31,
+      "states": {
+        "original_execution": "completed",
+        "readback": "read",
+        "conversion": "completed",
+        "delivery": "completed"
+      }
+    },
+    {
+      "document_id": "10726562",
+      "sample_id": "vanke-interest-p001-002",
+      "pipeline": "P06",
+      "source_pages": [
+        1,
+        2
+      ],
+      "authorization": "verified_against_original_frozen_flow_and_selection",
+      "native_sha256": "005f40313c2d11001e3cae85feb0594b08bd9e4fd509a1bcbefa551b58ecb754",
+      "observation_sha256": "2bc78b9b3db91a0c6e7b125b4fef1e1f699e7b0e0a8eae8c5667199e886556d3",
+      "output": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P06/vanke-interest-p001-002",
+      "native_objects": 91,
+      "states": {
+        "original_execution": "completed",
+        "readback": "read",
+        "conversion": "completed",
+        "delivery": "completed"
+      }
+    },
+    {
+      "document_id": "10726562",
+      "sample_id": "vanke-interest-p001-002",
+      "pipeline": "P07",
+      "source_pages": [
+        1,
+        2
+      ],
+      "authorization": "verified_against_original_frozen_flow_and_selection",
+      "native_sha256": "925aeb70ac24e7535c1dedc914f0a4690878f87cb2839f1cbec6bc609c1af5a6",
+      "observation_sha256": "6a8a7953c91ab5dcb6f13644781d462cc882ddf0f5ef44adeaed554555518a91",
+      "output": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P07/vanke-interest-p001-002",
+      "native_objects": 90,
+      "states": {
+        "original_execution": "completed",
+        "readback": "read",
+        "conversion": "completed",
+        "delivery": "completed"
+      }
+    },
+    {
+      "document_id": "10726562",
+      "sample_id": "vanke-interest-p001-002",
+      "pipeline": "P08",
+      "source_pages": [
+        1,
+        2
+      ],
+      "authorization": "verified_against_original_frozen_flow_and_selection",
+      "native_sha256": "c3bd64eaf6d638adca6b46487d3ff3f9662815f4e4aae64f3d7e2b2e8e7e1c8c",
+      "observation_sha256": "f3926590401bb504f8de0040ffd60efc193d947fc8192e6ae0acf15cd76ff7d8",
+      "output": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P08/vanke-interest-p001-002",
+      "native_objects": 61,
+      "states": {
+        "original_execution": "completed",
+        "readback": "read",
+        "conversion": "partial",
+        "delivery": "partial"
+      }
+    },
+    {
+      "document_id": "1201917092",
+      "sample_id": "vanke-repurchase-share-changes-p001-003",
+      "pipeline": "P01",
+      "source_pages": [
+        1,
+        2,
+        3
+      ],
+      "authorization": "verified_against_original_frozen_flow_and_selection",
+      "native_sha256": "2feddedb01493ad21c58b06dfbfea5a94fd763cb89dd93591b4083f0e94b010b",
+      "observation_sha256": "641a52fd6a42398b87711f5b513255cc716160c63608603eb6059ec139aef67e",
+      "output": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P01/vanke-repurchase-share-changes-p001-003",
+      "native_objects": 81,
+      "states": {
+        "original_execution": "completed",
+        "readback": "read",
+        "conversion": "completed",
+        "delivery": "partial"
+      }
+    },
+    {
+      "document_id": "1201917092",
+      "sample_id": "vanke-repurchase-share-changes-p001-003",
+      "pipeline": "P02",
+      "source_pages": [
+        1,
+        2,
+        3
+      ],
+      "authorization": "verified_against_original_frozen_flow_and_selection",
+      "native_sha256": "666c32a82e47e3cbe86dfc93787b06196b8bf05640a4665b2fca6667ba6a09cb",
+      "observation_sha256": "edfba49a175483c6c5a1c2ddf0858408f7e50492b9b4ac6a26ba5d84b03cda29",
+      "output": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P02/vanke-repurchase-share-changes-p001-003",
+      "native_objects": 82,
+      "states": {
+        "original_execution": "completed",
+        "readback": "read",
+        "conversion": "completed",
+        "delivery": "partial"
+      }
+    },
+    {
+      "document_id": "1201917092",
+      "sample_id": "vanke-repurchase-share-changes-p001-003",
+      "pipeline": "P03",
+      "source_pages": [
+        1,
+        2,
+        3
+      ],
+      "authorization": "verified_against_original_frozen_flow_and_selection",
+      "native_sha256": "6483f74c8859d7c25367872f2c079afd86f49966229ad0e2928e7ef6c86a485d",
+      "observation_sha256": "cb716000227e7db40aa6649a41b194e74661379429c1d99db10fc1b944220abb",
+      "output": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P03/vanke-repurchase-share-changes-p001-003",
+      "native_objects": 142,
+      "states": {
+        "original_execution": "completed",
+        "readback": "read",
+        "conversion": "partial",
+        "delivery": "partial"
+      }
+    },
+    {
+      "document_id": "1201917092",
+      "sample_id": "vanke-repurchase-share-changes-p001-003",
+      "pipeline": "P04",
+      "source_pages": [
+        1,
+        2,
+        3
+      ],
+      "authorization": "verified_against_original_frozen_flow_and_selection",
+      "native_sha256": "48cc533a25fad62b2c84377e12fc2e055084ea63179c439503aeb7735b1d2556",
+      "observation_sha256": "827852c5f3f9e9bd07184be14b2d61d4bd0ec5756f352fa242b19c53652ffe90",
+      "output": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P04/vanke-repurchase-share-changes-p001-003",
+      "native_objects": 142,
+      "states": {
+        "original_execution": "completed",
+        "readback": "read",
+        "conversion": "partial",
+        "delivery": "partial"
+      }
+    },
+    {
+      "document_id": "1201917092",
+      "sample_id": "vanke-repurchase-share-changes-p001-003",
+      "pipeline": "P05",
+      "source_pages": [
+        1,
+        2,
+        3
+      ],
+      "authorization": "verified_against_original_frozen_flow_and_selection",
+      "native_sha256": "561675ca255241f75870ae4a27a01e5252caa08cf6dc3a58334c1703b83bf4c0",
+      "observation_sha256": "24657039d2776ce74843501947c5f1a5a4d30b5bcec7bc91d19e6a6041779618",
+      "output": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P05/vanke-repurchase-share-changes-p001-003",
+      "native_objects": 77,
+      "states": {
+        "original_execution": "completed",
+        "readback": "read",
+        "conversion": "completed",
+        "delivery": "completed"
+      }
+    },
+    {
+      "document_id": "1201917092",
+      "sample_id": "vanke-repurchase-share-changes-p001-003",
+      "pipeline": "P06",
+      "source_pages": [
+        1,
+        2,
+        3
+      ],
+      "authorization": "verified_against_original_frozen_flow_and_selection",
+      "native_sha256": "f15b13a9dd4f339a00293ad66b7936e163994925fbda8c591cb4289bbbca7fc4",
+      "observation_sha256": "c74321368c9d56d134eeb0fef55d4470c59acd2712f8a7d1fac775f00f9598fe",
+      "output": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P06/vanke-repurchase-share-changes-p001-003",
+      "native_objects": 137,
+      "states": {
+        "original_execution": "completed",
+        "readback": "read",
+        "conversion": "completed",
+        "delivery": "partial"
+      }
+    },
+    {
+      "document_id": "1201917092",
+      "sample_id": "vanke-repurchase-share-changes-p001-003",
+      "pipeline": "P07",
+      "source_pages": [
+        1,
+        2,
+        3
+      ],
+      "authorization": "verified_against_original_frozen_flow_and_selection",
+      "native_sha256": "22c5badfb6264ee69c96012778a4478bb85289e36a16f8ec0108733ab85f8c2e",
+      "observation_sha256": "a8975b43009734486c516681421c969f4c9e7750695aeb5e64197b455fc097b2",
+      "output": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P07/vanke-repurchase-share-changes-p001-003",
+      "native_objects": 132,
+      "states": {
+        "original_execution": "completed",
+        "readback": "read",
+        "conversion": "completed",
+        "delivery": "partial"
+      }
+    },
+    {
+      "document_id": "1201917092",
+      "sample_id": "vanke-repurchase-share-changes-p001-003",
+      "pipeline": "P08",
+      "source_pages": [
+        1,
+        2,
+        3
+      ],
+      "authorization": "verified_against_original_frozen_flow_and_selection",
+      "native_sha256": "ecedfb125f015e52687da116e26a81ea05a8c40f94a1e136643a5a74bd4de576",
+      "observation_sha256": "a7b509f9cc65d38b3a57dbd5ca56bd0100590015c50ebe6ceb6334aae426025e",
+      "output": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P08/vanke-repurchase-share-changes-p001-003",
+      "native_objects": 117,
+      "states": {
+        "original_execution": "completed",
+        "readback": "read",
+        "conversion": "partial",
+        "delivery": "partial"
+      }
+    },
+    {
+      "document_id": "1200694910",
+      "sample_id": "zhenye-coupon-seals-p001-003",
+      "pipeline": "P01",
+      "source_pages": [
+        1,
+        2,
+        3
+      ],
+      "authorization": "verified_against_original_frozen_flow_and_selection",
+      "native_sha256": "8d5773afda90aba770d2eaed1b2aa932e5778362f8261f7731aad2e5882b3e0e",
+      "observation_sha256": "2d25ed30a499cf2f8936e3818a624dde6e4d9a0304824e68f03c68453a8d0aa3",
+      "output": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P01/zhenye-coupon-seals-p001-003",
+      "native_objects": 27,
+      "states": {
+        "original_execution": "completed",
+        "readback": "read",
+        "conversion": "partial",
+        "delivery": "partial"
+      }
+    },
+    {
+      "document_id": "1200694910",
+      "sample_id": "zhenye-coupon-seals-p001-003",
+      "pipeline": "P02",
+      "source_pages": [
+        1,
+        2,
+        3
+      ],
+      "authorization": "verified_against_original_frozen_flow_and_selection",
+      "native_sha256": "5f7cc114234d533ee333afb31dc0ae9be427178191b0e94951aa3a4f564da1b3",
+      "observation_sha256": "5090148801676b63cb350484f93c87dc7a07e039cc600ad3ab7b24a483fa6c44",
+      "output": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P02/zhenye-coupon-seals-p001-003",
+      "native_objects": 27,
+      "states": {
+        "original_execution": "completed",
+        "readback": "read",
+        "conversion": "partial",
+        "delivery": "partial"
+      }
+    },
+    {
+      "document_id": "1200694910",
+      "sample_id": "zhenye-coupon-seals-p001-003",
+      "pipeline": "P03",
+      "source_pages": [
+        1,
+        2,
+        3
+      ],
+      "authorization": "verified_against_original_frozen_flow_and_selection",
+      "native_sha256": "3519d5f999b5596c0461dfad67dc8f81a8772a082feb8deecdfabba2865b795c",
+      "observation_sha256": "24fd3ba230be9d69f7b88c468407ead2935e9d9b0238ebef8cc6cee26bc1ae58",
+      "output": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P03/zhenye-coupon-seals-p001-003",
+      "native_objects": 75,
+      "states": {
+        "original_execution": "completed",
+        "readback": "read",
+        "conversion": "partial",
+        "delivery": "partial"
+      }
+    },
+    {
+      "document_id": "1200694910",
+      "sample_id": "zhenye-coupon-seals-p001-003",
+      "pipeline": "P04",
+      "source_pages": [
+        1,
+        2,
+        3
+      ],
+      "authorization": "verified_against_original_frozen_flow_and_selection",
+      "native_sha256": "6c875047aa893ce4d58769a87421856435b50e53d3910d595bf7d9a3bf5dcc95",
+      "observation_sha256": "9444ce37ecd68588d85c530a47b785e307dd728efca0385a58f5e3a5aac0a3cc",
+      "output": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P04/zhenye-coupon-seals-p001-003",
+      "native_objects": 75,
+      "states": {
+        "original_execution": "completed",
+        "readback": "read",
+        "conversion": "partial",
+        "delivery": "partial"
+      }
+    },
+    {
+      "document_id": "1200694910",
+      "sample_id": "zhenye-coupon-seals-p001-003",
+      "pipeline": "P05",
+      "source_pages": [
+        1,
+        2,
+        3
+      ],
+      "authorization": "verified_against_original_frozen_flow_and_selection",
+      "native_sha256": "e76f218bba46579e8ca83af6ebb2dbd3abcbc2b225062115c9edc1399c52ccbc",
+      "observation_sha256": "d4e345fb6d835291b66aea0e6f075df6a5a24dc094dd1ae1f1756900c4b4925e",
+      "output": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P05/zhenye-coupon-seals-p001-003",
+      "native_objects": 22,
+      "states": {
+        "original_execution": "completed",
+        "readback": "read",
+        "conversion": "partial",
+        "delivery": "partial"
+      }
+    },
+    {
+      "document_id": "1200694910",
+      "sample_id": "zhenye-coupon-seals-p001-003",
+      "pipeline": "P06",
+      "source_pages": [
+        1,
+        2,
+        3
+      ],
+      "authorization": "verified_against_original_frozen_flow_and_selection",
+      "native_sha256": "dc1a38e7dba0baab8ae4f676b54e2e0c3368c2d48a9483708c40f153fdf19bbc",
+      "observation_sha256": "e3967e493b330458ed62f5378dd4eacaa8b86054a89bd18a803ffa52d963c66f",
+      "output": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P06/zhenye-coupon-seals-p001-003",
+      "native_objects": 57,
+      "states": {
+        "original_execution": "completed",
+        "readback": "read",
+        "conversion": "partial",
+        "delivery": "partial"
+      }
+    },
+    {
+      "document_id": "1200694910",
+      "sample_id": "zhenye-coupon-seals-p001-003",
+      "pipeline": "P07",
+      "source_pages": [
+        1,
+        2,
+        3
+      ],
+      "authorization": "verified_against_original_frozen_flow_and_selection",
+      "native_sha256": "c1417dee318426c94521b02ceec494ddafddeaee66db03e05dac4c2ed3492949",
+      "observation_sha256": "c880362072d62377878b7ec3a4293cdc0918f7016d76cd28e4cce163dff4cbbd",
+      "output": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P07/zhenye-coupon-seals-p001-003",
+      "native_objects": 57,
+      "states": {
+        "original_execution": "completed",
+        "readback": "read",
+        "conversion": "partial",
+        "delivery": "partial"
+      }
+    },
+    {
+      "document_id": "1200694910",
+      "sample_id": "zhenye-coupon-seals-p001-003",
+      "pipeline": "P08",
+      "source_pages": [
+        1,
+        2,
+        3
+      ],
+      "authorization": "verified_against_original_frozen_flow_and_selection",
+      "native_sha256": "f07856b3df2889dc90c5a7d5bbc2a6e3388231cea17e903c4af77cf240f51fd3",
+      "observation_sha256": "a6c94a7688cf7d7b4c4629501c831dd41b7ca9f0737bb4e8efca1a06bf4201c9",
+      "output": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P08/zhenye-coupon-seals-p001-003",
+      "native_objects": 50,
+      "states": {
+        "original_execution": "completed",
+        "readback": "read",
+        "conversion": "partial",
+        "delivery": "partial"
+      }
+    },
+    {
+      "document_id": "complex-tencent-2025-bond-programme",
+      "sample_id": "tencent-conditions-entity-payment-definitions-p108-114",
+      "pipeline": "P01",
+      "source_pages": [
+        108,
+        109,
+        110,
+        111,
+        112,
+        113,
+        114
+      ],
+      "authorization": "verified_against_original_frozen_flow_and_selection",
+      "native_sha256": "0e50e6a8fe0503c293e8129f0d67228aa44b944980f531ae33a9fde8743c5ef2",
+      "observation_sha256": "a3b5e779afe620f30ef6e741ac779b33a5fd3af4fac38f5416c452186360040a",
+      "output": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P01/tencent-conditions-entity-payment-definitions-p108-114",
+      "native_objects": 106,
+      "states": {
+        "original_execution": "completed",
+        "readback": "read",
+        "conversion": "completed",
+        "delivery": "completed"
+      }
+    },
+    {
+      "document_id": "complex-tencent-2025-bond-programme",
+      "sample_id": "tencent-conditions-entity-payment-definitions-p108-114",
+      "pipeline": "P02",
+      "source_pages": [
+        108,
+        109,
+        110,
+        111,
+        112,
+        113,
+        114
+      ],
+      "authorization": "verified_against_original_frozen_flow_and_selection",
+      "native_sha256": "7bab9bea82567af1e183b8a9448a1183eae39a561ede54732f1afb7d906dda00",
+      "observation_sha256": "6537fd162c572564361c5f5ae4bd7cabbb2024cfd76d5b01538080e34eb3bbe8",
+      "output": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P02/tencent-conditions-entity-payment-definitions-p108-114",
+      "native_objects": 106,
+      "states": {
+        "original_execution": "completed",
+        "readback": "read",
+        "conversion": "completed",
+        "delivery": "completed"
+      }
+    },
+    {
+      "document_id": "complex-tencent-2025-bond-programme",
+      "sample_id": "tencent-conditions-entity-payment-definitions-p108-114",
+      "pipeline": "P03",
+      "source_pages": [
+        108,
+        109,
+        110,
+        111,
+        112,
+        113,
+        114
+      ],
+      "authorization": "verified_against_original_frozen_flow_and_selection",
+      "native_sha256": "f60ab130adcc7e318f26929ed3b74191974b72696d1ad19fcd5b6f03d378cb99",
+      "observation_sha256": "d353f9b9e04a63190ed3deb38caeaf927e4b93bbb47a17ceba5a2211c07d1344",
+      "output": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P03/tencent-conditions-entity-payment-definitions-p108-114",
+      "native_objects": 267,
+      "states": {
+        "original_execution": "completed",
+        "readback": "read",
+        "conversion": "partial",
+        "delivery": "partial"
+      }
+    },
+    {
+      "document_id": "complex-tencent-2025-bond-programme",
+      "sample_id": "tencent-conditions-entity-payment-definitions-p108-114",
+      "pipeline": "P04",
+      "source_pages": [
+        108,
+        109,
+        110,
+        111,
+        112,
+        113,
+        114
+      ],
+      "authorization": "verified_against_original_frozen_flow_and_selection",
+      "native_sha256": "f6f26aa2c1d3ecbaa6fe2c80cb6188bf8edddd39c1f651a0de3c5b61afa84656",
+      "observation_sha256": "98f35e8955b38c991845c6d6cf378018cc39b587ef95e75b7cc44d30687e57da",
+      "output": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P04/tencent-conditions-entity-payment-definitions-p108-114",
+      "native_objects": 267,
+      "states": {
+        "original_execution": "completed",
+        "readback": "read",
+        "conversion": "partial",
+        "delivery": "partial"
+      }
+    },
+    {
+      "document_id": "complex-tencent-2025-bond-programme",
+      "sample_id": "tencent-conditions-entity-payment-definitions-p108-114",
+      "pipeline": "P05",
+      "source_pages": [
+        108,
+        109,
+        110,
+        111,
+        112,
+        113,
+        114
+      ],
+      "authorization": "verified_against_original_frozen_flow_and_selection",
+      "native_sha256": "031a4c5b8570ffc76707ee4d52808a0b6ceb8c6b067a3675d4071a371a2a4dbf",
+      "observation_sha256": "af6168d085e24b1ac48fcc9883c3fb1c00924df4af69de744e31bd2e3d74fe53",
+      "output": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P05/tencent-conditions-entity-payment-definitions-p108-114",
+      "native_objects": 100,
+      "states": {
+        "original_execution": "completed",
+        "readback": "read",
+        "conversion": "completed",
+        "delivery": "completed"
+      }
+    },
+    {
+      "document_id": "complex-tencent-2025-bond-programme",
+      "sample_id": "tencent-conditions-entity-payment-definitions-p108-114",
+      "pipeline": "P06",
+      "source_pages": [
+        108,
+        109,
+        110,
+        111,
+        112,
+        113,
+        114
+      ],
+      "authorization": "verified_against_original_frozen_flow_and_selection",
+      "native_sha256": "a1198a64711fa5b85c19896dbc87f01e97dbfb4c3664a123e6557d225430dbe9",
+      "observation_sha256": "c7b5cd4eaeb36b4617286f64384414c0d8fffe5e4ffa005c45c45795a39b4077",
+      "output": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P06/tencent-conditions-entity-payment-definitions-p108-114",
+      "native_objects": 427,
+      "states": {
+        "original_execution": "completed",
+        "readback": "read",
+        "conversion": "completed",
+        "delivery": "completed"
+      }
+    },
+    {
+      "document_id": "complex-tencent-2025-bond-programme",
+      "sample_id": "tencent-conditions-entity-payment-definitions-p108-114",
+      "pipeline": "P07",
+      "source_pages": [
+        108,
+        109,
+        110,
+        111,
+        112,
+        113,
+        114
+      ],
+      "authorization": "verified_against_original_frozen_flow_and_selection",
+      "native_sha256": "d5d537436500b3ee1cc9c74c86f6b8e7d3c7504baeb450a6fc4869ea27f02433",
+      "observation_sha256": "7c6c9a5daaa9b90c7906a761e04a659d6d84b44b9cb21ae5ffbd9baa4cf6f6a2",
+      "output": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P07/tencent-conditions-entity-payment-definitions-p108-114",
+      "native_objects": 420,
+      "states": {
+        "original_execution": "completed",
+        "readback": "read",
+        "conversion": "completed",
+        "delivery": "completed"
+      }
+    },
+    {
+      "document_id": "complex-tencent-2025-bond-programme",
+      "sample_id": "tencent-conditions-entity-payment-definitions-p108-114",
+      "pipeline": "P08",
+      "source_pages": [
+        108,
+        109,
+        110,
+        111,
+        112,
+        113,
+        114
+      ],
+      "authorization": "verified_against_original_frozen_flow_and_selection",
+      "native_sha256": "52569c3972054632875771a37e08df40f8dfd400481de2bc69ed744ff7951362",
+      "observation_sha256": "739138ea52c7599e5a55e258da35d8a2cef4207ad00c333d08f7ac72c24e6f10",
+      "output": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P08/tencent-conditions-entity-payment-definitions-p108-114",
+      "native_objects": 211,
+      "states": {
+        "original_execution": "completed",
+        "readback": "read",
+        "conversion": "partial",
+        "delivery": "partial"
+      }
+    },
+    {
+      "document_id": "complex-huawei-2024-annual",
+      "sample_id": "huawei-statements-p068-070",
+      "pipeline": "P01",
+      "source_pages": [
+        68,
+        69,
+        70
+      ],
+      "authorization": "verified_against_original_frozen_flow_and_selection",
+      "native_sha256": "1b81935679caf2092d16fa13fec4e785710342f1db9da60fdadd79a39e0a1d1d",
+      "observation_sha256": "3734574e27ea89b2ed3a20110b77c89beb8677e308b8d4c9c310878a6bc2445a",
+      "output": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P01/huawei-statements-p068-070",
+      "native_objects": 351,
+      "states": {
+        "original_execution": "completed",
+        "readback": "read",
+        "conversion": "partial",
+        "delivery": "partial"
+      }
+    },
+    {
+      "document_id": "complex-huawei-2024-annual",
+      "sample_id": "huawei-statements-p068-070",
+      "pipeline": "P02",
+      "source_pages": [
+        68,
+        69,
+        70
+      ],
+      "authorization": "verified_against_original_frozen_flow_and_selection",
+      "native_sha256": "e9b3716ed01effcf69a1dbb13080a42b5df2552c0541c385120fc61d44bb83d7",
+      "observation_sha256": "cc6ea1ed5897152a3ba821415e825b64eb8b46612696a9c80f5b68b38b0df111",
+      "output": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P02/huawei-statements-p068-070",
+      "native_objects": 359,
+      "states": {
+        "original_execution": "completed",
+        "readback": "read",
+        "conversion": "partial",
+        "delivery": "partial"
+      }
+    },
+    {
+      "document_id": "complex-huawei-2024-annual",
+      "sample_id": "huawei-statements-p068-070",
+      "pipeline": "P03",
+      "source_pages": [
+        68,
+        69,
+        70
+      ],
+      "authorization": "verified_against_original_frozen_flow_and_selection",
+      "native_sha256": "22907c8ecf1919afa4c0af5cc4f462ffde22c8aba1a52ebb0a812e911f70872d",
+      "observation_sha256": "a1103b92a091540cd98209ccab0e34dcbe73952af9bc81655710c675dc7b3c64",
+      "output": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P03/huawei-statements-p068-070",
+      "native_objects": 407,
+      "states": {
+        "original_execution": "completed",
+        "readback": "read",
+        "conversion": "partial",
+        "delivery": "partial"
+      }
+    },
+    {
+      "document_id": "complex-huawei-2024-annual",
+      "sample_id": "huawei-statements-p068-070",
+      "pipeline": "P04",
+      "source_pages": [
+        68,
+        69,
+        70
+      ],
+      "authorization": "verified_against_original_frozen_flow_and_selection",
+      "native_sha256": "566eceffc575122eb3426b1fb92e08f498deb12a277797dc24fd5c6e788942a1",
+      "observation_sha256": "d64918b95455c36471ad23edc4a5e491cd0822188a327bc01a32b851ecdcc8d6",
+      "output": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P04/huawei-statements-p068-070",
+      "native_objects": 407,
+      "states": {
+        "original_execution": "completed",
+        "readback": "read",
+        "conversion": "partial",
+        "delivery": "partial"
+      }
+    },
+    {
+      "document_id": "complex-huawei-2024-annual",
+      "sample_id": "huawei-statements-p068-070",
+      "pipeline": "P05",
+      "source_pages": [
+        68,
+        69,
+        70
+      ],
+      "authorization": "verified_against_original_frozen_flow_and_selection",
+      "native_sha256": "bf098418e5e34f73f0425c6f0d2440d7179b08591b2378f18715cc34284187a4",
+      "observation_sha256": "5fef8af27df058e501fe18c269d1b65f38aa6f04670af8de1e532db9408949f9",
+      "output": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P05/huawei-statements-p068-070",
+      "native_objects": 351,
+      "states": {
+        "original_execution": "completed",
+        "readback": "read",
+        "conversion": "partial",
+        "delivery": "partial"
+      }
+    },
+    {
+      "document_id": "complex-huawei-2024-annual",
+      "sample_id": "huawei-statements-p068-070",
+      "pipeline": "P06",
+      "source_pages": [
+        68,
+        69,
+        70
+      ],
+      "authorization": "verified_against_original_frozen_flow_and_selection",
+      "native_sha256": "5c6fd7603677dbd33ef18cb7b983d097e01d046d719cd7e87131be18b11779fd",
+      "observation_sha256": "b16c4d1e2ad01087111e9daada906cb898bb7d6eb1b104eb9ff08ea018fff51f",
+      "output": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P06/huawei-statements-p068-070",
+      "native_objects": 394,
+      "states": {
+        "original_execution": "completed",
+        "readback": "read",
+        "conversion": "completed",
+        "delivery": "partial"
+      }
+    },
+    {
+      "document_id": "complex-huawei-2024-annual",
+      "sample_id": "huawei-statements-p068-070",
+      "pipeline": "P07",
+      "source_pages": [
+        68,
+        69,
+        70
+      ],
+      "authorization": "verified_against_original_frozen_flow_and_selection",
+      "native_sha256": "12d96c60972b189309854a36f3840ab24e3d816668e618d260b326434dc4abcf",
+      "observation_sha256": "8205db3fe1a2c4ec7a555adf9bcb5629811ec3306814922fd9eec6b387466b2a",
+      "output": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P07/huawei-statements-p068-070",
+      "native_objects": 394,
+      "states": {
+        "original_execution": "completed",
+        "readback": "read",
+        "conversion": "completed",
+        "delivery": "partial"
+      }
+    },
+    {
+      "document_id": "complex-huawei-2024-annual",
+      "sample_id": "huawei-statements-p068-070",
+      "pipeline": "P08",
+      "source_pages": [
+        68,
+        69,
+        70
+      ],
+      "authorization": "verified_against_original_frozen_flow_and_selection",
+      "native_sha256": "82c1ab9d8463b4276c01e8c00ed6c1e8b95a26b6f36edd953f1b9cc4e04716b0",
+      "observation_sha256": "5129c1de8c8649f2e12fde7b787893e953c3f2e2380d046849f5b95ea3ecc2af",
+      "output": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P08/huawei-statements-p068-070",
+      "native_objects": 380,
+      "states": {
+        "original_execution": "completed",
+        "readback": "read",
+        "conversion": "partial",
+        "delivery": "partial"
+      }
+    },
+    {
+      "document_id": "complex-huawei-2024-annual",
+      "sample_id": "huawei-management-toc-p014",
+      "pipeline": "P01",
+      "source_pages": [
+        14
+      ],
+      "authorization": "verified_against_original_frozen_flow_and_selection",
+      "native_sha256": "bb0332ce5b512346bef9c0eac60f3b9556c8d2fdb2de83f25bd13f6bae32dd98",
+      "observation_sha256": "b008c2ae45dcbb4319cb8453fc89fa6b206cb2a77daf425c7861c9af6c0fc478",
+      "output": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P01/huawei-management-toc-p014",
+      "native_objects": 6,
+      "states": {
+        "original_execution": "completed",
+        "readback": "read",
+        "conversion": "partial",
+        "delivery": "partial"
+      }
+    },
+    {
+      "document_id": "complex-huawei-2024-annual",
+      "sample_id": "huawei-management-toc-p014",
+      "pipeline": "P02",
+      "source_pages": [
+        14
+      ],
+      "authorization": "verified_against_original_frozen_flow_and_selection",
+      "native_sha256": "11d25aa93d110297251a0673c0baff23b934cb61b2fa1f112372fc4cd5ddf8d9",
+      "observation_sha256": "1ce4ac9e3c9d753a62c7fa138e6a36f359cc7aa0924c0c20fb7f29c932da3ef3",
+      "output": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P02/huawei-management-toc-p014",
+      "native_objects": 6,
+      "states": {
+        "original_execution": "completed",
+        "readback": "read",
+        "conversion": "partial",
+        "delivery": "partial"
+      }
+    },
+    {
+      "document_id": "complex-huawei-2024-annual",
+      "sample_id": "huawei-management-toc-p014",
+      "pipeline": "P03",
+      "source_pages": [
+        14
+      ],
+      "authorization": "verified_against_original_frozen_flow_and_selection",
+      "native_sha256": "68f34357e47206fd310ec837ea5a6645ec8b8ae5a5fd1b1f34f99676c647e5ba",
+      "observation_sha256": "96176b1cc1015b326b1040a7febcb1a699f6a74ae5eacb4db0a7d7230e99338d",
+      "output": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P03/huawei-management-toc-p014",
+      "native_objects": 33,
+      "states": {
+        "original_execution": "completed",
+        "readback": "read",
+        "conversion": "partial",
+        "delivery": "partial"
+      }
+    },
+    {
+      "document_id": "complex-huawei-2024-annual",
+      "sample_id": "huawei-management-toc-p014",
+      "pipeline": "P04",
+      "source_pages": [
+        14
+      ],
+      "authorization": "verified_against_original_frozen_flow_and_selection",
+      "native_sha256": "e6cb5951e67ad145b3eb60e3d38ada94622727cd0efea04042442db0de3c8362",
+      "observation_sha256": "8da3d0814eb169e071d4a86fcb9e7beb48d95547e22f21def4a9ba9c587ff87e",
+      "output": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P04/huawei-management-toc-p014",
+      "native_objects": 33,
+      "states": {
+        "original_execution": "completed",
+        "readback": "read",
+        "conversion": "partial",
+        "delivery": "partial"
+      }
+    },
+    {
+      "document_id": "complex-huawei-2024-annual",
+      "sample_id": "huawei-management-toc-p014",
+      "pipeline": "P05",
+      "source_pages": [
+        14
+      ],
+      "authorization": "verified_against_original_frozen_flow_and_selection",
+      "native_sha256": "e381faea4c620f8a0f6bc73ae622536e83898d5445be0c30f654e22adcba04ac",
+      "observation_sha256": "f392867097b3f49441a904bf6d290d6b3910cc1f25804aefc1ca2ae01ac028a9",
+      "output": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P05/huawei-management-toc-p014",
+      "native_objects": 6,
+      "states": {
+        "original_execution": "completed",
+        "readback": "read",
+        "conversion": "partial",
+        "delivery": "partial"
+      }
+    },
+    {
+      "document_id": "complex-huawei-2024-annual",
+      "sample_id": "huawei-management-toc-p014",
+      "pipeline": "P06",
+      "source_pages": [
+        14
+      ],
+      "authorization": "verified_against_original_frozen_flow_and_selection",
+      "native_sha256": "fb5529a887dab149dacfdb60213ad039cff2f4efd55f2be20bea4ed75be9e12c",
+      "observation_sha256": "9b94e1220b38baed10159552a5059529141b0781053679587f5ab1122ef50697",
+      "output": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P06/huawei-management-toc-p014",
+      "native_objects": 6,
+      "states": {
+        "original_execution": "completed",
+        "readback": "read",
+        "conversion": "partial",
+        "delivery": "partial"
+      }
+    },
+    {
+      "document_id": "complex-huawei-2024-annual",
+      "sample_id": "huawei-management-toc-p014",
+      "pipeline": "P07",
+      "source_pages": [
+        14
+      ],
+      "authorization": "verified_against_original_frozen_flow_and_selection",
+      "native_sha256": "7221a629237a8eaa42dd12b0e9b4a688b3b3b9611122ca11a1fe344b3727aaff",
+      "observation_sha256": "f72351a9e3191f1e9df78130b1a221e456b9cdf85c43f4004527caa1f44987f1",
+      "output": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P07/huawei-management-toc-p014",
+      "native_objects": 6,
+      "states": {
+        "original_execution": "completed",
+        "readback": "read",
+        "conversion": "partial",
+        "delivery": "partial"
+      }
+    },
+    {
+      "document_id": "complex-huawei-2024-annual",
+      "sample_id": "huawei-management-toc-p014",
+      "pipeline": "P08",
+      "source_pages": [
+        14
+      ],
+      "authorization": "verified_against_original_frozen_flow_and_selection",
+      "native_sha256": "f0d14510278e522f53096adae2addb2512ebd5e69d375049f1992e25c9435275",
+      "observation_sha256": "1863195fc4981906da5c7e45a7ee10437b279f60efbc4d63067e636f47f6ac6c",
+      "output": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P08/huawei-management-toc-p014",
+      "native_objects": 49,
+      "states": {
+        "original_execution": "completed",
+        "readback": "read",
+        "conversion": "partial",
+        "delivery": "partial"
+      }
+    },
+    {
+      "document_id": "complex-huaweitech-2024-096",
+      "sample_id": "huaweitech-editorial-spread-p002",
+      "pipeline": "P01",
+      "source_pages": [
+        2
+      ],
+      "authorization": "verified_against_original_frozen_flow_and_selection",
+      "native_sha256": "bd83a46340440f4b7fc2ddf6f783144d77645a2f21f24bea2ecc8d80f9889125",
+      "observation_sha256": "ba0661b6dab423ccd93b6e96d13d2ee11f6abe2855c1ac8c1fa1d1ba99a1c1e1",
+      "output": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P01/huaweitech-editorial-spread-p002",
+      "native_objects": 26,
+      "states": {
+        "original_execution": "completed",
+        "readback": "read",
+        "conversion": "completed",
+        "delivery": "partial"
+      }
+    },
+    {
+      "document_id": "complex-huaweitech-2024-096",
+      "sample_id": "huaweitech-editorial-spread-p002",
+      "pipeline": "P02",
+      "source_pages": [
+        2
+      ],
+      "authorization": "verified_against_original_frozen_flow_and_selection",
+      "native_sha256": "8b908b73f0dca581d8f72b59b97a10821875e851c3f252bf343f4d2af9ddb7d2",
+      "observation_sha256": "e74fbc0bc3d9621cfc966bf088c0648f6682ef940d67c567e49fa7cc011a4313",
+      "output": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P02/huaweitech-editorial-spread-p002",
+      "native_objects": 26,
+      "states": {
+        "original_execution": "completed",
+        "readback": "read",
+        "conversion": "completed",
+        "delivery": "partial"
+      }
+    },
+    {
+      "document_id": "complex-huaweitech-2024-096",
+      "sample_id": "huaweitech-editorial-spread-p002",
+      "pipeline": "P03",
+      "source_pages": [
+        2
+      ],
+      "authorization": "verified_against_original_frozen_flow_and_selection",
+      "native_sha256": "9a3ce4f0ffaee0e39605a2859f062f96d6ba8e98e282e787972c64d22a66f335",
+      "observation_sha256": "5684af56ad4812322e506f6cb99ed17462b7954528b422d362e100333e0c620d",
+      "output": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P03/huaweitech-editorial-spread-p002",
+      "native_objects": 63,
+      "states": {
+        "original_execution": "completed",
+        "readback": "read",
+        "conversion": "partial",
+        "delivery": "partial"
+      }
+    },
+    {
+      "document_id": "complex-huaweitech-2024-096",
+      "sample_id": "huaweitech-editorial-spread-p002",
+      "pipeline": "P04",
+      "source_pages": [
+        2
+      ],
+      "authorization": "verified_against_original_frozen_flow_and_selection",
+      "native_sha256": "8ae515709183eb3cf1d3a6c2dd38e1fffa565b4df03cceac0976ba0fbf27b0e1",
+      "observation_sha256": "c2717ea9eceec39c9dbdb1cd854fb4d401fc3eb36539866ced3a5a2f2a851ada",
+      "output": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P04/huaweitech-editorial-spread-p002",
+      "native_objects": 63,
+      "states": {
+        "original_execution": "completed",
+        "readback": "read",
+        "conversion": "partial",
+        "delivery": "partial"
+      }
+    },
+    {
+      "document_id": "complex-huaweitech-2024-096",
+      "sample_id": "huaweitech-editorial-spread-p002",
+      "pipeline": "P05",
+      "source_pages": [
+        2
+      ],
+      "authorization": "verified_against_original_frozen_flow_and_selection",
+      "native_sha256": "f5c02e3e38564c729dd765b504108e5beb71833bcfefa71981475e060dac9216",
+      "observation_sha256": "e7a88e77cdcb78b983db9d54dcaa444d7a2ee70b543b1690be87059f639c78bc",
+      "output": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P05/huaweitech-editorial-spread-p002",
+      "native_objects": 26,
+      "states": {
+        "original_execution": "completed",
+        "readback": "read",
+        "conversion": "completed",
+        "delivery": "partial"
+      }
+    },
+    {
+      "document_id": "complex-huaweitech-2024-096",
+      "sample_id": "huaweitech-editorial-spread-p002",
+      "pipeline": "P06",
+      "source_pages": [
+        2
+      ],
+      "authorization": "verified_against_original_frozen_flow_and_selection",
+      "native_sha256": "cbff8a22d15569f1fa3c16eda501617739ecebeda362c5ca744860fec1178235",
+      "observation_sha256": "31d3e0ca07d70deee6ee7b24eabc67a8f8f2b7698ab44a6c186f33480abf6c86",
+      "output": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P06/huaweitech-editorial-spread-p002",
+      "native_objects": 26,
+      "states": {
+        "original_execution": "completed",
+        "readback": "read",
+        "conversion": "completed",
+        "delivery": "partial"
+      }
+    },
+    {
+      "document_id": "complex-huaweitech-2024-096",
+      "sample_id": "huaweitech-editorial-spread-p002",
+      "pipeline": "P07",
+      "source_pages": [
+        2
+      ],
+      "authorization": "verified_against_original_frozen_flow_and_selection",
+      "native_sha256": "b968cdb084ace81353d0e475016b8127519901831105db567b0a19aeaa03ee57",
+      "observation_sha256": "007baa800682b5ef5589004a312a68cab8d3156162f2a6b31148ba469c9a06e9",
+      "output": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P07/huaweitech-editorial-spread-p002",
+      "native_objects": 26,
+      "states": {
+        "original_execution": "completed",
+        "readback": "read",
+        "conversion": "completed",
+        "delivery": "partial"
+      }
+    },
+    {
+      "document_id": "complex-huaweitech-2024-096",
+      "sample_id": "huaweitech-editorial-spread-p002",
+      "pipeline": "P08",
+      "source_pages": [
+        2
+      ],
+      "authorization": "verified_against_original_frozen_flow_and_selection",
+      "native_sha256": "19afcf75d19def4a1411016402fe109a19c1a2c39b42662f4a948a3dea119fa6",
+      "observation_sha256": "860b958830504096e79d3cd969c6fa055f506002c9bb769568140a96a4595d24",
+      "output": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P08/huaweitech-editorial-spread-p002",
+      "native_objects": 72,
+      "states": {
+        "original_execution": "completed",
+        "readback": "read",
+        "conversion": "partial",
+        "delivery": "partial"
+      }
+    },
+    {
+      "document_id": "1200454112",
+      "sample_id": "spdb-cover-declaration-p001-002",
+      "pipeline": "P01",
+      "source_pages": [
+        1,
+        2
+      ],
+      "authorization": "verified_against_original_frozen_flow_and_selection",
+      "native_sha256": "1c3e6799c1778f87b22504a3eaada6afedf3947d93477d6bebe379610ff4f473",
+      "observation_sha256": "b539f6159e024eaf836b2d515211b0263e731d73a5d5177533e4eba084080e70",
+      "output": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P01/spdb-cover-declaration-p001-002",
+      "native_objects": 46,
+      "states": {
+        "original_execution": "completed",
+        "readback": "read",
+        "conversion": "partial",
+        "delivery": "partial"
+      }
+    },
+    {
+      "document_id": "1200454112",
+      "sample_id": "spdb-cover-declaration-p001-002",
+      "pipeline": "P02",
+      "source_pages": [
+        1,
+        2
+      ],
+      "authorization": "verified_against_original_frozen_flow_and_selection",
+      "native_sha256": "fb3be0bedd1787226ebd758fbf83a1982e135f110efb59c04ee95bdfb779f6b5",
+      "observation_sha256": "c37bed4f5fad315d37744cd986f79d63cb7624eaa07ab51a8d3d646de6433a5e",
+      "output": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P02/spdb-cover-declaration-p001-002",
+      "native_objects": 46,
+      "states": {
+        "original_execution": "completed",
+        "readback": "read",
+        "conversion": "partial",
+        "delivery": "partial"
+      }
+    },
+    {
+      "document_id": "1200454112",
+      "sample_id": "spdb-cover-declaration-p001-002",
+      "pipeline": "P03",
+      "source_pages": [
+        1,
+        2
+      ],
+      "authorization": "verified_against_original_frozen_flow_and_selection",
+      "native_sha256": "4cc9d73c8d010ff9c68226d5ad4fb0a2732488b927c41a81e9d091439757197f",
+      "observation_sha256": "386bf09a12df7395a9179b881406ff3c10e3fff0e4ed718c4bff82463ddf5f52",
+      "output": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P03/spdb-cover-declaration-p001-002",
+      "native_objects": 90,
+      "states": {
+        "original_execution": "completed",
+        "readback": "read",
+        "conversion": "partial",
+        "delivery": "partial"
+      }
+    },
+    {
+      "document_id": "1200454112",
+      "sample_id": "spdb-cover-declaration-p001-002",
+      "pipeline": "P04",
+      "source_pages": [
+        1,
+        2
+      ],
+      "authorization": "verified_against_original_frozen_flow_and_selection",
+      "native_sha256": "9dc7b6e7b8da94c5c758119f6439afb28e16b9a711f884799fd4ab7b56813259",
+      "observation_sha256": "4f635312c488bb18a707fbb871f955ad38f161523c96fb4ca9b4e810070fb308",
+      "output": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P04/spdb-cover-declaration-p001-002",
+      "native_objects": 90,
+      "states": {
+        "original_execution": "completed",
+        "readback": "read",
+        "conversion": "partial",
+        "delivery": "partial"
+      }
+    },
+    {
+      "document_id": "1200454112",
+      "sample_id": "spdb-cover-declaration-p001-002",
+      "pipeline": "P05",
+      "source_pages": [
+        1,
+        2
+      ],
+      "authorization": "verified_against_original_frozen_flow_and_selection",
+      "native_sha256": "fe859aee243f948da276ed3d1f0a1953f8a8df787a6918545536e749c6b80e28",
+      "observation_sha256": "a41e60cb43b560413bf90504ca51851ae565a1e6a4de4fb589cb2517c11a138f",
+      "output": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P05/spdb-cover-declaration-p001-002",
+      "native_objects": 45,
+      "states": {
+        "original_execution": "completed",
+        "readback": "read",
+        "conversion": "partial",
+        "delivery": "partial"
+      }
+    },
+    {
+      "document_id": "1200454112",
+      "sample_id": "spdb-cover-declaration-p001-002",
+      "pipeline": "P06",
+      "source_pages": [
+        1,
+        2
+      ],
+      "authorization": "verified_against_original_frozen_flow_and_selection",
+      "native_sha256": "b640a7c7296a8c106224373bd4d24501412c105b501b7f14dce6b3a69d64b820",
+      "observation_sha256": "2cbe566903396e500fb6b52c95a355faec0cd637a9b4b7391d8bbf12a6bf1e41",
+      "output": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P06/spdb-cover-declaration-p001-002",
+      "native_objects": 64,
+      "states": {
+        "original_execution": "completed",
+        "readback": "read",
+        "conversion": "partial",
+        "delivery": "partial"
+      }
+    },
+    {
+      "document_id": "1200454112",
+      "sample_id": "spdb-cover-declaration-p001-002",
+      "pipeline": "P07",
+      "source_pages": [
+        1,
+        2
+      ],
+      "authorization": "verified_against_original_frozen_flow_and_selection",
+      "native_sha256": "0fe65ac670462ae323ccfb6c2738cf9703231f48c7f6d0a65caba12d2a0502ce",
+      "observation_sha256": "c3f1c91f664af93c515cde27dabdabfbf8908c81dbbfddbfcf4313c9f6b011fe",
+      "output": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P07/spdb-cover-declaration-p001-002",
+      "native_objects": 64,
+      "states": {
+        "original_execution": "completed",
+        "readback": "read",
+        "conversion": "partial",
+        "delivery": "partial"
+      }
+    },
+    {
+      "document_id": "1200454112",
+      "sample_id": "spdb-cover-declaration-p001-002",
+      "pipeline": "P08",
+      "source_pages": [
+        1,
+        2
+      ],
+      "authorization": "verified_against_original_frozen_flow_and_selection",
+      "native_sha256": "76ad8a5057b62a0302d9a3f0307a625674e649b798274eb5c190ba1cd5723ce8",
+      "observation_sha256": "9c6c8e78cec711743caae8235aa681783ceec33f1aa1b62ad3977d93ed165db3",
+      "output": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P08/spdb-cover-declaration-p001-002",
+      "native_objects": 74,
+      "states": {
+        "original_execution": "completed",
+        "readback": "read",
+        "conversion": "partial",
+        "delivery": "partial"
+      }
+    },
+    {
+      "document_id": "1200694562",
+      "sample_id": "pingan-financials-p001-004",
+      "pipeline": "P01",
+      "source_pages": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "authorization": "verified_against_original_frozen_flow_and_selection",
+      "native_sha256": "4251071604c76f12c3a663c5172cab5e3fe492c9b1a6979544c9ec0fdf51ba76",
+      "observation_sha256": "8c264e5966058021a006288c9e75ecda5d95f4fb32175332b7cda492beae4f7c",
+      "output": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P01/pingan-financials-p001-004",
+      "native_objects": 562,
+      "states": {
+        "original_execution": "completed",
+        "readback": "read",
+        "conversion": "partial",
+        "delivery": "partial"
+      }
+    },
+    {
+      "document_id": "1200694562",
+      "sample_id": "pingan-financials-p001-004",
+      "pipeline": "P02",
+      "source_pages": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "authorization": "verified_against_original_frozen_flow_and_selection",
+      "native_sha256": "6e0213ae2131d50f6b1d26ad9266c66f3eeab37bac868430162a2db67c5d8447",
+      "observation_sha256": "9132f9e37c2ede12bd5e47c73a95204dfcb6614ef1b372624d051ca6a574e8d8",
+      "output": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P02/pingan-financials-p001-004",
+      "native_objects": 565,
+      "states": {
+        "original_execution": "completed",
+        "readback": "read",
+        "conversion": "partial",
+        "delivery": "partial"
+      }
+    },
+    {
+      "document_id": "1200694562",
+      "sample_id": "pingan-financials-p001-004",
+      "pipeline": "P03",
+      "source_pages": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "authorization": "verified_against_original_frozen_flow_and_selection",
+      "native_sha256": "e806ebab074fdee2e233938bd9ae00275c1e619863b20f0ece8c67adf0dd7ffa",
+      "observation_sha256": "6939b7d22c8966cfb5a138b03eb5ac7c5fc9ed6849cccf176eb520e138d66345",
+      "output": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P03/pingan-financials-p001-004",
+      "native_objects": 639,
+      "states": {
+        "original_execution": "completed",
+        "readback": "read",
+        "conversion": "partial",
+        "delivery": "partial"
+      }
+    },
+    {
+      "document_id": "1200694562",
+      "sample_id": "pingan-financials-p001-004",
+      "pipeline": "P04",
+      "source_pages": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "authorization": "verified_against_original_frozen_flow_and_selection",
+      "native_sha256": "3907e95a2974cf525e3271ee3716a3a11c3fd09c92f38b260cef2e5293cc737c",
+      "observation_sha256": "9ef136746d4c9de22d83a13e0889ffe56ac71fc5f9e8edb37408496f28e47527",
+      "output": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P04/pingan-financials-p001-004",
+      "native_objects": 639,
+      "states": {
+        "original_execution": "completed",
+        "readback": "read",
+        "conversion": "partial",
+        "delivery": "partial"
+      }
+    },
+    {
+      "document_id": "1200694562",
+      "sample_id": "pingan-financials-p001-004",
+      "pipeline": "P05",
+      "source_pages": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "authorization": "verified_against_original_frozen_flow_and_selection",
+      "native_sha256": "d97eadea2c78725d838fef9fc92ebebca5e3a53939a903b5961c772fa9630581",
+      "observation_sha256": "d6f80e5234f89fe7b1ac57ec861b05234b72a8d9e0c92236da41f51a0d1d1468",
+      "output": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P05/pingan-financials-p001-004",
+      "native_objects": 537,
+      "states": {
+        "original_execution": "completed",
+        "readback": "read",
+        "conversion": "partial",
+        "delivery": "partial"
+      }
+    },
+    {
+      "document_id": "1200694562",
+      "sample_id": "pingan-financials-p001-004",
+      "pipeline": "P06",
+      "source_pages": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "authorization": "verified_against_original_frozen_flow_and_selection",
+      "native_sha256": "c308f8d4129f57c70fd175ac435544ba1e0ab67751f15fd45d757cf7cf4e492e",
+      "observation_sha256": "7fa8c41b3989980fc50fc73ec1fbcdcd812eaa943a447446fc1b5c408a0f9c43",
+      "output": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P06/pingan-financials-p001-004",
+      "native_objects": 654,
+      "states": {
+        "original_execution": "completed",
+        "readback": "read",
+        "conversion": "partial",
+        "delivery": "partial"
+      }
+    },
+    {
+      "document_id": "1200694562",
+      "sample_id": "pingan-financials-p001-004",
+      "pipeline": "P07",
+      "source_pages": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "authorization": "verified_against_original_frozen_flow_and_selection",
+      "native_sha256": "ed5629a5d228cb31fee4edd379818477dc7dc59d13dd97bed17ded9e0894986b",
+      "observation_sha256": "631867b592824f298cbeaacee14b1210890fe022819326bfe4a091f9041aa2e2",
+      "output": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P07/pingan-financials-p001-004",
+      "native_objects": 653,
+      "states": {
+        "original_execution": "completed",
+        "readback": "read",
+        "conversion": "partial",
+        "delivery": "partial"
+      }
+    },
+    {
+      "document_id": "1200694562",
+      "sample_id": "pingan-financials-p001-004",
+      "pipeline": "P08",
+      "source_pages": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "authorization": "verified_against_original_frozen_flow_and_selection",
+      "native_sha256": "02ce57d3cd9aa76e19c36a831c001cc4afae32253449cd99bc28c745a67f3a3a",
+      "observation_sha256": "c9b64529c54ba09ac2658789a658f3fd6decc650e1247af78791261869f1b210",
+      "output": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P08/pingan-financials-p001-004",
+      "native_objects": 600,
+      "states": {
+        "original_execution": "completed",
+        "readback": "read",
+        "conversion": "partial",
+        "delivery": "partial"
+      }
+    }
+  ]
+}

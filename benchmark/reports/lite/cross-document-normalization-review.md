@@ -1,5 +1,173 @@
-# MO-Parse 跨文档 Normalization 审查：第十一阶段
+# MO-Parse 跨文档Normalization：第十二阶段实际转换
 
+64个唯一文档配置组合的跨文档Normalization转换已完成；72个选段与管线授权记录均已核验。本文记录固定集合的信息流工程验证，质量状态仍由[唯一Lite报告](report.md)维护，不发布Native/Product分数或排名。
+
+## 当前身份与输入绑定
+
+| 对象 | 当前证据 |
+| --- | --- |
+| HEAD/dirty | `1650637de9bb6bffc8911ee959fa6fde9a6377f9`；接手干净；本轮保留源码、测试及报告修改，未提交 |
+| software_id | `f8bcef05feaa4406189d395219a4db50afb8cc9446600ee11adce7fb403e0f1f`；72条链相同 |
+| execution-lock | `20261026-repaired-v3`；SHA256 `341a6ac17351c0a0d65c3734947793e15bd8b623faf7c8fb79417af94f850d62`，未改写 |
+| Native运行 | `20261026-lite-v3`；原software_id `c6e7f5c0cdcbb8801d17595c515fcbe7794111c396bfe58a6d0ab71a199db28e`，未重签 |
+| 固定集合 | 8份文档、9个独立selection、64个唯一document_id/pipeline、72个selection/pipeline |
+| source-only清单 | `8868d3233fc65b31a08096e6a0dec2c12dde2b6f6a76163178c67abd38d30628` |
+| 正式索引 | requirements/current保持`structure_blocked`及原SHA；service/current/index.json和scores/current/index.json均不存在 |
+
+输入路径、SHA、完整producer/configuration、分支和页身份直接取自原[flow.json](data/cross-document-normalization/flow.json)，逐个native与自身observation核对。只读执行清单为[input-plan.json](../../runs/lite/service/development/cross-document-normalization-phase12/input-plan.json)，最终转换冻结为[freeze-attempt-05.json](../../runs/lite/service/development/cross-document-normalization-phase12/freeze-attempt-05.json)，分析工具在执行前另以[verification-tools-freeze.json](../../runs/lite/service/development/cross-document-normalization-phase12/verification-tools-freeze.json)绑定。早期草稿工具与开发失败均保留，没有冒充最终同版产物。输入PDF字节身份只沿用已有声明，本轮没有重新验证PDF；StoredSource所需size_bytes使用明确标注unknown的零值哨兵，没有读取或stat原件。
+
+现有入口一次只接收一个保存输入和selection，因此D5的S5（68–70）与S6（14）分别转换，不拼成14–70或任何新范围。文档级矩阵只合并统计，保留两份独立授权、来源、正文和绑定。新产物全部位于独立development目录，已有8条开发链和全部历史工件保持。
+
+## 两批实际执行与公共修复
+
+第一批S4/S9：16条实际链，6,753个原生清单对象，四层状态为{'original_execution': {'completed': 16}, 'readback': {'read': 16}, 'conversion': {'completed': 5, 'partial': 11}, 'delivery': {'completed': 5, 'partial': 11}}。第二批S1/S2/S3/S5/S6/S7/S8：56条实际选段链、48个唯一文档配置组合，6,016个原生对象，四层状态为{'original_execution': {'completed': 56}, 'readback': {'read': 56}, 'conversion': {'completed': 17, 'partial': 39}, 'delivery': {'partial': 52, 'completed': 4}}。两批均使用同一最终software_id。
+
+第一批发现P02/S9的原生逗号开头值被校验器误当作数额；转换器原本保留该未解析字面，校验器却要求单位。统一既有scalar及比例、引用、每股字面角色后，原值没有补数字或修年份，真实数额含括号负数仍须保留单位。独立反例还覆盖字面百分比、变化列横线、数字附注与每股币值；删除正常数额的单位继续拒绝。没有改动评分门禁、分母或等价政策。
+
+第二批发现P03/S3、P03/S6、P04/S6在Final发生对象去向拒绝：原生内部行尾空格经既有Export规范化，定位仍按原始显示字符串匹配。公共`_native_span`现以本对象唯一标记和精确Export投影定位，内容处置复用同一定位；没有改变Exporter规则或正文答案。两个规范化后相同字面的独立对象仍有不同最终跨度，标记缺失的对象不能借邻项补位置。未知原生类别继续partial。
+
+attempt-01至attempt-04的完整、失败和中间验证记录原样保留，未混入矩阵；attempt-05在最终源码下重跑全部72条链。没有只修一个管线、替换输入或重新运行解析模型。
+
+## 64个唯一文档配置的实际阶段覆盖
+
+下表来源于[完整阶段矩阵](data/cross-document-normalization/conversion-stage-matrix.json)。verified表示该工程阶段有实际同版证据，partial保留具体输出责任；不表示解析质量等级。Semantic的not_applicable表示公共回调实际执行但没有原生表格任务，不能解释成未执行。source_pages/native_pages仅捕获不适用回执，没有执行来源补充。
+
+| 文档 | 配置 | Native | Adapted | IR | Semantic | Final | Delivery |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| D1 | P01 | verified | verified | verified | not_applicable | verified | partial |
+| D1 | P02 | verified | verified | verified | not_applicable | verified | partial |
+| D1 | P03 | verified | verified | verified | not_applicable | partial | partial |
+| D1 | P04 | verified | verified | verified | not_applicable | partial | partial |
+| D1 | P05 | verified | verified | verified | not_applicable | verified | verified |
+| D1 | P06 | verified | verified | verified | not_applicable | verified | verified |
+| D1 | P07 | verified | verified | verified | not_applicable | verified | verified |
+| D1 | P08 | verified | verified | verified | not_applicable | partial | partial |
+| D2 | P01 | verified | verified | verified | verified | verified | partial |
+| D2 | P02 | verified | verified | verified | verified | verified | partial |
+| D2 | P03 | verified | verified | verified | verified | partial | partial |
+| D2 | P04 | verified | verified | verified | verified | partial | partial |
+| D2 | P05 | verified | verified | verified | verified | verified | verified |
+| D2 | P06 | verified | verified | verified | verified | verified | partial |
+| D2 | P07 | verified | verified | verified | verified | verified | partial |
+| D2 | P08 | verified | verified | verified | verified | partial | partial |
+| D3 | P01 | verified | verified | verified | not_applicable | partial | partial |
+| D3 | P02 | verified | verified | verified | not_applicable | partial | partial |
+| D3 | P03 | verified | verified | verified | not_applicable | partial | partial |
+| D3 | P04 | verified | verified | verified | not_applicable | partial | partial |
+| D3 | P05 | verified | verified | verified | not_applicable | partial | partial |
+| D3 | P06 | verified | verified | verified | not_applicable | partial | partial |
+| D3 | P07 | verified | verified | verified | not_applicable | partial | partial |
+| D3 | P08 | verified | verified | verified | not_applicable | partial | partial |
+| D4 | P01 | verified | verified | verified | not_applicable | verified | verified |
+| D4 | P02 | verified | verified | verified | not_applicable | verified | verified |
+| D4 | P03 | verified | verified | verified | not_applicable | partial | partial |
+| D4 | P04 | verified | verified | verified | not_applicable | partial | partial |
+| D4 | P05 | verified | verified | verified | not_applicable | verified | verified |
+| D4 | P06 | verified | verified | verified | not_applicable | verified | verified |
+| D4 | P07 | verified | verified | verified | not_applicable | verified | verified |
+| D4 | P08 | verified | verified | verified | not_applicable | partial | partial |
+| D5 | P01 | verified | verified | verified | partial | partial | partial |
+| D5 | P02 | verified | verified | verified | partial | partial | partial |
+| D5 | P03 | verified | verified | verified | verified | partial | partial |
+| D5 | P04 | verified | verified | verified | verified | partial | partial |
+| D5 | P05 | verified | verified | verified | verified | partial | partial |
+| D5 | P06 | verified | verified | verified | verified | partial | partial |
+| D5 | P07 | verified | verified | verified | verified | partial | partial |
+| D5 | P08 | verified | verified | verified | verified | partial | partial |
+| D6 | P01 | verified | verified | verified | not_applicable | verified | partial |
+| D6 | P02 | verified | verified | verified | not_applicable | verified | partial |
+| D6 | P03 | verified | verified | verified | not_applicable | partial | partial |
+| D6 | P04 | verified | verified | verified | not_applicable | partial | partial |
+| D6 | P05 | verified | verified | verified | not_applicable | verified | partial |
+| D6 | P06 | verified | verified | verified | not_applicable | verified | partial |
+| D6 | P07 | verified | verified | verified | not_applicable | verified | partial |
+| D6 | P08 | verified | verified | verified | not_applicable | partial | partial |
+| D7 | P01 | verified | verified | verified | not_applicable | partial | partial |
+| D7 | P02 | verified | verified | verified | not_applicable | partial | partial |
+| D7 | P03 | verified | verified | verified | not_applicable | partial | partial |
+| D7 | P04 | verified | verified | verified | not_applicable | partial | partial |
+| D7 | P05 | verified | verified | verified | not_applicable | partial | partial |
+| D7 | P06 | verified | verified | verified | not_applicable | partial | partial |
+| D7 | P07 | verified | verified | verified | not_applicable | partial | partial |
+| D7 | P08 | verified | verified | verified | not_applicable | partial | partial |
+| D8 | P01 | verified | verified | verified | partial | partial | partial |
+| D8 | P02 | verified | verified | verified | partial | partial | partial |
+| D8 | P03 | verified | verified | verified | partial | partial | partial |
+| D8 | P04 | verified | verified | verified | partial | partial | partial |
+| D8 | P05 | verified | verified | verified | partial | partial | partial |
+| D8 | P06 | verified | verified | verified | partial | partial | partial |
+| D8 | P07 | verified | verified | verified | partial | partial | partial |
+| D8 | P08 | verified | verified | verified | partial | partial | partial |
+
+## 72个授权记录与结构结果
+
+每条授权及各自native/observation SHA在[72记录矩阵](data/cross-document-normalization/conversion-selection-matrix.json)中列出；逐对象账本从原始native枚举后再读取消费者快照。下表统计实际清单对象与物理表，不将对象数量或completed状态作为内容验收票。
+
+| 选段/document_id | 范围 | 原生清单对象 | 物理表 | 交付completed / partial |
+| --- | --- | ---: | ---: | --- |
+| S1 / `10726562` | 1,2 | 681 | 0 | 3 / 5 |
+| S2 / `1201917092` | 1,2,3 | 910 | 8 | 1 / 7 |
+| S3 / `1200694910` | 1,2,3 | 390 | 0 | 0 / 8 |
+| S4 / `complex-tencent-2025-bond-programme` | 108,109,110,111,112,113,114 | 1904 | 0 | 5 / 3 |
+| S5 / `complex-huawei-2024-annual` | 68,69,70 | 3043 | 24 | 0 / 8 |
+| S6 / `complex-huawei-2024-annual` | 14 | 145 | 0 | 0 / 8 |
+| S7 / `complex-huaweitech-2024-096` | 2 | 328 | 0 | 0 / 8 |
+| S8 / `1200454112` | 1,2 | 519 | 0 | 0 / 8 |
+| S9 / `1200694562` | 1,2,3,4 | 4849 | 72 | 0 / 8 |
+
+S4：逐页原生身份、明确父链、列表角色、原始顺序和所有源文字在Adapted与IR交接中保留。含if/unless/except/provided/not/no/only的200个对象按自己的最终跨度核对，没有用另一出现的字面抵消缺失。P01/P02的阅读树、P07的真实list容器按自身来源保留；Paddle/Visual等缺少父链的对象仍unknown。条件和例外的文字保全与完整法律语义解释分开，不宣称已经恢复原生未提供的法律归属。
+
+S9：八组各有9张物理表，72张表保留独立来源；没有多来源合并视图，也没有新增跨页表头或单位继承。上下页近似表头、相同列数、单位或backend类别没有替代续接证据。未解表和行保持原格与partial；rowspan/colspan、空格原文、同字面单元格和记录所属位置逐格连接到自己的IR与最终来源。单位、期间、附注的实际TextRef/CellRef及限定范围另写入qualifier-ledger，未借用邻表或其他管线。
+
+S1保留每个原生段落及跨页身份，仅已有明确续接和确定顺序允许合句；S2保留多层表头、单位、期间、空格与记录来源，Docling V1/V2等各自原字不互补；S3保留文字、视觉对象声明及出现顺序，不读取印章或图片；S5保留括号负数、百分号、期间、附注和行组，不修数字；S6目录页码保持字面导航信息，不套数量等价或补目录；S7多栏双语、签名和多次5G-A各有独立身份，不按bbox制造阅读顺序；S8封面、网格与印章声明保留，scan-like不升级为确认扫描来源。
+
+## 对象去向、变化及最早可观察阶段
+
+独立原生清单共12,769项，其中按kind分布为{'container': 101, 'content': 2320, 'picture': 144, 'media': 170, 'metadata': 2911, 'table': 104, 'cell': 7019}。每项都有原始locator、原文/结构、页及分支、父级/顺序、实际Adapted/IR或审计交接、Semantic关系、逐阶段渲染跨度、Final去向和Delivery责任；容器及元数据的审计保留不冒充可见正文。视觉文字组件明确指向自身区域，不重复计为新的正文对象。
+
+| 变化类型 | 已有证据确认的对象数或责任 |
+| --- | --- |
+| retained | 10232 |
+| normalized | 2004 |
+| transformed | 67 |
+| excluded | 64 |
+| unresolved | 402 |
+| lost | 0 |
+| unsupported | 0 |
+| duplicated | 0 |
+| introduced_without_source | 0 |
+| inferred | 另列4373条实际值关系、6160条单位/期间/附注引用；不与原生对象计数相加 |
+
+最早可观察的显示变化分布为{'adapted': 1696, 'final': 117, 'unknown': 29, 'semantic': 499}；其中29项仍明确unknown，不能推断最早丢失位置。显示变化和原生payload变化分开，Adapted的页面显示快照含既有诊断导出，不能仅据字符串差异认定适配器改变了源值；Export的实际编辑、Semantic的源格关系及Final的精确编辑分别有回执。
+
+最终反向归因状态为{'verified': 72}。反向核对使用本对象标记、最终跨度、源格/记录引用及实际生产者编辑，所有非空最终字符都须落入已记录的源对象或源表转换操作；源表中的生成字段名、标点和未解提示属于明确转换，不冒充新增原生事实。lost和introduced_without_source的0只表示在本固定信息流中没有确证此类缺陷；不是Expected质量分、完整语义正确或全局零损失结论。未决格、未知阅读顺序、媒体未交付及缺少单格可观察跨度均另列。
+
+## 四层状态、Storage与真实责任
+
+| 层 | 72选段记录的实际状态 |
+| --- | --- |
+| original_execution | {'completed': 72} |
+| readback | {'read': 72} |
+| conversion | {'completed': 22, 'partial': 50} |
+| delivery | {'partial': 63, 'completed': 9} |
+
+partial原因按对象/来源/输出字段记录，汇总出现次数为{'native_media_not_delivered': 170, 'native_reading_order_unverified': 921, 'native_content_projection_incomplete': 34, 'unsupported_native_role': 34, 'table_semantics_incomplete': 37, 'native_table_continuation_unresolved': 6}；这些次数不是独立文档故障数，也不是管线扣分。无实际消费依赖的unknown元数据只保留warning，必要读序、未知用途、表格关系及媒体交付分别限制对应责任。原生执行失败/未知与读回、转换、交付不相互改写。
+
+每条Storage均实际写出result.md、asset-index.json及warnings.json；独立读回与最终快照、result.markdown和parse_result.renderings逐字节一致，document_warnings与evidence一致。没有媒体字节访问，资产索引交付数为0；有媒体声明的链继续partial，没有制造可下载图片或ZIP验收。逐条storage-verification及四层delivery-state随最终绑定保存。
+
+## 产物、测试、保护及正式质量边界
+
+独立开发根为`benchmark/runs/lite/service/development/cross-document-normalization-phase12`，各组合路径为`attempt-05/PXX/<sample_id>/`。每条链包含input-binding、从原始native再次独立枚举的native-inventory、既有evidence及其八个真实阶段快照/七条编辑过渡、object-ledger、qualifier-ledger、final.md、delivery-state、Storage实际文本/资产索引/warnings、storage-verification和final-binding。TableContext在TableSemantics公共调用内实际运行，真实fragment/context/关系输出随Semantic快照保存，没有将一个快照改名为独立TableContext阶段。
+
+完整回归实际执行169个允许模块、4282项测试，81个排除模块未收集；0项边界违规，另有1条只读pytest缓存写入警告。当前新计数不混入历史718/4175/4225等记录，也不以定向140项替代完整集合。允许清单、导入、conftest禁用、fixtures、子进程和I/O经当前校验及AST审查；只有显式asyncio插件，真实来源、原生候选和正式current在测试命名空间不可访问。
+
+转换资源为串行外层、8 CPU以内、8 GiB地址空间；实际最高RSS 838,488,064字节。每次进程记录CPU affinity、只读仓库/空来源挂载、独立网络命名空间、空GPU可见性及I/O审计。新开发转换时间单列，没有覆盖原生成本或正式Product成本。3590份工程文本工件哈希保持，原始Expected未打开；旧8条开发链逐文件保护且新同源产物分别复验，没有将旧software_id升级为当前。
+
+requirements/current、107份责任缺口、3份待独立整样本验收及5个输入范围保持。完整Expected责任、同版独立评分器与真实格式/候选诊断、正式执行授权、媒体/ZIP交付及Native/Product质量发布仍有各自门槛，本轮不替代它们。没有正式Native/Product评分、真实candidate/Expected比较、八组正式回放、模型、网络、GPU、TTS或服务操作，没有部署、提交或推送。
+
+本轮结构化汇总复用data/cross-document-normalization目录，新增conversion-state/flow/stage-matrix/selection-matrix/verification；原state、flow、gap-classification、history-and-costs和review-verification原字节保留。下面的第十一阶段原判断及旧证据保留，所有“本轮”“当前”“缺少64条链”均限于当时的只读审查。
+
+## 第十一阶段历史审查（原判断及证据保留）
 审查日期：2026-11-14。现有证据盘点、固定集合、原生覆盖和责任缺口分类已经完成；完整跨文档验证未完成。首个实际阻塞是：固定集合的72个选段与配置组合中，64个没有当前公共版本的完整阶段产物。本轮只分析已有产物，没有运行adapter、转换器、候选比较器或评分器来补齐它们。不能将缺少阶段证据写成管线失败，也不能将现有八份开发转换推广为跨文档验收。
 
 固定集合为8份文档、9个既有授权选段，包含72份实际native及配对observation；按document_id合并后是64个文档与配置组合。调查了10类结构，9类有文字或原生结构依据；扫描来源类别仍unknown，只有既有scan-like和特殊视觉版面声明。已有当前版本的完整链限于两份文档的8个开发结果。唯一质量报告仍是[report.md](report.md)；本文是信息保全审查，不发布质量分数、排名或新的解析性能成绩。

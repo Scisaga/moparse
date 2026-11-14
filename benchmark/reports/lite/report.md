@@ -1,5 +1,23 @@
 # MO-Parse Lite：跨文档Normalization与正式评价状态
 
+## 第十二阶段：固定64组合的实际公共转换与Normalization证据
+
+2026-11-14，64个唯一文档配置组合的跨文档Normalization转换已完成；72个选段与管线授权记录均已核验。固定集合保持8份文档、9个既有选段。第一批16条选段链与第二批56条选段链均实际执行，后者按document_id归并为48个唯一组合；D5的S5、S6分别转换，页范围没有合并。全部本轮有效产物使用software_id `f8bcef05feaa4406189d395219a4db50afb8cc9446600ee11adce7fb403e0f1f`，HEAD仍为`1650637de9bb6bffc8911ee959fa6fde9a6377f9`，没有提交或推送。
+
+本轮复用`close_saved_document`和既有NativeContentContract、SavedContentService、Export、IR、TableContext、TableSemantics、FinalContent及Storage。12,769个从原始native独立枚举的对象逐项连接到实际消费、审计保留、转换、排除或未决去向；72份最终正文与实际Storage文本逐字节一致，504条相邻阶段编辑完成精确重放。Adapted、IR、Semantic和Final仍使用现有evidence内的真实快照，未从旧正文重造或改名。完整[64组合阶段矩阵](data/cross-document-normalization/conversion-stage-matrix.json)、[72选段授权矩阵](data/cross-document-normalization/conversion-selection-matrix.json)、[信息流与逐链绑定](data/cross-document-normalization/conversion-flow.json)及[专项报告](cross-document-normalization-review.md)给出具体对象、来源、阶段与未完成责任。
+
+四层状态独立保留：原执行为{'completed': 72}，读回为{'read': 72}，转换为{'completed': 22, 'partial': 50}，交付为{'partial': 63, 'completed': 9}。其中63条partial仍有必要顺序、未知用途、表格关系或媒体未交付责任；9条completed也不表示Native/Product质量通过。原生未提供的法律父链、跨页续表、扫描来源和字符来源没有补造。S4含限定词的200个原生对象按各自最终跨度保全；S9每组9张物理表分别保留，没有以相邻、同列数或声明替代续表证明。
+
+本轮修复两处公共软件缺陷：单位责任校验与既有数值、比例、引用和每股字面角色不一致；最终对象定位没有重放已有Export行尾空白规范化。前者保留未解析数值字面并继续拒绝真实数额单位脱离，后者在各对象唯一标记前作精确投影，缺少标记时拒绝借用邻项。两处均有独立合成反例；最终源码冻结后重新执行全部72条链，旧尝试没有混入当前矩阵。没有改写原生、Expected或T/L/B合同，也没有按管线编号选择语义答案。
+
+最终[完整source-only回归](../../runs/lite/service/development/cross-document-normalization-phase12/source-only-complete.json)实际执行169个已审查模块、4282项测试，81个排除模块未收集；源码、清单、测试和I/O边界均有当前绑定。转换和回归使用串行外层、最多8 CPU、8 GiB地址空间、空GPU可见性与独立网络命名空间，代码及历史输入只读，原件和Expected根目录被空只读挂载屏蔽；转换最大RSS为838,488,064字节。测试只读取既有软件与自造文本/JSON，未调用未经审查的全量pytest；仅有1条只读pytest缓存无法写入的运行警告。
+
+[保全核验](../../runs/lite/service/development/cross-document-normalization-phase12/preservation.json)确认3590份受保护工程文本工件未变，另单独记录获授权的source-only测试清单更新；72份native/observation/faithful、已有8条开发链、原始成本、execution-lock、原selection/manifest和requirements/current保持。下方原始处理成本段SHA256仍为`e6562dfb197af4ff3889e7852cb59b140e7f8cd915dbc0cccfec0ce8a11d709c`。新开发耗时仅保存在各链evidence和执行日志，不写入Native或正式Product成本。
+
+正式质量仍为`structure_blocked`，107份比较责任缺口、3份完整责任待独立整样本验收和5个输入范围继续保留。未重编译Expected，未进行真实candidate/Expected比较、正式Native/Product评分、八组正式回放、模型推理或媒体交付；正式service/current及scores/current索引均未激活。没有读取原始PDF/图像字节，没有PDF字层、OCR、VLM、网络/GPU/TTS/在线服务、部署或发布操作。Normalization工程闭环与正式质量验收保持分离。
+
+以下第十一阶段及更早记录保留各自当时的身份和结论；其中“本轮”“当前”和缺少64条阶段证据的判断均属于对应历史阶段。
+
 ## 第十一阶段：既存证据审查与未完成范围
 
 2026-11-14核对历史原始job、2,080份observation及实际工件：八组`20261026-lite-v3`各完成quality800一次、perf80三轮及独立warmup；旧P07/P08 baseline/current有实际正文与原始CPU后处理成本。当前scores为空，正式T/L/B成绩及排名继续撤回；历史work-status与评分/复现日志不构成当前有效成绩。原始处理成本段保持原字节，本轮没有重跑或重签历史结果。

@@ -2,7 +2,9 @@
 
 本文维护开发依赖、交付物和完成条件。逐管线格式与适配设计见[管线索引](../pipelines/README.md)，最终交付要求见[输出规范](../specs/moparse-output-spec.md)，代码职责见[架构](architecture.md)。2026-10-24新增独立数据集与Lite评测实现；实际样本、运行、评分覆盖及服务验收分别记录，不能互相替代。
 
-2026-11-14第十一阶段固定8份文档、9个既有授权选段和72份真实native结果，完成历史执行、原生覆盖、既存阶段、107份责任缺口及成本可比性的只读审查。完整横向验证未完成：64个选段与配置组合没有当前公共版本的完整阶段产物；两份文档的8个既有开发链不能外推到整个集合。下一步先在另行授权下补齐固定集合的source-free开发证据，再按最早实际差异确定最小公共修复；不继续按编号重复接入，不以Expected比较缺口阻断独立的信息保全研究。具体文件、函数、样本及验收条件见[跨文档Normalization审查](../../benchmark/reports/lite/cross-document-normalization-review.md)，正式质量状态仍见[唯一报告](../../benchmark/reports/lite/report.md)。
+2026-11-14第十二阶段已在固定8份文档、9个授权selection上实际完成72条同版source-free公共转换，按document_id/pipeline归并为64个唯一组合；D5两个选段分别执行。两处公共单位/最终来源定位缺陷经独立反例修复，全部链按最终源码重跑，原生对象、各阶段、四层状态及Storage逐项绑定；partial、未知父链/续表和媒体未交付保持。4282项当前source-only回归不能代替质量验收。阶段矩阵、逐链证据和未完成责任见[跨文档Normalization报告](../../benchmark/reports/lite/cross-document-normalization-review.md)，正式质量仍为structure_blocked，未激活service/current或scores/current。
+
+第十一阶段历史记录：2026-11-14固定8份文档、9个既有授权选段和72份真实native结果，完成历史执行、原生覆盖、既存阶段、107份责任缺口及成本可比性的只读审查。完整横向验证未完成：64个选段与配置组合没有当前公共版本的完整阶段产物；两份文档的8个既有开发链不能外推到整个集合。当时下一步是另行授权补齐固定集合的source-free开发证据，再按最早实际差异确定最小公共修复；不继续按编号重复接入，不以Expected比较缺口阻断独立的信息保全研究。具体文件、函数、样本及验收条件见[跨文档Normalization审查](../../benchmark/reports/lite/cross-document-normalization-review.md)，正式质量状态仍见[唯一报告](../../benchmark/reports/lite/report.md)。
 
 此前第十阶段完成P08保存Visual Blocks的共同契约接入和单份真实三页source-free纵向验证，保留区域空间来源、视觉文字与描述类别、未知顺序和媒体未交付。P01–P07按当时最终源码逐份复验固定开发输入；这是开发保护，不是八组正式回放。五个格式族在固定开发范围达到转入跨格式验证的最低工程条件，逐编号接入阶段结束。未覆盖的真实可选格式、P07官方整文档schema拒绝、媒体交付及质量门禁继续保留。
 
@@ -55,7 +57,7 @@ B 同时支撑解析研究和服务适配。D 的方法研究可以使用外部�
 | 原生产物交接 | 研究worker保存完整原生文档、媒体、页序、分支和失败；GLM主结果与审计视图分开 | 原生读取与有限实际个案分别留证，不把导出完成当作内容或媒体全量正确；缺失和未知保留 |
 | 独立研究入口 | moparse_eval直接覆盖共同前处理、完整SDK、忠实导出及必要资产，使用worker直接处理时钟 | 初始化、预热及持久化分开；生产服务调用和原有字段不作为主计时，见[代码边界](architecture.md#现有调用与计时字段) |
 | 数据集与统一评分 | 人工选页及目读标注后冻结Lite，Full保留历史范围和审核状态；评分只读参考 | 按[评测任务](../../benchmark/evaluation-tasks.md)交付分项质量、覆盖、未知、成本和失败；修复评分器后同版重评，不改原生产物 |
-| 服务适配与转换 | 八个保存配置按Docling、GLM、Paddle、MinerU、Visual格式进入共同NativeContentContract和source-free调度，按输出依赖判定unknown影响 | 固定跨文档集合已建立并完成既存证据审查，64个组合缺同版完整阶段；P07官方文档拒绝、P08真实可选字段及交付边界保留，见[跨文档审查](../../benchmark/reports/lite/cross-document-normalization-review.md)与[架构](architecture.md#当前私有适配交接) |
+| 服务适配与转换 | 八个保存配置按Docling、GLM、Paddle、MinerU、Visual格式进入共同NativeContentContract和source-free调度，按输出依赖判定unknown影响 | 固定跨文档集合64个唯一组合及72条独立selection链已实际同版转换并完成工程信息流核验；P07官方文档拒绝、P08真实可选字段及交付边界保留，见[跨文档审查](../../benchmark/reports/lite/cross-document-normalization-review.md)与[架构](architecture.md#当前私有适配交接) |
 | 最终组装与输出包 | 已有正文持久化和资产 ZIP | 补齐包内 Markdown、相对图片引用与清单；随后接入完整覆盖及状态传递，详见[输出缺口](../specs/moparse-output-spec.md#9-当前实现差距与迁移) |
 
 统一评价仍遵循“数据与参考冻结 → 执行锁 → 忠实读回 → 正式测量 → 统一评分及报告”的依赖，当前受限开发转换不构成其中的正式执行。现有服务结果不能替代研究原始结果；后续服务适配和共同组装据实际读取到的信息设计，不以现有有限IR或GFM为所有后端的前置格式，也不因研究运行完成就宣称最终服务已验收。

@@ -1,0 +1,1720 @@
+{
+  "software_id": "f8bcef05feaa4406189d395219a4db50afb8cc9446600ee11adce7fb403e0f1f",
+  "count": 64,
+  "records": [
+    {
+      "document_id": "10726562",
+      "pipeline": "P01",
+      "selections": [
+        "vanke-interest-p001-002"
+      ],
+      "source_scopes": [
+        [
+          1,
+          2
+        ]
+      ],
+      "stages": {
+        "Native": "verified",
+        "Adapted": "verified",
+        "IR": "verified",
+        "Semantic": "not_applicable",
+        "Final": "verified",
+        "Delivery": "partial"
+      },
+      "actual_selection_chain_count": 1,
+      "chains": [
+        "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P01/vanke-interest-p001-002"
+      ]
+    },
+    {
+      "document_id": "10726562",
+      "pipeline": "P02",
+      "selections": [
+        "vanke-interest-p001-002"
+      ],
+      "source_scopes": [
+        [
+          1,
+          2
+        ]
+      ],
+      "stages": {
+        "Native": "verified",
+        "Adapted": "verified",
+        "IR": "verified",
+        "Semantic": "not_applicable",
+        "Final": "verified",
+        "Delivery": "partial"
+      },
+      "actual_selection_chain_count": 1,
+      "chains": [
+        "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P02/vanke-interest-p001-002"
+      ]
+    },
+    {
+      "document_id": "10726562",
+      "pipeline": "P03",
+      "selections": [
+        "vanke-interest-p001-002"
+      ],
+      "source_scopes": [
+        [
+          1,
+          2
+        ]
+      ],
+      "stages": {
+        "Native": "verified",
+        "Adapted": "verified",
+        "IR": "verified",
+        "Semantic": "not_applicable",
+        "Final": "partial",
+        "Delivery": "partial"
+      },
+      "actual_selection_chain_count": 1,
+      "chains": [
+        "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P03/vanke-interest-p001-002"
+      ]
+    },
+    {
+      "document_id": "10726562",
+      "pipeline": "P04",
+      "selections": [
+        "vanke-interest-p001-002"
+      ],
+      "source_scopes": [
+        [
+          1,
+          2
+        ]
+      ],
+      "stages": {
+        "Native": "verified",
+        "Adapted": "verified",
+        "IR": "verified",
+        "Semantic": "not_applicable",
+        "Final": "partial",
+        "Delivery": "partial"
+      },
+      "actual_selection_chain_count": 1,
+      "chains": [
+        "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P04/vanke-interest-p001-002"
+      ]
+    },
+    {
+      "document_id": "10726562",
+      "pipeline": "P05",
+      "selections": [
+        "vanke-interest-p001-002"
+      ],
+      "source_scopes": [
+        [
+          1,
+          2
+        ]
+      ],
+      "stages": {
+        "Native": "verified",
+        "Adapted": "verified",
+        "IR": "verified",
+        "Semantic": "not_applicable",
+        "Final": "verified",
+        "Delivery": "verified"
+      },
+      "actual_selection_chain_count": 1,
+      "chains": [
+        "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P05/vanke-interest-p001-002"
+      ]
+    },
+    {
+      "document_id": "10726562",
+      "pipeline": "P06",
+      "selections": [
+        "vanke-interest-p001-002"
+      ],
+      "source_scopes": [
+        [
+          1,
+          2
+        ]
+      ],
+      "stages": {
+        "Native": "verified",
+        "Adapted": "verified",
+        "IR": "verified",
+        "Semantic": "not_applicable",
+        "Final": "verified",
+        "Delivery": "verified"
+      },
+      "actual_selection_chain_count": 1,
+      "chains": [
+        "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P06/vanke-interest-p001-002"
+      ]
+    },
+    {
+      "document_id": "10726562",
+      "pipeline": "P07",
+      "selections": [
+        "vanke-interest-p001-002"
+      ],
+      "source_scopes": [
+        [
+          1,
+          2
+        ]
+      ],
+      "stages": {
+        "Native": "verified",
+        "Adapted": "verified",
+        "IR": "verified",
+        "Semantic": "not_applicable",
+        "Final": "verified",
+        "Delivery": "verified"
+      },
+      "actual_selection_chain_count": 1,
+      "chains": [
+        "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P07/vanke-interest-p001-002"
+      ]
+    },
+    {
+      "document_id": "10726562",
+      "pipeline": "P08",
+      "selections": [
+        "vanke-interest-p001-002"
+      ],
+      "source_scopes": [
+        [
+          1,
+          2
+        ]
+      ],
+      "stages": {
+        "Native": "verified",
+        "Adapted": "verified",
+        "IR": "verified",
+        "Semantic": "not_applicable",
+        "Final": "partial",
+        "Delivery": "partial"
+      },
+      "actual_selection_chain_count": 1,
+      "chains": [
+        "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P08/vanke-interest-p001-002"
+      ]
+    },
+    {
+      "document_id": "1201917092",
+      "pipeline": "P01",
+      "selections": [
+        "vanke-repurchase-share-changes-p001-003"
+      ],
+      "source_scopes": [
+        [
+          1,
+          2,
+          3
+        ]
+      ],
+      "stages": {
+        "Native": "verified",
+        "Adapted": "verified",
+        "IR": "verified",
+        "Semantic": "verified",
+        "Final": "verified",
+        "Delivery": "partial"
+      },
+      "actual_selection_chain_count": 1,
+      "chains": [
+        "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P01/vanke-repurchase-share-changes-p001-003"
+      ]
+    },
+    {
+      "document_id": "1201917092",
+      "pipeline": "P02",
+      "selections": [
+        "vanke-repurchase-share-changes-p001-003"
+      ],
+      "source_scopes": [
+        [
+          1,
+          2,
+          3
+        ]
+      ],
+      "stages": {
+        "Native": "verified",
+        "Adapted": "verified",
+        "IR": "verified",
+        "Semantic": "verified",
+        "Final": "verified",
+        "Delivery": "partial"
+      },
+      "actual_selection_chain_count": 1,
+      "chains": [
+        "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P02/vanke-repurchase-share-changes-p001-003"
+      ]
+    },
+    {
+      "document_id": "1201917092",
+      "pipeline": "P03",
+      "selections": [
+        "vanke-repurchase-share-changes-p001-003"
+      ],
+      "source_scopes": [
+        [
+          1,
+          2,
+          3
+        ]
+      ],
+      "stages": {
+        "Native": "verified",
+        "Adapted": "verified",
+        "IR": "verified",
+        "Semantic": "verified",
+        "Final": "partial",
+        "Delivery": "partial"
+      },
+      "actual_selection_chain_count": 1,
+      "chains": [
+        "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P03/vanke-repurchase-share-changes-p001-003"
+      ]
+    },
+    {
+      "document_id": "1201917092",
+      "pipeline": "P04",
+      "selections": [
+        "vanke-repurchase-share-changes-p001-003"
+      ],
+      "source_scopes": [
+        [
+          1,
+          2,
+          3
+        ]
+      ],
+      "stages": {
+        "Native": "verified",
+        "Adapted": "verified",
+        "IR": "verified",
+        "Semantic": "verified",
+        "Final": "partial",
+        "Delivery": "partial"
+      },
+      "actual_selection_chain_count": 1,
+      "chains": [
+        "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P04/vanke-repurchase-share-changes-p001-003"
+      ]
+    },
+    {
+      "document_id": "1201917092",
+      "pipeline": "P05",
+      "selections": [
+        "vanke-repurchase-share-changes-p001-003"
+      ],
+      "source_scopes": [
+        [
+          1,
+          2,
+          3
+        ]
+      ],
+      "stages": {
+        "Native": "verified",
+        "Adapted": "verified",
+        "IR": "verified",
+        "Semantic": "verified",
+        "Final": "verified",
+        "Delivery": "verified"
+      },
+      "actual_selection_chain_count": 1,
+      "chains": [
+        "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P05/vanke-repurchase-share-changes-p001-003"
+      ]
+    },
+    {
+      "document_id": "1201917092",
+      "pipeline": "P06",
+      "selections": [
+        "vanke-repurchase-share-changes-p001-003"
+      ],
+      "source_scopes": [
+        [
+          1,
+          2,
+          3
+        ]
+      ],
+      "stages": {
+        "Native": "verified",
+        "Adapted": "verified",
+        "IR": "verified",
+        "Semantic": "verified",
+        "Final": "verified",
+        "Delivery": "partial"
+      },
+      "actual_selection_chain_count": 1,
+      "chains": [
+        "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P06/vanke-repurchase-share-changes-p001-003"
+      ]
+    },
+    {
+      "document_id": "1201917092",
+      "pipeline": "P07",
+      "selections": [
+        "vanke-repurchase-share-changes-p001-003"
+      ],
+      "source_scopes": [
+        [
+          1,
+          2,
+          3
+        ]
+      ],
+      "stages": {
+        "Native": "verified",
+        "Adapted": "verified",
+        "IR": "verified",
+        "Semantic": "verified",
+        "Final": "verified",
+        "Delivery": "partial"
+      },
+      "actual_selection_chain_count": 1,
+      "chains": [
+        "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P07/vanke-repurchase-share-changes-p001-003"
+      ]
+    },
+    {
+      "document_id": "1201917092",
+      "pipeline": "P08",
+      "selections": [
+        "vanke-repurchase-share-changes-p001-003"
+      ],
+      "source_scopes": [
+        [
+          1,
+          2,
+          3
+        ]
+      ],
+      "stages": {
+        "Native": "verified",
+        "Adapted": "verified",
+        "IR": "verified",
+        "Semantic": "verified",
+        "Final": "partial",
+        "Delivery": "partial"
+      },
+      "actual_selection_chain_count": 1,
+      "chains": [
+        "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P08/vanke-repurchase-share-changes-p001-003"
+      ]
+    },
+    {
+      "document_id": "1200694910",
+      "pipeline": "P01",
+      "selections": [
+        "zhenye-coupon-seals-p001-003"
+      ],
+      "source_scopes": [
+        [
+          1,
+          2,
+          3
+        ]
+      ],
+      "stages": {
+        "Native": "verified",
+        "Adapted": "verified",
+        "IR": "verified",
+        "Semantic": "not_applicable",
+        "Final": "partial",
+        "Delivery": "partial"
+      },
+      "actual_selection_chain_count": 1,
+      "chains": [
+        "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P01/zhenye-coupon-seals-p001-003"
+      ]
+    },
+    {
+      "document_id": "1200694910",
+      "pipeline": "P02",
+      "selections": [
+        "zhenye-coupon-seals-p001-003"
+      ],
+      "source_scopes": [
+        [
+          1,
+          2,
+          3
+        ]
+      ],
+      "stages": {
+        "Native": "verified",
+        "Adapted": "verified",
+        "IR": "verified",
+        "Semantic": "not_applicable",
+        "Final": "partial",
+        "Delivery": "partial"
+      },
+      "actual_selection_chain_count": 1,
+      "chains": [
+        "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P02/zhenye-coupon-seals-p001-003"
+      ]
+    },
+    {
+      "document_id": "1200694910",
+      "pipeline": "P03",
+      "selections": [
+        "zhenye-coupon-seals-p001-003"
+      ],
+      "source_scopes": [
+        [
+          1,
+          2,
+          3
+        ]
+      ],
+      "stages": {
+        "Native": "verified",
+        "Adapted": "verified",
+        "IR": "verified",
+        "Semantic": "not_applicable",
+        "Final": "partial",
+        "Delivery": "partial"
+      },
+      "actual_selection_chain_count": 1,
+      "chains": [
+        "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P03/zhenye-coupon-seals-p001-003"
+      ]
+    },
+    {
+      "document_id": "1200694910",
+      "pipeline": "P04",
+      "selections": [
+        "zhenye-coupon-seals-p001-003"
+      ],
+      "source_scopes": [
+        [
+          1,
+          2,
+          3
+        ]
+      ],
+      "stages": {
+        "Native": "verified",
+        "Adapted": "verified",
+        "IR": "verified",
+        "Semantic": "not_applicable",
+        "Final": "partial",
+        "Delivery": "partial"
+      },
+      "actual_selection_chain_count": 1,
+      "chains": [
+        "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P04/zhenye-coupon-seals-p001-003"
+      ]
+    },
+    {
+      "document_id": "1200694910",
+      "pipeline": "P05",
+      "selections": [
+        "zhenye-coupon-seals-p001-003"
+      ],
+      "source_scopes": [
+        [
+          1,
+          2,
+          3
+        ]
+      ],
+      "stages": {
+        "Native": "verified",
+        "Adapted": "verified",
+        "IR": "verified",
+        "Semantic": "not_applicable",
+        "Final": "partial",
+        "Delivery": "partial"
+      },
+      "actual_selection_chain_count": 1,
+      "chains": [
+        "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P05/zhenye-coupon-seals-p001-003"
+      ]
+    },
+    {
+      "document_id": "1200694910",
+      "pipeline": "P06",
+      "selections": [
+        "zhenye-coupon-seals-p001-003"
+      ],
+      "source_scopes": [
+        [
+          1,
+          2,
+          3
+        ]
+      ],
+      "stages": {
+        "Native": "verified",
+        "Adapted": "verified",
+        "IR": "verified",
+        "Semantic": "not_applicable",
+        "Final": "partial",
+        "Delivery": "partial"
+      },
+      "actual_selection_chain_count": 1,
+      "chains": [
+        "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P06/zhenye-coupon-seals-p001-003"
+      ]
+    },
+    {
+      "document_id": "1200694910",
+      "pipeline": "P07",
+      "selections": [
+        "zhenye-coupon-seals-p001-003"
+      ],
+      "source_scopes": [
+        [
+          1,
+          2,
+          3
+        ]
+      ],
+      "stages": {
+        "Native": "verified",
+        "Adapted": "verified",
+        "IR": "verified",
+        "Semantic": "not_applicable",
+        "Final": "partial",
+        "Delivery": "partial"
+      },
+      "actual_selection_chain_count": 1,
+      "chains": [
+        "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P07/zhenye-coupon-seals-p001-003"
+      ]
+    },
+    {
+      "document_id": "1200694910",
+      "pipeline": "P08",
+      "selections": [
+        "zhenye-coupon-seals-p001-003"
+      ],
+      "source_scopes": [
+        [
+          1,
+          2,
+          3
+        ]
+      ],
+      "stages": {
+        "Native": "verified",
+        "Adapted": "verified",
+        "IR": "verified",
+        "Semantic": "not_applicable",
+        "Final": "partial",
+        "Delivery": "partial"
+      },
+      "actual_selection_chain_count": 1,
+      "chains": [
+        "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P08/zhenye-coupon-seals-p001-003"
+      ]
+    },
+    {
+      "document_id": "complex-tencent-2025-bond-programme",
+      "pipeline": "P01",
+      "selections": [
+        "tencent-conditions-entity-payment-definitions-p108-114"
+      ],
+      "source_scopes": [
+        [
+          108,
+          109,
+          110,
+          111,
+          112,
+          113,
+          114
+        ]
+      ],
+      "stages": {
+        "Native": "verified",
+        "Adapted": "verified",
+        "IR": "verified",
+        "Semantic": "not_applicable",
+        "Final": "verified",
+        "Delivery": "verified"
+      },
+      "actual_selection_chain_count": 1,
+      "chains": [
+        "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P01/tencent-conditions-entity-payment-definitions-p108-114"
+      ]
+    },
+    {
+      "document_id": "complex-tencent-2025-bond-programme",
+      "pipeline": "P02",
+      "selections": [
+        "tencent-conditions-entity-payment-definitions-p108-114"
+      ],
+      "source_scopes": [
+        [
+          108,
+          109,
+          110,
+          111,
+          112,
+          113,
+          114
+        ]
+      ],
+      "stages": {
+        "Native": "verified",
+        "Adapted": "verified",
+        "IR": "verified",
+        "Semantic": "not_applicable",
+        "Final": "verified",
+        "Delivery": "verified"
+      },
+      "actual_selection_chain_count": 1,
+      "chains": [
+        "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P02/tencent-conditions-entity-payment-definitions-p108-114"
+      ]
+    },
+    {
+      "document_id": "complex-tencent-2025-bond-programme",
+      "pipeline": "P03",
+      "selections": [
+        "tencent-conditions-entity-payment-definitions-p108-114"
+      ],
+      "source_scopes": [
+        [
+          108,
+          109,
+          110,
+          111,
+          112,
+          113,
+          114
+        ]
+      ],
+      "stages": {
+        "Native": "verified",
+        "Adapted": "verified",
+        "IR": "verified",
+        "Semantic": "not_applicable",
+        "Final": "partial",
+        "Delivery": "partial"
+      },
+      "actual_selection_chain_count": 1,
+      "chains": [
+        "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P03/tencent-conditions-entity-payment-definitions-p108-114"
+      ]
+    },
+    {
+      "document_id": "complex-tencent-2025-bond-programme",
+      "pipeline": "P04",
+      "selections": [
+        "tencent-conditions-entity-payment-definitions-p108-114"
+      ],
+      "source_scopes": [
+        [
+          108,
+          109,
+          110,
+          111,
+          112,
+          113,
+          114
+        ]
+      ],
+      "stages": {
+        "Native": "verified",
+        "Adapted": "verified",
+        "IR": "verified",
+        "Semantic": "not_applicable",
+        "Final": "partial",
+        "Delivery": "partial"
+      },
+      "actual_selection_chain_count": 1,
+      "chains": [
+        "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P04/tencent-conditions-entity-payment-definitions-p108-114"
+      ]
+    },
+    {
+      "document_id": "complex-tencent-2025-bond-programme",
+      "pipeline": "P05",
+      "selections": [
+        "tencent-conditions-entity-payment-definitions-p108-114"
+      ],
+      "source_scopes": [
+        [
+          108,
+          109,
+          110,
+          111,
+          112,
+          113,
+          114
+        ]
+      ],
+      "stages": {
+        "Native": "verified",
+        "Adapted": "verified",
+        "IR": "verified",
+        "Semantic": "not_applicable",
+        "Final": "verified",
+        "Delivery": "verified"
+      },
+      "actual_selection_chain_count": 1,
+      "chains": [
+        "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P05/tencent-conditions-entity-payment-definitions-p108-114"
+      ]
+    },
+    {
+      "document_id": "complex-tencent-2025-bond-programme",
+      "pipeline": "P06",
+      "selections": [
+        "tencent-conditions-entity-payment-definitions-p108-114"
+      ],
+      "source_scopes": [
+        [
+          108,
+          109,
+          110,
+          111,
+          112,
+          113,
+          114
+        ]
+      ],
+      "stages": {
+        "Native": "verified",
+        "Adapted": "verified",
+        "IR": "verified",
+        "Semantic": "not_applicable",
+        "Final": "verified",
+        "Delivery": "verified"
+      },
+      "actual_selection_chain_count": 1,
+      "chains": [
+        "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P06/tencent-conditions-entity-payment-definitions-p108-114"
+      ]
+    },
+    {
+      "document_id": "complex-tencent-2025-bond-programme",
+      "pipeline": "P07",
+      "selections": [
+        "tencent-conditions-entity-payment-definitions-p108-114"
+      ],
+      "source_scopes": [
+        [
+          108,
+          109,
+          110,
+          111,
+          112,
+          113,
+          114
+        ]
+      ],
+      "stages": {
+        "Native": "verified",
+        "Adapted": "verified",
+        "IR": "verified",
+        "Semantic": "not_applicable",
+        "Final": "verified",
+        "Delivery": "verified"
+      },
+      "actual_selection_chain_count": 1,
+      "chains": [
+        "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P07/tencent-conditions-entity-payment-definitions-p108-114"
+      ]
+    },
+    {
+      "document_id": "complex-tencent-2025-bond-programme",
+      "pipeline": "P08",
+      "selections": [
+        "tencent-conditions-entity-payment-definitions-p108-114"
+      ],
+      "source_scopes": [
+        [
+          108,
+          109,
+          110,
+          111,
+          112,
+          113,
+          114
+        ]
+      ],
+      "stages": {
+        "Native": "verified",
+        "Adapted": "verified",
+        "IR": "verified",
+        "Semantic": "not_applicable",
+        "Final": "partial",
+        "Delivery": "partial"
+      },
+      "actual_selection_chain_count": 1,
+      "chains": [
+        "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P08/tencent-conditions-entity-payment-definitions-p108-114"
+      ]
+    },
+    {
+      "document_id": "complex-huawei-2024-annual",
+      "pipeline": "P01",
+      "selections": [
+        "huawei-statements-p068-070",
+        "huawei-management-toc-p014"
+      ],
+      "source_scopes": [
+        [
+          68,
+          69,
+          70
+        ],
+        [
+          14
+        ]
+      ],
+      "stages": {
+        "Native": "verified",
+        "Adapted": "verified",
+        "IR": "verified",
+        "Semantic": "partial",
+        "Final": "partial",
+        "Delivery": "partial"
+      },
+      "actual_selection_chain_count": 2,
+      "chains": [
+        "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P01/huawei-statements-p068-070",
+        "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P01/huawei-management-toc-p014"
+      ]
+    },
+    {
+      "document_id": "complex-huawei-2024-annual",
+      "pipeline": "P02",
+      "selections": [
+        "huawei-statements-p068-070",
+        "huawei-management-toc-p014"
+      ],
+      "source_scopes": [
+        [
+          68,
+          69,
+          70
+        ],
+        [
+          14
+        ]
+      ],
+      "stages": {
+        "Native": "verified",
+        "Adapted": "verified",
+        "IR": "verified",
+        "Semantic": "partial",
+        "Final": "partial",
+        "Delivery": "partial"
+      },
+      "actual_selection_chain_count": 2,
+      "chains": [
+        "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P02/huawei-statements-p068-070",
+        "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P02/huawei-management-toc-p014"
+      ]
+    },
+    {
+      "document_id": "complex-huawei-2024-annual",
+      "pipeline": "P03",
+      "selections": [
+        "huawei-statements-p068-070",
+        "huawei-management-toc-p014"
+      ],
+      "source_scopes": [
+        [
+          68,
+          69,
+          70
+        ],
+        [
+          14
+        ]
+      ],
+      "stages": {
+        "Native": "verified",
+        "Adapted": "verified",
+        "IR": "verified",
+        "Semantic": "verified",
+        "Final": "partial",
+        "Delivery": "partial"
+      },
+      "actual_selection_chain_count": 2,
+      "chains": [
+        "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P03/huawei-statements-p068-070",
+        "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P03/huawei-management-toc-p014"
+      ]
+    },
+    {
+      "document_id": "complex-huawei-2024-annual",
+      "pipeline": "P04",
+      "selections": [
+        "huawei-statements-p068-070",
+        "huawei-management-toc-p014"
+      ],
+      "source_scopes": [
+        [
+          68,
+          69,
+          70
+        ],
+        [
+          14
+        ]
+      ],
+      "stages": {
+        "Native": "verified",
+        "Adapted": "verified",
+        "IR": "verified",
+        "Semantic": "verified",
+        "Final": "partial",
+        "Delivery": "partial"
+      },
+      "actual_selection_chain_count": 2,
+      "chains": [
+        "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P04/huawei-statements-p068-070",
+        "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P04/huawei-management-toc-p014"
+      ]
+    },
+    {
+      "document_id": "complex-huawei-2024-annual",
+      "pipeline": "P05",
+      "selections": [
+        "huawei-statements-p068-070",
+        "huawei-management-toc-p014"
+      ],
+      "source_scopes": [
+        [
+          68,
+          69,
+          70
+        ],
+        [
+          14
+        ]
+      ],
+      "stages": {
+        "Native": "verified",
+        "Adapted": "verified",
+        "IR": "verified",
+        "Semantic": "verified",
+        "Final": "partial",
+        "Delivery": "partial"
+      },
+      "actual_selection_chain_count": 2,
+      "chains": [
+        "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P05/huawei-statements-p068-070",
+        "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P05/huawei-management-toc-p014"
+      ]
+    },
+    {
+      "document_id": "complex-huawei-2024-annual",
+      "pipeline": "P06",
+      "selections": [
+        "huawei-statements-p068-070",
+        "huawei-management-toc-p014"
+      ],
+      "source_scopes": [
+        [
+          68,
+          69,
+          70
+        ],
+        [
+          14
+        ]
+      ],
+      "stages": {
+        "Native": "verified",
+        "Adapted": "verified",
+        "IR": "verified",
+        "Semantic": "verified",
+        "Final": "partial",
+        "Delivery": "partial"
+      },
+      "actual_selection_chain_count": 2,
+      "chains": [
+        "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P06/huawei-statements-p068-070",
+        "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P06/huawei-management-toc-p014"
+      ]
+    },
+    {
+      "document_id": "complex-huawei-2024-annual",
+      "pipeline": "P07",
+      "selections": [
+        "huawei-statements-p068-070",
+        "huawei-management-toc-p014"
+      ],
+      "source_scopes": [
+        [
+          68,
+          69,
+          70
+        ],
+        [
+          14
+        ]
+      ],
+      "stages": {
+        "Native": "verified",
+        "Adapted": "verified",
+        "IR": "verified",
+        "Semantic": "verified",
+        "Final": "partial",
+        "Delivery": "partial"
+      },
+      "actual_selection_chain_count": 2,
+      "chains": [
+        "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P07/huawei-statements-p068-070",
+        "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P07/huawei-management-toc-p014"
+      ]
+    },
+    {
+      "document_id": "complex-huawei-2024-annual",
+      "pipeline": "P08",
+      "selections": [
+        "huawei-statements-p068-070",
+        "huawei-management-toc-p014"
+      ],
+      "source_scopes": [
+        [
+          68,
+          69,
+          70
+        ],
+        [
+          14
+        ]
+      ],
+      "stages": {
+        "Native": "verified",
+        "Adapted": "verified",
+        "IR": "verified",
+        "Semantic": "verified",
+        "Final": "partial",
+        "Delivery": "partial"
+      },
+      "actual_selection_chain_count": 2,
+      "chains": [
+        "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P08/huawei-statements-p068-070",
+        "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P08/huawei-management-toc-p014"
+      ]
+    },
+    {
+      "document_id": "complex-huaweitech-2024-096",
+      "pipeline": "P01",
+      "selections": [
+        "huaweitech-editorial-spread-p002"
+      ],
+      "source_scopes": [
+        [
+          2
+        ]
+      ],
+      "stages": {
+        "Native": "verified",
+        "Adapted": "verified",
+        "IR": "verified",
+        "Semantic": "not_applicable",
+        "Final": "verified",
+        "Delivery": "partial"
+      },
+      "actual_selection_chain_count": 1,
+      "chains": [
+        "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P01/huaweitech-editorial-spread-p002"
+      ]
+    },
+    {
+      "document_id": "complex-huaweitech-2024-096",
+      "pipeline": "P02",
+      "selections": [
+        "huaweitech-editorial-spread-p002"
+      ],
+      "source_scopes": [
+        [
+          2
+        ]
+      ],
+      "stages": {
+        "Native": "verified",
+        "Adapted": "verified",
+        "IR": "verified",
+        "Semantic": "not_applicable",
+        "Final": "verified",
+        "Delivery": "partial"
+      },
+      "actual_selection_chain_count": 1,
+      "chains": [
+        "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P02/huaweitech-editorial-spread-p002"
+      ]
+    },
+    {
+      "document_id": "complex-huaweitech-2024-096",
+      "pipeline": "P03",
+      "selections": [
+        "huaweitech-editorial-spread-p002"
+      ],
+      "source_scopes": [
+        [
+          2
+        ]
+      ],
+      "stages": {
+        "Native": "verified",
+        "Adapted": "verified",
+        "IR": "verified",
+        "Semantic": "not_applicable",
+        "Final": "partial",
+        "Delivery": "partial"
+      },
+      "actual_selection_chain_count": 1,
+      "chains": [
+        "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P03/huaweitech-editorial-spread-p002"
+      ]
+    },
+    {
+      "document_id": "complex-huaweitech-2024-096",
+      "pipeline": "P04",
+      "selections": [
+        "huaweitech-editorial-spread-p002"
+      ],
+      "source_scopes": [
+        [
+          2
+        ]
+      ],
+      "stages": {
+        "Native": "verified",
+        "Adapted": "verified",
+        "IR": "verified",
+        "Semantic": "not_applicable",
+        "Final": "partial",
+        "Delivery": "partial"
+      },
+      "actual_selection_chain_count": 1,
+      "chains": [
+        "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P04/huaweitech-editorial-spread-p002"
+      ]
+    },
+    {
+      "document_id": "complex-huaweitech-2024-096",
+      "pipeline": "P05",
+      "selections": [
+        "huaweitech-editorial-spread-p002"
+      ],
+      "source_scopes": [
+        [
+          2
+        ]
+      ],
+      "stages": {
+        "Native": "verified",
+        "Adapted": "verified",
+        "IR": "verified",
+        "Semantic": "not_applicable",
+        "Final": "verified",
+        "Delivery": "partial"
+      },
+      "actual_selection_chain_count": 1,
+      "chains": [
+        "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P05/huaweitech-editorial-spread-p002"
+      ]
+    },
+    {
+      "document_id": "complex-huaweitech-2024-096",
+      "pipeline": "P06",
+      "selections": [
+        "huaweitech-editorial-spread-p002"
+      ],
+      "source_scopes": [
+        [
+          2
+        ]
+      ],
+      "stages": {
+        "Native": "verified",
+        "Adapted": "verified",
+        "IR": "verified",
+        "Semantic": "not_applicable",
+        "Final": "verified",
+        "Delivery": "partial"
+      },
+      "actual_selection_chain_count": 1,
+      "chains": [
+        "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P06/huaweitech-editorial-spread-p002"
+      ]
+    },
+    {
+      "document_id": "complex-huaweitech-2024-096",
+      "pipeline": "P07",
+      "selections": [
+        "huaweitech-editorial-spread-p002"
+      ],
+      "source_scopes": [
+        [
+          2
+        ]
+      ],
+      "stages": {
+        "Native": "verified",
+        "Adapted": "verified",
+        "IR": "verified",
+        "Semantic": "not_applicable",
+        "Final": "verified",
+        "Delivery": "partial"
+      },
+      "actual_selection_chain_count": 1,
+      "chains": [
+        "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P07/huaweitech-editorial-spread-p002"
+      ]
+    },
+    {
+      "document_id": "complex-huaweitech-2024-096",
+      "pipeline": "P08",
+      "selections": [
+        "huaweitech-editorial-spread-p002"
+      ],
+      "source_scopes": [
+        [
+          2
+        ]
+      ],
+      "stages": {
+        "Native": "verified",
+        "Adapted": "verified",
+        "IR": "verified",
+        "Semantic": "not_applicable",
+        "Final": "partial",
+        "Delivery": "partial"
+      },
+      "actual_selection_chain_count": 1,
+      "chains": [
+        "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P08/huaweitech-editorial-spread-p002"
+      ]
+    },
+    {
+      "document_id": "1200454112",
+      "pipeline": "P01",
+      "selections": [
+        "spdb-cover-declaration-p001-002"
+      ],
+      "source_scopes": [
+        [
+          1,
+          2
+        ]
+      ],
+      "stages": {
+        "Native": "verified",
+        "Adapted": "verified",
+        "IR": "verified",
+        "Semantic": "not_applicable",
+        "Final": "partial",
+        "Delivery": "partial"
+      },
+      "actual_selection_chain_count": 1,
+      "chains": [
+        "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P01/spdb-cover-declaration-p001-002"
+      ]
+    },
+    {
+      "document_id": "1200454112",
+      "pipeline": "P02",
+      "selections": [
+        "spdb-cover-declaration-p001-002"
+      ],
+      "source_scopes": [
+        [
+          1,
+          2
+        ]
+      ],
+      "stages": {
+        "Native": "verified",
+        "Adapted": "verified",
+        "IR": "verified",
+        "Semantic": "not_applicable",
+        "Final": "partial",
+        "Delivery": "partial"
+      },
+      "actual_selection_chain_count": 1,
+      "chains": [
+        "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P02/spdb-cover-declaration-p001-002"
+      ]
+    },
+    {
+      "document_id": "1200454112",
+      "pipeline": "P03",
+      "selections": [
+        "spdb-cover-declaration-p001-002"
+      ],
+      "source_scopes": [
+        [
+          1,
+          2
+        ]
+      ],
+      "stages": {
+        "Native": "verified",
+        "Adapted": "verified",
+        "IR": "verified",
+        "Semantic": "not_applicable",
+        "Final": "partial",
+        "Delivery": "partial"
+      },
+      "actual_selection_chain_count": 1,
+      "chains": [
+        "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P03/spdb-cover-declaration-p001-002"
+      ]
+    },
+    {
+      "document_id": "1200454112",
+      "pipeline": "P04",
+      "selections": [
+        "spdb-cover-declaration-p001-002"
+      ],
+      "source_scopes": [
+        [
+          1,
+          2
+        ]
+      ],
+      "stages": {
+        "Native": "verified",
+        "Adapted": "verified",
+        "IR": "verified",
+        "Semantic": "not_applicable",
+        "Final": "partial",
+        "Delivery": "partial"
+      },
+      "actual_selection_chain_count": 1,
+      "chains": [
+        "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P04/spdb-cover-declaration-p001-002"
+      ]
+    },
+    {
+      "document_id": "1200454112",
+      "pipeline": "P05",
+      "selections": [
+        "spdb-cover-declaration-p001-002"
+      ],
+      "source_scopes": [
+        [
+          1,
+          2
+        ]
+      ],
+      "stages": {
+        "Native": "verified",
+        "Adapted": "verified",
+        "IR": "verified",
+        "Semantic": "not_applicable",
+        "Final": "partial",
+        "Delivery": "partial"
+      },
+      "actual_selection_chain_count": 1,
+      "chains": [
+        "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P05/spdb-cover-declaration-p001-002"
+      ]
+    },
+    {
+      "document_id": "1200454112",
+      "pipeline": "P06",
+      "selections": [
+        "spdb-cover-declaration-p001-002"
+      ],
+      "source_scopes": [
+        [
+          1,
+          2
+        ]
+      ],
+      "stages": {
+        "Native": "verified",
+        "Adapted": "verified",
+        "IR": "verified",
+        "Semantic": "not_applicable",
+        "Final": "partial",
+        "Delivery": "partial"
+      },
+      "actual_selection_chain_count": 1,
+      "chains": [
+        "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P06/spdb-cover-declaration-p001-002"
+      ]
+    },
+    {
+      "document_id": "1200454112",
+      "pipeline": "P07",
+      "selections": [
+        "spdb-cover-declaration-p001-002"
+      ],
+      "source_scopes": [
+        [
+          1,
+          2
+        ]
+      ],
+      "stages": {
+        "Native": "verified",
+        "Adapted": "verified",
+        "IR": "verified",
+        "Semantic": "not_applicable",
+        "Final": "partial",
+        "Delivery": "partial"
+      },
+      "actual_selection_chain_count": 1,
+      "chains": [
+        "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P07/spdb-cover-declaration-p001-002"
+      ]
+    },
+    {
+      "document_id": "1200454112",
+      "pipeline": "P08",
+      "selections": [
+        "spdb-cover-declaration-p001-002"
+      ],
+      "source_scopes": [
+        [
+          1,
+          2
+        ]
+      ],
+      "stages": {
+        "Native": "verified",
+        "Adapted": "verified",
+        "IR": "verified",
+        "Semantic": "not_applicable",
+        "Final": "partial",
+        "Delivery": "partial"
+      },
+      "actual_selection_chain_count": 1,
+      "chains": [
+        "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P08/spdb-cover-declaration-p001-002"
+      ]
+    },
+    {
+      "document_id": "1200694562",
+      "pipeline": "P01",
+      "selections": [
+        "pingan-financials-p001-004"
+      ],
+      "source_scopes": [
+        [
+          1,
+          2,
+          3,
+          4
+        ]
+      ],
+      "stages": {
+        "Native": "verified",
+        "Adapted": "verified",
+        "IR": "verified",
+        "Semantic": "partial",
+        "Final": "partial",
+        "Delivery": "partial"
+      },
+      "actual_selection_chain_count": 1,
+      "chains": [
+        "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P01/pingan-financials-p001-004"
+      ]
+    },
+    {
+      "document_id": "1200694562",
+      "pipeline": "P02",
+      "selections": [
+        "pingan-financials-p001-004"
+      ],
+      "source_scopes": [
+        [
+          1,
+          2,
+          3,
+          4
+        ]
+      ],
+      "stages": {
+        "Native": "verified",
+        "Adapted": "verified",
+        "IR": "verified",
+        "Semantic": "partial",
+        "Final": "partial",
+        "Delivery": "partial"
+      },
+      "actual_selection_chain_count": 1,
+      "chains": [
+        "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P02/pingan-financials-p001-004"
+      ]
+    },
+    {
+      "document_id": "1200694562",
+      "pipeline": "P03",
+      "selections": [
+        "pingan-financials-p001-004"
+      ],
+      "source_scopes": [
+        [
+          1,
+          2,
+          3,
+          4
+        ]
+      ],
+      "stages": {
+        "Native": "verified",
+        "Adapted": "verified",
+        "IR": "verified",
+        "Semantic": "partial",
+        "Final": "partial",
+        "Delivery": "partial"
+      },
+      "actual_selection_chain_count": 1,
+      "chains": [
+        "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P03/pingan-financials-p001-004"
+      ]
+    },
+    {
+      "document_id": "1200694562",
+      "pipeline": "P04",
+      "selections": [
+        "pingan-financials-p001-004"
+      ],
+      "source_scopes": [
+        [
+          1,
+          2,
+          3,
+          4
+        ]
+      ],
+      "stages": {
+        "Native": "verified",
+        "Adapted": "verified",
+        "IR": "verified",
+        "Semantic": "partial",
+        "Final": "partial",
+        "Delivery": "partial"
+      },
+      "actual_selection_chain_count": 1,
+      "chains": [
+        "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P04/pingan-financials-p001-004"
+      ]
+    },
+    {
+      "document_id": "1200694562",
+      "pipeline": "P05",
+      "selections": [
+        "pingan-financials-p001-004"
+      ],
+      "source_scopes": [
+        [
+          1,
+          2,
+          3,
+          4
+        ]
+      ],
+      "stages": {
+        "Native": "verified",
+        "Adapted": "verified",
+        "IR": "verified",
+        "Semantic": "partial",
+        "Final": "partial",
+        "Delivery": "partial"
+      },
+      "actual_selection_chain_count": 1,
+      "chains": [
+        "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P05/pingan-financials-p001-004"
+      ]
+    },
+    {
+      "document_id": "1200694562",
+      "pipeline": "P06",
+      "selections": [
+        "pingan-financials-p001-004"
+      ],
+      "source_scopes": [
+        [
+          1,
+          2,
+          3,
+          4
+        ]
+      ],
+      "stages": {
+        "Native": "verified",
+        "Adapted": "verified",
+        "IR": "verified",
+        "Semantic": "partial",
+        "Final": "partial",
+        "Delivery": "partial"
+      },
+      "actual_selection_chain_count": 1,
+      "chains": [
+        "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P06/pingan-financials-p001-004"
+      ]
+    },
+    {
+      "document_id": "1200694562",
+      "pipeline": "P07",
+      "selections": [
+        "pingan-financials-p001-004"
+      ],
+      "source_scopes": [
+        [
+          1,
+          2,
+          3,
+          4
+        ]
+      ],
+      "stages": {
+        "Native": "verified",
+        "Adapted": "verified",
+        "IR": "verified",
+        "Semantic": "partial",
+        "Final": "partial",
+        "Delivery": "partial"
+      },
+      "actual_selection_chain_count": 1,
+      "chains": [
+        "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P07/pingan-financials-p001-004"
+      ]
+    },
+    {
+      "document_id": "1200694562",
+      "pipeline": "P08",
+      "selections": [
+        "pingan-financials-p001-004"
+      ],
+      "source_scopes": [
+        [
+          1,
+          2,
+          3,
+          4
+        ]
+      ],
+      "stages": {
+        "Native": "verified",
+        "Adapted": "verified",
+        "IR": "verified",
+        "Semantic": "partial",
+        "Final": "partial",
+        "Delivery": "partial"
+      },
+      "actual_selection_chain_count": 1,
+      "chains": [
+        "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P08/pingan-financials-p001-004"
+      ]
+    }
+  ],
+  "semantic_not_applicable_reason": "semantic callback executed but no native table candidates exist; no table-semantic responsibility, not not_executed",
+  "source_stages": "source_pages/native_pages callbacks captured with applicability false; no source processing executed"
+}

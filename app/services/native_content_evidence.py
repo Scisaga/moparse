@@ -551,6 +551,13 @@ def validate_table_relations(result):
     categories or infer business facts from values appearing in Markdown.
     """
     from app.models.table_semantics import CellRef, TextRef
+    from app.services.table_context_service import scalar
+    from app.services.table_semantics_service import (
+        _RATIO_HEADER,
+        _REFERENCE_HEADER,
+        _per_share_currency,
+    )
+    from app.utils.measurement import unit_applicable
 
     validate_native_content(result)
     fragments = {f.fragment_id: f for f in result._table_fragments}
@@ -627,9 +634,17 @@ def validate_table_relations(result):
                         if marker and any(re.search(r'(?:\^\s*\{?|<sup>)' + re.escape(marker[1]) + r'(?:\}|</sup>|\b)', registry[r].text)
                                           for r in (relation.value, *relation.row_headers)):
                             _require(ref in relation.note_refs, 'source note was detached from marked record')
-                    elif ref.kind == 'unit' and not relation.unit_refs and re.fullmatch(r'[+\-−]?[\d,.]+', cell.text.strip()):
-                        header_text = ' '.join(registry[r].text for r in relation.column_headers)
-                        if not re.search(r'%|％|‰|比例|比率|同比|增减率|占|佔|ratio|rate|Notes?|序号|编号|代码', header_text, re.I):
+                    # Use the bounded scalar grammar used for unit assignment:
+                    # malformed literals stay literal, and parentheses retain
+                    # the same unit responsibility as other numeric amounts.
+                    elif (ref.kind == 'unit' and not relation.unit_refs and scalar(cell.text)
+                          and not re.search(r'[%％‰]', cell.text)):
+                        columns = [registry[r].text for r in relation.column_headers]
+                        rows = [registry[r].text for r in relation.row_headers]
+                        if (not any(_REFERENCE_HEADER.fullmatch(t.strip().rstrip(':：')) for t in columns)
+                                and not any(_RATIO_HEADER.search(t) for t in columns)
+                                and not _per_share_currency(rows, cell.text)
+                                and unit_applicable(ref.text, columns, rows)):
                             _require(False, 'applicable source unit was detached')
                 checked.append({'value': relation.value.token, 'record_row': record.source_row,
                                 'row_headers': [r.token for r in relation.row_headers],

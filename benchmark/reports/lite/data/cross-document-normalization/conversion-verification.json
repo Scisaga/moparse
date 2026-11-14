@@ -1,0 +1,925 @@
+{
+  "purpose": "phase12 full fixed-scope engineering verification; not parsing or product quality acceptance",
+  "software_id": "f8bcef05feaa4406189d395219a4db50afb8cc9446600ee11adce7fb403e0f1f",
+  "totals": {
+    "documents": 8,
+    "selections": 9,
+    "document_pipeline_pairs": 64,
+    "selection_pipeline_records": 72,
+    "native_inventory_objects": 12769,
+    "objects_by_kind": {
+      "container": 101,
+      "content": 2320,
+      "picture": 144,
+      "media": 170,
+      "metadata": 2911,
+      "table": 104,
+      "cell": 7019
+    },
+    "destinations": {
+      "immutable_native_audit": 2689,
+      "retained": 2210,
+      "unresolved_media_delivery": 144,
+      "unverified_not_delivered": 170,
+      "consumed": 306,
+      "preserved_in_audit": 12,
+      "converted": 67,
+      "located_in_final": 6348,
+      "empty_literal_not_filled": 671,
+      "unresolved_native_node_without_text": 17,
+      "unresolved_retained": 71,
+      "explicitly_excluded_furniture": 64
+    },
+    "native_object_changes": {
+      "retained": 10232,
+      "normalized": 2004,
+      "unresolved": 402,
+      "transformed": 67,
+      "excluded": 64
+    },
+    "inferred_value_relations": 4373,
+    "source_bound_qualifier_references": 6160,
+    "duplicate_value_records": 0,
+    "unmapped_native_objects": 0,
+    "earliest_representation_stages": {
+      "adapted": 1696,
+      "final": 117,
+      "unknown": 29,
+      "semantic": 499
+    },
+    "earliest_representation_unknown_objects": 29,
+    "states": {
+      "original_execution": {
+        "completed": 72
+      },
+      "readback": {
+        "read": 72
+      },
+      "conversion": {
+        "completed": 22,
+        "partial": 50
+      },
+      "delivery": {
+        "partial": 63,
+        "completed": 9
+      }
+    },
+    "warning_counts": {
+      "saved_native_media_unverified": 170,
+      "native_reading_order_unverified": 400,
+      "native_group_semantics_unknown": 52,
+      "unsupported_native_role": 34,
+      "table_semantics_incomplete": 10,
+      "native_polygon_unresolved": 4
+    },
+    "partial_reason_counts": {
+      "native_media_not_delivered": 170,
+      "native_reading_order_unverified": 921,
+      "native_content_projection_incomplete": 34,
+      "unsupported_native_role": 34,
+      "table_semantics_incomplete": 37,
+      "native_table_continuation_unresolved": 6
+    },
+    "storage_consistency_records": 72,
+    "exact_stage_edit_transitions": 504,
+    "final_attribution_statuses": {
+      "verified": 72
+    },
+    "batch1": {
+      "selection_records": 16,
+      "unique_document_pipeline_pairs": 16,
+      "states": {
+        "original_execution": {
+          "completed": 16
+        },
+        "readback": {
+          "read": 16
+        },
+        "conversion": {
+          "completed": 5,
+          "partial": 11
+        },
+        "delivery": {
+          "completed": 5,
+          "partial": 11
+        }
+      },
+      "native_objects": 6753
+    },
+    "batch2": {
+      "selection_records": 56,
+      "unique_document_pipeline_pairs": 48,
+      "states": {
+        "original_execution": {
+          "completed": 56
+        },
+        "readback": {
+          "read": 56
+        },
+        "conversion": {
+          "completed": 17,
+          "partial": 39
+        },
+        "delivery": {
+          "partial": 52,
+          "completed": 4
+        }
+      },
+      "native_objects": 6016
+    },
+    "peak_conversion_rss_bytes": 838488064,
+    "source_only_test_modules": 169,
+    "source_only_test_cases": 4282,
+    "source_only_collected_cases": 4282,
+    "test_boundary_violations": 0
+  },
+  "source_only": {
+    "record": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/source-only-complete.json",
+    "sha256": "1a49c75e668e64987a54f8346ea6fb61a90919a2367b95635e02bf98d23adcb7",
+    "test_manifest_sha256": "8868d3233fc65b31a08096e6a0dec2c12dde2b6f6a76163178c67abd38d30628",
+    "executed_modules": [
+      "tests/unit/test_action_source_audit_integration.py",
+      "tests/unit/test_active_aspect_requirements.py",
+      "tests/unit/test_atomic_scalar_label_responsibility.py",
+      "tests/unit/test_authorized_source_inventory.py",
+      "tests/unit/test_business_capacity_oracle.py",
+      "tests/unit/test_business_correspondence.py",
+      "tests/unit/test_business_label_equivalence.py",
+      "tests/unit/test_cjk_assertion_production.py",
+      "tests/unit/test_cjk_circumstance_contract.py",
+      "tests/unit/test_cjk_measurement_requirements.py",
+      "tests/unit/test_cjk_narrative_requirements.py",
+      "tests/unit/test_cjk_period_identity_production.py",
+      "tests/unit/test_collection_declaration_ownership.py",
+      "tests/unit/test_compact_multichange_production.py",
+      "tests/unit/test_compact_qualifier_sources.py",
+      "tests/unit/test_compact_requirements.py",
+      "tests/unit/test_complete_period_labels.py",
+      "tests/unit/test_compositional_layer_integration.py",
+      "tests/unit/test_context_evidence.py",
+      "tests/unit/test_cross_fragment_source_ownership.py",
+      "tests/unit/test_deferred_input_scope.py",
+      "tests/unit/test_directed_series_graph_sources.py",
+      "tests/unit/test_directory_literal_page_responsibility.py",
+      "tests/unit/test_document_ast_comparison.py",
+      "tests/unit/test_document_composition_requirements.py",
+      "tests/unit/test_document_numeric_roles.py",
+      "tests/unit/test_document_scope_ownership.py",
+      "tests/unit/test_entity_requirements.py",
+      "tests/unit/test_enumeration_context.py",
+      "tests/unit/test_equivalence_report_contract.py",
+      "tests/unit/test_expected_inline_source_transport.py",
+      "tests/unit/test_expected_syntax_selection.py",
+      "tests/unit/test_explicit_reference_requirements.py",
+      "tests/unit/test_field_sequence_requirements.py",
+      "tests/unit/test_final_content_service.py",
+      "tests/unit/test_financial_attribution_context.py",
+      "tests/unit/test_financial_cause_source_closure.py",
+      "tests/unit/test_financial_following_cause.py",
+      "tests/unit/test_financial_group_context.py",
+      "tests/unit/test_financial_sequence_semantic_closure.py",
+      "tests/unit/test_fixed_source_oracle.py",
+      "tests/unit/test_formal_requirement_source_binding.py",
+      "tests/unit/test_fronted_nominal_context.py",
+      "tests/unit/test_header_path_requirements.py",
+      "tests/unit/test_infinitival_source_semantics.py",
+      "tests/unit/test_information_context.py",
+      "tests/unit/test_literal_qualifier_labels.py",
+      "tests/unit/test_matrix_date_axis_contract.py",
+      "tests/unit/test_matrix_evidence.py",
+      "tests/unit/test_measurement_evidence.py",
+      "tests/unit/test_measurement_reader_drift.py",
+      "tests/unit/test_mixed_statement_responsibility.py",
+      "tests/unit/test_moparse_eval_native_readback.py",
+      "tests/unit/test_moparse_eval_score_admission.py",
+      "tests/unit/test_moparse_eval_scoring.py",
+      "tests/unit/test_moparse_eval_scoring_freeze.py",
+      "tests/unit/test_moparse_eval_table_readback_repairs.py",
+      "tests/unit/test_narrative_emission_boundaries.py",
+      "tests/unit/test_narrative_enumeration_sources.py",
+      "tests/unit/test_narrative_nominal_composition.py",
+      "tests/unit/test_narrative_requirements.py",
+      "tests/unit/test_narrative_subject_responsibility.py",
+      "tests/unit/test_narrative_temporal_scope.py",
+      "tests/unit/test_nested_content_responsibility.py",
+      "tests/unit/test_nested_nominal_production_path.py",
+      "tests/unit/test_nonfinite_operation_production.py",
+      "tests/unit/test_p01_saved_content.py",
+      "tests/unit/test_period_basis_equivalence.py",
+      "tests/unit/test_proposition_coordination_sources.py",
+      "tests/unit/test_proposition_nominal_owner.py",
+      "tests/unit/test_proposition_semantic_coverage_guard.py",
+      "tests/unit/test_prose_field_context.py",
+      "tests/unit/test_prose_modal_source_bindings.py",
+      "tests/unit/test_prose_multi_clause_contract.py",
+      "tests/unit/test_prose_requirements.py",
+      "tests/unit/test_quoted_nominal_requirements.py",
+      "tests/unit/test_quoted_sentence_boundary.py",
+      "tests/unit/test_ratio_unit_readback.py",
+      "tests/unit/test_reader_qualifier_source_closure.py",
+      "tests/unit/test_represented_feature_production.py",
+      "tests/unit/test_represented_feature_source_guard_audit.py",
+      "tests/unit/test_requirement_ast_comparator.py",
+      "tests/unit/test_requirement_equivalence_contract.py",
+      "tests/unit/test_requirement_gate_evidence.py",
+      "tests/unit/test_requirement_graph_contract.py",
+      "tests/unit/test_requirement_graph_disposition_shapes.py",
+      "tests/unit/test_requirement_graph_enumeration_scope.py",
+      "tests/unit/test_requirement_graph_fronted_contexts.py",
+      "tests/unit/test_requirement_graph_late_scope.py",
+      "tests/unit/test_requirement_graph_logical_scope.py",
+      "tests/unit/test_requirement_graph_quoted_nominals.py",
+      "tests/unit/test_requirement_graph_semantic_sources.py",
+      "tests/unit/test_requirement_graph_source_coverage.py",
+      "tests/unit/test_requirement_source_parallel_compile.py",
+      "tests/unit/test_scalar_evidence.py",
+      "tests/unit/test_scope_correspondence.py",
+      "tests/unit/test_scoring_evidence.py",
+      "tests/unit/test_semantic_positive_responsibility.py",
+      "tests/unit/test_semantic_transport_contract.py",
+      "tests/unit/test_series_attribution_parent.py",
+      "tests/unit/test_series_directed_changes.py",
+      "tests/unit/test_series_explicit_positions.py",
+      "tests/unit/test_series_requirements.py",
+      "tests/unit/test_series_routing_boundaries.py",
+      "tests/unit/test_series_source_contract.py",
+      "tests/unit/test_service_object_ledger.py",
+      "tests/unit/test_service_replay_eight_pipelines.py",
+      "tests/unit/test_service_stages.py",
+      "tests/unit/test_shared_equivalence.py",
+      "tests/unit/test_shared_equivalence_formats.py",
+      "tests/unit/test_shared_equivalence_records.py",
+      "tests/unit/test_shared_modifier_production.py",
+      "tests/unit/test_short_currency_scale.py",
+      "tests/unit/test_source_obligation_deferred_boundaries.py",
+      "tests/unit/test_source_obligation_heading_scopes.py",
+      "tests/unit/test_source_obligation_metadata_boundaries.py",
+      "tests/unit/test_source_obligation_nominal_tail_scope.py",
+      "tests/unit/test_source_obligation_oracle.py",
+      "tests/unit/test_source_obligation_raw_binding.py",
+      "tests/unit/test_source_obligation_raw_table_scope.py",
+      "tests/unit/test_source_obligation_toc_ownership.py",
+      "tests/unit/test_source_obligation_typed_contract.py",
+      "tests/unit/test_source_obligation_unsupported_modifiers.py",
+      "tests/unit/test_stage4_source_contracts.py",
+      "tests/unit/test_table_semantics_entrypoints.py",
+      "tests/unit/test_text_projection.py",
+      "tests/unit/test_three_layer_audit_regressions.py",
+      "tests/unit/test_three_layer_calendar_contract.py",
+      "tests/unit/test_three_layer_description_contract.py",
+      "tests/unit/test_three_layer_explicit_reference_contract.py",
+      "tests/unit/test_three_layer_explicit_units.py",
+      "tests/unit/test_three_layer_extra_numeric_contract.py",
+      "tests/unit/test_three_layer_fiscal_series_contract.py",
+      "tests/unit/test_three_layer_flat_headings.py",
+      "tests/unit/test_three_layer_header_paths.py",
+      "tests/unit/test_three_layer_independent.py",
+      "tests/unit/test_three_layer_list_item_boundaries.py",
+      "tests/unit/test_three_layer_matrix_contract.py",
+      "tests/unit/test_three_layer_matrix_raw_spans.py",
+      "tests/unit/test_three_layer_measurement_contract.py",
+      "tests/unit/test_three_layer_measurement_projection.py",
+      "tests/unit/test_three_layer_narrative_integration.py",
+      "tests/unit/test_three_layer_native_formats.py",
+      "tests/unit/test_three_layer_orchestration.py",
+      "tests/unit/test_three_layer_parent_metric_contract.py",
+      "tests/unit/test_three_layer_preamble_contract.py",
+      "tests/unit/test_three_layer_prefixed_sequence_contract.py",
+      "tests/unit/test_three_layer_proposition_boundaries.py",
+      "tests/unit/test_three_layer_prose_contract.py",
+      "tests/unit/test_three_layer_prose_integration.py",
+      "tests/unit/test_three_layer_prose_source_spans.py",
+      "tests/unit/test_three_layer_relation_binding.py",
+      "tests/unit/test_three_layer_report.py",
+      "tests/unit/test_three_layer_scope_context.py",
+      "tests/unit/test_three_layer_scope_index_contract.py",
+      "tests/unit/test_three_layer_series_contract.py",
+      "tests/unit/test_three_layer_streaming_contract.py",
+      "tests/unit/test_three_layer_streaming_scheduler.py",
+      "tests/unit/test_three_layer_tense_contract.py",
+      "tests/unit/test_three_layer_toc_contract.py",
+      "tests/unit/test_three_layer_unit_scope_contract.py",
+      "tests/unit/test_toc_evidence.py",
+      "tests/unit/test_toc_parentage_contract.py",
+      "tests/unit/test_shared_saved_content.py",
+      "tests/unit/test_paddle_saved_content.py",
+      "tests/unit/test_native_content_status.py",
+      "tests/unit/test_p02_saved_content.py",
+      "tests/unit/test_mineru_saved_content.py",
+      "tests/unit/test_visual_saved_content.py"
+    ],
+    "excluded_modules": {
+      "tests/integration/test_http_api.py": "Outside the source/requirement/comparison software regression; dependencies and possible media/service side effects not admitted or collected.",
+      "tests/integration/test_mcp.py": "Outside the source/requirement/comparison software regression; dependencies and possible media/service side effects not admitted or collected.",
+      "tests/integration/test_public_table_source_scope.py": "Outside the source/requirement/comparison software regression; dependencies and possible media/service side effects not admitted or collected.",
+      "tests/integration/test_scan_assets.py": "Outside the source/requirement/comparison software regression; dependencies and possible media/service side effects not admitted or collected.",
+      "tests/integration/test_sdk_failed_page_fallback.py": "Outside the source/requirement/comparison software regression; dependencies and possible media/service side effects not admitted or collected.",
+      "tests/integration/test_source_region_export.py": "Outside the source/requirement/comparison software regression; dependencies and possible media/service side effects not admitted or collected.",
+      "tests/test_download_mineru_models.py": "Outside the source/requirement/comparison software regression; dependencies and possible media/service side effects not admitted or collected.",
+      "tests/test_markdown_policy.py": "Outside the source/requirement/comparison software regression; dependencies and possible media/service side effects not admitted or collected.",
+      "tests/unit/test_backend_adapters.py": "Outside the source/requirement/comparison software regression; dependencies and possible media/service side effects not admitted or collected.",
+      "tests/unit/test_candidate_delivery.py": "Media, execution, service or app dependencies outside the reviewed text-only entry; mixed modules retained and not collected. No pass claimed.",
+      "tests/unit/test_config.py": "Outside the source/requirement/comparison software regression; dependencies and possible media/service side effects not admitted or collected.",
+      "tests/unit/test_content_result.py": "Outside the source/requirement/comparison software regression; dependencies and possible media/service side effects not admitted or collected.",
+      "tests/unit/test_cross_page_context.py": "Outside the source/requirement/comparison software regression; dependencies and possible media/service side effects not admitted or collected.",
+      "tests/unit/test_cross_page_headers.py": "Outside the source/requirement/comparison software regression; dependencies and possible media/service side effects not admitted or collected.",
+      "tests/unit/test_docling_source_complete_export.py": "Outside the source/requirement/comparison software regression; dependencies and possible media/service side effects not admitted or collected.",
+      "tests/unit/test_docling_standard_parser.py": "Outside the source/requirement/comparison software regression; dependencies and possible media/service side effects not admitted or collected.",
+      "tests/unit/test_export_fidelity_repairs.py": "Outside the source/requirement/comparison software regression; dependencies and possible media/service side effects not admitted or collected.",
+      "tests/unit/test_export_quality.py": "Outside the source/requirement/comparison software regression; dependencies and possible media/service side effects not admitted or collected.",
+      "tests/unit/test_file_validation.py": "Outside the source/requirement/comparison software regression; dependencies and possible media/service side effects not admitted or collected.",
+      "tests/unit/test_gfm_linebreak_roundtrip.py": "Outside the source/requirement/comparison software regression; dependencies and possible media/service side effects not admitted or collected.",
+      "tests/unit/test_glm_runtime_configuration.py": "Outside the source/requirement/comparison software regression; dependencies and possible media/service side effects not admitted or collected.",
+      "tests/unit/test_glm_sdk_remote.py": "Outside the source/requirement/comparison software regression; dependencies and possible media/service side effects not admitted or collected.",
+      "tests/unit/test_glm_table_service.py": "Outside the source/requirement/comparison software regression; dependencies and possible media/service side effects not admitted or collected.",
+      "tests/unit/test_job_repository.py": "Outside the source/requirement/comparison software regression; dependencies and possible media/service side effects not admitted or collected.",
+      "tests/unit/test_job_service.py": "Outside the source/requirement/comparison software regression; dependencies and possible media/service side effects not admitted or collected.",
+      "tests/unit/test_mineru_cuda_graph_policy.py": "Outside the source/requirement/comparison software regression; dependencies and possible media/service side effects not admitted or collected.",
+      "tests/unit/test_mineru_native_remote.py": "Outside the source/requirement/comparison software regression; dependencies and possible media/service side effects not admitted or collected.",
+      "tests/unit/test_mineru_source_evidence_split.py": "Outside the source/requirement/comparison software regression; dependencies and possible media/service side effects not admitted or collected.",
+      "tests/unit/test_moparse_eval_cli.py": "Media, execution, service or app dependencies outside the reviewed text-only entry; mixed modules retained and not collected. No pass claimed.",
+      "tests/unit/test_moparse_eval_execution_freeze.py": "Media, execution, service or app dependencies outside the reviewed text-only entry; mixed modules retained and not collected. No pass claimed.",
+      "tests/unit/test_moparse_eval_execution_repairs.py": "Creates/opens/renders synthetic PDF fixtures; execution_repairs additionally creates images and reads PDF text layers. Entire mixed module uncollected; original assertions retained.",
+      "tests/unit/test_moparse_eval_glm_observation.py": "Media, execution, service or app dependencies outside the reviewed text-only entry; mixed modules retained and not collected. No pass claimed.",
+      "tests/unit/test_moparse_eval_maintenance.py": "Media, execution, service or app dependencies outside the reviewed text-only entry; mixed modules retained and not collected. No pass claimed.",
+      "tests/unit/test_moparse_eval_p05_optimization.py": "Media, execution, service or app dependencies outside the reviewed text-only entry; mixed modules retained and not collected. No pass claimed.",
+      "tests/unit/test_moparse_eval_packaging.py": "Creates/opens/renders synthetic PDF fixtures; execution_repairs additionally creates images and reads PDF text layers. Entire mixed module uncollected; original assertions retained.",
+      "tests/unit/test_moparse_eval_paddle_compat.py": "Creates/converts PIL images or pixel fixtures. Entire mixed module uncollected; original assertions retained.",
+      "tests/unit/test_moparse_eval_paddle_owner.py": "Creates/converts PIL images or pixel fixtures. Entire mixed module uncollected; original assertions retained.",
+      "tests/unit/test_moparse_eval_preparation_repairs.py": "Media, execution, service or app dependencies outside the reviewed text-only entry; mixed modules retained and not collected. No pass claimed.",
+      "tests/unit/test_moparse_eval_rebenchmark.py": "Creates/opens/renders synthetic PDF fixtures; execution_repairs additionally creates images and reads PDF text layers. Entire mixed module uncollected; original assertions retained.",
+      "tests/unit/test_moparse_eval_report_resources.py": "Media, execution, service or app dependencies outside the reviewed text-only entry; mixed modules retained and not collected. No pass claimed.",
+      "tests/unit/test_moparse_eval_reporting_metadata.py": "Media, execution, service or app dependencies outside the reviewed text-only entry; mixed modules retained and not collected. No pass claimed.",
+      "tests/unit/test_moparse_eval_request_metadata.py": "Media, execution, service or app dependencies outside the reviewed text-only entry; mixed modules retained and not collected. No pass claimed.",
+      "tests/unit/test_moparse_eval_service_observation.py": "Media, execution, service or app dependencies outside the reviewed text-only entry; mixed modules retained and not collected. No pass claimed.",
+      "tests/unit/test_moparse_eval_service_replay_native.py": "Media, execution, service or app dependencies outside the reviewed text-only entry; mixed modules retained and not collected. No pass claimed.",
+      "tests/unit/test_multimodal_service.py": "Outside the source/requirement/comparison software regression; dependencies and possible media/service side effects not admitted or collected.",
+      "tests/unit/test_native_caption_ranges.py": "Outside the source/requirement/comparison software regression; dependencies and possible media/service side effects not admitted or collected.",
+      "tests/unit/test_native_readiness.py": "Outside the source/requirement/comparison software regression; dependencies and possible media/service side effects not admitted or collected.",
+      "tests/unit/test_native_request_control.py": "Outside the source/requirement/comparison software regression; dependencies and possible media/service side effects not admitted or collected.",
+      "tests/unit/test_native_source_overlap.py": "Outside the source/requirement/comparison software regression; dependencies and possible media/service side effects not admitted or collected.",
+      "tests/unit/test_native_table_context.py": "Media, execution, service or app dependencies outside the reviewed text-only entry; mixed modules retained and not collected. No pass claimed.",
+      "tests/unit/test_native_text_async.py": "Outside the source/requirement/comparison software regression; dependencies and possible media/service side effects not admitted or collected.",
+      "tests/unit/test_native_text_service.py": "Outside the source/requirement/comparison software regression; dependencies and possible media/service side effects not admitted or collected.",
+      "tests/unit/test_native_worker_export.py": "Outside the source/requirement/comparison software regression; dependencies and possible media/service side effects not admitted or collected.",
+      "tests/unit/test_native_worker_resource_policy.py": "Outside the source/requirement/comparison software regression; dependencies and possible media/service side effects not admitted or collected.",
+      "tests/unit/test_orientation_service.py": "Outside the source/requirement/comparison software regression; dependencies and possible media/service side effects not admitted or collected.",
+      "tests/unit/test_page_range.py": "Outside the source/requirement/comparison software regression; dependencies and possible media/service side effects not admitted or collected.",
+      "tests/unit/test_parse_deadline.py": "Outside the source/requirement/comparison software regression; dependencies and possible media/service side effects not admitted or collected.",
+      "tests/unit/test_parser_service.py": "Outside the source/requirement/comparison software regression; dependencies and possible media/service side effects not admitted or collected.",
+      "tests/unit/test_pdf_table_entrypoints.py": "Outside the source/requirement/comparison software regression; dependencies and possible media/service side effects not admitted or collected.",
+      "tests/unit/test_pdf_table_evidence.py": "Outside the source/requirement/comparison software regression; dependencies and possible media/service side effects not admitted or collected.",
+      "tests/unit/test_postprocessing_preservation.py": "Media, execution, service or app dependencies outside the reviewed text-only entry; mixed modules retained and not collected. No pass claimed.",
+      "tests/unit/test_publish_workflow.py": "Outside the source/requirement/comparison software regression; dependencies and possible media/service side effects not admitted or collected.",
+      "tests/unit/test_purge_job_data.py": "Outside the source/requirement/comparison software regression; dependencies and possible media/service side effects not admitted or collected.",
+      "tests/unit/test_quality_tuning.py": "Outside the source/requirement/comparison software regression; dependencies and possible media/service side effects not admitted or collected.",
+      "tests/unit/test_sdk_region_resilience.py": "Outside the source/requirement/comparison software regression; dependencies and possible media/service side effects not admitted or collected.",
+      "tests/unit/test_sdk_response_receipts.py": "Outside the source/requirement/comparison software regression; dependencies and possible media/service side effects not admitted or collected.",
+      "tests/unit/test_service_cpu_ownership.py": "Media, execution, service or app dependencies outside the reviewed text-only entry; mixed modules retained and not collected. No pass claimed.",
+      "tests/unit/test_service_evaluation.py": "Includes synthetic PDF creation/opening; entire mixed module uncollected.",
+      "tests/unit/test_service_execution_activation.py": "Media, execution, service or app dependencies outside the reviewed text-only entry; mixed modules retained and not collected. No pass claimed.",
+      "tests/unit/test_service_expected_structure_gate.py": "Media, execution, service or app dependencies outside the reviewed text-only entry; mixed modules retained and not collected. No pass claimed.",
+      "tests/unit/test_service_native_readback_isolation.py": "Creates and reads synthetic PDF byte payloads and mock service requests; entire mixed module uncollected.",
+      "tests/unit/test_service_partial_scope_readback.py": "Media, execution, service or app dependencies outside the reviewed text-only entry; mixed modules retained and not collected. No pass claimed.",
+      "tests/unit/test_service_source_capabilities.py": "Media, execution, service or app dependencies outside the reviewed text-only entry; mixed modules retained and not collected. No pass claimed.",
+      "tests/unit/test_source_service.py": "Outside the source/requirement/comparison software regression; dependencies and possible media/service side effects not admitted or collected.",
+      "tests/unit/test_source_url.py": "Outside the source/requirement/comparison software regression; dependencies and possible media/service side effects not admitted or collected.",
+      "tests/unit/test_storage_service.py": "Outside the source/requirement/comparison software regression; dependencies and possible media/service side effects not admitted or collected.",
+      "tests/unit/test_streaming_aggregation.py": "Media, execution, service or app dependencies outside the reviewed text-only entry; mixed modules retained and not collected. No pass claimed.",
+      "tests/unit/test_structure_preflight_gate.py": "Media, execution, service or app dependencies outside the reviewed text-only entry; mixed modules retained and not collected. No pass claimed.",
+      "tests/unit/test_table_semantics.py": "Outside the source/requirement/comparison software regression; dependencies and possible media/service side effects not admitted or collected.",
+      "tests/unit/test_table_structure_metadata.py": "Outside the source/requirement/comparison software regression; dependencies and possible media/service side effects not admitted or collected.",
+      "tests/unit/test_trace_storage.py": "Media, execution, service or app dependencies outside the reviewed text-only entry; mixed modules retained and not collected. No pass claimed."
+    },
+    "exit_code": 0,
+    "boundary_violations": [],
+    "process_audit_count": 24
+  },
+  "preservation": {
+    "path": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/preservation.json",
+    "sha256": "d095bcf9edbfb0fa3acca8ffc187609596246eb05a22e4a46ed3405f437a9140",
+    "unchanged": 3590,
+    "unexpected_changes": []
+  },
+  "final_bindings": [
+    {
+      "sample_id": "vanke-interest-p001-002",
+      "document_id": "10726562",
+      "pipeline": "P01",
+      "binding": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P01/vanke-interest-p001-002/final-binding.json",
+      "sha256": "8f7241723d9cef1959330ebf042f974f44522146c8db1518307eb5ecebeff7b9"
+    },
+    {
+      "sample_id": "vanke-interest-p001-002",
+      "document_id": "10726562",
+      "pipeline": "P02",
+      "binding": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P02/vanke-interest-p001-002/final-binding.json",
+      "sha256": "095338ea30a26d3b34a96252245f88b1613c128227ae6d92def0635ea803b4ea"
+    },
+    {
+      "sample_id": "vanke-interest-p001-002",
+      "document_id": "10726562",
+      "pipeline": "P03",
+      "binding": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P03/vanke-interest-p001-002/final-binding.json",
+      "sha256": "3a7d12fb5a1e5b9b6783f3b41830208d3ab7316f4968555d87fd394c33600af5"
+    },
+    {
+      "sample_id": "vanke-interest-p001-002",
+      "document_id": "10726562",
+      "pipeline": "P04",
+      "binding": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P04/vanke-interest-p001-002/final-binding.json",
+      "sha256": "6fc3e402fd9ebde6f76b82b6f4021874a6a26c5cc18a6d0db25fcdb0a39a1b97"
+    },
+    {
+      "sample_id": "vanke-interest-p001-002",
+      "document_id": "10726562",
+      "pipeline": "P05",
+      "binding": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P05/vanke-interest-p001-002/final-binding.json",
+      "sha256": "5bcbf4a52eb33edcafa5a6923618c60d00e94248380eb7c41440f1e896cb4ec4"
+    },
+    {
+      "sample_id": "vanke-interest-p001-002",
+      "document_id": "10726562",
+      "pipeline": "P06",
+      "binding": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P06/vanke-interest-p001-002/final-binding.json",
+      "sha256": "20f24dbf0c898dab33338ef03d53618bda8046140a18796e18cc957c2141acda"
+    },
+    {
+      "sample_id": "vanke-interest-p001-002",
+      "document_id": "10726562",
+      "pipeline": "P07",
+      "binding": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P07/vanke-interest-p001-002/final-binding.json",
+      "sha256": "a50c6a56982d5dfdf22e380fe63c4a8c31684f125b5f7ad0417887e525705ae0"
+    },
+    {
+      "sample_id": "vanke-interest-p001-002",
+      "document_id": "10726562",
+      "pipeline": "P08",
+      "binding": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P08/vanke-interest-p001-002/final-binding.json",
+      "sha256": "5eeae9f32816f5ec6aa4089401ed0930362698c73f11c1d1ca79a69287042499"
+    },
+    {
+      "sample_id": "vanke-repurchase-share-changes-p001-003",
+      "document_id": "1201917092",
+      "pipeline": "P01",
+      "binding": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P01/vanke-repurchase-share-changes-p001-003/final-binding.json",
+      "sha256": "5c6d85a8db96ba653b27175992271639b92409cfc093632093cd484f17543d7f"
+    },
+    {
+      "sample_id": "vanke-repurchase-share-changes-p001-003",
+      "document_id": "1201917092",
+      "pipeline": "P02",
+      "binding": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P02/vanke-repurchase-share-changes-p001-003/final-binding.json",
+      "sha256": "609e6e3d290e238aba353f4d7963cbbb1b0e964a41a0df29624d0acc30a5c538"
+    },
+    {
+      "sample_id": "vanke-repurchase-share-changes-p001-003",
+      "document_id": "1201917092",
+      "pipeline": "P03",
+      "binding": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P03/vanke-repurchase-share-changes-p001-003/final-binding.json",
+      "sha256": "e8b25dbd41746ea2e921569ddfb157d5edee03743301b8117c0c8a5b56d26fdb"
+    },
+    {
+      "sample_id": "vanke-repurchase-share-changes-p001-003",
+      "document_id": "1201917092",
+      "pipeline": "P04",
+      "binding": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P04/vanke-repurchase-share-changes-p001-003/final-binding.json",
+      "sha256": "364a0c864bf3fcb1f3955eb766f04c0a716a36ec925ce39232878a68013908c7"
+    },
+    {
+      "sample_id": "vanke-repurchase-share-changes-p001-003",
+      "document_id": "1201917092",
+      "pipeline": "P05",
+      "binding": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P05/vanke-repurchase-share-changes-p001-003/final-binding.json",
+      "sha256": "e6576a33ee18099e293008ab75e9b6c701138f08f6207accec038871083f2395"
+    },
+    {
+      "sample_id": "vanke-repurchase-share-changes-p001-003",
+      "document_id": "1201917092",
+      "pipeline": "P06",
+      "binding": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P06/vanke-repurchase-share-changes-p001-003/final-binding.json",
+      "sha256": "f227b5f65ab6e847c76e8df9784a4873fe9ad9d23d041e2f713bf379abb47a84"
+    },
+    {
+      "sample_id": "vanke-repurchase-share-changes-p001-003",
+      "document_id": "1201917092",
+      "pipeline": "P07",
+      "binding": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P07/vanke-repurchase-share-changes-p001-003/final-binding.json",
+      "sha256": "e3bcc2ac91a823b5e75cc371651a064d891a4a45b0713ec3cce1099fbbef6285"
+    },
+    {
+      "sample_id": "vanke-repurchase-share-changes-p001-003",
+      "document_id": "1201917092",
+      "pipeline": "P08",
+      "binding": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P08/vanke-repurchase-share-changes-p001-003/final-binding.json",
+      "sha256": "46b760a8c5d39f67e20bf9a8039903bbee60d654f52b3df93ac1524d07a0b3db"
+    },
+    {
+      "sample_id": "zhenye-coupon-seals-p001-003",
+      "document_id": "1200694910",
+      "pipeline": "P01",
+      "binding": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P01/zhenye-coupon-seals-p001-003/final-binding.json",
+      "sha256": "86aca0bfa0a2f6ddfccd4440dc09058a6e175c9e918ee1820aeaa944f13adc79"
+    },
+    {
+      "sample_id": "zhenye-coupon-seals-p001-003",
+      "document_id": "1200694910",
+      "pipeline": "P02",
+      "binding": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P02/zhenye-coupon-seals-p001-003/final-binding.json",
+      "sha256": "b15275498731920294e6ce1b446b413532a25624d94f6148953fcee693333d9f"
+    },
+    {
+      "sample_id": "zhenye-coupon-seals-p001-003",
+      "document_id": "1200694910",
+      "pipeline": "P03",
+      "binding": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P03/zhenye-coupon-seals-p001-003/final-binding.json",
+      "sha256": "b4e232d8e5dc44e9667df047c9056b361e4eff94d6ec79d1206a50c02690c6f5"
+    },
+    {
+      "sample_id": "zhenye-coupon-seals-p001-003",
+      "document_id": "1200694910",
+      "pipeline": "P04",
+      "binding": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P04/zhenye-coupon-seals-p001-003/final-binding.json",
+      "sha256": "86439aee6436cf90f2e7c4a8274c4bd37b052651205f11a357ceab0ef80c2356"
+    },
+    {
+      "sample_id": "zhenye-coupon-seals-p001-003",
+      "document_id": "1200694910",
+      "pipeline": "P05",
+      "binding": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P05/zhenye-coupon-seals-p001-003/final-binding.json",
+      "sha256": "6c5378240fa57dab6608a48feffdafcf1f480cab12772c0cf673e8bbb55ef62b"
+    },
+    {
+      "sample_id": "zhenye-coupon-seals-p001-003",
+      "document_id": "1200694910",
+      "pipeline": "P06",
+      "binding": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P06/zhenye-coupon-seals-p001-003/final-binding.json",
+      "sha256": "88ca37b74db0d2eceb8aa268c8499101e5fa0db9f29545e5776b03de43be7428"
+    },
+    {
+      "sample_id": "zhenye-coupon-seals-p001-003",
+      "document_id": "1200694910",
+      "pipeline": "P07",
+      "binding": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P07/zhenye-coupon-seals-p001-003/final-binding.json",
+      "sha256": "efd70853619e358af4cfdba8d6805f72aed019e9234519b55b14c89f6b09122b"
+    },
+    {
+      "sample_id": "zhenye-coupon-seals-p001-003",
+      "document_id": "1200694910",
+      "pipeline": "P08",
+      "binding": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P08/zhenye-coupon-seals-p001-003/final-binding.json",
+      "sha256": "d4f6dd45672d3014f00639c601ba94dd438dd541944e0415f9c347fcd9e146cd"
+    },
+    {
+      "sample_id": "tencent-conditions-entity-payment-definitions-p108-114",
+      "document_id": "complex-tencent-2025-bond-programme",
+      "pipeline": "P01",
+      "binding": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P01/tencent-conditions-entity-payment-definitions-p108-114/final-binding.json",
+      "sha256": "c014ca20be253a7021cb6b96c4d58d84d1d09dbcd4fe784f60267e741ddfc873"
+    },
+    {
+      "sample_id": "tencent-conditions-entity-payment-definitions-p108-114",
+      "document_id": "complex-tencent-2025-bond-programme",
+      "pipeline": "P02",
+      "binding": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P02/tencent-conditions-entity-payment-definitions-p108-114/final-binding.json",
+      "sha256": "d8d7f557f7bcfaaca4368c6a6585b66c210b8982feded5b4d80716fc963d70d3"
+    },
+    {
+      "sample_id": "tencent-conditions-entity-payment-definitions-p108-114",
+      "document_id": "complex-tencent-2025-bond-programme",
+      "pipeline": "P03",
+      "binding": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P03/tencent-conditions-entity-payment-definitions-p108-114/final-binding.json",
+      "sha256": "1fb23448e9cf7268ffecf0672c801221f0561f01ee80165d921d1f5b3d537779"
+    },
+    {
+      "sample_id": "tencent-conditions-entity-payment-definitions-p108-114",
+      "document_id": "complex-tencent-2025-bond-programme",
+      "pipeline": "P04",
+      "binding": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P04/tencent-conditions-entity-payment-definitions-p108-114/final-binding.json",
+      "sha256": "ce944a0089dd5e1c783036328a2279577acb68d45a596b6fa7ccdd51fe9a6105"
+    },
+    {
+      "sample_id": "tencent-conditions-entity-payment-definitions-p108-114",
+      "document_id": "complex-tencent-2025-bond-programme",
+      "pipeline": "P05",
+      "binding": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P05/tencent-conditions-entity-payment-definitions-p108-114/final-binding.json",
+      "sha256": "c65bea8c139e14b2ad94e4ee15d9523c4a1dcc2a3f4a02347d1b84627364d54f"
+    },
+    {
+      "sample_id": "tencent-conditions-entity-payment-definitions-p108-114",
+      "document_id": "complex-tencent-2025-bond-programme",
+      "pipeline": "P06",
+      "binding": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P06/tencent-conditions-entity-payment-definitions-p108-114/final-binding.json",
+      "sha256": "aa35b343be6e572810873c304ff94fca382e487939b2cba0f33beae196dd8c15"
+    },
+    {
+      "sample_id": "tencent-conditions-entity-payment-definitions-p108-114",
+      "document_id": "complex-tencent-2025-bond-programme",
+      "pipeline": "P07",
+      "binding": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P07/tencent-conditions-entity-payment-definitions-p108-114/final-binding.json",
+      "sha256": "84419283db56c98f86b7ed0d14f0d3f1265a29c9b4cc509b1640110f231c5506"
+    },
+    {
+      "sample_id": "tencent-conditions-entity-payment-definitions-p108-114",
+      "document_id": "complex-tencent-2025-bond-programme",
+      "pipeline": "P08",
+      "binding": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P08/tencent-conditions-entity-payment-definitions-p108-114/final-binding.json",
+      "sha256": "7a5cfc767189bf18db23899a11d230e649ccf2c64018ee0b826a34b9d776e6e5"
+    },
+    {
+      "sample_id": "huawei-statements-p068-070",
+      "document_id": "complex-huawei-2024-annual",
+      "pipeline": "P01",
+      "binding": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P01/huawei-statements-p068-070/final-binding.json",
+      "sha256": "9117af6e4874195fb0b8ddd312c0f6f017ddb188d366a6dc8a3d387449378843"
+    },
+    {
+      "sample_id": "huawei-statements-p068-070",
+      "document_id": "complex-huawei-2024-annual",
+      "pipeline": "P02",
+      "binding": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P02/huawei-statements-p068-070/final-binding.json",
+      "sha256": "6096c92759dc3940978b76a70ba7de63b9a8dbd1b0529d5f78976fc120ff5f25"
+    },
+    {
+      "sample_id": "huawei-statements-p068-070",
+      "document_id": "complex-huawei-2024-annual",
+      "pipeline": "P03",
+      "binding": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P03/huawei-statements-p068-070/final-binding.json",
+      "sha256": "6b5921d4b0bb4cc121b0286ecd0f0b6751e659147f672a8e78e133add7233b9c"
+    },
+    {
+      "sample_id": "huawei-statements-p068-070",
+      "document_id": "complex-huawei-2024-annual",
+      "pipeline": "P04",
+      "binding": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P04/huawei-statements-p068-070/final-binding.json",
+      "sha256": "ec739a6dfef30ceb2fce4425375b11ab9dc9d1e537622bd10ce8a410ace251ab"
+    },
+    {
+      "sample_id": "huawei-statements-p068-070",
+      "document_id": "complex-huawei-2024-annual",
+      "pipeline": "P05",
+      "binding": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P05/huawei-statements-p068-070/final-binding.json",
+      "sha256": "3d451669e59546a5e3b99c4b337ae5c904b28c70a09706fa2b112094c245c348"
+    },
+    {
+      "sample_id": "huawei-statements-p068-070",
+      "document_id": "complex-huawei-2024-annual",
+      "pipeline": "P06",
+      "binding": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P06/huawei-statements-p068-070/final-binding.json",
+      "sha256": "ce58d616e57a980a09d05a2aadb04e067064885925d38de329df67239d0ad720"
+    },
+    {
+      "sample_id": "huawei-statements-p068-070",
+      "document_id": "complex-huawei-2024-annual",
+      "pipeline": "P07",
+      "binding": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P07/huawei-statements-p068-070/final-binding.json",
+      "sha256": "8569fd4d60ab8d61a3945ef7c6532d5784e0908d65dca262d741c78fddbd1055"
+    },
+    {
+      "sample_id": "huawei-statements-p068-070",
+      "document_id": "complex-huawei-2024-annual",
+      "pipeline": "P08",
+      "binding": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P08/huawei-statements-p068-070/final-binding.json",
+      "sha256": "1340582c535d9b382e2387874351f10e7262f18812ad4e6a20e0db202aeaa611"
+    },
+    {
+      "sample_id": "huawei-management-toc-p014",
+      "document_id": "complex-huawei-2024-annual",
+      "pipeline": "P01",
+      "binding": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P01/huawei-management-toc-p014/final-binding.json",
+      "sha256": "afe4d946f40575d64f06f389c4cb58e9ac7ac0b3fe15550b224d7771eaf2b5af"
+    },
+    {
+      "sample_id": "huawei-management-toc-p014",
+      "document_id": "complex-huawei-2024-annual",
+      "pipeline": "P02",
+      "binding": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P02/huawei-management-toc-p014/final-binding.json",
+      "sha256": "46a10721f39b247830706b4faa4233a482c97a60b0d4ffed41281c968324305a"
+    },
+    {
+      "sample_id": "huawei-management-toc-p014",
+      "document_id": "complex-huawei-2024-annual",
+      "pipeline": "P03",
+      "binding": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P03/huawei-management-toc-p014/final-binding.json",
+      "sha256": "50307030f8fad72acd47a154f36685878a80a6f57db3877c2e42b5b67d27d59f"
+    },
+    {
+      "sample_id": "huawei-management-toc-p014",
+      "document_id": "complex-huawei-2024-annual",
+      "pipeline": "P04",
+      "binding": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P04/huawei-management-toc-p014/final-binding.json",
+      "sha256": "08d449198dd92fdebf768adf78687a369144fd9e5bd04c51eb352eb58a15f12a"
+    },
+    {
+      "sample_id": "huawei-management-toc-p014",
+      "document_id": "complex-huawei-2024-annual",
+      "pipeline": "P05",
+      "binding": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P05/huawei-management-toc-p014/final-binding.json",
+      "sha256": "d57373ba4ffd36a4edc384415dd8b7d7f331305d438383f484cff7ba6c506c76"
+    },
+    {
+      "sample_id": "huawei-management-toc-p014",
+      "document_id": "complex-huawei-2024-annual",
+      "pipeline": "P06",
+      "binding": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P06/huawei-management-toc-p014/final-binding.json",
+      "sha256": "baa1c2ff74c7cbf1269cdfddac1ee54c218534c0f5e8da20d6d1736adb19bb3c"
+    },
+    {
+      "sample_id": "huawei-management-toc-p014",
+      "document_id": "complex-huawei-2024-annual",
+      "pipeline": "P07",
+      "binding": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P07/huawei-management-toc-p014/final-binding.json",
+      "sha256": "f14dd1e1d2dd78ecb5ff1d1edd8678ce37aa5902873ba7bb2fb21d9e53a09827"
+    },
+    {
+      "sample_id": "huawei-management-toc-p014",
+      "document_id": "complex-huawei-2024-annual",
+      "pipeline": "P08",
+      "binding": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P08/huawei-management-toc-p014/final-binding.json",
+      "sha256": "4377db5f9219a2376f868e16642ecb3348a3c7cafc59ec8a5bbfe622ef431720"
+    },
+    {
+      "sample_id": "huaweitech-editorial-spread-p002",
+      "document_id": "complex-huaweitech-2024-096",
+      "pipeline": "P01",
+      "binding": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P01/huaweitech-editorial-spread-p002/final-binding.json",
+      "sha256": "ed4dfba2aa5ef8f93bfad63a11c9363a45d41dc7f9ce1dc9edb85921bbfd1ad8"
+    },
+    {
+      "sample_id": "huaweitech-editorial-spread-p002",
+      "document_id": "complex-huaweitech-2024-096",
+      "pipeline": "P02",
+      "binding": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P02/huaweitech-editorial-spread-p002/final-binding.json",
+      "sha256": "eae83992cc4b4c82abdfaa779ced487425a763332f7c09cab473eb3ed9c86b5d"
+    },
+    {
+      "sample_id": "huaweitech-editorial-spread-p002",
+      "document_id": "complex-huaweitech-2024-096",
+      "pipeline": "P03",
+      "binding": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P03/huaweitech-editorial-spread-p002/final-binding.json",
+      "sha256": "55ecc166bff33f50a0e5505f80d4470236e8c55962061e47bf9193cf142c413e"
+    },
+    {
+      "sample_id": "huaweitech-editorial-spread-p002",
+      "document_id": "complex-huaweitech-2024-096",
+      "pipeline": "P04",
+      "binding": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P04/huaweitech-editorial-spread-p002/final-binding.json",
+      "sha256": "ad340da5107fb67b2c0628d3f8742e1abb490d4e767ba15e747992bf90188c94"
+    },
+    {
+      "sample_id": "huaweitech-editorial-spread-p002",
+      "document_id": "complex-huaweitech-2024-096",
+      "pipeline": "P05",
+      "binding": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P05/huaweitech-editorial-spread-p002/final-binding.json",
+      "sha256": "7c635a608c63ad8729d280277bedaa29e3cad14c7d574f64dd7aae93f509c987"
+    },
+    {
+      "sample_id": "huaweitech-editorial-spread-p002",
+      "document_id": "complex-huaweitech-2024-096",
+      "pipeline": "P06",
+      "binding": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P06/huaweitech-editorial-spread-p002/final-binding.json",
+      "sha256": "150e989ae276291d4155f42b2e0f59b3bd2c8436649b8d3f19deaf01987075a7"
+    },
+    {
+      "sample_id": "huaweitech-editorial-spread-p002",
+      "document_id": "complex-huaweitech-2024-096",
+      "pipeline": "P07",
+      "binding": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P07/huaweitech-editorial-spread-p002/final-binding.json",
+      "sha256": "c123c2f66c50432303bcbc10dcc8e297c8662e4d3477843b23bd2df7c0ab1d86"
+    },
+    {
+      "sample_id": "huaweitech-editorial-spread-p002",
+      "document_id": "complex-huaweitech-2024-096",
+      "pipeline": "P08",
+      "binding": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P08/huaweitech-editorial-spread-p002/final-binding.json",
+      "sha256": "e6a6fdf8c5a90e0b3a10638f94fe49ed1d129c1eed873cbe66d45ae89f067d8e"
+    },
+    {
+      "sample_id": "spdb-cover-declaration-p001-002",
+      "document_id": "1200454112",
+      "pipeline": "P01",
+      "binding": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P01/spdb-cover-declaration-p001-002/final-binding.json",
+      "sha256": "4a1cc56334d4488ba165abc2c0c2f266bd76849269808394ef75bf5e62439d5d"
+    },
+    {
+      "sample_id": "spdb-cover-declaration-p001-002",
+      "document_id": "1200454112",
+      "pipeline": "P02",
+      "binding": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P02/spdb-cover-declaration-p001-002/final-binding.json",
+      "sha256": "683d9442859a9b32227870d0cb059a18c26b92336e9c87851e8da6956b655dc7"
+    },
+    {
+      "sample_id": "spdb-cover-declaration-p001-002",
+      "document_id": "1200454112",
+      "pipeline": "P03",
+      "binding": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P03/spdb-cover-declaration-p001-002/final-binding.json",
+      "sha256": "b31f079db72ebd6d3fe9491d37569b711dd5ba181e59112ce9429a2ed1fb5180"
+    },
+    {
+      "sample_id": "spdb-cover-declaration-p001-002",
+      "document_id": "1200454112",
+      "pipeline": "P04",
+      "binding": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P04/spdb-cover-declaration-p001-002/final-binding.json",
+      "sha256": "9ab7e34ce861fda85bd6334db04935b692b084307a168ecf024dcb96cf3dab4d"
+    },
+    {
+      "sample_id": "spdb-cover-declaration-p001-002",
+      "document_id": "1200454112",
+      "pipeline": "P05",
+      "binding": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P05/spdb-cover-declaration-p001-002/final-binding.json",
+      "sha256": "358a95d392cb95f9c30639c6f80fa7d003632e419fb1c47247cad37c36fd8f97"
+    },
+    {
+      "sample_id": "spdb-cover-declaration-p001-002",
+      "document_id": "1200454112",
+      "pipeline": "P06",
+      "binding": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P06/spdb-cover-declaration-p001-002/final-binding.json",
+      "sha256": "eecb3c6597dc807301cd9f355551f62c99e2080aa236a04f323c929eba461db0"
+    },
+    {
+      "sample_id": "spdb-cover-declaration-p001-002",
+      "document_id": "1200454112",
+      "pipeline": "P07",
+      "binding": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P07/spdb-cover-declaration-p001-002/final-binding.json",
+      "sha256": "b4ee9972bc362a5ff4f3b054454eb5c9af967d96af4efa8d8fc07c693b14dc5b"
+    },
+    {
+      "sample_id": "spdb-cover-declaration-p001-002",
+      "document_id": "1200454112",
+      "pipeline": "P08",
+      "binding": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P08/spdb-cover-declaration-p001-002/final-binding.json",
+      "sha256": "cb6f7b50d2b96cb7c6c30dc81c6d8ebdac1fd27b29f8fd457519f54e3e459f5e"
+    },
+    {
+      "sample_id": "pingan-financials-p001-004",
+      "document_id": "1200694562",
+      "pipeline": "P01",
+      "binding": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P01/pingan-financials-p001-004/final-binding.json",
+      "sha256": "0f6b2bc901c761ac179219c5d99d9a739884a4de2b8b3543daf6681828d2e279"
+    },
+    {
+      "sample_id": "pingan-financials-p001-004",
+      "document_id": "1200694562",
+      "pipeline": "P02",
+      "binding": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P02/pingan-financials-p001-004/final-binding.json",
+      "sha256": "022fe1682aed513852896234dc841b3ee03274ad1b76159bce1a7cf5a6cd032e"
+    },
+    {
+      "sample_id": "pingan-financials-p001-004",
+      "document_id": "1200694562",
+      "pipeline": "P03",
+      "binding": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P03/pingan-financials-p001-004/final-binding.json",
+      "sha256": "cdad5b6ba8694f658c9a82e292dcb073a5e04eea43c3fb785062325e1be76f26"
+    },
+    {
+      "sample_id": "pingan-financials-p001-004",
+      "document_id": "1200694562",
+      "pipeline": "P04",
+      "binding": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P04/pingan-financials-p001-004/final-binding.json",
+      "sha256": "0f4927d3e60f5dd892680d775c56f4752e376a7d54921fe8c0c707a39cd7f87d"
+    },
+    {
+      "sample_id": "pingan-financials-p001-004",
+      "document_id": "1200694562",
+      "pipeline": "P05",
+      "binding": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P05/pingan-financials-p001-004/final-binding.json",
+      "sha256": "e0d2654cb2caea857e42acd436135944042a9cf35c0b411275a30572e7f67282"
+    },
+    {
+      "sample_id": "pingan-financials-p001-004",
+      "document_id": "1200694562",
+      "pipeline": "P06",
+      "binding": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P06/pingan-financials-p001-004/final-binding.json",
+      "sha256": "e077fec86776ee8b6e4e036c4259b928b9815549eca2f327e14af6b692505ba6"
+    },
+    {
+      "sample_id": "pingan-financials-p001-004",
+      "document_id": "1200694562",
+      "pipeline": "P07",
+      "binding": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P07/pingan-financials-p001-004/final-binding.json",
+      "sha256": "cff335c09e1b6bd600bb31092001dc0537d8160c6edef9a998bad0053e7685b2"
+    },
+    {
+      "sample_id": "pingan-financials-p001-004",
+      "document_id": "1200694562",
+      "pipeline": "P08",
+      "binding": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/attempt-05/P08/pingan-financials-p001-004/final-binding.json",
+      "sha256": "d665d6215d20bb8831432f806854d1b9ff458282cc4036a1f9a0f73addf17219"
+    }
+  ],
+  "superseded_attempts_kept": [
+    "attempt-01",
+    "attempt-02",
+    "attempt-03",
+    "attempt-04"
+  ],
+  "official_quality_scores": "withdrawn",
+  "prohibited_operations": {
+    "original_pdf_or_image_bytes": false,
+    "pdf_text_or_ocr_or_vlm": false,
+    "model_or_network_or_gpu_or_tts_or_online_services": false,
+    "formal_candidate_comparison_or_replay_or_scoring": false,
+    "expected_or_manifest_or_selection_or_current_or_scoring_contract_changed": false,
+    "commit_or_push": false
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "purpose": "phase12 execution identity, not replacement of stage11 state.json",
+  "head": "1650637de9bb6bffc8911ee959fa6fde9a6377f9",
+  "software_id": "f8bcef05feaa4406189d395219a4db50afb8cc9446600ee11adce7fb403e0f1f",
+  "initial_dirty": "",
+  "current_dirty": " M app/services/final_content_service.py\n M app/services/native_content_evidence.py\n M benchmark/reports/lite/cross-document-normalization-review.md\n M benchmark/reports/lite/report.md\n M docs/engineering/technical-route.md\n M docs/pipelines/README.md\n M moparse_eval/saved_content_closure.py\n M tests/source_only.json\n M tests/unit/test_shared_saved_content.py\n?? benchmark/reports/lite/data/cross-document-normalization/conversion-flow.json\n?? benchmark/reports/lite/data/cross-document-normalization/conversion-selection-matrix.json\n?? benchmark/reports/lite/data/cross-document-normalization/conversion-stage-matrix.json\n?? benchmark/reports/lite/data/cross-document-normalization/conversion-state.json\n?? benchmark/reports/lite/data/cross-document-normalization/conversion-verification.json\n",
+  "execution_lock_sha256": "341a6ac17351c0a0d65c3734947793e15bd8b623faf7c8fb79417af94f850d62",
+  "native_run_id": "20261026-lite-v3",
+  "native_run_original_software_id": "c6e7f5c0cdcbb8801d17595c515fcbe7794111c396bfe58a6d0ab71a199db28e",
+  "fixed_flow_sha256": "623c2ac2c6b83297c11ff1bf2908b236641ea9d9965af34d535259af7414832e",
+  "fixed_state_sha256": "694f28cc1aeb73cc420c3503b4b51865547b8bbd6def098f9c81f01d8c930681",
+  "test_manifest_sha256": "8868d3233fc65b31a08096e6a0dec2c12dde2b6f6a76163178c67abd38d30628",
+  "conversion_complete": true,
+  "counts": {
+    "documents": 8,
+    "selections": 9,
+    "document_pipeline_pairs": 64,
+    "selection_pipeline_records": 72
+  },
+  "formal_requirement_index_sha256": "09918d7c652aee0d306dc603cbf7c827c6ca01996b8a436d72fb8d4f803b6884",
+  "formal_requirement_state": "structure_blocked",
+  "formal_service_current_index_activated": false,
+  "formal_score_current_index_activated": false,
+  "development_root": "benchmark/runs/lite/service/development/cross-document-normalization-phase12",
+  "source_size_bytes": "unknown; zero is explicit StoredSource schema sentinel, no source stat or byte read performed",
+  "dirty_at_execution_evidence_capture": " M app/services/final_content_service.py\n M app/services/native_content_evidence.py\n M moparse_eval/saved_content_closure.py\n M tests/source_only.json\n M tests/unit/test_shared_saved_content.py\n?? benchmark/reports/lite/data/cross-document-normalization/conversion-flow.json\n?? benchmark/reports/lite/data/cross-document-normalization/conversion-selection-matrix.json\n?? benchmark/reports/lite/data/cross-document-normalization/conversion-stage-matrix.json\n",
+  "final_binding": "benchmark/runs/lite/service/development/cross-document-normalization-phase12/final-binding.json"
+}

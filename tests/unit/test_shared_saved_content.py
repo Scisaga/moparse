@@ -187,6 +187,48 @@ async def test_source_relationships_cannot_be_replaced_by_printed_numbers(damage
 
 
 @pytest.mark.asyncio
+@pytest.mark.parametrize('literal', [',913,027', '.', '37.5%'])
+async def test_unit_responsibility_respects_literal_roles_and_checks_parenthesized_amounts(literal):
+    native = table_input()
+    region = native['pages'][0]['raw']['json_result'][0][1]
+    region['content'] = region['content'].replace('17.00', literal, 1).replace('17.00', '(23.5)', 1)
+    result, evidence = await finish(native)
+    view = result._semantic_tables[0]
+    record = view.records[0]
+    unparsed, amount = record.values
+    assert not unparsed.unit_refs
+    assert amount.unit_refs
+    assert f'收入：{literal}' in result.markdown and '成本：(23.5)' in result.markdown
+    cells = [i for i in evidence['contract']['inventory'] if i['kind'] == 'cell']
+    assert any(i['raw_text'] == literal for i in cells)
+    assert any(i['raw_text'] == '(23.5)' for i in cells)
+    # The numeric responsibility still applies to a printed negative amount.
+    detached = replace(amount, unit_refs=())
+    result._semantic_tables[0] = replace(view, records=(replace(record, values=(unparsed, detached)),))
+    with pytest.raises(NativeContentError, match='source unit was detached'):
+        validate_table_relations(result)
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize('header,literal,subject', [
+    ('比上年末增减', '-', 'Alpha'),
+    ('附注', '5', 'Alpha'),
+    ('收入', '$0.27', 'Earnings per share'),
+])
+async def test_unit_responsibility_uses_own_field_role_and_keeps_neighboring_amount(header, literal, subject):
+    native = table_input()
+    region = native['pages'][0]['raw']['json_result'][0][1]
+    region['content'] = (region['content'].replace('<th>收入</th>', f'<th>{header}</th>')
+                         .replace('Alpha', subject).replace('17.00', literal, 1).replace('17.00', '(23.5)', 1))
+    result, _ = await finish(native)
+    record = result._semantic_tables[0].records[0]
+    assert not record.values[0].unit_refs
+    assert record.values[1].unit_refs
+    assert f'{header}：{literal}' in result.markdown
+    assert '成本：(23.5)' in result.markdown
+
+
+@pytest.mark.asyncio
 async def test_note_detachment_is_caught_from_the_native_marked_record():
     from tests.unit.test_p01_saved_content import native, prov
     from tests.unit.test_p01_saved_content import source as mixed_source
@@ -300,6 +342,33 @@ async def test_actual_stage_edits_and_storage_are_identical_bytes(tmp_path):
     assert len(same) == 2 and same[0]['final_spans'] != same[1]['final_spans']
     assert all(d.get('locator', {}).get('artifact_sha256') == result._native_content.artifact.sha256
                for d in evidence['native_destinations'])
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize('label', ['text', 'unsupported_native_role'])
+async def test_export_normalization_keeps_each_same_display_occurrence_source_bound(label):
+    native = glm_input()
+    native['pages'][0]['raw']['json_result'] = [[
+        {'index': 0, 'label': label, 'content': 'Printed first line.  \nPrinted second line.'},
+        {'index': 1, 'label': 'text', 'content': 'Printed first line.\nPrinted second line.'},
+    ]]
+    result, evidence = await finish(native)
+    dispositions = evidence['content_dispositions']
+    assert len(dispositions) == 2
+    assert dispositions[0]['raw_text'] == 'Printed first line.  \nPrinted second line.'
+    assert dispositions[1]['raw_text'] == 'Printed first line.\nPrinted second line.'
+    spans = [d['final_spans'][0] for d in dispositions]
+    assert spans[0][1] <= spans[1][0]
+    assert all(result.markdown[a:b] == 'Printed first line.\nPrinted second line.' for a, b in spans)
+    assert len({d['occurrence_id'] for d in dispositions}) == 2
+
+
+def test_a_missing_owned_marker_cannot_borrow_a_unique_neighboring_literal():
+    from app.services.final_content_service import _native_span
+    text = 'Printed unique neighbor.'
+    source = text + '<!-- source-text: other -->'
+    block = {'service_marker': '<!-- source-text: missing -->'}
+    assert _native_span(source, text, (0, len(source)), block) is None
 
 
 def test_actual_json_bytes_not_a_declared_checksum_own_the_contract():

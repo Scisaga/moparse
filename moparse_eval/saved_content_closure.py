@@ -79,7 +79,7 @@ def format_readback_checks(native, result):
 
 def content_dispositions(result, observation):
     """Account for actual native content using located final spans and refs."""
-    from app.services.final_content_service import map_text_offset
+    from app.services.final_content_service import _native_span, map_text_offset
 
     emitted = {}
     for page in observation["pages"]:
@@ -145,11 +145,10 @@ def content_dispositions(result, observation):
                     span for cell in record["cells"] for span in cell["final_spans"]
                 ]
             else:
-                marker = block.get("service_marker")
                 text = str(block.get("markdown", "")).replace("\r\n", "\n").replace("\r", "\n")
-                location = assembly.find(marker) if marker else -1
-                start = location - len(text)
-                if location >= 0 and start >= 0 and assembly[start:location] == text:
+                span = _native_span(assembly, text, (0, len(assembly)), block) if text else None
+                if span is not None:
+                    start, location = span
                     a, b = map_text_offset(start, edits), map_text_offset(location, edits, end=True)
                     actual = result.markdown[a:b]
                     record.update(
