@@ -1,4 +1,15 @@
-# MO-Parse Lite：P08 Visual Blocks共同接入与视觉来源边界
+# MO-Parse Lite：跨文档Normalization与正式评价状态
+
+## 第十一阶段：既存证据审查与未完成范围
+
+2026-11-14核对历史原始job、2,080份observation及实际工件：八组`20261026-lite-v3`各完成quality800一次、perf80三轮及独立warmup；旧P07/P08 baseline/current有实际正文与原始CPU后处理成本。当前scores为空，正式T/L/B成绩及排名继续撤回；历史work-status与评分/复现日志不构成当前有效成绩。原始处理成本段保持原字节，本轮没有重跑或重签历史结果。
+
+固定跨文档集合包含8份文档、9个既有授权选段及72份真实native结果。同一公共software_id下的完整既有阶段只覆盖两份文档的8个开发结果，其余64个组合缺同版Adapted/IR等阶段，因此完整横向验证未完成。原生、适配保全和最终产品比较分别记录；107份缺口的分层影响、逐对象信息流及下一步具体任务见[跨文档Normalization审查](cross-document-normalization-review.md)。没有运行新adapter转换、真实回放、candidate/Expected比较或正式评分，没有修改生产代码、Expected、门禁或五个范围。
+
+## 第十阶段：P08 Visual Blocks共同接入（历史）
+
+以下第十阶段及更早记录中的“本轮”均指其各自开发阶段，不能解释为从未发生历史Native解析，也不能推广为第十一阶段的跨文档验收。
+
 
 P08 Visual Blocks共同适配已完成；真实保存结果纵向转换状态为partial。当前结论限于本组一份三页保存JSON的来源、适配、公共处理及持久化工程验收。P01–P07的七份固定开发结果按最终源码重新生成，正文、表格关系、warning、四层状态及编辑证据与原产物保持。逐格式接入达到进入跨格式验证的最低工程条件；本轮未启动跨文档Normalization、正式candidate比较、Native/Product评分或八组正式回放。
 

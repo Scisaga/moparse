@@ -101,7 +101,7 @@ DocVortex 0.5.16的官方`render._internal.common.planner._merge_continued_table
 
 ## 5. 实现状态与验证项
 
-P06研究执行路径已修复，[P06工程预检02](../../benchmark/runs/lite/preflight/)独立完成同一清单的11个任务并提供本次冻结依据。本组保存quality800一次和perf80三轮的有效原生结果及测量；错误评分及结论已删除；本轮以完整身份、候选上下文和源位置核对后的同一程序重评，完成范围以评测索引为准；结果只见[当前统一评测报告](../../benchmark/reports/lite/report.md)，状态与限制由[评测索引](../../benchmark/reports/README.md)维护。TTS只观测不控制，先前撤回测量不恢复；执行和自动评分完成不构成内容、Gold或图片内容验收。
+P06研究执行路径已修复，[P06工程预检02](../../benchmark/runs/lite/preflight/)独立完成同一清单的11个任务并提供本次冻结依据。本组保存quality800一次和perf80三轮的有效原生结果及测量；错误评分及结论继续撤回，当前scores索引不存在；历史执行与当前三层比较分开，尚未取得正式T/L/B成绩；结果只见[当前统一评测报告](../../benchmark/reports/lite/report.md)，状态与限制由[评测索引](../../benchmark/reports/README.md)维护。TTS只观测不控制，先前撤回测量不恢复；原生执行完成不构成内容、Gold或图片内容验收。
 
 研究执行器显式使用 tier=standard，实际映射为 high，与 P07 的 Advanced/xhigh 不同。共享 GLM 研究分支已采用 native rotary，避开 vLLM 0.19.1 的 GPT-J MRoPE 配对错误；MinerU 主模型的 NeoX 配对不具有同一冲突，不对其套用 GLM 修复。研究路径的旋转坐标交接、分支结果先行保全及局部图片导出隔离已修复；机制证据见[执行层诊断](../../benchmark/diagnostics/README.md)。
 

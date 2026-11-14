@@ -8,7 +8,7 @@
 
 第九阶段为P06/P07增加同一个MinerU Middle JSON投影和独立输入清单，接入现有公共source-free链。两组保留Standard/Advanced配置与自己的原字、list父链及HTML跨度；研究读取的默认视图政策不变。2026-11-14在固定DocVortex 0.5.16隔离镜像中完成同两份输入的官方结构及安全文本对照，生产链保持；P06整文档schema接受，P07因四个嵌套list成员显式continues_prev=null保留整页及文档拒绝。两组各29个块均实际通过自身对象schema及文本保全对照，不外推全部MinerU格式；该次核验未接入P08。
 
-第十阶段将[P08 Visual Blocks](p08-mineru-visual.md#保存视觉结果的共同准入)接入相同NativeContentContract与SavedContentService。八个保存配置现在共用导出、IR、表格关系、FinalContent及Storage，独立格式读取保留各自来源。P08固定三页开发样本保全22个视觉区域、20个原生文字字段和2个未交付媒体声明；未知读序不成为确定顺序，区域不产生字符跨度或标题父树。真实描述、polygon及分组样本缺失，受控边界与实样验收分开。逐格式接入达到固定开发范围的最低工程条件，后续跨文档Normalization样本与执行授权另定；完整格式、媒体交付、正式比较及质量成绩仍未完成，证据只见[唯一报告](../../benchmark/reports/lite/report.md)。
+第十阶段将[P08 Visual Blocks](p08-mineru-visual.md#保存视觉结果的共同准入)接入相同NativeContentContract与SavedContentService。八个保存配置现在共用导出、IR、表格关系、FinalContent及Storage，独立格式读取保留各自来源。P08固定三页开发样本保全22个视觉区域、20个原生文字字段和2个未交付媒体声明；未知读序不成为确定顺序，区域不产生字符跨度或标题父树。真实描述、polygon及分组样本缺失，受控边界与实样验收分开。逐格式接入达到固定开发范围的最低工程条件；第十一阶段的固定文档集合及现有信息流见[跨文档Normalization审查](../../benchmark/reports/lite/cross-document-normalization-review.md)，完整横向验证仍缺同版阶段证据。完整格式、媒体交付、正式比较及质量成绩仍未完成，状态见[唯一报告](../../benchmark/reports/lite/report.md)。
 
 ## 管线索引
 
@@ -23,7 +23,7 @@
 | [P07：MinerU Advanced + TXT + GLM SDK](p07-mineru-advanced-glm.md) | 与P06共享格式读取 | Advanced显式入口，独立运行及分支记录 |
 | [P08：MinerU 全页纯视觉 SDK + vLLM](p08-mineru-visual.md) | 完整PDF渲染及官方纯视觉SDK | 原生块先行保全、局部导出隔离已修复，独立工程预检完成 |
 
-研究入口及共享读取代码位于[评测模块](../../moparse_eval/README.md)。本轮八组已按冻结身份各完成quality800一次和perf80三轮，原生测量及原MO服务恢复完成；旧评分及结论已删除；本轮按完整身份、候选上下文及源位置重新计算，实际完成范围以评测索引为准。结果只见[当前统一评测报告](../../benchmark/reports/lite/report.md)，状态与限制由[评测索引](../../benchmark/reports/README.md)维护。TTS只观测不控制，先前撤回测量不恢复；执行和自动评分完成不表示内容、Gold、图片内容或生产部署已验收，机制证据由[执行层诊断](../../benchmark/diagnostics/README.md)维护。
+研究入口及共享读取代码位于[评测模块](../../moparse_eval/README.md)。2026-11-14逐组核对原始job、observation、native及成本记录，确认八组在`20261026-lite-v3`各完成quality800一次和perf80三轮；原记录记载MO服务恢复，不代表本轮检查过在线服务。旧评分及结论继续撤回，当前scores索引不存在；历史评分日志不证明当前T/L/B评分完成。原生执行、保存结果读回、Normalization验收、Product转换与正式发布分别见[跨文档审查](../../benchmark/reports/lite/cross-document-normalization-review.md)。质量状态只见[当前统一评测报告](../../benchmark/reports/lite/report.md)及[评测索引](../../benchmark/reports/README.md)。原执行的TTS只观测不控制，独立inference资源有GPU归属采样但覆盖为partial，不能由CPU worker的空字段推断全管线缺测；先前撤回测量不恢复，执行完成不表示内容、Gold、图片内容或生产部署已验收，机制证据由[执行层诊断](../../benchmark/diagnostics/README.md)维护。
 
 ## 共用规则
 

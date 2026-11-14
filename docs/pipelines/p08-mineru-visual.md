@@ -80,7 +80,7 @@ P08 的必要裁图只能使用本组输入页面图像及 SDK 区域，保存�
 
 2026-10-29的`mineru_visual_result`保留为已有显示组件，其有序输入行为继续由独立的FinalContent组件测试保护；第十阶段共同保存入口不再调用旧P08 bridge或该投影器。当前来源及状态边界以上述[共同准入](#保存视觉结果的共同准入)为准，原有历史baseline/current不覆盖，正式配对仍受[评测任务](../../benchmark/evaluation-tasks.md#7-p07p08与mo-parse最终输出的配对评测)约束。
 
-P08研究执行路径已修复，[P08工程预检02](../../benchmark/runs/lite/preflight/)独立完成同一清单的11个任务并提供本次冻结依据。本组保存quality800一次和perf80三轮的有效原生结果及测量；错误评分及结论已删除；本轮以完整身份、候选上下文和源位置核对后的同一程序重评，完成范围以评测索引为准；结果只见[当前统一评测报告](../../benchmark/reports/lite/report.md)，状态与限制由[评测索引](../../benchmark/reports/README.md)维护。TTS只观测不控制，先前撤回测量不恢复；执行和自动评分完成不构成内容、Gold或图片内容验收。
+P08研究执行路径已修复，[P08工程预检02](../../benchmark/runs/lite/preflight/)独立完成同一清单的11个任务并提供本次冻结依据。本组保存quality800一次和perf80三轮的有效原生结果及测量；错误评分及结论继续撤回，当前scores索引不存在；历史执行与当前三层比较分开，尚未取得正式T/L/B成绩；结果只见[当前统一评测报告](../../benchmark/reports/lite/report.md)，状态与限制由[评测索引](../../benchmark/reports/README.md)维护。TTS只观测不控制，先前撤回测量不恢复；原生执行完成不构成内容、Gold或图片内容验收。
 
 研究侧已有独立 P08 执行器，直接调用官方 SDK 的 aio_two_step_extract，关闭 image_analysis 与重试，不读取原生文字或其他解析器补答案。源码追踪未发现其 Qwen2VL/NeoX 解码器具有 P05 的 GPT-J rotary 配对冲突；这只是该机制的边界，不构成完整模型数值或解析质量验收。机制诊断统一见[执行层诊断](../../benchmark/diagnostics/README.md)。
 
