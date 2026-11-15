@@ -1,4 +1,91 @@
-# MO-Parse Lite：Native/Final产品价值与正式评价状态
+# MO-Parse Lite：Native有限研究与正式评价状态
+
+## 第十六阶段：Native有限研究范围核验与正式门槛
+
+2026-11-16，Native有限研究范围核验已完成；S3/S4/S6共24个组合的Native独立读取可靠性为24/24；T/L/B的逐组合准备状态分别为`{'partial': 24}`、`{'partial': 10, 'blocked': 14}`、`{'partial': 12, 'blocked': 12}`，正式评分授权尚未执行。这是固定三个已有开发/诊断暴露selection的有限Native研究，不是独立留出集、完整Lite代表、Product评分或八组总体排名。
+
+接手及当前HEAD为`ce7aad797086fb3314119a07b581b256f330219d`，接手工作区干净。两个入口均解析为`/opt/moparse`。当前评测software_id仍为`ad49afdc37e3bfb2489ec2768638d6b4d7bd18920f57610addc7ad3b1ebda72e`，与第十五阶段相同；评测库、生产公共处理及其支持源码均未修改。原Native执行`20261026-lite-v3`仍绑定`c6e7f5c0cdcbb8801d17595c515fcbe7794111c396bfe58a6d0ab71a199db28e`，公共Final转换历史身份仍为`f8bcef05feaa4406189d395219a4db50afb8cc9446600ee11adce7fb403e0f1f`，后者没有混入本轮Native研究身份。逐份Native/observation完整路径、SHA256、sample/document/selection、原配置、producer来源、主视图、页分支、来源许可和执行状态见[24份输入绑定](../../runs/lite/diagnostics/native-research-phase16/input-binding.json)与唯一[Native研究准备](../../runs/lite/diagnostics/text-readback-phase15/native-research-preparation.json)。
+
+附件给出的`benchmark/requirements/current/index.json`不存在；真实正式索引是`benchmark/runs/lite/requirements/current/index.json`，SHA256仍为`09918d7c652aee0d306dc603cbf7c827c6ca01996b8a436d72fb8d4f803b6884`，没有新建替代索引。三个选段使用各自canonical Expected及原有要求图，完整要求ID、载荷和T/L/B分母在八组间一致，未重编译Expected、改写source-map、合同、权重、分母或Oracle。S3为`zhenye-coupon-seals-p001-003`，S4为`tencent-conditions-entity-payment-definitions-p108-114`，S6为`huawei-management-toc-p014`；没有换成员或筛掉困难要求。
+
+候选读取先独立保存Native观察、候选图、文字投影和原生清单，再由独立进程加载所选Expected比较。实际复用`native_observation → read_saved_native/read_native_relations → read_candidate`及`load_requirements → grade_layers`，只用本地编排收窄Native侧，未调用会读取Final的配对入口，未建立第二评分器。948项原生主文字字段核对及2837项对象/几何/父子引用/原始prov核对无差异；主文字遗漏、重复对象路径、未解释读取异常均为0。原生body/groups顺序、原数组出现位置、HTML语法格、已有页及分支、warning/截断/unknown各自保留；数组位置或bbox不充当全局读序，Markdown缩进不充当法律父链，无原生charspan时只记录本地读取跨度。详见[读取可靠性](../../runs/lite/diagnostics/native-research-phase16/native-reader-reliability.json)。
+
+24份同版[Native逐要求比较](../../runs/lite/diagnostics/native-research-phase16/comparison/diagnostic-execution.json)均执行成功，共4128条要求：T 1224条、L 1936条、B 968条。这些是固定责任记录数，T字符分母另保留，不是正确数、分数或排名。每项的Expected来源、原生/observation绑定、实际候选来源、原始比较器状态、责任状态、原始trace指针及不能比较的确切原因均在[分层矩阵数据](../../runs/lite/diagnostics/native-research-phase16/readiness-matrix.json)及其24份requirement-diagnosis链接中；原outcome和固定责任未被诊断标签覆盖。所有顶层和内层质量分数、分子均 withheld，没有激活正式current。24份文字容量trace复核及无损存储检查见[trace核验](../../runs/lite/diagnostics/native-research-phase16/trace-verification.json)；后续仅细化原生unknown与比较能力限制的归因，已通过且SHA未变的trace没有重复运行。
+
+真实来源例证见[本轮固定案例](../../runs/lite/diagnostics/native-research-phase16/focused-real-cases.json)：S4/P03的`projected-text:32:sentence:0`由自身`#/pages/2/raw/res/parsing_res_list/4`的`[0,232)`可靠提供，法律父链仍独立未决。S6/P01的`projected-text:2:sentence:0`“愿景、使命与战略”和其页码“13”实际存在于自身`#/pages/0/raw/json_result/0/1/content`，T语法单元与导航身份尚不能可靠对应，不能将其记为原生缺字。现有trace中的`software_failure`也用于wording、scope/order或导航能力未支持，并不都表示异常；本轮保留原flag、原reason和来源，将比较能力限制C与原生关系unknown D分开，没有报告成24次读取执行失败。
+
+本轮未把缺少独立位置证明的差异升级为已确认的原生质量错误；这不等于原生零缺陷。所有原始incorrect及其实际候选、格式差异和未决原因均保留，召回无命中或未知关系不作候选零分。 原生文字正确、原生字面错误、原生结构正确/不完整、原生关系unknown、软件读取问题、比较对应限制、Expected责任阻塞和格式差异分别保留。当前所选Expected责任阻塞为0；历史107份全局责任缺口、3份待独立整样本验收和5个输入范围仍保持，不能以全局未决抹掉本范围独立T，也不能以所选责任完整宣称候选B已通过。S4法律条件、否定及例外逐字参与T，父链不能从缩进补造；S6导航/页码身份不能用数值算术等价替代，跨区域顺序无证明时为unknown；S3媒体声明不证明印章或图文关系，未读图片或赋予图像语义。S9/P02真实数字和邮箱缺字沿用同版源码与[历史负例绑定](../../runs/lite/diagnostics/text-readback-phase15/negative-controls.json)，本轮未重跑或计入24组统计，未把历史测试计数继承为本轮结果。
+
+以下ready/partial/blocked描述研究条件，不描述解析质量高低。真实候选错误本身不阻止参与研究；未定位或关系未知保留对应要求。总体partial表达仍能开展独立局部诊断，不是取T/L/B最差值，也不表示正式授权已满足。确切不可比较requirement_id、原因、影响层及trace随每格保存在准备文件中。
+
+| Pipeline | Selection | Native工件 | Native读取 | T | L | B | 成本 | 总体状态 |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| P01 | S3 | ready | ready | partial | partial | partial | partial | partial |
+| P02 | S3 | ready | ready | partial | partial | partial | partial | partial |
+| P03 | S3 | ready | ready | partial | partial | partial | partial | partial |
+| P04 | S3 | ready | ready | partial | partial | partial | partial | partial |
+| P05 | S3 | ready | ready | partial | blocked | blocked | partial | partial |
+| P06 | S3 | ready | ready | partial | partial | partial | partial | partial |
+| P07 | S3 | ready | ready | partial | partial | partial | partial | partial |
+| P08 | S3 | ready | ready | partial | partial | partial | partial | partial |
+| P01 | S4 | ready | ready | partial | blocked | blocked | partial | partial |
+| P02 | S4 | ready | ready | partial | blocked | blocked | partial | partial |
+| P03 | S4 | ready | ready | partial | blocked | partial | partial | partial |
+| P04 | S4 | ready | ready | partial | blocked | partial | partial | partial |
+| P05 | S4 | ready | ready | partial | blocked | blocked | partial | partial |
+| P06 | S4 | ready | ready | partial | partial | partial | partial | partial |
+| P07 | S4 | ready | ready | partial | partial | partial | partial | partial |
+| P08 | S4 | ready | ready | partial | partial | partial | partial | partial |
+| P01 | S6 | ready | ready | partial | blocked | blocked | partial | partial |
+| P02 | S6 | ready | ready | partial | blocked | blocked | partial | partial |
+| P03 | S6 | ready | ready | partial | blocked | blocked | partial | partial |
+| P04 | S6 | ready | ready | partial | blocked | blocked | partial | partial |
+| P05 | S6 | ready | ready | partial | blocked | blocked | partial | partial |
+| P06 | S6 | ready | ready | partial | blocked | blocked | partial | partial |
+| P07 | S6 | ready | ready | partial | blocked | blocked | partial | partial |
+| P08 | S6 | ready | ready | partial | blocked | blocked | partial | partial |
+
+历史Native模型执行完成、历史质量计算发生、历史成绩撤回、当前正式Native成绩未发布、本轮有限诊断五个状态独立保留。[原始成本核验](../../runs/lite/diagnostics/native-research-phase16/original-cost-verification.json)逐一读取并绑定2,080份原observation及各组worker/inference资源与ownership记录：每组quality800为173选段/800页一轮，perf80为28选段/80页三轮，独立预热为3选段/8页；全部原执行状态completed，时钟和页数齐全。[原执行核验](../../runs/lite/diagnostics/native-research-phase16/original-execution-verification.json)另核实八组execution-config与原run一致、各worker完成260条、ExitCode=0且无OOM；Native执行器SHA`0163210d018d45d692bf8516c5c02d9fc134d6ce1f2671dbdc5f869d1bb02139`与原运行记录相同，其Docling V1/V2、MinerU Standard/Advanced等选择通过只读源码核对，未导入或执行模型。旧work-status中的历史计算状态不是当前成绩或零损失证据，未恢复任何历史分数、排名或旧冻结。
+
+下面只核实原始时钟，单位秒。quality800与每轮perf80仅在各自串行、互不重叠的worker处理区间内求和；SDK初始化、GPU服务就绪及预热分别显示，互不相加为新端到端耗时。本轮读取/比较耗时以及公共后处理没有计入。完整原值、CPU秒、硬配额/affinity、RSS、内存采样、客户端并发、retry=0配置及实际request/errors记录保留在成本数据中；配置预算不是实测峰值。
+
+| Pipeline | quality800处理秒 | perf80三轮处理秒 | 8页预热秒 | SDK初始化秒 | GPU服务就绪秒 | GPU归属采样 |
+| --- | ---: | --- | ---: | ---: | ---: | --- |
+| P01 | 1565.346 | 201.004 / 199.899 / 199.424 | 27.494 | 7.728 | 49.835 | partial |
+| P02 | 1478.303 | 186.266 / 186.332 / 187.188 | 22.641 | 8.023 | 50.305 | partial |
+| P03 | 11576.992 | 1001.961 / 893.875 / 937.507 | 103.015 | 4.558 | 16.838 | partial |
+| P04 | 11826.903 | 778.186 / 967.767 / 778.310 | 105.752 | 4.348 | 15.718 | partial |
+| P05 | 2908.116 | 278.233 / 275.325 / 276.465 | 38.007 | 5.406 | 51.165 | partial |
+| P06 | 1619.337 | 202.435 / 202.140 / 202.872 | 16.151 | 7.540 | 101.159 | partial |
+| P07 | 2411.696 | 279.992 / 276.897 / 274.570 | 31.422 | 7.318 | 100.816 | partial |
+| P08 | 3327.525 | 316.181 / 310.530 / 311.491 | 36.183 | 4.675 | 48.354 | partial |
+
+所有组的独立GPU归属历史采样均为partial，只能保留观察窗口内归属聚合值及其下界，不能声明完整峰值、逐组合峰值或据此估算功耗。worker与推理服务窗口、初始化/Graph捕获与样本处理窗口不同，独立峰值不相加。TTS历史共驻、负载不受控及观察缺失均披露，不称独占或空闲GPU。perf80成员不等于本固定三个selection，具体每组是否有该选段三轮记录已逐组合保留，不能拿全局80页成本冒充本选段重复成本。原始成本可支撑保存执行的身份及背景成本研究，不能单独支持24组的完整GPU/功耗比较或全文档类型外推。
+
+| 正式门槛 | 状态 | 具体结论 |
+| --- | --- | --- |
+| Native输入完整 | ready | 24对Native/observation身份均核实。 |
+| Native reader可靠 | ready | 原生主文字、对象、实际提供的元数据保全；未知结构未补造。 |
+| T读取及对应 | partial | 可独立诊断部分文字；逐要求未定位、容量或对象歧义仍保留。 |
+| L比较能力 | partial | 可诊断明确字段/导航关系；法律父链、范围和多栏全局顺序仍有限制。 |
+| B的Expected责任完整 | ready | 所选三个既有视图的来源、结构、比较责任完整，选内责任阻塞为0。 |
+| 独立验收证据 | partial | 历史整样本来源验收保留；当前受控测试不重签同版正式scope验收。 |
+| 成本身份可靠 | ready | 2,080份原始observation及各组资源记录可追溯；GPU及选段性能外推仍partial。 |
+| 软件及配置冻结 | partial | 源码和原配置已绑定，尚无本范围获准的正式冻结。 |
+| 正式研究范围批准 | blocked | 本轮仅批准调查准备。 |
+| 正式评分授权 | blocked | 目前尚未获得正式Native评分授权。 |
+| scoring freeze批准 | blocked | 未创建approved freeze或active current。 |
+| 有限Native正式入口 | blocked | 现有正式入口拒绝--sample，省略会扩大到完整Lite；需另行授权最小Native-only范围入口。 |
+
+正式授权申请已写入现有准备文件的`phase16.authorization_application`，逐项绑定研究目的、固定24输入、Expected/要求视图、当前软件、原生运行及成本身份、各层适用条件、全部不可比较要求、失败处理、结果发布边界和待批准事项。申请范围保留三个完整selection及全部八组，不筛选观察后容易通过的要求；未知不转N/A或0。待批准的是该有限正式研究范围、复用原评分器的最小Native-only范围入口，以及先决条件满足后的正式执行和精确scoring freeze，不能把任一批准替代内容验收。
+
+目前尚未获得正式Native评分授权。**当前不存在可安全执行此24组合有限正式研究的正式命令**：现有`evaluate_saved`在正式模式拒绝sample选择，省略sample又会扩大到完整Lite。准备文件保留`formal_command=null`、具体源码门槛、正式命令应满足的完整参数合同及本轮实际执行的诊断命令；没有虚构开关、裁剪manifest/requirements、绕过门禁，或把诊断命令称为正式评分命令。后续授权申请必须先处理这一明确执行条件，再批准相应freeze；本轮不为它扩建评测器。
+
+本轮按`scripts/test_source_only.py`实际执行19个已审查模块，585项通过、0项跳过；历史2249/4282等计数未计入。运行前核对当前imports、tmp_path/monkeypatch fixture、共享helper、文件I/O及子进程站点；只执行自造文字/JSON、Native读取、T/L/B、目录、父链/范围、trace和正式门禁反例。未经核查的全量pytest未运行，现有排除模块仍未收集；导入的两个受控测试helper不另算执行模块。详见[本轮审查](../../runs/lite/diagnostics/native-research-phase16/test-review.json)及[测试回执](../../runs/lite/diagnostics/native-research-phase16/source-only-phase16.json)。本轮只更新主报告和本地研究证据，没有docs或其他通用文档变更；报告和runs按永久规则排除通用Markdown检查。
+
+候选读取、元数据核对、独立比较、trace及测试使用串行、最多8 CPU、8 GiB地址空间、空GPU可见性、独立禁网namespace及仓库只读挂载；候选和测试的Expected根被空只读挂载。所有最终成功执行审计无边界违规，审计覆盖的最大RSS为1168502784字节；本轮诊断时长仅在本地审计中。原执行元数据提取器初次因未识别带类型赋值而失败，异常回溯又被其窄I/O规则拒绝读取自身Python源码及一个不存在的同名路径，共5次拒绝；没有额外候选、Expected或媒体被打开。修正本地元数据提取和自身源码回溯许可后，八组原执行记录核验成功；初次审计及本地绑定失败另保存在development-attempts，没有当作候选失败或测试通过。没有原始PDF/图像字节、字层、OCR/VLM、模型推理、公共转换/Final重生、网络、GPU/TTS/在线服务、部署、正式评分、approved freeze、active current、正式排名、提交或推送。Expected、source-map、selection、manifest、要求索引、合同、分母、Oracle、execution-lock和原始成本保持；保全及所有执行工具/工件绑定见[本轮最终绑定](../../runs/lite/diagnostics/native-research-phase16/final-binding.json)。
+
+以下第十五阶段及更早段落保留其历史身份和当时范围；其历史“当前”及准备状态不替代本节结论。
 
 ## 第十五阶段：评测文字读取修复与有限Native研究准备
 
