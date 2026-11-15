@@ -173,7 +173,8 @@
     "tests/unit/test_three_layer_unit_scope_contract.py": "97bdaacaae96dce9ee98f792546486116cf47e84df4a976d49e1eb984f7c9242",
     "tests/unit/test_toc_evidence.py": "2d4fd676267b3490825b9d74dab79aaa848a43dd394718b9fbbe05d2cdec2736",
     "tests/unit/test_toc_parentage_contract.py": "fc15471bdd6097b31fa8dcaf764f0e186d2c1f070ee54ba4eecc3dc709c2b87a",
-    "tests/unit/test_visual_saved_content.py": "0de33f0393eead32ea17c139840f56f13efb5e98f07b23fedeeeab6b6de6cb83"
+    "tests/unit/test_visual_saved_content.py": "0de33f0393eead32ea17c139840f56f13efb5e98f07b23fedeeeab6b6de6cb83",
+    "tests/unit/test_native_research_entry.py": "b49ec923207914955766dd66fc53ce58a720c27c7010a0cf800a35fc19e4848a"
   },
   "dependencies": {
     "pyproject.toml": "e622a4f69bfb14f4919f276dd34272373f669abe6b236e3251e7719cd37005c8",
@@ -195,10 +196,14 @@
     "tests/validation/docling_v2_native_assertions.py": "e5cf068f6cd2b3afe875e6a25e9ae19f41ea7cd6ab9228868d48cf3d086a8367",
     "tests/validation/mineru_native_assertions.py": "6e4c683348680be64134ac9ba769b5da49e34aec98c78c280fa429af91f07823",
     "tests/validation/visual_native_assertions.py": "e955b54540698efdc9f737e241bbdff04dec6e2134d5e1258834d988b0d6f821",
-    "moparse_eval/diagnostic_artifacts.py": "8f06776f5821c92fb45e12aadbedf28d2da71eb6c4c0b6594ad249ade18d7deb",
-    "moparse_eval/diagnostic_comparison.py": "fdf169b1fdfc057169dfc574bd7e44049cf6724d676ce7b1922a020e1877320c",
+    "moparse_eval/diagnostic_artifacts.py": "bb23a7cb40778845d95c9854ec53281e9e19d9f66af96f0b9a9841c2fd0a2a2c",
+    "moparse_eval/diagnostic_comparison.py": "bdaba6a222f0fda7f20784e650f09706b7cde04ce73c16a136b028a1ce5c257a",
     "moparse_eval/expected_readback.py": "3626ddbb39c4aae7040415345bc45f0ade1489091d9b89b69091d570f08c7e03",
-    "moparse_eval/document_ast_comparison.py": "5d030e184ae06aa94bcdfb239d065c79cee460246ddeb51a33abcc422aa41648"
+    "moparse_eval/document_ast_comparison.py": "5d030e184ae06aa94bcdfb239d065c79cee460246ddeb51a33abcc422aa41648",
+    "moparse_eval/native_candidate.py": "b19671e467fbe1f0faac78a6651f2ac063f22c8c759fe8b76ce88c725e347d25",
+    "moparse_eval/native_evaluation.py": "3288b328f3f8bc94c8017db112dc07836e5c4caa3841048edc3893d5f6871264",
+    "moparse_eval/requirement_gate.py": "80275aa02b68169caca1305dd4f5472424450a9a6f7f3d44def7e31978d28f9f",
+    "moparse_eval/cli.py": "c40bf116d1130410cbbd67f9e600572327a567e308de0e7b14a9bb93ef221ab2"
   },
   "excluded_modules": {
     "tests/integration/test_http_api.py": "Outside the source/requirement/comparison software regression; dependencies and possible media/service side effects not admitted or collected.",
@@ -314,7 +319,8 @@
     "Phase13 development artifact binding: independent invented JSON/text identity, checksum, selection, cross-pipeline borrowing, missing-body and formal-mode counterexamples. Candidate read failures remain software-blocked; final read receives only its actual Markdown. Imports and fixtures reviewed; no media, model, service, network or corpus I/O.",
     "Phase13 comparison orchestration: scoped Expected reader exposes only selected physical lines, rejects whole-document caches; existing requirement projection is source-bound without compilation; per-source L/B blockers do not block independent T or adjacent requirements. Nested diagnostic scores are withheld. Fixtures are invented text/JSON only; no source, media, model, network or service execution.",
     "Phase13 native heading readback closure: only expose an own saved SDK single-heading level when primary text is unchanged and identical; original inputs stay immutable. Missing, mixed and conflicting SDK views cannot add levels or text. Controlled candidate scope is checked against the independent native context without any Expected fixture.",
-    "Phase13 paragraph-frame source identity: independently authored single native Markdown field with two paragraphs reproduces a name/number source collision. block_lines is part of record identity, including same-literal capacity and missing-frame guards. No comparison rule, expected answer or denominator changed."
+    "Phase13 paragraph-frame source identity: independently authored single native Markdown field with two paragraphs reproduces a name/number source collision. block_lines is part of record identity, including same-literal capacity and missing-frame guards. No comparison rule, expected answer or denominator changed.",
+    "Phase17 fixed Native-only admission and freeze guards: independently authored JSON/text transport counterexamples, fixed selection/pipeline scope, unapproved execution denial, partial and blocked denominators. Existing complete Lite and diagnostic tests retained; the 16-process regression is explicitly deselected to obey this serial 8 CPU task. Real Native reading is separate and cannot access Expected."
   ],
   "history": "The prior 4618-pass run and stage4-execution-scope.json remain historical evidence with disclosed media deviations."
 }

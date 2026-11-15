@@ -7,12 +7,11 @@ No processing, activation, formal aggregation or reference compilation lives her
 
 from __future__ import annotations
 
-import copy
 import hashlib
-import re
 from pathlib import Path
 from typing import Any
 
+from .native_candidate import bind_native_syntax_scopes, expose_native_heading_fields
 from .packaging import inside, read_json, write_json
 
 
@@ -111,150 +110,6 @@ def load_artifacts(path: Path, *, root: Path, sample_ids: list[str]) -> dict[str
         "records": [r for r in records if r["sample_id"] in sample_ids],
         "selections": {s: selections[s] for s in sample_ids},
     }
-
-
-def expose_native_heading_fields(
-    observation: dict[str, Any],
-) -> tuple[dict[str, Any], list[dict[str, Any]]]:
-    """Expose already saved, text-identical native heading metadata.
-
-    The common candidate compiler consumes explicit heading fields. Some saved
-    regions carry their actual level only in their own SDK Markdown export;
-    independent native context already reads that level. Bind those same fields
-    before compiling candidates, without adding or changing any primary text.
-    """
-    from .native_relations import heading_evidence
-    from .representations import visible_text
-    from .three_layer import canonical
-
-    derived = copy.deepcopy(observation)
-    evidence = []
-    recognized = {"heading", "section_header", "title", "doc_title"}
-
-    def heading_metadata_text(text):
-        # This binds only a level to the same native object. SDK rendering may
-        # flatten spaces or serialized line breaks; primary/T text is unchanged.
-        return re.sub(r"\\[rn]|\s+", "", canonical(text))
-
-    for page in derived.get("pages", []):
-        for block in page.get("blocks", []):
-            exported = block.get("native_export_markdown")
-            if block.get("cells"):
-                continue
-            proof = heading_evidence(block)
-            level = proof.get("resolved_level")
-            if type(level) is not int:
-                continue
-            primary = visible_text(block.get("text", ""), block.get("text_format", "plain"))
-            if proof.get("level_source") == "native_export_markdown" and (
-                not isinstance(exported, str)
-                or heading_metadata_text(primary)
-                != heading_metadata_text(visible_text(exported, "markdown"))
-            ):
-                continue  # Conflicting native views cannot supply each other's text.
-            own = {
-                key: value
-                for key, value in block.items()
-                if key not in {"native_export_markdown", "level", "heading_level"}
-            }
-            primary_level = heading_evidence(own).get("resolved_level")
-            current_level = (
-                (block.get("heading_level", block.get("level", 1)) or 1)
-                if block.get("kind") in recognized
-                else primary_level
-            )
-            if current_level == level and proof.get("role") == "heading":
-                continue
-            evidence.append(
-                {
-                    "native_path": block.get("native_path"),
-                    "original_kind": block.get("kind"),
-                    "source": (
-                        block.get("native_export_markdown_path")
-                        if proof.get("level_source") == "native_export_markdown"
-                        else block.get("native_path")
-                    ),
-                    "heading_evidence": proof,
-                    "primary_text_unchanged": True,
-                    "exposed_level": level,
-                    "expected_access": False,
-                }
-            )
-            block.update(kind="heading", heading_level=level, level=level)
-    return derived, evidence
-
-
-def bind_native_syntax_scopes(evidence: dict[str, Any]) -> list[dict[str, Any]]:
-    """Withdraw guessed syntax hierarchy where native evidence says unknown.
-
-    No fact, value, qualifier, parent edge or primary text is added. The separate
-    native context is authoritative only for its own recorded source blocks.
-    Explicit contradictions and mixed/ambiguous native scopes remain blocked.
-    """
-    contexts = evidence.get("native_context", {})
-    events = {row["id"]: row for row in contexts.get("heading_events", [])}
-    own_events = {row["source"].get("block"): row for row in events.values()}
-    records = []
-    for unit in evidence.get("syntax", []):
-        block = unit.get("source", {}).get("block")
-        context = contexts.get("by_block", {}).get(block)
-        if not context:
-            continue
-        own = own_events.get(block)
-        if unit.get("kind") == "heading" and own and own.get("hierarchy_known") is False:
-            if "heading_level" in unit:
-                records.append(
-                    {
-                        "source": unit["source"],
-                        "action": "withdraw_inferred_heading_level",
-                        "previous_level": unit.pop("heading_level"),
-                        "native_level": None,
-                        "basis": own["evidence"],
-                        "expected_access": False,
-                    }
-                )
-        uncertain = [
-            events[ref["event_id"]]
-            for ref in context.get("context_evidence", [])
-            if ref.get("event_id") in events
-            and events[ref["event_id"]].get("hierarchy_known") is False
-        ]
-        if not uncertain or context.get("conflicts") or context.get("scope_disagreements"):
-            continue
-        if any(
-            row.get("evidence", {}).get("markdown_status") == "mixed_scope" for row in uncertain
-        ):
-            continue
-        paths = [context.get("heading_path", [])]
-        paths.extend(
-            row["path"]
-            for row in context.get("explicit_heading_paths", [])
-            if row.get("status") == "bound"
-        )
-        if unit.get("kind") == "heading":
-            paths = [path[:-1] if path[-1:] == [unit.get("text")] else path for path in paths]
-        scope = unit.get("scope", [])
-        checked = (
-            scope[:-1]
-            if unit.get("kind") == "heading" and scope[-1:] == [unit.get("text")]
-            else scope
-        )
-        distinct = {tuple(path) for path in paths}
-        if checked not in paths and len(distinct) == 1:
-            new_scope = list(next(iter(distinct)))
-            records.append(
-                {
-                    "source": unit["source"],
-                    "action": "withdraw_unsupported_syntax_scope",
-                    "previous_scope": scope,
-                    "native_heading_path": new_scope,
-                    "unknown_heading_events": [row["id"] for row in uncertain],
-                    "basis": "independent_native_context_without_known_hierarchy",
-                    "expected_access": False,
-                }
-            )
-            unit["scope"] = new_scope
-    return records
 
 
 def read_candidates(manifest: dict[str, Any], output: Path, *, root: Path) -> Path:

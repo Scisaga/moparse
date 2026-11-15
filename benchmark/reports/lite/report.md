@@ -1,5 +1,39 @@
 # MO-Parse Lite：Native有限研究与正式评价状态
 
+## 第十七阶段：Native-only有限研究入口与冻结准备
+
+2026-11-16，Native-only有限研究入口已实现，24个固定组合的冻结准备及独立Preflight达到`ready_for_authorization`，仅完成prepared和verified；`approval_status=not_approved`、`execution_authorized=false`、`publication_authorized=false`。未执行正式评分，未产生正式score、激活current或发布质量成绩。可直接审阅[研究授权申请](../../runs/lite/diagnostics/native-research-phase17/final/authorization-application.json)、[精确冻结](../../runs/lite/diagnostics/native-research-phase17/final/freeze.json)、[实际CLI预检](../../runs/lite/diagnostics/native-research-phase17/final/preflight.json)及[最终交付绑定](../../runs/lite/diagnostics/native-research-phase17/final/final-binding.json)。以下第十六阶段及更早内容保留历史身份，其历史“当前”不替代本节。
+
+接手HEAD及本轮结束HEAD为`096a50f75405e555f3e3c171fd65f83fe0a21365`，两个目录入口均指向`/opt/moparse`，接手工作区干净，本轮代码及文档修改尚未提交。`096a50f7`是第十六阶段接手`ce7aad797086fb3314119a07b581b256f330219d`的直接子提交，二者只有主报告差异，评测源码相同；接手时实测software_id仍为`ad49afdc37e3bfb2489ec2768638d6b4d7bd18920f57610addc7ad3b1ebda72e`。本轮最终software_id为`3f0f0efea2a57dfda02191fbf7394f967fdf8bb610000bc59171de7d55e7c509`，绑定实际源码、支持源码、Python和依赖，另保存软件快照、测试、CLI及合同身份。原Native执行`c6e7f5c0cdcbb8801d17595c515fcbe7794111c396bfe58a6d0ab71a199db28e`和公共Final历史转换`f8bcef05feaa4406189d395219a4db50afb8cc9446600ee11adce7fb403e0f1f`独立保留，后者只在评测绑定中作为历史身份说明，不进入Native输入绑定或候选读取。
+
+范围固定为完整S3 `zhenye-coupon-seals-p001-003`、S4 `tencent-conditions-entity-payment-definitions-p108-114`、S6 `huawei-management-toc-p014`各自乘P01-P08。三者已经开发及诊断暴露，不是独立留出集或完整Lite代表。新入口不接受sample、pipeline、workers、Final/current或diagnostic范围开关；源码固定范围，并以第十五阶段准备及第十六阶段输入SHA为不可自动重绑的锚。24份原生JSON及24份observation均逐份校验路径、SHA、selection/document、producer、实际配置、模型revision、页/分支映射及来源许可；不因缺失或不利结果跳过成员。见[研究范围](../../runs/lite/diagnostics/native-research-phase17/final/research-scope.json)及[完整输入绑定](../../runs/lite/diagnostics/native-research-phase17/final/input-binding.json)。
+
+实际调用为`python -m moparse_eval native-evaluate --phase read|preflight|execute --freeze ... --output ...`。`native_evaluation.load_preparation/preflight`只核验冻结材料；`launch_reading`启动独立mount/network namespace中的`native_candidate.worker`，仓库只读、仅本轮读取目录可写，Expected及数据/原件根不可见，每次只准读取当前组合自己的Native和observation。候选读取复用`native_observation → read_saved_native/read_native_relations → read_candidate → literal_readback`，既有原生标题字段及未知范围处理仅从诊断模块原样移到共同读取模块。正式路径不导入诊断比较编排、读取Final、调用公共转换或以IR/Semantic补字。Expected只在父进程通过`requirement_gate.load_bound_requirement → read_expected(selection_only=True) → evaluation_projection`加载既存图，并与原授权行段绑定；不调用Expected编译器，不使用整文档缓存补范围。
+
+未来获准的`execute_native`复用`three_layer.grade_layers`、document AST比较、既有requirement graph/gate、trace storage和严格`layer_aggregation.summarize_layers`。`retain_limits`只限制不受支持结论的发布，保留原始比较trace和全部要求及分母；partial、blocked、unknown和软件异常不会变成passed、N/A或候选零分。当前三个选段的T字符分母依次为734、22751、165，L要求分母22、179、41，B要求分母13、90、18；八组全部保留，共4128项责任。没有按可比较子集重算分数，也没有T/L/B总质量或八组总体排名。
+
+| 层 | partial组合 | blocked组合 | 本轮正式质量成绩 |
+| --- | ---: | ---: | --- |
+| T | 24 | 0 | 未执行 |
+| L | 10 | 14 | 未执行 |
+| B | 12 | 12 | 未执行 |
+
+逐组合的确切限制要求ID及原因见[24组矩阵](../../runs/lite/diagnostics/native-research-phase17/final/readiness-matrix.json)。这些是研究能力状态，不是质量成绩。历史63份独立source Oracle及原assertion/验收证据按原身份保留，本轮没有重新审查Expected或将其重签为新软件的完整语义验收；新软件的独立验收只针对入口、冻结材料和读取器。真实24组读取完成，独立检查逐份确认完整候选载荷与历史第十六阶段读取载荷完全相同，包含原生对象、字面读取、结构及未知信息，且本轮无Expected/Final访问或质量比较。见[读取回执](../../runs/lite/diagnostics/native-research-phase17/final/reading/candidate-reading.json)和[独立预检](../../runs/lite/diagnostics/native-research-phase17/final/independent-preflight.json)。
+
+原完整Lite入口`expected_evaluation.evaluate_saved`文件字节未改：正式模式在读取任何材料前拒绝sample，范围仍取原run的quality800与完整manifest并核对全P01-P08；`_frozen_requirements`仍要求完整来源独立门禁；`_service_inputs`只有被显式要求时才读取已激活的全八组current。`_grade_tasks`原分析调度及失败处理不变，软件异常走`_blocked_score`并保留空分数；正式完整聚合仍由streaming aggregation完成，受支持后才写调用方output的index。原`score_run`只更新原run的latest_scores，`report_run`及显式report-output才调用报告renderer；此链没有自动激活scores/current的步骤。新Native入口不调用上述完整Lite运行、报告或激活路径，未来输出仅限独立`benchmark/runs/lite/native-only/<new-run>`，本轮该根仍不存在。具体调用链与副作用见[入口审查](../../runs/lite/diagnostics/native-research-phase17/final/entry-audit.json)。
+
+真实要求索引仍为`benchmark/runs/lite/requirements/current/index.json`，SHA256 `09918d7c652aee0d306dc603cbf7c827c6ca01996b8a436d72fb8d4f803b6884`，全局`structure_blocked`、107份责任缺口、3份待独立整样本验收和5个输入范围均保持。全Lite声明仍为173个selection、800页、1384个Native质量组合；完整三层正式分母及质量尚未获准冻结。不存在的`benchmark/requirements/current/index.json`未创建，service/current及scores/current未激活，execution-lock未改，历史评分继续撤回。有限研究冻结没有改变全局准入。
+
+成本绑定重用第十六阶段八组quality800一次、perf80三轮、预热/初始化、worker/inference资源及归属证据，并复核2104份原始成本记录身份。GPU归属采样继续partial，观察窗口的归属峰值仅是下界；历史TTS共驻且负载未受控制，不宣称独占或空闲。此成本只支持历史执行背景，不能称为24组合的独立重复性能测量、完整逐选段资源峰值或八组性能排名；本轮读取及预检耗时不并入Native解析成本。见[成本绑定](../../runs/lite/diagnostics/native-research-phase17/final/cost-binding.json)。
+
+最终同版source-only运行12个已审查模块，439项通过，16进程调度保护测试按本轮串行约束deselected，未运行未经审查的全量pytest；首次41项开发检查不计入最终计数。新入口41项受控检查覆盖Native对象缺失、Native/observation SHA漂移、pipeline/selection/producer/页映射/来源权限变更、要求缺失、独立验收或成本缺失、软件异常、Expected责任blocked、T/L/B局部blocked、Final混入、扩大selection、删除pipeline、current激活、软件身份混合及绕过执行批准等正反门禁；完整Lite原范围及diagnostic保护测试也实际执行。真实CLI另在没有authorization时调用execute，明确拒绝并在任何候选读取或正式输出创建前停止，证明prepared/verified文件及ready预检不能授权评分。见[测试审查](../../runs/lite/diagnostics/native-research-phase17/final/test-review.json)、[同版439项回执](../../runs/lite/diagnostics/native-research-phase17/final/source-only-final.json)及[实际拒绝回执](../../runs/lite/diagnostics/native-research-phase17/final/negative-cli-clean.json)。
+
+未授权CLI直接打印异常时，两次尝试读取Python的`<unknown>`源码占位路径，均被隔离器拒绝，没有读取真实文件。随后捕获该预期ValueError重新进入同一实际CLI main/参数解析/执行门禁，无mock，退出码2且审计无违规；正式输出根仍不存在。交付元数据首次因将入口审查误作执行审计而中止，此后按真实审计类型及上述拒绝记录整理，未重跑比较或更改冻结。详见[执行尝试说明](../../runs/lite/diagnostics/native-research-phase17/final/development-attempts.json)。
+
+最终差异检查发现`requirement_gate.py`末尾多一个空行，修正仅影响源码字节和software_id，比较行为未变；旧冻结及中间439项测试记录已明确[失效并保留](../../runs/lite/diagnostics/native-research-phase17/preparation-invalidated.json)，不能继续作为最终准入依据。当前有效材料全部位于`native-research-phase17/final/`，在最终身份下重新完成439项测试、24份Native读取、独立载荷核验及实际CLI预检；各次测试不累加，也没有沿用旧软件冻结。
+
+精确freeze SHA256为`cb8dbc49df2a76c7e472241bca46a5c7fe24768040943a8fc48bb288e00bf0e9`，完整部件及各自SHA在freeze与final-binding中。授权申请分别列出仍待用户批准的固定研究范围、Native-only入口、此精确scoring freeze、正式执行及有限研究发布。批准执行不自动允许发布，更不允许恢复历史quality800成绩或发布完整Lite/文档类型总体排名。本轮结束即停止；未运行正式Native/Product评分、模型/回放、公共生产转换、原件/图片读取、OCR/VLM、GPU/TTS/网络/在线服务、部署、提交或推送；只读输入、原始成本及正式门禁保持。
+
 ## 第十六阶段：Native有限研究范围核验与正式门槛
 
 2026-11-16，Native有限研究范围核验已完成；S3/S4/S6共24个组合的Native独立读取可靠性为24/24；T/L/B的逐组合准备状态分别为`{'partial': 24}`、`{'partial': 10, 'blocked': 14}`、`{'partial': 12, 'blocked': 12}`，正式评分授权尚未执行。这是固定三个已有开发/诊断暴露selection的有限Native研究，不是独立留出集、完整Lite代表、Product评分或八组总体排名。

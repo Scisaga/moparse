@@ -409,6 +409,11 @@ def parser() -> argparse.ArgumentParser:
         child.add_argument("--run", type=Path, required=True)
         if name == "score":
             child.add_argument("--freeze", type=Path, help="validated scoring software and protocol identity")
+    native = commands.add_parser("native-evaluate", help="fixed S3/S4/S6 Native research; preflight never scores")
+    native.add_argument("--phase", choices=("read", "preflight", "execute"), default="preflight")
+    native.add_argument("--freeze", type=Path, required=True, help="Native research preparation, separate from full Lite")
+    native.add_argument("--output", type=Path, required=True)
+    native.add_argument("--authorization", type=Path, help="explicit user decisions bound to this exact freeze")
     return command
 
 
@@ -421,6 +426,10 @@ def main(argv: list[str] | None = None) -> int:
         return asyncio.run(run_dataset(args))
     elif args.command == "score":
         print(score_run(args.run, freeze=args.freeze))
+    elif args.command == "native-evaluate":
+        from .native_evaluation import native_command
+
+        return native_command(args)
     else:
         print(report_run(args.run))
     return 0

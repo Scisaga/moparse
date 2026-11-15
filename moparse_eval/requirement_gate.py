@@ -14,6 +14,8 @@ import re
 from pathlib import Path
 from typing import Any
 
+from .packaging import inside, read_json
+
 _DIGEST = re.compile(r"[0-9a-f]{64}")
 _EVIDENCE_CATEGORIES = {
     "oracle": {
@@ -278,3 +280,27 @@ def validate_replay_gate_receipt(receipt: Any, software_id: str, *, scope: set[s
             or any(not isinstance(ident, str) or not ident for ident in ids)
             or ids != sorted(set(ids)) or scope is not None and set(ids) != set(scope)):
         _fail("candidate replay receipt lacks current evidence identities or complete sample scope")
+
+
+def load_bound_requirement(index_path: Path, sample, expected_root: Path):
+    """Read an existing view and bind its selected raw source; never recompile it."""
+    from .expected_readback import read_expected
+    from .requirement_graph import evaluation_projection, validate_requirement_graph
+
+    index = read_json(index_path)
+    rows = [row for row in index["records"] if row["sample_id"] == sample["id"]]
+    if len(rows) != 1:
+        raise ValueError("selected requirement view missing or duplicated")
+    row = rows[0]
+    path = inside(index_path.parent, row["json"])
+    if hashlib.sha256(path.read_bytes()).hexdigest() != row["generated_view_sha256"]:
+        raise ValueError("existing requirement view checksum differs")
+    graph = read_json(path)
+    # No expected= argument: that formal validation path recompiles a graph.
+    validate_requirement_graph(graph)
+    expected = read_expected(sample, expected_root, selection_only=True)
+    saved = graph["source_obligation_inventory"]["selection"]
+    for key in ("sample_id", "document_id", "source_pages", "scope", "authorized_raw_segments"):
+        if saved[key] != expected[key]:
+            raise ValueError("existing requirement source binding differs: " + key)
+    return graph, evaluation_projection(graph), row, expected

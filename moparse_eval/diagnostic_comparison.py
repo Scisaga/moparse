@@ -10,6 +10,7 @@ from typing import Any
 
 from .diagnostic_artifacts import sha256
 from .packaging import inside, read_json, write_json
+from .requirement_gate import load_bound_requirement as load_requirements
 
 
 @contextmanager
@@ -160,30 +161,6 @@ def diagnostic_outcomes(score, *, graph, trace, artifact):
             }
         )
     return result
-
-
-def load_requirements(index_path: Path, sample, expected_root: Path):
-    """Read an existing view and bind its selected raw source; never recompile it."""
-    from .expected_readback import read_expected
-    from .requirement_graph import evaluation_projection, validate_requirement_graph
-
-    index = read_json(index_path)
-    rows = [row for row in index["records"] if row["sample_id"] == sample["id"]]
-    if len(rows) != 1:
-        raise ValueError("selected requirement view missing or duplicated")
-    row = rows[0]
-    path = inside(index_path.parent, row["json"])
-    if sha256(path) != row["generated_view_sha256"]:
-        raise ValueError("existing requirement view checksum differs")
-    graph = read_json(path)
-    # No expected= argument: that formal validation path recompiles a graph.
-    validate_requirement_graph(graph)
-    expected = read_expected(sample, expected_root, selection_only=True)
-    saved = graph["source_obligation_inventory"]["selection"]
-    for key in ("sample_id", "document_id", "source_pages", "scope", "authorized_raw_segments"):
-        if saved[key] != expected[key]:
-            raise ValueError("existing requirement source binding differs: " + key)
-    return graph, evaluation_projection(graph), row, expected
 
 
 def compare_candidates(

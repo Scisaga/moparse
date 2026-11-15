@@ -2,6 +2,8 @@
 
 本文维护开发依赖、交付物和完成条件。逐管线格式与适配设计见[管线索引](../pipelines/README.md)，最终交付要求见[输出规范](../specs/moparse-output-spec.md)，代码职责见[架构](architecture.md)。2026-10-24新增独立数据集与Lite评测实现；实际样本、运行、评分覆盖及服务验收分别记录，不能互相替代。
 
+2026-11-16第十七阶段新增固定S3/S4/S6 × P01-P08的`native-evaluate`入口，复用既有读取、要求图和三层比较，完整Lite正式入口保持原行为。24份Native独立读取及同版冻结预检达到`ready_for_authorization`，T/L/B局部partial和blocked保持；准备及验证不构成执行或发布批准。精确冻结、独立证据及五项待批准事项见[唯一Lite报告](../../benchmark/reports/lite/report.md#第十七阶段native-only有限研究入口与冻结准备)。正式评分、Product评价、current激活及全Lite排名均未启动。
+
 2026-11-14第十二阶段已在固定8份文档、9个授权selection上实际完成72条同版source-free公共转换，按document_id/pipeline归并为64个唯一组合；D5两个选段分别执行。两处公共单位/最终来源定位缺陷经独立反例修复，全部链按最终源码重跑，原生对象、各阶段、四层状态及Storage逐项绑定；partial、未知父链/续表和媒体未交付保持。4282项当前source-only回归不能代替质量验收。阶段矩阵、逐链证据和未完成责任见[跨文档Normalization报告](../../benchmark/reports/lite/cross-document-normalization-review.md)，正式质量仍为structure_blocked，未激活service/current或scores/current。
 
 第十一阶段历史记录：2026-11-14固定8份文档、9个既有授权选段和72份真实native结果，完成历史执行、原生覆盖、既存阶段、107份责任缺口及成本可比性的只读审查。完整横向验证未完成：64个选段与配置组合没有当前公共版本的完整阶段产物；两份文档的8个既有开发链不能外推到整个集合。当时下一步是另行授权补齐固定集合的source-free开发证据，再按最早实际差异确定最小公共修复；不继续按编号重复接入，不以Expected比较缺口阻断独立的信息保全研究。具体文件、函数、样本及验收条件见[跨文档Normalization审查](../../benchmark/reports/lite/cross-document-normalization-review.md)，正式质量状态仍见[唯一报告](../../benchmark/reports/lite/report.md)。
