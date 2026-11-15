@@ -1,5 +1,21 @@
 # MO-Parse Lite：Native/Final产品价值与正式评价状态
 
+## 第十五阶段：评测文字读取修复与有限Native研究准备
+
+2026-11-15，已实际修复评测侧三类共同问题：候选长对象、括号标签及显示行路径中的合法文字片段未暴露；同字面出现与父子视图的容量分配不可靠；直接T调用与Native/Final入口、完整trace复核未统一。新增`literal_readback.text_readback/match_text`只依据候选自身语法、原始片段和既有来源生成读取视图，`three_layer._text_layer`统一调用，`expected_report._complete_text_trace`重建视图并验证对应与消费容量。原文字表、剩余文字、T/L/B合同、canonical、0.35召回阈值和正式分母保持；没有公共产品转换或Final正文改善。
+
+U03的677字符Native对象内232字符原句、U04本源Final行路径的“资本充足率”、U05双语标题和U10括号内“注册地址”均已通过真实路径可靠读回；U02保留未决，公司名与董事会之间实际存在“图片未交付。”段落，不能跳过屏障或借页首标题接受文末签名。五例前后来源、实际候选及未选命中见[专项诊断](native-final-diagnostic-review.md#第十五阶段评测文字读取与匹配修复)与[最终锚点trace](../../runs/lite/diagnostics/text-readback-phase15/anchors-after.json)。S9/P02数值及邮箱缺字继续判错，两条表头内部换行转空格的原T差异保留；法律父链、多栏顺序、单位和期间关系没有因T读回自动通过。
+
+固定九个selection、P01–P08的72组Native/Final配对已全部重新读取并比较，共144份候选侧记录，均使用本轮评测身份`ad49afdc37e3bfb2489ec2768638d6b4d7bd18920f57610addc7ad3b1ebda72e`，没有复用旧比较结论。28,608条配对要求保持原身份与责任范围，L/B全部原始判定及载荷逐条未变。4,112条T状态或实际对应变化按语法片段读取、完整出现重分配、明确歧义、非等价定位和无缺失证明的未定位五类复核；其中49条原始正确转错误均为同字面有限容量重新分配，旧文字仍在，审查状态保留未决，不能称为候选新增缺字。没有未解释的批量变化，详见[变化汇总](../../runs/lite/diagnostics/text-readback-phase15/regression-summary.json)、[变化复核](../../runs/lite/diagnostics/text-readback-phase15/transition-review.json)和[容量复核](../../runs/lite/diagnostics/text-readback-phase15/capacity-transition-review.json)；这些记录不构成分数、排名或产品收益。
+
+本轮实际通过99个受影响已审查模块的2,249项source-only测试，81个排除模块未收集，另73个允许模块未执行；未继承历史267或4282计数。独立自造文字/JSON覆盖重复容量、顺序变化、真实缺字与数字/日期/代码/引用差异、否定条件例外、插入屏障、候选与Expected隔离、Final不能借IR和T/L/B独立性。测试及最终真实诊断均使用串行、最多8 CPU、8 GiB、空GPU可见性及禁网隔离；最终I/O审计无违规。开发中失败、拒绝及中断另存于[过程记录](../../runs/lite/diagnostics/text-readback-phase15/development-attempts.json)，不混入最终通过证据。
+
+原Native执行`20261026-lite-v3`仍绑定`c6e7f5c0cdcbb8801d17595c515fcbe7794111c396bfe58a6d0ab71a199db28e`；72份Final仍绑定原公共转换`f8bcef05feaa4406189d395219a4db50afb8cc9446600ee11adce7fb403e0f1f`；历史phase13诊断仍为`8eb9d431864ea4c0baec2cb661c726ba457490b852b682d286a9786c4ac29146`。接手及当前HEAD为`f4c884d14061eb3ffee6a561cafb9f5592ee2f66`，新评测身份不重签这些历史产物。只读保全核对涵盖727份绑定工件、九份既有要求视图、72份Final/Storage正文及83份生产支持源码；原成本段保持原字节，见[保全记录](../../runs/lite/diagnostics/text-readback-phase15/preservation.json)。
+
+S3/S4/S6三个完整既有selection、全部八组共24个Native组合的[研究冻结准备](../../runs/lite/diagnostics/text-readback-phase15/native-research-preparation.json)已形成：先固定全范围，再逐组合列原配置、主视图与来源许可、要求及历史独立依据、当前T/L/B证据、确切未就绪要求和历史成本限制。三者已有开发和诊断暴露，不能称为留出集或完整Lite代表。仍需获准研究范围、同版独立比较验证及具体歧义处置、授权正式scoring freeze；没有创建已批准冻结、正式命令或active current。完整Lite仍为`structure_blocked`，107份责任缺口、3份待独立整样本验收及5个输入范围保留；这些全局数量不作为本次有限准备的清零前提。
+
+本轮`diagnostic_only=true`、`publishable=false`。未修改生产转换、Expected、历史Oracle、选择声明、原生/observation、Final、Storage或requirements/current；没有重跑模型、公共转换、正式评分、PDF/图像、OCR/VLM、网络、GPU/TTS、在线服务、部署、提交或推送。代码、实际执行与交付证据见[最终绑定](../../runs/lite/diagnostics/text-readback-phase15/final-binding.json)。以下第十四阶段及更早内容保留各自历史身份与当时判断，其中“当前”“下一轮”属于对应历史阶段。
+
 ## 第十四阶段：产品价值复核与工程路线收敛
 
 2026-11-15，已完成固定证据的只读产品价值复核，未重跑Native、公共转换或72条诊断。两条S2/P01、P02换行差异属于同一表头单元格的合法显示规范化，现有T合同差异仍保留；不修改生产代码，不增加CRLF字符映射。七条S9复合表头表达有同表源格与共同记录支持，证明一张表的一项局部组织增益，不能当作七种独立能力或总体质量提高；P01单位文字存在但表内绑定未证，单列限制。

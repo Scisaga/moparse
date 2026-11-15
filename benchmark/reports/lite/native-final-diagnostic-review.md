@@ -1,4 +1,52 @@
-# MO-Parse 第十三阶段：固定Native/Final独立诊断
+# MO-Parse 固定Native/Final独立诊断
+
+## 第十五阶段：评测文字读取与匹配修复
+
+2026-11-15，已完成实际评测代码修改和固定九选段的全部72组配对回归；72份Native与72份Final均重新独立读取并比较，没有重新解析或转换。所有最终trace使用评测源码`ad49afdc37e3bfb2489ec2768638d6b4d7bd18920f57610addc7ad3b1ebda72e`；`diagnostic_only=true`、`publishable=false`，不发布质量分数或排名。当前HEAD为`f4c884d14061eb3ffee6a561cafb9f5592ee2f66`。
+
+实际调用保持`read_candidates → read_candidate/read_candidate_markdown → three_layer._text_layer → literal_readback.match_text`，候选读取先通过`literal_readback.text_readback`暴露自身片段。`_finish`此前保留的完整对象有时跨原生分块合并，或把标题/标签和邻近文字组成一个T单元，导致已有局部文字不能独立对应；它本身与Expected编译保持不变。本轮读取视图复用`source_fragments`、locator、`block_lines`和局部跨度，保留整个原单元；句界、完整括号标签及有标签列表中的显示路径只从候选生成，不接收Expected、不增B/L事实、不改正文。`match_text`优先完整精确责任，保留各次真实出现及父子视图共享容量；同字面重复按有限出现数量及自身上下文对应，仍有多个合法范围时留歧义，不能借同名另一位置。完整trace复核独立重建读取视图与消费记录，拒绝伪造跨度或重复消费；旧直接调用的贪心分支已移除。
+
+### 五个真实锚点
+
+| 案例 | 修复前实际问题 | 本轮真实结果及边界 |
+| --- | --- | --- |
+| U02，S2/P03，T68 | Final贪心选择页首同名标题，独立复核为未决；Native原来正确 | Native仍正确；Final明确未决，没有接受标题。公司名在L91，媒体告警“图片未交付。”在L93，董事会/日期在L95/L97，不能跳过中间实际段落构造签名 |
+| U03，S4/P03，T32 | 232字符要求位于677字符原生对象内部，Native整单元未可靠对应；Final已正确 | 两侧均正确。Native为`#/pages/2/raw/res/parsing_res_list/4`、`block_lines=[1,1]`、局部`[0,232]`；Final为`markdown:L65:32`、`[0,232]`。其余条件、否定和文字保留；不接受未知法律父链 |
+| U04，S9/P01，T86 | Native已正确，Final显示行路径中的本源标签未认领 | 两侧均正确。Native为table8/cell62、row8/col1；Final为`markdown:L501:381`、`[28,33]`中的“资本充足率”。原格尾部空白仍保留严格差异，不生成第二次出现；不接受整条业务关系 |
+| U05，S7/P08，T1 | Native正确；Final标题与后续媒体告警处于较大文字单元，未正确定位 | 两侧均正确。Final为`markdown:L9:4`、`[0,24]`的实际标题；中英文边界空白沿用原canonical政策，没有新空白规则、标题层级或多栏顺序推断 |
+| U10，S8/P01 GLM，T5 | 两侧完整括号文字中标签未独立进入对应，原审查为未决 | 两侧均正确。Native为`#/pages/0/raw/json_result/0/7`、`[1,5]`；Final为`markdown:L15:7`、`[1,5]`。地址、括号及剩余文字保留，没有新增B层责任 |
+
+表中T编号均为完整`projected-text:N:sentence:0`。修复前复现保留实际旧比较器结果和当时独立责任状态；修复后使用完整最终回归trace，不在侧车中手工指定correct。见[修复前锚点](../../runs/lite/diagnostics/text-readback-phase15/anchors-before.json)、[修复后锚点](../../runs/lite/diagnostics/text-readback-phase15/anchors-after.json)、[实际候选读取](../../runs/lite/diagnostics/text-readback-phase15/full-reading/candidate-reading.json)及[完整比较执行](../../runs/lite/diagnostics/text-readback-phase15/full-comparison/diagnostic-execution.json)。
+
+### 完整回归变化及反例
+
+固定九selection的28,608条配对要求保持原ID、文字范围及分母；每侧T为12,616条、L为11,456条、B为4,536条。144份比较没有新软件异常或绑定失败，L/B的所有原始outcome及载荷逐条完全相同。4,112条T记录改变了状态或实际对象，对同一新版本逐项分类核对如下；同状态换位置也在其中，不可全部计作新修复。
+
+| 变化机制 | 记录数 | 核查依据 |
+| --- | ---: | --- |
+| 读取候选自己的语法片段 | 490 | 实际对象等于候选阶段生成的连续片段；本轮正确项均符合未改canonical，保留剩余文字 |
+| 完整出现重新分配 | 307 | 实际对象仍为原完整视图，来源容量有限；包含原来已正确但位置变化的记录 |
+| 明确出现或视图歧义 | 1,820 | 多个合法候选，未选actual、未发布分数，保留所有命中及来源 |
+| 既有阈值下非等价对象对应改变 | 1,411 | 实际对象来自自身候选，仍按原0.35阈值及字面编辑保留错误，没有变成正确 |
+| 容量占用或未定位，无缺失证明 | 84 | 不声称候选缺字；保留原要求，审查仍未决或blocked |
+
+原始比较器状态中539条incorrect转correct、258条correct仍correct但换位置；这些均从实际候选视图重建验证，没有手工通过。1,820条明确歧义包括909条incorrect转unresolved、911条correct转unresolved。49条correct转incorrect均没有actual：原正确对象在新读取表中逐字保持，已被另一条同字面要求消费，全部有实际容量持有者；它们属于有限出现重新分配，审查状态保留未决，不能解释为本轮候选内容丢失。历史责任或结构限制不因新T对应撤销，且没有只改变侧车审查边界而无核心读回变化的记录。完整[变化清单](../../runs/lite/diagnostics/text-readback-phase15/changed-comparisons.json)、[逐类复核](../../runs/lite/diagnostics/text-readback-phase15/transition-review.json)、[49条容量持有者](../../runs/lite/diagnostics/text-readback-phase15/capacity-transition-review.json)及[新旧审查状态汇总](../../runs/lite/diagnostics/text-readback-phase15/regression-summary.json)保留不同层次。没有未解释的批量状态变化；这些诊断不重做历史产品阶段归因，也不证明所有其他未决已解决。
+
+实际负例保持：S9/P02的T23/T31仍把Expected邮箱`pabdsh@pingan.com.cn。`与本源实际`abdsh@pingan.com.cn`定位后判错；T238/T241/T244仍分别比较`25,321/91,674/185,838`与本源`5,321/1,674/85,838`，Native和Final共10条均错误，没有借其他单元格或补首字。S2/P01、P02的T25仍是Native含CRLF正确、Final内部空格错误；产品允许该显示规范化，T政策并未改。独立合成反例同时验证否定、条件、例外、数值、日期、代码、引用、重复容量和插入正文/标题/列表/媒体/表格屏障，Final没有借IR或其他阶段补文字。详见[真实负例](../../runs/lite/diagnostics/text-readback-phase15/negative-controls.json)及`tests/unit/test_literal_readback.py`。
+
+最终`source-only-frozen`通过99个受影响已审查模块、2,249项测试；81个排除模块未收集，73个其他允许模块未运行。旧测试/Oracle断言不变，仅新增独立合成测试及其source-only清单条目。测试和真实诊断使用串行、8 CPU上限、8 GiB、GPU不可见及禁网隔离，候选读取时Expected被屏蔽；最终审计无违规。完整[测试回执](../../runs/lite/diagnostics/text-readback-phase15/source-only-frozen.json)、[开发过程](../../runs/lite/diagnostics/text-readback-phase15/development-attempts.json)和[最终绑定](../../runs/lite/diagnostics/text-readback-phase15/final-binding.json)保留实际范围，历史267/4282不计入本轮。
+
+### Native范围与正式门禁
+
+[冻结准备记录](../../runs/lite/diagnostics/text-readback-phase15/native-research-preparation.json)首先固定S3/S4/S6三个完整既有selection、全部P01–P08的24个Native组合，再给各层状态，不按成功要求重新定义分母。逐条包含原生工件、observation、原配置、页分支/主视图/来源许可、当前比较器、完整要求视图和历史独立验收依据、未就绪要求ID及trace、失败/缺失/软件限制/歧义的分开处理，以及原始成本和共享TTS工作负荷不受控等限制。历史独立来源验收未重签为当前通过；三个selection已有开发暴露，不是留出测试或完整Lite代表。媒体未交付不自动阻断独立T，T也不代表三层总质量。
+
+正式执行尚需批准上述完整研究范围、同版独立验证与具体不确定性处置、授权并绑定正式scoring freeze。当前正式`evaluate_saved`仍拒绝diagnostic以外的`sample_ids`；原Lite声明及`requirements/current`保持，不裁manifest、不建active current、不造获准freeze。准备记录提供本轮实际运行的候选读取/比较命令；正式命令为空并列出不可执行原因。107份责任缺口、3份待独立验收、5个输入范围仍保留，不要求全部清零才允许有限研究准备。
+
+四类身份分别保留：原Native为`c6e7f5c0cdcbb8801d17595c515fcbe7794111c396bfe58a6d0ab71a199db28e`，公共Final转换为`f8bcef05feaa4406189d395219a4db50afb8cc9446600ee11adce7fb403e0f1f`，历史phase13诊断为`8eb9d431864ea4c0baec2cb661c726ba457490b852b682d286a9786c4ac29146`，本轮评测为`ad49afdc37e3bfb2489ec2768638d6b4d7bd18920f57610addc7ad3b1ebda72e`。727份绑定工件、九份要求视图、72份Final/Storage和83份生产支持源码保持；详见[只读保全](../../runs/lite/diagnostics/text-readback-phase15/preservation.json)。没有模型、公共转换、PDF/图像、OCR、网络、GPU/TTS、在线服务、部署、正式评分、提交或推送。
+
+## 第十三阶段（历史）：固定Native/Final独立诊断
+
+以下保留phase13原始结论与当时身份；“当前”“本轮”和计数均属于该历史阶段。本轮读回诊断以上述第十五阶段为准，历史原始trace及产品阶段证据未覆盖。
 
 固定9个选段、72条Native/Final诊断已完成；实际可诊断要求11525项，未决或软件阻塞17083项；正式成绩仍未发布。
 

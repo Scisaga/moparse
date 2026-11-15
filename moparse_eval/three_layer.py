@@ -1710,14 +1710,21 @@ def compile_expected(expected: dict[str, Any]) -> dict[str, Any]:
 
 
 def read_candidate_markdown(markdown: str, *, sample_id: str = "synthetic", pipeline: str = "test") -> dict[str, Any]:
+    from .literal_readback import text_readback
+
     result = compile_markdown(markdown, sample_id=sample_id, path="<candidate-markdown>")
     result["pipeline"] = pipeline
+    result["literal_readback"] = text_readback(result["text"])
     return result
 
 
 def read_candidate(observation: dict[str, Any]) -> dict[str, Any]:
+    from .literal_readback import text_readback
+
     if "business" in observation and "relations" in observation:
-        return copy.deepcopy(observation)
+        result = copy.deepcopy(observation)
+        result["literal_readback"] = text_readback(result["text"])
+        return result
     graph = _Graph(observation["sample_id"])
     toc_blocks = [{**block, "source": {"path": block.get("native_path", block.get("id")), "page": page.get("page"),
                                        "lines": block.get("public_lines", []), "block": block.get("id")}}
@@ -1869,6 +1876,7 @@ def read_candidate(observation: dict[str, Any]) -> dict[str, Any]:
                                         "context_evidence": copy.deepcopy(contexts["by_block"].get(block, {})),
                                         "role_basis": "actual_heading_position_parentage_must_be_verified_separately"})
     result = _finish(graph)
+    result["literal_readback"] = text_readback(result["text"])
     result.update(pipeline=observation.get("pipeline"), status=observation.get("status"),
                   timing=observation.get("timing", {}), resources=observation.get("resources", {}))
     return result
@@ -1879,50 +1887,12 @@ def _edit(reference: str, actual: str) -> dict[str, int]:
     return {"S": counts["replace"], "D": counts["delete"], "I": counts["insert"]}
 
 
-def _text_layer(reference: list[dict[str, Any]], candidate: list[dict[str, Any]]) -> tuple[dict[str, Any], list[dict[str, Any]]]:
-    available = set(range(len(candidate)))
-    matches: dict[int, int] = {}
-    # Literal-unit capacity one, not a global character bag. Complete units
-    # can move; no permutation inside any word, number or paragraph is allowed.
-    for i, item in enumerate(reference):
-        hits = [j for j in sorted(available) if canonical(candidate[j]["text"]) == canonical(item["text"])]
-        if hits:
-            matches[i] = hits[0]
-            available.remove(hits[0])
-    possibilities = []
-    for i, item in enumerate(reference):
-        if i in matches:
-            continue
-        for j in available:
-            a, b = canonical(item["text"]), canonical(candidate[j]["text"])
-            similarity = Levenshtein.normalized_similarity(a, b)
-            if similarity >= 0.35:
-                possibilities.append((-similarity, i, j))
-    for _, i, j in sorted(possibilities):
-        if i not in matches and j in available:
-            matches[i] = j
-            available.remove(j)
-    rows, totals = [], Counter()
-    located_characters = 0
-    for i, item in enumerate(reference):
-        actual = candidate[matches[i]] if i in matches else None
-        a, b = canonical(item["text"]), canonical(actual["text"]) if actual else ""
-        edit = _edit(a, b)
-        strict = _edit(item.get("strict_text", item["text"]), actual.get("strict_text", actual["text"]) if actual else "")
-        totals.update(edit)
-        located_characters += len(a) if actual else 0
-        rows.append({"id": item["id"], "layer": "T", "role": "literal", "expected": snapshot_copy(item),
-                     "actual": snapshot_copy(actual), "outcome": "correct" if a == b else "incorrect",
-                     "edits": edit, "strict_edits": strict, "source": snapshot_copy(item["source"]),
-                     "root_cause": f"literal:{item['id']}"})
-    denominator = sum(len(canonical(item["text"])) for item in reference)
-    numerator = denominator - sum(totals.values())
-    return {"numerator": numerator, "denominator": denominator,
-            "score": 100 * max(0, numerator) / denominator if denominator else None,
-            "complete": True, **{key: totals[key] for key in ("S", "D", "I")},
-            "located_units": len(matches), "required_units": len(reference),
-            "located_characters": located_characters, "unadjudicated_extra_units": snapshot_copy([candidate[j] for j in sorted(available)]),
-            "full_scope_edit_rate": sum(totals.values()) / denominator if denominator else None}, rows
+def _text_layer(reference: list[dict[str, Any]], candidate: list[dict[str, Any]], *,
+                readback: dict[str, Any] | None = None) -> tuple[dict[str, Any], list[dict[str, Any]]]:
+    from .literal_readback import match_text, text_readback
+
+    reading = readback if readback is not None else text_readback(candidate)
+    return match_text(reference, candidate, reading, canonicalize=canonical, edit=_edit)
 
 def grade_layers(requirements: dict[str, Any], evidence: dict[str, Any]) -> dict[str, Any]:
     with evidence_session():
@@ -1939,6 +1909,8 @@ def grade_layers(requirements: dict[str, Any], evidence: dict[str, Any]) -> dict
 
 
 def _grade_layers(requirements: dict[str, Any], evidence: dict[str, Any]) -> dict[str, Any]:
+    from .literal_readback import text_readback
+
     if requirements["sample_id"] != evidence["sample_id"]:
         raise ValueError("expected and candidate sample identities differ")
     if requirements.get("requirement_ledger") != requirements["business"]:
@@ -1947,7 +1919,10 @@ def _grade_layers(requirements: dict[str, Any], evidence: dict[str, Any]) -> dic
         validate_scalar_sources(graph["business"], graph.get("text_projection", {}), canonicalize=canonical,
                                 syntax=graph.get('syntax', []), relations=graph.get('relations', []), blockers=graph.get('blockers', []))
     layers, rows = {}, []
-    layers["T"], outcomes = _text_layer(requirements["text"], evidence["text"])
+    literal_reading = evidence.get("literal_readback")
+    if literal_reading is None:
+        literal_reading = text_readback(evidence["text"])
+    layers["T"], outcomes = _text_layer(requirements["text"], evidence["text"], readback=literal_reading)
     rows.extend(outcomes)
     scope_options = {"contexts": evidence.get("native_context"),
                      "declared_paths": requirements.get("scope_schema", {}).get("paths", []),
@@ -1987,6 +1962,7 @@ def _grade_layers(requirements: dict[str, Any], evidence: dict[str, Any]) -> dic
                                    "candidate": snapshot_copy(evidence.get("toc_evidence"))},
             "text_evidence": {"required_atoms": snapshot_copy(requirements["text"]),
                               "candidate_atoms": snapshot_copy(evidence["text"]),
+                              "candidate_readback": snapshot_copy(literal_reading),
                               "required_projection": snapshot_copy(requirements.get("text_projection", {})),
                               "candidate_projection": snapshot_copy(evidence.get("text_projection", {}))},
             "scope_evidence": {"contexts": snapshot_copy(evidence.get("native_context")),

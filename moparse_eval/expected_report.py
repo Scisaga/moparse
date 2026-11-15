@@ -214,6 +214,15 @@ def _complete_text_trace(score: dict[str, Any]) -> None:
         raise ValueError("formal text decisions require the full precomparison text evidence")
     required = _text_atom_manifest(evidence.get("required_atoms"), evidence.get("required_projection"))
     candidate = _text_atom_manifest(evidence.get("candidate_atoms"), evidence.get("candidate_projection"))
+    reading = evidence.get("candidate_readback")
+    if reading is not None:
+        from .literal_readback import overlaps, text_readback
+
+        if text_readback(evidence["candidate_atoms"]) != reading:
+            raise ValueError("literal readback differs from original candidate occurrences")
+        views = {view["atom"]["id"]: view for view in reading["views"]}
+        candidate = {identifier: view["atom"] for identifier, view in views.items()}
+        consumed = []
     rows = [row for row in score["outcomes"] if row["layer"] == "T"]
     if Counter(row["expected"]["id"] for row in rows) != Counter(required.keys()):
         raise ValueError("text requirements differ from the complete precomparison view")
@@ -228,6 +237,20 @@ def _complete_text_trace(score: dict[str, Any]) -> None:
             used.add(actual.get("id"))
             if candidate.get(actual.get("id")) != actual:
                 raise ValueError("a text match differs from its actual precomparison occurrence")
+            if reading is not None:
+                capacity = views[actual["id"]]["capacity"]
+                if overlaps(capacity, consumed):
+                    raise ValueError("text alternatives reuse the same original occurrence capacity")
+                consumed.extend(capacity)
+    if reading is not None:
+        from .three_layer import _text_layer
+
+        _, replay = _text_layer(evidence["required_atoms"], evidence["candidate_atoms"], readback=reading)
+        if rows != replay:
+            if any(row.get(field) != own.get(field) for row, own in zip(rows, replay, strict=True)
+                   for field in ("edits", "strict_edits")):
+                raise ValueError("text S/D/I differs from its actual paired literals")
+            raise ValueError("literal correspondence differs from complete candidate-only replay")
 
 
 def _joined_prose_trace(score: dict[str, Any]) -> None:
@@ -509,7 +532,8 @@ def _validate_flat_evidence(score: dict[str, Any]) -> None:
                 if row.get(field) != edits:
                     raise ValueError("text S/D/I differs from its actual paired literals")
                 counts.update(edits)
-            if row["outcome"] != ("correct" if a == b else "incorrect"):
+            ambiguous = row.get("correspondence", {}).get("status") == "ambiguous"
+            if row["outcome"] != ("unresolved" if ambiguous else "correct" if a == b else "incorrect"):
                 raise ValueError("text decision contradicts its paired literals")
             if row.get("actual"):
                 _source(row["actual"])
