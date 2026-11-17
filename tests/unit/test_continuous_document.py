@@ -168,13 +168,14 @@ def test_combined_document_title_and_separate_own_title_fragments(tmp_path, body
 
 
 @pytest.mark.parametrize('company,expected_credit', [('甲企业', 100), ('甲企业集团', 0)])
-def test_saved_native_bilingual_brand_title_keeps_complete_company_fragment(tmp_path, company, expected_credit):
+@pytest.mark.parametrize('brand_prefix', ['', 'ACME '])
+def test_saved_native_bilingual_brand_title_keeps_complete_company_fragment(tmp_path, company, expected_credit, brand_prefix):
     expected = '# 甲企业\n\n## 年度公告\n\n### 调研\n\n甲方完成專業培訓。'
     required = evaluation_projection(compile_requirement_graph(authored(tmp_path, expected), comparison_contract='document_ast'))
     observation = _observation('neutral')
     observation['sample_id'] = required['sample_id']
     native = {'pages': [{'page': 1, 'branch': 'glm', 'raw': {'json_result': [[
-        {'index': 0, 'label': 'title', 'content': f'ACME {company} ACME GROUP CO., LTD.'},
+        {'index': 0, 'label': 'title', 'content': f'{brand_prefix}{company} ACME GROUP CO., LTD.'},
         {'index': 1, 'label': 'title', 'content': '年度公告'},
         {'index': 2, 'label': 'title', 'content': '调研'},
         {'index': 3, 'label': 'text', 'content': '甲方完成專業培訓。'},

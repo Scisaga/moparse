@@ -14,11 +14,12 @@ from .ast_alignment import METHOD, RULES, _join, align_nodes, identity_text, pro
 
 def _title_fragments(text):
     parts = [part.strip() for part in text.splitlines() if part.strip()]
-    # A complete CJK title between Latin branding runs remains its own printed
-    # language fragment. Never accept an arbitrary substring or a shortened
+    # A complete CJK title before its Latin translation, with optional Latin
+    # branding before it, remains its own printed language fragment. Never
+    # accept an arbitrary substring or a shortened
     # company name from a longer CJK name.
-    bilingual = re.fullmatch(r'[A-Za-z][A-Za-z\d\s.,&()\-]*\s*([\u3400-\u9fff（）()·\s]+)\s*[A-Za-z][A-Za-z\d\s.,&()\-]*', text)
-    if bilingual:
+    bilingual = re.fullmatch(r'(?:[A-Za-z][A-Za-z\d\s.,&()\-]*\s*)?([\u3400-\u9fff（）()·\s]+)\s*[A-Za-z][A-Za-z\d\s.,&()\-]*', text)
+    if bilingual and re.search(r'[\u3400-\u9fff]', bilingual[1]):
         parts.append(bilingual[1].strip())
     return parts
 
