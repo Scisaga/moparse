@@ -206,6 +206,8 @@ def _fixed_content_requirements(ast, indices, facts, issues, units):
 
 
 def document_order_requirements(graph):
+    if 'continuous_original_document_orders' in graph:
+        return graph['continuous_original_document_orders'] + graph['continuous_extra_document_orders']
     """Fix reading-order endpoints from exclusive source partitions, before retrieval."""
     content = graph['source_form_requirements']
     anchors = graph['source_form_order_anchors']
@@ -696,7 +698,14 @@ def _without_grammar_analysis(graph, blocks, ast=None):
     return result
 
 
-def grade_document_content(requirements, evidence):
+def grade_document_content(requirements, evidence, *, scoring_method=None):
+    if scoring_method is not None:
+        from .ast_alignment import METHOD
+        from .continuous_document import grade_continuous_document
+
+        if scoring_method != METHOD:
+            raise ValueError('unknown document scoring method')
+        return grade_continuous_document(requirements, evidence)
     """Extend one grader with source-form proofs; keep T and typed B/L intact."""
     from .three_layer import _grade_layers
 

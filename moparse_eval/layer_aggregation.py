@@ -113,6 +113,10 @@ def _validate_score(score: Mapping[str, Any]) -> dict[str, dict[str, Mapping[str
 
 def summarize_layers(scores: list[dict[str, Any]]) -> dict[str, Any]:
     """Pool each fixed layer separately, then average the three layer scores."""
+    from .ast_alignment import METHOD
+
+    if scores and all(s.get('scoring_method') == METHOD for s in scores):
+        return summarize_continuous(scores)
     seen: set[str] = set()
     for score in scores:
         _validate_score(score)
@@ -140,6 +144,78 @@ def summarize_layers(scores: list[dict[str, Any]]) -> dict[str, Any]:
         "publishable": applicable,
         "blockers": [],
     }
+
+
+def summarize_continuous(scores):
+    """Pool full responsibilities; never promote internal research to publication."""
+    seen = set()
+    for score in scores:
+        if score['sample_id'] in seen:
+            raise ValueError('duplicate continuous sample')
+        seen.add(score['sample_id'])
+        if score.get('publication_authorized') is not False or score.get('research_only') is not True:
+            raise ValueError('continuous contract is bounded research only')
+        for layer in LAYERS:
+            own = [r for r in score['outcomes'] if r['layer'] == layer]
+            if len({r['id'] for r in own}) != len(own):
+                raise ValueError('duplicate continuous requirement')
+            counts = score['layers'][layer]
+            if layer != 'T':
+                if len(own) != counts['denominator']:
+                    raise ValueError('continuous requirement denominator changed')
+                for row in own:
+                    if row['credit'] is None:
+                        continue
+                    parts = row['components']
+                    total = sum(p.get('weight', 1) for p in parts)
+                    credit = sum(p['credit'] * p.get('weight', 1) for p in parts) / total
+                    if not math.isclose(credit, row['credit'], abs_tol=1e-12):
+                        raise ValueError('continuous credit differs from fixed components')
+                numerator = sum(r['credit'] or 0 for r in own)
+            else:
+                from .three_layer import canonical
+
+                if sum(len(canonical(r['expected']['text'])) for r in own) != counts['denominator']:
+                    raise ValueError('continuous canonical denominator changed')
+                numerator = counts['denominator'] - sum(sum(r['edits'].values()) for r in own)
+            if counts['complete'] and not math.isclose(numerator, counts['numerator'], abs_tol=1e-9):
+                raise ValueError('continuous numerator differs from item evidence')
+    layers = {}
+    for layer in LAYERS:
+        own = [s['layers'][layer] for s in scores]
+        n = sum(r['denominator'] for r in own)
+        complete = all(r['complete'] for r in own)
+        numerator = sum(r['numerator'] for r in own) if complete else None
+        layers[layer] = {'denominator': n, 'numerator': numerator,
+                         'score': _layer_score(layer, numerator, n) if complete else None,
+                         'complete': complete,
+                         'compared_requirements': sum(r['compared_requirements'] for r in own)}
+    values = [r['score'] for r in layers.values()]
+    return {'samples': len(scores), 'layers': layers,
+            'score': sum(values) / 3 if all(v is not None for v in values) else None,
+            'research_only': True, 'full_lite_score': False,
+            'publishable': False, 'publication_authorized': False,
+            'blockers': [b for s in scores for b in s['blockers']]}
+
+
+def continuous_aggregation_record(score):
+    """Validate full evidence, then retain only the numeric pooling ledger.
+
+    The complete score must already be persisted. This keeps serial 72-case
+    execution within the same memory budget without discarding saved proof.
+    """
+    summarize_continuous([score])
+    result = {k: score[k] for k in ('sample_id', 'pipeline', 'scoring_method', 'layers', 'score',
+                                   'research_only', 'publication_authorized', 'blockers', 'comparison_complete')}
+    result['outcomes'] = []
+    for row in score['outcomes']:
+        own = {k: row[k] for k in ('id', 'layer', 'credit', 'outcome')}
+        if row['layer'] == 'T':
+            own.update(expected={'text': row['expected']['text']}, edits=row['edits'])
+        else:
+            own['components'] = [{k: part[k] for k in ('credit', 'weight') if k in part} for part in row['components']]
+        result['outcomes'].append(own)
+    return result
 
 
 def paired_layers(before: list[dict[str, Any]], after: list[dict[str, Any]]) -> dict[str, Any]:

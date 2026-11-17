@@ -14,6 +14,7 @@ import os
 import resource
 import subprocess
 import sys
+import time
 from collections import Counter
 from pathlib import Path
 from typing import Any
@@ -39,6 +40,17 @@ SELECTIONS = {
     ),
     "huawei-management-toc-p014": ("S6", "complex-huawei-2024-annual", [14]),
 }
+ALL_SELECTIONS = {
+    'vanke-interest-p001-002': ('S1', '10726562', [1, 2]),
+    'vanke-repurchase-share-changes-p001-003': ('S2', '1201917092', [1, 2, 3]),
+    **{k: SELECTIONS[k] for k in list(SELECTIONS)[:2]},
+    'huawei-statements-p068-070': ('S5', 'complex-huawei-2024-annual', [68, 69, 70]),
+    'huawei-management-toc-p014': SELECTIONS['huawei-management-toc-p014'],
+    'huaweitech-editorial-spread-p002': ('S7', 'complex-huaweitech-2024-096', [2]),
+    'spdb-cover-declaration-p001-002': ('S8', '1200454112', [1, 2]),
+    'pingan-financials-p001-004': ('S9', '1200694562', [1, 2, 3, 4]),
+}
+ALL_SCOPE = 'S1-S9'
 PIPELINES = tuple(f"P{i:02}" for i in range(1, 9))
 LAYERS = ("T", "L", "B")
 SCHEMA = "moparse-native-research-freeze/1"
@@ -85,14 +97,18 @@ def _unapproved(record):
         )
 
 
-def _keys(rows):
+def _keys(rows, scope=None):
+    if scope not in (None, ALL_SCOPE):
+        raise ValueError('unknown fixed Native scope')
+    selections = ALL_SELECTIONS if scope == ALL_SCOPE else SELECTIONS
+    count = len(selections) * len(PIPELINES)
     keys = [(r["sample_id"], r["pipeline"]) for r in rows]
     if (
-        len(keys) != 24
-        or len(set(keys)) != 24
-        or set(keys) != {(s, p) for s in SELECTIONS for p in PIPELINES}
+        len(keys) != count
+        or len(set(keys)) != count
+        or set(keys) != {(s, p) for s in selections for p in PIPELINES}
     ):
-        raise ValueError("Native research must retain exactly S3/S4/S6 x P01-P08, 24 combinations")
+        raise ValueError(f"Native research must retain its exact fixed scope, {count} combinations")
     return keys
 
 
@@ -127,10 +143,10 @@ def input_rows(history, preparation):
     ]
 
 
-def verify_input(row):
+def verify_input(row, *, scope=None):
     """Verify original metadata and whole objects, without reading source media."""
     sid, pipeline = row["sample_id"], row["pipeline"]
-    _, document, pages = SELECTIONS[sid]
+    _, document, pages = (ALL_SELECTIONS if scope == ALL_SCOPE else SELECTIONS)[sid]
     if (
         row["selection_id"] != sid
         or row["document_id"] != document
@@ -266,6 +282,10 @@ def load_preparation(path: Path, *, verify_requirements: bool = True):
     from .expected_scoring import PROTOCOL
 
     frozen = read_json(path)
+    if frozen.get('schema') == 'moparse-native-nine-selection-freeze/1':
+        from .native_scope import load_nine_preparation
+
+        return load_nine_preparation(path, verify_requirements=verify_requirements)
     _unapproved(frozen)
     if frozen.get("schema") != SCHEMA or set(frozen.get("components", {})) != COMPONENTS:
         raise ValueError("incomplete Native research freeze")
@@ -299,8 +319,13 @@ def load_preparation(path: Path, *, verify_requirements: bool = True):
         raise ValueError("Expected/index/requirement views differ from the existing preparation")
     evaluation = parts["evaluation"]
     live = code_identity()
+    from .ast_alignment import METHOD, RULES
+
+    continuous = evaluation.get('scoring_method') == METHOD
+    if continuous and evaluation.get('scoring_rules') != RULES:
+        raise ValueError('continuous scoring rules differ from the execution freeze')
     if (
-        evaluation["software"] != live
+        evaluation["software"]["software_id"] != live["software_id"]
         or frozen["software_id"] != live["software_id"]
         or evaluation["protocol"] != PROTOCOL
         or evaluation["python_executable"] != sys.executable
@@ -341,8 +366,9 @@ def load_preparation(path: Path, *, verify_requirements: bool = True):
     } != set(PIPELINES):
         raise ValueError("missing original cost/configuration record")
     # This is cost provenance only, never additional quality candidates.
-    for ref in costs["original_record_bindings"]:
-        artifact(ref)
+    if not continuous:
+        for ref in costs["original_record_bindings"]:
+            artifact(ref)
     if costs["original_record_bindings"] != cost_record["original_cost_bindings"]:
         raise ValueError("missing original cost binding")
     validation = parts["validation"]
@@ -429,7 +455,7 @@ def limit_resources():
     os.environ["CUDA_VISIBLE_DEVICES"] = ""
 
 
-def launch_reading(inputs, destination: Path, software_id: str):
+def launch_reading(inputs, destination: Path, software_id: str, *, scope=None):
     """A fresh namespace gets Native declarations only, never Expected paths."""
     _output(
         destination,
@@ -443,7 +469,7 @@ def launch_reading(inputs, destination: Path, software_id: str):
         row["selection"] = {k: row["selection"][k] for k in ("id", "document_id", "source_pages")}
     write_json(
         destination / "candidate-input.json",
-        {"records": candidate_inputs, "software_id": software_id},
+        {"records": candidate_inputs, "software_id": software_id, **({'scope': scope} if scope else {})},
     )
     script = """
 set -eu
@@ -517,7 +543,7 @@ def preflight(path: Path):
         }
 
 
-def retain_limits(score, readiness, inventory):
+def retain_limits(score, readiness, inventory, *, scope='S3/S4/S6'):
     """Withhold unsupported conclusions without changing any comparator or divisor."""
     score = copy.deepcopy(score)
     actual = {
@@ -530,6 +556,14 @@ def retain_limits(score, readiness, inventory):
         for layer in LAYERS
     ):
         raise ValueError("comparison omitted/changed a fixed requirement or denominator")
+    from .ast_alignment import METHOD
+
+    if score.get('scoring_method') == METHOD:
+        score.update(benchmark='native', scope=scope, research_only=True,
+                     full_lite_score=False, publication_authorized=False,
+                     historical_readiness=copy.deepcopy(readiness),
+                     historical_readiness_applied=False, publishable=False)
+        return score
     for row in score["outcomes"]:
         limit = readiness["layers"][row["layer"]]["not_comparable_reasons"].get(row["id"])
         if limit:
@@ -560,14 +594,29 @@ def retain_limits(score, readiness, inventory):
     return score
 
 
+def aggregate_native_scores(scores, scoring_method=None):
+    """Pool validated continuous evidence independently for each layer."""
+    from .ast_alignment import METHOD
+    from .layer_aggregation import summarize_layers
+
+    return {pipeline: summarize_layers(rows)
+            if scoring_method == METHOD or all(r.get('publishable') is True for r in rows)
+            else {"state": "partial_or_blocked", "score": None, "all_requirements_retained": True}
+            for pipeline, rows in scores.items()}
+
+
 def execute_native(freeze: Path, output: Path, authorization: Path | None):
     # Admission precedes all candidate reading, score paths, and directory writes.
     approval = require_authorization(authorization, freeze)
     _output(output, execute=True)
-    checked = preflight(freeze)
-    if checked["preflight_status"] != "ready_for_authorization":
-        raise ValueError("Native execution blocked by preflight: " + repr(checked["blockers"]))
-    frozen, parts, requirements = load_preparation(freeze)
+    if read_json(freeze).get('schema') == 'moparse-native-nine-selection-freeze/1':
+        frozen, parts, requirements = load_preparation(freeze)
+    else:
+        checked = preflight(freeze)
+        if checked["preflight_status"] != "ready_for_authorization":
+            raise ValueError("Native execution blocked by preflight: " + repr(checked["blockers"]))
+        frozen, parts, requirements = load_preparation(freeze)
+    scope = parts['scope'].get('scope_id')
     output.mkdir(parents=True, exist_ok=False)
     status = {
         "benchmark": "native",
@@ -579,18 +628,19 @@ def execute_native(freeze: Path, output: Path, authorization: Path | None):
         "overall_quality_score": None,
         "full_lite_ranking": False,
         "records": [],
+        "research_only": True,
+        "full_lite_score": False,
     }
     write_json(output / "execution-status.json", status)
     try:
         from .expected_evaluation import _write_compact_score
-        from .layer_aggregation import summarize_layers
         from .three_layer import grade_layers
         from .trace_storage import read_score
 
         # Read again after authorization, before comparing; old diagnostics are
         # never copied into a formal result and are never used as candidate data.
         reading = read_json(
-            launch_reading(parts["inputs"]["records"], output / "reading", frozen["software_id"])
+            launch_reading(parts["inputs"]["records"], output / "reading", frozen["software_id"], scope=scope)
         )
         if reading["status"] != "passed" or reading["software_id"] != frozen["software_id"]:
             raise ValueError(
@@ -599,24 +649,32 @@ def execute_native(freeze: Path, output: Path, authorization: Path | None):
         masks = {(r["sample_id"], r["pipeline"]): r for r in parts["readiness"]["records"]}
         inventories = {r["sample_id"]: r["inventory"] for r in parts["requirements"]["records"]}
         scores = {p: [] for p in PIPELINES}
-        _keys(reading["records"])
+        _keys(reading["records"], scope)
         for row in reading["records"]:
             sid, pipeline = row["sample_id"], row["pipeline"]
+            started = time.monotonic()
             candidate = read_score(artifact(row["candidate"]))
             score = retain_limits(
-                grade_layers(requirements[sid], candidate), masks[sid, pipeline], inventories[sid]
+                grade_layers(requirements[sid], candidate,
+                             scoring_method=parts['evaluation'].get('scoring_method')),
+                masks[sid, pipeline], inventories[sid], scope=scope or 'S3/S4/S6'
             )
             relative = f"requirements/{pipeline}/{sid}.json"
             _write_compact_score(output / relative, score)
-            scores[pipeline].append(score)
-            status["records"].append({"sample_id": sid, "pipeline": pipeline, "path": relative})
-        # The existing aggregator remains strict. Partial layers never enter it.
-        status["aggregation"] = {
-            p: summarize_layers(rows)
-            if all(r["publishable"] for r in rows)
-            else {"state": "partial_or_blocked", "score": None, "all_requirements_retained": True}
-            for p, rows in scores.items()
-        }
+            if score.get('scoring_method'):
+                from .layer_aggregation import continuous_aggregation_record
+
+                scores[pipeline].append(continuous_aggregation_record(score))
+            else:
+                scores[pipeline].append(score)
+            status["records"].append({"sample_id": sid, "pipeline": pipeline, "path": relative,
+                                      "evaluation_seconds": time.monotonic() - started,
+                                      "peak_process_rss_bytes": resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024})
+            write_json(output / 'execution-status.json', status)
+            print(f'Native comparison {len(status["records"])}/{len(reading["records"])}: {pipeline}/{sid}', flush=True)
+        # Continuous pooling validates all item evidence and retains independently
+        # complete layers when another layer contains an identity ambiguity.
+        status["aggregation"] = aggregate_native_scores(scores, parts['evaluation'].get('scoring_method'))
         load_preparation(freeze)  # Input/software drift invalidates the entire run.
         status.update(state="executed_limited_research", published=False)
     except BaseException as error:
@@ -634,15 +692,32 @@ def execute_native(freeze: Path, output: Path, authorization: Path | None):
 
 def native_command(args):
     limit_resources()
+    # An inherited cwd can refer to the pre-bind mount. Atomic score writes
+    # must address the same post-bind mount as their temporary files.
+    args.freeze = args.freeze.resolve()
+    args.output = args.output.resolve()
+    if args.authorization is not None:
+        args.authorization = args.authorization.resolve()
     if args.phase == "execute":
         print(execute_native(args.freeze, args.output, args.authorization))
         return 0
     if args.authorization is not None:
         raise ValueError("read/preflight cannot consume or create an execution approval")
-    _output(args.output, execute=False)
+    _output(args.output, execute=args.output.resolve().is_relative_to(
+        (ROOT / 'benchmark/runs/lite/native-only').resolve()))
     if args.phase == "read":
         frozen = read_json(args.freeze)
         _unapproved(frozen)
+        if frozen.get('schema') == 'moparse-native-nine-selection-freeze/1':
+            from .native_scope import load_nine_inputs
+
+            inputs = load_nine_inputs(frozen)
+            from .cli import code_identity
+
+            if frozen['software_id'] != code_identity()['software_id']:
+                raise ValueError('candidate reading software differs')
+            print(launch_reading(inputs, args.output, frozen['software_id'], scope=ALL_SCOPE))
+            return 0
         inputs = read_json(artifact(frozen["components"]["inputs"]))["records"]
         history = read_json(artifact({"path": HISTORY, "sha256": HISTORY_SHA}))
         preparation = read_json(artifact({"path": PREPARATION, "sha256": PREPARATION_SHA}))

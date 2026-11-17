@@ -1,5 +1,32 @@
 # MO-Parse Lite：Native有限研究与正式评价状态
 
+## 当前：S1-S9连续AST保存Native研究
+
+2026-11-17，按用户明确扩展授权，S1-S9 × P01-P08共72组已使用同一实现实际比较。原生读取与Expected比较隔离，真正使用独立AST、模糊拆合对应、T连续编辑、L关系分项和B关键值保护；原始正文业务责任全部保留，没有沿用排除98项B的小集合。
+
+每条管线完整责任为T 40,495字符、L 1,535项、B 629项。全部72组实际T/L/B、分母、未决、原文与候选对应证据见[当前有限Native研究报告](native-limited-research-results.md)、[汇总数据](../../runs/lite/native-only/s1-s9-continuous-20261117-r7/summary.json)及[逐项执行索引](../../runs/lite/native-only/s1-s9-continuous-20261117-r7/execution/index.json)。未决项目保留完整责任，其他项目照常计分；不是只报告已决子集准确率。
+
+计分软件ID为`a6cabfbf336372fa40ce9eca26da167d9817617b8c4cb4e699b2bc363069a990`，同版448项相关source-only测试通过。新增条件标题、数字内部空格和合并品牌标题的真实误判已修复；剩余比较限制及中断尝试明确留证。规则见[拥有文档](../../evaluation-tasks.md#固定native研究的连续计分2026-11-17授权)，[最终身份与边界核验](../../runs/lite/native-only/s1-s9-continuous-20261117-r7/final-binding.json)保留全部绑定。
+
+`benchmark=native`、`scope=S1-S9`、`research_only=true`、`full_lite_score=false`、`publication_authorized=false`。这9个选段已开发暴露，不能推广为完整Lite排名。Expected及全部只读输入保持，未改Final或生产转换、未运行推理/PDF/图像读取/服务/网络，未激活current、未发布、未提交推送。评测时间与历史解析成本分开。64组已有完整三层分数；S9的8组仍有79条L/B未决责任，另有邮箱字段绑定限制，业务验收尚未全部闭合。以下内容保留其历史日期及软件身份。
+
+<details>
+<summary>此前工作区报告原文（历史日期及软件身份）</summary>
+
+# MO-Parse Lite：Native有限研究与正式评价状态
+
+## 固定S3/S4/S6有限Native研究结果
+
+2026-11-16，固定S3/S4/S6 × P01-P08内部有限Native研究已完成24/24个组合。共同T/L/B为23650字符、242项、23项；这三个选段内的原始完整责任为23650字符、242项、121项，每个配置全部原要求及trace保留。98项B源文保留责任因合法改写等价比较能力不足，在读取结果前统一排除于共同研究集合；没有改变正式合同或完整Lite分母。共同集合SHA256为`ce776fb8c9a2cad3b7dd5500950bde4c0ae174fd8d34be264a7a933cf5102f7f`。
+
+实际correct、incorrect、unresolved、software_blocked、candidate_missing、独立覆盖及研究上下界见[有限Native研究报告](native-limited-research-results.md)和[逐要求结果](../../runs/lite/native-only/s3-s4-s6-20261116/research-results.json)。研究统计没有三层总分；不同覆盖的辅助已决准确率不用于排名。文字对应、结构证明和业务责任分开；无命中不等于候选缺失，未知父链/顺序不等于明确解析错误。
+
+当前HEAD为`242aa672f70686b6c962f5ed9d9454d540e0c8cb`，Native software_id为`3f0f0efea2a57dfda02191fbf7394f967fdf8bb610000bc59171de7d55e7c509`。历史freeze保留；仅更新Git/新增聚合器测试环境元数据并绑定共同集合的执行freeze SHA256为`1e9bd1d166201b4bca3659698075307638d58cf24e299efb57a4892136a9ed1f`。[本轮附件明确授权](../../runs/lite/native-only/s3-s4-s6-20261116/binding/authorization.json)绑定精确身份。Native-only主入口完成一次有效的24组执行；另保留全量计时观测造成的一次中断尝试，[24份结果索引](../../runs/lite/native-only/s3-s4-s6-20261116/execution-complete/index.json)保留执行状态。
+
+原始2104份成本记录重新核验，quality800、perf80三轮及初始化/预热分开；24个选段case时钟来自各自observation，未分摊全局总量。GPU归属继续partial，历史TTS共驻且活动未受控制；当前CPU研究耗时单列，不并入Native解析时间。
+
+正式Lite成绩继续撤回，requirements/current全局门禁和五个输入范围保持。未激活scores/current，未启动Product评价、模型/解析重跑、生产转换、PDF/图片读取、网络、GPU/TTS/服务或部署；未提交、推送。以下第十七阶段及更早记录保留其历史状态，本节为本轮当前研究状态。
+
 ## 第十七阶段：Native-only有限研究入口与冻结准备
 
 2026-11-16，Native-only有限研究入口已实现，24个固定组合的冻结准备及独立Preflight达到`ready_for_authorization`，仅完成prepared和verified；`approval_status=not_approved`、`execution_authorized=false`、`publication_authorized=false`。未执行正式评分，未产生正式score、激活current或发布质量成绩。可直接审阅[研究授权申请](../../runs/lite/diagnostics/native-research-phase17/final/authorization-application.json)、[精确冻结](../../runs/lite/diagnostics/native-research-phase17/final/freeze.json)、[实际CLI预检](../../runs/lite/diagnostics/native-research-phase17/final/preflight.json)及[最终交付绑定](../../runs/lite/diagnostics/native-research-phase17/final/final-binding.json)。以下第十六阶段及更早内容保留历史身份，其历史“当前”不替代本节。
@@ -542,3 +569,5 @@ StorageService.build_bundle仍只打包manifest与资产，缺少result.md、包
 | P08 current | 181.99 | 27.37（27.18–27.39） | 128 / 14 / 31 / 0 |
 
 原生配置的CPU预处理分配为8核及8GiB内存、推理进程分配为4核及20GiB内存，自有评测GPU显存预算16GiB；原服务后处理为8核及8GiB内存、无GPU、并发1。原始执行存在TTS共驻和未受控制的活动：起止持久任务计数71至76，观测到5个新增任务；短调用可能没有被这些观测捕捉。不得据此宣称GPU独占或TTS空闲。数据分别保存分配与实测使用、RSS/cgroup峰值及观测覆盖；未记录的GPU指标保持未知，单页allocator峰值不等于整个设备占用。本轮16个CPU分析进程仅用于source-only要求图重建，不改变原执行资源与时长。
+
+</details>

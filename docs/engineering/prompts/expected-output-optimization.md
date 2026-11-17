@@ -1,4 +1,12 @@
-# MO-Parse expected-only：source-only回归范围与T投影完整样本修复
+# MO-Parse expected-only：连续AST比较与固定Native研究
+
+2026-11-17本轮实施优先遵循[固定Native连续计分合同](../../../benchmark/evaluation-tasks.md#固定native研究的连续计分2026-11-17授权)：两侧独立建树、模糊节点对应、T编辑部分分、L明确关系分项和B业务值保护。沿真实`native-evaluate → grade_layers`执行路径实现，保留原S3/S4/S6子集全部23650字符、242项L和121项B每管线责任，以及扩大到九个选段后的完整责任。禁止沿用排除98项B的23项小集合或用旧readiness清空新分数。新增条件标题与正文内新增条件均须检查，普通展示标题可保留；有限内容保留比较不宣称任意改写等价。
+
+用户随后明确选择“扩大到全部72组”：最终执行S1-S9 × P01-P08，24组S3/S4/S6保留为子集验证，其他禁止项继续生效。复用同一连续比较核心；旧语言pending由同源内容或明确标量字段承接，完整保留原义务和原要求身份，不能把旧responsibility/readiness作为新方法的自动门槛。九个固定选段见既有native-final-diagnostic-review.md及当前原始input-plan，不读取Final内容。
+
+先固定规则并用独立合成正反例从格式读取入口验证，再使用同一软件串行执行全部72组保存Native。执行授权来自本轮用户附件及后续72组明确回复，不重复请求；绑定实际源码、规则和原输入，保留旧冻结及已有未提交工作。只更新受影响的软件验证和研究绑定，不重查全部历史成本。更新现有Lite报告及native-limited-research-results.md，给出三层实际分数、完整分母、逐项原文差异、真实歧义和软件限制。
+
+CPU串行、最多8 CPU和8 GiB、无网络及GPU，使用`/opt/moparse/.venv/bin/python`和现有隔离设施。Expected、Oracle、source-map、selection、manifest、五个未决范围、24份Native/observation、72份Final和历史成本只读；禁止PDF/图像字节、OCR、视觉、模型、在线服务、完整Lite、scores/current、发布、部署、提交和推送。下文为历史来源修复记录，不覆盖此次明确授权。
 
 工作区为`/opt/moparse`，`/opt/mosaic-parse`为同一入口。先读AGENTS.md、benchmark/evaluation-tasks.md、唯一Lite报告及现有来源诊断，以本地HEAD和工作区为准，不回退或覆盖已有修改。第四阶段固定5份已完成完整来源独立审查及必要修复；逐份结论、B/L、真实剩余阻塞及最终身份只从report.md与actual-source-diagnosis.json.phase4_independent_acceptance读取。
 

@@ -189,7 +189,7 @@ def worker(input_path: Path, output: Path):
     from .packaging import read_json, write_json
 
     manifest = read_json(input_path)
-    _keys(manifest["records"])
+    _keys(manifest["records"], manifest.get('scope'))
     limit_resources()
     violations, reads = [], set()
     active = set()
@@ -266,7 +266,7 @@ def worker(input_path: Path, output: Path):
         active.update((ROOT / row[k]["path"]).resolve() for k in ("native", "observation"))
         entry = {k: row[k] for k in ("sample_id", "pipeline", "native", "observation")}
         try:
-            verify_input(row)
+            verify_input(row, scope=manifest.get('scope'))
             evidence, metadata = read_native_candidate(row, root=ROOT)
             target = output / row["pipeline"] / row["sample_id"] / "native.json"
             _write_compact_score(target, evidence)

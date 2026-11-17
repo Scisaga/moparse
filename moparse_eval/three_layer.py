@@ -1894,8 +1894,15 @@ def _text_layer(reference: list[dict[str, Any]], candidate: list[dict[str, Any]]
     reading = readback if readback is not None else text_readback(candidate)
     return match_text(reference, candidate, reading, canonicalize=canonical, edit=_edit)
 
-def grade_layers(requirements: dict[str, Any], evidence: dict[str, Any]) -> dict[str, Any]:
+def grade_layers(requirements: dict[str, Any], evidence: dict[str, Any], *, scoring_method: str | None = None) -> dict[str, Any]:
     with evidence_session():
+        if scoring_method is not None:
+            from .ast_alignment import METHOD
+            from .document_ast_comparison import grade_document_content
+
+            if scoring_method != METHOD:
+                raise ValueError('unknown continuous scoring method')
+            return grade_document_content(requirements, evidence, scoring_method=scoring_method)
         if requirements.get('comparison_contract') == 'document_ast':
             if requirements.get('comparison_contract_version') != 'document_ast/1':
                 raise ValueError('unknown document comparison contract version')
