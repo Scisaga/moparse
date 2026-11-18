@@ -4,7 +4,7 @@ from copy import deepcopy
 
 import pytest
 
-from app.models.table_semantics import TextRef
+from app.models.table_semantics import CellRef, TextRef
 from app.services.table_context_service import native_scopes
 from app.services.table_semantics_service import bind_table_view, render_semantic_view
 from app.services.table_service import TableCellFragment, TableFragment, render_gfm_rows
@@ -19,6 +19,29 @@ def table(rows, name="native"):
     f.native_evidence = native_scopes(f)
     f.source_header_scopes = f.native_evidence["header_scopes"]
     return f
+
+
+@pytest.mark.parametrize("unit", ["(USD millions", "USD millions)", "（人民币百万元"])
+def test_complete_printed_corner_unit_survives_an_unmatched_display_parenthesis(unit):
+    f = table([[unit, "2034年", "2033年"], ["Revenue", "17", "11"], ["Profit", "(3)", "(2)"]])
+    before = deepcopy(f)
+    view = bind_table_view("view", [f], [f])
+    assert view.status == "converted"
+    for record in view.records:
+        assert record.subject_headers == ()
+        assert all(value.unit_refs == (CellRef("native", 0, 0),) for value in record.values)
+    rendered = render_semantic_view(view, [f])
+    assert "Revenue；2034年：17" in rendered and "Profit；2034年：(3)" in rendered
+    assert unit in rendered and f == before
+
+
+@pytest.mark.parametrize("unit", ["（人民币百万", "(USD millions of customers", "((USD millions", "USD millions extra)"])
+def test_incomplete_or_extended_corner_text_is_not_completed_into_a_unit(unit):
+    f = table([[unit, "2034年", "2033年"], ["Revenue", "17", "11"]])
+    view = bind_table_view("view", [f], [f])
+    assert view.records
+    assert all(not value.unit_refs for record in view.records for value in record.values)
+    assert unit in render_semantic_view(view, [f])
 
 
 def test_native_measurement_structure_does_not_require_a_pdf_vector_grid():

@@ -133,7 +133,17 @@ def unit_description(text: str) -> bool:
 
 
 def unit_header(text: str) -> bool:
-    return unit_description(text) or unit_description("(" + text.strip() + ")")
+    literal = text.strip()
+    if unit_description(literal):
+        return True
+    # An unmatched display parenthesis does not remove a complete printed
+    # unit. The whole remaining payload must still name a supported unit;
+    # missing currency/unit characters are never supplied here.
+    if literal.startswith(("（", "(")):
+        literal = literal[1:].strip()
+    elif literal.endswith(("）", ")")):
+        literal = literal[:-1].strip()
+    return unit_description("(" + literal + ")")
 
 
 def row_unit_description(text: str) -> bool:
