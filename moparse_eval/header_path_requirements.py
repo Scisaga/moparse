@@ -273,6 +273,19 @@ def read_header_path_requirements(text: str, source: dict[str, Any], *, scope: t
         if len(labels) == 1 and labels[0][1] and MEASUREMENT.search(labels[0][0]):
             attribute, attribute_source = labels[0]
             subject = row[-1]["text"]
+        elif (labels and columns[-1]["label"] and columns[-1]["qualifiers"].keys() >= {"unit"}
+              and all(n["label"] and not n["qualifiers"] for n in columns[:-1])
+              and all(origin for _, origin in labels)):
+            # A terminal labelled measurement with its own unit can sit under
+            # distinct printed headings. Retain every heading in that field.
+            lo = field["columns"][0][0]
+            hi = field["columns"][-1][0] + len(columns[-1]["label"])
+            attribute = text[lo:hi]
+            if attribute != " / ".join(label for label, _origin in labels):
+                _pending(result, "header_path_metric_roles_ambiguous", text, source, start, end)
+                _atom(result, text, source, *field["value"], "pending_requirement")
+                continue
+            subject, attribute_source = row[-1]["text"], _source(source, lo, hi)
         elif not labels and MEASUREMENT.search(row[-1]["text"]):
             subject, attribute, attribute_source = "", row[-1]["text"], row[-1]["source"]
             for atom in result["text_atoms"]:

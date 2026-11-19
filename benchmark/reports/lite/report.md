@@ -1,5 +1,111 @@
 # MO-Parse Lite：Native有限研究与正式评价状态
 
+## 2026-11-19 由管线 AST 逐项证明 Expected 的列表记录
+
+Expected 列表中的两笔“资本充足率”各有 7 个值。第一个是独立的标准值，另外六个分属三个日期，每个日期各有“年末”和“月均”。两笔记录由各自的办法名称确定身份。程序现在把这些层次和各自的原文位置一同保留。管线画成表格时，可以通过本行的组名、跨列日期、子列名称和原值格共同证明一个节点。每个节点先按这些关系定位，再判断数值或“不适用”。表格证据支持具体陈述的方法可参照 TabFact，跨单元格证据集及证据不足的区分可参照 FEVEROUS。[Expected 来源树](../../runs/lite/diagnostics/dual-ast-records-20261119/accepted/expected-records.json) [TabFact](https://arxiv.org/abs/1909.02164) [FEVEROUS 任务定义](https://fever.ai/2021/task.html)
+
+在保存的 S9 读回中，P03–P08 的两笔同名记录各自保留完整办法名称，两个 2014 年末值的原文是 10.86 和 11.75，百分号取自各自表前的单位说明。Expected 的数值节点取自对应列表项，百分号回指第 114 行，“不适用”保留为独立状态。P01 的空角格下方印有覆盖相同列的“财务指标”，也能展开每行的七个本地字段。其第二笔的组名只印出“根据《商业银行”，同一表的下一行另有残片，分组继续存疑。P01 把单位说明排在表后的附注之后，本次保留本行数字与未绑定单位。P02 已保存的格中混有断词和金额碎片，此次未建出这两条具名记录。上述结果分别从各管线自己的保存结构读取，未计算真实业务得分。[八份管线树及字段来源](../../runs/lite/diagnostics/dual-ast-records-20261119/accepted/native-records.json)
+
+下列两个数字分别是同一份自编两行账表的 4 项既有 B 责任和 7 项既有 L 责任。修复前，正确的 HTML 跨列表头无法取得完整的 B 或 L 分。修复后，两个评分入口均可从 HTML 核对列表要求的业务内容，源文字形式的差别仍计入 T。连续研究入口额外保存每个子字段的局部得分与原文权重。[受控样例和旧版结果](../../runs/lite/diagnostics/dual-ast-records-20261119/before/controlled-zh.json) [同一输入的新版逐项结果](../../runs/lite/diagnostics/dual-ast-records-20261119/accepted/controlled-zh.json)
+
+| 管线的实际表达 | B | L |
+| --- | --- | --- |
+| 相同记录改成 HTML 合并表头 | 4/4 | 7/7 |
+| 表中增加独立的“峰值”列 | 4/4 | 7/7 |
+| 两行整行调换位置 | 4/4 | 6/7 |
+| 只把第一笔下限从 ≥8 改成 ≤8 | 3/4 | 7/7 |
+| 只把一处“不适用”改为 0 | 3/4 | 7/7 |
+| 一处改写为“待复核” | 这一字段未决，其余已有证据保留 | 7/7 |
+
+另一个受控例把百分号放在独立的表前单位声明中。正确的声明支持全部五个字段。换成“万元”后，四个数值字段都有具体单位冲突，“不适用”仍然正确。把百分号移至表后并用附注隔开，四个数值的单位均为未决。此例的独立说明句“各年分别列期末、月均”仍有自己的文字和范围责任，普通入口尚不能给整段总分。字段的判断和整段的剩余责任均保留在同一结果中。[表前、错单位和表后声明的独立试验](../../runs/lite/diagnostics/dual-ast-records-20261119/accepted/unit-caption-controls.json)
+
+当候选印有相同的行组、行名和本节标题，外面少一层标题时，可以分别指出五个本地字段的证据。完整上级归属保留未决，也不占用该上级范围内的数据位置。改成另一个具名小节时，归属有了明确冲突。真实 P03 的保存表记录了报告标题和本节标题，Expected 还列有中间的章节层次。[少一层上级与错小节的受控对照](../../runs/lite/diagnostics/dual-ast-records-20261119/accepted/partial-heading-scope.json)
+
+重新编译的 173 个 Expected 选段与上版逐一保留相同的 T/L/B 分母、评分项 ID 和五个待裁定输入范围。16 个视图新增记录子树，其中 468 条记录沿用已有的期间字段责任，另有 21 条包含日期下的多个子字段。P01–P08 已交付 S5 正文的逐值读回与上版一致。[逐选段固定责任](../../runs/lite/diagnostics/dual-ast-records-20261119/accepted/selection-inventories.json) [发生变化的视图](../../runs/lite/diagnostics/dual-ast-records-20261119/accepted/changed-views.json) [核验的实物与两笔借款](../../runs/lite/diagnostics/dual-ast-records-20261119/accepted/examples.json)
+
+最终软件身份为 `b171dc3fbf0c5b8abf1dc4238cafccec97fa1ddcf6269e372d22887124f53aa3`。175 个已审核测试模块的 4,603 个受控用例通过。各组使用独立临时目录和原 I/O 边界。早先共用临时目录的尝试在 pytest 清理旧目录时被边界检查拦截，未纳入验收。此前独立验收的 72 个选段按本版全部复验通过，其余 101 个选段中有 2 个已具备完整比较责任、99 个仍有程序缺口。本次未执行正式 Lite 评分。[同版验收汇总](../../runs/lite/diagnostics/dual-ast-records-20261119/accepted/verification.json) [修复前后软件与版本](../../runs/lite/diagnostics/dual-ast-records-20261119/accepted/software.json)
+
+## 2026-11-19 从两棵文档 AST 复核变动率与同名行
+
+Expected 依自己的授权文字建树。Native 依自己的结构建树，Final 依交付的 Markdown 建树。节点的来源、父记录和打印顺序决定可以与哪一项对应，定位后再判文字、关系和业务值。正式入口以前在全是类型化字段、没有整段正文或目录顺序项时会跳过文档树检查。现已让这类输入也校验两棵树，再交给已有字段比较器；两边伪造父级、候选篡改跨列数的受控反例均被拒绝。[评分合同](../../evaluation-tasks.md#文档-ast-与内容比较) [受控断言](../../../tests/unit/test_document_ast_comparison.py)
+
+此前报告把少执行一步 Expected 投影的试验称作连续研究评分。该试验确实只检查了四个年度金额，无法支持“研究入口对错答一律给 100”的结论。按 S1–S9 Native 入口的实际准备步骤重做，同一份两行账表有 95 个 T 字符、15 项 L 关系和 6 项 B 责任。两个变动率原已落在整行责任中。旧程序先占用候选的年度金额和行名，再用 Expected 的完整行匹配余下的片段，同名的变动率由此脱离了各自的行。[修复前两种入口的逐项对照](../../runs/lite/diagnostics/dual-ast-20261119/before/evidence.json) [Native 要求准备](../../../moparse_eval/native_scope.py)
+
+现在两侧分别从完整记录取得行名、已绑定的期间子项以及余下字段的原文跨度。已固定的业务项即使只承担行尾的一个字段，也可沿树找到原来的行名。每一笔金额和变动率仍各用原有的一票。下表是同一连续研究入口的自编账表，业务分为百分制。单独换行只改变阅读顺序。遇到同名、同上下文且正负号或单位不同的候选，匹配保留歧义。[修复后逐项来源、顺序和得分](../../runs/lite/diagnostics/dual-ast-20261119/after/dual-tree.json) [对齐与分层计分](../../../moparse_eval/continuous_document.py)
+
+| 候选账表 | 修复前 B | 修复后 B | 修复后实际判定 |
+| --- | ---: | ---: | --- |
+| 原样 | 76.62 | 100.00 | 6/6 项正确 |
+| 两行整体换位 | 76.62 | 100.00 | 业务 6/6，阅读顺序 0/1，L 为 14/15 |
+| 两行互换正负号 | 76.62 | 66.67 | 四笔年度金额正确，两笔变动率错误 |
+| 一处百分比换成百分点 | 71.97 | 83.33 | 只错本行的单位 |
+| 删去一处变动率 | 71.97 | 83.33 | 其余五项保留 |
+| 改一笔年度金额 | 59.95 | 83.33 | 只错本行该年的金额 |
+
+按同一实际投影复核五个保存选段的 77 个变动字段，26 个已有独立业务项，51 个由既有正文项承担。在这 51 个中，41 个现在能在源树上指出各自的行名、数值、单位及印出的比较基准（如有）。余下 10 个继续保留完整正文，其中 7 个有括号但其已识别的年度金额没有可验证的货币单位，3 个的年度值还含上标附注。此处核对的是 Expected 的来源与责任，没有把这些数目算作任一管线的正确率。条件句的主体互换和后置条件反例也仍能复现。[77 个位置与对应源树](../../runs/lite/diagnostics/dual-ast-20261119/after/dual-tree.json)
+
+S9 的 P03 保存表中有两处“资本充足率”，分别位于第 8、11 行（原生索引从 0 起）。Expected 列表把它们挂在不同的办法名称下。候选 HTML 有两个办法名称，各自跨 3 行与 2 行，文档树以前丢了这些跨度。现在候选 AST 保留跨行、跨列、原生表头声明和本格来源。当时这两个格只核实了 HTML 的跨行声明。后续从行组、日期及子列共同建立业务节点的结果见本页首节。此前 114/120 个能定位的查询来自独立诊断，未用于判定这两行的业务值。区分单元格拓扑与文字内容的相关实现见 GriTS。[真实两侧节点](../../runs/lite/diagnostics/dual-ast-20261119/after/dual-tree.json) [GriTS 原论文](https://arxiv.org/abs/2203.12555)
+
+## 2026-11-19 此前的业务问题定位试验
+
+先问“程序能否在本份输出中找到正确的位置”，再问“现有业务评分项是否真的检查了那里印出的内容”。本次使用已保存的要求视图、S9 历史读回和自编正反例，在新目录独立复现了 14 份逐字节相同的 JSON。整选段独立验收仍为 72/173，另有 2 个选段待整段验收、99 个仍有软件缺口。6,636 项未闭合义务落在 976 个“选段、文件、行范围”组合中。组合只用于安排修复，每一条原义务和分母都保留。[同版验收状态](../../runs/lite/diagnostics/list-field-scope-20261119/verified/verification.json) [全部问题及位置](../../runs/lite/diagnostics/list-field-scope-20261119/verified/issues.csv)
+
+**同名财务行。** S9 原列作句段归属的 42 项全部来自四行财务记录。两行都叫“资本充足率”，分别受《商业银行资本管理办法（试行）》和《商业银行资本充足率管理办法》等约束。每份候选先独立建立表内索引，保存章节、跨行的办法名称、指标、跨列日期和下层“年末/月均”的源格。查询阶段才读原有要求。合并结构项和业务项对同一位置的重复询问后，三行有 120 个期间子列查询，其中 114 个能唯一定位，P02 的 6 个缺少完整表头。第四行“吸收存款”没有这对子列。10 个受控检查覆盖了子列换序、同名行、错误表题、残缺表头和遮住全部数值。定位本身尚未比较标准值、金额、“不适用”或整行归属。[逐项查询与对照](../../runs/lite/diagnostics/evidence-queries-20261119/nested-query.json) [W3C 多层表头关联](https://www.w3.org/WAI/tutorials/tables/multi-level/) [Arelle 的事实维度及值比较](https://arelle.readthedocs.io/en/latest/apidocs/arelle/arelle.ValidateDuplicateFacts.html)
+
+对回旧检索记录后，24 项原有备选包含正确行和其他行，14 项的所有备选都在错误行，另 4 项仍缺定位依据。第一类可以用已打印的上级筛选，第二类必须从候选自己的物理表重新找行。S9 另外 37 项检查了 P01、P02 各自的全部九张物理表。其中 25 项能找到行名，本表没有相应的完整日期表头，前表与本表之间还有图片节点和页脚，读回中没有直接续表关系。8 项在正确表里只看到 `014年12月31日` 这类残缺日期，2 项未找到完全一致的行名，2 项原本就没有期间要求。相同标题或相近数值均未用于补日期。[同表逐项查找与跨表屏障](../../runs/lite/diagnostics/evidence-queries-20261119/table-query.json)
+
+**变动率的初次试验。** 未扩展的要求视图只有四个年度金额 B 项，三个改动变动率的自编错例在这条诊断路径上都得到 100。保存的五份视图中，354 条未支持记录对应 177 个原文跨度，77 处可拆出字段名、原值和显式单位。此前仅在未扩展投影内寻找其责任，误报了 77 处均无负责业务项。完整研究入口的责任归属和修复前后的实际行为见本页首节。旧诊断数据原样保留。[初次试验及具体差异](../../runs/lite/diagnostics/evidence-queries-20261119/field-query.json) [FinQA 的支持证据和可执行问题](https://aclanthology.org/2021.emnlp-main.300/)
+
+**条件句的正反例。** 对“如果北区获准，南区可以延期付款”，连续研究评分给主体互换的错答 87.5，给只把条件移到句末的同义写法 0。试验分开读取“谁满足条件”和“本条规则允许谁做什么”，在各个可能的获准状态下检查规则明示的结果。16 个受控样例中，4 个同义、5 个有明确差异、7 个证据不足，均与事先写定的判断一致。这组有限句式在 3,617 条去重后的已有未决义务文字中命中 0 条，尚不能解释真实中文积压。应保留这个错答检验，以真实未决句中的条件、主语和作用对象检验后续读法。[句子、原文跨度和可复现反例](../../runs/lite/diagnostics/evidence-queries-20261119/conditional-query.json) [QA-SRL 谓词与原文论元](https://dada.cs.washington.edu/qasrl/) [在多组输入上检验语义等价的试验方法](https://aclanthology.org/2020.emnlp-main.29/)
+
+两项整段验收各有不同的问题。IEA 的三个采用率和节能评级字段可以直接问“属于哪项技术”，技术名称中动词形式的词是否陈述已发生的事件，还须另找断言依据。地铁选段需核对每条图题与正文标题的归属，包括两条图题互换的反例。五个跨页目标的 Expected 已经给出整段文字，缺少的是各页从哪个字交接；只影响这五个目标的完整判定。以上试验使用独立证据目录，正式 Lite 成绩继续待定。[IEA 已验证的反例](../../runs/lite/diagnostics/list-field-scope-20261119/label-declaration-trial.json) [事件断言与事实性研究](https://aclanthology.org/J12-2002/) [逐页范围及示例](../../diagnostics/three-layer-input-boundary.md) [本次试验的复现入口](../../runs/lite/diagnostics/evidence-queries-20261119/reproduce.sh)
+
+## 2026-11-19 列表字段、同名指标和条件公式
+
+重新编译全部 173 个 Expected 选段后，74 个选段的评分要求已有明确归属，上轮为 68 个。99 个仍有文字或关系缺口。原先 68 个的 JSON 和 XML 逐份保持原字节。其余有变化的 26 份逐项核对了字段原值、文字范围、关系位置、计分项 ID 和三层分母。5 个跨页目标仍保留。这里统计的是评分程序的覆盖情况，正式 Lite 成绩继续待定。[173 份同版要求](../../runs/lite/requirements/list-field-scope-20261119-04/index.json) [逐份分母和来源核对](../../runs/lite/diagnostics/list-field-scope-20261119/verified/denominators.json)
+
+72 份已通过同版整选段独立验收，上轮为 68 份。新增的英伟达业务概览、腾讯债券条件与公式、央行编写名单、港交所风险委员会报告，分别逐处核对 43、81、37、121 处源文。另有 IEA 和地铁两份已通过本轮受影响字段的逐项对照，仍保留整选段待验状态。同一程序验证了 47 项评分能力，390 个指定正反例可追到本次 868 个受控测试。正式八配置尚未重评。[独立验收及测试记录](../../runs/lite/diagnostics/list-field-scope-20261119/verified/verification.json) [每个整选段的原始断言](../../runs/lite/diagnostics/list-field-scope-20261119/verified/acceptance/whole-source-current.json) [受控正反例](../../runs/lite/diagnostics/list-field-scope-20261119/verified/acceptance/comparison-current.json)
+
+| 已复现的错误 | 修改后观察 |
+| --- | --- |
+| 两个列表组都有余额和口径，原程序收到两份相同的第一组时仍判对 4/4 | 两条完整记录换序时业务项通过 4/4，第二组字段移到第一组后通过 2/4。父项文字、源行和出现次序都参与校验。 |
+| 同一行的收入和利润率脱离了写在旁边的分部名 | 单独交换分部名后，四个错挂的金额和比例全部被拒绝。完整换序或改成带同名列头的表格，四个字段均能匹配。同比字段也能回指同一行的指标名。 |
+| 分类写成一个字段、措施写成嵌套正文时，评分程序找不到两者之间的归属 | 港交所 13 类风险原有的 59 条未决都能定位到风险名称和措施原文。IEA 的 16 项技术共 48 格评级和地铁的 6 行共 12 个字段，也逐项核过所属项目。 |
+
+修复沿用两个独立读入流程。先在各自文档中按列表缩进、同级项、表格及标题边界取得字段位置，再比较其值。列表结构参考 CommonMark，跨格式字段定位参考层次表头和具名表头的对应方法。交换父项、仅替换条件、保留相同数值的错误注入来自最小对照样例的做法。[CommonMark 列表项](https://spec.commonmark.org/0.31.2/#list-items) [HiTab](https://aclanthology.org/2022.acl-long.78/) [W3C 多层表头](https://www.w3.org/WAI/tutorials/tables/multi-level/) [最小对照样例](https://aclanthology.org/2020.findings-emnlp.117/) [三个实际选段的逐项来源](../../runs/lite/diagnostics/list-field-scope-20261119/verified/selected-scopes.json)
+
+现存阻塞分析记录由 5,046 条降到 4,737 条，其中列表分组从 503 条降到 194 条。原有 6,636 项未闭合的文字和关系要求继续逐项保留，与上述分析记录有重叠。原先笼统标记的 2,317 条已追到具体原文及应判角色，其中包括 941 条逻辑关系、492 条结构化字段和 117 条限定语。每条均可回到选段、行、文字范围和原计分责任。[逐项变更](../../runs/lite/diagnostics/list-field-scope-20261119/verified/issues.csv) [按实际缺失角色展开](../../runs/lite/diagnostics/list-field-scope-20261119/verified/pending-by-required-role.csv)
+
+IEA 的评级已能逐格归属，另有一个真实读回缺陷。程序把技术名称 `Hardware / Photonic integrated circuits` 中的 `integrated` 读成已发生的动作。试过将斜杠父项统一读作名称，也试过要求同一类别里先出现同名定义。两种试法都能消除这一处误判，却也抹掉了受控样例中实际发生的动作，均未采用。地铁选段已核对 12 个字段，整段的图题和正文仍需独立验收。[第一种试法](../../runs/lite/diagnostics/list-field-scope-20261119/label-trial.json) [增加定义依据后的反例](../../runs/lite/diagnostics/list-field-scope-20261119/label-declaration-trial.json) [名词修饰与句子谓词的区分](https://universaldependencies.org/en/specific-syntax.html)
+
+另用六组自编中英文句子单独改变条件、许可、否定、先后或施受方向，保留原句作正例。六个原句的业务项都是满分，五个错例的业务项为零。一例把“如果北区获准，南区可以延期付款”中的北区、南区对调后，业务项仍给 87.5%。这暴露了完整句段按内容相似度给部分分时，对条件主体和结果主体的区分还不充分。其余真实中文句段继续按各自责任诊断。[逐句受控结果](../../runs/lite/diagnostics/list-field-scope-20261119/verified/condition-trials.json) [Chinese PropBank 的谓词与论元标注](https://catalog.ldc.upenn.edu/docs/LDC2011T03/propbank/chinese-propbank.pdf)
+
+另对 S9 原有 37 条同名字段及其绑定做了最大匹配试验。先合并业务项和结构项对同一源位置的引用，排除明确错年的格，再检验每个备选格能否由一一对应关系唯一确定。在历史保留的 88 个备选引用中，这种方法未能唯一确定任何位置。原有 79 条未决继续保留，试验全程未使用金额选择位置。五个跨页目标的缺口仅在页内文字边界，其他工作照常执行。[S9 逐位置试验](../../runs/lite/diagnostics/list-field-scope-20261119/s9-capacity.json) [最大二分匹配算法](https://networkx.org/documentation/stable/reference/algorithms/generated/networkx.algorithms.bipartite.matching.hopcroft_karp_matching.html) [五个跨页目标](../../diagnostics/three-layer-input-boundary.md)
+
+## 2026-11-19 本轮修改前的 68 份来源验收
+
+用同一版程序重新编译了 173 个 Expected 选段。68 个选段的文字、结构和业务要求已能全部对应到评分项，105 个仍有缺口。新增通过来源检查的是华为三张财务报表，独立核对了 74 行的 148 个金额及其期间、单位、分组，并核对了三处附注的页码范围、所属报表和来源。其余 172 份 JSON 和 XML 与修复前逐份相同，包括先前通过的 67 份。各选段的三层分母逐份保持。华为选段的 4,572 个字符、603 项结构关系和 162 项业务要求均可追到原来的计分对象。8 个金额新增的单位和币种由各自原有字段承接。[173 份前后对照](../../runs/lite/diagnostics/scorer-issue-repair-20261119/selections.csv) [三层分母和来源](../../runs/lite/diagnostics/scorer-issue-repair-20261119/denominators.json) [独立来源断言](../../runs/lite/diagnostics/scorer-issue-repair-20261119/s5-independent-delivered.json)
+
+评分器读同一份实际 Markdown 时，P06 能读全金额、日期、单位、业务分组和附注的记录从 0/74 增至 74/74。P01 现金流表的 20 个单位和 P02 资产负债表的 65 个单位均可读回。P02 打印的 65 个无效日期逐个保留。受控错例中，两组同名记录整组调换位置，修复前四笔都判错，修复后四笔均判对。金额相同却把后两笔挂错组，修复前四笔都判对，修复后只判对仍在原组的两笔。[实际正文读回](../../runs/lite/diagnostics/scorer-issue-repair-20261119/public-delivered.json) [旧程序受控结果](../../runs/lite/diagnostics/scorer-issue-repair-20261119/controls-before.json) [新程序受控结果](../../runs/lite/diagnostics/scorer-issue-repair-20261119/controls-delivered.json)
+
+剩余 105 个选段共涉及 6,636 项未落实的原文要求和 5,046 条关联分析限制。两种记录可以指向同一处。每条保留选段、原文位置、原因及前后状态。五个跨页目标继续留在分母中。S9 历史研究的 79 条未决也保留原评分状态，分为 42 条重复句段和 37 条同名指标的行列关系。正式 Lite 评分尚未执行。[逐条问题和参考方法](../../runs/lite/diagnostics/scorer-issue-repair-20261119/issue-index.md) [同版要求与门槛](../../runs/lite/requirements/scorer-issue-repair-20261119-05/index.json) [五个跨页目标](../../diagnostics/three-layer-input-boundary.md)
+
+68 份已落实的选段均通过同版独立整选段验收。单独复查 S9 的 37 条指标时，旧备选中的显式年份均不足以唯一定位。扩大到备选所在表的全部源格后，两条“成本收入比”找到了同名同年的其他格，实际都属于“补充财务指标”表，且区分年末与月均。原要求指向“盈利能力指标”，四个位置均未拿来替这两条要求给分。[68 份独立验收](../../runs/lite/diagnostics/scorer-issue-repair-20261119/acceptance-final/whole-source-current.json) [同版受控比较](../../runs/lite/diagnostics/scorer-issue-repair-20261119/acceptance-final/comparison-current.json) [逐格排除记录](../../runs/lite/diagnostics/scorer-issue-repair-20261119/s9-scoped-search.json)
+
+最终软件身份为 `f9dc0a5e5114809d88190fdf7b139e0e7819ca883d9ec83ab54e38af151db06e`。同版执行的 4,559 项隔离测试全部通过。旧版、新版、八份正文、独立验收、问题清单及实际错误注入记录已绑定到各自文件摘要。[版本及验证记录](../../runs/lite/diagnostics/scorer-issue-repair-20261119/final-verification.json)
+
+## 2026-11-19 上一轮的正式门槛与 S5 实际交付
+
+新版用同一软件从八份 S5 保存 Native 生成了八份 Markdown、对应 Semantic、Storage 和离线样包。P06 的 74 个日期金额逐格核对了原生 HTML，七对同名项目可区分。P02 的 22 个残缺单位业务前缀已撤除。八组共 1,770 个值槽的原文和正文位置经过对照。P03 的六个主指标金额可由实际 Markdown 连同对应日期、单位和附注读回。正文改善和读回改善分别列在 [S5 对照报告](native-final-value-s5.md#11-表头分段具名小计与实际下载2026-11-19)。
+
+同版重新编译 173 个 Expected 选段。67 个选段的文字、结构和业务比较责任已在要求图中闭合，106 个仍有缺口。以前独立验收的 63 个选段，其 JSON、XML 与比较责任均逐份保持同一 SHA。IEA 技术采用、平安业务亮点、平安医疗养老三份另做整样本来源验收，分别覆盖 46、65、75 处源文。浦发封面声明新增一份 12 处源文的整样本验收，包括联席承销商的三个具名主体、印刷顺序和分隔符。茅台环境表的多层列名和实物单位修复后，阻塞义务从 198 降至 137；浦发发行条款从 11 降至 8。其余缺口保留原要求 ID、文字跨度和阻塞原因。[173 份要求视图](../../runs/lite/requirements/s5-delivery-20261119-02/index.json)、[独立验收与版本对照](../../runs/lite/diagnostics/s5-table-scopes-and-delivery-20261119/source-acceptance-final/requirements-delta.json)、[106 份逐项未决](../../runs/lite/diagnostics/s5-table-scopes-and-delivery-20261119/final-source-acceptance/open-comparison-responsibilities.json)。
+
+新软件重跑了涵盖原有 377 个指定实例的 731 个受控比较用例，45 项原有比较能力逐项回指本次执行。随后用同一软件、同一要求视图和本次比较证据重新执行整样本来源验收，67 个选段全部通过。剩余 106 份共有 6,636 个阻塞义务和 5,053 条关联的分析限制，两组记录有交叉，分别保存在清单中。S5 自身也仍有三个单位声明的验收边界和四个现金流子项的列表归属待解决。[同版受控比较](../../runs/lite/diagnostics/s5-table-scopes-and-delivery-20261119/source-acceptance-final/comparison-current.json)、[67 个整样本通过记录](../../runs/lite/diagnostics/s5-table-scopes-and-delivery-20261119/source-acceptance-final/whole-source-current.json)。
+
+五个跨页目标及其分母继续保留。例如央行报告 Expected 第 252 行是一段完整文字，来源声明跨原页 18–19。两份已执行样本分别止于第 18 页和始于第 19 页，现有记录缺少这段文字换页处的字符位置。如何把同一段分到两份输入，目前仍待范围裁定。[五项输入范围与原文位置](../../diagnostics/three-layer-input-boundary.md)。
+
+S9 历史研究中的 31 条 L、48 条 B 未决已逐项关联原要求、候选中的实际竞争位置及其文字。正式评分器尚未冻结，P01–P08 Native 横向、八组 Native 到 Final 配对、P07/P08 真实历史配对均未启动。原 quality800 和 perf80 的三轮成本观测保留；新版公共处理尚无正式 800 页和 80 页三轮成本。本轮不产生全 Lite 成绩、配置采用或发布候选结论。[S9 的 79 条原责任](../../runs/lite/diagnostics/s5-table-scopes-and-delivery-20261119/validated-02/s9-original-responsibilities.json)、[原始成本与测量条件](#原始处理成本)、[预先声明的采用条件](../../evaluation-tasks.md#固定配置的采用条件)。
+
 ## 当前：S1-S9连续AST保存Native研究
 
 2026-11-17，按用户明确扩展授权，S1-S9 × P01-P08共72组已使用同一实现实际比较。原生读取与Expected比较隔离，真正使用独立AST、模糊拆合对应、T连续编辑、L关系分项和B关键值保护；原始正文业务责任全部保留，没有沿用排除98项B的小集合。

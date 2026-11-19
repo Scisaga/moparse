@@ -12,6 +12,7 @@ import copy
 import re
 from collections import defaultdict
 
+from .enumeration_context import grid_record_axis
 from .quantity import exact_number, normalize_unit
 
 
@@ -60,13 +61,13 @@ def syntax_grid_fields(evidence):
             table_index += 1
             block = table_index
             scopes[block] = unit.get('scope', [])
-            if previous:
+            if previous and (previous.get('kind') in {'text', 'item', 'table_caption'}
+                             or previous.get('semantic_role') == 'qualifier_declaration'):
                 raw = previous.get('text', '').strip()
                 own = re.fullmatch(r'(?:[（(]?(?:金额单位|金額單位|单位|單位)\s*[:：为為]?\s*)?([^()（）:：]+)[）)]?', raw)
                 if own and normalize_unit(own[1])['matched']:
                     units[block] = (own[1], previous['source'])
-        if unit.get('text', '').strip():
-            previous = unit
+        previous = unit
     result = []
     for block, cells in tables.items():
         headers = [c for c in cells if 'column_header' in c.get('roles', []) or c.get('native_declarations', {}).get('is_column_header') is True]
@@ -82,6 +83,7 @@ def syntax_grid_fields(evidence):
             if len(own) < 2 or not own[0]['text'].strip():
                 continue
             raw_label = own[0]['text'].strip()
+            row_headers = [h for h in headers if h['source']['col'] == own[0]['source']['col'] and h.get('col_span', 1) == 1]
             label = raw_label
             row_unit = None
             row_match = re.fullmatch(r'(.*?)\s*[(（]([^()（）]+)[)）]', label)
@@ -158,7 +160,9 @@ def syntax_grid_fields(evidence):
                 attribute = semantic[0].get('attribute', '') if strong else ' / '.join(names)
                 if row_unit and subject == raw_label:
                     subject = label
+                axis = grid_record_axis(row_headers[0], own[0], attribute) if len(row_headers) == 1 else None
                 result.append({**(copy.deepcopy(semantic[0]) if semantic else {}),
+                               **({'record_axis': copy.deepcopy(axis)} if axis else {}),
                                'id': 'grid-field:' + str(len(result)), 'kind': 'fact',
                                'role': semantic[0].get('role', 'metric') if semantic else 'metric',
                                'subject': subject, 'attribute': attribute, 'value': value,

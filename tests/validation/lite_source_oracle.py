@@ -18,6 +18,9 @@ REVIEW_MODULES = (
     'tests.validation.lite_review_alibaba_assertions',
     'tests.validation.lite_review_hkex_assertions',
     'tests.validation.lite_review_energy_assertions',
+    'tests.validation.lite_delivery_source_assertions',
+    'tests.validation.lite_statement_source_assertions',
+    'tests.validation.lite_list_source_assertions',
 )
 STAGE3_MODULES = ('tests.validation.lite_stage3_assertions',)
 STAGE4_MODULES = ('tests.validation.lite_stage4_assertions',)
@@ -1073,6 +1076,15 @@ def _check_fixed_source(graph, original, expected, assertion, target, block):
         assert own['scope'] == assertion['scope'] and own['parents'] == assertion['parents']
         a, b = own['content']['source']['text_span']
         assert ''.join(n['text'] for n in own['content']['children']) == ''.join(raw[a:b].split())
+    if 'typed_parent_line' in assertion:
+        number, name = assertion['typed_parent_line']
+        parent, = [f for f in facts if f['source']['lines'] == [number, number]]
+        binding, = [e for e in edges if e.get('fact_id') == parent['id'] and e['type'] == 'field_binding']
+        assert parent['value'] == _semantic_literal(graph['sources'], parent['value_source']) == name
+        assert own_content and any(r.get('basis') == 'complete_child_content_and_its_printed_parent_field'
+            and r['source'] == target['reference'] and r['parent_sources'][0]['lines'] == [number, number]
+            and {parent['id'], binding['id'], *(c['requirement_id'] for c in own_content)} <= set(r['requirement_ids'])
+            for r in coverage['analysis_limitations'])
     if assertion.get('navigation'):
         declaration = assertion['navigation']
         label, page, parents = declaration['title'], declaration['page'], declaration['parent_path']
@@ -1121,6 +1133,17 @@ def _check_fixed_source(graph, original, expected, assertion, target, block):
         label, value = assertion['anchors'][0].split('：', 1)
         wanted = [('', label, value, {})]
     actual = [(f['subject'], f['attribute'], f['value'], f['qualifiers']) for f in observed]
+    if 'printed_document_reference' in assertion:
+        component, document, pages, start, end = assertion['printed_document_reference']
+        assert len(own_content) == 1 and own_content[0]['source']['text_span'] == [0, len(raw)] and not observed
+        local = [edge for edge in graph['relations']
+                 if source_in_target(edge.get('binding_evidence', {}).get('statement_source', {}), target, original)]
+        part, = [e for e in local if e['type'] == 'document_part_of']
+        page, = [e for e in local if e['type'] == 'page_reference_scope']
+        assert part['left']['text'] == component and part['left']['scope'] == assertion['scope'] and part['right']['text'] == document
+        assert page['right']['subject'] == component and page['right']['scope'] == assertion['scope']
+        assert (page['left']['text'], page['left']['start']['id'], page['left']['end']['id']) == (pages, start, end)
+        assert _semantic_literal(graph['sources'], page['source']) == pages
     structural = assertion['role'].startswith('H') or assertion['role'] in {'D', 'C'}
     policy = assertion.get('representation', REPRESENTATION_POLICIES.get((sample_id, line),
         'typed' if assertion['role'] == 'F' else 'structure' if structural else 'content'))
@@ -1166,6 +1189,23 @@ def _check_fixed_source(graph, original, expected, assertion, target, block):
             assert _semantic_literal(graph['sources'], fact['attribute_source']) == fact['attribute']
             assert _semantic_literal(graph['sources'], fact['value_source']) == fact['value']
             assert any(e['type'] == 'field_binding' and e.get('fact_id') == fact['id'] for e in edges)
+        if 'field_parent_lines' in assertion:
+            parents = assertion['field_parent_lines']
+            rows = fact.get('row_evidence', [])
+            assert [(r['role'], r['source']['lines'], r['text']) for r in rows] == [
+                ('list_parent', [number, number], name) for number, name in parents]
+            assert all(_semantic_literal(graph['sources'], r['source']) == r['text'] for r in rows)
+            names = [name for _, name in parents]
+            assert fact.get('identity_facets', {}).get('list_parents', []) == names
+            own = [e for e in edges if e.get('fact_id') == fact['id'] and e['type'] == 'field_binding']
+            assert len(own) == 1 and own[0]['right'].get('identity_facets', {}).get('list_parents', []) == names
+            for number, name in parents:
+                issues = [i for i in graph['unresolved'] if i.get('parent') == name and i['source'] == target['reference']
+                          and i.get('parent_source', {}).get('lines') == [number, number]]
+                assert len(issues) <= 1
+                for issue in issues:
+                    assert any(r['issue_id'] == issue['id'] and r['status'] == 'semantic_or_structure'
+                        and {own[0]['id'], fact['id']} <= set(r['requirement_ids']) for r in coverage['analysis_limitations'])
     if observed:
         typed_spans = []
         for fact in observed:
@@ -1176,14 +1216,37 @@ def _check_fixed_source(graph, original, expected, assertion, target, block):
                 import re
 
                 assert sentence.get('kind') == 'complete_printed_proposition_sentence'
-                assert sentence.get('semantic_source') == fact['source']
+                semantic = sentence['semantic_source']
+                if quantity := assertion.get('printed_predicate_quantity'):
+                    subject, predicate, expression = quantity
+                    assert raw == f'{subject} {predicate} {expression}.'
+                    assert source_in_target(semantic, target, original)
+                    assert semantic['text_span'] == [0, len(raw) - 1]
+                    start = raw.index(expression, len(subject) + len(predicate))
+                    assert fact['source']['text_span'] == [start, start + len(expression)]
+                    assert source_in_target(fact['source'], target, original)
+                    assert _semantic_literal(graph['sources'], fact['subject_source']) == subject
+                    assert _semantic_literal(graph['sources'], fact['predicate_source']) == predicate
+                    assert _semantic_literal(graph['sources'], fact['value_source']) == expression[:-1]
+                    assert _semantic_literal(graph['sources'], fact['qualifier_provenance']['unit']['source']) == expression[-1]
+                else:
+                    assert semantic == fact['source']
                 assert source_in_target(printed, target, original)
-                a, b = fact['source']['text_span']
+                a, b = semantic['text_span']
                 x, y = printed['text_span']
                 assert 0 <= x <= a < b <= y <= len(raw) and not raw[x:a].strip()
                 assert re.fullmatch(r'[.!?。！？]["”’」』）)\]]*\s*', raw[b:y])
             origins = ([sequence or fact.get('statement_source', fact['source'])] if fact.get('logic') else
                        [fact.get('attribute_source', {}), fact['value_source']])
+            if delimiter := assertion.get('field_delimiter'):
+                start, end = fact['attribute_source']['text_span'][1], fact['value_source']['text_span'][0]
+                assert raw[start:end].strip() == delimiter
+                typed_spans.append([start, end])
+            if 'metric_parent_line' in assertion:
+                assert fact['attribute_source']['lines'] == [assertion['metric_parent_line']] * 2
+                assert fact['subject_source']['lines'] == [line, line]
+                assert _semantic_literal(graph['sources'], fact['subject_source']) == fact['subject']
+                origins.append(fact['subject_source'])
             if sentence:
                 origins.append(printed)
             origins += list(fact.get('qualifier_sources', {}).values())
@@ -1195,19 +1258,62 @@ def _check_fixed_source(graph, original, expected, assertion, target, block):
                     typed_spans.append(origin['text_span'])
             bindings = [e for e in edges if e['type'] == 'field_binding' and e.get('fact_id') == fact['id']]
             assert len(bindings) == 1, (sample_id, line, 'typed binding cardinality')
+            if 'sibling_axes' in assertion:
+                wanted_axis = assertion['sibling_axes'].get(fact['attribute'])
+                axis = fact.get('record_axis')
+                assert bindings[0].get('binding_evidence', {}).get('record_axis') == axis
+                if wanted_axis:
+                    role, *words = wanted_axis
+                    assert axis['role'] == role and axis['text'] == words[-1]
+                    assert source_in_target(axis['source'], target, original)
+                    assert _semantic_literal(graph['sources'], axis['source']) == words[-1]
+                    assert axis['source']['text_span'] != fact['value_source']['text_span']
+                    if role == 'category':
+                        assert axis['label'] == words[0] and source_in_target(axis['label_source'], target, original)
+                        assert _semantic_literal(graph['sources'], axis['label_source']) == words[0]
+                else:
+                    assert axis is None
             right = bindings[0]['right']
-            assert all(right.get(k) == fact.get(k) for k in ('subject', 'attribute', 'scope')), (
+            bound_scope = fact['scope']
+            if 'row_group_lines' in assertion:
+                groups = assertion['row_group_lines']
+                labels = [name for _, name in groups]
+                assert fact['identity_facets'].get('group', []) == labels and right['identity_facets'].get('group', []) == labels
+                rows = [r for r in fact.get('row_evidence', []) if r.get('role') == 'row_group']
+                assert [(r['source']['lines'], r['text']) for r in rows] == [([n, n], name) for n, name in groups]
+                assert all(_semantic_literal(graph['sources'], r['source']) == r['text'] for r in rows)
+                for key in ('unit', 'currency'):
+                    origin = fact['qualifier_provenance'][key]['source']
+                    assert origin['lines'] == [assertion['money_declaration_line']] * 2
+                    assert _semantic_literal(graph['sources'], origin) == fact['qualifiers'][key]
+                bound_scope = [*fact['scope'], *labels]
+            assert right.get('scope') == bound_scope and all(right.get(k) == fact.get(k) for k in ('subject', 'attribute')), (
                 sample_id, line, 'independent typed endpoint identity')
             if 'qualifiers' in right:
                 assert right['qualifiers'] == assertion.get('binding_qualifiers', fact['qualifiers']), (sample_id, line, 'typed endpoint qualifiers')
             for key in {'unit', 'currency', 'period', 'from_period', 'to_period'} & fact['qualifiers'].keys():
-                bound = [e for e in edges if e['type'] == 'qualifier_scope' and e.get('fact_id') == fact['id']
+                bound = [e for e in graph['relations'] if e['type'] == 'qualifier_scope' and e.get('fact_id') == fact['id']
                          and e.get('left', {}).get('type') == key and e['left'].get('text') == fact['qualifiers'][key]
-                         and all(e['right'].get(k) == fact.get(k) for k in ('subject', 'attribute', 'scope'))]
-                assert bound, (sample_id, line, 'independent typed qualifier relation', key)
+                         and e['right'].get('scope') == bound_scope
+                         and all(e['right'].get(k) == fact.get(k) for k in ('subject', 'attribute'))]
+                assert len(bound) == 1, (sample_id, line, 'independent typed qualifier relation', key)
+                if bound[0]['id'] not in retained['L']:
+                    assert key in ('unit', 'currency') and assertion.get('row_group_lines')
+                    assert bound[0]['right'] == right and bound[0]['source']['lines'] == [assertion['money_declaration_line']] * 2
+                    assert _semantic_literal(graph['sources'], bound[0]['source']) == fact['qualifiers'][key]
+                    assert {'analysis_relation_id': bound[0]['id'], 'counted_relation_id': bindings[0]['id'],
+                            'fact_id': fact['id'], 'dimension': key, 'source': bound[0]['source']} in coverage['field_qualifier_ownership']
         label = TYPED_SCOPE_LABELS.get((sample_id, line))
         if label:
             typed_spans.append([0, len(label) + 1])
+        if assertion.get('entity_list_separator'):
+            separator = assertion['entity_list_separator']
+            assert len(observed) > 1 and all(f.get('role') == 'identity' for f in observed)
+            for left, right in zip(observed[:-1], observed[1:], strict=True):
+                assert left['attribute_source'] == right['attribute_source'] and left['source'] == right['source']
+                a, b = left['value_source']['text_span'][1], right['value_source']['text_span'][0]
+                assert a < b and raw[a:b] == separator, (sample_id, line, 'entity list source order or separator')
+                typed_spans.append([a, b])
         for pos, char in enumerate(raw):
             if (char.isspace() or char in ':：;；'
                     or pos == len(raw) - 1 and char in '。.!?！？'):
@@ -1236,6 +1342,12 @@ def _check_fixed_source(graph, original, expected, assertion, target, block):
     if assertion['role'] == 'C':
         assert assertion['scope'] and any(e['type'] == 'prose_heading_membership'
             and e['source']['lines'][0] == line for e in edges), (sample_id, line, 'caption scope')
+        if 'caption_parent' in assertion:
+            number, name = assertion['caption_parent']
+            own = [e for e in edges if e['type'] == 'list_membership' and e['source'] == target['reference']]
+            assert len(own) == 1 and own[0]['left'] == name and own[0]['right'] == {'text': raw, 'parents': [name]}
+            row, = own[0]['binding_evidence']['rows']
+            assert row['source']['lines'] == [number, number] and _semantic_literal(graph['sources'], row['source']) == name
     for requirement in expected.get('required_relations', {}).get(line, []):
         matching = [edge for edge in edges if edge['type'] == requirement['type']
                     and source_in_target(edge['source'], target, original)

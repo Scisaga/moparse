@@ -368,6 +368,7 @@ def _actual_node(alignment, row):
 
 def content_credit(required, actual):
     """Length-weighted printed clauses, each protected against business errors."""
+    from .document_composition_requirements import printed_document_reference
     from .three_layer import _edit, canonical
 
     wanted, found = canonical(required), canonical(actual)
@@ -384,16 +385,24 @@ def content_credit(required, actual):
                                           read_content_ast(found, {'path': '<actual-content>'}))
         gate = equivalence['status'] == 'equivalent'
     fraction = max(0, 1 - sum(edits.values()) / len(wanted)) if wanted else float(not found)
-    return {"credit": (1 if equivalence and equivalence['status'] == 'equivalent' else fraction) if gate else 0, "content_retention": fraction,
+    result = {"credit": (1 if equivalence and equivalence['status'] == 'equivalent' else fraction) if gate else 0, "content_retention": fraction,
             "protected_values_correct": gate, "expected_tokens": expected_tokens,
             "actual_tokens": actual_tokens, "edits": edits, "token_equivalence": equivalence,
             "semantic_claim": "bounded_content_preservation_only"}
+    expected_ref = printed_document_reference(required)
+    if expected_ref:
+        actual_ref = printed_document_reference(actual)
+        conflict = bool(actual_ref and any(expected_ref[k] != actual_ref[k] for k in ('document_kind', 'pages')))
+        result['document_reference'] = {'required': expected_ref, 'actual': actual_ref, 'explicit_conflict': conflict}
+        if conflict:
+            result['credit'] = 0
+    return result
 
 
 def _source_form(required, candidate_nodes, scalar_owners=()):
     """Score all source-form owners without dropping unparsed prose."""
     ast = {"children": required["source_form_requirements"] + required["source_form_order_anchors"]}
-    nodes = _nodes(required, ast, clauses=True)
+    nodes = [n for n in _nodes(required, ast, clauses=True) if f"B:content:{n['ast_index']}" not in scalar_owners]
     aligned = align_nodes(nodes, candidate_nodes)
     rows, owners, positions = [], {}, {}
     count = len(required["source_form_requirements"])
@@ -440,17 +449,88 @@ def _field_axes(fact):
 
     values = [fact.get('subject', ''), fact.get('attribute', '')]
     values.extend(fact.get('qualifiers', {}).get(k, '') for k in ('period', 'year', 'entity'))
+    if axis := fact.get('record_axis'):
+        values.append(axis['text'])
     qualifiers = fact.get('qualifiers', {})
+    groups = []
+    if fact.get('role') == 'metric':
+        notes = [qualifiers['note']] if qualifiers.get('note') else []
+        for index, value in enumerate(values[:2]):
+            note = re.fullmatch(r"(.+?)[（(](?:附[注註]|Notes?)\s*([0-9]+)[)）]", value, re.I)
+            if note:
+                values[index] = note[1]
+                notes.append(note[2])
+        values.extend('note:' + str(note) for note in notes)
+        groups = _printed_field_parents(fact)
+        values.extend(groups)
     currency = normalize_unit(qualifiers.get('unit'), qualifiers.get('currency')).get('currency')
     if currency:
         values.append('currency:' + currency)
     if fact.get('role') == 'identity' and fact.get('subject') == fact.get('value'):
         values[0] = ''  # The value being graded cannot locate its own entity field.
-    return sorted({identity_text(part) for v in values if v for part in (
-        str(v).split(' / ') if fact.get('role') == 'metric' else [str(v)])})
+    axes = {identity_text(part) for v in values if v for part in (
+        str(v).split(' / ') if fact.get('role') == 'metric' else [str(v)])}
+    if len(groups) > 1:
+        axes.add('row-group:' + ' / '.join(identity_text(group) for group in groups))
+    return sorted(axes)
+
+
+def _field_axis_component(required, actual):
+    from .business_correspondence import _qualifier_check
+    from .financial_group_context import field_caption_dimensions
+    from .three_layer import canonical
+
+    expected_axes = _field_axes(required)
+    actual_axes = _field_axes(actual) if actual else []
+    component = {'relation': 'row_column_period_axes', 'expected': expected_axes, 'actual': actual_axes,
+                 'credit': int(actual is not None and expected_axes == actual_axes and _same_printed_field_context(required, actual))}
+    dimensions = field_caption_dimensions(required)
+    if dimensions:
+        checks = {key: _qualifier_check(required, actual or {}, key, canonical) for key in dimensions}
+        component['caption_dimensions'] = checks
+        component['credit'] = int(bool(component['credit']) and all(c['correct'] for c in checks.values()))
+    return component
+
+
+def _printed_field_parents(fact):
+    groups = [row['text'] for row in fact.get('row_evidence', [])
+              if row.get('role') in {'row_group', 'list_parent'} and row.get('source') and row.get('text')]
+    # A public record may print the dated value below a label with its full row path.
+    attribute = fact.get('attribute', '')
+    if not groups and fact.get('qualifiers', {}).get('period') and ' / ' in attribute:
+        origin = fact.get('source', {})
+        label = fact.get('attribute_source') or origin.get('attribute_source', {})
+        value = fact.get('value_source', origin)
+        if label.get('path') and any(label.get(k) != value.get(k) for k in ('path', 'lines', 'block', 'cell')):
+            groups = attribute.split(' / ')[:-1]
+    return [identity_text(group) for group in groups]
+
+
+def _same_printed_field_context(required, actual):
+    if 'series_record_source' in required or 'series_record_source' in actual:
+        if any(identity_text(required.get(k, '')) != identity_text(actual.get(k, ''))
+               for k in ('subject', 'attribute')):
+            return False
+        if required.get('parents', []) != actual.get('parents', []):
+            return False
+    axis, other = required.get('record_axis', {}), actual.get('record_axis', {})
+    if any(identity_text(axis.get(k, '')) != identity_text(other.get(k, '')) for k in ('role', 'label', 'text')):
+        return False
+    if any(r.get('role') == 'list_parent' for f in (required, actual) for r in f.get('row_evidence', [])):
+        return _printed_field_parents(required) == _printed_field_parents(actual)
+    return True
+
+
+def _quantity_operand(fact):
+    # A magnitude and its two printed accounting brackets have separate spans.
+    if fact.get('accounting_sign_sources'):
+        return {**fact, 'value': '(' + fact['value'] + ')'}
+    return fact
 
 
 def _typed_nodes(facts):
+    from .quantity import normalize_quantity, unit_key
+
     result = []
     for fact in facts:
         scope = list(fact.get("scope", []))
@@ -458,8 +538,17 @@ def _typed_nodes(facts):
         axes = '|'.join(_field_axes(fact))
         result.append({"id": fact["id"], "text": axes or fact['role'], 'identity': axes,
                       "source": fact["source"], "role": fact["role"], "scope": scope,
+                      "parents": _printed_field_parents(fact),
                       'matching_scope': fact.get('matching_scope', scope),
                       "payload": fact})
+        if 'series_record_source' in fact:
+            node = result[-1]
+            node['parents'] = fact['parents']
+            q = fact['qualifiers']
+            quantity = normalize_quantity({**q, 'value': _quantity_operand(fact)['value']})
+            # Only inspect this payload after equally ranked identities tie.
+            magnitude = quantity['value'] if quantity['matched'] else (fact['raw_value'], q['unit'])
+            node['payload_signature'] = [unit_key(quantity['unit']), magnitude, q.get('comparison_basis')]
     return result
 
 
@@ -501,6 +590,31 @@ def _native_fields(evidence):
     return [*retained, *fields]
 
 
+def _series_content_views(graph, blocks, *, retained=None):
+    """Project each side's own complete record and its already bound children."""
+    from collections import defaultdict
+
+    from .document_ast_comparison import _contains, _resolve
+    from .literal_readback import _identity
+    from .series_requirements import residual_measurement
+
+    siblings = defaultdict(list)
+    for fact in graph['business']:
+        siblings[_identity(fact.get('value_source', fact['source']))].append(fact)
+    views = {}
+    for i, block in enumerate(blocks):
+        if block['role'] not in {'item', 'text'} or not block.get('content'):
+            continue
+        source = block['content']['source']
+        facts = [f for f in siblings.get(_identity(source), ()) if _contains(source, f.get('value_source', f['source']))]
+        if not facts or retained is not None and any(f['id'] not in retained for f in facts):
+            continue
+        view = residual_measurement(_resolve(graph, source) or '', source, facts)
+        if view:
+            views[i] = {**view, 'id': f'series-field:{i}', 'scope': block['scope'], 'parents': block['parents']}
+    return views
+
+
 def _scalar_content_views(requirements):
     """Reuse one fully source-bound scalar inside its original content vote.
 
@@ -512,12 +626,27 @@ def _scalar_content_views(requirements):
     from .quantity import exact_number, normalize_unit
     from .three_layer import canonical
 
-    result = {}
-    retained = requirements['comparison_coverage']['retained_semantic_requirements']['B']
-    for i, block in enumerate(requirements['source_form_requirements']):
+    retained = set(requirements['comparison_coverage']['retained_semantic_requirements']['B'])
+    blocks = requirements['source_form_requirements']
+    record_fields = _series_content_views(requirements, requirements['document_ast']['children'], retained=retained)
+    views_by_record, result = {}, {}
+    for i, block in enumerate(blocks):
         if block['role'] == 'heading':
             continue
         source = block.get('content', {}).get('source', block['source'])
+        record_index = block['block_index']
+        field = record_fields.get(record_index)
+        if field and _contains(source, field['attribute_source']) and _contains(source, field['source']):
+            # A fixed owner can be an entire record or just its remaining
+            # field. Find the row on the original tree in either case.
+            whole = source == field['series_record_source']
+            field_only = all(t['text'] in {'.', '。', ';', '；'} or _contains(field['series_field_source'], t['source'])
+                             for t in block['content']['children'])
+            if whole or field_only:
+                key = f'B:content:{i}'
+                views_by_record.setdefault(record_index, []).append((key, {
+                    **field, 'id': key, 'source_form_owner': block, 'source_form_extent': 'record' if whole else 'field'}))
+                continue
         text = _resolve(requirements, source) or ''
         statement = re.fullmatch(r'\s*([^:：;；。\n]+)[:：]\s*([+\-−]?\d[\d,]*(?:\.\d+)?)([^\d;；\n]*?)\s*[。.]?\s*', text)
         if not statement:
@@ -540,10 +669,13 @@ def _scalar_content_views(requirements):
         key = f'B:content:{i}'
         result[key] = {**copy.deepcopy(fact), 'id': key, 'source_form_owner': copy.deepcopy(block),
                        'original_scalar_view_id': fact['id'], 'rule_id': 'complete_source_bound_scalar_content_view'}
+    for owners in views_by_record.values():
+        if len(owners) == 1:
+            result.update(owners)
     return result
 
 
-def _typed(requirements, evidence, candidate_nodes, scalar_owners=None):
+def _typed(requirements, evidence, candidate_nodes, scalar_owners=None, candidate_series=()):
     from .business_correspondence import _qualifier_check, _value_check
     from .equivalence import decide_equivalence
     from .three_layer import canonical
@@ -556,7 +688,8 @@ def _typed(requirements, evidence, candidate_nodes, scalar_owners=None):
     wanted.extend(copy.deepcopy(list((scalar_owners or {}).values())))
     from .native_grid_fields import email_token, identifier_label
 
-    actual = copy.deepcopy([f for f in _native_fields(evidence) if f.get("semantic_type") != "toc_page"] + _navigation(evidence))
+    actual = copy.deepcopy([f for f in _native_fields(evidence) if f.get("semantic_type") != "toc_page"]
+                           + _navigation(evidence) + list(candidate_series))
     from .document_ast_comparison import _contains
 
     def owns(node, source):
@@ -580,7 +713,7 @@ def _typed(requirements, evidence, candidate_nodes, scalar_owners=None):
     for fact, match in zip(wanted, aligned["rows"], strict=True):
         own = actual[match["actual_pieces"][0]["index"]] if match["actual_pieces"] else None
         if own:
-            value = _value_check(fact, own, canonical)
+            value = _value_check(_quantity_operand(fact), _quantity_operand(own), canonical)
             label = str(fact.get('attribute', ''))
             required_email, actual_email = email_token(canonical(fact['value'])), email_token(canonical(own['value']))
             if required_email is not None and actual_email is not None:
@@ -595,7 +728,7 @@ def _typed(requirements, evidence, candidate_nodes, scalar_owners=None):
                          'role_basis': 'printed_identifier_or_calendar_field'}
             parts = [{"relation": "value", "expected": fact["value"], "actual": own["value"],
                       "credit": int(value["correct"]), "equivalence": value}]
-            identity = _field_axes(fact) == _field_axes(own)
+            identity = _field_axes(fact) == _field_axes(own) and _same_printed_field_context(fact, own)
             context = _scope_matches(fact.get('scope', []), own)
             restrictions = _restrictive_context(fact, own)
             context = context and restrictions['correct']
@@ -660,6 +793,21 @@ def _reserve_typed_sources(nodes, matches):
     return result
 
 
+def _aligned_source_positions(alignment, source):
+    from .literal_readback import _identity
+
+    positions = []
+    for index, node in enumerate(alignment['actual_nodes']):
+        if not node.get('text') or _identity(node['source']) != _identity(source):
+            continue
+        start = node['source'].get('text_span', [0])[0] + node['raw_span'][0]
+        stop = start + len(node['text'])
+        a, b = source.get('text_span', [start, stop])
+        if max(start, a) < min(stop, b):
+            positions.append((index, max(start, a) - start, min(stop, b) - start))
+    return positions
+
+
 def _layout_ties(facts, alignment):
     """Keep value ambiguity while proving independent relation invariants.
 
@@ -701,38 +849,102 @@ def _layout_ties(facts, alignment):
 def grade_continuous_document(requirements, evidence):
     from .document_ast_comparison import (
         _candidate_ast,
+        _contains,
+        _expected_units,
+        _resolve,
         document_order_requirements,
         navigation_order_requirements,
     )
     from .native_evaluation import requirement_inventory
+    from .record_ast import record_matches
     from .relation_correspondence import grade_relations
+    from .requirement_ast import _span_overlap, build_document_ast, validate_content_ast
     from .three_layer import canonical
 
     if requirements["sample_id"] != evidence["sample_id"]:
         raise ValueError("Expected and candidate selection identities differ")
     if requirements.get("requirement_ledger") != requirements["business"]:
         raise ValueError("requirement ledger was changed before comparison")
-    ast = _source_order_ast(_candidate_ast(evidence))
+    expected_ast = build_document_ast(_expected_units(requirements['document_selection']), facts=requirements['business'])
+    if expected_ast != requirements['document_ast']:
+        raise ValueError('document requirements differ from the authorized source selection')
+    for block in [*requirements['source_form_requirements'], *requirements['source_form_order_anchors']]:
+        index = block['block_index']
+        if not 0 <= index < len(expected_ast['children']):
+            raise ValueError('content comparison owner lies outside the document AST')
+        owner = expected_ast['children'][index]
+        if (any(block[k] != owner[k] for k in ('role', 'scope', 'parents')) or not owner.get('content')
+                or block['source'] != block['content']['source'] or not _contains(owner['content']['source'], block['source'])):
+            raise ValueError('content comparison owner differs from its source subtree')
+        validate_content_ast(block['content'], lambda source: _resolve(requirements, source))
+    candidate_ast = _candidate_ast(evidence)
+    if 'document_ast' in evidence and candidate_ast != evidence['document_ast']:
+        raise ValueError('candidate document AST differs from actual native syntax')
+    ast = _source_order_ast(candidate_ast)
     if not ast["reading_complete"]:
         raise ValueError("candidate_reader_failure_or_incomplete_scope")
     candidate_nodes = _nodes(evidence, ast, clauses=True)
     scalar_owners = _scalar_content_views(requirements)
-    typed_rows, typed_alignment, facts = _typed(requirements, evidence, candidate_nodes, scalar_owners)
+    candidate_series = _series_content_views(evidence, ast['children'])
+    typed_rows, typed_alignment, facts = _typed(requirements, evidence, candidate_nodes, scalar_owners, candidate_series.values())
     layout_ties = _layout_ties(facts, typed_alignment)
-    source_rows, source_alignment, positions = _source_form(requirements, _reserve_typed_sources(candidate_nodes, facts), scalar_owners)
+    blocks = requirements['source_form_requirements']
+    record_hits = record_matches(blocks, ast['children'])
+    reserved = dict(facts)
+    claimed_values = []
+    for info in facts.values():
+        actual = info['actual']
+        if actual:
+            origin = actual.get('value_source', actual['source'])
+            span = origin.get('text_span', [0, len(str(actual.get('value', '')))])
+            claimed_values.append({'source': origin, 'text_span': span})
+    for i, match in list(record_hits.items()):
+        if (any(_contains(blocks[i]['source'], info['required'].get('value_source', info['required']['source']))
+                for info in facts.values())
+                or any(_span_overlap(s, typed) for s in match['spans'] for typed in claimed_values)):
+            del record_hits[i]
+            continue
+        for j, span in enumerate(match['spans']):
+            reserved[f'record:{i}:{j}'] = {'actual': {'source': span['source']}}
+    record_ids = {f'B:content:{i}' for i in record_hits}
+    source_rows, source_alignment, positions = _source_form(
+        requirements, _reserve_typed_sources(candidate_nodes, reserved), {*scalar_owners, *record_ids})
+    ambiguous_positions = set()
     for row in source_rows:
         key = row['id'].replace('L:content:', 'B:content:')
         if row['layer'] == 'L' and key in scalar_owners:
             info = facts[key]
             actual = info['actual']
             components = _components(info['required'], actual or {}, actual is not None)
-            components.append({'relation': 'row_column_period_axes', 'credit': int(actual is not None and _field_axes(info['required']) == _field_axes(actual))})
+            components.append(_field_axis_component(info['required'], actual))
             replacement = _outcome(row['id'], 'L', 'document_scope', row['expected'], actual, components,
                                    reason='complete_source_bound_scalar_relationship')
             if info['match']['status'] == 'ambiguous':
                 replacement.update(credit=None, outcome='unresolved', reason='field_correspondence_identity_tie')
+                ambiguous_positions.add(row['expected']['requirement_id'])
+            elif actual:
+                extent = 'series_field_source' if info['required'].get('source_form_extent') == 'field' else 'series_record_source'
+                positions[row['expected']['requirement_id']] = _aligned_source_positions(
+                    source_alignment, actual.get(extent, actual['source']))
             row.clear()
             row.update(replacement)
+    record_layout_ids = {f'L:content:{i}' for i in record_hits}
+    source_rows = [row for row in source_rows if row['id'] not in record_layout_ids]
+    for i, match in record_hits.items():
+        key = blocks[i]['requirement_id']
+        positions[key] = [p for s in match['spans'] for p in _aligned_source_positions(source_alignment, s['source'])]
+        if match['status'] == 'unresolved' and not match['spans']:
+            ambiguous_positions.add(key)
+        layout = [{'relation': 'record_parent_period_and_field_labels', 'credit': int(match['layout_correct'])}]
+        parts = [dict(p, credit=p['credit'] or 0) for p in match['components']] or [{'credit': 0}]
+        for layer, components in [('L', layout), ('B', parts)]:
+            row = _outcome(f'{layer}:content:{i}', layer, 'document_scope' if layer == 'L' else 'source_form_assertion',
+                           blocks[i], match['actual'], components, reason=match['reason'], record_correspondence=match)
+            if (layer == 'B' and (match['status'] == 'unresolved' or
+                    any(p['credit'] is None for p in match['components']))
+                    or layer == 'L' and match['status'] == 'unresolved' and not match['layout_correct']):
+                row.update(credit=None, outcome='unresolved')
+            source_rows.append(row)
     rows = []
     own_projection = {**evidence, 'business': _native_fields(evidence)}
     literal_audit = _literal_audit(own_projection)
@@ -769,17 +981,13 @@ def grade_continuous_document(requirements, evidence):
             info = facts.get(edge.get("fact_id"))
             found = info["actual"] if info else None
             components = _components(info["required"] if info else {}, found or {}, found is not None)
-            axes = _field_axes(info['required']) if info else []
-            actual_axes = _field_axes(found) if found else []
-            components.append({'relation': 'row_column_period_axes', 'expected': axes,
-                               'actual': actual_axes, 'credit': int(found is not None and axes == actual_axes)})
+            components.append(_field_axis_component(info['required'] if info else {}, found))
             tie = layout_ties.get(edge.get('fact_id'))
             if tie and tie['capacity_proven']:
                 alternatives = []
                 for alternative in tie['candidates']:
                     parts = _components(info['required'], alternative)
-                    parts.append({'relation': 'row_column_period_axes', 'expected': axes,
-                                  'actual': _field_axes(alternative), 'credit': int(axes == _field_axes(alternative))})
+                    parts.append(_field_axis_component(info['required'], alternative))
                     alternatives.append(parts)
                 if alternatives and len({tuple(p['credit'] for p in parts) for parts in alternatives}) == 1:
                     components = alternatives[0]
@@ -813,6 +1021,8 @@ def grade_continuous_document(requirements, evidence):
                              reason="candidate_original_positions")
         if any(source_alignment['actual_nodes'][p[0]].get('source_order_known') is False for p in first + second):
             row.update(credit=None, outcome='unresolved', reason='native_table_flow_unresolved')
+        if ambiguous_positions.intersection((edge['left'], edge['right'])):
+            row.update(credit=None, outcome='unresolved', reason='field_correspondence_identity_tie')
         rows.append(row)
     for edge in navigation_order_requirements(requirements):
         endpoints = []

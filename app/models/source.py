@@ -15,4 +15,5 @@ class StoredSource(BaseModel):
     mime_type: str
     size_bytes: int = Field(ge=0)
     page_count: int = Field(ge=1)
+    original_page_count: int | None = Field(default=None, ge=1)
     source_url: str | None = None

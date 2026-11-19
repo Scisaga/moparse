@@ -114,3 +114,14 @@ def test_other_prose_and_existing_field_grammars_are_not_reclassified(text):
     result = read_entity_requirements(text, SOURCE)
     assert result["matched"] is False
     assert result["facts"] == [] and result["blockers"] == []
+
+
+def test_named_role_list_binds_each_complete_organization_at_its_printed_occurrence():
+    text = "联席主承销商：甲方银行、乙方证券公司、甲方银行。"
+    result = read_entity_requirements(text, SOURCE)
+    assert result["matched"] and not result["blockers"]
+    assert [(f["attribute"], f["value"], f["value_source"]["text_span"]) for f in result["facts"]] == [
+        ("联席主承销商", "甲方银行", [7, 11]), ("联席主承销商", "乙方证券公司", [12, 18]),
+        ("联席主承销商", "甲方银行", [19, 23])]
+    pending = read_entity_requirements(text.replace("乙方证券公司", "如获批准则启用第三方"), SOURCE)
+    assert pending["blockers"] and not pending["facts"]

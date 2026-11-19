@@ -153,6 +153,7 @@ def _table(block: dict[str, Any], page: int, ordinal: int, branch: str) -> Table
         num_rows=height, num_cols=width, rows=rows, column_boundaries=[], markdown=rendered,
         rendered=f"<!-- table-fragment: {ident} -->\n\n{rendered}", source_kind=branch,
         cells=projected, has_column_header=bool(header_depth),
+        source_continues_prev=block.get("native_table_declaration", {}).get("continues_prev"),
         header_scope_complete=bool(header_depth) and all(cell.is_column_header for cell in projected if cell.row < header_depth),
         caption_scope_complete=False,
         native_evidence={"native_path": block["native_path"], "source_cells": copy.deepcopy(cells),

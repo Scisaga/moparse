@@ -264,9 +264,12 @@ def _content_leaves(node):
     return [leaf for child in node['children'] for leaf in _content_leaves(child)] if node.get('kind') == 'content_join' else node.get('children', [])
 
 
-def build_document_ast(units):
+def build_document_ast(units, *, facts=()):
     """Keep producer document structure and content; never access expected."""
-    blocks = []
+    from .record_ast import attach_records
+    from .text_projection import table_cell_structure
+
+    blocks, kept_units = [], []
     for unit in units:
         text, source = unit.get('text'), unit.get('source', unit.get('reference'))
         if isinstance(source, dict) and not (isinstance(text, str) and text.strip()) and unit.get('kind') not in {'text', 'item', 'table_cell'}:
@@ -274,6 +277,7 @@ def build_document_ast(units):
                            'scope': copy.deepcopy(unit.get('scope', [])),
                            'parents': copy.deepcopy(unit.get('parents', [])),
                            'source': copy.deepcopy(source), 'content': None, 'structural_barrier': True})
+            kept_units.append(unit)
             continue
         if not isinstance(text, str) or not isinstance(source, dict) or not text.strip() and unit.get('kind') != 'table_cell':
             continue
@@ -284,6 +288,10 @@ def build_document_ast(units):
                        'scope': scope,
                        'parents': copy.deepcopy(unit.get('parents', [])),
                        'source': copy.deepcopy(source), 'content': read_content_ast(text, source)})
+        if unit.get('kind') == 'table_cell':
+            blocks[-1]['cell_structure'] = table_cell_structure(unit)
+        kept_units.append(unit)
+    attach_records(blocks, kept_units, facts)
     return {'kind': 'document', 'children': blocks}
 
 
@@ -365,12 +373,15 @@ def compare_document_ast(required, actual, *, source_resolver=None):
     """
     from rapidfuzz.distance import Levenshtein
 
-    windows = list(_document_windows(actual))
+    from .record_ast import record_matches
+
+    records = record_matches(required['children'], actual['children'])
+    windows = list(_document_windows(actual)) if required['children'] else []
     rows, proposals = [], []
     for index, block in enumerate(required['children']):
         wanted = tuple(_leaf_identity(n) for n in _content_leaves(block['content']))
         candidates = {}
-        for parts in windows:
+        for parts in (() if index in records else windows):
             leaves = [(i, leaf) for i, part in parts for leaf in _content_leaves(part['content'])]
             shape = tuple(_leaf_identity(n) for _, n in leaves)
             if not shape:
@@ -424,7 +435,7 @@ def compare_document_ast(required, actual, *, source_resolver=None):
                      'required': copy.deepcopy(block), 'actual': None,
                      'retrieval': {'candidates': [hit['trace'] for hit in candidates.values()], 'value_used': False,
                                    'alignment_limit': DOCUMENT_ALIGNMENT_LIMIT}})
-    consumed = []
+    consumed = [(i, span) for i, match in records.items() for span in match['spans']]
     # Anchor all unique exact identities together. Required order never picks
     # their position, including two identities inside one reversed native block.
     exact_assignments = {i: hits[0] for i, hits in enumerate(proposals)
@@ -432,7 +443,7 @@ def compare_document_ast(required, actual, *, source_resolver=None):
     colliding = {i for i, hit in exact_assignments.items() for j, other in exact_assignments.items()
                  if i != j and any(_span_overlap(a, b) for a in hit['spans'] for b in other['spans'])}
     for i, hit in exact_assignments.items():
-        if i not in colliding:
+        if i not in colliding and not any(_span_overlap(a, b) for a in hit['spans'] for _, b in consumed):
             consumed.extend((i, span) for span in hit['spans'])
     # Only independently anchored identities reserve capacity. A unique weak
     # retrieval is a tentative comparison, never an exclusive absence proof.
@@ -442,6 +453,15 @@ def compare_document_ast(required, actual, *, source_resolver=None):
         residual.append([hit for hit in hits if not any(owner != i and _span_overlap(a, b)
             for owner, b in consumed for a in hit['spans'])])
     for i, (row, hits) in enumerate(zip(rows, proposals, strict=True)):
+        if i in records:
+            record = records[i]
+            spans = record['spans']
+            row.update(actual_index=spans[0]['actual_index'] if spans else None,
+                       actual_indices=[s['actual_index'] for s in spans], actual_spans=spans, actual=record['actual'],
+                       correspondence_status='confirmed' if spans else record['status'],
+                       decision=_result(record['status'], '$', reason=record['reason'], proof=record))
+            row['retrieval'].update(selection_basis='printed_record_path_and_scope', record_candidates=record['candidate_sources'])
+            continue
         available = []
         for hit in hits:
             occupied = any(owner != i and _span_overlap(a, b) for owner, b in consumed for a in hit['spans'])

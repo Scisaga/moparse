@@ -286,7 +286,7 @@ class DocumentIRService:
                 size_bytes=source.size_bytes,
                 unit_count=result.page_count,
                 page_count=(
-                    result.page_count
+                    (source.original_page_count or result.page_count)
                     if source.mime_type in {"application/pdf", "image/tiff"}
                     else None
                 ),

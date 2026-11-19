@@ -18,7 +18,7 @@ _ZH_DIGITS = "零〇一二三四五六七八九"
 _ZH_NUMBER = rf"[\d{_ZH_DIGITS}十]+"
 DATE_PATTERN = (rf"(?:{_MONTH_PATTERN}\s+\d{{1,2}},?\s+(?:19|20)\d{{2}}"
                 rf"|\d{{1,2}}\s*{_MONTH_PATTERN}\s*(?:19|20)\d{{2}}"
-                rf"|(?:19|20)\d{{2}}-\d{{1,2}}-\d{{1,2}}|{_ZH_NUMBER}年{_ZH_NUMBER}月{_ZH_NUMBER}日)")
+                rf"|(?:19|20)\d{{2}}-\d{{1,2}}-\d{{1,2}}|{_ZH_NUMBER}年[ \t\u3000]*{_ZH_NUMBER}月[ \t\u3000]*{_ZH_NUMBER}日)")
 _DATE = re.compile(DATE_PATTERN, re.I)
 _BASIS = re.compile(r"(?:(?:for\s+)?(?:the\s+)?)?(?:(?:fiscal\s+)?"
                     r"(?:(?:one|two|three|four|six|nine|twelve|\d+)\s+)?"
@@ -32,7 +32,7 @@ def _source(source, a, b):
 
 
 def calendar_date(literal: str) -> str | None:
-    text = literal.strip()
+    text = re.sub(r'(?<=[年月])[ \t\u3000]+', '', literal.strip())
     english = re.fullmatch(r"([A-Za-z]+)\.?\s+(\d{1,2}),?\s+((?:19|20)\d{2})", text)
     numeric = re.fullmatch(r"((?:19|20)\d{2})(?:-|年)(\d{1,2})(?:-|月)(\d{1,2})日?", text)
     day_first = re.fullmatch(r"(\d{1,2})\s*([A-Za-z]+)\.?\s*((?:19|20)\d{2})", text)

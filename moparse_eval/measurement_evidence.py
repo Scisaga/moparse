@@ -10,6 +10,8 @@ import copy
 import re
 from typing import Any
 
+from .quantity import PHYSICAL_UNITS
+
 _CURRENCY_TEXT = (r"人民币|人民幣|美元|港元|港币|港幣|欧元|歐元|日元|英镑|英鎊|澳元|加元|新加坡元"
                   r"|USD|RMB|CNY|HKD|EUR|JPY|GBP|AUD|CAD|SGD")
 _CURRENCY = re.compile(_CURRENCY_TEXT, re.I)
@@ -60,7 +62,7 @@ def read_unit_token(text: str, source: dict[str, Any] | None = None) -> dict[str
     result = _empty(text, source, "not_a_complete_printed_unit")
     start, end = _bounds(text)
     token = text[start:end]
-    if not token or _UNIT.fullmatch(token) is None:
+    if not token or (_UNIT.fullmatch(token) is None and token not in PHYSICAL_UNITS):
         return result
     result.update(matched=True, reason=None, unit=token, unit_span=[start, end])
     result["sources"]["unit"] = _source(source, start, end)

@@ -5,7 +5,7 @@ from copy import deepcopy
 import pytest
 
 from app.models.table_semantics import CellRef, TextRef
-from app.services.table_context_service import native_scopes
+from app.services.table_context_service import cell_role_refs, native_scopes
 from app.services.table_semantics_service import bind_table_view, render_semantic_view
 from app.services.table_service import TableCellFragment, TableFragment, render_gfm_rows
 from moparse_eval.three_layer import read_candidate
@@ -42,6 +42,67 @@ def test_incomplete_or_extended_corner_text_is_not_completed_into_a_unit(unit):
     assert view.records
     assert all(not value.unit_refs for record in view.records for value in record.values)
     assert unit in render_semantic_view(view, [f])
+
+
+@pytest.mark.parametrize("corner", ["(USD millions) Resources", "Resources (USD millions)"])
+def test_compound_corner_roles_have_disjoint_literals_and_independent_scopes(corner):
+    f = table([[corner, "Note", "2034年", "2033年"],
+               ["Equipment", "2", "17", "11"], ["Total Resources", "", "17", "11"],
+               ["Obligations", "", "", ""], ["Loan", "3", "5", "4"],
+               ["Total Obligations", "", "5", "4"], ["Combined total", "", "22", "15"]])
+    before = deepcopy(f)
+    unit, group = cell_role_refs(f)
+    assert unit.kind == "unit" and unit.body_rows == tuple(range(1, 7)) and unit.columns == (2, 3)
+    assert group.kind == "group" and group.body_rows == (1, 2) and group.columns == (1, 2, 3)
+    assert unit.source_cell == group.source_cell == CellRef("native", 0, 0)
+    assert corner[unit.start:unit.end] == unit.text == "(USD millions)"
+    assert corner[group.start:group.end] == group.text == "Resources"
+    assert not set(range(unit.start, unit.end)) & set(range(group.start, group.end))
+    view = bind_table_view("view", [f], [f])
+    assert view.status == "converted" and f == before
+    assert all(not record.subject_headers for record in view.records)
+    assert view.records[0].row_groups == (group,)
+    assert view.records[2].row_groups == (CellRef("native", 3, 0),)
+    assert not view.records[-1].row_groups
+    for record in view.records:
+        assert not record.values[0].unit_refs
+        assert all(value.unit_refs == (unit,) for value in record.values[1:])
+    text = render_semantic_view(view, [f])
+    assert "Resources / Equipment" in text and "Obligations / Loan" in text
+    assert "Resources：Obligations" not in text and "Obligations / Combined total" not in text
+
+
+def test_uncertain_compound_group_retains_only_its_source_header_and_keeps_the_unit():
+    f = table([["(USD millions) Unresolved subject", "2034年"], ["Equipment", "17"],
+               ["Operations", ""], ["Maintenance", "3"]])
+    refs = cell_role_refs(f)
+    assert len(refs) == 1 and refs[0].kind == "unit"
+    view = bind_table_view("view", [f], [f])
+    assert view.status == "partial" and len(view.records) == 2
+    assert view.retained_rows == (("native", 0),)
+    assert all(record.values[0].unit_refs == refs and not record.subject_headers for record in view.records)
+    text = render_semantic_view(view, [f])
+    assert "(USD millions) Unresolved subject" in text and "Unresolved subject：Equipment" not in text
+    assert "Operations / Maintenance" in text
+
+
+def test_a_confirmed_compound_group_survives_an_unknown_parenthesized_qualification():
+    f = table([["(unverified currency scale) Resources", "2034年"], ["Equipment", "17"],
+               ["Total Resources", "17"], ["Obligations", ""], ["Loan", "5"]])
+    group, = cell_role_refs(f)
+    assert group.kind == "group" and group.text == "Resources" and group.body_rows == (1, 2)
+    view = bind_table_view("view", [f], [f])
+    assert view.status == "partial" and view.retained_rows == (("native", 0),)
+    assert view.records[0].row_groups == (group,) and all(not v.unit_refs for r in view.records for v in r.values)
+    text = render_semantic_view(view, [f])
+    assert "(unverified currency scale) Resources" in text and "Resources / Equipment" in text
+    assert "Resources：Obligations" not in text and "Obligations / Loan" in text
+
+
+def test_a_unit_inside_ordinary_grid_prose_does_not_declare_cell_roles():
+    f = table([["Narrative (USD millions) was revised.", "Comment"],
+               ["No decision was taken.", "The matter remains open."]])
+    assert not cell_role_refs(f) and bind_table_view("view", [f], [f]).status == "retained"
 
 
 def test_native_measurement_structure_does_not_require_a_pdf_vector_grid():

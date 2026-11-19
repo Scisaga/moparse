@@ -18,6 +18,7 @@ from app.models import (
     JobStatus,
     ServiceError,
 )
+from app.services.storage_service import BundleContentError
 
 router = APIRouter(
     prefix="/v1/content/jobs",
@@ -181,7 +182,9 @@ async def get_content_asset(job_id: str, asset_id: str, request: Request) -> Res
     if asset is None:
         raise ServiceError("asset_not_found", "asset does not exist", status_code=404)
     try:
-        path = service.storage.asset_path(job_id, asset_id)
+        path = await service.storage.verified_asset_path(job_id, asset)
+    except BundleContentError as exc:
+        raise ServiceError("asset_content_incomplete", str(exc), status_code=409) from exc
     except ValueError as exc:
         raise ServiceError("invalid_asset_id", "invalid asset identifier", status_code=400) from exc
     if path is None:
@@ -218,14 +221,17 @@ async def get_content_asset(job_id: str, asset_id: str, request: Request) -> Res
     return StreamingResponse(stream(), status_code=206, media_type=asset.mime_type, headers=headers)
 
 
-@router.get("/{job_id}/bundle", summary="Download the parsed-content asset bundle")
+@router.get("/{job_id}/bundle", summary="Download Markdown, manifest and assets")
 async def get_content_bundle(job_id: str, request: Request) -> FileResponse:
     service = get_runtime(request).job_service
     record = await service.get_job(job_id)
     if record.status not in {JobStatus.COMPLETED, JobStatus.PARTIAL}:
         raise ServiceError("result_not_ready", "job result is not available", status_code=409)
     await service.get_assets(job_id)
-    path = await service.storage.build_bundle(job_id)
+    try:
+        path = await service.storage.build_bundle(job_id)
+    except BundleContentError as exc:
+        raise ServiceError("bundle_content_incomplete", str(exc), status_code=409) from exc
     return FileResponse(
         path,
         media_type="application/zip",

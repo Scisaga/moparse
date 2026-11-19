@@ -83,6 +83,25 @@ def test_source_case_cannot_claim_unreviewed_nonblank_content_is_whitespace(tmp_
         check_fixed_source_graph(graph, changed, assertions)
 
 
+@pytest.mark.parametrize('damage', ['missing_member', 'other_occurrence', 'different_separator'])
+def test_independent_entity_list_covers_each_member_and_the_printed_delimiter(tmp_path, damage):
+    names = ['甲方银行', '乙方证券公司', '甲方银行']
+    text = '联席主承销商：' + '、'.join(names) + '。'
+    graph, original, expected = representation_sample(tmp_path, text, policy='typed',
+        typed_facts=[('', '联席主承销商', name, {}) for name in names])
+    expected['sources'][1]['entity_list_separator'] = '、'
+    check_fixed_source_graph(graph, original, expected)
+    members = [f for f in graph['nodes'] if f.get('role') == 'identity']
+    if damage == 'missing_member':
+        graph['nodes'].remove(members[1])
+    elif damage == 'other_occurrence':
+        members[-1]['value_source'] = members[0]['value_source']
+    else:
+        expected['sources'][1]['entity_list_separator'] = '或'
+    with pytest.raises(AssertionError):
+        check_fixed_source_graph(graph, original, expected)
+
+
 def test_joined_analysis_ownership_projects_absolute_offsets_to_all_original_fragments():
     source = {'path': 'invented', 'lines': [1, 1], 'text_span': [9, 15], 'joined_fragments': [
         {'source': {'path': 'invented', 'lines': [1, 1], 'text_span': [7, 11]},
@@ -247,12 +266,25 @@ def test_all_handwritten_modules_are_bound_without_replacing_historical_batches(
 
     before = deepcopy((historical.ASSERTIONS, historical.ADDITIONAL_ASSERTIONS))
     catalogue = fixed_assertion_catalogue()
-    assert len(catalogue['review_ids']) == 23
+    delivery_ids = {
+        'iea-adoption-ai-types-p025-031',
+        'huawei-statements-p068-070',
+        'pboc-committees-p002-003',
+        'nvidia-business-overview-p018-019',
+        'tencent-conditions-definitions-formulas-p102-107',
+        'hkex-risk-committee-p112-117',
+        'pingan-business-highlights-p012-013',
+        'pingan-health-senior-care-p025-030',
+        'spdb-cover-declaration-p001-002',
+    }
+    assert delivery_ids <= catalogue['review_ids']
+    assert len(catalogue['review_ids'] - delivery_ids) == 23
     assert len(catalogue['stage3_ids']) == 1
     assert len(catalogue['stage4_ids']) == 5
     assert len(catalogue['stage5_ids']) == 2
-    assert len(catalogue['assertions']) - len(catalogue['stage3_ids']) - len(catalogue['stage4_ids']) - len(catalogue['stage5_ids']) + 3 == 55
-    assert len(catalogue['assertions']) + 3 == 63
+    historical_ids = set(catalogue['assertions']) - delivery_ids
+    assert len(historical_ids - catalogue['stage3_ids'] - catalogue['stage4_ids'] - catalogue['stage5_ids']) + 3 == 55
+    assert len(historical_ids) + 3 == 63
     assert (historical.ASSERTIONS, historical.ADDITIONAL_ASSERTIONS) == before
     paths = ['tests/validation/lite_fixed_source_assertions.py']
     paths += [name.replace('.', '/') + '.py' for name in (*REVIEW_MODULES, *STAGE3_MODULES, *STAGE4_MODULES, *STAGE5_MODULES, *CONTROLLED_REVIEW_MODULES)]

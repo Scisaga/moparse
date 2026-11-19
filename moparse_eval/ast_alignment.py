@@ -233,9 +233,12 @@ def align_nodes(required, actual, *, maximum=None, preserve_identity_ambiguity=T
                 if not any(i in used_a for i in range(*p["actual"]))]
         signatures = {(tuple(protected(_join(actual[slice(*p["actual"])])[0])),
                        _context(actual[p["actual"][0]]),
-                       repr(actual[p['actual'][0]].get('payload', {}).get('value')))
+                       repr(actual[p['actual'][0]].get('payload_signature',
+                                actual[p['actual'][0]].get('payload', {}).get('value'))))
                       for p in ties}
-        if preserve_identity_ambiguity and len(signatures) > 1 and repeated[shape(canonical(required[a[0]]["text"])), _context(required[a[0]])] == 1:
+        needs_identity = ('payload_signature' in required[a[0]]
+                          or repeated[shape(canonical(required[a[0]]["text"])), _context(required[a[0]])] == 1)
+        if preserve_identity_ambiguity and len(signatures) > 1 and needs_identity:
             for i in range(*a):
                 ambiguous[i] = [p["actual"] for p in ties]
             proposal["rejected"] = "score_changing_identity_tie"

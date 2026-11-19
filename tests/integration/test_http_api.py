@@ -421,3 +421,88 @@ def test_authenticated_asset_range_bundle_checksum_and_cleanup(
         deleted = client.delete(f"/v1/content/jobs/{job_id}", headers=headers)
         assert deleted.json()["status"] == "deleted"
         assert not (tmp_path / "jobs" / job_id).exists()
+
+
+def test_complete_offline_delivery_through_sync_and_queued_jobs(tmp_path, monkeypatch):
+    from app.models import AssetKind, AssetRole, ContentAsset, SourceKind
+    from app.services.storage_service import StorageService
+    from tests.conftest import FakeParserService
+    from tests.unit.test_file_validation import _minimal_docx
+
+    settings = make_test_settings(tmp_path)
+    storage = StorageService(settings)
+    source = tmp_path / "input.docx"
+    _minimal_docx(source)
+    data = source.read_bytes()
+    # Invented asset bytes exercise exact transport without a media backend.
+    import base64
+    asset = base64.b64decode("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVR4nGPQjOkHAAHGARVD0ZcIAAAAAElFTkSuQmCC")
+    digest = hashlib.sha256(asset).hexdigest()
+    original = FakeParserService.parse
+
+    async def saved(self, source, options, *, document_id, **kwargs):
+        result = await original(self, source, options, document_id=document_id, **kwargs)
+        result.parse_result.source.kind = SourceKind.DOCX
+        url = f"/v1/content/jobs/{document_id}/assets/figure"
+        result.markdown = "## 图题\r\n\r\n" + f"![图一]({url}) ![图二]({url})\r\n\r\n`![示例]({url})`"
+        if source.filename != "missing.docx":
+            await storage.write_asset(document_id, "figure", "illustration.png", asset)
+        result.parse_result.assets = [ContentAsset(asset_id="figure", kind=AssetKind.IMAGE,
+            role=AssetRole.EMBEDDED_IMAGE, filename="illustration.png", mime_type="image/png",
+            size_bytes=len(asset), sha256=digest, download_url=url)]
+        return result
+
+    monkeypatch.setattr(FakeParserService, "parse", saved)
+    with TestClient(create_app(settings, runtime_factory=fake_runtime)) as client:
+        for filename, endpoint in [("sync.docx", "parse"), ("async.docx", "jobs"), ("missing.docx", "jobs")]:
+            response = client.post("/v1/content/" + endpoint, files={"file": (filename, data)})
+            assert response.status_code == (200 if endpoint == "parse" else 202), response.text
+            job = response.headers["x-content-id"] if endpoint == "parse" else response.json()["id"]
+            root = f"/v1/content/jobs/{job}"
+            state = "partial" if filename == "missing.docx" else "completed"
+            assert wait_for_status(client, job, {state})["status"] == state
+            online = client.get(root + "/result").content
+            assert online == client.get(root + "/result?download=true").content == storage.result_path(job).read_bytes()
+            if endpoint == "parse":
+                assert response.content == online
+            if state == "partial":
+                assert client.get(root + "/bundle").status_code == 409
+                warnings = json.loads((storage.logs_dir(job) / "warnings.json").read_text())["document_warnings"]
+                assert any(w["code"] == "asset_delivery_incomplete" for w in warnings)
+                continue
+            assert client.get(root + "/assets/figure").content == asset
+            archive_path = storage.output_dir(job) / "assets.zip"
+            with zipfile.ZipFile(archive_path, "w") as obsolete:
+                obsolete.writestr("manifest.json", "{}")
+            downloaded = client.get(root + "/bundle")
+            assert downloaded.status_code == 200
+            assert downloaded.content == client.get(root + "/bundle").content
+            with zipfile.ZipFile(io.BytesIO(downloaded.content)) as bundle:
+                relative = "assets/figure/illustration.png"
+                assert sorted(bundle.namelist()) == sorted(["result.md", "manifest.json", relative])
+                offline = bundle.read("result.md")
+                assert offline == online.replace((root + "/assets/figure").encode(), relative.encode(), 2)
+                manifest = json.loads(bundle.read("manifest.json"))
+                assert manifest["markdown"]["sha256"] == hashlib.sha256(offline).hexdigest()
+                assert manifest["source"]["filename"] == filename
+                assert manifest["source"]["page_count"] is None and manifest["source"]["unit_count"] == 1
+                assert manifest["source"]["source_sha256"] == hashlib.sha256(data).hexdigest()
+                assert manifest["assets"][0]["sha256"] == digest == hashlib.sha256(bundle.read(relative)).hexdigest()
+            storage.asset_path(job, "figure").write_bytes(b"x" * len(asset))
+            assert client.get(root + "/assets/figure").status_code == 409
+            assert client.get(root + "/bundle").status_code == 409
+
+
+def test_text_only_result_download_includes_markdown_and_manifest(tmp_path):
+    from tests.unit.test_file_validation import _minimal_docx
+
+    path = tmp_path / "empty.docx"
+    _minimal_docx(path)
+    with TestClient(create_app(make_test_settings(tmp_path), runtime_factory=fake_runtime)) as client:
+        response = client.post("/v1/content/parse", files={"file": (path.name, path.read_bytes())})
+        assert response.status_code == 200
+        bundled = client.get(f"/v1/content/jobs/{response.headers['x-content-id']}/bundle")
+        with zipfile.ZipFile(io.BytesIO(bundled.content)) as bundle:
+            assert set(bundle.namelist()) == {"result.md", "manifest.json"}
+            assert json.loads(bundle.read("manifest.json"))["assets"] == []
+            assert bundle.read("result.md") == response.content

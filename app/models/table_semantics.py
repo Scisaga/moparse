@@ -21,13 +21,13 @@ class CellRef:
 
 @dataclass(frozen=True, slots=True)
 class TextRef:
-    """A literal native prose slice and its explicitly bounded table scope."""
+    """A literal native text slice and its independently bounded table scope."""
 
     table_id: str
     page: int
     block_id: str
     text: str
-    kind: Literal["unit", "period", "note", "title"]
+    kind: Literal["unit", "period", "note", "title", "group"]
     start: int
     end: int
     body_rows: tuple[int, ...]
@@ -37,13 +37,21 @@ class TextRef:
     def token(self) -> str:
         return f"{self.table_id}.text.{self.block_id}.{self.start}:{self.end}"
 
+    @property
+    def source_cell(self) -> CellRef | None:
+        """Cell-backed slices share an anchor, never a whole-cell literal."""
+        parts = self.block_id.split(".")
+        if len(parts) == 3 and parts[0] == "cell" and all(p.isdecimal() for p in parts[1:]):
+            return CellRef(self.table_id, int(parts[1]), int(parts[2]))
+        return None
+
 
 @dataclass(frozen=True, slots=True)
 class ValueRelation:
     """Explicit cell bindings; an empty literal makes no source-blank claim."""
 
     value: CellRef
-    row_headers: tuple[CellRef, ...] = ()
+    row_headers: tuple[CellRef | TextRef, ...] = ()
     column_headers: tuple[CellRef, ...] = ()
     unit_refs: tuple[CellRef | TextRef, ...] = ()
     period_refs: tuple[CellRef | TextRef, ...] = ()
@@ -58,7 +66,7 @@ class SemanticRecord:
     values: tuple[ValueRelation, ...]
     subject: CellRef | None = None
     subject_headers: tuple[CellRef, ...] = ()
-    row_groups: tuple[CellRef, ...] = ()
+    row_groups: tuple[CellRef | TextRef, ...] = ()
     scope_refs: tuple[TextRef, ...] = ()
 
 

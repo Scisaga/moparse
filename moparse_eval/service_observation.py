@@ -22,6 +22,7 @@ from app.services.table_semantics_service import (
     _column_literal_parts,
     _label_separator,
     _literal,
+    _printed_column_slices,
     _record_literal_parts,
     render_nested_record,
     render_semantic_view,
@@ -110,7 +111,9 @@ def _ref_dict(ref: CellRef | TextRef) -> dict[str, Any]:
     if isinstance(ref, TextRef):
         return {"table_id": ref.table_id, "block_id": ref.block_id, "page": ref.page,
                 "text_span": [ref.start, ref.end], "scope_rows": list(ref.body_rows),
-                "scope_columns": list(ref.columns), "token": ref.token}
+                "scope_columns": list(ref.columns), "token": ref.token,
+                **({"source_cell": _ref_dict(ref.source_cell), "kind": ref.kind}
+                   if ref.source_cell is not None else {})}
     return {"table_id": ref.table_id, "row": ref.row, "column": ref.column, "token": ref.token}
 
 
@@ -121,6 +124,8 @@ def _record_parts(
     """Describe the current renderer template, checked against its real output."""
     pieces = ["- "]
     cells: list[dict[str, Any]] = []
+
+    inline_refs = set()
 
     def literal(ref: CellRef | TextRef, role: str, field: int | None = None, blank: bool = False,
                 relation: Any = None) -> None:
@@ -141,6 +146,13 @@ def _record_parts(
                 "value_state": "source_blank" if blank else "literal",
             }
         )
+
+        if embedded_units and relation is not None and role == "column_header":
+            for piece, (a, b) in _printed_column_slices(relation, ref, registry, raw).items():
+                cells.append({"ref": piece, "role": piece.kind, "field_index": field,
+                              "span": [start + a, start + b], "text": _inline_text(raw[a:b]),
+                              "value_state": "literal"})
+                inline_refs.add(piece)
 
     def labels(refs: Sequence[Any], role: str, relation: Any = None) -> tuple[Any, ...]:
         unique = tuple(dict.fromkeys(refs))
@@ -165,6 +177,7 @@ def _record_parts(
     for index, value in enumerate(record.values):
         if index or record.subject is not None:
             pieces.append("；")
+        inline_refs.clear()
         refs = labels(
             value.column_headers if record.subject else value.row_headers,
             "column_header" if record.subject else "row_header",
@@ -172,7 +185,7 @@ def _record_parts(
         )
         pieces.append(_label_separator(" / ".join(_literal(registry[ref].text) for ref in refs)))
         literal(value.value, "value", index, value.value_state == "source_blank")
-        emitted = {value.value, *refs, *record.subject_headers, *record.row_groups}
+        emitted = {value.value, *inline_refs, *refs, *record.subject_headers, *record.row_groups}
         if record.subject:
             emitted.add(record.subject)
         qualifiers = []
@@ -200,6 +213,8 @@ def _record_parts(
 def _cell_registry(
     fragments: Sequence[TableFragment],
 ) -> tuple[dict[Any, Any], dict[str, int], list[dict[str, Any]]]:
+    from app.services.table_context_service import cell_role_refs
+
     registry: dict[Any, Any] = {}
     pages = {}
     ambiguous = set()
@@ -212,7 +227,7 @@ def _cell_registry(
             if ref in registry:
                 ambiguous.add(fragment.fragment_id)
             registry[ref] = cell
-        for context_ref in fragment.context_refs:
+        for context_ref in (*cell_role_refs(fragment), *fragment.context_refs):
             registry[context_ref] = context_ref
     return (
         {ref: cell for ref, cell in registry.items() if ref.table_id not in ambiguous},
@@ -508,6 +523,7 @@ def _partial_grid_blocks(
         return []
     blocks = []
     for part in retained_table_parts(view, fragments):
+        hidden = set(map(tuple, part.get("omitted_cells", [])))
         marker = part["rendered"].partition("\n\n")[0]
         marker_forms = _printed_marker_forms(marker)
         tokens = _spans(final)
@@ -540,6 +556,8 @@ def _partial_grid_blocks(
                     row = display_to_source.get(display)
                     if row is None:
                         raise ValueError("partial HTML row has no declared source coordinate")
+                    if (row, cell["col"]) in hidden:
+                        continue
                     cell.update(row=row)
                     cell.pop("is_column_header", None)
                     ref = CellRef(part["table_id"], row, cell["col"])
@@ -574,6 +592,8 @@ def _partial_grid_blocks(
                 line = lines[line_index]
                 delimiters = [m.start() for m in re.finditer(r"\|", line)]
                 col = cell["col"]
+                if (row, col) in hidden:
+                    continue
                 if len(delimiters) <= col + 1:
                     raise ValueError("partial cell has no final character range")
                 a, b = delimiters[col] + 1, delimiters[col + 1]

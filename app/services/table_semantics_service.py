@@ -200,7 +200,10 @@ def _ref(fragment: TableFragment, cell: TableCellFragment) -> CellRef:
 
 
 def _registry(fragments: Sequence[TableFragment]) -> dict[Any, Any]:
+    from app.services.table_context_service import cell_role_refs
+
     return {**{_ref(f, c): c for f in fragments for c in f.cells},
+            **{ref: ref for f in fragments for ref in cell_role_refs(f)},
             **{ref: ref for f in fragments for ref in f.context_refs}}
 
 
@@ -303,22 +306,28 @@ class _FragmentBinding:
     issues: list[tuple[int, str]]
 
 
-def _record_refs(record: SemanticRecord) -> set[CellRef]:
+def _record_references(record: SemanticRecord) -> set[CellRef | TextRef]:
     references: set[Any] = {*record.subject_headers, *record.row_groups}
     if record.subject:
         references.add(record.subject)
     for value in record.values:
         references.update((value.value, *value.row_headers, *value.column_headers,
                            *value.unit_refs, *value.period_refs, *value.note_refs))
-    return {ref for ref in references if isinstance(ref, CellRef)}
+    return references
+
+
+def _record_refs(record: SemanticRecord) -> set[CellRef]:
+    return {source for ref in _record_references(record)
+            if (source := ref if isinstance(ref, CellRef) else ref.source_cell) is not None}
 
 
 def _consumed_cells(fragment: TableFragment, records: Sequence[SemanticRecord]) -> set[CellRef]:
     """Cover literal references and only their explicitly empty source anchors."""
     consumed = {ref for record in records for ref in _record_refs(record)
                 if ref.table_id == fragment.fragment_id}
-    group_rows = {ref.row for record in records for ref in record.row_groups
-                  if ref.table_id == fragment.fragment_id}
+    group_rows = {source.row for record in records for ref in record.row_groups
+                  if (source := ref if isinstance(ref, CellRef) else ref.source_cell) is not None
+                  and source.table_id == fragment.fragment_id}
     for record in records:
         subject = record.subject
         if (record.source_table_id == fragment.fragment_id and subject is not None
@@ -338,6 +347,19 @@ def _consumed_cells(fragment: TableFragment, records: Sequence[SemanticRecord]) 
         if cell and any(any(ref.block_id == f"{fragment.fragment_id}.title.{cell.row}.{cell.column}"
                             and ref.text == cell.text for ref in record.scope_refs) for record in records):
             consumed.add(_ref(fragment, cell))
+    # A sliced reference consumes only its literal span. Do not hide an
+    # unresolved remainder merely because another role uses the same cell.
+    used = {ref for record in records for ref in _record_references(record)}
+    for declaration in fragment.native_evidence.get("cell_roles", []):
+        source = CellRef(fragment.fragment_id, declaration["row"], declaration["column"])
+        if source in used:
+            continue
+        spans = {i for ref in used if isinstance(ref, TextRef) and ref.source_cell == source
+                 for i in range(ref.start, ref.end)}
+        if all(i in spans or char.isspace() for i, char in enumerate(declaration["raw_text"])):
+            consumed.add(source)
+        else:
+            consumed.discard(source)
     return consumed
 
 
@@ -352,7 +374,7 @@ def _unit_context_cells(fragment: TableFragment, records: Sequence[SemanticRecor
 
 def _qualify_relation(fragment: TableFragment, relation: ValueRelation,
                       registry: dict[Any, Any]) -> ValueRelation:
-    from app.services.table_context_service import scalar, unit_header
+    from app.services.table_context_service import applicable_cell_roles, scalar, unit_header
     cell = registry[relation.value]
     labels = [registry[r].text for r in relation.column_headers]
     reference_field = any(_REFERENCE_HEADER.fullmatch(text.strip().rstrip(":：")) for text in labels)
@@ -362,7 +384,11 @@ def _qualify_relation(fragment: TableFragment, relation: ValueRelation,
     # A numeric note reference, index or code is not a monetary measurement,
     # even beneath a shared currency band. Its literal and column label stay.
     unit_refs = [] if reference_field else list(relation.unit_refs)
-    period_refs = list(relation.period_refs)
+    roles = applicable_cell_roles(fragment, cell.row, cell.column, registry)
+    unit_slices = {r.source_cell: r for r in roles if r.kind == "unit"}
+    period_slices = {r.source_cell: r for r in roles if r.kind == "period"}
+    unit_refs = [unit_slices.get(ref, ref) for ref in unit_refs]
+    period_refs = [period_slices.get(ref, ref) for ref in relation.period_refs]
     notes = []
     ratio = any(_RATIO_HEADER.search(text) for text in labels)
     own_unit = re.search(r"[%％‰]", cell.text)
@@ -383,9 +409,8 @@ def _qualify_relation(fragment: TableFragment, relation: ValueRelation,
                        and ref.row in active_headers and unit_header(c.text)), None)
         if corner is not None:
             unit_refs.append(corner)
-    for ref in fragment.context_refs:
-        if cell.row not in ref.body_rows or cell.column not in ref.columns:
-            continue
+    context = (ref for ref in fragment.context_refs if cell.row in ref.body_rows and cell.column in ref.columns)
+    for ref in (*roles, *context):
         if ref.kind == "unit" and amount_slot and not own_unit and not own_per_share and not unit_refs and not ratio:
             unit_refs.append(ref)
         elif ref.kind == "period" and not period_refs:
@@ -622,8 +647,11 @@ def _bind_fragment(
             issues.append((row, "subject_crosses_header_columns"))
             continue
         subject_path = tuple({(h.row, h.column): h for path in label_paths if path for h in path}.values())
-        from app.services.table_context_service import unit_header
-        subject_path = tuple(h for h in subject_path if not unit_header(h.text))
+        from app.services.table_context_service import cell_role_refs, unit_header
+        decomposed = {CellRef(origin.fragment_id, d["row"], d["column"])
+                      for d in origin.native_evidence.get("cell_roles", [])}
+        subject_path = tuple(h for h in subject_path if not unit_header(h.text)
+                             and _ref(origin, h) not in decomposed)
         values = []
         paths_seen: set[tuple[CellRef, ...]] = set()
         reason = None
@@ -640,6 +668,9 @@ def _bind_fragment(
             if (cell.row != row or cell.row_span != 1) and not native_scope:
                 reason = "value_span_crosses_records"
                 break
+            if cell.column in scope.get("unresolved_columns", ()) and cell.row_span == cell.column_span == 1:
+                issues.append((row, "column_role_unresolved"))
+                continue
             path = field_paths[(cell.row, cell.column)]
             if not path:
                 reason = "incomplete_column_header_path"
@@ -677,6 +708,14 @@ def _bind_fragment(
             extra_ref = CellRef(fragment.fragment_id, *extra_group)
             row_groups = tuple(dict.fromkeys((extra_ref, *row_groups)))
             values = [replace(value, row_headers=tuple(dict.fromkeys((extra_ref, *value.row_headers)))) for value in values]
+        scoped_groups = tuple(ref for ref in cell_role_refs(fragment) if ref.kind == "group"
+                              and row in ref.body_rows
+                              and all(value.value.column in ref.columns for value in values))
+        if scoped_groups:
+            row_groups = tuple(sorted((*scoped_groups, *row_groups),
+                                      key=lambda r: r.source_cell.row if isinstance(r, TextRef) and r.source_cell else r.row))
+            values = [replace(value, row_headers=tuple(dict.fromkeys((*row_groups, *value.row_headers))))
+                      for value in values]
         records.append(SemanticRecord(
             fragment.fragment_id, row, tuple(values), _ref(fragment, subject),
             tuple(_ref(origin, h) for h in subject_path),
@@ -729,6 +768,10 @@ def bind_table_view(
         records.extend(bound.records)
         covered.update(bound.consumed)
         issues.extend((fragment.fragment_id, row, reason) for row, reason in bound.issues)
+    unresolved_groups = [(fragment.fragment_id, row, issue["reason"]) for fragment in group
+                         for issue in fragment.native_evidence.get("unresolved_subgroups", [])
+                         for row in issue["rows"]]
+    issues.extend(unresolved_groups)
     expected = {_ref(f, c) for f in group for c in f.cells}
     reasons = tuple(dict.fromkeys(reason for _, _, reason in issues))
     header_positions = {
@@ -740,16 +783,22 @@ def bind_table_view(
                             for position in f.native_evidence.get("row_groups", {}).values())
     header_positions.update((f.fragment_id, int(position[0])) for f in group
                             for position in f.native_evidence.get("retained_row_context", {}).values())
+    unresolved_columns = {(fragment.fragment_id, row): scope["unresolved_columns"]
+                          for fragment in group for scope in fragment.source_header_scopes
+                          if scope.get("unresolved_columns") for row in scope["body_rows"]}
     while True:
         missing = expected - covered
         retained_rows = {(ref.table_id, row) for ref in missing
                          for row in range(ref.row, ref.row + registry[ref].row_span)}
         # Labels from a source header may recur as context. No data, subject,
         # group or qualifier cell can be rendered in both a record and grid.
+        shared_rows = {(ref.table_id, ref.row) for ref in missing
+                       if ref.column not in unresolved_columns.get((ref.table_id, ref.row), ())}
         unsafe = {
             (record.source_table_id, record.source_row) for record in records
             if any((ref.table_id, ref.row) not in header_positions
-                   and any((ref.table_id, row) in retained_rows for row in range(
+                   and any((ref.table_id, row) in retained_rows and ((ref.table_id, row) in shared_rows
+                       or (ref.table_id, row) not in unresolved_columns) for row in range(
                        ref.row, ref.row + registry[ref].row_span))
                    for ref in _record_refs(record) if ref in expected)
         }
@@ -777,7 +826,7 @@ def bind_table_view(
     kind: SemanticKind = ("mixed" if fields and tabular else "fields" if fields
                           else "comparison" if numeric else "records")
     return SemanticTableView(
-        view_id, ids, "partial" if missing else "converted", kind, tuple(records),
+        view_id, ids, "partial" if missing or unresolved_groups else "converted", kind, tuple(records),
         reason_codes=reasons, source_cell_count=count, covered_source_cells=len(covered),
         retained_cells=tuple(sorted(missing)), retained_rows=tuple(sorted(retained_rows)),
         row_issues=tuple(issues),
@@ -844,12 +893,39 @@ def retained_table_parts(
                 "synthetic_header_rows": [0], "source_to_display_rows": display,
                 "spans": spans, "start_row": chunk[0],
             }
+            converted_rows = {r.source_row for r in view.records if r.source_table_id == fragment.fragment_id}
+            hidden = {(c.row, c.column) for c in fragment.cells if c.row in chunk and c.row in converted_rows
+                      and _ref(fragment, c) not in view.retained_cells}
+            if hidden:
+                metadata["omitted_cells"] = sorted(hidden)
+            display_rows = [["" if (row, col) in hidden else value for col, value in enumerate(fragment.rows[row])]
+                            for row in selected]
             marker = "<!-- semantic-retained: " + json.dumps(metadata, separators=(",", ":")) + " -->"
             rendered = marker + "\n\n" + render_source_rows(
-                [[""] * fragment.num_cols, *[fragment.rows[row] for row in selected]], spans,
+                [[""] * fragment.num_cols, *display_rows], spans,
             )
             parts.append({**metadata, "rendered": rendered})
     return parts
+
+
+def _printed_column_slices(value, header, registry, rendered):
+    raw = registry[header].text
+    trimmed = raw.lstrip()
+    result = {}
+    for ref in (*value.unit_refs, *value.period_refs):
+        if not isinstance(ref, TextRef) or ref.source_cell != header:
+            continue
+        # Rendering may suppress an overridden unit. Anchor a subrange to its
+        # actual column occurrence; never find the literal elsewhere in the row.
+        prefix = _literal(trimmed[:ref.start - (len(raw) - len(trimmed))]) if ref.start else ""
+        start = len(prefix)
+        literal = _literal(ref.text)
+        if rendered[start:start + len(literal)] == literal:
+            result[ref] = (start, start + len(literal))
+        elif rendered == _literal(raw) and rendered.count(literal) == 1:
+            start = rendered.index(literal)
+            result[ref] = (start, start + len(literal))
+    return result
 
 
 def _render_record(record: SemanticRecord, registry: dict[Any, Any]) -> str:
@@ -865,7 +941,9 @@ def _render_record(record: SemanticRecord, registry: dict[Any, Any]) -> str:
         refs.update(value.row_headers)
         refs.update((*value.unit_refs, *value.period_refs, *value.note_refs))
         header_refs.update(value.column_headers)
-    source = ",".join(ref.token for ref in sorted(r for r in refs if isinstance(r, CellRef)))
+    source_refs = {source for ref in refs
+                   if (source := ref if isinstance(ref, CellRef) else ref.source_cell) is not None}
+    source = ",".join(ref.token for ref in sorted(source_refs))
     headers = ",".join(ref.token for ref in sorted(header_refs))
     marker = f"<!-- semantic-source: cells={source}; headers={headers} -->"
     def literal(ref: Any) -> str:
@@ -893,6 +971,9 @@ def _render_record(record: SemanticRecord, registry: dict[Any, Any]) -> str:
         emitted: set[Any] = {value.value, *label_refs, *record.subject_headers, *record.row_groups}
         if record.subject:
             emitted.add(record.subject)
+            for header in label_refs:
+                display = "".join(_column_literal_parts(record, value, header, registry))
+                emitted.update(_printed_column_slices(value, header, registry, display))
         qualifiers = []
         for qualifier, qualifier_refs in (("单位", value.unit_refs), ("期间", value.period_refs),
                                            ("附注", value.note_refs)):
@@ -948,11 +1029,18 @@ def render_nested_record(record: SemanticRecord, registry: Mapping[Any, Any]) ->
             write("\n  - ")
         label_refs = value.column_headers if record.subject else value.row_headers
         # Column literals include their actually linked note marker.
+        inline = set()
         for n, ref in enumerate(dict.fromkeys(label_refs)):
             if n:
                 write(" / ")
             rendered = "".join(_column_literal_parts(record, value, ref, registry)) if record.subject else _record_literal(record, ref, registry)
             token(ref, "column_header" if record.subject else "row_header", index, text=rendered)
+            label_start = emitted[-1]["span"][0]
+            for piece, (a, b) in _printed_column_slices(value, ref, registry, rendered).items():
+                inline.add(piece)
+                emitted.append({"ref": piece, "role": "期间" if piece.kind == "period" else "单位",
+                                "text": piece.text, "span": [label_start + a, label_start + b],
+                                "field_index": index, "value_state": "literal"})
         label = " / ".join(registry[r].text for r in label_refs)
         write(_label_separator(label))
         text = _record_value_literal(value, registry)
@@ -963,7 +1051,7 @@ def render_nested_record(record: SemanticRecord, registry: Mapping[Any, Any]) ->
         elif value.value_state != "literal":
             raise ValueError("unsupported semantic value state")
         token(value.value, "value", index, text=text)
-        used: set[CellRef | TextRef] = {value.value, *label_refs, *record.subject_headers, *record.row_groups}
+        used: set[CellRef | TextRef] = {value.value, *inline, *label_refs, *record.subject_headers, *record.row_groups}
         if record.subject:
             used.add(record.subject)
         for name, refs in (("单位", value.unit_refs), ("期间", value.period_refs), ("附注", value.note_refs)):

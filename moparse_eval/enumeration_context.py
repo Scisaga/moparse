@@ -95,6 +95,74 @@ def _block_source(block):
     return block.get("source", block.get("reference", {}))
 
 
+_CATEGORY_LABEL = re.compile(r'(?:business )?(?:segment|division|category)|分部|业务分部|業務分部|板块|板塊|类别|類別', re.I)
+_CHANGE_LABEL = re.compile(r'(?:year[ -]on[ -]year|YoY|同比|环比|環比)(?:增长率|增長率|增长|增長|变动|變動)?', re.I)
+
+
+def list_record_axes(pairs):
+    """Read an explicit sibling category, or the metric named beside its relative change."""
+    from .measurement_evidence import read_measurement_literal
+    from .three_layer import IDENTITY, QUALIFIER
+
+    if len(pairs) < 2 or len({key for key, *_ in pairs}) != len(pairs):
+        return {}
+    categories = [p for p in pairs if _CATEGORY_LABEL.fullmatch(p[0])]
+    if len(categories) == 1:
+        label, text, label_source, source = categories[0]
+        if any(c.isalpha() for c in text) and not read_measurement_literal(text)['matched']:
+            axis = {'role': 'category', 'label': label, 'text': text, 'label_source': label_source, 'source': source}
+            return {key: axis for key, *_ in pairs if key != label}
+    if len(pairs) == 2 and not categories:
+        for index, (label, *_) in enumerate(pairs):
+            metric, _, source, _ = pairs[1 - index]
+            if _CHANGE_LABEL.fullmatch(label) and not any(p.fullmatch(metric) for p in (_CHANGE_LABEL, IDENTITY, QUALIFIER)):
+                return {label: {'role': 'measure', 'text': metric, 'source': source}}
+    return {}
+
+
+def grid_record_axis(header, row, field_label):
+    from .measurement_evidence import read_measurement_literal
+
+    if not header or not any(c.isalpha() for c in row['text']) or read_measurement_literal(row['text'])['matched']:
+        return None
+    label = header['text'].strip()
+    if _CATEGORY_LABEL.fullmatch(label):
+        return {'role': 'category', 'label': label, 'text': row['text'].strip(),
+                'source': row['source'], 'label_source': header['source']}
+    if re.fullmatch(r'metric|measure|指标|指標|项目|項目', label, re.I) and _CHANGE_LABEL.fullmatch(field_label):
+        return {'role': 'measure', 'text': row['text'].strip(), 'source': row['source']}
+    return None
+
+
+def printed_list_ancestors(syntax, position):
+    """Recover the open list stack from this stream's own items and list interval."""
+    child = syntax[position]
+    names = child.get('parents', [])
+    layout = child.get('syntax_evidence', {})
+    stream, band = layout.get('list_stream'), layout.get('list_span')
+    item_kinds = {'item', 'list_item', 'image_caption'}
+    if not names or not stream or layout.get('kind') not in item_kinds:
+        return []
+    chain = []
+    for i in range(position - 1, -1, -1):
+        prior = syntax[i]
+        own = prior.get('syntax_evidence', {})
+        if (prior.get('scope') != child.get('scope') or own.get('kind') not in item_kinds
+                or own.get('list_stream') != stream or own.get('list_span') != band):
+            break
+        depth = len(names) - len(chain) - 1
+        parents = prior.get('parents', [])
+        if len(parents) > depth:
+            continue
+        if (prior['kind'] != 'parent_label' or parents != names[:depth] or prior['text'] != names[depth]
+                or not prior.get('source', {}).get('path')):
+            break
+        chain.append({'role': 'list_parent', 'text': prior['text'], 'source': copy.deepcopy(prior['source'])})
+        if depth == 0:
+            return list(reversed(chain))
+    return []
+
+
 def _list_span(block):
     value = block.get("list_span")
     return tuple(value) if (isinstance(value, (list, tuple)) and len(value) == 2

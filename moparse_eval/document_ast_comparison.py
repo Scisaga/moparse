@@ -12,6 +12,8 @@ from __future__ import annotations
 import copy
 import re
 
+from .enumeration_context import list_record_axes, printed_list_ancestors
+from .financial_group_context import field_caption_dimensions
 from .requirement_ast import (
     build_document_ast,
     compare_document_ast,
@@ -247,14 +249,15 @@ def navigation_order_requirements(graph, *, retained_fact_ids=None):
             if left.get('directory_evidence') == right.get('directory_evidence')]
 
 
-def attach_document_ast(graph, expected):
+def _expected_units(expected):
     units = []
     for target in expected['targets']:
         scopes = target.get('selected_heading_context')
         scope = [item['text'] for item in scopes] if scopes is not None else target.get('context', [])
         if target.get('cells'):
             for cell in target['cells']:
-                units.append({'kind': 'table_cell', 'text': cell.get('text', ''), 'scope': scope,
+                units.append({**cell, 'kind': 'table_cell', 'text': cell.get('text', ''), 'scope': scope,
+                    'table_source': target['reference'],
                     'source': {**target['reference'], 'cell': cell.get('id', cell.get('native_path')),
                                'row': cell.get('row'), 'column': cell.get('col'),
                                **({'native_path': cell['native_path']} if cell.get('native_path') is not None else {})},
@@ -262,9 +265,14 @@ def attach_document_ast(graph, expected):
         else:
             units.append({'kind': target['kind'], 'text': target.get('raw_text', target['text']),
                           'source': target['reference'], 'scope': scope, 'parents': target.get('parents', [])})
+    return units
+
+
+def attach_document_ast(graph, expected):
+    units = _expected_units(expected)
     graph['comparison_contract'] = 'document_ast'
-    graph['document_ast'] = build_document_ast(units)
     facts = [n for n in graph.get('nodes', graph.get('business', [])) if n.get('kind') != 'text']
+    graph['document_ast'] = build_document_ast(units, facts=facts)
     graph['source_form_units'] = _fallback_blocks(graph['document_ast'], graph['unresolved'], facts)
     graph['source_form_requirements'], graph['source_form_order_anchors'] = _fixed_content_requirements(
         graph['document_ast'], graph['source_form_units'], facts, graph['unresolved'], units)
@@ -274,6 +282,101 @@ def attach_document_ast(graph, expected):
         _same_record(graph['document_ast']['children'][index]['source'], issue.get('source', {}))
         for index in graph['source_form_units']) for issue in graph['unresolved'])
 
+
+
+def _bound_list_owners(projected, banks):
+    """Verify existing counted fields/captions against their own printed list stack."""
+    from .measurement_evidence import read_measurement_label, read_measurement_literal
+    from .three_layer import _pair_sources
+
+    syntax = projected.get('syntax', [])
+    facts = {f['id']: f for f in projected['business']}
+    edges = {e['id']: e for e in projected['relations']}
+    bindings = {}
+    for edge in edges.values():
+        if edge['type'] == 'field_binding':
+            bindings.setdefault(edge.get('fact_id'), []).append(edge)
+    owners = {}
+    by_source = {}
+    for fact in facts.values():
+        if fact['id'] in banks['B']:
+            by_source.setdefault(_location(fact['source']), []).append(fact)
+    labelled_parents = {}
+    typed_paths = {}
+    for i, item in enumerate(syntax):
+        loc = _location(item['source'])
+        if by_source.get(loc) and item.get('syntax_evidence', {}).get('kind') in {'item', 'list_item'}:
+            pairs = _pair_sources(item['text'], item['source'])
+            axes = list_record_axes(pairs)
+            for label, _, _, value_source in pairs:
+                for fact in by_source[loc]:
+                    if fact['source'] != value_source:
+                        continue
+                    own = bindings.get(fact['id'], [])
+                    if len(own) == 1 and own[0].get('rule_id') == 'explicit_field_binding':
+                        if (fact.get('record_axis') != axes.get(label)
+                                or own[0].get('binding_evidence', {}).get('record_axis') != axes.get(label)):
+                            raise ValueError('Record axis differs from the independent label or category in its own item')
+        if item['kind'] == 'parent_label' and len(by_source.get(loc, [])) == 1:
+            pairs = _pair_sources(item['text'], item['source'])
+            if len(pairs) == 1:
+                label, value, label_source, value_source = pairs[0]
+                fact, = by_source[loc]
+                own = bindings.get(fact['id'], [])
+                if (label and value and _resolve(projected, item['source']) == item['text']
+                        and fact.get('attribute') == label and fact.get('value') == value
+                        and fact.get('attribute_source') == label_source and fact.get('value_source') == value_source
+                        and len(own) == 1 and own[0]['source'] == value_source and own[0]['id'] in banks['L']):
+                    labelled_parents[loc] = [fact['id'], own[0]['id']]
+        ids = item.get('list_field_ids', [])
+        caption = item.get('list_caption_relation')
+        if not ids and not caption and not (item.get('parents') and labelled_parents):
+            continue
+        rows = printed_list_ancestors(syntax, i)
+        if not ids and not caption:
+            if rows:
+                proven = {_location(r['source']): labelled_parents[_location(r['source'])] for r in rows
+                          if _location(r['source']) in labelled_parents}
+                if proven:
+                    typed_paths[loc] = (tuple(_location(r['source']) for r in rows), proven)
+            continue
+        names = [r['text'] for r in rows]
+        if not rows or any(_resolve(projected, row['source']) != row['text'] for row in rows):
+            raise ValueError('List owner differs from its open source item')
+        if caption:
+            edge = edges.get(caption, {})
+            if (item['kind'] != 'image_caption' or edge.get('type') != 'list_membership'
+                    or edge['source'] != item['source'] or edge['left'] != names[-1]
+                    or edge['right'] != {'text': item['text'], 'parents': names}
+                    or edge.get('binding_evidence', {}).get('rows') != rows):
+                raise ValueError('Caption membership differs from its printed source and ancestry')
+            duties = [caption] if caption in banks['L'] else []
+        else:
+            pairs = _pair_sources(item['text'], item['source'])
+            if len(ids) != len(pairs) or len(set(ids)) != len(ids):
+                raise ValueError('List item field ownership differs from its printed fields')
+            duties = []
+            for fid, (label, value, label_source, value_source) in zip(ids, pairs, strict=True):
+                fact = facts.get(fid, {})
+                own = bindings.get(fid, [])
+                header = read_measurement_label(label, label_source)
+                measurement = read_measurement_literal(value, value_source)
+                if (len(own) != 1 or fact.get('source') != value_source or fact.get('row_evidence') != rows
+                        or fact.get('attribute') != (header['label'] if header['matched'] else label)
+                        or fact.get('value') != (measurement['value'] if measurement['matched'] else value)
+                        or fact.get('attribute_source') != (header['sources']['label'] if header['matched'] else label_source)
+                        or fact.get('value_source') != (measurement['sources']['value'] if measurement['matched'] else value_source)
+                        or own[0]['source'] != value_source or fact.get('identity_facets', {}).get('list_parents') != names
+                        or own[0]['right'].get('identity_facets', {}).get('list_parents') != names):
+                    raise ValueError('List field differs from its own printed value, label or parent source')
+                if fid in banks['B'] and own[0]['id'] in banks['L']:
+                    duties.extend((fid, own[0]['id']))
+            if len(duties) != 2 * len(ids):
+                continue
+        if duties:
+            for row in rows:
+                owners[_location(item['source']), row['text'], _location(row['source'])] = duties
+    return owners, typed_paths
 
 
 def comparison_requirement_coverage(graph):
@@ -291,6 +394,7 @@ def comparison_requirement_coverage(graph):
     retained = _without_grammar_analysis(projected, blocks, ast)
     banks = {'T': graph['projections']['T'], 'L': [n['id'] for n in retained['relations']],
              'B': [n['id'] for n in retained['business']]}
+    list_owners, typed_paths = _bound_list_owners(projected, banks)
     ids = set().union(*map(set, banks.values()))
     inventory = graph['source_obligation_inventory']
     obligations = {n['id']: n for n in [*inventory['obligations'], *inventory['authorized_raw_inventory']['obligations']]}
@@ -332,8 +436,28 @@ def comparison_requirement_coverage(graph):
         content = owners(issue.get('source', {}))
         list_scope = _list_scope_proof(issue, ast)
         list_parents_owned = not list_scope or all(owners(parent) for parent in list_scope['parents'])
+        path, fields = typed_paths.get(_location(issue.get('source', {})), ((), {}))
         if is_deferred_input_scope(graph['sample_id'], issue):
             status = 'deferred_input_scope'
+        elif (issue.get('reason') == 'list_group_scope_interpretation_unsupported'
+              and (typed := list_owners.get((_location(issue['source']), issue.get('parent'),
+                                             _location(issue.get('parent_source') or {}))))
+              and all(by_obligation[n]['status'] != 'blocking' for n in linked)):
+            limitations.append({'issue_id': issue['id'], 'status': 'semantic_or_structure',
+                'obligation_ids': copy.deepcopy(linked), 'requirement_ids': list(typed),
+                'contract': 'typed_semantics_and_structure/1', 'source': copy.deepcopy(issue['source']),
+                'basis': 'existing_counted_field_or_caption_owns_the_printed_list_ancestry'})
+            continue
+        elif (list_scope and not list_parents_owned and content
+              and path == tuple(_location(p) for p in list_scope['parents'])
+              and all(owners(p) or _location(p) in fields for p in list_scope['parents'])
+              and all(by_obligation[n]['status'] != 'blocking' for n in linked)):
+            duties = {d for p in list_scope['parents'] for d in (owners(p) or fields[_location(p)])}
+            limitations.append({'issue_id': issue['id'], 'status': 'semantic_or_structure',
+                'obligation_ids': list(linked), 'requirement_ids': sorted(duties.union(content)),
+                'contract': 'typed_semantics_and_structure/1', 'source': copy.deepcopy(issue['source']),
+                'basis': 'complete_child_content_and_its_printed_parent_field', 'parent_sources': list_scope['parents']})
+            continue
         elif (_grammar_limit(issue, ast) and content and list_parents_owned and 'T' not in issue.get('layers', [])
               and all(by_obligation[n]['status'] != 'blocking' for n in linked)):
             status = 'language_analysis_only'
@@ -347,6 +471,7 @@ def comparison_requirement_coverage(graph):
         'responsibility_complete': not any(r['status'] == 'blocking' for r in [*responsibility, *limitations]),
         'obligations': responsibility, 'analysis_limitations': limitations,
         'retained_semantic_requirements': banks,
+        **({'field_qualifier_ownership': retained['field_qualifier_ownership']} if retained.get('field_qualifier_ownership') else {}),
         'content_relation_ownership': copy.deepcopy(retained['content_relation_ownership']),
         'content_requirement_ids': [b['requirement_id'] for b in blocks],
         'mixed_order_requirement_ids': [e['id'] for e in document_order_requirements(graph)
@@ -362,6 +487,9 @@ def comparison_requirement_coverage(graph):
             *({'statement_parent_scope_single_vote'} if retained['content_relation_ownership'] else set()),
             *({'literal_navigation_role'} if any(f.get('semantic_type') == 'toc_page' for f in retained['business']) else set()),
             *({'nested_content_scope'} if any(_list_scope_proof(issue, ast) for issue in graph['unresolved']) else set()),
+            *({'printed_list_field_scope'} if any(r['basis'] in {'complete_child_content_and_its_printed_parent_field',
+                 'existing_counted_field_or_caption_owns_the_printed_list_ancestry'} for r in limitations) else set()),
+            *({'sibling_record_axis'} if any(f.get('record_axis') for f in retained['business']) else set()),
             *retained.get('required_matcher_features', [])}),
         'independent_acceptance': 'not_established_by_compilation'}
 
@@ -439,10 +567,10 @@ def _candidate_ast(evidence):
                 raise ValueError('document scope differs from the actual printed heading stream')
         if heading and level is not None:
             stack.append((level, unit['text']))
-    units.extend({'kind': 'table_cell', 'text': item.get('text', ''), 'source': item['source'],
+    units.extend({**item, 'kind': 'table_cell', 'text': item.get('text', ''),
                   'scope': item.get('scope', []), 'parents': []}
                  for item in evidence.get('text_projection', {}).get('source_cells', []))
-    ast = build_document_ast(units)
+    ast = build_document_ast(units, facts=evidence.get('business', []))
     ast['reading_complete'] = (evidence.get('status') not in {'failed', 'cancelled', 'timeout'}
         and not any(issue.get('reason') in {'candidate_reader_failure', 'native_region_read_failure'}
                     or issue.get('category') == 'engineering_failure'
@@ -639,6 +767,29 @@ def _without_grammar_analysis(graph, blocks, ast=None):
             'basis': 'same_unique_source_endpoints_and_complete_content_order_path'})
     transferred_scopes = {proof['analysis_relation_id'] for proof in scope_ownership}
     result['content_relation_ownership'] = scope_ownership
+    fields = {f['id']: dims for f in result['business'] if (dims := field_caption_dimensions(f))}
+    if fields:
+        bindings = {}
+        for edge in result['relations']:
+            if edge['type'] == 'field_binding' and edge.get('fact_id') in fields:
+                bindings.setdefault(edge['fact_id'], []).append(edge)
+        ownership = []
+        for edge in result['relations']:
+            fid = edge.get('fact_id')
+            if edge['type'] != 'qualifier_scope' or len(bindings.get(fid, [])) != 1:
+                continue
+            owner = bindings[fid][0]
+            key, literal = edge['left']['type'], edge['left']['text']
+            source = fields[fid].get(key)
+            evidence = edge.get('binding_evidence', {})
+            if (source and edge['right'] == owner['right'] and edge['source'] == source
+                    and owner['right']['qualifiers'].get(key) == literal and _resolve(graph, source) == literal
+                    and evidence.get('statement_source') == owner['source'] and evidence.get('qualifier_source') == source):
+                ownership.append({'analysis_relation_id': edge['id'], 'counted_relation_id': owner['id'],
+                                  'fact_id': fid, 'dimension': key, 'source': copy.deepcopy(source)})
+        if ownership:
+            result['field_qualifier_ownership'] = ownership
+            transferred_scopes.update(proof['analysis_relation_id'] for proof in ownership)
     if 'requirement_ledger' in result:
         result['requirement_ledger'] = copy.deepcopy(result['business'])
     for name in ('logical_statements', 'semantic_operands', 'semantic_operand_relations', 'explicit_references',
@@ -722,6 +873,7 @@ def grade_document_content(requirements, evidence, *, scoring_method=None):
     if (coverage['retained_semantic_requirements']['L'] != [e['id'] for e in base_required['relations']]
             or coverage['retained_semantic_requirements']['B'] != [f['id'] for f in base_required['business']]
             or coverage.get('content_relation_ownership') != base_required['content_relation_ownership']
+            or coverage.get('field_qualifier_ownership') != base_required.get('field_qualifier_ownership')
             or coverage.get('mixed_order_requirement_ids') != [e['id'] for e in document_order_requirements(requirements)
                                                               if e['role'] == 'mixed_typed_content_order']
             or coverage.get('navigation_order_requirement_ids') != [e['id'] for e in navigation_order_requirements(requirements)]):
@@ -744,9 +896,30 @@ def grade_document_content(requirements, evidence, *, scoring_method=None):
                     if row['required'].get('comparison_role') != 'typed_order_anchor']
     cuts = [span for row in content_rows if row['correspondence_status'] == 'confirmed'
             for span in row['actual_spans']]
+    # When a whole printed list record has been read, its legacy partial
+    # grammar analysis is replaced together with its dependent attachments.
+    # Data-occurrence capacity still belongs to the individual field spans.
+    for row in content_rows:
+        proof = row['decision']['proof']
+        found = proof.get('actual') or {}
+        if (row['correspondence_status'] == 'confirmed' and found.get('kind') == 'record'
+                and not found.get('table_source') and not proof.get('extra_paths')):
+            cuts.append({'source': found['source']})
     cuts.extend(span for row in content_rows for hit in row['retrieval']['candidates']
                 if hit['exact_shape'] and hit['conflicts'] for span in hit['candidate_spans'])
     base_actual = _without_grammar_analysis(evidence, [{'source': span['source']} for span in cuts], candidate_ast)
+    from .record_ast import resolved_matrix_issues
+
+    resolved = resolved_matrix_issues(candidate_ast['children'], base_actual.get('blockers', []))
+    if resolved:
+        def matrix_issue(issue):
+            # The literal projection can add T to a copy of the same local issue.
+            return {k: v for k, v in issue.items() if k != 'layers'}
+
+        resolved_issues = [matrix_issue(proof['issue']) for proof in resolved]
+        for collection in ('blockers', 'candidate_issues', 'pending_requirements'):
+            base_actual[collection] = [issue for issue in base_actual.get(collection, [])
+                                       if matrix_issue(issue) not in resolved_issues]
     base = _grade_layers(base_required, base_actual)
     score = copy.deepcopy(base)
     content_index = 0
@@ -754,7 +927,7 @@ def grade_document_content(requirements, evidence, *, scoring_method=None):
         if row['required'].get('comparison_role') == 'typed_order_anchor':
             continue  # Existing typed B/bindings own this sentence; only order uses its span.
         status = row['decision']['status']
-        scope_correct = row['correspondence_status'] == 'confirmed'
+        scope_correct = row['correspondence_status'] == 'confirmed' and row['decision']['proof'].get('layout_correct', True)
         for layer, correct in (('B', status == 'equivalent'), ('L', scope_correct)):
             if layer == 'B' and row['required']['role'] == 'heading':
                 continue  # Document labels own T/L; they assert no new fact.
@@ -820,6 +993,7 @@ def grade_document_content(requirements, evidence, *, scoring_method=None):
         layer['score'] is not None for layer in score['layers'].values()) else None
     score['document_comparison'] = {'inputs': {'required': copy.deepcopy(requirements), 'actual': copy.deepcopy(evidence)},
         'decision': decision, 'base_score': base, 'source_form_units': copy.deepcopy(wanted),
+        'candidate_record_bindings': resolved,
         'semantic_limitations_retained': copy.deepcopy(requirements.get('blockers', [])),
         'contract': 'source_form_identity_or_typed_conflict_other_wording_unresolved'}
     return score

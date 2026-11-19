@@ -24,6 +24,10 @@ _GROWTH = re.compile(r"本年比上年增[減减]|較上年同期增[減减]|较
 _DELTA = re.compile(r'變化額|变化额|變動額|变动额')
 _CHANGE_DIRECTIONS = {"增长": "increase", "增長": "increase", "增加": "increase", "上升": "increase",
                       "下降": "decrease", "减少": "decrease", "減少": "decrease"}
+_RELATIVE_PERIOD = r"(?:本|上|前|去|[当當])(?:[报報]告)?(?:年度?|季度?|月|期)(?:年?[末初])?"
+_PRINTED_COMPARISON = re.compile(
+    rf"(?P<basis>(?:{_RELATIVE_PERIOD})?(?:同比|[环環]比)|{_RELATIVE_PERIOD}(?:比|[较較]){_RELATIVE_PERIOD})"
+    r"(?:增[减減](?:幅度)?|[变變][动動](?:幅度)?|[变變]化(?:率)?|增[长長]率)")
 _DIRECTED_CHANGE = re.compile("|".join(_CHANGE_DIRECTIONS))
 _UNSIGNED_MAGNITUDE = re.compile(r"(?:\d{1,3}(?:,\d{3})+|\d+)(?:\.\d+)?|\.\d+")
 _CAUSE = re.compile(r"(?:报告期内变动的主要原因|報告期內變動的主要原因|变动原因|變動原因|主要原因|原因|Reason|Cause)", re.I)
@@ -816,3 +820,71 @@ def read_series_requirements(text: str, source: dict[str, Any], *, context: dict
     if attribution:
         _attribution_projection(result, text, source, attribution)
     return result
+
+
+def residual_measurement(text, source, dated):
+    """Identify the sole remaining labelled quantity of an explicitly named series.
+
+    The existing period children keep their own votes. Every other printable
+    part of the record must be accounted for before its content owner can be
+    compared as a scalar. Dates of comparison are never inferred here.
+    """
+    if not dated or not all(f.get('role_basis', {}).get('period_selector') and
+                            f.get('attribute_source') == dated[0].get('attribute_source') for f in dated):
+        return None
+    series = read_series_requirements(text, source)
+    pending = series['pending_requirements']
+    if (not series['text_projection_complete'] or len(pending) != 1 or len(series['blockers']) != 1
+            or pending[0].get('reason') != 'series_independent_field_role_unsupported'):
+        return None
+    def position(fact):
+        return (fact.get('attribute'), fact.get('qualifiers', {}).get('period'),
+                tuple(fact.get('value_source', {}).get('text_span', ())))
+    if (len(dated) != len(series['facts']) or len({position(f) for f in dated}) != len(dated)
+            or {position(f) for f in dated} != {position(f) for f in series['facts']}):
+        return None
+    owner = dated[0]
+    if owner.get('attribute_source') != series['facts'][0].get('attribute_source'):
+        return None
+    field = pending[0]
+    fragment = field['text']
+    pair = _PAIR.fullmatch(fragment)
+    comparison = _PRINTED_COMPARISON.match(fragment)
+    if pair:
+        label_span, payload_span = pair.span(1), pair.span(2)
+    elif comparison:
+        label_span, payload_span = comparison.span(), (comparison.end(), len(fragment))
+    else:
+        return None
+    label = fragment[slice(*label_span)]
+    start, end = _trim(fragment, *payload_span)
+    if fragment[start:end].endswith('.'):
+        end -= 1
+    raw = fragment[start:end]
+    origin = field['source']
+    raw_source = _source(origin, start, end)
+    measured = read_measurement_literal(raw, raw_source)
+    enclosure = []
+    if not measured['matched'] and (raw[:1], raw[-1:]) in {('(', ')'), ('（', '）')}:
+        # Only a complete standalone unsigned measurement in a monetary
+        # series can use the accounting enclosure as a negative sign.
+        if any(normalize_unit(f.get('qualifiers', {}).get('unit'))['dimension'] != 'money' for f in dated):
+            return None
+        measured = read_measurement_literal(raw[1:-1], _source(origin, start + 1, end - 1))
+        if not measured['matched'] or not _UNSIGNED_MAGNITUDE.fullmatch(measured['value']):
+            return None
+        enclosure = [_source(origin, start, start + 1), _source(origin, end - 1, end)]
+    if not measured['matched'] or not measured['unit']:
+        return None
+    qualifiers = {key: measured[key] for key in ('unit', 'currency') if measured[key]}
+    sources = {key: measured['sources'][key] for key in qualifiers}
+    if comparison and comparison.span() == label_span:
+        qualifiers['comparison_basis'] = comparison['basis']
+        sources['comparison_basis'] = _source(origin, *comparison.span('basis'))
+    return {'role': 'metric', 'subject': owner['attribute'], 'subject_source': owner['attribute_source'],
+            'attribute': label, 'attribute_source': _source(origin, *label_span),
+            'value': measured['value'], 'value_source': measured['sources']['value'],
+            'raw_value': raw, 'source': raw_source, 'accounting_sign_sources': enclosure,
+            'qualifiers': qualifiers, 'qualifier_sources': sources,
+            'series_record_source': source, 'series_field_source': origin, 'dated_child_ids': [f['id'] for f in dated],
+            'rule_id': 'sole_measured_field_of_source_bound_series'}

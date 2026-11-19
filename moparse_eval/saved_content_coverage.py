@@ -31,6 +31,8 @@ def native_destinations(result, dispositions):
                     raise NativeContentError('converted native cell has no actual final span: ' + item.identity)
                 record.update(destination=candidates[0]['disposition'], final_spans=candidates[0]['final_spans'],
                               adapted_owner=item.parent)
+                if candidates[0].get('role_destinations'):
+                    record['role_destinations'] = candidates[0]['role_destinations']
             elif owner and owner['disposition'] in {'unresolved_retained', 'retained'}:
                 record.update(destination='unresolved_source_grid_retained', adapted_owner=item.parent,
                               final_spans=owner['final_spans'])

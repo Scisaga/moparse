@@ -12,10 +12,12 @@ import re
 from typing import Any
 
 from .measurement_evidence import read_measurement_literal, read_unit_token
+from .period_evidence import DATE_PATTERN, calendar_date
 from .series_requirements import is_ordinary_scalar_field
 
 YEAR = r"(?:19|20)\d{2}年?"
 _YEAR = re.compile(YEAR)
+_DATED_FIELD = re.compile(rf"({DATE_PATTERN}|{YEAR})(?:[，,]\s*([^:：]+))?\s*[:：]\s*(.*)", re.I | re.S)
 _PAIR = re.compile(r"^\s*([^:：=]+?)\s*[:：=]\s*(.*)$", re.S)
 _INTRO = re.compile(r"各[項项]分[別别]列示|列[說说]明\s*[:：]|Columns?\s*[:：]", re.I)
 _AMOUNT = re.compile(r"金[額额]|Amount", re.I)
@@ -367,7 +369,8 @@ def read_compact_requirements(text: str, source: dict[str, Any], *, schema: dict
                        and ";" not in outer[2] and "；" not in outer[2]
                        and all(read_measurement_literal(piece.strip().rstrip("。"))["matched"]
                                or piece.strip().rstrip("。") in {"—", "–", "-"} for piece in outer[2].split("、")))
-    if outer and (re.match(rf"^\s*{YEAR}", outer[2]) or fixed_tuple) and not _YEAR.match(outer[1].strip()):
+    if (outer and (re.match(rf"^\s*{YEAR}", outer[2]) or fixed_tuple)
+            and not _YEAR.match(outer[1].strip()) and not _DATED_FIELD.fullmatch(text.strip())):
         outer_label = outer[1].strip()
         body_start = outer.start(2)
         _atom(result, text, source, outer.start(1), outer.end(1), "locator")
@@ -385,7 +388,10 @@ def read_compact_requirements(text: str, source: dict[str, Any], *, schema: dict
                                      and any(column["attribute"] == _PAIR.fullmatch(text[start:end])[1].strip()
                                              for column in schema["columns"]))
                                  for start, end in clauses)))
-    leaf = bool(len(clauses) == 1 and re.match(rf"^{YEAR}(?:[，,].*?)?\s*[:：]", text[clauses[0][0]:clauses[0][1]]))
+    leaf = _DATED_FIELD.fullmatch(text[slice(*clauses[0])]) if len(clauses) == 1 else None
+    calendar_leaf = leaf is not None and not _YEAR.fullmatch(leaf[1])
+    if calendar_leaf and not read_measurement_literal(leaf[3].strip())["matched"]:
+        leaf = None
     if not compact and not leaf:
         if outer and re.match(rf"^\s*{YEAR}", outer[2]) and "、" in outer[2]:
             result["matched"] = True
@@ -537,9 +543,7 @@ def read_compact_requirements(text: str, source: dict[str, Any], *, schema: dict
             result["record_source"] = copy.deepcopy(source if outer_label else subject_source)
     else:
         start, end = clauses[0]
-        match = re.fullmatch(rf"({YEAR})(?:[，,]\s*([^:：]+))?\s*[:：]\s*(.*)", text[start:end], re.S)
-        if match is None:
-            return _result()
+        match = leaf
         attribute_source = scope.get("attribute_source")
         leaf_subject = scope["subject"]
         if scope["attribute"]:
@@ -563,14 +567,26 @@ def read_compact_requirements(text: str, source: dict[str, Any], *, schema: dict
         else:
             attribute = None
             attribute_declaration = None
+        if calendar_leaf and not attribute:
+            # A complete date alone does not establish which business field
+            # owns the number. Preserve the entire input for the other readers.
+            return _result()
         if not attribute:
             result["blockers"].append({"reason": "period_value_metric_unavailable", "source": copy.deepcopy(source)})
         q = dict(scope["qualifiers"])
         qualifier_sources = {item["role"]: copy.deepcopy(item["source"]) for item in scope["evidence"]
                              if item["role"] in q and item["text"] == q[item["role"]]}
-        q["period"] = match[1]
-        qualifier_sources["period"] = _source(source, [start + match.start(1), start + match.end(1)])
-        _atom(result, text, source, start + match.start(1), start + match.end(1), "period")
+        period_source = _source(source, [start + match.start(1), start + match.end(1)])
+        invalid_date = calendar_leaf and calendar_date(match[1]) is None
+        if invalid_date:
+            q.pop("period", None)
+            qualifier_sources.pop("period", None)
+            result["blockers"].append({"reason": "invalid_printed_calendar_period", "source": period_source,
+                                       "text": match[1], "layers": ["L", "B"]})
+        else:
+            q["period"] = match[1]
+            qualifier_sources["period"] = period_source
+        _atom(result, text, source, start + match.start(1), start + match.end(1), "unresolved_period" if invalid_date else "period")
         if match[2]:
             selector = match[2].strip()
             if _UNIT.fullmatch(selector):
@@ -607,6 +623,8 @@ def read_compact_requirements(text: str, source: dict[str, Any], *, schema: dict
                                   "qualifier_sources": copy.deepcopy(qualifier_sources),
                                   "parent_context_evidence": copy.deepcopy(scope["evidence"])}}
         if attribute:
+            if invalid_date:
+                requirement["role_basis"] = {"unresolved_period": {"text": match[1], "source": period_source}}
             result["facts"].append(requirement)
             if attribute_declaration:
                 result["metric_declarations"] = [copy.deepcopy(attribute_declaration)]

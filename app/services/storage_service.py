@@ -15,9 +15,10 @@ from collections.abc import AsyncIterable, AsyncIterator
 from dataclasses import dataclass
 from pathlib import Path
 from typing import BinaryIO, Literal
+from urllib.parse import quote
 
-from app.models.content_result import ContentAsset
-from app.models.parse_result import DocumentParseResult
+from app.models.content_result import ContentAsset, ParseWarning
+from app.models.parse_result import DocumentParseResult, PipelineWarning
 from app.models.source import StoredSource
 from app.security.file_validation import FileValidationError, safe_filename, validate_stored_file
 from app.utils.settings import setting, setting_path
@@ -33,6 +34,51 @@ class StoredResultPaths:
 
 class AssetIndexError(ValueError):
     """Persisted asset metadata does not use the current index contract."""
+
+
+class BundleContentError(OSError):
+    """The persisted result cannot be delivered as a complete offline file."""
+
+
+def _offline_markdown(markdown, assets, job_id):
+    from app.adapters.native_readers import code_ranges
+
+    if not assets and "/assets/" not in markdown:
+        return markdown, set()
+    protected = code_ranges(markdown) + [m.span() for m in re.finditer(r"<!--.*?(?:-->|$)", markdown, re.S)]
+    paths = {a.download_url: "assets/" + a.asset_id + "/" + safe_filename(a.filename) for a in assets
+             if a.download_url == f"/v1/content/jobs/{job_id}/assets/{a.asset_id}"}
+    # Work on destination tokens only. Captions, code, ordinary prose and
+    # physical line endings belong to the original Markdown.
+    destination = re.compile(
+        r"""(?P<head>(?<![!\\])!?\[(?:\\.|[^\[\]\\\n]|\[[^\[\]\n]*\])*\]\(\s*"""
+        r"""|^ {0,3}\[(?:[^\]\n]|\\.)+\]:[ \t]*|<img\b[^>\n]*?\bsrc=["'])"""
+        r"""(?P<angle><)?(?P<url>[^\s<>()"'\n]+)""", re.M | re.I)
+    missing = set()
+
+    def rewrite(match):
+        url = match['url']
+        if any(a <= match.start() < b for a, b in protected):
+            return match[0]
+        if url in paths:
+            return match['head'] + (match['angle'] or '') + quote(paths[url], safe='/')
+        if re.match(r"/v1/content/jobs/[^/]+/assets/", url):
+            missing.add(url)
+        return match[0]
+
+    return destination.sub(rewrite, markdown), missing
+
+
+def _file_digest(path):
+    with path.open('rb') as stream:
+        return hashlib.file_digest(stream, 'sha256').hexdigest()
+
+
+def _asset_matches(path: Path | None, asset: ContentAsset) -> bool:
+    try:
+        return path is not None and path.stat().st_size == asset.size_bytes and _file_digest(path) == asset.sha256
+    except FileNotFoundError:
+        return False
 
 
 class StorageService:
@@ -250,6 +296,22 @@ class StorageService:
             warnings=self.logs_dir(job_id) / "warnings.json",
         )
         asset_index = output / "asset-index.json"
+        content = result.parse_result
+        _, missing_urls = _offline_markdown(result.markdown, content.assets, job_id)
+        failures = [(None, url) for url in sorted(missing_urls)]
+        for asset in content.assets:
+            path = self.asset_path(job_id, asset.asset_id)
+            if not await asyncio.to_thread(_asset_matches, path, asset):
+                failures.append((asset.asset_id, asset.download_url))
+        for identifier, url in failures:
+            content.status = "partial"
+            warning = ParseWarning(code="asset_delivery_incomplete", severity="error", asset_id=identifier)
+            if warning not in content.warnings:
+                content.warnings.append(warning)
+            diagnostic = PipelineWarning(code="asset_delivery_incomplete",
+                message="A declared asset is missing or differs from its indexed file.", details={"url": url})
+            if diagnostic not in result.warnings:
+                result.warnings.append(diagnostic)
         warning_payload = {
             "document_warnings": [warning.model_dump(mode="json") for warning in result.warnings],
             "units": [
@@ -271,7 +333,10 @@ class StorageService:
                     {
                         "schema": "mosaic-asset-index/2.0",
                         "content_id": result.parse_result.source.content_id,
-                        "source_sha256": result.parse_result.source.source_sha256,
+                        "source_sha256": content.source.source_sha256,
+                        "source": content.source.model_dump(mode="json", include={"filename", "source_sha256", "kind", "unit_count", "page_count", "slide_count"}),
+                        "delivery_status": content.status,
+                        "warnings": [w.model_dump(mode="json", exclude_none=True) for w in content.warnings],
                         "assets": [
                             asset.model_dump(mode="json", exclude={"locations"})
                             for asset in result.parse_result.assets
@@ -345,6 +410,12 @@ class StorageService:
             raise ValueError("asset storage path escapes the configured job directory")
         return candidate
 
+    async def verified_asset_path(self, job_id: str, asset: ContentAsset) -> Path | None:
+        path = self.asset_path(job_id, asset.asset_id)
+        if path is not None and not await asyncio.to_thread(_asset_matches, path, asset):
+            raise BundleContentError("Persisted asset differs from its delivery index")
+        return path
+
     async def build_bundle(self, job_id: str) -> Path:
         """Atomically create and cache a ZIP bundle for a completed result."""
 
@@ -355,61 +426,63 @@ class StorageService:
         assets = [ContentAsset.model_validate(item) for item in raw_assets]
         output = self.output_dir(job_id)
         target = output / "assets.zip"
-        if target.is_file():
-            try:
-                with zipfile.ZipFile(target) as archive:
-                    cached_manifest = json.loads(archive.read("manifest.json"))
-                cached_assets = (
-                    cached_manifest.get("assets", []) if isinstance(cached_manifest, dict) else []
-                )
-                if (
-                    isinstance(cached_manifest, dict)
-                    and cached_manifest.get("schema") == "mosaic-asset-bundle/1.0"
-                    and isinstance(cached_assets, list)
-                    and all(
-                        isinstance(asset, dict) and "locations" not in asset
-                        for asset in cached_assets
-                    )
-                ):
-                    return target
-            except (OSError, KeyError, json.JSONDecodeError, zipfile.BadZipFile):
-                pass
-
         def build() -> Path:
-            descriptor, temporary_name = tempfile.mkstemp(
-                prefix=".assets.", suffix=".zip.tmp", dir=output
-            )
+            markdown = (output / "result.md").read_bytes().decode("utf-8")
+            offline, missing = _offline_markdown(markdown, assets, job_id)
+            if missing:
+                raise BundleContentError("A Markdown asset has no delivery entry")
+            body = offline.encode("utf-8")
+            source = index.get("source", {"source_sha256": index["source_sha256"]})
+            warnings = list(index.get("warnings", []))
+            files = {}
+            entries = []
+            for asset in assets:
+                path = self.asset_path(job_id, asset.asset_id)
+                if not _asset_matches(path, asset):
+                    raise BundleContentError(f"Missing or changed asset: {asset.asset_id}")
+                name = f"assets/{asset.asset_id}/{safe_filename(asset.filename)}"
+                if name in files:
+                    raise BundleContentError("Duplicate asset path in persisted index")
+                files[name] = (path, asset.sha256)
+                entries.append({**asset.model_dump(mode="json", exclude={"locations"}), "path": name})
+            digest = hashlib.sha256(body).hexdigest()
+            manifest = {"schema": "mosaic-asset-bundle/1.0", "content_id": index["content_id"],
+                        "source_sha256": index["source_sha256"], "source": source,
+                        "markdown": {"path": "result.md", "sha256": digest}, "assets": entries,
+                        "warnings": warnings, "delivery_status": index.get("delivery_status", "unknown")}
+            if target.is_file():
+                try:
+                    with zipfile.ZipFile(target) as archive:
+                        if (json.loads(archive.read("manifest.json")) == manifest
+                                and sorted(archive.namelist()) == sorted(["result.md", "manifest.json", *files])
+                                and archive.read("result.md") == body):
+                            for name, (_, expected) in files.items():
+                                with archive.open(name) as stream:
+                                    if hashlib.file_digest(stream, "sha256").hexdigest() != expected:
+                                        break
+                            else:
+                                return target
+                except (OSError, ValueError, KeyError, EOFError, zipfile.BadZipFile):
+                    pass
+            descriptor, temporary_name = tempfile.mkstemp(prefix=".assets.", suffix=".zip.tmp", dir=output)
             os.close(descriptor)
             temporary = Path(temporary_name)
             try:
-                manifest = {
-                    "schema": "mosaic-asset-bundle/1.0",
-                    "content_id": index["content_id"],
-                    "source_sha256": index["source_sha256"],
-                    "assets": [
-                        asset.model_dump(mode="json", exclude={"locations"}) for asset in assets
-                    ],
-                }
-                with zipfile.ZipFile(
-                    temporary, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=6
-                ) as archive:
-                    archive.writestr(
-                        "manifest.json",
-                        json.dumps(manifest, ensure_ascii=False, indent=2),
-                    )
-                    for asset in assets:
-                        path = self.asset_path(job_id, asset.asset_id)
-                        if path is None:
-                            continue
-                        data = path.read_bytes()
-                        if hashlib.sha256(data).hexdigest() != asset.sha256:
-                            raise OSError(f"asset checksum mismatch: {asset.asset_id}")
-                        archive.writestr(f"assets/{asset.asset_id}/{asset.filename}", data)
+                with zipfile.ZipFile(temporary, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=6) as archive:
+                    archive.writestr("result.md", body)
+                    archive.writestr("manifest.json", json.dumps(manifest, ensure_ascii=False, indent=2))
+                    for name, (path, expected) in files.items():
+                        checksum = hashlib.sha256()
+                        with path.open("rb") as src, archive.open(name, "w") as dst:
+                            while chunk := src.read(1024 * 1024):
+                                checksum.update(chunk)
+                                dst.write(chunk)
+                        if checksum.hexdigest() != expected:
+                            raise BundleContentError(f"Asset changed during packaging: {name}")
                 os.replace(temporary, target)
                 return target
-            except BaseException:
+            finally:
                 temporary.unlink(missing_ok=True)
-                raise
 
         return await asyncio.to_thread(build)
 

@@ -21,6 +21,14 @@ _INCOME = re.compile(
 _POSITION = re.compile(
     r"(?:概要|简明|簡明)?(?:合并|合併)?(?:财务状况|財務狀況|资产负债|資產負債)表"
     r"|(?:(?:condensed|consolidated)\s+)*(?:statements?\s+of\s+financial\s+position|balance\s+sheets?)", re.I)
+_CASH_FLOW = re.compile(
+    r"(?:概要|简明|簡明)?(?:合并|合併)?[现現]金流量表"
+    r"|(?:(?:condensed|consolidated)\s+)*(?:statements?\s+of\s+cash\s+flows|cash\s+flow\s+statements?)", re.I)
+_CASH_BALANCES = re.compile(
+    r"[现現]金(?:及|和|与|與)(?:其)?(?:[现現]金等[价價]物|約當現金)|cash\s+and\s+cash\s+equivalents", re.I)
+_CASH_ACTIVITIES = re.compile(
+    r"(?:[经經][营營]|[投籌筹融][资資])活[动動](?:[产產]生的[现現]金流量)?"
+    r"|(?:cash\s+flows?\s+from\s+)?(?:operating|investing|financing)\s+activities", re.I)
 _ANNOTATION = re.compile(
     r"(?:税后(?:及重分类调整后)?金额|稅後(?:及重分類調整後)?金額|税后|稅後|net\s+of\s+tax|after\s+tax)"
     r"(?:\s*[,，]\s*(?:附注|附註|notes?)\s*\d+(?:[（(][a-zA-Z][）)])?)?"
@@ -75,7 +83,10 @@ def financial_statement_kind(heading: dict[str, Any] | None) -> str | None:
     if not heading or not isinstance(heading.get("source"), dict) or not heading["source"].get("path"):
         return None
     text = heading.get("text", "").strip()
-    return "income" if _INCOME.fullmatch(text) else "position" if _POSITION.fullmatch(text) else None
+    for name, title in (("income", _INCOME), ("position", _POSITION), ("cash_flow", _CASH_FLOW)):
+        if title.fullmatch(text):
+            return name
+    return None
 
 
 def _classification(text: str, statement: str, parents: list[dict[str, Any]]) -> str | None:
@@ -93,6 +104,8 @@ def _classification(text: str, statement: str, parents: list[dict[str, Any]]) ->
         return "reclassification_category"
     if statement == "position" and _POSITION_GROUP.fullmatch(label):
         return "financial_position_category"
+    if statement == "cash_flow" and (_CASH_BALANCES.fullmatch(label) or _CASH_ACTIVITIES.fullmatch(label)):
+        return "cash_flow_category"
     return None
 
 
@@ -137,7 +150,35 @@ def read_financial_group_context(text: str, source: dict[str, Any], *, kind: str
                   source_disposition={"role": "financial_statement_classification", "business_vote": False,
                                       "semantics": "source_bound_group_identity_and_unit_scope",
                                       "rule_id": "printed_financial_statement_classification"})
+    # A statement component can qualify existing amounts using the printed
+    # caption. Its unit is a facet of each field, not a repeated declaration.
+    if any(row["classification"] == "cash_flow_category" for row in rows):
+        result["unit_binding"]["owner"] = "field_binding"
     return result
+
+
+def field_caption_dimensions(fact: dict[str, Any]) -> dict[str, dict[str, Any]]:
+    """Exact externally printed dimensions owned by this particular field."""
+    basis = fact.get("role_basis")
+    if not isinstance(basis, dict):
+        return {}
+    context = basis.get("financial_group_context", {})
+    binding = context.get("unit_binding", {})
+    if binding.get("owner") != "field_binding" or fact.get("role") != "metric":
+        return {}
+    rows = [r for r in fact.get("row_evidence", []) if r.get("role") == "row_group"]
+    if (not rows or rows != context.get("row_evidence")
+            or [r["text"] for r in rows] != fact.get("identity_facets", {}).get("group")):
+        return {}
+    caption = binding["declaration"]
+    source = fact["source"]
+    unit = read_unit_token(caption["text"], caption["source"])
+    if not unit["matched"] or _same_object(source, caption["source"]):
+        return {}
+    origins = {**source.get("qualifier_sources", {}), **fact.get("qualifier_sources", {}),
+               **{k: p["source"] for k, p in fact.get("qualifier_provenance", {}).items() if p.get("source")}}
+    return {k: origin for k, origin in unit["sources"].items() if k in {"unit", "currency"}
+            and fact.get("qualifiers", {}).get(k) == unit[k] and origins.get(k) == origin}
 
 
 def bind_financial_group_facts(result: dict[str, Any], context: dict[str, Any]) -> None:

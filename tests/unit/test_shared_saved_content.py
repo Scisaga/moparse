@@ -11,6 +11,7 @@ from app.models.native_content import NativeArtifact
 from app.models.parse_options import ContentParseOptions
 from app.models.parse_result import DocumentParseResult, PageParseResult, ParsePipeline
 from app.models.source import StoredSource
+from app.models.table_semantics import TextRef
 from app.services.native_content_evidence import (
     NativeContentError,
     validate_ir_handoff,
@@ -32,6 +33,80 @@ async def finish(native=None, observed='present'):
     return await close_saved_document(native, source(), sample_id='synthetic',
         declared_source_sha256='a' * 64, source_pages=[91],
         original_observation=execution(native['pipeline']) if observed == 'present' else observed)
+
+
+def compound_tables_input():
+    n = glm_input()
+    n['pages'][0]['raw']['json_result'] = [[
+        {'index': 0, 'label': 'table', 'content':
+         '<table><tr><td>(USD millions) Resources</td><td>2034年</td></tr>'
+         '<tr><td>Equipment</td><td>17</td></tr>'
+         '<tr><td>Total Resources</td><td>17</td></tr>'
+         '<tr><td>Obligations</td><td></td></tr>'
+         '<tr><td>Loan</td><td>5</td></tr>'
+         '<tr><td>Total Obligations</td><td>5</td></tr>'
+         '<tr><td>Combined total</td><td>22</td></tr></table>'},
+        {'index': 1, 'label': 'table', 'content':
+         '<table><tr><td></td><td>2034年</td></tr>'
+         '<tr><td>Independent measurement</td><td>9</td></tr></table>'},
+    ]]
+    return n
+
+
+@pytest.mark.asyncio
+async def test_cell_role_slices_reach_actual_final_and_reverse_native_destinations():
+    n = compound_tables_input()
+    before = deepcopy(n)
+    result, evidence = await finish(n)
+    assert n == before
+    first, second = result._semantic_tables
+    assert first.status == second.status == 'converted'
+    unit = first.records[0].values[0].unit_refs[0]
+    group = first.records[0].row_groups[0]
+    assert isinstance(unit, TextRef) and isinstance(group, TextRef)
+    assert unit.source_cell == group.source_cell
+    assert not second.records[0].row_groups and not second.records[0].values[0].unit_refs
+    assert '- Resources / Equipment\n  - 2034年：17\n    - 单位：(USD millions)' in result.markdown
+    assert '- Obligations / Loan' in result.markdown and '- Combined total' in result.markdown
+    assert '(USD millions) Resources：' not in result.markdown
+    source = next(d for d in evidence['native_destinations']
+                  if d.get('role_destinations'))
+    assert source['destination'] == 'located_in_final_roles'
+    for role in source['role_destinations']:
+        start, end = role['final_span']
+        a, b = role['source_text_span']
+        assert result.markdown[start:end] == role['actual_rendering'] == '(USD millions) Resources'[a:b]
+    assert {role['role'] for role in source['role_destinations']} == {'unit', 'group'}
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize('damage', ['overlapping_literal', 'wrong_scope', 'foreign_occurrence', 'locator', 'detached_group'])
+async def test_cell_role_source_slices_and_scopes_are_validated(damage):
+    result, _ = await finish(compound_tables_input())
+    fragment = result._table_fragments[0]
+    view = result._semantic_tables[0]
+    record = view.records[-1]
+    if damage == 'overlapping_literal':
+        role = fragment.native_evidence['cell_roles'][0]['roles'][1]
+        role['text_span'] = [0, len('(USD millions) Resources')]
+        role['text'] = '(USD millions) Resources'
+    elif damage == 'locator':
+        fragment.native_evidence['cell_roles'][0]['native_path'] = '#/neighbor/cell'
+    elif damage == 'detached_group':
+        record = view.records[0]
+        value = replace(record.values[0], row_headers=(record.subject,))
+        record = replace(record, row_groups=(), values=(value,))
+        result._semantic_tables[0] = replace(view, records=(record,))
+    else:
+        group = view.records[0].row_groups[0]
+        if damage == 'foreign_occurrence':
+            group = replace(group, table_id=result._table_fragments[1].fragment_id)
+            record = view.records[0]
+        value = replace(record.values[0], row_headers=(group, *record.values[0].row_headers))
+        record = replace(record, row_groups=(group,), values=(value,))
+        result._semantic_tables[0] = replace(view, records=(record,))
+    with pytest.raises(NativeContentError):
+        validate_table_relations(result)
 
 
 def table_input(pipeline='P05'):
@@ -423,3 +498,97 @@ def test_production_handoff_modules_do_not_depend_on_evaluation_or_oracles():
                         paths.append(target)
             elif isinstance(node, ast.Import):
                 assert all(not a.name.startswith(('moparse_eval', 'tests')) for a in node.names)
+
+
+def measurement_input(rows):
+    from html import escape
+    html = '<table>' + ''.join('<tr>' + ''.join('<td>' + escape(c) + '</td>' for c in r) + '</tr>'
+                               for r in rows) + '</table>'
+    n = glm_input()
+    n['pages'][0]['raw']['json_result'] = [[{'index': 0, 'label': 'table', 'content': html}]]
+    return n
+
+
+@pytest.mark.asyncio
+async def test_changed_measurement_band_and_local_note_marker_in_final():
+    n = measurement_input([['（人民币万元）设备（附注1）', '2025年', '2024年'], ['仪器', '11', '10'],
+                           ['设备总计', '11', '10'], ['(USD millions) Loans', '2023年', '2022年'],
+                           ['Bank loan', '7', '6'], ['Total Loans', '7', '6']])
+    result, _ = await finish(n)
+    bank = result.markdown.split('- Loans / Bank loan\n')[1].split('\n\n')[0]
+    assert bank == '  - 2023年：7\n    - 单位：(USD millions)\n  - 2022年：6\n    - 单位：(USD millions)'
+    assert '（人民币万元）设备（附注1）' in result.markdown
+    assert '- 设备 / 仪器\n  - 2025年：11\n    - 单位：（人民币万元）' in result.markdown
+    assert all(not v.note_refs for r in result._semantic_tables[0].records for v in r.values)
+
+
+@pytest.mark.asyncio
+async def test_column_role_positions_are_in_the_printed_header_and_bound_to_the_value():
+    from app.models.table_semantics import CellRef
+    n = measurement_input([['Item', '2025年（人民币万元）', '2024年（美元）'], ['Net', '11', '7']])
+    result, e = await finish(n)
+    view = result._semantic_tables[0]
+    record, = view.records
+    for i, v in enumerate(record.values, 1):
+        period, = v.period_refs
+        unit, = v.unit_refs
+        assert v.column_headers == (CellRef(record.source_table_id, 0, i),)
+        assert period.source_cell == unit.source_cell == v.column_headers[0]
+        role_info = next(d['role_destinations'] for d in e['native_destinations']
+                         if any(k['reference'] == unit.token for k in d.get('role_destinations', [])))
+        for ref in (period, unit):
+            dest, = [k for k in role_info if k['reference'] == ref.token]
+            assert result.markdown[slice(*dest['final_span'])] == ref.text
+    assert '2025年（人民币万元）：11' in result.markdown and '单位：' not in result.markdown
+    v = replace(record.values[0], period_refs=record.values[1].period_refs)
+    result._semantic_tables[0] = replace(view, records=(replace(record, values=(v, record.values[1])),))
+    with pytest.raises(NativeContentError):
+        validate_table_relations(result)
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize('damage', ['dropped_unit', 'expired_group'])
+async def test_missing_cell_unit_and_expired_ordinary_group_are_rejected(damage):
+    result, _ = await finish(compound_tables_input())
+    v = result._semantic_tables[0]
+    records = list(v.records)
+    if damage == 'dropped_unit':
+        r = records[0]
+        records[0] = replace(r, values=(replace(r.values[0], unit_refs=()),))
+    else:
+        group, = records[-2].row_groups
+        r = records[-1]
+        records[-1] = replace(r, row_groups=(group,),
+                              values=(replace(r.values[0], row_headers=(group, *r.values[0].row_headers)),))
+    result._semantic_tables[0] = replace(v, records=tuple(records))
+    with pytest.raises(NativeContentError):
+        validate_table_relations(result)
+
+
+@pytest.mark.asyncio
+async def test_partial_period_replacement_keeps_one_bound_and_one_local_value():
+    n = measurement_input([['(USD millions)', '2029年', '2028年'], ['First', '31', '30'],
+                           ['（人民币万元）', '2026年', ''], ['Second', '19', '13']])
+    result, _ = await finish(n)
+    last = result._semantic_tables[0].records[-1]
+    assert result._semantic_tables[0].status == 'partial'
+    assert len(last.values) == 1 and last.values[0].value.column == 1
+    assert '- Second\n  - 2026年：19\n    - 单位：（人民币万元）' in result.markdown
+    assert '13' in result.markdown and '2028年：13' not in result.markdown
+
+
+@pytest.mark.asyncio
+async def test_unproved_named_subtotal_partition_keeps_two_separate_loan_records():
+    n = measurement_input([['（人民币万元）', '2025年', '2024年'], ['负债', '', ''],
+                           ['借款', '7', '11'], ['小计', '7', '11'],
+                           ['借款', '7', '11'], ['流动负债合计', '7', '11'], ['负债总计', '14', '22']])
+    result, _ = await finish(n)
+    view = result._semantic_tables[0]
+    fragment = result._table_fragments[0]
+    loans = [rec for rec in view.records if rec.source_row in (2, 4)]
+    assert len(loans) == 2 and loans[0].subject != loans[1].subject
+    assert all(len(rec.row_groups) == 1 for rec in loans)
+    assert all(len(v.unit_refs) == 1 for rec in loans for v in rec.values)
+    assert any(issue["rows"] == [2, 4] and issue["reason"] == "subtotal_without_a_literal_child_name"
+               for issue in fragment.native_evidence["unresolved_subgroups"])
+    assert view.status == "partial" and result.markdown.count("负债 / 借款") == 2

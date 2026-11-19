@@ -33,6 +33,16 @@ _EN = re.compile(
 FEATURES = ("document_composition", "page_reference_binding")
 
 
+def printed_document_reference(text):
+    """Expose explicit page endpoints and the named document kind to content comparison."""
+    match = _CN.fullmatch(text) or _EN.fullmatch(text)
+    if match is None:
+        return None
+    return {"document": match["object"], "document_span": list(match.span("object")),
+            "document_kind": "report" if match["object"].lower().endswith("report") else "statements",
+            "pages": [match["start"], match["end"]], "pages_span": list(match.span("pages"))}
+
+
 def read_document_composition(text, source, *, scope=()):
     """Read one bounded assertion, retaining every printed identity and cut."""
     if not isinstance(text, str) or not isinstance(source, dict) or not isinstance(source.get("path"), str):

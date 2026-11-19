@@ -194,3 +194,16 @@ def test_a_declared_unit_cannot_silently_replace_a_conflicting_inline_unit():
     assert result["facts"] == []
     assert result["pending_requirements"][0]["reason"] == "header_path_qualifier_conflict"
     assert "unit" in result["pending_requirements"][0]["conflicts"]
+
+
+def test_terminal_unit_binds_only_its_own_printed_column_path():
+    text = "区域 / 一号厂；甲类 / 浓度（毫克/升）：7；乙类 / 浓度（毫克/升）：7；备注：待定"
+    graph = read_header_path_requirements(text, SOURCE)
+    assert [(f["subject"], f["attribute"], f["value"], f["qualifiers"]) for f in graph["facts"]] == [
+        ("一号厂", "甲类 / 浓度", "7", {"unit": "毫克/升"}),
+        ("一号厂", "乙类 / 浓度", "7", {"unit": "毫克/升"})]
+    assert graph["blockers"] and graph["blockers"][-1]["text"] == "备注：待定"
+    for fact in graph["facts"]:
+        assert text[slice(*fact["attribute_source"]["text_span"])] == fact["attribute"]
+    ambiguous = read_header_path_requirements(text.replace("（毫克/升）", "（未声明）"), SOURCE)
+    assert not ambiguous["facts"]

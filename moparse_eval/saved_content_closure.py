@@ -82,12 +82,20 @@ def content_dispositions(result, observation):
     from app.services.final_content_service import _native_span, map_text_offset
 
     emitted = {}
+    role_destinations = {}
     for page in observation["pages"]:
         for block in page["blocks"]:
             for cell in block.get("cells", []):
                 ref = cell.get("source_cell_ref", {})
                 if ref.get("token") and cell.get("final_markdown_span") is not None:
                     emitted.setdefault(ref["token"], []).append(cell["final_markdown_span"])
+                    if ref.get("source_cell"):
+                        role_destinations.setdefault(ref['source_cell']['token'], []).append({
+                            'role': ref['kind'], 'reference': ref['token'],
+                            'source_text_span': ref['text_span'],
+                            'final_span': cell['final_markdown_span'],
+                            'actual_rendering': result.markdown[slice(*cell['final_markdown_span'])],
+                        })
     final_evidence = result._final_text_evidence
     assembly, edits = final_evidence["assembly_markdown"], final_evidence["edits"]
     semantics = {ident: view for view in result._semantic_tables for ident in view.source_tables}
@@ -124,6 +132,12 @@ def content_dispositions(result, observation):
                 for cell in block.get("cells", []):
                     token = f"{fragment}.r{cell['row']}c{cell['col']}"
                     spans = emitted.get(token, [])
+                    roles = role_destinations.get(token, [])
+                    covered = {i for role in roles for i in range(*role['source_text_span'])}
+                    roles_complete = bool(roles) and all(
+                        i in covered or ch.isspace() for i, ch in enumerate(cell.get('text', '')))
+                    if not spans and roles_complete:
+                        spans = [role['final_span'] for role in roles]
                     empty = not cell.get("text", "").strip()
                     record["cells"].append(
                         {
@@ -134,11 +148,13 @@ def content_dispositions(result, observation):
                             "source_cell_ref": token,
                             "disposition": "empty_literal_not_filled"
                             if empty
+                            else "located_in_final_roles" if roles_complete
                             else "located_in_final"
                             if spans
                             else "unresolved_final_location",
                             "final_spans": spans,
                             "actual_renderings": [result.markdown[a:b] for a, b in spans],
+                            **({'role_destinations': roles} if roles else {}),
                         }
                     )
                 record["final_spans"] = [
@@ -357,6 +373,7 @@ def main() -> int:
         mime_type="application/pdf",
         size_bytes=meta["size_bytes"],
         page_count=meta.get('page_count') or len(meta["source_pages"]),
+        original_page_count=meta.get('pages'),
     )
 
     async def run():

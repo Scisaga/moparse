@@ -13,6 +13,7 @@ import json
 import re
 from typing import Any
 
+from .financial_group_context import field_caption_dimensions
 from .matrix_evidence import UNIT as _PRINTED_UNIT
 
 _SCHEMA_KEYS = re.compile(r"Group|Item|Record|Section|Property|Attribute|Field|Metric|Value|分組|分组|組別|组别|项目|項目|指标|指標|属性|屬性|字段|值|數值|数值", re.I)
@@ -278,6 +279,16 @@ def _measurement_cell(result: dict[str, Any], obj: dict[str, Any], source: dict[
     return True
 
 
+def table_cell_structure(cell):
+    declarations = cell.get('native_declarations')
+    if declarations is None:
+        declarations = {name: cell[name] for name in (
+            'native_attributes', 'native_header_tag', 'native_header_section', 'is_column_header',
+            'is_row_header', 'column_header', 'row_header', 'row_section') if name in cell}
+    return {'row_span': cell.get('row_span', 1), 'col_span': cell.get('col_span', 1),
+            'native_declarations': copy.deepcopy(declarations)}
+
+
 def project_table_text(cells: list[dict[str, Any]], matrix_result: dict[str, Any], source: dict[str, Any]) -> dict[str, Any]:
     """Expose source literals plus finite schema aliases over existing cells.
 
@@ -288,11 +299,8 @@ def project_table_text(cells: list[dict[str, Any]], matrix_result: dict[str, Any
     for cell in cells:
         result["source_cells"].append({
             "source": _cell_source(cell, source), "text": cell.get("text", ""),
-            "row_span": cell.get("row_span", 1), "col_span": cell.get("col_span", 1),
+            **table_cell_structure(cell),
             "roles": [item["role"] for item in matrix_result.get("roles", []) if item.get("id") == cell.get("id")],
-            "native_declarations": {name: copy.deepcopy(cell[name]) for name in (
-                "native_attributes", "native_header_tag", "native_header_section", "is_column_header",
-                "is_row_header", "column_header", "row_header", "row_section") if name in cell},
         })
     by_id = {cell.get("id", cell.get("native_path")): cell for cell in cells}
     facts = matrix_result.get("facts", [])
@@ -447,12 +455,15 @@ def project_compact_text(result: dict[str, Any], schema: dict[str, Any] | None, 
                 claimed.add(origin["id"])
         attribute_source = fact_source.get("attribute_source")
         q_sources = fact_source.get("qualifier_sources", {})
+        field_dimensions = field_caption_dimensions(fact)
         for role, text, origin_source in [
             ("label", fact["attribute"], attribute_source),
             *[(name, value, q_sources.get(name)) for name, value in fact.get("qualifiers", {}).items()
               if name in {"period", "period_basis", "unit"}],
         ]:
             if origin_source:
+                if field_dimensions.get(role) == origin_source:
+                    continue
                 if origin_source.get("location") == "declared_parent_text":
                     projection["complete"] = False
                     projection["blockers"].append({"reason": "compact_parent_declaration_source_unavailable",

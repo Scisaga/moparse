@@ -428,3 +428,34 @@ async def test_native_level_is_a_preserved_observation_not_a_document_heading_tr
     a["heading_projection"]["level"] = 5
     with pytest.raises(NativeContentError):
         validate_native_content(r)
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("declared", [True, False])
+async def test_saved_continuation_owns_only_its_mapped_header_roles(declared):
+    native = middle()
+    doc = native["documents"][0]
+    body = doc["pages"][0]["blocks"][2]
+    body["content"] = [body["content"][1]]
+    body["content"][0]["content"] = (
+        "<table><tr><td>(USD millions) Devices</td><td>2034年</td><td>2033年</td></tr>"
+        "<tr><td>Instrument</td><td>17</td><td>11</td></tr>"
+        "<tr><td>Total Devices</td><td>17</td><td>11</td></tr></table>")
+    doc["pages"][0]["blocks"] = [body]
+    following = deepcopy(body)
+    following["continues_prev"] = declared
+    following["content"][0]["content"] = "<table><tr><td>Rentals</td><td>5</td><td>4</td></tr></table>"
+    doc["pages"].append({"page_idx": 1, "blocks": [following]})
+    native["pages"].append({**deepcopy(native["pages"][0]), "page": 2})
+    native["pages"][1]["raw"]["page_idx"] = 1
+    result, evidence = await finish(native)
+    first, second = result._semantic_tables
+    if declared:
+        record, = second.records
+        assert record.row_groups == ()
+        assert all(v.unit_refs == first.records[0].values[0].unit_refs for v in record.values)
+        assert '- Rentals\n  - 2034年：5\n    - 单位：(USD millions)' in result.markdown
+        assert not any(i['code'] == 'native_table_continuation_unresolved' for i in evidence['states']['impacts'])
+    else:
+        assert not second.records
+        assert '- Rentals\n  - 2034年：5' not in result.markdown

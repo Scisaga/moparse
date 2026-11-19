@@ -216,11 +216,18 @@ def plan_mixed_source(text: str, source: dict[str, Any]) -> dict[str, Any] | Non
     # treating ordinary enumerations in a single field as independent facts.
     if not fields or not fields[0]:
         return None
-    from .series_requirements import _CAUSE
+    from .record_ast import read_list_record
+
+    if read_list_record(text, source):
+        return None  # Each dated clause is a group inside the same printed list record.
+    from .series_requirements import _CAUSE, _annual_scalar_start
 
     if (re.match(r'(?:19|20)\d{2}年', fields[0][2].strip())
             and any(field is not None and _CAUSE.fullmatch(field[1].strip()) for field in fields[1:])):
         return None  # One annual financial series retains its trailing reason.
+    if _annual_scalar_start(fields[0][2].strip()) and any(
+            field is None and _annual_scalar_start(text[a:b]) for (a, b), field in zip(trimmed[1:], fields[1:], strict=True)):
+        return None  # A punctuated sibling field does not end its enclosing period series.
     if sum(match is not None for match in fields) < 2:
         from .proposition_requirements import read_propositions
 

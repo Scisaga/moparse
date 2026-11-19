@@ -28,6 +28,10 @@ _COUNTS = {"人": "people", "person": "people", "persons": "people", "people": "
            "employees": "people", "股": "shares", "share": "shares", "shares": "shares",
            "件": "items", "个": "items", "個": "items", "item": "items", "items": "items",
            "户": "households", "戶": "households", "台": "machines", "次": "occurrences"}
+# Exact physical units only. SI prefixes retain their printed case.
+PHYSICAL_UNITS = {"毫克/升": "mg/L", "mg/L": "mg/L", "吨": "t", "噸": "t",
+                  "千克": "kg", "公斤": "kg", "kg": "kg"}
+
 _NUMBER = re.compile(r"[+\-−]?(?:(?:\d{1,3}(?:,\d{3})+|\d+)(?:\.\d+)?|\.\d+)")
 
 
@@ -81,6 +85,10 @@ def normalize_unit(raw_unit: str | None, currency: str | None = None,
 
     if not text:
         return finish("dimensionless", "scalar", 1, own_role="scalar")
+    if text in PHYSICAL_UNITS:
+        if explicit_currency:
+            return result
+        return finish("physical_quantity", PHYSICAL_UNITS[text], 1)
     folded = text.casefold()
     if folded in {"%", "‰", "percent", "percentage"}:
         if role in {"absolute_ratio_change", "percentage_points", "basis_points"}:

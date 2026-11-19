@@ -2,7 +2,7 @@
 
 默认 Base URL 为 `http://localhost:12303`，在线定义以 `/openapi.json`、`/docs` 和 `/redoc` 为准。
 
-本文说明当前 HTTP 与 MCP 行为；目标交付及实现差距统一见[输出规范](moparse-output-spec.md)，八组原生格式与适配设计见[逐管线说明](../pipelines/README.md)。文档正文使用 `result.md`、`text/markdown`，图片经资产接口交付；任务状态、错误和资产索引使用 JSON 控制协议。现有 bundle 尚未包含 Markdown 正文。
+本文说明当前 HTTP 与 MCP 行为；目标交付及实现差距统一见[输出规范](moparse-output-spec.md)，八组原生格式与适配设计见[逐管线说明](../pipelines/README.md)。文档正文使用 `result.md`、`text/markdown`，图片经资产接口交付；任务状态、错误和资产索引使用 JSON 控制协议。现有 bundle 下载同一正文、清单和已交付资产。
 
 公开接口的最终要求由 MO-Parse 在接入解析结果后履行，不要求底层后端直接生成该格式。候选管线的原始结果和研究侧 Markdown 可以含表格及页面信息；其解析质量与成本按[研究框架](../research/research-framework.md)评价，不按本文最终格式评分。逐管线服务适配应先核对原生输出，现有公共接口不因此增加八组或模型选择参数，当前接入也不代表全部研究配置已实现。
 
@@ -131,7 +131,7 @@ POST   /v1/content/jobs/{id}/retry
 DELETE /v1/content/jobs/{id}
 ```
 
-SSE 是增量体验层，断线后以 Job JSON 为准。原生文档 worker 按整件返回结果， 中间阶段的页进度可能保持 0，Job 仍处于 `running`；它不提供逐页实时百分比。资产元数据含 MIME、SHA256、尺寸、角色、 状态和下载 URL，不含页位置或 bbox；视频支持单个 HTTP byte range。当前 bundle 仅包含 `manifest.json` 与资产文件，**不包含 `result.md`**，也没有可离线使用的 Markdown 图片引用。这是现有资产包行为；[目标输出包](moparse-output-spec.md#12-markdown-与图片的输出包)要求将同一正文与图片一起打包，尚待代码实现。
+SSE 是增量体验层，断线后以 Job JSON 为准。原生文档 worker 按整件返回结果， 中间阶段的页进度可能保持 0，Job 仍处于 `running`；它不提供逐页实时百分比。资产元数据含 MIME、SHA256、尺寸、角色、 状态和下载 URL，不含页位置或 bbox；视频支持单个 HTTP byte range。包内 `result.md` 使用相对图片路径，清单保存包内文件的校验值。资产校验失败时下载返回 409，任务正文可由结果接口单独读取。包的来源字段与离线交付条件见[输出包契约](moparse-output-spec.md#12-markdown-与图片的输出包)。
 
 ## MCP
 

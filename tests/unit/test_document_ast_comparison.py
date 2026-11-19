@@ -39,6 +39,213 @@ def compare(required, text):
     return score
 
 
+def test_typed_only_document_still_authenticates_both_trees(tmp_path):
+    from moparse_eval.ast_alignment import METHOD
+
+    text = '# Figures\n\n- Balance: 12'
+    graph = compile_requirement_graph(authored(tmp_path, text), comparison_contract='document_ast')
+    required = evaluation_projection(graph)
+    actual = read_candidate_markdown(text, sample_id=required['sample_id'])
+    assert not required['source_form_requirements'] and len(required['business']) == 1
+    score = grade_layers(required, actual)
+    validate_evidence(score)
+    assert score['layers']['B']['score'] == 100
+    assert score['document_comparison']['base_score']['layers']['B']['denominator'] == 1
+    altered = deepcopy(required)
+    altered['document_ast']['children'][-1]['parents'] = ['unprinted owner']
+    for method in (None, METHOD):
+        with pytest.raises(ValueError, match='source selection'):
+            grade_layers(altered, actual, scoring_method=method)
+    actual['document_ast'] = _candidate_ast(actual)
+    actual['document_ast']['children'][-1]['parents'] = ['unprinted owner']
+    with pytest.raises(ValueError, match='actual native syntax'):
+        grade_layers(required, actual)
+
+
+def test_both_document_trees_keep_own_cell_spans_and_native_header_declarations(tmp_path):
+    from moparse_eval.ast_alignment import METHOD
+
+    table = ('<table><tr><th colspan="2" scope="colgroup">Periods</th></tr>'
+             '<tr><td rowspan="2">North</td><td>12</td></tr><tr><td>15</td></tr></table>')
+    graph = compile_requirement_graph(authored(tmp_path, table), comparison_contract='document_ast')
+    required = evaluation_projection(graph)
+    actual = read_candidate_markdown(table, sample_id=required['sample_id'])
+    actual['document_ast'] = _candidate_ast(actual)
+    for tree in (required['document_ast'], actual['document_ast']):
+        cells = {''.join(n['text'] for n in b['content']['children']): b
+                 for b in tree['children'] if b['role'] == 'table_cell'}
+        assert cells['Periods']['cell_structure']['col_span'] == 2
+        assert cells['Periods']['cell_structure']['native_declarations']['native_attributes']['scope'] == 'colgroup'
+        assert cells['North']['cell_structure']['row_span'] == 2
+        assert cells['North']['parents'] == []
+        assert not cells['North']['cell_structure']['native_declarations'].get('native_header_tag')
+    cell = next(b for b in actual['document_ast']['children'] if b['role'] == 'table_cell')
+    cell['cell_structure']['col_span'] = 9
+    for method in (None, METHOD):
+        with pytest.raises(ValueError, match='actual native syntax'):
+            grade_layers(required, actual, scoring_method=method)
+
+
+NESTED_LIST = ('# 周转指标\n\n- 口径甲\n'
+               '  - 周转率：下限≥8；2025年12月31日期末10.5%、月均不适用；2024年12月31日期末9.1%、月均8%。')
+NESTED_GRID = ('# 周转指标\n\n<table><tr><th rowspan="2" colspan="2">指标</th><th rowspan="2">下限</th>'
+               '<th colspan="2">2025-12-31</th><th colspan="2">2024-12-31</th></tr>'
+               '<tr><th>期末（%）</th><th>月均（%）</th><th>期末（%）</th><th>月均（%）</th></tr>'
+               '<tr><td>口径甲</td><td>周转率</td><td>≥8</td><td>10.5</td><td>不适用</td>'
+               '<td>9.1</td><td>8</td></tr></table>')
+
+
+def compare_nested(tmp_path, markdown, expected=NESTED_LIST):
+    from moparse_eval.ast_alignment import METHOD
+    from moparse_eval.continuous_projection import extend_projection
+
+    graph = compile_requirement_graph(authored(tmp_path, expected), comparison_contract='document_ast')
+    required = evaluation_projection(graph)
+    actual = read_candidate_markdown(markdown, sample_id=required['sample_id'])
+    actual['document_ast'] = _candidate_ast(actual)
+    strict = grade_layers(required, actual)
+    continuous = grade_layers(extend_projection(graph, required), actual, scoring_method=METHOD)
+    proof, = [r['decision']['proof'] for r in strict['document_comparison']['decision']['proof']['rows']
+              if r['required'].get('record')]
+    return strict, continuous, proof
+
+
+@pytest.mark.parametrize('extra', [False, True])
+def test_expected_leaf_is_entailed_by_its_own_row_date_and_shared_header_unit(tmp_path, extra):
+    grid = NESTED_GRID
+    if extra:
+        grid = grid.replace('<th colspan="2">2025', '<th rowspan="2">峰值</th><th colspan="2">2025')
+        grid = grid.replace('<td>≥8</td>', '<td>≥8</td><td>99</td>')
+    strict, continuous, proof = compare_nested(tmp_path, grid)
+    for score in (strict, continuous):
+        assert score['layers']['B']['score'] == score['layers']['L']['score'] == 100
+        assert score['layers']['T']['score'] < 100
+    assert proof['extra_paths'] == ([['', '峰值']] if extra else [])
+    assert len(proof['components']) == 5
+    field, = [p for p in proof['components'] if p['path'] == ['2025-12-31', '期末']]
+    value = field['actual']
+    assert field['status'] == 'entailed' and not field['value_used_for_location']
+    assert value['unit']['text'] == '%' and value['unit']['source']['row'] == 1
+    assert value['number']['text'] == '10.5' and value['number']['source']['row'] == 2
+    assert value['unit']['source']['col'] == value['number']['source']['col']
+    date = next(c for c in proof['actual']['children'] if c['kind'] == 'period')
+    assert date['label']['source']['row'] == 0
+    assert proof['actual']['row_path'][0]['text'] == '口径甲'
+    validate_evidence(strict)
+
+
+@pytest.mark.parametrize(('old', 'new', 'wrong'), [
+    ('<td>≥8</td>', '<td>≤8</td>', ['', '下限']),
+    ('<td>不适用</td>', '<td>0</td>', ['2025-12-31', '月均']),
+    ('<th>期末（%）</th>', '<th>期末（万元）</th>', ['2025-12-31', '期末']),
+    ('<td>10.5</td>', '<td></td>', ['2025-12-31', '期末']),
+])
+def test_one_conflicting_leaf_cannot_use_a_sibling_as_its_witness(tmp_path, old, new, wrong):
+    strict, continuous, proof = compare_nested(tmp_path, NESTED_GRID.replace(old, new, 1))
+    assert [p['path'] for p in proof['components'] if p['status'] != 'entailed'] == [wrong]
+    assert proof['layout_correct']
+    assert 0 < continuous['layers']['B']['score'] < 100
+    assert strict['layers']['B']['score'] < 100
+
+
+def test_opaque_cell_with_a_printed_header_keeps_its_neighbors_and_location(tmp_path):
+    strict, continuous, proof = compare_nested(tmp_path, NESTED_GRID.replace('<td>10.5</td>', '<td>待复核</td>'))
+    assert [p['status'] for p in proof['components']] == ['entailed', 'unresolved', 'entailed', 'entailed', 'entailed']
+    for score in (strict, continuous):
+        assert score['layers']['B']['score'] is None
+        assert score['layers']['L']['score'] == 100
+
+
+def test_scope_and_original_occurrence_are_required_before_choosing_a_matching_number(tmp_path):
+    row = NESTED_GRID[NESTED_GRID.index('<tr><td>'):-len('</table>')]
+    duplicated = NESTED_GRID.replace('</table>', row.replace('10.5', '91') + '</table>')
+    _, _, proof = compare_nested(tmp_path, duplicated)
+    assert len(proof['candidate_sources']) == 2 and proof['status'] == 'unresolved'
+    # A correct alternative in another titled table cannot rescue the first cell.
+    changed = NESTED_GRID.replace('10.5', '91') + '\n\n' + NESTED_GRID.replace('# 周转指标', '# 另一组')
+    _, _, proof = compare_nested(tmp_path, changed)
+    assert [p['path'] for p in proof['components'] if not p['credit']] == [['2025-12-31', '期末']]
+
+
+def test_replaced_matrix_issue_has_the_specific_row_header_and_cell_witnesses(tmp_path):
+    from moparse_eval.record_ast import resolved_matrix_issues
+
+    row = NESTED_GRID[NESTED_GRID.index('<tr><td>'):-len('</table>')]
+    grid = NESTED_GRID.replace('</table>', row.replace('口径甲', '口径乙') + '</table>')
+    strict, _, _ = compare_nested(tmp_path, grid)
+    actual = strict['document_comparison']['inputs']['actual']
+    proofs = strict['document_comparison']['candidate_record_bindings']
+    assert len(proofs) == 14
+    wrong_header = deepcopy(proofs[-1]['issue'])
+    wrong_header['header_ids'] = proofs[0]['issue']['header_ids']
+    assert not resolved_matrix_issues(_candidate_ast(actual)['children'], [wrong_header])
+
+
+def test_split_corner_and_wrapped_parent_are_local_proofs(tmp_path):
+    grid = NESTED_GRID.replace('<th rowspan="2" colspan="2">指标</th>', '<th colspan="2"></th>')
+    grid = grid.replace('<tr><th>期末', '<tr><th colspan="2">指标</th><th>期末')
+    grid = grid.replace('口径甲', '依据《管理\n（甲）》')
+    expected = NESTED_LIST.replace('口径甲', '依据《管理（甲）》')
+    strict, continuous, proof = compare_nested(tmp_path, grid, expected)
+    assert all(s['layers']['B']['score'] == 100 for s in (strict, continuous))
+    record = proof['actual']
+    assert record['blank_corner']['text'] == '' and record['row_axis']['text'] == '指标'
+    assert record['blank_corner']['source']['row'] == 0 and record['row_axis']['source']['row'] == 1
+    # The rest of a truncated title in a neighboring data row cannot supply this parent.
+    truncated = grid.replace('依据《管理\n（甲）》', '依据《管理')
+    _, _, proof = compare_nested(tmp_path, truncated, expected)
+    assert proof['status'] == 'unresolved' and not proof['spans']
+
+
+def test_record_unit_declaration_applies_only_to_covered_numeric_leaves(tmp_path):
+    expected = NESTED_LIST.replace('10.5%', '10.5').replace('9.1%', '9.1').replace('8%', '8')
+    expected = expected.replace('- 口径甲', '单位：%。各年分别列期末、月均。\n\n- 口径甲')
+    grid = NESTED_GRID.replace('（%）', '').replace('<table>', '（单位：%）\n\n<table>')
+    _, _, proof = compare_nested(tmp_path, grid, expected)
+    assert proof['status'] == 'equivalent'
+    assert all(p['status'] == 'entailed' for p in proof['components'])
+    for part in proof['components']:
+        for side in ('expected', 'actual'):
+            field = part[side]
+            if field.get('number'):
+                assert field['unit']['text'] == '%' and field['unit']['source']['lines'] == [3, 3]
+                assert field['unit_declaration_source']['lines'] == [3, 3]
+            else:
+                assert 'unit' not in field
+    wrong = grid.replace('单位：%', '单位：万元')
+    _, _, proof = compare_nested(tmp_path, wrong, expected)
+    assert [p['status'] for p in proof['components']] == ['conflict','conflict','entailed','conflict','conflict']
+    interrupted = grid.replace('（单位：%）\n\n', '') + '\n\n注：另表说明。\n\n（单位：%）'
+    _, _, proof = compare_nested(tmp_path, interrupted, expected)
+    assert [p['status'] for p in proof['components']] == ['unresolved','unresolved','entailed','unresolved','unresolved']
+
+
+def test_cached_record_witness_must_equal_the_two_independently_rebuilt_trees(tmp_path):
+    graph = compile_requirement_graph(authored(tmp_path, NESTED_LIST), comparison_contract='document_ast')
+    required = evaluation_projection(graph)
+    actual = read_candidate_markdown(NESTED_GRID, sample_id=required['sample_id'])
+    actual['document_ast'] = _candidate_ast(actual)
+    record = next(b['record'] for b in actual['document_ast']['children'] if 'record' in b)
+    record['children'][1]['children'][0]['unit']['source']['col'] += 1
+    with pytest.raises(ValueError, match='actual native syntax'):
+        grade_layers(required, actual)
+
+
+def test_unprinted_outer_scope_keeps_local_field_proofs_without_accepting_full_record(tmp_path):
+    expected = NESTED_LIST.replace('# 周转指标', '# 样本报告\n\n## 综合口径\n\n### 周转指标')
+    actual = NESTED_GRID.replace('# 周转指标', '# 样本报告\n\n## 周转指标')
+    strict, continuous, proof = compare_nested(tmp_path, actual, expected)
+    assert proof['reason'] == 'record_outer_scope_unproven'
+    assert proof['expected_scope'] == ['样本报告','综合口径','周转指标']
+    assert proof['observed_scope'] == ['样本报告','周转指标']
+    assert not proof['spans'] and not proof['layout_correct'] and proof['status'] == 'unresolved'
+    assert len(proof['components']) == 5 and all(p['status'] == 'entailed' for p in proof['components'])
+    assert strict['layers']['B']['score'] is None and continuous['layers']['B']['score'] is None
+    # A different printed local section supplies a contradictory placement.
+    _, _, conflict = compare_nested(tmp_path, actual.replace('## 周转指标', '## 采购指标'), expected)
+    assert conflict['status'] == 'conflict' and not conflict['components']
+
+
 def test_complete_content_is_comparable_without_parsing_chinese_grammar(tmp_path):
     graph, required = required_document(tmp_path)
     assert len(graph['document_ast']['children']) == 5

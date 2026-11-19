@@ -36,6 +36,60 @@ def graphs(markdown):
     yield read_candidate(markdown_observation(markdown, sample_id="invented-financial-groups", pipeline="P07", pages=[1]))
 
 
+@pytest.mark.parametrize("heading,left,right", [
+    ("合并现金流量表", "经营活动产生的现金流量", "筹资活动产生的现金流量"),
+    ("簡明合併現金流量表", "現金及現金等價物", "投資活動產生的現金流量"),
+    ("Condensed consolidated statement of cash flows", "Cash and cash equivalents", "Financing activities"),
+])
+def test_cash_flow_classifications_own_their_actual_occurrences(heading, left, right):
+    text = (f"# {heading}\n\nUnit: USD million.\n\n- {left}\n"
+            f"  - Balance:2029年7;2028年11\n- {right}\n  - Balance:2029年7;2028年13\n"
+            "\n# Another section\n\n- Balance:2029年7;2028年11")
+    for graph in graphs(text):
+        rows = [f for f in graph["business"] if f["attribute"] == "Balance"]
+        assert [(f["value"], f["qualifiers"].get("period")) for f in rows] == [
+            ("7", "2029年"), ("11", "2028年"), ("7", "2029年"), ("13", "2028年"), ("7", "2029年"), ("11", "2028年")]
+        assert [f["identity_facets"].get("group") for f in rows] == [[left], [left], [right], [right], None, None]
+        for i, f in enumerate(rows[:4]):
+            assert f["qualifiers"]["unit"] == "USD million" and f["qualifiers"]["currency"] == "USD"
+            assert f["row_evidence"][-1]["source"]["lines"] == ([5, 5] if i < 2 else [7, 7])
+            assert f["qualifier_provenance"]["unit"]["source"]["lines"] == [3, 3]
+        assert all("unit" not in f["qualifiers"] for f in rows[4:])
+
+
+@pytest.mark.parametrize("heading,parent", [
+    ("Capital review", "Financing activities"),
+    ("Statement of cash flows", "Possible financing activities next year"),
+    ("Statement of cash flows", "Cash and cash equivalents (forecast 14%)"),
+])
+def test_cash_flow_scope_requires_statement_and_classification(heading, parent):
+    for graph in graphs(f"# {heading}\n\nUnit: USD million.\n\n- {parent}\n  - Net:2029年7;2028年11"):
+        facts = [f for f in graph["business"] if f["attribute"] == "Net"]
+        assert len(facts) == 2 and all("unit" not in f["qualifiers"] and "group" not in f["identity_facets"] for f in facts)
+
+
+@pytest.mark.parametrize("note,pages", [
+    ("第31页至第46页所载的附注为本财务报表的组成部分。", "第31页至第46页"),
+    ("Notes on pages 31 to 46 are part of these financial statements.", "pages 31 to 46"),
+])
+def test_page_reference_ends_shared_unit_without_owning_money(note, pages):
+    text = "# Statement of financial position\n\nUnit: USD million.\n\n- Cash:2029年31;2028年46\n\n" + note
+    for graph in graphs(text + "\n\n- Reserve:2029年31;2028年46"):
+        assert not any(b["reason"] == "unit_scope_boundary_unresolved" for b in graph["blockers"])
+        cash = [f for f in graph["business"] if f["attribute"] == "Cash"]
+        assert [f["qualifiers"]["unit"] for f in cash] == ["USD million"] * 2
+        assert [f["qualifiers"] for f in graph["business"] if f.get("logic", {}).get("kind") == "document_composition"] == [
+            {"polarity": "positive", "page_range": pages}]
+        reserve = [f for f in graph["business"] if f["attribute"] == "Reserve"]
+        assert len(reserve) == 2 and all("unit" not in f["qualifiers"] for f in reserve)
+
+
+def test_unread_clause_beside_page_range_keeps_unit_boundary_open():
+    note = "Notes on pages 31 to 46 are part of these financial statements, including another 7."
+    for graph in graphs("# Statement of financial position\n\nUnit: USD million.\n\n- Cash:2029年31;2028年46\n\n" + note):
+        assert any(b["reason"] == "unit_scope_boundary_unresolved" and b["boundary"]["text"] == note for b in graph["blockers"])
+
+
 def test_total_summary_binds_only_its_immediate_complementary_categories(tmp_path):
     from moparse_eval.expected_report import validate_evidence
     from moparse_eval.three_layer import grade_layers, read_candidate_markdown

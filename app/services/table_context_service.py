@@ -189,13 +189,212 @@ def _unit_caption(text: str) -> tuple[str, int] | None:
     return (text, 0) if unit_description(text) else None
 
 
-def closes_group(group: str, label: str) -> bool:
+def named_group_total(group: str, label: str) -> bool:
+    """A printed total names this group exactly; no financial ontology."""
     total = re.fullmatch(r"Total\s+(.+)", label.strip(), re.I)
     if total and total[1].casefold() == group.strip(" :：").casefold():
+        return True
+    return bool(re.fullmatch(re.escape(group.strip(" :：")) + r"\s*(?:合计|合計|总计|總計|小计|小計)", label.strip()))
+
+
+def named_child_group(parent: str, child: str) -> bool:
+    parent = parent.strip().casefold()
+    child = child.strip().casefold()
+    if not parent or child == parent:
+        return False
+    if re.search(r"[㐀-鿿]", parent):
+        return child.endswith(parent) or child.startswith(parent)
+    return bool(re.search(r"(?<!\w)" + re.escape(parent) + r"(?!\w)", child))
+
+
+def closes_group(group: str, label: str) -> bool:
+    if named_group_total(group, label):
         return True
     sibling = re.compile(r"^([一二三四五六七八九十百]+)([、.])")
     left, right = sibling.match(group.strip()), sibling.match(label.strip())
     return bool(left and right and left[2] == right[2] and left[1] != right[1])
+
+
+def cell_role_refs(fragment: TableFragment) -> tuple[TextRef, ...]:
+    """Expose recognized cell slices through the existing scoped text refs."""
+    return tuple(
+        TextRef(fragment.fragment_id, fragment.page_number, f"cell.{cell['row']}.{cell['column']}",
+                role["text"], role["kind"], *role["text_span"],
+                tuple(role["body_rows"]), tuple(role["columns"]))
+        for cell in fragment.native_evidence.get("cell_roles", []) for role in cell["roles"]
+    )
+
+
+def applicable_cell_roles(fragment, row, column, registry):
+    local = tuple(ref for ref in cell_role_refs(fragment) if row in ref.body_rows and column in ref.columns)
+    inherited = fragment.native_evidence.get("inherited_header_scope", {})
+    tokens = {link["source_token"] for link in inherited.get("cell_role_scopes", [])
+              if row in link["body_rows"] and column in link["columns"]}
+    if not tokens or not inherited.get("complete"):
+        return local
+    return (*local, *(ref for ref in registry if isinstance(ref, TextRef)
+                      and ref.table_id == inherited.get("source_table_id") and ref.token in tokens))
+
+
+_PAREN_PART = re.compile(r"[（(][^()（）]+[)）]")
+_PRINTED_DATE = re.compile(r"(?:19|20)\d{2}\s*年(?:度|末|\s*\d{1,2}\s*月(?:\s*\d{1,2}\s*日)?)?")
+_NOTE_MARKER = re.compile(r"[（(]\s*(?:附[注註]|Notes?)\s*[0-9]+\s*[)）]", re.I)
+_NAMED_TOTAL = re.compile(r"(?:Total\s+(?P<en>.+)|(?P<zh>.+?)(?:合计|合計|总计|總計|小计|小計))", re.I)
+
+
+def _cell_role_declaration(fragment, cell, roles, unresolved=()):
+    source = next((c for c in fragment.native_evidence.get("source_cells", [])
+                   if (c.get("row"), c.get("col")) == (cell.row, cell.column)), {})
+    return {"row": cell.row, "column": cell.column, "raw_text": cell.text,
+            "native_path": source.get("native_path"), "evidence_locator": source.get("evidence_locator"),
+            "roles": roles, "unresolved_spans": list(unresolved)}
+
+
+def _literal_role(cell, kind, span, rows, columns, evidence, **proof):
+    a, b = span
+    return {"kind": kind, "text": cell.text[a:b], "text_span": [a, b],
+            "body_rows": list(rows), "columns": list(columns), "evidence": evidence, **proof}
+
+
+def _compound_header_roles(fragment: TableFragment, scopes: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    declarations = []
+    for scope in scopes:
+        body = scope["body_rows"]
+        if not body or scope.get("evidence", {}).get("explicit_record_fields"):
+            continue
+        headers = [c for c in fragment.cells if c.row in scope["header_rows"]]
+        stubs = scope.get("row_header_columns", [0])
+        columns = [col for col in range(fragment.num_cols) if col not in stubs and any(
+            h.column <= col < h.column + h.column_span and (_PERIOD.search(h.text) or _MEASURE.search(h.text))
+            for h in headers)]
+        if not columns:
+            continue
+        for cell in headers:
+            raw = cell.text
+            if not raw.strip() or unit_header(raw):
+                continue
+            parts = list(_PAREN_PART.finditer(raw))
+            units = [m for m in parts if unit_description(m[0])]
+            if cell.column not in stubs:
+                if len(units) != 1:
+                    continue
+                unit = units[0]
+                before, after = raw[:unit.start()], raw[unit.end():]
+                period = before.strip() or after.strip()
+                if (before.strip() and after.strip()) or not (_PRINTED_DATE.fullmatch(period) or _PERIOD.fullmatch(period)):
+                    continue
+                a = raw.index(period, 0 if before.strip() else unit.end())
+                owned = list(range(cell.column, cell.column + cell.column_span))
+                roles = [_literal_role(cell, "period", (a, a + len(period)), body, owned, "printed_column_period"),
+                         _literal_role(cell, "unit", unit.span(), body, owned, "printed_column_unit")]
+                declarations.append(_cell_role_declaration(fragment, cell, roles))
+                continue
+            if cell.column_span > 1 or identity_header(raw) or property_label(raw):
+                continue
+            # An explicit identity field may qualify records. A measurement corner
+            # or undeciphered stub without such a declaration has local ownership.
+            spans = [m.span() for m in parts]
+            gaps = [(a, b) for a, b in zip([0, *(b for a, b in spans)],
+                                             [*(a for a, b in spans), len(raw)], strict=True)
+                    if raw[a:b].strip()]
+            roles = []
+            if len(units) == 1:
+                roles.append(_literal_role(cell, "unit", units[0].span(), body, columns,
+                                           "complete_literal_unit_in_measurement_header_scope"))
+            if len(gaps) == 1 and stubs == [0]:
+                a, b = gaps[0]
+                a += len(raw[a:b]) - len(raw[a:b].lstrip())
+                b = a + len(raw[a:b].rstrip())
+                label = raw[a:b]
+                if (0 < len(label) <= 60 and not re.search(r"[。；;:：\n\r()（）]", label)
+                        and not scalar(label) and not _PERIOD.search(label)):
+                    group_rows = []
+                    for row in body:
+                        band = [c for c in fragment.cells if c.row == row]
+                        stub = next((c for c in band if c.column == cell.column), None)
+                        if (stub is None or not stub.text.strip() or stub.row_span != 1
+                                or not any(c.column in columns and scalar(c.text) for c in band)
+                                or re.match(r"(?:注|Notes?|加|减|減|Add|Less)\s*[:：]", stub.text.strip(), re.I)):
+                            break
+                        group_rows.append(row)
+                        if named_group_total(label, stub.text):
+                            roles.append(_literal_role(cell, "group", (a, b), group_rows,
+                                [c for c in range(fragment.num_cols) if c not in stubs],
+                                "leading_stub_label_closed_by_literal_named_total", closing_cell=[row, stub.column]))
+                            break
+            known = {tuple(role["text_span"]) for role in roles}
+            unresolved = []
+            for a, b in sorted([*spans, *gaps]):
+                a += len(raw[a:b]) - len(raw[a:b].lstrip())
+                b = a + len(raw[a:b].rstrip())
+                if (a, b) not in known:
+                    unresolved.append({"text": raw[a:b], "text_span": [a, b], "reason":
+                        "note_marker_without_confirmed_attachment" if _NOTE_MARKER.fullmatch(raw[a:b])
+                        else "local_header_role_or_scope_unresolved"})
+            declarations.append(_cell_role_declaration(fragment, cell, roles, unresolved))
+    return declarations
+
+
+def _subtotal_groups(fragment, evidence):
+    """Only a closed parent with a full partition of named sibling totals owns these intervals."""
+    stubs = {c.row: c for c in fragment.cells if c.column == 0 and c.column_span == c.row_span == 1}
+    parents = [(d["row"], r["text"], r["body_rows"]) for d in evidence["cell_roles"]
+               for r in d["roles"] if r["kind"] == "group"]
+    ordinary: dict[int, list[int]] = {}
+    for row, (anchor, col) in evidence["row_groups"].items():
+        if col == 0 and anchor in stubs:
+            ordinary.setdefault(anchor, []).append(int(row))
+    parents.extend((anchor, stubs[anchor].text.strip(), rows) for anchor, rows in ordinary.items())
+    for anchor, parent, rows in parents:
+        if not rows:
+            continue
+        duplicate_rows = {}
+        for r in rows:
+            if r in stubs and stubs[r].text.strip():
+                duplicate_rows.setdefault(stubs[r].text.strip(), []).append(r)
+        duplicates = sorted(r for group in duplicate_rows.values() if len(group) > 1 for r in group)
+        if (len(rows) < 5 or rows != list(range(rows[0], rows[-1] + 1))
+                or any(r not in stubs for r in rows) or not named_group_total(parent, stubs[rows[-1]].text)):
+            if duplicates:
+                evidence.setdefault("unresolved_subgroups", []).append(
+                    {"parent_cell": [anchor, 0], "rows": duplicates, "reason": "subgroup_parent_extent_unproved"})
+            continue
+        measure_columns = {col for scope in evidence["header_scopes"] if rows[0] in scope["body_rows"]
+                           for h in fragment.cells if h.row in scope["header_rows"]
+                           and (_PERIOD.search(h.text) or _MEASURE.search(h.text))
+                           for col in range(h.column, h.column + h.column_span) if col not in scope["row_header_columns"]}
+        sections = []
+        failure = "named_subtotals_do_not_partition_the_parent"
+        start = rows[0]
+        for row in rows[:-1]:
+            stub = stubs[row]
+            band = [c for c in fragment.cells if c.row == row and c.column > 0]
+            text = stub.text.strip()
+            if (not text or not any(scalar(c.text) for c in band if c.column in measure_columns) or row in evidence["operation_rows"]
+                    or any(c.row_span != 1 or c.column_span != 1 for c in band)):
+                break
+            total = _NAMED_TOTAL.fullmatch(text)
+            if not total:
+                if re.search(r"(?:合计|合計|总计|總計|小计|小計)$|^(?:Sub)?total\b", text, re.I):
+                    failure = "subtotal_without_a_literal_child_name"
+                    break
+                continue
+            name = (total["en"] or total["zh"]).strip()
+            if not named_child_group(parent, name) or row == start:
+                break
+            sections.append((start, stub, name))
+            start = row + 1
+        if start != rows[-1] or len(sections) < 2 or len({n for _, _, n in sections}) != len(sections):
+            if duplicates:
+                evidence.setdefault("unresolved_subgroups", []).append(
+                    {"parent_cell": [anchor, 0], "rows": duplicates, "reason": failure})
+            continue
+        for begin, cell, name in sections:
+            a = cell.text.index(name)
+            role = _literal_role(cell, "group", (a, a + len(name)), range(begin, cell.row),
+                range(1, fragment.num_cols), "bounded_sibling_subtotals", parent_cell=[anchor, 0],
+                closing_cell=[cell.row, cell.column], parent_end=rows[-1])
+            evidence["cell_roles"].append(_cell_role_declaration(fragment, cell, [role]))
 
 
 def native_scopes(fragment: TableFragment, *, contract=None) -> dict[str, Any]:
@@ -207,6 +406,7 @@ def native_scopes(fragment: TableFragment, *, contract=None) -> dict[str, Any]:
         "header_scopes": [],
         "row_groups": {},
         "retained_row_context": {},
+        "cell_roles": [],
         "structure_readable": False,
     }
     from app.services.native_content_evidence import verify_table_source
@@ -358,17 +558,20 @@ def native_scopes(fragment: TableFragment, *, contract=None) -> dict[str, Any]:
         # A blank corner may introduce a complete new period band. Bare
         # numeric years could also be unnamed values, so require explicit
         # dated labels and the complete original single-row partition.
-        dated = re.compile(r"(?:19|20)\d{2}\s*年(?:度|末)")
+        dated = _PRINTED_DATE
+        measurement_corner = bool(stub and (unit_header(stub.text) or any(
+            unit_description(part[0]) for part in _PAREN_PART.finditer(stub.text))))
         changed_period = bool(
             stub
-            and not stub.text.strip()
+            and (not stub.text.strip() or measurement_corner)
             and first_body - header_start == 1
             and len(band) == fragment.num_cols
             and all(c.row_span == c.column_span == 1 for c in band)
             and all(c.row_span == c.column_span == 1 for c in headers)
-            and sum(bool(dated.fullmatch(c.text.strip())) for c in band if c.column > 0) >= 2
+            and sum(bool(dated.fullmatch(c.text.strip())) for c in band if c.column > 0) >= (1 if measurement_corner else 2)
             and all(
                 dated.fullmatch(c.text.strip())
+                or measurement_corner and not scalar(c.text) and len(c.text) <= 60
                 or (
                     not scalar(c.text)
                     and len(c.text) <= 60
@@ -385,6 +588,10 @@ def native_scopes(fragment: TableFragment, *, contract=None) -> dict[str, Any]:
                     **scope,
                     "header_rows": [row],
                     "body_rows": list(range(row + 1, fragment.num_rows)),
+                    "unresolved_columns": [c.column for c in band if c.column not in row_cols
+                                            and not (dated.fullmatch(c.text.strip()) or _MEASURE.search(c.text)
+                                            or property_label(c.text) or re.fullmatch(r"(?:Notes?|附[注註])", c.text.strip(), re.I)
+                                            or re.search(r"[%％‰]", c.text))] if changed_period else [],
                     "evidence": {**scope["evidence"], "explicit_period_switch": changed_period},
                 }
             )
@@ -405,6 +612,8 @@ def native_scopes(fragment: TableFragment, *, contract=None) -> dict[str, Any]:
         and not unit_header(c.text)
     ]
     _row_context(fragment, evidence, scopes)
+    evidence["cell_roles"] = _compound_header_roles(fragment, scopes)
+    _subtotal_groups(fragment, evidence)
     return evidence
 
 
@@ -1147,6 +1356,13 @@ def _prepare_native_continuations(result: DocumentParseResult) -> None:
         key=lambda f: (f.page_number, f.ordinal),
     )
     contents = {page.page_number: page.content or "" for page in result.pages}
+    for fragment in fragments:
+        page = fragment.page_number
+        for block in result._native_page_blocks.get(page, []):
+            marker = block.get("service_marker")
+            if (block.get("service_fragment_id") == fragment.fragment_id and marker
+                    and contents.get(page, "").count(fragment.rendered + marker) == 1):
+                contents[page] = contents[page].replace(fragment.rendered + marker, fragment.rendered, 1)
     furniture = [f for f in result._page_furniture if isinstance(f, PageFurnitureFragment)]
     for left, right in zip(fragments, fragments[1:], strict=False):
 
@@ -1335,6 +1551,12 @@ def _prepare_native_continuations(result: DocumentParseResult) -> None:
                 )
             },
         }
+        inherited["cell_role_scopes"] = [
+            {"source_token": ref.token, "body_rows": body, "columns": list(ref.columns)}
+            for ref in cell_role_refs(left) if ref.kind in {"unit", "period"}
+            and ref.source_cell is not None and ref.source_cell.row in rows
+            and tuple(scope.get("body_rows", [])) == ref.body_rows
+        ]
         if caption_range:
             inherited["caption_range"] = caption_range
         if furniture_evidence:

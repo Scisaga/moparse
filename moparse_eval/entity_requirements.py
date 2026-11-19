@@ -14,11 +14,12 @@ from typing import Any
 _ENGLISH_ROLES = frozenset({
     "borrower", "lender", "issuer", "guarantor", "trustee", "beneficiary", "creditor", "debtor",
     "grantor", "owner", "operator", "employer", "employee", "director", "chairperson", "secretary",
-    "auditor", "registrar", "purchaser", "seller", "customer", "supplier", "applicant", "respondent",
+    "underwriter", "lead underwriter", "joint lead underwriter", "auditor", "registrar", "purchaser", "seller", "customer", "supplier", "applicant", "respondent",
 })
 _CHINESE_ROLES = frozenset({
     "借款人", "贷款人", "貸款人", "发行人", "發行人", "担保人", "擔保人", "受托人", "受託人",
     "受益人", "债权人", "債權人", "债务人", "債務人", "所有者", "运营方", "營運方", "雇主", "僱主",
+    "承销商", "承銷商", "主承销商", "主承銷商", "联席主承销商", "聯席主承銷商",
     "雇员", "僱員", "董事", "主席", "审计师", "審計師", "购买方", "購買方", "卖方", "賣方", "供应商", "供應商",
 })
 _EN_ASSIGNMENT = re.compile(r"(?:(?i:the)\s+)?(?P<role>[A-Za-z][A-Za-z ]{0,70}?)\s+(?P<verb>is|are)\s+(?P<value>.*)", re.I | re.S)
@@ -176,10 +177,24 @@ def read_entity_requirements(text: str, source: dict[str, Any], *, scope=(), par
             continue
         role_start = start + match.start("role")
         role_end = role_start + len(role)
-        result["facts"].append({"subject": "", "attribute": role, "value": value, "role": "identity", "qualifiers": {},
+        members = [(value, value_start, value_end)]
+        if not quoted and "、" in value:
+            names = value.removesuffix("。").split("、")
+            if pair is None or any(not re.fullmatch(r"[^、:：,，。;；()（）]+(?:公司|银行|銀行|事务所|事務所)", n.strip())
+                                   for n in names):
+                _pending(result, clause_source, fragment, role, "entity_list_member_extent_unresolved")
+                continue
+            members = []
+            cursor = value_start
+            for name in names:
+                a = cursor + len(name) - len(name.lstrip())
+                members.append((name.strip(), a, a + len(name.strip())))
+                cursor += len(name) + 1
+        for name, a, b in members:
+            result["facts"].append({"subject": "", "attribute": role, "value": name, "role": "identity", "qualifiers": {},
                                 "identity_facets": {}, "scope": list(scope), "source": clause_source,
                                 "attribute_source": _source(source, role_start, role_end),
-                                "value_source": _source(source, value_start, value_end),
+                                "value_source": _source(source, a, b),
                                 "subject_source": _source(source, role_start, role_end),
                                 "role_basis": "explicit_printed_entity_role", "entity_syntax": "labelled" if pair else "copular"})
     if result["matched"]:

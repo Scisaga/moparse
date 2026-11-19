@@ -551,8 +551,18 @@ def validate_table_relations(result):
     categories or infer business facts from values appearing in Markdown.
     """
     from app.models.table_semantics import CellRef, TextRef
-    from app.services.table_context_service import scalar
+    from app.services.table_context_service import (
+        applicable_cell_roles,
+        cell_role_refs,
+        named_child_group,
+        named_group_total,
+        row_unit_description,
+        scalar,
+        unit_description,
+        unit_header,
+    )
     from app.services.table_semantics_service import (
+        _AMOUNT_HEADER,
         _RATIO_HEADER,
         _REFERENCE_HEADER,
         _per_share_currency,
@@ -562,13 +572,99 @@ def validate_table_relations(result):
     validate_native_content(result)
     fragments = {f.fragment_id: f for f in result._table_fragments}
     registry = {CellRef(f.fragment_id, c.row, c.column): c for f in fragments.values() for c in f.cells}
+    for fragment in fragments.values():
+        for declaration in fragment.native_evidence.get('cell_roles', []):
+            source = registry.get(CellRef(fragment.fragment_id, declaration['row'], declaration['column']))
+            _require(source is not None and source.text == declaration['raw_text'], 'role source cell changed')
+            native = next((c for c in fragment.native_evidence.get('source_cells', [])
+                           if c.get('row') == source.row and c.get('col') == source.column), {})
+            _require(declaration.get('native_path') == native.get('native_path')
+                     and declaration.get('evidence_locator') == native.get('evidence_locator'),
+                     'cell role locator differs from its original native cell')
+            occupied = set()
+            for role in declaration['roles']:
+                start, end = role['text_span']
+                _require(0 <= start < end <= len(source.text) and source.text[start:end] == role['text'],
+                         'role literal is not its source cell slice')
+                span = set(range(start, end))
+                _require(not occupied.intersection(span), 'roles claim overlapping source text')
+                occupied.update(span)
+                scopes = [s for s in fragment.source_header_scopes if s.get('complete')
+                          and (source.row in s.get('header_rows', []) or role.get('evidence') == 'bounded_sibling_subtotals'
+                               and source.row in s.get('body_rows', []))
+                          and set(role['body_rows']) <= set(s.get('body_rows', []))
+                          and all(0 <= col < fragment.num_cols and col not in s.get('row_header_columns', [0])
+                                  for col in role['columns'])]
+                _require(bool(scopes) and bool(role['body_rows']) and bool(role['columns']),
+                         'cell role exceeds its declared header/body scope')
+                if role['evidence'] in {'printed_column_unit', 'printed_column_period'}:
+                    _require(role['columns'] == list(range(source.column, source.column + source.column_span))
+                             and role['body_rows'] == scopes[0]['body_rows'], 'column slice escaped its header')
+                if role['kind'] == 'unit':
+                    _require(unit_description(role['text']), 'cell role is not a complete literal unit')
+                elif role['kind'] == 'period':
+                    _require(re.search(r'(?:19|20)\d{2}|季度|Q[1-4]', role['text'], re.I) is not None,
+                             'period slice has no printed period')
+                elif role.get('evidence') == 'bounded_sibling_subtotals':
+                    begin, last = role['body_rows'][0], role['body_rows'][-1]
+                    parent = role['parent_cell']
+                    parent_text = registry[CellRef(fragment.fragment_id, *parent)].text
+                    parent_roles = [ref for ref in cell_role_refs(fragment) if ref.kind == 'group'
+                                    and ref.source_cell == CellRef(fragment.fragment_id, *parent)]
+                    label = parent_roles[0].text if parent_roles else parent_text.strip()
+                    previous = registry.get(CellRef(fragment.fragment_id, begin - 1, source.column))
+                    _require(role['body_rows'] == list(range(begin, source.row)) and last + 1 == source.row
+                             and role['closing_cell'] == [source.row, source.column]
+                             and named_group_total(role['text'], source.text) and named_child_group(label, role['text'])
+                             and parent[0] < begin <= source.row < role['parent_end']
+                             and named_group_total(label, registry[CellRef(fragment.fragment_id, role['parent_end'], 0)].text)
+                             and (parent[0] == begin - 1 or previous is not None and any(
+                                 r.get('parent_cell') == parent and r.get('closing_cell') == [begin - 1, previous.column]
+                                 for d in fragment.native_evidence['cell_roles'] for r in d['roles'])),
+                             'subtotal group does not have a closed source interval')
+                elif role['kind'] == 'group':
+                    closing = registry.get(CellRef(fragment.fragment_id, *role['closing_cell']))
+                    _require(closing is not None and closing.row == role['body_rows'][-1]
+                             and named_group_total(role['text'], closing.text), 'cell group has no literal scope closure')
+                else:
+                    _require(False, 'unsupported cell slice role')
+        registry.update({ref: ref for ref in cell_role_refs(fragment)})
+    for f in fragments.values():
+        registry.update({ref: ref for ref in f.context_refs})
     checked = []
     for view in result._semantic_tables:
         for record in view.records:
             _require(record.source_table_id in fragments, 'record has no source table')
             fragment = fragments[record.source_table_id]
-            declared_context = set(fragment.context_refs)
-            for reference in (*record.scope_refs, *(r for v in record.values for r in (*v.unit_refs, *v.period_refs, *v.note_refs) if isinstance(r, TextRef))):
+            declared_context = {*fragment.context_refs, *cell_role_refs(fragment)}
+            inherited = fragment.native_evidence.get('inherited_header_scope', {})
+            origin = fragments.get(inherited.get('source_table_id'))
+            if inherited:
+                _require(origin and origin.page_number + 1 == fragment.page_number
+                         and fragment.native_evidence.get('continuation_scope_guard', {}).get('reason') == 'bound',
+                         'inherited header has no physical continuation evidence')
+                published = {ref.token: ref for ref in cell_role_refs(origin)}
+                for link in inherited.get('cell_role_scopes', []):
+                    ref = published.get(link['source_token'])
+                    _require(ref and ref.kind in {'unit', 'period'} and ref.source_cell.row in inherited['header_rows']
+                             and link['body_rows'] == inherited['body_rows']
+                             and all(set(inherited['source_column_groups'][c]) <= set(ref.columns) for c in link['columns']),
+                             'inherited qualifier has no source header partition')
+                    declared_context.add(ref)
+            ordinary = fragment.native_evidence.get('row_groups', {}).get(str(record.source_row))
+            if ordinary is not None:
+                required_group = CellRef(fragment.fragment_id, *ordinary)
+                _require(required_group in record.row_groups and all(required_group in r.row_headers for r in record.values),
+                         'ordinary group missing from its source interval')
+            _require(all(all(g in v.row_headers for v in record.values) for g in record.row_groups),
+                     'record group has no corresponding value relationship')
+            decomposed = {CellRef(f.fragment_id, declaration['row'], declaration['column'])
+                          for f in (fragment, origin) if f for declaration in f.native_evidence.get('cell_roles', [])}
+            _require(not decomposed.intersection(record.subject_headers), 'whole role-bearing cell used as subject header')
+            references = {*record.scope_refs, *record.row_groups,
+                          *(r for v in record.values for r in
+                            (*v.row_headers, *v.unit_refs, *v.period_refs, *v.note_refs))}
+            for reference in (r for r in references if isinstance(r, TextRef)):
                 _require(reference in declared_context, 'qualifier borrowed from another table/occurrence')
                 locator = fragment.native_evidence.get('context_native_paths', {}).get(reference.token)
                 if locator:
@@ -586,7 +682,7 @@ def validate_table_relations(result):
                              'unit/period/note literal span changed')
                 elif reference.block_id.startswith('cell.'):
                     _, row, col = reference.block_id.split('.')
-                    source = registry.get(CellRef(fragment.fragment_id, int(row), int(col)))
+                    source = registry.get(CellRef(reference.table_id, int(row), int(col)))
                     _require(source is not None and source.text[reference.start:reference.end] == reference.text,
                              'table context cell is unbound')
                 else:
@@ -602,33 +698,78 @@ def validate_table_relations(result):
                 for ref in relation.row_headers:
                     _require(ref in registry and ref.table_id == record.source_table_id,
                              'row header has no source cell')
+                    if isinstance(ref, TextRef):
+                        _require(ref.kind == 'group' and ref in record.row_groups
+                                 and record.source_row in ref.body_rows and cell.column in ref.columns,
+                                 'cell group does not own the value record')
+                        continue
                     header = registry[ref]
                     _require(header.column < cell.column and (header.row <= record.source_row < header.row + header.row_span
-                             or [header.row, header.column] in fragment.native_evidence.get('row_groups', {}).values()),
+                             or [header.row, header.column] == fragment.native_evidence.get('row_groups', {}).get(str(record.source_row))
+                             or ref == record.subject and [header.row, header.column] == fragment.native_evidence.get(
+                                 'retained_row_context', {}).get(str(record.source_row))),
                              'row header does not own the value record')
+                active_roles = applicable_cell_roles(fragment, record.source_row, cell.column, registry)
+                for ref in active_roles:
+                    if ref.kind == 'group' and record.source_row in ref.body_rows and cell.column in ref.columns:
+                        _require(ref in record.row_groups and ref in relation.row_headers,
+                                 'source cell group was detached from its scoped value')
                 scopes = [s for s in fragment.source_header_scopes if s.get('complete') and record.source_row in s.get('body_rows', [])]
                 expected_headers = tuple(CellRef(fragment.fragment_id, h.row, h.column)
                     for h in sorted(fragment.cells, key=lambda c: (c.row, c.column))
                     if any(h.row in s.get('header_rows', []) for s in scopes) and h.text.strip()
                     and h.column <= cell.column and cell.column + cell.column_span <= h.column + h.column_span)
-                _require(relation.column_headers == expected_headers, 'column header path is incomplete or misbound')
+                if origin and record.source_row in inherited.get('body_rows', []):
+                    cols = [c for i in range(cell.column, cell.column + cell.column_span)
+                            for c in inherited['source_column_groups'][i]]
+                    expected_headers = tuple(CellRef(origin.fragment_id, h.row, h.column)
+                        for h in sorted(origin.cells, key=lambda c: (c.row, c.column))
+                        if h.row in inherited['header_rows'] and h.text.strip()
+                        and all(h.column <= c < h.column + h.column_span for c in cols))
+                identity_headers = tuple(h for h in expected_headers if not unit_description(registry[h].text))
+                _require(relation.column_headers in (expected_headers, identity_headers or expected_headers),
+                         'column header path is incomplete or misbound')
                 labels = set((*relation.row_headers, *relation.column_headers))
                 for refs, kind in ((relation.unit_refs, 'unit'), (relation.period_refs, 'period'), (relation.note_refs, 'note')):
                     for ref in refs:
                         if isinstance(ref, TextRef):
-                            _require(ref.kind == kind and record.source_row in ref.body_rows and cell.column in ref.columns,
+                            _require(ref.kind == kind and (ref in active_roles or ref in fragment.context_refs
+                                     and record.source_row in ref.body_rows and cell.column in ref.columns),
                                      'qualifier kind/record/column scope conflict')
                         else:
-                            _require(ref in registry and (ref in labels or kind == 'unit' and ref.column == 0
-                                     and any(ref.row in s.get('header_rows', []) for s in scopes)),
+                            _require(ref in registry and (ref in labels or kind == 'unit' and
+                                     (ref in expected_headers or ref.column == 0 and unit_header(registry[ref].text)
+                                      and (ref.table_id == fragment.fragment_id and any(ref.row in s['header_rows'] for s in scopes)
+                                           or origin and ref.table_id == origin.fragment_id and ref.row in inherited['header_rows']))),
                                      'qualifier source cell is outside its owning headers')
                 # A period printed on a selected header must remain attached.
                 periods = tuple(ref for ref in (*relation.row_headers, *relation.column_headers)
                                 if re.search(r'报告期|同期|年度|期末|年末|月末|\d{4}\s*年|(?<!\d)(?:19|20)\d{2}(?!\d)', registry[ref].text))
-                _require(set(periods) <= set(relation.period_refs), 'printed header period was detached')
-                for ref in fragment.context_refs:
-                    if record.source_row not in ref.body_rows or cell.column not in ref.columns:
-                        continue
+                slices = {ref.source_cell: ref for ref in active_roles if ref.kind == 'period'}
+                printed_periods = {slices.get(ref, ref) for ref in periods}
+                _require(printed_periods <= set(relation.period_refs)
+                         and (not printed_periods or set(relation.period_refs) == printed_periods), 'printed header period was detached')
+                context = [r for r in fragment.context_refs if record.source_row in r.body_rows and cell.column in r.columns]
+                columns = [registry[r].text for r in relation.column_headers]
+                rows = [registry[r].text for r in relation.row_headers]
+                is_amount = scalar(cell.text) or (not cell.text.strip() and any(_AMOUNT_HEADER.search(s) for s in columns))
+                references_only = any(_REFERENCE_HEADER.fullmatch(s.strip().rstrip(':：')) for s in columns)
+                if references_only:
+                    _require(not relation.unit_refs, 'reference column acquired a measurement unit')
+                if is_amount and not references_only and not (re.search(r'[%％‰]', cell.text)
+                        or any(_RATIO_HEADER.search(s) for s in columns) or _per_share_currency(rows, cell.text)):
+                    local = [r for r in relation.row_headers if row_unit_description(registry[r].text)]
+                    applicable = [r for r in active_roles if r.kind == 'unit' and r.source_cell in expected_headers]
+                    source_table = origin if origin and record.source_row in inherited.get('body_rows', []) else fragment
+                    band = inherited['header_rows'] if source_table is origin else {i for s in scopes for i in s['header_rows']}
+                    declared = [r for r in expected_headers if unit_description(registry[r].text)]
+                    corners = [CellRef(source_table.fragment_id, h.row, h.column) for h in source_table.cells
+                               if h.column == 0 and h.row in band and unit_header(h.text)]
+                    required = (local[-1:] or applicable or declared or corners or
+                                [r for r in (*active_roles, *context) if r.kind == 'unit'])
+                    if required and unit_applicable(registry[required[0]].text, columns, rows):
+                        _require(required[0] in relation.unit_refs, 'applicable source unit was detached')
+                for ref in (*active_roles, *context):
                     if ref.kind == 'note':
                         marker = re.match(r'^\s*([0-9]{1,2}|[*†‡])(?:\s+|[.)、：:])', ref.text)
                         if marker and any(re.search(r'(?:\^\s*\{?|<sup>)' + re.escape(marker[1]) + r'(?:\}|</sup>|\b)', registry[r].text)

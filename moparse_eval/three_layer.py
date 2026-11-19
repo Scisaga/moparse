@@ -29,7 +29,7 @@ from .enumeration_binding import (
     member_for_source,
     plan_from_syntax,
 )
-from .enumeration_context import read_enumeration_intro
+from .enumeration_context import list_record_axes, printed_list_ancestors, read_enumeration_intro
 from .expected_readback import _context_continues, elements
 from .explicit_reference_requirements import read_explicit_references
 from .field_sequence_requirements import read_field_sequence_requirements, read_labelled_record
@@ -256,6 +256,13 @@ def _qualifier_key(label: str) -> str:
     raise ValueError("unclassified qualifier")
 
 
+def _wrapped_unit(literal: str):
+    wrapper = re.fullmatch(r'[(（]?([^()（）]+)[)）]?', literal)
+    if (wrapper and wrapper[1] != literal and read_unit_token(wrapper[1])['matched']):
+        return wrapper
+    return None
+
+
 def _pairs(text: str) -> list[tuple[str, str]]:
     """Only the first explicit delimiter in a clause binds its value.
 
@@ -271,11 +278,18 @@ def _pairs(text: str) -> list[tuple[str, str]]:
     # An enclosing parenthesis is not part of an attribute on one side of
     # the colon and part of its value on the other. Preserve the whole body
     # for the content contract rather than manufacture two unbalanced roles.
+    if len(matches) == 1 and (one := matches[0]) and re.fullmatch(r'Units?|单位|單位', one[1].strip(), re.I) and _wrapped_unit(one[2].strip()):
+        return [(one[1].strip(), one[2].strip())]
     if any(match and any(match[1].count(a) != match[1].count(b)
                          or match[2].count(a) != match[2].count(b)
                          for a, b in [('(', ')'), ('（', '）'), ('[', ']')]) for match in matches):
         return []
     if matches and all(matches):
+        if len(matches) > 1:
+            from .record_ast import read_list_record
+
+            if read_list_record(text, {}):
+                return []  # The dated groups own their named child fields.
         return [(match[1].strip(), match[2].strip()) for match in matches if match]
     match = PAIR.fullmatch(text.strip())
     return [(match[1].strip(), match[2].strip())] if match else []
@@ -411,6 +425,93 @@ class _Graph:
         self.record_id: str | None = None
         self.record_sources: dict[str, str] = {}
         self.text_projections: list[dict[str, Any]] = []
+        self.list_qualifier_rows: set[str] = set()
+        self.list_field_qualifiers: dict[str, dict] = {}
+
+    def index_public_list_fields(self, entries):
+        """Use actual list-item occurrences for qualifier ownership, including trailing siblings."""
+        stack = []
+        children: dict[int, list[int]] = {}
+        items = list(entries)
+        previous_band = None
+        for index, (kind, _text, parents, band, _source) in enumerate(items):
+            if kind != "item" or not band:
+                stack.clear()
+                previous_band = None
+                continue
+            if band != previous_band:
+                stack.clear()
+            previous_band = band
+            stack = stack[:len(parents)]
+            if [items[i][1] for i in stack] != list(parents):
+                stack.clear()
+                continue
+            if stack:
+                children.setdefault(stack[-1], []).append(index)
+            stack.append(index)
+        for parent, members in children.items():
+            if _pairs(items[parent][1]):
+                continue
+            fields = []
+            shared = []
+            for item in members:
+                pairs = _pairs(items[item][1])
+                if len(pairs) != 1:
+                    continue
+                label, value = pairs[0]
+                if QUALIFIER.fullmatch(label) or label in {"范围", "範圍"}:
+                    shared.append(item)
+                elif read_measurement_literal(value)["matched"] and (
+                        re.search(r"(?:19|20)\d{2}|年度|年末", label) or item in children):
+                    fields.append(item)
+            for item in fields:
+                target = self.source_key(items[item][4])
+                declarations = {}
+                for child in [*shared, *children.get(item, [])]:
+                    source = items[child][4]
+                    pairs = _pair_sources(items[child][1], source)
+                    if len(pairs) != 1 or child in children:
+                        continue
+                    name, literal, _, proof = pairs[0]
+                    if not literal or not (QUALIFIER.fullmatch(name) or name in {"范围", "範圍"}):
+                        continue
+                    key = "scope" if name in {"范围", "範圍"} else _qualifier_key(name)
+                    self.list_qualifier_rows.add(self.source_key(source))
+                    if key == "unit":
+                        wrapper = _wrapped_unit(literal)
+                        if wrapper:
+                            a = proof["text_span"][0] + wrapper.start(1)
+                            proof = {**proof, "text_span": [a, a + len(wrapper[1])]}
+                            literal = wrapper[1]
+                    level = "record_explicit" if child in shared else "field_inline"
+                    previous = declarations.get(key)
+                    if previous and previous["level"] == level and previous["text"] != literal:
+                        declarations[key] = {"ambiguous": True, "text": literal, "source": proof, "level": level}
+                    elif not previous or previous["level"] != level or not previous.get("ambiguous"):
+                        declarations[key] = {"text": literal, "source": proof, "level": level}
+                if declarations:
+                    self.list_field_qualifiers[target] = declarations
+
+    def bind_public_list_fields(self):
+        for fact in self.data["business"]:
+            declarations = self.list_field_qualifiers.get(self.source_key(fact["source"]), {})
+            for key, proof in declarations.items():
+                if proof.get("ambiguous"):
+                    self.block("conflicting_printed_field_qualifiers", proof["source"], layers=["L", "B"])
+                    continue
+                value = proof["text"]
+                fact["qualifiers"][key] = value
+                fact.setdefault("qualifier_provenance", {})[key] = copy.deepcopy(proof)
+                edges = [e for e in self.data["relations"] if e.get("fact_id") == fact["id"]]
+                for edge in edges:
+                    edge["right"]["qualifiers"] = copy.deepcopy(fact["qualifiers"])
+                edge = next((e for e in edges if e["type"] == "qualifier_scope" and e["left"]["type"] == key), None)
+                if edge:
+                    edge.update(left={"type": key, "text": value}, source=copy.deepcopy(proof["source"]))
+                elif edges:
+                    self.relation("qualifier_scope", {"type": key, "text": value},
+                                  copy.deepcopy(edges[0]["right"]), copy.deepcopy(proof["source"]))
+                    self.data["relations"][-1]["fact_id"] = fact["id"]
 
     @staticmethod
     def source_key(source: dict[str, Any]) -> str:
@@ -518,21 +619,30 @@ class _Graph:
             return
         reading = _read_narrative(text, source, scope=self.headings) if not parents and kind in {"text", "field_body"} else None
         offset = source.get('text_span', [0])[0]
-        dated_numbers = [origin['text_span'] for fact in (reading or {}).get('facts', [])
-                         for key, origin in fact.get('qualifier_sources', {}).items()
-                         if key in {'period', 'from_period', 'to_period'} and isinstance(origin, dict)
-                         and all(origin.get(k) == source.get(k) for k in ('path', 'lines', 'cell', 'block', 'native_path'))
-                         and 'text_span' in origin]
-        only_dates = all(any(a <= offset + m.start() < offset + m.end() <= b for a, b in dated_numbers)
-                         for m in re.finditer(r'\d+', text))
-        explicit = bool(reading and reading.get("facts") and (reading['complete'] and only_dates or all(fact.get("qualifier_sources", {}).get("unit")
+        references = []
+        for fact in (reading or {}).get('facts', []):
+            for role, origin in fact.get('qualifier_sources', {}).items():
+                if role not in {'period', 'from_period', 'to_period'} and not (
+                        role == 'page_range' and fact.get('logic', {}).get('kind') == 'document_composition'):
+                    continue
+                if isinstance(origin, dict) and 'text_span' in origin and all(
+                        origin.get(k) == source.get(k) for k in ('path', 'lines', 'cell', 'block', 'native_path')):
+                    references.append({'role': role, 'source': origin})
+        spans = [ref['source']['text_span'] for ref in references]
+        only_references = all(any(a <= offset + m.start() < offset + m.end() <= b for a, b in spans)
+                              for m in re.finditer(r'\d+', text))
+        explicit = bool(reading and reading.get("facts") and (reading['complete'] and only_references or all(fact.get("qualifier_sources", {}).get("unit")
             for fact in reading["facts"]) and (reading["complete"] or all(
                 not re.search(r"\d", fragment.get("text", "")) for issue in reading.get("unresolved", [])
                 for fragment in issue.get("fragments", [issue])))))
         if explicit:
-            self.data.setdefault("unit_scope_terminations", []).append({"declaration": copy.deepcopy(proof),
+            termination = {"declaration": copy.deepcopy(proof),
                 "boundary": {"kind": kind, "text": text, "source": copy.deepcopy(source)},
-                "rule_id": "independent_prose_inline_units_end_the_table_default"})
+                "rule_id": "independent_prose_inline_units_end_the_table_default"}
+            if reading['complete'] and only_references and any(ref['role'] == 'page_range' for ref in references):
+                termination.update(rule_id='independent_prose_with_printed_page_reference', references=copy.deepcopy(references))
+                self.data['syntax'][-1]['unit_scope_end'] = copy.deepcopy(termination)
+            self.data.setdefault("unit_scope_terminations", []).append(termination)
             return
         original = next((item for item in reversed(self.data["syntax"][:-1])
                          if self.source_key(item["source"]) == self.source_key(proof["source"])), None)
@@ -572,7 +682,7 @@ class _Graph:
              identity_facets: dict[str, str] | None = None, inherit_qualifiers: bool = True,
              scope: list[str] | None = None, record_id: str | None = None,
              attribute_source: dict[str, Any] | None = None,
-             measurement_source: dict[str, Any] | None = None,
+             measurement_source: dict[str, Any] | None = None, record_axis: dict[str, Any] | None = None,
              qualifier_sources: dict[str, dict[str, Any]] | None = None) -> dict[str, Any]:
         identity = bool(IDENTITY.fullmatch(attribute)) if identity is None else identity
         q = {**(self.qualifiers if inherit_qualifiers else {}), **(qualifiers or {})}
@@ -633,6 +743,9 @@ class _Graph:
                     "qualifiers": dict(q), "identity_facets": dict(item["identity_facets"])}
         self.relation("field_binding", {"subject": item["subject"], "attribute": attribute}, endpoint, source)
         self.data["relations"][-1]["fact_id"] = item["id"]
+        if record_axis:
+            item['record_axis'] = copy.deepcopy(record_axis)
+            self.data['relations'][-1]['binding_evidence'] = {'record_axis': copy.deepcopy(record_axis)}
         for key, literal in q.items():
             origin = provenance.get(key, {}).get("source", source)
             self.relation("qualifier_scope", {"type": key, "text": literal}, endpoint, origin)
@@ -807,6 +920,11 @@ class _Graph:
                                     "scope": list(self.headings), "parents": list(parents or []),
                                     "parent_evidence": copy.deepcopy(parent_evidence or []),
                                     "syntax_evidence": copy.deepcopy(syntax_evidence or {})})
+        if self.source_key(source) in self.list_qualifier_rows:
+            for name, value, label_source, value_source in _pair_sources(text, source):
+                self.literal(name, label_source, "label")
+                self.literal(value, value_source, "qualifier")
+            return
         if kind == 'heading' and self.heading_stack and self.heading_stack[-1][1] == text:
             self.data['syntax'][-1]['heading_level'] = self.heading_stack[-1][0]
         if kind == 'heading' and _pairs(text) and not all(QUALIFIER.fullmatch(key) for key, _ in _pairs(text)):
@@ -861,6 +979,7 @@ class _Graph:
         identity = next((fact for fact in reversed(self.data["business"])
                          if fact["role"] == "identity" and fact["value"] == self.subject), None)
         record_parents = []
+        financial_parents = []
         for depth, parent in enumerate(parents or []):
             declared = next((p for p in parent_evidence or [] if p['text'] == parent), None)
             candidates = [p for p in self.data['syntax'][:-1] if p['text'] == parent and p.get('kind') == 'parent_label'
@@ -872,6 +991,21 @@ class _Graph:
                               and p['syntax_evidence']['list_span'] == syntax_evidence.get('list_span')
                               and p['syntax_evidence'].get('list_stream') == syntax_evidence.get('list_stream')]
             record_parents.append({'text': parent, 'source': copy.deepcopy(candidates[-1]['source'])} if candidates else parent)
+            owner = candidates[-1] if candidates else None
+            if owner is None and not declared and not syntax_evidence.get('list_span') and syntax_evidence.get('kind') in {'item', 'list_item'}:
+                # Some source streams declare ancestry per item, without a list span.
+                # Only the still-open item at this depth can own the field.
+                for prior in reversed(self.data['syntax'][:-1]):
+                    syntax = prior.get('syntax_evidence', {})
+                    if (syntax.get('kind') not in {'item', 'list_item'} or syntax.get('list_span')
+                            or syntax.get('list_stream') != syntax_evidence.get('list_stream') or prior.get('scope') != self.headings):
+                        break
+                    if len(prior.get('parents', [])) <= depth:
+                        if prior['kind'] == 'parent_label' and prior['text'] == parent and prior.get('parents', []) == list(parents)[:depth]:
+                            owner = prior
+                        break
+            financial_parents.append({'text': parent, 'source': owner['source'],
+                'financial_group_context': owner.get('financial_group_context')} if owner else {'text': parent})
         record = (read_labelled_record(text, source, scope=self.headings, parents=record_parents,
             qualifiers=self.qualifiers, qualifier_sources={k: p['source'] for k, p in self.qualifier_evidence.items()})
                   if self.compact_schema is None else {'matched': False})
@@ -896,13 +1030,6 @@ class _Graph:
             return
         if re.search(r"续表|續表|\btable\s+continued\b|\bcontinued\s+table\b", text, re.I):
             self.block("cross_page_relation_interpretation_unsupported", source, text=text)
-        financial_parents = []
-        for parent in parents or []:
-            declared = next((item for item in parent_evidence or [] if item["text"] == parent), None)
-            actual = next((item for item in reversed(self.data["syntax"][:-1]) if item["text"] == parent
-                           and (declared is None or self.source_key(item["source"]) == self.source_key(declared["source"]))), None)
-            financial_parents.append({"text": parent, "source": copy.deepcopy(actual["source"]),
-                "financial_group_context": copy.deepcopy(actual.get("financial_group_context"))} if actual else {"text": parent})
         financial_context = read_financial_group_context(text, source, kind=kind,
             heading=self.financial_heading(), parents=financial_parents, unit=self.qualifier_evidence.get("unit"))
         if kind == "parent_label" and financial_context["matched"]:
@@ -911,6 +1038,7 @@ class _Graph:
             self.data.setdefault("financial_group_contexts", []).append(copy.deepcopy(financial_context))
             self.literal(text, source, "locator")
             return
+        unbound_parents = []
         for parent in parents or []:
             parent_pairs = _pairs(parent)
             if not financial_context["matched"] and (not parent_pairs or any(not (IDENTITY.fullmatch(key) or QUALIFIER.fullmatch(key))
@@ -918,6 +1046,7 @@ class _Graph:
                 actual = next((item for item in reversed(self.data["syntax"][:-1]) if item["text"] == parent), None)
                 self.block("list_group_scope_interpretation_unsupported", source, parent=parent,
                            parent_source=copy.deepcopy(actual["source"]) if actual else None)
+                unbound_parents.append(self.data["blockers"][-1])
         schema = read_compact_schema(text, source, qualifiers=self.qualifiers)
         if schema["matched"]:
             self.compact_schema = schema.get("schema")
@@ -1147,6 +1276,11 @@ class _Graph:
             self.block("compact_multi_metric_requirement_unsupported", source, text=text)
         if pairs:
             # Identity is independent of formatting and never a numeric parent.
+            list_rows = []
+            if unbound_parents and all(value and not (IDENTITY.fullmatch(key) or QUALIFIER.fullmatch(key))
+                                       for key, value in pairs):
+                list_rows = printed_list_ancestors(self.data['syntax'], len(self.data['syntax']) - 1)
+            list_fields = []
             for key, value in pairs:
                 if PRIMARY.fullmatch(key) and value:
                     self.identity_attribute(key, value)
@@ -1164,6 +1298,7 @@ class _Graph:
             # Qualifiers in a record apply to its independent sibling facts,
             # regardless of serialization order.
             pair_sources = _pair_sources(text, source)
+            record_axes = list_record_axes(pair_sources) if (syntax_evidence or {}).get('kind') in {'item', 'list_item'} else {}
             for key, value, _key_source, value_source in pair_sources:
                 if QUALIFIER.fullmatch(key):
                     self.declare_qualifier(_qualifier_key(key), value, value_source,
@@ -1200,7 +1335,13 @@ class _Graph:
                     facets = copy.deepcopy(self.identity_facets)
                     if financial_context["matched"]:
                         facets["group"] = copy.deepcopy(financial_context["group_path"])
-                    fact = self.fact(key, value, value_source, attribute_source=key_source, identity_facets=facets)
+                    elif list_rows:
+                        facets['list_parents'] = [r['text'] for r in list_rows]
+                    fact = self.fact(key, value, value_source, attribute_source=key_source, identity_facets=facets,
+                                     record_axis=record_axes.get(key))
+                    if list_rows:
+                        fact['row_evidence'] = copy.deepcopy(list_rows)
+                        list_fields.append(fact['id'])
                     if financial_context["matched"]:
                         if fact["role"] == "identity":
                             binding: dict[str, Any] = {"facts": [fact]}
@@ -1213,6 +1354,12 @@ class _Graph:
                 elif kind != "parent_label":
                     # A colon alone is a scope label, not an empty fact.
                     pass
+            if list_fields:
+                self.data['syntax'][-1]['list_field_ids'] = list_fields
+                for issue in unbound_parents:
+                    matches = [r['source'] for r in list_rows if r['text'] == issue['parent']]
+                    if len(matches) == 1:
+                        issue['parent_source'] = copy.deepcopy(matches[0])
             return
         self.literal(text, source, "heading" if kind == "heading" else "literal")
         if kind == "heading" and len(self.headings) > 1:
@@ -1225,6 +1372,13 @@ class _Graph:
             labels = [p for p in parents if not _pairs(p) or any(IDENTITY.fullmatch(k) for k, _ in _pairs(p))]
             if labels:
                 self.relation("list_membership", labels[-1], {"text": text}, source)
+                if kind == 'image_caption' and unbound_parents:
+                    rows = printed_list_ancestors(self.data['syntax'], len(self.data['syntax']) - 1)
+                    if rows and labels[-1] == rows[-1]['text']:
+                        edge = self.data['relations'][-1]
+                        edge['right']['parents'] = [r['text'] for r in rows]
+                        edge['binding_evidence'] = {'rows': rows}
+                        self.data['syntax'][-1]['list_caption_relation'] = edge['id']
 
     def table(self, cells: list[dict[str, Any]], source: dict[str, Any]) -> None:
         self.continuity_segment += 1
@@ -1236,6 +1390,10 @@ class _Graph:
         for atom in projection["atoms"]:
             atom.update(continuity_segment=self.continuity_segment, scope=list(self.headings))
         self.text_projections.append(projection)
+        # The caption supplied to read_matrix belongs to this physical table.
+        # A subsequent table or record needs its own printed declaration.
+        self.clear_heading_state()
+        self.record_start = len(self.data["business"])
 
 
 
@@ -1254,6 +1412,7 @@ def _finish(graph: _Graph) -> dict[str, Any]:
             if missing:
                 graph.block("compact_declared_columns_missing", members[0]["source"],
                             layers=["B", "L"], columns=copy.deepcopy(missing), record_id=members[0]["record_id"])
+    graph.bind_public_list_fields()
     enumerations = plan_from_syntax(graph.data["syntax"])
     graph.data["blockers"].extend(copy.deepcopy(enumerations["blockers"]))
     graph.data.setdefault("pending_requirements", []).extend(copy.deepcopy(enumerations["pending_requirements"]))
@@ -1635,9 +1794,13 @@ def _finish(graph: _Graph) -> dict[str, Any]:
 
 
 def compile_markdown(markdown: str, *, sample_id: str = "synthetic",
-                     selected_lines: list[tuple[int, int]] | None = None, path: str = "<markdown>") -> dict[str, Any]:
+                     selected_lines: list[tuple[int, int]] | None = None, path: str = "<markdown>",
+                     public_list_fields: bool = False) -> dict[str, Any]:
     graph = _Graph(sample_id)
     document = elements(markdown)
+    if public_list_fields:
+        graph.index_public_list_fields((el.kind, el.text, el.parents, el.list_span, _source(path, el.lines))
+                                       for el in document)
     syntax = [{"id": f"syntax:{index}", "kind": element.kind, "text": element.text,
                "reference": _source(path, element.lines), "cells": element.cells,
                "parents": list(element.parents), "list_span": element.list_span,
@@ -1712,7 +1875,7 @@ def compile_expected(expected: dict[str, Any]) -> dict[str, Any]:
 def read_candidate_markdown(markdown: str, *, sample_id: str = "synthetic", pipeline: str = "test") -> dict[str, Any]:
     from .literal_readback import text_readback
 
-    result = compile_markdown(markdown, sample_id=sample_id, path="<candidate-markdown>")
+    result = compile_markdown(markdown, sample_id=sample_id, path="<candidate-markdown>", public_list_fields=True)
     result["pipeline"] = pipeline
     result["literal_readback"] = text_readback(result["text"])
     return result
@@ -1726,6 +1889,11 @@ def read_candidate(observation: dict[str, Any]) -> dict[str, Any]:
         result["literal_readback"] = text_readback(result["text"])
         return result
     graph = _Graph(observation["sample_id"])
+    for page in observation.get("pages", []):
+        graph.index_public_list_fields((b.get("public_syntax_kind"), b.get("text", ""),
+            b.get("public_list_parents", []), b.get("public_list_span"),
+            {"path": b.get("native_path", b.get("id")), "page": page.get("page"),
+             "lines": b.get("public_lines", []), "block": b.get("id")}) for b in page.get("blocks", []))
     toc_blocks = [{**block, "source": {"path": block.get("native_path", block.get("id")), "page": page.get("page"),
                                        "lines": block.get("public_lines", []), "block": block.get("id")}}
                   for page in observation.get("pages", []) for block in page.get("blocks", [])]
@@ -1906,9 +2074,6 @@ def grade_layers(requirements: dict[str, Any], evidence: dict[str, Any], *, scor
         if requirements.get('comparison_contract') == 'document_ast':
             if requirements.get('comparison_contract_version') != 'document_ast/1':
                 raise ValueError('unknown document comparison contract version')
-        if requirements.get('comparison_contract') == 'document_ast' and (
-                requirements.get('source_form_requirements')
-                or requirements.get('comparison_coverage', {}).get('navigation_order_requirement_ids')):
             from .document_ast_comparison import grade_document_content
 
             return grade_document_content(requirements, evidence)

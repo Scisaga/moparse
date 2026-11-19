@@ -53,6 +53,8 @@ def native_status_impacts(result):
                 "path": binding.get("entry", "#/pages"), "input_page": page}
 
     pending = result._final_text_evidence.get("unresolved_continuations", [])
+    joined = {f.fragment_id for f in result._table_fragments if
+              f.native_evidence.get('continuation_scope_guard', {}).get('reason') == 'bound'}
     for page in contract.selected_pages:
         own = [i for i in items if i.input_page == page]
         # Both textual regions and table/image occurrences have a position in
@@ -105,7 +107,7 @@ def native_status_impacts(result):
                     observation={'native_label': item.details.get('label'), 'consumer_role': b.get('type'),
                                  'read_status': b.get('read_status'), 'read_error': b.get('read_error')})
             declaration = b.get('native_table_declaration', {})
-            if declaration.get('continues_prev') is True:
+            if declaration.get('continues_prev') is True and b.get('service_fragment_id') not in joined:
                 add('native_table_continuation_unresolved', 'output_responsibility_unresolved',
                     [source(item)], ['body.table_relations'], effects=('table_relations',),
                     dependencies=[{'obligation': 'complete_cross_page_header_and_cell_partition'}],

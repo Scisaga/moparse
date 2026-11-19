@@ -1,5 +1,7 @@
 # MO-Parse：S5 财务表格 Native → Final 公共处理价值研究
 
+续修状态（2026-11-18）：第 1–9 节及其链接保留上一轮研究与修复前结论。本轮已把同格多角色及独立范围处理接入公共链，P06 的实际改善、八配置回归及独立版本证据见[第 10 节](#10-复合表头多角色与独立作用范围的实际修复)；旧问题记录不代表续修后的当前结果。
+
 2026-11-18。接手 HEAD 为 `574805b866877a1cdc183e18f1856da348bdf78f`，工作区初始干净。固定范围为 `huawei-statements-p068-070`、原输入页 68–70、P01–P08 各自的保存 Native 与既有冻结 Final。本报告接续 [Native 质量研究](native-quality-findings.md)，没有重新接入解析器、重建评测框架或扩大到其他选段。
 
 ## 1. 研究结论
@@ -245,6 +247,92 @@ A–E 不是互斥的样本评分，也不相加成总收益。一个原值可�
 
 本轮仅修改公共单位角色识别及其受控正反例，新增本报告和本地研究证据。原 Native、Expected、Oracle、selection、source-map、历史 Final、原始成本与输入均未改；原输入和冻结 Final 的 SHA 保持。没有 PDF/图片查看、PDF 文字层、OCR/VLM、模型运行、在线服务/GPU/TTS 操作、正式 current 激活、部署、提交或推送。本轮到此停止扩展，保留研究与修复前后证据，供用户审阅。
 
+## 10. 复合表头多角色与独立作用范围的实际修复
+
+本轮从实际 HEAD `b39d00f63c0910a0979f102032ad4585f2357081`、干净工作区接续，直接修改现有 TableContext、TableSemantics 和来源去向记录。最终版本已在 S5 八配置各自的保存 Native 上运行；P06 原页 69 的 74 个非空日期列值逐项获得有源格、有范围及实际正文位置的单位引用，错误的“资产：负债 / 借款”前缀消失。没有重做 Native 质量研究、运行评分或转换完整 72 组 Final。
+
+### 10.1 版本、范围与证据保存
+
+证据根为 `benchmark/runs/lite/diagnostics/s5-cell-role-scopes-20261118/`。[输入绑定][role-inputs]保存原 Native、observation、旧 Final、旧 Semantic/evidence 及旧 Storage 的路径和 SHA；`before/`独立保存八份旧正文、Semantic/evidence、Storage 和当前接手代码快照。P01/P02 使用上一轮完整单位括号修复后的实际交付作为回归基线，其余六组使用原冻结交付，没有为 P01–P06 制造历史处理基线。接手软件 ID 为 `565bbf2dffc3055bb42f6872835808ce2f53805ed22643538a3862348ee37be2`；六组冻结交付的原软件身份仍保留为第 2 节所列值。
+
+最终修复软件 ID 为 `22f5a0a17c9a12b314fd1ec6b7dc8d0931111176d6b04b9b34aa28c3d2c154c4`，代码在 `attempt-02/after/software/`独立保存。八条最终重放全部使用这一身份，各自实际 Export、IR、Semantic、Final 和 Storage 保存在 `attempt-02/after/{pipeline}/huawei-statements-p068-070/`。最初实现及其八份工件保留在 `attempt-01/`；随后补齐“分组已证、单位未证”的局部保留及来源拒绝校验后，才生成最终版本，未覆盖前次证据。
+
+两次都是必要的 S5 确定性重放，复用原 CLI 及原 source metadata：只读代码/Native、独立 mount/network namespace、原件与 Expected 等目录屏蔽、GPU 不可见、8 CPU affinity、8 GiB address-space limit、串行，仅本轮输出目录可写。最终八次执行均成功，工件内的边界违规为空，Native 未改，Actual Final 与 Storage UTF-8 字节一致；原解析成本未改。这些执行是内容组织验证，不是新的吞吐或生产延迟测量。详见[执行记录][role-execution]和各条 `evidence.json`。
+
+### 10.2 进入实际处理链的通用能力
+
+原 Native 的 HTML 角格依次通过 Adapter、Export、IR 保留完整文字；IR 没有被拆格或写入新的答案。`prepare_native_table_scopes()`调用现有 `native_scopes()`，在已确认的计量表头范围内建立格内角色声明。`_compound_header_roles()`按实际边缘括号与文字跨度读取单位，另用连续标量记录和精确具名总计证明起始分组的范围；后者不借用单位的范围。生产代码没有公司、配置、页码、金额或具体角格特判。
+
+角色复用 `TextRef`，通过 `source_cell`回指同一 `CellRef`；`native_evidence.cell_roles`只保存一份完整原格和原生 locator，每个角色各有实际片段、半开字符跨度、识别依据和行列范围。`bind_table_view()`不再把已分解角格整体放进所有记录的 `subject_headers`；分组片段进入适用记录的 `row_groups`和 `ValueRelation.row_headers`，单位片段由 `_qualify_relation()`独立限定到适用值。既有具名总计规则同时支持中文总计，结束旧组后不把它传播到后续跨组汇总。
+
+`render_nested_record()`仍按这些已有引用生成正文，FinalContent 继续使用自己的实际编辑账本，Storage 保存实际 Final。输出 observation 和反向 Native 去向增加角色的源格及片段跨度、Semantic token 和真实 Final 字符位置；整格去向标为 `located_in_final_roles`时，必须由实际片段覆盖其非空白原文，不能拿某个片段冒充完整角格。来源校验拒绝重叠跨度、改绑 locator、外表 occurrence、超出范围的分组和脱离已证分组的值。来源定义更新在[表格来源约定](../../../docs/specs/table-source.md#表头与限定语作用域)。
+
+两个方向的局部不确定性均保留：已证单位、未证组名时仍可建立单位引用，组名原文留在局部原表；已证组名、括号内资格文字未证时可保留分组而不给值补单位。部分文字被引用不算整格已消费，残余原文通过现有 retained row 路径交付，不让一格的歧义阻断其他记录。这些反例来自受控文字结构，不将它们计为额外真实财报样本。
+
+### 10.3 P06 原页 69 的实际范围与 Final
+
+原生 locator 保持为 `#/documents/0/pages/1/blocks/2/content/0/content::html/cell[0]`，完整原文仍为 `（人民币百万元）资产`。下列坐标均为此物理表的原始零基行列，不是新插入的显示行，也不出现在交付正文中。
+
+| 角色 | 实际文字来源 | 证据及适用范围 | 实际金额列实例 |
+| --- | --- | --- | --- |
+| 单位 | 原格 `(0,0)` 的 `[0,8)`：`（人民币百万元）` | 当前完整日期表头的 body rows 1–39，columns 2、3；附注列不继承金额单位 | 74 个非空日期列值各有一个独立引用及其后的真实单位正文 |
+| 起始业务分组 | 同格 `[8,10)`：`资产` | 连续记录 rows 1–18，至源格 `(18,0)` 的“资产总计”结束；不跨权益标题 | 18 条记录、36 个日期列值 |
+| 权益分组 | 独立标题源格 `(19,0)`：`权益` | rows 20–22，至“权益总计”结束 | 3 条记录、6 个日期列值 |
+| 负债分组 | 独立标题源格 `(23,0)`：`负债` | rows 24–38，至“负债总计”结束 | 15 条记录、30 个日期列值 |
+| 跨组总计 | 行名源格 `(39,0)`：`权益及负债总计` | 不继承资产、权益或负债的业务分组；仍在本表单位范围内 | 1 条记录、2 个日期列值 |
+
+这里的 74 是实际逐项检查结果，并非预设让每个值都继承同一单位：表头只声明一个完整单位，两个日期列均在其范围内，74 个原值均符合既有标量及计量适用条件；附注编号没有获得单位。74 条对照分别保存值格、原文、行名、附注列、日期及期间引用、单位/分组片段、作用范围、实际 Final value 和 qualifier 跨度，见[逐值记录][role-values]。原角格在反向去向中有 74 个单位位置和 18 个分组位置，均回指同一原生格的不同片段，不制造第二个源格。
+
+| 比较对象 | 修复前实际结果 | 最终修复后实际结果 |
+| --- | --- | --- |
+| 原始角格 | `（人民币百万元）资产` | 完整原文、Native locator、源格与 IR 文字不变 |
+| 角色识别 | 整格成为所有记录的业务列头 | 单位 `[0,8)` 与资产组 `[8,10)` 独立引用 |
+| 单位引用 | 74 个非空日期列值均无引用 | 74 个逐项建立引用，范围为本表两个日期列；附注列仍无单位 |
+| 业务分组 | 权益、负债记录仍带资产前缀，负债还覆盖最后的跨组总计 | 资产、权益、负债独立；跨组总计无继承组名 |
+| Final | `（人民币百万元）资产：负债 / 借款` | `负债 / 借款`，其两年金额下分别打印单位 |
+| 原始值与限定内容 | 原金额、日期、行名及附注 | 原源格逐格一致，金额和附注列实际交付文字没有猜改 |
+
+最终 [P06 Actual Final][role-final] 中的真实节选为：
+
+```text
+- 资产 / 物业、厂房及设备
+  - 附注：14
+  - 2024年12月31日：176,565
+    - 单位：（人民币百万元）
+  - 2023年12月31日：156,495
+    - 单位：（人民币百万元）
+
+- 负债 / 借款
+  - 附注：24
+  - 2024年12月31日：237,508
+    - 单位：（人民币百万元）
+  - 2023年12月31日：291,688
+    - 单位：（人民币百万元）
+```
+
+### 10.4 八配置真实回归与剩余边界
+
+下表每格依次为“非空日期列值数：修复前有单位引用 → 修复后有单位引用”。它是实际来源组织对照，不是业务正确率或 T/L/B 分母。P01/P02 的“前”已包括上一轮括号缺一侧的修复。
+
+| 配置 | 利润表 | 资产负债表 | 现金流表 |
+| --- | --- | --- | --- |
+| P01 | `50：50 → 50` | `74：74 → 74` | `20：20 → 20` |
+| P02 | `44：0 → 0` | `70：65 → 65` | `18：17 → 17` |
+| P03 | `54：54 → 54` | `74：74 → 74` | `20：20 → 20` |
+| P04 | `54：54 → 54` | `74：74 → 74` | `20：20 → 20` |
+| P05 | `54：54 → 54` | `74：74 → 74` | `20：20 → 20` |
+| P06 | `54：54 → 54` | `74：0 → 74` | `20：20 → 20` |
+| P07 | `54：54 → 54` | `74：74 → 74` | `20：20 → 20` |
+| P08 | `54：54 → 54` | `74：74 → 74` | `20：20 → 20` |
+
+八组 Native cells 和 IR 交接使用的源格原文均未改，Semantic 值格集合及列头、期间、附注引用不变；全部 1,770 个已组织值槽（含附注与空文字槽）的实际 Final 文字逐项与各自修复前一致。P01 的 8 个、P02 的 44 个保留源格及其实际 Final 出现也逐项不变，无标签小计及破损合写没有被补名或拆成猜测值。固定收入、销售成本、销售毛利的 48 个年度金额仍全部交付，其中 42 个有完整单位来源；P02 六例仍因原生单位缺字而未被补全。详见[总对照][role-comparison]、[主指标逐值来源][role-principal]、[附注及局部保留对照][role-retention]和[IR 保全记录][role-ir]。
+
+普通单位角格、没有显式 `<th>` 的计量头以及 P01/P02 完整载荷缺括号的单位绑定均未退回业务前缀。除 P06 外，实际分组变化只有两类：P01/P03/P04/P05/P07/P08 各一条“权益及负债总计”在“负债总计”后退出负债组；P02 三条权益记录在“资产总计”后退出资产组。逐条检查了这些变化自己的原生行带与实际 Final，没有发现新引入的分组或单位回归。P02 合写的权益行名、`2月31日`、缺位金额等原生错误继续保留，不宣称恢复了正确业务答案；完整差异见[分组对照][role-groups]。
+
+既有多层表头、共享单位、多分组、分组切换、无标签小计、空白角格、续表与相邻表边界回归，加上本次少量必要的同格正反例，共 11 个相关测试模块在禁用父 conftest、plugin autoload 并拒绝原件、参考、媒体和网络 I/O 的局部审计下通过 727 项，边界违规为空，实际代码身份未变。合写片段的两种先后顺序、两种局部未知方向、普通网格正文、相邻表不继承、原文重叠、locator 改绑、外表 occurrence、错误行范围及已证分组脱离均有独立反例；测试明细与实际参数见[回归记录][role-regression]。这些是软件验证，不计为额外真实样本或完整财务验收。
+
+当前能力限定在有原生表头、实际文字边界和各自范围证据的片段；没有扩大到任意正文拆角色、缺失金额恢复、未知合并格关系或全部财务层级。八组转换与媒体交付状态保持：P06/P07 的 conversion 为 completed，其余六组 partial，八组 delivery 均为 partial；本轮不据此给出完整质量等级。原 Native、Expected、正式分母、计分合同、原始成本及旧工件均保留，未解析 PDF、未调用 OCR/VLM、未运行任何新评分或服务/GPU/TTS 操作。所有改动留在工作区，未提交、未推送，等待用户审阅。
+
 [historical]: ../../runs/lite/service/development/cross-document-normalization-phase12/final-binding.json
 [inputs]: ../../runs/lite/diagnostics/native-final-value-s5-20261118/inputs.json
 [cases]: ../../runs/lite/diagnostics/native-final-value-s5-20261118/casebook.json
@@ -256,3 +344,100 @@ A–E 不是互斥的样本评分，也不相加成总收益。一个原值可�
 [repair]: ../../runs/lite/diagnostics/native-final-value-s5-20261118/repair-impact.json
 [execution]: ../../runs/lite/diagnostics/native-final-value-s5-20261118/repair-execution.json
 [summary]: ../../runs/lite/diagnostics/native-final-value-s5-20261118/research-summary.json
+[role-inputs]: ../../runs/lite/diagnostics/s5-cell-role-scopes-20261118/inputs.json
+[role-execution]: ../../runs/lite/diagnostics/s5-cell-role-scopes-20261118/attempt-02/execution.json
+[role-comparison]: ../../runs/lite/diagnostics/s5-cell-role-scopes-20261118/attempt-02/comparison.json
+[role-values]: ../../runs/lite/diagnostics/s5-cell-role-scopes-20261118/attempt-02/p06-74-values.json
+[role-principal]: ../../runs/lite/diagnostics/s5-cell-role-scopes-20261118/attempt-02/principal-values.json
+[role-retention]: ../../runs/lite/diagnostics/s5-cell-role-scopes-20261118/attempt-02/retention-and-notes.json
+[role-groups]: ../../runs/lite/diagnostics/s5-cell-role-scopes-20261118/attempt-02/group-differences.json
+[role-regression]: ../../runs/lite/diagnostics/s5-cell-role-scopes-20261118/attempt-02/regression.json
+[role-final]: ../../runs/lite/diagnostics/s5-cell-role-scopes-20261118/attempt-02/after/P06/huawei-statements-p068-070/final.md
+[role-ir]: ../../runs/lite/diagnostics/s5-cell-role-scopes-20261118/attempt-02/ir-preservation.json
+
+## 11. 表头分段、具名小计与实际下载（2026-11-19）
+
+本轮对照起点为第 10 节的 `attempt-02`，软件 ID 为 `22f5a0a17c9a12b314fd1ec6b7dc8d0931111176d6b04b9b34aa28c3d2c154c4`。新版八份实际 Final、Semantic、Storage 和软件快照独立保存在 `validated-02/after/`，软件 ID 为 `926db2c1e78cf1c46d5e7eff9cd20b8e6c051e7c7a14a6188b2e777f0e0dc0b9`。P01 至 P08 逐个串行重放，每次仅挂载本配置的保存 Native 和执行元数据，使用 8 CPU、8 GiB、禁用网络及 GPU 的隔离环境。开发重放与此次交付分目录留存。[基线文件及校验值][scope-baseline]、[新版逐配置执行记录][scope-execution]、[下载八份实际 Markdown][scope-finals]。
+
+| 比较对象 | 基线中的实况 | 新版交付及来源 |
+| --- | --- | --- |
+| P06 角格与 74 个金额 | 最初整格传播为业务上级，缺 74 个单位；到本轮基线已拆出单位和资产，74 个单位已建立 | 原生完整文字仍为 `（人民币百万元）资产`。单位取字符区间 `[0,8)`，两日期金额列共用。资产取 `[8,10)`，覆盖本表第 1–18 数据行。74 个值分别比对原 HTML 的金额、日期、行名、附注、分组源格以及 Final 位置 |
+| P06 七对同名行 | 大组内同名项目共 28 个日期金额，仅靠名称和附注无法区分两个借款记录 | 以原生标题、同级具名小计及各自连续区间确定子组。七对逐笔保留自己的源格，负债与权益各自独立，跨组总计仍有自己的两笔日期金额、单位 |
+| P02 利润表残缺角格 | `（人民币百万` 成为 22 条记录的共同业务上级 | 角格完整残片原地保留一次，22 条错误前缀全部消失。六个收入、销售成本、销售毛利年度金额继续没有单位来源 |
+| 现有金额与实际字节 | 1,770 个值槽，含附注和空格位；八份正文各自持久化 | 相同 Native 和 IR 源格，逐槽核对原文和 Final 位置。633 槽的关系发生改变，567 槽在七份财务状况表增加具名子组，P02 的 66 槽撤除残片上级。其余 1,137 槽的这些关系相同。八份 Storage 正文各自与对应 Final 字节一致 |
+| 已有可证单位 | P01 现金流表 20 个，P02 财务状况表 65 个；八组固定三项主指标 48 个金额中 42 个有单位 | 所有 85 个旧绑定逐个保留来源和实际正文位置。48 个金额全部交付，42 个有完整单位，六个源格残缺的金额继续局部交付 |
+
+[含来源和正文行号的 74 行 CSV][scope-csv]、[原 HTML 独立逐格核对][scope-raw]、[P06 每笔前后关系][scope-p06]、[七对同名行的 28 个金额][scope-pairs]、[P02 残片和正文位置][scope-p02]、[85 个既有单位][scope-protected]、[48 个主指标][scope-indicators]、[1,770 槽逐项去向][scope-slots]、[633 槽关系变动明细][scope-changes]。
+
+P06 两笔借款的附注均为 `24`，日期列从左至右均为 `2024年12月31日`、`2023年12月31日`。下表行号为原生物理表的零基行号，表头在第 0 行。各行覆盖关系在读到金额之前即可从标题及具名小计确立。[P06 实际 Final][scope-final-p06]。
+
+| 原生记录 | 日期金额原文（2024 / 2023） | 实际打印路径与原生依据 |
+| --- | --- | --- |
+| 第 24 行，借款 | 237,508 / 291,688 | 负债 / 非流动负债 / 借款。负债标题在第 23 行，第 28 行“非流动负债合计”界定第 24–27 行 |
+| 第 29 行，借款 | 27,363 / 16,726 | 负债 / 流动负债 / 借款。第 28 行结束上一组，第 37 行“流动负债合计”界定第 29–36 行 |
+| 第 39 行，权益及负债总计 | 1,290,149 / 1,263,597 | 独立记录。两笔金额保留日期及同一角格中的单位，组路径为空 |
+
+24 份真实物理表中，一份触发同格单位与业务分组拆分，七份有证据确立具名小计子组。S5 中多段换头和明确跨页继承的观察数均为零。受控数据中的后段借款 `7` 确实打印 `2023年` 和 `USD millions`；局部新表头只建立已证列，明确续表保留上页角色源格，普通年份数据、无标签小计和相邻表均有反例。年份挪用、已结束分组、错表、缺必需单位和错误片段有独立拒绝测试。普通含单位的列头保留完整列路径，年份与单位分别指向已打印片段。[真实表结构清单][scope-physical]、[受控 Native、Semantic 和实际 Markdown][scope-controls]、[多层列头与反例][scope-multilevel]、[相关软件回归][scope-regression]。
+
+对 P03 的实际 Final 通过正式 Markdown 读回入口进行局部诊断。收入、销售成本和销售毛利的两年金额均能读到各自打印的单位和日期，两条收入还能关联本记录的独立附注 8。此项可见改善来自读回器，P03 原文此前已交付这些字段。[六个字段的读回依据][scope-p03]。
+
+八份正文各有可独立解压的交付包，含 `result.md`、`manifest.json` 及实际交付的资产。八份 S5 样包的已交付图片数均为零。P06、P07 有媒体声明但图像交付未证，两者公共转换完成、交付状态均为 `partial`。其余六组保留各自局部转换状态。沿现有同步、异步入口，以保存的 P06 正文作为识别结果经过队列、任务库和存储，分别核对响应、下载、持久化和 ZIP 中的字节。重复图片、缺失或损坏资产、旧缓存和重复下载由含已知图片字节的受控请求验证。使用的是进程内 API，正式服务和新增原件运行另行验收。[八个样包及校验值][scope-bundles]、[两种 HTTP 入口的实际读回][scope-api]、[S5 前后及状态汇总][scope-comparison]。
+
+S5 的 P02（表内关系未决）、P03（阅读顺序未证）、P06（图片交付未证）也分别经过同步和异步任务，六次下载均保留对应警告、部分完成状态及持久化字节。另提供一个受控图片样包，其中两处引用共用同一份可离线读取的 PNG。P06 三个独立页码已从正文去除，公司名称和年度报告文字仍出现于页眉页脚位置；整份文档的装饰文字清理尚未通过验收。另核对了已保存的四份历史输出以补充 S5 没有的内容结构，腾讯 27 处列表项和华为编辑页三处图题有实际正文落点，华为目录三个布局容器保留在审计，平安三处未决网格局部保留。这四份沿用各自旧软件身份。[内容最终去向][scope-content]、[P02 任务读回][scope-api-p02]、[P03 任务读回][scope-api-p03]、[受控含图离线样包][scope-image-sample]。
+
+本次针对表格与读回的 735 项回归通过。重新审查统一 source-only 清单的变更与依赖后，完整入口在冻结测试源码下通过 4,528 项，禁止 I/O 的触发次数为零。首次统一执行暴露旧的手写样本目录计数仍固定为 23，最终断言分别保护历史样本及新增选段。此前的执行和中断记录保留，最终绑定记录同时核验 64 份早期工件、八份新版正文和存储、受控 HTTP 结果及独立来源检查。[统一回归与 I/O 记录][scope-alltests]、[测试源码及依赖审查][scope-review]、[最终版本与工件校验][scope-bind]。
+
+[scope-baseline]: ../../runs/lite/diagnostics/s5-table-scopes-and-delivery-20261119/baseline.json
+[scope-execution]: ../../runs/lite/diagnostics/s5-table-scopes-and-delivery-20261119/validated-02/execution.json
+[scope-finals]: ../../runs/lite/diagnostics/s5-table-scopes-and-delivery-20261119/validated-02/s5-finals.zip
+[scope-final-p06]: ../../runs/lite/diagnostics/s5-table-scopes-and-delivery-20261119/validated-02/after/P06/huawei-statements-p068-070/final.md
+[scope-raw]: ../../runs/lite/diagnostics/s5-table-scopes-and-delivery-20261119/validated-02/p06-native-html-audit.json
+[scope-p06]: ../../runs/lite/diagnostics/s5-table-scopes-and-delivery-20261119/validated-02/p06-74-values.json
+[scope-pairs]: ../../runs/lite/diagnostics/s5-table-scopes-and-delivery-20261119/validated-02/p06-seven-pairs.json
+[scope-p02]: ../../runs/lite/diagnostics/s5-table-scopes-and-delivery-20261119/validated-02/p02-local-header.json
+[scope-protected]: ../../runs/lite/diagnostics/s5-table-scopes-and-delivery-20261119/validated-02/protected-unit-bindings.json
+[scope-indicators]: ../../runs/lite/diagnostics/s5-table-scopes-and-delivery-20261119/validated-02/principal-values.json
+[scope-slots]: ../../runs/lite/diagnostics/s5-table-scopes-and-delivery-20261119/validated-02/value-slots.json
+[scope-changes]: ../../runs/lite/diagnostics/s5-table-scopes-and-delivery-20261119/validated-02/relationship-changes.json
+[scope-physical]: ../../runs/lite/diagnostics/s5-table-scopes-and-delivery-20261119/validated-02/physical-table-coverage.json
+[scope-comparison]: ../../runs/lite/diagnostics/s5-table-scopes-and-delivery-20261119/validated-02/comparison.json
+[scope-regression]: ../../runs/lite/diagnostics/s5-table-scopes-and-delivery-20261119/validated-02/regression.json
+[scope-p03]: ../../runs/lite/diagnostics/s5-table-scopes-and-delivery-20261119/validated-02/p03-six-markdown-fields.json
+[scope-bundles]: ../../runs/lite/diagnostics/s5-table-scopes-and-delivery-20261119/validated-02/bundles.json
+[scope-api]: ../../runs/lite/diagnostics/s5-table-scopes-and-delivery-20261119/validated-02/api-saved-final.json
+
+[scope-content]: ../../runs/lite/diagnostics/s5-table-scopes-and-delivery-20261119/validated-02/content-destinations.json
+[scope-api-p02]: ../../runs/lite/diagnostics/s5-table-scopes-and-delivery-20261119/validated-02/api-saved-final-P02.json
+[scope-api-p03]: ../../runs/lite/diagnostics/s5-table-scopes-and-delivery-20261119/validated-02/api-saved-final-P03.json
+[scope-image-sample]: ../../runs/lite/diagnostics/s5-table-scopes-and-delivery-20261119/validated-02/controlled-image-sample.zip
+[scope-csv]: ../../runs/lite/diagnostics/s5-table-scopes-and-delivery-20261119/validated-02/p06-74-review.csv
+[scope-controls]: ../../runs/lite/diagnostics/s5-table-scopes-and-delivery-20261119/validated-02/controlled-tables/index.json
+[scope-multilevel]: ../../runs/lite/diagnostics/s5-table-scopes-and-delivery-20261119/validated-02/controlled-tables/multi-level-and-negative-controls.json
+[scope-alltests]: ../../runs/lite/diagnostics/s5-table-scopes-and-delivery-20261119/validated-02/regression-approved.json
+[scope-review]: ../../runs/lite/diagnostics/s5-table-scopes-and-delivery-20261119/source-only-review-bound.json
+[scope-bind]: ../../runs/lite/diagnostics/s5-table-scopes-and-delivery-20261119/final-binding.json
+
+## 12. 同一份已交付正文的评分器读回
+
+本轮直接读取第 11 节交付的八份持久化 Markdown。旧程序和新程序读到相同的正文文件，各文件的 SHA 随逐值记录保存。先从正文建立金额、日期、单位及附注，再按上轮已核对的来源和打印位置验证。两次读取均未运行解析后端或转换 Final。[旧版逐值读回](../../runs/lite/diagnostics/scorer-issue-repair-20261119/public-baseline.json) [新版逐值读回](../../runs/lite/diagnostics/scorer-issue-repair-20261119/public-delivered.json)
+
+| 同一批实际正文 | 旧评分器 | 新评分器 |
+| --- | --- | --- |
+| P06 资产负债表的 74 个非空日期金额 | 0 条读出完整绑定，完整日期字段未被识别 | 74 条逐项通过金额、期间、单位、币种、单位打印位置、业务路径和附注检查 |
+| P01 现金流表的 20 个单位引用 | 20 个金额和期间可读，0 个读到单位 | 20 个金额及其单位、单位文字位置和期间全部对应 |
+| P02 资产负债表的 65 个单位引用 | 无效日期旁的 65 个金额都未读到 | 65 个原值及其单位全部对应。65 个“2月31日”都保留自己的原文和位置，有效日期绑定为 0 |
+| 八组收入、销售成本和销售毛利的 48 个年度金额 | 已有交付对照保留全部 48 个实际值 | 八组正文均读回对应金额和日期。42 个有完整单位来源，另 6 个仍保留无单位来源的状态 |
+
+对同名字段的受控试验只交换整组顺序、替换归属、调换金额或替换附注所指文件。修复后，四笔正确金额在两个组换序后仍逐笔判对。两笔同值记录被挪入另一个组时，只有原组的两笔判对。把附注所指的财务报表换成年度报告，该条附注的业务得分由 76.19% 降至 0，邻近的两笔正确金额均保留满分。[旧结果](../../runs/lite/diagnostics/scorer-issue-repair-20261119/controls-before.json) [修复后结果](../../runs/lite/diagnostics/scorer-issue-repair-20261119/controls-delivered.json)
+
+复核中发现第一版修复给八个现金余额重复展开了同一处“人民币百万元”，多出 48 个文字字符和 16 项单位、币种关系。最终实现把限定语绑定到已经计分的字段，每个金额仍须通过自己的单位、币种和业务归属检查。S5 的三层分母前后均为 4,572、603、162。现金分组标题的文字和来源保持，语义角色从普通文字改为定位分组。每项原职责及因分析关系增加而顺移的编号均可核对。[计分对象对照](../../runs/lite/diagnostics/scorer-issue-repair-20261119/denominators.json)
+
+列表归属和同名字段的评分器修改完成后，用同一版程序再次读回上述八份既有正文。P06 的 74 个金额及七个逐值核对项全部通过。P01 的 20 个、P02 的 65 个单位引用仍能定位到正文。P02 的 65 处无效日期继续保留原文。48 个主指标金额逐项对应，42 个完整单位来源和 6 个缺口均与先前一致。本次读回使用原有持久化文件，其字节和此前采用的文件逐份相同。[逐值读回和正文文件标识](../../runs/lite/diagnostics/list-field-scope-20261119/verified/public.json)
+
+### 12.1 从八份持久化 Markdown 独立建树
+
+同一版评分器逐份读取第 11 节留存的实际 Final，仅用各份 Markdown 生成候选文档 AST。八份树共 3,855 个内容节点，其中 57 个对应空白单元格。其余 3,798 个节点的文字与原始位置、57 个空格各自的来源均已从本份正文读回核实。八个文件的 SHA 与第 12 节的输入逐一相同。[八份候选树及来源文件](../../runs/lite/diagnostics/dual-ast-20261119/after/final-trees/index.json)
+
+P06 的 74 个金额逐项核对金额、期间、业务路径、附注、单位、币种和打印位置，74 项均有原先的绑定。P01 的 20 处和 P02 的 65 处单位来源逐项可追；P02 这 65 处的残缺日期继续保留原文字段。八配置的六个主指标合计 48 笔都有原值和期间，42 笔能追到完整单位。此次验证的是评分器如何读已交付的正文，没有产生新的 Final 或 Lite 分数。[实际正文逐值读回](../../runs/lite/diagnostics/dual-ast-20261119/after/s5-markdown.json)
+
+Expected 列表的两个“借款（附注24）”现在也保留为可展开的记录。每个记录分别带有自己的完整业务路径、附注 24 的原文跨度、两条日期和每个日期的金额。共享单位“人民币百万元”回指原单位说明，币种还可定位到其中的“人民币”。每笔金额仍由原年度字段计分。两笔同名记录的字段和原文位置可以并列检查。[两笔借款的 Expected 子树](../../runs/lite/diagnostics/dual-ast-records-20261119/accepted/expected-records.json)
